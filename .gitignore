@@ -1,0 +1,17 @@
+.DS_Store
+env.sh
+clear.sh
+quick_build.sh
+debug.sh
+debug.tf
+dev_watch.sh
+export_env.sh
+.idea
+*.log
+vendor/*/
+.terraform/
+terraform-provider-tencentcloud
+terraform-provider-qcloud
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfstate.lock.info
