@@ -314,6 +314,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		diskSize := systemDiskSize.(int)
 		params["SystemDisk.DiskSize"] = fmt.Sprintf("%v", diskSize)
 	}
+	var dataDisksAttr []map[string]interface{}
 	if dataDisks, ok := d.GetOk("data_disks"); ok {
 		dataDiskList := dataDisks.([]interface{})
 		if len(dataDiskList) > 1 {
@@ -330,6 +331,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 				paramValue := fmt.Sprintf("%v", v)
 				params[paramKey] = paramValue
 			}
+			dataDisksAttr = append(dataDisksAttr, dd)
 		}
 	}
 
@@ -405,6 +407,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 	instanceId := jsonresp.Response.InstanceIdSet[0]
 	d.SetId(instanceId)
 	d.Set("instance_status", instanceStatusMap[instanceId])
+	d.Set("data_disks", dataDisksAttr)
 	return resourceTencentCloudInstanceRead(d, m)
 }
 
