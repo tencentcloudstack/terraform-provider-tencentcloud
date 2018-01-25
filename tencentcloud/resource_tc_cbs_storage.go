@@ -10,7 +10,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 const MaxStorageNameLength = 60
@@ -99,7 +98,7 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 }
 
 func modifyCbsStorage(storageId string, storageName string, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":      "ModifyCbsStorageAttributes",
 		"storageId":   storageId,
@@ -133,7 +132,7 @@ func modifyCbsStorage(storageId string, storageName string, m interface{}) error
 }
 
 func describeCbsStorage(d *schema.ResourceData, m interface{}) (*storageInfo, bool, error) {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	var jsonresp struct {
 		Code       int    `json:tag"code"`
 		Message    string `json:tag"message"`
@@ -173,7 +172,7 @@ func describeCbsStorage(d *schema.ResourceData, m interface{}) (*storageInfo, bo
 }
 
 func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":      "CreateCbsStorages",
 		"storageType": d.Get("storage_type").(string),

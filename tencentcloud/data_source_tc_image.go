@@ -12,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 const (
@@ -86,7 +85,7 @@ func dataSourceTencentCloudSourceImages() *schema.Resource {
 }
 
 func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*client.Client)
+	client := meta.(*TencentCloudClient).commonConn
 	filters, filtersOk := d.GetOk("filter")
 	imageNameRegex, nameRegexOk := d.GetOk("image_name_regex")
 	osName, osNameOk := d.GetOk("os_name")

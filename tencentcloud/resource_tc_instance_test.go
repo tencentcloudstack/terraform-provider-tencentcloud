@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func TestAccTencentCloudInstance_basic(t *testing.T) {
@@ -297,7 +296,7 @@ func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("Provider Meta is nil")
 		}
 
-		client := provider.Meta().(*client.Client)
+		client := provider.Meta().(*TencentCloudClient).commonConn
 		instanceIds := []string{
 			rs.Primary.ID,
 		}
@@ -314,7 +313,7 @@ func testAccCheckInstanceDestroy(s *terraform.State) error {
 }
 
 func testAccCheckInstanceDestroyWithProvider(s *terraform.State, provider *schema.Provider) error {
-	client := provider.Meta().(*client.Client)
+	client := provider.Meta().(*TencentCloudClient).commonConn
 
 	var instanceIds []string
 	for _, rs := range s.RootModule().Resources {

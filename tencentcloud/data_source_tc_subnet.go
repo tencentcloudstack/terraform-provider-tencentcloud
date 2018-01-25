@@ -8,7 +8,6 @@ import (
 	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func dataSourceTencentCloudSubnet() *schema.Resource {
@@ -45,7 +44,7 @@ func dataSourceTencentCloudSubnet() *schema.Resource {
 }
 
 func dataSourceTencentCloudSubnetRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	subnetParams := map[string]string{
 		"Action":   "DescribeSubnet",
 		"vpcId":    d.Get("vpc_id").(string),

@@ -9,7 +9,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func resourceTencentCloudKeyPair() *schema.Resource {
@@ -46,7 +45,7 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 }
 
 func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*client.Client)
+	client := meta.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Version":   "2017-03-12",
 		"ProjectId": "0", // TODO only support default projectId in v1.0
@@ -131,7 +130,7 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 
 func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) error {
 	id := d.Id()
-	client := meta.(*client.Client)
+	client := meta.(*TencentCloudClient).commonConn
 	keyName, _, err := findKeyPairById(client, id)
 	if err != nil {
 		if err == errKeyPairNotFound {
@@ -155,7 +154,7 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 		"Action":   "DeleteKeyPairs",
 		"KeyIds.0": id,
 	}
-	client := meta.(*client.Client)
+	client := meta.(*TencentCloudClient).commonConn
 	resource.Retry(3*time.Minute, func() *resource.RetryError {
 		_, bindedInstanceIds, err := findKeyPairById(client, id)
 		if err != nil && err != errKeyPairNotFound {

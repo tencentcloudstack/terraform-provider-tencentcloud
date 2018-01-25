@@ -8,7 +8,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func resourceTencentCloudSubnet() *schema.Resource {
@@ -48,7 +47,7 @@ func resourceTencentCloudSubnet() *schema.Resource {
 }
 
 func resourceTencentCloudSubnetCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":                 "CreateSubnet",
 		"vpcId":                  d.Get("vpc_id").(string),
@@ -82,7 +81,7 @@ func resourceTencentCloudSubnetCreate(d *schema.ResourceData, m interface{}) err
 }
 
 func resourceTencentCloudSubnetRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":   "DescribeSubnet",
 		"vpcId":    d.Get("vpc_id").(string),
@@ -120,7 +119,7 @@ func resourceTencentCloudSubnetRead(d *schema.ResourceData, m interface{}) error
 }
 
 func resourceTencentCloudSubnetUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":   "ModifySubnetAttribute",
 		"vpcId":    d.Get("vpc_id").(string),
@@ -155,7 +154,7 @@ func resourceTencentCloudSubnetUpdate(d *schema.ResourceData, m interface{}) err
 }
 
 func resourceTencentCloudSubnetDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	return resource.Retry(5*time.Minute, func() *resource.RetryError {
 		params := map[string]string{
 			"Action":   "DeleteSubnet",

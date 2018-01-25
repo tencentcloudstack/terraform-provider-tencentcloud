@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func dataSourceTencentCloudVpc() *schema.Resource {
@@ -42,7 +41,7 @@ func dataSourceTencentCloudVpc() *schema.Resource {
 }
 
 func dataSourceTencentCloudVpcRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action": "DescribeVpcEx",
 		"offset": "0",

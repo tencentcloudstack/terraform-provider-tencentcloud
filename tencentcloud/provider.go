@@ -4,7 +4,6 @@ import (
 	"os"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 const (
@@ -79,7 +78,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			region = "ap-guangzhou"
 		}
 	}
-	client := client.NewClient(secretId.(string), secretKey.(string), region.(string))
-	client.Debug = true
-	return client, nil
+	config := Config{
+		SecretId:  secretId.(string),
+		SecretKey: secretKey.(string),
+		Region:    region.(string),
+	}
+	return config.Client()
 }

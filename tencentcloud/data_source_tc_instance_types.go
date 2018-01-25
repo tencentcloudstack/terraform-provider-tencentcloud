@@ -7,7 +7,6 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 const (
@@ -111,7 +110,7 @@ func dataSourceInstanceTypes() *schema.Resource {
 }
 
 func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*client.Client)
+	client := meta.(*TencentCloudClient).commonConn
 	filters, filtersOk := d.GetOk("filter")
 	cpuCoreCount, cpuCoreCountOk := d.GetOk("cpu_core_count")
 	memorySizeCount, memorySizeCountOk := d.GetOk("memory_size")
