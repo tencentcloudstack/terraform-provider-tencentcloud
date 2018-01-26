@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func resourceTencentCloudCbsStorageAttachment() *schema.Resource {
@@ -32,8 +31,7 @@ func resourceTencentCloudCbsStorageAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudCbsStorageAttachmentCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
-	client.Debug = true
+	client := m.(*TencentCloudClient).commonConn
 
 	storageId := d.Get("storage_id").(string)
 	instanceId := d.Get("instance_id").(string)
@@ -78,7 +76,7 @@ func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, m inte
 		return err
 	}
 
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":       "DescribeCbsStorages",
 		"storageIds.0": storageId,
@@ -140,8 +138,7 @@ func resourceTencentCloudCbsStorageAttachmentDelete(d *schema.ResourceData, m in
 		return err
 	}
 
-	client := m.(*client.Client)
-	client.Debug = true
+	client := m.(*TencentCloudClient).commonConn
 
 	params := map[string]string{
 		"Action":       "DetachCbsStorages",

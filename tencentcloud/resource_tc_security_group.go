@@ -10,7 +10,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 var projectId = 0
@@ -38,7 +37,7 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 }
 
 func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":    "CreateSecurityGroup",
 		"projectId": strconv.Itoa(projectId),
@@ -79,7 +78,7 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 }
 
 func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":    "DescribeSecurityGroupEx",
 		"projectId": strconv.Itoa(projectId),
@@ -124,7 +123,7 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 }
 
 func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action": "ModifySecurityGroupAttributes",
 		"sgId":   d.Id(),
@@ -177,7 +176,7 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 }
 
 func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	var sgId = d.Id()
 
 	params := map[string]string{

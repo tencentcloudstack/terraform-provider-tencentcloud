@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func dataSourceTencentCloudSecurityGroup() *schema.Resource {
@@ -21,13 +20,13 @@ func dataSourceTencentCloudSecurityGroup() *schema.Resource {
 			"name": &schema.Schema{
 				Type:         schema.TypeString,
 				Optional:     true,
-                Computed: true,
+				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
 			},
 			"description": &schema.Schema{
 				Type:         schema.TypeString,
 				Optional:     true,
-                Computed: true,
+				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(2, 100),
 			},
 			"create_time": &schema.Schema{
@@ -43,7 +42,7 @@ func dataSourceTencentCloudSecurityGroup() *schema.Resource {
 }
 
 func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":    "DescribeSecurityGroupEx",
 		"projectId": strconv.Itoa(projectId),
@@ -81,7 +80,7 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface
 		log.Printf("[ERROR] resource_tc_security_group read error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
 		return errors.New(jsonresp.Message)
 	} else if jsonresp.Data.TotalNum <= 0 || len(jsonresp.Data.Detail) <= 0 {
-        return errors.New("Security group not found")
+		return errors.New("Security group not found")
 	}
 
 	sg := jsonresp.Data.Detail[0]

@@ -6,7 +6,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func TestAccTencentCloudKeyPair_basic(t *testing.T) {
@@ -50,7 +49,7 @@ func TestAccTencentCloudKeyPair_pubcliKey(t *testing.T) {
 }
 
 func testAccCheckKeyPairDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*client.Client)
+	client := testAccProvider.Meta().(*TencentCloudClient).commonConn
 	var keyId string
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_key_pair" {

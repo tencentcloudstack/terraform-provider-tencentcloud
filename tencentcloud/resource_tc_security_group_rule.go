@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func resourceTencentCloudSecurityGroupRule() *schema.Resource {
@@ -101,7 +100,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 }
 
 func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":           "CreateSecurityGroupPolicy",
 		"sgId":             d.Get("security_group_id").(string),
@@ -161,7 +160,7 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 
 func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interface{}) error {
 	log.Printf("[DEBUG] resource_tc_security_group_rule read id:%v", d.Id())
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	rule, ok := parseSecurityGroupRuleId(d.Id())
 	if ok == false {
 		return fmt.Errorf("resource_tc_security_group_rule read error, id decode faild! id:%v", d.Id())
@@ -193,7 +192,7 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 }
 
 func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	rule, ok := parseSecurityGroupRuleId(d.Id())
 	if ok == false {
 		return fmt.Errorf("resource_tc_security_group_rule read error, id decode faild! id:%v", d.Id())

@@ -8,7 +8,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func resourceTencentCloudVpc() *schema.Resource {
@@ -42,7 +41,7 @@ func resourceTencentCloudVpc() *schema.Resource {
 }
 
 func resourceTencentCloudVpcCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":    "CreateVpc",
 		"vpcName":   d.Get("name").(string),
@@ -70,7 +69,7 @@ func resourceTencentCloudVpcCreate(d *schema.ResourceData, m interface{}) error 
 }
 
 func resourceTencentCloudVpcRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action": "DescribeVpcEx",
 		"vpcId":  d.Id(),
@@ -112,7 +111,7 @@ func resourceTencentCloudVpcRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceTencentCloudVpcUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action": "ModifyVpcAttribute",
 	}
@@ -146,7 +145,7 @@ func resourceTencentCloudVpcUpdate(d *schema.ResourceData, m interface{}) error 
 }
 
 func resourceTencentCloudVpcDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	return resource.Retry(5*time.Minute, func() *resource.RetryError {
 		params := map[string]string{
 			"Action": "DeleteVpc",

@@ -845,10 +845,22 @@
 			"revisionTime": "2017-12-14T14:18:50Z"
 		},
 		{
-			"checksumSHA1": "kyQHKLtsHu5hKBzLDs5sgeq0mkA=",
+			"checksumSHA1": "qYp2ApfNWxYVURsuVTsob1u13nQ=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/client",
-			"revision": "4e4cf67e706627c492a13543941e38e461dbb971",
-			"revisionTime": "2017-12-26T13:13:50Z"
+			"revision": "44c9d7848b45dfa951f51d206bc4f193ba8b636e",
+			"revisionTime": "2018-01-25T02:26:37Z"
+		},
+		{
+			"checksumSHA1": "YuwSbJuTlq6L7f7vV9D6curLYqo=",
+			"path": "github.com/zqfan/tencentcloud-sdk-go/common",
+			"revision": "44c9d7848b45dfa951f51d206bc4f193ba8b636e",
+			"revisionTime": "2018-01-25T02:26:37Z"
+		},
+		{
+			"checksumSHA1": "lyOd2u3XfIGteAKBzLtPaD34lY0=",
+			"path": "github.com/zqfan/tencentcloud-sdk-go/services/cvm",
+			"revision": "44c9d7848b45dfa951f51d206bc4f193ba8b636e",
+			"revisionTime": "2018-01-25T02:26:37Z"
 		},
 		{
 			"checksumSHA1": "vE43s37+4CJ2CDU6TlOUOYE0K9c=",

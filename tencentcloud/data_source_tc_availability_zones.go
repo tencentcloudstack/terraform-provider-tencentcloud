@@ -7,7 +7,6 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 const (
@@ -62,7 +61,7 @@ func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
 }
 
 func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta interface{}) error {
-	client := meta.(*client.Client)
+	client := meta.(*TencentCloudClient).commonConn
 
 	params := map[string]string{
 		"Version": "2017-03-12",

@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func resourceTencentCloudRouteTable() *schema.Resource {
@@ -31,7 +30,7 @@ func resourceTencentCloudRouteTable() *schema.Resource {
 }
 
 func resourceTencentCloudRouteTableCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":         "CreateRouteTable",
 		"vpcId":          d.Get("vpc_id").(string),
@@ -61,7 +60,7 @@ func resourceTencentCloudRouteTableCreate(d *schema.ResourceData, m interface{})
 }
 
 func resourceTencentCloudRouteTableRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":       "DescribeRouteTable",
 		"vpcId":        d.Get("vpc_id").(string),
@@ -98,7 +97,7 @@ func resourceTencentCloudRouteTableRead(d *schema.ResourceData, m interface{}) e
 }
 
 func resourceTencentCloudRouteTableUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":       "ModifyVPCRouteTable",
 		"vpcId":        d.Get("vpc_id").(string),
@@ -135,7 +134,7 @@ func resourceTencentCloudRouteTableUpdate(d *schema.ResourceData, m interface{})
 }
 
 func resourceTencentCloudRouteTableDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":       "DeleteRouteTable",
 		"vpcId":        d.Get("vpc_id").(string),

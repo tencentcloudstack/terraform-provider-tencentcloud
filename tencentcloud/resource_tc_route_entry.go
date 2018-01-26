@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 var nextTypes = map[string]int{
@@ -75,7 +74,7 @@ func resourceTencentCloudRouteEntry() *schema.Resource {
 }
 
 func resourceTencentCloudRouteEntryCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	next_type := d.Get("next_type").(string)
 	params := map[string]string{
 		"Action":                          "CreateRoute",
@@ -124,7 +123,7 @@ func resourceTencentCloudRouteEntryCreate(d *schema.ResourceData, m interface{})
 
 func resourceTencentCloudRouteEntryRead(d *schema.ResourceData, m interface{}) error {
 	log.Printf("[DEBUG] resource_tc_route_entry read id:%v", d.Id())
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	_route, ok := routeIdDecode(d.Id())
 	if ok == false {
 		return fmt.Errorf("resource_tc_route_entry read error, id decode faild! id:%v", d.Id())
@@ -197,7 +196,7 @@ func resourceTencentCloudRouteEntryRead(d *schema.ResourceData, m interface{}) e
 }
 
 func resourceTencentCloudRouteEntryDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	routes, ok := routeIdDecode(d.Id())
 	if ok == false {
 		return fmt.Errorf("resource_tc_route_entry delete error, id decode faild! id:%v", d.Id())

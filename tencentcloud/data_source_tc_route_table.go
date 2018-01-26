@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 func dataSourceTencentCloudRouteTable() *schema.Resource {
@@ -71,7 +70,7 @@ func dataSourceTencentCloudRouteTable() *schema.Resource {
 }
 
 func dataSourceTencentCloudRouteTableRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Action":       "DescribeRouteTable",
 		"routeTableId": d.Get("route_table_id").(string),

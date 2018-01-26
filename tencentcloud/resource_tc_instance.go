@@ -8,7 +8,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 const (
@@ -236,7 +235,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 }
 
 func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 
 	params := map[string]string{
 		"Version":        "2017-03-12",
@@ -419,7 +418,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	}
 	params["InstanceIds.0"] = instanceId
 
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	response, err := client.SendRequest("cvm", params)
 	if err != nil {
 		return err
@@ -560,7 +559,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 }
 
 func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, m interface{}) (err error) {
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 	instanceId := d.Id()
 
 	for _, field := range unsupportedUpdateFields {
@@ -668,7 +667,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 		}
 	}
 
-	client := m.(*client.Client)
+	client := m.(*TencentCloudClient).commonConn
 
 	params := map[string]string{
 		"Version":       "2017-03-12",
