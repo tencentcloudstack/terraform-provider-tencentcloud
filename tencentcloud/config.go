@@ -16,6 +16,8 @@ type Config struct {
 type TencentCloudClient struct {
 	commonConn *client.Client
 	cvmConn    *cvm.Client
+	cbsConn    *cbs.Client
+	vpcConn    *vpc.Client
 }
 
 func (c *Config) Client() (interface{}, error) {
