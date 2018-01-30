@@ -37,6 +37,7 @@ func Provider() *schema.Provider {
 
 		DataSourcesMap: map[string]*schema.Resource{
 			"tencentcloud_availability_zones": dataSourceTencentCloudAvailabilityZones(),
+			"tencentcloud_eip":                dataSourceTencentCloudEip(),
 			"tencentcloud_image":              dataSourceTencentCloudSourceImages(),
 			"tencentcloud_instance_types":     dataSourceInstanceTypes(),
 			"tencentcloud_vpc":                dataSourceTencentCloudVpc(),
