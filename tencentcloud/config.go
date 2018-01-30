@@ -2,7 +2,9 @@ package tencentcloud
 
 import (
 	"github.com/zqfan/tencentcloud-sdk-go/client"
-	"github.com/zqfan/tencentcloud-sdk-go/services/cvm"
+	cbs "github.com/zqfan/tencentcloud-sdk-go/services/cbs/unversioned"
+	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
+	vpc "github.com/zqfan/tencentcloud-sdk-go/services/vpc/unversioned"
 )
 
 type Config struct {
@@ -25,5 +27,15 @@ func (c *Config) Client() (interface{}, error) {
 		return nil, err
 	}
 	tcClient.cvmConn = cvmConn
+	vpcConn, err := vpc.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
+	if err != nil {
+		return nil, err
+	}
+	tcClient.vpcConn = vpcConn
+	cbsConn, err := cbs.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
+	if err != nil {
+		return nil, err
+	}
+	tcClient.cbsConn = cbsConn
 	return &tcClient, nil
 }
