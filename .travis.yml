@@ -9,3 +9,4 @@ install:
 
 script:
   - go build .
+  - sh ci_data_source_auto_test.sh
