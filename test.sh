@@ -5,7 +5,8 @@ export TF_LOG="DEBUG"
 old_path=`pwd`
 cd tencentcloud;
 #go test -i; go test . -v
-go test -i; go test -test.run TestAccTencentCloudEipDataSource -v
+go test -i; go test -test.run TestAccTencentCloudEip_basic -v
+#go test -i; go test -test.run TestAccTencentCloudEipDataSource -v
 #go test -i; go test -test.run TestAccTencentCloudKeyPair_pubcliKey -v
 #go test -i; go test -test.run TestAccTencentCloudKeyPair_basic -v
 #go test -i; go test -test.run TestAccTencentCloudInstance_network -v

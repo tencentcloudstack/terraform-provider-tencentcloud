@@ -48,6 +48,7 @@ func Provider() *schema.Provider {
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_key_pair":               resourceTencentCloudKeyPair(),
+			"tencentcloud_eip":                    resourceTencentCloudEip(),
 			"tencentcloud_instance":               resourceTencentCloudInstance(),
 			"tencentcloud_cbs_storage":            resourceTencentCloudCbsStorage(),
 			"tencentcloud_cbs_storage_attachment": resourceTencentCloudCbsStorageAttachment(),
