@@ -19,6 +19,16 @@ func dataSourceTencentCloudEip() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"filter": dataSourceTencentCloudFiltersSchema(),
 
+			"include_arrears": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+
+			"include_blocked": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+
 			"id": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
@@ -61,7 +71,31 @@ func dataSourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) err
 	if len(eips) == 0 {
 		return errEIPNotFound
 	}
-	eip := eips[0]
+
+	includeArrears := false
+	if v, ok := d.GetOk("include_arrears"); ok {
+		includeArrears = v.(bool)
+	}
+	includeBlocked := false
+	if v, ok := d.GetOk("include_blocked"); ok {
+		includeBlocked = v.(bool)
+	}
+
+	var filteredEips []*cvm.Address
+	for _, eip := range eips {
+		if *eip.IsArrears && !includeArrears {
+			continue
+		}
+		if *eip.IsBlocked && !includeBlocked {
+			continue
+		}
+		filteredEips = append(filteredEips, eip)
+	}
+	if len(filteredEips) == 0 {
+		return errEIPNotFound
+	}
+
+	eip := filteredEips[0]
 
 	d.SetId(*eip.AddressId)
 	d.Set("public_ip", *eip.AddressIp)

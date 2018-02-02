@@ -2,7 +2,9 @@ package tencentcloud
 
 import (
 	"errors"
+	"time"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
@@ -20,9 +22,11 @@ const (
 )
 
 var (
-	errCreateEIPFailed  = errors.New("create eip failed")
-	errEIPStillCreating = errors.New("eip still creating")
-	errEIPStillDeleting = errors.New("eip still deleting")
+	errCreateEIPFailed   = errors.New("create eip failed")
+	errEIPStillUnbinding = errors.New("eip still unbinding")
+	errEIPStillCreating  = errors.New("eip still creating")
+	errEIPStillDeleting  = errors.New("eip still deleting")
+	errEIPNotUnbind      = errors.New("eip should be unbind")
 )
 
 func resourceTencentCloudEip() *schema.Resource {
@@ -126,14 +130,26 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	cvmConn := meta.(*TencentCloudClient).cvmConn
 	eipId := d.Id()
 
-	req := cvm.NewReleaseAddressesRequest()
-	req.AddressIds = []*string{
-		common.StringPtr(eipId),
-	}
-	_, err := cvmConn.ReleaseAddresses(req)
-	if err != nil {
-		return err
-	}
+	// NOTE wait until eip is unbind
+	return resource.Retry(3*time.Minute, func() *resource.RetryError {
+		eip, _, err := findEipById(cvmConn, eipId)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
 
-	return nil
+		status := *eip.AddressStatus
+		if status == tencentCloudApiEipStatusUnbind {
+			req := cvm.NewReleaseAddressesRequest()
+			req.AddressIds = []*string{
+				common.StringPtr(eipId),
+			}
+			_, err = cvmConn.ReleaseAddresses(req)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			return nil
+		}
+
+		return resource.RetryableError(errEIPStillDeleting)
+	})
 }
