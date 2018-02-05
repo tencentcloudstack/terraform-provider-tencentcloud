@@ -1,5 +1,7 @@
 # terraform-provider-tencentcloud
 
+[![Build Status](https://api.travis-ci.org/tencentyun/terraform-provider-tencentcloud.png?branch=master)](https://travis-ci.org/tencentyun/terraform-provider-tencentcloud)
+
 ## Requirements
 
 * [Terraform](https://www.terraform.io/downloads.html) 0.11.x
