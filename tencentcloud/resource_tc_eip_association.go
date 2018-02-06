@@ -29,6 +29,7 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 
 			"instance_id": &schema.Schema{
 				Type:     schema.TypeString,
+				ForceNew: true,
 				Optional: true,
 				Computed: true,
 				ConflictsWith: []string{
@@ -40,6 +41,7 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 
 			"network_interface_id": &schema.Schema{
 				Type:         schema.TypeString,
+				ForceNew:     true,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateNotEmpty,
@@ -50,6 +52,7 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 
 			"private_ip": &schema.Schema{
 				Type:         schema.TypeString,
+				ForceNew:     true,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateNotEmpty,

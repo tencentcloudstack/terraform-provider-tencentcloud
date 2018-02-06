@@ -19,7 +19,7 @@ func findEipById(cvmConn *cvm.Client, eipId string) (eip *cvm.Address, retryable
 	req.Limit = common.IntPtr(1)
 	resp, err := cvmConn.DescribeAddresses(req)
 	if err != nil {
-		retryable = false
+		retryable = true
 		return
 	}
 	if *resp.Response.TotalCount == 0 {
@@ -49,7 +49,7 @@ func setEipName(cvmConn *cvm.Client, eipId string, newName string) (err error) {
 }
 
 func waitForEipAvailable(cvmConn *cvm.Client, eipId string) (err error) {
-	resource.Retry(3*time.Minute, func() *resource.RetryError {
+	return resource.Retry(3*time.Minute, func() *resource.RetryError {
 		eip, retryable, err := findEipById(cvmConn, eipId)
 		if err != nil {
 			if retryable {
@@ -63,12 +63,10 @@ func waitForEipAvailable(cvmConn *cvm.Client, eipId string) (err error) {
 			return resource.NonRetryableError(errCreateEIPFailed)
 		}
 
-		if *eip.AddressStatus == tencentCloudApiEipStatusUnbind {
+		if status == tencentCloudApiEipStatusUnbind {
 			return nil
 		}
 
 		return resource.RetryableError(errEIPStillCreating)
 	})
-
-	return nil
 }

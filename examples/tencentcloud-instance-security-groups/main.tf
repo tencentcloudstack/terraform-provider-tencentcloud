@@ -57,11 +57,11 @@ resource "tencentcloud_security_group_rule" "qortex" {
 }
 
 resource "tencentcloud_instance" "instance-without-specified-image-id-example" {
-  instance_name = "${var.instance_name}"
-  availability_zone     = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  password      = "test1234"
+  instance_name     = "${var.instance_name}"
+  availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  password          = "test1234"
 
   security_groups = [
     "${tencentcloud_security_group.my_sg.id}",

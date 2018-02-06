@@ -27,6 +27,7 @@ var (
 	errEIPStillCreating  = errors.New("eip still creating")
 	errEIPStillDeleting  = errors.New("eip still deleting")
 	errEIPNotUnbind      = errors.New("eip should be unbind")
+	errEIPInvalidName    = errors.New("eip name is invlid")
 )
 
 func resourceTencentCloudEip() *schema.Resource {
@@ -41,9 +42,10 @@ func resourceTencentCloudEip() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateStringLengthInRange(1, 20),
 			},
 
 			"public_ip": &schema.Schema{
@@ -115,7 +117,10 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 	if d.HasChange("name") {
 		eipId := d.Id()
 		cvmConn := meta.(*TencentCloudClient).cvmConn
-		_, v := d.GetChange("name")
+		v, ok := d.GetOk("name")
+		if !ok {
+			return errEIPInvalidName
+		}
 		newName := v.(string)
 		err := setEipName(cvmConn, eipId, newName)
 		if err != nil {
