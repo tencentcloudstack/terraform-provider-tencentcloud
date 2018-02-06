@@ -847,32 +847,44 @@
 		{
 			"checksumSHA1": "qYp2ApfNWxYVURsuVTsob1u13nQ=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/client",
-			"revision": "e02dc4ddc4b3414edd2201c69641063a0b5ca237",
-			"revisionTime": "2018-01-30T02:45:06Z"
+			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
+			"revisionTime": "2018-02-06T08:22:04Z"
 		},
 		{
-			"checksumSHA1": "2ZWQKsCxf23vb9RpFrilrrhuUWk=",
+			"checksumSHA1": "g8+EbaXMD5kvrQ8+yFQQVYcYpn8=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/common",
-			"revision": "e02dc4ddc4b3414edd2201c69641063a0b5ca237",
-			"revisionTime": "2018-01-30T02:45:06Z"
+			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
+			"revisionTime": "2018-02-06T08:22:04Z"
 		},
 		{
 			"checksumSHA1": "fRVQbUmdEQSsS2U9lHoJ+AyP10o=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/cbs/unversioned",
-			"revision": "e02dc4ddc4b3414edd2201c69641063a0b5ca237",
-			"revisionTime": "2018-01-30T02:45:06Z"
+			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
+			"revisionTime": "2018-02-06T08:22:04Z"
+		},
+		{
+			"checksumSHA1": "ZEkgZYWMv5VKg2ch1DJA8fYXI8w=",
+			"path": "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned",
+			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
+			"revisionTime": "2018-02-06T08:22:04Z"
 		},
 		{
 			"checksumSHA1": "PJU02X3xpTvZNsC7fBXOChzmf9U=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312",
-			"revision": "e02dc4ddc4b3414edd2201c69641063a0b5ca237",
-			"revisionTime": "2018-01-30T02:45:06Z"
+			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
+			"revisionTime": "2018-02-06T08:22:04Z"
 		},
 		{
-			"checksumSHA1": "e0IIa/yT094TbsQAUiBTU8dtSF8=",
+			"checksumSHA1": "sbEtdJ6c7bREgnEkPCR9ZjYxewc=",
+			"path": "github.com/zqfan/tencentcloud-sdk-go/services/lb/unversioned",
+			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
+			"revisionTime": "2018-02-06T08:22:04Z"
+		},
+		{
+			"checksumSHA1": "WKqqmUUynuDVlUhiBF20gYp5LcA=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/vpc/unversioned",
-			"revision": "e02dc4ddc4b3414edd2201c69641063a0b5ca237",
-			"revisionTime": "2018-01-30T02:45:06Z"
+			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
+			"revisionTime": "2018-02-06T08:22:04Z"
 		},
 		{
 			"checksumSHA1": "vE43s37+4CJ2CDU6TlOUOYE0K9c=",
