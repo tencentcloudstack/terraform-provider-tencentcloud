@@ -3,7 +3,9 @@ package tencentcloud
 import (
 	"github.com/zqfan/tencentcloud-sdk-go/client"
 	cbs "github.com/zqfan/tencentcloud-sdk-go/services/cbs/unversioned"
+	ccs "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned"
 	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
+	lb "github.com/zqfan/tencentcloud-sdk-go/services/lb/unversioned"
 	vpc "github.com/zqfan/tencentcloud-sdk-go/services/vpc/unversioned"
 )
 
@@ -17,6 +19,8 @@ type TencentCloudClient struct {
 	commonConn *client.Client
 	cvmConn    *cvm.Client
 	cbsConn    *cbs.Client
+	ccsConn    *ccs.Client
+	lbConn     *lb.Client
 	vpcConn    *vpc.Client
 }
 
@@ -24,20 +28,36 @@ func (c *Config) Client() (interface{}, error) {
 	var tcClient TencentCloudClient
 	tcClient.commonConn = client.NewClient(c.SecretId, c.SecretKey, c.Region)
 	tcClient.commonConn.Debug = true
+
 	cvmConn, err := cvm.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
 	if err != nil {
 		return nil, err
 	}
 	tcClient.cvmConn = cvmConn
+
 	vpcConn, err := vpc.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
 	if err != nil {
 		return nil, err
 	}
 	tcClient.vpcConn = vpcConn
+
 	cbsConn, err := cbs.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
 	if err != nil {
 		return nil, err
 	}
 	tcClient.cbsConn = cbsConn
+
+	ccsConn, err := ccs.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
+	if err != nil {
+		return nil, err
+	}
+	tcClient.ccsConn = ccsConn
+
+	lbConn, err := lb.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
+	if err != nil {
+		return nil, err
+	}
+	tcClient.lbConn = lbConn
+
 	return &tcClient, nil
 }
