@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/athom/goset"
@@ -110,8 +111,8 @@ func validateCIDRNetworkAddress(v interface{}, k string) (ws []string, errors []
 
 func validateIp(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
-	err := net.ParseIP(value)
-	if err != nil {
+	ip := net.ParseIP(value)
+	if ip == nil {
 		errors = append(errors, fmt.Errorf("%q must contain a valid IP", k))
 	}
 	return
@@ -210,5 +211,32 @@ func validateInstanceName(v interface{}, k string) (ws []string, errors []error)
 		errors = append(errors, fmt.Errorf("%s cannot starts with http:// or https://", k))
 	}
 
+	return
+}
+
+func validateAllowedStringValue(ss []string) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(string)
+        if !goset.IsIncluded(ss, value) {
+			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ss, value))
+        }
+		return
+	}
+}
+
+func validatePort(v interface{}, k string) (ws []string, errors []error) {
+	value := 0
+	switch v.(type) {
+	case string:
+		value, _ = strconv.Atoi(v.(string))
+	case int:
+		value = v.(int)
+	default:
+		errors = append(errors, fmt.Errorf("%q data type error ", k))
+		return
+	}
+	if value < 1 || value > 65535 {
+		errors = append(errors, fmt.Errorf("%q must be a valid port between 1 and 65535", k))
+	}
 	return
 }

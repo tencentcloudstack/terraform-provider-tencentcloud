@@ -847,44 +847,44 @@
 		{
 			"checksumSHA1": "qYp2ApfNWxYVURsuVTsob1u13nQ=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/client",
-			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
-			"revisionTime": "2018-02-06T08:22:04Z"
+			"revision": "f191d5b6a94d1099e8e117ce0788a4a139c89df9",
+			"revisionTime": "2018-02-09T08:29:08Z"
 		},
 		{
 			"checksumSHA1": "g8+EbaXMD5kvrQ8+yFQQVYcYpn8=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/common",
-			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
-			"revisionTime": "2018-02-06T08:22:04Z"
+			"revision": "f191d5b6a94d1099e8e117ce0788a4a139c89df9",
+			"revisionTime": "2018-02-09T08:29:08Z"
 		},
 		{
 			"checksumSHA1": "fRVQbUmdEQSsS2U9lHoJ+AyP10o=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/cbs/unversioned",
-			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
-			"revisionTime": "2018-02-06T08:22:04Z"
+			"revision": "f191d5b6a94d1099e8e117ce0788a4a139c89df9",
+			"revisionTime": "2018-02-09T08:29:08Z"
 		},
 		{
 			"checksumSHA1": "ZEkgZYWMv5VKg2ch1DJA8fYXI8w=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned",
-			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
-			"revisionTime": "2018-02-06T08:22:04Z"
+			"revision": "f191d5b6a94d1099e8e117ce0788a4a139c89df9",
+			"revisionTime": "2018-02-09T08:29:08Z"
 		},
 		{
 			"checksumSHA1": "PJU02X3xpTvZNsC7fBXOChzmf9U=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312",
-			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
-			"revisionTime": "2018-02-06T08:22:04Z"
+			"revision": "f191d5b6a94d1099e8e117ce0788a4a139c89df9",
+			"revisionTime": "2018-02-09T08:29:08Z"
 		},
 		{
 			"checksumSHA1": "sbEtdJ6c7bREgnEkPCR9ZjYxewc=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/lb/unversioned",
-			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
-			"revisionTime": "2018-02-06T08:22:04Z"
+			"revision": "f191d5b6a94d1099e8e117ce0788a4a139c89df9",
+			"revisionTime": "2018-02-09T08:29:08Z"
 		},
 		{
-			"checksumSHA1": "WKqqmUUynuDVlUhiBF20gYp5LcA=",
+			"checksumSHA1": "9KL1HqvPkb+rhh7SqO3Hdde8bRo=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/vpc/unversioned",
-			"revision": "371d9490bc2cd1365f4302f59eeaa123e7fd2175",
-			"revisionTime": "2018-02-06T08:22:04Z"
+			"revision": "f191d5b6a94d1099e8e117ce0788a4a139c89df9",
+			"revisionTime": "2018-02-09T08:29:08Z"
 		},
 		{
 			"checksumSHA1": "vE43s37+4CJ2CDU6TlOUOYE0K9c=",
