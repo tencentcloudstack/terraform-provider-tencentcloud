@@ -37,6 +37,7 @@ func Provider() *schema.Provider {
 
 		DataSourcesMap: map[string]*schema.Resource{
 			"tencentcloud_availability_zones": dataSourceTencentCloudAvailabilityZones(),
+			"tencentcloud_eip":                dataSourceTencentCloudEip(),
 			"tencentcloud_image":              dataSourceTencentCloudSourceImages(),
 			"tencentcloud_instance_types":     dataSourceInstanceTypes(),
 			"tencentcloud_vpc":                dataSourceTencentCloudVpc(),
@@ -47,6 +48,8 @@ func Provider() *schema.Provider {
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_key_pair":               resourceTencentCloudKeyPair(),
+			"tencentcloud_eip":                    resourceTencentCloudEip(),
+			"tencentcloud_eip_association":        resourceTencentCloudEipAssociation(),
 			"tencentcloud_instance":               resourceTencentCloudInstance(),
 			"tencentcloud_cbs_storage":            resourceTencentCloudCbsStorage(),
 			"tencentcloud_cbs_storage_attachment": resourceTencentCloudCbsStorageAttachment(),

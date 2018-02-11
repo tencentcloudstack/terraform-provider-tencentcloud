@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
+	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
 )
 
 // Generates a hash for the set hash function used by the IDs
@@ -54,6 +55,24 @@ func buildFiltersParam(params map[string]string, filterList *schema.Set, maxFilt
 		}
 	}
 	return nil
+}
+
+// Tranform filter condition to TecentCloud Go SDK's param
+func buildFiltersParamForSDK(filterList *schema.Set) (r []*cvm.Filter) {
+	for _, v := range filterList.List() {
+		m := v.(map[string]interface{})
+		name := m["name"].(string)
+		filterValues := m["values"].([]interface{})
+
+		filter := &cvm.Filter{}
+		filter.Name = &name
+		for _, fv := range filterValues {
+			filterValue := fv.(string)
+			filter.Values = append(filter.Values, &filterValue)
+		}
+		r = append(r, filter)
+	}
+	return
 }
 
 func retryable(code string, msg string) bool {

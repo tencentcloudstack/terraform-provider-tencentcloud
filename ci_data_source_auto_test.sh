@@ -8,4 +8,5 @@ cd tencentcloud;
 go test -i; go test -test.run TestAccTencentCloudAvailabilityZonesDataSource_basic -v
 go test -i; go test -test.run TestAccTencentCloudInstanceTypesDataSource_basic -v
 go test -i; go test -test.run TestAccTencentCloudImagesDataSource_filter -v
+go test -i; go test -test.run TestAccTencentCloudEipDataSource -v
 cd $old_path
