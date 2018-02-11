@@ -56,13 +56,13 @@ func dataSourceTencentCloudSubnetRead(d *schema.ResourceData, m interface{}) err
 	}
 
 	var jsonresp struct {
-		Code             int    `json:tag"code"`
-		Message          string `json:tag"message"`
-		CodeDesc         string `json:tag"codeDesc"`
-		SubnetName       string `json:tag"subnetName"`
-		CidrBlock        string `json:tag"cidrBlock"`
-		RouteTableId     string `json:tag"routeTableId"`
-		ZoneId           int    `json:tag"zoneId"`
+		Code             int    `json:"code"`
+		Message          string `json:"message"`
+		CodeDesc         string `json:"codeDesc"`
+		SubnetName       string `json:"subnetName"`
+		CidrBlock        string `json:"cidrBlock"`
+		RouteTableId     string `json:"routeTableId"`
+		ZoneId           int    `json:"zoneId"`
 		AvailabilityZone string
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
@@ -91,18 +91,18 @@ func dataSourceTencentCloudSubnetRead(d *schema.ResourceData, m interface{}) err
 	}
 
 	type Zone struct {
-		Zone      string `json:tag"Zone"`
-		ZoneName  string `json:tag"ZoneName"`
-		ZoneId    string `json:tag"ZoneId"`
-		ZoneState string `json:tag"ZoneState"`
+		Zone      string `json:"Zone"`
+		ZoneName  string `json:"ZoneName"`
+		ZoneId    string `json:"ZoneId"`
+		ZoneState string `json:"ZoneState"`
 	}
 	var ZoneJsonresp struct {
 		Response struct {
 			Error struct {
-				Code    string `json:tag"Code"`
-				Message string `json:tag"Message"`
+				Code    string `json:"Code"`
+				Message string `json:"Message"`
 			}
-			RequestId string `json:tag"RequestId"`
+			RequestId string `json:"RequestId"`
 			ZoneSet   []Zone
 		}
 	}

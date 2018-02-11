@@ -142,21 +142,21 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 	}
 
 	type InstanceTypeConfig struct {
-		Zone           string  `json:tag"Zone"`
-		InstanceFamily string  `json:tag"InstanceFamily"`
-		InstanceType   string  `json:tag"InstanceType"`
-		CPU            int     `json:tag"CPU"`
-		GPU            int     `json:tag"GPU"`
-		FPGA           int     `json:tag"FPGA"`
-		Memory         float64 `json:tag"Memory"`
+		Zone           string  `json:"Zone"`
+		InstanceFamily string  `json:"InstanceFamily"`
+		InstanceType   string  `json:"InstanceType"`
+		CPU            int     `json:"CPU"`
+		GPU            int     `json:"GPU"`
+		FPGA           int     `json:"FPGA"`
+		Memory         float64 `json:"Memory"`
 	}
 	var jsonresp struct {
 		Response struct {
 			Error struct {
-				Code    string `json:tag"Code"`
-				Message string `json:tag"Message"`
+				Code    string `json:"Code"`
+				Message string `json:"Message"`
 			}
-			RequestId             string `json:tag"RequestId"`
+			RequestId             string `json:"RequestId"`
 			InstanceTypeConfigSet []InstanceTypeConfig
 		}
 	}

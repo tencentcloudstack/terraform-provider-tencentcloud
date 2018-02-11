@@ -124,9 +124,9 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		return err
 	}
 	var jsonresp struct {
-		Code     int    `json:tag"code"`
-		Message  string `json:tag"message"`
-		CodeDesc string `json:tag"codeDesc"`
+		Code     int    `json:"code"`
+		Message  string `json:"message"`
+		CodeDesc string `json:"codeDesc"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {
@@ -218,9 +218,9 @@ func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m inter
 		return err
 	}
 	var jsonresp struct {
-		Code     int    `json:tag"code"`
-		Message  string `json:tag"message"`
-		CodeDesc string `json:tag"codeDesc"`
+		Code     int    `json:"code"`
+		Message  string `json:"message"`
+		CodeDesc string `json:"codeDesc"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {

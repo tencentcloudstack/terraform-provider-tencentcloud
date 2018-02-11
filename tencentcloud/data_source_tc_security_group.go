@@ -58,16 +58,16 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface
 	}
 
 	var jsonresp struct {
-		Code    int    `json:tag"code"`
-		Message string `json:tag"message"`
+		Code    int    `json:"code"`
+		Message string `json:"message"`
 		Data    struct {
-			TotalNum int `json:tag"totalNum"`
+			TotalNum int `json:"totalNum"`
 			Detail   []struct {
-				SgId             string `json:tag"sgId"`
-				SgName           string `json:tag"sgName"`
-				SgRemark         string `json:tag"sgRemark"`
-				BeAssociateCount string `json:tag"beAssociateCount"`
-				CreateTime       string `json:tag"createTime"`
+				SgId             string `json:"sgId"`
+				SgName           string `json:"sgName"`
+				SgRemark         string `json:"sgRemark"`
+				BeAssociateCount string `json:"beAssociateCount"`
+				CreateTime       string `json:"createTime"`
 			}
 		}
 	}

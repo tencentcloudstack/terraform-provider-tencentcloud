@@ -60,11 +60,11 @@ func resourceTencentCloudSubnetCreate(d *schema.ResourceData, m interface{}) err
 		return err
 	}
 	var jsonresp struct {
-		Code      int    `json:tag"code"`
-		Message   string `json:tag"message"`
-		CodeDesc  string `json:tag"codeDesc"`
+		Code      int    `json:"code"`
+		Message   string `json:"message"`
+		CodeDesc  string `json:"codeDesc"`
 		SubnetSet []struct {
-			UnSubnetId string `json:tag"unSubnetId"`
+			UnSubnetId string `json:"unSubnetId"`
 		}
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
@@ -93,13 +93,13 @@ func resourceTencentCloudSubnetRead(d *schema.ResourceData, m interface{}) error
 	}
 
 	var jsonresp struct {
-		Code         int    `json:tag"code"`
-		Message      string `json:tag"message"`
-		CodeDesc     string `json:tag"codeDesc"`
-		SubnetName   string `json:tag"subnetName"`
-		CidrBlock    string `json:tag"cidrBlock"`
-		RouteTableId string `json:tag"routeTableId"`
-		ZoneId       int    `json:tag"zoneId"`
+		Code         int    `json:"code"`
+		Message      string `json:"message"`
+		CodeDesc     string `json:"codeDesc"`
+		SubnetName   string `json:"subnetName"`
+		CidrBlock    string `json:"cidrBlock"`
+		RouteTableId string `json:"routeTableId"`
+		ZoneId       int    `json:"zoneId"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {
@@ -135,8 +135,8 @@ func resourceTencentCloudSubnetUpdate(d *schema.ResourceData, m interface{}) err
 			return err
 		}
 		var jsonresp struct {
-			Code    int    `json:tag"code"`
-			Message string `json:tag"message"`
+			Code    int    `json:"code"`
+			Message string `json:"message"`
 		}
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {
@@ -166,9 +166,9 @@ func resourceTencentCloudSubnetDelete(d *schema.ResourceData, m interface{}) err
 			return resource.RetryableError(fmt.Errorf("trying again while it is deleted."))
 		}
 		var jsonresp struct {
-			Code     int    `json:tag"code"`
-			Message  string `json:tag"message"`
-			CodeDesc string `json:tag"codeDesc"`
+			Code     int    `json:"code"`
+			Message  string `json:"message"`
+			CodeDesc string `json:"codeDesc"`
 		}
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {
