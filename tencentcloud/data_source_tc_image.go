@@ -20,10 +20,10 @@ const (
 )
 
 type imageSorter []struct {
-	ImageId     string `json:tag"ImageId"`
-	OsName      string `json:tag"OsName"`
-	ImageName   string `json:tag"ImageName"`
-	CreatedTime string `json:tag"CreatedTime"`
+	ImageId     string `json:"ImageId"`
+	OsName      string `json:"OsName"`
+	ImageName   string `json:"ImageName"`
+	CreatedTime string `json:"CreatedTime"`
 }
 
 func (a imageSorter) Len() int {
@@ -125,14 +125,14 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	var jsonresp struct {
 		Response struct {
 			Error struct {
-				Code    string `json:tag"Code"`
-				Message string `json:tag"Message"`
+				Code    string `json:"Code"`
+				Message string `json:"Message"`
 			}
 			ImageSet []struct {
-				ImageId     string `json:tag"ImageId"`
-				OsName      string `json:tag"OsName"`
-				ImageName   string `json:tag"ImageName"`
-				CreatedTime string `json:tag"CreatedTime"`
+				ImageId     string `json:"ImageId"`
+				OsName      string `json:"OsName"`
+				ImageName   string `json:"ImageName"`
+				CreatedTime string `json:"CreatedTime"`
 			}
 		}
 	}

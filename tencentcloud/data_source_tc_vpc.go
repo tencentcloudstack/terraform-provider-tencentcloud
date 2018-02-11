@@ -61,15 +61,15 @@ func dataSourceTencentCloudVpcRead(d *schema.ResourceData, m interface{}) error 
 	}
 
 	var jsonresp struct {
-		Code       int    `json:tag"code"`
-		Message    string `json:tag"message"`
-		TotalCount int    `json:tag"totalCount"`
+		Code       int    `json:"code"`
+		Message    string `json:"message"`
+		TotalCount int    `json:"totalCount"`
 		Data       []struct {
-			UinqVpcId   string `json:tag"unVpcId"`
-			VpcName     string `json:tag"vpcName"`
-			CidrBlock   string `json:tag"cidrBlock"`
-			IsDefault   bool   `json:tag"isDefault"`
-			IsMulticast bool   `json:tag"isMulticast"`
+			UinqVpcId   string `json:"unVpcId"`
+			VpcName     string `json:"vpcName"`
+			CidrBlock   string `json:"cidrBlock"`
+			IsDefault   bool   `json:"isDefault"`
+			IsMulticast bool   `json:"isMulticast"`
 		}
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)

@@ -75,18 +75,18 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 	}
 
 	type Zone struct {
-		Zone      string `json:tag"Zone"`
-		ZoneName  string `json:tag"ZoneName"`
-		ZoneId    string `json:tag"ZoneId"`
-		ZoneState string `json:tag"ZoneState"`
+		Zone      string `json:"Zone"`
+		ZoneName  string `json:"ZoneName"`
+		ZoneId    string `json:"ZoneId"`
+		ZoneState string `json:"ZoneState"`
 	}
 	var jsonresp struct {
 		Response struct {
 			Error struct {
-				Code    string `json:tag"Code"`
-				Message string `json:tag"Message"`
+				Code    string `json:"Code"`
+				Message string `json:"Message"`
 			}
-			RequestId string `json:tag"RequestId"`
+			RequestId string `json:"RequestId"`
 			ZoneSet   []Zone
 		}
 	}

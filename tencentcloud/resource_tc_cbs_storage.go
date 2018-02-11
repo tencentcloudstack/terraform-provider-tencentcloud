@@ -46,12 +46,12 @@ var (
 )
 
 type storageInfo struct {
-	StorageType   string `json:tag"storageType"`
-	StorageSize   int    `json:tag"storageSize"`
-	Zone          string `json:tag"zone"`
-	StorageName   string `json:tag"storageName"`
-	StorageStatus string `json:tag"storageStatus"`
-	Attached      int    `json:tag"attached"`
+	StorageType   string `json:"storageType"`
+	StorageSize   int    `json:"storageSize"`
+	Zone          string `json:"zone"`
+	StorageName   string `json:"storageName"`
+	StorageStatus string `json:"storageStatus"`
+	Attached      int    `json:"attached"`
 }
 
 func resourceTencentCloudCbsStorage() *schema.Resource {
@@ -110,9 +110,9 @@ func modifyCbsStorage(storageId string, storageName string, m interface{}) error
 		return err
 	}
 	var jsonresp struct {
-		Code     int    `json:tag"code"`
-		Message  string `json:tag"message"`
-		CodeDesc string `json:tag"codeDesc"`
+		Code     int    `json:"code"`
+		Message  string `json:"message"`
+		CodeDesc string `json:"codeDesc"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {
@@ -134,9 +134,9 @@ func modifyCbsStorage(storageId string, storageName string, m interface{}) error
 func describeCbsStorage(d *schema.ResourceData, m interface{}) (*storageInfo, bool, error) {
 	client := m.(*TencentCloudClient).commonConn
 	var jsonresp struct {
-		Code       int    `json:tag"code"`
-		Message    string `json:tag"message"`
-		CodeDesc   string `json:tag"codeDesc"`
+		Code       int    `json:"code"`
+		Message    string `json:"message"`
+		CodeDesc   string `json:"codeDesc"`
 		StorageSet []storageInfo
 	}
 	params := map[string]string{
@@ -220,10 +220,10 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, m interface{})
 		return err
 	}
 	var jsonresp struct {
-		Code       int      `json:tag"code"`
-		Message    string   `json:tag"message"`
-		CodeDesc   string   `json:tag"codeDesc"`
-		StorageIds []string `json:tag"storageIds"`
+		Code       int      `json:"code"`
+		Message    string   `json:"message"`
+		CodeDesc   string   `json:"codeDesc"`
+		StorageIds []string `json:"storageIds"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {

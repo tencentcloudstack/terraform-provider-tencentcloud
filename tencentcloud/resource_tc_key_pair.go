@@ -65,10 +65,10 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 		var jsonresp struct {
 			Response struct {
 				Error struct {
-					Code    string `json:tag"Code"`
-					Message string `json:tag"Message"`
+					Code    string `json:"Code"`
+					Message string `json:"Message"`
 				}
-				KeyId     string `json:tag"KeyId"`
+				KeyId     string `json:"KeyId"`
 				RequestId string
 			}
 		}
@@ -96,16 +96,16 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 		var jsonresp struct {
 			Response struct {
 				Error struct {
-					Code    string `json:tag"Code"`
-					Message string `json:tag"Message"`
+					Code    string `json:"Code"`
+					Message string `json:"Message"`
 				}
 				KeyPair struct {
-					KeyId      string `json:tag"KeyId"`
-					KeyName    string `json:tag"KeyName"`
-					ProjectId  int    `json:tag"ProjectId"`
-					PublicKey  string `json:tag"PublicKey"`
-					PrivateKey string `json:tag"PrivateKey"`
-				} `json:tag"KeyPair"`
+					KeyId      string `json:"KeyId"`
+					KeyName    string `json:"KeyName"`
+					ProjectId  int    `json:"ProjectId"`
+					PublicKey  string `json:"PublicKey"`
+					PrivateKey string `json:"PrivateKey"`
+				} `json:"KeyPair"`
 				RequestId string
 			}
 		}
@@ -186,8 +186,8 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 		var jsonresp struct {
 			Response struct {
 				Error struct {
-					Code    string `json:tag"Code"`
-					Message string `json:tag"Message"`
+					Code    string `json:"Code"`
+					Message string `json:"Message"`
 				}
 				RequestId string
 			}

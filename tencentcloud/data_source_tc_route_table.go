@@ -88,21 +88,21 @@ func dataSourceTencentCloudRouteTableRead(d *schema.ResourceData, m interface{})
 	}
 
 	var jsonresp struct {
-		Code       int    `json:tag"code"`
-		Message    string `json:tag"message"`
-		CodeDesc   string `json:tag"codeDesc"`
-		TotalCount int    `json:tag"totalCount"`
+		Code       int    `json:"code"`
+		Message    string `json:"message"`
+		CodeDesc   string `json:"codeDesc"`
+		TotalCount int    `json:"totalCount"`
 		Data       []struct {
-			UnVpcId              string `json:tag"UnVpcId"`
-			UnRouteTableId       string `json:tag"unRouteTableId"`
-			RouteTableName       string `json:tag"routeTableName"`
-			RouteTableCreateTime string `json:tag"routeTableCreateTime"`
-			SubnetNum            int    `json:tag"subnetNum"`
+			UnVpcId              string `json:"UnVpcId"`
+			UnRouteTableId       string `json:"unRouteTableId"`
+			RouteTableName       string `json:"routeTableName"`
+			RouteTableCreateTime string `json:"routeTableCreateTime"`
+			SubnetNum            int    `json:"subnetNum"`
 			RouteTableSet        []struct {
-				DestinationCidrBlock string `json:tag"destinationCidrBlock"`
-				NextType             int    `json:tag"nextType"`
-				UnNextHub            string `json:tag"unNextHub"`
-				Description          string `json:tag"description"`
+				DestinationCidrBlock string `json:"destinationCidrBlock"`
+				NextType             int    `json:"nextType"`
+				UnNextHub            string `json:"unNextHub"`
+				Description          string `json:"description"`
 			}
 		}
 	}

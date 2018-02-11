@@ -87,13 +87,13 @@ func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, m inte
 		return err
 	}
 	var jsonresp struct {
-		Code       int    `json:tag"code"`
-		Message    string `json:tag"message"`
+		Code       int    `json:"code"`
+		Message    string `json:"message"`
 		StorageSet []struct {
-			Attached      int    `json:tag"attached"`
-			StorageStatus string `json:tag"storageStatus"`
-			UInstanceId   string `json:tag"uInstanceId"`
-		} `json:tag"storageSet"`
+			Attached      int    `json:"attached"`
+			StorageStatus string `json:"storageStatus"`
+			UInstanceId   string `json:"uInstanceId"`
+		} `json:"storageSet"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {

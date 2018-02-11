@@ -57,10 +57,10 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 		return err
 	}
 	var jsonresp struct {
-		Code    int    `json:tag"code"`
-		Message string `json:tag"message"`
+		Code    int    `json:"code"`
+		Message string `json:"message"`
 		Data    struct {
-			SgId string `json:tag"sgId"`
+			SgId string `json:"sgId"`
 		}
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
@@ -94,13 +94,13 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 	}
 
 	var jsonresp struct {
-		Code    int    `json:tag"code"`
-		Message string `json:tag"message"`
+		Code    int    `json:"code"`
+		Message string `json:"message"`
 		Data    struct {
-			TotalNum int `json:tag"totalNum"`
+			TotalNum int `json:"totalNum"`
 			Detail   []struct {
-				SgName   string `json:tag"sgName"`
-				SgRemark string `json:tag"sgRemark"`
+				SgName   string `json:"sgName"`
+				SgRemark string `json:"sgRemark"`
 			}
 		}
 	}
@@ -155,9 +155,9 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 			return err
 		}
 		var jsonresp struct {
-			Code     int    `json:tag"code"`
-			Message  string `json:tag"message"`
-			CodeDesc string `json:tag"codeDesc"`
+			Code     int    `json:"code"`
+			Message  string `json:"message"`
+			CodeDesc string `json:"codeDesc"`
 		}
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {
@@ -211,8 +211,8 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 			return resource.NonRetryableError(err)
 		}
 		var jsonresp struct {
-			Code    int    `json:tag"code"`
-			Message string `json:tag"message"`
+			Code    int    `json:"code"`
+			Message string `json:"message"`
 		}
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {

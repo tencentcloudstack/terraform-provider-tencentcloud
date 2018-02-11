@@ -31,22 +31,22 @@ func describeSecurityGroupRuleIndex(client *client.Client, rule map[string]strin
 	}
 
 	var jsonresp struct {
-		Code    int    `json:tag"code"`
-		Message string `json:tag"message"`
+		Code    int    `json:"code"`
+		Message string `json:"message"`
 		Data    struct {
 			Ingress []struct {
-				Index      int    `json:tag"index"`
-				CidrIp     string `json:tag"cidrIp"`
-				IpProtocol string `json:tag"ipProtocol"`
-				PortRange  string `json:tag"portRange"`
-				Action     string `json:tag"action"`
+				Index      int    `json:"index"`
+				CidrIp     string `json:"cidrIp"`
+				IpProtocol string `json:"ipProtocol"`
+				PortRange  string `json:"portRange"`
+				Action     string `json:"action"`
 			}
 			Egress []struct {
-				Index      int    `json:tag"index"`
-				CidrIp     string `json:tag"cidrIp"`
-				IpProtocol string `json:tag"ipProtocol"`
-				PortRange  string `json:tag"portRange"`
-				Action     string `json:tag"action"`
+				Index      int    `json:"index"`
+				CidrIp     string `json:"cidrIp"`
+				IpProtocol string `json:"ipProtocol"`
+				PortRange  string `json:"portRange"`
+				Action     string `json:"action"`
 			}
 		}
 	}
@@ -105,11 +105,11 @@ func getSecurityGroupAssociatedInstancesBySgId(client *client.Client, sgId strin
 	}
 
 	var jsonresp struct {
-		Code       int    `json:tag"code"`
-		Message    string `json:tag"message"`
-		TotalCount int    `json:tag"totalCount"`
+		Code       int    `json:"code"`
+		Message    string `json:"message"`
+		TotalCount int    `json:"totalCount"`
 		Data       []struct {
-			InstanceId string `json:tag"instanceId"`
+			InstanceId string `json:"instanceId"`
 		}
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
