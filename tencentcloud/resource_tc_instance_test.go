@@ -27,7 +27,7 @@ func TestAccTencentCloudInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_size", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_type", "CLOUD_BASIC"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_type", "CLOUD_BASIC"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_size", "70"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_size", "50"),
 				),
 			},
 		},
@@ -166,29 +166,24 @@ func TestAccTencentCloudInstance_imageIdChanged(t *testing.T) {
 				Config: testAccInstanceConfigWithImageIdChanged(
 					"img-31tjrtph",
 					"testpwd123",
-					"50",
 				),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.hello"),
 					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.hello"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "password", "testpwd123"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "system_disk_size", "50"),
 				),
 			},
 			{
 				Config: testAccInstanceConfigWithImageIdChanged(
 					"img-871lthrb",
 					"testpwd1234",
-					"60",
 				),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.hello"),
 					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.hello"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "password", "testpwd1234"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "system_disk_size", "60"),
-					//resource.TestCheckResourceAttr("tencentcloud_instance.hello", "image_id", "img-871lthrb"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "image_id", "img-871lthrb"),
 				),
 			},
 		},
@@ -252,27 +247,6 @@ func TestAccTencentCloudInstance_password(t *testing.T) {
 					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.login"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.login", "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttrSet("tencentcloud_instance.login", "password"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_PrePaid(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.prepaid",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccInstanceConfigWithSmallInstanceTypePrePaid,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.prepaid"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.prepaid"),
-					//resource.TestCheckResourceAttr("tencentcloud_instance.prepaid", "instance_status", "RUNNING"),
 				),
 			},
 		},
@@ -408,7 +382,7 @@ resource "tencentcloud_instance" "hello" {
 	)
 }
 
-func testAccInstanceConfigWithImageIdChanged(imageId string, password string, systemDiskSize string) string {
+func testAccInstanceConfigWithImageIdChanged(imageId, password string) string {
 	return fmt.Sprintf(
 		`
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
@@ -428,13 +402,10 @@ resource "tencentcloud_instance" "hello" {
   image_id      = "%s"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   password      = "%s"
-  system_disk_type = "CLOUD_BASIC"
-  system_disk_size = %s
 }
 `,
 		imageId,
 		password,
-		systemDiskSize,
 	)
 }
 
@@ -456,7 +427,9 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
   memory_size    = 2
 }
 
-data "tencentcloud_availability_zones" "my_favorate_zones" {}
+data "tencentcloud_availability_zones" "my_favorate_zones" {
+	name = "ap-guangzhou-3"
+}
 
 resource "tencentcloud_instance" "foo" {
   instance_name = "terraform_automation_test_kuruk"
@@ -468,7 +441,7 @@ resource "tencentcloud_instance" "foo" {
   data_disks = [
     {
       data_disk_type = "CLOUD_BASIC"
-      data_disk_size = 70
+      data_disk_size = 50
     }
   ]
   disable_security_service = true
@@ -540,37 +513,6 @@ resource "tencentcloud_instance" "login" {
 		pwd,
 	)
 }
-
-const testAccInstanceConfigWithSmallInstanceTypePrePaid = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S1"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-data "tencentcloud_availability_zones" "my_favorate_zones" {}
-
-resource "tencentcloud_instance" "prepaid" {
-  instance_name = "terraform_automation_test_kuruk_prepay"
-  availability_zone     = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-
-  instance_charge_type = "PREPAID"
-  instance_charge_type_prepaid_period = 1
-}
-`
 
 const testAccInstanceConfigWithVPC = `
 data "tencentcloud_image" "my_favorate_image" {
