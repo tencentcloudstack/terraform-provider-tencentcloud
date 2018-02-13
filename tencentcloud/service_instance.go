@@ -47,7 +47,6 @@ func queryInstancesStatus(client *client.Client, instanceIds []string) (instance
 		"Action":  "DescribeInstancesStatus",
 	}
 	for i, instanceId := range instanceIds {
-		println(instanceId)
 		paramsKey := fmt.Sprintf("InstanceIds.%v", i+1)
 		params[paramsKey] = instanceId
 	}
