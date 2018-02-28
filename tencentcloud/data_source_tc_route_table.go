@@ -62,7 +62,7 @@ func dataSourceTencentCloudRouteTable() *schema.Resource {
 				},
 			},
 			"create_time": &schema.Schema{
-				Type:     schema.TypeInt,
+				Type:     schema.TypeString,
 				Computed: true,
 			},
 		},
@@ -103,7 +103,7 @@ func dataSourceTencentCloudRouteTableRead(d *schema.ResourceData, m interface{})
 				NextType             int    `json:tag"nextType"`
 				UnNextHub            string `json:tag"unNextHub"`
 				Description          string `json:tag"description"`
-			}
+			} `json:"routeSet"`
 		}
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)

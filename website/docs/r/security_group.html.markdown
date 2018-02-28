@@ -25,8 +25,8 @@ resource "tencentcloud_security_group" "sg" {
 
 The following arguments are supported:
 
-* `name` - (Optional) The name of the security group. Under the same project, the name can not be the same, can be arbitrarily named, but no t more than 60 characters.
-* `description` - (Optional) The security group description, The upper limit of 100 characters.
+* `name` - (Required) The name of the security group. Name should be unique in each project, and no more than 60 characters.
+* `description` - (Optional) The security group's description, maximum length is 100 characters.
 
 ## Attributes Reference
 

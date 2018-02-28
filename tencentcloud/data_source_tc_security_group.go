@@ -66,7 +66,7 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface
 				SgId             string `json:tag"sgId"`
 				SgName           string `json:tag"sgName"`
 				SgRemark         string `json:tag"sgRemark"`
-				BeAssociateCount string `json:tag"beAssociateCount"`
+				BeAssociateCount int    `json:tag"beAssociateCount"`
 				CreateTime       string `json:tag"createTime"`
 			}
 		}
@@ -85,6 +85,7 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface
 
 	sg := jsonresp.Data.Detail[0]
 
+	d.SetId(sg.SgId)
 	d.Set("security_group_id", sg.SgId)
 	d.Set("name", sg.SgName)
 	d.Set("description", sg.SgRemark)
