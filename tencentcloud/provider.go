@@ -53,6 +53,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_instance":               resourceTencentCloudInstance(),
 			"tencentcloud_cbs_storage":            resourceTencentCloudCbsStorage(),
 			"tencentcloud_cbs_storage_attachment": resourceTencentCloudCbsStorageAttachment(),
+			"tencentcloud_cbs_snapshot":           resourceTencentCloudCbsSnapshot(),
 			"tencentcloud_vpc":                    resourceTencentCloudVpc(),
 			"tencentcloud_subnet":                 resourceTencentCloudSubnet(),
 			"tencentcloud_route_table":            resourceTencentCloudRouteTable(),
