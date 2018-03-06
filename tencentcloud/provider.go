@@ -44,6 +44,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_subnet":             dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":        dataSourceTencentCloudRouteTable(),
 			"tencentcloud_security_group":     dataSourceTencentCloudSecurityGroup(),
+			"tencentcloud_nats":               dataSourceTencentCloudNats(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -60,6 +61,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_route_entry":            resourceTencentCloudRouteEntry(),
 			"tencentcloud_security_group":         resourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_group_rule":    resourceTencentCloudSecurityGroupRule(),
+			"tencentcloud_nat_gateway":            resourceTencentCloudNatGateway(),
+			"tencentcloud_dnat":                   resourceTencentCloudDnat(),
 		},
 
 		ConfigureFunc: providerConfigure,
