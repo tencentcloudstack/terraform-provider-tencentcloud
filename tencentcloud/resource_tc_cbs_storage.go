@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
 
 const MaxStorageNameLength = 60
@@ -93,6 +95,10 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
+			"snapshot_id": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -128,6 +134,75 @@ func modifyCbsStorage(storageId string, storageName string, m interface{}) error
 	}
 
 	log.Printf("[DEBUG] ModifyCbsStorageAttributes, new storageName: %#v.", storageName)
+	return nil
+}
+
+func rollbackStorage(storageId string, snapshotId string, m interface{}) error {
+	client := m.(*TencentCloudClient).commonConn
+	params := map[string]string{
+		"Action":     "ApplySnapshot",
+		"storageId":  storageId,
+		"snapshotId": snapshotId,
+	}
+
+	response, err := client.SendRequest("snapshot", params)
+	if err != nil {
+		return err
+	}
+	var jsonresp struct {
+		Code     int
+		Message  string
+		CodeDesc string
+	}
+	err = json.Unmarshal([]byte(response), &jsonresp)
+	if err != nil {
+		return err
+	}
+	if jsonresp.Code != 0 {
+		return fmt.Errorf(
+			"rollback storage error, code:%v, message: %v, codeDesc: %v.",
+			jsonresp.Code,
+			jsonresp.Message,
+			jsonresp.CodeDesc,
+		)
+	}
+
+	log.Printf("[DEBUG] rollback storage %#v with snapshot %#v.", storageId, snapshotId)
+	return nil
+}
+
+func terminateCbsStorage(storageId string, client *client.Client) *resource.RetryError {
+	params := map[string]string{
+		"Action":       "TerminateCbsStorages",
+		"storageIds.0": storageId,
+	}
+
+	response, err := client.SendRequest("cbs", params)
+	if err != nil {
+		return resource.NonRetryableError(err)
+	}
+	var jsonresp struct {
+		Code     interface{}
+		Message  string
+		CodeDesc string
+	}
+	err = json.Unmarshal([]byte(response), &jsonresp)
+	if err != nil {
+		return resource.NonRetryableError(err)
+	}
+	code, ok := jsonresp.Code.(float64)
+	// the code maybe a string
+	if !ok || code != 0 {
+		if strings.Contains(jsonresp.Message, "query deal & resourceDeal fail") {
+			// for a new disk, we can terminate after a few minutes.
+			return resource.RetryableError(fmt.Errorf("query deal failed, please retry later"))
+		}
+		return resource.NonRetryableError(fmt.Errorf(
+			"terminate storage error, message: %v, codeDesc: %v.",
+			jsonresp.Message,
+			jsonresp.CodeDesc,
+		))
+	}
 	return nil
 }
 
@@ -215,6 +290,11 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, m interface{})
 	}
 	params["storageSize"] = strconv.Itoa(size)
 
+	snapshotIdInf, ok := d.GetOk("snapshot_id")
+	if ok {
+		params["snapshotId"] = snapshotIdInf.(string)
+	}
+
 	response, err := client.SendRequest("cbs", params)
 	if err != nil {
 		return err
@@ -283,11 +363,6 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, m interface{}) e
 }
 
 func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, m interface{}) error {
-	requestUpdate := false
-	if d.HasChange("storage_name") {
-		requestUpdate = true
-	}
-
 	immutableItems := [...]string{"storage_size", "storage_type", "availability_zone", "period"}
 	for _, item := range immutableItems {
 		if d.HasChange(item) {
@@ -295,25 +370,43 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, m interface{})
 		}
 	}
 
-	if !requestUpdate {
-		return nil
+	requestUpdate := false
+	if d.HasChange("storage_name") {
+		_, n := d.GetChange("storage_name")
+		storageName := n.(string)
+		if storageName == "" {
+			return fmt.Errorf("storage_name are not allow to be empty")
+		}
+
+		err := modifyCbsStorage(d.Id(), storageName, m)
+		if err != nil {
+			return err
+		}
+		requestUpdate = true
 	}
 
-	_, n := d.GetChange("storage_name")
-	storageName := n.(string)
-	if storageName == "" {
-		return fmt.Errorf("storage_name are not allow to be empty")
+	if d.HasChange("snapshot_id") {
+		_, snapshotIdInf := d.GetChange("snapshot_id")
+		snapshotId := snapshotIdInf.(string)
+		if snapshotId == "" {
+			// pass
+		} else {
+			err := rollbackStorage(d.Id(), snapshotId, m)
+			if err != nil {
+				return err
+			}
+		}
 	}
-
-	err := modifyCbsStorage(d.Id(), storageName, m)
-	if err != nil {
-		return err
+	if requestUpdate {
+		return resourceTencentCloudCbsStorageRead(d, m)
 	}
-
-	return resourceTencentCloudCbsStorageRead(d, m)
+	return nil
 }
 
 func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, m interface{}) error {
-
-	return fmt.Errorf("Storage not support delete.")
+	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+		return terminateCbsStorage(d.Id(), m.(*TencentCloudClient).commonConn)
+	})
+	d.SetId("")
+	return err
 }

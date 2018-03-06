@@ -13,6 +13,7 @@ Provides a CBS resource.
 ~> **NOTE:** At present, only 'PREPAID' storage is supported to create. 'PREPAID' storage cannot be deleted, once created, must wait it to be expired and release it automatically.
 
 ## Example Usage
+
 ```hcl
 data "tencentcloud_availability_zones" "my_favorate_zones" {}
 
@@ -34,6 +35,7 @@ The following arguments are supported:
 * `period` - (Required) The tenancy (time unit is month) of the perpaid storage, the legal values are [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60]. **NOTE**, `period` do not support modification.
 * `availability_zone` - (Required) The available zone that the CBS instance locates at. **NOTE**, `availability_zone` do not support modification.
 * `storage_name` - (Optional) The name of the CBS. This storage_name can have a string of 1 to 64 characters, must contain only alphanumeric characters or hyphens, such as "-",".","_". If not specified, the default name is `CBS-Instance`. It is supported to modify `storage_name` after the storage is created
+* `snapshot_id` - (Optional) For a new storage, this indicate which snapshot to use to create the new storage. **For a exist storage, change this field whill case a rollback operation: your storage will rollback to the moment the snapshot created, your must change this filed carefully, please ensure your data in this storage is saved or out of use.**
 
 
 ## Attributes Reference
