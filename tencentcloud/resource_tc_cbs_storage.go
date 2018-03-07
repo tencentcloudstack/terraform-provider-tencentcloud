@@ -54,6 +54,7 @@ type storageInfo struct {
 	StorageName   string `json:"storageName"`
 	StorageStatus string `json:"storageStatus"`
 	Attached      int    `json:"attached"`
+	InstanceId    string `json:"uInstanceId"`
 }
 
 func resourceTencentCloudCbsStorage() *schema.Resource {
@@ -206,8 +207,7 @@ func terminateCbsStorage(storageId string, client *client.Client) *resource.Retr
 	return nil
 }
 
-func describeCbsStorage(d *schema.ResourceData, m interface{}) (*storageInfo, bool, error) {
-	client := m.(*TencentCloudClient).commonConn
+func describeCbsStorage(storageId string, client *client.Client) (*storageInfo, bool, error) {
 	var jsonresp struct {
 		Code       int    `json:"code"`
 		Message    string `json:"message"`
@@ -216,7 +216,7 @@ func describeCbsStorage(d *schema.ResourceData, m interface{}) (*storageInfo, bo
 	}
 	params := map[string]string{
 		"Action":       "DescribeCbsStorages",
-		"storageIds.0": d.Id(),
+		"storageIds.0": storageId,
 	}
 	response, err := client.SendRequest("cbs", params)
 	canRetryError := false
@@ -321,7 +321,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, m interface{})
 	d.SetId(storageId)
 	time.Sleep(time.Second * 3)
 	resource.Retry(3*time.Minute, func() *resource.RetryError {
-		_, canRetryError, err := describeCbsStorage(d, m)
+		_, canRetryError, err := describeCbsStorage(d.Id(), m.(*TencentCloudClient).commonConn)
 		if err != nil {
 			if canRetryError == false {
 				return resource.NonRetryableError(err)
@@ -340,12 +340,11 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, m interface{})
 			return err
 		}
 	}
-
 	return resourceTencentCloudCbsStorageRead(d, m)
 }
 
 func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, m interface{}) error {
-	storage, _, err := describeCbsStorage(d, m)
+	storage, _, err := describeCbsStorage(d.Id(), m.(*TencentCloudClient).commonConn)
 	if err != nil {
 		if err == errStorageNotFound {
 			d.SetId("")
