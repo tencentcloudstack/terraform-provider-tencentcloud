@@ -63,6 +63,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_security_group_rule":    resourceTencentCloudSecurityGroupRule(),
 			"tencentcloud_nat_gateway":            resourceTencentCloudNatGateway(),
 			"tencentcloud_dnat":                   resourceTencentCloudDnat(),
+			"tencentcloud_alb_server_attachment":  resourceTencentCloudAlbServerAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
