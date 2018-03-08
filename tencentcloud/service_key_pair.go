@@ -101,7 +101,7 @@ func findKeyPairById(client *client.Client, id string) (keyName string, associat
 				PublicKey             string    `json:"PublicKey"`
 				AssociatedInstanceIds []string  `json::"AssociatedInstanceIds"`
 				CreateTime            time.Time `json::"CreateTime"`
-			} `json:"KeyPair"`
+			} `json:"KeyPairSet"`
 			RequestId string
 		}
 	}
