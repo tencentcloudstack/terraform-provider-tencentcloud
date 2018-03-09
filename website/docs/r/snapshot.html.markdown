@@ -1,19 +1,19 @@
 ---
 layout: "tencentcloud"
-page_title: "tencentcloud: tencentcloud_snapshot"
+page_title: "tencentcloud: tencentcloud_cbs_snapshot"
 sidebar_current: "docs-tencentcloud-resource-snapshot"
 description: |-
   Provides a snapshot resource.
 ---
 
-# tencentcloud_snapshot
+# tencentcloud_cbs_snapshot
 
 Provides a snapshot resource.
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_snapshot" "my-snapshot" {
+resource "tencentcloud_cbs_snapshot" "my-snapshot" {
   storage_id	= "disk-4vmyor8k"
   snapshot_name = "my-snapshot"
 }
