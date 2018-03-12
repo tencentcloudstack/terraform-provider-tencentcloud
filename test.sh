@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export TF_LOG="DEBUG"
+export TF_ACC=true
 
 old_path=`pwd`
 cd tencentcloud;
@@ -12,7 +12,6 @@ cd tencentcloud;
 #go test -i; go test -test.run TestAccTencentCloudKeyPair_pubcliKey -v
 #go test -i; go test -test.run TestAccTencentCloudKeyPair_basic -v
 #go test -i; go test -test.run TestAccTencentCloudInstance_network -v
-#go test -i; go test -test.run TestAccTencentCloudInstance_PrePaid -v
 #go test -i; go test -test.run TestAccTencentCloudInstance_basic -v
 #go test -i; go test -test.run TestAccTencentCloudAvailabilityZonesDataSource_basic -v
 #go test -i; go test -test.run TestAccTencentCloudInstance_changed -v
@@ -23,6 +22,12 @@ cd tencentcloud;
 #go test -i; go test -test.run TestAccTencentCloudInstance_keypair -v
 #go test -i; go test -test.run TestAccTencentCloudInstanceTypesDataSource_basic -v
 #go test -i; go test -test.run TestAccTencentCloudImagesDataSource_filter -v
+#go test -i; go test -test.run TestAccTencentCloudVpc -v
+#go test -i; go test -test.run TestAccTencentCloudSubnet -v
+#go test -i; go test -test.run TestAccTencentCloudRouteTable -v
+#go test -i; go test -test.run TestAccTencentCloudSecurityGroup_ -v
+#go test -i; go test -test.run TestAccTencentCloudRouteEntry -v
+#go test -i; go test -test.run TestAccTencentCloudSecurityGroupRule -v
 #go test -i; go test -test.run TestAccTencentCloudNatGateway_basic -v
 #go test -i; go test -test.run TestAccTencentCloudDnat_basic -v
 go test -i; go test -test.run TestAccTencentCloudNatsDataSource -v

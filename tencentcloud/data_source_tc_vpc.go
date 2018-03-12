@@ -24,9 +24,8 @@ func dataSourceTencentCloudVpc() *schema.Resource {
 				Computed: true,
 			},
 			"cidr_block": &schema.Schema{
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validateCIDRNetworkAddress,
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 			"is_default": &schema.Schema{
 				Type:     schema.TypeBool,
@@ -65,12 +64,12 @@ func dataSourceTencentCloudVpcRead(d *schema.ResourceData, m interface{}) error 
 		Message    string `json:"message"`
 		TotalCount int    `json:"totalCount"`
 		Data       []struct {
-			UinqVpcId   string `json:"unVpcId"`
+			UnVpcId     string `json:"unVpcId"`
 			VpcName     string `json:"vpcName"`
 			CidrBlock   string `json:"cidrBlock"`
 			IsDefault   bool   `json:"isDefault"`
 			IsMulticast bool   `json:"isMulticast"`
-		}
+		} `json:"data"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {
@@ -90,7 +89,7 @@ func dataSourceTencentCloudVpcRead(d *schema.ResourceData, m interface{}) error 
 	}
 
 	vpc := jsonresp.Data[0]
-	d.SetId(vpc.UinqVpcId)
+	d.SetId(vpc.UnVpcId)
 	d.Set("name", vpc.VpcName)
 	d.Set("cidr_block", vpc.CidrBlock)
 	d.Set("is_default", vpc.IsDefault)
