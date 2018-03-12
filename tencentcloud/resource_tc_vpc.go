@@ -52,9 +52,9 @@ func resourceTencentCloudVpcCreate(d *schema.ResourceData, m interface{}) error 
 		return err
 	}
 	var jsonresp struct {
-		Code      int    `json:tag"code"`
-		Message   string `json:tag"message"`
-		UniqVpcId string `json:tag"uniqVpcId"`
+		Code      int    `json:"code"`
+		Message   string `json:"message"`
+		UniqVpcId string `json:"uniqVpcId"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {
@@ -81,14 +81,14 @@ func resourceTencentCloudVpcRead(d *schema.ResourceData, m interface{}) error {
 	}
 
 	var jsonresp struct {
-		Code       int    `json:tag"code"`
-		Message    string `json:tag"message"`
-		TotalCount int    `json:tag"totalCount"`
+		Code       int    `json:"code"`
+		Message    string `json:"message"`
+		TotalCount int    `json:"totalCount"`
 		Data       []struct {
-			VpcName     string `json:tag"vpcName"`
-			CidrBlock   string `json:tag"cidrBlock"`
-			IsDefault   bool   `json:tag"isDefault"`
-			IsMulticast bool   `json:tag"isMulticast"`
+			VpcName     string `json:"vpcName"`
+			CidrBlock   string `json:"cidrBlock"`
+			IsDefault   bool   `json:"isDefault"`
+			IsMulticast bool   `json:"isMulticast"`
 		}
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
@@ -129,8 +129,8 @@ func resourceTencentCloudVpcUpdate(d *schema.ResourceData, m interface{}) error 
 			return err
 		}
 		var jsonresp struct {
-			Code    int    `json:tag"code"`
-			Message string `json:tag"message"`
+			Code    int    `json:"code"`
+			Message string `json:"message"`
 		}
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {
@@ -156,9 +156,9 @@ func resourceTencentCloudVpcDelete(d *schema.ResourceData, m interface{}) error 
 			return resource.RetryableError(fmt.Errorf("trying again while it is deleted."))
 		}
 		var jsonresp struct {
-			Code     int    `json:tag"code"`
-			Message  string `json:tag"message"`
-			CodeDesc string `json:tag"codeDesc"`
+			Code     int    `json:"code"`
+			Message  string `json:"message"`
+			CodeDesc string `json:"codeDesc"`
 		}
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {

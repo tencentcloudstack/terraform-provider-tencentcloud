@@ -60,8 +60,8 @@ func queryInstancesStatus(client *client.Client, instanceIds []string) (instance
 	var jsonresp struct {
 		Response struct {
 			Error struct {
-				Code    string `json:tag"Code"`
-				Message string `json:tag"Message"`
+				Code    string `json:"Code"`
+				Message string `json:"Message"`
 			}
 			TotalCount        int
 			InstanceStatusSet []struct {
@@ -257,8 +257,8 @@ func runBasicActionWithRetry(client *client.Client, params map[string]string) er
 		var jsonresp struct {
 			Response struct {
 				Error struct {
-					Code    string `json:tag"Code"`
-					Message string `json:tag"Message"`
+					Code    string `json:"Code"`
+					Message string `json:"Message"`
 				}
 				RequestId string
 			}

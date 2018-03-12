@@ -37,25 +37,33 @@ func Provider() *schema.Provider {
 
 		DataSourcesMap: map[string]*schema.Resource{
 			"tencentcloud_availability_zones": dataSourceTencentCloudAvailabilityZones(),
+			"tencentcloud_eip":                dataSourceTencentCloudEip(),
 			"tencentcloud_image":              dataSourceTencentCloudSourceImages(),
 			"tencentcloud_instance_types":     dataSourceInstanceTypes(),
 			"tencentcloud_vpc":                dataSourceTencentCloudVpc(),
 			"tencentcloud_subnet":             dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":        dataSourceTencentCloudRouteTable(),
 			"tencentcloud_security_group":     dataSourceTencentCloudSecurityGroup(),
+			"tencentcloud_nats":               dataSourceTencentCloudNats(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_key_pair":               resourceTencentCloudKeyPair(),
+			"tencentcloud_eip":                    resourceTencentCloudEip(),
+			"tencentcloud_eip_association":        resourceTencentCloudEipAssociation(),
 			"tencentcloud_instance":               resourceTencentCloudInstance(),
 			"tencentcloud_cbs_storage":            resourceTencentCloudCbsStorage(),
 			"tencentcloud_cbs_storage_attachment": resourceTencentCloudCbsStorageAttachment(),
+			"tencentcloud_cbs_snapshot":           resourceTencentCloudCbsSnapshot(),
 			"tencentcloud_vpc":                    resourceTencentCloudVpc(),
 			"tencentcloud_subnet":                 resourceTencentCloudSubnet(),
 			"tencentcloud_route_table":            resourceTencentCloudRouteTable(),
 			"tencentcloud_route_entry":            resourceTencentCloudRouteEntry(),
 			"tencentcloud_security_group":         resourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_group_rule":    resourceTencentCloudSecurityGroupRule(),
+			"tencentcloud_nat_gateway":            resourceTencentCloudNatGateway(),
+			"tencentcloud_dnat":                   resourceTencentCloudDnat(),
+			"tencentcloud_alb_server_attachment":  resourceTencentCloudAlbServerAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,

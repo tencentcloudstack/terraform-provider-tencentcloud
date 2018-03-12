@@ -90,18 +90,18 @@ func findKeyPairById(client *client.Client, id string) (keyName string, associat
 	var jsonresp struct {
 		Response struct {
 			Error struct {
-				Code    string `json:tag"Code"`
-				Message string `json:tag"Message"`
+				Code    string `json:"Code"`
+				Message string `json:"Message"`
 			}
-			TotalCount int `json:tag:"TotalCount"`
+			TotalCount int `json::"TotalCount"`
 			KeyPairSet []struct {
-				KeyId                 string    `json:tag"KeyId"`
-				KeyName               string    `json:tag"KeyName"`
-				Description           string    `json:tag"Description"`
-				PublicKey             string    `json:tag"PublicKey"`
-				AssociatedInstanceIds []string  `json:tag:"AssociatedInstanceIds"`
-				CreateTime            time.Time `json:tag:"CreateTime"`
-			} `json:tag"KeyPair"`
+				KeyId                 string    `json:"KeyId"`
+				KeyName               string    `json:"KeyName"`
+				Description           string    `json:"Description"`
+				PublicKey             string    `json:"PublicKey"`
+				AssociatedInstanceIds []string  `json::"AssociatedInstanceIds"`
+				CreateTime            time.Time `json::"CreateTime"`
+			} `json:"KeyPairSet"`
 			RequestId string
 		}
 	}

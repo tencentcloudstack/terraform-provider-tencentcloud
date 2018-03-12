@@ -42,10 +42,10 @@ func resourceTencentCloudRouteTableCreate(d *schema.ResourceData, m interface{})
 		return err
 	}
 	var jsonresp struct {
-		Code           int    `json:tag"code"`
-		Message        string `json:tag"message"`
-		CodeDesc       string `json:tag"codeDesc"`
-		UnRouteTableId string `json:tag"unRouteTableId"`
+		Code           int    `json:"code"`
+		Message        string `json:"message"`
+		CodeDesc       string `json:"codeDesc"`
+		UnRouteTableId string `json:"unRouteTableId"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {
@@ -72,12 +72,12 @@ func resourceTencentCloudRouteTableRead(d *schema.ResourceData, m interface{}) e
 	}
 
 	var jsonresp struct {
-		Code     int    `json:tag"code"`
-		Message  string `json:tag"message"`
-		CodeDesc string `json:tag"codeDesc"`
+		Code     int    `json:"code"`
+		Message  string `json:"message"`
+		CodeDesc string `json:"codeDesc"`
 		Data     []struct {
-			RouteTableName string `json:tag"routeTableName"`
-		} `json:tag"data"`
+			RouteTableName string `json:"routeTableName"`
+		} `json:"data"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {
@@ -113,9 +113,9 @@ func resourceTencentCloudRouteTableUpdate(d *schema.ResourceData, m interface{})
 			return err
 		}
 		var jsonresp struct {
-			Code     int    `json:tag"code"`
-			Message  string `json:tag"message"`
-			CodeDesc string `json:tag"codeDesc"`
+			Code     int    `json:"code"`
+			Message  string `json:"message"`
+			CodeDesc string `json:"codeDesc"`
 		}
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {
@@ -149,9 +149,9 @@ func resourceTencentCloudRouteTableDelete(d *schema.ResourceData, m interface{})
 		return err
 	}
 	var jsonresp struct {
-		Code     int    `json:tag"code"`
-		Message  string `json:tag"message"`
-		CodeDesc string `json:tag"codeDesc"`
+		Code     int    `json:"code"`
+		Message  string `json:"message"`
+		CodeDesc string `json:"codeDesc"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {

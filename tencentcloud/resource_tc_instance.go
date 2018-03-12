@@ -375,8 +375,8 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 	var jsonresp struct {
 		Response struct {
 			Error struct {
-				Code    string `json:tag"Code"`
-				Message string `json:tag"Message"`
+				Code    string `json:"Code"`
+				Message string `json:"Message"`
 			}
 			InstanceIdSet []string
 			RequestId     string
@@ -426,66 +426,66 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	var jsonresp struct {
 		Response struct {
 			Error struct {
-				Code    string `json:tag"Code"`
-				Message string `json:tag"Message"`
+				Code    string `json:"Code"`
+				Message string `json:"Message"`
 			}
 			TotalCount  int
 			InstanceSet []struct {
 				Placement struct {
-					Zone      string   `json:tag"Zone"`
-					ProjectId int      `json:tag"ProjectId"`
-					HostIds   []string `json:tag"HostIds"`
-				} `json:tag"Placement"`
+					Zone      string   `json:"Zone"`
+					ProjectId int      `json:"ProjectId"`
+					HostIds   []string `json:"HostIds"`
+				} `json:"Placement"`
 
-				InstanceId   string `json:tag"InstanceId"`
-				InstanceType string `json:tag"InstanceType"`
-				CPU          int    `json:tag"CPU"`
-				Memory       int    `json:tag"Memory"`
+				InstanceId   string `json:"InstanceId"`
+				InstanceType string `json:"InstanceType"`
+				CPU          int    `json:"CPU"`
+				Memory       int    `json:"Memory"`
 
-				RestrictState      string `json:tag"RestrictState"`
-				InstanceName       string `json:tag"InstanceName"`
-				InstanceChargeType string `json:tag"InstanceChargeType"`
+				RestrictState      string `json:"RestrictState"`
+				InstanceName       string `json:"InstanceName"`
+				InstanceChargeType string `json:"InstanceChargeType"`
 
 				SystemDisk struct {
-					DiskType string `json:tag"DiskType"`
-					DiskId   string `json:tag"DiskId"`
-					DiskSize int    `json:tag"DiskSize"`
-				} `json:tag"SystemDisk"`
+					DiskType string `json:"DiskType"`
+					DiskId   string `json:"DiskId"`
+					DiskSize int    `json:"DiskSize"`
+				} `json:"SystemDisk"`
 
 				DataDisks []struct {
-					DiskType string `json:tag"DiskType"`
-					DiskId   string `json:tag"DiskId"`
-					DiskSize int    `json:tag"DiskSize"`
-				} `json:tag"DataDisks"`
+					DiskType string `json:"DiskType"`
+					DiskId   string `json:"DiskId"`
+					DiskSize int    `json:"DiskSize"`
+				} `json:"DataDisks"`
 
-				PrivateIpAddresses []string `json:tag"PrivateIpAddresses"`
-				PublicIpAddresses  []string `json:tag"PublicIpAddresses"`
+				PrivateIpAddresses []string `json:"PrivateIpAddresses"`
+				PublicIpAddresses  []string `json:"PublicIpAddresses"`
 
 				InternetAccessible struct {
-					InternetChargeType      string `json:tag"InternetChargeType"`
-					InternetMaxBandwidthOut int    `json:tag"InternetMaxBandwidthOut"`
-					PublicIpAssigned        bool   `json:tag"PublicIpAssigned"`
-				} `json:tag"InternetAccessible"`
+					InternetChargeType      string `json:"InternetChargeType"`
+					InternetMaxBandwidthOut int    `json:"InternetMaxBandwidthOut"`
+					PublicIpAssigned        bool   `json:"PublicIpAssigned"`
+				} `json:"InternetAccessible"`
 
 				VirtualPrivateCloud struct {
-					VpcId              string   `json:tag"VpcId"`
-					SubnetId           string   `json:tag"SubnetId"`
-					AsVpcGateway       bool     `json:tag"AsVpcGateway"`
-					PrivateIpAddresses []string `json:tag"PrivateIpAddresses"`
+					VpcId              string   `json:"VpcId"`
+					SubnetId           string   `json:"SubnetId"`
+					AsVpcGateway       bool     `json:"AsVpcGateway"`
+					PrivateIpAddresses []string `json:"PrivateIpAddresses"`
 				}
 
-				SecurityGroupIds []string `json:tag"SecurityGroupIds"`
+				SecurityGroupIds []string `json:"SecurityGroupIds"`
 
 				LoginSettings struct {
-					KeyIds []string `json:tag"KeyIds"`
-				} `json:tag"LoginSettings"`
+					KeyIds []string `json:"KeyIds"`
+				} `json:"LoginSettings"`
 
-				ImageId string `json:tag"ImageId"`
+				ImageId string `json:"ImageId"`
 
-				RenewFlag   string    `json:tag"RenewFlag"`
-				CreatedTime time.Time `json:tag"CreatedTime"`
-				ExpiredTime time.Time `json:tag"ExpiredTime"`
-			} `json:tag"InstanceSet"`
+				RenewFlag   string    `json:"RenewFlag"`
+				CreatedTime time.Time `json:"CreatedTime"`
+				ExpiredTime time.Time `json:"ExpiredTime"`
+			} `json:"InstanceSet"`
 			RequestId string
 		}
 	}
@@ -683,8 +683,8 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 		var jsonresp struct {
 			Response struct {
 				Error struct {
-					Code    string `json:tag"Code"`
-					Message string `json:tag"Message"`
+					Code    string `json:"Code"`
+					Message string `json:"Message"`
 				}
 				RequestId string
 			}

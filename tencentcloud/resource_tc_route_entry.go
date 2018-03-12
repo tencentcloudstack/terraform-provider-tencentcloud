@@ -93,9 +93,9 @@ func resourceTencentCloudRouteEntryCreate(d *schema.ResourceData, m interface{})
 		return err
 	}
 	var jsonresp struct {
-		Code     int    `json:tag"code"`
-		Message  string `json:tag"message"`
-		CodeDesc string `json:tag"codeDesc"`
+		Code     int    `json:"code"`
+		Message  string `json:"message"`
+		CodeDesc string `json:"codeDesc"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {
@@ -139,15 +139,15 @@ func resourceTencentCloudRouteEntryRead(d *schema.ResourceData, m interface{}) e
 		return err
 	}
 	var jsonresp struct {
-		Code     int    `json:tag"code"`
-		Message  string `json:tag"message"`
-		CodeDesc string `json:tag"codeDesc"`
+		Code     int    `json:"code"`
+		Message  string `json:"message"`
+		CodeDesc string `json:"codeDesc"`
 		Data     struct {
-			TotalNum int `json:tag"totalNum"`
+			TotalNum int `json:"totalNum"`
 			Data     []struct {
-				DestinationCidrBlock string `json:tag"destinationCidrBlock"`
-				NextType             int    `json:tag"nextType"`
-				UnNextHub            string `json:tag"unNextHub"`
+				DestinationCidrBlock string `json:"destinationCidrBlock"`
+				NextType             int    `json:"nextType"`
+				UnNextHub            string `json:"unNextHub"`
 			}
 		}
 	}
@@ -218,9 +218,9 @@ func resourceTencentCloudRouteEntryDelete(d *schema.ResourceData, m interface{})
 		return err
 	}
 	var jsonresp struct {
-		Code     int    `json:tag"code"`
-		Message  string `json:tag"message"`
-		CodeDesc string `json:tag"codeDesc"`
+		Code     int    `json:"code"`
+		Message  string `json:"message"`
+		CodeDesc string `json:"codeDesc"`
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
 	if err != nil {
