@@ -107,7 +107,7 @@ func resourceTencentCloudDnatRead(d *schema.ResourceData, meta interface{}) erro
 	if err == dnatNotFound {
 		d.SetId("")
 		return nil
-	} else {
+	} else if err != nil {
 		return err
 	}
 
