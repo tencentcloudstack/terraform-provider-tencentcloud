@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_security_group_rule"
-sidebar_current: "docs-tencentcloud-resource-security-group-rule"
+sidebar_current: "docs-tencentcloud-resource-vpc-security-group-rule"
 description: |-
   Provides an security group rule resource.
 ---

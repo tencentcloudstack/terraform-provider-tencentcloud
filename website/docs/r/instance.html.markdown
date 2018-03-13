@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "tencentcloud: tencentcloud_instance"
-sidebar_current: "docs-tencentcloud-resource-instance"
+sidebar_current: "docs-tencentcloud-resource-cvm-instance"
 description: |-
   Provides a CVM instance resource.
 ---

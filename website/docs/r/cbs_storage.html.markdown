@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "tencentcloud: tencentcloud_cbs_storage"
-sidebar_current: "docs-tencentcloud-resource-cbs-storage"
+sidebar_current: "docs-tencentcloud-resource-cbs-storage-x"
 description: |-
   Provides a CBS resource.
 ---

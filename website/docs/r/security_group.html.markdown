@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_security_group"
-sidebar_current: "docs-tencentcloud-resource-security-group"
+sidebar_current: "docs-tencentcloud-resource-vpc-security-group-x"
 description: |-
   Provides a security group resource.
 ---
