@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -15,39 +16,37 @@ func TestAccTencentCloudImagesDataSource_filter(t *testing.T) {
 				Config: testAccTencentCloudImagesDataSourceConfigFilter,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.public_image"),
-					resource.TestCheckResourceAttr("data.tencentcloud_image.public_image", "image_id", "img-dkwyg6sr"),
+					resource.TestMatchResourceAttr("data.tencentcloud_image.public_image", "image_id", regexp.MustCompile("^img-")),
 				),
 			},
 			{
 				Config: testAccTencentCloudImagesDataSourceConfigFilterWithOsName,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.public_image"),
-					resource.TestCheckResourceAttr("data.tencentcloud_image.public_image", "image_id", "img-6mre94jv"),
+					resource.TestMatchResourceAttr("data.tencentcloud_image.public_image", "image_id", regexp.MustCompile("^img-")),
 				),
 			},
 			{
 				Config: testAccTencentCloudImagesDataSourceConfigFilterWithImageNameRegex,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.public_image"),
-					resource.TestCheckResourceAttr("data.tencentcloud_image.public_image", "image_id", "img-6ns5om13"),
+					resource.TestMatchResourceAttr("data.tencentcloud_image.public_image", "image_id", regexp.MustCompile("^img-")),
 				),
 			},
 			//// NOTE this test case is dependent in the account which already created some private images
-			//// It's commented by default, you should change to your real value of `image_id` if you want to run it.
 			//{
 			//	Config: testAccTencentCloudImagesDataSourceConfigFilterWithPrivateImage,
 			//	Check: resource.ComposeTestCheckFunc(
 			//		testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.private_image"),
-			//		resource.TestCheckResourceAttr("data.tencentcloud_image.private_image", "image_id", "img-1yl5l5mz"),
+			//		resource.TestMatchResourceAttr("data.tencentcloud_image.private_image", "image_id", regexp.MustCompile("^img-")),
 			//	),
 			//},
 			//// NOTE this test case is dependent in the account which already created some private images
-			//// It's commented by default, you should change to your real value of `image_id` if you want to run it.
 			//{
 			//	Config: testAccTencentCloudImagesDataSourceConfigFilterWithShareImageAndOsName,
 			//	Check: resource.ComposeTestCheckFunc(
 			//		testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.private_image"),
-			//		resource.TestCheckResourceAttr("data.tencentcloud_image.private_image", "image_id", "img-dfnohm79"),
+			//		resource.TestMatchResourceAttr("data.tencentcloud_image.private_image", "image_id", regexp.MustCompile("^img-")),
 			//	),
 			//},
 		},
