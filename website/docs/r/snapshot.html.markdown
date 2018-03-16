@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "tencentcloud: tencentcloud_cbs_snapshot"
-sidebar_current: "docs-tencentcloud-resource-snapshot"
+sidebar_current: "docs-tencentcloud-resource-cbs-snapshot"
 description: |-
   Provides a snapshot resource.
 ---

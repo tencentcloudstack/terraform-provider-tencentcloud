@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_route_entry"
-sidebar_current: "docs-tencentcloud-resource-route-entry"
+sidebar_current: "docs-tencentcloud-resource-vpc-route-entry"
 description: |-
   Provides a resource to create a routing entry in a VPC routing table.
 ---

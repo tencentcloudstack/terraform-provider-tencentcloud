@@ -14,22 +14,19 @@
                 <a href="#">Data Sources</a>
                     <ul class="nav nav-visible">
                         <li<%= sidebar_current("docs-tencentcloud-datasource-availability-zones") %>>
-                            <a href="/docs/providers/tencentcloud/d/availability_zones.html">tencentcloud_availability_zones</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-image") %>>
-                        <a href="/docs/providers/tencentcloud/d/image.html">tencentcloud_image</a>
+                        <a href="/docs/providers/tencentcloud/d/availability_zones.html">tencentcloud_availability_zones</a>
                         </li>
                         <li<%= sidebar_current("docs-tencentcloud-datasource-eip") %>>
                         <a href="/docs/providers/tencentcloud/d/eip.html">tencentcloud_eip</a>
                         </li>
+                        <li<%= sidebar_current("docs-tencentcloud-datasource-image") %>>
+                        <a href="/docs/providers/tencentcloud/d/image.html">tencentcloud_image</a>
+                        </li>
                         <li<%= sidebar_current("docs-tencentcloud-datasource-instance-types") %>>
                         <a href="/docs/providers/tencentcloud/d/instance_types.html">tencentcloud_instance_types</a>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-vpc") %>>
-                        <a href="/docs/providers/tencentcloud/d/vpc.html">tencentcloud_vpc</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-subnet") %>>
-                        <a href="/docs/providers/tencentcloud/d/subnet.html">tencentcloud_subnet</a>
+                        <li<%= sidebar_current("docs-tencentcloud-datasource-nats") %>>
+                        <a href="/docs/providers/tencentcloud/d/nats.html">tencentcloud_nats</a>
                         </li>
                         <li<%= sidebar_current("docs-tencentcloud-datasource-route-table") %>>
                         <a href="/docs/providers/tencentcloud/d/route_table.html">tencentcloud_route_table</a>
@@ -37,59 +34,83 @@
                         <li<%= sidebar_current("docs-tencentcloud-datasource-security-group") %>>
                         <a href="/docs/providers/tencentcloud/d/security_group.html">tencentcloud_security_group</a>
                         </li>
-                    </ul>
-                </li>
-
-                <li<%= sidebar_current("docs-tencentcloud-resource-(instance|key-pair|eip)") %>>
-                    <a href="#">CVM Resources</a>
-                    <ul class="nav nav-visible">
-                        <li<%= sidebar_current("docs-tencentcloud-resource-instance") %>>
-                        <a href="/docs/providers/tencentcloud/r/instance.html">tencentcloud_instance</a>
+                        <li<%= sidebar_current("docs-tencentcloud-datasource-subnet") %>>
+                        <a href="/docs/providers/tencentcloud/d/subnet.html">tencentcloud_subnet</a>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-key-pair") %>>
-                        <a href="/docs/providers/tencentcloud/r/key_pair.html">tencentcloud_key_pair</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-eip") %>>
-                        <a href="/docs/providers/tencentcloud/r/eip.html">tencentcloud_eip</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-eip-association") %>>
-                        <a href="/docs/providers/tencentcloud/r/eip_association.html">tencentcloud_eip_association</a>
+                        <li<%= sidebar_current("docs-tencentcloud-datasource-vpc") %>>
+                        <a href="/docs/providers/tencentcloud/d/vpc.html">tencentcloud_vpc</a>
                         </li>
                     </ul>
                 </li>
 
-                <li<%= sidebar_current("docs-tencentcloud-resource-tencentcloud-(cbs-storage|cbs-storage-attachment)") %>>
+                <li<%= sidebar_current("docs-tencentcloud-resource-cbs") %>>
                     <a href="#">CBS Resources</a>
                     <ul class="nav nav-visible">
-                      <li<%= sidebar_current("docs-tencentcloud-resource-tencentcloud-cbs-storage") %>>
-                        <a href="/docs/providers/tencentcloud/r/cbs_storage.html">tencentcloud_cbs_storage</a>
+                      <li<%= sidebar_current("docs-tencentcloud-resource-cbs-storage-x") %>>
+                      <a href="/docs/providers/tencentcloud/r/cbs_storage.html">tencentcloud_cbs_storage</a>
                       </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-tencentcloud-cbs-storage-attachment") %>>
-                        <a href="/docs/providers/tencentcloud/r/cbs_storage_attachment.html">tencentcloud_cbs_storage_attachment</a>
+                      <li<%= sidebar_current("docs-tencentcloud-resource-cbs-storage-attachment") %>>
+                      <a href="/docs/providers/tencentcloud/r/cbs_storage_attachment.html">tencentcloud_cbs_storage_attachment</a>
+                      </li>
+                      <li<%= sidebar_current("docs-tencentcloud-resource-cbs-snapshot") %>>
+                      <a href="/docs/providers/tencentcloud/r/snapshot.html">tencentcloud_cbs_snapshot</a>
+                      </li>
+                    </ul>
+                </li>
+
+                <li<%= sidebar_current("docs-tencentcloud-resource-cvm") %>>
+                    <a href="#">CVM Resources</a>
+                    <ul class="nav nav-visible">
+                        <li<%= sidebar_current("docs-tencentcloud-resource-cvm-eip-x") %>>
+                        <a href="/docs/providers/tencentcloud/r/eip.html">tencentcloud_eip</a>
+                        </li>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-cvm-eip-association") %>>
+                        <a href="/docs/providers/tencentcloud/r/eip_association.html">tencentcloud_eip_association</a>
+                        </li>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-cvm-instance") %>>
+                        <a href="/docs/providers/tencentcloud/r/instance.html">tencentcloud_instance</a>
+                        </li>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-cvm-key-pair") %>>
+                        <a href="/docs/providers/tencentcloud/r/key_pair.html">tencentcloud_key_pair</a>
                         </li>
                     </ul>
                 </li>
 
-                <li<%= sidebar_current("docs-tencentcloud-resource-(vpc|subnet|route-table|route-entry|security-group|security-group-rule)") %>>
+                <li<%= sidebar_current("docs-tencentcloud-resource-lb") %>>
+                    <a href="#">LB Resources</a>
+                    <ul class="nav nav-visible">
+                      <li<%= sidebar_current("docs-tencentcloud-resource-lb-server-attachment") %>>
+                      <a href="/docs/providers/tencentcloud/r/alb_server_attachment.html">tencentcloud_alb_server_attachment</a>
+                      </li>
+                    </ul>
+                </li>
+
+                <li<%= sidebar_current("docs-tencentcloud-resource-vpc") %>>
                     <a href="#">VPC Resources</a>
                     <ul class="nav nav-visible">
-                        <li<%= sidebar_current("docs-tencentcloud-resource-tencentcloud-vpc") %>>
-                            <a href="/docs/providers/tencentcloud/r/vpc.html">tencentcloud_vpc</a>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-vpc-dnat") %>>
+                        <a href="/docs/providers/tencentcloud/r/dnat.html">tencentcloud_dnat</a>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-tencentcloud-vpc") %>>
-                        <a href="/docs/providers/tencentcloud/r/subnet.html">tencentcloud_subnet</a>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-vpc-nat-gateway") %>>
+                        <a href="/docs/providers/tencentcloud/r/nat_gateway.html">tencentcloud_nat_gateway</a>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-tencentcloud-vpc") %>>
-                        <a href="/docs/providers/tencentcloud/r/route_table.html">tencentcloud_route_table</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-tencentcloud-vpc") %>>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-vpc-route-entry") %>>
                         <a href="/docs/providers/tencentcloud/r/route_entry.html">tencentcloud_route_entry</a>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-tencentcloud-vpc") %>>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-vpc-route-table") %>>
+                        <a href="/docs/providers/tencentcloud/r/route_table.html">tencentcloud_route_table</a>
+                        </li>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-vpc-security-group-x") %>>
                         <a href="/docs/providers/tencentcloud/r/security_group.html">tencentcloud_security_group</a>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-security-group-rule") %>>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-vpc-security-group-rule") %>>
                         <a href="/docs/providers/tencentcloud/r/security_group_rule.html">tencentcloud_security_group_rule</a>
+                        </li>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-vpc-subnet") %>>
+                        <a href="/docs/providers/tencentcloud/r/subnet.html">tencentcloud_subnet</a>
+                        </li>
+                        <li<%= sidebar_current("docs-tencentcloud-resource-vpc-x") %>>
+                        <a href="/docs/providers/tencentcloud/r/vpc.html">tencentcloud_vpc</a>
                         </li>
                     </ul>
                 </li>

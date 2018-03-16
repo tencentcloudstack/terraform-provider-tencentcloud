@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_subnet"
-sidebar_current: "docs-tencentcloud-resource-subnet"
+sidebar_current: "docs-tencentcloud-resource-vpc-subnet"
 description: |-
   Provides an Subnet resource.
 ---

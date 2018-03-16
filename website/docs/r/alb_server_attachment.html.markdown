@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "tencentcloud: tencentcloud_alb_server_attachment"
-sidebar_current: "docs-tencentcloud-resource-alb-server-attachment"
+sidebar_current: "docs-tencentcloud-resource-lb-server-attachment"
 description: |-
   Provides an tencentcloud application load balancer servers attachment as a resource, to attach and detach instances from load balancer.
 ---
@@ -10,9 +10,7 @@ description: |-
 
 Provides Load Balancer server attachment resource.
 
-** Note **
-
-- Currently only support existing `loadbalancer_id` `listener_id` `location_id` and Application layer 4/7 load balancer
+~> **NOTE:** Currently only support existing `loadbalancer_id` `listener_id` `location_id` and Application layer 7 load balancer
 
 ## Example Usage
 
