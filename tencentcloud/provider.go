@@ -45,6 +45,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_route_table":        dataSourceTencentCloudRouteTable(),
 			"tencentcloud_security_group":     dataSourceTencentCloudSecurityGroup(),
 			"tencentcloud_nats":               dataSourceTencentCloudNats(),
+			"tencentcloud_container_clusters":  dataSourceTencentCloudContainerClusters(),
+			"tencentcloud_container_cluster_instances":  dataSourceTencentCloudContainerClusterInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -64,6 +66,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_nat_gateway":            resourceTencentCloudNatGateway(),
 			"tencentcloud_dnat":                   resourceTencentCloudDnat(),
 			"tencentcloud_alb_server_attachment":  resourceTencentCloudAlbServerAttachment(),
+			"tencentcloud_container_cluster":      resourceTencentCloudContainerCluster(),
+			"tencentcloud_container_cluster_instances":  resourceTencentCloudContainerClusterInstances(),
 		},
 
 		ConfigureFunc: providerConfigure,

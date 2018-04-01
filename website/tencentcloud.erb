@@ -16,6 +16,12 @@
                         <li<%= sidebar_current("docs-tencentcloud-datasource-availability-zones") %>>
                         <a href="/docs/providers/tencentcloud/d/availability_zones.html">tencentcloud_availability_zones</a>
                         </li>
+                        <li<%= sidebar_current("docs-tencentcloud-datasource-container-clusters-x") %>>
+                        <a href="/docs/providers/tencentcloud/d/container_clusters.html">tencentcloud_container_clusters</a>
+                        </li>
+                        <li<%= sidebar_current("docs-tencentcloud-container-cluster-instances") %>>
+                        <a href="/docs/providers/tencentcloud/d/container_cluster_instances.html">tencentcloud_container_cluster_instances</a>
+                        </li>
                         <li<%= sidebar_current("docs-tencentcloud-datasource-eip") %>>
                         <a href="/docs/providers/tencentcloud/d/eip.html">tencentcloud_eip</a>
                         </li>
@@ -40,6 +46,7 @@
                         <li<%= sidebar_current("docs-tencentcloud-datasource-vpc") %>>
                         <a href="/docs/providers/tencentcloud/d/vpc.html">tencentcloud_vpc</a>
                         </li>
+                     
                     </ul>
                 </li>
 
@@ -58,6 +65,19 @@
                     </ul>
                 </li>
 
+                <li<%= sidebar_current("docs-tencentcloud-resource-container-cluster") %>>
+                    <a href="#">Container Cluster Resources</a>
+                    <ul class="nav nav-visible">
+                      <li<%= sidebar_current("docs-tencentcloud-container-cluster-x") %>>
+                      <a href="/docs/providers/tencentcloud/r/container_cluster.html">tencentcloud_container_cluster</a>
+                      </li>
+                      <li<%= sidebar_current("docs-tencentcloud-container-cluster-instance") %>>
+                      <a href="/docs/providers/tencentcloud/r/container_cluster_instance.html">tencentcloud_container_cluster_instance</a>
+                      </li>
+                     
+                    </ul>
+                </li>
+                                
                 <li<%= sidebar_current("docs-tencentcloud-resource-cvm") %>>
                     <a href="#">CVM Resources</a>
                     <ul class="nav nav-visible">
@@ -114,7 +134,7 @@
                         </li>
                     </ul>
                 </li>
-
+    
             </ul>
         </div>
     <% end %>
