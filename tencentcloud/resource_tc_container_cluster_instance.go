@@ -2,25 +2,25 @@ package tencentcloud
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 	ccs "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned"
 )
 
 const (
-	INSTANCE_NOT_FOUND_CODE = -1 //TODO
+	INSTANCE_NOT_FOUND_CODE = -1
 )
 
-func resourceTencentCloudContainerClusterInstances() *schema.Resource {
+func resourceTencentCloudContainerClusterInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudContainerClusterInstancesCreate,
 		Read:   resourceTencentCloudContainerClusterInstancesRead,
 		Update: resourceTencentCloudContainerClusterInstancesUpdate,
 		Delete: resourceTencentCloudContainerClusterInstancesDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:     schema.TypeString,
@@ -147,9 +147,11 @@ func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m
 		return fmt.Errorf("data_source_tencent_cloud_container_cluster_instances got error, code %v , message %v", *response.Code, *response.CodeDesc)
 	}
 
-	nodes := make([]map[string]interface{}, 0)
+	found := false
 	for _, node := range response.Data.Nodes {
 		if *node.InstanceId == instanceId {
+			found = true
+
 			if node.AbnormalReason != nil {
 				d.Set("abnormal_reason", *node.AbnormalReason)
 			}
@@ -173,8 +175,8 @@ func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m
 			}
 		}
 	}
-	if len(nodes) == 0 {
-		//resource not exist
+
+	if found == false {
 		d.SetId("")
 	}
 
@@ -185,13 +187,14 @@ func resourceTencentCloudContainerClusterInstancesUpdate(d *schema.ResourceData,
 	return fmt.Errorf("the container cluster instances resource doesn't support update")
 }
 
-//CreateClusterNode  one node per time
+// CreateClusterNode one node per time
 func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*TencentCloudClient).ccsConn
 
 	createInstanceReq := ccs.NewAddClusterInstancesRequest()
 
-	createInstanceReq.ClusterId = common.StringPtr(d.Get("cluster_id").(string))
+	clusterId := d.Get("cluster_id").(string)
+	createInstanceReq.ClusterId = &clusterId
 	createInstanceReq.GoodsNum = common.IntPtr(1)
 	if cpuRaw, ok := d.GetOkExists("cpu"); ok {
 		cpu := cpuRaw.(int)
@@ -327,13 +330,44 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 	}
 
 	nodeId := response.Data.InstanceIds[0]
-
 	d.SetId(*nodeId)
 
-	return nil
+	if err := waitClusterInstanceRunning(client, clusterId, *nodeId); err != nil {
+		return fmt.Errorf("Cluster Instance %s is abnormal, create fail", nodeId)
+	}
+
+	return resourceTencentCloudContainerClusterInstancesRead(d, m)
 }
 
-//Delete node
+func waitClusterInstanceRunning(conn *ccs.Client, clusterId, nodeId string) error {
+	req := ccs.NewDescribeClusterInstancesRequest()
+	req.ClusterId = &clusterId
+	err := resource.Retry(15*time.Minute, func() *resource.RetryError {
+		resp, err := conn.DescribeClusterInstances(req)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		if _, ok := err.(*common.APIError); ok {
+			return resource.NonRetryableError(err)
+		}
+		for _, node := range resp.Data.Nodes {
+			if *node.InstanceId != nodeId {
+				continue
+			}
+			if *node.IsNormal == 0 {
+				return resource.NonRetryableError(fmt.Errorf("Instance status = 0"))
+			}
+			if *node.IsNormal == 1 {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("Instance status = %s", *node.IsNormal))
+		}
+		// not found
+		return nil
+	})
+	return err
+}
+
 func resourceTencentCloudContainerClusterInstancesDelete(d *schema.ResourceData, m interface{}) error {
 	nodeId := d.Id()
 
@@ -346,7 +380,7 @@ func resourceTencentCloudContainerClusterInstancesDelete(d *schema.ResourceData,
 	if err != nil {
 		return err
 	}
-	//node is no longer existed
+	// node no longer exists
 	if len(describeClusterInstancesRsp.Data.Nodes) == 0 {
 		return nil
 	}
@@ -359,7 +393,7 @@ func resourceTencentCloudContainerClusterInstancesDelete(d *schema.ResourceData,
 		}
 	}
 
-	//node is no longer existed
+	// node no longer exists
 	if nodeFound == false {
 		return nil
 	}

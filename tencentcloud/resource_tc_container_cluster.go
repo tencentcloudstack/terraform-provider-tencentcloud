@@ -2,12 +2,12 @@ package tencentcloud
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 	ccs "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned"
-	"time"
 )
 
 const (
@@ -21,9 +21,7 @@ func resourceTencentCloudContainerCluster() *schema.Resource {
 		Read:   resourceTencentCloudContainerClusterRead,
 		Update: resourceTencentCloudContainerClusterUpdate,
 		Delete: resourceTencentCloudContainerClusterDelete,
-		//Importer: &schema.ResourceImporter{  	//理由：   import需要read中将现网参数（若与本地不一致）同步到入参中，可能引起update函数调用，但update函数调用一直会失败
-		//	State: schema.ImportStatePassthrough,
-		//},
+
 		Schema: map[string]*schema.Schema{
 			"cluster_name": &schema.Schema{
 				Type:     schema.TypeString,
@@ -157,7 +155,6 @@ func resourceTencentCloudContainerClusterUpdate(d *schema.ResourceData, m interf
 	return fmt.Errorf("the container cluster resource doesn't support update")
 }
 
-//CreateCluster
 func resourceTencentCloudContainerClusterCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*TencentCloudClient).ccsConn
 
@@ -361,7 +358,7 @@ func waitClusterStatusReady(client *ccs.Client, id string) error {
 	describeClusterReq := ccs.NewDescribeClusterRequest()
 	describeClusterReq.ClusterIds = []*string{&id}
 
-	err := resource.Retry(15 * time.Minute, func() *resource.RetryError {
+	err := resource.Retry(15*time.Minute, func() *resource.RetryError {
 		response, err := client.DescribeCluster(describeClusterReq)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -380,12 +377,11 @@ func waitClusterStatusReady(client *ccs.Client, id string) error {
 	return err
 }
 
-//Read Cluster Info
-//Read Cluster Security Info
+// Read Cluster Info
+// Read Cluster Security Info
 func resourceTencentCloudContainerClusterRead(d *schema.ResourceData, m interface{}) error {
 	clusterInstanceId := d.Id()
 
-	//返回集群信息和节点信息
 	client := m.(*TencentCloudClient).ccsConn
 
 	describeClusterReq := ccs.NewDescribeClusterRequest()
@@ -443,7 +439,6 @@ func resourceTencentCloudContainerClusterRead(d *schema.ResourceData, m interfac
 	return nil
 }
 
-//Delete Cluster
 func resourceTencentCloudContainerClusterDelete(d *schema.ResourceData, m interface{}) error {
 	clusterInstanceId := d.Id()
 	client := m.(*TencentCloudClient).ccsConn
@@ -466,7 +461,7 @@ func resourceTencentCloudContainerClusterDelete(d *schema.ResourceData, m interf
 		return fmt.Errorf("tencentcloud_container_cluster get code error")
 	}
 
-	//resource not existed, return done
+	// resource not existed, return done
 	if *response.Code == CLUSTER_NOT_FOUND_CODE {
 		return nil
 	}
