@@ -1,35 +1,78 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
+	"time"
+
 	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/terraform"
+	"github.com/zqfan/tencentcloud-sdk-go/common"
+	ccs "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned"
 )
 
-func TestAccTencentCloudContainerClusters(t *testing.T) {
+func TestAccTencentCloudContainerCluster_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudContainerClustersConfig_basic,
+				Config: testAccTencentCloudContainerClusterConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_container_cluster.foo"),
+					checkContainerClusterInstancesAllNormal("tencentcloud_container_cluster.foo"),
 				),
 			},
 		},
 	})
 }
 
-const testAccTencentCloudContainerClustersConfig_basic = `
+// For ordinary usage, it doesn't require all nodes in a cluster to be in normal state.
+// But for acceptance test, it only has a single node and should be in normal state otherwise
+// will cause resource leak such as vpc, subnet and vm resources, these leakage will block
+// subsequential acceptance test, hence here we need to do such check to ensure cluster node
+// is in an expected state.
+func checkContainerClusterInstancesAllNormal(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("Not found: %s", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("Container cluster ID is not set")
+		}
+
+		conn := testAccProvider.Meta().(*TencentCloudClient).ccsConn
+		req := ccs.NewDescribeClusterRequest()
+		req.ClusterIds = []*string{&rs.Primary.ID}
+		// For now, cluster instance will be reinstalled, hence it needs to wait more time
+		err := resource.Retry(20*time.Minute, func() *resource.RetryError {
+			resp, err := conn.DescribeCluster(req)
+			if err != nil {
+				return resource.RetryableError(err)
+			}
+			if _, ok := err.(*common.APIError); ok {
+				return resource.NonRetryableError(err)
+			}
+			if *resp.Data.Clusters[0].NodeStatus == "AllNormal" {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("Cluster node status is %s", *resp.Data.Clusters[0].NodeStatus))
+		})
+		return err
+	}
+}
+
+const testAccTencentCloudContainerClusterConfig_basic = `
 resource "tencentcloud_vpc" "my_vpc" {
   cidr_block = "10.6.0.0/16"
-  name       = "tf_vpc_test"
+  name       = "terraform_vpc_test"
 }
 
 resource "tencentcloud_subnet" "my_subnet" {
   vpc_id = "${tencentcloud_vpc.my_vpc.id}"
   availability_zone = "ap-guangzhou-3"
-  name              = "tf_test_subnet"
+  name              = "terraform_test_subnet"
   cidr_block        = "10.6.0.0/24"
 }
 
@@ -56,8 +99,7 @@ resource "tencentcloud_container_cluster" "foo" {
  instance_type = "S2.SMALL1"
  mount_target = ""
  docker_graph_path = ""
- instance_name = "bar-vm"
+ instance_name = "terraform-container-acc-test-vm"
  cluster_version = "1.7.8"
 }
 `
-

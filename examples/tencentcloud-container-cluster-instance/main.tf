@@ -36,3 +36,23 @@ resource "tencentcloud_container_cluster" "foo" {
   instance_name     = "terraform-container-acc-test-vm"
   cluster_version   = "1.7.8"
 }
+
+resource "tencentcloud_container_cluster_instance" "bar_instance" {
+  cpu               = 1
+  mem               = 1
+  bandwidth         = 1
+  bandwidth_type    = "PayByHour"
+  require_wan_ip    = 1
+  is_vpc_gateway    = 0
+  storage_size      = 10
+  root_size         = 50
+  password          = "Admin12345678"
+  cvm_type          = "PayByHour"
+  period            = 1
+  zone_id           = 100003
+  instance_type     = "CVM.S2"
+  mount_target      = "/data"
+  docker_graph_path = ""
+  subnet_id         = "${tencentcloud_subnet.my_subnet.id}"
+  cluster_id        = "${tencentcloud_container_cluster.foo.id}"
+}

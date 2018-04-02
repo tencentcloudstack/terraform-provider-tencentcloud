@@ -15,7 +15,7 @@ Provides a Container Cluster Instance resource.
 Basic Usage
 
 ```hcl
-resource "tencentcloud_container_cluster_instances" "bar_instance" {
+resource "tencentcloud_container_cluster_instance" "bar_instance" {
  cpu    = 1
  mem    = 1
  bandwidth  = 1
@@ -40,25 +40,25 @@ resource "tencentcloud_container_cluster_instances" "bar_instance" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) The id of the cluster. 
-* `cpu` - (Required) The cpu of the node. 
-* `mem` - (Required) The memory of the node. 
-* `bandwidth` - (Required) The network bandwidth of the node. 
-* `bandwidth_type` - (Required) The network type of the node. 
-* `require_wan_ip` - (Optional) Indicate whether wan ip is needed. 
-* `subnet_id` - (Required) The subnet id which the node stays in. 
-* `is_vpc_gateway` - (Required) Describe whether the node enable the gateway capability. 
-* `storage_size` - (Required) The size of the data volumn. 
-* `root_size` - (Required) The size of the root volumn. 
-* `vpc_id` - (Required) Specify vpc which the node(s) stay in. 
-* `cvm_type` - (Optional) The type of node needed by cvm. 
-* `period` - (Optional) The puchase duration of the node needed by cvm. 
-* `zone_id` - (Required) The zone which the node stays in. 
-* `instance_type` - (Optional) The instance type of the node needed by cvm. 
-* `sg_id` - (Optional) The safe-group id. 
-* `mount_target` - (Optional) The path which volumn is going to be mounted. 
-* `docker_graph_path` - (Optional) The docker graph path is going to mounted.  
-* `password` - (Optional) The password of each node. 
+* `cluster_id` - (Required) The id of the cluster.
+* `cpu` - (Required) The cpu of the node.
+* `mem` - (Required) The memory of the node.
+* `bandwidth` - (Required) The network bandwidth of the node.
+* `bandwidth_type` - (Required) The network type of the node.
+* `require_wan_ip` - (Optional) Indicate whether wan ip is needed.
+* `subnet_id` - (Required) The subnet id which the node stays in.
+* `is_vpc_gateway` - (Required) Describe whether the node enable the gateway capability.
+* `storage_size` - (Required) The size of the data volumn.
+* `root_size` - (Required) The size of the root volumn.
+* `vpc_id` - (Required) Specify vpc which the node(s) stay in.
+* `cvm_type` - (Optional) The type of node needed by cvm.
+* `period` - (Optional) The puchase duration of the node needed by cvm.
+* `zone_id` - (Required) The zone which the node stays in.
+* `instance_type` - (Optional) The instance type of the node needed by cvm.
+* `sg_id` - (Optional) The safe-group id.
+* `mount_target` - (Optional) The path which volumn is going to be mounted.
+* `docker_graph_path` - (Optional) The docker graph path is going to mounted.
+* `password` - (Optional) The password of each node.
 * `key_id` - (Optional) The key_id of each node(if using key pair to access).
 
 ## Attributes Reference

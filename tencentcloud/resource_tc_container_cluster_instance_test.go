@@ -2,34 +2,36 @@ package tencentcloud
 
 import (
 	"testing"
+
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccTencentCloudContainerClusterInstances(t *testing.T) {
+func TestAccTencentCloudContainerClusterInstance_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudContainerClusterInstancesConfig_basic,
+				Config: testAccTencentCloudContainerClusterInstanceConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_container_cluster_instances.bar_instance"),
+					testAccCheckTencentCloudDataSourceID("tencentcloud_container_cluster_instance.bar_instance"),
+					checkContainerClusterInstancesAllNormal("tencentcloud_container_cluster.foo"),
 				),
 			},
 		},
 	})
 }
 
-const testAccTencentCloudContainerClusterInstancesConfig_basic = `
+const testAccTencentCloudContainerClusterInstanceConfig_basic = `
 resource "tencentcloud_vpc" "my_vpc" {
   cidr_block = "10.6.0.0/16"
-  name       = "tf_vpc_test"
+  name       = "terraform_vpc_test"
 }
 
 resource "tencentcloud_subnet" "my_subnet" {
   vpc_id = "${tencentcloud_vpc.my_vpc.id}"
   availability_zone = "ap-guangzhou-3"
-  name              = "tf_test_subnet"
+  name              = "terraform_test_subnet"
   cidr_block        = "10.6.0.0/24"
 }
 
@@ -56,11 +58,11 @@ resource "tencentcloud_container_cluster" "foo" {
  instance_type = "S2.SMALL1"
  mount_target = ""
  docker_graph_path = ""
- instance_name = "bar-vm"
+ instance_name = "terraform-container-acc-test-vm"
  cluster_version = "1.7.8"
 }
 
-resource "tencentcloud_container_cluster_instances" "bar_instance" {
+resource "tencentcloud_container_cluster_instance" "bar_instance" {
  cpu    = 1
  mem    = 1
  bandwidth  = 1
@@ -70,7 +72,7 @@ resource "tencentcloud_container_cluster_instances" "bar_instance" {
  storage_size = 10
  root_size  = 50
  password  = "Admin12345678"
- cvm_type  = "PayByMonth"
+ cvm_type  = "PayByHour"
  period   = 1
  zone_id   = 100003
  instance_type = "CVM.S2"
@@ -80,4 +82,3 @@ resource "tencentcloud_container_cluster_instances" "bar_instance" {
  cluster_id = "${tencentcloud_container_cluster.foo.id}"
 }
 `
-
