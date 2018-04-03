@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_eip"
-sidebar_current: "docs-tencentcloud-resource-eip"
+sidebar_current: "docs-tencentcloud-resource-cvm-eip-x"
 description: |-
   Provides a TencentCloud EIP resource.
 ---

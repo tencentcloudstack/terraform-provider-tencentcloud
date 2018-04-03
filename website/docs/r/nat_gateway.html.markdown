@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_nat_gateway"
-sidebar_current: "docs-tencentcloud-resource-nat-gateway"
+sidebar_current: "docs-tencentcloud-resource-vpc-nat-gateway"
 description: |-
   Provides a resource to create a VPC NAT Gateway.
 ---

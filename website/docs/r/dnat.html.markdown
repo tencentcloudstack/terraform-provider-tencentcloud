@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dnat"
-sidebar_current: "docs-tencentcloud-resource-dnat"
+sidebar_current: "docs-tencentcloud-resource-vpc-dnat"
 description: |-
   Provides a port mapping/forwarding of destination network address translation (DNAT/DNAPT) resource.
 ---

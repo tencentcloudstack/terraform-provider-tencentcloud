@@ -13,4 +13,6 @@ go test -v -run TestAccDataSourceTencentCloudRouteTable_basic
 go test -v -run TestAccDataSourceTencentCloudSecurityGroup_basic
 go test -v -run TestAccDataSourceTencentCloudSubnet_basic
 go test -v -run TestAccDataSourceTencentCloudVpc_basic
+go test -v -run TestAccTencentCloudDataSourceContainerClusterInstances
+go test -v -run TestAccTencentCloudDataSourceContainerClusters
 cd $old_path

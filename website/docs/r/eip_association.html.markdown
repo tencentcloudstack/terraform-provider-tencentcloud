@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_eip_association"
-sidebar_current: "docs-tencentcloud-resource-eip-association"
+sidebar_current: "docs-tencentcloud-resource-cvm-eip-association"
 description: |-
   Provides a TencentCloud EIP association.
 ---

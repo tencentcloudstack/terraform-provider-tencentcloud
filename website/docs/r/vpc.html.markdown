@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vpc"
-sidebar_current: "docs-tencentcloud-resource-vpc"
+sidebar_current: "docs-tencentcloud-resource-vpc-x"
 description: |-
   Provides an VPC resource.
 ---

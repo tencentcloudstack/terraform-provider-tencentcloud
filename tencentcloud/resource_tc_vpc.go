@@ -164,7 +164,7 @@ func resourceTencentCloudVpcDelete(d *schema.ResourceData, m interface{}) error 
 		if err != nil {
 			return resource.NonRetryableError(err)
 		}
-		if jsonresp.CodeDesc == "InvalidVpc.CannotDelete" {
+		if jsonresp.CodeDesc == "InvalidVpc.CannotDelete" || jsonresp.CodeDesc == "InvalidSubnet.CannotDelete" {
 			return resource.RetryableError(fmt.Errorf(jsonresp.Message))
 		} else if jsonresp.CodeDesc == "InvalidVpc.NotFound" {
 			log.Printf("[DEBUG] Delete vpc faid failed, CodeDesc:InvalidVpc.NotFound, vpcId:%s", params["vpcId"])

@@ -8,7 +8,6 @@ dev_watch.sh
 export_env.sh
 .idea
 *.log
-vendor/*/
 .terraform/
 terraform-provider-tencentcloud
 terraform-provider-qcloud

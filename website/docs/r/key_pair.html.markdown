@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_key_pair"
-sidebar_current: "docs-tencentcloud-resource-key-pair"
+sidebar_current: "docs-tencentcloud-resource-cvm-key-pair"
 description: |-
   Provides a TencentCloud key pair resource.
 ---

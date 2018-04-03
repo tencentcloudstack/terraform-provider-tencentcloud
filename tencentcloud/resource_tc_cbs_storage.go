@@ -194,7 +194,7 @@ func terminateCbsStorage(storageId string, client *client.Client) *resource.Retr
 	code, ok := jsonresp.Code.(float64)
 	// the code maybe a string
 	if !ok || code != 0 {
-		if strings.Contains(jsonresp.Message, "query deal & resourceDeal fail") {
+		if strings.Contains(jsonresp.Message, "query deal & resourceDeal fail") || jsonresp.CodeDesc == "IAMInnerError" {
 			// for a new disk, we can terminate after a few minutes.
 			return resource.RetryableError(fmt.Errorf("query deal failed, please retry later"))
 		}
