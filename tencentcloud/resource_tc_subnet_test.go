@@ -63,6 +63,9 @@ func TestAccTencentCloudSubnet_update(t *testing.T) {
 
 func testAccCheckSubnetDestroy(vpcId, subnetId *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
+		if *vpcId == "" || *subnetId == "" {
+			return nil
+		}
 		conn := testAccProvider.Meta().(*TencentCloudClient).commonConn
 		params := map[string]string{
 			"Action":   "DescribeSubnet",

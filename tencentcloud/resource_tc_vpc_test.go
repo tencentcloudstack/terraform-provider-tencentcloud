@@ -73,6 +73,9 @@ resource "tencentcloud_vpc" "foo" {
 
 func testAccCheckVpcDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
+		if *id == "" {
+			return nil
+		}
 		conn := testAccProvider.Meta().(*TencentCloudClient).commonConn
 		params := map[string]string{
 			"Action": "DescribeVpcEx",
