@@ -106,10 +106,11 @@ func resourceTencentCloudSubnetRead(d *schema.ResourceData, m interface{}) error
 		return err
 	}
 	if jsonresp.Code != 0 {
+		if jsonresp.CodeDesc == "InvalidSubnet.NotFound" {
+			d.SetId("")
+			return nil
+		}
 		return fmt.Errorf("resource_tc_subnet got error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-	} else if jsonresp.CodeDesc == "InvalidSubnet.NotFound" {
-		d.SetId("")
-		return nil
 	}
 
 	d.Set("cidr_block", jsonresp.CidrBlock)

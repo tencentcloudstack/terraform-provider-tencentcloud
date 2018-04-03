@@ -58,6 +58,9 @@ func TestAccTencentCloudRouteTable_update(t *testing.T) {
 
 func testAccCheckRouteTableDestroy(vpcId, rtId *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
+		if *vpcId == "" || *rtId == "" {
+			return nil
+		}
 		conn := testAccProvider.Meta().(*TencentCloudClient).commonConn
 		params := map[string]string{
 			"Action":       "DescribeRouteTable",

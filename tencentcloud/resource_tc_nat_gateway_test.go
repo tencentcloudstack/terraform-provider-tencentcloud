@@ -84,8 +84,8 @@ resource "tencentcloud_nat_gateway" "my_nat" {
   vpc_id           = "${tencentcloud_vpc.main.id}"
   name             = "terraform_test"
   max_concurrent   = 3000000
-  bandwidth        = 500 
-  assigned_eip_set = [ 
+  bandwidth        = 500
+  assigned_eip_set = [
     "${tencentcloud_eip.eip_dev_dnat.public_ip}",
     "${tencentcloud_eip.eip_test_dnat.public_ip}",
   ]
@@ -110,8 +110,8 @@ resource "tencentcloud_nat_gateway" "my_nat" {
   vpc_id           = "${tencentcloud_vpc.main.id}"
   name             = "new_name"
   max_concurrent   = 10000000
-  bandwidth        = 1000 
-  assigned_eip_set = [ 
+  bandwidth        = 1000
+  assigned_eip_set = [
     "${tencentcloud_eip.eip_dev_dnat.public_ip}",
     "${tencentcloud_eip.new_eip.public_ip}",
   ]
