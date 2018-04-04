@@ -25,7 +25,7 @@ func validateNameRegex(v interface{}, k string) (ws []string, errors []error) {
 func validateStorageType(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if !goset.IsIncluded(availableStorageTypeFamilies, value) {
-		errors = append(errors, fmt.Errorf("not found instance_type_family: %v", value))
+		errors = append(errors, fmt.Errorf("Invalid storage type: %v. Valid choice: %s.", value, availableStorageTypeFamilies))
 	}
 	return
 }
@@ -33,7 +33,7 @@ func validateStorageType(v interface{}, k string) (ws []string, errors []error) 
 func validateStorageName(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if value == "" {
-		return
+		errors = append(errors, fmt.Errorf("Storage name cannot be empty."))
 	}
 
 	if len(value) > MaxStorageNameLength {
@@ -217,9 +217,9 @@ func validateInstanceName(v interface{}, k string) (ws []string, errors []error)
 func validateAllowedStringValue(ss []string) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)
-        if !goset.IsIncluded(ss, value) {
+		if !goset.IsIncluded(ss, value) {
 			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ss, value))
-        }
+		}
 		return
 	}
 }

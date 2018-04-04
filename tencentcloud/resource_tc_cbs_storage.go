@@ -85,7 +85,7 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 			},
 			"storage_name": &schema.Schema{
 				Type:         schema.TypeString,
-				Optional:     true,
+				Required:     true,
 				ValidateFunc: validateStorageName,
 			},
 			"storage_status": &schema.Schema{
