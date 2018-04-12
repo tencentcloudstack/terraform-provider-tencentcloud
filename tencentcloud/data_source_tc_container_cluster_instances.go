@@ -2,10 +2,11 @@ package tencentcloud
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 	ccs "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned"
-	"time"
 )
 
 func dataSourceTencentCloudContainerClusterInstances() *schema.Resource {
@@ -91,7 +92,7 @@ func dataSourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData,
 		return fmt.Errorf("data_source_tencent_cloud_container_cluster_instances got error, code %v , message %v", *response.Code, *response.CodeDesc)
 	}
 
-	id := fmt.Sprintf("%d",time.Now().Unix())
+	id := fmt.Sprintf("%d", time.Now().Unix())
 	nodes := make([]map[string]interface{}, 0)
 	for _, node := range response.Data.Nodes {
 		nodeInfo := make(map[string]interface{}, 0)

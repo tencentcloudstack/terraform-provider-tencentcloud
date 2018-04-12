@@ -141,10 +141,10 @@ func dataSourceTencentCloudNatsRead(d *schema.ResourceData, meta interface{}) er
 			"create_time":    *nat.CreateTime,
 		}
 
-        var eips []string
+		var eips []string
 		if len(nat.EipSet) > 0 {
 			for _, eip := range nat.EipSet {
-			    eips = append(eips, *eip)
+				eips = append(eips, *eip)
 			}
 		}
 		mapping["assigned_eip_set"] = eips

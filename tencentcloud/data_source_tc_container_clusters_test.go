@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"testing"
+
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
@@ -24,4 +25,3 @@ const testAccTencentCloudDataSourceContainerClustersConfig_basic = `
 data "tencentcloud_container_clusters" "foo" {
 }
 `
-
