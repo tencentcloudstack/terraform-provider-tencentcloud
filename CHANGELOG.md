@@ -1,3 +1,9 @@
+## Unreleased
+
+BUG FIXES:
+
+* resource/tencentcloud_cbs_storage: make name to be required ([#25](https://github.com/tencentyun/terraform-provider-tencentcloud/issues/25))
+
 ## v1.2.0 (April 3, 2018)
 
 FEATURES:

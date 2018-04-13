@@ -85,7 +85,7 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 			},
 			"storage_name": &schema.Schema{
 				Type:         schema.TypeString,
-				Optional:     true,
+				Required:     true,
 				ValidateFunc: validateStorageName,
 			},
 			"storage_status": &schema.Schema{
@@ -320,7 +320,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, m interface{})
 	storageId := jsonresp.StorageIds[0]
 	d.SetId(storageId)
 	time.Sleep(time.Second * 3)
-	resource.Retry(3*time.Minute, func() *resource.RetryError {
+	_ = resource.Retry(3*time.Minute, func() *resource.RetryError {
 		_, canRetryError, err := describeCbsStorage(d.Id(), m.(*TencentCloudClient).commonConn)
 		if err != nil {
 			if canRetryError == false {

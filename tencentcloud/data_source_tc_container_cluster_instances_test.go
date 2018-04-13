@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"testing"
+
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
@@ -28,4 +29,3 @@ data "tencentcloud_container_cluster_instances" "foo_instance" {
     cluster_id = "${data.tencentcloud_container_clusters.foo.clusters.0.cluster_id}"
 }
 `
-

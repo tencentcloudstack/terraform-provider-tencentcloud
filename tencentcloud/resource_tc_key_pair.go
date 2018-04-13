@@ -155,7 +155,7 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 		"KeyIds.0": id,
 	}
 	client := meta.(*TencentCloudClient).commonConn
-	resource.Retry(3*time.Minute, func() *resource.RetryError {
+	return resource.Retry(3*time.Minute, func() *resource.RetryError {
 		_, bindedInstanceIds, err := findKeyPairById(client, id)
 		if err != nil && err != errKeyPairNotFound {
 			return resource.NonRetryableError(err)
@@ -209,5 +209,4 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 		}
 		return nil
 	})
-	return nil
 }
