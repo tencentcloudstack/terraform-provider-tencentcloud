@@ -113,7 +113,7 @@ func dataSourceTencentCloudNatsRead(d *schema.ResourceData, meta interface{}) er
 	} else if err != nil {
 		return err
 	} else if response == nil || len(response.Data) == 0 {
-		return fmt.Errorf("no matching NAT gateway found: %s", args)
+		return fmt.Errorf("no matching NAT gateway found: %v", args)
 	}
 
 	var s []map[string]interface{}

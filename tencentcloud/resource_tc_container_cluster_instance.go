@@ -333,7 +333,7 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 	d.SetId(*nodeId)
 
 	if err := waitClusterInstanceRunning(client, clusterId, *nodeId); err != nil {
-		return fmt.Errorf("Cluster Instance %s is abnormal, create fail", nodeId)
+		return fmt.Errorf("Cluster Instance %s is abnormal, create fail", *nodeId)
 	}
 
 	return resourceTencentCloudContainerClusterInstancesRead(d, m)
@@ -360,7 +360,7 @@ func waitClusterInstanceRunning(conn *ccs.Client, clusterId, nodeId string) erro
 			if *node.IsNormal == 1 {
 				return nil
 			}
-			return resource.RetryableError(fmt.Errorf("Instance status = %s", *node.IsNormal))
+			return resource.RetryableError(fmt.Errorf("Instance status = %d", *node.IsNormal))
 		}
 		// not found
 		return nil
