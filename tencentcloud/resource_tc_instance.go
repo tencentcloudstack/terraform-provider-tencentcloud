@@ -675,7 +675,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 		"InstanceIds.0": d.Id(),
 	}
 
-	resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
 		response, err := client.SendRequest("cvm", params)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -698,6 +698,9 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
 	d.SetId("")
 	return nil
 }

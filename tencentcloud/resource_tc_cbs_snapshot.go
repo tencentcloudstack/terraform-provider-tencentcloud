@@ -136,7 +136,7 @@ func deleteSnapshot(snapshotId string, client *client.Client) *resource.RetryErr
 	}
 	code := jsonresp.Detail[snapshotId].Code
 	msg := jsonresp.Detail[snapshotId].Msg
-	//
+
 	if code == ecSnapshotNotExistError || code == 0 {
 		return nil
 	} else if code == ecSnapshotStatusError || code == ecSnapshotLifeStateError {
@@ -144,7 +144,6 @@ func deleteSnapshot(snapshotId string, client *client.Client) *resource.RetryErr
 	} else {
 		return resource.NonRetryableError(fmt.Errorf("DeleteSnapshot failed, inner code:%v, message: %v", code, msg))
 	}
-	return nil
 }
 
 func waitingSnapshotReady(snapshotId string, client *client.Client) error {

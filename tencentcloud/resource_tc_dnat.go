@@ -153,7 +153,7 @@ func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) er
 
 // Build an ID for a Forward Entry, eg "tcp://VpcId:NatId@127.15.2.3:8080"
 func buildDnatId(entry *vpc.AddDnaptRuleRequest) (entryId string) {
-	log.Printf("[DEBUG] args=%s", entry)
+	log.Printf("[DEBUG] args=%v", entry)
 	entryId = fmt.Sprintf("%s://%s:%s@%s:%s", *entry.Proto, *entry.VpcId, *entry.NatId, *entry.Eip, *entry.Eport)
 	log.Printf("[DEBUG] buildDnatId entryId=%s", entryId)
 	return
