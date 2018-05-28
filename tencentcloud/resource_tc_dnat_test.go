@@ -2,7 +2,6 @@ package tencentcloud
 
 import (
 	"fmt"
-	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -78,8 +77,7 @@ func testAccCheckDnatDestroy(s *terraform.State) error {
 		_entry.UniqNatId = common.StringPtr(rs.Primary.Attributes["nat_id"])
 		_entry.Proto = common.StringPtr(rs.Primary.Attributes["ip_protocol"])
 		_entry.Eip = common.StringPtr(rs.Primary.Attributes["external_ip"])
-		_external_port, _ := strconv.Atoi(rs.Primary.Attributes["external_port"])
-		_entry.Eport = common.IntPtr(_external_port)
+		_entry.Eport = common.StringPtr(rs.Primary.Attributes["external_port"])
 
 		_, err := client.DescribeDnat(_entry)
 

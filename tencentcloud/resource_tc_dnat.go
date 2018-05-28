@@ -6,7 +6,6 @@ import (
 	"log"
 	"net"
 	"net/url"
-	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/zqfan/tencentcloud-sdk-go/common"
@@ -115,7 +114,7 @@ func resourceTencentCloudDnatRead(d *schema.ResourceData, meta interface{}) erro
 	d.Set("nat_id", entry.NatId)
 	d.Set("ip_protocol", entry.Proto)
 	d.Set("external_ip", entry.Eip)
-	d.Set("external_port", strconv.Itoa(*entry.Eport)) //todo: delete strconv.Itoa
+	d.Set("external_port", entry.Eport)
 	d.Set("internal_ip", entry.Pip)
 	d.Set("internal_port", entry.Pport)
 	return nil
@@ -136,7 +135,7 @@ func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) er
 	args.DnatList = []*vpc.DnaptRuleInput{
 		&vpc.DnaptRuleInput{
 			Eip:   _entry.Eip,
-			Eport: common.StringPtr(strconv.Itoa(*_entry.Eport)), //todo: delete strconv.Itoa
+			Eport: _entry.Eport,
 			Proto: _entry.Proto,
 		},
 	}
@@ -168,14 +167,13 @@ func parseDnatId(entryId string) (entry *vpc.DnaptRule, err error) {
 		return
 	}
 	host, port, _ := net.SplitHostPort(u.Host)
-	_port, _ := strconv.Atoi(port)
 	natId, _ := u.User.Password()
 	entry = &vpc.DnaptRule{}
 	entry.UniqVpcId = common.StringPtr(u.User.Username())
 	entry.UniqNatId = common.StringPtr(natId)
 	entry.Proto = common.StringPtr(u.Scheme)
 	entry.Eip = common.StringPtr(host)
-	entry.Eport = common.IntPtr(_port) //todo: delete strconv.Atoi
+	entry.Eport = common.StringPtr(port)
 	b, _ := json.Marshal(entry)
 	log.Printf("[DEBUG] parseDnatId result: %s", b)
 	return

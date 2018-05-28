@@ -207,12 +207,12 @@ type DnaptRule struct {
 	CreateTime  *string `json:"createTime"`
 	Description *string `json:"description"`
 	Eip         *string `json:"eip"`
-	Eport       *int    `json:"eport"`
+	Eport       *string `json:"eport"`
 	NatId       *int    `json:"natId"`
 	Owner       *string `json:"owner"`
 	Pip         *string `json:"pip"`
 	PipType     *int    `json:"pipType"`
-	Pport       *int    `json:"pport"`
+	Pport       *string `json:"pport"`
 	Proto       *string `json:"proto"`
 	UniqNatId   *string `json:"uniqNatId"`
 	UniqVpcId   *string `json:"uniqVpcId"`
@@ -339,7 +339,7 @@ type DescribeNetworkInterfacesResponse struct {
 			GroupSet       []*struct {
 				SgId      *string `json:"sgId"`
 				SgName    *string `json:"sgName"`
-				ProjectId *string `json:"projectId"`
+				ProjectId *int    `json:"projectId"`
 			} `json:"groupSet"`
 			InstanceSet *struct {
 				InstanceId *string `json:"instanceId"`

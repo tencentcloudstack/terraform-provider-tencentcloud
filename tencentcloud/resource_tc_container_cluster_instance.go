@@ -171,12 +171,14 @@ func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m
 			if node.AbnormalReason != nil {
 				d.Set("abnormal_reason", *node.AbnormalReason)
 			}
-			if node.CPU != nil {
-				d.Set("cpu", *node.CPU)
-			}
-			if node.Mem != nil {
-				d.Set("mem", *node.Mem)
-			}
+			// ccs API does no longer respect cpu & mem as what they specified, but redefines them as available cpu & mem
+			// the units of these two attributes have been changed to milli-cpu and MB
+			// if node.CPU != nil {
+			// 	d.Set("cpu", *node.CPU)
+			// }
+			// if node.Mem != nil {
+			// 	d.Set("mem", *node.Mem)
+			// }
 			if node.InstanceId != nil {
 				d.Set("instance_id", *node.InstanceId)
 			}
