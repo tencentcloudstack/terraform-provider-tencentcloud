@@ -128,6 +128,7 @@ resource "tencentcloud_instance" "foo" {
   image_id          = "${data.tencentcloud_image.foo.image_id}"
   vpc_id            = "${tencentcloud_vpc.foo.id}"
   subnet_id         = "${tencentcloud_subnet.foo.id}"
+  instance_type     = "S2.SMALL2"
 }
 
 resource "tencentcloud_route_entry" "instance" {

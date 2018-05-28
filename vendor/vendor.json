@@ -845,46 +845,46 @@
 			"revisionTime": "2017-12-14T14:18:50Z"
 		},
 		{
-			"checksumSHA1": "5572cAKWdcmrNdA87EpCyJ04w70=",
+			"checksumSHA1": "qYp2ApfNWxYVURsuVTsob1u13nQ=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/client",
-			"revision": "bc1cbd86e408f8c7737aa09b3275b670ace267e6",
-			"revisionTime": "2018-03-30T12:49:40Z"
+			"revision": "e7db7d9904a9760e817f987a24e7aa48284c2615",
+			"revisionTime": "2018-05-22T02:55:44Z"
 		},
 		{
-			"checksumSHA1": "/kAIuumqxSA65eWIMJbL/i9AcEo=",
+			"checksumSHA1": "cTHfJdgRd3Ph5x/ypURFS5VY9wA=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/common",
-			"revision": "bc1cbd86e408f8c7737aa09b3275b670ace267e6",
-			"revisionTime": "2018-03-30T12:49:40Z"
+			"revision": "e7db7d9904a9760e817f987a24e7aa48284c2615",
+			"revisionTime": "2018-05-22T02:55:44Z"
 		},
 		{
-			"checksumSHA1": "VE4RFfPvem79HTzf9q4Dr8fNYL8=",
+			"checksumSHA1": "fRVQbUmdEQSsS2U9lHoJ+AyP10o=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/cbs/unversioned",
-			"revision": "bc1cbd86e408f8c7737aa09b3275b670ace267e6",
-			"revisionTime": "2018-03-30T12:49:40Z"
+			"revision": "e7db7d9904a9760e817f987a24e7aa48284c2615",
+			"revisionTime": "2018-05-22T02:55:44Z"
 		},
 		{
-			"checksumSHA1": "wRARtnrhuKvw2QNNqX9naUGZ2/4=",
+			"checksumSHA1": "xT2BLnhRaWPHzrGHmPYwR7jYgCQ=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned",
 			"revision": "e7db7d9904a9760e817f987a24e7aa48284c2615",
 			"revisionTime": "2018-05-22T02:55:44Z"
 		},
 		{
-			"checksumSHA1": "sbSsYq9/OZnM/FYKuBU39I0PH40=",
+			"checksumSHA1": "PJU02X3xpTvZNsC7fBXOChzmf9U=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312",
-			"revision": "bc1cbd86e408f8c7737aa09b3275b670ace267e6",
-			"revisionTime": "2018-03-30T12:49:40Z"
+			"revision": "e7db7d9904a9760e817f987a24e7aa48284c2615",
+			"revisionTime": "2018-05-22T02:55:44Z"
 		},
 		{
-			"checksumSHA1": "jNXIErG1O79pZhsLrlgbf4lxsFA=",
+			"checksumSHA1": "sbEtdJ6c7bREgnEkPCR9ZjYxewc=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/lb/unversioned",
-			"revision": "bc1cbd86e408f8c7737aa09b3275b670ace267e6",
-			"revisionTime": "2018-03-30T12:49:40Z"
+			"revision": "e7db7d9904a9760e817f987a24e7aa48284c2615",
+			"revisionTime": "2018-05-22T02:55:44Z"
 		},
 		{
-			"checksumSHA1": "v04BiM3tiwER0Md0vuvdBzyXBCQ=",
+			"checksumSHA1": "qaPwgc6EklCrZuwA8hOu52cJjhE=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/vpc/unversioned",
-			"revision": "bc1cbd86e408f8c7737aa09b3275b670ace267e6",
-			"revisionTime": "2018-03-30T12:49:40Z"
+			"revision": "e7db7d9904a9760e817f987a24e7aa48284c2615",
+			"revisionTime": "2018-05-22T02:55:44Z"
 		},
 		{
 			"checksumSHA1": "vE43s37+4CJ2CDU6TlOUOYE0K9c=",
