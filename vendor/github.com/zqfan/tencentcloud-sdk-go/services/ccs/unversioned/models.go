@@ -68,6 +68,7 @@ type CreateClusterRequest struct {
 	OSName                    *string `name:"osName"`
 	InstanceType              *string `name:"instanceType"`
 	CVMType                   *string `name:"cvmType"`
+	RenewFlag                 *string `name:"renewFlag"`
 	BandwidthType             *string `name:"bandwidthType"`
 	Bandwidth                 *int    `name:"bandwidth"`
 	WanIp                     *int    `name:"wanIp"`
@@ -75,16 +76,21 @@ type CreateClusterRequest struct {
 	SubnetId                  *string `name:"subnetId"`
 	IsVpcGateway              *int    `name:"isVpcGateway"`
 	RootSize                  *int    `name:"rootSize"`
+	RootType                  *string `name:"rootType"`
 	StorageSize               *int    `name:"storageSize"`
+	StorageType               *string `name:"storageType"`
 	Password                  *string `name:"password"`
 	KeyId                     *string `name:"keyId"`
 	Period                    *int    `name:"period"`
 	SgId                      *string `name:"sgId"`
-	MountTarget		  *string  `name:"mountTarget"`
-	DockerGraphPath		  *string  `name:"dockerGraphPath"`
-	InstanceName		  *string  `name:"instanceName"`
-	ClusterVersion		  *string  `name:"clusterVersion"`
-	ProjectId		  *int     `name:"projectId"`
+	MasterSubnetId            *string `name:"masterSubnetId"`
+	UserScript                *string `name:"userScript"`
+	// FIXME: not in official document
+	MountTarget     *string `name:"mountTarget"`
+	DockerGraphPath *string `name:"dockerGraphPath"`
+	InstanceName    *string `name:"instanceName"`
+	ClusterVersion  *string `name:"clusterVersion"`
+	ProjectId       *int    `name:"projectId"`
 }
 
 type CreateClusterResponse struct {
@@ -123,29 +129,29 @@ type DescribeClusterInstancesRequest struct {
 }
 
 type ClusterInstance struct {
-	AbnormalReason       *string            `json:"abnormalReason"`
-	AutoScalingGroupId   *string            `json:"autoScalingGroupId"`
-	CPU                  *int               `json:"cpu"`
-	CreatedAt            *string            `json:"createdAt"`
-	CvmPayMode           *int               `json:"cvmPayMode"`
-	CvmState             *int               `json:"cvmState"`
-	InstanceCreateTime   *string            `json:"instanceCreateTime"`
-	InstanceDeadlineTime *string            `json:"instanceDeadlineTime"`
-	InstanceId           *string            `json:"instanceId"`
-	InstanceName         *string            `json:"instanceName"`
-	InstanceType         *string            `json:"instanceType"`
-	IsNormal             *int               `json:"isNormal"`
-	KernelVersion        *string            `json:"kernelVersion"`
-	//Labels               *map[string]string `json:"labels,omitempty"`
-	LanIp                *string            `json:"lanIp"`
-	Mem                  *int               `json:"mem"`
-	NetworkPayMode       *int               `json:"networkPayMode"`
-	OSImage              *string            `json:"osImage"`
-	PodCidr              *string            `json:"podCidr"`
-	Unschedulable        *bool              `json:"unschedulable"`
-	WanIp                *string            `json:"wanIp"`
-	Zone                 *string            `json:"zone"`
-	ZoneId               *int               `json:"zoneId"`
+	AbnormalReason       *string `json:"abnormalReason"`
+	AutoScalingGroupId   *string `json:"autoScalingGroupId"`
+	CPU                  *int    `json:"cpu"`
+	CreatedAt            *string `json:"createdAt"`
+	CvmPayMode           *int    `json:"cvmPayMode"`
+	CvmState             *int    `json:"cvmState"`
+	InstanceCreateTime   *string `json:"instanceCreateTime"`
+	InstanceDeadlineTime *string `json:"instanceDeadlineTime"`
+	InstanceId           *string `json:"instanceId"`
+	InstanceName         *string `json:"instanceName"`
+	InstanceType         *string `json:"instanceType"`
+	IsNormal             *int    `json:"isNormal"`
+	KernelVersion        *string `json:"kernelVersion"`
+	// Labels               *map[string]string `json:"labels,omitempty"`
+	LanIp          *string `json:"lanIp"`
+	Mem            *int    `json:"mem"`
+	NetworkPayMode *int    `json:"networkPayMode"`
+	OSImage        *string `json:"osImage"`
+	PodCidr        *string `json:"podCidr"`
+	Unschedulable  *bool   `json:"unschedulable"`
+	WanIp          *string `json:"wanIp"`
+	Zone           *string `json:"zone"`
+	ZoneId         *int    `json:"zoneId"`
 }
 
 type DescribeClusterInstancesResponse struct {
@@ -161,27 +167,32 @@ type DescribeClusterInstancesResponse struct {
 
 type AddClusterInstancesRequest struct {
 	*common.BaseRequest
-	ClusterId     *string `name:"clusterId"`
-	ClusterDesc   *string `name:"clusterDesc"`
-	ZoneId        *string `name:"zoneId"`
-	CPU           *int    `name:"cpu"`
-	Mem           *int    `name:"mem"`
-	InstanceType  *string `name:"instanceType"`
-	CvmType       *string `name:"cvmType"`
-	BandwidthType *string `name:"bandwidthType"`
-	Bandwidth     *int    `name:"bandwidth"`
-	WanIp         *int    `name:"wanIp"`
-	SubnetId      *string `name:"subnetId"`
-	IsVpcGateway  *int    `name:"isVpcGateway"`
-	StorageSize   *int    `name:"storageSize"`
-	RootSize      *int    `name:"rootSize"`
-	GoodsNum      *int    `name:"goodsNum"`
-	Password      *string `name:"password"`
-	KeyId         *string `name:"keyId"`
-	Period        *int    `name:"period"`
-	SgId          *string `name:"sgId"`
-	MountTarget   *string `name:"mountTarget"`
-	DockerGraphPath  *string `name:"dockerGraphPath"`
+	ClusterId       *string `name:"clusterId"`
+	ClusterDesc     *string `name:"clusterDesc"`
+	ZoneId          *string `name:"zoneId"`
+	CPU             *int    `name:"cpu"`
+	Mem             *int    `name:"mem"`
+	InstanceType    *string `name:"instanceType"`
+	CvmType         *string `name:"cvmType"`
+	RenewFlag       *string `name:"renewFlag"`
+	BandwidthType   *string `name:"bandwidthType"`
+	Bandwidth       *int    `name:"bandwidth"`
+	WanIp           *int    `name:"wanIp"`
+	SubnetId        *string `name:"subnetId"`
+	IsVpcGateway    *int    `name:"isVpcGateway"`
+	StorageSize     *int    `name:"storageSize"`
+	StorageType     *string `name:"storageType"`
+	RootSize        *int    `name:"rootSize"`
+	RootType        *string `name:"rootType"`
+	GoodsNum        *int    `name:"goodsNum"`
+	Password        *string `name:"password"`
+	KeyId           *string `name:"keyId"`
+	Period          *int    `name:"period"`
+	SgId            *string `name:"sgId"`
+	MountTarget     *string `name:"mountTarget"`
+	DockerGraphPath *string `name:"dockerGraphPath"`
+	Unschedulable   *int    `name:"unschedulable"`
+	UserScript      *string `name:"userScript"`
 }
 
 type AddClusterInstancesResponse struct {

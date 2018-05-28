@@ -63,9 +63,21 @@ func resourceTencentCloudContainerCluster() *schema.Resource {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
+			"storage_type": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"root_size": &schema.Schema{
 				Type:     schema.TypeInt,
 				Required: true,
+			},
+			"root_type": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"user_script": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"goods_num": &schema.Schema{
 				Type:     schema.TypeInt,
@@ -217,9 +229,30 @@ func resourceTencentCloudContainerClusterCreate(d *schema.ResourceData, m interf
 		createReq.StorageSize = common.IntPtr(storageSize)
 	}
 
+	if storageTypeRaw, ok := d.GetOkExists("storage_type"); ok {
+		storageType := storageTypeRaw.(string)
+		if len(storageType) > 0 {
+			createReq.StorageType = common.StringPtr(storageType)
+		}
+	}
+
 	if rootSizeRaw, ok := d.GetOkExists("root_size"); ok {
 		rootSize := rootSizeRaw.(int)
 		createReq.RootSize = common.IntPtr(rootSize)
+	}
+
+	if rootTypeRaw, ok := d.GetOkExists("root_type"); ok {
+		rootType := rootTypeRaw.(string)
+		if len(rootType) > 0 {
+			createReq.RootType = common.StringPtr(rootType)
+		}
+	}
+
+	if userScriptRaw, ok := d.GetOkExists("user_script"); ok {
+		userScript := userScriptRaw.(string)
+		if len(userScript) > 0 {
+			createReq.UserScript = common.StringPtr(userScript)
+		}
 	}
 
 	if goodsNumRaw, ok := d.GetOkExists("goods_num"); ok {

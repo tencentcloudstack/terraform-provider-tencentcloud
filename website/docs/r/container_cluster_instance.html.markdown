@@ -49,7 +49,9 @@ The following arguments are supported:
 * `subnet_id` - (Required) The subnet id which the node stays in.
 * `is_vpc_gateway` - (Required) Describe whether the node enable the gateway capability.
 * `storage_size` - (Required) The size of the data volumn.
+* `storage_type` - (Optional) The type of the data volumn. see more from CVM.
 * `root_size` - (Required) The size of the root volumn.
+* `root_type` - (Optional) The type of the root volumn. see more from CVM.
 * `vpc_id` - (Required) Specify vpc which the node(s) stay in.
 * `cvm_type` - (Optional) The type of node needed by cvm.
 * `period` - (Optional) The puchase duration of the node needed by cvm.
@@ -60,6 +62,8 @@ The following arguments are supported:
 * `docker_graph_path` - (Optional) The docker graph path is going to mounted.
 * `password` - (Optional) The password of each node.
 * `key_id` - (Optional) The key_id of each node(if using key pair to access).
+* `unschedulable` - (Optional) Determine whether the node will be schedulable. 0 is the default meaning node will be schedulable. 1 for unschedulable.
+* `user_script` - (Optional) User defined script in a base64-format. The script runs after the kubernetes component is ready on node. see more from CCS api documents.
 
 ## Attributes Reference
 

@@ -863,10 +863,10 @@
 			"revisionTime": "2018-03-30T12:49:40Z"
 		},
 		{
-			"checksumSHA1": "wUpWC4QB7zx9v7NsdVXrDsYjWjE=",
+			"checksumSHA1": "wRARtnrhuKvw2QNNqX9naUGZ2/4=",
 			"path": "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned",
-			"revision": "bc1cbd86e408f8c7737aa09b3275b670ace267e6",
-			"revisionTime": "2018-03-30T12:49:40Z"
+			"revision": "e7db7d9904a9760e817f987a24e7aa48284c2615",
+			"revisionTime": "2018-05-22T02:55:44Z"
 		},
 		{
 			"checksumSHA1": "sbSsYq9/OZnM/FYKuBU39I0PH40=",
