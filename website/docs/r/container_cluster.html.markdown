@@ -56,8 +56,10 @@ The following arguments are supported:
 * `bandwidth_type` - (Required) The network type of the node. 
 * `subnet_id` - (Required) The subnet id which the node stays in. 
 * `is_vpc_gateway` - (Required) Describe whether the node enable the gateway capability. 
-* `storage_size` - (Required) The size of the data volumn. 
-* `root_size` - (Required) The size of the root volumn. 
+* `storage_size` - (Required) The size of the data volumn.
+* `storage_type` - (Optional) The type of the data volumn. see more from CVM.
+* `root_size` - (Required) The size of the root volumn.
+* `root_type` - (Optional) The type of the root volumn. see more from CVM.
 * `goods_num` - (Required) The node number is going to create in the cluster. 
 * `vpc_id` - (Required) Specify vpc which the node(s) stay in. 
 * `cluster_cidr` - (Required) The CIDR which the cluster is going to use. 
@@ -73,7 +75,8 @@ The following arguments are supported:
 * `cluster_version` - (Optional) The kubernetes version of the cluster. 
 * `password` - (Optional) The password of each node. 
 * `key_id` - (Optional) The key_id of each node(if using key pair to access).
-* `require_wan_ip` - (Optional) Indicate whether wan ip is needed. 
+* `require_wan_ip` - (Optional) Indicate whether wan ip is needed.
+* `user_script` - (Optional) User defined script in a base64-format. The script runs after the kubernetes component is ready on node. see more from CCS api documents.
 
 ## Attributes Reference
 

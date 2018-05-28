@@ -58,9 +58,17 @@ func resourceTencentCloudContainerClusterInstance() *schema.Resource {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
+			"storage_type": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"root_size": &schema.Schema{
 				Type:     schema.TypeInt,
 				Required: true,
+			},
+			"root_type": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
 			},
 			"password": &schema.Schema{
 				Type:     schema.TypeString,
@@ -95,6 +103,14 @@ func resourceTencentCloudContainerClusterInstance() *schema.Resource {
 				Optional: true,
 			},
 			"docker_graph_path": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"unschedulable": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+			"user_script": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
@@ -155,12 +171,14 @@ func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m
 			if node.AbnormalReason != nil {
 				d.Set("abnormal_reason", *node.AbnormalReason)
 			}
-			if node.CPU != nil {
-				d.Set("cpu", *node.CPU)
-			}
-			if node.Mem != nil {
-				d.Set("mem", *node.Mem)
-			}
+			// ccs API does no longer respect cpu & mem as what they specified, but redefines them as available cpu & mem
+			// the units of these two attributes have been changed to milli-cpu and MB
+			// if node.CPU != nil {
+			// 	d.Set("cpu", *node.CPU)
+			// }
+			// if node.Mem != nil {
+			// 	d.Set("mem", *node.Mem)
+			// }
 			if node.InstanceId != nil {
 				d.Set("instance_id", *node.InstanceId)
 			}
@@ -244,9 +262,23 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 		createInstanceReq.StorageSize = common.IntPtr(storageSize)
 	}
 
+	if storageTypeRaw, ok := d.GetOkExists("storage_type"); ok {
+		storageType := storageTypeRaw.(string)
+		if len(storageType) > 0 {
+			createInstanceReq.StorageType = common.StringPtr(storageType)
+		}
+	}
+
 	if rootSizeRaw, ok := d.GetOkExists("root_size"); ok {
 		rootSize := rootSizeRaw.(int)
 		createInstanceReq.RootSize = common.IntPtr(rootSize)
+	}
+
+	if rootTypeRaw, ok := d.GetOkExists("root_type"); ok {
+		rootType := rootTypeRaw.(string)
+		if len(rootType) > 0 {
+			createInstanceReq.RootType = common.StringPtr(rootType)
+		}
 	}
 
 	if passwordRaw, ok := d.GetOkExists("password"); ok {
@@ -305,6 +337,18 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 		dockerGraphPath := dockerGraphPathRaw.(string)
 		if len(dockerGraphPath) > 0 {
 			createInstanceReq.DockerGraphPath = common.StringPtr(dockerGraphPath)
+		}
+	}
+
+	if unschedulableRaw, ok := d.GetOkExists("unschedulable"); ok {
+		unschedulable := unschedulableRaw.(int)
+		createInstanceReq.Unschedulable = common.IntPtr(unschedulable)
+	}
+
+	if userScriptRaw, ok := d.GetOkExists("user_script"); ok {
+		userScript := userScriptRaw.(string)
+		if len(userScript) > 0 {
+			createInstanceReq.UserScript = common.StringPtr(userScript)
 		}
 	}
 

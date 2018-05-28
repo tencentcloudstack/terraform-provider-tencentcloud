@@ -325,7 +325,7 @@ data "tencentcloud_image" "my_favorate_image" {
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S2"]
   }
   cpu_core_count = 1
   memory_size    = 1
@@ -363,7 +363,7 @@ data "tencentcloud_image" "my_favorate_image" {
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S2"]
   }
   cpu_core_count = 1
   memory_size    = 1
@@ -388,7 +388,7 @@ func testAccInstanceConfigWithImageIdChanged(imageId, password string) string {
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S2"]
   }
   cpu_core_count = 1
   memory_size    = 1
@@ -421,7 +421,7 @@ data "tencentcloud_image" "my_favorate_image" {
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S2"]
   }
   cpu_core_count = 1
   memory_size    = 2
@@ -461,7 +461,7 @@ data "tencentcloud_image" "my_favorate_image" {
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S2"]
   }
   cpu_core_count = 1
   memory_size    = 1
@@ -493,7 +493,7 @@ data "tencentcloud_image" "my_favorate_image" {
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S2"]
   }
   cpu_core_count = 1
   memory_size    = 1
@@ -526,7 +526,7 @@ data "tencentcloud_image" "my_favorate_image" {
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S2"]
   }
   cpu_core_count = 1
   memory_size    = 2
@@ -568,7 +568,7 @@ data "tencentcloud_image" "my_favorate_image" {
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S2"]
   }
   cpu_core_count = 1
   memory_size    = 2
