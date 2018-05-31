@@ -18,7 +18,7 @@ $ mkdir -p $GOPATH/src/github.com/tencentyun
 $ cd $GOPATH/src/github.com/tencentyun
 $ git clone https://github.com/tencentyun/terraform-provider-tencentcloud
 $ cd terraform-provider-tencentcloud
-$ go install github.com/kardianos/govendor/
+$ go get github.com/kardianos/govendor/
 $ govendor sync -v
 $ go build -o terraform-provider-tencentcloud
 ```
@@ -64,7 +64,7 @@ terraform apply
 If you want to destroy the resource, make sure the instance is already in ``running`` status, otherwise the destroy might fail.
 
 ```
-terraform destory
+terraform destroy
 ```
 
 ## Developer Guide
