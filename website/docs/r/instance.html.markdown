@@ -120,6 +120,8 @@ The following arguments are supported:
 
 * `subnet_id` - (Optional) The id of a VPC subnetwork. If you want to create instances in VPC network, this parameter must be set.
 
+* `private_ip` - (Optional) The private ip to be assigned to this instance, must be in the provided subnet and available.
+
 * `security_groups` - (Optional)  A list of security group ids to associate with.
 
 * `system_disk_type` - (Optional) Valid values are `LOCAL_BASIC`, `LOCAL_SSD`,  `CLOUD_BASIC` and `CLOUD_SSD`.
@@ -136,7 +138,7 @@ The following arguments are supported:
 
 * `password` - (Optional) Password to an instance. In order to take effect new password, the instance will be restarted after modifying the password.
 
-
+* `user_data` - (Optional) The user data to be specified into this instance. Must be encrypted in base64 format and limited in 16 KB.
 
 ## Attributes Reference
 

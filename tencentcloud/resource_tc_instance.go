@@ -147,6 +147,12 @@ func resourceTencentCloudInstance() *schema.Resource {
 				ForceNew: true,
 				Computed: true,
 			},
+			"private_ip": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+			},
 			// security group
 			"security_groups": &schema.Schema{
 				Type:     schema.TypeSet,
@@ -216,13 +222,13 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:  true,
 				Sensitive: true,
 			},
+			"user_data": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 
 			// Computed values.
 			"instance_status": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"private_ip": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -357,6 +363,12 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		passwd := v.(string)
 		params["LoginSettings.Password"] = passwd
 	}
+	if v, ok := d.GetOk("user_data"); ok {
+		data := v.(string)
+		if len(data) > 0 {
+			params["UserData"] = data
+		}
+	}
 
 	// vpc
 	if v, ok := d.GetOk("vpc_id"); ok {
@@ -366,6 +378,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 	if v, ok := d.GetOk("subnet_id"); ok {
 		subnetId := v.(string)
 		params["VirtualPrivateCloud.SubnetId"] = subnetId
+	}
+	if v, ok := d.GetOk("private_ip"); ok {
+		ip := v.(string)
+		params["VirtualPrivateCloud.PrivateIpAddresses.0"] = ip
 	}
 
 	response, err := client.SendRequest("cvm", params)
