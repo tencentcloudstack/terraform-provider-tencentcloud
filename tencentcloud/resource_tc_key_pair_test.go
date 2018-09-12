@@ -24,6 +24,11 @@ func TestAccTencentCloudKeyPair_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_key_pair.foo", "key_name", "from_terraform"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_key_pair.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
