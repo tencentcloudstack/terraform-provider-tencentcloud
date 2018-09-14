@@ -32,3 +32,11 @@ The following arguments are supported:
 ## Attributes Reference
 
 * `id` - The id of the key pair, something like `skey-xxxxxxx`, use this for instance creation and resetting.
+
+## Import
+
+Key pairs can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_key_pair.foo skey-17634f05
+```

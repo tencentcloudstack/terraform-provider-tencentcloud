@@ -44,6 +44,11 @@ func TestAccTencentCloudEip_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_eip.bar", "public_ip"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_eip.bar",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
