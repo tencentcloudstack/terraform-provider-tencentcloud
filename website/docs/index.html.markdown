@@ -122,6 +122,7 @@ The following arguments are supported:
 
 * `region` - (Required) This is the TencentCloud region. It must be provided, but
   it can also be sourced from the `TENCENTCLOUD_REGION` environment variables.
+  The default input value is ap-guangzhou.
 
 
 ## Testing

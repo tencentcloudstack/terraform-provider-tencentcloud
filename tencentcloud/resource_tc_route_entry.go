@@ -26,9 +26,6 @@ func resourceTencentCloudRouteEntry() *schema.Resource {
 		Create: resourceTencentCloudRouteEntryCreate,
 		Read:   resourceTencentCloudRouteEntryRead,
 		Delete: resourceTencentCloudRouteEntryDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"vpc_id": &schema.Schema{

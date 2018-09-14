@@ -106,6 +106,11 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("conn.DescribeNatGateway error: %v", err)
 	}
 
+	if *descResp.TotalCount == 0 {
+		d.SetId("")
+		return nil
+	}
+
 	nat := descResp.Data[0]
 
 	d.Set("name", *nat.NatName)
