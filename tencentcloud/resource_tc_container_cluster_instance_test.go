@@ -70,7 +70,8 @@ resource "tencentcloud_container_cluster_instance" "bar_instance" {
  require_wan_ip   = 1
  is_vpc_gateway = 0
  storage_size = 10
- root_size  = 50
+ root_size  = 100
+ root_type = "CLOUD_SSD"
  password  = "Admin12345678"
  cvm_type  = "PayByHour"
  period   = 1

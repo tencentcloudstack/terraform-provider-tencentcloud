@@ -141,7 +141,7 @@ func validateInternetMaxBandwidthOut(v interface{}, k string) (ws []string, erro
 func validateDiskType(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if !goset.IsIncluded(availableDiskTypes, value) {
-		errors = append(errors, fmt.Errorf("invalid internet_charge_type: %v", value))
+		errors = append(errors, fmt.Errorf("invalid disk type: %v", value))
 	}
 	return
 }

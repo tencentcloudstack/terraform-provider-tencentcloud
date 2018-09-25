@@ -8,7 +8,7 @@ cd tencentcloud;
 #go test -i; go test -test.run TestAccTencentCloudEipAssociationWithInstance -v
 #go test -i; go test -test.run TestAccTencentCloudEipAssociationWithNetworkInterface -v
 #go test -i; go test -test.run TestAccTencentCloudEip_basic -v
-#go test -i; go test -test.run TestAccTencentCloudEipDataSource -v
+go test -i; go test -test.run TestAccTencentCloudEipDataSource -v
 #go test -i; go test -test.run TestAccTencentCloudKeyPair_pubcliKey -v
 #go test -i; go test -test.run TestAccTencentCloudKeyPair_basic -v
 #go test -i; go test -test.run TestAccTencentCloudInstance_network -v
@@ -30,5 +30,8 @@ cd tencentcloud;
 #go test -i; go test -test.run TestAccTencentCloudSecurityGroupRule -v
 #go test -i; go test -test.run TestAccTencentCloudNatGateway_basic -v
 #go test -i; go test -test.run TestAccTencentCloudDnat_basic -v
-go test -i; go test -test.run TestAccTencentCloudNatsDataSource -v
+#go test -i; go test -test.run TestAccTencentCloudNatsDataSource -v
+#go test -i; go test -test.run TestAccTencentCloudCbsStorageAttachment_basic -v
+#go test -i; go test -test.run TestAccTencentCloudContainerCluster_basic -v
+#go test -i; go test -test.run TestAccTencentCloudContainerClusterInstance_basic -v
 cd $old_path

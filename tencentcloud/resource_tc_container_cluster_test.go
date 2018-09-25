@@ -87,7 +87,8 @@ resource "tencentcloud_container_cluster" "foo" {
  subnet_id  = "${tencentcloud_subnet.my_subnet.id}"
  is_vpc_gateway = 0
  storage_size = 0
- root_size  = 50
+ root_size = 100
+ root_type = "CLOUD_SSD"
  goods_num  = 1
  password  = "Admin12345678"
  vpc_id   = "${tencentcloud_vpc.my_vpc.id}"

@@ -64,7 +64,7 @@ data "tencentcloud_image" "public_image" {
 
 const testAccTencentCloudImagesDataSourceConfigFilterWithOsName = `
 data "tencentcloud_image" "public_image" {
-  os_name = "CoreOS 717.3.0 64位"
+  os_name = "CentOS 7.5 64位"
   filter {
     name = "image-type"
     values = ["PUBLIC_IMAGE"]
@@ -74,7 +74,7 @@ data "tencentcloud_image" "public_image" {
 
 const testAccTencentCloudImagesDataSourceConfigFilterWithImageNameRegex = `
 data "tencentcloud_image" "public_image" {
-  image_name_regex = "^CentOS\\s+6\\.8\\s+64\\w*"
+  image_name_regex = "^CentOS\\s+7\\.5\\s+64\\w*"
   filter {
     name = "image-type"
     values = ["PUBLIC_IMAGE"]
