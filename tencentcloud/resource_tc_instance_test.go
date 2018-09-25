@@ -164,7 +164,7 @@ func TestAccTencentCloudInstance_imageIdChanged(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccInstanceConfigWithImageIdChanged(
-					"img-31tjrtph",
+					"img-8toqc6s3",
 					"testpwd123",
 				),
 				Check: resource.ComposeTestCheckFunc(
@@ -176,14 +176,14 @@ func TestAccTencentCloudInstance_imageIdChanged(t *testing.T) {
 			},
 			{
 				Config: testAccInstanceConfigWithImageIdChanged(
-					"img-871lthrb",
+					"img-oikl1tzv",
 					"testpwd1234",
 				),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.hello"),
 					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.hello"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "image_id", "img-871lthrb"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "image_id", "img-oikl1tzv"),
 				),
 			},
 		},
@@ -402,6 +402,7 @@ resource "tencentcloud_instance" "hello" {
   image_id      = "%s"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   password      = "%s"
+  system_disk_type = "CLOUD_SSD"
 }
 `,
 		imageId,

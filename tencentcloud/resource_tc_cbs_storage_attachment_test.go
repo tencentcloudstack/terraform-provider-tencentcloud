@@ -84,8 +84,8 @@ data "tencentcloud_image" "my_favorate_image" {
 
 resource "tencentcloud_cbs_storage" "my_storage" {
   availability_zone = "ap-guangzhou-3"
-  storage_size      = 10
-  storage_type      = "cloudBasic"
+  storage_size      = 100
+  storage_type      = "cloudSSD"
   period            = 1
   storage_name      = "testAccCbsStorageTest"
 }
