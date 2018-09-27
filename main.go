@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/terraform/plugin"
 	"github.com/hashicorp/terraform/terraform"
 
-	"github.com/tencentyun/terraform-provider-tencentcloud/tencentcloud"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud"
 )
 
 func main() {
