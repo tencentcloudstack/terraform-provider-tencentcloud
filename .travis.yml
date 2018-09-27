@@ -1,12 +1,29 @@
+dist: trusty
+sudo: required
+services:
+- docker
 language: go
-
 go:
-  - 1.9
+- 1.8.1
 
 install:
-  - go get github.com/kardianos/govendor
-  - govendor sync
+# This script is used by the Travis build to install a cookie for
+# go.googlesource.com so rate limits are higher when using `go get` to fetch
+# packages that live there.
+# See: https://github.com/golang/go/issues/12933
+- bash scripts/gogetcookie.sh
+- go get github.com/kardianos/govendor
 
 script:
-  - go build .
-  - sh ci_data_source_auto_test.sh
+- make test
+- make vendor-status
+- make vet
+- make website-test
+
+branches:
+  only:
+  - master
+matrix:
+  fast_finish: true
+  allow_failures:
+  - go: tip
