@@ -1,11 +1,11 @@
-## 1.2.1 (Unreleased)
+## 1.2.2 (Unreleased)
 
 BUG FIXES:
 
 * resource/tencentcloud_cbs_storage: make name to be required ([#25](https://github.com/tencentyun/terraform-provider-tencentcloud/issues/25))
 * resource/tencentcloud_instance: support user data and private ip
 
-## v1.2.0 (April 3, 2018)
+## 1.2.0 (April 3, 2018)
 
 FEATURES:
 
@@ -14,7 +14,7 @@ FEATURES:
 * **New Data Source**: `tencentcloud_container_clusters`
 * **New Data Source**: `tencentcloud_container_cluster_instances`
 
-## v1.1.0 (March 9, 2018)
+## 1.1.0 (March 9, 2018)
 
 FEATURES:
 
@@ -27,7 +27,7 @@ FEATURES:
 * **New Resource**: `tencentcloud_cbs_snapshot`
 * **New Resource**: `tencentcloud_alb_server_attachment`
 
-## v1.0.0 (January 19, 2018)
+## 1.0.0 (January 19, 2018)
 
 FEATURES:
 
