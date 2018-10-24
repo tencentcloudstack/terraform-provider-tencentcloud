@@ -26,34 +26,40 @@ type TencentCloudClient struct {
 
 func (c *Config) Client() (interface{}, error) {
 	var tcClient TencentCloudClient
+	userAgent := "TF_TC_1.2.2"
 	tcClient.commonConn = client.NewClient(c.SecretId, c.SecretKey, c.Region)
 	tcClient.commonConn.Debug = true
 
 	cvmConn, err := cvm.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
+	cvmConn.WithUserAgent(userAgent)
 	if err != nil {
 		return nil, err
 	}
 	tcClient.cvmConn = cvmConn
 
 	vpcConn, err := vpc.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
+	vpcConn.WithUserAgent(userAgent)
 	if err != nil {
 		return nil, err
 	}
 	tcClient.vpcConn = vpcConn
 
 	cbsConn, err := cbs.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
+	cbsConn.WithUserAgent(userAgent)
 	if err != nil {
 		return nil, err
 	}
 	tcClient.cbsConn = cbsConn
 
 	ccsConn, err := ccs.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
+	ccsConn.WithUserAgent(userAgent)
 	if err != nil {
 		return nil, err
 	}
 	tcClient.ccsConn = ccsConn
 
 	lbConn, err := lb.NewClientWithSecretId(c.SecretId, c.SecretKey, c.Region)
+	lbConn.WithUserAgent(userAgent)
 	if err != nil {
 		return nil, err
 	}

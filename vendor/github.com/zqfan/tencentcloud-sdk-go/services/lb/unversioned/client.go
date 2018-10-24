@@ -1,4 +1,4 @@
-package lb
+package unversioned
 
 import (
 	"github.com/zqfan/tencentcloud-sdk-go/common"

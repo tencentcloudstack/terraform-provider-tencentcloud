@@ -37,7 +37,7 @@ func (r *BaseResponse) ParseErrorFromHTTPResponse(body []byte) (err error) {
 		return
 	}
 	if resp.Response.Error.Code != "" {
-		return NewAPIError(resp.Response.Error.Code, resp.Response.Error.Message, -1)
+		return NewAPIError(resp.Response.Error.Code, resp.Response.Error.Message, -1, resp.Response.RequestId)
 	}
 
 	deprecated := &DeprecatedAPIErrorResponse{}
@@ -46,7 +46,7 @@ func (r *BaseResponse) ParseErrorFromHTTPResponse(body []byte) (err error) {
 		return
 	}
 	if deprecated.Code != 0 {
-		return NewAPIError(deprecated.CodeDesc, deprecated.Message, deprecated.Code)
+		return NewAPIError(deprecated.CodeDesc, deprecated.Message, deprecated.Code, "")
 	}
 	return nil
 }

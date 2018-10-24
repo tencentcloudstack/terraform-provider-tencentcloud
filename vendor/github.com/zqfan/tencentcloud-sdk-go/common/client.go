@@ -10,6 +10,7 @@ type Client struct {
 	httpClient *http.Client
 	credential Credential
 	signMethod string
+	userAgent  string
 	debug      bool
 }
 
@@ -48,6 +49,10 @@ func (c *Client) GetRegion() string {
 	return c.region
 }
 
+func (c *Client) GetUserAgent() string {
+	return c.userAgent
+}
+
 func (c *Client) Init(region string) *Client {
 	c.httpClient = &http.Client{}
 	c.region = region
@@ -64,6 +69,11 @@ func (c *Client) WithSecretId(secretId, secretKey string) *Client {
 
 func (c *Client) WithSignatureMethod(method string) *Client {
 	c.signMethod = method
+	return c
+}
+
+func (c *Client) WithUserAgent(agent string) *Client {
+	c.userAgent = agent
 	return c
 }
 
