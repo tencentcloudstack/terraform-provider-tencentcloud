@@ -1,4 +1,4 @@
-package lb
+package unversioned
 
 import (
 	"github.com/zqfan/tencentcloud-sdk-go/common"
@@ -20,6 +20,9 @@ const (
 	LBTaskSuccess = 0
 	LBTaskFail    = 1
 	LBTaskDoing   = 2
+
+	LBStatusCreating = 0
+	LBStatusReady    = 1
 )
 
 type DescribeLoadBalancersRequest struct {
@@ -247,6 +250,69 @@ type DescribeForwardLBBackendsResponse struct {
 			Url        *string `json:"url"`
 		} `json:"rules"`
 	} `json:"data"`
+}
+
+type CreateLoadBalancerRequest struct {
+	*common.BaseRequest
+	LoadBalancerType *int    `name:"loadBalancerType"`
+	Forward          *int    `name:"forward"`
+	LoadBalancerName *string `name:"loadBalancerName"`
+	DomainPrefix     *string `name:"domainPrefix"`
+	VpcId            *string `name:"vpcId"`
+	SubnetId         *int    `name:"subnetId"`
+	ProjectId        *int    `name:"projectId"`
+	Number           *int    `name:"number"`
+}
+
+type CreateLoadBalancerResponse struct {
+	*common.BaseResponse
+	Code              *int                  `json:"code"`
+	Message           *string               `json:"message"`
+	CodeDesc          *string               `json:"codeDesc"`
+	UnLoadBalancerIds *map[string][]*string `json:"unLoadBalancerIds" list`
+	RequestId         *int                  `json:"requestId"`
+	DealIds           []*string             `json:"dealIds" list`
+}
+
+type DeleteLoadBalancersRequest struct {
+	*common.BaseRequest
+	LoadBalancerIds []*string `name:"loadBalancerIds" list`
+}
+
+type DeleteLoadBalancersResponse struct {
+	*common.BaseResponse
+	Code      *int    `json:"code"`
+	Message   *string `json:"message"`
+	CodeDesc  *string `json:"codeDesc"`
+	RequestId *int    `json:"requestId"`
+}
+
+type ModifyForwardLBNameRequest struct {
+	*common.BaseRequest
+	LoadBalancerId   *string `name:"loadBalancerId"`
+	LoadBalancerName *string `name:"loadBalancerName"`
+}
+
+type ModifyForwardLBNameResponse struct {
+	*common.BaseResponse
+	Code     *int    `json:"code"`
+	Message  *string `json:"message"`
+	CodeDesc *string `json:"codeDesc"`
+}
+
+type ModifyLoadBalancerAttributesRequest struct {
+	*common.BaseRequest
+	LoadBalancerId   *string `name:"loadBalancerId"`
+	LoadBalancerName *string `name:"loadBalancerName"`
+	DomainPrefix     *string `name:"domainPrefix"`
+}
+
+type ModifyLoadBalancerAttributesResponse struct {
+	*common.BaseResponse
+	Code      *int    `json:"code"`
+	Message   *string `json:"message"`
+	CodeDesc  *string `json:"codeDesc"`
+	RequestId *int    `json:"requestId"`
 }
 
 type Request struct {

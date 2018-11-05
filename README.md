@@ -1,7 +1,5 @@
 # terraform-provider-tencentcloud
 
-[![Build Status](https://api.travis-ci.org/tencentyun/terraform-provider-tencentcloud.png?branch=master)](https://travis-ci.org/tencentyun/terraform-provider-tencentcloud)
-
 ## Requirements
 
 * [Terraform](https://www.terraform.io/downloads.html) 0.11.x
@@ -11,16 +9,14 @@
 
 ### Build from source code
 
-Clone repository to: `$GOPATH/src/github.com/tencentyun/terraform-provider-tencentcloud`
+Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-tencentcloud`
 
 ```sh
-$ mkdir -p $GOPATH/src/github.com/tencentyun
-$ cd $GOPATH/src/github.com/tencentyun
-$ git clone https://github.com/tencentyun/terraform-provider-tencentcloud
+$ mkdir -p $GOPATH/src/github.com/terraform-providers
+$ cd $GOPATH/src/github.com/terraform-providers
+$ git clone https://github.com/terraform-providers/terraform-provider-tencentcloud
 $ cd terraform-provider-tencentcloud
-$ go get github.com/kardianos/govendor/
-$ govendor sync -v
-$ go build -o terraform-provider-tencentcloud
+$ go build .
 ```
 
 If you're building the provider, follow the instructions to [install it as a plugin.](https://www.terraform.io/docs/plugins/basics.html#installing-a-plugin) After placing it into your plugins directory,  run `terraform init` to initialize it.
@@ -41,7 +37,7 @@ export TENCENTCLOUD_SECRET_KEY=72pQp14tWKUglrnX5RbaNEtN-EXAMPLE
 If you are beind a proxy, for example, in a corporate network, you must set the proxy environment variables correctly. For example:
 
 ```
-export http_proxy=http://dev-proxy.oa.com:8080  # This is just an example, use your real proxy settings!
+export http_proxy=http://your-proxy-host:your-proxy-port  # This is just an example, use your real proxy settings!
 export https_proxy=$http_proxy
 export HTTP_PROXY=$http_proxy
 export HTTPS_PROXY=$http_proxy
@@ -49,7 +45,7 @@ export HTTPS_PROXY=$http_proxy
 
 ## Run demo
 
-You can edit your own terraform configuration files, or you can just rename `debug.tf.example` to `debug.tf`.
+You can edit your own terraform configuration files. Learn examples from examples directory.
 
 ### Terrafrom it
 
