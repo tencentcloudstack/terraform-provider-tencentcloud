@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -223,8 +224,16 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Sensitive: true,
 			},
 			"user_data": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
+				ConflictsWith: []string{"user_data_raw"},
+			},
+			"user_data_raw": &schema.Schema{
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
+				ConflictsWith: []string{"user_data"},
 			},
 
 			// Computed values.
@@ -367,6 +376,12 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		data := v.(string)
 		if len(data) > 0 {
 			params["UserData"] = data
+		}
+	}
+	if v, ok := d.GetOk("user_data_raw"); ok {
+		data := v.(string)
+		if len(data) > 0 {
+			params["UserData"] = base64.StdEncoding.EncodeToString([]byte(data))
 		}
 	}
 
