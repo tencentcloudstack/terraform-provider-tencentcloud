@@ -1,4 +1,14 @@
-## 1.2.3 (Unreleased)
+## 1.3.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_lb` [GH-3]
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: Add `user_data_raw` argument [GH-4]
+
+
 ## 1.2.2 (September 28, 2018)
 
 BUG FIXES:
