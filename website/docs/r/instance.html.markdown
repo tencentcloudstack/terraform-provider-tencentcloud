@@ -140,6 +140,8 @@ The following arguments are supported:
 
 * `user_data` - (Optional) The user data to be specified into this instance. Must be encrypted in base64 format and limited in 16 KB.
 
+* `user_data_raw` - (Optional) The user data to be specified into this instance, plain text. Conflicts with `user_data`. Limited in 16 KB after encrypted in base64 format.
+
 ## Attributes Reference
 
 The following attributes are exported:
