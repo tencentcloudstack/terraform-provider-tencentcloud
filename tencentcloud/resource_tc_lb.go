@@ -17,6 +17,7 @@ func resourceTencentCloudLB() *schema.Resource {
 			"type": {
 				Type:     schema.TypeInt,
 				Required: true,
+				ForceNew: true,
 			},
 			"forward": {
 				Type:     schema.TypeInt,
