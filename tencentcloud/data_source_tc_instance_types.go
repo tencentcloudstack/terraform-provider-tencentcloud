@@ -14,50 +14,6 @@ const (
 	tencentCloudApiDescribeInstanceTypeConfigsParaLimitMaxFilterValuessNumber = 1
 )
 
-const (
-	tencentCloudApiInstanceTypeFamilyS1  = "S1"
-	tencentCloudApiInstanceTypeFamilyS2  = "S2"
-	tencentCloudApiInstanceTypeFamilyS3  = "S3"
-	tencentCloudApiInstanceTypeFamilySN2 = "SN2"
-
-	tencentCloudApiInstanceTypeFamilyM1 = "M1"
-	tencentCloudApiInstanceTypeFamilyM2 = "M2"
-
-	tencentCloudApiInstanceTypeFamilyI1 = "I1"
-	tencentCloudApiInstanceTypeFamilyI2 = "I2"
-
-	tencentCloudApiInstanceTypeFamilyC2  = "C2"
-	tencentCloudApiInstanceTypeFamilyC3  = "C3"
-	tencentCloudApiInstanceTypeFamilyCN2 = "CN2"
-
-	tencentCloudApiInstanceTypeFamilyFX2 = "FX2"
-	tencentCloudApiInstanceTypeFamilyGA2 = "GA2"
-	tencentCloudApiInstanceTypeFamilyGN2 = "GN2"
-)
-
-var (
-	availableInstanceTypeFamilies = []string{
-		tencentCloudApiInstanceTypeFamilyS1,
-		tencentCloudApiInstanceTypeFamilyS2,
-		tencentCloudApiInstanceTypeFamilyS3,
-		tencentCloudApiInstanceTypeFamilySN2,
-
-		tencentCloudApiInstanceTypeFamilyM1,
-		tencentCloudApiInstanceTypeFamilyM2,
-
-		tencentCloudApiInstanceTypeFamilyI1,
-		tencentCloudApiInstanceTypeFamilyI2,
-
-		tencentCloudApiInstanceTypeFamilyC2,
-		tencentCloudApiInstanceTypeFamilyC3,
-		tencentCloudApiInstanceTypeFamilyCN2,
-
-		tencentCloudApiInstanceTypeFamilyFX2,
-		tencentCloudApiInstanceTypeFamilyGA2,
-		tencentCloudApiInstanceTypeFamilyGN2,
-	}
-)
-
 func dataSourceInstanceTypes() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudInstanceTypesRead,

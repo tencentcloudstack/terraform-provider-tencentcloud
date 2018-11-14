@@ -50,24 +50,14 @@ func validateNotEmpty(v interface{}, k string) (ws []string, errors []error) {
 	return
 }
 
-func validateInstanceTypeFamily(v interface{}, k string) (ws []string, errors []error) {
-	family := v.(string)
-	if !goset.IsIncluded(availableInstanceTypeFamilies, family) {
-		errors = append(errors, fmt.Errorf("not found instance_type_family: %v", family))
-	}
-	return
-}
-
-// TODO existing checking from API
 func validateInstanceType(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	words := strings.Split(value, ".")
 	if len(words) <= 1 {
-		errors = append(errors, fmt.Errorf("invalid instance_type: %v", value))
+		errors = append(errors, fmt.Errorf("invalid instance_type: %v, should be like S1.SMALL1", value))
 		return
 	}
-	family := words[0]
-	return validateInstanceTypeFamily(family, k)
+	return
 }
 
 func validateInstanceChargeType(v interface{}, k string) (ws []string, errors []error) {
