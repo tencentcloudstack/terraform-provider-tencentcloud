@@ -26,112 +26,112 @@ func resourceTencentCloudContainerClusterInstance() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"cpu": &schema.Schema{
+			"cpu": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"mem": &schema.Schema{
+			"mem": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"bandwidth": &schema.Schema{
+			"bandwidth": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"bandwidth_type": &schema.Schema{
+			"bandwidth_type": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"require_wan_ip": &schema.Schema{
+			"require_wan_ip": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"subnet_id": &schema.Schema{
+			"subnet_id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"is_vpc_gateway": &schema.Schema{
+			"is_vpc_gateway": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"storage_size": &schema.Schema{
+			"storage_size": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"storage_type": &schema.Schema{
+			"storage_type": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"root_size": &schema.Schema{
+			"root_size": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"root_type": &schema.Schema{
+			"root_type": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"password": &schema.Schema{
+			"password": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"key_id": &schema.Schema{
+			"key_id": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"cvm_type": &schema.Schema{
+			"cvm_type": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"period": &schema.Schema{
+			"period": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"zone_id": &schema.Schema{
+			"zone_id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"instance_type": &schema.Schema{
+			"instance_type": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"sg_id": &schema.Schema{
+			"sg_id": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"mount_target": &schema.Schema{
+			"mount_target": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"docker_graph_path": &schema.Schema{
+			"docker_graph_path": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"unschedulable": &schema.Schema{
+			"unschedulable": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"user_script": &schema.Schema{
+			"user_script": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
 			// Computed values
-			"abnormal_reason": &schema.Schema{
+			"abnormal_reason": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"instance_id": &schema.Schema{
+			"instance_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"is_normal": &schema.Schema{
+			"is_normal": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"wan_ip": &schema.Schema{
+			"wan_ip": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"lan_ip": &schema.Schema{
+			"lan_ip": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

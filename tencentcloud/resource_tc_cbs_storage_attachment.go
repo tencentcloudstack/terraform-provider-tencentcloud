@@ -16,12 +16,12 @@ func resourceTencentCloudCbsStorageAttachment() *schema.Resource {
 		Delete: resourceTencentCloudCbsStorageAttachmentDelete,
 
 		Schema: map[string]*schema.Schema{
-			"storage_id": &schema.Schema{
+			"storage_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"instance_id": &schema.Schema{
+			"instance_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,

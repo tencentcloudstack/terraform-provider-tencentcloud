@@ -20,14 +20,14 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 		Delete: resourceTencentCloudEipAssociationDelete,
 
 		Schema: map[string]*schema.Schema{
-			"eip_id": &schema.Schema{
+			"eip_id": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateNotEmpty,
 			},
 
-			"instance_id": &schema.Schema{
+			"instance_id": {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Optional: true,
@@ -39,7 +39,7 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 				ValidateFunc: validateNotEmpty,
 			},
 
-			"network_interface_id": &schema.Schema{
+			"network_interface_id": {
 				Type:         schema.TypeString,
 				ForceNew:     true,
 				Optional:     true,
@@ -50,7 +50,7 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 				},
 			},
 
-			"private_ip": &schema.Schema{
+			"private_ip": {
 				Type:         schema.TypeString,
 				ForceNew:     true,
 				Optional:     true,

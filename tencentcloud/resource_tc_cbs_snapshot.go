@@ -39,29 +39,29 @@ func resourceTencentCloudCbsSnapshot() *schema.Resource {
 		Delete: resourceTencentCloudCbsSnapshotDelete,
 
 		Schema: map[string]*schema.Schema{
-			"snapshot_name": &schema.Schema{
+			"snapshot_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
 			},
-			"storage_id": &schema.Schema{
+			"storage_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"storage_size": &schema.Schema{
+			"storage_size": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"snapshot_status": &schema.Schema{
+			"snapshot_status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"disk_type": &schema.Schema{
+			"disk_type": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"pecent": &schema.Schema{
+			"pecent": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
