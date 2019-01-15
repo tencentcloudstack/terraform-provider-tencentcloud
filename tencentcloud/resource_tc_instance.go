@@ -303,11 +303,11 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		maxBandwidthOut := internetMaxBandwidthOut.(int)
 		params["InternetAccessible.InternetMaxBandwidthOut"] = fmt.Sprintf("%v", maxBandwidthOut)
 	}
+	// set public ip assignment default to false, assign public IP when `allocate_public_ip` explicitly set to true.
+	params["InternetAccessible.PublicIpAssigned"] = "FALSE"
 	if allocatePublicIP, ok := d.GetOk("allocate_public_ip"); ok {
 		if allocatePublicIP.(bool) {
 			params["InternetAccessible.PublicIpAssigned"] = "TRUE"
-		} else {
-			params["InternetAccessible.PublicIpAssigned"] = "FALSE"
 		}
 	}
 
