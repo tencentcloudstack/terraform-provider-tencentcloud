@@ -46,7 +46,7 @@ resource "tencentcloud_key_pair" "my_ssh_key" {
 // Create Security Group with 2 rules
 resource "tencentcloud_security_group" "default" {
   name        = "web accessibility"
-  description = "make it accessable for both production and stage ports"
+  description = "make it accessible for both production and stage ports"
 }
 resource "tencentcloud_security_group_rule" "web" {
   security_group_id = "${tencentcloud_security_group.default.id}"

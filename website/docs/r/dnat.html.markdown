@@ -91,7 +91,7 @@ The following arguments are supported:
 
 * `nat_id` - (Required, Forces new resource) The ID for the NAT Gateway.
 * `vpc_id` - (Required, Forces new resource) The VPC ID for the NAT Gateway.
-* `protocol` - (Required, Forces new resource) The ip protocal, valid value is tcp|udp.
+* `protocol` - (Required, Forces new resource) The ip protocol, valid value is tcp|udp.
 * `elastic_ip` - (Required, Forces new resource) The elastic IP of NAT gateway association, must a [Elastic IP](eip.html).
 * `elastic_port` - (Required, Forces new resource) The external port, valid value is 1~65535.
 * `private_ip` - (Required, Forces new resource) The internal ip, must a private ip (VPC IP).

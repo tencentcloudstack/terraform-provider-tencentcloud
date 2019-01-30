@@ -63,7 +63,7 @@ The following arguments are supported:
 * `goods_num` - (Required) The node number is going to create in the cluster. 
 * `vpc_id` - (Required) Specify vpc which the node(s) stay in. 
 * `cluster_cidr` - (Required) The CIDR which the cluster is going to use. 
-* `cluster_desc` - (Optional) The descirption of the cluster. 
+* `cluster_desc` - (Optional) The description of the cluster. 
 * `cvm_type` - (Optional) The type of node needed by cvm. 
 * `period` - (Optional) The puchase duration of the node needed by cvm. 
 * `zone_id` - (Required) The zone which the node stays in. 

@@ -73,4 +73,4 @@ The following attributes are exported:
 * `instance_id` - An id identify the node, provided by cvm.
 * `is_normal` - Describe whether the node is normal.
 * `wan_ip` - Describe the wan ip of the node.
-* `lan_ip` - Descirbe the lan ip of the node.
+* `lan_ip` - Describe the lan ip of the node.
