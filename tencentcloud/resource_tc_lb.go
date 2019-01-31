@@ -1,9 +1,18 @@
 package tencentcloud
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/zqfan/tencentcloud-sdk-go/common"
 	lb "github.com/zqfan/tencentcloud-sdk-go/services/lb/unversioned"
+)
+
+const (
+	lbNetworkTypeOpen        = "OPEN"
+	lbNetworkTypeInternal    = "INTERNAL"
+	lbForwardTypeClassic     = "CLASSIC"
+	lbForwardTypeApplication = "APPLICATION"
 )
 
 func resourceTencentCloudLB() *schema.Resource {
@@ -15,14 +24,28 @@ func resourceTencentCloudLB() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"type": {
-				Type:     schema.TypeInt,
+				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
+				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+					value := v.(string)
+					if value != lbNetworkTypeOpen && value != lbNetworkTypeInternal {
+						errors = append(errors, fmt.Errorf("Invalid value %s for '%s', choices: OPEN, INTERNAL", value, k))
+					}
+					return
+				},
 			},
 			"forward": {
-				Type:     schema.TypeInt,
+				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
+				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+					value := v.(string)
+					if value != lbForwardTypeClassic && value != lbForwardTypeApplication {
+						errors = append(errors, fmt.Errorf("Invalid value %s for '%s', choices: CLASSIC, APPLICATION", value, k))
+					}
+					return
+				},
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -39,7 +62,7 @@ func resourceTencentCloudLB() *schema.Resource {
 				ForceNew: true,
 			},
 			"status": {
-				Type:     schema.TypeInt,
+				Type:     schema.TypeString,
 				Computed: true,
 			},
 		},
@@ -49,9 +72,17 @@ func resourceTencentCloudLB() *schema.Resource {
 func resourceTencentCloudLBCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*TencentCloudClient).lbConn
 	req := lb.NewCreateLoadBalancerRequest()
-	req.LoadBalancerType = common.IntPtr(d.Get("type").(int))
+	if d.Get("type").(string) == lbNetworkTypeOpen {
+		req.LoadBalancerType = common.IntPtr(lb.LBNetworkTypePublic)
+	} else {
+		req.LoadBalancerType = common.IntPtr(lb.LBNetworkTypePrivate)
+	}
 	if t, ok := d.GetOk("forward"); ok {
-		req.Forward = common.IntPtr(t.(int))
+		if t.(string) == lbForwardTypeClassic {
+			req.Forward = common.IntPtr(lb.LBForwardTypeClassic)
+		} else {
+			req.Forward = common.IntPtr(lb.LBForwardTypeApplication)
+		}
 	}
 	if n, ok := d.GetOk("name"); ok {
 		req.LoadBalancerName = common.StringPtr(n.(string))
@@ -89,12 +120,26 @@ func resourceTencentCloudLBRead(d *schema.ResourceData, meta interface{}) error 
 		d.SetId("")
 		return nil
 	}
-	d.Set("type", *resp.LoadBalancerSet[0].LoadBalancerType)
-	d.Set("forward", *resp.LoadBalancerSet[0].Forward)
+	if *resp.LoadBalancerSet[0].LoadBalancerType == lb.LBNetworkTypePublic {
+		d.Set("type", lbNetworkTypeOpen)
+	} else {
+		d.Set("type", lbNetworkTypeInternal)
+	}
+	if *resp.LoadBalancerSet[0].Forward == lb.LBForwardTypeClassic {
+		d.Set("forward", lbForwardTypeClassic)
+	} else {
+		d.Set("forward", lbForwardTypeApplication)
+	}
 	d.Set("name", *resp.LoadBalancerSet[0].LoadBalancerName)
 	d.Set("vpc_id", *resp.LoadBalancerSet[0].VpcId)
 	d.Set("project_id", *resp.LoadBalancerSet[0].ProjectId)
-	d.Set("status", *resp.LoadBalancerSet[0].Status)
+	if *resp.LoadBalancerSet[0].Status == lb.LBStatusReady {
+		d.Set("status", "NORMAL")
+	} else if *resp.LoadBalancerSet[0].Status == lb.LBStatusCreating {
+		d.Set("status", "CREATING")
+	} else {
+		d.Set("status", "UNKNOWN")
+	}
 	return nil
 }
 
@@ -105,7 +150,7 @@ func resourceTencentCloudLBUpdate(d *schema.ResourceData, meta interface{}) erro
 		return nil
 	}
 	v, _ := d.GetOk("name")
-	if f := d.Get("forward").(int); f == lb.LBForwardTypeApplication {
+	if f := d.Get("forward").(string); f == lbForwardTypeApplication {
 		req := lb.NewModifyForwardLBNameRequest()
 		req.LoadBalancerId = common.StringPtr(lbid)
 		req.LoadBalancerName = common.StringPtr(v.(string))

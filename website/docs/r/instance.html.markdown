@@ -41,7 +41,7 @@ data "tencentcloud_availability_zones" "my_favorate_zones" {}
 // Create Security Group with 2 rules
 resource "tencentcloud_security_group" "app" {
   name        = "web accessibility"
-  description = "make it accessable for both production and stage ports"
+  description = "make it accessible for both production and stage ports"
 }
 resource "tencentcloud_security_group_rule" "web" {
   security_group_id = "${tencentcloud_security_group.app.id}"
@@ -106,7 +106,7 @@ The following arguments are supported:
 
 * `instance_charge_type` - (Optional) Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, The default is `POSTPAID_BY_HOUR`.
 
-* `instance_charge_type_prepaid_period` - (Optional) The tenancy (time unit is month) of the perpaid instance, **NOTE**: it only works when `instance_charge_type` is set to `PREPAID`.
+* `instance_charge_type_prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance, **NOTE**: it only works when `instance_charge_type` is set to `PREPAID`.
 
 * `instance_charge_type_prepaid_renew_flag` - (Optional) When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy, **NOTE**: it only works when `instance_charge_type` is set to `PREPAID`.
 
