@@ -7,7 +7,10 @@ FEATURES:
 ENHANCEMENTS:
 
 * resource/tencentcloud_instance: Add `user_data_raw` argument [GH-4]
+* resource/tencentcloud_instance: Add `hostname`, `project_id`, `delete_with_instance` argument.
 
+BUG FIXES:
+* resource/tencentcloud_instance: fix allocate_public_ip always evaluated true.
 
 ## 1.2.2 (September 28, 2018)
 
