@@ -112,7 +112,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"project_id": &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
-				ForceNew: true,
+				ForceNew: false,
 			},
 			// payment
 			"instance_charge_type": &schema.Schema{
@@ -295,10 +295,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		}
 	}
 	if projectId, ok := d.GetOk("project_id"); ok {
-		pId := projectId.(int)
-		if pId > 0 {
-			params["Placement.ProjectId"] = fmt.Sprintf("%v", pId)
-		}
+		params["Placement.ProjectId"] = fmt.Sprintf("%v", projectId.(int))
 	}
 
 	if instanceChargeType, ok := d.GetOk("instance_charge_type"); ok {
@@ -654,6 +651,16 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, m interface{}) (
 		if err != nil {
 			return err
 		}
+	}
+
+	if d.HasChange("project_id") {
+		oldProjectId, newProjectId := d.GetChange("project_id")
+		log.Printf("[DEBUG] tencentcloud_instance modify project_id from %v to %v", oldProjectId, newProjectId)
+		err = modifyInstancesProject(client, []string{instanceId}, newProjectId.(int))
+		if err != nil {
+			return err
+		}
+		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("key_name") {

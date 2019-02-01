@@ -253,6 +253,54 @@ func TestAccTencentCloudInstance_password(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstance_hostname(t *testing.T) {
+	id := "tencentcloud_instance.hostname"
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() { testAccPreCheck(t) },
+
+		IDRefreshName: id,
+
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccInstanceConfigWithHostname,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "private_ip"),
+					resource.TestCheckResourceAttrSet(id, "hostname"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstance_projectId(t *testing.T) {
+	id := "tencentcloud_instance.project_id"
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() { testAccPreCheck(t) },
+
+		IDRefreshName: id,
+
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccInstanceConfigWithHostname,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "private_ip"),
+					resource.TestCheckResourceAttrSet(id, "project_id"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -553,6 +601,72 @@ resource "tencentcloud_instance" "vpc_ins" {
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   vpc_id = "${tencentcloud_vpc.my_vpc.id}"
   subnet_id = "${tencentcloud_subnet.my_subnet.id}"
+}
+`
+
+const testAccInstanceConfigWithHostname = `
+data "tencentcloud_image" "my_favorate_image" {
+  os_name = "centos"
+  filter {
+    name   = "image-type"
+    values = ["PUBLIC_IMAGE"]
+  }
+}
+
+data "tencentcloud_instance_types" "my_favorate_instance_types" {
+  filter {
+    name   = "instance-family"
+    values = ["S2"]
+  }
+  cpu_core_count = 1
+  memory_size    = 2
+}
+
+data "tencentcloud_availability_zones" "my_favorate_zones" {
+	name = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name = "terraform_automation_test_kuruk"
+  availability_zone     = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
+  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  hostname      = "terraform_automation_test_kuruk"
+
+  system_disk_type = "CLOUD_BASIC"
+}
+`
+
+const testAccInstanceConfigWithProjectId = `
+data "tencentcloud_image" "my_favorate_image" {
+  os_name = "centos"
+  filter {
+    name   = "image-type"
+    values = ["PUBLIC_IMAGE"]
+  }
+}
+
+data "tencentcloud_instance_types" "my_favorate_instance_types" {
+  filter {
+    name   = "instance-family"
+    values = ["S2"]
+  }
+  cpu_core_count = 1
+  memory_size    = 2
+}
+
+data "tencentcloud_availability_zones" "my_favorate_zones" {
+	name = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name = "terraform_automation_test_kuruk"
+  availability_zone     = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
+  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  project_id    = 0
+
+  system_disk_type = "CLOUD_BASIC"
 }
 `
 
