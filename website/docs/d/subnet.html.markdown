@@ -18,9 +18,11 @@ The following example shows how one might accept a subnet id as a variable and u
 
 ```hcl
 variable "subnet_id" {}
+variable "vpc_id" {}
 
 data "tencentcloud_subnet" "selected" {
-  id = "${var.subnet_id}"
+  vpc_id    = "${var.vpc_id}"
+  subnet_id = "${var.subnet_id}"
 }
 
 resource "tencentcloud_security_group" "default" {
