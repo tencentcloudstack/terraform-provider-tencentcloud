@@ -161,6 +161,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:     schema.TypeSet,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
+				Computed: true,
 			},
 			// storage
 			"system_disk_type": &schema.Schema{

@@ -117,9 +117,11 @@ func deleteSnapshot(snapshotId string, client *client.Client) *resource.RetryErr
 		Code     int
 		Message  string
 		CodeDesc string
-		Detail   map[string]struct {
-			Msg  string
-			Code int
+		Detail   struct {
+			Result map[string]struct {
+				Msg  string
+				Code int
+			}
 		}
 	}
 	err = json.Unmarshal([]byte(response), &jsonresp)
@@ -134,8 +136,8 @@ func deleteSnapshot(snapshotId string, client *client.Client) *resource.RetryErr
 			jsonresp.CodeDesc,
 		))
 	}
-	code := jsonresp.Detail[snapshotId].Code
-	msg := jsonresp.Detail[snapshotId].Msg
+	code := jsonresp.Detail.Result[snapshotId].Code
+	msg := jsonresp.Detail.Result[snapshotId].Msg
 
 	if code == ecSnapshotNotExistError || code == 0 {
 		return nil
