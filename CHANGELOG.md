@@ -1,12 +1,12 @@
-## 1.3.0 (Unreleased)
+## 1.3.0 (March 12, 2019)
 
 FEATURES:
 
-* **New Resource**: `tencentcloud_lb` [GH-3]
+* **New Resource**: `tencentcloud_lb` ([#3](https://github.com/terraform-providers/terraform-provider-scaffolding/issues/3))
 
 ENHANCEMENTS:
 
-* resource/tencentcloud_instance: Add `user_data_raw` argument [GH-4]
+* resource/tencentcloud_instance: Add `user_data_raw` argument ([#4](https://github.com/terraform-providers/terraform-provider-scaffolding/issues/4))
 
 
 ## 1.2.2 (September 28, 2018)
