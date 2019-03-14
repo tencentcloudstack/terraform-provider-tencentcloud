@@ -23,15 +23,15 @@ func dataSourceTencentCloudVpc() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
-			"cidr_block": &schema.Schema{
+			"cidr_block": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"is_default": &schema.Schema{
+			"is_default": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"is_multicast": &schema.Schema{
+			"is_multicast": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},

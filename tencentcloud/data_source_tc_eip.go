@@ -19,27 +19,27 @@ func dataSourceTencentCloudEip() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"filter": dataSourceTencentCloudFiltersSchema(),
 
-			"include_arrears": &schema.Schema{
+			"include_arrears": {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
 
-			"include_blocked": &schema.Schema{
+			"include_blocked": {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
 
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 
-			"public_ip": &schema.Schema{
+			"public_ip": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 
-			"status": &schema.Schema{
+			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

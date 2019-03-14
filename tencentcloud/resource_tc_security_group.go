@@ -22,12 +22,12 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 		Delete: resourceTencentCloudSecurityGroupDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(2, 100),

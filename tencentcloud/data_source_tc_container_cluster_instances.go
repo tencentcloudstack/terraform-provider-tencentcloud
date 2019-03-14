@@ -32,31 +32,31 @@ func dataSourceTencentCloudContainerClusterInstances() *schema.Resource {
 				Type:     schema.TypeList,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"abnormal_reason": &schema.Schema{
+						"abnormal_reason": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"cpu": &schema.Schema{
+						"cpu": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"mem": &schema.Schema{
+						"mem": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"instance_id": &schema.Schema{
+						"instance_id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"is_normal": &schema.Schema{
+						"is_normal": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"wan_ip": &schema.Schema{
+						"wan_ip": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"lan_ip": &schema.Schema{
+						"lan_ip": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},

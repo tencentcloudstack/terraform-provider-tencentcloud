@@ -13,27 +13,27 @@ func dataSourceTencentCloudSecurityGroup() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudSecurityGroupRead,
 		Schema: map[string]*schema.Schema{
-			"security_group_id": &schema.Schema{
+			"security_group_id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(2, 100),
 			},
-			"create_time": &schema.Schema{
+			"create_time": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"be_associate_count": &schema.Schema{
+			"be_associate_count": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
