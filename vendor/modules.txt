@@ -16,7 +16,7 @@ github.com/apparentlymart/go-textseg/textseg
 github.com/armon/go-radix
 # github.com/athom/goset v0.0.0-20151103071336-f07be69aa101
 github.com/athom/goset
-# github.com/aws/aws-sdk-go v1.15.78
+# github.com/aws/aws-sdk-go v1.16.36
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/credentials
 github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds
@@ -33,6 +33,7 @@ github.com/aws/aws-sdk-go/internal/sdkuri
 github.com/aws/aws-sdk-go/aws/client/metadata
 github.com/aws/aws-sdk-go/aws/corehandlers
 github.com/aws/aws-sdk-go/aws/request
+github.com/aws/aws-sdk-go/aws/credentials/processcreds
 github.com/aws/aws-sdk-go/aws/credentials/stscreds
 github.com/aws/aws-sdk-go/aws/csm
 github.com/aws/aws-sdk-go/aws/defaults
@@ -119,7 +120,7 @@ github.com/hashicorp/hil/parser
 github.com/hashicorp/hil/scanner
 # github.com/hashicorp/logutils v1.0.0
 github.com/hashicorp/logutils
-# github.com/hashicorp/terraform v0.0.0-20171214141850-03ddb9134a15
+# github.com/hashicorp/terraform v0.11.14-0.20190313165547-28810e6c0c0a
 github.com/hashicorp/terraform/plugin
 github.com/hashicorp/terraform/terraform
 github.com/hashicorp/terraform/helper/hashcode
@@ -132,6 +133,7 @@ github.com/hashicorp/terraform/config/module
 github.com/hashicorp/terraform/dag
 github.com/hashicorp/terraform/flatmap
 github.com/hashicorp/terraform/helper/hilmapstructure
+github.com/hashicorp/terraform/httpclient
 github.com/hashicorp/terraform/moduledeps
 github.com/hashicorp/terraform/tfdiags
 github.com/hashicorp/terraform/version
@@ -141,13 +143,13 @@ github.com/hashicorp/terraform/config/hcl2shim
 github.com/hashicorp/terraform/registry
 github.com/hashicorp/terraform/registry/regsrc
 github.com/hashicorp/terraform/registry/response
-github.com/hashicorp/terraform/svchost/auth
 github.com/hashicorp/terraform/svchost/disco
 github.com/hashicorp/terraform/helper/pathorcontents
 github.com/hashicorp/terraform/svchost
+github.com/hashicorp/terraform/svchost/auth
 # github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb
 github.com/hashicorp/yamux
-# github.com/jmespath/go-jmespath v0.0.0-20160202185014-0b12d6b521d8
+# github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
 github.com/jmespath/go-jmespath
 # github.com/mattn/go-colorable v0.0.9
 github.com/mattn/go-colorable
@@ -176,8 +178,6 @@ github.com/posener/complete
 github.com/posener/complete/cmd/install
 github.com/posener/complete/cmd
 github.com/posener/complete/match
-# github.com/satori/go.uuid v1.2.0
-github.com/satori/go.uuid
 # github.com/terraform-providers/terraform-provider-template v0.0.0-20171212001638-4caf52415ae8
 github.com/terraform-providers/terraform-provider-template/template
 # github.com/ulikunitz/xz v0.5.5

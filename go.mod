@@ -12,12 +12,11 @@ require (
 	github.com/hashicorp/hcl2 v0.0.0-20190305174554-fdf8e232b64f // indirect
 	github.com/hashicorp/hil v0.0.0-20190212132231-97b3a9cdfa93 // indirect
 	github.com/hashicorp/logutils v1.0.0 // indirect
-	github.com/hashicorp/terraform v0.0.0-20171214141850-03ddb9134a15
+	github.com/hashicorp/terraform v0.11.14-0.20190313165547-28810e6c0c0a
 	github.com/mitchellh/cli v1.0.0 // indirect
 	github.com/mitchellh/copystructure v1.0.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/hashstructure v1.0.0 // indirect
-	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/terraform-providers/terraform-provider-template v0.0.0-20171212001638-4caf52415ae8
 	github.com/zclconf/go-cty v0.0.0-20190212192503-19dda139b164 // indirect
 	github.com/zqfan/tencentcloud-sdk-go v0.0.0-20181105105106-4c76f78ff2e6
