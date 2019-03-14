@@ -31,8 +31,8 @@ lint:
 	@gometalinter ./$(PKG_NAME)
 
 tools:
-	go get -u github.com/alecthomas/gometalinter
-	gometalinter --install
+	GO111MODULE=off go get -u github.com/alecthomas/gometalinter
+	GO111MODULE=off gometalinter --install
 
 
 test-compile:
