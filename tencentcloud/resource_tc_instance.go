@@ -334,8 +334,8 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 	var dataDisksAttr []map[string]interface{}
 	if dataDisks, ok := d.GetOk("data_disks"); ok {
 		dataDiskList := dataDisks.([]interface{})
-		if len(dataDiskList) > 1 {
-			return fmt.Errorf("tencentcloud_instance currently only one data disk is supported during instance creation")
+		if len(dataDiskList) > 10 {
+			return fmt.Errorf("Too many data disks for tencentcloud_instance!")
 		}
 		for i, dataDisk := range dataDiskList {
 			dd := dataDisk.(map[string]interface{})

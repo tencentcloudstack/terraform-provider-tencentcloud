@@ -434,6 +434,10 @@ resource "tencentcloud_instance" "foo" {
     {
       data_disk_type = "CLOUD_SSD"
       data_disk_size = 100
+    },
+    {
+      data_disk_type = "CLOUD_SSD"
+      data_disk_size = 100
     }
   ]
   disable_security_service = true

@@ -99,6 +99,7 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 			"snapshot_id": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 		},
 	}

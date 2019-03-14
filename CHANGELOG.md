@@ -1,4 +1,9 @@
 ## 1.4.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: data disk count limit now is upgrade from 1 to 10, as API has supported more disks.
+
 ## 1.3.0 (March 12, 2019)
 
 FEATURES:
