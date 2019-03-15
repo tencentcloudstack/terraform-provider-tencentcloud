@@ -18,21 +18,21 @@ func resourceTencentCloudVpc() *schema.Resource {
 		Delete: resourceTencentCloudVpcDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"cidr_block": &schema.Schema{
+			"cidr_block": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateCIDRNetworkAddress,
 			},
-			"is_default": &schema.Schema{
+			"is_default": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},
-			"is_multicast": &schema.Schema{
+			"is_multicast": {
 				Type:     schema.TypeBool,
 				Computed: true,
 			},

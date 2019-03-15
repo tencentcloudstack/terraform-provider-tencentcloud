@@ -19,41 +19,41 @@ func resourceTencentCloudDnat() *schema.Resource {
 		Delete: resourceTencentCloudDnatDelete,
 
 		Schema: map[string]*schema.Schema{
-			"vpc_id": &schema.Schema{
+			"vpc_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"nat_id": &schema.Schema{
+			"nat_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"protocol": &schema.Schema{
+			"protocol": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"tcp", "udp"}),
 			},
-			"elastic_ip": &schema.Schema{
+			"elastic_ip": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateIp,
 			},
-			"elastic_port": &schema.Schema{
+			"elastic_port": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validatePort,
 			},
-			"private_ip": &schema.Schema{
+			"private_ip": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateIp,
 			},
-			"private_port": &schema.Schema{
+			"private_port": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
@@ -133,7 +133,7 @@ func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) er
 	args.VpcId = _entry.UniqVpcId
 	args.NatId = _entry.UniqNatId
 	args.DnatList = []*vpc.DnaptRuleInput{
-		&vpc.DnaptRuleInput{
+		{
 			Eip:   _entry.Eip,
 			Eport: _entry.Eport,
 			Proto: _entry.Proto,

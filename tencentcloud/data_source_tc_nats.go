@@ -15,28 +15,28 @@ func dataSourceTencentCloudNats() *schema.Resource {
 		Read: dataSourceTencentCloudNatsRead,
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
+			"id": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"vpc_id": &schema.Schema{
+			"vpc_id": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
 			},
-			"state": &schema.Schema{
+			"state": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"max_concurrent": &schema.Schema{
+			"max_concurrent": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"bandwidth": &schema.Schema{
+			"bandwidth": {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
@@ -47,36 +47,36 @@ func dataSourceTencentCloudNats() *schema.Resource {
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"id": &schema.Schema{
+						"id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"vpc_id": &schema.Schema{
+						"vpc_id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"name": &schema.Schema{
+						"name": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"state": &schema.Schema{
+						"state": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"max_concurrent": &schema.Schema{
+						"max_concurrent": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"bandwidth": &schema.Schema{
+						"bandwidth": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"assigned_eip_set": &schema.Schema{
+						"assigned_eip_set": {
 							Type:     schema.TypeList,
 							Computed: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
-						"create_time": &schema.Schema{
+						"create_time": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},

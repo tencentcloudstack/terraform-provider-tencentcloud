@@ -65,38 +65,38 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 		Delete: resourceTencentCloudCbsStorageDelete,
 
 		Schema: map[string]*schema.Schema{
-			"storage_type": &schema.Schema{
+			"storage_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStorageType,
 			},
-			"storage_size": &schema.Schema{
+			"storage_size": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"period": &schema.Schema{
+			"period": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateStoragePeriod,
 			},
-			"availability_zone": &schema.Schema{
+			"availability_zone": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"storage_name": &schema.Schema{
+			"storage_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStorageName,
 			},
-			"storage_status": &schema.Schema{
+			"storage_status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"attached": &schema.Schema{
+			"attached": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"snapshot_id": &schema.Schema{
+			"snapshot_id": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,

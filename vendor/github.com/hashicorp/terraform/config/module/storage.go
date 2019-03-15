@@ -7,11 +7,11 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	getter "github.com/hashicorp/go-getter"
 	"github.com/hashicorp/terraform/registry"
 	"github.com/hashicorp/terraform/registry/regsrc"
-	"github.com/hashicorp/terraform/svchost/auth"
 	"github.com/hashicorp/terraform/svchost/disco"
 	"github.com/mitchellh/cli"
 )
@@ -64,22 +64,19 @@ type Storage struct {
 	// StorageDir is the full path to the directory where all modules will be
 	// stored.
 	StorageDir string
-	// Services is a required *disco.Disco, which may have services and
-	// credentials pre-loaded.
-	Services *disco.Disco
-	// Creds optionally provides credentials for communicating with service
-	// providers.
-	Creds auth.CredentialsSource
+
 	// Ui is an optional cli.Ui for user output
 	Ui cli.Ui
+
 	// Mode is the GetMode that will be used for various operations.
 	Mode GetMode
 
 	registry *registry.Client
 }
 
-func NewStorage(dir string, services *disco.Disco, creds auth.CredentialsSource) *Storage {
-	regClient := registry.NewClient(services, creds, nil)
+// NewStorage returns a new initialized Storage object.
+func NewStorage(dir string, services *disco.Disco) *Storage {
+	regClient := registry.NewClient(services, nil)
 
 	return &Storage{
 		StorageDir: dir,
@@ -104,6 +101,21 @@ func (s Storage) loadManifest() (moduleManifest, error) {
 	if err := json.Unmarshal(data, &manifest); err != nil {
 		return manifest, err
 	}
+
+	for i, rec := range manifest.Modules {
+		// If the path was recorded before we changed to always using a
+		// slash as separator, we delete the record from the manifest so
+		// it can be discovered again and will be recorded using a slash.
+		if strings.Contains(rec.Dir, "\\") {
+			manifest.Modules[i] = manifest.Modules[len(manifest.Modules)-1]
+			manifest.Modules = manifest.Modules[:len(manifest.Modules)-1]
+			continue
+		}
+
+		// Make sure we use the correct path separator.
+		rec.Dir = filepath.FromSlash(rec.Dir)
+	}
+
 	return manifest, nil
 }
 
@@ -133,6 +145,9 @@ func (s Storage) recordModule(rec moduleRecord) error {
 			break
 		}
 	}
+
+	// Make sure we always use a slash separator.
+	rec.Dir = filepath.ToSlash(rec.Dir)
 
 	manifest.Modules = append(manifest.Modules, rec)
 
@@ -295,17 +310,17 @@ func (s Storage) findRegistryModule(mSource, constraint string) (moduleRecord, e
 	}
 	rec.registry = true
 
-	log.Printf("[TRACE] %q is a registry module", mod.Module())
+	log.Printf("[TRACE] %q is a registry module", mod.Display())
 
 	versions, err := s.moduleVersions(mod.String())
 	if err != nil {
-		log.Printf("[ERROR] error looking up versions for %q: %s", mod.Module(), err)
+		log.Printf("[ERROR] error looking up versions for %q: %s", mod.Display(), err)
 		return rec, err
 	}
 
 	match, err := newestRecord(versions, constraint)
 	if err != nil {
-		log.Printf("[INFO] no matching version for %q<%s>, %s", mod.Module(), constraint, err)
+		log.Printf("[INFO] no matching version for %q<%s>, %s", mod.Display(), constraint, err)
 	}
 	log.Printf("[DEBUG] matched %q version %s for %s", mod, match.Version, constraint)
 
@@ -322,7 +337,7 @@ func (s Storage) findRegistryModule(mSource, constraint string) (moduleRecord, e
 		}
 
 		if len(resp.Modules) == 0 {
-			return rec, fmt.Errorf("module %q not found in registry", mod.Module())
+			return rec, fmt.Errorf("module %q not found in registry", mod.Display())
 		}
 
 		match, err := newestVersion(resp.Modules[0].Versions, constraint)
@@ -331,7 +346,7 @@ func (s Storage) findRegistryModule(mSource, constraint string) (moduleRecord, e
 		}
 
 		if match == nil {
-			return rec, fmt.Errorf("no versions for %q found matching %q", mod.Module(), constraint)
+			return rec, fmt.Errorf("no versions for %q found matching %q", mod.Display(), constraint)
 		}
 
 		rec.Version = match.Version

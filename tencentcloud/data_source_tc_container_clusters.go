@@ -31,47 +31,47 @@ func dataSourceTencentCloudContainerClusters() *schema.Resource {
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"cluster_id": &schema.Schema{
+						"cluster_id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"security_certification_authority": &schema.Schema{
+						"security_certification_authority": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"security_cluster_external_endpoint": &schema.Schema{
+						"security_cluster_external_endpoint": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"security_username": &schema.Schema{
+						"security_username": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"security_password": &schema.Schema{
+						"security_password": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"description": &schema.Schema{
+						"description": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"kubernetes_version": &schema.Schema{
+						"kubernetes_version": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"nodes_num": &schema.Schema{
+						"nodes_num": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"nodes_status": &schema.Schema{
+						"nodes_status": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"total_cpu": &schema.Schema{
+						"total_cpu": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"total_mem": &schema.Schema{
+						"total_mem": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},

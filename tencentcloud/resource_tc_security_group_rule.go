@@ -19,12 +19,12 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 		Delete: resourceTencentCloudSecurityGroupRuleDelete,
 
 		Schema: map[string]*schema.Schema{
-			"security_group_id": &schema.Schema{
+			"security_group_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"type": &schema.Schema{
+			"type": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
@@ -37,7 +37,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					return
 				},
 			},
-			"cidr_ip": &schema.Schema{
+			"cidr_ip": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
@@ -56,7 +56,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					return
 				},
 			},
-			"ip_protocol": &schema.Schema{
+			"ip_protocol": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
@@ -69,7 +69,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					return
 				},
 			},
-			"port_range": &schema.Schema{
+			"port_range": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
@@ -83,7 +83,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					return
 				},
 			},
-			"policy": &schema.Schema{
+			"policy": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
