@@ -65,3 +65,24 @@ needMoreItems:
 	return backupInfos, nil
 
 }
+
+func (me *MysqlService) DescribeDBZoneConfig(ctx context.Context) (sellConfigures []*cdb.RegionSellConf, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewDescribeDBZoneConfigRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().DescribeDBZoneConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	sellConfigures = response.Response.Items
+	return
+}

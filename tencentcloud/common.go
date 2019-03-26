@@ -62,15 +62,10 @@ func writeToFile(filePath string, data interface{}) error {
 			filePath = strings.Replace(filePath, "~", usr.HomeDir, 1)
 		}
 	}
-
-	if err := os.Remove(filePath); err != nil {
-		return fmt.Errorf("delete old file fail,reason %s", err)
-	}
+	os.Remove(filePath)
 	jsonStr, err := json.MarshalIndent(data, "", "\t")
-
 	if err != nil {
 		return fmt.Errorf("json decode error,reason %s", err)
 	}
-	ioutil.WriteFile(filePath, []byte(jsonStr), 422)
-	return nil
+	return ioutil.WriteFile(filePath, []byte(jsonStr), 422)
 }

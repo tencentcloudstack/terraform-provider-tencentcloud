@@ -22,4 +22,24 @@ const (
 	RegionToronto       = "na-toronto"
 )
 
-var MysqlSupportedRegions = []string{RegionGuangZhou}
+var AllSupportedRegions = []string{RegionBangKok,
+	RegionBeiJing,
+	RegionChengDu,
+	RegionChongQing,
+	RegionGuangZhou,
+	RegionGuangZhouOpen,
+	RegionHongkong,
+	RegionMumbai,
+	RegionSeoul,
+	RegionShangHai,
+	RegionShangHaiFsi,
+	RegionShenZhenFsi,
+	RegionSingapore,
+	RegionTokyo,
+	RegionFrankfurt,
+	RegionMoscow,
+	RegionAshburn,
+	RegionSiliconvalley,
+	RegionToronto,
+}
+var MysqlSupportedRegions = AllSupportedRegions

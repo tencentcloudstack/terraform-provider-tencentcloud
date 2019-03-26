@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -99,7 +100,8 @@ func dataSourceTencentMysqlBackupList() *schema.Resource {
 
 func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface{}) error {
 
-	ctx := context.WithValue(context.TODO(), "logId", GetLogId(nil))
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -128,11 +130,18 @@ func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface
 		itemShemas = append(itemShemas, mapping)
 	}
 
-	d.Set("list", itemShemas)
+	if err := d.Set("list", itemShemas); err != nil {
+		log.Printf("[CRITAL]%s provider set itemShemas fail, reason:%s\n ", logId, err.Error())
+	}
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-		writeToFile(output.(string), itemShemas)
+
+		if err := writeToFile(output.(string), itemShemas); err != nil {
+			log.Printf("[CRITAL]%s output file[%s] fail,  reason[%s]\n",
+				logId, output.(string), err.Error())
+		}
+
 	}
 	return nil
 }
