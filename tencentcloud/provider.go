@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"os"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -10,6 +11,7 @@ const (
 	PROVIDER_SECRET_ID  = "TENCENTCLOUD_SECRET_ID"
 	PROVIDER_SECRET_KEY = "TENCENTCLOUD_SECRET_KEY"
 	PROVIDER_REGION     = "TENCENTCLOUD_REGION"
+	PROVIDER_DEBUG      = "TENCENTCLOUD_DEBUG"
 )
 
 func Provider() *schema.Provider {
@@ -48,7 +50,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_nats":                        dataSourceTencentCloudNats(),
 			"tencentcloud_container_clusters":          dataSourceTencentCloudContainerClusters(),
 			"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),
-			"tencentcloud_mysql_backup_list":           dataSourceTencentMsyqlBackupList(),
+			"tencentcloud_mysql_backup_list":           dataSourceTencentMysqlBackupList(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -94,6 +96,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		SecretId:  secretId.(string),
 		SecretKey: secretKey.(string),
 		Region:    region.(string),
+	}
+	if strings.TrimSpace(os.Getenv(PROVIDER_DEBUG)) != "" {
+		InitLogConfig(true)
+	} else {
+		InitLogConfig(true)
 	}
 	return config.Client()
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func TencentMsyqlBackupInfosItem() map[string]*schema.Schema {
+func TencentMysqlBackupInfosItem() map[string]*schema.Schema {
 
 	return map[string]*schema.Schema{
 		"time": {
@@ -49,7 +49,7 @@ func TencentMsyqlBackupInfosItem() map[string]*schema.Schema {
 /*
 data_source data_source_tc_mysql_backup_list{
 	instance_id      string  = "Database (master)ID"
-    max_number       int64  = "Recent log numbers, default 10"
+    max_number       int64  = "Recent log numbers, default 10,min 0 ,max10000"
     result_output_file string ="Output path"
 	list             []TencentMsyqlBackupInfosItem = "Backup information list"
 }
@@ -64,10 +64,10 @@ struct  TencentMsyqlBackupInfosItem {
 	creator           string = "Backup creator"
 }
 */
-func dataSourceTencentMsyqlBackupList() *schema.Resource {
+func dataSourceTencentMysqlBackupList() *schema.Resource {
 
 	return &schema.Resource{
-		Read: dataSourceTencentMsyqlBackupListRead,
+		Read: dataSourceTencentMysqlBackupListRead,
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:     schema.TypeString,
@@ -75,10 +75,11 @@ func dataSourceTencentMsyqlBackupList() *schema.Resource {
 				Required: true,
 			},
 			"max_number": {
-				Type:     schema.TypeInt,
-				ForceNew: true,
-				Optional: true,
-				Default:  10,
+				Type:         schema.TypeInt,
+				ForceNew:     true,
+				Optional:     true,
+				Default:      10,
+				ValidateFunc: validateIntegerInRange(1, 10000),
 			},
 			"result_output_file": {
 				Type:     schema.TypeString,
@@ -89,22 +90,20 @@ func dataSourceTencentMsyqlBackupList() *schema.Resource {
 			"list": {Type: schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
-					Schema: TencentMsyqlBackupInfosItem(),
+					Schema: TencentMysqlBackupInfosItem(),
 				},
 			},
 		},
 	}
 }
 
-func dataSourceTencentMsyqlBackupListRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface{}) error {
 
-	ctx := context.WithValue(context.TODO(), "logId", GetLogId())
+	ctx := context.WithValue(context.TODO(), "logId", GetLogId(nil))
 
-	v3Conn := meta.(*TencentCloudClient).apiV3Conn
-	mysqlService := MysqlService{client: v3Conn}
+	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	max_number, _ := d.Get("max_number").(int)
-
 	backInfoItems, err := mysqlService.DescribeBackupsByInstanceId(ctx, d.Get("instance_id").(string), int64(max_number))
 
 	if err != nil {
@@ -125,7 +124,7 @@ func dataSourceTencentMsyqlBackupListRead(d *schema.ResourceData, meta interface
 			"internet_url": strings.Replace(*item.InternetUrl, "\u0026", "&", -1),
 			"creator":      *item.Creator,
 		}
-		ids[index] = fmt.Sprint("%d", *item.BackupId)
+		ids[index] = fmt.Sprintf("%d", *item.BackupId)
 		itemShemas = append(itemShemas, mapping)
 	}
 

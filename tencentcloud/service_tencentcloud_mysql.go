@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"log"
 
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -15,6 +16,8 @@ func (me *MysqlService) DescribeBackupsByInstanceId(ctx context.Context,
 	instanceId string,
 	leftNumber int64) (backupInfos []*cdb.BackupInfo, errRet error) {
 
+	logId := GetLogId(ctx)
+
 	listInitSize := leftNumber
 	if listInitSize > 500 {
 		listInitSize = 500
@@ -25,7 +28,7 @@ func (me *MysqlService) DescribeBackupsByInstanceId(ctx context.Context,
 	request.InstanceId = &instanceId
 
 needMoreItems:
-	var limit int64 = 100
+	var limit int64 = 10
 	if leftNumber > limit {
 		limit = leftNumber
 	}
@@ -37,7 +40,8 @@ needMoreItems:
 	request.Offset = &offset
 	defer func() {
 		if errRet != nil {
-			Dlog(ctx, request.GetAction(), request.ToJsonString(), errRet)
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
 
@@ -46,7 +50,9 @@ needMoreItems:
 		errRet = err
 		return
 	}
-	Dlog(ctx, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	totalCount := *response.Response.TotalCount
 	leftNumber = leftNumber - limit
