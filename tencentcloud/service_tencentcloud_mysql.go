@@ -12,8 +12,8 @@ type MysqlService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *MysqlService) DescribeBackupsByInstanceId(ctx context.Context,
-	instanceId string,
+func (me *MysqlService) DescribeBackupsByMysqlId(ctx context.Context,
+	mysqlId string,
 	leftNumber int64) (backupInfos []*cdb.BackupInfo, errRet error) {
 
 	logId := GetLogId(ctx)
@@ -25,7 +25,7 @@ func (me *MysqlService) DescribeBackupsByInstanceId(ctx context.Context,
 	backupInfos = make([]*cdb.BackupInfo, 0, listInitSize)
 
 	request := cdb.NewDescribeBackupsRequest()
-	request.InstanceId = &instanceId
+	request.InstanceId = &mysqlId
 
 needMoreItems:
 	var limit int64 = 10

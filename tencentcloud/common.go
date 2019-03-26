@@ -56,16 +56,28 @@ func writeToFile(filePath string, data interface{}) error {
 	if strings.HasPrefix(filePath, "~") {
 		usr, err := user.Current()
 		if err != nil {
-			return fmt.Errorf("Get current user fail,reason %s", err)
+			return fmt.Errorf("Get current user fail,reason %s", err.Error())
 		}
 		if usr.HomeDir != "" {
 			filePath = strings.Replace(filePath, "~", usr.HomeDir, 1)
 		}
 	}
-	os.Remove(filePath)
+
+	fileInfo, err := os.Stat(filePath)
+	if err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("stat old file error,reason %s", err.Error())
+	}
+	if !os.IsNotExist(err) {
+		if fileInfo.IsDir() {
+			return fmt.Errorf("old filepath is a dir,can not delete")
+		}
+		if err := os.Remove(filePath); err != nil {
+			return fmt.Errorf("delete old file error,reason %s", err.Error())
+		}
+	}
 	jsonStr, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
-		return fmt.Errorf("json decode error,reason %s", err)
+		return fmt.Errorf("json decode error,reason %s", err.Error())
 	}
 	return ioutil.WriteFile(filePath, []byte(jsonStr), 422)
 }

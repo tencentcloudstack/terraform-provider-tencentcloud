@@ -49,7 +49,7 @@ func TencentMysqlBackupInfosItem() map[string]*schema.Schema {
 
 /*
 data_source data_source_tc_mysql_backup_list{
-	instance_id      string  = "Database (master)ID"
+	mysql_id      string  = "Database (master)ID"
     max_number       int64  = "Recent log numbers, default 10,min 0 ,max10000"
     result_output_file string ="Output path"
 	list             []TencentMsyqlBackupInfosItem = "Backup information list"
@@ -70,7 +70,7 @@ func dataSourceTencentMysqlBackupList() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentMysqlBackupListRead,
 		Schema: map[string]*schema.Schema{
-			"instance_id": {
+			"mysql_id": {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Required: true,
@@ -106,7 +106,7 @@ func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	max_number, _ := d.Get("max_number").(int)
-	backInfoItems, err := mysqlService.DescribeBackupsByInstanceId(ctx, d.Get("instance_id").(string), int64(max_number))
+	backInfoItems, err := mysqlService.DescribeBackupsByMysqlId(ctx, d.Get("mysql_id").(string), int64(max_number))
 
 	if err != nil {
 		return fmt.Errorf("api[DescribeBackups]fail, return %s", err.Error())
