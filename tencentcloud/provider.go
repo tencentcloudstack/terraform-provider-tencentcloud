@@ -52,6 +52,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),
 			"tencentcloud_mysql_backup_list":           dataSourceTencentMysqlBackupList(),
 			"tencentcloud_mysql_zone_config":           dataSourceTencentMysqlZoneConfig(),
+			"tencentcloud_mysql_parameter_list":        dataSourceTencentCloudMysqlParameterList(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
