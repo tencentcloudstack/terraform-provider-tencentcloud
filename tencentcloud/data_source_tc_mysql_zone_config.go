@@ -11,11 +11,6 @@ import (
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
-const (
-	ZONE_SELL_STATUS_ONLINE = 1
-	ZONE_SELL_STATUS_NEW    = 2
-)
-
 func TencentMysqlSellType() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"cdb_type": {
