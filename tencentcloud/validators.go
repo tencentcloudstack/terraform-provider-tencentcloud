@@ -230,3 +230,31 @@ func validatePort(v interface{}, k string) (ws []string, errors []error) {
 	}
 	return
 }
+
+func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	if len(value) > 64 || len(value) < 8 {
+		errors = append(errors, fmt.Errorf("invalid password, len(password) must between 8 and 64,%s", value))
+	}
+	var match = make(map[string]bool)
+	if strings.ContainsAny(value, "_+-&=!@#$%^*()") {
+		match["alien"] = true
+	}
+	for i := 0; i < len(value); i++ {
+		if len(match) >= 2 {
+			break
+		}
+		if value[i] >= '0' && value[i] <= '9' {
+			match["number"] = true
+			continue
+		}
+		if (value[i] >= 'a' && value[i] <= 'z') || (value[i] >= 'A' && value[i] <= 'Z') {
+			match["letter"] = true
+			continue
+		}
+	}
+	if len(match) < 2 {
+		errors = append(errors, fmt.Errorf("invalid password, contains at least letters, Numbers, and characters(_+-&=!@#$%%^*()),%s", value))
+	}
+	return
+}

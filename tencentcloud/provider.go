@@ -76,6 +76,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_subnet":                     resourceTencentCloudSubnet(),
 			"tencentcloud_vpc":                        resourceTencentCloudVpc(),
 			"tencentcloud_mysql_backup_policy":        resourceTencentCloudMysqlBackupPolicy(),
+			"tencentcloud_mysql_account":              resourceTencentCloudMysqlAccount(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -15,6 +15,8 @@ import (
 	lumberjack "gopkg.in/natefinch/lumberjack.v2"
 )
 
+const FILED_SP = "#"
+
 var firstLogTime = ""
 var logAtomaticId int64 = 0
 
