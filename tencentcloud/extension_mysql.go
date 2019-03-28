@@ -29,3 +29,9 @@ var MYSQL_DATABASE_PRIVILEGE = []string{"SELECT", "INSERT", "UPDATE", "DELETE",
 	"CREATE ROUTINE", "ALTER ROUTINE", "EVENT", "TRIGGER"}
 
 var MYSQL_DATABASE_MUST_PRIVILEGE = "SHOW VIEW"
+
+var MYSQL_ROLE_MAP = map[int64]string{
+	1: "master",
+	2: "ro",
+	3: "dr",
+}
