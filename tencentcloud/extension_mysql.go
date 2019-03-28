@@ -21,3 +21,9 @@ const (
 
 //default to all host
 var DEFAULT_ACCOUNT_HOST = "%"
+
+var MYSQL_ROLE_MAP = map[int64]string{
+	1: "master",
+	2: "ro",
+	3: "dr",
+}
