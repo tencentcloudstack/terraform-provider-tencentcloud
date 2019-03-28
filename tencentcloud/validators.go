@@ -204,6 +204,21 @@ func validateInstanceName(v interface{}, k string) (ws []string, errors []error)
 	return
 }
 
+func validateAllowedStringValueIgnoreCase(ss []string) schema.SchemaValidateFunc {
+
+	var upperStrs = make([]string, len(ss))
+	for index, value := range ss {
+		upperStrs[index] = strings.ToUpper(value)
+	}
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(string)
+		if !goset.IsIncluded(ss, strings.ToUpper(value)) {
+			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ss, value))
+		}
+		return
+	}
+}
+
 func validateAllowedStringValue(ss []string) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)

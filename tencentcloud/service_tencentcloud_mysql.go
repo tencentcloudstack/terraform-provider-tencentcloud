@@ -211,12 +211,13 @@ func (me *MysqlService) CreateAccount(ctx context.Context, mysqlId string,
 
 	request := cdb.NewCreateAccountsRequest()
 
-	var accountInfo = cdb.Account{User: &accountName, Host: &DEFAULT_ACCOUNT_HOST}
+	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
 	var accountInfos = []*cdb.Account{&accountInfo}
 
 	request.InstanceId = &mysqlId
 	request.Password = &accountPassword
 	request.Accounts = accountInfos
+	request.Description = &accountDescription
 
 	defer func() {
 		if errRet != nil {
@@ -241,7 +242,7 @@ func (me *MysqlService) ModifyAccountPassword(ctx context.Context, mysqlId strin
 
 	request := cdb.NewModifyAccountPasswordRequest()
 
-	var accountInfo = cdb.Account{User: &accountName, Host: &DEFAULT_ACCOUNT_HOST}
+	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
 	var accountInfos = []*cdb.Account{&accountInfo}
 
 	request.InstanceId = &mysqlId
@@ -271,7 +272,7 @@ func (me *MysqlService) ModifyAccountDescription(ctx context.Context, mysqlId st
 
 	request := cdb.NewModifyAccountDescriptionRequest()
 
-	var accountInfo = cdb.Account{User: &accountName, Host: &DEFAULT_ACCOUNT_HOST}
+	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
 	var accountInfos = []*cdb.Account{&accountInfo}
 
 	request.InstanceId = &mysqlId
@@ -301,7 +302,7 @@ func (me *MysqlService) DeleteAccount(ctx context.Context, mysqlId string,
 
 	request := cdb.NewDeleteAccountsRequest()
 
-	var accountInfo = cdb.Account{User: &accountName, Host: &DEFAULT_ACCOUNT_HOST}
+	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
 	var accountInfos = []*cdb.Account{&accountInfo}
 
 	request.InstanceId = &mysqlId
@@ -392,5 +393,79 @@ func (me *MysqlService) DescribeAsyncRequestInfo(ctx context.Context, asyncReque
 	}
 	status = *response.Response.Status
 	message = *response.Response.Info
+	return
+}
+
+func (me *MysqlService) ModifyAccountPrivileges(ctx context.Context, mysqlId string,
+	accountName, databaseName string, privileges []string) (asyncRequestId string, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewModifyAccountPrivilegesRequest()
+	request.InstanceId = &mysqlId
+
+	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
+	request.Accounts = []*cdb.Account{&accountInfo}
+
+	var cdbprivileges = cdb.DatabasePrivilege{Database: &databaseName}
+	cdbprivileges.Privileges = make([]*string, len(privileges))
+
+	for i, _ := range privileges {
+		cdbprivileges.Privileges[i] = &privileges[i]
+	}
+	request.DatabasePrivileges = []*cdb.DatabasePrivilege{&cdbprivileges}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().ModifyAccountPrivileges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	asyncRequestId = *response.Response.AsyncRequestId
+	return
+}
+
+func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId string,
+	accountName, databaseName string) (privileges []string, errRet error) {
+
+	logId := GetLogId(ctx)
+
+	privileges = make([]string, 0, len(MYSQL_DATABASE_PRIVILEGE))
+
+	request := cdb.NewDescribeAccountPrivilegesRequest()
+	request.InstanceId = &mysqlId
+	request.User = &accountName
+	request.Host = &MYSQL_DEFAULT_ACCOUNT_HOST
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().DescribeAccountPrivileges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, dataPrivilege := range response.Response.DatabasePrivileges {
+		if *dataPrivilege.Database == databaseName {
+			for _, privilege := range dataPrivilege.Privileges {
+				privileges = append(privileges, *privilege)
+			}
+			break
+		}
+	}
 	return
 }

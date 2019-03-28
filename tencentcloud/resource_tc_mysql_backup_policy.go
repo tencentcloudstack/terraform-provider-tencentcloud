@@ -14,6 +14,7 @@ func resourceTencentCloudMysqlBackupPolicy() *schema.Resource {
 		Read:   resourceTencentCloudMysqlBackupPolicyRead,
 		Update: resourceTencentCloudMysqlBackupPolicyUpdate,
 		Delete: resourceTencentCloudMysqlBackupPolicyDelete,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
