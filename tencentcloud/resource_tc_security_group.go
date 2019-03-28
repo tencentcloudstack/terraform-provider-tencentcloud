@@ -12,8 +12,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-var projectId = 0
-
 func resourceTencentCloudSecurityGroup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSecurityGroupCreate,
@@ -32,6 +30,11 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(2, 100),
 			},
+			"project_id": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				ForceNew: true,
+			},
 		},
 	}
 }
@@ -39,14 +42,16 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
-		"Action":    "CreateSecurityGroup",
-		"projectId": strconv.Itoa(projectId),
+		"Action": "CreateSecurityGroup",
 	}
 	if _, ok := d.GetOk("name"); ok {
 		params["sgName"] = d.Get("name").(string)
 	}
 	if _, ok := d.GetOk("description"); ok {
 		params["sgRemark"] = d.Get("description").(string)
+	}
+	if _, ok := d.GetOk("project_id"); ok {
+		params["projectId"] = strconv.Itoa(d.Get("project_id").(int))
 	}
 
 	log.Printf("[DEBUG] resource_tc_security_group create params:%v", params)
@@ -80,9 +85,8 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
-		"Action":    "DescribeSecurityGroupEx",
-		"projectId": strconv.Itoa(projectId),
-		"sgId":      d.Id(),
+		"Action": "DescribeSecurityGroupEx",
+		"sgId":   d.Id(),
 	}
 
 	log.Printf("[DEBUG] resource_tc_security_group read params:%v", params)
@@ -99,8 +103,9 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 		Data    struct {
 			TotalNum int `json:"totalNum"`
 			Detail   []struct {
-				SgName   string `json:"sgName"`
-				SgRemark string `json:"sgRemark"`
+				SgName    string `json:"sgName"`
+				SgRemark  string `json:"sgRemark"`
+				ProjectId int    `json:"projectId"`
 			}
 		}
 	}
@@ -119,6 +124,7 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 	sg := jsonresp.Data.Detail[0]
 	d.Set("name", sg.SgName)
 	d.Set("description", sg.SgRemark)
+	d.Set("project_id", sg.ProjectId)
 	return nil
 }
 
