@@ -15,9 +15,8 @@ import (
 )
 
 type resourceTencentCloudMysqlAccountPrivilegeId struct {
-	MysqlId      string
-	AccountName  string
-	DatabaseName string
+	MysqlId     string
+	AccountName string
 }
 
 func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
@@ -53,10 +52,11 @@ func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
 					return hashcode.String(strings.ToLower(v.(string)))
 				},
 			},
-			"database_name": {
-				Type:     schema.TypeString,
-				ForceNew: true,
+			"database_names": {
+				Type:     schema.TypeSet,
 				Required: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				MinItems: 1,
 			},
 		},
 	}
@@ -65,12 +65,10 @@ func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
 func resourceTencentCloudMysqlAccountPrivilegeCreate(d *schema.ResourceData, meta interface{}) error {
 
 	var (
-		mysqlId      = d.Get("mysql_id").(string)
-		accountName  = d.Get("account_name").(string)
-		databaseName = d.Get("database_name").(string)
-		privilegeId  = resourceTencentCloudMysqlAccountPrivilegeId{MysqlId: mysqlId,
-			AccountName:  accountName,
-			DatabaseName: databaseName}
+		mysqlId     = d.Get("mysql_id").(string)
+		accountName = d.Get("account_name").(string)
+		privilegeId = resourceTencentCloudMysqlAccountPrivilegeId{MysqlId: mysqlId,
+			AccountName: accountName}
 	)
 
 	privilegeIdStr, _ := json.Marshal(privilegeId)
@@ -111,9 +109,13 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 		d.SetId("")
 		return nil
 	}
+	dbNames := make([]string, 0, d.Get("database_names").(*schema.Set).Len())
+	for _, v := range d.Get("database_names").(*schema.Set).List() {
+		dbNames = append(dbNames, v.(string))
+	}
 
 	privileges, err := mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId,
-		privilegeId.AccountName, privilegeId.DatabaseName)
+		privilegeId.AccountName, dbNames)
 
 	if err != nil {
 		return err
@@ -154,16 +156,24 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 		return err
 	}
 
-	if d.HasChange("privileges") {
+	if d.HasChange("privileges") || d.HasChange("database_names") {
+		d.Partial(true)
 		d.Get("privileges").(*schema.Set).Add(MYSQL_DATABASE_MUST_PRIVILEGE)
 		privileges := d.Get("privileges").(*schema.Set).List()
+
+		log.Println(privileges)
 		upperPrivileges := make([]string, len(privileges))
 
 		for i, _ := range privileges {
 			upperPrivileges[i] = strings.ToUpper(privileges[i].(string))
 		}
 
-		asyncRequestId, err := mysqlService.ModifyAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, privilegeId.DatabaseName, upperPrivileges)
+		dbNames := make([]string, 0, d.Get("database_names").(*schema.Set).Len())
+		for _, v := range d.Get("database_names").(*schema.Set).List() {
+			dbNames = append(dbNames, v.(string))
+		}
+
+		asyncRequestId, err := mysqlService.ModifyAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, dbNames, upperPrivileges)
 		if err != nil {
 			return err
 		}
@@ -187,6 +197,10 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 			log.Printf("[CRITAL]%s modify account privilege   fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
+		d.SetPartial("privileges")
+		d.SetPartial("db_names")
+		d.Partial(false)
+
 	}
 
 	return resourceTencentCloudMysqlAccountPrivilegeRead(d, meta)
@@ -206,9 +220,15 @@ func resourceTencentCloudMysqlAccountPrivilegeDelete(d *schema.ResourceData, met
 		log.Printf("[CRITAL]%s %s\n ", logId, err.Error())
 		return err
 	}
+
 	upperPrivileges := []string{MYSQL_DATABASE_MUST_PRIVILEGE}
 
-	asyncRequestId, err := mysqlService.ModifyAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, privilegeId.DatabaseName, upperPrivileges)
+	dbNames := make([]string, 0, d.Get("database_names").(*schema.Set).Len())
+	for _, v := range d.Get("database_names").(*schema.Set).List() {
+		dbNames = append(dbNames, v.(string))
+	}
+
+	asyncRequestId, err := mysqlService.ModifyAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, dbNames, upperPrivileges)
 	if err != nil {
 		return err
 	}

@@ -400,7 +400,7 @@ func (me *MysqlService) DescribeAsyncRequestInfo(ctx context.Context, asyncReque
 }
 
 func (me *MysqlService) ModifyAccountPrivileges(ctx context.Context, mysqlId string,
-	accountName, databaseName string, privileges []string) (asyncRequestId string, errRet error) {
+	accountName string, databaseNames []string, privileges []string) (asyncRequestId string, errRet error) {
 
 	logId := GetLogId(ctx)
 	request := cdb.NewModifyAccountPrivilegesRequest()
@@ -409,13 +409,19 @@ func (me *MysqlService) ModifyAccountPrivileges(ctx context.Context, mysqlId str
 	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
 	request.Accounts = []*cdb.Account{&accountInfo}
 
-	var cdbprivileges = cdb.DatabasePrivilege{Database: &databaseName}
-	cdbprivileges.Privileges = make([]*string, len(privileges))
+	request.DatabasePrivileges = make([]*cdb.DatabasePrivilege, 0, len(databaseNames))
 
-	for i, _ := range privileges {
-		cdbprivileges.Privileges[i] = &privileges[i]
+	for _, databaseName := range databaseNames {
+		var temp = databaseName
+		var cdbprivileges = cdb.DatabasePrivilege{Database: &temp}
+		cdbprivileges.Privileges = make([]*string, len(privileges))
+
+		for i, _ := range privileges {
+			cdbprivileges.Privileges[i] = &privileges[i]
+		}
+
+		request.DatabasePrivileges = append(request.DatabasePrivileges, &cdbprivileges)
 	}
-	request.DatabasePrivileges = []*cdb.DatabasePrivilege{&cdbprivileges}
 
 	defer func() {
 		if errRet != nil {
@@ -438,7 +444,7 @@ func (me *MysqlService) ModifyAccountPrivileges(ctx context.Context, mysqlId str
 }
 
 func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId string,
-	accountName, databaseName string) (privileges []string, errRet error) {
+	accountName string, databaseNames []string) (privileges []string, errRet error) {
 
 	logId := GetLogId(ctx)
 
@@ -462,13 +468,40 @@ func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId s
 		return
 	}
 
-	for _, dataPrivilege := range response.Response.DatabasePrivileges {
-		if *dataPrivilege.Database == databaseName {
-			for _, privilege := range dataPrivilege.Privileges {
-				privileges = append(privileges, *privilege)
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	var inSlice = func(str string, strs []string) bool {
+		for _, v := range strs {
+			if v == str {
+				return true
 			}
-			break
+		}
+		return false
+	}
+
+	privilegeCountMap := make(map[string]int)
+
+	hasMapSize := 0
+	for _, dataPrivilege := range response.Response.DatabasePrivileges {
+
+		if inSlice(*dataPrivilege.Database, databaseNames) {
+
+			hasMapSize++
+
+			for _, privilege := range dataPrivilege.Privileges {
+				privilegeCountMap[*privilege]++
+			}
+
 		}
 	}
+	//every exist database all has the privilege
+	for privilege, scount := range privilegeCountMap {
+		if scount == hasMapSize {
+			privileges = append(privileges, privilege)
+		}
+	}
+
+	log.Printf("[DEBUG]%s we got same privileges is %+v \n", logId, privileges)
 	return
 }
