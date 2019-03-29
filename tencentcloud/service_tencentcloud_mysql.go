@@ -391,6 +391,9 @@ func (me *MysqlService) DescribeAsyncRequestInfo(ctx context.Context, asyncReque
 		errRet = err
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	status = *response.Response.Status
 	message = *response.Response.Info
 	return

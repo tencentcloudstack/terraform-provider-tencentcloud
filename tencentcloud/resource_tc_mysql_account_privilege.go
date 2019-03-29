@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 )
 
 type resourceTencentCloudMysqlAccountPrivilegeId struct {
@@ -93,12 +94,31 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 	}
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
+	//check if the account is delete
+	var accountInfo *cdb.AccountInfo = nil
+	accountInfos, err := mysqlService.DescribeAccounts(ctx, privilegeId.MysqlId)
+	if err != nil {
+		return err
+	}
+
+	for _, account := range accountInfos {
+		if *account.User == privilegeId.AccountName {
+			accountInfo = account
+			break
+		}
+	}
+	if accountInfo == nil {
+		d.SetId("")
+		return nil
+	}
+
 	privileges, err := mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId,
 		privilegeId.AccountName, privilegeId.DatabaseName)
 
 	if err != nil {
 		return err
 	}
+
 	var finalPrivileges = make([]string, 0, len(privileges))
 
 	var allowPrivileges = make(map[string]struct{})
@@ -107,6 +127,9 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 	}
 
 	for _, getPrivilege := range privileges {
+		if getPrivilege == MYSQL_DATABASE_MUST_PRIVILEGE {
+			continue
+		}
 		if _, ok := allowPrivileges[getPrivilege]; ok {
 			finalPrivileges = append(finalPrivileges, getPrivilege)
 		}
@@ -132,7 +155,7 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 	}
 
 	if d.HasChange("privileges") {
-
+		d.Get("privileges").(*schema.Set).Add(MYSQL_DATABASE_MUST_PRIVILEGE)
 		privileges := d.Get("privileges").(*schema.Set).List()
 		upperPrivileges := make([]string, len(privileges))
 
