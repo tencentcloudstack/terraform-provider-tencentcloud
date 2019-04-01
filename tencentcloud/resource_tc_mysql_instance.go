@@ -89,10 +89,6 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		},
 
 		// Computed values
-		"mysql_id": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
 		"intranet_ip": {
 			Type:     schema.TypeString,
 			Computed: true,
