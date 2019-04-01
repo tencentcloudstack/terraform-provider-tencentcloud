@@ -273,3 +273,13 @@ func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error
 	}
 	return
 }
+
+func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(int)
+		if !goset.IsIncluded(ints, value) {
+			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ints, value))
+		}
+		return
+	}
+}

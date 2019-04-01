@@ -79,6 +79,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_backup_policy":        resourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":              resourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":    resourceTencentCloudMysqlAccountPrivilege(),
+			"tencentcloud_mysql_instance":             resourceTencentCloudMysqlInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
