@@ -138,20 +138,20 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Sensitive:    true,
 			ValidateFunc: validateMysqlPassword,
 		},
-		"slave_deploy_mode": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-			Default:      0,
-		},
-		"first_slave_zone": {
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"second_slave_zone": {
-			Type:     schema.TypeString,
-			Optional: true,
-		},
+		//		"slave_deploy_mode": {
+		//			Type:         schema.TypeInt,
+		//			Optional:     true,
+		//			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+		//			Default:      0,
+		//		},
+		//		"first_slave_zone": {
+		//			Type:     schema.TypeString,
+		//			Optional: true,
+		//		},
+		//		"second_slave_zone": {
+		//			Type:     schema.TypeString,
+		//			Optional: true,
+		//		},
 		"slave_sync_mode": {
 			Type:         schema.TypeInt,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
@@ -177,7 +177,10 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 	}
 }
 
-func tencentMsyqlCreateInstanceCommSet(ctx context.Context, requestInter interface{}, d *schema.ResourceData, meta interface{}) error {
+/*
+   [master] and [dr] and [ro] all need set
+*/
+func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *schema.ResourceData, meta interface{}) error {
 	requestByMonth, okByMonth := requestInter.(*cdb.CreateDBInstanceRequest)
 	requestByUse, _ := requestInter.(*cdb.CreateDBInstanceHourRequest)
 
@@ -309,7 +312,66 @@ func tencentMsyqlCreateInstanceCommSet(ctx context.Context, requestInter interfa
 
 }
 
-func tencentMsyqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+/*
+ [master] need set
+*/
+func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d *schema.ResourceData, meta interface{}) error {
+	requestByMonth, okByMonth := requestInter.(*cdb.CreateDBInstanceRequest)
+	requestByUse, _ := requestInter.(*cdb.CreateDBInstanceHourRequest)
+
+	if stringInterface, ok := d.GetOk("availability_zone"); ok {
+		str := stringInterface.(string)
+		if okByMonth {
+			requestByMonth.Zone = &str
+			requestByMonth.SlaveZone = &str
+		} else {
+			requestByUse.Zone = &str
+			requestByUse.SlaveZone = &str
+		}
+	}
+
+	if stringInterface, ok := d.GetOk("root_password"); ok {
+		str := stringInterface.(string)
+		if okByMonth {
+			requestByMonth.Password = &str
+		} else {
+			requestByUse.Password = &str
+		}
+	}
+	//slaveDeployMode := int64(d.Get("slave_deploy_mode").(int))
+	var slaveDeployMode int64 = 0
+	if okByMonth {
+		requestByMonth.DeployMode = &slaveDeployMode
+	} else {
+		requestByUse.DeployMode = &slaveDeployMode
+	}
+	//	if stringInterface, ok := d.GetOk("first_slave_zone"); ok {
+	//		str := stringInterface.(string)
+	//		if okByMonth {
+	//			requestByMonth.SlaveZone = &str
+	//		} else {
+	//			requestByUse.SlaveZone = &str
+	//		}
+	//	}
+
+	//	if stringInterface, ok := d.GetOk("second_slave_zone"); ok {
+	//		str := stringInterface.(string)
+	//		if okByMonth {
+	//			requestByMonth.BackupZone = &str
+	//		} else {
+	//			requestByUse.BackupZone = &str
+	//		}
+	//	}
+	slaveSyncMode := int64(d.Get("slave_sync_mode").(int))
+	if okByMonth {
+		requestByMonth.ProtectMode = &slaveSyncMode
+	} else {
+		requestByUse.ProtectMode = &slaveSyncMode
+	}
+	return nil
+}
+
+func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
 
 	logId := GetLogId(ctx)
 
@@ -321,9 +383,14 @@ func tencentMsyqlCreateInstancePayByMonth(ctx context.Context, d *schema.Resourc
 	autoRenewFlag := int64(d.Get("auto_renew_flag").(int))
 	request.AutoRenewFlag = &autoRenewFlag
 
-	if err := tencentMsyqlCreateInstanceCommSet(ctx, request, d, meta); err != nil {
+	if err := mysqlAllInstanceRoleSet(ctx, request, d, meta); err != nil {
 		return err
 	}
+	if err := mysqlMasterInstanceRoleSet(ctx, request, d, meta); err != nil {
+		return err
+	}
+
+	log.Println(request.ToJsonString(), "2222222222222222222222222222")
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -340,14 +407,20 @@ func tencentMsyqlCreateInstancePayByMonth(ctx context.Context, d *schema.Resourc
 	return nil
 }
 
-func tencentMsyqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
 
 	logId := GetLogId(ctx)
 	request := cdb.NewCreateDBInstanceHourRequest()
 
-	if err := tencentMsyqlCreateInstanceCommSet(ctx, request, d, meta); err != nil {
+	if err := mysqlAllInstanceRoleSet(ctx, request, d, meta); err != nil {
 		return err
 	}
+
+	if err := mysqlMasterInstanceRoleSet(ctx, request, d, meta); err != nil {
+		return err
+	}
+
+	log.Println(request.ToJsonString(), "1111111111111111111111111111111")
 
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstanceHour(request)
 	if err != nil {
@@ -376,12 +449,12 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	payType := d.Get("pay_type").(int)
 
 	if payType == MysqlPayByMonth {
-		err := tencentMsyqlCreateInstancePayByMonth(ctx, d, meta)
+		err := mysqlCreateInstancePayByMonth(ctx, d, meta)
 		if err != nil {
 			return err
 		}
 	} else if payType == MysqlPayByUse {
-		err := tencentMsyqlCreateInstancePayByUse(ctx, d, meta)
+		err := mysqlCreateInstancePayByUse(ctx, d, meta)
 		if err != nil {
 			return err
 		}
@@ -394,6 +467,10 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	err := resource.Retry(10*time.Minute, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+		if mysqlInfo == nil {
+			err = fmt.Errorf("mysqlid %s instance not exists", mysqlID)
 			return resource.NonRetryableError(err)
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_DELIVING {
@@ -410,6 +487,12 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
+
+	//初始化
+
+	//开外网
+
+	//开gtid
 
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
@@ -517,12 +600,17 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interface{}) error {
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	mysqlInfo, err := tencentMsyqlBasicInfoRead(ctx, d, meta)
 	if err != nil {
 		return err
+	}
+	if mysqlInfo == nil {
+		d.SetId("")
+		return nil
 	}
 	d.Set("availability_zone", *mysqlInfo.Zone)
 
@@ -531,14 +619,14 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 	d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
-	d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
+	//	d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
 
-	if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
-		d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
-	}
-	if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
-		d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
-	}
+	//	if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
+	//		d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
+	//	}
+	//	if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
+	//		d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
+	//	}
 
 	return nil
 }
