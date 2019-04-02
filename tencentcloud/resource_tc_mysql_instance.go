@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
+	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 )
 
 func TencentMsyqlBasicInfo() map[string]*schema.Schema {
@@ -177,19 +178,21 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
 
-func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta interface{}) (mysqlInfo *cdb.InstanceInfo,
+	errRet error) {
 
 	logId := GetLogId(ctx)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
+	mysqlInfo, errRet = mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
-	if err != nil {
-		return fmt.Errorf("Describe mysql instance fails, reaseon %s", err.Error())
+	if errRet != nil {
+		errRet = fmt.Errorf("Describe mysql instance fails, reaseon %s", errRet.Error())
+		return
 	}
 	if mysqlInfo == nil {
 		d.SetId("")
-		return nil
+		return
 	}
 
 	d.Set("instance_name", *mysqlInfo.InstanceName)
@@ -223,14 +226,16 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 
 	isGTIDOpen, err := mysqlService.CheckDBGTIDOpen(ctx, d.Id())
 	if err != nil {
-		return err
+		errRet = err
+		return
 	}
 	d.Set("gtid", int(isGTIDOpen))
 	d.Set("project_id", int(*mysqlInfo.ProjectId))
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
-		return err
+		errRet = err
+		return
 	}
 	d.Set("security_groups", securityGroups)
 
@@ -244,7 +249,8 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		}
 		caresParameters, err := mysqlService.DescribeCaresParameters(ctx, d.Id(), cares)
 		if err != nil {
-			return err
+			errRet = err
+			return
 		}
 		if err := d.Set("parameters", caresParameters); err != nil {
 			log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, err.Error())
@@ -252,7 +258,8 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	tags, err := mysqlService.DescribeTagsOfInstanceId(ctx, d.Id())
 	if err != nil {
-		return err
+		errRet = err
+		return
 	}
 	if err := d.Set("tags", tags); err != nil {
 		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
@@ -268,7 +275,7 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	d.Set("status", *mysqlInfo.Status)
 	d.Set("task_status", *mysqlInfo.TaskStatus)
-	return nil
+	return
 }
 
 func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interface{}) error {
@@ -276,9 +283,12 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	if err := tencentMsyqlBasicInfoRead(ctx, d, meta); err != nil {
+	mysqlInfo, err := tencentMsyqlBasicInfoRead(ctx, d, meta)
+	if err != nil {
 		return err
 	}
+	d.Set("availability_zone", *mysqlInfo.Zone)
+
 	return nil
 }
 func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
