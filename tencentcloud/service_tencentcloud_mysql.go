@@ -199,9 +199,6 @@ func (me *MysqlService) DescribeInstanceParameters(ctx context.Context, instance
 		return
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 	parameterList = response.Response.Items
 	return
 }
