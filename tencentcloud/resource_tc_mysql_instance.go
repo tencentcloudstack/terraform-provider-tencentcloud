@@ -174,7 +174,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 }
 
 func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-
+	d.SetId("cdb-8xtme2cj")
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
 
@@ -279,15 +279,25 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interface{}) error {
-
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-
+	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	mysqlInfo, err := tencentMsyqlBasicInfoRead(ctx, d, meta)
 	if err != nil {
 		return err
 	}
 	d.Set("availability_zone", *mysqlInfo.Zone)
+
+	backConfig, err := mysqlService.DescribeDBInstanceConfig(ctx, d.Id())
+	d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
+	d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
+
+	if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
+		d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
+	}
+	if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
+		d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
+	}
 
 	return nil
 }

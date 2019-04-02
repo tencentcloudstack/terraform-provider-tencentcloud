@@ -644,3 +644,30 @@ func (me *MysqlService) DescribeTagsOfInstanceId(ctx context.Context, mysqlId st
 	}
 	return
 }
+
+func (me *MysqlService) DescribeDBInstanceConfig(ctx context.Context, mysqlId string) (backupConfig *cdb.DescribeDBInstanceConfigResponse,
+	errRet error) {
+	logId := GetLogId(ctx)
+	request := cdb.NewDescribeDBInstanceConfigRequest()
+	request.InstanceId = &mysqlId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().DescribeDBInstanceConfig(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	backupConfig = response
+
+	return
+}
