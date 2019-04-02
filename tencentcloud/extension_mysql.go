@@ -37,6 +37,12 @@ var MYSQL_ROLE_MAP = map[int64]string{
 }
 
 //mysql available period value
-var MYSQL_AVAILABLE_PERIOD = []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}
+var MYSQL_AVAILABLE_PERIOD = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}
 
 var MYSQL_SUPPORTS_ENGINE = []string{"5.5", "5.6", "5.7"}
+
+const (
+	MYSQL_RENEW_NOUSE = 0
+	MYSQL_RENEW_OPEN  = 1
+	MYSQL_RENEW_CLOSE = 2
+)

@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
@@ -179,6 +180,7 @@ func (me *MysqlService) DescribeDefaultParameters(ctx context.Context, engineVer
 }
 
 func (me *MysqlService) DescribeInstanceParameters(ctx context.Context, instanceId string) (parameterList []*cdb.ParameterDetail, errRet error) {
+
 	logId := GetLogId(ctx)
 
 	request := cdb.NewDescribeInstanceParamsRequest()
@@ -201,6 +203,31 @@ func (me *MysqlService) DescribeInstanceParameters(ctx context.Context, instance
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	parameterList = response.Response.Items
+	return
+}
+
+func (me *MysqlService) DescribeCaresParameters(ctx context.Context, instanceId string, cares []string) (caresKv map[string]interface{}, errRet error) {
+	caresKv = make(map[string]interface{})
+	parameterList, err := me.DescribeInstanceParameters(ctx, instanceId)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	var inSlice = func(key string) bool {
+		for _, care := range cares {
+			if key == care {
+				return true
+			}
+		}
+		return false
+	}
+
+	for _, paramInfo := range parameterList {
+		if inSlice(*paramInfo.Name) {
+			caresKv[*paramInfo.Name] = *paramInfo.CurrentValue
+		}
+	}
 	return
 }
 
@@ -503,5 +530,117 @@ func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId s
 	}
 
 	log.Printf("[DEBUG]%s we got same privileges is %+v \n", logId, privileges)
+	return
+}
+
+func (me *MysqlService) DescribeDBInstanceById(ctx context.Context, mysqlId string) (mysqlInfo *cdb.InstanceInfo, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewDescribeDBInstancesRequest()
+	request.InstanceIds = []*string{&mysqlId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().DescribeDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) == 0 {
+		return
+	}
+	if len(response.Response.Items) > 1 {
+		errRet = fmt.Errorf("One mysql id got %d instance info", len(response.Response.Items))
+	}
+	mysqlInfo = response.Response.Items[0]
+
+	return
+}
+
+func (me *MysqlService) CheckDBGTIDOpen(ctx context.Context, mysqlId string) (open int64, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewDescribeDBInstanceGTIDRequest()
+	request.InstanceId = &mysqlId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().DescribeDBInstanceGTID(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	open = *response.Response.IsGTIDOpen
+	return
+}
+
+func (me *MysqlService) DescribeDBSecurityGroups(ctx context.Context, mysqlId string) (securityGroups []string, errRet error) {
+	logId := GetLogId(ctx)
+	request := cdb.NewDescribeDBSecurityGroupsRequest()
+	request.InstanceId = &mysqlId
+	securityGroups = make([]string, 0, 10)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().DescribeDBSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	for _, sg := range response.Response.Groups {
+		securityGroups = append(securityGroups, *sg.SecurityGroupId)
+	}
+	return
+}
+
+func (me *MysqlService) ModifyInstanceTags() {}
+
+func (me *MysqlService) DescribeTagsOfInstanceId(ctx context.Context, mysqlId string) (tags map[string]string, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewDescribeTagsOfInstanceIdsRequest()
+	request.InstanceIds = []*string{&mysqlId}
+	tags = make(map[string]string)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().DescribeTagsOfInstanceIds(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Rows) == 0 {
+		return
+	}
+	if len(response.Response.Rows) > 1 {
+		errRet = fmt.Errorf("One mysql id got %d tags info rows", len(response.Response.Rows))
+	}
+
+	for _, tag := range response.Response.Rows[0].Tags {
+		tags[*tag.TagKey] = *tag.TagValue
+	}
 	return
 }

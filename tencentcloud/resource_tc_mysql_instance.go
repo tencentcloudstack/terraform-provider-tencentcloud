@@ -1,6 +1,10 @@
 package tencentcloud
 
 import (
+	"context"
+	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -10,6 +14,12 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"instance_name": {
 			Type:     schema.TypeString,
 			Optional: true,
+		},
+		"pay_type": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+			Default:      0,
 		},
 		"period": {
 			Type:         schema.TypeInt,
@@ -69,23 +79,14 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 				return hashcode.String(v.(string))
 			},
 		},
-		"availability_zone": {
-			Type:     schema.TypeString,
-			Optional: true,
-		},
+
 		"parameters": {
 			Type:     schema.TypeMap,
 			Optional: true,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
 		},
 		"tags": {
 			Type:     schema.TypeMap,
 			Optional: true,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
 		},
 
 		// Computed values
@@ -122,6 +123,10 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 
 func resourceTencentCloudMysqlInstance() *schema.Resource {
 	specialInfo := map[string]*schema.Schema{
+		"availability_zone": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
 		"root_password": {
 			Type:         schema.TypeString,
 			Optional:     true,
@@ -168,12 +173,116 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 }
 
 func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+
+	return resourceTencentCloudMysqlInstanceRead(d, meta)
+}
+
+func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(ctx)
+
+	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
+
+	if err != nil {
+		return fmt.Errorf("Describe mysql instance fails, reaseon %s", err.Error())
+	}
+	if mysqlInfo == nil {
+		d.SetId("")
+		return nil
+	}
+
+	d.Set("instance_name", *mysqlInfo.InstanceName)
+	d.Set("pay_type", int(*mysqlInfo.PayType))
+
+	tempInt, _ := d.Get("period").(int)
+	if tempInt == 0 {
+		d.Set("period", 1)
+	}
+
+	if *mysqlInfo.AutoRenew == MYSQL_RENEW_CLOSE {
+		*mysqlInfo.AutoRenew = MYSQL_RENEW_NOUSE
+	}
+	d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
+
+	d.Set("engine_version", *mysqlInfo.EngineVersion)
+	d.Set("mem_size", *mysqlInfo.Memory)
+	d.Set("volume_size", *mysqlInfo.Volume)
+	d.Set("vpc_id", *mysqlInfo.UniqVpcId)
+	d.Set("subnet_id", *mysqlInfo.UniqSubnetId)
+
+	if *mysqlInfo.WanStatus == 1 {
+		d.Set("internet_service", 1)
+		d.Set("internet_host", *mysqlInfo.WanDomain)
+		d.Set("internet_port", int(*mysqlInfo.WanPort))
+	} else {
+		d.Set("internet_service", 0)
+		d.Set("internet_host", "")
+		d.Set("internet_port", 0)
+	}
+
+	isGTIDOpen, err := mysqlService.CheckDBGTIDOpen(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+	d.Set("gtid", int(isGTIDOpen))
+	d.Set("project_id", int(*mysqlInfo.ProjectId))
+
+	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+	d.Set("security_groups", securityGroups)
+
+	parametersMap, ok := d.Get("parameters").(map[string]interface{})
+	if !ok {
+		log.Printf("[INFO] %d  config error,parameters is not map[string]interface{}\n", logId)
+	} else {
+		var cares []string
+		for k, _ := range parametersMap {
+			cares = append(cares, k)
+		}
+		caresParameters, err := mysqlService.DescribeCaresParameters(ctx, d.Id(), cares)
+		if err != nil {
+			return err
+		}
+		if err := d.Set("parameters", caresParameters); err != nil {
+			log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, err.Error())
+		}
+	}
+	tags, err := mysqlService.DescribeTagsOfInstanceId(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+	if err := d.Set("tags", tags); err != nil {
+		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
+	}
+
+	d.Set("intranet_ip", *mysqlInfo.Vip)
+	d.Set("intranet_port", int(*mysqlInfo.Vport))
+
+	if *mysqlInfo.CdbError != 0 {
+		d.Set("locked", 1)
+	} else {
+		d.Set("locked", 0)
+	}
+	d.Set("status", *mysqlInfo.Status)
+	d.Set("task_status", *mysqlInfo.TaskStatus)
 	return nil
 }
+
 func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	if err := tencentMsyqlBasicInfoRead(ctx, d, meta); err != nil {
+		return err
+	}
 	return nil
 }
 func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+
 	return nil
 }
 func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interface{}) error {
