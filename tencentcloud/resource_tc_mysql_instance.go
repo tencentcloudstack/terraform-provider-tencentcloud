@@ -10,20 +10,22 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_name": {
-			Type:     schema.TypeString,
-			Optional: true,
+			Type:         schema.TypeString,
+			Required:     true,
+			ValidateFunc: validateStringLengthInRange(1, 100),
 		},
 		"pay_type": {
 			Type:         schema.TypeInt,
 			ForceNew:     true,
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
-			Default:      0,
+			Default:      MysqlPayByUse,
 		},
 		"period": {
 			Type:         schema.TypeInt,
@@ -44,7 +46,6 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			ValidateFunc: validateAllowedStringValue(MYSQL_SUPPORTS_ENGINE),
 			Default:      MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-1],
 		},
-
 		"intranet_port": {
 			Type:         schema.TypeInt,
 			Optional:     true,
@@ -60,12 +61,14 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Required: true,
 		},
 		"vpc_id": {
-			Type:     schema.TypeString,
-			Optional: true,
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validateStringLengthInRange(1, 100),
 		},
 		"subnet_id": {
-			Type:     schema.TypeString,
-			Optional: true,
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validateStringLengthInRange(1, 100),
 		},
 		"internet_service": {
 			Type:         schema.TypeInt,
@@ -73,7 +76,6 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
 		},
-
 		"project_id": {
 			Type:     schema.TypeInt,
 			Optional: true,
@@ -86,7 +88,6 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 				return hashcode.String(v.(string))
 			},
 		},
-
 		"parameters": {
 			Type:     schema.TypeMap,
 			Optional: true,
@@ -531,6 +532,10 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta interface{}) (mysqlInfo *cdb.InstanceInfo,
 	errRet error) {
 
+	if d.Id() == "" {
+		return
+	}
+
 	logId := GetLogId(ctx)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -576,6 +581,21 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		d.Set("internet_port", 0)
 	}
 
+	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
+	if err != nil {
+		sdkErr, ok := err.(*errors.TencentCloudSDKError)
+		if ok {
+			if sdkErr.Code == MysqlInstanceIdNotFound3 {
+				mysqlInfo = nil
+				d.SetId("")
+				return
+			}
+		}
+		errRet = err
+		return
+	}
+	d.Set("security_groups", securityGroups)
+
 	isGTIDOpen, err := mysqlService.CheckDBGTIDOpen(ctx, d.Id())
 	if err != nil {
 		errRet = err
@@ -583,13 +603,6 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	d.Set("gtid", int(isGTIDOpen))
 	d.Set("project_id", int(*mysqlInfo.ProjectId))
-
-	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
-	if err != nil {
-		errRet = err
-		return
-	}
-	d.Set("security_groups", securityGroups)
 
 	parametersMap, ok := d.Get("parameters").(map[string]interface{})
 	if !ok {
@@ -668,7 +681,194 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 
 	return nil
 }
+
+/*
+   [master] and [dr] and [ro] all need update
+*/
+func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(ctx)
+
+	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	if d.HasChange("instance_name") {
+		if err := mysqlService.ModifyDBInstanceName(ctx, d.Id(), d.Get("instance_name").(string)); err != nil {
+			return err
+		}
+		d.SetPartial("instance_name")
+	}
+
+	if d.HasChange("intranet_port") || d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		var (
+			intranetPort = int64(d.Get("intranet_port").(int))
+			vpcId        = ""
+			subnetId     = ""
+		)
+		if d.HasChange("vpc_id") {
+			vpcId = d.Get("vpc_id").(string)
+			if vpcId == "" {
+				return fmt.Errorf("[vpc_id]Once a setting cannot be deleted,it can only be modified")
+			}
+		}
+		if d.HasChange("subnet_id") {
+			subnetId = d.Get("subnet_id").(string)
+			if vpcId == "" {
+				return fmt.Errorf("[subnet_id]Once a setting cannot be deleted,it can only be modified")
+			}
+		}
+
+		if err := mysqlService.ModifyDBInstanceVipVport(ctx, d.Id(), vpcId, subnetId, intranetPort); err != nil {
+			return err
+		}
+		if d.HasChange("intranet_port") {
+			d.SetPartial("intranet_port")
+		}
+		if d.HasChange("vpc_id") {
+			d.SetPartial("vpc_id")
+		}
+		if d.HasChange("subnet_id") {
+			d.SetPartial("subnet_id")
+		}
+	}
+
+	if d.HasChange("mem_size") || d.HasChange("volume_size") {
+
+		memSize := int64(d.Get("mem_size").(int))
+		volumeSize := int64(d.Get("volume_size").(int))
+
+		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, volumeSize)
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(60*time.Minute, func() *resource.RetryError {
+			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+				return nil
+			}
+			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("update mysql  mem_size/volume_size status is %s", taskStatus))
+			}
+			err = fmt.Errorf("update mysql  mem_size/volume_size task status is %s,we won't wait for it finish ,it show message:%s",
+				message)
+			return resource.NonRetryableError(err)
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+		if d.HasChange("mem_size") {
+			d.SetPartial("mem_size")
+		}
+		if d.HasChange("volume_size") {
+			d.SetPartial("volume_size")
+		}
+	}
+
+	if d.HasChange("internet_service") {
+		internetService := d.Get("internet_service").(int)
+		var (
+			asyncRequestId       = ""
+			err            error = nil
+			tag                  = "close internet service"
+		)
+		if internetService == 0 {
+			asyncRequestId, err = mysqlService.CloseWanService(ctx, d.Id())
+		} else {
+			asyncRequestId, err = mysqlService.OpenWanService(ctx, d.Id())
+			tag = "open internet service"
+		}
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mysql %s fail, reason:%s\n ", logId, tag, err.Error())
+			return err
+		}
+		err = resource.Retry(60*time.Minute, func() *resource.RetryError {
+			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+				return nil
+			}
+			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("update mysql  %s status is %s", tag, taskStatus))
+			}
+			err = fmt.Errorf("update mysql  %s task status is %s,we won't wait for it finish ,it show message:%s",
+				tag, message)
+			return resource.NonRetryableError(err)
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update mysql  %s  fail, reason:%s\n ", logId, tag, err.Error())
+			return err
+		}
+		d.SetPartial("internet_service")
+	}
+
+	if d.HasChange("project_id") {
+		newProjectId := int64(d.Get("project_id").(int))
+		if err := mysqlService.ModifyDBInstanceProject(ctx, d.Id(), newProjectId); err != nil {
+			return err
+		}
+		d.SetPartial("project_id")
+	}
+
+	return nil
+}
+
+/*
+ [master] need set
+*/
+func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+	return nil
+}
+
+func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta); err != nil {
+		return err
+	}
+	if err := mysqlMasterInstanceRoleUpdate(ctx, d, meta); err != nil {
+		return err
+	}
+	return nil
+}
+
+func mysqlUpdateInstancePayByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta); err != nil {
+		return err
+	}
+	if err := mysqlMasterInstanceRoleUpdate(ctx, d, meta); err != nil {
+		return err
+	}
+	return nil
+}
+
 func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	payType := d.Get("pay_type").(int)
+
+	d.Partial(true)
+	if payType == MysqlPayByMonth {
+		err := mysqlUpdateInstancePayByMonth(ctx, d, meta)
+		if err != nil {
+			return err
+		}
+	} else if payType == MysqlPayByUse {
+		err := mysqlUpdateInstancePayByUse(ctx, d, meta)
+		if err != nil {
+			return err
+		}
+	} else {
+		return fmt.Errorf("mysql not support this pay type yet.")
+	}
+	d.Partial(false)
 
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }

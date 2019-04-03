@@ -771,3 +771,106 @@ func (me *MysqlService) OpenDBInstanceGTID(ctx context.Context, mysqlId string) 
 	asyncRequestId = *response.Response.AsyncRequestId
 	return
 }
+
+func (me *MysqlService) ModifyDBInstanceName(ctx context.Context, mysqlId,
+	newInstanceName string) (errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewModifyDBInstanceNameRequest()
+	request.InstanceId = &mysqlId
+	request.InstanceName = &newInstanceName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, errRet := me.client.UseMysqlClient().ModifyDBInstanceName(request)
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MysqlService) ModifyDBInstanceVipVport(ctx context.Context, mysqlId, vpcId, subnetId string, port int64) (errRet error) {
+	logId := GetLogId(ctx)
+	request := cdb.NewModifyDBInstanceVipVportRequest()
+	request.InstanceId = &mysqlId
+	request.DstPort = &port
+	if vpcId != "" {
+		request.UniqVpcId = &vpcId
+	}
+	if subnetId != "" {
+		request.UniqSubnetId = &subnetId
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, errRet := me.client.UseMysqlClient().ModifyDBInstanceVipVport(request)
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
+	memSize, volumeSize int64) (asyncRequestId string, errRet error) {
+
+	logId := GetLogId(ctx)
+
+	var waitSwitch int64 = 0 //0- switch immediately, 1- time window switch
+
+	request := cdb.NewUpgradeDBInstanceRequest()
+	request.InstanceId = &mysqlId
+	request.Memory = &memSize
+	request.Volume = &volumeSize
+	request.WaitSwitch = &waitSwitch
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().UpgradeDBInstance(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	asyncRequestId = *response.Response.AsyncRequestId
+	return
+}
+
+func (me *MysqlService) ModifyDBInstanceProject(ctx context.Context, mysqlId string, newProjectId int64) (errRet error) {
+	logId := GetLogId(ctx)
+
+	request := cdb.NewModifyDBInstanceProjectRequest()
+	request.InstanceIds = []*string{&mysqlId}
+	request.NewProjectId = &newProjectId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().ModifyDBInstanceProject(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+
+}
