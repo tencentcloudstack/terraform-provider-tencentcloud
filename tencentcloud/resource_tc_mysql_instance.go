@@ -44,6 +44,13 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			ValidateFunc: validateAllowedStringValue(MYSQL_SUPPORTS_ENGINE),
 			Default:      MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-1],
 		},
+
+		"intranet_port": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validateIntegerInRange(1024, 65535),
+			Default:      3306,
+		},
 		"mem_size": {
 			Type:     schema.TypeInt,
 			Required: true,
@@ -66,12 +73,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
 		},
-		"gtid": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-			Default:      0,
-		},
+
 		"project_id": {
 			Type:     schema.TypeInt,
 			Optional: true,
@@ -99,10 +101,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Type:     schema.TypeString,
 			Computed: true,
 		},
-		"intranet_port": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
+
 		"locked": {
 			Type:     schema.TypeInt,
 			Computed: true,
@@ -123,6 +122,10 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Type:     schema.TypeInt,
 			Computed: true,
 		},
+		"gtid": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
 	}
 }
 
@@ -134,7 +137,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		},
 		"root_password": {
 			Type:         schema.TypeString,
-			Optional:     true,
+			Required:     true,
 			Sensitive:    true,
 			ValidateFunc: validateMysqlPassword,
 		},
@@ -205,6 +208,13 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 		requestByMonth.EngineVersion = &engineVersion
 	} else {
 		requestByUse.EngineVersion = &engineVersion
+	}
+
+	intranetPort := int64(d.Get("intranet_port").(int))
+	if okByMonth {
+		requestByMonth.Port = &intranetPort
+	} else {
+		requestByUse.Port = &intranetPort
 	}
 
 	memSize := int64(d.Get("mem_size").(int))
@@ -387,7 +397,6 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		return err
 	}
 
-	log.Println(request.ToJsonString(), "2222222222222222222222222222")
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -417,8 +426,6 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 		return err
 	}
 
-	log.Println(request.ToJsonString(), "1111111111111111111111111111111")
-
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstanceHour(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -442,7 +449,6 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	_ = mysqlService
 	payType := d.Get("pay_type").(int)
 
 	if payType == MysqlPayByMonth {
@@ -485,11 +491,34 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	//初始化
+	//internet service
+	internetService := d.Get("internet_service").(int)
+	if internetService == 1 {
+		asyncRequestId, err := mysqlService.OpenWanService(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+		err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+				return nil
+			}
+			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
+			}
+			err = fmt.Errorf("open internet service task status is %s,we won't wait for it finish ,it show message:%s",
+				message)
+			return resource.NonRetryableError(err)
+		})
 
-	//开外网
-
-	//开gtid
+		if err != nil {
+			log.Printf("[CRITAL]%s open internet service   fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+	}
 
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
@@ -616,14 +645,14 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 	d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
-	//	d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
+	d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
 
-	//	if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
-	//		d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
-	//	}
-	//	if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
-	//		d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
-	//	}
+	if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
+		d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
+	}
+	if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
+		d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
+	}
 
 	return nil
 }

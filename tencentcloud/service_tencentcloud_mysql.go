@@ -668,3 +668,106 @@ func (me *MysqlService) DescribeDBInstanceConfig(ctx context.Context, mysqlId st
 
 	return
 }
+
+func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId string, password string) (asyncRequestId string, errRet error) {
+	logId := GetLogId(ctx)
+	request := cdb.NewInitDBInstancesRequest()
+	request.InstanceIds = []*string{&mysqlId}
+	request.NewPassword = &password
+
+	paramsMap := map[string]string{
+		"character_set_server":   "utf8mb4", //["utf8","latin1","gbk","utf8mb4"]
+		"lower_case_table_names": "1",       //["0","1"]
+	}
+	request.Parameters = make([]*cdb.ParamInfo, 0, len(paramsMap))
+	for k, v := range paramsMap {
+		name := k
+		value := v
+		param := cdb.ParamInfo{Name: &name, Value: &value}
+		request.Parameters = append(request.Parameters, &param)
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().InitDBInstances(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	if len(response.Response.AsyncRequestIds) != 1 {
+		errRet = fmt.Errorf("init one  mysql id got %d async ids", len(response.Response.AsyncRequestIds))
+		return
+	}
+
+	asyncRequestId = *response.Response.AsyncRequestIds[0]
+	return
+}
+
+func (me *MysqlService) OpenWanService(ctx context.Context, mysqlId string) (asyncRequestId string, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewOpenWanServiceRequest()
+	request.InstanceId = &mysqlId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().OpenWanService(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	asyncRequestId = *response.Response.AsyncRequestId
+	return
+}
+
+func (me *MysqlService) CloseWanService(ctx context.Context, mysqlId string) (asyncRequestId string, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewCloseWanServiceRequest()
+	request.InstanceId = &mysqlId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().CloseWanService(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	asyncRequestId = *response.Response.AsyncRequestId
+	return
+}
+
+func (me *MysqlService) OpenDBInstanceGTID(ctx context.Context, mysqlId string) (asyncRequestId string, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewOpenDBInstanceGTIDRequest()
+	request.InstanceId = &mysqlId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().OpenDBInstanceGTID(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	asyncRequestId = *response.Response.AsyncRequestId
+	return
+}
