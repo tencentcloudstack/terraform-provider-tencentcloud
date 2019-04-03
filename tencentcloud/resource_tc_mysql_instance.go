@@ -133,6 +133,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 	specialInfo := map[string]*schema.Schema{
 		"availability_zone": {
 			Type:     schema.TypeString,
+			ForceNew: true,
 			Optional: true,
 		},
 		"root_password": {
@@ -144,21 +145,25 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"slave_deploy_mode": {
 			Type:         schema.TypeInt,
 			Optional:     true,
+			ForceNew:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
 		},
 		"first_slave_zone": {
 			Type:     schema.TypeString,
+			ForceNew: true,
 			Optional: true,
 		},
 		"second_slave_zone": {
 			Type:     schema.TypeString,
+			ForceNew: true,
 			Optional: true,
 		},
 		"slave_sync_mode": {
 			Type:         schema.TypeInt,
-			ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
+			ForceNew:     true,
 			Optional:     true,
+			ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
 			Default:      0,
 		},
 	}
@@ -648,10 +653,17 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
 
 	if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
-		d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
+		//if you set ,i set
+		if _, ok := d.GetOk("first_slave_zone"); ok {
+			d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
+		}
 	}
 	if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
-		d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
+		//if you set ,i set
+		if _, ok := d.GetOk("second_slave_zone"); ok {
+			d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
+		}
+
 	}
 
 	return nil
