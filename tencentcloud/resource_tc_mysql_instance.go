@@ -138,20 +138,20 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Sensitive:    true,
 			ValidateFunc: validateMysqlPassword,
 		},
-		//		"slave_deploy_mode": {
-		//			Type:         schema.TypeInt,
-		//			Optional:     true,
-		//			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-		//			Default:      0,
-		//		},
-		//		"first_slave_zone": {
-		//			Type:     schema.TypeString,
-		//			Optional: true,
-		//		},
-		//		"second_slave_zone": {
-		//			Type:     schema.TypeString,
-		//			Optional: true,
-		//		},
+		"slave_deploy_mode": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+			Default:      0,
+		},
+		"first_slave_zone": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"second_slave_zone": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
 		"slave_sync_mode": {
 			Type:         schema.TypeInt,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
@@ -323,10 +323,8 @@ func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d
 		str := stringInterface.(string)
 		if okByMonth {
 			requestByMonth.Zone = &str
-			requestByMonth.SlaveZone = &str
 		} else {
 			requestByUse.Zone = &str
-			requestByUse.SlaveZone = &str
 		}
 	}
 
@@ -338,30 +336,29 @@ func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d
 			requestByUse.Password = &str
 		}
 	}
-	//slaveDeployMode := int64(d.Get("slave_deploy_mode").(int))
-	var slaveDeployMode int64 = 0
+	slaveDeployMode := int64(d.Get("slave_deploy_mode").(int))
 	if okByMonth {
 		requestByMonth.DeployMode = &slaveDeployMode
 	} else {
 		requestByUse.DeployMode = &slaveDeployMode
 	}
-	//	if stringInterface, ok := d.GetOk("first_slave_zone"); ok {
-	//		str := stringInterface.(string)
-	//		if okByMonth {
-	//			requestByMonth.SlaveZone = &str
-	//		} else {
-	//			requestByUse.SlaveZone = &str
-	//		}
-	//	}
+	if stringInterface, ok := d.GetOk("first_slave_zone"); ok {
+		str := stringInterface.(string)
+		if okByMonth {
+			requestByMonth.SlaveZone = &str
+		} else {
+			requestByUse.SlaveZone = &str
+		}
+	}
 
-	//	if stringInterface, ok := d.GetOk("second_slave_zone"); ok {
-	//		str := stringInterface.(string)
-	//		if okByMonth {
-	//			requestByMonth.BackupZone = &str
-	//		} else {
-	//			requestByUse.BackupZone = &str
-	//		}
-	//	}
+	if stringInterface, ok := d.GetOk("second_slave_zone"); ok {
+		str := stringInterface.(string)
+		if okByMonth {
+			requestByMonth.BackupZone = &str
+		} else {
+			requestByUse.BackupZone = &str
+		}
+	}
 	slaveSyncMode := int64(d.Get("slave_sync_mode").(int))
 	if okByMonth {
 		requestByMonth.ProtectMode = &slaveSyncMode
