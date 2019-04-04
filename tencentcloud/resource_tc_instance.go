@@ -135,7 +135,6 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"allocate_public_ip": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  false,
 			},
 			// vpc
 			"vpc_id": {
@@ -304,7 +303,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		maxBandwidthOut := internetMaxBandwidthOut.(int)
 		params["InternetAccessible.InternetMaxBandwidthOut"] = fmt.Sprintf("%v", maxBandwidthOut)
 	}
-	if allocatePublicIP, ok := d.GetOk("allocate_public_ip"); ok {
+	if allocatePublicIP, ok := d.GetOkExists("allocate_public_ip"); ok {
 		if allocatePublicIP.(bool) {
 			params["InternetAccessible.PublicIpAssigned"] = "TRUE"
 		} else {
@@ -545,6 +544,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	publicIPs := jsonresp.Response.InstanceSet[0].PublicIpAddresses
 	if len(publicIPs) > 0 {
 		d.Set("public_ip", publicIPs[0])
+	} else {
+		d.Set("public_ip", "")
 	}
 	systemDiskType := jsonresp.Response.InstanceSet[0].SystemDisk.DiskType
 	d.Set("system_disk_type", systemDiskType)

@@ -97,6 +97,29 @@ func TestAccTencentCloudInstance_network(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstance_network_no_public_ip(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() { testAccPreCheck(t) },
+
+		IDRefreshName: "tencentcloud_instance.network",
+
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccInstanceConfigWithInternetNoPublicIP,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.network"),
+					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.network"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.network", "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.network", "public_ip", ""),
+					resource.TestCheckResourceAttrSet("tencentcloud_instance.network", "private_ip"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudInstance_vpc(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
@@ -470,6 +493,36 @@ resource "tencentcloud_instance" "network" {
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   internet_charge_type = "BANDWIDTH_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 1
+  system_disk_type = "CLOUD_SSD"
+}
+`
+
+const testAccInstanceConfigWithInternetNoPublicIP = `
+data "tencentcloud_image" "my_favorate_image" {
+  os_name = "centos"
+  filter {
+    name   = "image-type"
+    values = ["PUBLIC_IMAGE"]
+  }
+}
+
+data "tencentcloud_instance_types" "my_favorate_instance_types" {
+  filter {
+    name   = "instance-family"
+    values = ["S2"]
+  }
+  cpu_core_count = 1
+  memory_size    = 1
+}
+
+resource "tencentcloud_instance" "network" {
+  instance_name = "terraform_automation_test_kuruk"
+  availability_zone = "ap-guangzhou-3"
+  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  internet_charge_type = "BANDWIDTH_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 1
+  allocate_public_ip = false
   system_disk_type = "CLOUD_SSD"
 }
 `

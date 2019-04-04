@@ -4,6 +4,10 @@ ENHANCEMENTS:
 
 * resource/tencentcloud_instance: data disk count limit now is upgrade from 1 to 10, as API has supported more disks.
 
+BUG FIXIES:
+
+* resource/tencentcloud_instance: `allocate_public_ip` doesn't work properly when it is set to false.
+
 ## 1.3.0 (March 12, 2019)
 
 FEATURES:
