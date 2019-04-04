@@ -240,6 +240,10 @@ func (me *MysqlService) DescribeCaresParameters(ctx context.Context, instanceId 
 	caresKv = make(map[string]interface{})
 	parameterList, err := me.DescribeInstanceParameters(ctx, instanceId)
 	if err != nil {
+		sdkErr, ok := err.(*errors.TencentCloudSDKError)
+		if ok && sdkErr.Code == "CdbError" {
+			return
+		}
 		errRet = err
 		return
 	}
@@ -610,6 +614,11 @@ func (me *MysqlService) CheckDBGTIDOpen(ctx context.Context, mysqlId string) (op
 	}()
 	response, err := me.client.UseMysqlClient().DescribeDBInstanceGTID(request)
 	if err != nil {
+		sdkErr, ok := err.(*errors.TencentCloudSDKError)
+		if ok && sdkErr.Code == "CdbError" {
+			open = 0
+			return
+		}
 		errRet = err
 		return
 	}
@@ -1050,6 +1059,5 @@ func (me *MysqlService) IsolateDBInstance(ctx context.Context, mysqlId string) (
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	asyncRequestId = *response.Response.AsyncRequestId
 	return
 }
