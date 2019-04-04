@@ -39,13 +39,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
 		},
-		"engine_version": {
-			Type:         schema.TypeString,
-			ForceNew:     true,
-			Optional:     true,
-			ValidateFunc: validateAllowedStringValue(MYSQL_SUPPORTS_ENGINE),
-			Default:      MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-1],
-		},
+
 		"intranet_port": {
 			Type:         schema.TypeInt,
 			Optional:     true,
@@ -70,12 +64,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Required:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
 		},
-		"internet_service": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-			Default:      0,
-		},
+
 		"project_id": {
 			Type:     schema.TypeInt,
 			Optional: true,
@@ -88,10 +77,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 				return hashcode.String(v.(string))
 			},
 		},
-		"parameters": {
-			Type:     schema.TypeMap,
-			Optional: true,
-		},
+
 		"tags": {
 			Type:     schema.TypeMap,
 			Optional: true,
@@ -115,14 +101,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Type:     schema.TypeInt,
 			Computed: true,
 		},
-		"internet_host": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"internet_port": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
+
 		"gtid": {
 			Type:     schema.TypeInt,
 			Computed: true,
@@ -132,6 +111,24 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 
 func resourceTencentCloudMysqlInstance() *schema.Resource {
 	specialInfo := map[string]*schema.Schema{
+		"parameters": {
+			Type:     schema.TypeMap,
+			Optional: true,
+		},
+		"internet_service": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+			Default:      0,
+		},
+		"engine_version": {
+			Type:         schema.TypeString,
+			ForceNew:     true,
+			Optional:     true,
+			ValidateFunc: validateAllowedStringValue(MYSQL_SUPPORTS_ENGINE),
+			Default:      MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-1],
+		},
+
 		"availability_zone": {
 			Type:     schema.TypeString,
 			ForceNew: true,
@@ -166,6 +163,16 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
 			Default:      0,
+		},
+
+		// Computed values
+		"internet_host": {
+			Type:     schema.TypeString,
+			Computed: true,
+		},
+		"internet_port": {
+			Type:     schema.TypeInt,
+			Computed: true,
 		},
 	}
 
@@ -207,13 +214,6 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 		} else {
 			requestByUse.InstanceName = &instanceName
 		}
-	}
-
-	engineVersion := d.Get("engine_version").(string)
-	if okByMonth {
-		requestByMonth.EngineVersion = &engineVersion
-	} else {
-		requestByUse.EngineVersion = &engineVersion
 	}
 
 	intranetPort := int64(d.Get("intranet_port").(int))
@@ -293,21 +293,6 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 		}
 	}
 
-	if parametersMap, ok := d.Get("parameters").(map[string]interface{}); ok {
-		requestParamList := make([]*cdb.ParamInfo, 0, len(parametersMap))
-		for k, v := range parametersMap {
-			key := k
-			value := v.(string)
-			var paramInfo = cdb.ParamInfo{Name: &key, Value: &value}
-			requestParamList = append(requestParamList, &paramInfo)
-		}
-		if okByMonth {
-			requestByMonth.ParamList = requestParamList
-		} else {
-			requestByUse.ParamList = requestParamList
-		}
-	}
-
 	if tagsMap, ok := d.Get("tags").(map[string]interface{}); ok {
 		requestResourceTags := make([]*cdb.TagInfo, 0, len(tagsMap))
 		for k, v := range tagsMap {
@@ -335,6 +320,27 @@ func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d
 	requestByMonth, okByMonth := requestInter.(*cdb.CreateDBInstanceRequest)
 	requestByUse, _ := requestInter.(*cdb.CreateDBInstanceHourRequest)
 
+	if parametersMap, ok := d.Get("parameters").(map[string]interface{}); ok {
+		requestParamList := make([]*cdb.ParamInfo, 0, len(parametersMap))
+		for k, v := range parametersMap {
+			key := k
+			value := v.(string)
+			var paramInfo = cdb.ParamInfo{Name: &key, Value: &value}
+			requestParamList = append(requestParamList, &paramInfo)
+		}
+		if okByMonth {
+			requestByMonth.ParamList = requestParamList
+		} else {
+			requestByUse.ParamList = requestParamList
+		}
+	}
+
+	engineVersion := d.Get("engine_version").(string)
+	if okByMonth {
+		requestByMonth.EngineVersion = &engineVersion
+	} else {
+		requestByUse.EngineVersion = &engineVersion
+	}
 	if stringInterface, ok := d.GetOk("availability_zone"); ok {
 		str := stringInterface.(string)
 		if okByMonth {
@@ -565,21 +571,10 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
 
-	d.Set("engine_version", *mysqlInfo.EngineVersion)
 	d.Set("mem_size", *mysqlInfo.Memory)
 	d.Set("volume_size", *mysqlInfo.Volume)
 	d.Set("vpc_id", *mysqlInfo.UniqVpcId)
 	d.Set("subnet_id", *mysqlInfo.UniqSubnetId)
-
-	if *mysqlInfo.WanStatus == 1 {
-		d.Set("internet_service", 1)
-		d.Set("internet_host", *mysqlInfo.WanDomain)
-		d.Set("internet_port", int(*mysqlInfo.WanPort))
-	} else {
-		d.Set("internet_service", 0)
-		d.Set("internet_host", "")
-		d.Set("internet_port", 0)
-	}
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
@@ -604,23 +599,6 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	d.Set("gtid", int(isGTIDOpen))
 	d.Set("project_id", int(*mysqlInfo.ProjectId))
 
-	parametersMap, ok := d.Get("parameters").(map[string]interface{})
-	if !ok {
-		log.Printf("[INFO] %d  config error,parameters is not map[string]interface{}\n", logId)
-	} else {
-		var cares []string
-		for k, _ := range parametersMap {
-			cares = append(cares, k)
-		}
-		caresParameters, err := mysqlService.DescribeCaresParameters(ctx, d.Id(), cares)
-		if err != nil {
-			errRet = err
-			return
-		}
-		if err := d.Set("parameters", caresParameters); err != nil {
-			log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, err.Error())
-		}
-	}
 	tags, err := mysqlService.DescribeTagsOfInstanceId(ctx, d.Id())
 	if err != nil {
 		errRet = err
@@ -656,6 +634,35 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		d.SetId("")
 		return nil
 	}
+
+	d.Set("engine_version", *mysqlInfo.EngineVersion)
+	if *mysqlInfo.WanStatus == 1 {
+		d.Set("internet_service", 1)
+		d.Set("internet_host", *mysqlInfo.WanDomain)
+		d.Set("internet_port", int(*mysqlInfo.WanPort))
+	} else {
+		d.Set("internet_service", 0)
+		d.Set("internet_host", "")
+		d.Set("internet_port", 0)
+	}
+
+	parametersMap, ok := d.Get("parameters").(map[string]interface{})
+	if !ok {
+		log.Printf("[INFO] %d  config error,parameters is not map[string]interface{}\n", logId)
+	} else {
+		var cares []string
+		for k, _ := range parametersMap {
+			cares = append(cares, k)
+		}
+		caresParameters, err := mysqlService.DescribeCaresParameters(ctx, d.Id(), cares)
+		if err != nil {
+			return err
+		}
+		if err := d.Set("parameters", caresParameters); err != nil {
+			log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, err.Error())
+		}
+	}
+
 	d.Set("availability_zone", *mysqlInfo.Zone)
 
 	backConfig, err := mysqlService.DescribeDBInstanceConfig(ctx, d.Id())
@@ -769,46 +776,6 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("internet_service") {
-		internetService := d.Get("internet_service").(int)
-		var (
-			asyncRequestId       = ""
-			err            error = nil
-			tag                  = "close internet service"
-		)
-		if internetService == 0 {
-			asyncRequestId, err = mysqlService.CloseWanService(ctx, d.Id())
-		} else {
-			asyncRequestId, err = mysqlService.OpenWanService(ctx, d.Id())
-			tag = "open internet service"
-		}
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update mysql %s fail, reason:%s\n ", logId, tag, err.Error())
-			return err
-		}
-		err = resource.Retry(60*time.Minute, func() *resource.RetryError {
-			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
-			if err != nil {
-				return resource.NonRetryableError(err)
-			}
-			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
-				return nil
-			}
-			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("update mysql  %s status is %s", tag, taskStatus))
-			}
-			err = fmt.Errorf("update mysql  %s task status is %s,we won't wait for it finish ,it show message:%s",
-				tag, message)
-			return resource.NonRetryableError(err)
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update mysql  %s  fail, reason:%s\n ", logId, tag, err.Error())
-			return err
-		}
-		d.SetPartial("internet_service")
-	}
-
 	if d.HasChange("project_id") {
 		newProjectId := int64(d.Get("project_id").(int))
 		if err := mysqlService.ModifyDBInstanceProject(ctx, d.Id(), newProjectId); err != nil {
@@ -847,6 +814,44 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 		d.SetPartial("security_groups")
 	}
+
+	if d.HasChange("tags") {
+
+		oldValue, newValue := d.GetChange("tags")
+
+		oldTags := oldValue.(map[string]interface{})
+		newTags := newValue.(map[string]interface{})
+
+		//set(oldTags-newTags) need delete
+		var deleteTags = make(map[string]string, len(oldTags))
+		for k, v := range oldTags {
+			if _, has := newTags[k]; !has {
+				deleteTags[k] = v.(string)
+			}
+		}
+
+		//set newTags need modify
+		var modifytTags = make(map[string]string, len(newTags))
+		for k, v := range newTags {
+			modifytTags[k] = v.(string)
+		}
+
+		if err := mysqlService.ModifyInstanceTag(ctx, d.Id(), deleteTags, modifytTags); err != nil {
+			return err
+		}
+		d.SetPartial("tags")
+	}
+
+	return nil
+}
+
+/*
+ [master] need set
+*/
+func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(ctx)
+
+	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	if d.HasChange("parameters") {
 
@@ -925,43 +930,45 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		d.SetPartial("parameters")
 	}
 
-	if d.HasChange("tags") {
-
-		oldValue, newValue := d.GetChange("tags")
-
-		oldTags := oldValue.(map[string]interface{})
-		newTags := newValue.(map[string]interface{})
-
-		//set(oldTags-newTags) need delete
-		var deleteTags = make(map[string]string, len(oldTags))
-		for k, v := range oldTags {
-			if _, has := newTags[k]; !has {
-				deleteTags[k] = v.(string)
-			}
+	if d.HasChange("internet_service") {
+		internetService := d.Get("internet_service").(int)
+		var (
+			asyncRequestId       = ""
+			err            error = nil
+			tag                  = "close internet service"
+		)
+		if internetService == 0 {
+			asyncRequestId, err = mysqlService.CloseWanService(ctx, d.Id())
+		} else {
+			asyncRequestId, err = mysqlService.OpenWanService(ctx, d.Id())
+			tag = "open internet service"
 		}
 
-		//set newTags need modify
-		var modifytTags = make(map[string]string, len(newTags))
-		for k, v := range newTags {
-			modifytTags[k] = v.(string)
-		}
-
-		if err := mysqlService.ModifyInstanceTag(ctx, d.Id(), deleteTags, modifytTags); err != nil {
+		if err != nil {
+			log.Printf("[CRITAL]%s update mysql %s fail, reason:%s\n ", logId, tag, err.Error())
 			return err
 		}
-		d.SetPartial("tags")
+		err = resource.Retry(60*time.Minute, func() *resource.RetryError {
+			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+				return nil
+			}
+			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("update mysql  %s status is %s", tag, taskStatus))
+			}
+			err = fmt.Errorf("update mysql  %s task status is %s,we won't wait for it finish ,it show message:%s",
+				tag, message)
+			return resource.NonRetryableError(err)
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update mysql  %s  fail, reason:%s\n ", logId, tag, err.Error())
+			return err
+		}
+		d.SetPartial("internet_service")
 	}
-
-	return nil
-}
-
-/*
- [master] need set
-*/
-func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(ctx)
-
-	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	if d.HasChange("root_password") {
 
