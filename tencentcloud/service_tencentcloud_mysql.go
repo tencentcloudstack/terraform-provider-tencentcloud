@@ -640,7 +640,47 @@ func (me *MysqlService) DescribeDBSecurityGroups(ctx context.Context, mysqlId st
 	return
 }
 
-func (me *MysqlService) ModifyInstanceTags() {}
+func (me *MysqlService) ModifyInstanceTag(ctx context.Context, mysqlId string, deleteTags, modifyTags map[string]string) (errRet error) {
+
+	logId := GetLogId(ctx)
+
+	request := cdb.NewModifyInstanceTagRequest()
+	request.InstanceId = &mysqlId
+
+	if len(modifyTags) > 0 {
+		request.ReplaceTags = make([]*cdb.TagInfo, 0, len(modifyTags))
+		for name, value := range modifyTags {
+			tagKey := name
+			tagValue := value
+			tag := cdb.TagInfo{TagKey: &tagKey, TagValue: []*string{&tagValue}}
+			request.ReplaceTags = append(request.ReplaceTags, &tag)
+		}
+	}
+	if len(deleteTags) > 0 {
+		request.DeleteTags = make([]*cdb.TagInfo, 0, len(deleteTags))
+		for name, value := range deleteTags {
+			tagKey := name
+			tagValue := value
+			tag := cdb.TagInfo{TagKey: &tagKey, TagValue: []*string{&tagValue}}
+			request.DeleteTags = append(request.DeleteTags, &tag)
+		}
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().ModifyInstanceTag(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
 
 func (me *MysqlService) DescribeTagsOfInstanceId(ctx context.Context, mysqlId string) (tags map[string]string, errRet error) {
 

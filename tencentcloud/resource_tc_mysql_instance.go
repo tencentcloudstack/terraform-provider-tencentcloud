@@ -925,6 +925,33 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		d.SetPartial("parameters")
 	}
 
+	if d.HasChange("tags") {
+
+		oldValue, newValue := d.GetChange("tags")
+
+		oldTags := oldValue.(map[string]interface{})
+		newTags := newValue.(map[string]interface{})
+
+		//set(oldTags-newTags) need delete
+		var deleteTags = make(map[string]string, len(oldTags))
+		for k, v := range oldTags {
+			if _, has := newTags[k]; !has {
+				deleteTags[k] = v.(string)
+			}
+		}
+
+		//set newTags need modify
+		var modifytTags = make(map[string]string, len(newTags))
+		for k, v := range newTags {
+			modifytTags[k] = v.(string)
+		}
+
+		if err := mysqlService.ModifyInstanceTag(ctx, d.Id(), deleteTags, modifytTags); err != nil {
+			return err
+		}
+		d.SetPartial("tags")
+	}
+
 	return nil
 }
 
@@ -932,6 +959,44 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
  [master] need set
 */
 func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(ctx)
+
+	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	if d.HasChange("root_password") {
+
+		var (
+			newPassword = d.Get("root_password").(string)
+			userName    = "root"
+		)
+
+		asyncRequestId, err := mysqlService.ModifyAccountPassword(ctx, d.Id(), userName, newPassword)
+
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(60*time.Minute, func() *resource.RetryError {
+			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+				return nil
+			}
+			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("change root password status is %s", taskStatus))
+			}
+			err = fmt.Errorf("change root password task status is %s,we won't wait for it finish ,it show message:%s",
+				message)
+			return resource.NonRetryableError(err)
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s change root password   fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+		d.SetPartial("root_password")
+	}
 	return nil
 }
 
