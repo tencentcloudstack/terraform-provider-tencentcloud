@@ -1003,3 +1003,53 @@ func (me *MysqlService) DisassociateSecurityGroup(ctx context.Context, mysqlId s
 	return
 
 }
+
+func (me *MysqlService) ModifyAutoRenewFlag(ctx context.Context, mysqlId string, newRenewFlag int64) (errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewModifyAutoRenewFlagRequest()
+	request.InstanceIds = []*string{&mysqlId}
+	request.AutoRenew = &newRenewFlag
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().ModifyAutoRenewFlag(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *MysqlService) IsolateDBInstance(ctx context.Context, mysqlId string) (asyncRequestId string, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewIsolateDBInstanceRequest()
+	request.InstanceId = &mysqlId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().IsolateDBInstance(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	asyncRequestId = *response.Response.AsyncRequestId
+	return
+}

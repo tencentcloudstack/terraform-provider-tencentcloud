@@ -1007,6 +1007,19 @@ func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	if err := mysqlMasterInstanceRoleUpdate(ctx, d, meta); err != nil {
 		return err
 	}
+
+	if d.HasChange("auto_renew_flag") {
+		renewFlag := int64(d.Get("auto_renew_flag").(int))
+		mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+		if err := mysqlService.ModifyAutoRenewFlag(ctx, d.Id(), renewFlag); err != nil {
+			return err
+		}
+		d.SetPartial("auto_renew_flag")
+	}
+
+	if d.HasChange("period") {
+		return fmt.Errorf("After the initialization of the field[%s] to set does not make sense", "period")
+	}
 	return nil
 }
 
@@ -1046,5 +1059,16 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
 func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
+
+	if err != nil {
+		return err
+	}
 	return nil
 }
