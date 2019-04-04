@@ -203,6 +203,39 @@ func (me *MysqlService) DescribeInstanceParameters(ctx context.Context, instance
 	return
 }
 
+func (me *MysqlService) ModifyInstanceParam(ctx context.Context, instanceId string, params map[string]string) (asyncRequestId string, errRet error) {
+
+	logId := GetLogId(ctx)
+
+	request := cdb.NewModifyInstanceParamRequest()
+	request.InstanceIds = []*string{&instanceId}
+	request.ParamList = make([]*cdb.Parameter, 0, len(params))
+
+	for k, v := range params {
+		key := k
+		value := v
+		var param = cdb.Parameter{Name: &key, CurrentValue: &value}
+		request.ParamList = append(request.ParamList, &param)
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().ModifyInstanceParam(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	asyncRequestId = *response.Response.AsyncRequestId
+
+	return
+}
+
 func (me *MysqlService) DescribeCaresParameters(ctx context.Context, instanceId string, cares []string) (caresKv map[string]interface{}, errRet error) {
 	caresKv = make(map[string]interface{})
 	parameterList, err := me.DescribeInstanceParameters(ctx, instanceId)
@@ -851,6 +884,7 @@ func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
 }
 
 func (me *MysqlService) ModifyDBInstanceProject(ctx context.Context, mysqlId string, newProjectId int64) (errRet error) {
+
 	logId := GetLogId(ctx)
 
 	request := cdb.NewModifyDBInstanceProjectRequest()
@@ -864,6 +898,61 @@ func (me *MysqlService) ModifyDBInstanceProject(ctx context.Context, mysqlId str
 		}
 	}()
 	response, err := me.client.UseMysqlClient().ModifyDBInstanceProject(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+
+}
+
+func (me *MysqlService) ModifyDBInstanceSecurityGroups(ctx context.Context, mysqlId string, securityGroups []string) (errRet error) {
+
+	logId := GetLogId(ctx)
+
+	request := cdb.NewModifyDBInstanceSecurityGroupsRequest()
+	request.InstanceId = &mysqlId
+	request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
+
+	for _, v := range securityGroups {
+		value := v
+		request.SecurityGroupIds = append(request.SecurityGroupIds, &value)
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().ModifyDBInstanceSecurityGroups(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *MysqlService) DisassociateSecurityGroup(ctx context.Context, mysqlId string, securityGroup string) (errRet error) {
+
+	logId := GetLogId(ctx)
+
+	request := cdb.NewDisassociateSecurityGroupsRequest()
+	request.InstanceIds = []*string{&mysqlId}
+	request.SecurityGroupId = &securityGroup
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	response, err := me.client.UseMysqlClient().DisassociateSecurityGroups(request)
 
 	if err != nil {
 		errRet = err

@@ -62,12 +62,12 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		},
 		"vpc_id": {
 			Type:         schema.TypeString,
-			Optional:     true,
+			Required:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
 		},
 		"subnet_id": {
 			Type:         schema.TypeString,
-			Optional:     true,
+			Required:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
 		},
 		"internet_service": {
@@ -815,6 +815,114 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			return err
 		}
 		d.SetPartial("project_id")
+	}
+
+	if d.HasChange("security_groups") {
+
+		oldValue, newValue := d.GetChange("security_groups")
+
+		oldSecuritygroups := oldValue.(*schema.Set).List()
+		newSecuritygroups := newValue.(*schema.Set).List()
+
+		isDelete := false
+
+		if len(newSecuritygroups) == 0 && len(oldSecuritygroups) != 0 {
+			isDelete = true
+			newSecuritygroups = append(newSecuritygroups, oldSecuritygroups[0])
+		}
+
+		var newStrs = make([]string, 0, len(newSecuritygroups))
+		for _, v := range newSecuritygroups {
+			newStrs = append(newStrs, v.(string))
+		}
+
+		if err := mysqlService.ModifyDBInstanceSecurityGroups(ctx, d.Id(), newStrs); err != nil {
+			return err
+		}
+		if isDelete {
+			oldFirst := oldSecuritygroups[0].(string)
+			if err := mysqlService.DisassociateSecurityGroup(ctx, d.Id(), oldFirst); err != nil {
+				return err
+			}
+		}
+		d.SetPartial("security_groups")
+	}
+
+	if d.HasChange("parameters") {
+
+		oldValue, newValue := d.GetChange("parameters")
+
+		oldParameters := oldValue.(map[string]interface{})
+		newParameters := newValue.(map[string]interface{})
+
+		//set(oldParameters-newParameters)need set to Default
+		var oldMinusNew = make(map[string]interface{}, len(oldParameters))
+		for k, v := range oldParameters {
+			if _, has := newParameters[k]; !has {
+				oldMinusNew[k] = v
+			}
+		}
+
+		supportsParameters := make(map[string]*cdb.ParameterDetail)
+		parameterList, err := mysqlService.DescribeInstanceParameters(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+		for _, parameter := range parameterList {
+			supportsParameters[*parameter.Name] = parameter
+		}
+
+		for parameName, _ := range newParameters {
+			if _, has := supportsParameters[parameName]; !has {
+				return fmt.Errorf("this mysql not support param %s set", parameName)
+			}
+		}
+
+		modifyParameters := make(map[string]string)
+		for parameName, detail := range supportsParameters {
+			//set to Default
+			if old, has := oldMinusNew[parameName]; has {
+				modifyParameters[parameName] = *detail.Default
+				log.Printf("[DEBUG] %s mysql need set param  %+v to default:%+v, old:%+v\n", logId, parameName, *detail.Default, old)
+				continue
+			}
+			//set(newParameters) need set add or modify
+			if v, has := newParameters[parameName]; has {
+				modifyParameters[parameName] = v.(string)
+				continue
+			}
+		}
+
+		log.Printf("[DEBUG] %s mysql need set params:%+v\n", logId, modifyParameters)
+
+		tag := "modify param"
+		if len(modifyParameters) > 0 {
+			asyncRequestId, err := mysqlService.ModifyInstanceParam(ctx, d.Id(), modifyParameters)
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql %s fail, reason:%s\n ", logId, tag, err.Error())
+				return err
+			}
+			err = resource.Retry(60*time.Minute, func() *resource.RetryError {
+				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+				if err != nil {
+					return resource.NonRetryableError(err)
+				}
+				if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+					return nil
+				}
+				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+					return resource.RetryableError(fmt.Errorf("update mysql  %s status is %s", tag, taskStatus))
+				}
+				err = fmt.Errorf("update mysql  %s task status is %s,we won't wait for it finish ,it show message:%s",
+					tag, message)
+				return resource.NonRetryableError(err)
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql  %s  fail, reason:%s\n ", logId, tag, err.Error())
+				return err
+			}
+		}
+		d.SetPartial("parameters")
 	}
 
 	return nil
