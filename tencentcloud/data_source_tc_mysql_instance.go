@@ -54,15 +54,15 @@ func TencentCloudMysqlInstanceDetail() map[string]*schema.Schema {
 			Type:     schema.TypeInt,
 			Computed: true,
 		},
-		"extranet_status": {
+		"internet_status": {
 			Type:     schema.TypeInt,
 			Computed: true,
 		},
-		"extranet_domain": {
+		"internet_domain": {
 			Type:     schema.TypeString,
 			Computed: true,
 		},
-		"extranet_port": {
+		"internet_port": {
 			Type:     schema.TypeInt,
 			Computed: true,
 		},
@@ -79,22 +79,14 @@ func TencentCloudMysqlInstanceDetail() map[string]*schema.Schema {
 			Computed: true,
 		},
 		"vpc_id": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"uniq_vpc_id": {
 			Type:     schema.TypeString,
 			Computed: true,
 		},
 		"subnet_id": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"uniq_subnet_id": {
 			Type:     schema.TypeString,
 			Computed: true,
 		},
-		"protect_mode": {
+		"slave_sync_mode": {
 			Type:     schema.TypeInt,
 			Computed: true,
 		},
@@ -143,15 +135,15 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"instance_type": {
-				Type:         schema.TypeInt,
+			"instance_role": {
+				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateIntegerInRange(1, 3),
+				ValidateFunc: validateAllowedStringValue([]string{"master", "ro", "dr"}),
 			},
 			"status": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateIntegerInRange(0, 5),
+				ValidateFunc: validateAllowedIntValue([]int{0, 1, 4, 5}),
 			},
 			"security_group_id": {
 				Type:     schema.TypeString,
@@ -160,7 +152,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 			"pay_type": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
+				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			},
 			"instance_name": {
 				Type:     schema.TypeString,
@@ -171,33 +163,25 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"5.1", "5.5", "5.6", "5.7"}),
 			},
-			"vpc_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-			},
-			"subnet_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-			},
 			"init_flag": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
+				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			},
 			"with_dr": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
+				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			},
 			"with_ro": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
+				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			},
 			"with_master": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
+				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			},
 			"offset": {
 				Type:         schema.TypeInt,
@@ -234,15 +218,21 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 
 	if mysqlId, ok := d.GetOk("mysql_id"); ok {
 		mysqlIdValue := mysqlId.(string)
-		request.InstanceIds = append(request.InstanceIds, &mysqlIdValue)
+		request.InstanceIds = []*string{&mysqlIdValue}
 	}
-	if instanceType, ok := d.GetOk("instance_type"); ok {
-		instanceTypeValue := uint64(instanceType.(int))
-		request.InstanceTypes = append(request.InstanceTypes, &instanceTypeValue)
+	if instanceType, ok := d.GetOk("instance_role"); ok {
+		instanceTypeValue := instanceType.(string)
+		var instanceRole uint64 = 1
+		for k, v := range MYSQL_ROLE_MAP {
+			if instanceTypeValue == v {
+				instanceRole = uint64(k)
+			}
+		}
+		request.InstanceTypes = []*uint64{&instanceRole}
 	}
 	if status, ok := d.GetOk("status"); ok {
 		statusValue := uint64(status.(int))
-		request.Status = append(request.Status, &statusValue)
+		request.Status = []*uint64{&statusValue}
 	}
 	if securityGroupId, ok := d.GetOk("security_group_id"); ok {
 		securityGroupIdValue := securityGroupId.(string)
@@ -250,27 +240,19 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 	}
 	if payType, ok := d.GetOk("pay_type"); ok {
 		payTypeValue := uint64(payType.(int))
-		request.PayTypes = append(request.PayTypes, &payTypeValue)
+		request.PayTypes = []*uint64{&payTypeValue}
 	}
 	if instanceName, ok := d.GetOk("instance_name"); ok {
 		instanceNameValue := instanceName.(string)
-		request.InstanceNames = append(request.InstanceNames, &instanceNameValue)
+		request.InstanceNames = []*string{&instanceNameValue}
 	}
 	if taskStatus, ok := d.GetOk("task_status"); ok {
 		taskStatusValue := uint64(taskStatus.(int))
-		request.TaskStatus = append(request.TaskStatus, &taskStatusValue)
+		request.TaskStatus = []*uint64{&taskStatusValue}
 	}
 	if engineVersion, ok := d.GetOk("engine_version"); ok {
 		engineVersionValue := engineVersion.(string)
-		request.EngineVersions = append(request.EngineVersions, &engineVersionValue)
-	}
-	if vpcId, ok := d.GetOk("vpc_id"); ok {
-		vpcIdValue := uint64(vpcId.(int))
-		request.VpcIds = append(request.VpcIds, &vpcIdValue)
-	}
-	if subnetId, ok := d.GetOk("subnet_id"); ok {
-		subnetIdValue := uint64(subnetId.(int))
-		request.SubnetIds = append(request.SubnetIds, &subnetIdValue)
+		request.EngineVersions = []*string{&engineVersionValue}
 	}
 	if initFlag, ok := d.GetOk("init_flag"); ok {
 		initFlagValue := int64(initFlag.(int))
@@ -322,17 +304,15 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 			"cpu_core_count":  *item.Cpu,
 			"memory_size":     *item.Memory,
 			"volume_size":     *item.Volume,
-			"extranet_status": *item.WanStatus,
-			"extranet_domain": *item.WanDomain,
-			"extranet_port":   *item.WanPort,
+			"internet_status": *item.WanStatus,
+			"internet_domain": *item.WanDomain,
+			"internet_port":   *item.WanPort,
 			"intranet_ip":     *item.Vip,
 			"intranet_port":   *item.Vport,
 			"project_id":      *item.ProjectId,
-			"vpc_id":          *item.VpcId,
-			"uniq_vpc_id":     *item.UniqVpcId,
-			"subnet_id":       *item.SubnetId,
-			"uniq_subnet_id":  *item.UniqSubnetId,
-			"protect_mode":    *item.ProtectMode,
+			"vpc_id":          *item.UniqVpcId,
+			"subnet_id":       *item.UniqSubnetId,
+			"slave_sync_mode": *item.ProtectMode,
 			"device_type":     *item.DeviceType,
 			"pay_type":        *item.PayType,
 			"create_time":     *item.CreateTime,

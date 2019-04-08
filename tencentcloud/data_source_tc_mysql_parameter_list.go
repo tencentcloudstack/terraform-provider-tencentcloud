@@ -55,7 +55,7 @@ func TencentCloudMysqlParameterDetail() map[string]*schema.Schema {
 
 func dataSourceTencentCloudMysqlParameterList() *schema.Resource {
 	return &schema.Resource{
-		Read: dataResourceTencentMysqlParameterListRead,
+		Read: dataSourceTencentMysqlParameterListRead,
 		Schema: map[string]*schema.Schema{
 			"mysql_id": {
 				Type:     schema.TypeString,
@@ -81,7 +81,7 @@ func dataSourceTencentCloudMysqlParameterList() *schema.Resource {
 	}
 }
 
-func dataResourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	mysqlService := MysqlService{
