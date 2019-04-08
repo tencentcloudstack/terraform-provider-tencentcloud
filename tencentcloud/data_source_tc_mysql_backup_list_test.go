@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestDataSourceMysqlBackupList_basic(t *testing.T) {
+func TestAccDataSourceMysqlBackupList_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

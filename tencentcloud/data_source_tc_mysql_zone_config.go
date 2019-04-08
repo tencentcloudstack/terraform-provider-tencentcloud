@@ -108,6 +108,7 @@ func TencentMysqlZoneConfig() map[string]*schema.Schema {
 /*
 data_source tencentcloud_mysql_zoneConfig {
    region  string ="Region to read,eg:ap-beijing"
+   result_output_file  string="result out put"
    list  []TencentMsyqlZoneConfig = "Configures for need  Region"
 }
 struct TencentMsyqlZoneConfig{
