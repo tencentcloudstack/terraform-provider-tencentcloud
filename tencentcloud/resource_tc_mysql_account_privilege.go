@@ -189,7 +189,7 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 				return resource.RetryableError(fmt.Errorf("modify account privilege   task  status is %s", taskStatus))
 			}
-			err = fmt.Errorf("modify account privilege  task status is %s,we won't wait for it finish ,it show message:%s", message)
+			err = fmt.Errorf("modify account privilege  task status is %s,we won't wait for it finish ,it show message:%s", taskStatus, message)
 			return resource.NonRetryableError(err)
 		})
 
@@ -243,7 +243,7 @@ func resourceTencentCloudMysqlAccountPrivilegeDelete(d *schema.ResourceData, met
 		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 			return resource.RetryableError(fmt.Errorf("delete account privilege   task  status is %s", taskStatus))
 		}
-		err = fmt.Errorf("delete account privilege  task status is %s,we won't wait for it finish ,it show message:%s", message)
+		err = fmt.Errorf("delete account privilege  task status is %s,we won't wait for it finish ,it show message:%s", taskStatus, message)
 		return resource.NonRetryableError(err)
 	})
 

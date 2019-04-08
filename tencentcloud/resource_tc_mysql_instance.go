@@ -494,7 +494,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		if *mysqlInfo.Status == MYSQL_STATUS_RUNNING {
 			return nil
 		}
-		err = fmt.Errorf("create mysql    task status is %s,we won't wait for it finish", *mysqlInfo.Status)
+		err = fmt.Errorf("create mysql    task status is %v,we won't wait for it finish", *mysqlInfo.Status)
 		return resource.NonRetryableError(err)
 	})
 
@@ -521,7 +521,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 				return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
 			}
-			err = fmt.Errorf("open internet service task status is %s,we won't wait for it finish ,it show message:%s",
+			err = fmt.Errorf("open internet service task status is %s,we won't wait for it finish ,it show message:%s", ",",
 				message)
 			return resource.NonRetryableError(err)
 		})
@@ -648,7 +648,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 
 	parametersMap, ok := d.Get("parameters").(map[string]interface{})
 	if !ok {
-		log.Printf("[INFO] %d  config error,parameters is not map[string]interface{}\n", logId)
+		log.Printf("[INFO] %v  config error,parameters is not map[string]interface{}\n", logId)
 	} else {
 		var cares []string
 		for k, _ := range parametersMap {
@@ -760,7 +760,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				return resource.RetryableError(fmt.Errorf("update mysql  mem_size/volume_size status is %s", taskStatus))
 			}
 			err = fmt.Errorf("update mysql  mem_size/volume_size task status is %s,we won't wait for it finish ,it show message:%s",
-				message)
+				",", message)
 			return resource.NonRetryableError(err)
 		})
 
@@ -918,7 +918,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 					return resource.RetryableError(fmt.Errorf("update mysql  %s status is %s", tag, taskStatus))
 				}
-				err = fmt.Errorf("update mysql  %s task status is %s,we won't wait for it finish ,it show message:%s",
+				err = fmt.Errorf("update mysql   task status is %s,we won't wait for it finish ,it show message:%s",
 					tag, message)
 				return resource.NonRetryableError(err)
 			})
@@ -959,7 +959,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 				return resource.RetryableError(fmt.Errorf("update mysql  %s status is %s", tag, taskStatus))
 			}
-			err = fmt.Errorf("update mysql  %s task status is %s,we won't wait for it finish ,it show message:%s",
+			err = fmt.Errorf("update mysql task status is %s,we won't wait for it finish ,it show message:%s",
 				tag, message)
 			return resource.NonRetryableError(err)
 		})
@@ -995,7 +995,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 				return resource.RetryableError(fmt.Errorf("change root password status is %s", taskStatus))
 			}
 			err = fmt.Errorf("change root password task status is %s,we won't wait for it finish ,it show message:%s",
-				message)
+				taskStatus, message)
 			return resource.NonRetryableError(err)
 		})
 		if err != nil {

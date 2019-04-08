@@ -80,7 +80,7 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 			return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
 		}
-		err = fmt.Errorf("create account task status is %s,we won't wait for it finish ,it show message:%s", message)
+		err = fmt.Errorf("create account task status is %s,we won't wait for it finish ,it show message:%s", ",", message)
 		return resource.NonRetryableError(err)
 	})
 
@@ -172,8 +172,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 				return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
 			}
-			err = fmt.Errorf("modify mysql account description task status is %s,we won't wait for it finish ,it show message:%s",
-				message)
+			err = fmt.Errorf("modify mysql account description task status is %s,we won't wait for it finish ,it show message:%s", taskStatus, message)
 			return resource.NonRetryableError(err)
 		})
 
@@ -203,7 +202,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 				return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
 			}
-			err = fmt.Errorf("modify mysql account password task status is %s,we won't wait for it finish ,it show message:%s",
+			err = fmt.Errorf("modify mysql account password task status is %s,we won't wait for it finish ,it show message:%s", taskStatus,
 				message)
 			return resource.NonRetryableError(err)
 		})
@@ -249,7 +248,7 @@ func resourceTencentCloudMysqlAccountDelete(d *schema.ResourceData, meta interfa
 		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 			return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
 		}
-		err = fmt.Errorf("delete mysql account  task status is %s,we won't wait for it finish ,it show message:%s",
+		err = fmt.Errorf("delete mysql account  task status is %s,we won't wait for it finish ,it show message:%s", taskStatus,
 			message)
 		return resource.NonRetryableError(err)
 	})
