@@ -29,6 +29,17 @@ func TestAccTencentCloudMysqlBackupPolicy(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "binlog_period"),
 				),
 			},
+			{
+				Config: testAccMysqlBackupPolicyUpdate(MysqlInstanceCommonTestCase),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudMysqlBackupPolicyExists("tencentcloud_mysql_backup_policy.mysql_backup_policy"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "mysql_id"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "retention_period", "80"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "backup_model", "logical"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "backup_time", "06:00-10:00"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "binlog_period"),
+				),
+			},
 		},
 	})
 }
@@ -95,5 +106,16 @@ resource "tencentcloud_mysql_backup_policy" "mysql_backup_policy" {
 	retention_period = 56
 	backup_model = "physical"
 	backup_time = "10:00-14:00"
+}`, commonTestCase)
+}
+
+func testAccMysqlBackupPolicyUpdate(commonTestCase string) string {
+	return fmt.Sprintf(`
+%s
+resource "tencentcloud_mysql_backup_policy" "mysql_backup_policy" {
+	mysql_id = "${tencentcloud_mysql_instance.default.id}"
+	retention_period = 80
+	backup_model = "logical"
+	backup_time = "06:00-10:00"
 }`, commonTestCase)
 }
