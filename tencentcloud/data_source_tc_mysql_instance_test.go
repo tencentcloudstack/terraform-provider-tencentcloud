@@ -13,7 +13,7 @@ func TestAccTencentCloudMysqlInstanceDataSource(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudMysqlInstanceDataSourceConfig(),
+				Config: testAccTencentCloudMysqlInstanceDataSourceConfig(MysqlInstanceCommonTestCase),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.instance_name", "testAccTencentCloudMysqlInstanceDataSourceConfig"),
@@ -29,23 +29,12 @@ func TestAccTencentCloudMysqlInstanceDataSource(t *testing.T) {
 	})
 }
 
-func testAccTencentCloudMysqlInstanceDataSourceConfig() string {
+func testAccTencentCloudMysqlInstanceDataSourceConfig(commonTestCase string) string {
 	return fmt.Sprintf(`
-resource "tencentcloud_mysql_instance" "mysql" {
-	pay_type = 1
-	mem_size = 1000
-	volume_size = 50
-	instance_name = "testAccTencentCloudMysqlInstanceDataSourceConfig"
-	vpc_id = "vpc-fzdzrsir"
-	subnet_id = "subnet-he8ldxx6"
-	engine_version = "5.7"
-	root_password = "test1234"
-	availability_zone = "ap-guangzhou-4"
-}
-
+%s
 data "tencentcloud_mysql_instance" "mysql" {
-	mysql_id = "${tencentcloud_mysql_instance.mysql.id}"
-	instance_name = "${tencentcloud_mysql_instance.mysql.instance_name}"
+	mysql_id = "${tencentcloud_mysql_instance.default.id}"
+	instance_name = "${tencentcloud_mysql_instance.default.instance_name}"
 }
-	`)
+	`, commonTestCase)
 }
