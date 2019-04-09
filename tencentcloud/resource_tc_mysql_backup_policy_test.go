@@ -12,7 +12,7 @@ import (
 )
 
 func TestAccTencentCloudMysqlBackupPolicy(t *testing.T) {
-	InitLogConfig(true)
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
