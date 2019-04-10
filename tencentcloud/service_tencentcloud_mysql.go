@@ -47,8 +47,8 @@ func (me *MysqlService) DescribeBackupsByMysqlId(ctx context.Context,
 	request.InstanceId = &mysqlId
 
 needMoreItems:
-	var limit int64 = 10
-	if leftNumber > limit {
+	var limit int64 = 50
+	if leftNumber < limit {
 		limit = leftNumber
 	}
 	if leftNumber <= 0 {
@@ -83,6 +83,31 @@ needMoreItems:
 	}
 	return backupInfos, nil
 
+}
+
+func (me *MysqlService) CreateBackup(ctx context.Context, mysqlId string) (backupId int64, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewCreateBackupRequest()
+
+	backupMethod := "logical"
+	request.BackupMethod = &backupMethod
+	request.InstanceId = &mysqlId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().CreateBackup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	backupId = int64(*response.Response.BackupId)
+	return
 }
 
 func (me *MysqlService) DescribeDBZoneConfig(ctx context.Context) (sellConfigures []*cdb.RegionSellConf, errRet error) {
