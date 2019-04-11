@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -460,7 +461,7 @@ needMoreItems:
 
 }
 
-func (me *MysqlService) DescribeAsyncRequestInfo(ctx context.Context, asyncRequestId string) (status, message string, errRet error) {
+func (me *MysqlService) _innerDescribeAsyncRequestInfo(ctx context.Context, asyncRequestId string) (status, message string, errRet error) {
 	logId := GetLogId(ctx)
 	request := cdb.NewDescribeAsyncRequestInfoRequest()
 	request.AsyncRequestId = &asyncRequestId
@@ -482,6 +483,30 @@ func (me *MysqlService) DescribeAsyncRequestInfo(ctx context.Context, asyncReque
 
 	status = *response.Response.Status
 	message = *response.Response.Info
+	return
+}
+
+func (me *MysqlService) DescribeAsyncRequestInfo(ctx context.Context, asyncRequestId string) (status, message string, errRet error) {
+
+	//Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
+	status, message, errRet = me._innerDescribeAsyncRequestInfo(ctx, asyncRequestId)
+	if errRet != nil {
+		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+			status, message, errRet = me._innerDescribeAsyncRequestInfo(ctx, asyncRequestId)
+		}
+	}
+	if errRet != nil {
+		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+			time.Sleep(2 * time.Second)
+			status, message, errRet = me._innerDescribeAsyncRequestInfo(ctx, asyncRequestId)
+		}
+	}
+	if errRet != nil {
+		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+			time.Sleep(5 * time.Second)
+			status, message, errRet = me._innerDescribeAsyncRequestInfo(ctx, asyncRequestId)
+		}
+	}
 	return
 }
 
@@ -593,6 +618,32 @@ func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId s
 }
 
 func (me *MysqlService) DescribeDBInstanceById(ctx context.Context, mysqlId string) (mysqlInfo *cdb.InstanceInfo, errRet error) {
+
+	//Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
+	mysqlInfo, errRet = me._innerDescribeDBInstanceById(ctx, mysqlId)
+
+	if errRet != nil {
+		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+			mysqlInfo, errRet = me._innerDescribeDBInstanceById(ctx, mysqlId)
+		}
+	}
+	if errRet != nil {
+		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+			time.Sleep(3 * time.Second)
+			mysqlInfo, errRet = me._innerDescribeDBInstanceById(ctx, mysqlId)
+
+		}
+	}
+	if errRet != nil {
+		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
+			time.Sleep(5 * time.Second)
+			mysqlInfo, errRet = me._innerDescribeDBInstanceById(ctx, mysqlId)
+		}
+	}
+	return
+}
+
+func (me *MysqlService) _innerDescribeDBInstanceById(ctx context.Context, mysqlId string) (mysqlInfo *cdb.InstanceInfo, errRet error) {
 
 	logId := GetLogId(ctx)
 	request := cdb.NewDescribeDBInstancesRequest()

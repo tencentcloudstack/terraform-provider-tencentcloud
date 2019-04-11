@@ -16,7 +16,7 @@ func TestAccTencentCloudMysqlInstanceDataSource(t *testing.T) {
 				Config: testAccTencentCloudMysqlInstanceDataSourceConfig(MysqlInstanceCommonTestCase),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.instance_name", "testAccTencentCloudMysqlInstanceDataSourceConfig"),
+					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.instance_name", "testAccMysql"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.pay_type", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.memory_size", "1000"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mysql_instance.mysql", "instance_list.0.volume_size", "50"),

@@ -514,6 +514,13 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		err = resource.Retry(3*time.Minute, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			if err != nil {
 				return resource.NonRetryableError(err)
 			}
 			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
@@ -547,7 +554,6 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	mysqlInfo, errRet = mysqlService.DescribeDBInstanceById(ctx, d.Id())
-
 	if errRet != nil {
 		errRet = fmt.Errorf("Describe mysql instance fails, reaseon %s", errRet.Error())
 		return
@@ -744,15 +750,22 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		volumeSize := int64(d.Get("volume_size").(int))
 
 		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, volumeSize)
+
 		if err != nil {
 			return err
 		}
 
-		err = resource.Retry(60*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(6*time.Hour, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
 			if err != nil {
-				return resource.NonRetryableError(err)
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
 			}
+
 			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
 				return nil
 			}
@@ -763,7 +776,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				",", message)
 			return resource.NonRetryableError(err)
 		})
-
+		log.Println("44444444444444444444444", err)
 		if err != nil {
 			log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
 			return err
@@ -910,6 +923,13 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			err = resource.Retry(60*time.Minute, func() *resource.RetryError {
 				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 				if err != nil {
+					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+						return resource.RetryableError(err)
+					} else {
+						return resource.NonRetryableError(err)
+					}
+				}
+				if err != nil {
 					return resource.NonRetryableError(err)
 				}
 				if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
@@ -951,6 +971,13 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 		err = resource.Retry(60*time.Minute, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			if err != nil {
 				return resource.NonRetryableError(err)
 			}
 			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
@@ -985,6 +1012,13 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 
 		err = resource.Retry(60*time.Minute, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			if err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
 			if err != nil {
 				return resource.NonRetryableError(err)
 			}
@@ -1031,6 +1065,7 @@ func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 }
 
 func mysqlUpdateInstancePayByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+	log.Println("sssssssssssssssssssssssssssssssssssssssssss")
 	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta); err != nil {
 		return err
 	}
