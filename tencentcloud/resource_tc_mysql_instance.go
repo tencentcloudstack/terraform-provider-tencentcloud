@@ -65,10 +65,6 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			ValidateFunc: validateStringLengthInRange(1, 100),
 		},
 
-		"project_id": {
-			Type:     schema.TypeInt,
-			Optional: true,
-		},
 		"security_groups": {
 			Type:     schema.TypeSet,
 			Optional: true,
@@ -163,6 +159,10 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
 			Default:      0,
+		},
+		"project_id": {
+			Type:     schema.TypeInt,
+			Optional: true,
 		},
 
 		// Computed values
@@ -271,14 +271,6 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 		}
 	}
 
-	if intInterface, ok := d.GetOkExists("project_id"); ok {
-		intv := int64(intInterface.(int))
-		if okByMonth {
-			requestByMonth.ProjectId = &intv
-		} else {
-			requestByUse.ProjectId = &intv
-		}
-	}
 	if temp, ok := d.GetOkExists("security_groups"); ok {
 		securityGroups := temp.(*schema.Set).List()
 		requestSecurityGroup := make([]*string, 0, len(securityGroups))
@@ -332,6 +324,15 @@ func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d
 			requestByMonth.ParamList = requestParamList
 		} else {
 			requestByUse.ParamList = requestParamList
+		}
+	}
+
+	if intInterface, ok := d.GetOkExists("project_id"); ok {
+		intv := int64(intInterface.(int))
+		if okByMonth {
+			requestByMonth.ProjectId = &intv
+		} else {
+			requestByUse.ProjectId = &intv
 		}
 	}
 
@@ -597,7 +598,6 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		return
 	}
 	d.Set("gtid", int(isGTIDOpen))
-	d.Set("project_id", int(*mysqlInfo.ProjectId))
 
 	tags, err := mysqlService.DescribeTagsOfInstanceId(ctx, d.Id())
 	if err != nil {
@@ -634,7 +634,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		d.SetId("")
 		return nil
 	}
-
+	d.Set("project_id", int(*mysqlInfo.ProjectId))
 	d.Set("engine_version", *mysqlInfo.EngineVersion)
 	if *mysqlInfo.WanStatus == 1 {
 		d.Set("internet_service", 1)
@@ -776,14 +776,6 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("project_id") {
-		newProjectId := int64(d.Get("project_id").(int))
-		if err := mysqlService.ModifyDBInstanceProject(ctx, d.Id(), newProjectId); err != nil {
-			return err
-		}
-		d.SetPartial("project_id")
-	}
-
 	if d.HasChange("security_groups") {
 
 		oldValue, newValue := d.GetChange("security_groups")
@@ -852,6 +844,14 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 	logId := GetLogId(ctx)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	if d.HasChange("project_id") {
+		newProjectId := int64(d.Get("project_id").(int))
+		if err := mysqlService.ModifyDBInstanceProject(ctx, d.Id(), newProjectId); err != nil {
+			return err
+		}
+		d.SetPartial("project_id")
+	}
 
 	if d.HasChange("parameters") {
 
