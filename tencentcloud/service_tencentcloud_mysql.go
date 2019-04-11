@@ -625,6 +625,41 @@ func (me *MysqlService) DescribeDBInstanceById(ctx context.Context, mysqlId stri
 	return
 }
 
+func (me *MysqlService) DescribeRunningDBInstanceById(ctx context.Context, mysqlId string) (mysqlInfo *cdb.InstanceInfo, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewDescribeDBInstancesRequest()
+	request.InstanceIds = []*string{&mysqlId}
+	runningStatus := uint64(1)
+	request.Status = []*uint64{&runningStatus}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().DescribeDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) == 0 {
+		return
+	}
+	if len(response.Response.Items) > 1 {
+		errRet = fmt.Errorf("One mysql id got %d instance info", len(response.Response.Items))
+	}
+	mysqlInfo = response.Response.Items[0]
+
+	return
+}
+
 func (me *MysqlService) CheckDBGTIDOpen(ctx context.Context, mysqlId string) (open int64, errRet error) {
 
 	logId := GetLogId(ctx)
@@ -668,6 +703,10 @@ func (me *MysqlService) DescribeDBSecurityGroups(ctx context.Context, mysqlId st
 		errRet = err
 		return
 	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	for _, sg := range response.Response.Groups {
 		securityGroups = append(securityGroups, *sg.SecurityGroupId)
 	}

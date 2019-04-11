@@ -114,6 +114,24 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	// the mysql master instance must have a backup before creating a read-only instance
+	masterInstanceId := d.Get("master_instance_id").(string)
+	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+		backups, err := mysqlService.DescribeBackupsByMysqlId(ctx, masterInstanceId, 10)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+		if len(backups) < 1 {
+			return resource.RetryableError(fmt.Errorf("waiting backup creating"))
+		}
+		return resource.NonRetryableError(err)
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
+		return err
+	}
+
 	payType := d.Get("pay_type").(int)
 	if payType == MysqlPayByMonth {
 		err := mysqlCreateReadonlyInstancePayByMonth(ctx, d, meta)
@@ -131,7 +149,7 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 
 	mysqlID := d.Id()
 
-	err := resource.Retry(10*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
 			return resource.NonRetryableError(err)

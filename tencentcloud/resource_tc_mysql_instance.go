@@ -708,8 +708,8 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 	if d.HasChange("intranet_port") || d.HasChange("vpc_id") || d.HasChange("subnet_id") {
 		var (
 			intranetPort = int64(d.Get("intranet_port").(int))
-			vpcId        = ""
-			subnetId     = ""
+			vpcId        = d.Get("vpc_id").(string)
+			subnetId     = d.Get("subnet_id").(string)
 		)
 		if d.HasChange("vpc_id") {
 			vpcId = d.Get("vpc_id").(string)
