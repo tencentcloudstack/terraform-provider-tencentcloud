@@ -3,6 +3,7 @@
 ENHANCEMENTS:
 
 * resource/tencentcloud_instance: data disk count limit now is upgrade from 1 to 10, as API has supported more disks.
+* resource/tencentcloud_instance: PREPAID instance now can be deleted, but still have some limit in API.
 
 BUG FIXIES:
 

@@ -34,6 +34,26 @@ func TestAccTencentCloudInstance_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstance_prepaid(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: "tencentcloud_instance.foo",
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccInstanceConfigWithSmallInstanceType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
+					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_type", "CLOUD_SSD"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudInstance_sg(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
@@ -465,6 +485,26 @@ resource "tencentcloud_instance" "foo" {
   ]
   disable_security_service = true
   disable_monitor_service = true
+}
+`
+
+const testAccInstanceConfigChargeTypePrepaid = `
+data "tencentcloud_image" "myimage" {
+  os_name = "centos"
+  filter {
+    name   = "image-type"
+    values = ["PUBLIC_IMAGE"]
+  }
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name = "terraform_ci_test"
+  availability_zone = "ap-guangzhou-3"
+  image_id      = "${data.tencentcloud_image.myimage.image_id}"
+  instance_type = "S2.SMALL1"
+  system_disk_type = "CLOUD_SSD"
+  instance_charge_type = "PREPAID"
+  instance_charge_type_prepaid_period = 1
 }
 `
 

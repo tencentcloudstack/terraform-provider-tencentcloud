@@ -694,14 +694,6 @@ LABEL_REINSTALL:
 }
 
 func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) error {
-	v, ok := d.GetOk("instance_charge_type")
-	if ok {
-		instanceChargeType := v.(string)
-		if instanceChargeType == tencentCloudApiInstanceChargeTypePrePaid {
-			return fmt.Errorf("prepaid instance %v is not allowed to be deleted in terraform", d.Id())
-		}
-	}
-
 	client := m.(*TencentCloudClient).commonConn
 
 	params := map[string]string{
