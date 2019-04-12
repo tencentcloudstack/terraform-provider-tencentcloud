@@ -31,4 +31,5 @@ data "tencentcloud_image" "my_favorate_image" {
 
 ## Attributes Reference
 
- * `image_id` - An image id indicate the uniqueness of a certain image,  which can be used for instance creation or resetting.
+* `image_id` - An image id indicate the uniqueness of a certain image,  which can be used for instance creation or resetting.
+* `image_name` - Name of this image.
