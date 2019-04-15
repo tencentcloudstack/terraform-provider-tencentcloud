@@ -776,7 +776,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				",", message)
 			return resource.NonRetryableError(err)
 		})
-		log.Println("44444444444444444444444", err)
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
 			return err
