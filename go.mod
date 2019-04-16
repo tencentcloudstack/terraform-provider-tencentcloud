@@ -17,11 +17,13 @@ require (
 	github.com/mitchellh/copystructure v1.0.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/hashstructure v1.0.0 // indirect
+	github.com/tencentcloud/tencentcloud-sdk-go v0.0.0-20190412170407-4a070674c768
 	github.com/terraform-providers/terraform-provider-template v0.0.0-20171212001638-4caf52415ae8
 	github.com/zclconf/go-cty v0.0.0-20190212192503-19dda139b164 // indirect
 	github.com/zqfan/tencentcloud-sdk-go v0.0.0-20181105105106-4c76f78ff2e6
 	golang.org/x/crypto v0.0.0-20190313024323-a1f597ede03a // indirect
 	golang.org/x/net v0.0.0-20190313220215-9f648a60d977 // indirect
+	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	labix.org/v2/mgo v0.0.0-20140701140051-000000000287 // indirect
 	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 )
