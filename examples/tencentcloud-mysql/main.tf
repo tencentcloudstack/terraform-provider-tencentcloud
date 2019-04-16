@@ -18,6 +18,19 @@ resource "tencentcloud_mysql_instance" "main" {
 	}
 }
 
+resource "tencentcloud_mysql_readonly_instance" "readonly" {
+	master_instance_id = "${tencentcloud_mysql_instance.main.id}"
+    mem_size = 1000
+    volume_size = 50
+    instance_name = "testAccMysql_readonly"
+    vpc_id = "${var.default_vpc_id}"
+    subnet_id = "${var.default_subnet_id}"
+    intranet_port = 3360
+	tags = {
+		purpose ="for test"
+	}
+}
+
 data "tencentcloud_mysql_parameter_list" "mysql" {
 	mysql_id = "${tencentcloud_mysql_instance.main.id}"
 }
