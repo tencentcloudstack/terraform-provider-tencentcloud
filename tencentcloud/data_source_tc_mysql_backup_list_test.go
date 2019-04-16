@@ -7,6 +7,11 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
+/*
+	you should modify to your mysql_id before testing.
+*/
+const mysqlIdfor_TestAccDataSourceMysqlBackupListConfig = "cdb-ia8zhj0t"
+
 func TestAccDataSourceMysqlBackupList_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -45,11 +50,6 @@ func TestAccDataSourceMysqlBackupList_basic(t *testing.T) {
 		},
 	})
 }
-
-/*
-	you should modify to your mysql_id before testing.
-*/
-const mysqlIdfor_TestAccDataSourceMysqlBackupListConfig = "cdb-ia8zhj0t"
 
 func testAccDataSourceMysqlBackupListConfig() string {
 	return fmt.Sprintf(`

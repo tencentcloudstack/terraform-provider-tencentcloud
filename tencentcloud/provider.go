@@ -108,7 +108,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if strings.TrimSpace(os.Getenv(PROVIDER_DEBUG)) != "" {
 		InitLogConfig(true)
 	} else {
-		InitLogConfig(true)
+		InitLogConfig(false)
 	}
 	return config.Client()
 }
