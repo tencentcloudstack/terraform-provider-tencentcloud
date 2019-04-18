@@ -421,9 +421,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 	}
 	if jsonresp.Response.Error.Code != "" {
 		return fmt.Errorf(
-			"tencentcloud_instance got error, code:%v, message:%v",
+			"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
 			jsonresp.Response.Error.Code,
 			jsonresp.Response.Error.Message,
+			jsonresp.Response.RequestId,
 		)
 	}
 	if len(jsonresp.Response.InstanceIdSet) == 0 {
@@ -528,9 +529,10 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	}
 	if jsonresp.Response.Error.Code != "" {
 		return fmt.Errorf(
-			"tencentcloud_instance got error, code:%v, message:%v",
+			"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
 			jsonresp.Response.Error.Code,
 			jsonresp.Response.Error.Message,
+			jsonresp.Response.RequestId,
 		)
 	}
 	if len(jsonresp.Response.InstanceSet) == 0 {
@@ -721,7 +723,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 			return resource.NonRetryableError(err)
 		}
 		if jsonresp.Response.Error.Code == "InternalError" {
-			return resource.RetryableError(fmt.Errorf(jsonresp.Response.Error.Message))
+			return resource.RetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
 		}
 		return nil
 	})
