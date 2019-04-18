@@ -83,6 +83,10 @@ func dataSourceTencentCloudCosBucketObjectsRead(d *schema.ResourceData, meta int
 		}
 		objectList = append(objectList, object)
 	}
+	ids := make([]string, 2)
+	ids[0] = bucketName
+	ids[1] = keyPrefixString
+	d.SetId(dataResourceIdsHash(ids))
 	err = d.Set("object_list", objectList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set object list fail, reason:%s\n ", logId, err.Error())
