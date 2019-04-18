@@ -52,6 +52,7 @@ func resourceTencentCloudMysqlAccount() *schema.Resource {
 }
 
 func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("source.tencentcloud_mysql_account.create")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -93,6 +94,7 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("source.tencentcloud_mysql_account.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -138,7 +140,9 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 	d.Set("name", *accountInfo.User)
 	return nil
 }
+
 func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("source.tencentcloud_mysql_account.update")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -218,7 +222,9 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 
 	return nil
 }
+
 func resourceTencentCloudMysqlAccountDelete(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("source.tencentcloud_mysql_account.delete")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

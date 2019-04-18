@@ -99,6 +99,7 @@ func dataSourceTencentMysqlBackupList() *schema.Resource {
 }
 
 func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("data_source.tencentcloud_mysql_backup_list.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

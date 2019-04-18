@@ -163,6 +163,7 @@ func dataSourceTencentMysqlZoneConfig() *schema.Resource {
 }
 
 func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("data_source.tencentcloud_mysql_zone_config.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
