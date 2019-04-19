@@ -88,6 +88,6 @@ func writeToFile(filePath string, data interface{}) error {
 func LogElapsed(mark ...string) func() {
 	start_at := time.Now()
 	return func() {
-		log.Printf("[DEBUG] [ELAPSED] %s elapsed %d ms\n", strings.Join(mark, " "), int64(time.Since(start_at) / time.Millisecond))
+		log.Printf("[DEBUG] [ELAPSED] %s elapsed %d ms\n", strings.Join(mark, " "), int64(time.Since(start_at)/time.Millisecond))
 	}
 }

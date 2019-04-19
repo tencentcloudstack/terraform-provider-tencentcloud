@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -27,87 +26,6 @@ func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "pay_type", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "mem_size", "1000"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "volume_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "vpc_id", "vpc-fzdzrsir"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "subnet_id", "subnet-he8ldxx6"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_port", "3360"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "task_status"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudMysqlReadonlyInstance_basic(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMysqlReadonlyInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccMysqlReadonlyInstance_basic(masterMysqlId),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "instance_name", "mysql-readonly-test"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "pay_type", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "mem_size", "1000"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "volume_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "vpc_id", "vpc-fzdzrsir"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "subnet_id", "subnet-he8ldxx6"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_port", "3360"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "task_status"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudMysqlReadonlyInstance_securityGroup(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMysqlReadonlyInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccMysqlReadonlyInstance_securityGroup(masterMysqlId),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "instance_name", "mysql-readonly-test"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "pay_type", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "mem_size", "1000"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "volume_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "vpc_id", "vpc-fzdzrsir"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "subnet_id", "subnet-he8ldxx6"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_port", "3360"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "security_groups."+fmt.Sprintf("%d", hashcode.String("sg-eeks0kgz")), "sg-eeks0kgz"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "task_status"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudMysqlReadonlyInstance_tags(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMysqlReadonlyInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccMysqlReadonlyInstance_tags(masterMysqlId),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "instance_name", "mysql-readonly-test"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "pay_type", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "mem_size", "1000"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "volume_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "vpc_id", "vpc-fzdzrsir"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "subnet_id", "subnet-he8ldxx6"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_port", "3360"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "status"),
@@ -117,7 +35,7 @@ func TestAccTencentCloudMysqlReadonlyInstance_tags(t *testing.T) {
 			},
 			// add tag
 			{
-				Config: testAccMysqlReadonlyInstance_multiTags(masterMysqlId, "read"),
+				Config: testAccMysqlReadonlyInstance_multiTags(MysqlInstanceCommonTestCase, "read"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "tags.role", "read"),
@@ -125,7 +43,7 @@ func TestAccTencentCloudMysqlReadonlyInstance_tags(t *testing.T) {
 			},
 			// update tag
 			{
-				Config: testAccMysqlReadonlyInstance_multiTags(masterMysqlId, "readonly"),
+				Config: testAccMysqlReadonlyInstance_multiTags(MysqlInstanceCommonTestCase, "readonly"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "tags.role", "readonly"),
@@ -133,52 +51,15 @@ func TestAccTencentCloudMysqlReadonlyInstance_tags(t *testing.T) {
 			},
 			// remove tag
 			{
-				Config: testAccMysqlReadonlyInstance_tags(masterMysqlId),
+				Config: testAccMysqlReadonlyInstance(MysqlInstanceCommonTestCase),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckNoResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "tags.role"),
 				),
 			},
-		},
-	})
-}
-
-func TestAccTencentCloudMysqlReadonlyInstance_update(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckMysqlReadonlyInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccMysqlReadonlyInstance_basic(masterMysqlId),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "instance_name", "mysql-readonly-test"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "pay_type", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "mem_size", "1000"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "volume_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "vpc_id", "vpc-fzdzrsir"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "subnet_id", "subnet-he8ldxx6"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_port", "3360"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "task_status"),
-				),
-			},
-			// update mem_size and volume_size
-			{
-				Config: testAccMysqlReadonlyInstance_update(masterMysqlId, "2000", "100", "mysql-readonly-test", "vpc-fzdzrsir",
-					"subnet-he8ldxx6", "3360"),
-				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "mem_size", "2000"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "volume_size", "100"),
-				),
-			},
 			// update instance_name
 			{
-				Config: testAccMysqlReadonlyInstance_update(masterMysqlId, "2000", "100", "mysql-readonly-update", "vpc-fzdzrsir",
-					"subnet-he8ldxx6", "3360"),
+				Config: testAccMysqlReadonlyInstance_update(MysqlInstanceCommonTestCase, "mysql-readonly-update", "3360"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "instance_name", "mysql-readonly-update"),
@@ -186,8 +67,7 @@ func TestAccTencentCloudMysqlReadonlyInstance_update(t *testing.T) {
 			},
 			// update intranet_port
 			{
-				Config: testAccMysqlReadonlyInstance_update(masterMysqlId, "2000", "100", "mysql-readonly-update", "vpc-fzdzrsir",
-					"subnet-he8ldxx6", "3361"),
+				Config: testAccMysqlReadonlyInstance_update(MysqlInstanceCommonTestCase, "mysql-readonly-update", "3361"),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "intranet_port", "3361"),
@@ -251,113 +131,46 @@ func testAccMysqlReadonlyInstance(mysqlTestCase string) string {
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
     master_instance_id = "${tencentcloud_mysql_instance.default.id}"
-    pay_type = 1
     mem_size = 1000
     volume_size = 50
     instance_name = "mysql-readonly-test"
-    vpc_id = "vpc-fzdzrsir"
-    subnet_id = "subnet-he8ldxx6"
-	intranet_port = 3360
-}
-	`, mysqlTestCase)
-}
-
-func testAccMysqlReadonlyInstance_basic(mysqlId string) string {
-	return fmt.Sprintf(`
-resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-    master_instance_id = "%s"
-    pay_type = 1
-    mem_size = 1000
-    volume_size = 50
-    instance_name = "mysql-readonly-test"
-    vpc_id = "vpc-fzdzrsir"
-    subnet_id = "subnet-he8ldxx6"
-	intranet_port = 3360
-}
-	`, mysqlId)
-}
-
-func testAccMysqlReadonlyInstance_prePaid(mysqlId string) string {
-	return fmt.Sprintf(`
-resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-    master_instance_id = "%s"
-	pay_type = 0
-	period = 1
-	auto_renew_flag = 0
-    mem_size = 1000
-    volume_size = 50
-    instance_name = "mysql-readonly-test"
-    vpc_id = "vpc-fzdzrsir"
-    subnet_id = "subnet-he8ldxx6"
-	intranet_port = 3360
-}
-	`, mysqlId)
-}
-
-func testAccMysqlReadonlyInstance_securityGroup(mysqlId string) string {
-	return fmt.Sprintf(`
-resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-    master_instance_id = "%s"
-	pay_type = 1
-    mem_size = 1000
-    volume_size = 50
-    instance_name = "mysql-readonly-test"
-    vpc_id = "vpc-fzdzrsir"
-    subnet_id = "subnet-he8ldxx6"
-    intranet_port = 3360
-	security_groups = ["sg-eeks0kgz"]
-}
-	`, mysqlId)
-}
-
-func testAccMysqlReadonlyInstance_tags(mysqlId string) string {
-	return fmt.Sprintf(`
-resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-    master_instance_id = "%s"
-	pay_type = 1
-    mem_size = 1000
-    volume_size = 50
-    instance_name = "mysql-readonly-test"
-    vpc_id = "vpc-fzdzrsir"
-    subnet_id = "subnet-he8ldxx6"
 	intranet_port = 3360
 	tags = {
 		test = "test-tf"
 	}
 }
-	`, mysqlId)
+	`, mysqlTestCase)
 }
 
-func testAccMysqlReadonlyInstance_multiTags(mysqlId, value string) string {
+func testAccMysqlReadonlyInstance_multiTags(mysqlTestCase, value string) string {
 	return fmt.Sprintf(`
+%s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-    master_instance_id = "%s"
-	pay_type = 1
+	master_instance_id = "${tencentcloud_mysql_instance.default.id}"
     mem_size = 1000
     volume_size = 50
     instance_name = "mysql-readonly-test"
-    vpc_id = "vpc-fzdzrsir"
-    subnet_id = "subnet-he8ldxx6"
 	intranet_port = 3360
 	tags = {
 		test = "test-tf"
 		role = "%s"
 	}
 }
-	`, mysqlId, value)
+	`, mysqlTestCase, value)
 }
 
-func testAccMysqlReadonlyInstance_update(mysqlId, mem_size, volume_size, instance_name, vpc_id, subnet_id, instranet_port string) string {
+func testAccMysqlReadonlyInstance_update(mysqlTestCase, instance_name, instranet_port string) string {
 	return fmt.Sprintf(`
+%s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-    master_instance_id = "%s"
-	pay_type = 1
-    mem_size = %s
-    volume_size = %s
+	master_instance_id = "${tencentcloud_mysql_instance.default.id}"
+    mem_size = 1000
+    volume_size = 50
     instance_name = "%s"
-    vpc_id = "%s"
-    subnet_id = "%s"
-    intranet_port = %s
+	intranet_port = %s
+	tags = {
+		test = "test-tf"
+	}
 }
-	`, mysqlId, mem_size, volume_size, instance_name, vpc_id, subnet_id, instranet_port)
+	`, mysqlTestCase, instance_name, instranet_port)
 }
