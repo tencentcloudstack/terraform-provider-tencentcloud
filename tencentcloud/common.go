@@ -83,3 +83,11 @@ func writeToFile(filePath string, data interface{}) error {
 	}
 	return ioutil.WriteFile(filePath, []byte(jsonStr), 422)
 }
+
+// LogElapsed log elapsed time, using in defer
+func LogElapsed(mark ...string) func() {
+	start_at := time.Now()
+	return func() {
+		log.Printf("[DEBUG] [ELAPSED] %s elapsed %d ms\n", strings.Join(mark, " "), int64(time.Since(start_at) / time.Millisecond))
+	}
+}

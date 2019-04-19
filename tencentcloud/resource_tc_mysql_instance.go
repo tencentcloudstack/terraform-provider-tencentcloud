@@ -456,6 +456,7 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 }
 
 func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("source.tencentcloud_mysql_instance.create")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -633,6 +634,7 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("source.tencentcloud_mysql_instance.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -1070,7 +1072,6 @@ func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 }
 
 func mysqlUpdateInstancePayByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
-	log.Println("sssssssssssssssssssssssssssssssssssssssssss")
 	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta); err != nil {
 		return err
 	}
@@ -1081,6 +1082,7 @@ func mysqlUpdateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 }
 
 func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("source.tencentcloud_mysql_instance.update")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -1106,6 +1108,7 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
 func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("source.tencentcloud_mysql_instance.delete")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

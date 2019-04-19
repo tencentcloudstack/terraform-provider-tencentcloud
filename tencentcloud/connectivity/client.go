@@ -1,12 +1,9 @@
 package connectivity
 
 import (
-	"net/http"
-
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
-	cos "github.com/tencentyun/cos-go-sdk-v5"
 )
 
 //client for all TencentCloud service
@@ -15,7 +12,6 @@ type TencentCloudClient struct {
 	SecretId  string
 	SecretKey string
 	mysqlConn *cdb.Client
-	cosConn   *cos.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -55,24 +51,4 @@ func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 	me.mysqlConn = mysqlClient
 
 	return me.mysqlConn
-}
-
-// the format of bucketName is {name}-{appid}
-// if bucket is null, client can only request GetService
-func (me *TencentCloudClient) UseCosClient(bucketName string) (client *cos.Client) {
-	if me.cosConn != nil {
-		return me.cosConn
-	}
-
-	b := &cos.BaseURL{}
-	if bucketName != "" {
-		b.BucketURL = cos.NewBucketURL(bucketName, me.Region, true)
-	}
-	client = cos.NewClient(b, &http.Client{
-		Transport: &cos.AuthorizationTransport{
-			SecretID:  me.SecretId,
-			SecretKey: me.SecretKey,
-		},
-	})
-	return
 }
