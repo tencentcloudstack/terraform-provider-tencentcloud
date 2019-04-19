@@ -664,7 +664,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		log.Printf("[INFO] %v  config error,parameters is not map[string]interface{}\n", logId)
 	} else {
 		var cares []string
-		for k, _ := range parametersMap {
+		for k := range parametersMap {
 			cares = append(cares, k)
 		}
 		caresParameters, err := mysqlService.DescribeCaresParameters(ctx, d.Id(), cares)
@@ -897,7 +897,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			supportsParameters[*parameter.Name] = parameter
 		}
 
-		for parameName, _ := range newParameters {
+		for parameName := range newParameters {
 			if _, has := supportsParameters[parameName]; !has {
 				return fmt.Errorf("this mysql not support param %s set", parameName)
 			}

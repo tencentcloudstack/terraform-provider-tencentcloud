@@ -527,7 +527,7 @@ func (me *MysqlService) ModifyAccountPrivileges(ctx context.Context, mysqlId str
 		var cdbprivileges = cdb.DatabasePrivilege{Database: &temp}
 		cdbprivileges.Privileges = make([]*string, len(privileges))
 
-		for i, _ := range privileges {
+		for i := range privileges {
 			cdbprivileges.Privileges[i] = &privileges[i]
 		}
 

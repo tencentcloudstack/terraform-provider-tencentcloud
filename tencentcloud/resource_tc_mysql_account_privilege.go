@@ -167,7 +167,7 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 		log.Println(privileges)
 		upperPrivileges := make([]string, len(privileges))
 
-		for i, _ := range privileges {
+		for i := range privileges {
 			upperPrivileges[i] = strings.ToUpper(privileges[i].(string))
 		}
 
