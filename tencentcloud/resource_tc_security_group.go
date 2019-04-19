@@ -96,7 +96,7 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 		log.Printf("[ERROR] resource_tc_security_group read client.SendRequest error:%v", err)
 		return err
 	}
-
+	//"projectId":145454,
 	var jsonresp struct {
 		Code    int    `json:"code"`
 		Message string `json:"message"`
@@ -109,7 +109,25 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 			}
 		}
 	}
+	//"projectId":"0",
+	var jsonresp2 struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    struct {
+			TotalNum int `json:"totalNum"`
+			Detail   []struct {
+				SgName    string `json:"sgName"`
+				SgRemark  string `json:"sgRemark"`
+				ProjectId string `json:"projectId"`
+			}
+		}
+	}
+	first := true
 	err = json.Unmarshal([]byte(response), &jsonresp)
+	if err != nil {
+		first = false
+		err = json.Unmarshal([]byte(response), &jsonresp2)
+	}
 	if err != nil {
 		log.Printf("[ERROR] resource_tc_security_group read json.Unmarshal error:%v", err)
 		return err
@@ -121,10 +139,17 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 		d.SetId("")
 		return nil
 	}
-	sg := jsonresp.Data.Detail[0]
-	d.Set("name", sg.SgName)
-	d.Set("description", sg.SgRemark)
-	d.Set("project_id", sg.ProjectId)
+	if first {
+		sg := jsonresp.Data.Detail[0]
+		d.Set("name", sg.SgName)
+		d.Set("description", sg.SgRemark)
+		d.Set("project_id", sg.ProjectId)
+	} else {
+		sg := jsonresp2.Data.Detail[0]
+		d.Set("name", sg.SgName)
+		d.Set("description", sg.SgRemark)
+		d.Set("project_id", sg.ProjectId)
+	}
 	return nil
 }
 

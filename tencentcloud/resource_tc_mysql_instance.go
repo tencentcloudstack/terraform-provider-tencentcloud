@@ -56,12 +56,12 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		},
 		"vpc_id": {
 			Type:         schema.TypeString,
-			Required:     true,
+			Optional:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
 		},
 		"subnet_id": {
 			Type:         schema.TypeString,
-			Required:     true,
+			Optional:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
 		},
 
@@ -580,9 +580,14 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 
 	d.Set("mem_size", *mysqlInfo.Memory)
 	d.Set("volume_size", *mysqlInfo.Volume)
-	d.Set("vpc_id", *mysqlInfo.UniqVpcId)
-	d.Set("subnet_id", *mysqlInfo.UniqSubnetId)
 
+	if d.Get("vpc_id").(string) != "" {
+		d.Set("vpc_id", *mysqlInfo.UniqVpcId)
+	}
+
+	if d.Get("subnet_id").(string) != "" {
+		d.Set("subnet_id", *mysqlInfo.UniqSubnetId)
+	}
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
 		sdkErr, ok := err.(*errors.TencentCloudSDKError)
