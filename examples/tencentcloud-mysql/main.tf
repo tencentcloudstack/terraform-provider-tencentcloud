@@ -2,8 +2,6 @@ resource "tencentcloud_mysql_instance" "main" {
 	mem_size = 1000
 	volume_size = 50
 	instance_name = "testAccMysql"
-	vpc_id = "${var.default_vpc_id}"
-	subnet_id = "${var.default_subnet_id}"
 	engine_version = "5.7"
 	root_password = "test1234"
 	availability_zone = "${var.availability_zone}"
@@ -23,8 +21,6 @@ resource "tencentcloud_mysql_readonly_instance" "readonly" {
     mem_size = 1000
     volume_size = 50
     instance_name = "testAccMysql_readonly"
-    vpc_id = "${var.default_vpc_id}"
-    subnet_id = "${var.default_subnet_id}"
     intranet_port = 3360
 	tags = {
 		purpose ="for test"
