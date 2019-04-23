@@ -89,3 +89,12 @@ func expandStringList(configured []interface{}) []string {
 	}
 	return vs
 }
+
+// Tranform sdk map[string]*string to terraform TypeMap
+func pointersMapToStringMap(pointers map[string]*string) map[string]interface{} {
+	list := make(map[string]interface{}, len(pointers))
+	for i, v := range pointers {
+		list[i] = *v
+	}
+	return list
+}
