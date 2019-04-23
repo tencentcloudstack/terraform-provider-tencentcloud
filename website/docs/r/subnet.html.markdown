@@ -31,6 +31,7 @@ The following arguments are supported:
 * `cidr_block` - (Required, Forces new resource) The CIDR block for the Subnet.
 * `availability_zone`- (Required, Forces new resource) The AZ for the subnet.
 * `vpc_id` - (Required, Forces new resource) The VPC ID.
+* `route_table_id` - (Optional) The Route Table ID.
 
 ## Attributes Reference
 
@@ -41,4 +42,4 @@ The following attributes are exported:
 * `cidr_block` - The CIDR block of the Subnet.
 * `availability_zone`- The AZ for the subnet.
 * `vpc_id` - The VPC ID.
-* `route_table_id` - The Route Table ID.
+
