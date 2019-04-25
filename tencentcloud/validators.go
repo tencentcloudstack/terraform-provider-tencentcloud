@@ -204,6 +204,21 @@ func validateInstanceName(v interface{}, k string) (ws []string, errors []error)
 	return
 }
 
+func validateAllowedStringValueIgnoreCase(ss []string) schema.SchemaValidateFunc {
+
+	var upperStrs = make([]string, len(ss))
+	for index, value := range ss {
+		upperStrs[index] = strings.ToUpper(value)
+	}
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(string)
+		if !goset.IsIncluded(ss, strings.ToUpper(value)) {
+			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ss, value))
+		}
+		return
+	}
+}
+
 func validateAllowedStringValue(ss []string) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)
@@ -229,4 +244,42 @@ func validatePort(v interface{}, k string) (ws []string, errors []error) {
 		errors = append(errors, fmt.Errorf("%q must be a valid port between 1 and 65535", k))
 	}
 	return
+}
+
+func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	if len(value) > 64 || len(value) < 8 {
+		errors = append(errors, fmt.Errorf("invalid password, len(password) must between 8 and 64,%s", value))
+	}
+	var match = make(map[string]bool)
+	if strings.ContainsAny(value, "_+-&=!@#$%^*()") {
+		match["alien"] = true
+	}
+	for i := 0; i < len(value); i++ {
+		if len(match) >= 2 {
+			break
+		}
+		if value[i] >= '0' && value[i] <= '9' {
+			match["number"] = true
+			continue
+		}
+		if (value[i] >= 'a' && value[i] <= 'z') || (value[i] >= 'A' && value[i] <= 'Z') {
+			match["letter"] = true
+			continue
+		}
+	}
+	if len(match) < 2 {
+		errors = append(errors, fmt.Errorf("invalid password, contains at least letters, Numbers, and characters(_+-&=!@#$%%^*()),%s", value))
+	}
+	return
+}
+
+func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(int)
+		if !goset.IsIncluded(ints, value) {
+			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ints, value))
+		}
+		return
+	}
 }

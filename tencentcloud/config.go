@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/zqfan/tencentcloud-sdk-go/client"
 	cbs "github.com/zqfan/tencentcloud-sdk-go/services/cbs/unversioned"
 	ccs "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned"
@@ -22,6 +23,8 @@ type TencentCloudClient struct {
 	ccsConn    *ccs.Client
 	lbConn     *lb.Client
 	vpcConn    *vpc.Client
+	//for TencentCloud api v3
+	apiV3Conn *connectivity.TencentCloudClient
 }
 
 func (c *Config) Client() (interface{}, error) {
@@ -64,6 +67,8 @@ func (c *Config) Client() (interface{}, error) {
 		return nil, err
 	}
 	tcClient.lbConn = lbConn
+
+	tcClient.apiV3Conn = connectivity.NewTencentCloudClient(c.SecretId, c.SecretKey, c.Region)
 
 	return &tcClient, nil
 }

@@ -48,6 +48,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_nats":                        dataSourceTencentCloudNats(),
 			"tencentcloud_container_clusters":          dataSourceTencentCloudContainerClusters(),
 			"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),
+			"tencentcloud_mysql_backup_list":           dataSourceTencentMysqlBackupList(),
+			"tencentcloud_mysql_zone_config":           dataSourceTencentMysqlZoneConfig(),
+			"tencentcloud_mysql_parameter_list":        dataSourceTencentCloudMysqlParameterList(),
+			"tencentcloud_mysql_instance":              dataSourceTencentCloudMysqlInstance(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -70,6 +74,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_security_group_rule":        resourceTencentCloudSecurityGroupRule(),
 			"tencentcloud_subnet":                     resourceTencentCloudSubnet(),
 			"tencentcloud_vpc":                        resourceTencentCloudVpc(),
+			"tencentcloud_mysql_backup_policy":        resourceTencentCloudMysqlBackupPolicy(),
+			"tencentcloud_mysql_account":              resourceTencentCloudMysqlAccount(),
+			"tencentcloud_mysql_account_privilege":    resourceTencentCloudMysqlAccountPrivilege(),
+			"tencentcloud_mysql_instance":             resourceTencentCloudMysqlInstance(),
+			"tencentcloud_mysql_readonly_instance":    resourceTencentCloudMysqlReadonlyInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
