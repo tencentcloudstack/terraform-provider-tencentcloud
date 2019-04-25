@@ -20,10 +20,6 @@ func resourceTencentCloudMysqlAccount() *schema.Resource {
 		Update: resourceTencentCloudMysqlAccountUpdate,
 		Delete: resourceTencentCloudMysqlAccountDelete,
 
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
-
 		Schema: map[string]*schema.Schema{
 			"mysql_id": {
 				Type:     schema.TypeString,

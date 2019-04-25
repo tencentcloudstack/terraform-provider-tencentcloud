@@ -44,7 +44,7 @@ func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 	//all request use method POST
 	cpf.HttpProfile.ReqMethod = "POST"
 	//request timeout
-	cpf.HttpProfile.ReqTimeout = 10
+	cpf.HttpProfile.ReqTimeout = 300
 	cpf.SignMethod = "HmacSHA1"
 
 	mysqlClient, _ := cdb.NewClient(credential, me.Region, cpf)

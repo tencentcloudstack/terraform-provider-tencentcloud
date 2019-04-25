@@ -186,9 +186,6 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		Update: resourceTencentCloudMysqlInstanceUpdate,
 		Delete: resourceTencentCloudMysqlInstanceDelete,
 
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: specialInfo,
 	}
 }

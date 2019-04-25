@@ -15,10 +15,6 @@ func resourceTencentCloudMysqlBackupPolicy() *schema.Resource {
 		Update: resourceTencentCloudMysqlBackupPolicyUpdate,
 		Delete: resourceTencentCloudMysqlBackupPolicyDelete,
 
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
-
 		Schema: map[string]*schema.Schema{
 			"mysql_id": {
 				Type:     schema.TypeString,

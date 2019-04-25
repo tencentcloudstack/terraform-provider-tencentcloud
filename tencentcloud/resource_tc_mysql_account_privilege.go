@@ -27,10 +27,6 @@ func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
 		Update: resourceTencentCloudMysqlAccountPrivilegeUpdate,
 		Delete: resourceTencentCloudMysqlAccountPrivilegeDelete,
 
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
-
 		Schema: map[string]*schema.Schema{
 			"mysql_id": {
 				Type:     schema.TypeString,
