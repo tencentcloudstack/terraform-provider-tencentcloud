@@ -105,36 +105,6 @@ func TencentMysqlZoneConfig() map[string]*schema.Schema {
 	}
 }
 
-/*
-data_source tencentcloud_mysql_zoneConfig {
-   region  string ="Region to read,eg:ap-beijing"
-   result_output_file  string="result out put"
-   list  []TencentMsyqlZoneConfig = "Configures for need  Region"
-}
-struct TencentMsyqlZoneConfig{
-   name                  string = "zone name in this Region,eg: ap-beijing-1"
-   is_default            int64 = "Default zone :0 is not  default, 1 is  default"
-   is_support_disaster_recovery  int64 = "Whether support disaster recovery, 0 not support, 1 support"
-   is_support_vpc        int64 = "Whether support  vpc, 0 not support, 1 support"
-   engine_versions       list{string}  = "Support mysql version of this zone, 5.5/5.6/5.7"
-   pay_type              list{string} ="Support Payment type.0-package year,1-hour,2-after payment"
-   hour_instance_sale_max_num  int64 = "Can buy max instance numbers with Payment type 1-hour"
-   support_slave_sync_modes list{int64} = "Supported data replication types 0-asynchronous,1-semi-synchronous,2-strongly synchronous"
-   disaster_recovery_zones  list{string} = "All zones supports disaster recovery  if you choose this zone"
-   slave_deploy_modes       list{int64}  = "Slave zone deployment mode, possible values: 0-single available zone,1- multiple availability zones"
-   first_slave_zones        list{string} ="The availability zone where backup library 1 is located"
-   second_slave_zones       list{string} ="The availability zone where backup library 2 is located"
-   sells                    []TencentDbSellType = "List of supported sales types"
-}
-struct TencentMsyqlSellType{
-	cdb_type         string ="Instance type,eg:CUSTOM"
-	mem_size         int64 = "Memory size in MB"
-	min_volume_size  int64 = "Minimum size of disk, in GB"
-	max_volume_size  int64 = "Maximum disk size in GB"
-	volume_step      int64 = "Disk step size in GB"
-	qps              int64 = "Number of queries per second that can be supported"
-}
-*/
 func dataSourceTencentMysqlZoneConfig() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentMysqlZoneConfigRead,
