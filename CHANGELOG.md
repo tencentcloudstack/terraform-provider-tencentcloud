@@ -1,4 +1,21 @@
 ## 1.5.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_mysql_backup_list`
+* **New Data Source**: `tencentcloud_mysql_zone_config`
+* **New Data Source**: `tencentcloud_mysql_parameter_list`
+* **New Data Source**: `tencentcloud_mysql_instance`
+* **New Resource**: `tencentcloud_mysql_backup_policy`
+* **New Resource**: `tencentcloud_mysql_account`
+* **New Resource**: `tencentcloud_mysql_account_privilege`
+* **New Resource**: `tencentcloud_mysql_instance`
+* **New Resource**: `tencentcloud_mysql_readonly_instance`
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_subnet: `route_table_id` now is an optional argument
+
 ## 1.4.0 (April 12, 2019)
 
 ENHANCEMENTS:
