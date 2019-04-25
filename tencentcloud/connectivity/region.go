@@ -1,45 +1,25 @@
 package connectivity
 
-const (
-	RegionBangKok       = "ap-bangkok"
-	RegionBeiJing       = "ap-beijing"
-	RegionChengDu       = "ap-chengdu"
-	RegionChongQing     = "ap-chongqing"
-	RegionGuangZhou     = "ap-guangzhou"
-	RegionGuangZhouOpen = "ap-guangzhou-open"
-	RegionHongkong      = "ap-hongkong"
-	RegionMumbai        = "ap-mumbai"
-	RegionSeoul         = "ap-seoul"
-	RegionShangHai      = "ap-shanghai"
-	RegionShangHaiFsi   = "ap-shanghai-fsi"
-	RegionShenZhenFsi   = "ap-shenzhen-fsi"
-	RegionSingapore     = "ap-singapore"
-	RegionTokyo         = "ap-tokyo"
-	RegionFrankfurt     = "eu-frankfurt"
-	RegionMoscow        = "eu-moscow"
-	RegionAshburn       = "na-ashburn"
-	RegionSiliconvalley = "na-siliconvalley"
-	RegionToronto       = "na-toronto"
+import (
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions"
 )
 
-var AllSupportedRegions = []string{RegionBangKok,
-	RegionBeiJing,
-	RegionChengDu,
-	RegionChongQing,
-	RegionGuangZhou,
-	RegionGuangZhouOpen,
-	RegionHongkong,
-	RegionMumbai,
-	RegionSeoul,
-	RegionShangHai,
-	RegionShangHaiFsi,
-	RegionShenZhenFsi,
-	RegionSingapore,
-	RegionTokyo,
-	RegionFrankfurt,
-	RegionMoscow,
-	RegionAshburn,
-	RegionSiliconvalley,
-	RegionToronto,
-}
+var AllSupportedRegions = []string{regions.Beijing,
+	regions.Chengdu,
+	regions.Chongqing,
+	regions.Guangzhou,
+	regions.GuangzhouOpen,
+	regions.HongKong,
+	regions.Mumbai,
+	regions.Seoul,
+	regions.Shanghai,
+	regions.ShanghaiFSI,
+	regions.ShenzhenFSI,
+	regions.Singapore,
+	regions.Frankfurt,
+	regions.Moscow,
+	regions.Ashburn,
+	regions.SiliconValley,
+	regions.Toronto}
+
 var MysqlSupportedRegions = AllSupportedRegions
