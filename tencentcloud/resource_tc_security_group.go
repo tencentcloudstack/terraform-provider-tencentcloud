@@ -148,7 +148,8 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 		sg := jsonresp2.Data.Detail[0]
 		d.Set("name", sg.SgName)
 		d.Set("description", sg.SgRemark)
-		d.Set("project_id", sg.ProjectId)
+		projectId, _ := strconv.ParseInt(sg.ProjectId, 10, 64)
+		d.Set("project_id", int(projectId))
 	}
 	return nil
 }
