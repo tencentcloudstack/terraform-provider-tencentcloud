@@ -55,6 +55,7 @@ func TestAccTencentCloudSubnet_update(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSubnetExists("tencentcloud_vpc.foo", "tencentcloud_subnet.foo", &vpcId, &subnetId),
 					resource.TestCheckResourceAttr("tencentcloud_subnet.foo", "name", "ci-temp-test-subnet-updated"),
+					resource.testAccCheckMysqlMasterInstanceExists("tencentcloud_subnet.foo", "route_table_id"),
 				),
 			},
 		},
@@ -164,11 +165,15 @@ resource "tencentcloud_vpc" "foo" {
     name = "ci-temp-test"
     cidr_block = "10.0.0.0/16"
 }
-
+resource "tencentcloud_route_table" "foo" {
+   vpc_id = "${tencentcloud_vpc.foo.id}"
+   name = "ci-temp-test-rt"
+}
 resource "tencentcloud_subnet" "foo" {
   vpc_id = "${tencentcloud_vpc.foo.id}"
   name = "ci-temp-test-subnet-updated"
   cidr_block = "10.0.11.0/24"
   availability_zone = "ap-guangzhou-3"
+  route_table_id = "${tencentcloud_route_table.foo.id}"
 }
 `
