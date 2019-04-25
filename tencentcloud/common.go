@@ -11,34 +11,12 @@ import (
 	"strings"
 	"sync/atomic"
 	"time"
-
-	lumberjack "gopkg.in/natefinch/lumberjack.v2"
 )
 
 const FILED_SP = "#"
 
 var firstLogTime = ""
 var logAtomaticId int64 = 0
-
-//init log config
-func InitLogConfig(saveLocalFile bool) {
-	if firstLogTime == "" {
-		firstLogTime = fmt.Sprintf("%x", time.Now().Unix())
-	}
-
-	log.SetFlags(log.Lshortfile | log.LstdFlags | log.Lmicroseconds)
-
-	if saveLocalFile {
-		logOut := &lumberjack.Logger{
-			Filename:   "./tencentcloud.log",
-			MaxSize:    2 * 1024, //2G
-			MaxBackups: 10,
-			Compress:   true,
-			LocalTime:  true,
-		}
-		log.SetOutput(logOut)
-	}
-}
 
 //get logid  for trace, return a new logid if ctx is nil
 func GetLogId(ctx context.Context) string {

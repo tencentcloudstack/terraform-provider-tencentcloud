@@ -2,7 +2,6 @@ package tencentcloud
 
 import (
 	"os"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -11,7 +10,6 @@ const (
 	PROVIDER_SECRET_ID  = "TENCENTCLOUD_SECRET_ID"
 	PROVIDER_SECRET_KEY = "TENCENTCLOUD_SECRET_KEY"
 	PROVIDER_REGION     = "TENCENTCLOUD_REGION"
-	PROVIDER_DEBUG      = "TENCENTCLOUD_DEBUG"
 )
 
 func Provider() *schema.Provider {
@@ -104,11 +102,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		SecretId:  secretId.(string),
 		SecretKey: secretKey.(string),
 		Region:    region.(string),
-	}
-	if strings.TrimSpace(os.Getenv(PROVIDER_DEBUG)) != "" {
-		InitLogConfig(true)
-	} else {
-		InitLogConfig(false)
 	}
 	return config.Client()
 }
