@@ -3,7 +3,7 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_backup_list"
 sidebar_current: "docs-tencentcloud-tencentcloud_mysql_backup_list"
 description: |-
-Use this data source to query the list of backup databases.
+  Use this data source to query the list of backup databases.
 ---
 
 # tencentcloud_mysql_backup_list
