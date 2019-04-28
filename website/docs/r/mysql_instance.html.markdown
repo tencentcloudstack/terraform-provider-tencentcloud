@@ -14,13 +14,13 @@ Provides a mysql instance resource to create master database instances.
 
 ## Example Usage
 
-```
+```hcl
 resource " tencentcloud_mysql_instance" "default" {
   internet_service = 1
   engine_version = "5.7"
   parameters = {
-  max_connections = "1000"
-}
+    max_connections = "1000"
+  }
   root_password = ******
   slave_deploy_mode = 0
   first_slave_zone = "ap-guangzhou-4"
@@ -36,8 +36,8 @@ resource " tencentcloud_mysql_instance" "default" {
   intranet_port = 3306
   security_groups = ["sg-ot8eclwz"]
   tags = {
-     name ="test"
-}
+    name ="test"
+  }
 }
 
 ```

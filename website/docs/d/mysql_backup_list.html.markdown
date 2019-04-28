@@ -11,7 +11,7 @@ description: |-
 Use this data source to query the list of backup databases.
 
 ## Example Usage
-```
+```hcl
 resource "tencentcloud_mysql_account" "default" { 
     mysql_id = "my-test-database" 
     name = "tf_account" 

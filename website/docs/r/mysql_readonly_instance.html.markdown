@@ -13,7 +13,7 @@ Provides a mysql instance resource to create read-only database instances.
 
 ## Example Usage
 
-```
+```hcl
 resource " tencentcloud_mysql_readonly_instance " "default" {
   master_instance_id = "cdb-dnqksd9f"
   instance_name =" myTestMysql"

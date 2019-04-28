@@ -12,7 +12,7 @@ Use this data source to get information about a MySQL instance
 
 ## Example Usage
 
-```
+```hcl
 data "tencentcloud_mysql_instance" "database"{
      mysql_id = "my-test-database" 
 }

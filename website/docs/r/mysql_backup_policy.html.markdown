@@ -12,7 +12,7 @@ Provides a mysql policy resource to create a backup policy.
 
 ## Example Usage
 
-```
+```hcl
 resource " tencentcloud_mysql_backup_policy " "default" {
   mysql_id = "cdb-dnqksd9f"
   retention_period = 7

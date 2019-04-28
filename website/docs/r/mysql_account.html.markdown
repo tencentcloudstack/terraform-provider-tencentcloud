@@ -13,7 +13,7 @@ Provides a MySQL account resource for database management. A MySQL instance supp
 
 ## Example Usage
 
-```
+```hcl
 resource "tencentcloud_mysql_account" "default" {
   mysql_id = "my-test-database"
   name = "tf_account"
