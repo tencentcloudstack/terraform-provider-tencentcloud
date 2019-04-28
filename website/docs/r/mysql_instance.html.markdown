@@ -3,25 +3,26 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_instance"
 sidebar_current: "docs-tencentcloud-tencentcloud_mysql_instance"
 description: |-
-Provides a mysql instance resource to create master database instances.
+ Provides a mysql instance resource to create master database instances.
 ---
 
-#tencentcloud_mysql_instance
+# tencentcloud_mysql_instance
 
 
 Provides a mysql instance resource to create master database instances.
 
+~> **NOTE:** The terminate operation of mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
-##Example Usage
+## Example Usage
 
-```
-resource " tencentcloud_mysql_instance" "default" {
+```hcl
+resource "tencentcloud_mysql_instance" "default" {
   internet_service = 1
   engine_version = "5.7"
   parameters = {
-  max_connections = "1000"
-}
-  root_password = ******
+    max_connections = "1000"
+  }
+  root_password = "********"
   slave_deploy_mode = 0
   first_slave_zone = "ap-guangzhou-4"
   second_slave_zone = "ap-guangzhou-4"
@@ -36,13 +37,13 @@ resource " tencentcloud_mysql_instance" "default" {
   intranet_port = 3306
   security_groups = ["sg-ot8eclwz"]
   tags = {
-     name ="test"
-}
+    name ="test"
+  }
 }
 
 ```
 
-##Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
@@ -66,7 +67,7 @@ The following arguments are supported:
 - `tags` – (Optional) Instance tags.
 
 
-##Attributes Reference
+## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 

@@ -3,20 +3,21 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_readonly_instance"
 sidebar_current: "docs-tencentcloud-tencentcloud_mysql_readonly_instance"
 description: |-
-Provides a mysql instance resource to create read-only database instances.
+ Provides a mysql instance resource to create read-only database instances.
 ---
 
-#tencentcloud_mysql_readonly_instance
+# tencentcloud_mysql_readonly_instance
 
 Provides a mysql instance resource to create read-only database instances.
 
+~> **NOTE:** The terminate operation of mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
-##Example Usage
+## Example Usage
 
-```
-resource " tencentcloud_mysql_readonly_instance " "default" {
+```hcl
+resource "tencentcloud_mysql_readonly_instance" "default" {
   master_instance_id = "cdb-dnqksd9f"
-  instance_name =" myTestMysql"
+  instance_name ="myTestMysql"
   mem_size = 128000 
   volume_size = 255
   vpc_id = "vpc-12mt3l31"
@@ -29,7 +30,7 @@ resource " tencentcloud_mysql_readonly_instance " "default" {
 }
 
 ```
-##Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
@@ -44,7 +45,7 @@ The following arguments are supported:
 - `tags` – (Optional) Instance tags.
 
 
-##Attributes Reference
+## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 

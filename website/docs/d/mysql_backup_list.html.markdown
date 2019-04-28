@@ -3,25 +3,24 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_backup_list"
 sidebar_current: "docs-tencentcloud-tencentcloud_mysql_backup_list"
 description: |-
-Use this data source to query the list of backup databases.
+  Use this data source to query the list of backup databases.
 ---
 
-#tencentcloud_mysql_backup_list
+# tencentcloud_mysql_backup_list
 
 Use this data source to query the list of backup databases.
 
-##Example Usage
-```
-resource "tencentcloud_mysql_account" "default" { 
+## Example Usage
+```hcl
+resource "tencentcloud_mysql_backup_list" "default" { 
     mysql_id = "my-test-database" 
-    name = "tf_account" 
-    password = "…" 
-    description = "My test account" 
+    max_number = 10 
+    result_output_file = "mytestpath"
 }
 ```
  
 
-##Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
@@ -29,7 +28,7 @@ The following arguments are supported:
 - `max_number` - (Optional) The latest files to list, rang from 1 to 10000. And the default value is 10.
 - `result_output_file` - (Optional) Used to store results.
 
-##Attributes Reference
+## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 

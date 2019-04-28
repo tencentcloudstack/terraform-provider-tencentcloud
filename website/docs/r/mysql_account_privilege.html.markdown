@@ -3,28 +3,28 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_account_privilege"
 sidebar_current: "docs-tencentcloud-tencentcloud_mysql_account_privilege"
 description: |-
-Provides a mysql account privilege resource to grant different access privilege to different database. A database can be granted by multiple account.
+ Provides a mysql account privilege resource to grant different access privilege to different database. A database can be granted by multiple account.
 ---
 
-#tencentcloud_mysql_account_privilege
+# tencentcloud_mysql_account_privilege
 
 
 Provides a mysql account privilege resource to grant different access privilege to different database. A database can be granted by multiple account.
 
 
-##Example Usage
+## Example Usage
 
 
-```
-resource " tencentcloud_mysql_account_privilege" "default" {
-  mysql_id = " my-test-database "
+```hcl
+resource "tencentcloud_mysql_account_privilege" "default" {
+  mysql_id = "my-test-database"
   account_name= "tf_account"
   privileges = ["SELECT"]
   database_names = ["instance.name"]
 }
 ```
 
-##Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
