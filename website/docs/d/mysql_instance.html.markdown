@@ -6,11 +6,11 @@ description: |-
  Use this data source to get information about a MySQL instance.
 ---
 
-#tencentcloud_mysql_instance##
+# tencentcloud_mysql_instance
 
 Use this data source to get information about a MySQL instance
 
-##Example Usage
+## Example Usage
 
 ```
 data "tencentcloud_mysql_instance" "database"{
@@ -19,7 +19,7 @@ data "tencentcloud_mysql_instance" "database"{
 ```
 
 
-##Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
@@ -37,7 +37,7 @@ The following arguments are supported:
 - `limit` - (Optional) Number of results returned for a single request. Default is 20, and maximum is 2000.
 
 
-##Attributes Reference
+## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 

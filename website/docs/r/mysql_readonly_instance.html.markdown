@@ -3,15 +3,15 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_readonly_instance"
 sidebar_current: "docs-tencentcloud-tencentcloud_mysql_readonly_instance"
 description: |-
-Provides a mysql instance resource to create read-only database instances.
+ Provides a mysql instance resource to create read-only database instances.
 ---
 
-#tencentcloud_mysql_readonly_instance
+# tencentcloud_mysql_readonly_instance
 
 Provides a mysql instance resource to create read-only database instances.
 
 
-##Example Usage
+## Example Usage
 
 ```
 resource " tencentcloud_mysql_readonly_instance " "default" {
@@ -29,7 +29,7 @@ resource " tencentcloud_mysql_readonly_instance " "default" {
 }
 
 ```
-##Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
@@ -44,7 +44,7 @@ The following arguments are supported:
 - `tags` – (Optional) Instance tags.
 
 
-##Attributes Reference
+## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 

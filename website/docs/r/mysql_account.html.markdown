@@ -3,15 +3,15 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_account"
 sidebar_current: "docs-tencentcloud-tencentcloud_mysql_account"
 description: |-
-Provides a MySQL account resource for database management. A MySQL instance supports multiple database account.
+ Provides a MySQL account resource for database management. A MySQL instance supports multiple database account.
 ---
 
-#tencentcloud_mysql_account
+# tencentcloud_mysql_account
 
 Provides a MySQL account resource for database management. A MySQL instance supports multiple database account.
 
 
-##Example Usage
+## Example Usage
 
 ```
 resource "tencentcloud_mysql_account" "default" {
@@ -23,7 +23,7 @@ resource "tencentcloud_mysql_account" "default" {
 
 ```
 
-##Argument Reference
+## Argument Reference
 
 
 The following arguments are supported:

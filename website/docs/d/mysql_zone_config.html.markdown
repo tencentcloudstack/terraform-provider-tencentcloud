@@ -6,25 +6,25 @@ description: |-
   Use this data source to query the available database specifications for different regions. And a maximum of 20 requests can be initiated per second for this query.
 ---
 
-#tencentcloud_mysql_zone_config
+# tencentcloud_mysql_zone_config
 
 Use this data source to query the available database specifications for different regions. And a maximum of 20 requests can be initiated per second for this query.
 
-##Example Usage
+## Example Usage
 ```
 data "tencentcloud_mysql_zone_config" "mysql" {
     region = "ap-guangzhou"
     result_output_file = "mytestpath" 
 }
 ```
-##Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
 - `region` - (Optional) Region parameter, which is used to identify the region to which the data you want to work with belongs. 
 - `result_output_file` - (Optional) Used to store results.
 
-##Attributes Reference
+## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 

@@ -3,14 +3,14 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_backup_policy"
 sidebar_current: "docs-tencentcloud-tencentcloud_mysql_backup_policy"
 description: |-
-Provides a mysql policy resource to create a backup policy.
+ Provides a mysql policy resource to create a backup policy.
 ---
 
-#tencentcloud_mysql_backup_policy
+# tencentcloud_mysql_backup_policy
 
 Provides a mysql policy resource to create a backup policy.
 
-##Example Usage
+## Example Usage
 
 ```
 resource " tencentcloud_mysql_backup_policy " "default" {
@@ -21,7 +21,7 @@ resource " tencentcloud_mysql_backup_policy " "default" {
 }
 ```
 
-##Argument Reference
+## Argument Reference
 
 The following arguments are supported:
 
@@ -30,7 +30,7 @@ The following arguments are supported:
 - `backup_model` – (Optional) Backup method. Supported values include: physical - physical backup, and logical - logical backup.
 - `backup_time` – (Optional) Instance backup time, in the format of "HH:mm-HH:mm". Time setting interval is four hours. Default to "02:00-06:00". The following value can be supported: 02:00\-06:00, 06:00\-10:00, 10:00\-14:00, 14:00\-18:00, 18:00\-22:00, and 22:00\-02:00.
 
-##Attributes Reference
+## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
