@@ -14,9 +14,9 @@ Provides a mysql instance resource to create read-only database instances.
 ## Example Usage
 
 ```hcl
-resource " tencentcloud_mysql_readonly_instance " "default" {
+resource "tencentcloud_mysql_readonly_instance" "default" {
   master_instance_id = "cdb-dnqksd9f"
-  instance_name =" myTestMysql"
+  instance_name ="myTestMysql"
   mem_size = 128000 
   volume_size = 255
   vpc_id = "vpc-12mt3l31"

@@ -20,6 +20,7 @@ resource "tencentcloud_subnet" "main" {
   cidr_block        = "10.0.1.0/24"
   availability_zone = "ap-guangzhou-3"
   vpc_id            = "${tencent_vpc.main.id}"
+  route_table_id = "${tencentcloud_route_table.foo.id}"
 }
 ```
 

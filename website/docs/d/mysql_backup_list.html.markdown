@@ -12,11 +12,10 @@ Use this data source to query the list of backup databases.
 
 ## Example Usage
 ```hcl
-resource "tencentcloud_mysql_account" "default" { 
+resource "tencentcloud_mysql_backup_list" "default" { 
     mysql_id = "my-test-database" 
-    name = "tf_account" 
-    password = "…" 
-    description = "My test account" 
+    max_number = 10 
+    result_output_file = "mytestpath"
 }
 ```
  

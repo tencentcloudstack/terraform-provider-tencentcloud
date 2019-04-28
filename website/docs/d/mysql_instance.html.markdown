@@ -15,6 +15,7 @@ Use this data source to get information about a MySQL instance
 ```hcl
 data "tencentcloud_mysql_instance" "database"{
      mysql_id = "my-test-database" 
+	 result_output_file = "mytestpath" 
 }
 ```
 
@@ -35,6 +36,7 @@ The following arguments are supported:
 - `with_master` - (Optional) Indicates whether to query master instances.
 - `offset` - (Optional) Record offset. Default is 0.
 - `limit` - (Optional) Number of results returned for a single request. Default is 20, and maximum is 2000.
+- `result_output_file` - (Optional) Used to store results.
 
 
 ## Attributes Reference

@@ -17,7 +17,7 @@ Provides a MySQL account resource for database management. A MySQL instance supp
 resource "tencentcloud_mysql_account" "default" {
   mysql_id = "my-test-database"
   name = "tf_account"
-  password = "..."
+  password = "********"
   description = "My test account"
 }
 
