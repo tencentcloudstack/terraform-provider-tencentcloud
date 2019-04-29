@@ -8,125 +8,6 @@ import (
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 )
 
-func TencentCloudMysqlInstanceDetail() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"mysql_id": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"instance_name": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"instance_role": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"init_flag": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"status": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"zone": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"auto_renew_flag": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"engine_version": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"cpu_core_count": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"memory_size": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"volume_size": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"internet_status": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"internet_domain": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"internet_port": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"intranet_ip": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"intranet_port": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"project_id": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"vpc_id": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"subnet_id": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"slave_sync_mode": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"device_type": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"pay_type": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"create_time": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"dead_line_time": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"master_instance_id": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"ro_instance_ids": {
-			Type:     schema.TypeList,
-			Computed: true,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
-		},
-		"dr_instance_ids": {
-			Type:     schema.TypeList,
-			Computed: true,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
-		},
-	}
-}
-
 func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudMysqlInstanceRead,
@@ -253,7 +134,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"internet_domain": {
+						"internet_host": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -422,7 +303,7 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 			"memory_size":     *item.Memory,
 			"volume_size":     *item.Volume,
 			"internet_status": *item.WanStatus,
-			"internet_domain": *item.WanDomain,
+			"internet_host":   *item.WanDomain,
 			"internet_port":   *item.WanPort,
 			"intranet_ip":     *item.Vip,
 			"intranet_port":   *item.Vport,
