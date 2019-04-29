@@ -44,11 +44,12 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 - `instance_list` - List of instances.
-- `zone` - Information of available zone.
+
 
 
 For detail information of mysql instance, the following information will be included:
 
+- `zone` - Information of available zone.
 - `cpu_core_count`- CPU count.
 - `memory_size` - Memory size (in MB). 
 - `volume_size` - Disk capacity (in GB).
