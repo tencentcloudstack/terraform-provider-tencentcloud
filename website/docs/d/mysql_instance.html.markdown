@@ -65,4 +65,3 @@ In addition to all arguments above, the following attributes are exported:
   * `volume_size` - Disk capacity (in GB).
   * `vpc_id` - ID of Virtual Private Cloud.
   * `zone` - Information of available zone.
-
