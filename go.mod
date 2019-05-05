@@ -23,7 +23,6 @@ require (
 	github.com/zqfan/tencentcloud-sdk-go v0.0.0-20181105105106-4c76f78ff2e6
 	golang.org/x/crypto v0.0.0-20190313024323-a1f597ede03a // indirect
 	golang.org/x/net v0.0.0-20190313220215-9f648a60d977 // indirect
-	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 	labix.org/v2/mgo v0.0.0-20140701140051-000000000287 // indirect
 	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 )
