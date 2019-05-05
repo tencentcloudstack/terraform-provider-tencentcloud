@@ -86,14 +86,14 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Description:  "Public access port, rang form 1024 to 65535 and default value is 3306.",
 		},
 		"mem_size": {
-			Type:     schema.TypeInt,
-			Required: true,
-			Description:  "Memory size (in MB).",
+			Type:        schema.TypeInt,
+			Required:    true,
+			Description: "Memory size (in MB).",
 		},
 		"volume_size": {
-			Type:     schema.TypeInt,
-			Required: true,
-			Description:  "Disk size (in GB).",
+			Type:        schema.TypeInt,
+			Required:    true,
+			Description: "Disk size (in GB).",
 		},
 		"vpc_id": {
 			Type:         schema.TypeString,
@@ -115,42 +115,42 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Set: func(v interface{}) int {
 				return hashcode.String(v.(string))
 			},
-			Description:  "Security groups to use.",
+			Description: "Security groups to use.",
 		},
 
 		"tags": {
-			Type:     schema.TypeMap,
-			Optional: true,
-			Description:  "Instance tags.",
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "Instance tags.",
 		},
 
 		// Computed values
 		"intranet_ip": {
-			Type:     schema.TypeString,
-			Computed: true,
-			Description:  "instance intranet IP.",
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "instance intranet IP.",
 		},
 
 		"locked": {
-			Type:     schema.TypeInt,
-			Computed: true,
-			Description:  "Indicates whether the instance is locked. 0 - No; 1 - Yes.",
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Indicates whether the instance is locked. 0 - No; 1 - Yes.",
 		},
 		"status": {
-			Type:     schema.TypeInt,
-			Computed: true,
-			Description:  "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.",
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.",
 		},
 		"task_status": {
-			Type:     schema.TypeInt,
-			Computed: true,
-			Description:  "Indicates which kind of operations is being executed.",
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Indicates which kind of operations is being executed.",
 		},
 
 		"gtid": {
-			Type:     schema.TypeInt,
-			Computed: true,
-			Description:  "Indicates whether GTID is enable. 0 - Not enabled; 1 - Enabled.",
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Indicates whether GTID is enable. 0 - Not enabled; 1 - Enabled.",
 		},
 	}
 }
@@ -158,9 +158,9 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 func resourceTencentCloudMysqlInstance() *schema.Resource {
 	specialInfo := map[string]*schema.Schema{
 		"parameters": {
-			Type:     schema.TypeMap,
-			Optional: true,
-			Description:  "List of parameters to use.",
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "List of parameters to use.",
 		},
 		"internet_service": {
 			Type:         schema.TypeInt,
@@ -179,10 +179,10 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		},
 
 		"availability_zone": {
-			Type:     schema.TypeString,
-			ForceNew: true,
-			Optional: true,
-			Description:  "Indicates which availability zone will be used.",
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Indicates which availability zone will be used.",
 		},
 		"root_password": {
 			Type:         schema.TypeString,
@@ -200,16 +200,16 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Description:  "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.",
 		},
 		"first_slave_zone": {
-			Type:     schema.TypeString,
-			ForceNew: true,
-			Optional: true,
-			Description:  "Zone information about first slave instance.",
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Zone information about first slave instance.",
 		},
 		"second_slave_zone": {
-			Type:     schema.TypeString,
-			ForceNew: true,
-			Optional: true,
-			Description:  "Zone information about second slave instance.",
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Zone information about second slave instance.",
 		},
 		"slave_sync_mode": {
 			Type:         schema.TypeInt,
@@ -220,21 +220,21 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Description:  "Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.",
 		},
 		"project_id": {
-			Type:     schema.TypeInt,
-			Optional: true,
-			Description:  "Project ID, default value is 0.",
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Project ID, default value is 0.",
 		},
 
 		// Computed values
 		"internet_host": {
-			Type:     schema.TypeString,
-			Computed: true,
-			Description:  "host for public access.",
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "host for public access.",
 		},
 		"internet_port": {
-			Type:     schema.TypeInt,
-			Computed: true,
-			Description:  "Access port for public access.",
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Access port for public access.",
 		},
 	}
 
