@@ -23,3 +23,4 @@ var AllSupportedRegions = []string{regions.Beijing,
 	regions.Toronto}
 
 var MysqlSupportedRegions = AllSupportedRegions
+var RedisSupportedRegions = AllSupportedRegions
