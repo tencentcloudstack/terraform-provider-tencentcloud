@@ -116,7 +116,7 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 				if err != nil {
 					continue
 				}
-				memSizes = append(memSizes, temp)
+				memSizes = append(memSizes, temp*1024)
 			}
 
 			zoneConfigures["mem_sizes"] = memSizes

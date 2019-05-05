@@ -53,6 +53,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_parameter_list":        dataSourceTencentCloudMysqlParameterList(),
 			"tencentcloud_mysql_instance":              dataSourceTencentCloudMysqlInstance(),
 			"tencentcloud_redis_zone_config":           dataSourceTencentRedisZoneConfig(),
+			"tencentcloud_redis_instances":             dataSourceTencentRedisInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
