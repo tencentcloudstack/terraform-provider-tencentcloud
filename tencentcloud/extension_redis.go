@@ -68,3 +68,24 @@ var REDIS_ZONE_ID2NAME = map[int64]string{
 	240001: "eu-moscow-1",
 	250001: "ap-tokyo-1",
 }
+
+/*
+	https://cloud.tencent.com/document/api/239/20022#TradeDealDetail
+	Order status
+	1: unpaid
+	2: paid, not shipped
+	3: in shipment
+	4: successfully
+	5: shipped failed
+	6: refunded
+	7: closed order
+	8: expired
+	9: order no longer valid
+	10: product no longer valid
+	11: payment refused
+	12: in payment
+*/
+const (
+	REDIS_ORDER_SUCCESS_DELIVERY = 4
+	REDIS_ORDER_PAYMENT          = 12
+)

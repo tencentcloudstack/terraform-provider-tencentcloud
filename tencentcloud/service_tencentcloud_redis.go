@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
@@ -80,7 +82,7 @@ func (me *RedisService) DescribeInstances(ctx context.Context, zoneName, searchK
 		}
 	}()
 
-	var limit, offset uint64 = 20, 0
+	var limit, offset uint64 = 2, 0
 	var leftNumber int64 = 0
 	var leftNumberInit bool = false
 
@@ -101,6 +103,7 @@ needMoreItems:
 	}
 	if !leftNumberInit {
 		leftNumber = *response.Response.TotalCount
+		leftNumberInit = true
 	}
 	leftNumber = leftNumber - int64(limit)
 	offset = offset + limit
@@ -141,11 +144,272 @@ needMoreItems:
 			return
 		}
 	}
-
+	fmt.Println(leftNumber)
 	if leftNumber < 0 {
 		return
 	} else {
 		goto needMoreItems
 	}
+	return
+}
+
+func (me *RedisService) CreateInstances(ctx context.Context,
+	zoneName, typeId, password, vpcId, subnetId string,
+	memSize, projectId, port int64,
+	securityGroups []string) (dealId string, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := redis.NewCreateInstancesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	//zone
+	var intZoneId uint64 = 0
+
+	for id, name := range REDIS_ZONE_ID2NAME {
+		if zoneName == name {
+			intZoneId = uint64(id)
+			break
+		}
+	}
+	if intZoneId == 0 {
+		errRet = fmt.Errorf("redis not supports this zone %s now", zoneName)
+		return
+	}
+	request.ZoneId = &intZoneId
+
+	//type
+	var intTypeId uint64 = 0
+	for id, name := range REDIS_NAMES {
+		if typeId == name {
+			intTypeId = uint64(id)
+			break
+		}
+	}
+	if intTypeId == 0 {
+		errRet = fmt.Errorf("redis not supports this type %s now", typeId)
+		return
+	}
+	request.TypeId = &intTypeId
+
+	//vpc
+	if (vpcId == "" && subnetId != "") || (vpcId != "" && subnetId == "") {
+		errRet = fmt.Errorf("redis need vpcId and subnetId both set or none")
+		return
+	}
+	if vpcId != "" && subnetId != "" {
+		request.VpcId = &vpcId
+		request.SubnetId = &subnetId
+	} else {
+		if len(securityGroups) > 0 {
+			errRet = fmt.Errorf("redis need empty security_groups if vpc_id and subnet_id is empty")
+			return
+		}
+	}
+
+	if projectId >= 0 {
+		request.ProjectId = &projectId
+	}
+
+	var (
+		vport              = uint64(port)
+		umemSize           = uint64(memSize)
+		billingMode int64  = 0
+		goodsNum    uint64 = 1
+		period      uint64 = 1
+	)
+	//request.VPort = &vport
+	_ = vport
+	request.MemSize = &umemSize
+	request.BillingMode = &billingMode
+	request.GoodsNum = &goodsNum
+	request.Period = &period
+
+	request.Password = &password
+
+	if len(securityGroups) > 0 {
+		request.SecurityGroupIdList = make([]*string, 0, len(securityGroups))
+		for v, _ := range securityGroups {
+			request.SecurityGroupIdList = append(request.SecurityGroupIdList, &securityGroups[v])
+		}
+	}
+
+	response, err := me.client.UseRedisClient().CreateInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Println(response.ToJsonString())
+	dealId = *response.Response.DealId
+	return
+}
+
+func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) (has bool,
+	online bool,
+	info *redis.InstanceSet,
+	errRet error) {
+
+	logId := GetLogId(ctx)
+
+	request := redis.NewDescribeInstancesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &redisId
+
+	response, err := me.client.UseRedisClient().DescribeInstances(request)
+
+	//Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
+	if err != nil {
+		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+			time.Sleep(time.Second)
+			response, err = me.client.UseRedisClient().DescribeInstances(request)
+		}
+	}
+	if err != nil {
+		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+			time.Sleep(3 * time.Second)
+			response, err = me.client.UseRedisClient().DescribeInstances(request)
+		}
+	}
+
+	if err != nil {
+		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+			time.Sleep(5 * time.Second)
+			response, err = me.client.UseRedisClient().DescribeInstances(request)
+		}
+	}
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.InstanceSet) == 0 {
+		has = false
+		return
+	}
+
+	if len(response.Response.InstanceSet) != 1 {
+		errRet = fmt.Errorf("redis DescribeInstances one id get %d redis info", len(response.Response.InstanceSet))
+		return
+	}
+
+	has = true
+	info = response.Response.InstanceSet[0]
+
+	if *info.Status == REDIS_STATUS_ONLINE {
+		online = true
+		return
+	}
+
+	if *info.Status == REDIS_STATUS_INIT || *info.Status == REDIS_STATUS_PROCESSING {
+		online = false
+		return
+	}
+
+	errRet = fmt.Errorf("redis instance delivery failure,  status is %s", *info.Status)
+	return
+}
+
+func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId string) (done bool, redisId string, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := redis.NewDescribeInstanceDealDetailRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.DealIds = []*string{&dealId}
+
+	response, err := me.client.UseRedisClient().DescribeInstanceDealDetail(request)
+
+	//Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
+
+	if err != nil {
+		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+			time.Sleep(time.Second)
+			response, err = me.client.UseRedisClient().DescribeInstanceDealDetail(request)
+		}
+	}
+
+	if err != nil {
+		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+			time.Sleep(3 * time.Second)
+			response, err = me.client.UseRedisClient().DescribeInstanceDealDetail(request)
+		}
+	}
+
+	if err != nil {
+		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+			time.Sleep(5 * time.Second)
+			response, err = me.client.UseRedisClient().DescribeInstanceDealDetail(request)
+		}
+	}
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.DealDetails) != 1 {
+		errRet = fmt.Errorf("Redis api DescribeInstanceDealDetail  one dealId[%s]  return %d deal infos.",
+			dealId, len(response.Response.DealDetails))
+		return
+	}
+
+	dealDetail := response.Response.DealDetails[0]
+	status := *dealDetail.Status
+
+	if status == REDIS_ORDER_SUCCESS_DELIVERY {
+
+		if len(dealDetail.InstanceIds) != 1 {
+			errRet = fmt.Errorf("redis one dealid give  %d  redis id", len(dealDetail.InstanceIds))
+			return
+		}
+		redisId = *dealDetail.InstanceIds[0]
+		done = true
+		return
+	}
+	if status < REDIS_ORDER_SUCCESS_DELIVERY || status == REDIS_ORDER_PAYMENT {
+		return
+	}
+	errRet = fmt.Errorf("redis instance delivery failure, deal status is %d", status)
+	return
+}
+
+func (me *RedisService) ModifyInstanceName(ctx context.Context, redisId string, name string) (errRet error) {
+	logId := GetLogId(ctx)
+	request := redis.NewModifyInstanceRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	op := "rename"
+	request.InstanceName = &name
+	request.Operation = &op
+	request.InstanceId = &redisId
+
+	respone, err := me.client.UseRedisClient().ModifyInstance(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), respone.ToJsonString())
+	}
+	errRet = err
 	return
 }
