@@ -83,10 +83,6 @@ func dataSourceTencentCloudCosBucketObject() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"tags": {
-				Type:     schema.TypeMap,
-				Computed: true,
-			},
 		},
 	}
 }
@@ -104,7 +100,7 @@ func dataSourceTencentCloudCosBucketObjectsRead(d *schema.ResourceData, meta int
 	cosService := CosService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	info, err := cosService.HeadObject(ctx, bucket, key, versionId)
+	info, err := cosService.HeadObject(ctx, bucket, key)
 	if err != nil {
 		return err
 	}
@@ -129,12 +125,6 @@ func dataSourceTencentCloudCosBucketObjectsRead(d *schema.ResourceData, meta int
 	if info.StorageClass != nil {
 		d.Set("storage_class", info.StorageClass)
 	}
-
-	tags, err := cosService.GetObjectTags(ctx, bucket, key)
-	if err != nil {
-		return err
-	}
-	d.Set("tags", tags)
 
 	return nil
 }

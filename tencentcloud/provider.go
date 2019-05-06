@@ -82,6 +82,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_account_privilege":    resourceTencentCloudMysqlAccountPrivilege(),
 			"tencentcloud_mysql_instance":             resourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_readonly_instance":    resourceTencentCloudMysqlReadonlyInstance(),
+			"tencentcloud_cos_bucket":                 resourceTencentCloudCosBucket(),
+			"tencentcloud_cos_bucket_object":          resourceTencentCloudCosBucketObject(),
 		},
 
 		ConfigureFunc: providerConfigure,
