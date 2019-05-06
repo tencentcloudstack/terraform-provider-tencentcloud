@@ -18,6 +18,7 @@ resource "tencentcloud_mysql_backup_list" "default" {
   max_number = 10
   result_output_file = "mytestpath"
 }
+```
 
 ## Argument Reference
 

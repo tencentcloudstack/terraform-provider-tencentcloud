@@ -18,6 +18,7 @@ data "tencentcloud_mysql_parameter_list" "mysql" {
   engine_version = "5.5"
   result_output_file = "mytestpath"
 }
+```
 
 ## Argument Reference
 
