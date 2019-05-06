@@ -1,3 +1,17 @@
+/*
+Provides a MySQL account resource for database management. A MySQL instance supports multiple database account.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_mysql_account" "default" {
+  mysql_id = "my-test-database"
+  name = "tf_account"
+  password = "********"
+  description = "My test account"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -22,26 +36,30 @@ func resourceTencentCloudMysqlAccount() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"mysql_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "Instance ID to which the account belongs.",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "Account name.",
 			},
 			"password": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Sensitive:    true,
 				ValidateFunc: validateMysqlPassword,
+				Description:  "Operation password.",
 			},
 			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "--",
 				ValidateFunc: validateStringLengthInRange(1, 200),
+				Description:  "Database description.",
 			},
 		},
 	}

@@ -1,3 +1,15 @@
+/*
+Use this data source to get information about a parameter group of a database instance.
+
+Example Usage
+
+```hcl
+data "tencentcloud_mysql_parameter_list" "mysql" {
+  mysql_id = "my-test-database"
+  engine_version = "5.5"
+  result_output_file = "mytestpath"
+}
+*/
 package tencentcloud
 
 import (
@@ -12,43 +24,52 @@ import (
 func TencentCloudMysqlParameterDetail() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"parameter_name": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Parameter name.",
 		},
 		"parameter_type": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Parameter type.",
 		},
 		"description": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Parameter specification description.",
 		},
 		"current_value": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Current value.",
 		},
 		"default_value": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Default value.",
 		},
 		"enum_value": {
-			Type:     schema.TypeList,
-			Computed: true,
+			Type:        schema.TypeList,
+			Computed:    true,
+			Description: "Enumerated value.",
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
 		},
 		"max": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Maximum value for the parameter.",
 		},
 		"min": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Minimum value for the parameter.",
 		},
 		"need_reboot": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Indicates whether reboot is needed to enable the new parameters.",
 		},
 	}
 }
@@ -58,21 +79,25 @@ func dataSourceTencentCloudMysqlParameterList() *schema.Resource {
 		Read: dataSourceTencentMysqlParameterListRead,
 		Schema: map[string]*schema.Schema{
 			"mysql_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Instance ID.",
 			},
 			"engine_version": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"5.1", "5.5", "5.6", "5.7"}),
+				Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.",
 			},
 			"result_output_file": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to store results.",
 			},
 			"parameter_list": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list of parameters. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: TencentCloudMysqlParameterDetail(),
 				},

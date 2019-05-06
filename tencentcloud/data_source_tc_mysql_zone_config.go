@@ -1,3 +1,14 @@
+/*
+Use this data source to query the available database specifications for different regions. And a maximum of 20 requests can be initiated per second for this query.
+
+Example Usage
+
+```hcl
+data "tencentcloud_mysql_zone_config" "mysql" {
+  region = "ap-guangzhou"
+  result_output_file = "mytestpath"
+}
+*/
 package tencentcloud
 
 import (
@@ -14,27 +25,34 @@ import (
 func TencentMysqlSellType() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"cdb_type": {
-			Type:     schema.TypeString,
-			Computed: true},
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "",
+		},
 		"mem_size": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Memory size (in MB).",
 		},
 		"min_volume_size": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Minimum disk size (in GB).",
 		},
 		"max_volume_size": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Maximum disk size (in GB).",
 		},
 		"volume_step": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Disk increment (in GB).",
 		},
 		"qps": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Queries per second.",
 		},
 	}
 }
@@ -42,62 +60,75 @@ func TencentMysqlSellType() map[string]*schema.Schema {
 func TencentMysqlZoneConfig() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"name": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "The name of available zone which is equal to a specific datacenter.",
 		},
 		"is_default": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Indicates whether the current DC is the default DC for the region. Possible returned values: 0 - No; 1 - Yes.",
 		},
 		"is_support_disaster_recovery": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Indicates whether recovery is supported: 0 - No; 1 - Yes.",
 		},
 		"is_support_vpc": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Indicates whether VPC is supported: 0 - No; 1 - Yes.",
 		},
 		"engine_versions": {
-			Type:     schema.TypeList,
-			Elem:     &schema.Schema{Type: schema.TypeString},
-			Computed: true,
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Computed:    true,
+			Description: "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.",
 		},
 		"pay_type": {
-			Type:     schema.TypeList,
-			Elem:     &schema.Schema{Type: schema.TypeInt},
-			Computed: true,
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeInt},
+			Computed:    true,
+			Description: "",
 		},
 		"hour_instance_sale_max_num": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "",
 		},
 		"support_slave_sync_modes": {
-			Type:     schema.TypeList,
-			Elem:     &schema.Schema{Type: schema.TypeInt},
-			Computed: true,
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeInt},
+			Computed:    true,
+			Description: "Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.",
 		},
 		"disaster_recovery_zones": {
-			Type:     schema.TypeList,
-			Elem:     &schema.Schema{Type: schema.TypeString},
-			Computed: true,
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Computed:    true,
+			Description: "Information about available zones of recovery.",
 		},
 		"slave_deploy_modes": {
-			Type:     schema.TypeList,
-			Elem:     &schema.Schema{Type: schema.TypeInt},
-			Computed: true,
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeInt},
+			Computed:    true,
+			Description: "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.",
 		},
 		"first_slave_zones": {
-			Type:     schema.TypeList,
-			Elem:     &schema.Schema{Type: schema.TypeString},
-			Computed: true,
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Computed:    true,
+			Description: "Zone information about first slave instance.",
 		},
 		"second_slave_zones": {
-			Type:     schema.TypeList,
-			Elem:     &schema.Schema{Type: schema.TypeString},
-			Computed: true,
+			Type:        schema.TypeList,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Computed:    true,
+			Description: "Zone information about second slave instance.",
 		},
 		"sells": {Type: schema.TypeList,
-			Computed: true,
+			Computed:    true,
+			Description: "A list of supported instance types for sell:",
 			Elem: &schema.Resource{
 				Schema: TencentMysqlSellType(),
 			},
@@ -114,16 +145,19 @@ func dataSourceTencentMysqlZoneConfig() *schema.Resource {
 				ForceNew:     true,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(connectivity.MysqlSupportedRegions),
+				Description:  "Region parameter, which is used to identify the region to which the data you want to work with belongs.",
 			},
 			"result_output_file": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to store results.",
 			},
-
 			// Computed values
-			"list": {Type: schema.TypeList,
-				Computed: true,
+			"list": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list of zone config. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: TencentMysqlZoneConfig(),
 				},
