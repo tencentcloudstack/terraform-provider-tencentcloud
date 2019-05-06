@@ -56,17 +56,17 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	}
 
 	fname := fmt.Sprintf("%s_%s_%s.go", dtype, cloudMarkShort, data["resource"])
-	log.Printf("get description from file: %s\n", fname)
+	log.Printf("[START]get description from file: %s\n", fname)
 
 	description, err := getFileDescription(fmt.Sprintf("%s/%s", fpath, fname))
 	if err != nil {
-		log.Printf("[SKIP]get description failed, skip: %s", err)
+		log.Printf("[SKIP!]get description failed, skip: %s", err)
 		return
 	}
 
 	description = strings.TrimSpace(description)
 	if description == "" {
-		log.Printf("[SKIP]description empty, skip: %s\n", fname)
+		log.Printf("[SKIP!]description empty, skip: %s\n", fname)
 		return
 	}
 
@@ -75,7 +75,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 		data["example"] = strings.TrimSpace(description[pos+15:])
 		description = strings.TrimSpace(description[:pos])
 	} else {
-		log.Printf("[SKIP]example usage missing, skip: %s\n", fname)
+		log.Printf("[SKIP!]example usage missing, skip: %s\n", fname)
 		return
 	}
 
@@ -107,25 +107,10 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 				opt += ", ForceNew"
 			}
 			optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
-		} else if v.Computed {
-			if v.Type == schema.TypeList {
-				listAttributes := []string{}
-				for kk, vv := range v.Elem.(*schema.Resource).Schema {
-					if vv.Description == "" {
-						continue
-					}
-					if v.Computed {
-						listAttributes = append(listAttributes, fmt.Sprintf("  * `%s` - %s", kk, vv.Description))
-					}
-				}
-				slistAttributes := ""
-				sort.Strings(listAttributes)
-				if len(listAttributes) > 0 {
-					slistAttributes = "\n" + strings.Join(listAttributes, "\n")
-				}
-				attributes = append(attributes, fmt.Sprintf("* `%s` - %s%s", k, v.Description, slistAttributes))
-			} else {
-				attributes = append(attributes, fmt.Sprintf("* `%s` - %s", k, v.Description))
+		} else {
+			attrs := getAttributes(0, k, v)
+			if len(attrs) > 0 {
+				attributes = append(attributes, attrs...)
 			}
 		}
 	}
@@ -141,7 +126,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	fname = fmt.Sprintf("%s/%s/%s.html.markdown", docRoot, dtype[0:1], data["resource"])
 	fd, err := os.OpenFile(fname, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
-		log.Printf("[FAIL]open file %s failed: %s", fname, err)
+		log.Printf("[FAIL!]open file %s failed: %s", fname, err)
 		return
 	}
 
@@ -149,11 +134,43 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	t := template.Must(template.New("t").Parse(docTPL))
 	err = t.Execute(fd, data)
 	if err != nil {
-		log.Printf("[FAIL]write file %s failed: %s", fname, err)
+		log.Printf("[FAIL!]write file %s failed: %s", fname, err)
 		return
 	}
 
-	log.Printf("[SUCC]write doc to file success: %s", fname)
+	log.Printf("[SUCC.]write doc to file success: %s", fname)
+}
+
+// getAttributes get attributes from schema
+func getAttributes(step int, k string, v *schema.Schema) []string {
+	attributes := []string{}
+	ident := strings.Repeat(" ", step*2)
+
+	if v.Description == "" {
+		return attributes
+	}
+
+	if v.Computed {
+		if _, ok := v.Elem.(*schema.Resource); ok {
+			listAttributes := []string{}
+			for kk, vv := range v.Elem.(*schema.Resource).Schema {
+				attrs := getAttributes(step+1, kk, vv)
+				if len(attrs) > 0 {
+					listAttributes = append(listAttributes, attrs...)
+				}
+			}
+			slistAttributes := ""
+			sort.Strings(listAttributes)
+			if len(listAttributes) > 0 {
+				slistAttributes = "\n" + strings.Join(listAttributes, "\n")
+			}
+			attributes = append(attributes, fmt.Sprintf("%s* `%s` - %s%s", ident, k, v.Description, slistAttributes))
+		} else {
+			attributes = append(attributes, fmt.Sprintf("%s* `%s` - %s", ident, k, v.Description))
+		}
+	}
+
+	return attributes
 }
 
 // getFileDescription get description from go file

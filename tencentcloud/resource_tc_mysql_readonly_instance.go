@@ -1,3 +1,26 @@
+/*
+Provides a mysql instance resource to create read-only database instances.
+
+~> **NOTE:** The terminate operation of mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_mysql_readonly_instance" "default" {
+  master_instance_id = "cdb-dnqksd9f"
+  instance_name ="myTestMysql"
+  mem_size = 128000
+  volume_size = 255
+  vpc_id = "vpc-12mt3l31"
+  subnet_id = "subnet-9uivyb1g"
+  intranet_port = 3306
+  security_groups = ["sg-ot8eclwz"]
+  tags = {
+    name ="test"
+  }
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -14,9 +37,10 @@ import (
 func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 	readonlyInstanceInfo := map[string]*schema.Schema{
 		"master_instance_id": {
-			Type:     schema.TypeString,
-			ForceNew: true,
-			Required: true,
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Required:    true,
+			Description: "Indicates the master instance ID of recovery instances.",
 		},
 	}
 
