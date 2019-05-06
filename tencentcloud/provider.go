@@ -55,6 +55,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_parameter_list":        dataSourceTencentCloudMysqlParameterList(),
 			"tencentcloud_mysql_instance":              dataSourceTencentCloudMysqlInstance(),
 			"tencentcloud_cos_bucket_object":           dataSourceTencentCloudCosBucketObject(),
+			"tencentcloud_cos_buckets":                 dataSourceTencentCloudCosBuckets(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

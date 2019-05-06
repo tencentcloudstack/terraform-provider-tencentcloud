@@ -253,3 +253,21 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (webs
 
 	return
 }
+
+func (me *CosService) ListBuckets(ctx context.Context) (buckets []*s3.Bucket, errRet error) {
+	logId := GetLogId(ctx)
+
+	request := s3.ListBucketsInput{}
+	response, err := me.client.UseCosClient().ListBuckets(&request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "get bucket list", request.String(), err.Error())
+		errRet = fmt.Errorf("cos get bucket list error: %s", err.Error())
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "get bucket list", request.String(), response.String())
+
+	buckets = response.Buckets
+	return
+}
