@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/schema"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -117,6 +119,44 @@ func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet
 	return nil
 }
 
+func (me *CosService) HeadBucket(ctx context.Context, bucket string) (errRet error) {
+	logId := GetLogId(ctx)
+
+	request := s3.HeadBucketInput{
+		Bucket: aws.String(bucket),
+	}
+	response, err := me.client.UseCosClient().HeadBucket(&request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "head bucket", request.String(), err.Error())
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "head bucket", request.String(), response.String())
+
+	return nil
+}
+
+func (me *CosService) DeleteBucket(ctx context.Context, bucket string) (errRet error) {
+	logId := GetLogId(ctx)
+
+	request := s3.DeleteBucketInput{
+		Bucket: aws.String(bucket),
+	}
+	response, err := me.client.UseCosClient().DeleteBucket(&request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "delete bucket", request.String(), err.Error())
+		return fmt.Errorf("cos delete bucket error: %s, bucket: %s", err.Error(), bucket)
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "delete bucket", request.String(), response.String())
+
+	return nil
+}
+
 func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRules []map[string]interface{}, errRet error) {
 	logId := GetLogId(ctx)
 
@@ -150,6 +190,8 @@ func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRul
 			if value.MaxAgeSeconds != nil {
 				rule["max_age_seconds"] = int(*value.MaxAgeSeconds)
 			}
+
+			corsRules = append(corsRules, rule)
 		}
 	}
 	return
@@ -180,9 +222,13 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 			rule := make(map[string]interface{})
 
 			// filter_prefix
-			if value.Filter != nil && value.Filter.And != nil && value.Filter.And.Prefix != nil &&
-				*value.Filter.And.Prefix != "" {
-				rule["filter_prefix"] = *value.Filter.And.Prefix
+			if value.Filter != nil {
+				if value.Filter.And != nil && value.Filter.And.Prefix != nil &&
+					*value.Filter.And.Prefix != "" {
+					rule["filter_prefix"] = *value.Filter.And.Prefix
+				} else if value.Filter.Prefix != nil && *value.Filter.Prefix != "" {
+					rule["filter_prefix"] = *value.Filter.Prefix
+				}
 			}
 			// transition
 			if len(value.Transitions) > 0 {
@@ -200,7 +246,7 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 					}
 					transitions = append(transitions, t)
 				}
-				rule["transition"] = transitions
+				rule["transition"] = schema.NewSet(transitionHash, transitions)
 			}
 			// expiration
 			if value.Expiration != nil {
@@ -211,7 +257,7 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 				if value.Expiration.Days != nil {
 					e["days"] = int(*value.Expiration.Days)
 				}
-				rule["expiration"] = []interface{}{e}
+				rule["expiration"] = schema.NewSet(expirationHash, []interface{}{e})
 			}
 
 			lifecycleRules = append(lifecycleRules, rule)
@@ -269,5 +315,25 @@ func (me *CosService) ListBuckets(ctx context.Context) (buckets []*s3.Bucket, er
 		logId, "get bucket list", request.String(), response.String())
 
 	buckets = response.Buckets
+	return
+}
+
+func (me *CosService) ListObjects(ctx context.Context, bucket string) (objects []*s3.Object, errRet error) {
+	logId := GetLogId(ctx)
+
+	request := s3.ListObjectsInput{
+		Bucket: aws.String(bucket),
+	}
+	response, err := me.client.UseCosClient().ListObjects(&request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "get object list", request.String(), err.Error())
+		errRet = fmt.Errorf("cos get object list error: %s", err.Error())
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "get object list", request.String(), response.String())
+
+	objects = response.Contents
 	return
 }

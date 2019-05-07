@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -93,6 +95,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 						"transition": {
 							Type:     schema.TypeSet,
 							Optional: true,
+							Set:      transitionHash,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"date": {
@@ -116,6 +119,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 						"expiration": {
 							Type:     schema.TypeSet,
 							Optional: true,
+							Set:      expirationHash,
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -256,24 +260,29 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 
 	d.Partial(false)
 
-	return nil
+	// wait for update cache
+	// if not, the data may be outdate.
+	time.Sleep(3 * time.Second)
+
+	return resourceTencentCloudCosBucketRead(d, meta)
 }
 
 func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Id()
-	request := s3.DeleteBucketInput{
-		Bucket: aws.String(bucket),
+	cosService := CosService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().DeleteBucket(&request)
+	err := cosService.DeleteBucket(ctx, bucket)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, "delete bucket", request.String(), err.Error())
-		return fmt.Errorf("cos delete bucket error: %s, bucket: %s", err.Error(), bucket)
+		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, "delete bucket", request.String(), response.String())
+
+	// wait for update cache
+	// if not, head bucket may be successful
+	time.Sleep(3 * time.Second)
 
 	return nil
 }
@@ -383,9 +392,14 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 			logId, "delete bucket lifecycle", request.String(), response.String())
 	} else {
 		rules := make([]*s3.LifecycleRule, 0, len(lifecycleRules))
-		for i := range lifecycleRules {
+		for i, lifecycleRule := range lifecycleRules {
+			r := lifecycleRule.(map[string]interface{})
 			rule := &s3.LifecycleRule{}
 			rule.Status = aws.String(s3.ExpirationStatusEnabled)
+			prefix := r["filter_prefix"].(string)
+			rule.Filter = &s3.LifecycleRuleFilter{
+				Prefix: &prefix,
+			}
 
 			// Transitions
 			transitions := d.Get(fmt.Sprintf("lifecycle_rules.%d.transition", i)).(*schema.Set).List()
@@ -505,4 +519,31 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, client *s3.
 	}
 
 	return nil
+}
+
+func expirationHash(v interface{}) int {
+	var buf bytes.Buffer
+	m := v.(map[string]interface{})
+	if v, ok := m["date"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+	}
+	if v, ok := m["days"]; ok {
+		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
+	}
+	return hashcode.String(buf.String())
+}
+
+func transitionHash(v interface{}) int {
+	var buf bytes.Buffer
+	m := v.(map[string]interface{})
+	if v, ok := m["date"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+	}
+	if v, ok := m["days"]; ok {
+		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
+	}
+	if v, ok := m["storage_class"]; ok {
+		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
+	}
+	return hashcode.String(buf.String())
 }
