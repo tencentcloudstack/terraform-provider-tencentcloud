@@ -24,6 +24,7 @@ const (
 )
 
 const (
+	// deprecated
 	tencentCloudApiStorageTypeBasic   = "cloudBasic"
 	tencentCloudApiStorageTypePremium = "cloudPremium"
 	tencentCloudApiStorageTypeSSD     = "cloudSSD"

@@ -36,7 +36,7 @@ resource "tencentcloud_subnet" "my_subnet" {
 }
 
 resource "tencentcloud_container_cluster" "foo" {
- cluster_name = "bar"
+ cluster_name = "terraform-acc-test-inst"
  cpu    = 1
  mem    = 1
  os_name   = "ubuntu16.04.1 LTSx86_64"

@@ -17,6 +17,7 @@ func TestAccTencentCloudImagesDataSource_filter(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.public_image"),
 					resource.TestMatchResourceAttr("data.tencentcloud_image.public_image", "image_id", regexp.MustCompile("^img-")),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_image.public_image", "image_name"),
 				),
 			},
 			{

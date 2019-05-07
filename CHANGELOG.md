@@ -1,8 +1,33 @@
-## 1.4.0 (Unreleased)
+## 1.6.0 (Unreleased)
+## 1.5.0 (April 26, 2019)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_mysql_backup_list`
+* **New Data Source**: `tencentcloud_mysql_zone_config`
+* **New Data Source**: `tencentcloud_mysql_parameter_list`
+* **New Data Source**: `tencentcloud_mysql_instance`
+* **New Resource**: `tencentcloud_mysql_backup_policy`
+* **New Resource**: `tencentcloud_mysql_account`
+* **New Resource**: `tencentcloud_mysql_account_privilege`
+* **New Resource**: `tencentcloud_mysql_instance`
+* **New Resource**: `tencentcloud_mysql_readonly_instance`
 
 ENHANCEMENTS:
 
+* resource/tencentcloud_subnet: `route_table_id` now is an optional argument
+
+## 1.4.0 (April 12, 2019)
+
+ENHANCEMENTS:
+
+* data/tencentcloud_image: add `image_name` attribute to this data source.
 * resource/tencentcloud_instance: data disk count limit now is upgrade from 1 to 10, as API has supported more disks.
+* resource/tencentcloud_instance: PREPAID instance now can be deleted, but still have some limit in API.
+
+BUG FIXIES:
+
+* resource/tencentcloud_instance: `allocate_public_ip` doesn't work properly when it is set to false.
 
 ## 1.3.0 (March 12, 2019)
 

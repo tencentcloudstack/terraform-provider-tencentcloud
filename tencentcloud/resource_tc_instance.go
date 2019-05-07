@@ -135,7 +135,6 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"allocate_public_ip": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  false,
 			},
 			// vpc
 			"vpc_id": {
@@ -304,7 +303,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		maxBandwidthOut := internetMaxBandwidthOut.(int)
 		params["InternetAccessible.InternetMaxBandwidthOut"] = fmt.Sprintf("%v", maxBandwidthOut)
 	}
-	if allocatePublicIP, ok := d.GetOk("allocate_public_ip"); ok {
+	if allocatePublicIP, ok := d.GetOkExists("allocate_public_ip"); ok {
 		if allocatePublicIP.(bool) {
 			params["InternetAccessible.PublicIpAssigned"] = "TRUE"
 		} else {
@@ -422,9 +421,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 	}
 	if jsonresp.Response.Error.Code != "" {
 		return fmt.Errorf(
-			"tencentcloud_instance got error, code:%v, message:%v",
+			"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
 			jsonresp.Response.Error.Code,
 			jsonresp.Response.Error.Message,
+			jsonresp.Response.RequestId,
 		)
 	}
 	if len(jsonresp.Response.InstanceIdSet) == 0 {
@@ -529,9 +529,10 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	}
 	if jsonresp.Response.Error.Code != "" {
 		return fmt.Errorf(
-			"tencentcloud_instance got error, code:%v, message:%v",
+			"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
 			jsonresp.Response.Error.Code,
 			jsonresp.Response.Error.Message,
+			jsonresp.Response.RequestId,
 		)
 	}
 	if len(jsonresp.Response.InstanceSet) == 0 {
@@ -545,6 +546,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	publicIPs := jsonresp.Response.InstanceSet[0].PublicIpAddresses
 	if len(publicIPs) > 0 {
 		d.Set("public_ip", publicIPs[0])
+	} else {
+		d.Set("public_ip", "")
 	}
 	systemDiskType := jsonresp.Response.InstanceSet[0].SystemDisk.DiskType
 	d.Set("system_disk_type", systemDiskType)
@@ -693,14 +696,6 @@ LABEL_REINSTALL:
 }
 
 func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) error {
-	v, ok := d.GetOk("instance_charge_type")
-	if ok {
-		instanceChargeType := v.(string)
-		if instanceChargeType == tencentCloudApiInstanceChargeTypePrePaid {
-			return fmt.Errorf("prepaid instance %v is not allowed to be deleted in terraform", d.Id())
-		}
-	}
-
 	client := m.(*TencentCloudClient).commonConn
 
 	params := map[string]string{
@@ -728,7 +723,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 			return resource.NonRetryableError(err)
 		}
 		if jsonresp.Response.Error.Code == "InternalError" {
-			return resource.RetryableError(fmt.Errorf(jsonresp.Response.Error.Message))
+			return resource.RetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
 		}
 		return nil
 	})

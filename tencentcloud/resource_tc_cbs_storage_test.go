@@ -60,9 +60,9 @@ func testAccCheckStorageExists(n string) resource.TestCheckFunc {
 
 const testAccCbsStorageConfig = `
 resource "tencentcloud_cbs_storage" "my_storage" {
-  availability_zone = "ap-guangzhou-4"
-  storage_size      = 10
-  storage_type      = "cloudBasic"
+  availability_zone = "ap-guangzhou-3"
+  storage_size      = 50
+  storage_type      = "cloudPremium"
   period            = 1
   storage_name      = "testAccCbsStorageTest"
 }
@@ -70,9 +70,9 @@ resource "tencentcloud_cbs_storage" "my_storage" {
 
 const testAccCbsStorageConfigChanged = `
 resource "tencentcloud_cbs_storage" "my_storage" {
-  availability_zone = "ap-guangzhou-4"
-  storage_size      = 10
-  storage_type      = "cloudBasic"
+  availability_zone = "ap-guangzhou-3"
+  storage_size      = 50
+  storage_type      = "cloudPremium"
   period            = 1
   storage_name      = "testAccCbsStorageTest-2"
 }
