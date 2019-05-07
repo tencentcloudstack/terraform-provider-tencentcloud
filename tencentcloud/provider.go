@@ -1,3 +1,77 @@
+/*
+The TencentCloud provider is used to interact with many resources supported by TencentCloud. The provider needs to be configured with the proper credentials before it can be used.
+
+The TencentCloud provider is used to interact with the many resources supported by [TencentCloud](https://intl.cloud.tencent.com).
+The provider needs to be configured with the proper credentials before it can be used.
+
+Use the navigation to the left to read about the available resources.
+
+Example Usage
+
+```hcl
+# Configure the TencentCloud Provider
+provider "tencentcloud" {
+  secret_id  = "${var.secret_id}"
+  secret_key = "${var.secret_key}"
+  region     = "${var.region}"
+}
+```
+
+Resources List
+
+Data Sources
+  tencentcloud_availability_zones
+  tencentcloud_container_clusters
+  tencentcloud_container_cluster_instances
+  tencentcloud_instance_types
+  tencentcloud_image
+  tencentcloud_eip
+  tencentcloud_vpc
+  tencentcloud_subnet
+  tencentcloud_route_table
+  tencentcloud_security_group
+  tencentcloud_nats
+  tencentcloud_mysql_instance
+  tencentcloud_mysql_backup_list
+  tencentcloud_mysql_parameter_list
+  tencentcloud_mysql_zone_config
+
+CBS Resources
+  tencentcloud_cbs_storage
+  tencentcloud_cbs_storage_attachment
+  tencentcloud_cbs_snapshot
+
+Container Cluster Resources
+  tencentcloud_container_cluster
+  tencentcloud_container_cluster_instance
+
+CVM Resources
+  tencentcloud_instance
+  tencentcloud_eip
+  tencentcloud_eip_association
+  tencentcloud_key_pair
+
+LB Resources
+  tencentcloud_lb
+  tencentcloud_alb_server_attachment
+
+VPC Resources
+  tencentcloud_vpc
+  tencentcloud_subnet
+  tencentcloud_security_group
+  tencentcloud_security_group_rule
+  tencentcloud_route_table
+  tencentcloud_route_entry
+  tencentcloud_dnat
+  tencentcloud_nat_gateway
+
+MySQL Resources
+  tencentcloud_mysql_instance
+  tencentcloud_mysql_readonly_instance
+  tencentcloud_mysql_account
+  tencentcloud_mysql_account_privilege
+  tencentcloud_mysql_backup_policy
+*/
 package tencentcloud
 
 import (

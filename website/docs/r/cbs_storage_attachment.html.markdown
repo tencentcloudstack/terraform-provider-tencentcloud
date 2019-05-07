@@ -6,7 +6,7 @@ description: |-
   Provides an tencentcloud CBS stoarge attachment as a resource, to attach and detach storage from CVM Instances.
 ---
 
-# tencentcloud_instance
+# tencentcloud_cbs_storage_attachment
 
 Provides CBS stoarge attachment resource.
 

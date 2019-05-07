@@ -31,15 +31,125 @@ func main() {
 	fpath := filepath.Dir(fname)
 	log.Printf("generating doc from: %s\n", fpath)
 
-	// DataSourcesMap
+	// document for DataSources
 	for k, v := range provider.DataSourcesMap {
 		genDoc("data_source", fpath, k, v)
 	}
 
-	// ResourcesMap
+	// document for Resources
 	for k, v := range provider.ResourcesMap {
 		genDoc("resource", fpath, k, v)
 	}
+
+	// document for Index
+	genIdx(fpath)
+}
+
+// genIdx generating index for resource
+func genIdx(fpath string) {
+	type Index struct {
+		Name         string
+		NameShort    string
+		ResType      string
+		ResTypeShort string
+		Resources    [][]string
+	}
+
+	resources := ""
+	dataSources := []Index{}
+	sources := []Index{}
+
+	fname := "provider.go"
+	log.Printf("[START]get description from file: %s\n", fname)
+	description, err := getFileDescription(fmt.Sprintf("%s/%s", fpath, fname))
+	if err != nil {
+		log.Printf("[SKIP!]get description failed, skip: %s", err)
+		return
+	}
+
+	description = strings.TrimSpace(description)
+	if description == "" {
+		log.Printf("[SKIP!]description empty, skip: %s\n", fname)
+		return
+	}
+
+	pos := strings.Index(description, "\nResources List\n")
+	if pos != -1 {
+		resources = strings.TrimSpace(description[pos+16:])
+		description = strings.TrimSpace(description[:pos])
+	} else {
+		log.Printf("[SKIP!]resource list missing, skip: %s\n", fname)
+		return
+	}
+
+	index := Index{}
+	for _, v := range strings.Split(resources, "\n") {
+		vv := strings.TrimSpace(v)
+		if vv == "" {
+			continue
+		}
+		if strings.HasPrefix(v, "  ") {
+			if index.Name == "" {
+				log.Printf("[FAIL!]no resource name found: %s", v)
+				return
+			}
+			index.Resources = append(index.Resources, []string{vv, vv[len(cloudMark)+1:]})
+		} else {
+			if index.Name != "" {
+				if index.Name == "Data Sources" {
+					dataSources = append(dataSources, index)
+				} else {
+					sources = append(sources, index)
+				}
+			}
+			vvv := ""
+			resType := "datasource"
+			if vv != "Data Sources" {
+				resType = "resource"
+				vs := strings.Split(vv, " ")
+				vvv = strings.ToLower(strings.Join(vs[:len(vs)-1], "-"))
+			}
+			index = Index{
+				Name:         vv,
+				NameShort:    vvv,
+				ResType:      resType,
+				ResTypeShort: resType[0:1],
+				Resources:    [][]string{},
+			}
+		}
+	}
+
+	if index.Name != "" {
+		if index.Name == "Data Sources" {
+			dataSources = append(dataSources, index)
+		} else {
+			sources = append(sources, index)
+		}
+	}
+
+	dataSources = append(dataSources, sources...)
+	data := map[string]interface{}{
+		"datasource":  dataSources,
+		"cloud_mark":  cloudMark,
+		"cloud_title": cloudTitle,
+	}
+
+	fname = fmt.Sprintf("%s/../%s.erb", docRoot, cloudMark)
+	fd, err := os.OpenFile(fname, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		log.Printf("[FAIL!]open file %s failed: %s", fname, err)
+		return
+	}
+
+	defer fd.Close()
+	t := template.Must(template.New("t").Parse(idxTPL))
+	err = t.Execute(fd, data)
+	if err != nil {
+		log.Printf("[FAIL!]write file %s failed: %s", fname, err)
+		return
+	}
+
+	log.Printf("[SUCC.]write doc to file success: %s", fname)
 }
 
 // genDoc generating doc for resource
