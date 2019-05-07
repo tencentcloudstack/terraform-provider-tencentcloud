@@ -128,3 +128,35 @@ map[string]*schema.Schema{
     }
 }
 ```
+
+## 文档索引更新
+
+文档索引文件，即 website/tencentcloud.erb 的更新数据来源于 provider.go 的文件注释。
+
+完成了新的 Data Sources 或 Resources 后，需要更新 provider.go 的文件注释，格式可参考已有的 Data Sources 或 Resources。
+
+### Data Sources
+
+在注释中找到 Data Sources，在它的下面填写新的 Data Sources 名称，比如：tencentcloud_mysql_instance，注意前面需要空两个空格。
+
+例如：
+
+```go
+Data Sources
+  tencentcloud_mysql_instance
+  tencentcloud_mysql_backup_list
+  tencentcloud_mysql_parameter_list
+```
+
+### Resources
+
+在注释的 Data Sources 段之后，直接添加新的 Resources 类并添加 Resources，也可以将 Resources 添加到已有的 Resources 类。
+
+例如：
+
+```go
+MySQL Resources
+  tencentcloud_mysql_instance
+  tencentcloud_mysql_readonly_instance
+  tencentcloud_mysql_account
+```
