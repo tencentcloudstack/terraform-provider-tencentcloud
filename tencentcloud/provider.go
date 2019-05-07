@@ -82,6 +82,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_instance":             resourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_readonly_instance":    resourceTencentCloudMysqlReadonlyInstance(),
 			"tencentcloud_redis_instance":             resourceTencentCloudRedisInstance(),
+			"tencentcloud_redis_backup_config":        resourceTencentCloudRedisBackupConfig(),
 		},
 
 		ConfigureFunc: providerConfigure,

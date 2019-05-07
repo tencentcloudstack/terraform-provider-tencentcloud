@@ -589,3 +589,59 @@ func (me *RedisService) ResetPassword(ctx context.Context, redisId string, newPa
 	return
 
 }
+
+func (me *RedisService) ModifyAutoBackupConfig(ctx context.Context, redisId string, weekDays []string, timePeriod string) (errRet error) {
+	logId := GetLogId(ctx)
+
+	request := redis.NewModifyAutoBackupConfigRequest()
+	request.InstanceId = &redisId
+	request.WeekDays = make([]*string, 0, len(weekDays))
+	for index, _ := range weekDays {
+		request.WeekDays = append(request.WeekDays, &weekDays[index])
+	}
+	request.TimePeriod = &timePeriod
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	respone, err := me.client.UseRedisClient().ModifyAutoBackupConfig(request)
+	errRet = err
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), respone.ToJsonString())
+
+	}
+	return
+}
+
+func (me *RedisService) DescribeAutoBackupConfig(ctx context.Context, redisId string) (weekDays []string, timePeriod string, errRet error) {
+	logId := GetLogId(ctx)
+
+	request := redis.NewDescribeAutoBackupConfigRequest()
+	request.InstanceId = &redisId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	respone, err := me.client.UseRedisClient().DescribeAutoBackupConfig(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	timePeriod = *respone.Response.TimePeriod
+
+	if len(respone.Response.WeekDays) > 0 {
+		weekDays = make([]string, 0, len(respone.Response.WeekDays))
+		for _, v := range respone.Response.WeekDays {
+			weekDays = append(weekDays, *v)
+		}
+	}
+	return
+}
