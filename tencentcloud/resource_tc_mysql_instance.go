@@ -1,3 +1,37 @@
+/*
+Provides a mysql instance resource to create master database instances.
+
+~> **NOTE:** The terminate operation of mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_mysql_instance" "default" {
+  internet_service = 1
+  engine_version = "5.7"
+  parameters = {
+    max_connections = "1000"
+  }
+  root_password = "********"
+  slave_deploy_mode = 0
+  first_slave_zone = "ap-guangzhou-4"
+  second_slave_zone = "ap-guangzhou-4"
+  slave_sync_mode = 1
+  availability_zone = "ap-guangzhou-4"
+  project_id = 201901010001
+  instance_name = "myTestMysql"
+  mem_size = 128000
+  volume_size = 250
+  vpc_id = "vpc-12mt3l31"
+  subnet_id = "subnet-9uivyb1g"
+  intranet_port = 3306
+  security_groups = ["sg-ot8eclwz"]
+  tags = {
+    name ="test"
+  }
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -19,6 +53,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Type:         schema.TypeString,
 			Required:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
+			Description:  "The name of a mysql instance.",
 		},
 		"pay_type": {
 			Type:         schema.TypeInt,
@@ -26,18 +61,21 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
 			Default:      MysqlPayByUse,
+			Description:  "",
 		},
 		"period": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			Default:      1,
 			ValidateFunc: validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
+			Description:  "",
 		},
 		"auto_renew_flag": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
+			Description:  "",
 		},
 
 		"intranet_port": {
@@ -45,24 +83,29 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:     true,
 			ValidateFunc: validateIntegerInRange(1024, 65535),
 			Default:      3306,
+			Description:  "Public access port, rang form 1024 to 65535 and default value is 3306.",
 		},
 		"mem_size": {
-			Type:     schema.TypeInt,
-			Required: true,
+			Type:        schema.TypeInt,
+			Required:    true,
+			Description: "Memory size (in MB).",
 		},
 		"volume_size": {
-			Type:     schema.TypeInt,
-			Required: true,
+			Type:        schema.TypeInt,
+			Required:    true,
+			Description: "Disk size (in GB).",
 		},
 		"vpc_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
+			Description:  "ID of VPC, which can be modified once every 24 hours and can’t be removed.",
 		},
 		"subnet_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
+			Description:  "Private network ID. If vpc_id is set, this value is required.",
 		},
 
 		"security_groups": {
@@ -72,35 +115,42 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Set: func(v interface{}) int {
 				return hashcode.String(v.(string))
 			},
+			Description: "Security groups to use.",
 		},
 
 		"tags": {
-			Type:     schema.TypeMap,
-			Optional: true,
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "Instance tags.",
 		},
 
 		// Computed values
 		"intranet_ip": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "instance intranet IP.",
 		},
 
 		"locked": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Indicates whether the instance is locked. 0 - No; 1 - Yes.",
 		},
 		"status": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.",
 		},
 		"task_status": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Indicates which kind of operations is being executed.",
 		},
 
 		"gtid": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Indicates whether GTID is enable. 0 - Not enabled; 1 - Enabled.",
 		},
 	}
 }
@@ -108,14 +158,16 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 func resourceTencentCloudMysqlInstance() *schema.Resource {
 	specialInfo := map[string]*schema.Schema{
 		"parameters": {
-			Type:     schema.TypeMap,
-			Optional: true,
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "List of parameters to use.",
 		},
 		"internet_service": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
+			Description:  "Indicates whether to enable the access to an instance from public network: 0 - No, 1 - Yes.",
 		},
 		"engine_version": {
 			Type:         schema.TypeString,
@@ -123,18 +175,21 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Optional:     true,
 			ValidateFunc: validateAllowedStringValue(MYSQL_SUPPORTS_ENGINE),
 			Default:      MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-1],
+			Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7, and default is 5.7.",
 		},
 
 		"availability_zone": {
-			Type:     schema.TypeString,
-			ForceNew: true,
-			Optional: true,
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Indicates which availability zone will be used.",
 		},
 		"root_password": {
 			Type:         schema.TypeString,
 			Required:     true,
 			Sensitive:    true,
 			ValidateFunc: validateMysqlPassword,
+			Description:  "Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.",
 		},
 		"slave_deploy_mode": {
 			Type:         schema.TypeInt,
@@ -142,16 +197,19 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			ForceNew:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
+			Description:  "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.",
 		},
 		"first_slave_zone": {
-			Type:     schema.TypeString,
-			ForceNew: true,
-			Optional: true,
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Zone information about first slave instance.",
 		},
 		"second_slave_zone": {
-			Type:     schema.TypeString,
-			ForceNew: true,
-			Optional: true,
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Zone information about second slave instance.",
 		},
 		"slave_sync_mode": {
 			Type:         schema.TypeInt,
@@ -159,20 +217,24 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
 			Default:      0,
+			Description:  "Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.",
 		},
 		"project_id": {
-			Type:     schema.TypeInt,
-			Optional: true,
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Project ID, default value is 0.",
 		},
 
 		// Computed values
 		"internet_host": {
-			Type:     schema.TypeString,
-			Computed: true,
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "host for public access.",
 		},
 		"internet_port": {
-			Type:     schema.TypeInt,
-			Computed: true,
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Access port for public access.",
 		},
 	}
 

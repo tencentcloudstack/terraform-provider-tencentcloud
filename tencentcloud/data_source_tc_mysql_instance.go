@@ -1,3 +1,15 @@
+/*
+Use this data source to get information about a MySQL instance.
+
+Example Usage
+
+```hcl
+data "tencentcloud_mysql_instance" "database"{
+  mysql_id = "my-test-database"
+  result_output_file = "mytestpath"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -8,313 +20,236 @@ import (
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 )
 
-func TencentCloudMysqlInstanceDetail() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"mysql_id": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"instance_name": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"instance_role": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"init_flag": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"status": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"zone": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"auto_renew_flag": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"engine_version": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"cpu_core_count": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"memory_size": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"volume_size": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"internet_status": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"internet_domain": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"internet_port": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"intranet_ip": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"intranet_port": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"project_id": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"vpc_id": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"subnet_id": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"slave_sync_mode": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"device_type": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"pay_type": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"create_time": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"dead_line_time": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"master_instance_id": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"ro_instance_ids": {
-			Type:     schema.TypeList,
-			Computed: true,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
-		},
-		"dr_instance_ids": {
-			Type:     schema.TypeList,
-			Computed: true,
-			Elem: &schema.Schema{
-				Type: schema.TypeString,
-			},
-		},
-	}
-}
-
 func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudMysqlInstanceRead,
 		Schema: map[string]*schema.Schema{
 			"mysql_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Instance ID, such as cdb-c1nl9rpv. It is identical to the instance ID displayed in the database console page.",
 			},
 			"instance_role": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"master", "ro", "dr"}),
+				Description:  "Instance type. Supported values include: master - master instance, dr - disaster recovery instance, and ro - read-only instance.",
 			},
 			"status": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1, 4, 5}),
+				Description:  "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.",
 			},
 			"security_group_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Security groups ID of instance.",
 			},
 			"pay_type": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				Description:  "",
 			},
 			"instance_name": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of mysql instance.",
 			},
 			"engine_version": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"5.1", "5.5", "5.6", "5.7"}),
+				Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.",
 			},
 			"init_flag": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				Description:  "Initialization mark. Available values: 0 - Uninitialized; 1 – Initialized.",
 			},
 			"with_dr": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				Description:  "Indicates whether to query disaster recovery instances.",
 			},
 			"with_ro": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				Description:  "Indicates whether to query read-only instances.",
 			},
 			"with_master": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				Description:  "Indicates whether to query master instances.",
 			},
 			"offset": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      0,
 				ValidateFunc: validateIntegerInRange(0, 1000),
+				Description:  "Record offset. Default is 0.",
 			},
 			"limit": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      20,
 				ValidateFunc: validateIntegerInRange(1, 2000),
+				Description:  "Number of results returned for a single request. Default is 20, and maximum is 2000.",
 			},
 			"result_output_file": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to store results.",
 			},
 			// Computed values
 			"instance_list": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list of instances. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"mysql_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance ID, such as cdb-c1nl9rpv. It is identical to the instance ID displayed in the database console page.",
 						},
 						"instance_name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of mysql instance.",
 						},
 						"instance_role": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance type. Supported values include: master - master instance, dr - disaster recovery instance, and ro - read-only instance.",
 						},
 						"init_flag": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Initialization mark. Available values: 0 - Uninitialized; 1 – Initialized.",
 						},
 						"status": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.",
 						},
 						"zone": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Information of available zone.",
 						},
 						"auto_renew_flag": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "",
 						},
 						"engine_version": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.",
 						},
 						"cpu_core_count": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "CPU count.",
 						},
 						"memory_size": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Memory size (in MB).",
 						},
 						"volume_size": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Disk capacity (in GB).",
 						},
 						"internet_status": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Status of public network.",
 						},
-						"internet_domain": {
-							Type:     schema.TypeString,
-							Computed: true,
+						"internet_host": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Public network domain name.",
 						},
 						"internet_port": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Public network port.",
 						},
 						"intranet_ip": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance IP for internal access.",
 						},
 						"intranet_port": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Transport layer port number for internal purpose.",
 						},
 						"project_id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Project ID to which the current instance belongs.",
 						},
 						"vpc_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of Virtual Private Cloud.",
 						},
 						"subnet_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of subnet to which the current instance belongs.",
 						},
 						"slave_sync_mode": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.",
 						},
 						"device_type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Supported instance model.HA - high available version; Basic - basic version.",
 						},
 						"pay_type": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "",
 						},
 						"create_time": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The time at which a instance is created.",
 						},
 						"dead_line_time": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "",
 						},
 						"master_instance_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "",
 						},
 						"ro_instance_ids": {
-							Type:     schema.TypeList,
-							Computed: true,
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "ID list of read-only type associated with the current instance.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
 						},
 						"dr_instance_ids": {
-							Type:     schema.TypeList,
-							Computed: true,
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "ID list of disaster-recovory type associated with the current instance.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -422,7 +357,7 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 			"memory_size":     *item.Memory,
 			"volume_size":     *item.Volume,
 			"internet_status": *item.WanStatus,
-			"internet_domain": *item.WanDomain,
+			"internet_host":   *item.WanDomain,
 			"internet_port":   *item.WanPort,
 			"intranet_ip":     *item.Vip,
 			"intranet_port":   *item.Vport,

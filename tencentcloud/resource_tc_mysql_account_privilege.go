@@ -1,3 +1,17 @@
+/*
+Provides a mysql account privilege resource to grant different access privilege to different database. A database can be granted by multiple account.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_mysql_account_privilege" "default" {
+  mysql_id = "my-test-database"
+  account_name= "tf_account"
+  privileges = ["SELECT"]
+  database_names = ["instance.name"]
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -29,19 +43,23 @@ func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"mysql_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "Instance ID.",
 			},
 			"account_name": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "Account name.",
 			},
 			"privileges": {
-				Optional: true,
-				Type:     schema.TypeSet,
-				Elem: &schema.Schema{Type: schema.TypeString,
+				Optional:    true,
+				Type:        schema.TypeSet,
+				Description: `Database permissions. Available values for Privileges: "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "DROP", "REFERENCES", "INDEX", "ALTER", "CREATE TEMPORARY TABLES", "LOCK TABLES","EXECUTE", "CREATE VIEW", "SHOW VIEW", "CREATE ROUTINE", "ALTER ROUTINE", "EVENT", and "TRIGGER".`,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
 					ValidateFunc: validateAllowedStringValueIgnoreCase(MYSQL_DATABASE_PRIVILEGE),
 				},
 				Set: func(v interface{}) int {
@@ -49,10 +67,11 @@ func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
 				},
 			},
 			"database_names": {
-				Type:     schema.TypeSet,
-				Required: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				MinItems: 1,
+				Type:        schema.TypeSet,
+				Required:    true,
+				Description: "List of specified database name.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				MinItems:    1,
 			},
 		},
 	}
