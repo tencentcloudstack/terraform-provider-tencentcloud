@@ -89,3 +89,12 @@ const (
 	REDIS_ORDER_SUCCESS_DELIVERY = 4
 	REDIS_ORDER_PAYMENT          = 12
 )
+
+//https://cloud.tencent.com/document/api/239/30601
+const (
+	REDIS_TASK_PREPARING = "preparing"
+	REDIS_TASK_RUNNING   = "running"
+	REDIS_TASK_SUCCEED   = "succeed"
+	REDIS_TASK_FAILED    = "failed"
+	REDIS_TASK_ERROR     = "error"
+)

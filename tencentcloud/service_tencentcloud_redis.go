@@ -154,7 +154,7 @@ needMoreItems:
 }
 
 func (me *RedisService) CreateInstances(ctx context.Context,
-	zoneName, typeId, password, vpcId, subnetId string,
+	zoneName, typeId, password, vpcId, subnetId, redisName string,
 	memSize, projectId, port int64,
 	securityGroups []string) (dealId string, errRet error) {
 
@@ -228,6 +228,10 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	request.BillingMode = &billingMode
 	request.GoodsNum = &goodsNum
 	request.Period = &period
+
+	if redisName != "" {
+		request.InstanceName = &redisName
+	}
 
 	request.Password = &password
 
@@ -316,7 +320,7 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 		return
 	}
 
-	errRet = fmt.Errorf("redis instance delivery failure,  status is %s", *info.Status)
+	errRet = fmt.Errorf("redis instance delivery failure,  status is %d", *info.Status)
 	return
 }
 
@@ -412,4 +416,176 @@ func (me *RedisService) ModifyInstanceName(ctx context.Context, redisId string, 
 	}
 	errRet = err
 	return
+}
+
+func (me *RedisService) ModifyInstanceProjectId(ctx context.Context, redisId string, projectId int64) (errRet error) {
+	logId := GetLogId(ctx)
+	request := redis.NewModifyInstanceRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	op := "modifyProject"
+	request.ProjectId = &projectId
+	request.Operation = &op
+	request.InstanceId = &redisId
+
+	respone, err := me.client.UseRedisClient().ModifyInstance(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), respone.ToJsonString())
+	}
+	errRet = err
+	return
+
+}
+
+func (me *RedisService) DescribeInstanceSecurityGroup(ctx context.Context, redisId string) (sg []string, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := redis.NewDescribeInstanceSecurityGroupRequest()
+	request.InstanceIds = []*string{&redisId}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	respone, err := me.client.UseRedisClient().DescribeInstanceSecurityGroup(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), respone.ToJsonString())
+	}
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(respone.Response.InstanceSecurityGroupsDetail) > 0 {
+		for _, item := range respone.Response.InstanceSecurityGroupsDetail {
+			if *item.InstanceId == redisId {
+				sg = make([]string, 0, len(item.SecurityGroupDetails))
+				for _, v := range item.SecurityGroupDetails {
+					sg = append(sg, *v.SecurityGroupName)
+				}
+				break
+			}
+		}
+	}
+	return
+}
+
+func (me *RedisService) DestroyPostpaidInstance(ctx context.Context, redisId string) (taskId int64, errRet error) {
+	logId := GetLogId(ctx)
+	request := redis.NewDestroyPostpaidInstanceRequest()
+	request.InstanceId = &redisId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	respone, err := me.client.UseRedisClient().DestroyPostpaidInstance(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), respone.ToJsonString())
+	} else {
+		errRet = err
+		return
+	}
+
+	taskId = *respone.Response.TaskId
+	return
+}
+
+func (me *RedisService) UpgradeInstance(ctx context.Context, redisId string, newMemSize int64) (dealId string, errRet error) {
+	logId := GetLogId(ctx)
+
+	var uintNewMemSize = uint64(newMemSize)
+
+	request := redis.NewUpgradeInstanceRequest()
+	request.InstanceId = &redisId
+	request.MemSize = &uintNewMemSize
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	respone, err := me.client.UseRedisClient().UpgradeInstance(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), respone.ToJsonString())
+	} else {
+		errRet = err
+		return
+	}
+
+	dealId = *respone.Response.DealId
+	return
+}
+
+func (me *RedisService) DescribeTaskInfo(ctx context.Context, redisId string, taskId int64) (ok bool, errRet error) {
+
+	logId := GetLogId(ctx)
+	var uintTaskId = uint64(taskId)
+	request := redis.NewDescribeTaskInfoRequest()
+	request.TaskId = &uintTaskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	respone, err := me.client.UseRedisClient().DescribeTaskInfo(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	if *respone.Response.Status == REDIS_TASK_RUNNING || *respone.Response.Status == REDIS_TASK_PREPARING {
+		return
+	}
+	if *respone.Response.Status == REDIS_TASK_SUCCEED {
+		ok = true
+		return
+	}
+	errRet = fmt.Errorf("redis task exe fail, task status is %s", *respone.Response.Status)
+	return
+}
+
+func (me *RedisService) ResetPassword(ctx context.Context, redisId string, newPassword string) (taskId int64, errRet error) {
+
+	logId := GetLogId(ctx)
+
+	request := redis.NewResetPasswordRequest()
+	request.InstanceId = &redisId
+	request.Password = &newPassword
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	respone, err := me.client.UseRedisClient().ResetPassword(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), respone.ToJsonString())
+	} else {
+		errRet = err
+		return
+	}
+
+	taskId = *respone.Response.TaskId
+	return
+
 }

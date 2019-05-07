@@ -9,14 +9,15 @@ import (
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudRedisInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudRedisInstanceCreate,
-		Read:   resourceTencentCloudMysqlInstanceRead,
-		Update: resourceTencentCloudMysqlInstanceUpdate,
-		Delete: resourceTencentCloudMysqlInstanceDelete,
+		Read:   resourceTencentCloudRedisInstanceRead,
+		Update: resourceTencentCloudRedisInstanceUpdate,
+		Delete: resourceTencentCloudRedisInstanceDelete,
 
 		Schema: map[string]*schema.Schema{
 			"availability_zone": {
@@ -27,6 +28,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"type": {
 				Type:     schema.TypeString,
@@ -58,12 +60,14 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
+				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(1, 100),
 			},
 			"subnet_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
+				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(1, 100),
 			},
 			"security_groups": {
@@ -82,6 +86,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"port": {
 				Type:     schema.TypeInt,
 				Optional: true,
+				ForceNew: true,
 				Default:  6379,
 			},
 
@@ -133,6 +138,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		password,
 		vpcId,
 		subnetId,
+		redisName,
 		int64(memSize),
 		int64(projectId),
 		int64(port),
@@ -164,11 +170,169 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		log.Printf("[CRITAL]%s create redis  task fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	if redisName != "" {
-		if err := service.ModifyInstanceName(ctx, redisId, redisName); err != nil {
-			log.Printf("[CRITAL]%s  redis  set name error, reason:%s\n ", logId, err.Error())
+	d.SetId(redisId)
+	return resourceTencentCloudRedisInstanceRead(d, meta)
+}
+
+func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("source.tencentcloud_redis_instance.read")()
+
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	has, _, info, err := service.CheckRedisCreateOk(ctx, d.Id())
+	if info != nil {
+		if *info.Status == REDIS_STATUS_ISOLATE || *info.Status == REDIS_STATUS_TODELETE {
+			d.SetId("")
+			return nil
 		}
 	}
-	d.SetId(redisId)
+	if err != nil {
+		return err
+	}
+	if has == false {
+		d.SetId("")
+		return nil
+	}
+
+	statusName := REDIS_STATUS[*info.Status]
+	if statusName == "" {
+		err = fmt.Errorf("redis read unkwnow status %d", *info.ZoneId)
+		log.Printf("[CRITAL]%s  redis read status name error, reason:%s\n ", logId, err.Error())
+		return err
+	}
+	d.Set("status", statusName)
+
+	d.Set("name", *info.InstanceName)
+
+	zoneName := REDIS_ZONE_ID2NAME[*info.ZoneId]
+	if zoneName == "" {
+		err = fmt.Errorf("redis read unkwnow zoneid %d", *info.ZoneId)
+		log.Printf("[CRITAL]%s  redis read zone name error, reason:%s\n ", logId, err.Error())
+		return err
+	}
+	d.Set("availability_zone", zoneName)
+
+	typeName := REDIS_NAMES[*info.Type]
+	if typeName == "" {
+		err = fmt.Errorf("redis read unkwnow type %d", *info.Type)
+		log.Printf("[CRITAL]%s  redis read type name error, reason:%s\n ", logId, err.Error())
+		return err
+	}
+	d.Set("type", typeName)
+
+	d.Set("mem_size", int64(*info.Size))
+
+	d.Set("vpc_id", *info.UniqVpcId)
+	d.Set("subnet_id", *info.UniqSubnetId)
+
+	d.Set("project_id", *info.ProjectId)
+	d.Set("port", *info.Port)
+	d.Set("ip", *info.WanIp)
+	d.Set("create_time", *info.Createtime)
+
+	if d.Get("vpc_id").(string) != "" {
+		securityGroups, err := service.DescribeInstanceSecurityGroup(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+		if len(securityGroups) > 0 {
+			d.Set("security_groups", securityGroups)
+		}
+	}
 	return nil
+}
+
+func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+
+	defer LogElapsed("source.tencentcloud_redis_instance.update")()
+
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	//name\mem_size\password\project_id
+
+	if d.HasChange("name") {
+		name := d.Get("name").(string)
+		if name == "" {
+			name = d.Id()
+		}
+		err := service.ModifyInstanceName(ctx, d.Id(), name)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("name")
+	}
+
+	if d.HasChange("mem_size") {
+		memSize := d.Get("mem_size").(int)
+		if memSize < 1 {
+			return fmt.Errorf("redis mem_size value cannot be set to less than 1")
+		}
+		taskid, err := service.UpgradeInstance(ctx, d.Id(), int64(memSize))
+		//todo
+		fmt.Println(taskid)
+		if err != nil {
+			log.Printf("[CRITAL]%s  redis update mem size error, reason:%s\n ", logId, err.Error())
+		}
+		d.SetPartial("mem_size")
+	}
+
+	if d.HasChange("password") {
+		password := d.Get("password").(string)
+		taskid, err := service.ResetPassword(ctx, d.Id(), password)
+		if err != nil {
+			log.Printf("[CRITAL]%s  redis change password error, reason:%s\n ", logId, err.Error())
+			return err
+		}
+		err = resource.Retry(300*time.Second, func() *resource.RetryError {
+			ok, err := service.DescribeTaskInfo(ctx, d.Id(), taskid)
+			if err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			if ok {
+				return nil
+			} else {
+				return resource.RetryableError(fmt.Errorf("change password is processing"))
+			}
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s redis change  password   fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+		d.SetPartial("password")
+	}
+
+	if d.HasChange("project_id") {
+		projectId := d.Get("project_id").(int)
+		err := service.ModifyInstanceProjectId(ctx, d.Id(), int64(projectId))
+		if err != nil {
+			return err
+		}
+		d.SetPartial("project_id")
+	}
+
+	return nil
+}
+
+func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+
+	defer LogElapsed("source.tencentcloud_redis_instance.delete")()
+
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	_, err := service.DestroyPostpaidInstance(ctx, d.Id())
+
+	return err
 }
