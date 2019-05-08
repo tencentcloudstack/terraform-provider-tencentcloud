@@ -64,7 +64,7 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 						},
 						"lifecycle_rules": {
 							Type:     schema.TypeList,
-							Optional: true,
+							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"filter_prefix": {
@@ -72,7 +72,7 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 										Computed: true,
 									},
 									"transition": {
-										Type:     schema.TypeSet,
+										Type:     schema.TypeList,
 										Computed: true,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -92,7 +92,7 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 										},
 									},
 									"expiration": {
-										Type:     schema.TypeSet,
+										Type:     schema.TypeList,
 										Computed: true,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -149,7 +149,7 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 	bucketList := make([]map[string]interface{}, 0, len(buckets))
 	for _, v := range buckets {
 		bucket := make(map[string]interface{})
-		if prefix != "" && strings.HasPrefix(*v.Name, prefix) {
+		if prefix != "" && !strings.HasPrefix(*v.Name, prefix) {
 			continue
 		}
 
@@ -159,7 +159,7 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 			return err
 		}
 		bucket["cors_rules"] = corsRules
-		lifecycleRules, err := cosService.GetBucketLifecycle(ctx, *v.Name)
+		lifecycleRules, err := cosService.GetDataSourceBucketLifecycle(ctx, *v.Name)
 		if err != nil {
 			return err
 		}
@@ -183,7 +183,9 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		writeToFile(output.(string), bucketList)
+		if err = writeToFile(output.(string), bucketList); err != nil {
+			return err
+		}
 	}
 
 	return nil

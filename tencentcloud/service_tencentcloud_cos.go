@@ -266,6 +266,75 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 	return
 }
 
+func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket string) (lifecycleRules []map[string]interface{}, errRet error) {
+	logId := GetLogId(ctx)
+
+	request := s3.GetBucketLifecycleConfigurationInput{
+		Bucket: aws.String(bucket),
+	}
+	response, err := me.client.UseCosClient().GetBucketLifecycleConfiguration(&request)
+	if err != nil {
+		awsError, ok := err.(awserr.Error)
+		if !ok || awsError.Code() != "NoSuchLifecycleConfiguration" {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "get bucket lifecycle", request.String(), err.Error())
+			errRet = fmt.Errorf("cos get bucket cors error: %s, bucket: %s", err.Error(), bucket)
+			return
+		}
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "get bucket lifecycle", request.String(), response.String())
+
+	lifecycleRules = make([]map[string]interface{}, 0, len(response.Rules))
+	if len(response.Rules) > 0 {
+		for _, value := range response.Rules {
+			rule := make(map[string]interface{})
+
+			// filter_prefix
+			if value.Filter != nil {
+				if value.Filter.And != nil && value.Filter.And.Prefix != nil &&
+					*value.Filter.And.Prefix != "" {
+					rule["filter_prefix"] = *value.Filter.And.Prefix
+				} else if value.Filter.Prefix != nil && *value.Filter.Prefix != "" {
+					rule["filter_prefix"] = *value.Filter.Prefix
+				}
+			}
+			// transition
+			if len(value.Transitions) > 0 {
+				transitions := make([]interface{}, 0, len(value.Transitions))
+				for _, v := range value.Transitions {
+					t := make(map[string]interface{})
+					if v.Date != nil {
+						t["date"] = (*v.Date).Format("2006-01-02")
+					}
+					if v.Days != nil {
+						t["days"] = int(*v.Days)
+					}
+					if v.StorageClass != nil {
+						t["storage_class"] = *v.StorageClass
+					}
+					transitions = append(transitions, t)
+				}
+				rule["transition"] = transitions
+			}
+			// expiration
+			if value.Expiration != nil {
+				e := make(map[string]interface{})
+				if value.Expiration.Date != nil {
+					e["date"] = (*value.Expiration.Date).Format("2006-01-02")
+				}
+				if value.Expiration.Days != nil {
+					e["days"] = int(*value.Expiration.Days)
+				}
+				rule["expiration"] = []interface{}{e}
+			}
+
+			lifecycleRules = append(lifecycleRules, rule)
+		}
+	}
+	return
+}
+
 func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (websites []map[string]interface{}, errRet error) {
 	logId := GetLogId(ctx)
 
