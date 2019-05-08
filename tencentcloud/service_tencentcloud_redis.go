@@ -222,8 +222,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 		goodsNum    uint64 = 1
 		period      uint64 = 1
 	)
-	//request.VPort = &vport
-	_ = vport
+	request.VPort = &vport
 	request.MemSize = &umemSize
 	request.BillingMode = &billingMode
 	request.GoodsNum = &goodsNum
@@ -629,7 +628,11 @@ func (me *RedisService) DescribeAutoBackupConfig(ctx context.Context, redisId st
 		}
 	}()
 	respone, err := me.client.UseRedisClient().DescribeAutoBackupConfig(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), respone.ToJsonString())
 
+	}
 	if err != nil {
 		errRet = err
 		return
