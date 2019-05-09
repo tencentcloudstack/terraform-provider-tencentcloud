@@ -33,6 +33,9 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 		Read:   resourceTencentCloudCosBucketRead,
 		Update: resourceTencentCloudCosBucketUpdate,
 		Delete: resourceTencentCloudCosBucketDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"bucket": {
@@ -186,6 +189,11 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	bucket := d.Id()
 	cosService := CosService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	// set bucket in the import case
+	if _, ok := d.GetOk("bucket"); !ok {
+		d.Set("bucket", d.Id())
 	}
 
 	// read the cors

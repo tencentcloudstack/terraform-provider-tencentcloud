@@ -82,6 +82,12 @@ func TestAccTencentCloudCosBucket_basic(t *testing.T) {
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
 				),
 			},
+			{
+				ResourceName:            "tencentcloud_cos_bucket.bucket_basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"acl"},
+			},
 		},
 	})
 }
@@ -122,6 +128,12 @@ func TestAccTencentCloudCosBucket_cors(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_cors", "cors_rules.0.allowed_origins.0", "https://www.example.com"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_cors", "cors_rules.0.max_age_seconds", "100"),
 				),
+			},
+			{
+				ResourceName:            "tencentcloud_cos_bucket.bucket_cors",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"acl"},
 			},
 		},
 	})
@@ -164,6 +176,12 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.transition.1139768587.storage_class", "ARCHIVE"),
 				),
 			},
+			{
+				ResourceName:            "tencentcloud_cos_bucket.bucket_lifecycle",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"acl"},
+			},
 		},
 	})
 }
@@ -192,6 +210,12 @@ func TestAccTencentCloudCosBucket_website(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.0.index_document", "testindex.html"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.0.error_document", "testerror.html"),
 				),
+			},
+			{
+				ResourceName:            "tencentcloud_cos_bucket.bucket_website",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"acl"},
 			},
 		},
 	})

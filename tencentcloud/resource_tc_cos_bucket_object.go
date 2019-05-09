@@ -23,10 +23,6 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 		Update: resourceTencentCloudCosBucketObjectUpdate,
 		Delete: resourceTencentCloudCosBucketObjectDelete,
 
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
-
 		Schema: map[string]*schema.Schema{
 			"bucket": {
 				Type:     schema.TypeString,
