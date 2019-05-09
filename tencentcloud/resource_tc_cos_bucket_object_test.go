@@ -30,7 +30,7 @@ func TestAccTencentCloudCosBucketObject_source(t *testing.T) {
 	// Compatible with windows path format
 	path := tmpFile.Name()
 	if runtime.GOOS == "windows" {
-		path = strings.ReplaceAll(path, "\\", "\\\\")
+		path = strings.Replace(path, "\\", "\\\\", -1)
 	}
 
 	resource.Test(t, resource.TestCase{
