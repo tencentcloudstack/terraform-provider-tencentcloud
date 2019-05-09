@@ -100,6 +100,7 @@ func Provider() *schema.Provider {
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, nil),
 				Description: "Secret key of Tencent Cloud",
+				Sensitive:   true,
 			},
 			"region": {
 				Type:         schema.TypeString,
