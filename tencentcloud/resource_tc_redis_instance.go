@@ -268,16 +268,56 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 	}
 
 	if d.HasChange("mem_size") {
-		memSize := d.Get("mem_size").(int)
-		if memSize < 1 {
+
+		oldInter, newInter := d.GetChange("mem_size")
+		newMemSize := newInter.(int)
+		oldMemSize := oldInter.(int)
+
+		if oldMemSize >= newMemSize {
+			return fmt.Errorf("redis mem_size can only increase")
+		}
+
+		if newMemSize < 1 {
 			return fmt.Errorf("redis mem_size value cannot be set to less than 1")
 		}
-		taskid, err := service.UpgradeInstance(ctx, d.Id(), int64(memSize))
-		//todo
-		fmt.Println(taskid)
+		redisId, err := service.UpgradeInstance(ctx, d.Id(), int64(newMemSize))
+
 		if err != nil {
 			log.Printf("[CRITAL]%s  redis update mem size error, reason:%s\n ", logId, err.Error())
 		}
+
+		err = resource.Retry(600*time.Second, func() *resource.RetryError {
+			_, _, info, err := service.CheckRedisCreateOk(ctx, redisId)
+
+			if info != nil {
+				status := REDIS_STATUS[*info.Status]
+				if status == "" {
+					return resource.NonRetryableError(fmt.Errorf("after update redis mem size, redis status is unknown ,status=%d", *info.Status))
+				}
+				if *info.Status == REDIS_STATUS_PROCESSING || *info.Status == REDIS_STATUS_INIT {
+					return resource.RetryableError(fmt.Errorf("redis update processing."))
+				}
+				if *info.Status == REDIS_STATUS_ONLINE {
+					return nil
+				}
+				return resource.NonRetryableError(fmt.Errorf("after update redis mem size, redis status is %s", status))
+			}
+
+			if err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			return resource.NonRetryableError(fmt.Errorf("after update redis mem size, redis disappear"))
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s redis update  mem size fail , reason:%s\n ", logId, err.Error())
+			return err
+		}
+
 		d.SetPartial("mem_size")
 	}
 
@@ -319,7 +359,6 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 		d.SetPartial("project_id")
 	}
-
 	return nil
 }
 

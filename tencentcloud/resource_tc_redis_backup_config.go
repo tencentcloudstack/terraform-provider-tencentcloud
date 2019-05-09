@@ -34,8 +34,6 @@ func resourceTencentCloudRedisBackupConfig() *schema.Resource {
 					"21:00-22:00", "22:00-23:00", "23:00-00:00",
 				}),
 			},
-
-			//todo 现在设置不起效果
 			"backup_period": {
 				Type:     schema.TypeSet,
 				Required: true,
