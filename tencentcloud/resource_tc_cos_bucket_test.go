@@ -11,8 +11,6 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-const appid string = "1258798060"
-
 func init() {
 	resource.AddTestSweepers("tencentcloud_cos_bucket", &resource.Sweeper{
 		Name: "tencentcloud_cos_bucket",

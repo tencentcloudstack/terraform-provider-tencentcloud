@@ -9,6 +9,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
+
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
@@ -156,7 +158,7 @@ func testAccCheckCosBucketObjectDestroy(s *terraform.State) error {
 func testAccCosBucketObject_source(appid string, source string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "object_bucket" {
-	bucket = "tf-bucket-%s"
+	bucket = "tf-bucket-%d-%s"
 }
 
 resource "tencentcloud_cos_bucket_object" "object_source" {
@@ -165,13 +167,13 @@ resource "tencentcloud_cos_bucket_object" "object_source" {
 	source = "%s"
 	content_type = "binary/octet-stream"
 }
-`, appid, source)
+`, acctest.RandInt(), appid, source)
 }
 
 func testAccCosBucketObject_content(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "object_bucket" {
-	bucket = "tf-bucket-%s"
+	bucket = "tf-bucket-%d-%s"
 }
 
 resource "tencentcloud_cos_bucket_object" "object_content" {
@@ -180,13 +182,13 @@ resource "tencentcloud_cos_bucket_object" "object_content" {
 	content = "aaaaaaaaaaaaaaaa"
 	content_type = "binary/octet-stream"
 }
-`, appid)
+`, acctest.RandInt(), appid)
 }
 
 func testAccCosBucketObject_storageClass(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "object_bucket" {
-	bucket = "tf-bucket-%s"
+	bucket = "tf-bucket-%d-%s"
 }
 
 resource "tencentcloud_cos_bucket_object" "object_storage" {
@@ -196,13 +198,13 @@ resource "tencentcloud_cos_bucket_object" "object_storage" {
 	content_type = "binary/octet-stream"
 	storage_class = "STANDARD_IA"
 }
-`, appid)
+`, acctest.RandInt(), appid)
 }
 
 func testAccCosBucketObject_acl(appid, acl string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "object_bucket" {
-	bucket = "tf-bucket-%s"
+	bucket = "tf-bucket-acl-%s"
 }
 
 resource "tencentcloud_cos_bucket_object" "object_acl" {

@@ -1,3 +1,34 @@
+/*
+Provides a COS object resource to put an object(content or file) to the bucket.
+
+Example Usage
+
+Uploading a file to a bucket
+
+```hcl
+resource "tencentcloud_cos_bucket_object" "myobject" {
+  bucket = "mycos-1258798060"
+  key    = "new_object_key"
+  source = "path/to/file"
+}
+```
+
+Uploading a content to a bucket
+
+```hcl
+resource "tencentcloud_cos_bucket" "mycos" {
+  bucket = "mycos-1258798060"
+  acl = "public-read"
+}
+
+resource "tencentcloud_cos_bucket_object" "myobject" {
+  bucket = "${tencentcloud_cos_bucket.mycos.bucket}"
+  key    = "new_object_key"
+  content = "the content that you want to upload."
+}
+```
+*/
+
 package tencentcloud
 
 import (
@@ -25,24 +56,28 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"bucket": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The name of a bucket to use.",
 			},
 			"key": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The name of the object once it is in the bucket.",
 			},
 			"source": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"content"},
+				Description:   "The path to the source file being uploaded to the bucket.",
 			},
 			"content": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"source"},
+				Description:   "Literal string value to use as the object content, which will be uploaded as UTF-8-encoded text.",
 			},
 			"acl": {
 				Type:     schema.TypeString,
@@ -53,38 +88,41 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 					s3.ObjectCannedACLPublicRead,
 					s3.ObjectCannedACLPublicReadWrite,
 				}),
+				Description: "The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.",
 			},
 			"cache_control": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Specifies caching behavior along the request/reply chain.For further details，RFC2616 can be referred.",
 			},
 			"content_disposition": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Specifies presentational information for the object.",
 			},
 			"content_encoding": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.",
 			},
 			"content_type": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "A standard MIME type describing the format of the object data.",
 			},
 			"storage_class": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ValidateFunc: validateAllowedStringValue([]string{
-					// todo: check enum value
-					s3.ObjectStorageClassStandard,
-					s3.ObjectStorageClassStandardIa,
-				}),
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue(availableCosStorageClass),
+				Description:  "Object storage type, Available values include STANDARD, STANDARD_IA and ARCHIVE.",
 			},
 			"etag": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The ETag generated for the object (an MD5 sum of the object content).",
 			},
 		},
 	}

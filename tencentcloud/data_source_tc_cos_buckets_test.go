@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
@@ -17,7 +18,6 @@ func TestAccTencentCloudCosBucketDataSource_basic(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.bucket", "tf-bucket-basic-"+appid),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.cors_rules.#", "0"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.lifecycle_rules.#", "0"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.website.#", "0"),
@@ -37,7 +37,6 @@ func TestAccTencentCloudCosBucketDataSource_full(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_full"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.bucket", "tf-bucket-full-"+appid),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.cors_rules.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.cors_rules.0.allowed_headers.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.cors_rules.0.allowed_headers.0", "*"),
@@ -69,19 +68,19 @@ func TestAccTencentCloudCosBucketDataSource_full(t *testing.T) {
 func testAccCosBucketDataSource_basic(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_basic" {
-	bucket = "tf-bucket-basic-%s"
+	bucket = "tf-bucket-%d-%s"
 }
 
 data "tencentcloud_cos_buckets" "bucket_list" {
 	bucket_prefix = "${tencentcloud_cos_bucket.bucket_basic.bucket}"
 }
-`, appid)
+`, acctest.RandInt(), appid)
 }
 
 func testAccCosBucketDataSource_full(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_full" {
-	bucket = "tf-bucket-full-%s"
+	bucket = "tf-bucket-%d-%s"
 	cors_rules {
 		allowed_headers = ["*"]
 		allowed_methods = ["GET","POST"]
@@ -112,5 +111,5 @@ resource "tencentcloud_cos_bucket" "bucket_full" {
 data "tencentcloud_cos_buckets" "bucket_list" {
 	bucket_prefix = "${tencentcloud_cos_bucket.bucket_full.bucket}"
 }
-`, appid)
+`, acctest.RandInt(), appid)
 }

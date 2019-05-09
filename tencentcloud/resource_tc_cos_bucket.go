@@ -1,3 +1,68 @@
+/*
+Provides a COS resource to create a COS bucket and set its attributes.
+
+Example Usage
+
+Private Bucket
+
+```hcl
+resource "tencentcloud_cos_bucket" "mycos" {
+  bucket = "mycos-1258798060"
+  acl    = "private"
+}
+```
+
+Static Website
+
+```hcl
+resource "tencentcloud_cos_bucket" "mycos" {
+  bucket = "mycos-1258798060"
+
+  website = {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
+}
+```
+
+Using CORS
+
+```hcl
+resource "tencentcloud_cos_bucket" "mycos" {
+  bucket = "mycos-1258798060"
+  acl    = "public-read-write"
+
+  cors_rule {
+    allowed_origins = ["http://*.abc.com"]
+    allowed_methods = ["PUT", "POST"]
+    allowed_headers = ["*"]
+    max_age_seconds = 300
+    expose_headers  = ["Etag"]
+  }
+}
+```
+
+Using object lifecycle
+
+```hcl
+resource "tencentcloud_cos_bucket" "mycos" {
+  bucket = "mycos-1258798060"
+  acl    = "public-read-write"
+
+  lifecycle_rules {
+    filter_prefix = "path1/"
+    transition {
+      data          = "2019-06-01"
+      storage_class = "STANDARD_IA"
+    }
+    expiration {
+      days = 90
+    }
+  }
+}
+```
+*/
+
 package tencentcloud
 
 import (
@@ -43,6 +108,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateCosBucketName,
+				Description:  "The name of a bucket to be created.",
 			},
 			"acl": {
 				Type:     schema.TypeString,
@@ -53,88 +119,104 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 					s3.ObjectCannedACLPublicRead,
 					s3.ObjectCannedACLPublicReadWrite,
 				}),
+				Description: "The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.",
 			},
 			"cors_rules": {
-				Type:     schema.TypeList,
-				Optional: true,
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "A rule of Cross-Origin Resource Sharing (documented below).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"allowed_origins": {
-							Type:     schema.TypeList,
-							Required: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:        schema.TypeList,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Specifies which origins are allowed.",
 						},
 						"allowed_methods": {
-							Type:     schema.TypeList,
-							Required: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:        schema.TypeList,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Specifies which methods are allowed. Can be GET, PUT, POST, DELETE or HEAD.",
 						},
 						"allowed_headers": {
-							Type:     schema.TypeList,
-							Required: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:        schema.TypeList,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Specifies which headers are allowed.",
 						},
 						"max_age_seconds": {
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Specifies time in seconds that browser can cache the response for a preflight request.",
 						},
 						"expose_headers": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:        schema.TypeList,
+							Optional:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Specifies expose header in the response.",
 						},
 					},
 				},
 			},
 			"lifecycle_rules": {
-				Type:     schema.TypeList,
-				Optional: true,
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: " A configuration of object lifecycle management (documented below).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"filter_prefix": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Object key prefix identifying one or more objects to which the rule applies.",
 						},
 						"transition": {
-							Type:     schema.TypeSet,
-							Optional: true,
-							Set:      transitionHash,
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Set:         transitionHash,
+							Description: "Specifies a period in the object's transitions (documented below).",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"date": {
 										Type:         schema.TypeString,
 										Optional:     true,
 										ValidateFunc: validateCosBucketLifecycleTimestamp,
+										Description:  "Specifies the date after which you want the corresponding action to take effect.",
 									},
 									"days": {
 										Type:         schema.TypeInt,
 										Optional:     true,
 										ValidateFunc: validateIntegerMin(0),
+										Description:  "Specifies the number of days after object creation when the specific rule action takes effect.",
 									},
 									"storage_class": {
 										Type:         schema.TypeString,
 										Required:     true,
 										ValidateFunc: validateAllowedStringValue(availableCosStorageClass),
+										Description:  "Specifies the storage class to which you want the object to transition. Available values include STANDARD, STANDARD_IA and ARCHIVE.",
 									},
 								},
 							},
 						},
 						"expiration": {
-							Type:     schema.TypeSet,
-							Optional: true,
-							Set:      expirationHash,
-							MaxItems: 1,
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Set:         expirationHash,
+							MaxItems:    1,
+							Description: "Specifies a period in the object's expire (documented below).",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"date": {
 										Type:         schema.TypeString,
 										Optional:     true,
 										ValidateFunc: validateCosBucketLifecycleTimestamp,
+										Description:  "Specifies the number of days after object creation when the specific rule action takes effect.",
 									},
 									"days": {
 										Type:         schema.TypeInt,
 										Optional:     true,
 										ValidateFunc: validateIntegerMin(0),
+										Description:  "Specifies the number of days after object creation when the specific rule action takes effect.",
 									},
 								},
 							},
@@ -143,18 +225,21 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				},
 			},
 			"website": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "A website object(documented below).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"index_document": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "COS returns this index document when requests are made to the root domain or any of the subfolders. ",
 						},
 						"error_document": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "An absolute path to the document to return in case of a 4XX error.",
 						},
 					},
 				},
@@ -245,7 +330,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("cors_rules") {
 		err := resourceTencentCloudCosBucketCorsUpdate(ctx, client, d)
 		if err != nil {
-			return nil
+			return err
 		}
 		d.SetPartial("cors_rules")
 	}
@@ -253,7 +338,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("lifecycle_rules") {
 		err := resourceTencentCloudCosBucketLifecycleUpdate(ctx, client, d)
 		if err != nil {
-			return nil
+			return err
 		}
 		d.SetPartial("lifecycle_rules")
 	}
@@ -261,7 +346,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("website") {
 		err := resourceTencentCloudCosBucketWebsiteUpdate(ctx, client, d)
 		if err != nil {
-			return nil
+			return err
 		}
 		d.SetPartial("website")
 	}

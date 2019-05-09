@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/hashicorp/terraform/helper/acctest"
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
@@ -29,7 +30,7 @@ func TestAccTencentCloudCosBucketObjectDataSource(t *testing.T) {
 func testAccCosBucketObjectDataSource(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "object_bucket" {
-	bucket = "tf-bucket-%s"
+	bucket = "tf-bucket-%d-%s"
 }
 
 resource "tencentcloud_cos_bucket_object" "object_content" {
@@ -43,5 +44,5 @@ data "tencentcloud_cos_bucket_object" "object" {
 	bucket = "${tencentcloud_cos_bucket_object.object_content.bucket}"
 	key = "${tencentcloud_cos_bucket_object.object_content.key}"
 }
-`, appid)
+`, acctest.RandInt(), appid)
 }
