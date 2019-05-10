@@ -19,6 +19,10 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 		Update: resourceTencentCloudRedisInstanceUpdate,
 		Delete: resourceTencentCloudRedisInstanceDelete,
 
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"availability_zone": {
 				Type:     schema.TypeString,

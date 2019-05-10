@@ -14,6 +14,10 @@ func resourceTencentCloudRedisBackupConfig() *schema.Resource {
 		Update: resourceTencentCloudRedisBackupConfigUpdate,
 		Delete: resourceTencentCloudRedisBackupConfigDelete,
 
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"redis_id": {
 				Type:     schema.TypeString,
@@ -63,6 +67,7 @@ func resourceTencentCloudRedisBackupConfigRead(d *schema.ResourceData, meta inte
 	}
 
 	d.Set("backup_time", backupTime)
+	d.Set("redis_id", d.Id())
 	d.Set("backup_period", backupPeriods)
 
 	return nil
