@@ -80,35 +80,36 @@ The following arguments are supported:
 * `cors_rules` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
 * `lifecycle_rules` - (Optional)  A configuration of object lifecycle management (documented below).
 * `website` - (Optional) A website object(documented below).
-the `website` object supports the following:
+
+The `lifecycle_rules` object supports the following:
+
+* `filter_prefix` - (Required) Object key prefix identifying one or more objects to which the rule applies.
+* `expiration` - (Optional) Specifies a period in the object's expire (documented below).
+* `transition` - (Optional) Specifies a period in the object's transitions (documented below).
+
+The `transition` object supports the following:
+
+* `storage_class` - (Required) Specifies the storage class to which you want the object to transition. Available values include STANDARD, STANDARD_IA and ARCHIVE.
+* `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
+* `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
+
+The `expiration` object supports the following:
+
+* `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
+* `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
+
+The `website` object supports the following:
 
 * `error_document` - (Optional) An absolute path to the document to return in case of a 4XX error.
 * `index_document` - (Optional) COS returns this index document when requests are made to the root domain or any of the subfolders. 
 
-the `cors_rules` object supports the following:
+The `cors_rules` object supports the following:
 
 * `allowed_headers` - (Required) Specifies which headers are allowed.
 * `allowed_methods` - (Required) Specifies which methods are allowed. Can be GET, PUT, POST, DELETE or HEAD.
 * `allowed_origins` - (Required) Specifies which origins are allowed.
 * `expose_headers` - (Optional) Specifies expose header in the response.
 * `max_age_seconds` - (Optional) Specifies time in seconds that browser can cache the response for a preflight request.
-
-the `lifecycle_rules` object supports the following:
-
-* `filter_prefix` - (Required) Object key prefix identifying one or more objects to which the rule applies.
-* `expiration` - (Optional) Specifies a period in the object's expire (documented below).
-* `transition` - (Optional) Specifies a period in the object's transitions (documented below).
-
-the `transition` object supports the following:
-
-* `storage_class` - (Required) Specifies the storage class to which you want the object to transition. Available values include STANDARD, STANDARD_IA and ARCHIVE.
-* `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
-* `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
-
-the `expiration` object supports the following:
-
-* `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
-* `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
 
 
 ## Import

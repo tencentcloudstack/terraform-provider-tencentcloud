@@ -242,7 +242,9 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 
 	requiredArgs = append(requiredArgs, optionalArgs...)
 	data["arguments"] = strings.Join(requiredArgs, "\n")
-	data["arguments"] += strings.Join(subStruct, "\n")
+	if len(subStruct) > 0 {
+		data["arguments"] += "\n" + strings.Join(subStruct, "\n")
+	}
 	data["attributes"] = strings.Join(attributes, "\n")
 
 	fname = fmt.Sprintf("%s/%s/%s.html.markdown", docRoot, dtype[0:1], data["resource"])
@@ -317,7 +319,7 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 
 	if v.Type == schema.TypeMap || v.Type == schema.TypeList || v.Type == schema.TypeSet {
 		if _, ok := v.Elem.(*schema.Resource); ok {
-			subStructs = append(subStructs, fmt.Sprintf("\nthe `%s` object supports the following:\n", k))
+			subStructs = append(subStructs, fmt.Sprintf("\nThe `%s` object supports the following:\n", k))
 			requiredArgs := []string{}
 			optionalArgs := []string{}
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {

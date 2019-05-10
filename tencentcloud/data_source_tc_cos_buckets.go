@@ -44,7 +44,7 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 						"bucket": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Bucket name, the format likes <bucket>-<appid>.",
+							Description: "Bucket name, the format likes `<bucket>-<appid>`.",
 						},
 						"cors_rules": {
 							Type:        schema.TypeList,

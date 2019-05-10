@@ -31,7 +31,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `bucket_list` - A list of bucket. Each element contains the following attributes:
-  * `bucket` - Bucket name, the format likes <bucket>-<appid>.
+  * `bucket` - Bucket name, the format likes `<bucket>-<appid>`.
   * `cors_rules` - A list of CORS rule configurations.
     * `allowed_headers` - Specifies which headers are allowed.
     * `allowed_methods` - Specifies which methods are allowed. Can be GET, PUT, POST, DELETE or HEAD.
