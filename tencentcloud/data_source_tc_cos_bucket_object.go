@@ -11,7 +11,6 @@ data "tencentcloud_cos_bucket_object" "mycos" {
 }
 ```
 */
-
 package tencentcloud
 
 import (

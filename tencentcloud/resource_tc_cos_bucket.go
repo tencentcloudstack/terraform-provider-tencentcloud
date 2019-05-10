@@ -61,8 +61,15 @@ resource "tencentcloud_cos_bucket" "mycos" {
   }
 }
 ```
-*/
 
+Import
+
+COS bucket can be imported, e.g.
+
+```
+$ terraform import tencentcloud_cos_bucket.bucket bucket-name
+```
+*/
 package tencentcloud
 
 import (
@@ -210,7 +217,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 										Type:         schema.TypeString,
 										Optional:     true,
 										ValidateFunc: validateCosBucketLifecycleTimestamp,
-										Description:  "Specifies the number of days after object creation when the specific rule action takes effect.",
+										Description:  "Specifies the date after which you want the corresponding action to take effect.",
 									},
 									"days": {
 										Type:         schema.TypeInt,

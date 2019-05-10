@@ -28,7 +28,6 @@ resource "tencentcloud_cos_bucket_object" "myobject" {
 }
 ```
 */
-
 package tencentcloud
 
 import (

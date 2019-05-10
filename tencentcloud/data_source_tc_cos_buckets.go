@@ -10,7 +10,6 @@ data "tencentcloud_cos_buckets" "cos_buckets" {
 }
 ```
 */
-
 package tencentcloud
 
 import (
@@ -99,7 +98,7 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 									"transition": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "Specifies a period in the object's transitions (documented below).",
+										Description: "Specifies a period in the object's transitions.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"date": {
@@ -123,7 +122,7 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 									"expiration": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "Specifies a period in the object's expire (documented below).",
+										Description: "Specifies a period in the object's expire.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"date": {

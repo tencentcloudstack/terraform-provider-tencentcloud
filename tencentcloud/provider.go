@@ -35,6 +35,8 @@ Data Sources
   tencentcloud_mysql_backup_list
   tencentcloud_mysql_parameter_list
   tencentcloud_mysql_zone_config
+  tencentcloud_cos_buckets
+  tencentcloud_cos_bucket_object
 
 CBS Resources
   tencentcloud_cbs_storage
@@ -71,6 +73,10 @@ MySQL Resources
   tencentcloud_mysql_account
   tencentcloud_mysql_account_privilege
   tencentcloud_mysql_backup_policy
+
+COS Resources
+  tencentcloud_cos_bucket
+  tencentcloud_cos_bucket_object
 */
 package tencentcloud
 
