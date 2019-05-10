@@ -127,6 +127,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_zone_config":           dataSourceTencentMysqlZoneConfig(),
 			"tencentcloud_mysql_parameter_list":        dataSourceTencentCloudMysqlParameterList(),
 			"tencentcloud_mysql_instance":              dataSourceTencentCloudMysqlInstance(),
+			"tencentcloud_cos_bucket_object":           dataSourceTencentCloudCosBucketObject(),
+			"tencentcloud_cos_buckets":                 dataSourceTencentCloudCosBuckets(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -154,6 +156,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_account_privilege":    resourceTencentCloudMysqlAccountPrivilege(),
 			"tencentcloud_mysql_instance":             resourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_readonly_instance":    resourceTencentCloudMysqlReadonlyInstance(),
+			"tencentcloud_cos_bucket":                 resourceTencentCloudCosBucket(),
+			"tencentcloud_cos_bucket_object":          resourceTencentCloudCosBucketObject(),
 		},
 
 		ConfigureFunc: providerConfigure,

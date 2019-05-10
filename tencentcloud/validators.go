@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/athom/goset"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -152,6 +153,17 @@ func validateIntegerInRange(min, max int) schema.SchemaValidateFunc {
 	}
 }
 
+func validateIntegerMin(min int) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(int)
+		if value < min {
+			errors = append(errors, fmt.Errorf(
+				"%q cannot be lower than %d: %d", k, min, value))
+		}
+		return
+	}
+}
+
 func validateStringLengthInRange(min, max int) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := len(v.(string))
@@ -282,4 +294,29 @@ func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
 		}
 		return
 	}
+}
+
+// Only support lowercase letters, numbers and "-". It cannot be longer than 40 characters.
+func validateCosBucketName(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	if len(value) > 40 || len(value) < 0 {
+		errors = append(errors, fmt.Errorf("invalid bucket name: %v, size too long or too short", value))
+	}
+
+	pattern := `^[a-z0-9-]+$`
+	if match, _ := regexp.Match(pattern, []byte(value)); !match {
+		errors = append(errors, fmt.Errorf("invalid bucket name: %v, wrong format: only support lowercase letters, numbers and -", value))
+	}
+	return
+}
+
+func validateCosBucketLifecycleTimestamp(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	_, err := time.Parse(time.RFC3339, fmt.Sprintf("%sT00:00:00Z", value))
+	if err != nil {
+		errors = append(errors, fmt.Errorf(
+			"%q cannot be parsed as RFC3339 Timestamp Format", value))
+	}
+
+	return
 }

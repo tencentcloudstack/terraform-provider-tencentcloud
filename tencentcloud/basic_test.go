@@ -10,6 +10,8 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
+const appid string = "1258798060"
+
 func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv(PROVIDER_SECRET_ID); v == "" {
 		t.Fatalf("%v must be set for acceptance tests\n", PROVIDER_SECRET_ID)
