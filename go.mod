@@ -3,6 +3,7 @@ module github.com/terraform-providers/terraform-provider-tencentcloud
 require (
 	github.com/apparentlymart/go-cidr v1.0.0 // indirect
 	github.com/athom/goset v0.0.0-20151103071336-f07be69aa101
+	github.com/aws/aws-sdk-go v1.16.36
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/hashicorp/go-getter v1.2.0 // indirect
 	github.com/hashicorp/go-hclog v0.8.0 // indirect

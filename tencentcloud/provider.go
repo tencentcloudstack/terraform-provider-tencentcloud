@@ -35,6 +35,8 @@ Data Sources
   tencentcloud_mysql_backup_list
   tencentcloud_mysql_parameter_list
   tencentcloud_mysql_zone_config
+  tencentcloud_cos_buckets
+  tencentcloud_cos_bucket_object
 
 CBS Resources
   tencentcloud_cbs_storage
@@ -71,6 +73,10 @@ MySQL Resources
   tencentcloud_mysql_account
   tencentcloud_mysql_account_privilege
   tencentcloud_mysql_backup_policy
+
+COS Resources
+  tencentcloud_cos_bucket
+  tencentcloud_cos_bucket_object
 */
 package tencentcloud
 
@@ -100,6 +106,7 @@ func Provider() *schema.Provider {
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, nil),
 				Description: "Secret key of Tencent Cloud",
+				Sensitive:   true,
 			},
 			"region": {
 				Type:         schema.TypeString,
@@ -126,6 +133,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_zone_config":           dataSourceTencentMysqlZoneConfig(),
 			"tencentcloud_mysql_parameter_list":        dataSourceTencentCloudMysqlParameterList(),
 			"tencentcloud_mysql_instance":              dataSourceTencentCloudMysqlInstance(),
+			"tencentcloud_cos_bucket_object":           dataSourceTencentCloudCosBucketObject(),
+			"tencentcloud_cos_buckets":                 dataSourceTencentCloudCosBuckets(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -153,6 +162,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_account_privilege":    resourceTencentCloudMysqlAccountPrivilege(),
 			"tencentcloud_mysql_instance":             resourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_readonly_instance":    resourceTencentCloudMysqlReadonlyInstance(),
+			"tencentcloud_cos_bucket":                 resourceTencentCloudCosBucket(),
+			"tencentcloud_cos_bucket_object":          resourceTencentCloudCosBucketObject(),
 		},
 
 		ConfigureFunc: providerConfigure,

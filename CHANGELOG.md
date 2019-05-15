@@ -1,4 +1,16 @@
 ## 1.6.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_cos_buckets`
+* **New Data Source**: `tencentcloud_cos_bucket_object`
+* **New Resource**: `tencentcloud_cos_bucket`
+* **New Resource**: `tencentcloud_cos_bucket_object`
+
+ENHANCEMENTS:
+
+* Add the framework of auto generating terraform docs
+
 ## 1.5.0 (April 26, 2019)
 
 FEATURES:

@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform/helper/schema"
-	cloud "github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud"
 	"go/parser"
 	"go/token"
 	"log"
@@ -14,6 +12,9 @@ import (
 	"sort"
 	"strings"
 	"text/template"
+
+	"github.com/hashicorp/terraform/helper/schema"
+	cloud "github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud"
 )
 
 const (
@@ -163,6 +164,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 		"example":           "",
 		"description":       "",
 		"description_short": "",
+		"import":            "",
 	}
 
 	fname := fmt.Sprintf("%s_%s_%s.go", dtype, cloudMarkShort, data["resource"])
@@ -178,6 +180,12 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	if description == "" {
 		log.Printf("[SKIP!]description empty, skip: %s\n", fname)
 		return
+	}
+
+	importPos := strings.Index(description, "\nImport\n")
+	if importPos != -1 {
+		data["import"] = strings.TrimSpace(description[importPos+8:])
+		description = strings.TrimSpace(description[:importPos])
 	}
 
 	pos := strings.Index(description, "\nExample Usage\n")
@@ -200,6 +208,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	requiredArgs := []string{}
 	optionalArgs := []string{}
 	attributes := []string{}
+	subStruct := []string{}
 
 	for k, v := range resource.Schema {
 		if v.Description == "" {
@@ -211,12 +220,14 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 				opt += ", ForceNew"
 			}
 			requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
+			subStruct = append(subStruct, getSubStruct(0, k, v)...)
 		} else if v.Optional {
 			opt := "Optional"
 			if v.ForceNew {
 				opt += ", ForceNew"
 			}
 			optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
+			subStruct = append(subStruct, getSubStruct(0, k, v)...)
 		} else {
 			attrs := getAttributes(0, k, v)
 			if len(attrs) > 0 {
@@ -231,6 +242,9 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 
 	requiredArgs = append(requiredArgs, optionalArgs...)
 	data["arguments"] = strings.Join(requiredArgs, "\n")
+	if len(subStruct) > 0 {
+		data["arguments"] += "\n" + strings.Join(subStruct, "\n")
+	}
 	data["attributes"] = strings.Join(attributes, "\n")
 
 	fname = fmt.Sprintf("%s/%s/%s.html.markdown", docRoot, dtype[0:1], data["resource"])
@@ -293,4 +307,45 @@ func getFileDescription(fname string) (string, error) {
 	}
 
 	return parsedAst.Doc.Text(), nil
+}
+
+// getSubStruct get sub structure from go file
+func getSubStruct(step int, k string, v *schema.Schema) []string {
+	subStructs := []string{}
+
+	if v.Description == "" {
+		return subStructs
+	}
+
+	if v.Type == schema.TypeMap || v.Type == schema.TypeList || v.Type == schema.TypeSet {
+		if _, ok := v.Elem.(*schema.Resource); ok {
+			subStructs = append(subStructs, fmt.Sprintf("\nThe `%s` object supports the following:\n", k))
+			requiredArgs := []string{}
+			optionalArgs := []string{}
+			for kk, vv := range v.Elem.(*schema.Resource).Schema {
+				if vv.Required {
+					opt := "Required"
+					if vv.ForceNew {
+						opt += ", ForceNew"
+					}
+					requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, vv.Description))
+				} else if vv.Optional {
+					opt := "Optional"
+					if vv.ForceNew {
+						opt += ", ForceNew"
+					}
+					optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, vv.Description))
+				}
+			}
+			sort.Strings(requiredArgs)
+			subStructs = append(subStructs, requiredArgs...)
+			sort.Strings(optionalArgs)
+			subStructs = append(subStructs, optionalArgs...)
+
+			for kk, vv := range v.Elem.(*schema.Resource).Schema {
+				subStructs = append(subStructs, getSubStruct(step+1, kk, vv)...)
+			}
+		}
+	}
+	return subStructs
 }
