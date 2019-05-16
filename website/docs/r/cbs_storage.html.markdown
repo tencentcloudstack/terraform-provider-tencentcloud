@@ -30,7 +30,7 @@ resource "tencentcloud_cbs_storage" "my-storage" {
 
 The following arguments are supported:
 
-* `storage_type` - (Required) Type of CBS medium. cloudBasic refers to a HDD cloud storage, cloudPremium refers to a Premium cloud storage, cloudSSD refers to a SSD cloud storage. **NOTE**, `storage_type` do not support modification.
+* `storage_type` - (Required) Type of CBS medium. cloudBasic refers to a HDD cloud storage but it is deprecated now, cloudPremium refers to a Premium cloud storage, cloudSSD refers to a SSD cloud storage. **NOTE**, `storage_type` do not support modification.
 * `storage_size` - (Required) Size of the storage (GB). The value range is 10GB - 4,000GB (HDD cloud storages), 500GB - 4,000GB (Premium cloud storages), 100GB - 4,000GB (SSD cloud storages). The increment is 10GB. **NOTE**,  `storage_size` do not support modification.
 * `period` - (Required) The tenancy (time unit is month) of the prepaid storage, the legal values are [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60]. **NOTE**, `period` do not support modification.
 * `availability_zone` - (Required) The available zone that the CBS instance locates at. **NOTE**, `availability_zone` do not support modification.

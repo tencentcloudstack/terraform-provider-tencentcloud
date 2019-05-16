@@ -12,8 +12,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-var projectId = 0
-
 func resourceTencentCloudSecurityGroup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSecurityGroupCreate,
@@ -22,15 +20,20 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 		Delete: resourceTencentCloudSecurityGroupDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(2, 100),
+			},
+			"project_id": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				ForceNew: true,
 			},
 		},
 	}
@@ -39,14 +42,16 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface{}) error {
 	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
-		"Action":    "CreateSecurityGroup",
-		"projectId": strconv.Itoa(projectId),
+		"Action": "CreateSecurityGroup",
 	}
 	if _, ok := d.GetOk("name"); ok {
 		params["sgName"] = d.Get("name").(string)
 	}
 	if _, ok := d.GetOk("description"); ok {
 		params["sgRemark"] = d.Get("description").(string)
+	}
+	if _, ok := d.GetOk("project_id"); ok {
+		params["projectId"] = strconv.Itoa(d.Get("project_id").(int))
 	}
 
 	log.Printf("[DEBUG] resource_tc_security_group create params:%v", params)
@@ -80,9 +85,8 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
-		"Action":    "DescribeSecurityGroupEx",
-		"projectId": strconv.Itoa(projectId),
-		"sgId":      d.Id(),
+		"Action": "DescribeSecurityGroupEx",
+		"sgId":   d.Id(),
 	}
 
 	log.Printf("[DEBUG] resource_tc_security_group read params:%v", params)
@@ -92,19 +96,38 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 		log.Printf("[ERROR] resource_tc_security_group read client.SendRequest error:%v", err)
 		return err
 	}
-
+	//"projectId":145454,
 	var jsonresp struct {
 		Code    int    `json:"code"`
 		Message string `json:"message"`
 		Data    struct {
 			TotalNum int `json:"totalNum"`
 			Detail   []struct {
-				SgName   string `json:"sgName"`
-				SgRemark string `json:"sgRemark"`
+				SgName    string `json:"sgName"`
+				SgRemark  string `json:"sgRemark"`
+				ProjectId int    `json:"projectId"`
 			}
 		}
 	}
+	//"projectId":"0",
+	var jsonresp2 struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    struct {
+			TotalNum int `json:"totalNum"`
+			Detail   []struct {
+				SgName    string `json:"sgName"`
+				SgRemark  string `json:"sgRemark"`
+				ProjectId string `json:"projectId"`
+			}
+		}
+	}
+	first := true
 	err = json.Unmarshal([]byte(response), &jsonresp)
+	if err != nil {
+		first = false
+		err = json.Unmarshal([]byte(response), &jsonresp2)
+	}
 	if err != nil {
 		log.Printf("[ERROR] resource_tc_security_group read json.Unmarshal error:%v", err)
 		return err
@@ -116,9 +139,18 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 		d.SetId("")
 		return nil
 	}
-	sg := jsonresp.Data.Detail[0]
-	d.Set("name", sg.SgName)
-	d.Set("description", sg.SgRemark)
+	if first {
+		sg := jsonresp.Data.Detail[0]
+		d.Set("name", sg.SgName)
+		d.Set("description", sg.SgRemark)
+		d.Set("project_id", sg.ProjectId)
+	} else {
+		sg := jsonresp2.Data.Detail[0]
+		d.Set("name", sg.SgName)
+		d.Set("description", sg.SgRemark)
+		projectId, _ := strconv.ParseInt(sg.ProjectId, 10, 64)
+		d.Set("project_id", int(projectId))
+	}
 	return nil
 }
 

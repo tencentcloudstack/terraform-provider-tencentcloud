@@ -36,7 +36,7 @@ resource "tencentcloud_subnet" "my_subnet" {
 }
 
 resource "tencentcloud_container_cluster" "foo" {
- cluster_name = "bar"
+ cluster_name = "terraform-acc-test-inst"
  cpu    = 1
  mem    = 1
  os_name   = "ubuntu16.04.1 LTSx86_64"
@@ -47,15 +47,16 @@ resource "tencentcloud_container_cluster" "foo" {
  is_vpc_gateway = 0
  storage_size = 0
  root_size  = 50
+ root_type = "CLOUD_SSD"
  goods_num  = 1
- password  = "Admin12345678"
+ password  = "Admin12345678#!"
  vpc_id   = "${tencentcloud_vpc.my_vpc.id}"
  cluster_cidr = "10.0.0.0/19"
  cvm_type  = "PayByHour"
  cluster_desc = "foofoofoo"
  period   = 1
  zone_id   = 100003
- instance_type = "S2.SMALL1"
+ instance_type = "S4.SMALL1"
  mount_target = ""
  docker_graph_path = ""
  instance_name = "terraform-container-acc-test-vm"
@@ -70,13 +71,13 @@ resource "tencentcloud_container_cluster_instance" "bar_instance" {
  require_wan_ip   = 1
  is_vpc_gateway = 0
  storage_size = 10
- root_size  = 100
+ root_size  = 50
  root_type = "CLOUD_SSD"
  password  = "Admin12345678"
  cvm_type  = "PayByHour"
  period   = 1
  zone_id   = 100003
- instance_type = "CVM.S2"
+ instance_type = "CVM.S3"
  mount_target = "/data"
  docker_graph_path = ""
  subnet_id  = "${tencentcloud_subnet.my_subnet.id}"

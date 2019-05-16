@@ -21,13 +21,13 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"key_name": &schema.Schema{
+			"key_name": {
 				Type:         schema.TypeString,
 				ForceNew:     true,
 				Required:     true,
 				ValidateFunc: validateKeyPairName,
 			},
-			"public_key": &schema.Schema{
+			"public_key": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,

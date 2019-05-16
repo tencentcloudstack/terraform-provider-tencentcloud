@@ -93,7 +93,9 @@ func testAccCheckDnatDestroy(s *terraform.State) error {
 }
 
 const testAccDnatConfig = `
-data "tencentcloud_availability_zones" "my_favorate_zones" {}
+data "tencentcloud_availability_zones" "my_favorate_zones" {
+  name = "ap-guangzhou-3"
+}
 
 data "tencentcloud_image" "my_favorate_image" {
   filter {
@@ -140,6 +142,7 @@ resource "tencentcloud_instance" "foo" {
   image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
   vpc_id            = "${tencentcloud_vpc.main.id}"
   subnet_id         = "${tencentcloud_subnet.main_subnet.id}"
+  system_disk_type  = "CLOUD_SSD"
 }
 
 # Add DNAT Entry
@@ -154,7 +157,9 @@ resource "tencentcloud_dnat" "dev_dnat" {
 }
 `
 const testAccDnatConfigUpdate = `
-data "tencentcloud_availability_zones" "my_favorate_zones" {}
+data "tencentcloud_availability_zones" "my_favorate_zones" {
+  name = "ap-guangzhou-3"
+}
 
 data "tencentcloud_image" "my_favorate_image" {
   filter {
@@ -201,6 +206,7 @@ resource "tencentcloud_instance" "foo" {
   image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
   vpc_id            = "${tencentcloud_vpc.main.id}"
   subnet_id         = "${tencentcloud_subnet.main_subnet.id}"
+  system_disk_type  = "CLOUD_SSD"
 }
 
 # Update DNAT Entry

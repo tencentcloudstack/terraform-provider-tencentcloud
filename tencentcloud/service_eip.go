@@ -11,7 +11,7 @@ import (
 func findEipById(cvmConn *cvm.Client, eipId string) (eip *cvm.Address, retryable bool, err error) {
 	req := cvm.NewDescribeAddressesRequest()
 	req.Filters = []*cvm.Filter{
-		&cvm.Filter{
+		{
 			Name:   common.StringPtr("address-id"),
 			Values: []*string{common.StringPtr(eipId)},
 		},

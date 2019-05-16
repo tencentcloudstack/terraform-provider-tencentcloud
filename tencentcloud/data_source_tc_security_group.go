@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
-	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -13,27 +12,31 @@ func dataSourceTencentCloudSecurityGroup() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudSecurityGroupRead,
 		Schema: map[string]*schema.Schema{
-			"security_group_id": &schema.Schema{
+			"security_group_id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
 			},
-			"description": &schema.Schema{
+			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(2, 100),
 			},
-			"create_time": &schema.Schema{
+			"create_time": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"be_associate_count": &schema.Schema{
+			"be_associate_count": {
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"project_id": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
@@ -44,9 +47,8 @@ func dataSourceTencentCloudSecurityGroup() *schema.Resource {
 func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}) error {
 	client := m.(*TencentCloudClient).commonConn
 	params := map[string]string{
-		"Action":    "DescribeSecurityGroupEx",
-		"projectId": strconv.Itoa(projectId),
-		"sgId":      d.Get("security_group_id").(string),
+		"Action": "DescribeSecurityGroupEx",
+		"sgId":   d.Get("security_group_id").(string),
 	}
 
 	log.Printf("[DEBUG] resource_tc_security_group read params:%v", params)
@@ -68,6 +70,7 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface
 				SgRemark         string `json:"sgRemark"`
 				BeAssociateCount int    `json:"beAssociateCount"`
 				CreateTime       string `json:"createTime"`
+				ProjectId        int    `json:"projectId"`
 			}
 		}
 	}
@@ -91,6 +94,7 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface
 	d.Set("description", sg.SgRemark)
 	d.Set("create_time", sg.CreateTime)
 	d.Set("be_associate_count", sg.BeAssociateCount)
+	d.Set("project_id", sg.ProjectId)
 
 	return nil
 }

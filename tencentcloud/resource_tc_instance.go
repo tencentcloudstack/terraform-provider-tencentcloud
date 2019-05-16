@@ -84,21 +84,21 @@ func resourceTencentCloudInstance() *schema.Resource {
 		Delete: resourceTencentCloudInstanceDelete,
 
 		Schema: map[string]*schema.Schema{
-			"image_id": &schema.Schema{
+			"image_id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"availability_zone": &schema.Schema{
+			"availability_zone": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"instance_name": &schema.Schema{
+			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "CVM-Instance",
 				ValidateFunc: validateInstanceName,
 			},
-			"instance_type": &schema.Schema{
+			"instance_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
@@ -115,65 +115,65 @@ func resourceTencentCloudInstance() *schema.Resource {
 				ForceNew: false,
 			},
 			// payment
-			"instance_charge_type": &schema.Schema{
+			"instance_charge_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateInstanceChargeType,
 			},
-			"instance_charge_type_prepaid_period": &schema.Schema{
+			"instance_charge_type_prepaid_period": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateInstanceChargeTypePrePaidPeriod,
 			},
-			"instance_charge_type_prepaid_renew_flag": &schema.Schema{
+			"instance_charge_type_prepaid_renew_flag": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateInstanceChargeTypePrePaidRenewFlag,
 			},
 			// network
-			"internet_charge_type": &schema.Schema{
+			"internet_charge_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateInternetChargeType,
 			},
-			"internet_max_bandwidth_out": &schema.Schema{
+			"internet_max_bandwidth_out": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateInternetMaxBandwidthOut,
 			},
-			"allocate_public_ip": &schema.Schema{
+			"allocate_public_ip": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  true,
 			},
 			// vpc
-			"vpc_id": &schema.Schema{
+			"vpc_id": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 				Computed: true,
 			},
-			"subnet_id": &schema.Schema{
+			"subnet_id": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 				Computed: true,
 			},
-			"private_ip": &schema.Schema{
+			"private_ip": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 				Computed: true,
 			},
 			// security group
-			"security_groups": &schema.Schema{
+			"security_groups": {
 				Type:     schema.TypeSet,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
+				Computed: true,
 			},
 			// storage
-			"system_disk_type": &schema.Schema{
+			"system_disk_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
@@ -185,13 +185,13 @@ func resourceTencentCloudInstance() *schema.Resource {
 			//	Type:     schema.TypeString,
 			//	Optional: true,
 			//},
-			"system_disk_size": &schema.Schema{
+			"system_disk_size": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(50, 1000),
 			},
-			"data_disks": &schema.Schema{
+			"data_disks": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Computed: true,
@@ -207,7 +207,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 						//	Type:     schema.TypeString,
 						//	Optional: true,
 						//},
-						"data_disk_size": &schema.Schema{
+						"data_disk_size": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							ValidateFunc: validateDiskSize,
@@ -221,32 +221,32 @@ func resourceTencentCloudInstance() *schema.Resource {
 				},
 			},
 			// enhance services
-			"disable_security_service": &schema.Schema{
+			"disable_security_service": {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
-			"disable_monitor_service": &schema.Schema{
+			"disable_monitor_service": {
 				Type:     schema.TypeBool,
 				Optional: true,
 			},
 			// login
-			"key_name": &schema.Schema{
+			"key_name": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 			},
-			"password": &schema.Schema{
+			"password": {
 				Type:      schema.TypeString,
 				Optional:  true,
 				Sensitive: true,
 			},
-			"user_data": &schema.Schema{
+			"user_data": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ForceNew:      true,
 				ConflictsWith: []string{"user_data_raw"},
 			},
-			"user_data_raw": &schema.Schema{
+			"user_data_raw": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ForceNew:      true,
@@ -254,11 +254,11 @@ func resourceTencentCloudInstance() *schema.Resource {
 			},
 
 			// Computed values.
-			"instance_status": &schema.Schema{
+			"instance_status": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"public_ip": &schema.Schema{
+			"public_ip": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -358,8 +358,8 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 	var dataDisksAttr []map[string]interface{}
 	if dataDisks, ok := d.GetOk("data_disks"); ok {
 		dataDiskList := dataDisks.([]interface{})
-		if len(dataDiskList) > 1 {
-			return fmt.Errorf("tencentcloud_instance currently only one data disk is supported during instance creation")
+		if len(dataDiskList) > 10 {
+			return fmt.Errorf("Too many data disks for tencentcloud_instance!")
 		}
 		for i, dataDisk := range dataDiskList {
 			dd := dataDisk.(map[string]interface{})
@@ -455,9 +455,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 	}
 	if jsonresp.Response.Error.Code != "" {
 		return fmt.Errorf(
-			"tencentcloud_instance got error, code:%v, message:%v",
+			"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
 			jsonresp.Response.Error.Code,
 			jsonresp.Response.Error.Message,
+			jsonresp.Response.RequestId,
 		)
 	}
 	if len(jsonresp.Response.InstanceIdSet) == 0 {
@@ -562,9 +563,10 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	}
 	if jsonresp.Response.Error.Code != "" {
 		return fmt.Errorf(
-			"tencentcloud_instance got error, code:%v, message:%v",
+			"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
 			jsonresp.Response.Error.Code,
 			jsonresp.Response.Error.Message,
+			jsonresp.Response.RequestId,
 		)
 	}
 	if len(jsonresp.Response.InstanceSet) == 0 {
@@ -578,6 +580,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	publicIPs := jsonresp.Response.InstanceSet[0].PublicIpAddresses
 	if len(publicIPs) > 0 {
 		d.Set("public_ip", publicIPs[0])
+	} else {
+		d.Set("public_ip", "")
 	}
 	systemDiskType := jsonresp.Response.InstanceSet[0].SystemDisk.DiskType
 	d.Set("system_disk_type", systemDiskType)
@@ -736,14 +740,6 @@ LABEL_REINSTALL:
 }
 
 func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) error {
-	v, ok := d.GetOk("instance_charge_type")
-	if ok {
-		instanceChargeType := v.(string)
-		if instanceChargeType == tencentCloudApiInstanceChargeTypePrePaid {
-			return fmt.Errorf("prepaid instance %v is not allowed to be deleted in terraform", d.Id())
-		}
-	}
-
 	client := m.(*TencentCloudClient).commonConn
 
 	params := map[string]string{
@@ -771,7 +767,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 			return resource.NonRetryableError(err)
 		}
 		if jsonresp.Response.Error.Code == "InternalError" {
-			return resource.RetryableError(fmt.Errorf(jsonresp.Response.Error.Message))
+			return resource.RetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
 		}
 		return nil
 	})

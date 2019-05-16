@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/athom/goset"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -152,6 +153,17 @@ func validateIntegerInRange(min, max int) schema.SchemaValidateFunc {
 	}
 }
 
+func validateIntegerMin(min int) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(int)
+		if value < min {
+			errors = append(errors, fmt.Errorf(
+				"%q cannot be lower than %d: %d", k, min, value))
+		}
+		return
+	}
+}
+
 func validateStringLengthInRange(min, max int) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := len(v.(string))
@@ -204,6 +216,21 @@ func validateInstanceName(v interface{}, k string) (ws []string, errors []error)
 	return
 }
 
+func validateAllowedStringValueIgnoreCase(ss []string) schema.SchemaValidateFunc {
+
+	var upperStrs = make([]string, len(ss))
+	for index, value := range ss {
+		upperStrs[index] = strings.ToUpper(value)
+	}
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(string)
+		if !goset.IsIncluded(ss, strings.ToUpper(value)) {
+			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ss, value))
+		}
+		return
+	}
+}
+
 func validateAllowedStringValue(ss []string) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)
@@ -228,5 +255,68 @@ func validatePort(v interface{}, k string) (ws []string, errors []error) {
 	if value < 1 || value > 65535 {
 		errors = append(errors, fmt.Errorf("%q must be a valid port between 1 and 65535", k))
 	}
+	return
+}
+
+func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	if len(value) > 64 || len(value) < 8 {
+		errors = append(errors, fmt.Errorf("invalid password, len(password) must between 8 and 64,%s", value))
+	}
+	var match = make(map[string]bool)
+	if strings.ContainsAny(value, "_+-&=!@#$%^*()") {
+		match["alien"] = true
+	}
+	for i := 0; i < len(value); i++ {
+		if len(match) >= 2 {
+			break
+		}
+		if value[i] >= '0' && value[i] <= '9' {
+			match["number"] = true
+			continue
+		}
+		if (value[i] >= 'a' && value[i] <= 'z') || (value[i] >= 'A' && value[i] <= 'Z') {
+			match["letter"] = true
+			continue
+		}
+	}
+	if len(match) < 2 {
+		errors = append(errors, fmt.Errorf("invalid password, contains at least letters, Numbers, and characters(_+-&=!@#$%%^*()),%s", value))
+	}
+	return
+}
+
+func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(int)
+		if !goset.IsIncluded(ints, value) {
+			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ints, value))
+		}
+		return
+	}
+}
+
+// Only support lowercase letters, numbers and "-". It cannot be longer than 40 characters.
+func validateCosBucketName(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	if len(value) > 40 || len(value) < 0 {
+		errors = append(errors, fmt.Errorf("invalid bucket name: %v, size too long or too short", value))
+	}
+
+	pattern := `^[a-z0-9-]+$`
+	if match, _ := regexp.Match(pattern, []byte(value)); !match {
+		errors = append(errors, fmt.Errorf("invalid bucket name: %v, wrong format: only support lowercase letters, numbers and -", value))
+	}
+	return
+}
+
+func validateCosBucketLifecycleTimestamp(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	_, err := time.Parse(time.RFC3339, fmt.Sprintf("%sT00:00:00Z", value))
+	if err != nil {
+		errors = append(errors, fmt.Errorf(
+			"%q cannot be parsed as RFC3339 Timestamp Format", value))
+	}
+
 	return
 }

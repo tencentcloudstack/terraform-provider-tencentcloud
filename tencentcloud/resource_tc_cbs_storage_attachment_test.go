@@ -94,7 +94,8 @@ resource "tencentcloud_instance" "my_instance" {
   instance_name 	= "testAccCbsAttachmentTest"
   availability_zone = "ap-guangzhou-3"
   image_id      	= "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type 	= "S2.SMALL1"
+  instance_type 	= "S3.SMALL1"
+  system_disk_type  = "CLOUD_SSD"
 }
 
 resource "tencentcloud_cbs_storage_attachment" "my_attachment" {

@@ -28,23 +28,23 @@ func resourceTencentCloudRouteEntry() *schema.Resource {
 		Delete: resourceTencentCloudRouteEntryDelete,
 
 		Schema: map[string]*schema.Schema{
-			"vpc_id": &schema.Schema{
+			"vpc_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"route_table_id": &schema.Schema{
+			"route_table_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"cidr_block": &schema.Schema{
+			"cidr_block": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateCIDRNetworkAddress,
 			},
-			"next_type": &schema.Schema{
+			"next_type": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
@@ -53,7 +53,7 @@ func resourceTencentCloudRouteEntry() *schema.Resource {
 					_, ok := nextTypes[value]
 					if !ok {
 						var nextHubDesc []string
-						for vgwKey, _ := range nextTypes {
+						for vgwKey := range nextTypes {
 							nextHubDesc = append(nextHubDesc, vgwKey)
 						}
 						errors = append(errors, fmt.Errorf("%s Only 1 of %s is allowed", k, strings.Join(nextHubDesc, ",")))
@@ -61,7 +61,7 @@ func resourceTencentCloudRouteEntry() *schema.Resource {
 					return
 				},
 			},
-			"next_hub": &schema.Schema{
+			"next_hub": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,

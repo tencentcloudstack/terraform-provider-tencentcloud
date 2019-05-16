@@ -14,15 +14,15 @@ func dataSourceTencentCloudRouteTable() *schema.Resource {
 		Read: dataSourceTencentCloudRouteTableRead,
 
 		Schema: map[string]*schema.Schema{
-			"route_table_id": &schema.Schema{
+			"route_table_id": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"vpc_id": &schema.Schema{
+			"vpc_id": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
@@ -33,7 +33,7 @@ func dataSourceTencentCloudRouteTable() *schema.Resource {
 					return
 				},
 			},
-			"subnet_num": &schema.Schema{
+			"subnet_num": {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
@@ -42,26 +42,26 @@ func dataSourceTencentCloudRouteTable() *schema.Resource {
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"cidr_block": &schema.Schema{
+						"cidr_block": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"next_type": &schema.Schema{
+						"next_type": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"next_hub": &schema.Schema{
+						"next_hub": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"description": &schema.Schema{
+						"description": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
 					},
 				},
 			},
-			"create_time": &schema.Schema{
+			"create_time": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},

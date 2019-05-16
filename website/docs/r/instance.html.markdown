@@ -130,12 +130,12 @@ The following arguments are supported:
 
 * `security_groups` - (Optional)  A list of security group ids to associate with.
 
-* `system_disk_type` - (Optional) Valid values are `LOCAL_BASIC`, `LOCAL_SSD`,  `CLOUD_BASIC` and `CLOUD_SSD`.
+* `system_disk_type` - (Optional) Valid values are `LOCAL_BASIC`, `LOCAL_SSD`,  `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`. **NOTE**: LOCAL_BASIC and LOCAL_SSD are deprecated.
 
 * `system_disk_size` - (Optional) Size of the system disk, value range: 50GB ~ 1TB. Default is 50GB.
 
-* `data_disks` - (Optional) Settings for data disk. In each disk, `data_disk_type` indicates the disk type, valid values are `LOCAL_BASIC`, `LOCAL_SSD`,  `CLOUD_BASIC` and `CLOUD_SSD`. **NOTE**, it must follow the system_disk_type, and all disks must be the same type. 
-`data_disk_size` is the size of the data disk, value range: 60GB~1.6TB. `delete_with_instance` decides whether the disk is deleted with instance(only applied to `POSTPAID_BY_HOUR` cloud disk), default to true.  
+* `data_disks` - (Optional) Settings for data disk. In each disk, `data_disk_type` indicates the disk type, valid values are `LOCAL_BASIC`, `LOCAL_SSD`,  `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`. **NOTE**, it must follow the system_disk_type, and all disks must be the same type. `data_disk_size` is the size of the data disk, value range: 100GB~1.6TB.
+`data_disk_size` is the size of the data disk, value range: 60GB~1.6TB. `delete_with_instance` decides whether the disk is deleted with instance(only applied to `POSTPAID_BY_HOUR` cloud disk), default to true.
 
 * `disable_security_service` - (Optional) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed.
 

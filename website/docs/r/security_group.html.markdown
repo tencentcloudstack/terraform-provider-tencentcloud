@@ -27,6 +27,7 @@ The following arguments are supported:
 
 * `name` - (Required) The name of the security group. Name should be unique in each project, and no more than 60 characters.
 * `description` - (Optional) The security group's description, maximum length is 100 characters.
+* `project_id` - (Optional) The security group's project, default is 0.
 
 ## Attributes Reference
 

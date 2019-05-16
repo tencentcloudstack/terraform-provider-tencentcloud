@@ -15,7 +15,7 @@ can also be fetched when `include_unavailable` is specified.
 ## Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "my_favarate_zone" {
+data "tencentcloud_availability_zones" "my_favourite_zone" {
    name = "ap-guangzhou-3"
 }
 ```

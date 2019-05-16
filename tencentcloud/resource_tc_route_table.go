@@ -16,12 +16,12 @@ func resourceTencentCloudRouteTable() *schema.Resource {
 		Delete: resourceTencentCloudRouteTableDelete,
 
 		Schema: map[string]*schema.Schema{
-			"vpc_id": &schema.Schema{
+			"vpc_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},

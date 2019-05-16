@@ -21,25 +21,25 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 		Delete: resourceTencentCloudNatGatewayDelete,
 
 		Schema: map[string]*schema.Schema{
-			"vpc_id": &schema.Schema{
+			"vpc_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 			},
-			"name": &schema.Schema{
+			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
 			},
-			"max_concurrent": &schema.Schema{
+			"max_concurrent": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"bandwidth": &schema.Schema{
+			"bandwidth": {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"assigned_eip_set": &schema.Schema{
+			"assigned_eip_set": {
 				Type:     schema.TypeSet,
 				Required: true,
 				Elem: &schema.Schema{

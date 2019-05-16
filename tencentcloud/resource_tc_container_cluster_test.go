@@ -87,7 +87,7 @@ resource "tencentcloud_container_cluster" "foo" {
  subnet_id  = "${tencentcloud_subnet.my_subnet.id}"
  is_vpc_gateway = 0
  storage_size = 0
- root_size = 100
+ root_size = 50
  root_type = "CLOUD_SSD"
  goods_num  = 1
  password  = "Admin12345678"
@@ -97,7 +97,7 @@ resource "tencentcloud_container_cluster" "foo" {
  cluster_desc = "foofoofoo"
  period   = 1
  zone_id   = 100003
- instance_type = "S2.SMALL1"
+ instance_type = "S4.SMALL1"
  mount_target = ""
  docker_graph_path = ""
  instance_name = "terraform-container-acc-test-vm"

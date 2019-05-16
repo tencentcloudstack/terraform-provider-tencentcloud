@@ -26,6 +26,6 @@ func TestAccDataSourceTencentCloudSubnet_basic(t *testing.T) {
 const TestAccDataSourceTencentCloudSubnetConfig = `
 data "tencentcloud_subnet" "foo" {
 	vpc_id = "vpc-8ek64x3d"
-	subnet_id = "subnet-b1wk8b10"
+	subnet_id = "subnet-d3nsmfwe"
 }
 `

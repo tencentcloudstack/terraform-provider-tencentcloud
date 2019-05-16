@@ -8,12 +8,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/hashicorp/terraform/tfdiags"
-
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/hcl"
 	"github.com/hashicorp/terraform/config"
 	"github.com/hashicorp/terraform/config/module"
+	"github.com/hashicorp/terraform/tfdiags"
 	"github.com/hashicorp/terraform/version"
 )
 
@@ -145,13 +144,8 @@ func NewContext(opts *ContextOpts) (*Context, error) {
 
 	// If our state is from the future, then error. Callers can avoid
 	// this error by explicitly setting `StateFutureAllowed`.
-	if !opts.StateFutureAllowed && state.FromFutureTerraform() {
-		return nil, fmt.Errorf(
-			"Terraform doesn't allow running any operations against a state\n"+
-				"that was written by a future Terraform version. The state is\n"+
-				"reporting it is written by Terraform '%s'.\n\n"+
-				"Please run at least that version of Terraform to continue.",
-			state.TFVersion)
+	if err := CheckStateVersion(state); err != nil && !opts.StateFutureAllowed {
+		return nil, err
 	}
 
 	// Explicitly reset our state version to our current version so that
@@ -420,7 +414,7 @@ func (c *Context) Input(mode InputMode) error {
 			retry := 0
 			for {
 				var err error
-				value, err = c.uiInput.Input(&InputOpts{
+				value, err = c.uiInput.Input(context.Background(), &InputOpts{
 					Id:          fmt.Sprintf("var.%s", n),
 					Query:       fmt.Sprintf("var.%s", n),
 					Description: v.Description,
@@ -492,6 +486,13 @@ func (c *Context) Input(mode InputMode) error {
 func (c *Context) Apply() (*State, error) {
 	defer c.acquireRun("apply")()
 
+	// Check there are no empty target parameter values
+	for _, target := range c.targets {
+		if target == "" {
+			return nil, fmt.Errorf("Target parameter must not have empty value")
+		}
+	}
+
 	// Copy our own state
 	c.state = c.state.DeepCopy()
 
@@ -528,6 +529,13 @@ func (c *Context) Apply() (*State, error) {
 // by the plan, so Apply can be called after.
 func (c *Context) Plan() (*Plan, error) {
 	defer c.acquireRun("plan")()
+
+	// Check there are no empty target parameter values
+	for _, target := range c.targets {
+		if target == "" {
+			return nil, fmt.Errorf("Target parameter must not have empty value")
+		}
+	}
 
 	p := &Plan{
 		Module:  c.module,

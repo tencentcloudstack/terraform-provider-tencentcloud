@@ -73,9 +73,11 @@ resource "tencentcloud_vpc" "main" {
   name       = "terraform test"
   cidr_block = "10.6.0.0/16"
 }
+
 resource "tencentcloud_eip" "eip_dev_dnat" {
   name = "terraform_test"
 }
+
 resource "tencentcloud_eip" "eip_test_dnat" {
   name = "terraform_test"
 }
@@ -96,12 +98,15 @@ resource "tencentcloud_vpc" "main" {
   name       = "terraform test"
   cidr_block = "10.6.0.0/16"
 }
+
 resource "tencentcloud_eip" "eip_dev_dnat" {
   name = "terraform_test"
 }
+
 resource "tencentcloud_eip" "eip_test_dnat" {
   name = "terraform_test"
 }
+
 resource "tencentcloud_eip" "new_eip" {
   name = "terraform_test"
 }
