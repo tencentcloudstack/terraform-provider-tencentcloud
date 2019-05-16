@@ -148,6 +148,90 @@ func (c *Client) AllocateAddresses(request *AllocateAddressesRequest) (response 
     return
 }
 
+func NewAssignIpv6AddressesRequest() (request *AssignIpv6AddressesRequest) {
+    request = &AssignIpv6AddressesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "AssignIpv6Addresses")
+    return
+}
+
+func NewAssignIpv6AddressesResponse() (response *AssignIpv6AddressesResponse) {
+    response = &AssignIpv6AddressesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（AssignIpv6Addresses）用于弹性网卡申请`IPv6`地址。<br />
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`QueryTask`接口。
+// * 一个弹性网卡支持绑定的IP地址是有限制的，更多资源限制信息详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
+// * 可以指定`IPv6`地址申请，地址类型不能为主`IP`，`IPv6`地址暂时只支持作为辅助`IP`。
+// * 地址必须要在弹性网卡所在子网内，而且不能被占用。
+// * 在弹性网卡上申请一个到多个辅助`IPv6`地址，接口会在弹性网卡所在子网段内返回指定数量的辅助`IPv6`地址。
+func (c *Client) AssignIpv6Addresses(request *AssignIpv6AddressesRequest) (response *AssignIpv6AddressesResponse, err error) {
+    if request == nil {
+        request = NewAssignIpv6AddressesRequest()
+    }
+    response = NewAssignIpv6AddressesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAssignIpv6CidrBlockRequest() (request *AssignIpv6CidrBlockRequest) {
+    request = &AssignIpv6CidrBlockRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "AssignIpv6CidrBlock")
+    return
+}
+
+func NewAssignIpv6CidrBlockResponse() (response *AssignIpv6CidrBlockResponse) {
+    response = &AssignIpv6CidrBlockResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（AssignIpv6CidrBlock）用于分配IPv6网段。
+// * 使用本接口前，你需要已有VPC实例，如果没有可通过接口<a href="https://cloud.tencent.com/document/api/215/15774" title="CreateVpc" target="_blank">CreateVpc</a>创建。
+// * 每个VPC只能申请一个IPv6网段
+func (c *Client) AssignIpv6CidrBlock(request *AssignIpv6CidrBlockRequest) (response *AssignIpv6CidrBlockResponse, err error) {
+    if request == nil {
+        request = NewAssignIpv6CidrBlockRequest()
+    }
+    response = NewAssignIpv6CidrBlockResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAssignIpv6SubnetCidrBlockRequest() (request *AssignIpv6SubnetCidrBlockRequest) {
+    request = &AssignIpv6SubnetCidrBlockRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "AssignIpv6SubnetCidrBlock")
+    return
+}
+
+func NewAssignIpv6SubnetCidrBlockResponse() (response *AssignIpv6SubnetCidrBlockResponse) {
+    response = &AssignIpv6SubnetCidrBlockResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（AssignIpv6SubnetCidrBlock）用于分配IPv6子网段。
+// * 给子网分配 `IPv6` 网段，要求子网所属 `VPC` 已获得 `IPv6` 网段。如果尚未分配，请先通过接口 `AssignIpv6CidrBlock` 给子网所属 `VPC` 分配一个 `IPv6` 网段。否则无法分配 `IPv6` 子网段。
+// * 每个子网只能分配一个IPv6网段。
+func (c *Client) AssignIpv6SubnetCidrBlock(request *AssignIpv6SubnetCidrBlockRequest) (response *AssignIpv6SubnetCidrBlockResponse, err error) {
+    if request == nil {
+        request = NewAssignIpv6SubnetCidrBlockRequest()
+    }
+    response = NewAssignIpv6SubnetCidrBlockResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAssignPrivateIpAddressesRequest() (request *AssignPrivateIpAddressesRequest) {
     request = &AssignPrivateIpAddressesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -678,7 +762,7 @@ func NewCreateSecurityGroupPoliciesResponse() (response *CreateSecurityGroupPoli
 // * Protocol字段支持输入TCP, UDP, ICMP, GRE, ALL。
 // * CidrBlock字段允许输入符合cidr格式标准的任意字符串。(展开)在基础网络中，如果CidrBlock包含您的账户内的云服务器之外的设备在腾讯云的内网IP，并不代表此规则允许您访问这些设备，租户之间网络隔离规则优先于安全组中的内网规则。
 // * SecurityGroupId字段允许输入与待修改的安全组位于相同项目中的安全组ID，包括这个安全组ID本身，代表安全组下所有云服务器的内网IP。使用这个字段时，这条规则用来匹配网络报文的过程中会随着被使用的这个ID所关联的云服务器变化而变化，不需要重新修改。
-// * Port字段允许输入一个单独端口号，或者用减号分隔的两个端口号代表端口范围，例如80或8000-8010。只有当Protocol字段是TCP或UDP时，Port字段才被接受。
+// * Port字段允许输入一个单独端口号，或者用减号分隔的两个端口号代表端口范围，例如80或8000-8010。只有当Protocol字段是TCP或UDP时，Port字段才被接受，即Protocol字段不是TCP或UDP时，Protocol和Port排他关系，不允许同时输入，否则会接口报错。
 // * Action字段只允许输入ACCEPT或DROP。
 // * CidrBlock, SecurityGroupId, AddressTemplate三者是排他关系，不允许同时输入，Protocol + Port和ServiceTemplate二者是排他关系，不允许同时输入。
 // * 一次请求中只能创建单个方向的规则, 如果需要指定索引（PolicyIndex）参数, 多条规则的索引必须一致。
@@ -2123,6 +2207,32 @@ func (c *Client) DescribeSubnets(request *DescribeSubnetsRequest) (response *Des
     return
 }
 
+func NewDescribeVpcIpv6AddressesRequest() (request *DescribeVpcIpv6AddressesRequest) {
+    request = &DescribeVpcIpv6AddressesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeVpcIpv6Addresses")
+    return
+}
+
+func NewDescribeVpcIpv6AddressesResponse() (response *DescribeVpcIpv6AddressesResponse) {
+    response = &DescribeVpcIpv6AddressesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（DescribeVpcIpv6Addresses）用于查询 `VPC` `IPv6` 信息。
+// 只能查询已使用的`IPv6`信息，当查询未使用的IP时，本接口不会报错，但不会出现在返回结果里。
+func (c *Client) DescribeVpcIpv6Addresses(request *DescribeVpcIpv6AddressesRequest) (response *DescribeVpcIpv6AddressesResponse, err error) {
+    if request == nil {
+        request = NewDescribeVpcIpv6AddressesRequest()
+    }
+    response = NewDescribeVpcIpv6AddressesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeVpcPrivateIpAddressesRequest() (request *DescribeVpcPrivateIpAddressesRequest) {
     request = &DescribeVpcPrivateIpAddressesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2911,6 +3021,31 @@ func (c *Client) ModifyIp6Translator(request *ModifyIp6TranslatorRequest) (respo
     return
 }
 
+func NewModifyIpv6AddressesAttributeRequest() (request *ModifyIpv6AddressesAttributeRequest) {
+    request = &ModifyIpv6AddressesAttributeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "ModifyIpv6AddressesAttribute")
+    return
+}
+
+func NewModifyIpv6AddressesAttributeResponse() (response *ModifyIpv6AddressesAttributeResponse) {
+    response = &ModifyIpv6AddressesAttributeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（ModifyIpv6AddressesAttribute）用于修改弹性网卡内网IPv6地址属性。
+func (c *Client) ModifyIpv6AddressesAttribute(request *ModifyIpv6AddressesAttributeRequest) (response *ModifyIpv6AddressesAttributeResponse, err error) {
+    if request == nil {
+        request = NewModifyIpv6AddressesAttributeRequest()
+    }
+    response = NewModifyIpv6AddressesAttributeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyNetworkInterfaceAttributeRequest() (request *ModifyNetworkInterfaceAttributeRequest) {
     request = &ModifyNetworkInterfaceAttributeRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3573,6 +3708,84 @@ func (c *Client) TransformAddress(request *TransformAddressRequest) (response *T
         request = NewTransformAddressRequest()
     }
     response = NewTransformAddressResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUnassignIpv6AddressesRequest() (request *UnassignIpv6AddressesRequest) {
+    request = &UnassignIpv6AddressesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "UnassignIpv6Addresses")
+    return
+}
+
+func NewUnassignIpv6AddressesResponse() (response *UnassignIpv6AddressesResponse) {
+    response = &UnassignIpv6AddressesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（UnassignIpv6Addresses）用于释放弹性网卡`IPv6`地址。<br />
+// 本接口是异步完成，如需查询异步任务执行结果，请使用本接口返回的`RequestId`轮询`QueryTask`接口。
+func (c *Client) UnassignIpv6Addresses(request *UnassignIpv6AddressesRequest) (response *UnassignIpv6AddressesResponse, err error) {
+    if request == nil {
+        request = NewUnassignIpv6AddressesRequest()
+    }
+    response = NewUnassignIpv6AddressesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUnassignIpv6CidrBlockRequest() (request *UnassignIpv6CidrBlockRequest) {
+    request = &UnassignIpv6CidrBlockRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "UnassignIpv6CidrBlock")
+    return
+}
+
+func NewUnassignIpv6CidrBlockResponse() (response *UnassignIpv6CidrBlockResponse) {
+    response = &UnassignIpv6CidrBlockResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（UnassignIpv6CidrBlock）用于释放IPv6网段。<br />
+// 网段如果还有IP占用且未回收，则网段无法释放。
+func (c *Client) UnassignIpv6CidrBlock(request *UnassignIpv6CidrBlockRequest) (response *UnassignIpv6CidrBlockResponse, err error) {
+    if request == nil {
+        request = NewUnassignIpv6CidrBlockRequest()
+    }
+    response = NewUnassignIpv6CidrBlockResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUnassignIpv6SubnetCidrBlockRequest() (request *UnassignIpv6SubnetCidrBlockRequest) {
+    request = &UnassignIpv6SubnetCidrBlockRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "UnassignIpv6SubnetCidrBlock")
+    return
+}
+
+func NewUnassignIpv6SubnetCidrBlockResponse() (response *UnassignIpv6SubnetCidrBlockResponse) {
+    response = &UnassignIpv6SubnetCidrBlockResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（UnassignIpv6SubnetCidrBlock）用于释放IPv6子网段。<br />
+// 子网段如果还有IP占用且未回收，则子网段无法释放。
+func (c *Client) UnassignIpv6SubnetCidrBlock(request *UnassignIpv6SubnetCidrBlockRequest) (response *UnassignIpv6SubnetCidrBlockResponse, err error) {
+    if request == nil {
+        request = NewUnassignIpv6SubnetCidrBlockRequest()
+    }
+    response = NewUnassignIpv6SubnetCidrBlockResponse()
     err = c.Send(request, response)
     return
 }
