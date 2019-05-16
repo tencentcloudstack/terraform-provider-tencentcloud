@@ -404,9 +404,9 @@ func (me *RedisService) ModifyInstanceName(ctx context.Context, redisId string, 
 		}
 	}()
 	op := "rename"
-	request.InstanceNames = []*string{&name}
+	request.InstanceName = &name
 	request.Operation = &op
-	request.InstanceIds = []*string{&redisId}
+	request.InstanceId = &redisId
 
 	respone, err := me.client.UseRedisClient().ModifyInstance(request)
 	if err == nil {
@@ -430,7 +430,7 @@ func (me *RedisService) ModifyInstanceProjectId(ctx context.Context, redisId str
 	op := "modifyProject"
 	request.ProjectId = &projectId
 	request.Operation = &op
-	request.InstanceIds = []*string{&redisId}
+	request.InstanceId = &redisId
 
 	respone, err := me.client.UseRedisClient().ModifyInstance(request)
 	if err == nil {
