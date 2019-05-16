@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/hashcode"
@@ -119,6 +120,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
 
 	availabilityZone := d.Get("availability_zone").(string)
 	redisName := d.Get("name").(string)
@@ -130,6 +132,12 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	securityGroups := d.Get("security_groups").(*schema.Set).List()
 	projectId := d.Get("project_id").(int)
 	port := d.Get("port").(int)
+
+	if availabilityZone != "" {
+		if !strings.Contains(availabilityZone, region) {
+			return fmt.Errorf("zone[%s] not in region[%s]", availabilityZone, region)
+		}
+	}
 
 	requestSecurityGroup := make([]string, 0, len(securityGroups))
 

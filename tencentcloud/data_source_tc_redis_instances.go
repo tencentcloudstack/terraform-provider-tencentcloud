@@ -2,6 +2,8 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"log"
 
@@ -119,6 +121,9 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 		tempStr := temp.(string)
 		if tempStr != "" {
 			zone = tempStr
+			if !strings.Contains(zone, region) {
+				return fmt.Errorf("zone[%s] not in region[%s]", zone, region)
+			}
 		}
 	}
 	if temp, ok := d.GetOk("search_key"); ok {
