@@ -214,25 +214,25 @@ type ComputeNode struct {
 type ComputeNodeMetrics struct {
 
 	// 已经完成提交的计算节点数量
-	SubmittedCount *string `json:"SubmittedCount,omitempty" name:"SubmittedCount"`
+	SubmittedCount *uint64 `json:"SubmittedCount,omitempty" name:"SubmittedCount"`
 
 	// 创建中的计算节点数量
-	CreatingCount *string `json:"CreatingCount,omitempty" name:"CreatingCount"`
+	CreatingCount *uint64 `json:"CreatingCount,omitempty" name:"CreatingCount"`
 
 	// 创建失败的计算节点数量
-	CreationFailedCount *string `json:"CreationFailedCount,omitempty" name:"CreationFailedCount"`
+	CreationFailedCount *uint64 `json:"CreationFailedCount,omitempty" name:"CreationFailedCount"`
 
 	// 完成创建的计算节点数量
-	CreatedCount *string `json:"CreatedCount,omitempty" name:"CreatedCount"`
+	CreatedCount *uint64 `json:"CreatedCount,omitempty" name:"CreatedCount"`
 
 	// 运行中的计算节点数量
-	RunningCount *string `json:"RunningCount,omitempty" name:"RunningCount"`
+	RunningCount *uint64 `json:"RunningCount,omitempty" name:"RunningCount"`
 
 	// 销毁中的计算节点数量
-	DeletingCount *string `json:"DeletingCount,omitempty" name:"DeletingCount"`
+	DeletingCount *uint64 `json:"DeletingCount,omitempty" name:"DeletingCount"`
 
 	// 异常的计算节点数量
-	AbnormalCount *string `json:"AbnormalCount,omitempty" name:"AbnormalCount"`
+	AbnormalCount *uint64 `json:"AbnormalCount,omitempty" name:"AbnormalCount"`
 }
 
 type CreateComputeEnvRequest struct {
@@ -809,6 +809,40 @@ func (r *DescribeCvmZoneInstanceConfigInfosResponse) FromJsonString(s string) er
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeInstanceCategoriesRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeInstanceCategoriesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeInstanceCategoriesRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeInstanceCategoriesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// CVM实例分类列表
+		InstanceCategorySet []*InstanceCategoryItem `json:"InstanceCategorySet,omitempty" name:"InstanceCategorySet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeInstanceCategoriesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeInstanceCategoriesResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeJobRequest struct {
 	*tchttp.BaseRequest
 
@@ -1195,7 +1229,7 @@ type EnvData struct {
 	// 实例数据盘配置信息
 	DataDisks []*DataDisk `json:"DataDisks,omitempty" name:"DataDisks" list`
 
-	// 私有网络相关信息配置
+	// 私有网络相关信息配置，与Zones和VirtualPrivateClouds不能同时指定。
 	VirtualPrivateCloud *VirtualPrivateCloud `json:"VirtualPrivateCloud,omitempty" name:"VirtualPrivateCloud"`
 
 	// 公网带宽相关信息设置
@@ -1224,6 +1258,12 @@ type EnvData struct {
 
 	// CVM实例机型配置。不能与InstanceType和InstanceTypes同时出现。
 	InstanceTypeOptions *InstanceTypeOptions `json:"InstanceTypeOptions,omitempty" name:"InstanceTypeOptions"`
+
+	// 可用区列表，支持跨可用区创建CVM实例。与VirtualPrivateCloud和VirtualPrivateClouds不能同时指定。
+	Zones []*string `json:"Zones,omitempty" name:"Zones" list`
+
+	// 私有网络列表，支持跨私有网络创建CVM实例。与VirtualPrivateCloud和Zones不能同时指定。
+	VirtualPrivateClouds []*VirtualPrivateCloud `json:"VirtualPrivateClouds,omitempty" name:"VirtualPrivateClouds" list`
 }
 
 type EnvVar struct {
@@ -1287,6 +1327,15 @@ type InputMapping struct {
 
 	// 挂载配置项参数
 	MountOptionParameter *string `json:"MountOptionParameter,omitempty" name:"MountOptionParameter"`
+}
+
+type InstanceCategoryItem struct {
+
+	// 实例类型名
+	InstanceCategory *string `json:"InstanceCategory,omitempty" name:"InstanceCategory"`
+
+	// 实例族列表
+	InstanceFamilySet []*string `json:"InstanceFamilySet,omitempty" name:"InstanceFamilySet" list`
 }
 
 type InstanceMarketOptionsRequest struct {
