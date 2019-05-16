@@ -156,3 +156,11 @@ The following attributes are exported:
 * `system_disk_size` - The system disk type on the instance.
 * `data_disks` - The data disks info. In each data disk, `data_disk_type` is the disk type. `data_disk_size` is the size of the disk.
 * `key_name` - The key pair id of the instance.
+
+## Import
+
+CVM instance can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_instance.foo ins-2qol3a80
+```

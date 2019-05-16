@@ -18,6 +18,9 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 		Read:   resourceTencentCloudSecurityGroupRead,
 		Update: resourceTencentCloudSecurityGroupUpdate,
 		Delete: resourceTencentCloudSecurityGroupDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
