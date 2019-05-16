@@ -37,6 +37,8 @@ Data Sources
   tencentcloud_mysql_zone_config
   tencentcloud_cos_buckets
   tencentcloud_cos_bucket_object
+  tencentcloud_redis_zone_config
+  tencentcloud_redis_instances
 
 CBS Resources
   tencentcloud_cbs_storage
@@ -77,6 +79,10 @@ MySQL Resources
 COS Resources
   tencentcloud_cos_bucket
   tencentcloud_cos_bucket_object
+
+Redis Resources
+  tencentcloud_redis_instance
+  tencentcloud_redis_backup_config
 */
 package tencentcloud
 
@@ -135,6 +141,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_instance":              dataSourceTencentCloudMysqlInstance(),
 			"tencentcloud_cos_bucket_object":           dataSourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_buckets":                 dataSourceTencentCloudCosBuckets(),
+			"tencentcloud_redis_zone_config":           dataSourceTencentRedisZoneConfig(),
+			"tencentcloud_redis_instances":             dataSourceTencentRedisInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -164,6 +172,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_readonly_instance":    resourceTencentCloudMysqlReadonlyInstance(),
 			"tencentcloud_cos_bucket":                 resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":          resourceTencentCloudCosBucketObject(),
+			"tencentcloud_redis_instance":             resourceTencentCloudRedisInstance(),
+			"tencentcloud_redis_backup_config":        resourceTencentCloudRedisBackupConfig(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -144,7 +144,6 @@ needMoreItems:
 			return
 		}
 	}
-	fmt.Println(leftNumber)
 	if leftNumber < 0 {
 		return
 	} else {
