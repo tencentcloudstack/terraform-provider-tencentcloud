@@ -95,7 +95,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      "CVM-Instance",
+				Default:      "Terrafrom-CVM-Instance",
 				ValidateFunc: validateInstanceName,
 			},
 			"instance_type": {
