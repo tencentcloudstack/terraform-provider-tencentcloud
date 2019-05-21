@@ -1,4 +1,12 @@
 ## 1.7.0 (Unreleased)
+
+FEATURES:
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: Add `user_data_raw` argument [GH-4]
+* resource/tencentcloud_instance: Add `hostname`, `project_id`, `delete_with_instance` argument.
+
 ## 1.6.0 (May 15, 2019)
 
 FEATURES:
