@@ -104,12 +104,12 @@ func resourceTencentCloudInstance() *schema.Resource {
 				ForceNew:     true,
 				ValidateFunc: validateInstanceType,
 			},
-			"hostname": &schema.Schema{
+			"hostname": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 			},
-			"project_id": &schema.Schema{
+			"project_id": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				ForceNew: false,
@@ -212,7 +212,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Optional:     true,
 							ValidateFunc: validateDiskSize,
 						},
-						"delete_with_instance": &schema.Schema{
+						"delete_with_instance": {
 							Type:     schema.TypeBool,
 							Optional: true,
 							Default:  true,

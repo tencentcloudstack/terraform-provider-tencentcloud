@@ -330,7 +330,7 @@ func TestAccTencentCloudInstance_projectId(t *testing.T) {
 		CheckDestroy: testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInstanceConfigWithHostname,
+				Config: testAccInstanceConfigWithProjectId,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -579,8 +579,9 @@ resource "tencentcloud_instance" "network" {
   availability_zone = "ap-guangzhou-3"
   image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  internet_charge_type = "BANDWIDTH_POSTPAID_BY_HOUR"
+  internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 1
+  allocate_public_ip = true
   system_disk_type = "CLOUD_SSD"
 }
 `
@@ -608,7 +609,7 @@ resource "tencentcloud_instance" "network" {
   availability_zone = "ap-guangzhou-3"
   image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  internet_charge_type = "BANDWIDTH_POSTPAID_BY_HOUR"
+  internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 1
   allocate_public_ip = false
   system_disk_type = "CLOUD_SSD"
@@ -712,14 +713,14 @@ data "tencentcloud_availability_zones" "my_favorate_zones" {
 	name = "ap-guangzhou-3"
 }
 
-resource "tencentcloud_instance" "foo" {
+resource "tencentcloud_instance" "hostname" {
   instance_name = "terraform_automation_test_kuruk"
   availability_zone     = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
   image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  hostname      = "terraform_automation_test_kuruk"
+  hostname      = "testing"
 
-  system_disk_type = "CLOUD_BASIC"
+  system_disk_type = "CLOUD_SSD"
 }
 `
 
@@ -745,14 +746,14 @@ data "tencentcloud_availability_zones" "my_favorate_zones" {
 	name = "ap-guangzhou-3"
 }
 
-resource "tencentcloud_instance" "foo" {
+resource "tencentcloud_instance" "project_id" {
   instance_name = "terraform_automation_test_kuruk"
   availability_zone     = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
   image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   project_id    = 0
 
-  system_disk_type = "CLOUD_BASIC"
+  system_disk_type = "CLOUD_SSD"
 }
 `
 
