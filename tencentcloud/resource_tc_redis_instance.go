@@ -1,3 +1,27 @@
+/*
+Provides a resource to create a Redis instance and set its attributes.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_redis_instance" "redis_instance_test"{
+	availability_zone="ap-hongkong-3"
+	type="master_slave_redis"
+	password="test12345789"
+	mem_size=8192
+	name="terrform_test"
+	port=6379
+}
+```
+
+Import
+
+Redis instance can be imported, e.g.
+
+```hcl
+$ terraform import tencentcloud_redis_instance.redislab redis-id
+```
+*/
 package tencentcloud
 
 import (
@@ -26,14 +50,16 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"availability_zone": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "The available zone ID of an instance to be created., refer to tencentcloud_redis_zone_config.list",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Instance name.",
 			},
 			"type": {
 				Type:     schema.TypeString,
@@ -50,16 +76,19 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 					errors = append(errors, fmt.Errorf("this redis type %s not support now.", value))
 					return
 				},
+				Description: "Instance type. Available values: master_slave_redis.",
 			},
 			"password": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Sensitive:    true,
 				ValidateFunc: validateMysqlPassword,
+				Description:  "Password for a Redis user，which should be 8 to 16 characters.",
 			},
 			"mem_size": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "The memory volume of an available instance(in MB), refer to tencentcloud_redis_zone_config.list[zone].mem_sizes",
 			},
 			"vpc_id": {
 				Type:         schema.TypeString,
@@ -67,6 +96,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(1, 100),
+				Description:  "ID of the vpc with which the instance is to be associated.",
 			},
 			"subnet_id": {
 				Type:         schema.TypeString,
@@ -74,6 +104,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(1, 100),
+				Description:  "Specifies which subnet the instance should belong to.",
 			},
 			"security_groups": {
 				Type:     schema.TypeSet,
@@ -83,31 +114,37 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Set: func(v interface{}) int {
 					return hashcode.String(v.(string))
 				},
+				Description: "ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either. ",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Specifies which project the instance should belong to.",
 			},
 			"port": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
-				Default:  6379,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     6379,
+				Description: "The port used to access a redis instance. The default value is 6379. And this value can't be changed after creation, or the Redis instance will be recreated.",
 			},
 
 			// Computed values
 			"ip": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "IP address of an instance.",
 			},
 			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Current status of an instance，maybe: init, processing, online, isolate and todelete.",
 			},
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: " The time when the instance was created.",
 			},
 		},
 	}

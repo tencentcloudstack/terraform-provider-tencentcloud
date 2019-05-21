@@ -1,3 +1,18 @@
+/*
+Use this data source to query the detail information of redis instance.
+
+Example Usage
+
+```hcl
+data "tencentcloud_redis_instances" "redislab" {
+    zone                = "ap-hongkong-1"
+    search_key          = "myredis"
+    project_id          = 0
+    limit               = 20
+    result_output_file  = "/tmp/redis_instances"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -15,83 +30,101 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 		Read: dataSourceTencentRedisInstancesRead,
 		Schema: map[string]*schema.Schema{
 			"zone": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "ID of an available zone.",
 			},
 			"search_key": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Key words used to match the results, and the key words can be: instance ID, instance name and IP address.",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeInt,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "ID of the project to which  redis instance belongs.",
 			},
 			"limit": {
-				Type:     schema.TypeInt,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeInt,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "The number limitation of results for a query.",
 			},
 			"result_output_file": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 
 			// Computed values
 			"instance_list": {Type: schema.TypeList,
-				Computed: true,
+				Computed:    true,
+				Description: "A list of redis instance. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"redis_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of a redis instance.",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of a redis instance.",
 						},
 						"zone": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Available zone to which a redis instance belongs.",
 						},
 						"project_id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "ID of the project to which a redis instance belongs.",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance type. Available values: master_slave_redis, master_slave_ckv, cluster_ckv, cluster_redis and standalone_redis.",
 						},
 						"mem_size": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Memory size in MB",
 						},
 						"status": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Current status of an instance，maybe: init, processing, online, isolate and todelete.",
 						},
 						"vpc_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the vpc with which the instance is associated.",
 						},
 						"subnet_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the vpc subnet.",
 						},
 						"ip": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IP address of an instance.",
 						},
 						"port": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The port used to access a redis instance.",
 						},
 						"create_time": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The time when the instance is created.",
 						},
 					},
 				},
