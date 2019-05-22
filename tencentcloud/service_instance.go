@@ -121,6 +121,21 @@ func operateInstance(client *client.Client, instanceId string, action string) er
 	return runBasicActionWithRetry(client, params)
 }
 
+func modifyInstancesProject(client *client.Client, instanceIds []string, newId int) error {
+	params := map[string]string{
+		"Version":   "2017-03-12",
+		"Action":    "ModifyInstancesProject",
+		"ProjectId": fmt.Sprintf("%v", newId),
+	}
+	for i, instanceId := range instanceIds {
+		paramKey := fmt.Sprintf("InstanceIds.%v", i)
+		paramValue := instanceId
+		params[paramKey] = paramValue
+	}
+
+	return runBasicActionWithRetry(client, params)
+}
+
 func renameInstancesName(client *client.Client, instanceIds []string, newName string) error {
 	_, errs := validateInstanceName(interface{}(newName), "")
 	if len(errs) > 0 {

@@ -98,7 +98,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      "CVM-Instance",
+				Default:      "Terrafrom-CVM-Instance",
 				ValidateFunc: validateInstanceName,
 			},
 			"instance_type": {
@@ -106,6 +106,16 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateInstanceType,
+			},
+			"hostname": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+			},
+			"project_id": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				ForceNew: false,
 			},
 			// payment
 			"instance_charge_type": {
@@ -205,6 +215,11 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Optional:     true,
 							ValidateFunc: validateDiskSize,
 						},
+						"delete_with_instance": {
+							Type:     schema.TypeBool,
+							Optional: true,
+							Default:  true,
+						},
 					},
 				},
 			},
@@ -276,6 +291,15 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 			params["InstanceName"] = insName
 		}
 	}
+	if hostName, ok := d.GetOk("hostname"); ok {
+		hName := hostName.(string)
+		if len(hName) > 0 {
+			params["HostName"] = hName
+		}
+	}
+	if projectId, ok := d.GetOk("project_id"); ok {
+		params["Placement.ProjectId"] = fmt.Sprintf("%v", projectId.(int))
+	}
 
 	if instanceChargeType, ok := d.GetOk("instance_charge_type"); ok {
 		insChargeType := instanceChargeType.(string)
@@ -306,8 +330,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		maxBandwidthOut := internetMaxBandwidthOut.(int)
 		params["InternetAccessible.InternetMaxBandwidthOut"] = fmt.Sprintf("%v", maxBandwidthOut)
 	}
-	if allocatePublicIP, ok := d.GetOkExists("allocate_public_ip"); ok {
-		if allocatePublicIP.(bool) {
+	// assign public IP
+	if allocatePublicIP, ok := d.Get("allocate_public_ip").(bool); ok {
+		if allocatePublicIP {
 			params["InternetAccessible.PublicIpAssigned"] = "TRUE"
 		} else {
 			params["InternetAccessible.PublicIpAssigned"] = "FALSE"
@@ -350,6 +375,15 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 				paramValue := fmt.Sprintf("%v", v)
 				params[paramKey] = paramValue
 			}
+			if v, ok := dd["delete_with_instance"].(bool); ok {
+				paramKey := fmt.Sprintf("DataDisks.%v.DeleteWithInstance", i)
+				if v {
+					params[paramKey] = "TRUE"
+				} else {
+					params[paramKey] = "FALSE"
+				}
+			}
+
 			dataDisksAttr = append(dataDisksAttr, dd)
 		}
 	}
@@ -640,6 +674,16 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, m interface{}) (
 		if err != nil {
 			return err
 		}
+	}
+
+	if d.HasChange("project_id") {
+		oldProjectId, newProjectId := d.GetChange("project_id")
+		log.Printf("[DEBUG] tencentcloud_instance modify project_id from %v to %v", oldProjectId, newProjectId)
+		err = modifyInstancesProject(client, []string{instanceId}, newProjectId.(int))
+		if err != nil {
+			return err
+		}
+		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("key_name") {
