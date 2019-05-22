@@ -301,6 +301,8 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
+	d.Partial(true)
+
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	//name\mem_size\password\project_id

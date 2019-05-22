@@ -147,6 +147,7 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 
 	if err := d.Set("list", allZonesConfigs); err != nil {
 		log.Printf("[CRITAL]%s provider set  redis zoneConfigs fail, reason:%s\n ", logId, err.Error())
+		return err
 	}
 	d.SetId("redis_zoneconfig" + region)
 
@@ -155,6 +156,7 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 		if err := writeToFile(output.(string), allZonesConfigs); err != nil {
 			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
 				logId, output.(string), err.Error())
+			return err
 		}
 
 	}
