@@ -1,10 +1,15 @@
 ## 1.7.0 (Unreleased)
 
 FEATURES:
+* **New Data Source**: `tencentcloud_redis_zone_config`
+* **New Data Source**: `tencentcloud_redis_instances`
+* **New Resource**: `tencentcloud_redis_instance`
+* **New Resource**: `tencentcloud_redis_backup_config`
 
 ENHANCEMENTS:
 
 * resource/tencentcloud_instance: Add `hostname`, `project_id`, `delete_with_instance` argument.
+* Update tencentcloud-sdk-go to better support redis api.
 
 ## 1.6.0 (May 15, 2019)
 

@@ -82,6 +82,9 @@ func resourceTencentCloudInstance() *schema.Resource {
 		Read:   resourceTencentCloudInstanceRead,
 		Update: resourceTencentCloudInstanceUpdate,
 		Delete: resourceTencentCloudInstanceDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"image_id": {
@@ -491,6 +494,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	if err != nil {
 		return err
 	}
+
 	var jsonresp struct {
 		Response struct {
 			Error struct {
@@ -513,6 +517,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 				RestrictState      string `json:"RestrictState"`
 				InstanceName       string `json:"InstanceName"`
 				InstanceChargeType string `json:"InstanceChargeType"`
+				InstanceState      string `json:"InstanceState"`
 
 				SystemDisk struct {
 					DiskType string `json:"DiskType"`
@@ -588,6 +593,20 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	systemDiskSize := jsonresp.Response.InstanceSet[0].SystemDisk.DiskSize
 	d.Set("system_disk_size", systemDiskSize)
 
+	ImageId := jsonresp.Response.InstanceSet[0].ImageId
+	d.Set("image_id", ImageId)
+	InstanceName := jsonresp.Response.InstanceSet[0].InstanceName
+	d.Set("instance_name", InstanceName)
+	InstanceType := jsonresp.Response.InstanceSet[0].InstanceType
+	d.Set("instance_type", InstanceType)
+	InstanceState := jsonresp.Response.InstanceSet[0].InstanceState
+	d.Set("instance_status", InstanceState)
+	Zone := jsonresp.Response.InstanceSet[0].Placement.Zone
+	d.Set("availability_zone", Zone)
+	InternetMaxBandwidthOut := jsonresp.Response.InstanceSet[0].InternetAccessible.InternetMaxBandwidthOut
+	d.Set("internet_max_bandwidth_out", InternetMaxBandwidthOut)
+	d.Set("allocate_public_ip", len(publicIPs) > 0)
+
 	var dataDiskList []map[string]interface{}
 	dataDisks := jsonresp.Response.InstanceSet[0].DataDisks
 	for _, dataDisk := range dataDisks {
@@ -598,7 +617,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 		m["data_disk_size"] = diskSize
 		dataDiskList = append(dataDiskList, m)
 	}
-	//d.Set("data_disks", dataDiskList)
+	d.Set("data_disks", dataDiskList)
 
 	securityGroupIds := jsonresp.Response.InstanceSet[0].SecurityGroupIds
 	if len(securityGroupIds) > 0 {

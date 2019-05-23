@@ -24,6 +24,11 @@ func TestAccTencentCloudSecurityGroup_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "name", "ci-temp-test-sg"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_security_group.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

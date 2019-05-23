@@ -30,6 +30,12 @@ func TestAccTencentCloudInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_size", "100"),
 				),
 			},
+			{
+				ResourceName:            "tencentcloud_instance.foo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service"},
+			},
 		},
 	})
 }

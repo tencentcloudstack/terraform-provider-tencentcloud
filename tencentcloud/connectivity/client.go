@@ -11,6 +11,7 @@ import (
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 )
 
 //client for all TencentCloud service
@@ -20,6 +21,7 @@ type TencentCloudClient struct {
 	SecretKey string
 	mysqlConn *cdb.Client
 	cosConn   *s3.S3
+	redisConn *redis.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -84,4 +86,24 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 		EndpointResolver: endpoints.ResolverFunc(resolver),
 	}))
 	return s3.New(sess)
+}
+
+// get redis client for service
+func (me *TencentCloudClient) UseRedisClient() *redis.Client {
+	if me.redisConn != nil {
+		return me.redisConn
+	}
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+
+	redisConn, _ := redis.NewClient(credential, me.Region, cpf)
+	me.redisConn = redisConn
+
+	return me.redisConn
 }

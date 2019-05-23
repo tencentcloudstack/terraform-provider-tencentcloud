@@ -25,6 +25,11 @@ func TestAccTencentCloudVpc_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", "ci-temp-test"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_vpc.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

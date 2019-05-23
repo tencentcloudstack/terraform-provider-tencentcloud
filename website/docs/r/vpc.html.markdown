@@ -37,3 +37,11 @@ The following attributes are exported:
 * `cidr_block` - The CIDR block of the VPC.
 * `is_default` - Whether or not the default VPC.
 * `is_multicast` - Whether or not the VPC has Multicast support.
+
+## Import
+
+VPC can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_vpc.foo vpc-83pk9lt9
+```

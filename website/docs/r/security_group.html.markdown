@@ -36,3 +36,11 @@ The following attributes are exported:
 * `id` - The ID of the security group.
 * `name` - The name of the security group.
 * `description` - The description of the security group.
+
+## Import
+
+Security group can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_security_group.foo sg-ey3wmiz1
+```

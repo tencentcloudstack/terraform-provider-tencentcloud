@@ -16,6 +16,9 @@ func resourceTencentCloudVpc() *schema.Resource {
 		Read:   resourceTencentCloudVpcRead,
 		Update: resourceTencentCloudVpcUpdate,
 		Delete: resourceTencentCloudVpcDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
