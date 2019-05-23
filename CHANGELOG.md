@@ -1,4 +1,4 @@
-## 1.7.0 (Unreleased)
+## 1.7.0 (May 23, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_redis_zone_config`
