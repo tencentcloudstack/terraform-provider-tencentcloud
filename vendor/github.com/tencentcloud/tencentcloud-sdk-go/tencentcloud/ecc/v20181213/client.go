@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package v20190318
+package v20181213
 
 import (
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -20,7 +20,7 @@ import (
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 )
 
-const APIVersion = "2019-03-18"
+const APIVersion = "2018-12-13"
 
 type Client struct {
     common.Client
@@ -43,27 +43,54 @@ func NewClient(credential *common.Credential, region string, clientProfile *prof
 }
 
 
-func NewDescribeSdkAppidRequest() (request *DescribeSdkAppidRequest) {
-    request = &DescribeSdkAppidRequest{
+func NewECCRequest() (request *ECCRequest) {
+    request = &ECCRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("cim", APIVersion, "DescribeSdkAppid")
+    request.Init().WithApiInfo("ecc", APIVersion, "ECC")
     return
 }
 
-func NewDescribeSdkAppidResponse() (response *DescribeSdkAppidResponse) {
-    response = &DescribeSdkAppidResponse{
+func NewECCResponse() (response *ECCResponse) {
+    response = &ECCResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// 获取云通信IM中腾讯云账号对应的SDKAppID
-func (c *Client) DescribeSdkAppid(request *DescribeSdkAppidRequest) (response *DescribeSdkAppidResponse, err error) {
+// 接口请求域名： ecc.tencentcloudapi.com 
+// 纯文本英语作文批改
+func (c *Client) ECC(request *ECCRequest) (response *ECCResponse, err error) {
     if request == nil {
-        request = NewDescribeSdkAppidRequest()
+        request = NewECCRequest()
     }
-    response = NewDescribeSdkAppidResponse()
+    response = NewECCResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewEHOCRRequest() (request *EHOCRRequest) {
+    request = &EHOCRRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("ecc", APIVersion, "EHOCR")
+    return
+}
+
+func NewEHOCRResponse() (response *EHOCRResponse) {
+    response = &EHOCRResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// https://ecc.tencentcloudapi.com/?Action=EHOCR
+// 作文识别
+func (c *Client) EHOCR(request *EHOCRRequest) (response *EHOCRResponse, err error) {
+    if request == nil {
+        request = NewEHOCRRequest()
+    }
+    response = NewEHOCRResponse()
     err = c.Send(request, response)
     return
 }
