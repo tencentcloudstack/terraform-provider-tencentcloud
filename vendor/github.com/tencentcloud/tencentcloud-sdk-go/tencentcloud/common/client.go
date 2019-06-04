@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -185,10 +184,7 @@ func (c *Client) GetRegion() string {
 }
 
 func (c *Client) Init(region string) *Client {
-	proxyAddress, _ := url.Parse("http://proxy.tencent.com:8080")
-	proxy := http.ProxyURL(proxyAddress)
-
-	c.httpClient = &http.Client{Transport: &http.Transport{Proxy: proxy}}
+	c.httpClient = &http.Client{}
 	c.region = region
 	c.signMethod = "HmacSHA256"
 	c.debug = false

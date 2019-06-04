@@ -235,7 +235,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 
 	if len(securityGroups) > 0 {
 		request.SecurityGroupIdList = make([]*string, 0, len(securityGroups))
-		for v, _ := range securityGroups {
+		for v := range securityGroups {
 			request.SecurityGroupIdList = append(request.SecurityGroupIdList, &securityGroups[v])
 		}
 	}
@@ -594,7 +594,7 @@ func (me *RedisService) ModifyAutoBackupConfig(ctx context.Context, redisId stri
 	request := redis.NewModifyAutoBackupConfigRequest()
 	request.InstanceId = &redisId
 	request.WeekDays = make([]*string, 0, len(weekDays))
-	for index, _ := range weekDays {
+	for index := range weekDays {
 		request.WeekDays = append(request.WeekDays, &weekDays[index])
 	}
 	request.TimePeriod = &timePeriod

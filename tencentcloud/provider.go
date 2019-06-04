@@ -143,6 +143,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cos_buckets":                 dataSourceTencentCloudCosBuckets(),
 			"tencentcloud_redis_zone_config":           dataSourceTencentRedisZoneConfig(),
 			"tencentcloud_redis_instances":             dataSourceTencentRedisInstances(),
+			"tencentcloud_as_scaling_configs":          dataSourceTencentCloudAsScalingConfigs(),
+			"tencentcloud_as_scaling_groups":           dataSourceTencentCloudAsScalingGroups(),
+			"tencentcloud_as_scaling_policies":         dataSourceTencentCloudAsScalingPolicies(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -174,6 +177,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_cos_bucket_object":          resourceTencentCloudCosBucketObject(),
 			"tencentcloud_redis_instance":             resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":        resourceTencentCloudRedisBackupConfig(),
+			"tencentcloud_as_scaling_config":          resourceTencentCloudAsScalingConfig(),
+			"tencentcloud_as_scaling_group":           resourceTencentCloudAsScalingGroup(),
+			"tencentcloud_as_attachment":              resourceTencentCloudAsAttachment(),
+			"tencentcloud_as_scaling_policy":          resourceTencentCloudAsScalingPolicy(),
+			"tencentcloud_as_schedule":                resourceTencentCloudAsSchedule(),
+			"tencentcloud_as_lifecycle_hook":          resourceTencentCloudAsLifecycleHook(),
+			"tencentcloud_as_notification":            resourceTencentCloudAsNotification(),
 		},
 
 		ConfigureFunc: providerConfigure,

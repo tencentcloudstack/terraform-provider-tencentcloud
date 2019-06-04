@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -22,6 +23,7 @@ type TencentCloudClient struct {
 	mysqlConn *cdb.Client
 	cosConn   *s3.S3
 	redisConn *redis.Client
+	asConn    *as.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -106,4 +108,23 @@ func (me *TencentCloudClient) UseRedisClient() *redis.Client {
 	me.redisConn = redisConn
 
 	return me.redisConn
+}
+
+func (me *TencentCloudClient) UseAsClient() *as.Client {
+	if me.asConn != nil {
+		return me.asConn
+	}
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+
+	asConn, _ := as.NewClient(credential, me.Region, cpf)
+	me.asConn = asConn
+
+	return me.asConn
 }
