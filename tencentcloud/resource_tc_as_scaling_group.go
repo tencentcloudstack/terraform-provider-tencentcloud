@@ -1,3 +1,32 @@
+/*
+Provides a resource to create a group of AS (Auto scaling) instances.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_as_scaling_group" "scaling_group" {
+	scaling_group_name = "tf-as-scaling-group"
+	configuration_id = "asc-oqio4yyj"
+	max_size = 1
+	min_size = 0
+	vpc_id = "vpc-3efmz0z"
+	subnet_ids = ["subnet-mc3egos"]
+	project_id = 0
+	default_cooldown = 400
+	desired_capacity = 1
+	termination_policies = ["NEWEST_INSTANCE"]
+	retry_policy = "INCREMENTAL_INTERVALS"
+}
+```
+
+Import
+
+AutoScaling Groups can be imported using the id, e.g.
+
+```hcl
+$ terraform import tencentcloud_as_scaling_group.scaling_group asg-n32ymck2
+```
+*/
 package tencentcloud
 
 import (
@@ -27,86 +56,104 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 55),
+				Description:  "Name of a scaling group.",
 			},
 			"configuration_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "An available ID for a launch configuration.",
 			},
 			"max_size": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerInRange(0, 2000),
+				Description:  "Maximum number of CVM instances (0~2000).",
 			},
 			"min_size": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerInRange(0, 2000),
+				Description:  "Minimum number of CVM instances (0~2000).",
 			},
 			"vpc_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "ID of VPC network.",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Specifys to which project the scaling group belongs.",
 			},
 			"subnet_ids": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "ID list of subnet, and for VPC it is required.",
 			},
 			"zones": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "List of available zones, for Basic network it is required.",
 			},
 			"default_cooldown": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  300,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     300,
+				Description: "Default cooldown time in second, and default value is 300.",
 			},
 			"desired_capacity": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Desired volume of CVM instances, which is between max_size and min_size.",
 			},
 			"load_balancer_ids": {
 				Type:          schema.TypeList,
 				Optional:      true,
 				Elem:          &schema.Schema{Type: schema.TypeString},
 				ConflictsWith: []string{"forward_balancer_ids"},
+				Description:   "ID list of traditional load balancers.",
 			},
 			"forward_balancer_ids": {
 				Type:          schema.TypeList,
 				Optional:      true,
 				ConflictsWith: []string{"load_balancer_ids"},
+				Description:   "List of application load balancers, which can't be specified with load_balancer_ids together.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"load_balancer_id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "ID of available load balancers.",
 						},
 						"listener_id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Listener ID for application load balancers.",
 						},
 						"location_id": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "ID of forwarding rules.",
 						},
 						"target_attribute": {
-							Type:     schema.TypeList,
-							Required: true,
+							Type:        schema.TypeList,
+							Required:    true,
+							Description: "Attribute list of target rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"port": {
-										Type:     schema.TypeInt,
-										Required: true,
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Port number.",
 									},
 									"weight": {
-										Type:     schema.TypeInt,
-										Required: true,
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Weight.",
 									},
 								},
 							},
@@ -115,10 +162,11 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				},
 			},
 			"termination_policies": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Computed: true,
-				MaxItems: 1,
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Available values for termination policies include OLDEST_INSTANCE and NEWEST_INSTANCE.",
 				Elem: &schema.Schema{
 					Type:    schema.TypeString,
 					Default: SCALING_GROUP_TERMINATION_POLICY_OLDEST_INSTANCE,
@@ -127,21 +175,24 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				},
 			},
 			"retry_policy": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Available values for retry policies include IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.",
+				Default:     SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 				ValidateFunc: validateAllowedStringValue([]string{SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 					SCALING_GROUP_RETRY_POLICY_INCREMENTAL_INTERVALS}),
 			},
 
 			// computed value
 			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Current status of a scaling group.",
 			},
 			"instance_count": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The time when the AS group was created.",
 			},
 			"create_time": {
 				Type:     schema.TypeString,

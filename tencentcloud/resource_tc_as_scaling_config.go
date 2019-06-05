@@ -1,3 +1,41 @@
+/*
+Provides a resource to create a configuration for an AS (Auto scaling) instance.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_as_scaling_config" "launch_configuration" {
+	configuration_name = "launch-configuration"
+	image_id = "img-9qabwvbn"
+	instance_types = ["SA1.SMALL1"]
+	project_id = 0
+	system_disk_type = "CLOUD_PREMIUM"
+	system_disk_size = "50"
+	data_disk = {
+		disk_type = "CLOUD_PREMIUM"
+		disk_size = 50
+	}
+	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
+	internet_max_bandwidth_out = 10
+	public_ip_assigned = true
+	password = "test123#"
+	enhanced_security_service = false
+	enhanced_monitor_service = false
+	user_data = "dGVzdA=="
+	instance_tags = {
+		tag = "as"
+	}
+}
+```
+
+Import
+
+AutoScaling Configuration can be imported using the id, e.g.
+
+```hcl
+$ terraform import tencentcloud_as_scaling_config.scaling_config asc-n32ymck2
+```
+*/
 package tencentcloud
 
 import (
@@ -24,41 +62,46 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
+				Description:  "Name of a launch configuration.",
 			},
 			"image_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "An available image ID for a cvm instance.",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Specifys to which project the configuration belongs.",
 			},
 			"instance_types": {
-				Type:     schema.TypeList,
-				Required: true,
-				MinItems: 1,
-				MaxItems: 5,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
+				Type:        schema.TypeList,
+				Required:    true,
+				MinItems:    1,
+				MaxItems:    5,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Specified types of CVM instances.",
 			},
 			"system_disk_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 				ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
+				Description:  "Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM",
 			},
 			"system_disk_size": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      50,
 				ValidateFunc: validateIntegerInRange(50, 500),
+				Description:  "Volume of system disk in GB. Default is 50.",
 			},
 			"data_disk": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 11,
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    11,
+				Description: "Configurations of data disk.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"disk_type": {
@@ -66,15 +109,18 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 							Optional:     true,
 							Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 							ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
+							Description:  "Types of disk，available values: CLOUD_PREMIUM and CLOUD_SSD.",
 						},
 						"disk_size": {
-							Type:     schema.TypeInt,
-							Optional: true,
-							Default:  0,
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Default:     0,
+							Description: "Volume of disk in GB. Default is 0.",
 						},
 						"snapshot_id": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Data disk snapshot ID.",
 						},
 					},
 				},
@@ -84,16 +130,19 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Optional:     true,
 				Default:      INTERNET_CHARGE_TYPE_TRAFFIC_POSTPAID_BY_HOUR,
 				ValidateFunc: validateAllowedStringValue(INTERNET_CHARGE_ALLOW_TYPE),
+				Description:  "Charge types for network traffic. Available values include TRAFFIC_POSTPAID_BY_HOUR.",
 			},
 			"internet_max_bandwidth_out": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      0,
 				ValidateFunc: validateIntegerInRange(0, 100),
+				Description:  "Max bandwith of Internet access in Mbps. Default is 0.",
 			},
 			"public_ip_assigned": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Specify whether to assign an Internet IP address.",
 			},
 			"password": {
 				Type:          schema.TypeString,
@@ -101,50 +150,60 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Sensitive:     true,
 				ValidateFunc:  validateAsConfigPassword,
 				ConflictsWith: []string{"keep_image_login"},
+				Description:   "Password to access.",
 			},
 			"key_ids": {
 				Type:          schema.TypeList,
 				Optional:      true,
 				Elem:          &schema.Schema{Type: schema.TypeString},
 				ConflictsWith: []string{"keep_image_login"},
+				Description:   "ID list of keys.",
 			},
 			"keep_image_login": {
 				Type:          schema.TypeBool,
 				Optional:      true,
 				ConflictsWith: []string{"password", "key_ids"},
+				Description:   "Specify whether to keep original settings of a CVM image. And it can't be used with password or key_ids together.",
 			},
 			"security_group_ids": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Security groups to which a CVM instance belongs.",
 			},
 			"enhanced_security_service": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "To specify whether to enable cloud security service. Default is TRUE.",
 			},
 			"enhanced_monitor_service": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "To specify whether to enable cloud monitor service. Default is TRUE.",
 			},
 			"user_data": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ase64-encoded User Data text, the length limit is 16KB.",
 			},
 			"instance_tags": {
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "A list of tags used to associate different resources.",
 			},
 
 			// Computed values
 			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Current statues of a launch configuration.",
 			},
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The time when the launch configuration was created.",
 			},
 		},
 	}

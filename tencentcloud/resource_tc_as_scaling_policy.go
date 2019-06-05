@@ -1,3 +1,24 @@
+/*
+Provides a resource for an AS (Auto scaling) policy.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_as_scaling_policy" "scaling_policy" {
+	scaling_group_id = "asg-n32ymck2"
+	policy_name = "tf-as-scaling-policy"
+	adjustment_type = "EXACT_CAPACITY"
+	adjustment_value = 0
+	comparison_operator = "GREATER_THAN"
+	metric_name = "CPU_UTILIZATION"
+	threshold = 80
+	period = 300
+	continuous_time = 10
+	statistic = "AVERAGE"
+	cooldown = 360
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -18,62 +39,74 @@ func resourceTencentCloudAsScalingPolicy() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"scaling_group_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of a scaling group.",
 			},
 			"policy_name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Name of a policy used to define a reaction when an alarm is triggered.",
 			},
 			"adjustment_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(SCALING_GROUP_ADJUSTMENT_TYPE),
+				Description:  "Specifies whether the adjustment is an absolute number or a percentage of the current capacity. Available values include CHANGE_IN_CAPACITY, EXACT_CAPACITY and PERCENT_CHANGE_IN_CAPACITY.",
 			},
 			"adjustment_value": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "Define the number of instances by which to scale.For CHANGE_IN_CAPACITY type or PERCENT_CHANGE_IN_CAPACITY, a positive increment adds to the current capacity and a negative value removes from the current capacity. For EXACT_CAPACITY type, it defines an absolute number of the existing Auto Scaling group size.",
 			},
 			"comparison_operator": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(SCALING_GROUP_COMPARISON_OPERATOR),
+				Description:  "Comparison operator, of which valid values can be GREATER_THAN, GREATER_THAN_OR_EQUAL_TO, LESS_THAN, LESS_THAN_OR_EQUAL_TO, EQUAL_TO and NOT_EQUAL_TO.",
 			},
 			"metric_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(SCALING_GROUP_METRIC_NAME),
+				Description:  "Name of an indicator, which can be CPU_UTILIZATION, MEM_UTILIZATION, LAN_TRAFFIC_OUT, LAN_TRAFFIC_IN, WAN_TRAFFIC_OUT and WAN_TRAFFIC_IN.",
 			},
 			"threshold": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "Alarm threshold.",
 			},
 			"period": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateAllowedIntValue([]int{60, 300}),
+				Description:  "Time period in second, of which valid values can be 60 and 300.",
 			},
 			"continuous_time": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerInRange(1, 10),
+				Description:  "Retry times (1~10).",
 			},
 			"statistic": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      SCALING_GROUP_STATISTIC_AVERAGE,
 				ValidateFunc: validateAllowedStringValue(SCALING_GROUP_STATISTIC),
+				Description:  "Statistic types, include AVERAGE, MAXIMUM and MINIMUM. Default is AVERAGE.",
 			},
 			"cooldown": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  300,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     300,
+				Description: "Cooldwon time in second. Default is 300.",
 			},
 			"notification_user_group_ids": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "An ID group of users to be notified when an alarm is triggered.",
 			},
 		},
 	}

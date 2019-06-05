@@ -1,3 +1,15 @@
+/*
+Provides a resource to attach or detach CVM instances to a specified scaling group.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_as_attachment" "attachment" {
+  scaling_group_id           = "sg-afasfa"
+  instance_id                = ["ins-01", "ins-02"]
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -15,15 +27,17 @@ func resourceTencentCloudAsAttachment() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"scaling_group_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of a scaling group.",
 			},
 			"instance_ids": {
-				Type:     schema.TypeSet,
-				Required: true,
-				MinItems: 1,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeSet,
+				Required:    true,
+				MinItems:    1,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "ID list of CVM instances to be attached to the scaling group.",
 			},
 		},
 	}

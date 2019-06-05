@@ -1,3 +1,16 @@
+/*
+Provides a resource for an AS (Auto scaling) notification.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_autoscaling_notification" "aslab" {
+  scaling_group_id              = "sg-12af45"
+  notification_type             = ["SCALE_OUT_FAILED", "SCALE_IN_SUCCESSFUL", "SCALE_IN_FAILED", "REPLACE_UNHEALTHY_INSTANCE_FAILED"]
+  notification_user_group_ids   = ["ASGID"]
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -18,24 +31,27 @@ func resourceTencentCloudAsNotification() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"scaling_group_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of a scaling group.",
 			},
 			"notification_type": {
-				Type:     schema.TypeList,
-				Required: true,
-				MinItems: 1,
+				Type:        schema.TypeList,
+				Required:    true,
+				MinItems:    1,
+				Description: "A list of Notification Types that trigger notifications. Acceptable values are SCALE_OUT_FAILED, SCALE_IN_SUCCESSFUL, SCALE_IN_FAILED, REPLACE_UNHEALTHY_INSTANCE_SUCCESSFUL and REPLACE_UNHEALTHY_INSTANCE_FAILED.",
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
 					ValidateFunc: validateAllowedStringValue(SCALING_GROUP_NOTIFICATION_TYPE),
 				},
 			},
 			"notification_user_group_ids": {
-				Type:     schema.TypeList,
-				Required: true,
-				MinItems: 1,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeList,
+				Required:    true,
+				MinItems:    1,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "A group of user IDs to be notified.",
 			},
 		},
 	}

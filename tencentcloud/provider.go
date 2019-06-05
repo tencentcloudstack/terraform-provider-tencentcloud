@@ -39,6 +39,9 @@ Data Sources
   tencentcloud_cos_bucket_object
   tencentcloud_redis_zone_config
   tencentcloud_redis_instances
+  tencentcloud_as_scaling_configs
+  tencentcloud_as_scaling_groups
+  tencentcloud_as_scaling_policies
 
 CBS Resources
   tencentcloud_cbs_storage
@@ -83,6 +86,15 @@ COS Resources
 Redis Resources
   tencentcloud_redis_instance
   tencentcloud_redis_backup_config
+
+AS Resources
+  tencentcloud_as_scaling_config
+  tencentcloud_as_scaling_group
+  tencentcloud_as_attachment
+  tencentcloud_as_scaling_policy
+  tencentcloud_as_schedule
+  tencentcloud_as_lifecycle_hook
+  tencentcloud_as_notification
 */
 package tencentcloud
 
