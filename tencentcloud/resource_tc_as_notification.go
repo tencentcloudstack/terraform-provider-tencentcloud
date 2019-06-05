@@ -4,10 +4,10 @@ Provides a resource for an AS (Auto scaling) notification.
 Example Usage
 
 ```hcl
-resource "tencentcloud_autoscaling_notification" "aslab" {
+resource "tencentcloud_as_notification" "as_notification" {
   scaling_group_id              = "sg-12af45"
   notification_type             = ["SCALE_OUT_FAILED", "SCALE_IN_SUCCESSFUL", "SCALE_IN_FAILED", "REPLACE_UNHEALTHY_INSTANCE_FAILED"]
-  notification_user_group_ids   = ["ASGID"]
+  notification_user_group_ids   = ["76955"]
 }
 ```
 */
@@ -36,7 +36,7 @@ func resourceTencentCloudAsNotification() *schema.Resource {
 				ForceNew:    true,
 				Description: "ID of a scaling group.",
 			},
-			"notification_type": {
+			"notification_types": {
 				Type:        schema.TypeList,
 				Required:    true,
 				MinItems:    1,
