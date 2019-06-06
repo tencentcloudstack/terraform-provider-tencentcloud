@@ -510,7 +510,7 @@ func (r *DeletePersonResponse) FromJsonString(s string) error {
 type DetectFaceRequest struct {
 	*tchttp.BaseRequest
 
-	// 最多处理的人脸数目。默认值为1（仅检测图片中面积最大的那张人脸），最大值为30。 
+	// 最多处理的人脸数目。默认值为1（仅检测图片中面积最大的那张人脸），最大值为120。 
 	// 此参数用于控制处理待检测图片中的人脸个数，值越小，处理速度越快。
 	MaxFaceNum *uint64 `json:"MaxFaceNum,omitempty" name:"MaxFaceNum"`
 
@@ -533,7 +533,8 @@ type DetectFaceRequest struct {
 	NeedFaceAttributes *uint64 `json:"NeedFaceAttributes,omitempty" name:"NeedFaceAttributes"`
 
 	// 是否开启质量检测。0 为关闭，1 为开启。默认为 0。 
-	// 非 1 值均视为不进行质量检测。  
+	// 非 1 值均视为不进行质量检测。
+	// 最多返回面积最大的 5 张人脸质量分信息，超过 5 张人脸（第 6 张及以后的人脸）的 FaceQualityInfo不具备参考意义。  
 	// 建议：人脸入库操作建议开启此功能。
 	NeedQualityDetection *uint64 `json:"NeedQualityDetection,omitempty" name:"NeedQualityDetection"`
 }
@@ -621,13 +622,13 @@ func (r *DetectLiveFaceResponse) FromJsonString(s string) error {
 
 type FaceAttributesInfo struct {
 
-	// 性别 [0(female)~100(male)]。 NeedFaceAttributes 不为 1 或检测超过 5 张人脸时，此参数仍返回，但不具备参考意义。
+	// 性别 [0(female，女性)~100(male，男性)]。 NeedFaceAttributes 不为 1 或检测超过 5 张人脸时，此参数仍返回，但不具备参考意义。
 	Gender *int64 `json:"Gender,omitempty" name:"Gender"`
 
 	// 年龄 [0~100]。NeedFaceAttributes 不为1 或检测超过 5 张人脸时，此参数仍返回，但不具备参考意义。
 	Age *int64 `json:"Age,omitempty" name:"Age"`
 
-	// 微笑[0(normal)~50(smile)~100(laugh)]。NeedFaceAttributes 不为1 或检测超过 5 张人脸时，此参数仍返回，但不具备参考意义。
+	// 微笑[0(normal，正常)~50(smile，微笑)~100(laugh，大笑)]。NeedFaceAttributes 不为1 或检测超过 5 张人脸时，此参数仍返回，但不具备参考意义。
 	Expression *int64 `json:"Expression,omitempty" name:"Expression"`
 
 	// 是否有眼镜 [true,false]。NeedFaceAttributes 不为1 或检测超过 5 张人脸时，此参数仍返回，但不具备参考意义。
@@ -767,7 +768,7 @@ type FaceQualityInfo struct {
 
 type FaceRect struct {
 
-	// 人脸框左上角纵坐标。 
+	// 人脸框左上角横坐标。 
 	// 人脸框包含人脸五官位置并在此基础上进行一定的扩展，若人脸框超出图片范围，会导致坐标负值。 
 	// 若需截取完整人脸，可以在完整分completess满足需求的情况下，将负值坐标取0。
 	X *int64 `json:"X,omitempty" name:"X"`
@@ -789,16 +790,16 @@ type FaceShape struct {
 	// 描述脸型轮廓的 21 点。
 	FaceProfile []*Point `json:"FaceProfile,omitempty" name:"FaceProfile" list`
 
-	// 描述左测眼睛轮廓的 8 点。
+	// 描述左侧眼睛轮廓的 8 点。
 	LeftEye []*Point `json:"LeftEye,omitempty" name:"LeftEye" list`
 
-	// 描述右测眼睛轮廓的 8 点。
+	// 描述右侧眼睛轮廓的 8 点。
 	RightEye []*Point `json:"RightEye,omitempty" name:"RightEye" list`
 
-	// 描述左测眉毛轮廓的 8 点。
+	// 描述左侧眉毛轮廓的 8 点。
 	LeftEyeBrow []*Point `json:"LeftEyeBrow,omitempty" name:"LeftEyeBrow" list`
 
-	// 描述右测眉毛轮廓的 8 点。
+	// 描述右侧眉毛轮廓的 8 点。
 	RightEyeBrow []*Point `json:"RightEyeBrow,omitempty" name:"RightEyeBrow" list`
 
 	// 描述嘴巴轮廓的 22 点。
