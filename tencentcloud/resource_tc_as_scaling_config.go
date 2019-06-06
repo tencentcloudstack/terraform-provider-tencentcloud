@@ -137,7 +137,7 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Optional:     true,
 				Default:      0,
 				ValidateFunc: validateIntegerInRange(0, 100),
-				Description:  "Max bandwith of Internet access in Mbps. Default is 0.",
+				Description:  "Max bandwidth of Internet access in Mbps. Default is 0.",
 			},
 			"public_ip_assigned": {
 				Type:        schema.TypeBool,

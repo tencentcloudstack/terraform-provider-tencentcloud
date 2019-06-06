@@ -113,7 +113,7 @@ func dataSourceTencentCloudAsScalingConfigs() *schema.Resource {
 						"internet_max_bandwidth_out": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Max bandwith of Internet access in Mbps.",
+							Description: "Max bandwidth of Internet access in Mbps.",
 						},
 						"public_ip_assigned": {
 							Type:        schema.TypeBool,

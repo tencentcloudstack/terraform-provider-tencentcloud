@@ -49,7 +49,7 @@ The following arguments are supported:
 * `enhanced_security_service` - (Optional) To specify whether to enable cloud security service. Default is TRUE.
 * `instance_tags` - (Optional) A list of tags used to associate different resources.
 * `internet_charge_type` - (Optional) Charge types for network traffic. Available values include TRAFFIC_POSTPAID_BY_HOUR.
-* `internet_max_bandwidth_out` - (Optional) Max bandwith of Internet access in Mbps. Default is 0.
+* `internet_max_bandwidth_out` - (Optional) Max bandwidth of Internet access in Mbps. Default is 0.
 * `keep_image_login` - (Optional) Specify whether to keep original settings of a CVM image. And it can't be used with password or key_ids together.
 * `key_ids` - (Optional) ID list of keys.
 * `password` - (Optional) Password to access.

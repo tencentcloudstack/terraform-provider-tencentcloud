@@ -45,7 +45,7 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_tags` - A tag list associates with an instance.
   * `instance_types` - Instance type list of the scaling configuration.
   * `internet_charge_type` - Charge types for network traffic.
-  * `internet_max_bandwidth_out` - Max bandwith of Internet access in Mbps.
+  * `internet_max_bandwidth_out` - Max bandwidth of Internet access in Mbps.
   * `key_ids` - ID list of login keys
   * `project_id` - ID of the project to which the configuration belongs. Default value is 0.
   * `public_ip_assigned` - Specify whether to assign an Internet IP address.
