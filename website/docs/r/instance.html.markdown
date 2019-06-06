@@ -79,6 +79,8 @@ resource "tencentcloud_instance" "my_awesome_app" {
   image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
   instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   key_name          = "${tencentcloud_key_pair.random_key.id}"
+  hostname          = "awesome_app"
+  project_id        = 0
 
   security_groups = [
     "${tencentcloud_security_group.app.id}",
@@ -103,6 +105,10 @@ The following arguments are supported:
 * `instance_name` - (Optional) The name of the CVM. This instance_name can have a string of 2 to 128 characters, must contain only alphanumeric characters or hyphens, such as "-",".","_", and must not begin or end with a hyphen, and must not begin with http:// or https://. If not specified, Terraform will autogenerate a default name is `CVM-Instance`.
 
 * `instance_type` - (Required) The type of instance to start.
+
+* `hostname` - (Optional) The hostname of CVM.
+
+* `project_id` - (Optional) The project CVM belongs to, default to 0.
 
 * `instance_charge_type` - (Optional) Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, The default is `POSTPAID_BY_HOUR`.
 
@@ -129,6 +135,7 @@ The following arguments are supported:
 * `system_disk_size` - (Optional) Size of the system disk, value range: 50GB ~ 1TB. Default is 50GB.
 
 * `data_disks` - (Optional) Settings for data disk. In each disk, `data_disk_type` indicates the disk type, valid values are `LOCAL_BASIC`, `LOCAL_SSD`,  `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`. **NOTE**, it must follow the system_disk_type, and all disks must be the same type. `data_disk_size` is the size of the data disk, value range: 100GB~1.6TB.
+`data_disk_size` is the size of the data disk, value range: 60GB~1.6TB. `delete_with_instance` decides whether the disk is deleted with instance(only applied to `POSTPAID_BY_HOUR` cloud disk), default to true.
 
 * `disable_security_service` - (Optional) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed.
 
