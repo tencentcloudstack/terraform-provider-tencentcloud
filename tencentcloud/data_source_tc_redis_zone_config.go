@@ -1,3 +1,15 @@
+/*
+Use this data source to query which instance types of Redis are available in a specific region.
+
+Example Usage
+
+```hcl
+data "tencentcloud_redis_zone_config" "redislab" {
+    region             = "ap-hongkong"
+    result_output_file = "/temp/mytestpath"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -20,34 +32,41 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 				ForceNew:     true,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(connectivity.MysqlSupportedRegions),
+				Description:  "Name of a region. If this value is not set, the current region getting from provider's configuration will be used.",
 			},
 			"result_output_file": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 
 			// Computed values
 			"list": {Type: schema.TypeList,
-				Computed: true,
+				Description: "A list of zone. Each element contains the following attributes:",
+				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"zone": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of available zone.",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance type. Available values: master_slave_redis, master_slave_ckv, cluster_ckv, cluster_redis and standalone_redis. ",
 						},
 						"version": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Version description of an available instance. Possible values: Redis 3.2, Redis 4.0 .",
 						},
 						"mem_sizes": {
-							Type:     schema.TypeList,
-							Elem:     &schema.Schema{Type: schema.TypeInt},
-							Computed: true,
+							Type:        schema.TypeList,
+							Elem:        &schema.Schema{Type: schema.TypeInt},
+							Computed:    true,
+							Description: "The memory volume of an available instance（in MB）.  ",
 						},
 					},
 				},
@@ -128,6 +147,7 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 
 	if err := d.Set("list", allZonesConfigs); err != nil {
 		log.Printf("[CRITAL]%s provider set  redis zoneConfigs fail, reason:%s\n ", logId, err.Error())
+		return err
 	}
 	d.SetId("redis_zoneconfig" + region)
 
@@ -136,6 +156,7 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 		if err := writeToFile(output.(string), allZonesConfigs); err != nil {
 			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
 				logId, output.(string), err.Error())
+			return err
 		}
 
 	}

@@ -91,6 +91,12 @@ func resourceTencentCloudRouteTableRead(d *schema.ResourceData, m interface{}) e
 		return nil
 	}
 
+	if len(jsonresp.Data) != 1 {
+		d.SetId("")
+		log.Printf("[ERROR] DescribeRouteTable got  %d table info, our expectation is 1.\n", len(jsonresp.Data))
+		return nil
+	}
+
 	d.Set("name", jsonresp.Data[0].RouteTableName)
 
 	return nil

@@ -1,3 +1,24 @@
+/*
+Use this data source to query which instance types of Redis are available in a specific region.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_redis_backup_config" "redislab" {
+  redis_id       = "crs-7yl0q0dd"
+  backup_time    = "04:00-05:00"
+  backup_period  = "Monday"
+}
+```
+
+Import
+
+Redis  backup config can be imported, e.g.
+
+```hcl
+$ terraform import tencentcloud_redis_backup_config.redisconfig redis-id
+```
+*/
 package tencentcloud
 
 import (
@@ -20,9 +41,10 @@ func resourceTencentCloudRedisBackupConfig() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"redis_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "ID of a Redis instance to which the policy will be applied.",
 			},
 			"backup_time": {
 				Type:     schema.TypeString,
@@ -37,11 +59,13 @@ func resourceTencentCloudRedisBackupConfig() *schema.Resource {
 					"18:00-19:00", "19:00-20:00", "20:00-21:00",
 					"21:00-22:00", "22:00-23:00", "23:00-00:00",
 				}),
+				Description: "Specifys what time the backup action should take place.",
 			},
 			"backup_period": {
-				Type:     schema.TypeSet,
-				Required: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeSet,
+				Required:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Specifys which day the backup action should take place. Supported values include: Monday，Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday.",
 			},
 		},
 	}
