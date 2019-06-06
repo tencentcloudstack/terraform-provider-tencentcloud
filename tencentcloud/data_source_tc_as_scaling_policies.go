@@ -170,7 +170,9 @@ func dataSourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta inte
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		writeToFile(output.(string), scalingPolicyList)
+		if err = writeToFile(output.(string), scalingPolicyList); err != nil {
+			return err
+		}
 	}
 
 	return nil

@@ -224,7 +224,9 @@ func dataSourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta inte
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		writeToFile(output.(string), configurationList)
+		if err = writeToFile(output.(string), configurationList); err != nil {
+			return err
+		}
 	}
 
 	return nil
