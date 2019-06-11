@@ -1,4 +1,4 @@
-## 1.8.0 (Unreleased)
+## 1.8.0 (June 11, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_as_scaling_configs`
