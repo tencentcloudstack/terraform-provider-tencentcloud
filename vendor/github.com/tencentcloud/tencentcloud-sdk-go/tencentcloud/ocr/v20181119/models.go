@@ -20,31 +20,173 @@ import (
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
+type ArithmeticOCRRequest struct {
+	*tchttp.BaseRequest
+
+	// Í¼Æ¬µÄ Base64 Öµ¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­Base64±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬µÄ ImageUrl¡¢ImageBase64 ±ØĞëÌá¹©Ò»¸ö£¬Èç¹û¶¼Ìá¹©£¬Ö»Ê¹ÓÃ ImageUrl¡£
+	ImageBase64 *string `json:"ImageBase64,omitempty" name:"ImageBase64"`
+
+	// Í¼Æ¬µÄ Url µØÖ·¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­ Base64 ±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆµÄ Url ¿É±£ÕÏ¸ü¸ßµÄÏÂÔØËÙ¶ÈºÍÎÈ¶¨ĞÔ£¬½¨ÒéÍ¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆ¡£
+	// ·ÇÌÚÑ¶ÔÆ´æ´¢µÄ Url ËÙ¶ÈºÍÎÈ¶¨ĞÔ¿ÉÄÜÊÜÒ»¶¨Ó°Ïì¡£
+	ImageUrl *string `json:"ImageUrl,omitempty" name:"ImageUrl"`
+}
+
+func (r *ArithmeticOCRRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ArithmeticOCRRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ArithmeticOCRResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// ¼ì²âµ½µÄÎÄ±¾ĞÅÏ¢£¬¾ßÌåÄÚÈİÇëµã»÷×ó²àÁ´½Ó¡£
+		TextDetections []*TextArithmetic `json:"TextDetections,omitempty" name:"TextDetections" list`
+
+		// Î¨Ò»ÇëÇó ID£¬Ã¿´ÎÇëÇó¶¼»á·µ»Ø¡£¶¨Î»ÎÊÌâÊ±ĞèÒªÌá¹©¸Ã´ÎÇëÇóµÄ RequestId¡£
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ArithmeticOCRResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ArithmeticOCRResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type Coord struct {
 
-	// æ¨ªåæ ‡
+	// ºá×ø±ê
 	X *int64 `json:"X,omitempty" name:"X"`
 
-	// çºµåæ ‡
+	// ×İ×ø±ê
 	Y *int64 `json:"Y,omitempty" name:"Y"`
+}
+
+type EnglishOCRRequest struct {
+	*tchttp.BaseRequest
+
+	// Í¼Æ¬µÄ Base64 Öµ¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­Base64±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬µÄ ImageUrl¡¢ImageBase64 ±ØĞëÌá¹©Ò»¸ö£¬Èç¹û¶¼Ìá¹©£¬Ö»Ê¹ÓÃ ImageUrl¡£
+	ImageBase64 *string `json:"ImageBase64,omitempty" name:"ImageBase64"`
+
+	// Í¼Æ¬µÄ Url µØÖ·¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­ Base64 ±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆµÄ Url ¿É±£ÕÏ¸ü¸ßµÄÏÂÔØËÙ¶ÈºÍÎÈ¶¨ĞÔ£¬½¨ÒéÍ¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆ¡£
+	// ·ÇÌÚÑ¶ÔÆ´æ´¢µÄ Url ËÙ¶ÈºÍÎÈ¶¨ĞÔ¿ÉÄÜÊÜÒ»¶¨Ó°Ïì¡£
+	ImageUrl *string `json:"ImageUrl,omitempty" name:"ImageUrl"`
+}
+
+func (r *EnglishOCRRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *EnglishOCRRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type EnglishOCRResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// ¼ì²âµ½µÄÎÄ±¾ĞÅÏ¢£¬¾ßÌåÄÚÈİÇëµã»÷×ó²àÁ´½Ó¡£
+		TextDetections []*TextDetectionEn `json:"TextDetections,omitempty" name:"TextDetections" list`
+
+		// Î¨Ò»ÇëÇó ID£¬Ã¿´ÎÇëÇó¶¼»á·µ»Ø¡£¶¨Î»ÎÊÌâÊ±ĞèÒªÌá¹©¸Ã´ÎÇëÇóµÄ RequestId¡£
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *EnglishOCRResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *EnglishOCRResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type GeneralAccurateOCRRequest struct {
+	*tchttp.BaseRequest
+
+	// Í¼Æ¬µÄ Base64 Öµ¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­Base64±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬µÄ ImageUrl¡¢ImageBase64 ±ØĞëÌá¹©Ò»¸ö£¬Èç¹û¶¼Ìá¹©£¬Ö»Ê¹ÓÃ ImageUrl¡£
+	ImageBase64 *string `json:"ImageBase64,omitempty" name:"ImageBase64"`
+
+	// Í¼Æ¬µÄ Url µØÖ·¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­ Base64 ±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆµÄ Url ¿É±£ÕÏ¸ü¸ßµÄÏÂÔØËÙ¶ÈºÍÎÈ¶¨ĞÔ£¬½¨ÒéÍ¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆ¡£
+	// ·ÇÌÚÑ¶ÔÆ´æ´¢µÄ Url ËÙ¶ÈºÍÎÈ¶¨ĞÔ¿ÉÄÜÊÜÒ»¶¨Ó°Ïì¡£
+	ImageUrl *string `json:"ImageUrl,omitempty" name:"ImageUrl"`
+}
+
+func (r *GeneralAccurateOCRRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *GeneralAccurateOCRRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type GeneralAccurateOCRResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// ¼ì²âµ½µÄÎÄ±¾ĞÅÏ¢£¬¾ßÌåÄÚÈİÇëµã»÷×ó²àÁ´½Ó¡£
+		TextDetections []*TextDetection `json:"TextDetections,omitempty" name:"TextDetections" list`
+
+		// Î¨Ò»ÇëÇó ID£¬Ã¿´ÎÇëÇó¶¼»á·µ»Ø¡£¶¨Î»ÎÊÌâÊ±ĞèÒªÌá¹©¸Ã´ÎÇëÇóµÄ RequestId¡£
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *GeneralAccurateOCRResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *GeneralAccurateOCRResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
 }
 
 type GeneralBasicOCRRequest struct {
 	*tchttp.BaseRequest
 
-	// å›¾ç‰‡çš„BASE64å€¼ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡æ ¼å¼ï¼šPNGã€JPGã€JPEGï¼Œæš‚ä¸æ”¯æŒGIFæ ¼å¼ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡å¤§å°ï¼šæ‰€ä¸‹è½½å›¾ç‰‡ç»Base64ç¼–ç åä¸è¶…è¿‡3Mã€‚å›¾ç‰‡ä¸‹è½½æ—¶é—´ä¸è¶…è¿‡3ç§’ã€‚
-	// å›¾ç‰‡çš„ ImageUrlã€ImageBase64å¿…é¡»æä¾›ä¸€ä¸ªï¼Œå¦‚æœéƒ½æä¾›ï¼Œåªä½¿ç”¨ImageBase64ã€‚
+	// Í¼Æ¬µÄ Base64 Öµ¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­Base64±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬µÄ ImageUrl¡¢ImageBase64 ±ØĞëÌá¹©Ò»¸ö£¬Èç¹û¶¼Ìá¹©£¬Ö»Ê¹ÓÃ ImageUrl¡£
 	ImageBase64 *string `json:"ImageBase64,omitempty" name:"ImageBase64"`
 
-	// å›¾ç‰‡çš„URLåœ°å€ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡æ ¼å¼ï¼šPNGã€JPGã€JPEGï¼Œæš‚ä¸æ”¯æŒGIFæ ¼å¼ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡å¤§å°ï¼šæ‰€ä¸‹è½½å›¾ç‰‡ç»Base64ç¼–ç åä¸è¶…è¿‡3Mã€‚å›¾ç‰‡ä¸‹è½½æ—¶é—´ä¸è¶…è¿‡3ç§’ã€‚
-	// å›¾ç‰‡å­˜å‚¨äºè…¾è®¯äº‘çš„Urlå¯ä¿éšœæ›´é«˜ä¸‹è½½é€Ÿåº¦å’Œç¨³å®šæ€§ï¼Œå»ºè®®å›¾ç‰‡å­˜å‚¨äºè…¾è®¯äº‘ã€‚éè…¾è®¯äº‘å­˜å‚¨çš„Urlé€Ÿåº¦å’Œç¨³å®šæ€§å¯èƒ½å—ä¸€å®šå½±å“ã€‚
+	// Í¼Æ¬µÄ Url µØÖ·¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­ Base64 ±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆµÄ Url ¿É±£ÕÏ¸ü¸ßµÄÏÂÔØËÙ¶ÈºÍÎÈ¶¨ĞÔ£¬½¨ÒéÍ¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆ¡£
+	// ·ÇÌÚÑ¶ÔÆ´æ´¢µÄ Url ËÙ¶ÈºÍÎÈ¶¨ĞÔ¿ÉÄÜÊÜÒ»¶¨Ó°Ïì¡£
 	ImageUrl *string `json:"ImageUrl,omitempty" name:"ImageUrl"`
 
-	// ä¿ç•™å­—æ®µã€‚
+	// ±£Áô×Ö¶Î¡£
 	Scene *string `json:"Scene,omitempty" name:"Scene"`
 }
 
@@ -61,14 +203,14 @@ type GeneralBasicOCRResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// æ£€æµ‹åˆ°çš„æ–‡æœ¬ä¿¡æ¯ï¼Œå…·ä½“å†…å®¹è¯·ç‚¹å‡»å·¦ä¾§é“¾æ¥
+		// ¼ì²âµ½µÄÎÄ±¾ĞÅÏ¢£¬¾ßÌåÄÚÈİÇëµã»÷×ó²àÁ´½Ó¡£
 		TextDetections []*TextDetection `json:"TextDetections,omitempty" name:"TextDetections" list`
 
-		// æ£€æµ‹åˆ°çš„è¯­è¨€ï¼Œç›®å‰æ”¯æŒçš„è¯­ç§èŒƒå›´ä¸ºï¼šç®€ä½“ä¸­æ–‡ã€ç¹ä½“ä¸­æ–‡ã€è‹±æ–‡ã€æ—¥æ–‡ã€éŸ©æ–‡ã€‚æœªæ¥å°†é™†ç»­æ–°å¢å¯¹æ›´å¤šè¯­ç§çš„æ”¯æŒã€‚
-	// è¿”å›ç»“æœå«ä¹‰ä¸ºï¼šzh-ä¸­è‹±æ··åˆï¼Œjap-æ—¥æ–‡ï¼Œkor-éŸ©æ–‡ã€‚
+		// ¼ì²âµ½µÄÓïÑÔ£¬Ä¿Ç°Ö§³ÖµÄÓïÖÖ·¶Î§Îª£º¼òÌåÖĞÎÄ¡¢·±ÌåÖĞÎÄ¡¢Ó¢ÎÄ¡¢ÈÕÎÄ¡¢º«ÎÄ¡£Î´À´½«Â½ĞøĞÂÔö¶Ô¸ü¶àÓïÖÖµÄÖ§³Ö¡£
+	// ·µ»Ø½á¹ûº¬ÒåÎª£ºzh-ÖĞÓ¢»ìºÏ£¬jap-ÈÕÎÄ£¬kor-º«ÎÄ¡£
 		Language *string `json:"Language,omitempty" name:"Language"`
 
-		// å”¯ä¸€è¯·æ±‚ IDï¼Œæ¯æ¬¡è¯·æ±‚éƒ½ä¼šè¿”å›ã€‚å®šä½é—®é¢˜æ—¶éœ€è¦æä¾›è¯¥æ¬¡è¯·æ±‚çš„ RequestIdã€‚
+		// Î¨Ò»ÇëÇó ID£¬Ã¿´ÎÇëÇó¶¼»á·µ»Ø¡£¶¨Î»ÎÊÌâÊ±ĞèÒªÌá¹©¸Ã´ÎÇëÇóµÄ RequestId¡£
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 	} `json:"Response"`
 }
@@ -85,16 +227,17 @@ func (r *GeneralBasicOCRResponse) FromJsonString(s string) error {
 type GeneralFastOCRRequest struct {
 	*tchttp.BaseRequest
 
-	// å›¾ç‰‡çš„BASE64å€¼ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡æ ¼å¼ï¼šPNGã€JPGã€JPEGï¼Œæš‚ä¸æ”¯æŒGIFæ ¼å¼ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡å¤§å°ï¼šæ‰€ä¸‹è½½å›¾ç‰‡ç»Base64ç¼–ç åä¸è¶…è¿‡3Mã€‚å›¾ç‰‡ä¸‹è½½æ—¶é—´ä¸è¶…è¿‡3ç§’ã€‚
-	// å›¾ç‰‡çš„ ImageUrlã€ImageBase64å¿…é¡»æä¾›ä¸€ä¸ªï¼Œå¦‚æœéƒ½æä¾›ï¼Œåªä½¿ç”¨ImageBase64ã€‚
+	// Í¼Æ¬µÄ Base64 Öµ¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­Base64±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬µÄ ImageUrl¡¢ImageBase64 ±ØĞëÌá¹©Ò»¸ö£¬Èç¹û¶¼Ìá¹©£¬Ö»Ê¹ÓÃ ImageUrl¡£
 	ImageBase64 *string `json:"ImageBase64,omitempty" name:"ImageBase64"`
 
-	// å›¾ç‰‡çš„URLåœ°å€ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡æ ¼å¼ï¼šPNGã€JPGã€JPEGï¼Œæš‚ä¸æ”¯æŒGIFæ ¼å¼ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡å¤§å°ï¼šæ‰€ä¸‹è½½å›¾ç‰‡ç»Base64ç¼–ç åä¸è¶…è¿‡3Mã€‚å›¾ç‰‡ä¸‹è½½æ—¶é—´ä¸è¶…è¿‡3ç§’ã€‚
-	// å›¾ç‰‡å­˜å‚¨äºè…¾è®¯äº‘çš„Urlå¯ä¿éšœæ›´é«˜ä¸‹è½½é€Ÿåº¦å’Œç¨³å®šæ€§ï¼Œå»ºè®®å›¾ç‰‡å­˜å‚¨äºè…¾è®¯äº‘ã€‚éè…¾è®¯äº‘å­˜å‚¨çš„Urlé€Ÿåº¦å’Œç¨³å®šæ€§å¯èƒ½å—ä¸€å®šå½±å“ã€‚
+	// Í¼Æ¬µÄ Url µØÖ·¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­ Base64 ±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆµÄ Url ¿É±£ÕÏ¸ü¸ßµÄÏÂÔØËÙ¶ÈºÍÎÈ¶¨ĞÔ£¬½¨ÒéÍ¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆ¡£
+	// ·ÇÌÚÑ¶ÔÆ´æ´¢µÄ Url ËÙ¶ÈºÍÎÈ¶¨ĞÔ¿ÉÄÜÊÜÒ»¶¨Ó°Ïì¡£
 	ImageUrl *string `json:"ImageUrl,omitempty" name:"ImageUrl"`
 }
 
@@ -111,14 +254,14 @@ type GeneralFastOCRResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// æ£€æµ‹åˆ°çš„æ–‡æœ¬ä¿¡æ¯ï¼Œå…·ä½“å†…å®¹è¯·ç‚¹å‡»å·¦ä¾§é“¾æ¥
+		// ¼ì²âµ½µÄÎÄ±¾ĞÅÏ¢£¬¾ßÌåÄÚÈİÇëµã»÷×ó²àÁ´½Ó¡£
 		TextDetections []*TextDetection `json:"TextDetections,omitempty" name:"TextDetections" list`
 
-		// æ£€æµ‹åˆ°çš„è¯­è¨€ï¼Œç›®å‰æ”¯æŒçš„è¯­ç§èŒƒå›´ä¸ºï¼šç®€ä½“ä¸­æ–‡ã€ç¹ä½“ä¸­æ–‡ã€è‹±æ–‡ã€æ—¥æ–‡ã€éŸ©æ–‡ã€‚æœªæ¥å°†é™†ç»­æ–°å¢å¯¹æ›´å¤šè¯­ç§çš„æ”¯æŒã€‚
-	// è¿”å›ç»“æœå«ä¹‰ä¸ºï¼šzh-ä¸­è‹±æ··åˆï¼Œjap-æ—¥æ–‡ï¼Œkor-éŸ©æ–‡ã€‚
+		// ¼ì²âµ½µÄÓïÑÔ£¬Ä¿Ç°Ö§³ÖµÄÓïÖÖ·¶Î§Îª£º¼òÌåÖĞÎÄ¡¢·±ÌåÖĞÎÄ¡¢Ó¢ÎÄ¡¢ÈÕÎÄ¡¢º«ÎÄ¡£Î´À´½«Â½ĞøĞÂÔö¶Ô¸ü¶àÓïÖÖµÄÖ§³Ö¡£
+	// ·µ»Ø½á¹ûº¬ÒåÎª£ºzh - ÖĞÓ¢»ìºÏ£¬jap - ÈÕÎÄ£¬kor - º«ÎÄ¡£
 		Language *string `json:"Language,omitempty" name:"Language"`
 
-		// å”¯ä¸€è¯·æ±‚ IDï¼Œæ¯æ¬¡è¯·æ±‚éƒ½ä¼šè¿”å›ã€‚å®šä½é—®é¢˜æ—¶éœ€è¦æä¾›è¯¥æ¬¡è¯·æ±‚çš„ RequestIdã€‚
+		// Î¨Ò»ÇëÇó ID£¬Ã¿´ÎÇëÇó¶¼»á·µ»Ø¡£¶¨Î»ÎÊÌâÊ±ĞèÒªÌá¹©¸Ã´ÎÇëÇóµÄ RequestId¡£
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 	} `json:"Response"`
 }
@@ -135,32 +278,33 @@ func (r *GeneralFastOCRResponse) FromJsonString(s string) error {
 type IDCardOCRRequest struct {
 	*tchttp.BaseRequest
 
-	// å›¾ç‰‡çš„BASE64å€¼ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡æ ¼å¼ï¼šPNGã€JPGã€JPEGï¼Œæš‚ä¸æ”¯æŒGIFæ ¼å¼ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡å¤§å°ï¼šæ‰€ä¸‹è½½å›¾ç‰‡ç»Base64ç¼–ç åä¸è¶…è¿‡6Mã€‚å›¾ç‰‡ä¸‹è½½æ—¶é—´ä¸è¶…è¿‡3ç§’ã€‚
-	// å›¾ç‰‡çš„ ImageUrlã€ImageBase64å¿…é¡»æä¾›ä¸€ä¸ªï¼Œå¦‚æœéƒ½æä¾›ï¼Œåªä½¿ç”¨ImageBase64ã€‚
+	// Í¼Æ¬µÄ Base64 Öµ¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­Base64±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬µÄ ImageUrl¡¢ImageBase64 ±ØĞëÌá¹©Ò»¸ö£¬Èç¹û¶¼Ìá¹©£¬Ö»Ê¹ÓÃ ImageUrl¡£
 	ImageBase64 *string `json:"ImageBase64,omitempty" name:"ImageBase64"`
 
-	// å›¾ç‰‡URLåœ°å€ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡æ ¼å¼ï¼šPNGã€JPGã€JPEGï¼Œæš‚ä¸æ”¯æŒGIFæ ¼å¼ã€‚
-	// æ”¯æŒçš„å›¾ç‰‡å¤§å°ï¼šæ‰€ä¸‹è½½å›¾ç‰‡ç»Base64ç¼–ç åä¸è¶…è¿‡3Mã€‚å›¾ç‰‡ä¸‹è½½æ—¶é—´ä¸è¶…è¿‡3ç§’ã€‚
-	// å›¾ç‰‡å­˜å‚¨äºè…¾è®¯äº‘çš„Urlå¯ä¿éšœæ›´é«˜ä¸‹è½½é€Ÿåº¦å’Œç¨³å®šæ€§ï¼Œå»ºè®®å›¾ç‰‡å­˜å‚¨äºè…¾è®¯äº‘ã€‚éè…¾è®¯äº‘å­˜å‚¨çš„Urlé€Ÿåº¦å’Œç¨³å®šæ€§å¯èƒ½å—ä¸€å®šå½±å“ã€‚
+	// Í¼Æ¬µÄ Url µØÖ·¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­ Base64 ±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆµÄ Url ¿É±£ÕÏ¸ü¸ßµÄÏÂÔØËÙ¶ÈºÍÎÈ¶¨ĞÔ£¬½¨ÒéÍ¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆ¡£
+	// ·ÇÌÚÑ¶ÔÆ´æ´¢µÄ Url ËÙ¶ÈºÍÎÈ¶¨ĞÔ¿ÉÄÜÊÜÒ»¶¨Ó°Ïì¡£
 	ImageUrl *string `json:"ImageUrl,omitempty" name:"ImageUrl"`
 
-	// FRONTä¸ºèº«ä»½è¯æœ‰ç…§ç‰‡çš„ä¸€é¢ï¼ˆæ­£é¢ï¼‰
-	// BACKä¸ºèº«ä»½è¯æœ‰å›½å¾½çš„ä¸€é¢ï¼ˆåé¢ï¼‰
+	// FRONT ÎªÉí·İÖ¤ÓĞÕÕÆ¬µÄÒ»Ãæ£¨ÈËÏñÃæ£©£¬
+	// BACK ÎªÉí·İÖ¤ÓĞ¹ú»ÕµÄÒ»Ãæ£¨¹ú»ÕÃæ£©¡£
 	CardSide *string `json:"CardSide,omitempty" name:"CardSide"`
 
-	// å¯é€‰å­—æ®µï¼Œæ ¹æ®éœ€è¦é€‰æ‹©æ˜¯å¦è¯·æ±‚å¯¹åº”å­—æ®µã€‚
-	// ç›®å‰åŒ…å«çš„å­—æ®µä¸ºï¼š
-	// CropIdCard-èº«ä»½è¯ç…§ç‰‡è£å‰ªï¼Œboolç±»å‹ï¼Œ
-	// CropPortrait-äººåƒç…§ç‰‡è£å‰ªï¼Œboolç±»å‹ï¼Œ
-	// CopyWarn-å¤å°ä»¶å‘Šè­¦ï¼Œboolç±»å‹ï¼Œ
-	// ReshootWarn-ç¿»æ‹å‘Šè­¦ï¼Œboolç±»å‹ã€‚
+	// ¿ÉÑ¡×Ö¶Î£¬¸ù¾İĞèÒªÑ¡ÔñÊÇ·ñÇëÇó¶ÔÓ¦×Ö¶Î¡£
+	// Ä¿Ç°°üº¬µÄ×Ö¶ÎÎª£º
+	// CropIdCard£¬Éí·İÖ¤ÕÕÆ¬²Ã¼ô£¬bool ÀàĞÍ£¬
+	// CropPortrait£¬ÈËÏñÕÕÆ¬²Ã¼ô£¬bool ÀàĞÍ£¬
+	// CopyWarn£¬¸´Ó¡¼ş¸æ¾¯£¬bool ÀàĞÍ£¬
+	// ReshootWarn£¬·­ÅÄ¸æ¾¯£¬bool ÀàĞÍ¡£
 	// 
-	// SDKè®¾ç½®æ–¹å¼å‚è€ƒï¼š
+	// SDK ÉèÖÃ·½Ê½²Î¿¼£º
 	// Config = Json.stringify({"CropIdCard":true,"CropPortrait":true})
-	// API 3.0 Explorerè®¾ç½®æ–¹å¼å‚è€ƒï¼š
+	// API 3.0 Explorer ÉèÖÃ·½Ê½²Î¿¼£º
 	// Config = {"CropIdCard":true,"CropPortrait":true}
 	Config *string `json:"Config,omitempty" name:"Config"`
 }
@@ -178,37 +322,41 @@ type IDCardOCRResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// å§“åï¼ˆæ­£é¢ï¼‰
+		// ĞÕÃû£¨ÈËÏñÃæ£©
 		Name *string `json:"Name,omitempty" name:"Name"`
 
-		// æ€§åˆ«ï¼ˆæ­£é¢ï¼‰
+		// ĞÔ±ğ£¨ÈËÏñÃæ£©
 		Sex *string `json:"Sex,omitempty" name:"Sex"`
 
-		// æ°‘æ—ï¼ˆæ­£é¢ï¼‰
+		// Ãñ×å£¨ÈËÏñÃæ£©
 		Nation *string `json:"Nation,omitempty" name:"Nation"`
 
-		// å‡ºç”Ÿæ—¥æœŸï¼ˆæ­£é¢ï¼‰
+		// ³öÉúÈÕÆÚ£¨ÈËÏñÃæ£©
 		Birth *string `json:"Birth,omitempty" name:"Birth"`
 
-		// åœ°å€ï¼ˆæ­£é¢ï¼‰
+		// µØÖ·£¨ÈËÏñÃæ£©
 		Address *string `json:"Address,omitempty" name:"Address"`
 
-		// èº«ä»½è¯å·ï¼ˆæ­£é¢ï¼‰
+		// Éí·İÖ¤ºÅ£¨ÈËÏñÃæ£©
 		IdNum *string `json:"IdNum,omitempty" name:"IdNum"`
 
-		// å‘è¯æœºå…³ï¼ˆåé¢ï¼‰
+		// ·¢Ö¤»ú¹Ø£¨¹ú»ÕÃæ£©
 		Authority *string `json:"Authority,omitempty" name:"Authority"`
 
-		// è¯ä»¶æœ‰æ•ˆæœŸï¼ˆåé¢ï¼‰
+		// Ö¤¼şÓĞĞ§ÆÚ£¨¹ú»ÕÃæ£©
 		ValidDate *string `json:"ValidDate,omitempty" name:"ValidDate"`
 
-		// æ‰©å±•ä¿¡æ¯ï¼Œæ ¹æ®è¯·æ±‚çš„å¯é€‰å­—æ®µè¿”å›å¯¹åº”å†…å®¹ï¼Œä¸è¯·æ±‚åˆ™ä¸è¿”å›ï¼Œå…·ä½“è¾“å…¥å‚è€ƒç¤ºä¾‹3ã€‚ç›®å‰æ”¯æŒçš„æ‰©å±•å­—æ®µä¸ºï¼š
-	// IdCardèº«ä»½è¯ç…§ç‰‡ï¼Œè¯·æ±‚CropIdCardæ—¶è¿”å›ï¼›
-	// Portraitäººåƒç…§ç‰‡ï¼Œè¯·æ±‚CropPortraitæ—¶è¿”å›ï¼›
-	// WarnInfoså‘Šè­¦ä¿¡æ¯ï¼ˆCodeå‘Šè­¦ç ï¼ŒMsgå‘Šè­¦ä¿¡æ¯ï¼‰ï¼Œè¯†åˆ«å‡ºç¿»æ‹ä»¶æˆ–å¤å°ä»¶æ—¶è¿”å›ã€‚
+		// À©Õ¹ĞÅÏ¢£¬¸ù¾İÇëÇóµÄ¿ÉÑ¡×Ö¶Î·µ»Ø¶ÔÓ¦ÄÚÈİ£¬²»ÇëÇóÔò²»·µ»Ø£¬¾ßÌåÊäÈë²Î¿¼Ê¾Àı3¡£Ä¿Ç°Ö§³ÖµÄÀ©Õ¹×Ö¶ÎÎª£º
+	// IdCard£¬Éí·İÖ¤ÕÕÆ¬£¬ÇëÇó CropIdCard Ê±·µ»Ø£»
+	// Portrait£¬ÈËÏñÕÕÆ¬£¬ÇëÇó CropPortrait Ê±·µ»Ø£»
+	// WarnInfos£¬¸æ¾¯ĞÅÏ¢£¨Code - ¸æ¾¯Âë£¬Msg - ¸æ¾¯ĞÅÏ¢ÄÚÈİ£©£¬Ê¶±ğ³ö·­ÅÄ¼ş»ò¸´Ó¡¼şÊ±·µ»Ø¡£
+	// 
+	// Code ¸æ¾¯ÂëÁĞ±íºÍÊÍÒå£º
+	// -9103	Éí·İÖ¤·­ÅÄ¸æ¾¯£¬
+	// -9102	Éí·İÖ¤¸´Ó¡¼ş¸æ¾¯¡£
 		AdvancedInfo *string `json:"AdvancedInfo,omitempty" name:"AdvancedInfo"`
 
-		// å”¯ä¸€è¯·æ±‚ IDï¼Œæ¯æ¬¡è¯·æ±‚éƒ½ä¼šè¿”å›ã€‚å®šä½é—®é¢˜æ—¶éœ€è¦æä¾›è¯¥æ¬¡è¯·æ±‚çš„ RequestIdã€‚
+		// Î¨Ò»ÇëÇó ID£¬Ã¿´ÎÇëÇó¶¼»á·µ»Ø¡£¶¨Î»ÎÊÌâÊ±ĞèÒªÌá¹©¸Ã´ÎÇëÇóµÄ RequestId¡£
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 	} `json:"Response"`
 }
@@ -222,19 +370,259 @@ func (r *IDCardOCRResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
-type TextDetection struct {
+type TableOCRRequest struct {
+	*tchttp.BaseRequest
 
-	// è¯†åˆ«å‡ºçš„æ–‡æœ¬è¡Œå†…å®¹
+	// Í¼Æ¬µÄ Base64 Öµ¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­Base64±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬µÄ ImageUrl¡¢ImageBase64 ±ØĞëÌá¹©Ò»¸ö£¬Èç¹û¶¼Ìá¹©£¬Ö»Ê¹ÓÃ ImageUrl¡£
+	ImageBase64 *string `json:"ImageBase64,omitempty" name:"ImageBase64"`
+
+	// Í¼Æ¬µÄ Url µØÖ·¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­ Base64 ±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆµÄ Url ¿É±£ÕÏ¸ü¸ßµÄÏÂÔØËÙ¶ÈºÍÎÈ¶¨ĞÔ£¬½¨ÒéÍ¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆ¡£
+	// ·ÇÌÚÑ¶ÔÆ´æ´¢µÄ Url ËÙ¶ÈºÍÎÈ¶¨ĞÔ¿ÉÄÜÊÜÒ»¶¨Ó°Ïì¡£
+	ImageUrl *string `json:"ImageUrl,omitempty" name:"ImageUrl"`
+}
+
+func (r *TableOCRRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *TableOCRRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type TableOCRResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// ¼ì²âµ½µÄÎÄ±¾ĞÅÏ¢£¬¾ßÌåÄÚÈİÇëµã»÷×ó²àÁ´½Ó¡£
+		TextDetections []*TextTable `json:"TextDetections,omitempty" name:"TextDetections" list`
+
+		// Base64 ±àÂëºóµÄ Excel Êı¾İ¡£
+		Data *string `json:"Data,omitempty" name:"Data"`
+
+		// Î¨Ò»ÇëÇó ID£¬Ã¿´ÎÇëÇó¶¼»á·µ»Ø¡£¶¨Î»ÎÊÌâÊ±ĞèÒªÌá¹©¸Ã´ÎÇëÇóµÄ RequestId¡£
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *TableOCRResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *TableOCRResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type TextArithmetic struct {
+
+	// Ê¶±ğ³öµÄÎÄ±¾ĞĞÄÚÈİ
 	DetectedText *string `json:"DetectedText,omitempty" name:"DetectedText"`
 
-	// ç½®ä¿¡åº¦ 0 ~100
+	// ½á¹û
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
+	// ÖÃĞÅ¶È 0 ~100
 	Confidence *int64 `json:"Confidence,omitempty" name:"Confidence"`
 
-	// æ–‡æœ¬è¡Œåæ ‡ï¼Œä»¥å››ä¸ªé¡¶ç‚¹åæ ‡è¡¨ç¤º
-	// æ³¨æ„ï¼šæ­¤å­—æ®µå¯èƒ½è¿”å› nullï¼Œè¡¨ç¤ºå–ä¸åˆ°æœ‰æ•ˆå€¼ã€‚
+	// ÎÄ±¾ĞĞ×ø±ê£¬ÒÔËÄ¸ö¶¥µã×ø±ê±íÊ¾
+	// ×¢Òâ£º´Ë×Ö¶Î¿ÉÄÜ·µ»Ø null£¬±íÊ¾È¡²»µ½ÓĞĞ§Öµ¡£
 	Polygon []*Coord `json:"Polygon,omitempty" name:"Polygon" list`
 
-	// æ­¤å­—æ®µä¸ºæ‰©å±•å­—æ®µã€‚
-	// GeneralBasicOcræ¥å£è¿”å›æ®µè½ä¿¡æ¯Paragï¼ŒåŒ…å«ParagNoã€‚
+	// ´Ë×Ö¶ÎÎªÀ©Õ¹×Ö¶Î¡£
 	AdvancedInfo *string `json:"AdvancedInfo,omitempty" name:"AdvancedInfo"`
+}
+
+type TextDetection struct {
+
+	// Ê¶±ğ³öµÄÎÄ±¾ĞĞÄÚÈİ
+	DetectedText *string `json:"DetectedText,omitempty" name:"DetectedText"`
+
+	// ÖÃĞÅ¶È 0 ~100
+	Confidence *int64 `json:"Confidence,omitempty" name:"Confidence"`
+
+	// ÎÄ±¾ĞĞ×ø±ê£¬ÒÔËÄ¸ö¶¥µã×ø±ê±íÊ¾
+	// ×¢Òâ£º´Ë×Ö¶Î¿ÉÄÜ·µ»Ø null£¬±íÊ¾È¡²»µ½ÓĞĞ§Öµ¡£
+	Polygon []*Coord `json:"Polygon,omitempty" name:"Polygon" list`
+
+	// ´Ë×Ö¶ÎÎªÀ©Õ¹×Ö¶Î¡£
+	// GeneralBasicOcr½Ó¿Ú·µ»Ø¶ÎÂäĞÅÏ¢Parag£¬°üº¬ParagNo¡£
+	AdvancedInfo *string `json:"AdvancedInfo,omitempty" name:"AdvancedInfo"`
+}
+
+type TextDetectionEn struct {
+
+	// Ê¶±ğ³öµÄÎÄ±¾ĞĞÄÚÈİ
+	DetectedText *string `json:"DetectedText,omitempty" name:"DetectedText"`
+
+	// ÖÃĞÅ¶È 0 ~100
+	Confidence *int64 `json:"Confidence,omitempty" name:"Confidence"`
+
+	// ÎÄ±¾ĞĞ×ø±ê£¬ÒÔËÄ¸ö¶¥µã×ø±ê±íÊ¾
+	// ×¢Òâ£º´Ë×Ö¶Î¿ÉÄÜ·µ»Ø null£¬±íÊ¾È¡²»µ½ÓĞĞ§Öµ¡£
+	Polygon []*Coord `json:"Polygon,omitempty" name:"Polygon" list`
+
+	// ´Ë×Ö¶ÎÎªÀ©Õ¹×Ö¶Î¡£Ä¿Ç°EnglishOCR½Ó¿Ú·µ»ØÄÚÈİÎª¿Õ¡£
+	AdvancedInfo *string `json:"AdvancedInfo,omitempty" name:"AdvancedInfo"`
+}
+
+type TextTable struct {
+
+	// µ¥Ôª¸ñ×óÉÏ½ÇµÄÁĞË÷Òı
+	ColTl *int64 `json:"ColTl,omitempty" name:"ColTl"`
+
+	// µ¥Ôª¸ñ×óÉÏ½ÇµÄĞĞË÷Òı
+	RowTl *int64 `json:"RowTl,omitempty" name:"RowTl"`
+
+	// µ¥Ôª¸ñÓÒÏÂ½ÇµÄÁĞË÷Òı
+	ColBr *int64 `json:"ColBr,omitempty" name:"ColBr"`
+
+	// µ¥Ôª¸ñÓÒÏÂ½ÇµÄĞĞË÷Òı
+	RowBr *int64 `json:"RowBr,omitempty" name:"RowBr"`
+
+	// µ¥Ôª¸ñÎÄ×Ö
+	Text *string `json:"Text,omitempty" name:"Text"`
+
+	// µ¥Ôª¸ñÀàĞÍ£¬°üº¬body£¨±í¸ñÖ÷Ìå£©¡¢header£¨±íÍ·£©¡¢footer£¨±íÎ²£©ÈıÖÖ
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// ÖÃĞÅ¶È 0 ~100
+	Confidence *int64 `json:"Confidence,omitempty" name:"Confidence"`
+
+	// ÎÄ±¾ĞĞ×ø±ê£¬ÒÔËÄ¸ö¶¥µã×ø±ê±íÊ¾
+	Polygon []*Coord `json:"Polygon,omitempty" name:"Polygon" list`
+
+	// ´Ë×Ö¶ÎÎªÀ©Õ¹×Ö¶Î
+	AdvancedInfo *string `json:"AdvancedInfo,omitempty" name:"AdvancedInfo"`
+}
+
+type TextWaybill struct {
+
+	// ÊÕ¼şÈËĞÕÃû
+	RecName *WaybillObj `json:"RecName,omitempty" name:"RecName"`
+
+	// ÊÕ¼şÈËÊÖ»úºÅ
+	RecNum *WaybillObj `json:"RecNum,omitempty" name:"RecNum"`
+
+	// ÊÕ¼şÈËµØÖ·
+	RecAddr *WaybillObj `json:"RecAddr,omitempty" name:"RecAddr"`
+
+	// ¼Ä¼şÈËĞÕÃû
+	SenderName *WaybillObj `json:"SenderName,omitempty" name:"SenderName"`
+
+	// ¼Ä¼şÈËÊÖ»úºÅ
+	SenderNum *WaybillObj `json:"SenderNum,omitempty" name:"SenderNum"`
+
+	// ¼Ä¼şÈËµØÖ·
+	SenderAddr *WaybillObj `json:"SenderAddr,omitempty" name:"SenderAddr"`
+
+	// ÔËµ¥ºÅ
+	WaybillNum *WaybillObj `json:"WaybillNum,omitempty" name:"WaybillNum"`
+}
+
+type VinOCRRequest struct {
+	*tchttp.BaseRequest
+
+	// Í¼Æ¬µÄ Base64 Öµ¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­Base64±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬µÄ ImageUrl¡¢ImageBase64 ±ØĞëÌá¹©Ò»¸ö£¬Èç¹û¶¼Ìá¹©£¬Ö»Ê¹ÓÃ ImageUrl¡£
+	ImageBase64 *string `json:"ImageBase64,omitempty" name:"ImageBase64"`
+
+	// Í¼Æ¬µÄ Url µØÖ·¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­ Base64 ±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆµÄ Url ¿É±£ÕÏ¸ü¸ßµÄÏÂÔØËÙ¶ÈºÍÎÈ¶¨ĞÔ£¬½¨ÒéÍ¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆ¡£
+	// ·ÇÌÚÑ¶ÔÆ´æ´¢µÄ Url ËÙ¶ÈºÍÎÈ¶¨ĞÔ¿ÉÄÜÊÜÒ»¶¨Ó°Ïì¡£
+	ImageUrl *string `json:"ImageUrl,omitempty" name:"ImageUrl"`
+}
+
+func (r *VinOCRRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *VinOCRRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type VinOCRResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// ¼ì²âµ½µÄ³µÁ¾ VIN Âë¡£
+		Vin *string `json:"Vin,omitempty" name:"Vin"`
+
+		// Î¨Ò»ÇëÇó ID£¬Ã¿´ÎÇëÇó¶¼»á·µ»Ø¡£¶¨Î»ÎÊÌâÊ±ĞèÒªÌá¹©¸Ã´ÎÇëÇóµÄ RequestId¡£
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *VinOCRResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *VinOCRResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type WaybillOCRRequest struct {
+	*tchttp.BaseRequest
+
+	// Í¼Æ¬µÄ Base64 Öµ¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­Base64±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬µÄ ImageUrl¡¢ImageBase64 ±ØĞëÌá¹©Ò»¸ö£¬Èç¹û¶¼Ìá¹©£¬Ö»Ê¹ÓÃ ImageUrl¡£
+	ImageBase64 *string `json:"ImageBase64,omitempty" name:"ImageBase64"`
+
+	// Í¼Æ¬µÄ Url µØÖ·¡£
+	// Ö§³ÖµÄÍ¼Æ¬¸ñÊ½£ºPNG¡¢JPG¡¢JPEG£¬Ôİ²»Ö§³Ö GIF ¸ñÊ½¡£
+	// Ö§³ÖµÄÍ¼Æ¬´óĞ¡£ºËùÏÂÔØÍ¼Æ¬¾­ Base64 ±àÂëºó²»³¬¹ı 3M¡£Í¼Æ¬ÏÂÔØÊ±¼ä²»³¬¹ı 3 Ãë¡£
+	// Í¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆµÄ Url ¿É±£ÕÏ¸ü¸ßµÄÏÂÔØËÙ¶ÈºÍÎÈ¶¨ĞÔ£¬½¨ÒéÍ¼Æ¬´æ´¢ÓÚÌÚÑ¶ÔÆ¡£
+	// ·ÇÌÚÑ¶ÔÆ´æ´¢µÄ Url ËÙ¶ÈºÍÎÈ¶¨ĞÔ¿ÉÄÜÊÜÒ»¶¨Ó°Ïì¡£
+	ImageUrl *string `json:"ImageUrl,omitempty" name:"ImageUrl"`
+}
+
+func (r *WaybillOCRRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *WaybillOCRRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type WaybillOCRResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// ¼ì²âµ½µÄÎÄ±¾ĞÅÏ¢£¬¾ßÌåÄÚÈİÇëµã»÷×ó²àÁ´½Ó¡£
+	// ×¢Òâ£º´Ë×Ö¶Î¿ÉÄÜ·µ»Ø null£¬±íÊ¾È¡²»µ½ÓĞĞ§Öµ¡£
+		TextDetections *TextWaybill `json:"TextDetections,omitempty" name:"TextDetections"`
+
+		// Î¨Ò»ÇëÇó ID£¬Ã¿´ÎÇëÇó¶¼»á·µ»Ø¡£¶¨Î»ÎÊÌâÊ±ĞèÒªÌá¹©¸Ã´ÎÇëÇóµÄ RequestId¡£
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *WaybillOCRResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *WaybillOCRResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type WaybillObj struct {
+
+	// Ê¶±ğ³öµÄÎÄ±¾ĞĞÄÚÈİ
+	Text *string `json:"Text,omitempty" name:"Text"`
 }

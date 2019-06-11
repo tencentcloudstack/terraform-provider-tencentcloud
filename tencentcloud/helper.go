@@ -107,3 +107,26 @@ func pointersMapToStringMap(pointers map[string]*string) map[string]interface{} 
 	}
 	return list
 }
+
+func pointerToString(pointer *string) string {
+	if pointer == nil {
+		return ""
+	}
+	return *pointer
+}
+
+func pointerToInt(pointer *uint64) int {
+	if pointer == nil {
+		return 0
+	}
+	return int(*pointer)
+}
+
+func stringToPointer(s string) *string {
+	return &s
+}
+
+func intToPointer(i int) *uint64 {
+	u := uint64(i)
+	return &u
+}

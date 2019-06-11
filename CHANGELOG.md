@@ -1,4 +1,18 @@
-## 1.7.1 (Unreleased)
+## 1.9.0 (Unreleased)
+## 1.8.0 (Unreleased)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_as_scaling_configs`
+* **New Data Source**: `tencentcloud_as_scaling_groups`
+* **New Data Source**: `tencentcloud_as_scaling_policies`
+* **New Resource**: `tencentcloud_as_scaling_config`
+* **New Resource**: `tencentcloud_as_scaling_group`
+* **New Resource**: `tencentcloud_as_attachment`
+* **New Resource**: `tencentcloud_as_scaling_policy`
+* **New Resource**: `tencentcloud_as_schedule`
+* **New Resource**: `tencentcloud_as_lifecycle_hook`
+* **New Resource**: `tencentcloud_as_notification`
+
 ## 1.7.0 (May 23, 2019)
 
 FEATURES:

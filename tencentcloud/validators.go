@@ -320,3 +320,41 @@ func validateCosBucketLifecycleTimestamp(v interface{}, k string) (ws []string, 
 
 	return
 }
+
+func validateAsConfigPassword(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	if len(value) > 16 || len(value) < 8 {
+		errors = append(errors, fmt.Errorf("invalid password, len(password) must between 8 and 16,%s", value))
+	}
+	var match = make(map[string]bool)
+	if strings.ContainsAny(value, "()~!@#$%^&*-+={}[]:;',.?/") {
+		match["alien"] = true
+	}
+	for i := 0; i < len(value); i++ {
+		if len(match) >= 2 {
+			break
+		}
+		if value[i] >= '0' && value[i] <= '9' {
+			match["number"] = true
+			continue
+		}
+		if (value[i] >= 'a' && value[i] <= 'z') || (value[i] >= 'A' && value[i] <= 'Z') {
+			match["letter"] = true
+			continue
+		}
+	}
+	if len(match) < 2 {
+		errors = append(errors, fmt.Errorf("invalid password, contains at least letters, Numbers, and characters(_+-&=!@#$%%^*()),%s", value))
+	}
+	return
+}
+
+func validateAsScheduleTimestamp(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	_, err := time.Parse(time.RFC3339, value)
+	if err != nil {
+		errors = append(errors, fmt.Errorf(
+			"%q cannot be parsed as RFC3339 Timestamp Format", value))
+	}
+	return
+}
