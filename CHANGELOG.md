@@ -1,5 +1,15 @@
 ## 1.9.0 (Unreleased)
-## 1.8.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* update to `v0.12.1` Terraform SDK version
+
+BUG FIXIES:
+
+* data/tencentcloud_security_group: `project_id` remote API return sometime is string type.
+* resource/tencentcloud_security_group: just like `data/tencentcloud_security_group`
+
+## 1.8.0 (June 11, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_as_scaling_configs`
