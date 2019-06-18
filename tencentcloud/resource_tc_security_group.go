@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"reflect"
 	"strconv"
 	"time"
 
@@ -106,9 +107,9 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 		Data    struct {
 			TotalNum int `json:"totalNum"`
 			Detail   []struct {
-				SgName    string `json:"sgName"`
-				SgRemark  string `json:"sgRemark"`
-				ProjectId int    `json:"projectId"`
+				SgName    string      `json:"sgName"`
+				SgRemark  string      `json:"sgRemark"`
+				ProjectId interface{} `json:"projectId"`
 			}
 		}
 	}
@@ -127,7 +128,17 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 	sg := jsonresp.Data.Detail[0]
 	d.Set("name", sg.SgName)
 	d.Set("description", sg.SgRemark)
-	d.Set("project_id", sg.ProjectId)
+
+	if "string" == reflect.TypeOf(sg.ProjectId).String() {
+		if intVal, err := strconv.ParseInt(sg.ProjectId.(string), 10, 64); err != nil {
+			return fmt.Errorf("create security_group project ParseInt  error ,%s", err.Error())
+		} else {
+			d.Set("project_id", int(intVal))
+		}
+	} else {
+		d.Set("project_id", sg.ProjectId.(int))
+	}
+
 	return nil
 }
 

@@ -3,7 +3,10 @@ package tencentcloud
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
+	"reflect"
+	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -65,12 +68,12 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface
 		Data    struct {
 			TotalNum int `json:"totalNum"`
 			Detail   []struct {
-				SgId             string `json:"sgId"`
-				SgName           string `json:"sgName"`
-				SgRemark         string `json:"sgRemark"`
-				BeAssociateCount int    `json:"beAssociateCount"`
-				CreateTime       string `json:"createTime"`
-				ProjectId        int    `json:"projectId"`
+				SgId             string      `json:"sgId"`
+				SgName           string      `json:"sgName"`
+				SgRemark         string      `json:"sgRemark"`
+				BeAssociateCount int         `json:"beAssociateCount"`
+				CreateTime       string      `json:"createTime"`
+				ProjectId        interface{} `json:"projectId"`
 			}
 		}
 	}
@@ -94,7 +97,16 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface
 	d.Set("description", sg.SgRemark)
 	d.Set("create_time", sg.CreateTime)
 	d.Set("be_associate_count", sg.BeAssociateCount)
-	d.Set("project_id", sg.ProjectId)
 
+	if "string" == reflect.TypeOf(sg.ProjectId).String() {
+		if intVal, err := strconv.ParseInt(sg.ProjectId.(string), 10, 64); err != nil {
+			return fmt.Errorf("create security_group project ParseInt  error ,%s", err.Error())
+		} else {
+			d.Set("project_id", int(intVal))
+		}
+
+	} else {
+		d.Set("project_id", sg.ProjectId.(int))
+	}
 	return nil
 }
