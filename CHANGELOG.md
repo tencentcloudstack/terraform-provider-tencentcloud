@@ -1,4 +1,10 @@
-## 1.9.0 (Unreleased)
+## 1.9.1 (Unreleased)
+
+BUG FIXIES:
+
+* data/tencentcloud_instance: fixed vpc ip is in use error when re-creating with private ip ([#46](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/46)).
+
+## 1.9.0 (June 18, 2019)
 
 ENHANCEMENTS:
 

@@ -438,46 +438,65 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		params["VirtualPrivateCloud.PrivateIpAddresses.0"] = ip
 	}
 
-	response, err := client.SendRequest("cvm", params)
-	if err != nil {
-		return err
-	}
-	var jsonresp struct {
-		Response struct {
-			Error struct {
-				Code    string `json:"Code"`
-				Message string `json:"Message"`
-			}
-			InstanceIdSet []string
-			RequestId     string
+	err := resource.Retry(1*time.Minute, func() *resource.RetryError {
+		response, err := client.SendRequest("cvm", params)
+		if err != nil {
+			return resource.NonRetryableError(err)
 		}
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
+
+		var jsonresp struct {
+			Response struct {
+				Error struct {
+					Code    string `json:"Code"`
+					Message string `json:"Message"`
+				}
+				InstanceIdSet []string
+				RequestId     string
+			}
+		}
+
+		err = json.Unmarshal([]byte(response), &jsonresp)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		if jsonresp.Response.Error.Code == "VpcIpIsUsed" {
+			return resource.RetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
+		}
+
+		if jsonresp.Response.Error.Code != "" {
+			err = fmt.Errorf(
+				"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
+				jsonresp.Response.Error.Code,
+				jsonresp.Response.Error.Message,
+				jsonresp.Response.RequestId,
+			)
+			return resource.NonRetryableError(err)
+		}
+
+		if len(jsonresp.Response.InstanceIdSet) == 0 {
+			err = fmt.Errorf("tencentcloud_instance no instance id returned")
+			return resource.NonRetryableError(err)
+		}
+
+		var instanceStatusMap map[string]string
+		instanceStatusMap, err = waitInstanceReachTargetStatus(client, jsonresp.Response.InstanceIdSet, "RUNNING")
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		instanceId := jsonresp.Response.InstanceIdSet[0]
+		d.SetId(instanceId)
+		d.Set("instance_status", instanceStatusMap[instanceId])
+		d.Set("data_disks", dataDisksAttr)
+
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
-	if jsonresp.Response.Error.Code != "" {
-		return fmt.Errorf(
-			"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
-			jsonresp.Response.Error.Code,
-			jsonresp.Response.Error.Message,
-			jsonresp.Response.RequestId,
-		)
-	}
-	if len(jsonresp.Response.InstanceIdSet) == 0 {
-		return fmt.Errorf("tencentcloud_instance no instance id returned")
-	}
 
-	var instanceStatusMap map[string]string
-	instanceStatusMap, err = waitInstanceReachTargetStatus(client, jsonresp.Response.InstanceIdSet, "RUNNING")
-	if err != nil {
-		return err
-	}
-
-	instanceId := jsonresp.Response.InstanceIdSet[0]
-	d.SetId(instanceId)
-	d.Set("instance_status", instanceStatusMap[instanceId])
-	d.Set("data_disks", dataDisksAttr)
 	return resourceTencentCloudInstanceRead(d, m)
 }
 

@@ -25,8 +25,8 @@ func TestAccTencentCloudInstance_basic(t *testing.T) {
 					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_type", "CLOUD_SSD"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_type", "CLOUD_SSD"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_size", "100"),
 				),
 			},
@@ -53,7 +53,7 @@ func TestAccTencentCloudInstance_prepaid(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
 					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_type", "CLOUD_SSD"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_type", "CLOUD_PREMIUM"),
 				),
 			},
 		},
@@ -437,7 +437,7 @@ resource "tencentcloud_instance" "login" {
   image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   key_name = "${tencentcloud_key_pair.my_key.id}"
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
 }
 `,
 		keyname,
@@ -469,7 +469,7 @@ resource "tencentcloud_instance" "hello" {
   availability_zone = "ap-guangzhou-3"
   image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
 }
 `,
 		name,
@@ -494,7 +494,7 @@ resource "tencentcloud_instance" "hello" {
   image_id      = "%s"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   password      = "%s"
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
 }
 `,
 		imageId,
@@ -526,14 +526,14 @@ resource "tencentcloud_instance" "foo" {
   image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
 
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
   data_disks = [
     {
-      data_disk_type = "CLOUD_SSD"
+      data_disk_type = "CLOUD_PREMIUM"
       data_disk_size = 100
     },
     {
-      data_disk_type = "CLOUD_SSD"
+      data_disk_type = "CLOUD_PREMIUM"
       data_disk_size = 100
     }
   ]
@@ -556,7 +556,7 @@ resource "tencentcloud_instance" "foo" {
   availability_zone = "ap-guangzhou-3"
   image_id      = "${data.tencentcloud_image.myimage.image_id}"
   instance_type = "S2.SMALL1"
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
   instance_charge_type = "PREPAID"
   instance_charge_type_prepaid_period = 1
 }
@@ -588,7 +588,7 @@ resource "tencentcloud_instance" "network" {
   internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 1
   allocate_public_ip = true
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
 }
 `
 
@@ -618,7 +618,7 @@ resource "tencentcloud_instance" "network" {
   internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 1
   allocate_public_ip = false
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
 }
 `
 
@@ -649,7 +649,7 @@ resource "tencentcloud_instance" "login" {
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   internet_max_bandwidth_out = 1
   password = "%s"
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
 }
 `,
 		pwd,
@@ -693,7 +693,7 @@ resource "tencentcloud_instance" "vpc_ins" {
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   vpc_id = "${tencentcloud_vpc.my_vpc.id}"
   subnet_id = "${tencentcloud_subnet.my_subnet.id}"
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
 }
 `
 
@@ -726,7 +726,7 @@ resource "tencentcloud_instance" "hostname" {
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   hostname      = "testing"
 
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
 }
 `
 
@@ -759,7 +759,7 @@ resource "tencentcloud_instance" "project_id" {
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   project_id    = 0
 
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
 }
 `
 
@@ -815,7 +815,7 @@ resource "tencentcloud_instance" "sg" {
   availability_zone = "ap-guangzhou-3"
   image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type = "CLOUD_SSD"
+  system_disk_type = "CLOUD_PREMIUM"
 
   internet_max_bandwidth_out = 1
 
