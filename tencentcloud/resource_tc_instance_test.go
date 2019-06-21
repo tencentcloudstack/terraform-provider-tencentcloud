@@ -26,8 +26,6 @@ func TestAccTencentCloudInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_size", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_type", "CLOUD_PREMIUM"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_size", "100"),
 				),
 			},
 			{
@@ -349,7 +347,7 @@ func TestAccTencentCloudInstance_projectId(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstance_typeChangedWithPrivateIP(t *testing.T) {
+func TestAccTencentCloudInstance_hostnameChangedWithPrivateIP(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
 
@@ -359,7 +357,7 @@ func TestAccTencentCloudInstance_typeChangedWithPrivateIP(t *testing.T) {
 		CheckDestroy: testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInstanceConfigWithInstanceTypeChanged("aaa"),
+				Config: testAccInstanceConfigWithInstanceHostnameChangedWithPrivateIP("aaa"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
 					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
@@ -367,7 +365,7 @@ func TestAccTencentCloudInstance_typeChangedWithPrivateIP(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccInstanceConfigWithInstanceTypeChanged("bbb"),
+				Config: testAccInstanceConfigWithInstanceHostnameChangedWithPrivateIP("bbb"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
 					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
@@ -556,16 +554,7 @@ resource "tencentcloud_instance" "foo" {
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
 
   system_disk_type = "CLOUD_PREMIUM"
-  data_disks {
-    data_disk_type = "CLOUD_PREMIUM"
-    data_disk_size = 100
-    delete_with_instance = false
-  }
-  data_disks {
-    data_disk_type = "CLOUD_PREMIUM"
-    data_disk_size = 100
-    delete_with_instance = false
-  }
+
   disable_security_service = true
   disable_monitor_service = true
 }
@@ -855,7 +844,7 @@ resource "tencentcloud_instance" "sg" {
 	)
 }
 
-func testAccInstanceConfigWithInstanceTypeChanged(name string) string {
+func testAccInstanceConfigWithInstanceHostnameChangedWithPrivateIP(name string) string {
 	return fmt.Sprintf(
 		`
 data "tencentcloud_image" "my_favorate_image" {
