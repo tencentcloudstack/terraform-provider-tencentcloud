@@ -18,11 +18,11 @@ func TestAccTencentCloudInstanceTypesDataSource_basic(t *testing.T) {
 			{
 				Config: testAccTencentCloudInstanceTypesDataSourceConfigBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_instance_types.4c8g"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_instance_types.i4c8g"),
 
-					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.4c8g", "instance_types.0.cpu_core_count", "4"),
-					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.4c8g", "instance_types.0.memory_size", "8"),
-					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.4c8g", "instance_types.0.family", "S1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.i4c8g", "instance_types.0.cpu_core_count", "4"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.i4c8g", "instance_types.0.memory_size", "8"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.i4c8g", "instance_types.0.family", "S1"),
 				),
 			},
 		},
@@ -30,7 +30,7 @@ func TestAccTencentCloudInstanceTypesDataSource_basic(t *testing.T) {
 }
 
 const testAccTencentCloudInstanceTypesDataSourceConfigBasic = `
-data "tencentcloud_instance_types" "4c8g" {
+data "tencentcloud_instance_types" "i4c8g" {
   filter {
     name = "zone"
     values = ["ap-guangzhou-3"]

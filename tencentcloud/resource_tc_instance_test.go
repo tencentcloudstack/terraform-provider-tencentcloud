@@ -527,16 +527,16 @@ resource "tencentcloud_instance" "foo" {
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
 
   system_disk_type = "CLOUD_PREMIUM"
-  data_disks = [
-    {
-      data_disk_type = "CLOUD_PREMIUM"
-      data_disk_size = 100
-    },
-    {
-      data_disk_type = "CLOUD_PREMIUM"
-      data_disk_size = 100
-    }
-  ]
+  data_disks {
+    data_disk_type = "CLOUD_PREMIUM"
+    data_disk_size = 100
+    delete_with_instance = false
+  }
+  data_disks {
+    data_disk_type = "CLOUD_PREMIUM"
+    data_disk_size = 100
+    delete_with_instance = false
+  }
   disable_security_service = true
   disable_monitor_service = true
 }
