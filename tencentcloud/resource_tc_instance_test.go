@@ -349,6 +349,35 @@ func TestAccTencentCloudInstance_projectId(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstance_typeChangedWithPrivateIP(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() { testAccPreCheck(t) },
+
+		IDRefreshName: "tencentcloud_instance.foo",
+
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccInstanceConfigWithInstanceTypeChanged("aaa"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
+					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
+				),
+			},
+			{
+				Config: testAccInstanceConfigWithInstanceTypeChanged("bbb"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
+					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -823,5 +852,53 @@ resource "tencentcloud_instance" "sg" {
 }
 `,
 		rule,
+	)
+}
+
+func testAccInstanceConfigWithInstanceTypeChanged(name string) string {
+	return fmt.Sprintf(
+		`
+data "tencentcloud_image" "my_favorate_image" {
+  os_name = "centos"
+  filter {
+    name   = "image-type"
+    values = ["PUBLIC_IMAGE"]
+  }
+}
+
+data "tencentcloud_instance_types" "my_favorate_instance_types" {
+  filter {
+    name   = "instance-family"
+    values = ["S2"]
+  }
+  cpu_core_count = 1
+  memory_size    = 2
+}
+
+resource "tencentcloud_vpc" "my_vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_vpc_test"
+}
+
+resource "tencentcloud_subnet" "my_subnet" {
+  vpc_id = "${tencentcloud_vpc.my_vpc.id}"
+  availability_zone = "ap-guangzhou-3"
+  name              = "tf_test_subnet"
+  cidr_block        = "10.0.2.0/24"
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name = "test_with_private_ip"
+  availability_zone = "ap-guangzhou-3"
+  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  system_disk_type = "CLOUD_PREMIUM"
+  vpc_id = "${tencentcloud_vpc.my_vpc.id}"
+  subnet_id = "${tencentcloud_subnet.my_subnet.id}"
+  private_ip = "10.0.2.2"
+  hostname = "%s"
+}
+`,
+		name,
 	)
 }
