@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccDataSourceTencentCloudVpcV3Subnets_basic(t *testing.T) {
+func TestAccDataSourceTencentCloudVpcV3RouteTables_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
