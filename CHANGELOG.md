@@ -1,4 +1,9 @@
 ## 1.10.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* `resource/tencentcloud_instance`: add optional argument `tags`.
+
 ## 1.9.1 (June 24, 2019)
 
 BUG FIXIES:

@@ -376,6 +376,28 @@ func TestAccTencentCloudInstance_hostnameChangedWithPrivateIP(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstance_withTags(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() { testAccPreCheck(t) },
+
+		IDRefreshName: "tencentcloud_instance.foo",
+
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccInstanceConfigWithTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
+					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "tags.hello", "world"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -891,3 +913,25 @@ resource "tencentcloud_instance" "foo" {
 		name,
 	)
 }
+
+const testAccInstanceConfigWithTags = `
+data "tencentcloud_image" "my_favorate_image" {
+  os_name = "centos"
+  filter {
+    name   = "image-type"
+    values = ["PUBLIC_IMAGE"]
+  }
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name = "terraform_ci_with_tags"
+  availability_zone = "ap-guangzhou-3"
+  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type = "S4.SMALL1"
+  system_disk_type = "CLOUD_PREMIUM"
+  tags = {
+    "hello" = "world"
+    "happy" = "hour"
+  }
+}
+`

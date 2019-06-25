@@ -29,7 +29,7 @@ data "tencentcloud_image" "my_favorate_image" {
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S1"]
+    values = ["S4"]
   }
 
   cpu_core_count = 1
@@ -81,6 +81,9 @@ resource "tencentcloud_instance" "my_awesome_app" {
   key_name          = "${tencentcloud_key_pair.random_key.id}"
   hostname          = "awesome_app"
   project_id        = 0
+  tags              = {
+    tagKey = "tagValue"
+  }
 
   security_groups = [
     "${tencentcloud_security_group.app.id}",
@@ -148,6 +151,8 @@ The following arguments are supported:
 * `user_data` - (Optional) The user data to be specified into this instance. Must be encrypted in base64 format and limited in 16 KB.
 
 * `user_data_raw` - (Optional) The user data to be specified into this instance, plain text. Conflicts with `user_data`. Limited in 16 KB after encrypted in base64 format.
+
+* `tags` - (Optional) A mapping of tags to assign to the resource.
 
 ## Attributes Reference
 
