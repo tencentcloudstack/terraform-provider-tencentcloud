@@ -278,6 +278,8 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 		d.SetPartial("route_table_id")
 	}
 
+	d.Partial(false)
+
 	return resourceTencentCloudVpcSubnetRead(d, meta)
 }
 
