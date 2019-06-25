@@ -1,4 +1,18 @@
 ## 1.10.0 (Unreleased)
+
+ENHANCEMENTS:
+* Refactoring vpc logic with api3.0
+
+FEATURES:
+* **New Data Source**: `tencentcloud_vpc_instances`
+* **New Data Source**: `tencentcloud_vpc_subnets`
+* **New Data Source**: `tencentcloud_vpc_route_tables`
+* **New Resource**: `tencentcloud_route_table_entry`
+* **Update Resource**: `tencentcloud_vpc` , add more configurable items.
+* **Update Resource**: `tencentcloud_subnet` , add more configurable items.
+* **Update Resource**: `tencentcloud_route_table` ,add more configurable items.
+
+
 ## 1.9.1 (June 24, 2019)
 
 BUG FIXIES:
