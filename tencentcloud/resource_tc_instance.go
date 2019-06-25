@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -73,6 +74,8 @@ var (
 		"allocate_public_ip",
 		"system_disk_size",
 		"data_disks",
+		// we can remove it once tag api support default uin when it is absent in resource URI
+		"tags",
 	}
 )
 
@@ -105,6 +108,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
+				Computed:     true,
 				ValidateFunc: validateInstanceType,
 			},
 			"hostname": {
@@ -254,6 +258,44 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:      true,
 				ForceNew:      true,
 				ConflictsWith: []string{"user_data"},
+			},
+			// cvm api 2017-03-12 runinstances defines tags as a list of map,
+			// such as:
+			//"tags": {
+			//	Type:     schema.TypeList,
+			//	Optional: true,
+			//	Elem: schema.Resource{
+			//		Schema: map[string]*schema.Schema{
+			//			"resource_type": {
+			//				Type:     schema.TypeString,
+			//				Required: true,
+			//			},
+			//			"tags": {
+			//				Type:     schema.TypeList,
+			//				Required: true,
+			//				Elem: schema.Resource{
+			//					Schema: map[String]*schema.Schema{
+			//						"key": {
+			//							Type:     schema.TypeString,
+			//							Required: true,
+			//						},
+			//						"value": {
+			//							Type:     schema.TypeString,
+			//							Required: true,
+			//						},
+			//					},
+			//				},
+			//			},
+			//		},
+			//	},
+			//},
+			// but it actually only accept "instance" as resource type, and list will be merged into
+			// key:value pairs, which means it can be presented as following:
+			// Note that aws has exactly same definition in API spec and same schema in terraform,
+			// here we follow them.
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
 			},
 
 			// Computed values.
@@ -438,46 +480,76 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		params["VirtualPrivateCloud.PrivateIpAddresses.0"] = ip
 	}
 
-	response, err := client.SendRequest("cvm", params)
-	if err != nil {
-		return err
-	}
-	var jsonresp struct {
-		Response struct {
-			Error struct {
-				Code    string `json:"Code"`
-				Message string `json:"Message"`
-			}
-			InstanceIdSet []string
-			RequestId     string
+	// tag
+	if v, ok := d.GetOk("tags"); ok {
+		i := 0
+		params["TagSpecification.0.ResourceType"] = "instance"
+		for key, value := range v.(map[string]interface{}) {
+			params["TagSpecification.0.Tags."+strconv.Itoa(i)+".Key"] = key
+			params["TagSpecification.0.Tags."+strconv.Itoa(i)+".Value"] = value.(string)
 		}
+		i = i + 1
 	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
+
+	err := resource.Retry(1*time.Minute, func() *resource.RetryError {
+		response, err := client.SendRequest("cvm", params)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		var jsonresp struct {
+			Response struct {
+				Error struct {
+					Code    string `json:"Code"`
+					Message string `json:"Message"`
+				}
+				InstanceIdSet []string
+				RequestId     string
+			}
+		}
+
+		err = json.Unmarshal([]byte(response), &jsonresp)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		if jsonresp.Response.Error.Code == "VpcIpIsUsed" {
+			return resource.RetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
+		}
+
+		if jsonresp.Response.Error.Code != "" {
+			err = fmt.Errorf(
+				"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
+				jsonresp.Response.Error.Code,
+				jsonresp.Response.Error.Message,
+				jsonresp.Response.RequestId,
+			)
+			return resource.NonRetryableError(err)
+		}
+
+		if len(jsonresp.Response.InstanceIdSet) == 0 {
+			err = fmt.Errorf("tencentcloud_instance no instance id returned")
+			return resource.NonRetryableError(err)
+		}
+
+		var instanceStatusMap map[string]string
+		instanceStatusMap, err = waitInstanceReachTargetStatus(client, jsonresp.Response.InstanceIdSet, "RUNNING")
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		instanceId := jsonresp.Response.InstanceIdSet[0]
+		d.SetId(instanceId)
+		d.Set("instance_status", instanceStatusMap[instanceId])
+		d.Set("data_disks", dataDisksAttr)
+
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
-	if jsonresp.Response.Error.Code != "" {
-		return fmt.Errorf(
-			"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
-			jsonresp.Response.Error.Code,
-			jsonresp.Response.Error.Message,
-			jsonresp.Response.RequestId,
-		)
-	}
-	if len(jsonresp.Response.InstanceIdSet) == 0 {
-		return fmt.Errorf("tencentcloud_instance no instance id returned")
-	}
 
-	var instanceStatusMap map[string]string
-	instanceStatusMap, err = waitInstanceReachTargetStatus(client, jsonresp.Response.InstanceIdSet, "RUNNING")
-	if err != nil {
-		return err
-	}
-
-	instanceId := jsonresp.Response.InstanceIdSet[0]
-	d.SetId(instanceId)
-	d.Set("instance_status", instanceStatusMap[instanceId])
-	d.Set("data_disks", dataDisksAttr)
 	return resourceTencentCloudInstanceRead(d, m)
 }
 
@@ -558,6 +630,11 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 				RenewFlag   string    `json:"RenewFlag"`
 				CreatedTime time.Time `json:"CreatedTime"`
 				ExpiredTime time.Time `json:"ExpiredTime"`
+
+				Tags []struct {
+					Key   string `json:"Key"`
+					Value string `json:"Value"`
+				} `json:"Tags"`
 			} `json:"InstanceSet"`
 			RequestId string
 		}
@@ -644,6 +721,13 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	if len(subnetId) > 0 {
 		d.Set("subnet_id", subnetId)
 	}
+
+	// we do not allow to modify it, so we do not make it computed as well
+	//tags := make(map[string]string)
+	//for _, tag := range jsonresp.Response.InstanceSet[0].Tags {
+	//	tags[tag.Key] = tag.Value
+	//}
+	//d.Set("tags", tags)
 
 	return nil
 }
