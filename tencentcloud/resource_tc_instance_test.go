@@ -26,6 +26,10 @@ func TestAccTencentCloudInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_size", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_size", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.1.data_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.1.data_disk_size", "100"),
 				),
 			},
 			{
@@ -554,7 +558,16 @@ resource "tencentcloud_instance" "foo" {
   instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
 
   system_disk_type = "CLOUD_PREMIUM"
-
+  data_disks {
+    data_disk_type = "CLOUD_PREMIUM"
+    data_disk_size = 100
+    delete_with_instance = true
+  }
+  data_disks {
+    data_disk_type = "CLOUD_PREMIUM"
+    data_disk_size = 100
+    delete_with_instance = true
+  }
   disable_security_service = true
   disable_monitor_service = true
 }
