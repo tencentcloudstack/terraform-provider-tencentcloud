@@ -12,6 +12,8 @@ description: |-
 
 This resource can prove useful when a module accepts a vpc id as an input variable and needs to, for example, determine the CIDR block of that VPC.
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_vpc_instances.
+
 ## Example Usage
 
 The following example shows how one might accept a VPC id as a variable and use this data source to obtain the data necessary to create a subnet within it.

@@ -10,4 +10,7 @@ const (
 	AsScalingGroupInProgress      = "ResourceInUse.ActivityInProgress"
 	AsScalingGroupInstanceInGroup = "ResourceInUse.InstanceInGroup"
 	AsScalingGroupNotFound        = "ResourceNotFound.AutoScalingGroupNotFound"
+
+	//vpc
+	VPCNotFound = "ResourceNotFound"
 )

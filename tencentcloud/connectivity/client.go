@@ -13,6 +13,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
 //client for all TencentCloud service
@@ -24,6 +25,7 @@ type TencentCloudClient struct {
 	cosConn   *s3.S3
 	redisConn *redis.Client
 	asConn    *as.Client
+	vpcConn   *vpc.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -127,4 +129,24 @@ func (me *TencentCloudClient) UseAsClient() *as.Client {
 	me.asConn = asConn
 
 	return me.asConn
+}
+
+//get vpc client for service
+func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
+	if me.vpcConn != nil {
+		return me.vpcConn
+	}
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+
+	vpcConn, _ := vpc.NewClient(credential, me.Region, cpf)
+	me.vpcConn = vpcConn
+
+	return me.vpcConn
 }

@@ -12,6 +12,8 @@ description: |-
 
 This resource can prove useful when a module accepts a subnet id as an input variable and needs to, for example, determine the id of the VPC that the subnet belongs to.
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_vpc_subnets.
+
 ## Example Usage
 
 The following example shows how one might accept a subnet id as a variable and use this data source to obtain the data necessary to create a security group that allows connections from hosts in that subnet.

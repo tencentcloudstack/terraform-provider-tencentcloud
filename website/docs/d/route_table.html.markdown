@@ -12,6 +12,8 @@ description: |-
 
 This resource can prove useful when a module accepts a Subnet id as an input variable and needs to, for example, add a route in the Route Table.
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_vpc_route_tables.
+
 ## Example Usage
 
 The following example shows how one might accept a vpc id as a variable and use this data source to obtain the data necessary to create a route.

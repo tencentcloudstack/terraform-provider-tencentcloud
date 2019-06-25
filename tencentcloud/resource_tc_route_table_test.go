@@ -1,142 +1,125 @@
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudRouteTable_basic(t *testing.T) {
-	var vpcId string
-	var rtId string
-
+func TestAccTencentCloudVpcV3RouteTable_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckRouteTableDestroy(&vpcId, &rtId),
+		CheckDestroy: testAccCheckVpcRouteTableDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRouteTableConfig,
+				Config: testAccVpcRouteTableConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRouteTableExists("tencentcloud_vpc.foo", "tencentcloud_route_table.foo", &vpcId, &rtId),
+					testAccCheckVpcRouteTableExists("tencentcloud_route_table.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_route_table.foo", "name", "ci-temp-test-rt"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "subnet_ids.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "route_entry_ids.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "is_default"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "create_time"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_route_table.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-func TestAccTencentCloudRouteTable_update(t *testing.T) {
-	var vpcId string
-	var rtId string
-
+func TestAccTencentCloudVpcV3RouteTable_update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckRouteTableDestroy(&vpcId, &rtId),
+		CheckDestroy: testAccCheckVpcRouteTableDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRouteTableConfig,
+				Config: testAccVpcRouteTableConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRouteTableExists("tencentcloud_vpc.foo", "tencentcloud_route_table.foo", &vpcId, &rtId),
+					testAccCheckVpcRouteTableExists("tencentcloud_route_table.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_route_table.foo", "name", "ci-temp-test-rt"),
+
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "subnet_ids.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "route_entry_ids.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "is_default"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "create_time"),
 				),
 			},
 			{
-				Config: testAccRouteTableConfigUpdate,
+				Config: testAccVpcRouteTableConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRouteTableExists("tencentcloud_vpc.foo", "tencentcloud_route_table.foo", &vpcId, &rtId),
+					testAccCheckVpcRouteTableExists("tencentcloud_route_table.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_route_table.foo", "name", "ci-temp-test-rt-updated"),
+
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "subnet_ids.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "route_entry_ids.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "is_default"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "create_time"),
 				),
 			},
 		},
 	})
+
 }
 
-func testAccCheckRouteTableDestroy(vpcId, rtId *string) resource.TestCheckFunc {
+func testAccCheckVpcRouteTableExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		if *vpcId == "" || *rtId == "" {
+		logId := GetLogId(nil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
+
+		rs, ok := s.RootModule().Resources[r]
+		if !ok {
+			return fmt.Errorf("resource %s is not found", r)
+		}
+
+		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		_, has, err := service.DescribeRouteTable(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if has > 0 {
 			return nil
 		}
-		conn := testAccProvider.Meta().(*TencentCloudClient).commonConn
-		params := map[string]string{
-			"Action":       "DescribeRouteTable",
-			"vpcId":        *vpcId,
-			"routeTableId": *rtId,
-		}
-		response, err := conn.SendRequest("vpc", params)
-		if err != nil {
-			return err
-		}
-		var jsonresp struct {
-			Code       int    `json:"code"`
-			CodeDesc   string `json:"codeDesc"`
-			TotalCount int    `json:"totalCount"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.TotalCount != 0 {
-			return fmt.Errorf("Route table still exists.")
-		}
-		return nil
+
+		return fmt.Errorf("route table not exists.")
 	}
 }
 
-func testAccCheckRouteTableExists(vpc, rt string, vpcId, rtId *string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		vpcrs, ok := s.RootModule().Resources[vpc]
-		if !ok {
-			return fmt.Errorf("Not found: %s", vpc)
-		}
+func testAccCheckVpcRouteTableDestroy(s *terraform.State) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-		if vpcrs.Primary.ID == "" {
-			return fmt.Errorf("No VPC ID is set")
+	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_route_table" {
+			continue
 		}
-
-		rs, ok := s.RootModule().Resources[rt]
-		if !ok {
-			return fmt.Errorf("Not found: %s", rt)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("No route table ID is set")
-		}
-
-		client := testAccProvider.Meta().(*TencentCloudClient).commonConn
-		params := map[string]string{
-			"Action":       "DescribeRouteTable",
-			"vpcId":        vpcrs.Primary.ID,
-			"routeTableId": rs.Primary.ID,
-		}
-		response, err := client.SendRequest("vpc", params)
+		time.Sleep(5 * time.Second)
+		_, has, err := service.DescribeRouteTable(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
-		var jsonresp struct {
-			Code       int    `json:"code"`
-			CodeDesc   string `json:"codeDesc"`
-			TotalCount int    `json:"totalCount"`
+		if has == 0 {
+			return nil
 		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.TotalCount == 0 {
-			return fmt.Errorf("Route table not found: %s", rs.Primary.ID)
-		}
-
-		*vpcId = vpcrs.Primary.ID
-		*rtId = rs.Primary.ID
-		return nil
+		return fmt.Errorf("route table  not delete ok")
 	}
+	return nil
 }
 
-const testAccRouteTableConfig = `
+const testAccVpcRouteTableConfig = `
 resource "tencentcloud_vpc" "foo" {
     name = "ci-temp-test"
     cidr_block = "10.0.0.0/16"
@@ -147,7 +130,7 @@ resource "tencentcloud_route_table" "foo" {
    name = "ci-temp-test-rt"
 }
 `
-const testAccRouteTableConfigUpdate = `
+const testAccVpcRouteTableConfigUpdate = `
 resource "tencentcloud_vpc" "foo" {
     name = "ci-temp-test"
     cidr_block = "10.0.0.0/16"
