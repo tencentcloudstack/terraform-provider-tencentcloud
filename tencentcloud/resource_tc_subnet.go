@@ -1,346 +1,307 @@
+/*
+Provide a resource to create a VPC subnet.
+
+Example Usage
+
+```hcl
+variable "availability_zone" {
+	default = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_vpc" "foo" {
+    name="guagua-ci-temp-test"
+    cidr_block="10.0.0.0/16"
+}
+resource "tencentcloud_subnet" "subnet" {
+	availability_zone="${var.availability_zone}"
+	name="guagua-ci-temp-test"
+	vpc_id="${tencentcloud_vpc.foo.id}"
+	cidr_block="10.0.20.0/28"
+	is_multicast=false
+}
+```
+
+Import
+
+Vpc subnet instance can be imported, e.g.
+
+```hcl
+$ terraform import tencentcloud_subnet.test subnet_id
+```
+*/
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"log"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	cl "github.com/zqfan/tencentcloud-sdk-go/client"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-func resourceTencentCloudSubnet() *schema.Resource {
+func resourceTencentCloudVpcSubnet() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudSubnetCreate,
-		Read:   resourceTencentCloudSubnetRead,
-		Update: resourceTencentCloudSubnetUpdate,
-		Delete: resourceTencentCloudSubnetDelete,
+		Create: resourceTencentCloudVpcSubnetCreate,
+		Read:   resourceTencentCloudVpcSubnetRead,
+		Update: resourceTencentCloudVpcSubnetUpdate,
+		Delete: resourceTencentCloudVpcSubnetDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
+			"vpc_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the VPC to be associated.",
+			},
+			"availability_zone": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The availability zone within which the subnet should be created.",
+			},
+			"name": {
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validateStringLengthInRange(1, 60),
+				Description:  "The name of subnet to be created.",
+			},
 			"cidr_block": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateCIDRNetworkAddress,
+				Description:  "A network address block of the subnet.",
 			},
-			"vpc_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-			"availability_zone": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-			},
-			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+			"is_multicast": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Indicates whether multicast is enabled. The default value is 'true'.",
 			},
 			"route_table_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "ID of a routing table to which the subnet should be associated.",
+			},
+			// Computed values
+			"is_default": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicates whether it is the default VPC for this region.",
+			},
+			"available_ip_count": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The number of available IPs.",
+			},
+			"create_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of subnet resource.",
 			},
 		},
 	}
 }
+func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{}) error {
 
-func resourceTencentCloudSubnetCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":                 "CreateSubnet",
-		"vpcId":                  d.Get("vpc_id").(string),
-		"subnetSet.0.subnetName": d.Get("name").(string),
-		"subnetSet.0.cidrBlock":  d.Get("cidr_block").(string),
-		"subnetSet.0.zoneId":     d.Get("availability_zone").(string),
-	}
-	response, err := client.SendRequest("vpc", params)
-	if err != nil {
-		return err
-	}
-	var jsonresp struct {
-		Code      int    `json:"code"`
-		Message   string `json:"message"`
-		CodeDesc  string `json:"codeDesc"`
-		SubnetSet []struct {
-			UnSubnetId string `json:"unSubnetId"`
-		}
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("resource_tc_subnet got error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-	}
-	subnet := jsonresp.SubnetSet[0]
-	log.Printf("[DEBUG] UnSubnetId=%s", subnet.UnSubnetId)
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_subnet.create")()
 
-	if routeTableId := d.Get("route_table_id").(string); routeTableId != "" {
-		if err = bindRouteTableIdForSubnetId(client, d.Get("vpc_id").(string), subnet.UnSubnetId, routeTableId); err != nil {
-			return err
-		}
-	}
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	d.SetId(subnet.UnSubnetId)
-	return nil
-}
-
-func bindRouteTableIdForSubnetId(client *cl.Client, vpcId, unSubnetId, routeTableId string) (err error) {
-	params := map[string]string{
-		"Action":       "AssociateRouteTable",
-		"vpcId":        vpcId,
-		"subnetId":     unSubnetId,
-		"routeTableId": routeTableId,
-	}
-	response, err := client.SendRequest("vpc", params)
-	if err != nil {
-		return err
-	}
-	var jsonresp struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("AssociateRouteTable got error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-	}
-	return
-}
-
-func getMyNewTableId(client *cl.Client, vpcId, oldTableId string) (routeTableId string, errRet error) {
-	var jsonresp struct {
-		Code       int                      `json:"code"`
-		Message    string                   `json:"message"`
-		TotalCount int                      `json:"totalCount"`
-		Data       []map[string]interface{} `json:"data"`
-	}
-	params := map[string]string{
-		"Action":       "DescribeRouteTable",
-		"vpcId":        vpcId,
-		"limit":        "1",
-		"routeTableId": oldTableId,
-	}
-
-	response, err := client.SendRequest("vpc", params)
-	if err != nil {
-		errRet = err
-		return
-	}
-	if err = json.Unmarshal([]byte(response), &jsonresp); err != nil {
-		errRet = err
-		return
-	}
-
-	if jsonresp.Code != 0 {
-		errRet = fmt.Errorf("DescribeRouteTable got error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-		return
-	}
-
-	if len(jsonresp.Data) != 1 {
-		errRet = fmt.Errorf("DescribeRouteTable got  %d table info.", len(jsonresp.Data))
-		return
-	}
-
-	unRouteTableId, ok := jsonresp.Data[0]["unRouteTableId"]
-	if !ok {
-		errRet = fmt.Errorf("DescribeRouteTable got  nil unRouteTableId from table info.")
-		return
-	}
-	routeTableId = unRouteTableId.(string)
-	return
-}
-
-func getMyDefaultTableId(client *cl.Client, vpcId string) (routeTableId string, errRet error) {
 	var (
-		offset    int64 = 0
-		limit     int64 = 50
-		leftCount int64 = -1
+		vpcId            string = ""
+		availabilityZone string = ""
+		name             string = ""
+		cidrBlock        string = ""
+		isMulticast      bool   = true
+		routeTableId     string = ""
 	)
-	var jsonresp struct {
-		Code       int                      `json:"code"`
-		Message    string                   `json:"message"`
-		TotalCount int                      `json:"totalCount"`
-		Data       []map[string]interface{} `json:"data"`
-	}
-
-again:
-	params := map[string]string{
-		"Action": "DescribeRouteTable",
-		"vpcId":  vpcId,
-		"offset": fmt.Sprintf("%d", offset),
-		"limit":  fmt.Sprintf("%d", limit),
-	}
-	response, err := client.SendRequest("vpc", params)
-	if err != nil {
-		errRet = err
-		return
-	}
-	if err = json.Unmarshal([]byte(response), &jsonresp); err != nil {
-		errRet = err
-		return
-	}
-
-	if jsonresp.Code != 0 {
-		errRet = fmt.Errorf("DescribeRouteTable got error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-		return
-	}
-	for _, dataMap := range jsonresp.Data {
-		unRouteTableId, uok := dataMap["unRouteTableId"]
-		routeTableType, rok := dataMap["routeTableType"]
-		if uok && rok {
-			strUnRouteTableId, uok := unRouteTableId.(string)
-			strRouteTableType := fmt.Sprintf("%v", routeTableType)
-			if uok && rok && strRouteTableType == "1" {
-				routeTableId = strUnRouteTableId
-				return
-			}
+	if temp, ok := d.GetOk("vpc_id"); ok {
+		vpcId = temp.(string)
+		if len(vpcId) < 1 {
+			return fmt.Errorf("vpc_id should be not empty string")
 		}
 	}
-	if leftCount == -1 {
-		leftCount = int64(jsonresp.TotalCount)
-	}
-	leftCount -= limit
-	offset += limit
-	if leftCount <= 0 {
-		errRet = fmt.Errorf("no default route table was found.")
-		return
-	}
-	goto again
-}
-
-func resourceTencentCloudSubnetRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":   "DescribeSubnet",
-		"vpcId":    d.Get("vpc_id").(string),
-		"subnetId": d.Id(),
-	}
-	response, err := client.SendRequest("vpc", params)
-	if err != nil {
-		return err
-	}
-
-	var jsonresp struct {
-		Code         int    `json:"code"`
-		Message      string `json:"message"`
-		CodeDesc     string `json:"codeDesc"`
-		SubnetName   string `json:"subnetName"`
-		CidrBlock    string `json:"cidrBlock"`
-		RouteTableId string `json:"routeTableId"`
-		ZoneId       int    `json:"zoneId"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.Code != 0 {
-		if jsonresp.CodeDesc == "InvalidSubnet.NotFound" {
-			d.SetId("")
-			return nil
+	if temp, ok := d.GetOk("availability_zone"); ok {
+		availabilityZone = temp.(string)
+		if len(availabilityZone) < 1 {
+			return fmt.Errorf("availability_zone should be not empty string")
 		}
-		return fmt.Errorf("resource_tc_subnet got error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
+	}
+	if temp, ok := d.GetOk("name"); ok {
+		name = temp.(string)
+	}
+	if temp, ok := d.GetOk("cidr_block"); ok {
+		cidrBlock = temp.(string)
 	}
 
-	d.Set("cidr_block", jsonresp.CidrBlock)
-	d.Set("name", jsonresp.SubnetName)
+	isMulticast = d.Get("is_multicast").(bool)
 
-	if d.Get("route_table_id").(string) != "" {
-		newTableId, err := getMyNewTableId(client, d.Get("vpc_id").(string), jsonresp.RouteTableId)
+	if temp, ok := d.GetOk("route_table_id"); ok {
+		routeTableId = temp.(string)
+		if len(routeTableId) < 1 {
+			return fmt.Errorf("route_table_id should be not empty string")
+		}
+	}
+
+	if routeTableId != "" {
+		_, has, err := service.IsRouteTableInVpc(ctx, routeTableId, vpcId)
 		if err != nil {
 			return err
 		}
-		d.Set("route_table_id", newTableId)
+		if has != 1 {
+			err = fmt.Errorf("error,route_table [%s]  not found in vpc [%s]", routeTableId, vpcId)
+			log.Printf("[CRITAL]%s %s", logId, err.Error())
+			return err
+		}
 	}
+
+	subnetId, err := service.CreateSubnet(ctx, vpcId, name, cidrBlock, availabilityZone)
+	if err != nil {
+		return err
+	}
+	d.SetId(subnetId)
+
+	err = service.ModifySubnetAttribute(ctx, subnetId, name, isMulticast)
+	if err != nil {
+		return err
+	}
+
+	if routeTableId != "" {
+		err = service.ReplaceRouteTableAssociation(ctx, subnetId, routeTableId)
+		if err != nil {
+			return err
+		}
+	}
+
+	return resourceTencentCloudVpcSubnetRead(d, meta)
+}
+func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_subnet.read")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	info, has, err := service.DescribeSubnet(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+	//deleted
+	if has == 0 {
+		d.SetId("")
+		return nil
+	}
+	if has != 1 {
+		errRet := fmt.Errorf("one subnet_id read get %d subnet info", has)
+		log.Printf("[CRITAL]%s %s", logId, errRet.Error())
+		return errRet
+	}
+
+	d.Set("vpc_id", info.vpcId)
+	d.Set("availability_zone", info.zone)
+	d.Set("name", info.name)
+	d.Set("cidr_block", info.cidr)
+	d.Set("is_multicast", info.isMulticast)
+	d.Set("route_table_id", info.routeTableId)
+	d.Set("is_default", info.isDefault)
+	d.Set("available_ip_count", info.availableIpCount)
+	d.Set("create_time", info.createTime)
 	return nil
 }
+func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{}) error {
 
-func resourceTencentCloudSubnetUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":   "ModifySubnetAttribute",
-		"vpcId":    d.Get("vpc_id").(string),
-		"subnetId": d.Id(),
+	logId := GetLogId(nil)
+
+	defer LogElapsed(logId + "resource.tencentcloud_subnet.update")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var (
+		name        string = ""
+		isMulticast bool   = true
+	)
+	old, now := d.GetChange("name")
+	if d.HasChange("name") {
+		name = now.(string)
+	} else {
+		name = old.(string)
+	}
+
+	old, now = d.GetChange("is_multicast")
+	if d.HasChange("is_multicast") {
+		isMulticast = now.(bool)
+	} else {
+		isMulticast = old.(bool)
 	}
 
 	d.Partial(true)
 
-	if d.HasChange("name") {
-		params["subnetName"] = d.Get("name").(string)
-		response, err := client.SendRequest("vpc", params)
-		if err != nil {
-			return err
-		}
-		var jsonresp struct {
-			Code    int    `json:"code"`
-			Message string `json:"message"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.Code != 0 {
-			return fmt.Errorf("resource_tc_subnet got error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-		}
-		d.SetPartial("name")
+	if err := service.ModifySubnetAttribute(ctx, d.Id(), name, isMulticast); err != nil {
+		return err
 	}
+	d.SetPartial("name")
+	d.SetPartial("is_multicast")
 
 	if d.HasChange("route_table_id") {
 		routeTableId := d.Get("route_table_id").(string)
-
-		if routeTableId == "" {
-			//to default table id.
-			defaultRouteTable, err := getMyDefaultTableId(client, d.Get("vpc_id").(string))
-			if err != nil {
-				return err
-			}
-			routeTableId = defaultRouteTable
+		if len(routeTableId) < 1 {
+			return fmt.Errorf("route_table_id should be not empty string")
 		}
 
-		if err := bindRouteTableIdForSubnetId(client, d.Get("vpc_id").(string), d.Id(), routeTableId); err != nil {
+		_, has, err := service.IsRouteTableInVpc(ctx, routeTableId, d.Get("vpc_id").(string))
+		if err != nil {
+			return err
+		}
+		if has != 1 {
+			err = fmt.Errorf("error,route_table [%s]  not found in vpc [%s]", routeTableId, d.Get("vpc_id").(string))
+			log.Printf("[CRITAL]%s %s", logId, err.Error())
+			return err
+		}
+
+		if err := service.ReplaceRouteTableAssociation(ctx, d.Id(), routeTableId); err != nil {
 			return err
 		}
 		d.SetPartial("route_table_id")
 	}
 
-	d.Partial(false)
-
-	return resourceTencentCloudSubnetRead(d, m)
+	return resourceTencentCloudVpcSubnetRead(d, meta)
 }
 
-func resourceTencentCloudSubnetDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	return resource.Retry(5*time.Minute, func() *resource.RetryError {
-		params := map[string]string{
-			"Action":   "DeleteSubnet",
-			"vpcId":    d.Get("vpc_id").(string),
-			"subnetId": d.Id(),
-		}
-		response, err := client.SendRequest("vpc", params)
-		if err != nil {
-			return resource.RetryableError(fmt.Errorf("trying again while it is deleted."))
-		}
-		var jsonresp struct {
-			Code     int    `json:"code"`
-			Message  string `json:"message"`
-			CodeDesc string `json:"codeDesc"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if jsonresp.CodeDesc == "InvalidSubnet.CannotDelete" {
-			return resource.RetryableError(fmt.Errorf(jsonresp.Message))
-		} else if jsonresp.CodeDesc == "InvalidVpc.NotFound" || jsonresp.CodeDesc == "InvalidSubnet.NotFound" {
-			log.Printf("[DEBUG] Delete subnet faid failed, CodeDesc:%s, vpcId:%s, subnetId:%s", jsonresp.CodeDesc, params["vpcId"], params["subnetId"])
-		} else if jsonresp.Code != 0 {
-			return resource.NonRetryableError(fmt.Errorf(jsonresp.Message))
+func resourceTencentCloudVpcSubnetDelete(d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(nil)
+
+	defer LogElapsed(logId + "resource.tencentcloud_subnet.delete")()
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+		if err := service.DeleteSubnet(ctx, d.Id()); err != nil {
+			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+				if sdkErr.Code == VPCNotFound {
+					return nil
+				}
+			}
+			return resource.RetryableError(err)
 		}
 		return nil
 	})
+
+	return err
 }

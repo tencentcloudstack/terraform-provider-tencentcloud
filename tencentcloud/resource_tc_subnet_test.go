@@ -1,179 +1,168 @@
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudSubnet_basic(t *testing.T) {
-	var vpcId string
-	var subnetId string
-
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-			testAccPreSetRegion("ap-guangzhou")
-		},
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSubnetDestroy(&vpcId, &subnetId),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccSubnetConfig,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSubnetExists("tencentcloud_vpc.foo", "tencentcloud_subnet.foo", &vpcId, &subnetId),
-					resource.TestCheckResourceAttr("tencentcloud_subnet.foo", "cidr_block", "10.0.11.0/24"),
-					resource.TestCheckResourceAttr("tencentcloud_subnet.foo", "name", "ci-temp-test-subnet"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudSubnet_update(t *testing.T) {
-	var vpcId string
-	var subnetId string
+func TestAccTencentCloudVpcV3Subnet_basic(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckSubnetDestroy(&vpcId, &subnetId),
+		CheckDestroy: testAccCheckVpcSubnetDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSubnetConfig,
+				Config: testAccVpcSubnetConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSubnetExists("tencentcloud_vpc.foo", "tencentcloud_subnet.foo", &vpcId, &subnetId),
-					resource.TestCheckResourceAttr("tencentcloud_subnet.foo", "cidr_block", "10.0.11.0/24"),
-					resource.TestCheckResourceAttr("tencentcloud_subnet.foo", "name", "ci-temp-test-subnet"),
+					testAccCheckVpcSubnetExists("tencentcloud_subnet.subnet"),
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "cidr_block", "10.0.20.0/28"),
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "name", "guagua-ci-temp-test"),
 				),
 			},
 			{
-				Config: testAccSubnetConfigUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSubnetExists("tencentcloud_vpc.foo", "tencentcloud_subnet.foo", &vpcId, &subnetId),
-					resource.TestCheckResourceAttr("tencentcloud_subnet.foo", "name", "ci-temp-test-subnet-updated"),
-					resource.TestCheckResourceAttrSet("tencentcloud_subnet.foo", "route_table_id"),
-				),
+				ResourceName:      "tencentcloud_subnet.subnet",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-func testAccCheckSubnetDestroy(vpcId, subnetId *string) resource.TestCheckFunc {
+func TestAccTencentCloudVpcV3Subnet_update(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVpcSubnetDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccVpcSubnetConfig,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVpcSubnetExists("tencentcloud_subnet.subnet"),
+
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "cidr_block", "10.0.20.0/28"),
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "name", "guagua-ci-temp-test"),
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "is_multicast", "false"),
+
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "availability_zone"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "is_default"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "available_ip_count"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "route_table_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "create_time"),
+				),
+			},
+			{
+				Config: testAccVpcSubnetConfigUpdate,
+				Check: resource.ComposeTestCheckFunc(
+
+					testAccCheckVpcSubnetExists("tencentcloud_subnet.subnet"),
+
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "cidr_block", "10.0.20.0/28"),
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "name", "ci-temp-test-subnet-updated"),
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "is_multicast", "true"),
+
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "availability_zone"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "is_default"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "available_ip_count"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "route_table_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "create_time"),
+				),
+			},
+		},
+	})
+}
+func testAccCheckVpcSubnetExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		if *vpcId == "" || *subnetId == "" {
+		logId := GetLogId(nil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
+
+		rs, ok := s.RootModule().Resources[r]
+		if !ok {
+			return fmt.Errorf("resource %s is not found", r)
+		}
+
+		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		_, has, err := service.DescribeSubnet(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if has > 0 {
 			return nil
 		}
-		conn := testAccProvider.Meta().(*TencentCloudClient).commonConn
-		params := map[string]string{
-			"Action":   "DescribeSubnet",
-			"vpcId":    *vpcId,
-			"subnetId": *subnetId,
-		}
-		response, err := conn.SendRequest("vpc", params)
-		if err != nil {
-			return err
-		}
-		var jsonresp struct {
-			Code       int    `json:"code"`
-			CodeDesc   string `json:"codeDesc"`
-			TotalCount int    `json:"totalCount"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.CodeDesc != "InvalidSubnet.NotFound" {
-			return fmt.Errorf("Subnet still exists.")
-		}
-		return nil
+
+		return fmt.Errorf("subnet not exists.")
 	}
 }
 
-func testAccCheckSubnetExists(vpc, subnet string, vpcId, subnetId *string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		vpcrs, ok := s.RootModule().Resources[vpc]
-		if !ok {
-			return fmt.Errorf("Not found: %s", vpc)
-		}
+func testAccCheckVpcSubnetDestroy(s *terraform.State) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-		if vpcrs.Primary.ID == "" {
-			return fmt.Errorf("No VPC ID is set")
+	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_subnet" {
+			continue
 		}
-
-		rs, ok := s.RootModule().Resources[subnet]
-		if !ok {
-			return fmt.Errorf("Not found: %s", subnet)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("No subnet ID is set")
-		}
-
-		client := testAccProvider.Meta().(*TencentCloudClient).commonConn
-		params := map[string]string{
-			"Action":   "DescribeSubnet",
-			"vpcId":    vpcrs.Primary.ID,
-			"subnetId": rs.Primary.ID,
-		}
-		response, err := client.SendRequest("vpc", params)
+		time.Sleep(5 * time.Second)
+		_, has, err := service.DescribeSubnet(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
-		var jsonresp struct {
-			Code       int    `json:"code"`
-			CodeDesc   string `json:"codeDesc"`
-			TotalCount int    `json:"totalCount"`
+		if has == 0 {
+			return nil
 		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.CodeDesc == "InvalidSubnet.NotFound" {
-			return fmt.Errorf("Subnet not found: %s", rs.Primary.ID)
-		}
-		if jsonresp.Code != 0 {
-			return fmt.Errorf("Describe subnet failed")
-		}
-
-		*vpcId = vpcrs.Primary.ID
-		*subnetId = rs.Primary.ID
-		return nil
-
+		return fmt.Errorf("subnet not delete ok")
 	}
+	return nil
 }
 
-const testAccSubnetConfig = `
+const testAccVpcSubnetConfig = `
+variable "availability_zone" {
+	default = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_vpc" "foo" {
-    name = "ci-temp-test"
-    cidr_block = "10.0.0.0/16"
+    name="guagua-ci-temp-test"
+    cidr_block="10.0.0.0/16"
 }
-
-resource "tencentcloud_subnet" "foo" {
-   vpc_id = "${tencentcloud_vpc.foo.id}"
-   name = "ci-temp-test-subnet"
-   cidr_block = "10.0.11.0/24"
-   availability_zone = "ap-guangzhou-3"
+resource "tencentcloud_subnet" "subnet" {
+	availability_zone="${var.availability_zone}"
+	name="guagua-ci-temp-test"
+	vpc_id="${tencentcloud_vpc.foo.id}"
+	cidr_block="10.0.20.0/28"
+	is_multicast=false
 }
 `
 
-const testAccSubnetConfigUpdate = `
+const testAccVpcSubnetConfigUpdate = `
+variable "availability_zone" {
+	default = "ap-guangzhou-3"
+}
+
 resource "tencentcloud_vpc" "foo" {
-    name = "ci-temp-test"
-    cidr_block = "10.0.0.0/16"
+    name="guagua-ci-temp-test"
+    cidr_block="10.0.0.0/16"
 }
-resource "tencentcloud_route_table" "foo" {
-   vpc_id = "${tencentcloud_vpc.foo.id}"
-   name = "ci-temp-test-rt"
+
+resource "tencentcloud_route_table" "route_table" {
+    vpc_id = "${tencentcloud_vpc.foo.id}"
+    name = "ci-temp-test-rt"
 }
-resource "tencentcloud_subnet" "foo" {
-  vpc_id = "${tencentcloud_vpc.foo.id}"
-  name = "ci-temp-test-subnet-updated"
-  cidr_block = "10.0.11.0/24"
-  availability_zone = "ap-guangzhou-3"
-  route_table_id = "${tencentcloud_route_table.foo.id}"
+
+resource "tencentcloud_subnet" "subnet" {
+    availability_zone="${var.availability_zone}"
+    name = "ci-temp-test-subnet-updated"
+    vpc_id = "${tencentcloud_vpc.foo.id}"
+    cidr_block="10.0.20.0/28"
+    is_multicast=true
+    route_table_id = "${tencentcloud_route_table.route_table.id}"
 }
 `

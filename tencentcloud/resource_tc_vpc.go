@@ -1,179 +1,251 @@
+/*
+Provide a resource to create a VPC.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_vpc" "foo" {
+    name = "ci-temp-test-updated"
+    cidr_block = "10.0.0.0/16"
+	dns_servers=["119.29.29.29","8.8.8.8"]
+	is_multicast=false
+}
+```
+
+Import
+
+Vpc instance can be imported, e.g.
+
+```hcl
+$ terraform import tencentcloud_vpc.test vpc-id
+```
+*/
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"log"
 	"time"
 
+	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-func resourceTencentCloudVpc() *schema.Resource {
+func resourceTencentCloudVpcInstance() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudVpcCreate,
-		Read:   resourceTencentCloudVpcRead,
-		Update: resourceTencentCloudVpcUpdate,
-		Delete: resourceTencentCloudVpcDelete,
+		Create: resourceTencentCloudVpcInstanceCreate,
+		Read:   resourceTencentCloudVpcInstanceRead,
+		Update: resourceTencentCloudVpcInstanceUpdate,
+		Delete: resourceTencentCloudVpcInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validateStringLengthInRange(1, 60),
+				Description:  "The name of the VPC.",
 			},
 			"cidr_block": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateCIDRNetworkAddress,
+				Description:  "A network address block which should be a subnet of the three internal network segments (10.0.0.0/16, 172.16.0.0/12 and 192.168.0.0/16).",
 			},
-			"is_default": {
-				Type:     schema.TypeBool,
+			"dns_servers": {
+				Type:     schema.TypeSet,
+				Optional: true,
 				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Set: func(v interface{}) int {
+					return hashcode.String(v.(string))
+				},
+				Description: "The DNS server list of the VPC. And you can specify 0 to 5 servers to this list.",
 			},
 			"is_multicast": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Indicates whether VPC multicast is enabled. The default value is 'true'.",
+			},
+
+			// Computed values
+			"is_default": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicates whether it is the default VPC for this region.",
+			},
+			"create_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of VPC.",
 			},
 		},
 	}
 }
+func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 
-func resourceTencentCloudVpcCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":    "CreateVpc",
-		"vpcName":   d.Get("name").(string),
-		"cidrBlock": d.Get("cidr_block").(string),
+	logId := GetLogId(nil)
+
+	defer LogElapsed(logId + "resource.tencentcloud_vpc.create")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var (
+		name        string = ""
+		cidrBlock   string = ""
+		dnsServers         = make([]string, 0, 4)
+		isMulticast bool   = true
+	)
+	if temp, ok := d.GetOk("name"); ok {
+		name = temp.(string)
 	}
-	response, err := client.SendRequest("vpc", params)
+	if temp, ok := d.GetOk("cidr_block"); ok {
+		cidrBlock = temp.(string)
+	}
+	if temp, ok := d.GetOk("dns_servers"); ok {
+
+		slice := temp.(*schema.Set).List()
+		dnsServers = make([]string, 0, len(slice))
+		for _, v := range slice {
+			dnsServers = append(dnsServers, v.(string))
+		}
+		if len(dnsServers) < 1 {
+			return fmt.Errorf("If dns_servers is set, then len(dns_servers) should be [1:4]")
+		}
+		if len(dnsServers) > 4 {
+			return fmt.Errorf("If dns_servers is set, then len(dns_servers) should be [1:4]")
+		}
+
+	}
+	isMulticast = d.Get("is_multicast").(bool)
+
+	vpcId, _, err := service.CreateVpc(ctx, name, cidrBlock, isMulticast, dnsServers)
 	if err != nil {
 		return err
 	}
-	var jsonresp struct {
-		Code      int    `json:"code"`
-		Message   string `json:"message"`
-		UniqVpcId string `json:"uniqVpcId"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("resource_tc_vpc create error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-	}
-	log.Printf("[DEBUG] UniqVpcId=%v", jsonresp.UniqVpcId)
-	d.SetId(jsonresp.UniqVpcId)
-	return nil
+	d.SetId(vpcId)
+	return resourceTencentCloudVpcInstanceRead(d, meta)
 }
 
-func resourceTencentCloudVpcRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action": "DescribeVpcEx",
-		"vpcId":  d.Id(),
-	}
-	response, err := client.SendRequest("vpc", params)
-	if err != nil {
-		d.SetId("")
-		return err
-	}
+func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{}) error {
 
-	var jsonresp struct {
-		Code       int    `json:"code"`
-		Message    string `json:"message"`
-		TotalCount int    `json:"totalCount"`
-		Data       []struct {
-			VpcName     string `json:"vpcName"`
-			CidrBlock   string `json:"cidrBlock"`
-			IsDefault   bool   `json:"isDefault"`
-			IsMulticast bool   `json:"isMulticast"`
-		}
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
+	logId := GetLogId(nil)
+
+	defer LogElapsed(logId + "resource.tencentcloud_vpc.read")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	info, has, err := service.DescribeVpc(ctx, d.Id())
 	if err != nil {
 		return err
 	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("resource_tc_vpc read error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-	} else if jsonresp.TotalCount == 0 {
+	//deleted
+	if has == 0 {
+		log.Printf("[WARN]%s %s\n", logId, "vpc has been delete")
 		d.SetId("")
 		return nil
 	}
-
-	vpc := jsonresp.Data[0]
-	d.Set("name", vpc.VpcName)
-	d.Set("cidr_block", vpc.CidrBlock)
-	d.Set("is_default", vpc.IsDefault)
-	d.Set("is_multicast", vpc.IsMulticast)
+	if has != 1 {
+		errRet := fmt.Errorf("one vpc_id read get %d vpc info", has)
+		log.Printf("[CRITAL]%s %s\n", logId, errRet.Error())
+		return errRet
+	}
+	d.Set("name", info.name)
+	d.Set("cidr_block", info.cidr)
+	d.Set("dns_servers", info.dnsServers)
+	d.Set("is_multicast", info.isMulticast)
+	d.Set("create_time", info.createTime)
+	d.Set("is_default", info.isDefault)
 	return nil
 }
 
-func resourceTencentCloudVpcUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action": "ModifyVpcAttribute",
-	}
-	d.Partial(true)
-	params["vpcId"] = d.Id()
-	attributeUpdate := false
+func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(nil)
+
+	defer LogElapsed(logId + "resource.tencentcloud_vpc.update")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var (
+		name        string = ""
+		dnsServers         = make([]string, 0, 4)
+		slice              = make([]interface{}, 0, 4)
+		isMulticast bool   = true
+	)
+	old, now := d.GetChange("name")
 	if d.HasChange("name") {
-		d.SetPartial("name")
-		params["vpcName"] = d.Get("name").(string)
-		attributeUpdate = true
+		name = now.(string)
+	} else {
+		name = old.(string)
 	}
-	if attributeUpdate {
-		response, err := client.SendRequest("vpc", params)
-		if err != nil {
-			return err
+
+	old, now = d.GetChange("dns_servers")
+
+	if d.HasChange("dns_servers") {
+		slice = now.(*schema.Set).List()
+		if len(slice) < 1 {
+			return fmt.Errorf("If dns_servers is set, then len(dns_servers) should be [1:4]")
 		}
-		var jsonresp struct {
-			Code    int    `json:"code"`
-			Message string `json:"message"`
+		if len(slice) > 4 {
+			return fmt.Errorf("If dns_servers is set, then len(dns_servers) should be [1:4]")
 		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.Code != 0 {
-			return fmt.Errorf("resource_tc_vpc update error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
+	} else {
+		slice = old.([]interface{})
+	}
+	if len(slice) > 0 {
+		for _, v := range slice {
+			dnsServers = append(dnsServers, v.(string))
 		}
 	}
-	d.Partial(false)
-	return resourceTencentCloudVpcRead(d, m)
+
+	old, now = d.GetChange("is_multicast")
+	if d.HasChange("is_multicast") {
+		isMulticast = now.(bool)
+	} else {
+		isMulticast = old.(bool)
+	}
+
+	if err := service.ModifyVpcAttribute(ctx, d.Id(), name, isMulticast, dnsServers); err != nil {
+		return err
+	}
+
+	return resourceTencentCloudVpcInstanceRead(d, meta)
 }
 
-func resourceTencentCloudVpcDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	return resource.Retry(5*time.Minute, func() *resource.RetryError {
-		params := map[string]string{
-			"Action": "DeleteVpc",
-			"vpcId":  d.Id(),
-		}
-		response, err := client.SendRequest("vpc", params)
-		if err != nil {
-			return resource.RetryableError(fmt.Errorf("trying again while it is deleted."))
-		}
-		var jsonresp struct {
-			Code     int    `json:"code"`
-			Message  string `json:"message"`
-			CodeDesc string `json:"codeDesc"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if jsonresp.CodeDesc == "InvalidVpc.CannotDelete" || jsonresp.CodeDesc == "InvalidSubnet.CannotDelete" {
-			return resource.RetryableError(fmt.Errorf(jsonresp.Message))
-		} else if jsonresp.CodeDesc == "InvalidVpc.NotFound" {
-			log.Printf("[DEBUG] Delete vpc faid failed, CodeDesc:InvalidVpc.NotFound, vpcId:%s", params["vpcId"])
-		} else if jsonresp.Code != 0 {
-			return resource.NonRetryableError(fmt.Errorf(jsonresp.Message))
+func resourceTencentCloudVpcInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(nil)
+
+	defer LogElapsed(logId + "resource.tencentcloud_vpc.delete")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+		if err := service.DeleteVpc(ctx, d.Id()); err != nil {
+			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+				if sdkErr.Code == VPCNotFound {
+					return nil
+				}
+			}
+			return resource.RetryableError(err)
 		}
 		return nil
 	})
+	return err
+
 }

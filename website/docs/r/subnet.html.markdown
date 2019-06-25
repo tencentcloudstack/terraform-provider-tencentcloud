@@ -1,26 +1,32 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_subnet"
-sidebar_current: "docs-tencentcloud-resource-vpc-subnet"
+sidebar_current: "docs-tencentcloud-resource-subnet"
 description: |-
-  Provides an Subnet resource.
+  Provide a resource to create a VPC subnet.
 ---
 
 # tencentcloud_subnet
 
-Provides an VPC subnet resource.
+Provide a resource to create a VPC subnet.
 
 ## Example Usage
 
-Basic usage:
-
 ```hcl
-resource "tencentcloud_subnet" "main" {
-  name              = "my test subnet"
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-guangzhou-3"
-  vpc_id            = "${tencent_vpc.main.id}"
-  route_table_id = "${tencentcloud_route_table.foo.id}"
+variable "availability_zone" {
+	default = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_vpc" "foo" {
+    name="guagua-ci-temp-test"
+    cidr_block="10.0.0.0/16"
+}
+resource "tencentcloud_subnet" "subnet" {
+	availability_zone="${var.availability_zone}"
+	name="guagua-ci-temp-test"
+	vpc_id="${tencentcloud_vpc.foo.id}"
+	cidr_block="10.0.20.0/28"
+	is_multicast=false
 }
 ```
 
@@ -28,19 +34,27 @@ resource "tencentcloud_subnet" "main" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name for the Subnet.
-* `cidr_block` - (Required, Forces new resource) The CIDR block for the Subnet.
-* `availability_zone`- (Required, Forces new resource) The AZ for the subnet.
-* `vpc_id` - (Required, Forces new resource) The VPC ID.
-* `route_table_id` - (Optional) The Route Table ID. Note that if this value is not set explicitly, the default route table ID will be used.
+* `availability_zone` - (Required, ForceNew) The availability zone within which the subnet should be created.
+* `cidr_block` - (Required, ForceNew) A network address block of the subnet.
+* `name` - (Required) The name of subnet to be created.
+* `vpc_id` - (Required, ForceNew) ID of the VPC to be associated.
+* `is_multicast` - (Optional) Indicates whether multicast is enabled. The default value is 'true'.
+* `route_table_id` - (Optional) ID of a routing table to which the subnet should be associated.
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `id` - The ID of the Subnet.
-* `name` - The name for the Subnet.
-* `cidr_block` - The CIDR block of the Subnet.
-* `availability_zone`- The AZ for the subnet.
-* `vpc_id` - The VPC ID.
+* `available_ip_count` - The number of available IPs.
+* `create_time` - Creation time of subnet resource.
+* `is_default` - Indicates whether it is the default VPC for this region.
+
+
+## Import
+
+Vpc subnet instance can be imported, e.g.
+
+```hcl
+$ terraform import tencentcloud_subnet.test subnet_id
+```
 

@@ -42,6 +42,9 @@ Data Sources
   tencentcloud_as_scaling_configs
   tencentcloud_as_scaling_groups
   tencentcloud_as_scaling_policies
+  tencentcloud_vpc_instances
+  tencentcloud_vpc_subnets
+  tencentcloud_vpc_route_tables
 
 CBS Resources
   tencentcloud_cbs_storage
@@ -69,6 +72,7 @@ VPC Resources
   tencentcloud_security_group_rule
   tencentcloud_route_table
   tencentcloud_route_entry
+  tencentcloud_route_table_entry
   tencentcloud_dnat
   tencentcloud_nat_gateway
 
@@ -158,6 +162,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_scaling_configs":          dataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":           dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":         dataSourceTencentCloudAsScalingPolicies(),
+			"tencentcloud_vpc_instances":               dataSourceTencentCloudVpcInstances(),
+			"tencentcloud_vpc_subnets":                 dataSourceTencentCloudVpcSubnets(),
+			"tencentcloud_vpc_route_tables":            dataSourceTencentCloudVpcRouteTables(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -175,11 +182,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_lb":                         resourceTencentCloudLB(),
 			"tencentcloud_nat_gateway":                resourceTencentCloudNatGateway(),
 			"tencentcloud_route_entry":                resourceTencentCloudRouteEntry(),
-			"tencentcloud_route_table":                resourceTencentCloudRouteTable(),
+			"tencentcloud_route_table_entry":          resourceTencentCloudVpcRouteEntry(),
+			"tencentcloud_route_table":                resourceTencentCloudVpcRouteTable(),
 			"tencentcloud_security_group":             resourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_group_rule":        resourceTencentCloudSecurityGroupRule(),
-			"tencentcloud_subnet":                     resourceTencentCloudSubnet(),
-			"tencentcloud_vpc":                        resourceTencentCloudVpc(),
+			"tencentcloud_subnet":                     resourceTencentCloudVpcSubnet(),
+			"tencentcloud_vpc":                        resourceTencentCloudVpcInstance(),
 			"tencentcloud_mysql_backup_policy":        resourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":              resourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":    resourceTencentCloudMysqlAccountPrivilege(),

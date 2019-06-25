@@ -1,176 +1,208 @@
+/*
+Provides a resource to create a VPC routing table.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_vpc" "foo" {
+    name = "ci-temp-test"
+    cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_route_table" "foo" {
+   vpc_id = "${tencentcloud_vpc.foo.id}"
+   name = "ci-temp-test-rt"
+}
+```
+
+Import
+
+Vpc routetable instance can be imported, e.g.
+
+```hcl
+$ terraform import tencentcloud_route_table.test route_table_id
+```
+*/
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"log"
+	"time"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-func resourceTencentCloudRouteTable() *schema.Resource {
+func resourceTencentCloudVpcRouteTable() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudRouteTableCreate,
-		Read:   resourceTencentCloudRouteTableRead,
-		Update: resourceTencentCloudRouteTableUpdate,
-		Delete: resourceTencentCloudRouteTableDelete,
-
+		Create: resourceTencentCloudVpcRouteTableCreate,
+		Read:   resourceTencentCloudVpcRouteTableRead,
+		Update: resourceTencentCloudVpcRouteTableUpdate,
+		Delete: resourceTencentCloudVpcRouteTableDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"vpc_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of VPC to which the route table should be associated.",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validateStringLengthInRange(1, 60),
+				Description:  "The name of routing table.",
+			},
+			// Computed values
+			"subnet_ids": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "ID list of the subnets associated with this route table.",
+			},
+			"route_entry_ids": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "ID list of the routing entries.",
+			},
+			"is_default": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicates whether it is the default routing table.",
+			},
+			"create_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of the routing table.",
 			},
 		},
 	}
 }
 
-func resourceTencentCloudRouteTableCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":         "CreateRouteTable",
-		"vpcId":          d.Get("vpc_id").(string),
-		"routeTableName": d.Get("name").(string),
+func resourceTencentCloudVpcRouteTableCreate(d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_route_table.create")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var (
+		vpcId string = ""
+		name  string = ""
+	)
+	if temp, ok := d.GetOk("vpc_id"); ok {
+		vpcId = temp.(string)
+		if len(vpcId) < 1 {
+			return fmt.Errorf("vpc_id should be not empty string")
+		}
 	}
-	response, err := client.SendRequest("vpc", params)
+	if temp, ok := d.GetOk("name"); ok {
+		name = temp.(string)
+	}
+
+	routeTableId, err := service.CreateRouteTable(ctx, name, vpcId)
 	if err != nil {
-		log.Printf("[ERROR] resource_tc_route_table create json.Unmarshal error:%v", err)
 		return err
 	}
-	var jsonresp struct {
-		Code           int    `json:"code"`
-		Message        string `json:"message"`
-		CodeDesc       string `json:"codeDesc"`
-		UnRouteTableId string `json:"unRouteTableId"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("resource_tc_route_table create error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-	}
-	log.Printf("[DEBUG] UnRouteTableId=%s", jsonresp.UnRouteTableId)
-	d.SetId(jsonresp.UnRouteTableId)
-	return nil
+	d.SetId(routeTableId)
+
+	return resourceTencentCloudVpcRouteTableRead(d, meta)
 }
+func resourceTencentCloudVpcRouteTableRead(d *schema.ResourceData, meta interface{}) error {
 
-func resourceTencentCloudRouteTableRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":       "DescribeRouteTable",
-		"vpcId":        d.Get("vpc_id").(string),
-		"routeTableId": d.Id(),
-	}
-	response, err := client.SendRequest("vpc", params)
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_route_table.read")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	info, has, err := service.DescribeRouteTable(ctx, d.Id())
 	if err != nil {
 		return err
 	}
-
-	var jsonresp struct {
-		Code     int    `json:"code"`
-		Message  string `json:"message"`
-		CodeDesc string `json:"codeDesc"`
-		Data     []struct {
-			RouteTableName string `json:"routeTableName"`
-		} `json:"data"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		log.Printf("[ERROR] resource_tc_route_table read json.Unmarshal error:%v", err)
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("resource_tc_route_table read error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-	} else if jsonresp.CodeDesc == "InvalidRouteTableId.NotFound" {
+	//deleted
+	if has == 0 {
 		d.SetId("")
 		return nil
 	}
+	if has != 1 {
+		errRet := fmt.Errorf("one route_table_id read get %d route_table info", has)
+		log.Printf("[CRITAL]%s %s", logId, errRet.Error())
+		return errRet
+	}
 
-	if len(jsonresp.Data) != 1 {
-		d.SetId("")
-		log.Printf("[ERROR] DescribeRouteTable got  %d table info, our expectation is 1.\n", len(jsonresp.Data))
+	routeEntryIds := make([]string, 0, len(info.entryInfos))
+	for _, v := range info.entryInfos {
+		tfRouteEntryId := fmt.Sprintf("%d.%s", v.routeEntryId, d.Id())
+		routeEntryIds = append(routeEntryIds, tfRouteEntryId)
+	}
+
+	d.Set("vpc_id", info.vpcId)
+	d.Set("name", info.name)
+	d.Set("subnet_ids", info.subnetIds)
+	d.Set("route_entry_ids", routeEntryIds)
+	d.Set("is_default", info.isDefault)
+	d.Set("create_time", info.createTime)
+	return nil
+}
+func resourceTencentCloudVpcRouteTableUpdate(d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_route_table.update")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var (
+		name string = ""
+	)
+
+	if temp, ok := d.GetOk("name"); ok {
+		name = temp.(string)
+	}
+
+	err := service.ModifyRouteTableAttribute(ctx, d.Id(), name)
+
+	if err != nil {
+		return err
+	}
+
+	return resourceTencentCloudVpcRouteTableRead(d, meta)
+}
+
+func resourceTencentCloudVpcRouteTableDelete(d *schema.ResourceData, meta interface{}) error {
+
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_route_table.delete")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+		if err := service.DeleteRouteTable(ctx, d.Id()); err != nil {
+			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+				if sdkErr.Code == VPCNotFound {
+					return nil
+				}
+			}
+			return resource.RetryableError(err)
+		}
 		return nil
-	}
+	})
 
-	d.Set("name", jsonresp.Data[0].RouteTableName)
-
-	return nil
-}
-
-func resourceTencentCloudRouteTableUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":       "ModifyVPCRouteTable",
-		"vpcId":        d.Get("vpc_id").(string),
-		"routeTableId": d.Id(),
-	}
-
-	d.Partial(true)
-
-	if d.HasChange("name") {
-		params["routeTableName"] = d.Get("name").(string)
-		response, err := client.SendRequest("vpc", params)
-		if err != nil {
-			return err
-		}
-		var jsonresp struct {
-			Code     int    `json:"code"`
-			Message  string `json:"message"`
-			CodeDesc string `json:"codeDesc"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			log.Printf("[ERROR] resource_tc_route_table update json.Unmarshal error:%v", err)
-			return err
-		}
-		if jsonresp.Code != 0 {
-			return fmt.Errorf("resource_tc_route_table update error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-		}
-		d.SetPartial("name")
-	}
-
-	d.Partial(false)
-
-	return resourceTencentCloudRouteTableRead(d, m)
-}
-
-func resourceTencentCloudRouteTableDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":       "DeleteRouteTable",
-		"vpcId":        d.Get("vpc_id").(string),
-		"routeTableId": d.Id(),
-	}
-
-	log.Printf("[DEBUG] resource_tc_route_table delete params:%v", params)
-
-	response, err := client.SendRequest("vpc", params)
-	if err != nil {
-		log.Printf("[DEBUG] resource_tc_route_table delete client.SendRequest error:%v", err)
-		return err
-	}
-	var jsonresp struct {
-		Code     int    `json:"code"`
-		Message  string `json:"message"`
-		CodeDesc string `json:"codeDesc"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		log.Printf("[DEBUG] resource_tc_route_table delete json.Unmarshal error:%v", err)
-		return err
-	}
-
-	if jsonresp.Code != 0 {
-		log.Printf("[DEBUG] resource_tc_route_table delete error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-		if jsonresp.CodeDesc != "InvalidRouteTableId.NotFound" {
-			return fmt.Errorf(jsonresp.Message)
-		}
-	}
-
-	return nil
+	return err
 }

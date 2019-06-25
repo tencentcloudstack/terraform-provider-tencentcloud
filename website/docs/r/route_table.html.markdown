@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_route_table"
-sidebar_current: "docs-tencentcloud-resource-vpc-route-table"
+sidebar_current: "docs-tencentcloud-resource-route_table"
 description: |-
   Provides a resource to create a VPC routing table.
 ---
@@ -12,12 +12,15 @@ Provides a resource to create a VPC routing table.
 
 ## Example Usage
 
-Basic usage:
-
 ```hcl
-resource "tencentcloud_route_table" "r" {
-  name   = "my test route table"
-  vpc_id = "${tencent_vpc.main.id}"
+resource "tencentcloud_vpc" "foo" {
+    name = "ci-temp-test"
+    cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_route_table" "foo" {
+   vpc_id = "${tencentcloud_vpc.foo.id}"
+   name = "ci-temp-test-rt"
 }
 ```
 
@@ -25,13 +28,24 @@ resource "tencentcloud_route_table" "r" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name for the Route Table.
-* `vpc_id` - (Required, Forces new resource) The VPC ID.
+* `name` - (Required) The name of routing table.
+* `vpc_id` - (Required, ForceNew) ID of VPC to which the route table should be associated.
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `id` - The ID of the Route Table.
-* `name` - The name for Route Table.
-* `vpc_id` - The VPC ID.
+* `create_time` - Creation time of the routing table.
+* `is_default` - Indicates whether it is the default routing table.
+* `route_entry_ids` - ID list of the routing entries.
+* `subnet_ids` - ID list of the subnets associated with this route table.
+
+
+## Import
+
+Vpc routetable instance can be imported, e.g.
+
+```hcl
+$ terraform import tencentcloud_route_table.test route_table_id
+```
+

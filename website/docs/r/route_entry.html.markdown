@@ -10,6 +10,9 @@ description: |-
 
 Provides a resource to create a routing entry in a VPC routing table.
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_route_table_entry.
+
+
 ## Example Usage
 
 Basic usage:
