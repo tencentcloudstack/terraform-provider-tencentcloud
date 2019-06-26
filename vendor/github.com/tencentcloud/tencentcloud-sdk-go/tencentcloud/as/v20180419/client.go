@@ -790,6 +790,34 @@ func (c *Client) EnableAutoScalingGroup(request *EnableAutoScalingGroupRequest) 
     return
 }
 
+func NewExecuteScalingPolicyRequest() (request *ExecuteScalingPolicyRequest) {
+    request = &ExecuteScalingPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("as", APIVersion, "ExecuteScalingPolicy")
+    return
+}
+
+func NewExecuteScalingPolicyResponse() (response *ExecuteScalingPolicyResponse) {
+    response = &ExecuteScalingPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（ExecuteScalingPolicy）用于执行伸缩策略。
+// 
+// * 可以根据伸缩策略ID执行伸缩策略。
+// * 伸缩策略所属伸缩组处于伸缩活动时，会拒绝执行伸缩策略。
+func (c *Client) ExecuteScalingPolicy(request *ExecuteScalingPolicyRequest) (response *ExecuteScalingPolicyResponse, err error) {
+    if request == nil {
+        request = NewExecuteScalingPolicyRequest()
+    }
+    response = NewExecuteScalingPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyAutoScalingGroupRequest() (request *ModifyAutoScalingGroupRequest) {
     request = &ModifyAutoScalingGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1066,6 +1094,7 @@ func NewUpgradeLaunchConfigurationResponse() (response *UpgradeLaunchConfigurati
 // 本接口（UpgradeLaunchConfiguration）用于升级启动配置。
 // 
 // * 本接口用于升级启动配置，采用“完全覆盖”风格，无论之前参数如何，统一按照接口参数设置为新的配置。对于非必填字段，不填写则按照默认值赋值。
+// * 升级修改启动配置后，已经使用该启动配置扩容的存量实例不会发生变更，此后使用该启动配置的新增实例会按照新的配置进行扩容。
 func (c *Client) UpgradeLaunchConfiguration(request *UpgradeLaunchConfigurationRequest) (response *UpgradeLaunchConfigurationResponse, err error) {
     if request == nil {
         request = NewUpgradeLaunchConfigurationRequest()

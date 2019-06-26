@@ -165,11 +165,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_instances":               dataSourceTencentCloudVpcInstances(),
 			"tencentcloud_vpc_subnets":                 dataSourceTencentCloudVpcSubnets(),
 			"tencentcloud_vpc_route_tables":            dataSourceTencentCloudVpcRouteTables(),
+			"tencentcloud_cbs_storages":                dataSourceTencentCloudCbsStorages(),
+			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_alb_server_attachment":      resourceTencentCloudAlbServerAttachment(),
 			"tencentcloud_cbs_snapshot":               resourceTencentCloudCbsSnapshot(),
+			"tencentcloud_cbs_snapshot_policy":        resourceTencentCloudCbsSnapshotPolicy(),
 			"tencentcloud_cbs_storage":                resourceTencentCloudCbsStorage(),
 			"tencentcloud_cbs_storage_attachment":     resourceTencentCloudCbsStorageAttachment(),
 			"tencentcloud_container_cluster":          resourceTencentCloudContainerCluster(),

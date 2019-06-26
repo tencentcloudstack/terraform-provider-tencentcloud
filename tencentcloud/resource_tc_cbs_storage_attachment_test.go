@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -8,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudCbsStorageAttachment_basic(t *testing.T) {
+func TestAccTencentCloudCbsStorageAttachment(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -16,61 +17,39 @@ func TestAccTencentCloudCbsStorageAttachment_basic(t *testing.T) {
 			{
 				Config: testAccCbsStorageAttachmentConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCbsStorageAttached("tencentcloud_cbs_storage.my_storage", "tencentcloud_instance.my_instance"),
+					testAccCheckCbsStorageAttachmentExists("tencentcloud_cbs_storage_attachment.my_attachment"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cbs_storage_attachment.my_attachment", "storage_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cbs_storage_attachment.my_attachment", "instance_id"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckCbsStorageAttached(storageTag string, instanceTag string) resource.TestCheckFunc {
+func testAccCheckCbsStorageAttachmentExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		cbsRs, ok := s.RootModule().Resources[storageTag]
+		logId := GetLogId(nil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
+
+		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("Storage not found: %s", storageTag)
+			return fmt.Errorf("cbs storage attachment %s is not found", n)
 		}
-
-		insRs, ok := s.RootModule().Resources[instanceTag]
-		if !ok {
-			return fmt.Errorf("Instance not found: %s", instanceTag)
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("cbs storage attachment id is not set")
 		}
-
-		if cbsRs.Primary.ID == "" {
-			return fmt.Errorf("Storage no ID is set")
+		cbsService := CbsService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-
-		if insRs.Primary.ID == "" {
-			return fmt.Errorf("Instance no ID is set")
-		}
-
-		provider := testAccProvider
-		// Ignore if Meta is empty, this can happen for validation providers
-		if provider.Meta() == nil {
-			return fmt.Errorf("Provider Meta is nil")
-		}
-		client := provider.Meta().(*TencentCloudClient).commonConn
-
-		if _, err := waitInstanceReachTargetStatus(client, []string{insRs.Primary.ID}, "PENDING"); err != nil {
-			return err
-		}
-		if _, err := waitInstanceReachOneOfTargetStatusList(client, []string{insRs.Primary.ID}, []string{"RUNNING", "STOPPED"}); err != nil {
-			return err
-		}
-
-		storage, _, err := describeCbsStorage(cbsRs.Primary.ID, client)
+		storage, err := cbsService.DescribeDiskById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
-
-		if storage.Attached == 1 {
-			if storage.InstanceId != insRs.Primary.ID {
-				return fmt.Errorf("disk(%s) is attached in %s, not %s", cbsRs.Primary.ID, storage.InstanceId, insRs.Primary.ID)
-			}
-			return nil
+		if *storage.Attached == false {
+			return fmt.Errorf("cbs storage attchment not exists")
 		}
-		return fmt.Errorf("disk(%s) not attached!", cbsRs.Primary.ID)
+		return nil
 	}
-
 }
 
 const testAccCbsStorageAttachmentConfig = `
@@ -85,17 +64,16 @@ data "tencentcloud_image" "my_favorate_image" {
 resource "tencentcloud_cbs_storage" "my_storage" {
   availability_zone = "ap-guangzhou-3"
   storage_size      = 100
-  storage_type      = "cloudSSD"
-  period            = 1
-  storage_name      = "testAccCbsStorageTest"
+  storage_type      = "CLOUD_PREMIUM"
+  storage_name      = "tf-test-storage"
 }
 
 resource "tencentcloud_instance" "my_instance" {
-  instance_name 	= "testAccCbsAttachmentTest"
+  instance_name 	= "tf-test-instance"
   availability_zone = "ap-guangzhou-3"
   image_id      	= "${data.tencentcloud_image.my_favorate_image.image_id}"
   instance_type 	= "S3.SMALL1"
-  system_disk_type  = "CLOUD_SSD"
+  system_disk_type  = "CLOUD_PREMIUM"
 }
 
 resource "tencentcloud_cbs_storage_attachment" "my_attachment" {

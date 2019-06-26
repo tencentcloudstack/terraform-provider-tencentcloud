@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -10,70 +11,139 @@ import (
 
 func TestAccTencentCloudCbsStorage_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCbsStorageDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCbsStorageConfig,
+				Config: testAccCbsStorage_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckStorageExists("tencentcloud_cbs_storage.my_storage"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.my_storage", "storage_name", "testAccCbsStorageTest"),
+					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_basic"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_name", "tf-storage-basic"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_size", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "availability_zone", "ap-guangzhou-3"),
 				),
 			},
 			{
-				Config: testAccCbsStorageConfigChanged,
+				ResourceName:      "tencentcloud_cbs_storage.storage_basic",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudCbsStorage_full(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCbsStorageDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCbsStorage_full,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckStorageExists("tencentcloud_cbs_storage.my_storage"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.my_storage", "storage_name", "testAccCbsStorageTest-2"),
+					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_full"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_name", "tf-storage-full"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_size", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "availability_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "project_id", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "encrypt", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "tags.test", "tf"),
+				),
+			},
+			{
+				Config: testAccCbsStorage_update,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_full"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_name", "tf-storage-update"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_size", "60"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "availability_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "project_id", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "encrypt", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "tags.test", "tf"),
 				),
 			},
 		},
 	})
 }
 
+func testAccCheckCbsStorageDestroy(s *terraform.State) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	cbsService := CbsService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_cbs_storage" {
+			continue
+		}
+
+		_, err := cbsService.DescribeDiskById(ctx, rs.Primary.ID)
+		if err == nil {
+			return fmt.Errorf("cbs storage still exists: %s", rs.Primary.ID)
+		}
+	}
+	return nil
+}
+
 func testAccCheckStorageExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
+		logId := GetLogId(nil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
+
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("Not found: %s", n)
+			return fmt.Errorf("cbs storage %s is not found", n)
 		}
-
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("No ID is set")
+			return fmt.Errorf("cbs storage id is not set")
 		}
-
-		provider := testAccProvider
-		// Ignore if Meta is empty, this can happen for validation providers
-		if provider.Meta() == nil {
-			return fmt.Errorf("Provider Meta is nil")
+		cbsService := CbsService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-
-		client := provider.Meta().(*TencentCloudClient).commonConn
-		_, _, err := describeCbsStorage(rs.Primary.ID, client)
-
-		if err == nil {
+		_, err := cbsService.DescribeDiskById(ctx, rs.Primary.ID)
+		if err != nil {
 			return err
 		}
-		return fmt.Errorf("Error finding CBS Storage %s", rs.Primary.ID)
+		return nil
 	}
 }
 
-const testAccCbsStorageConfig = `
-resource "tencentcloud_cbs_storage" "my_storage" {
-  availability_zone = "ap-guangzhou-3"
-  storage_size      = 50
-  storage_type      = "cloudPremium"
-  period            = 1
-  storage_name      = "testAccCbsStorageTest"
+const testAccCbsStorage_basic = `
+resource "tencentcloud_cbs_storage" "storage_basic" {
+	storage_type      = "CLOUD_PREMIUM"
+	storage_name      = "tf-storage-basic"
+	storage_size      = 50
+	availability_zone = "ap-guangzhou-3"
 }
 `
 
-const testAccCbsStorageConfigChanged = `
-resource "tencentcloud_cbs_storage" "my_storage" {
-  availability_zone = "ap-guangzhou-3"
-  storage_size      = 50
-  storage_type      = "cloudPremium"
-  period            = 1
-  storage_name      = "testAccCbsStorageTest-2"
+const testAccCbsStorage_full = `
+resource "tencentcloud_cbs_storage" "storage_full" {
+	storage_type      = "CLOUD_PREMIUM"
+	storage_name      = "tf-storage-full"
+	storage_size      = 50
+	availability_zone = "ap-guangzhou-3"
+	project_id = 0
+	encrypt = false
+	tags = {
+		test = "tf"
+	}
+}
+`
+const testAccCbsStorage_update = `
+resource "tencentcloud_cbs_storage" "storage_full" {
+	storage_type      = "CLOUD_PREMIUM"
+	storage_name      = "tf-storage-update"
+	storage_size      = 60
+	availability_zone = "ap-guangzhou-3"
+	project_id = 0
+	encrypt = false
+	tags = {
+		test = "tf"
+	}
 }
 `
