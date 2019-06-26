@@ -168,8 +168,8 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		"sgId":       params["sgId"],
 		"direction":  params["direction"],
 		"action":     params["policys.0.action"],
-		"cidrIp":     "0.0.0.0/0", 
-		"sourceSgid": "",          
+		"cidrIp":     "0.0.0.0/0",
+		"sourceSgid": "",
 		"ipProtocol": "ALL",
 		"portRange":  "ALL",
 	}
@@ -219,7 +219,7 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 		d.Set("cidr_ip", rule["cidrIp"])
 	}
 	if sourceSgid != "" {
-		d.Set("sourceSgid", rule["source_sgid"])
+		d.Set("source_sgid", rule["sourceSgid"])
 	}
 	ipProtocol := strings.ToLower(rule["ipProtocol"])
 	portRange := strings.ToLower(rule["portRange"])
