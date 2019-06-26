@@ -13,6 +13,7 @@ FEATURES:
 * **Update Resource**: `tencentcloud_subnet` , add more configurable items.
 * **Update Resource**: `tencentcloud_route_table` ,add more configurable items.
 * **Update Resource**: `resource/tencentcloud_instance`: add optional argument `tags`.
+* **Update Resource**: `resource/tencentcloud_security_group_rule`: add optional argument `source_sgid`.
 
 
 ## 1.9.1 (June 24, 2019)
