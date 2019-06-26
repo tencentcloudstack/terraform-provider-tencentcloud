@@ -21,6 +21,11 @@ resource "tencentcloud_security_group" "default" {
   description = "test security group rule"
 }
 
+resource "tencentcloud_security_group" "default2" {
+  name        = "${var.security_group_name}"
+  description = "anthor test security group rule"
+}
+
 resource "tencentcloud_security_group_rule" "http-in" {
   security_group_id = "${tencentcloud_security_group.default.id}"
   type              = "ingress"
@@ -46,6 +51,15 @@ resource "tencentcloud_security_group_rule" "egress-drop" {
   ip_protocol       = "udp"
   port_range        = "3000-4000"
   policy            = "drop"
+}
+
+resource "tencentcloud_security_group_rule" "sourcesgid-in" {
+  security_group_id = "${tencentcloud_security_group.default.id}"
+  type              = "ingress"
+  source_sgid       = "${tencentcloud_security_group.default2.id}"
+  ip_protocol       = "tcp"
+  port_range        = "80,8080"
+  policy            = "accept"
 }
 ```
 

@@ -39,8 +39,11 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 			},
 			"cidr_ip": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 				ForceNew: true,
+				ConflictsWith: []string{
+					"source_sgid",
+				},
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					_, ip_err := validateIp(v, k)
 					log.Printf("[DEBUG] validateIp ip_err:%v", ip_err)
@@ -95,6 +98,14 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					return
 				},
 			},
+			"source_sgid": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				ConflictsWith: []string{
+					"cidr_ip",
+				},
+			},
 		},
 	}
 }
@@ -107,7 +118,23 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		"direction":        d.Get("type").(string),
 		"index":            "-1",
 		"policys.0.action": d.Get("policy").(string),
-		"policys.0.cidrIp": d.Get("cidr_ip").(string),
+	}
+
+	cidr_ip_exist := false
+	if cidr_ip, ok := d.GetOk("cidr_ip"); ok {
+		params["policys.0.cidrIp"] = cidr_ip.(string)
+		cidr_ip_exist = true
+	}
+
+	sgId_exist := false
+	if sgId, ok := d.GetOk("source_sgid"); ok {
+		params["policys.0.sgId"] = sgId.(string)
+		sgId_exist = true
+	}
+
+	if !cidr_ip_exist && !sgId_exist {
+		return fmt.Errorf("sgId and cidr_ip are both empty")
+
 	}
 	if ip_protocol, ok := d.GetOk("ip_protocol"); ok {
 		params["policys.0.ipProtocol"] = ip_protocol.(string)
@@ -141,10 +168,19 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		"sgId":       params["sgId"],
 		"direction":  params["direction"],
 		"action":     params["policys.0.action"],
-		"cidrIp":     params["policys.0.cidrIp"],
+		"cidrIp":     "0.0.0.0/0", //params["policys.0.cidrIp"],
+		"sourceSgid": "",          //params["policys.0.sgId"],
 		"ipProtocol": "ALL",
 		"portRange":  "ALL",
 	}
+
+	if cidrIp, ok := params["policys.0.cidrIp"]; ok {
+		rule["cidrIp"] = cidrIp
+	}
+	if sourceSgid, ok := params["policys.0.sgId"]; ok {
+		rule["sourceSgid"] = sourceSgid
+	}
+
 	if ipProtocol, ok := params["policys.0.ipProtocol"]; ok {
 		rule["ipProtocol"] = ipProtocol
 	}
@@ -177,7 +213,14 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 
 	d.Set("security_group_id", rule["sgId"])
 	d.Set("type", rule["direction"])
-	d.Set("cidr_ip", rule["cidrIp"])
+	cidrIp := rule["cidrIp"]
+	sourceSgid := rule["sourceSgid"]
+	if cidrIp != "0.0.0.0/0" {
+		d.Set("cidr_ip", rule["cidrIp"])
+	}
+	if sourceSgid != "" {
+		d.Set("sourceSgid", rule["source_sgid"])
+	}
 	ipProtocol := strings.ToLower(rule["ipProtocol"])
 	portRange := strings.ToLower(rule["portRange"])
 	if ipProtocol != "all" {
