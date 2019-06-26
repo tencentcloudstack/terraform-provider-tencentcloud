@@ -70,7 +70,7 @@ The following arguments are supported:
 * `security_group_id` - (Required, Forces new resource) The security group to apply this rule to.
 * `type` - (Required, Forces new resource) The type of rule being created. Valid options are "ingress" (inbound) or "egress" (outbound).
 * `cidr_ip` - (Optional, Forces new resource) can be IP, or CIDR block.
-* `source_sgid` - (Optional, Forces new resource) The ID of a security group rule. Either cidr_ip or source_sgid must be specified，but it isn't supported simultaneously.
+* `source_sgid` - (Optional, Forces new resource) The ID of a security group rule. Either `cidr_ip` or `source_sgid` must be specified, but it isn't supported simultaneously.
 * `ip_protocol` - (Optional, Forces new resource) Support "UDP"、"TCP"、"ICMP", Not configured means all protocols.
 * `port_range` - (Optional, Forces new resource) examples, Single port: "53"、Multiple ports: "80,8080,443"、Continuous port: "80-90", Not configured to represent all ports.
 * `policy` - (Required, Forces new resource) Policy of rule, "accept" or "drop".
