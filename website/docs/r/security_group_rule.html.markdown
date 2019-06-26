@@ -81,6 +81,7 @@ The following attributes are exported:
 * `id` - The ID of the security group rule.
 * `type` - The type of rule, "ingress" or "egress".
 * `cidr_ip` - The source of rule, IP or CIDR block.
+* `source_sgid` - The ID of a security group rule.
 * `ip_protocol` – The protocol used.
 * `port_range` – The port used.
 * `policy` - The policy of rule, "accept" or "drop".
