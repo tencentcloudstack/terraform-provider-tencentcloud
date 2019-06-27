@@ -61,7 +61,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
   lifecycle_rules {
     filter_prefix = "path1/"
     transition {
-      data          = "2019-06-01"
+      date          = "2019-06-01"
       storage_class = "STANDARD_IA"
     }
     expiration {
