@@ -19,6 +19,13 @@ FEATURES:
 * **Update Resource**: `tencentcloud_cbs_storage`, add more configurable items.
 * **Update Resource**: `tencentcloud_instance`: add optional argument `tags`.
 * **Update Resource**: `tencentcloud_security_group_rule`: add optional argument `source_sgid`.
+ 
+DEPRECATED:
+* Data Source: `tencentcloud_vpc` replaced by `tencentcloud_vpc_instances`.
+* Data Source: `tencentcloud_subnet` replaced by  `tencentcloud_vpc_subnets`.
+* Data Source: `tencentcloud_route_table` replaced by `tencentcloud_vpc_route_tables`.
+* Resource: `tencentcloud_route_entry` replaced by `tencentcloud_route_table_entry`.
+
 
 
 ## 1.9.1 (June 24, 2019)
