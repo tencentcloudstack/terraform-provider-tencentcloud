@@ -18,6 +18,7 @@ FEATURES:
 * **Update Resource**: `tencentcloud_route_table`, add more configurable items.
 * **Update Resource**: `tencentcloud_cbs_storage`, add more configurable items.
 * **Update Resource**: `tencentcloud_instance`: add optional argument `tags`.
+* **Update Resource**: `tencentcloud_security_group_rule`: add optional argument `source_sgid`.
 
 
 ## 1.9.1 (June 24, 2019)
