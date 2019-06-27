@@ -77,12 +77,27 @@ getMoreData:
 	request.Offset = &offset
 
 	response, err := me.client.UseVpcClient().DescribeCcns(request)
+
 	if err != nil {
 		errRet = err
+		responseStr := ""
+		if response != nil {
+			responseStr = response.ToJsonString()
+		}
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+			logId,
+			request.GetAction(),
+			request.ToJsonString(),
+			responseStr,
+			errRet.Error())
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		logId,
+		request.GetAction(),
+		request.ToJsonString(),
+		response.ToJsonString())
 
 	if total < 0 {
 		total = int(*response.Response.TotalCount)
@@ -121,24 +136,37 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, cnnI
 
 	logId := GetLogId(ctx)
 	request := vpc.NewDescribeCcnRegionBandwidthLimitsRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
 
 	infos = make([]CnnBandwidthLimit, 0, 100)
 
 	request.CcnId = &cnnId
 
 	response, err := me.client.UseVpcClient().DescribeCcnRegionBandwidthLimits(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
 	if err != nil {
 		errRet = err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		logId,
+		request.GetAction(),
+		request.ToJsonString(),
+		response.ToJsonString())
 
 	for _, item := range response.Response.CcnRegionBandwidthLimitSet {
 
@@ -146,6 +174,131 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, cnnI
 		cnnBandwidthLimit.region = *item.Region
 		cnnBandwidthLimit.limit = int64(*item.BandwidthLimit)
 		infos = append(infos, cnnBandwidthLimit)
+	}
+	return
+}
+
+func (me *VpcService) CreateCcn(ctx context.Context, name, description, qos string) (basicInfo CnnBasicInfo, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := vpc.NewCreateCcnRequest()
+
+	request.CcnName = &name
+	request.CcnDescription = &description
+	request.QosLevel = &qos
+
+	response, err := me.client.UseVpcClient().CreateCcn(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+		logId,
+		request.GetAction(),
+		request.ToJsonString(),
+		response.ToJsonString())
+
+	if response.Response.Ccn == nil || response.Response.Ccn.CcnId == nil || *response.Response.Ccn.CcnId == "" {
+		errRet = fmt.Errorf("CreateCcn return empty response.Response.Ccn ")
+		return
+	}
+
+	item := response.Response.Ccn
+	basicInfo.cnnId = *item.CcnId
+	basicInfo.name = *item.CcnName
+	basicInfo.createTime = *item.CreateTime
+
+	basicInfo.description = *item.CcnDescription
+	basicInfo.instanceCount = int64(*item.InstanceCount)
+	basicInfo.qos = *item.QosLevel
+	basicInfo.state = *item.State
+	return
+}
+
+func (me *VpcService) DeleteCcn(ctx context.Context, cnnId string) (errRet error) {
+
+	logId := GetLogId(ctx)
+	request := vpc.NewDeleteCcnRequest()
+	request.CcnId = &cnnId
+
+	response, err := me.client.UseVpcClient().DeleteCcn(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+		logId,
+		request.GetAction(),
+		request.ToJsonString(),
+		response.ToJsonString())
+	return
+}
+
+func (me *VpcService) ModifyCcnAttribute(ctx context.Context, cnnId, name, description string) (errRet error) {
+
+	logId := GetLogId(ctx)
+	request := vpc.NewModifyCcnAttributeRequest()
+	request.CcnId = &cnnId
+
+	if name != "" {
+		request.CcnName = &name
+	}
+	if description != "" {
+		request.CcnDescription = &description
+	}
+
+	response, err := me.client.UseVpcClient().ModifyCcnAttribute(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
+	if err != nil {
+		errRet = err
+		return
 	}
 	return
 }

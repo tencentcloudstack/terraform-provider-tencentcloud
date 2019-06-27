@@ -59,6 +59,41 @@ func dataSourceTencentCloudCnnInstances() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
+						"attachment_list": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"instance_type": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"instance_region": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"instance_id": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"state": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"attached_time": {
+										Type:     schema.TypeString,
+										Computed: true,
+									},
+									"cidr_block": {
+										Type:     schema.TypeList,
+										Computed: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
 						"create_time": {
 							Type:     schema.TypeString,
 							Computed: true,
@@ -111,7 +146,6 @@ func dataSourceTencentCloudCnnInstancesRead(d *schema.ResourceData, meta interfa
 		infoMap["description"] = item.description
 		infoMap["qos"] = item.qos
 		infoMap["state"] = strings.ToUpper(item.state)
-		infoMap["instance_count"] = item.instanceCount
 		infoMap["create_time"] = item.createTime
 		infoList = append(infoList, infoMap)
 	}
