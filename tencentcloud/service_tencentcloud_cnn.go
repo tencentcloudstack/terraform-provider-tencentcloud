@@ -19,6 +19,11 @@ type CnnBasicInfo struct {
 	createTime    string
 }
 
+type CnnBandwidthLimit struct {
+	region string
+	limit  int64
+}
+
 func (me *VpcService) DescribeCcn(ctx context.Context, cnnId string) (info CnnBasicInfo, has int, errRet error) {
 	infos, err := me.DescribeCcns(ctx, cnnId, "")
 	if err != nil {
@@ -110,4 +115,37 @@ getMoreData:
 	}
 	goto getMoreData
 
+}
+
+func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, cnnId string) (infos []CnnBandwidthLimit, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := vpc.NewDescribeCcnRegionBandwidthLimitsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	infos = make([]CnnBandwidthLimit, 0, 100)
+
+	request.CcnId = &cnnId
+
+	response, err := me.client.UseVpcClient().DescribeCcnRegionBandwidthLimits(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, item := range response.Response.CcnRegionBandwidthLimitSet {
+
+		var cnnBandwidthLimit CnnBandwidthLimit
+		cnnBandwidthLimit.region = *item.Region
+		cnnBandwidthLimit.limit = int64(*item.BandwidthLimit)
+		infos = append(infos, cnnBandwidthLimit)
+	}
+	return
 }

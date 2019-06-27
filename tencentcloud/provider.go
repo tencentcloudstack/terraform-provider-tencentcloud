@@ -166,6 +166,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_subnets":                 dataSourceTencentCloudVpcSubnets(),
 			"tencentcloud_vpc_route_tables":            dataSourceTencentCloudVpcRouteTables(),
 			"tencentcloud_cnn_instances":               dataSourceTencentCloudCnnInstances(),
+			"tencentcloud_cnn_bandwidth_limits":        dataSourceTencentCloudCnnBandwidthLimits(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
