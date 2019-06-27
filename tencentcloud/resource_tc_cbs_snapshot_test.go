@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -8,60 +9,102 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudCbsSnapshot_basic(t *testing.T) {
+func TestAccTencentCloudCbsSnapshot(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCbsSnapshotDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCbsSnapshotConfig,
+				Config: testAccCbsSnapshot,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSnapshotExists("tencentcloud_cbs_snapshot.test"),
+					testAccCheckSnapshotExists("tencentcloud_cbs_snapshot.snapshot"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cbs_snapshot.snapshot", "storage_id"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_snapshot.snapshot", "snapshot_name", "tf-test-snapshot"),
 				),
+			},
+			{
+				Config: testAccCbsSnapshot_update,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_cbs_snapshot.snapshot", "snapshot_name", "tf-test-snapshot-update"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_cbs_snapshot.snapshot",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
+func testAccCheckCbsSnapshotDestroy(s *terraform.State) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	cbsService := CbsService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_cbs_snapshot" {
+			continue
+		}
+
+		_, err := cbsService.DescribeSnapshotById(ctx, rs.Primary.ID)
+		if err == nil {
+			return fmt.Errorf("cbs snapshot still exists: %s", rs.Primary.ID)
+		}
+	}
+	return nil
+}
+
 func testAccCheckSnapshotExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
+		logId := GetLogId(nil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
+
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("Not found: %s", n)
+			return fmt.Errorf("cbs snapshot %s is not found", n)
 		}
-
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("No ID is set")
+			return fmt.Errorf("cbs snapshot id is set")
 		}
-
-		provider := testAccProvider
-		// Ignore if Meta is empty, this can happen for validation providers
-		if provider.Meta() == nil {
-			return fmt.Errorf("Provider Meta is nil")
+		cbsService := CbsService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-
-		client := provider.Meta().(*TencentCloudClient).commonConn
-
-		_, _, err := describeSnapshot(rs.Primary.ID, client)
-
-		if err == nil {
+		_, err := cbsService.DescribeSnapshotById(ctx, rs.Primary.ID)
+		if err != nil {
 			return err
 		}
-		return fmt.Errorf("Error finding CBS Snapshot %s", rs.Primary.ID)
+		return nil
 	}
 }
 
-const testAccCbsSnapshotConfig = `
-resource "tencentcloud_cbs_storage" "test" {
-  availability_zone = "ap-guangzhou-3"
-  storage_size      = 50
-  storage_type      = "cloudPremium"
-  period            = 1
-  storage_name      = "testAccCbsStorageTest"
+const testAccCbsSnapshot = `
+resource "tencentcloud_cbs_storage" "storage" {
+	availability_zone = "ap-guangzhou-3"
+	storage_size      = 50
+	storage_type      = "CLOUD_PREMIUM"
+	storage_name      = "tf-test-storage"
 }
 
-resource "tencentcloud_cbs_snapshot" "test" {
-  storage_id    = "${tencentcloud_cbs_storage.test.id}"
-  snapshot_name = "testAccCbsSnapshotTest"
+resource "tencentcloud_cbs_snapshot" "snapshot" {
+	storage_id    = "${tencentcloud_cbs_storage.storage.id}"
+	snapshot_name = "tf-test-snapshot"
+}
+`
+
+const testAccCbsSnapshot_update = `
+resource "tencentcloud_cbs_storage" "storage" {
+	availability_zone = "ap-guangzhou-3"
+	storage_size      = 50
+	storage_type      = "CLOUD_PREMIUM"
+	storage_name      = "tf-test-storage"
+}
+
+resource "tencentcloud_cbs_snapshot" "snapshot" {
+	storage_id    = "${tencentcloud_cbs_storage.storage.id}"
+	snapshot_name = "tf-test-snapshot-update"
 }
 `

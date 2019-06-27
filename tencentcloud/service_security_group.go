@@ -37,6 +37,7 @@ func describeSecurityGroupRuleIndex(client *client.Client, rule map[string]strin
 			Ingress []struct {
 				Index      int    `json:"index"`
 				CidrIp     string `json:"cidrIp"`
+				SourceSgId string `json:"sourceSgId"`
 				IpProtocol string `json:"ipProtocol"`
 				PortRange  string `json:"portRange"`
 				Action     string `json:"action"`
@@ -44,6 +45,7 @@ func describeSecurityGroupRuleIndex(client *client.Client, rule map[string]strin
 			Egress []struct {
 				Index      int    `json:"index"`
 				CidrIp     string `json:"cidrIp"`
+				SourceSgId string `json:"sourceSgId"`
 				IpProtocol string `json:"ipProtocol"`
 				PortRange  string `json:"portRange"`
 				Action     string `json:"action"`
@@ -78,8 +80,7 @@ func describeSecurityGroupRuleIndex(client *client.Client, rule map[string]strin
 		rule["ipProtocol"] = strings.ToLower(rule["ipProtocol"])
 		rule["portRange"] = strings.ToLower(rule["portRange"])
 		rule["action"] = strings.ToLower(rule["action"])
-
-		if r.CidrIp == rule["cidrIp"] && r.IpProtocol == rule["ipProtocol"] && r.PortRange == rule["portRange"] && r.Action == rule["action"] {
+		if ((rule["cidrIp"] == r.CidrIp) || (rule["sourceSgId"] == r.SourceSgId)) && r.IpProtocol == rule["ipProtocol"] && r.PortRange == rule["portRange"] && r.Action == rule["action"] {
 			exist = true
 			index = r.Index
 			break

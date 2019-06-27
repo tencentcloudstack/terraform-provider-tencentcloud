@@ -94,7 +94,7 @@ func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 
 	if len(dnsServers) > 0 {
 		request.DnsServers = make([]*string, 0, len(dnsServers))
-		for index, _ := range dnsServers {
+		for index := range dnsServers {
 			request.DnsServers = append(request.DnsServers, &dnsServers[index])
 		}
 	}
@@ -325,7 +325,7 @@ func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string
 
 	if len(dnsServers) > 0 {
 		request.DnsServers = make([]*string, 0, len(dnsServers))
-		for index, _ := range dnsServers {
+		for index := range dnsServers {
 			request.DnsServers = append(request.DnsServers, &dnsServers[index])
 		}
 	}

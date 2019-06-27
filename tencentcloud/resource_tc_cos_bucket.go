@@ -32,7 +32,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
   bucket = "mycos-1258798060"
   acl    = "public-read-write"
 
-  cors_rule {
+  cors_rules {
     allowed_origins = ["http://*.abc.com"]
     allowed_methods = ["PUT", "POST"]
     allowed_headers = ["*"]
@@ -52,7 +52,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
   lifecycle_rules {
     filter_prefix = "path1/"
     transition {
-      data          = "2019-06-01"
+      date          = "2019-06-01"
       storage_class = "STANDARD_IA"
     }
     expiration {

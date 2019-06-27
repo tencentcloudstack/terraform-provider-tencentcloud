@@ -1,35 +1,34 @@
+/*
+Provide a resource to create a CBS snapshot.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_cbs_snapshot" "snapshot" {
+        snapshot_name = "unnamed"
+        storage_id   = "disk-kdt0sq6m"
+}
+```
+
+Import
+
+CBS snapshot can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_cbs_snapshot.snapshot snap-3sa3f39b
+```
+*/
 package tencentcloud
 
 import (
-	"encoding/json"
-	"errors"
+	"context"
 	"fmt"
 	"log"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
-
-const (
-	ecSnapshotNotExistError  = 16003
-	ecSnapshotStatusError    = 16004
-	ecSnapshotLifeStateError = 16033
-)
-
-var (
-	errSnapshotNotFound = errors.New("snapshot not found")
-)
-
-type snapshotInfo struct {
-	DiskType       string
-	Percent        int
-	StorageId      string
-	StorageSize    int
-	SnapshotName   string
-	SnapshotStatus string
-}
 
 func resourceTencentCloudCbsSnapshot() *schema.Resource {
 	return &schema.Resource{
@@ -37,242 +36,140 @@ func resourceTencentCloudCbsSnapshot() *schema.Resource {
 		Read:   resourceTencentCloudCbsSnapshotRead,
 		Update: resourceTencentCloudCbsSnapshotUpdate,
 		Delete: resourceTencentCloudCbsSnapshotDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"snapshot_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
+				Description:  "Name of the snapshot.",
 			},
 			"storage_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the the CBS which this snapshot created from.",
 			},
 			"storage_size": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Volume of storage which this snapshot created from.",
 			},
 			"snapshot_status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Status of the snapshot.",
 			},
 			"disk_type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Types of CBS which this snapshot created from.",
 			},
-			"pecent": {
-				Type:     schema.TypeInt,
-				Computed: true,
+			"percent": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Snapshot creation progress percentage. If the snapshot has created successfully, the constant value is 100.",
+			},
+			"create_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of snapshot.",
 			},
 		},
 	}
 }
 
-func modifySnapshot(snapshotId string, snapshotName string, client *client.Client) error {
-	params := map[string]string{
-		"Action":       "ModifySnapshot",
-		"snapshotId":   snapshotId,
-		"snapshotName": snapshotName,
-	}
+func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	response, err := client.SendRequest("snapshot", params)
-	if err != nil {
-		return err
-	}
-	var jsonresp struct {
-		Code     int
-		Message  string
-		CodeDesc string
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf(
-			"ModifySnapshot error, code:%v, message: %v, codeDesc: %v.",
-			jsonresp.Code,
-			jsonresp.Message,
-			jsonresp.CodeDesc,
-		)
-	}
-
-	log.Printf("[DEBUG] ModifySnapshot, new snapshotName: %#v.", snapshotName)
-	return nil
-}
-
-func deleteSnapshot(snapshotId string, client *client.Client) *resource.RetryError {
-	params := map[string]string{
-		"Action":        "DeleteSnapshot",
-		"snapshotIds.0": snapshotId,
-	}
-
-	response, err := client.SendRequest("snapshot", params)
-	if err != nil {
-		return resource.NonRetryableError(err)
-	}
-
-	var jsonresp struct {
-		Code     int
-		Message  string
-		CodeDesc string
-		Detail   struct {
-			Result map[string]struct {
-				Msg  string
-				Code int
-			}
-		}
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return resource.NonRetryableError(err)
-	}
-	if jsonresp.Code != 0 {
-		return resource.NonRetryableError(fmt.Errorf(
-			"DeleteSnapshot error, code:%v, message: %v, codeDesc: %v.",
-			jsonresp.Code,
-			jsonresp.Message,
-			jsonresp.CodeDesc,
-		))
-	}
-	code := jsonresp.Detail.Result[snapshotId].Code
-	msg := jsonresp.Detail.Result[snapshotId].Msg
-
-	if code == ecSnapshotNotExistError || code == 0 {
-		return nil
-	} else if code == ecSnapshotStatusError || code == ecSnapshotLifeStateError {
-		return resource.RetryableError(fmt.Errorf("snapshot status error, please retry later"))
-	} else {
-		return resource.NonRetryableError(fmt.Errorf("DeleteSnapshot failed, inner code:%v, message: %v", code, msg))
-	}
-}
-
-func waitingSnapshotReady(snapshotId string, client *client.Client) error {
-	return resource.Retry(5*time.Minute, func() *resource.RetryError {
-		snapshotInfo, _, err := describeSnapshot(snapshotId, client)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if snapshotInfo.SnapshotStatus == "creating" {
-			return resource.RetryableError(fmt.Errorf("waiting snapshot ready"))
-		}
-		return nil
-	})
-}
-
-func describeSnapshot(snapshotId string, client *client.Client) (*snapshotInfo, bool, error) {
-	var jsonresp struct {
-		Code        int
-		Message     string
-		CodeDesc    string
-		SnapshotSet []snapshotInfo
-	}
-	params := map[string]string{
-		"Action":        "DescribeSnapshots",
-		"snapshotIds.0": snapshotId,
-	}
-	response, err := client.SendRequest("snapshot", params)
-	canRetryError := false
-	if err != nil {
-		return nil, canRetryError, err
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return nil, canRetryError, err
-	}
-	if jsonresp.Code != 0 {
-		return nil, canRetryError, fmt.Errorf(
-			"DescribeSnapshots error, code:%v, message: %v, codeDesc: %v.",
-			jsonresp.Code,
-			jsonresp.Message,
-			jsonresp.CodeDesc,
-		)
-	}
-
-	if len(jsonresp.SnapshotSet) == 0 {
-		canRetryError = true
-		return nil, canRetryError, errSnapshotNotFound
-
-	}
-
-	snapshot := jsonresp.SnapshotSet[0]
-	return &snapshot, canRetryError, nil
-}
-
-func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
+	storageId := d.Get("storage_id").(string)
 	snapshotName := d.Get("snapshot_name").(string)
-	params := map[string]string{
-		"Action":       "CreateSnapshot",
-		"storageId":    d.Get("storage_id").(string),
-		"snapshotName": snapshotName,
+	cbsService := CbsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	snapshotId, err := cbsService.CreateSnapshot(ctx, storageId, snapshotName)
+	if err != nil {
+		return nil
+	}
+	d.SetId(snapshotId)
 
-	response, err := client.SendRequest("snapshot", params)
-	if err != nil {
-		return err
-	}
-	var jsonresp struct {
-		Code       int
-		Message    string
-		CodeDesc   string
-		SnapshotId string
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf(
-			"CreateSnapshot error, code:%v, message:%v, codeDesc:%v.",
-			jsonresp.Code,
-			jsonresp.Message,
-			jsonresp.CodeDesc,
-		)
-	}
-	d.SetId(jsonresp.SnapshotId)
-	return resourceTencentCloudCbsSnapshotRead(d, m)
-}
-
-func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, m interface{}) error {
-	snapshot, _, err := describeSnapshot(d.Id(), m.(*TencentCloudClient).commonConn)
-	if err != nil {
-		if err == errSnapshotNotFound {
-			d.SetId("")
+	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+		snapshot, e := cbsService.DescribeSnapshotById(ctx, snapshotId)
+		if e != nil {
+			return resource.NonRetryableError(e)
+		}
+		if *snapshot.SnapshotState == CBS_SNAPSHOT_STATUS_CREATING {
+			return resource.RetryableError(fmt.Errorf("cbs snapshot status is %s", *snapshot.SnapshotState))
+		}
+		if *snapshot.SnapshotState == CBS_SNAPSHOT_STATUS_NORMAL {
 			return nil
 		}
+		e = fmt.Errorf("cbs snapshot status is %s, we won't wait for it finish.", *snapshot.SnapshotState)
+		return resource.NonRetryableError(e)
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s cbs snapshot attachment failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	d.Set("disk_type", snapshot.DiskType)
-	d.Set("percent", snapshot.Percent)
-	d.Set("storage_size", snapshot.StorageSize)
-	d.Set("storage_id", snapshot.StorageId)
-	d.Set("snapshot_name", snapshot.SnapshotName)
-	d.Set("snapshot_status", snapshot.SnapshotStatus)
-	return nil
+
+	return resourceTencentCloudCbsSnapshotRead(d, meta)
 }
 
-func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, m interface{}) error {
-	if !d.HasChange("snapshot_name") {
-		return nil
+func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	snapshotId := d.Id()
+	cbsService := CbsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-
-	_, n := d.GetChange("snapshot_name")
-	snapshotName := n.(string)
-
-	err := modifySnapshot(d.Id(), snapshotName, m.(*TencentCloudClient).commonConn)
+	snapshot, err := cbsService.DescribeSnapshotById(ctx, snapshotId)
 	if err != nil {
 		return err
 	}
 
-	return resourceTencentCloudCbsSnapshotRead(d, m)
+	d.Set("disk_type", snapshot.DiskUsage)
+	d.Set("percent", snapshot.Percent)
+	d.Set("storage_size", snapshot.DiskSize)
+	d.Set("storage_id", snapshot.DiskId)
+	d.Set("snapshot_name", snapshot.SnapshotName)
+	d.Set("snapshot_status", snapshot.SnapshotState)
+	return nil
 }
 
-func resourceTencentCloudCbsSnapshotDelete(d *schema.ResourceData, m interface{}) error {
-	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
-		return deleteSnapshot(d.Id(), m.(*TencentCloudClient).commonConn)
-	})
-	d.SetId("")
-	return err
+func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	snapshotId := d.Id()
+
+	if d.HasChange("snapshot_name") {
+		snapshotName := d.Get("snapshot_name").(string)
+		cbsService := CbsService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		err := cbsService.ModifySnapshotName(ctx, snapshotId, snapshotName)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func resourceTencentCloudCbsSnapshotDelete(d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	snapshotId := d.Id()
+	cbsService := CbsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	err := cbsService.DeleteSnapshot(ctx, snapshotId)
+	if err != nil {
+		return err
+	}
+	return nil
 }
