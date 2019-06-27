@@ -3,16 +3,21 @@
 ENHANCEMENTS:
 
 * Refactoring vpc logic with api3.0
+* Refactoring cbs logic with api3.0
 
 FEATURES:
 * **New Data Source**: `tencentcloud_vpc_instances`
 * **New Data Source**: `tencentcloud_vpc_subnets`
 * **New Data Source**: `tencentcloud_vpc_route_tables`
+* **New Data Source**: `tencentcloud_cbs_storages`
+* **New Data Source**: `tencentcloud_cbs_snapshots`
 * **New Resource**: `tencentcloud_route_table_entry`
+* **New Resource**: `tencentcloud_cbs_snapshot_policy`
 * **Update Resource**: `tencentcloud_vpc` , add more configurable items.
 * **Update Resource**: `tencentcloud_subnet` , add more configurable items.
-* **Update Resource**: `tencentcloud_route_table` ,add more configurable items.
-* **Update Resource**: `resource/tencentcloud_instance`: add optional argument `tags`.
+* **Update Resource**: `tencentcloud_route_table`, add more configurable items.
+* **Update Resource**: `tencentcloud_cbs_storage`, add more configurable items.
+* **Update Resource**: `tencentcloud_instance`: add optional argument `tags`.
 
 
 ## 1.9.1 (June 24, 2019)
