@@ -1,62 +1,42 @@
+/*
+Provide a resource to create a CBS.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_cbs_storage" "storage" {
+        storage_name      = "mystorage"
+        storage_type      = "CLOUD_SSD"
+        storage_size      = "50"
+        availability_zone = "ap-guangzhou-3"
+		project_id        = 0
+		encrypt = false
+		tags = {
+			test = "tf"
+		}
+}
+```
+
+Import
+
+CBS storage can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_cbs_storage.storage disk-41s6jwy4
+```
+*/
 package tencentcloud
 
 import (
-	"encoding/json"
-	"errors"
+	"context"
 	"fmt"
+	"github.com/hashicorp/terraform/helper/resource"
 	"log"
-	"strconv"
-	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/client"
+	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
-
-const MaxStorageNameLength = 60
-
-const (
-	BasicStorageMinimumSize   = 10
-	PremiumStorageMinimumSize = 50
-	SsdStorageMinimumSize     = 100
-	StorageMaxSize            = 4000
-)
-
-const (
-	// deprecated
-	tencentCloudApiStorageTypeBasic   = "cloudBasic"
-	tencentCloudApiStorageTypePremium = "cloudPremium"
-	tencentCloudApiStorageTypeSSD     = "cloudSSD"
-)
-
-var (
-	availableStorageTypeFamilies = []string{
-		tencentCloudApiStorageTypeBasic,
-		tencentCloudApiStorageTypePremium,
-		tencentCloudApiStorageTypeSSD,
-	}
-)
-
-var (
-	availablePeriodValue = []int{
-		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60,
-	}
-)
-
-var (
-	errStorageNotFound = errors.New("storage not found")
-)
-
-type storageInfo struct {
-	StorageType   string `json:"storageType"`
-	StorageSize   int    `json:"storageSize"`
-	Zone          string `json:"zone"`
-	StorageName   string `json:"storageName"`
-	StorageStatus string `json:"storageStatus"`
-	Attached      int    `json:"attached"`
-	InstanceId    string `json:"uInstanceId"`
-}
 
 func resourceTencentCloudCbsStorage() *schema.Resource {
 	return &schema.Resource{
@@ -64,350 +44,262 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 		Read:   resourceTencentCloudCbsStorageRead,
 		Update: resourceTencentCloudCbsStorageUpdate,
 		Delete: resourceTencentCloudCbsStorageDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"storage_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStorageType,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue(CBS_STORAGE_TYPE),
+				Description:  "Type of CBS medium, and available values include CLOUD_BASIC, CLOUD_PREMIUM and CLOUD_SSD.",
 			},
 			"storage_size": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:         schema.TypeInt,
+				Required:     true,
+				ValidateFunc: validateIntegerInRange(10, 16000),
+				Description:  "Volume of CBS.",
 			},
 			"period": {
 				Type:         schema.TypeInt,
-				Required:     true,
-				ValidateFunc: validateStoragePeriod,
+				Optional:     true,
+				ValidateFunc: validateIntegerInRange(1, 36),
+				Description:  "The purchased usage period of CBS, and value range [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].",
 			},
 			"availability_zone": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The available zone that the CBS instance locates at.",
 			},
 			"storage_name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStorageName,
-			},
-			"storage_status": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"attached": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				ValidateFunc: validateStringLengthInRange(2, 60),
+				Description:  "Name of CBS. The maximum length can not exceed 60 bytes.",
 			},
 			"snapshot_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "ID of the snapshot. If specified, created the CBS by this snapshot.",
+			},
+			"project_id": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "ID of the project to which the instance belongs.",
+			},
+			"encrypt": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates whether CBS is encrypted.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The available tags within this CBS.",
+			},
+
+			// computed
+			"storage_status": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Status of CBS, and available values include UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.",
+			},
+			"attached": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Indicates whether the CBS is mounted the CVM.",
 			},
 		},
 	}
 }
 
-func modifyCbsStorage(storageId string, storageName string, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":      "ModifyCbsStorageAttributes",
-		"storageId":   storageId,
-		"storageName": storageName,
-	}
+func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(nil)
+	request := cbs.NewCreateDisksRequest()
 
-	response, err := client.SendRequest("cbs", params)
-	if err != nil {
-		return err
+	request.DiskName = stringToPointer(d.Get("storage_name").(string))
+	request.DiskType = stringToPointer(d.Get("storage_type").(string))
+	request.DiskSize = intToPointer(d.Get("storage_size").(int))
+	request.Placement = &cbs.Placement{
+		Zone: stringToPointer(d.Get("availability_zone").(string)),
 	}
-	var jsonresp struct {
-		Code     int    `json:"code"`
-		Message  string `json:"message"`
-		CodeDesc string `json:"codeDesc"`
+	if v, ok := d.GetOk("project_id"); ok {
+		request.Placement.ProjectId = intToPointer(v.(int))
 	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
+	if v, ok := d.GetOk("snapshot_id"); ok {
+		request.SnapshotId = stringToPointer(v.(string))
 	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf(
-			"ModifyCbsStorageAttributes error, code:%v, message: %v, codeDesc: %v.",
-			jsonresp.Code,
-			jsonresp.Message,
-			jsonresp.CodeDesc,
-		)
+	if _, ok := d.GetOk("encrypt"); ok {
+		request.Encrypt = stringToPointer("ENCRYPT")
 	}
-
-	log.Printf("[DEBUG] ModifyCbsStorageAttributes, new storageName: %#v.", storageName)
-	return nil
-}
-
-func rollbackStorage(storageId string, snapshotId string, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":     "ApplySnapshot",
-		"storageId":  storageId,
-		"snapshotId": snapshotId,
-	}
-
-	response, err := client.SendRequest("snapshot", params)
-	if err != nil {
-		return err
-	}
-	var jsonresp struct {
-		Code     int
-		Message  string
-		CodeDesc string
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf(
-			"rollback storage error, code:%v, message: %v, codeDesc: %v.",
-			jsonresp.Code,
-			jsonresp.Message,
-			jsonresp.CodeDesc,
-		)
-	}
-
-	log.Printf("[DEBUG] rollback storage %#v with snapshot %#v.", storageId, snapshotId)
-	return nil
-}
-
-func terminateCbsStorage(storageId string, client *client.Client) *resource.RetryError {
-	params := map[string]string{
-		"Action":       "TerminateCbsStorages",
-		"storageIds.0": storageId,
-	}
-
-	response, err := client.SendRequest("cbs", params)
-	if err != nil {
-		return resource.NonRetryableError(err)
-	}
-	var jsonresp struct {
-		Code     interface{}
-		Message  string
-		CodeDesc string
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return resource.NonRetryableError(err)
-	}
-	code, ok := jsonresp.Code.(float64)
-	// the code maybe a string
-	if !ok || code != 0 {
-		if strings.Contains(jsonresp.Message, "query deal & resourceDeal fail") || jsonresp.CodeDesc == "IAMInnerError" {
-			// for a new disk, we can terminate after a few minutes.
-			return resource.RetryableError(fmt.Errorf("query deal failed, please retry later"))
-		}
-		return resource.NonRetryableError(fmt.Errorf(
-			"terminate storage error, message: %v, codeDesc: %v.",
-			jsonresp.Message,
-			jsonresp.CodeDesc,
-		))
-	}
-	return nil
-}
-
-func describeCbsStorage(storageId string, client *client.Client) (*storageInfo, bool, error) {
-	var jsonresp struct {
-		Code       int    `json:"code"`
-		Message    string `json:"message"`
-		CodeDesc   string `json:"codeDesc"`
-		StorageSet []storageInfo
-	}
-	params := map[string]string{
-		"Action":       "DescribeCbsStorages",
-		"storageIds.0": storageId,
-	}
-	response, err := client.SendRequest("cbs", params)
-	canRetryError := false
-	if err != nil {
-		return nil, canRetryError, err
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return nil, canRetryError, err
-	}
-	if jsonresp.Code != 0 {
-		return nil, canRetryError, fmt.Errorf(
-			"DescribeCbsStorages error, code:%v, message: %v, codeDesc: %v.",
-			jsonresp.Code,
-			jsonresp.Message,
-			jsonresp.CodeDesc,
-		)
-	}
-
-	if len(jsonresp.StorageSet) == 0 {
-		canRetryError = true
-		return nil, canRetryError, errStorageNotFound
-
-	}
-
-	storage := jsonresp.StorageSet[0]
-	return &storage, canRetryError, nil
-}
-
-func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":      "CreateCbsStorages",
-		"storageType": d.Get("storage_type").(string),
-		"period":      strconv.Itoa(d.Get("period").(int)),
-		"zone":        d.Get("availability_zone").(string),
-		"payMode":     "prePay",
-		"goodsNum":    "1",
-	}
-
-	size := d.Get("storage_size").(int)
-	if size%10 != 0 {
-		return fmt.Errorf("Storage_size: %v is illegal, must be an integer of 10", size)
-	}
-	storageType := d.Get("storage_type").(string)
-	if storageType == tencentCloudApiStorageTypeBasic &&
-		(size < BasicStorageMinimumSize || size > StorageMaxSize) {
-		return fmt.Errorf(
-			"The size of cloud basic storage must between %v to %v.",
-			BasicStorageMinimumSize,
-			StorageMaxSize,
-		)
-	}
-
-	if storageType == tencentCloudApiStorageTypePremium &&
-		(size < PremiumStorageMinimumSize || size > StorageMaxSize) {
-		return fmt.Errorf(
-			"The size of cloud basic storage must between %v to %v.",
-			PremiumStorageMinimumSize,
-			StorageMaxSize,
-		)
-	}
-
-	if storageType == tencentCloudApiStorageTypeSSD &&
-		(size < SsdStorageMinimumSize || size > StorageMaxSize) {
-		return fmt.Errorf(
-			"The size of cloud basic storage must between %v to %v.",
-			SsdStorageMinimumSize,
-			StorageMaxSize,
-		)
-	}
-	params["storageSize"] = strconv.Itoa(size)
-
-	snapshotIdInf, ok := d.GetOk("snapshot_id")
-	if ok {
-		params["snapshotId"] = snapshotIdInf.(string)
-	}
-
-	response, err := client.SendRequest("cbs", params)
-	if err != nil {
-		return err
-	}
-	var jsonresp struct {
-		Code       int      `json:"code"`
-		Message    string   `json:"message"`
-		CodeDesc   string   `json:"codeDesc"`
-		StorageIds []string `json:"storageIds"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf(
-			"CreateCbsStorages error, code:%v, message:%v, codeDesc:%v.",
-			jsonresp.Code,
-			jsonresp.Message,
-			jsonresp.CodeDesc,
-		)
-	}
-	storageId := jsonresp.StorageIds[0]
-	d.SetId(storageId)
-	time.Sleep(time.Second * 3)
-	_ = resource.Retry(3*time.Minute, func() *resource.RetryError {
-		_, canRetryError, err := describeCbsStorage(d.Id(), m.(*TencentCloudClient).commonConn)
-		if err != nil {
-			if canRetryError == false {
-				return resource.NonRetryableError(err)
-			} else {
-				return resource.RetryableError(fmt.Errorf("Storage is creating..."))
+	if v, ok := d.GetOk("tags"); ok {
+		tags := v.(map[string]interface{})
+		request.Tags = make([]*cbs.Tag, 0, len(tags))
+		for key, value := range tags {
+			tag := cbs.Tag{
+				Key:   &key,
+				Value: stringToPointer(value.(string)),
 			}
-		}
-
-		return nil
-	})
-	log.Printf("[DEBUG] CreateCbsStorages success - storageId: %#v.", storageId)
-	//TODO 由于CreateCbsStorages接口不支持创建时设置云盘名称，所以在创建完后需设置云盘名称
-	if storageName, ok := d.GetOk("storage_name"); ok {
-		err = modifyCbsStorage(d.Id(), storageName.(string), m)
-		if err != nil {
-			return err
+			request.Tags = append(request.Tags, &tag)
 		}
 	}
-	return resourceTencentCloudCbsStorageRead(d, m)
+	request.DiskChargeType = stringToPointer("POSTPAID_BY_HOUR")
+
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CreateDisks(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	} else {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+	if len(response.Response.DiskIdSet) < 1 {
+		return fmt.Errorf("storage id is nil")
+	}
+	d.SetId(*response.Response.DiskIdSet[0])
+
+	// must wait for finishing creating disk
+	time.Sleep(3 * time.Second)
+
+	return resourceTencentCloudCbsStorageRead(d, meta)
 }
 
-func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, m interface{}) error {
-	storage, _, err := describeCbsStorage(d.Id(), m.(*TencentCloudClient).commonConn)
+func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	storageId := d.Id()
+	cbsService := CbsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	storage, err := cbsService.DescribeDiskById(ctx, storageId)
 	if err != nil {
-		if err == errStorageNotFound {
-			d.SetId("")
-			return nil
-		}
 		return err
 	}
-	d.Set("storage_type", storage.StorageType)
-	d.Set("storage_size", storage.StorageSize)
-	d.Set("availability_zone", storage.Zone)
-	d.Set("storage_name", storage.StorageName)
-	d.Set("storage_status", storage.StorageStatus)
-	d.Set("attached", storage.StorageStatus)
+
+	d.Set("storage_type", storage.DiskType)
+	d.Set("storage_size", storage.DiskSize)
+	d.Set("availability_zone", storage.Placement.Zone)
+	d.Set("storage_name", storage.DiskName)
+	d.Set("project_id", storage.Placement.ProjectId)
+	d.Set("encrypt", storage.Encrypt)
+	d.Set("tags", flattenCbsTagsMapping(storage.Tags))
+	d.Set("storage_status", storage.DiskState)
+	d.Set("attached", storage.Attached)
+
 	return nil
 }
 
-func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, m interface{}) error {
-	immutableItems := [...]string{"storage_size", "storage_type", "availability_zone", "period"}
-	for _, item := range immutableItems {
-		if d.HasChange(item) {
-			return fmt.Errorf("[ERROR] %v does not support modification, please create a new disk instead.", item)
-		}
+func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	d.Partial(true)
+	cbsService := CbsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	storageId := d.Id()
+	storageName := ""
+	projectId := -1
+	changed := false
+
+	if d.HasChange("storage_name") {
+		changed = true
+		storageName = d.Get("storage_name").(string)
+	}
+	if d.HasChange("project_id") {
+		changed = true
+		projectId = d.Get("project_id").(int)
 	}
 
-	requestUpdate := false
-	if d.HasChange("storage_name") {
-		_, n := d.GetChange("storage_name")
-		storageName := n.(string)
-		if storageName == "" {
-			return fmt.Errorf("storage_name are not allow to be empty")
-		}
-
-		err := modifyCbsStorage(d.Id(), storageName, m)
+	if changed {
+		err := cbsService.ModifyDiskAttributes(ctx, storageId, storageName, projectId)
 		if err != nil {
 			return err
 		}
-		requestUpdate = true
+		if d.HasChange("storage_name") {
+			d.SetPartial("storage_name")
+		}
+		if d.HasChange("project_id") {
+			d.SetPartial("project_id")
+		}
+	}
+
+	if d.HasChange("storage_size") {
+		old, new := d.GetChange("storage_size")
+		oldValue := old.(int)
+		newValue := new.(int)
+		if oldValue > newValue {
+			return fmt.Errorf("storage size must be greater than current storage size")
+		}
+
+		err := cbsService.ResizeDisk(ctx, storageId, newValue)
+		if err != nil {
+			return err
+		}
+		err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+			storage, e := cbsService.DescribeDiskById(ctx, storageId)
+			if e != nil {
+				return resource.NonRetryableError(e)
+			}
+			if *storage.DiskState == CBS_STORAGE_STATUS_EXPANDING {
+				return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s cbs storage create failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+		d.SetPartial("storage_size")
 	}
 
 	if d.HasChange("snapshot_id") {
-		_, snapshotIdInf := d.GetChange("snapshot_id")
-		snapshotId := snapshotIdInf.(string)
-		if snapshotId == "" {
-			// pass
-		} else {
-			err := rollbackStorage(d.Id(), snapshotId, m)
-			if err != nil {
-				return err
-			}
+		snapshotId := d.Get("snapshot_id").(string)
+		err := cbsService.ApplySnapshot(ctx, storageId, snapshotId)
+		if err != nil {
+			return err
 		}
+		err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+			storage, e := cbsService.DescribeDiskById(ctx, storageId)
+			if e != nil {
+				return resource.NonRetryableError(e)
+			}
+			if *storage.DiskState == CBS_STORAGE_STATUS_ROLLBACKING {
+				return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s cbs storage create failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+		d.SetPartial("snapshot_id")
 	}
-	if requestUpdate {
-		return resourceTencentCloudCbsStorageRead(d, m)
-	}
+
+	d.Partial(false)
+
 	return nil
 }
 
-func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, m interface{}) error {
-	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
-		return terminateCbsStorage(d.Id(), m.(*TencentCloudClient).commonConn)
-	})
-	d.SetId("")
-	return err
+func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface{}) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	storageId := d.Id()
+	cbsService := CbsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	err := cbsService.DeleteDiskById(ctx, storageId)
+	if err != nil {
+		return err
+	}
+	return nil
 }

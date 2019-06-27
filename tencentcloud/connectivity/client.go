@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -26,6 +27,7 @@ type TencentCloudClient struct {
 	redisConn *redis.Client
 	asConn    *as.Client
 	vpcConn   *vpc.Client
+	cbsConn   *cbs.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -149,4 +151,23 @@ func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	me.vpcConn = vpcConn
 
 	return me.vpcConn
+}
+
+func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
+	if me.cbsConn != nil {
+		return me.cbsConn
+	}
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+
+	cbsConn, _ := cbs.NewClient(credential, me.Region, cpf)
+	me.cbsConn = cbsConn
+
+	return me.cbsConn
 }

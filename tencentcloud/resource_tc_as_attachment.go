@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_as_attachment" "attachment" {
   scaling_group_id           = "sg-afasfa"
-  instance_id                = ["ins-01", "ins-02"]
+  instance_ids               = ["ins-01", "ins-02"]
 }
 ```
 */
