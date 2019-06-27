@@ -45,11 +45,14 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_subnets
   tencentcloud_vpc_route_tables
+  tencentcloud_cbs_storages
+  tencentcloud_cbs_snapshots
 
 CBS Resources
   tencentcloud_cbs_storage
   tencentcloud_cbs_storage_attachment
   tencentcloud_cbs_snapshot
+  tencentcloud_cbs_snapshot_policy
 
 Container Cluster Resources
   tencentcloud_container_cluster

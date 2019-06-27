@@ -1,3 +1,23 @@
+/*
+Provide a resource to create a CBS snapshot.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_cbs_snapshot" "snapshot" {
+        snapshot_name = "unnamed"
+        storage_id   = "disk-kdt0sq6m"
+}
+```
+
+Import
+
+CBS snapshot can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_cbs_snapshot.snapshot snap-3sa3f39b
+```
+*/
 package tencentcloud
 
 import (
@@ -25,31 +45,38 @@ func resourceTencentCloudCbsSnapshot() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
+				Description:  "Name of the snapshot.",
 			},
 			"storage_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the the CBS which this snapshot created from.",
 			},
 			"storage_size": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Volume of storage which this snapshot created from.",
 			},
 			"snapshot_status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Status of the snapshot.",
 			},
 			"disk_type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Types of CBS which this snapshot created from.",
 			},
-			"pecent": {
-				Type:     schema.TypeInt,
-				Computed: true,
+			"percent": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Snapshot creation progress percentage. If the snapshot has created successfully, the constant value is 100.",
 			},
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of snapshot.",
 			},
 		},
 	}

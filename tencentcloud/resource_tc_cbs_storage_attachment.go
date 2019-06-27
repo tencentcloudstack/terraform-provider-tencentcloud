@@ -1,3 +1,15 @@
+/*
+Provides a CBS storage attachment resource.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_cbs_storage_attachment" "attachment" {
+        storage_id  = "disk-kdt0sq6m"
+        instance_id = "ins-jqlegd42"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -19,14 +31,16 @@ func resourceTencentCloudCbsStorageAttachment() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"storage_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the mounted CBS.",
 			},
 			"instance_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the CVM instance.",
 			},
 		},
 	}

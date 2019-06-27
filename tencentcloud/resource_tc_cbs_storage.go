@@ -1,3 +1,30 @@
+/*
+Provide a resource to create a CBS.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_cbs_storage" "storage" {
+        storage_name      = "mystorage"
+        storage_type      = "CLOUD_SSD"
+        storage_size      = "50"
+        availability_zone = "ap-guangzhou-3"
+		project_id        = 0
+		encrypt = false
+		tags = {
+			test = "tf"
+		}
+}
+```
+
+Import
+
+CBS storage can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_cbs_storage.storage disk-41s6jwy4
+```
+*/
 package tencentcloud
 
 import (
@@ -27,55 +54,66 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CBS_STORAGE_TYPE),
+				Description:  "Type of CBS medium, and available values include CLOUD_BASIC, CLOUD_PREMIUM and CLOUD_SSD.",
 			},
 			"storage_size": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerInRange(10, 16000),
+				Description:  "Volume of CBS.",
 			},
 			"period": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateIntegerInRange(1, 36),
+				Description:  "The purchased usage period of CBS, and value range [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].",
 			},
 			"availability_zone": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The available zone that the CBS instance locates at.",
 			},
 			"storage_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
+				Description:  "Name of CBS. The maximum length can not exceed 60 bytes.",
 			},
 			"snapshot_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "ID of the snapshot. If specified, created the CBS by this snapshot.",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "ID of the project to which the instance belongs.",
 			},
 			"encrypt": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates whether CBS is encrypted.",
 			},
 			"tags": {
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The available tags within this CBS.",
 			},
 
 			// computed
 			"storage_status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Status of CBS, and available values include UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.",
 			},
 			"attached": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Indicates whether the CBS is mounted the CVM.",
 			},
 		},
 	}

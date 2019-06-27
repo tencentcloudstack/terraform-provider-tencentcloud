@@ -1,3 +1,25 @@
+/*
+Provides a snapshot policy resource.
+
+Example Usage
+
+```hcl
+resource "tencentcloud-cbs_snapshot_policy" "snapshot_policy" {
+	snapshot_policy_name  = "mysnapshotpolicyname"
+	repeat_weekdays = [1, 4]
+	repeat_hours = [1]
+	retention_days = 7
+}
+```
+
+Import
+
+CBS snapshot policy can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_cbs_snapshot_policy.snapshot_policy asp-jliex1tn
+```
+*/
 package tencentcloud
 
 import (
@@ -24,6 +46,7 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
+				Description:  "Name of snapshot policy. The maximum length can not exceed 60 bytes.",
 			},
 			"repeat_weekdays": {
 				Type:     schema.TypeList,
@@ -32,6 +55,7 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 					Type:         schema.TypeInt,
 					ValidateFunc: validateIntegerInRange(0, 6),
 				},
+				Description: "Periodic snapshot is enabled, the available values are [0, 1, 2, 3, 4, 5, 6]. 0 means Sunday, 1-6 means Monday to Saturday.",
 			},
 			"repeat_hours": {
 				Type:     schema.TypeList,
@@ -40,11 +64,13 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 					Type:         schema.TypeInt,
 					ValidateFunc: validateIntegerInRange(0, 23),
 				},
+				Description: "Trigger times of periodic snapshot, the available values are 0 to 23. The 0 means 00:00, and so on.",
 			},
 			"retention_days": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  7,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     7,
+				Description: "Retention days of the snapshot, and the default value is 7.",
 			},
 		},
 	}
