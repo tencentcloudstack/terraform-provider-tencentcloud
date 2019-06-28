@@ -70,7 +70,7 @@ variable "other_region1" {
 }
 
 variable "other_region2" {
-    default = "ap-shanghai"
+    default = "ap-beijing"
 }
 
 resource tencentcloud_ccn main{

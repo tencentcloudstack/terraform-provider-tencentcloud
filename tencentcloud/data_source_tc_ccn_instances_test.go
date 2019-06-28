@@ -12,7 +12,7 @@ func TestAccDataSourceTencentCloudCcnV3Instances_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccDataSourceTencentCloudCnnInstances,
+				Config: TestAccDataSourceTencentCloudCcnInstances,
 
 				Check: resource.ComposeTestCheckFunc(
 
@@ -43,7 +43,7 @@ func TestAccDataSourceTencentCloudCcnV3Instances_basic(t *testing.T) {
 	})
 }
 
-const TestAccDataSourceTencentCloudCnnInstances = `
+const TestAccDataSourceTencentCloudCcnInstances = `
 resource tencentcloud_ccn main{
 	name ="ci-temp-test-ccn"
 	description="ci-temp-test-ccn-des"
