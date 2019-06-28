@@ -47,7 +47,7 @@ func TestAccTencentCloudCcnV3_update(t *testing.T) {
 		CheckDestroy: testAccCheckCcnDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccccnConfig,
+				Config: testAccCcnConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCcnExists("tencentcloud_ccn.main"),
 					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "name", "ci-temp-test-ccn"),
@@ -60,7 +60,7 @@ func TestAccTencentCloudCcnV3_update(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccccnConfigUpdate,
+				Config: testAccCcnConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 
 					testAccCheckCcnExists("tencentcloud_ccn.main"),
@@ -122,7 +122,7 @@ func testAccCheckCcnDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccccnConfig = `
+const testAccCcnConfig = `
 resource tencentcloud_ccn main{
 	name ="ci-temp-test-ccn"
 	description="ci-temp-test-ccn-des"
@@ -130,7 +130,7 @@ resource tencentcloud_ccn main{
 }
 `
 
-const testAccccnConfigUpdate = `
+const testAccCcnConfigUpdate = `
 resource tencentcloud_ccn main{
 	name ="ci-temp-test-ccn-update"
 	description="ci-temp-test-ccn-des-update"
