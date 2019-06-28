@@ -47,7 +47,8 @@ func testAccCheckCcnAttachmentExists(r string) resource.TestCheckFunc {
 		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		_, has, err := service.DescribeCcnAttachedInstance(ctx,
-			rs.Primary.Attributes["ccn_id"], rs.Primary.Attributes["instance_region"],
+			rs.Primary.Attributes["ccn_id"],
+			rs.Primary.Attributes["instance_region"],
 			rs.Primary.Attributes["instance_type"],
 			rs.Primary.Attributes["instance_id"])
 
