@@ -150,7 +150,7 @@ func resourceTencentCloudCnnUpdate(d *schema.ResourceData, meta interface{}) err
 
 func resourceTencentCloudCnnDelete(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_cnn.read")()
+	defer LogElapsed(logId + "resource.tencentcloud_cnn.delete")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}

@@ -207,6 +207,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_lifecycle_hook":          resourceTencentCloudAsLifecycleHook(),
 			"tencentcloud_as_notification":            resourceTencentCloudAsNotification(),
 			"tencentcloud_cnn":                        resourceTencentCloudCnn(),
+			"tencentcloud_cnn_attachment":             resourceTencentCloudCnnAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,

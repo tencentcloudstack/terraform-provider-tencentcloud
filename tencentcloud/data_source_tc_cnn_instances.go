@@ -1,5 +1,15 @@
 package tencentcloud
 
+/*
+resource tencentcloud_cnn main{
+	name ="ci-temp-test-cnn"
+	description="ci-temp-test-cnn-des"
+	qos ="AG"
+}
+data tencentcloud_cnn_instances test{
+	cnn_id = "${tencentcloud_cnn.main.id}"
+}
+*/
 import (
 	"context"
 	"crypto/md5"

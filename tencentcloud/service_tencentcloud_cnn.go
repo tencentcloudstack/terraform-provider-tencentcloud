@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
@@ -310,6 +311,33 @@ func (me *VpcService) ModifyCcnAttribute(ctx context.Context, cnnId, name, descr
 		errRet = err
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+		logId,
+		request.GetAction(),
+		request.ToJsonString(),
+		response.ToJsonString())
+	return
+}
+
+func (me *VpcService) DescribeCcnAttachedInstance(ctx context.Context, cnnId,
+	instanceRegion, instanceType, instanceId string) (info CnnAttachedInstanceInfo, has int, errRet error) {
+
+	infos, err := me.DescribeCcnAttachedInstances(ctx, cnnId)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, item := range infos {
+		if item.instanceId == instanceId &&
+			item.instanceRegion == item.instanceRegion &&
+			strings.ToUpper(item.instanceType) == strings.ToUpper(instanceType) {
+			has = 1
+			info = item
+			return
+		}
+	}
 	return
 }
 
@@ -340,6 +368,11 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, cnnId st
 		errRet = err
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+		logId,
+		request.GetAction(),
+		request.ToJsonString(),
+		response.ToJsonString())
 
 	infos = make([]CnnAttachedInstanceInfo, 0, len(response.Response.InstanceSet))
 
@@ -362,4 +395,89 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, cnnId st
 		infos = append(infos, info)
 	}
 	return
+}
+
+func (me *VpcService) AttachCcnInstances(ctx context.Context, cnnId, instanceRegion, instanceType, instanceId string) (errRet error) {
+
+	logId := GetLogId(ctx)
+	request := vpc.NewAttachCcnInstancesRequest()
+	request.CcnId = &cnnId
+
+	var ccnInstance vpc.CcnInstance
+	ccnInstance.InstanceId = &instanceId
+	ccnInstance.InstanceRegion = &instanceRegion
+	ccnInstance.InstanceType = &instanceType
+
+	request.Instances = []*vpc.CcnInstance{&ccnInstance}
+
+	response, err := me.client.UseVpcClient().AttachCcnInstances(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+		logId,
+		request.GetAction(),
+		request.ToJsonString(),
+		response.ToJsonString())
+	return
+}
+
+func (me *VpcService) DetachCcnInstances(ctx context.Context, cnnId, instanceRegion, instanceType, instanceId string) (errRet error) {
+
+	logId := GetLogId(ctx)
+	request := vpc.NewDetachCcnInstancesRequest()
+	request.CcnId = &cnnId
+
+	var ccnInstance vpc.CcnInstance
+	ccnInstance.InstanceId = &instanceId
+	ccnInstance.InstanceRegion = &instanceRegion
+	ccnInstance.InstanceType = &instanceType
+
+	request.Instances = []*vpc.CcnInstance{&ccnInstance}
+
+	response, err := me.client.UseVpcClient().DetachCcnInstances(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+		logId,
+		request.GetAction(),
+		request.ToJsonString(),
+		response.ToJsonString())
+	return
+
 }
