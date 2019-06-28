@@ -9,9 +9,9 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
-//Cnn basic information
-type CnnBasicInfo struct {
-	cnnId         string
+//Ccn basic information
+type CcnBasicInfo struct {
+	ccnId         string
 	name          string
 	description   string
 	state         string
@@ -20,8 +20,8 @@ type CnnBasicInfo struct {
 	createTime    string
 }
 
-type CnnAttachedInstanceInfo struct {
-	cnnId          string
+type CcnAttachedInstanceInfo struct {
+	ccnId          string
 	instanceType   string
 	instanceRegion string
 	instanceId     string
@@ -30,13 +30,13 @@ type CnnAttachedInstanceInfo struct {
 	cidrBlock      []string
 }
 
-type CnnBandwidthLimit struct {
+type CcnBandwidthLimit struct {
 	region string
 	limit  int64
 }
 
-func (me *VpcService) DescribeCcn(ctx context.Context, cnnId string) (info CnnBasicInfo, has int, errRet error) {
-	infos, err := me.DescribeCcns(ctx, cnnId, "")
+func (me *VpcService) DescribeCcn(ctx context.Context, ccnId string) (info CcnBasicInfo, has int, errRet error) {
+	infos, err := me.DescribeCcns(ctx, ccnId, "")
 	if err != nil {
 		errRet = err
 		return
@@ -48,7 +48,7 @@ func (me *VpcService) DescribeCcn(ctx context.Context, cnnId string) (info CnnBa
 	return
 }
 
-func (me *VpcService) DescribeCcns(ctx context.Context, cnnId, name string) (infos []CnnBasicInfo, errRet error) {
+func (me *VpcService) DescribeCcns(ctx context.Context, ccnId, name string) (infos []CcnBasicInfo, errRet error) {
 
 	logId := GetLogId(ctx)
 	request := vpc.NewDescribeCcnsRequest()
@@ -59,7 +59,7 @@ func (me *VpcService) DescribeCcns(ctx context.Context, cnnId, name string) (inf
 		}
 	}()
 
-	infos = make([]CnnBasicInfo, 0, 100)
+	infos = make([]CcnBasicInfo, 0, 100)
 
 	var offset uint64 = 0
 	var limit uint64 = 100
@@ -67,8 +67,8 @@ func (me *VpcService) DescribeCcns(ctx context.Context, cnnId, name string) (inf
 	var has = map[string]bool{}
 
 	var filters []*vpc.Filter
-	if cnnId != "" {
-		filters = me.fillFilter(filters, "ccn-id", cnnId)
+	if ccnId != "" {
+		filters = me.fillFilter(filters, "ccn-id", ccnId)
 	}
 	if name != "" {
 		filters = me.fillFilter(filters, "ccn-name", name)
@@ -121,9 +121,9 @@ getMoreData:
 		return
 	}
 	for _, item := range response.Response.CcnSet {
-		var basicInfo CnnBasicInfo
+		var basicInfo CcnBasicInfo
 
-		basicInfo.cnnId = *item.CcnId
+		basicInfo.ccnId = *item.CcnId
 		basicInfo.name = *item.CcnName
 		basicInfo.createTime = *item.CreateTime
 
@@ -132,25 +132,25 @@ getMoreData:
 		basicInfo.qos = *item.QosLevel
 		basicInfo.state = *item.State
 
-		if has[basicInfo.cnnId] {
-			errRet = fmt.Errorf("get repeated cnn_id[%s] when doing DescribeCcns", basicInfo.cnnId)
+		if has[basicInfo.ccnId] {
+			errRet = fmt.Errorf("get repeated ccn_id[%s] when doing DescribeCcns", basicInfo.ccnId)
 			return
 		}
-		has[basicInfo.cnnId] = true
+		has[basicInfo.ccnId] = true
 		infos = append(infos, basicInfo)
 	}
 	goto getMoreData
 
 }
 
-func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, cnnId string) (infos []CnnBandwidthLimit, errRet error) {
+func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, ccnId string) (infos []CcnBandwidthLimit, errRet error) {
 
 	logId := GetLogId(ctx)
 	request := vpc.NewDescribeCcnRegionBandwidthLimitsRequest()
 
-	infos = make([]CnnBandwidthLimit, 0, 100)
+	infos = make([]CcnBandwidthLimit, 0, 100)
 
-	request.CcnId = &cnnId
+	request.CcnId = &ccnId
 
 	response, err := me.client.UseVpcClient().DescribeCcnRegionBandwidthLimits(request)
 
@@ -181,15 +181,15 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, cnnI
 
 	for _, item := range response.Response.CcnRegionBandwidthLimitSet {
 
-		var cnnBandwidthLimit CnnBandwidthLimit
-		cnnBandwidthLimit.region = *item.Region
-		cnnBandwidthLimit.limit = int64(*item.BandwidthLimit)
-		infos = append(infos, cnnBandwidthLimit)
+		var ccnBandwidthLimit CcnBandwidthLimit
+		ccnBandwidthLimit.region = *item.Region
+		ccnBandwidthLimit.limit = int64(*item.BandwidthLimit)
+		infos = append(infos, ccnBandwidthLimit)
 	}
 	return
 }
 
-func (me *VpcService) CreateCcn(ctx context.Context, name, description, qos string) (basicInfo CnnBasicInfo, errRet error) {
+func (me *VpcService) CreateCcn(ctx context.Context, name, description, qos string) (basicInfo CcnBasicInfo, errRet error) {
 
 	logId := GetLogId(ctx)
 	request := vpc.NewCreateCcnRequest()
@@ -231,7 +231,7 @@ func (me *VpcService) CreateCcn(ctx context.Context, name, description, qos stri
 	}
 
 	item := response.Response.Ccn
-	basicInfo.cnnId = *item.CcnId
+	basicInfo.ccnId = *item.CcnId
 	basicInfo.name = *item.CcnName
 	basicInfo.createTime = *item.CreateTime
 
@@ -242,11 +242,11 @@ func (me *VpcService) CreateCcn(ctx context.Context, name, description, qos stri
 	return
 }
 
-func (me *VpcService) DeleteCcn(ctx context.Context, cnnId string) (errRet error) {
+func (me *VpcService) DeleteCcn(ctx context.Context, ccnId string) (errRet error) {
 
 	logId := GetLogId(ctx)
 	request := vpc.NewDeleteCcnRequest()
-	request.CcnId = &cnnId
+	request.CcnId = &ccnId
 
 	response, err := me.client.UseVpcClient().DeleteCcn(request)
 
@@ -277,11 +277,11 @@ func (me *VpcService) DeleteCcn(ctx context.Context, cnnId string) (errRet error
 	return
 }
 
-func (me *VpcService) ModifyCcnAttribute(ctx context.Context, cnnId, name, description string) (errRet error) {
+func (me *VpcService) ModifyCcnAttribute(ctx context.Context, ccnId, name, description string) (errRet error) {
 
 	logId := GetLogId(ctx)
 	request := vpc.NewModifyCcnAttributeRequest()
-	request.CcnId = &cnnId
+	request.CcnId = &ccnId
 
 	if name != "" {
 		request.CcnName = &name
@@ -319,10 +319,10 @@ func (me *VpcService) ModifyCcnAttribute(ctx context.Context, cnnId, name, descr
 	return
 }
 
-func (me *VpcService) DescribeCcnAttachedInstance(ctx context.Context, cnnId,
-	instanceRegion, instanceType, instanceId string) (info CnnAttachedInstanceInfo, has int, errRet error) {
+func (me *VpcService) DescribeCcnAttachedInstance(ctx context.Context, ccnId,
+	instanceRegion, instanceType, instanceId string) (info CcnAttachedInstanceInfo, has int, errRet error) {
 
-	infos, err := me.DescribeCcnAttachedInstances(ctx, cnnId)
+	infos, err := me.DescribeCcnAttachedInstances(ctx, ccnId)
 
 	if err != nil {
 		errRet = err
@@ -341,11 +341,11 @@ func (me *VpcService) DescribeCcnAttachedInstance(ctx context.Context, cnnId,
 	return
 }
 
-func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, cnnId string) (infos []CnnAttachedInstanceInfo, errRet error) {
+func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId string) (infos []CcnAttachedInstanceInfo, errRet error) {
 
 	logId := GetLogId(ctx)
 	request := vpc.NewDescribeCcnAttachedInstancesRequest()
-	request.CcnId = &cnnId
+	request.CcnId = &ccnId
 
 	response, err := me.client.UseVpcClient().DescribeCcnAttachedInstances(request)
 
@@ -374,11 +374,11 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, cnnId st
 		request.ToJsonString(),
 		response.ToJsonString())
 
-	infos = make([]CnnAttachedInstanceInfo, 0, len(response.Response.InstanceSet))
+	infos = make([]CcnAttachedInstanceInfo, 0, len(response.Response.InstanceSet))
 
 	for _, item := range response.Response.InstanceSet {
 
-		var info CnnAttachedInstanceInfo
+		var info CcnAttachedInstanceInfo
 
 		info.attachedTime = *item.AttachedTime
 		info.cidrBlock = make([]string, 0, len(item.CidrBlock))
@@ -387,7 +387,7 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, cnnId st
 			info.cidrBlock = append(info.cidrBlock, *v)
 		}
 
-		info.cnnId = cnnId
+		info.ccnId = ccnId
 		info.instanceId = *item.InstanceId
 		info.instanceRegion = *item.InstanceRegion
 		info.instanceType = *item.InstanceType
@@ -397,11 +397,11 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, cnnId st
 	return
 }
 
-func (me *VpcService) AttachCcnInstances(ctx context.Context, cnnId, instanceRegion, instanceType, instanceId string) (errRet error) {
+func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceRegion, instanceType, instanceId string) (errRet error) {
 
 	logId := GetLogId(ctx)
 	request := vpc.NewAttachCcnInstancesRequest()
-	request.CcnId = &cnnId
+	request.CcnId = &ccnId
 
 	var ccnInstance vpc.CcnInstance
 	ccnInstance.InstanceId = &instanceId
@@ -439,11 +439,11 @@ func (me *VpcService) AttachCcnInstances(ctx context.Context, cnnId, instanceReg
 	return
 }
 
-func (me *VpcService) DetachCcnInstances(ctx context.Context, cnnId, instanceRegion, instanceType, instanceId string) (errRet error) {
+func (me *VpcService) DetachCcnInstances(ctx context.Context, ccnId, instanceRegion, instanceType, instanceId string) (errRet error) {
 
 	logId := GetLogId(ctx)
 	request := vpc.NewDetachCcnInstancesRequest()
-	request.CcnId = &cnnId
+	request.CcnId = &ccnId
 
 	var ccnInstance vpc.CcnInstance
 	ccnInstance.InstanceId = &instanceId
@@ -482,9 +482,9 @@ func (me *VpcService) DetachCcnInstances(ctx context.Context, cnnId, instanceReg
 
 }
 
-func (me *VpcService) DescribeCcnRegionBandwidthLimit(ctx context.Context, cnnId, region string) (bandwidth int64, errRet error) {
+func (me *VpcService) DescribeCcnRegionBandwidthLimit(ctx context.Context, ccnId, region string) (bandwidth int64, errRet error) {
 
-	infos, err := me.DescribeCcnRegionBandwidthLimits(ctx, cnnId)
+	infos, err := me.DescribeCcnRegionBandwidthLimits(ctx, ccnId)
 	if err != nil {
 		errRet = err
 		return
@@ -498,11 +498,11 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimit(ctx context.Context, cnnId
 	return
 }
 
-func (me *VpcService) SetCcnRegionBandwidthLimits(ctx context.Context, cnnId, region string, bandwidth int64) (errRet error) {
+func (me *VpcService) SetCcnRegionBandwidthLimits(ctx context.Context, ccnId, region string, bandwidth int64) (errRet error) {
 
 	logId := GetLogId(ctx)
 	request := vpc.NewSetCcnRegionBandwidthLimitsRequest()
-	request.CcnId = &cnnId
+	request.CcnId = &ccnId
 
 	var uint64bandwidth = uint64(bandwidth)
 

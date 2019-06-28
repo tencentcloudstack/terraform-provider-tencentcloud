@@ -11,14 +11,14 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func resourceTencentCloudCnnAttachment() *schema.Resource {
+func resourceTencentCloudCcnAttachment() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCnnAttachmentCreate,
-		Read:   resourceTencentCloudCnnAttachmentRead,
-		Delete: resourceTencentCloudCnnAttachmentDelete,
+		Create: resourceTencentCloudCcnAttachmentCreate,
+		Read:   resourceTencentCloudCcnAttachmentRead,
+		Delete: resourceTencentCloudCcnAttachmentDelete,
 
 		Schema: map[string]*schema.Schema{
-			"cnn_id": {
+			"ccn_id": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
@@ -59,60 +59,60 @@ func resourceTencentCloudCnnAttachment() *schema.Resource {
 		},
 	}
 }
-func resourceTencentCloudCnnAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_cnn_attachment.create")()
+	defer LogElapsed(logId + "resource.tencentcloud_ccn_attachment.create")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		cnnId          = d.Get("cnn_id").(string)
+		ccnId          = d.Get("ccn_id").(string)
 		instanceType   = d.Get("instance_type").(string)
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
 	)
 
-	if len(cnnId) < 4 || len(instanceRegion) < 3 || len(instanceId) < 3 {
-		return fmt.Errorf("param cnn_id or instance_region or instance_id  error")
+	if len(ccnId) < 4 || len(instanceRegion) < 3 || len(instanceId) < 3 {
+		return fmt.Errorf("param ccn_id or instance_region or instance_id  error")
 	}
 
-	_, has, err := service.DescribeCcn(ctx, cnnId)
+	_, has, err := service.DescribeCcn(ctx, ccnId)
 	if err != nil {
 		return err
 	}
 	if has == 0 {
-		return fmt.Errorf("cnn[%s] doesn't exist", cnnId)
+		return fmt.Errorf("ccn[%s] doesn't exist", ccnId)
 	}
 
-	if err := service.AttachCcnInstances(ctx, cnnId, instanceRegion, instanceType, instanceId); err != nil {
+	if err := service.AttachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId); err != nil {
 		return err
 	}
 
 	m := md5.New()
-	m.Write([]byte(cnnId + instanceType + instanceRegion + instanceId))
+	m.Write([]byte(ccnId + instanceType + instanceRegion + instanceId))
 	d.SetId(fmt.Sprintf("%x", m.Sum(nil)))
 
-	return resourceTencentCloudCnnAttachmentRead(d, meta)
+	return resourceTencentCloudCcnAttachmentRead(d, meta)
 }
 
-func resourceTencentCloudCnnAttachmentRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_cnn_attachment.read")()
+	defer LogElapsed(logId + "resource.tencentcloud_ccn_attachment.read")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		cnnId          = d.Get("cnn_id").(string)
+		ccnId          = d.Get("ccn_id").(string)
 		instanceType   = d.Get("instance_type").(string)
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
 	)
 
-	_, has, err := service.DescribeCcn(ctx, cnnId)
+	_, has, err := service.DescribeCcn(ctx, ccnId)
 	if err != nil {
 		return err
 	}
@@ -122,7 +122,7 @@ func resourceTencentCloudCnnAttachmentRead(d *schema.ResourceData, meta interfac
 		return nil
 	}
 
-	info, has, err := service.DescribeCcnAttachedInstance(ctx, cnnId, instanceRegion, instanceType, instanceId)
+	info, has, err := service.DescribeCcnAttachedInstance(ctx, ccnId, instanceRegion, instanceType, instanceId)
 	if err != nil {
 		return err
 	}
@@ -138,20 +138,20 @@ func resourceTencentCloudCnnAttachmentRead(d *schema.ResourceData, meta interfac
 	return nil
 }
 
-func resourceTencentCloudCnnAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_cnn_attachment.delete")()
+	defer LogElapsed(logId + "resource.tencentcloud_ccn_attachment.delete")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	var (
-		cnnId          = d.Get("cnn_id").(string)
+		ccnId          = d.Get("ccn_id").(string)
 		instanceType   = d.Get("instance_type").(string)
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
 	)
 
-	_, has, err := service.DescribeCcn(ctx, cnnId)
+	_, has, err := service.DescribeCcn(ctx, ccnId)
 	if err != nil {
 		return err
 	}
@@ -159,12 +159,12 @@ func resourceTencentCloudCnnAttachmentDelete(d *schema.ResourceData, meta interf
 		return nil
 	}
 
-	if err := service.DetachCcnInstances(ctx, cnnId, instanceRegion, instanceType, instanceId); err != nil {
+	if err := service.DetachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId); err != nil {
 		return err
 	}
 
 	return resource.Retry(5*time.Minute, func() *resource.RetryError {
-		_, has, err := service.DescribeCcnAttachedInstance(ctx, cnnId, instanceRegion, instanceType, instanceId)
+		_, has, err := service.DescribeCcnAttachedInstance(ctx, ccnId, instanceRegion, instanceType, instanceId)
 		if err != nil {
 			return resource.RetryableError(err)
 		}

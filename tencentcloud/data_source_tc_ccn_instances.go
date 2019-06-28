@@ -1,13 +1,13 @@
 package tencentcloud
 
 /*
-resource tencentcloud_cnn main{
-	name ="ci-temp-test-cnn"
-	description="ci-temp-test-cnn-des"
+resource tencentcloud_ccn main{
+	name ="ci-temp-test-ccn"
+	description="ci-temp-test-ccn-des"
 	qos ="AG"
 }
-data tencentcloud_cnn_instances test{
-	cnn_id = "${tencentcloud_cnn.main.id}"
+data tencentcloud_ccn_instances test{
+	ccn_id = "${tencentcloud_ccn.main.id}"
 }
 */
 import (
@@ -20,12 +20,12 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func dataSourceTencentCloudCnnInstances() *schema.Resource {
+func dataSourceTencentCloudCcnInstances() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudCnnInstancesRead,
+		Read: dataSourceTencentCloudCcnInstancesRead,
 
 		Schema: map[string]*schema.Schema{
-			"cnn_id": {
+			"ccn_id": {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Optional: true,
@@ -47,7 +47,7 @@ func dataSourceTencentCloudCnnInstances() *schema.Resource {
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"cnn_id": {
+						"ccn_id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -117,24 +117,24 @@ func dataSourceTencentCloudCnnInstances() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudCnnInstancesRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceTencentCloudCcnInstancesRead(d *schema.ResourceData, meta interface{}) error {
 
 	logId := GetLogId(nil)
 
-	defer LogElapsed(logId + "data_source.tencentcloud_cnn_instances.read")()
+	defer LogElapsed(logId + "data_source.tencentcloud_ccn_instances.read")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		cnnId string = ""
+		ccnId string = ""
 		name  string = ""
 	)
 
-	if temp, ok := d.GetOk("cnn_id"); ok {
+	if temp, ok := d.GetOk("ccn_id"); ok {
 		if tempStr := temp.(string); tempStr != "" {
-			cnnId = tempStr
+			ccnId = tempStr
 		}
 	}
 
@@ -144,7 +144,7 @@ func dataSourceTencentCloudCnnInstancesRead(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	var infos, err = service.DescribeCcns(ctx, cnnId, name)
+	var infos, err = service.DescribeCcns(ctx, ccnId, name)
 	if err != nil {
 		return err
 	}
@@ -153,7 +153,7 @@ func dataSourceTencentCloudCnnInstancesRead(d *schema.ResourceData, meta interfa
 
 	for _, item := range infos {
 		var infoMap = make(map[string]interface{})
-		infoMap["cnn_id"] = item.cnnId
+		infoMap["ccn_id"] = item.ccnId
 		infoMap["name"] = item.name
 		infoMap["description"] = item.description
 		infoMap["qos"] = item.qos
@@ -161,7 +161,7 @@ func dataSourceTencentCloudCnnInstancesRead(d *schema.ResourceData, meta interfa
 		infoMap["create_time"] = item.createTime
 		infoList = append(infoList, infoMap)
 
-		instances, err := service.DescribeCcnAttachedInstances(ctx, item.cnnId)
+		instances, err := service.DescribeCcnAttachedInstances(ctx, item.ccnId)
 		if err != nil {
 			return err
 		}
@@ -185,12 +185,12 @@ func dataSourceTencentCloudCnnInstancesRead(d *schema.ResourceData, meta interfa
 
 	}
 	if err := d.Set("instance_list", infoList); err != nil {
-		log.Printf("[CRITAL]%s provider set  cnn instances fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set  ccn instances fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
 	m := md5.New()
-	m.Write([]byte("cnn_instances" + cnnId + "_" + name))
+	m.Write([]byte("ccn_instances" + ccnId + "_" + name))
 	d.SetId(fmt.Sprintf("%x", m.Sum(nil)))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

@@ -165,8 +165,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_instances":               dataSourceTencentCloudVpcInstances(),
 			"tencentcloud_vpc_subnets":                 dataSourceTencentCloudVpcSubnets(),
 			"tencentcloud_vpc_route_tables":            dataSourceTencentCloudVpcRouteTables(),
-			"tencentcloud_cnn_instances":               dataSourceTencentCloudCnnInstances(),
-			"tencentcloud_cnn_bandwidth_limits":        dataSourceTencentCloudCnnBandwidthLimits(),
+			"tencentcloud_ccn_instances":               dataSourceTencentCloudCcnInstances(),
+			"tencentcloud_ccn_bandwidth_limits":        dataSourceTencentCloudCcnBandwidthLimits(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -206,9 +206,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_schedule":                resourceTencentCloudAsSchedule(),
 			"tencentcloud_as_lifecycle_hook":          resourceTencentCloudAsLifecycleHook(),
 			"tencentcloud_as_notification":            resourceTencentCloudAsNotification(),
-			"tencentcloud_cnn":                        resourceTencentCloudCnn(),
-			"tencentcloud_cnn_attachment":             resourceTencentCloudCnnAttachment(),
-			"tencentcloud_cnn_bandwidth_limit":        resourceTencentCloudCnnBandwidthLimit(),
+			"tencentcloud_ccn":                        resourceTencentCloudCcn(),
+			"tencentcloud_ccn_attachment":             resourceTencentCloudCcnAttachment(),
+			"tencentcloud_ccn_bandwidth_limit":        resourceTencentCloudCcnBandwidthLimit(),
 		},
 
 		ConfigureFunc: providerConfigure,

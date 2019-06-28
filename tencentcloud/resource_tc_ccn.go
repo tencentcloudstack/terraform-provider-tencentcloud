@@ -1,7 +1,7 @@
 /*
-resource tencentcloud_cnn main{
-	name ="ci-temp-test-cnn"
-	description="ci-temp-test-cnn-des"
+resource tencentcloud_ccn main{
+	name ="ci-temp-test-ccn"
+	description="ci-temp-test-ccn-des"
 	qos ="AG"
 }
 */
@@ -17,12 +17,12 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func resourceTencentCloudCnn() *schema.Resource {
+func resourceTencentCloudCcn() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCnnCreate,
-		Read:   resourceTencentCloudCnnRead,
-		Update: resourceTencentCloudCnnUpdate,
-		Delete: resourceTencentCloudCnnDelete,
+		Create: resourceTencentCloudCcnCreate,
+		Read:   resourceTencentCloudCcnRead,
+		Update: resourceTencentCloudCcnUpdate,
+		Delete: resourceTencentCloudCcnDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -61,10 +61,10 @@ func resourceTencentCloudCnn() *schema.Resource {
 		},
 	}
 }
-func resourceTencentCloudCnnCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) error {
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_cnn.create")()
+	defer LogElapsed(logId + "resource.tencentcloud_ccn.create")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -81,14 +81,14 @@ func resourceTencentCloudCnnCreate(d *schema.ResourceData, meta interface{}) err
 	if err != nil {
 		return err
 	}
-	d.SetId(info.cnnId)
+	d.SetId(info.ccnId)
 
-	return resourceTencentCloudCnnRead(d, meta)
+	return resourceTencentCloudCcnRead(d, meta)
 }
-func resourceTencentCloudCnnRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error {
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_cnn.read")()
+	defer LogElapsed(logId + "resource.tencentcloud_ccn.read")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -112,10 +112,10 @@ func resourceTencentCloudCnnRead(d *schema.ResourceData, meta interface{}) error
 
 	return nil
 }
-func resourceTencentCloudCnnUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) error {
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_cnn.update")()
+	defer LogElapsed(logId + "resource.tencentcloud_ccn.update")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -145,12 +145,12 @@ func resourceTencentCloudCnnUpdate(d *schema.ResourceData, meta interface{}) err
 			return err
 		}
 	}
-	return resourceTencentCloudCnnRead(d, meta)
+	return resourceTencentCloudCcnRead(d, meta)
 }
 
-func resourceTencentCloudCnnDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudCcnDelete(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_cnn.delete")()
+	defer LogElapsed(logId + "resource.tencentcloud_ccn.delete")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}

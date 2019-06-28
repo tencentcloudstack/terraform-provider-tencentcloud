@@ -7,12 +7,12 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func dataSourceTencentCloudCnnBandwidthLimits() *schema.Resource {
+func dataSourceTencentCloudCcnBandwidthLimits() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudCnnBandwidthLimitsRead,
+		Read: dataSourceTencentCloudCcnBandwidthLimitsRead,
 
 		Schema: map[string]*schema.Schema{
-			"cnn_id": {
+			"ccn_id": {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Required: true,
@@ -44,21 +44,21 @@ func dataSourceTencentCloudCnnBandwidthLimits() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudCnnBandwidthLimitsRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceTencentCloudCcnBandwidthLimitsRead(d *schema.ResourceData, meta interface{}) error {
 
 	logId := GetLogId(nil)
 
-	defer LogElapsed(logId + "data_source.tencentcloud_cnn_bandwidth_limit.read")()
+	defer LogElapsed(logId + "data_source.tencentcloud_ccn_bandwidth_limit.read")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		cnnId string = d.Get("cnn_id").(string)
+		ccnId string = d.Get("ccn_id").(string)
 	)
 
-	var infos, err = service.DescribeCcnRegionBandwidthLimits(ctx, cnnId)
+	var infos, err = service.DescribeCcnRegionBandwidthLimits(ctx, ccnId)
 	if err != nil {
 		return err
 	}
@@ -72,11 +72,11 @@ func dataSourceTencentCloudCnnBandwidthLimitsRead(d *schema.ResourceData, meta i
 		infoList = append(infoList, infoMap)
 	}
 	if err := d.Set("limits", infoList); err != nil {
-		log.Printf("[CRITAL]%s provider set  cnn  bandwidth limits fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set  ccn  bandwidth limits fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
-	d.SetId(cnnId)
+	d.SetId(ccnId)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), infoList); err != nil {
