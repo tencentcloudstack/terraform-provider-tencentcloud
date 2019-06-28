@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
 	"testing"
 	"time"
 
@@ -52,12 +51,6 @@ func testAccCheckCcnAttachmentExists(r string) resource.TestCheckFunc {
 			rs.Primary.Attributes["instance_type"],
 			rs.Primary.Attributes["instance_id"])
 
-		log.Println("testAccCheckCcnAttachmentExists",
-			rs.Primary.Attributes["ccn_id"],
-			rs.Primary.Attributes["instance_region"],
-			rs.Primary.Attributes["instance_type"],
-			rs.Primary.Attributes["instance_id"])
-
 		if err != nil {
 			return err
 		}
@@ -81,11 +74,6 @@ func testAccCheckCcnAttachmentDestroy(s *terraform.State) error {
 		time.Sleep(5 * time.Second)
 		_, has, err := service.DescribeCcnAttachedInstance(ctx,
 			rs.Primary.Attributes["ccn_id"], rs.Primary.Attributes["instance_region"],
-			rs.Primary.Attributes["instance_type"],
-			rs.Primary.Attributes["instance_id"])
-		log.Println("testAccCheckCcnAttachmentDestroy",
-			rs.Primary.Attributes["ccn_id"],
-			rs.Primary.Attributes["instance_region"],
 			rs.Primary.Attributes["instance_type"],
 			rs.Primary.Attributes["instance_id"])
 		if err != nil {
