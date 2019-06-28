@@ -208,6 +208,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_notification":            resourceTencentCloudAsNotification(),
 			"tencentcloud_cnn":                        resourceTencentCloudCnn(),
 			"tencentcloud_cnn_attachment":             resourceTencentCloudCnnAttachment(),
+			"tencentcloud_cnn_bandwidth_limit":        resourceTencentCloudCnnBandwidthLimit(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -78,6 +78,14 @@ func resourceTencentCloudCnnAttachmentCreate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("param cnn_id or instance_region or instance_id  error")
 	}
 
+	_, has, err := service.DescribeCcn(ctx, cnnId)
+	if err != nil {
+		return err
+	}
+	if has == 0 {
+		return fmt.Errorf("cnn[%s] doesn't exist", cnnId)
+	}
+
 	if err := service.AttachCcnInstances(ctx, cnnId, instanceRegion, instanceType, instanceId); err != nil {
 		return err
 	}
@@ -103,6 +111,17 @@ func resourceTencentCloudCnnAttachmentRead(d *schema.ResourceData, meta interfac
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
 	)
+
+	_, has, err := service.DescribeCcn(ctx, cnnId)
+	if err != nil {
+		return err
+	}
+
+	if has == 0 {
+		d.SetId("")
+		return nil
+	}
+
 	info, has, err := service.DescribeCcnAttachedInstance(ctx, cnnId, instanceRegion, instanceType, instanceId)
 	if err != nil {
 		return err
@@ -131,6 +150,14 @@ func resourceTencentCloudCnnAttachmentDelete(d *schema.ResourceData, meta interf
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
 	)
+
+	_, has, err := service.DescribeCcn(ctx, cnnId)
+	if err != nil {
+		return err
+	}
+	if has == 0 {
+		return nil
+	}
 
 	if err := service.DetachCcnInstances(ctx, cnnId, instanceRegion, instanceType, instanceId); err != nil {
 		return err

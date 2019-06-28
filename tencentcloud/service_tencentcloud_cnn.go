@@ -481,3 +481,62 @@ func (me *VpcService) DetachCcnInstances(ctx context.Context, cnnId, instanceReg
 	return
 
 }
+
+func (me *VpcService) DescribeCcnRegionBandwidthLimit(ctx context.Context, cnnId, region string) (bandwidth int64, errRet error) {
+
+	infos, err := me.DescribeCcnRegionBandwidthLimits(ctx, cnnId)
+	if err != nil {
+		errRet = err
+		return
+	}
+	for _, v := range infos {
+		if v.region == region {
+			bandwidth = v.limit
+			break
+		}
+	}
+	return
+}
+
+func (me *VpcService) SetCcnRegionBandwidthLimits(ctx context.Context, cnnId, region string, bandwidth int64) (errRet error) {
+
+	logId := GetLogId(ctx)
+	request := vpc.NewSetCcnRegionBandwidthLimitsRequest()
+	request.CcnId = &cnnId
+
+	var uint64bandwidth = uint64(bandwidth)
+
+	var ccnRegionBandwidthLimit vpc.CcnRegionBandwidthLimit
+	ccnRegionBandwidthLimit.BandwidthLimit = &uint64bandwidth
+	ccnRegionBandwidthLimit.Region = &region
+
+	request.CcnRegionBandwidthLimits = []*vpc.CcnRegionBandwidthLimit{&ccnRegionBandwidthLimit}
+
+	response, err := me.client.UseVpcClient().SetCcnRegionBandwidthLimits(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+		logId,
+		request.GetAction(),
+		request.ToJsonString(),
+		response.ToJsonString())
+	return
+}
