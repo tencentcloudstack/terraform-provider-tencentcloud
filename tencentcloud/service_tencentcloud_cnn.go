@@ -19,6 +19,16 @@ type CnnBasicInfo struct {
 	createTime    string
 }
 
+type CnnAttachedInstanceInfo struct {
+	cnnId          string
+	instanceType   string
+	instanceRegion string
+	instanceId     string
+	state          string
+	attachedTime   string
+	cidrBlock      []string
+}
+
 type CnnBandwidthLimit struct {
 	region string
 	limit  int64
@@ -299,6 +309,57 @@ func (me *VpcService) ModifyCcnAttribute(ctx context.Context, cnnId, name, descr
 	if err != nil {
 		errRet = err
 		return
+	}
+	return
+}
+
+func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, cnnId string) (infos []CnnAttachedInstanceInfo, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := vpc.NewDescribeCcnAttachedInstancesRequest()
+	request.CcnId = &cnnId
+
+	response, err := me.client.UseVpcClient().DescribeCcnAttachedInstances(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	infos = make([]CnnAttachedInstanceInfo, 0, len(response.Response.InstanceSet))
+
+	for _, item := range response.Response.InstanceSet {
+
+		var info CnnAttachedInstanceInfo
+
+		info.attachedTime = *item.AttachedTime
+		info.cidrBlock = make([]string, 0, len(item.CidrBlock))
+
+		for _, v := range item.CidrBlock {
+			info.cidrBlock = append(info.cidrBlock, *v)
+		}
+
+		info.cnnId = cnnId
+		info.instanceId = *item.InstanceId
+		info.instanceRegion = *item.InstanceRegion
+		info.instanceType = *item.InstanceType
+		info.state = *item.State
+		infos = append(infos, info)
 	}
 	return
 }

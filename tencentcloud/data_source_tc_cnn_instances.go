@@ -2,6 +2,8 @@ package tencentcloud
 
 import (
 	"context"
+	"crypto/md5"
+	"fmt"
 	"log"
 	"strings"
 
@@ -148,13 +150,38 @@ func dataSourceTencentCloudCnnInstancesRead(d *schema.ResourceData, meta interfa
 		infoMap["state"] = strings.ToUpper(item.state)
 		infoMap["create_time"] = item.createTime
 		infoList = append(infoList, infoMap)
+
+		instances, err := service.DescribeCcnAttachedInstances(ctx, item.cnnId)
+		if err != nil {
+			return err
+		}
+		attachmentList := make([]interface{}, 0, len(instances))
+
+		for _, instance := range instances {
+
+			instanceMap := map[string]interface{}{
+				"instance_type":   instance.instanceType,
+				"instance_region": instance.instanceRegion,
+				"instance_id":     instance.instanceId,
+				"state":           strings.ToUpper(instance.state),
+				"attached_time":   instance.attachedTime,
+				"cidr_block":      instance.cidrBlock,
+			}
+			attachmentList = append(attachmentList, instanceMap)
+
+		}
+
+		infoMap["attachment_list"] = attachmentList
+
 	}
 	if err := d.Set("instance_list", infoList); err != nil {
 		log.Printf("[CRITAL]%s provider set  cnn instances fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
-	d.SetId("cnn_instances" + cnnId + "_" + name)
+	m := md5.New()
+	m.Write([]byte("cnn_instances" + cnnId + "_" + name))
+	d.SetId(fmt.Sprintf("%x", m.Sum(nil)))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), infoList); err != nil {
