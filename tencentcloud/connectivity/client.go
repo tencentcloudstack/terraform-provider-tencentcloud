@@ -146,6 +146,11 @@ func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	cpf.HttpProfile.ReqTimeout = 300
 
 	vpcConn, _ := vpc.NewClient(credential, me.Region, cpf)
+
+	var round LogRoundTripper
+
+	vpcConn.WithHttpTransport(&round)
+
 	me.vpcConn = vpcConn
 
 	return me.vpcConn

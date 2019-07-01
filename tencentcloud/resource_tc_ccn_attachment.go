@@ -139,6 +139,7 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+
 	logId := GetLogId(nil)
 	defer LogElapsed(logId + "resource.tencentcloud_ccn_attachment.delete")()
 
