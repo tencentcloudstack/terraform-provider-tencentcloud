@@ -25,6 +25,12 @@ func TestAccDataSourceTencentCloudCcnV3BandwidthLimits_basic(t *testing.T) {
 }
 
 const TestAccDataSourceTencentCloudCcnBandwidthLimits = `
+
+variable "other_region1" {
+    default = "ap-shanghai"
+}
+
+
 resource tencentcloud_ccn main{
 	name ="ci-temp-test-ccn"
 	description="ci-temp-test-ccn-des"
@@ -35,4 +41,9 @@ data tencentcloud_ccn_bandwidth_limits limit {
 	ccn_id ="${tencentcloud_ccn.main.id}"
 }
 
+resource tencentcloud_ccn_bandwidth_limit limit1 {
+	ccn_id ="${tencentcloud_ccn.main.id}"
+	region ="${var.other_region1}"
+	bandwidth_limit = 500
+}
 `
