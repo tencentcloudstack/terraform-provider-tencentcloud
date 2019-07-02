@@ -79,10 +79,8 @@ func (me *VpcService) DescribeCcns(ctx context.Context, ccnId, name string) (inf
 
 getMoreData:
 
-	if total >= 0 {
-		if int(offset) >= total {
-			return
-		}
+	if total >= 0 && int(offset) >= total {
+		return
 	}
 	request.Limit = &limit
 	request.Offset = &offset
@@ -331,7 +329,7 @@ func (me *VpcService) DescribeCcnAttachedInstance(ctx context.Context, ccnId,
 
 	for _, item := range infos {
 		if item.instanceId == instanceId &&
-			item.instanceRegion == item.instanceRegion &&
+			item.instanceRegion == instanceRegion &&
 			strings.ToUpper(item.instanceType) == strings.ToUpper(instanceType) {
 			has = 1
 			info = item

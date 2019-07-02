@@ -45,6 +45,8 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_subnets
   tencentcloud_vpc_route_tables
+  tencentcloud_ccn_instances
+  tencentcloud_ccn_bandwidth_limits
 
 CBS Resources
   tencentcloud_cbs_storage
@@ -99,6 +101,11 @@ AS Resources
   tencentcloud_as_schedule
   tencentcloud_as_lifecycle_hook
   tencentcloud_as_notification
+
+CCN Resources
+  tencentcloud_ccn
+  tencentcloud_ccn_attachment
+  tencentcloud_ccn_bandwidth_limit
 */
 package tencentcloud
 

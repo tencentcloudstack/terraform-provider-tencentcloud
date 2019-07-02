@@ -6,7 +6,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccDataSourceTencentCloudCcnV3BandwidthLimits_basic(t *testing.T) {
+func TestAccDataSourceTencentCloudCcnV3BandwidthLimitsBasic(t *testing.T) {
+	keyName := "data.tencentcloud_ccn_bandwidth_limits.limit"
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -15,9 +16,9 @@ func TestAccDataSourceTencentCloudCcnV3BandwidthLimits_basic(t *testing.T) {
 				Config: TestAccDataSourceTencentCloudCcnBandwidthLimits,
 
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_ccn_bandwidth_limits.limit"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_bandwidth_limits.limit", "ccn_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_bandwidth_limits.limit", "limits.#"),
+					testAccCheckTencentCloudDataSourceID(keyName),
+					resource.TestCheckResourceAttrSet(keyName, "ccn_id"),
+					resource.TestCheckResourceAttrSet(keyName, "limits.#"),
 				),
 			},
 		},

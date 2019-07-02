@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudCcnV3_basic(t *testing.T) {
-
+func TestAccTencentCloudCcnV3Basic(t *testing.T) {
+	keyName := keyName
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -20,18 +20,18 @@ func TestAccTencentCloudCcnV3_basic(t *testing.T) {
 			{
 				Config: testAccccnConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCcnExists("tencentcloud_ccn.main"),
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "name", "ci-temp-test-ccn"),
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "description", "ci-temp-test-ccn-des"),
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "instance_count", "0"),
+					testAccCheckCcnExists(keyName),
+					resource.TestCheckResourceAttr(keyName, "name", "ci-temp-test-ccn"),
+					resource.TestCheckResourceAttr(keyName, "description", "ci-temp-test-ccn-des"),
+					resource.TestCheckResourceAttr(keyName, "instance_count", "0"),
 
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "qos", "AG"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn.main", "state"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn.main", "create_time"),
+					resource.TestCheckResourceAttr(keyName, "qos", "AG"),
+					resource.TestCheckResourceAttrSet(keyName, "state"),
+					resource.TestCheckResourceAttrSet(keyName, "create_time"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_ccn.main",
+				ResourceName:      keyName,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -39,7 +39,7 @@ func TestAccTencentCloudCcnV3_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCcnV3_update(t *testing.T) {
+func TestAccTencentCloudCcnV3Update(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -49,28 +49,28 @@ func TestAccTencentCloudCcnV3_update(t *testing.T) {
 			{
 				Config: testAccCcnConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCcnExists("tencentcloud_ccn.main"),
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "name", "ci-temp-test-ccn"),
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "description", "ci-temp-test-ccn-des"),
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "instance_count", "0"),
+					testAccCheckCcnExists(keyName),
+					resource.TestCheckResourceAttr(keyName, "name", "ci-temp-test-ccn"),
+					resource.TestCheckResourceAttr(keyName, "description", "ci-temp-test-ccn-des"),
+					resource.TestCheckResourceAttr(keyName, "instance_count", "0"),
 
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "qos", "AG"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn.main", "state"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn.main", "create_time"),
+					resource.TestCheckResourceAttr(keyName, "qos", "AG"),
+					resource.TestCheckResourceAttrSet(keyName, "state"),
+					resource.TestCheckResourceAttrSet(keyName, "create_time"),
 				),
 			},
 			{
 				Config: testAccCcnConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 
-					testAccCheckCcnExists("tencentcloud_ccn.main"),
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "name", "ci-temp-test-ccn-update"),
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "description", "ci-temp-test-ccn-des-update"),
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "instance_count", "0"),
+					testAccCheckCcnExists(keyName),
+					resource.TestCheckResourceAttr(keyName, "name", "ci-temp-test-ccn-update"),
+					resource.TestCheckResourceAttr(keyName, "description", "ci-temp-test-ccn-des-update"),
+					resource.TestCheckResourceAttr(keyName, "instance_count", "0"),
 
-					resource.TestCheckResourceAttr("tencentcloud_ccn.main", "qos", "AG"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn.main", "state"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn.main", "create_time"),
+					resource.TestCheckResourceAttr(keyName, "qos", "AG"),
+					resource.TestCheckResourceAttrSet(keyName, "state"),
+					resource.TestCheckResourceAttrSet(keyName, "create_time"),
 				),
 			},
 		},

@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudCcnV3Attachment_basic(t *testing.T) {
-
+func TestAccTencentCloudCcnV3AttachmentBasic(t *testing.T) {
+	keyName := keyName
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -20,14 +20,14 @@ func TestAccTencentCloudCcnV3Attachment_basic(t *testing.T) {
 			{
 				Config: testAccCcnAttachmentConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCcnAttachmentExists("tencentcloud_ccn_attachment.attachment"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_attachment.attachment", "ccn_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_attachment.attachment", "instance_type"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_attachment.attachment", "instance_region"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_attachment.attachment", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_attachment.attachment", "state"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_attachment.attachment", "attached_time"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_attachment.attachment", "cidr_block.#"),
+					testAccCheckCcnAttachmentExists(keyName),
+					resource.TestCheckResourceAttrSet(keyName, "ccn_id"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_type"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_region"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_id"),
+					resource.TestCheckResourceAttrSet(keyName, "state"),
+					resource.TestCheckResourceAttrSet(keyName, "attached_time"),
+					resource.TestCheckResourceAttrSet(keyName, "cidr_block.#"),
 				),
 			},
 		},

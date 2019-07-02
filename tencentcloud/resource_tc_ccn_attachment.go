@@ -212,6 +212,4 @@ func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interf
 		}
 		return resource.RetryableError(fmt.Errorf("delete fail"))
 	})
-
-	return nil
 }

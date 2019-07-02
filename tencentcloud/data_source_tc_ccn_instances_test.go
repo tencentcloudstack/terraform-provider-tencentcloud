@@ -6,7 +6,8 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccDataSourceTencentCloudCcnV3Instances_basic(t *testing.T) {
+func TestAccDataSourceTencentCloudCcnV3InstancesBasic(t *testing.T) {
+	keyName := keyName
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -17,26 +18,26 @@ func TestAccDataSourceTencentCloudCcnV3Instances_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 
 					//id filter
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_ccn_instances.id_instances"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ccn_instances.id_instances", "instance_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.name", "ci-temp-test-ccn"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.description", "ci-temp-test-ccn-des"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.ccn_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.qos"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.state"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.attachment_list.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.create_time"),
+					testAccCheckTencentCloudDataSourceID(keyName),
+					resource.TestCheckResourceAttr(keyName, "instance_list.#", "1"),
+					resource.TestCheckResourceAttr(keyName, "instance_list.0.name", "ci-temp-test-ccn"),
+					resource.TestCheckResourceAttr(keyName, "instance_list.0.description", "ci-temp-test-ccn-des"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.ccn_id"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.qos"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.state"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.attachment_list.#"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.create_time"),
 
 					//name filter ,Every VPC with a "guagua_vpc_instance_test" name will be found
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_ccn_instances.name_instances"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.name"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.description"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.ccn_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.qos"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.state"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.attachment_list.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ccn_instances.id_instances", "instance_list.0.create_time"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.#"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.name"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.description"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.ccn_id"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.qos"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.state"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.attachment_list.#"),
+					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.create_time"),
 				),
 			},
 		},

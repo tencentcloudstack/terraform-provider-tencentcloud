@@ -9,7 +9,10 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudCcnV3BandwidthLimit_basic(t *testing.T) {
+func TestAccTencentCloudCcnV3BandwidthLimitBasic(t *testing.T) {
+
+	keyNameLimit1 := keyNameLimit1
+	keyNameLimit2 := keyNameLimit2
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -18,15 +21,15 @@ func TestAccTencentCloudCcnV3BandwidthLimit_basic(t *testing.T) {
 			{
 				Config: testAccCcnBandwidthLimitConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCcnBandwidthLimitExists("tencentcloud_ccn_bandwidth_limit.limit1"),
-					testAccCheckCcnBandwidthLimitExists("tencentcloud_ccn_bandwidth_limit.limit2"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_bandwidth_limit.limit1", "ccn_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_bandwidth_limit.limit1", "region"),
-					resource.TestCheckResourceAttr("tencentcloud_ccn_bandwidth_limit.limit1", "bandwidth_limit", "500"),
+					testAccCheckCcnBandwidthLimitExists(keyNameLimit1),
+					testAccCheckCcnBandwidthLimitExists(keyNameLimit2),
+					resource.TestCheckResourceAttrSet(keyNameLimit1, "ccn_id"),
+					resource.TestCheckResourceAttrSet(keyNameLimit1, "region"),
+					resource.TestCheckResourceAttr(keyNameLimit1, "bandwidth_limit", "500"),
 
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_bandwidth_limit.limit2", "ccn_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_bandwidth_limit.limit2", "region"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ccn_bandwidth_limit.limit2", "bandwidth_limit"),
+					resource.TestCheckResourceAttrSet(keyNameLimit2, "ccn_id"),
+					resource.TestCheckResourceAttrSet(keyNameLimit2, "region"),
+					resource.TestCheckResourceAttrSet(keyNameLimit2, "bandwidth_limit"),
 				),
 			},
 		},
@@ -61,6 +64,7 @@ func testAccCheckCcnBandwidthLimitExists(r string) resource.TestCheckFunc {
 }
 
 func testAccCheckCcnBandwidthLimitDestroy(s *terraform.State) error {
+	_ = s
 	return nil
 }
 

@@ -152,5 +152,6 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudCcnBandwidthLimitDelete(d *schema.ResourceData, meta interface{}) error {
+	_, _ = d, meta
 	return nil
 }
