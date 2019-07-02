@@ -11,14 +11,14 @@ import (
 )
 
 func TestAccTencentCloudCcnV3Basic(t *testing.T) {
-	keyName := keyName
+	keyName := "tencentcloud_ccn.main"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckCcnDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccccnConfig,
+				Config: testAccCcnConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCcnExists(keyName),
 					resource.TestCheckResourceAttr(keyName, "name", "ci-temp-test-ccn"),
@@ -40,6 +40,7 @@ func TestAccTencentCloudCcnV3Basic(t *testing.T) {
 }
 
 func TestAccTencentCloudCcnV3Update(t *testing.T) {
+	keyName := "tencentcloud_ccn.main"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

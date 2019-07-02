@@ -11,7 +11,7 @@ import (
 )
 
 func TestAccTencentCloudCcnV3AttachmentBasic(t *testing.T) {
-	keyName := keyName
+	keyName := "tencentcloud_ccn_attachment.attachment"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

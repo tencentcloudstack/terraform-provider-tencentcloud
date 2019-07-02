@@ -11,8 +11,8 @@ import (
 
 func TestAccTencentCloudCcnV3BandwidthLimitBasic(t *testing.T) {
 
-	keyNameLimit1 := keyNameLimit1
-	keyNameLimit2 := keyNameLimit2
+	keyNameLimit1 := "tencentcloud_ccn_bandwidth_limit.limit1"
+	keyNameLimit2 := "tencentcloud_ccn_bandwidth_limit.limit2"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
