@@ -1,4 +1,4 @@
-## 1.11.0 (Unreleased)
+## 1.11.0 (July 02, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_ccn_instances`
