@@ -1,9 +1,23 @@
 /*
+Provides a resource to create a CCN instance.
+
+Example Usage
+
+```hcl
 resource tencentcloud_ccn main{
 	name ="ci-temp-test-ccn"
 	description="ci-temp-test-ccn-des"
 	qos ="AG"
 }
+```
+
+Import
+
+Ccn instance can be imported, e.g.
+
+```hcl
+$ terraform import tencentcloud_ccn.test ccn-id
+```
 */
 package tencentcloud
 
@@ -32,11 +46,13 @@ func resourceTencentCloudCcn() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
+				Description:  "Name of the CCN to be queried, and maximum length does not exceed 60 bytes.",
 			},
 			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(0, 100),
+				Description:  "Description of CCN, and maximum length does not exceed 100 bytes.",
 			},
 			"qos": {
 				Type:         schema.TypeString,
@@ -44,19 +60,23 @@ func resourceTencentCloudCcn() *schema.Resource {
 				ForceNew:     true,
 				Default:      CNN_QOS_AU,
 				ValidateFunc: validateAllowedStringValue([]string{CNN_QOS_PT, CNN_QOS_AU, CNN_QOS_AG}),
+				Description:  " Service quality of CCN, and the available value include 'PT', 'AU', 'AG'. The default is 'AU'.",
 			},
 			// Computed values
 			"state": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "States of instance. The available value include 'ISOLATED'(arrears) and 'AVAILABLE'.",
 			},
 			"instance_count": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Number of attached instances.",
 			},
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of resource.",
 			},
 		},
 	}

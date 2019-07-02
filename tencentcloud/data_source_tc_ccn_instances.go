@@ -1,15 +1,26 @@
-package tencentcloud
-
 /*
+Use this data source to query detailed information of CCN instances.
+
+Example Usage
+
+```hcl
 resource tencentcloud_ccn main{
 	name ="ci-temp-test-ccn"
 	description="ci-temp-test-ccn-des"
 	qos ="AG"
 }
-data tencentcloud_ccn_instances test{
+
+data tencentcloud_ccn_instances id_instances{
 	ccn_id = "${tencentcloud_ccn.main.id}"
 }
+
+data tencentcloud_ccn_instances name_instances{
+	name = "${tencentcloud_ccn.main.name}"
+}
+```
 */
+package tencentcloud
+
 import (
 	"context"
 	"crypto/md5"
@@ -26,75 +37,86 @@ func dataSourceTencentCloudCcnInstances() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"ccn_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "ID of the CCN to be queried.",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Name of the CCN to be queried.",
 			},
 			"result_output_file": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 
 			// Computed values
 			"instance_list": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Information list of CCN.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"ccn_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the CCN.",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the CCN.",
 						},
 						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Description of the CCN.",
 						},
 						"qos": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Service quality of CCN, and the available value include 'PT', 'AU', 'AG'. The default is 'AU'.",
 						},
 						"state": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"instance_count": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "States of instance. The available value include 'ISOLATED'(arrears) and 'AVAILABLE'.",
 						},
 						"attachment_list": {
-							Type:     schema.TypeList,
-							Computed: true,
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Information list of instance is attached.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"instance_type": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Type of attached instance network, and available values include VPC, DIRECTCONNECT and BMVPC.",
 									},
 									"instance_region": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The region that the instance locates at.",
 									},
 									"instance_id": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "ID of instance is attached.",
 									},
 									"state": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "States of instance is attached, and available values include PENDING, ACTIVE, EXPIRED, REJECTED, DELETED, FAILED(asynchronous forced disassociation after 2 hours), ATTACHING, DETACHING and DETACHFAILED(asynchronous forced disassociation after 2 hours).",
 									},
 									"attached_time": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Time of attaching.",
 									},
 									"cidr_block": {
 										Type:     schema.TypeList,
@@ -102,13 +124,15 @@ func dataSourceTencentCloudCcnInstances() *schema.Resource {
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
+										Description: "A network address block of the instance that is attached.",
 									},
 								},
 							},
 						},
 						"create_time": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Creation time of resource.",
 						},
 					},
 				},

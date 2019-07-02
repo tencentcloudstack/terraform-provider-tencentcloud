@@ -1,3 +1,29 @@
+/*
+Use this data source to query detailed information of CCN bandwidth limits.
+
+Example Usage
+
+```hcl
+variable "other_region1" {
+    default = "ap-shanghai"
+}
+resource tencentcloud_ccn main{
+	name ="ci-temp-test-ccn"
+	description="ci-temp-test-ccn-des"
+	qos ="AG"
+}
+
+data tencentcloud_ccn_bandwidth_limits limit {
+	ccn_id ="${tencentcloud_ccn.main.id}"
+}
+
+resource tencentcloud_ccn_bandwidth_limit limit1 {
+	ccn_id ="${tencentcloud_ccn.main.id}"
+	region ="${var.other_region1}"
+	bandwidth_limit = 500
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -13,29 +39,34 @@ func dataSourceTencentCloudCcnBandwidthLimits() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"ccn_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "ID of the CCN to be queried.",
 			},
 			"result_output_file": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 
 			// Computed values
 			"limits": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "The bandwidth limits of regions",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"region": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Limitation of region.",
 						},
 						"bandwidth_limit": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Limitation of bandwidth.",
 						},
 					},
 				},

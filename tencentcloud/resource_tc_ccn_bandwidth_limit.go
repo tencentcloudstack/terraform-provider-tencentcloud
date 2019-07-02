@@ -1,3 +1,25 @@
+/*
+Provides a resource to limit CCN bandwidth.
+
+Example Usage
+
+```hcl
+variable "other_region1" {
+    default = "ap-shanghai"
+}
+resource tencentcloud_ccn main{
+	name ="ci-temp-test-ccn"
+	description="ci-temp-test-ccn-des"
+	qos ="AG"
+}
+
+resource tencentcloud_ccn_bandwidth_limit limit1 {
+	ccn_id ="${tencentcloud_ccn.main.id}"
+	region ="${var.other_region1}"
+	bandwidth_limit = 500
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -16,19 +38,22 @@ func resourceTencentCloudCcnBandwidthLimit() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"ccn_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the CCN",
 			},
 			"region": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Limitation of region.",
 			},
 			"bandwidth_limit": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Limitation of bandwidth.",
 			},
 		},
 	}

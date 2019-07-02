@@ -1,3 +1,34 @@
+/*
+Provides a CCN attaching resource.
+
+Example Usage
+
+```hcl
+variable "region" {
+    default = "ap-guangzhou"
+}
+
+resource  tencentcloud_vpc   vpc  {
+    name = "ci-temp-test-vpc"
+    cidr_block = "10.0.0.0/16"
+    dns_servers=["119.29.29.29","8.8.8.8"]
+    is_multicast=false
+}
+
+resource tencentcloud_ccn main{
+	name ="ci-temp-test-ccn"
+	description="ci-temp-test-ccn-des"
+	qos ="AG"
+}
+
+resource tencentcloud_ccn_attachment attachment{
+	ccn_id = "${tencentcloud_ccn.main.id}"
+	instance_type ="VPC"
+	instance_id ="${tencentcloud_vpc.vpc.id}"
+	instance_region="${var.region}"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -19,35 +50,41 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"ccn_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the CCN",
 			},
 			"instance_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{CNN_INSTANCE_TYPE_VPC, CNN_INSTANCE_TYPE_DIRECTCONNECT, CNN_INSTANCE_TYPE_BMVPC}),
 				ForceNew:     true,
+				Description:  "Type of attached instance network, and available values include VPC, DIRECTCONNECT and BMVPC.",
 			},
 			"instance_region": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The region that the instance locates at.",
 			},
 			"instance_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of instance is attached.",
 			},
 
 			// Computed values
 			"state": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "States of instance is attached, and available values include PENDING, ACTIVE, EXPIRED, REJECTED, DELETED, FAILED(asynchronous forced disassociation after 2 hours), ATTACHING, DETACHING and DETACHFAILED(asynchronous forced disassociation after 2 hours).",
 			},
 			"attached_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Time of attaching.",
 			},
 			"cidr_block": {
 				Type:     schema.TypeList,
@@ -55,6 +92,7 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+				Description: "A network address block of the instance that is attached.",
 			},
 		},
 	}
