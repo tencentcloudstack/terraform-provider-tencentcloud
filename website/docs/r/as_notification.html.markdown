@@ -13,10 +13,10 @@ Provides a resource for an AS (Auto scaling) notification.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_autoscaling_notification" "aslab" {
+resource "tencentcloud_as_notification" "as_notification" {
   scaling_group_id              = "sg-12af45"
   notification_type             = ["SCALE_OUT_FAILED", "SCALE_IN_SUCCESSFUL", "SCALE_IN_FAILED", "REPLACE_UNHEALTHY_INSTANCE_FAILED"]
-  notification_user_group_ids   = ["ASGID"]
+  notification_user_group_ids   = ["76955"]
 }
 ```
 
@@ -24,7 +24,7 @@ resource "tencentcloud_autoscaling_notification" "aslab" {
 
 The following arguments are supported:
 
-* `notification_type` - (Required) A list of Notification Types that trigger notifications. Acceptable values are SCALE_OUT_FAILED, SCALE_IN_SUCCESSFUL, SCALE_IN_FAILED, REPLACE_UNHEALTHY_INSTANCE_SUCCESSFUL and REPLACE_UNHEALTHY_INSTANCE_FAILED.
+* `notification_types` - (Required) A list of Notification Types that trigger notifications. Acceptable values are SCALE_OUT_FAILED, SCALE_IN_SUCCESSFUL, SCALE_IN_FAILED, REPLACE_UNHEALTHY_INSTANCE_SUCCESSFUL and REPLACE_UNHEALTHY_INSTANCE_FAILED.
 * `notification_user_group_ids` - (Required) A group of user IDs to be notified.
 * `scaling_group_id` - (Required, ForceNew) ID of a scaling group.
 

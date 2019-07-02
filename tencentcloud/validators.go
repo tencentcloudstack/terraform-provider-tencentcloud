@@ -23,26 +23,6 @@ func validateNameRegex(v interface{}, k string) (ws []string, errors []error) {
 	return
 }
 
-func validateStorageType(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	if !goset.IsIncluded(availableStorageTypeFamilies, value) {
-		errors = append(errors, fmt.Errorf("Invalid storage type: %v. Valid choice: %s.", value, availableStorageTypeFamilies))
-	}
-	return
-}
-
-func validateStorageName(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	if value == "" {
-		errors = append(errors, fmt.Errorf("Storage name cannot be empty."))
-	}
-
-	if len(value) > MaxStorageNameLength {
-		errors = append(errors, fmt.Errorf("%q cannot be longer than %v characters", k, MaxStorageNameLength))
-	}
-	return
-}
-
 func validateNotEmpty(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) == 0 {
@@ -105,14 +85,6 @@ func validateIp(v interface{}, k string) (ws []string, errors []error) {
 	ip := net.ParseIP(value)
 	if ip == nil {
 		errors = append(errors, fmt.Errorf("%q must contain a valid IP", k))
-	}
-	return
-}
-
-func validateStoragePeriod(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(int)
-	if !goset.IsIncluded(availablePeriodValue, value) {
-		errors = append(errors, fmt.Errorf("Storage period out of range: %v.", availablePeriodValue))
 	}
 	return
 }

@@ -21,6 +21,11 @@ resource "tencentcloud_security_group" "default" {
   description = "test security group rule"
 }
 
+resource "tencentcloud_security_group" "default2" {
+  name        = "${var.security_group_name}"
+  description = "anthor test security group rule"
+}
+
 resource "tencentcloud_security_group_rule" "http-in" {
   security_group_id = "${tencentcloud_security_group.default.id}"
   type              = "ingress"
@@ -47,6 +52,15 @@ resource "tencentcloud_security_group_rule" "egress-drop" {
   port_range        = "3000-4000"
   policy            = "drop"
 }
+
+resource "tencentcloud_security_group_rule" "sourcesgid-in" {
+  security_group_id = "${tencentcloud_security_group.default.id}"
+  type              = "ingress"
+  source_sgid       = "${tencentcloud_security_group.default2.id}"
+  ip_protocol       = "tcp"
+  port_range        = "80,8080"
+  policy            = "accept"
+}
 ```
 
 ## Argument Reference
@@ -55,7 +69,8 @@ The following arguments are supported:
 
 * `security_group_id` - (Required, Forces new resource) The security group to apply this rule to.
 * `type` - (Required, Forces new resource) The type of rule being created. Valid options are "ingress" (inbound) or "egress" (outbound).
-* `cidr_ip` - (Required, Forces new resource) can be IP, or CIDR block.
+* `cidr_ip` - (Optional, Forces new resource) can be IP, or CIDR block.
+* `source_sgid` - (Optional, Forces new resource) The ID of a security group rule. Either `cidr_ip` or `source_sgid` must be specified, but it isn't supported simultaneously.
 * `ip_protocol` - (Optional, Forces new resource) Support "UDP"、"TCP"、"ICMP", Not configured means all protocols.
 * `port_range` - (Optional, Forces new resource) examples, Single port: "53"、Multiple ports: "80,8080,443"、Continuous port: "80-90", Not configured to represent all ports.
 * `policy` - (Required, Forces new resource) Policy of rule, "accept" or "drop".
@@ -67,6 +82,7 @@ The following attributes are exported:
 * `id` - The ID of the security group rule.
 * `type` - The type of rule, "ingress" or "egress".
 * `cidr_ip` - The source of rule, IP or CIDR block.
+* `source_sgid` - The ID of a security group rule.
 * `ip_protocol` – The protocol used.
 * `port_range` – The port used.
 * `policy` - The policy of rule, "accept" or "drop".

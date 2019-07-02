@@ -45,13 +45,19 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_subnets
   tencentcloud_vpc_route_tables
+<<<<<<< .mine
   tencentcloud_ccn_instances
   tencentcloud_ccn_bandwidth_limits
+=======
+  tencentcloud_cbs_storages
+  tencentcloud_cbs_snapshots
+>>>>>>> .theirs
 
 CBS Resources
   tencentcloud_cbs_storage
   tencentcloud_cbs_storage_attachment
   tencentcloud_cbs_snapshot
+  tencentcloud_cbs_snapshot_policy
 
 Container Cluster Resources
   tencentcloud_container_cluster
@@ -172,13 +178,19 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_instances":               dataSourceTencentCloudVpcInstances(),
 			"tencentcloud_vpc_subnets":                 dataSourceTencentCloudVpcSubnets(),
 			"tencentcloud_vpc_route_tables":            dataSourceTencentCloudVpcRouteTables(),
+<<<<<<< .mine
 			"tencentcloud_ccn_instances":               dataSourceTencentCloudCcnInstances(),
 			"tencentcloud_ccn_bandwidth_limits":        dataSourceTencentCloudCcnBandwidthLimits(),
+=======
+			"tencentcloud_cbs_storages":                dataSourceTencentCloudCbsStorages(),
+			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
+>>>>>>> .theirs
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_alb_server_attachment":      resourceTencentCloudAlbServerAttachment(),
 			"tencentcloud_cbs_snapshot":               resourceTencentCloudCbsSnapshot(),
+			"tencentcloud_cbs_snapshot_policy":        resourceTencentCloudCbsSnapshotPolicy(),
 			"tencentcloud_cbs_storage":                resourceTencentCloudCbsStorage(),
 			"tencentcloud_cbs_storage_attachment":     resourceTencentCloudCbsStorageAttachment(),
 			"tencentcloud_container_cluster":          resourceTencentCloudContainerCluster(),
