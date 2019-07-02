@@ -45,6 +45,8 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_subnets
   tencentcloud_vpc_route_tables
+  tencentcloud_ccn_instances
+  tencentcloud_ccn_bandwidth_limits
   tencentcloud_cbs_storages
   tencentcloud_cbs_snapshots
 
@@ -102,6 +104,11 @@ AS Resources
   tencentcloud_as_schedule
   tencentcloud_as_lifecycle_hook
   tencentcloud_as_notification
+
+CCN Resources
+  tencentcloud_ccn
+  tencentcloud_ccn_attachment
+  tencentcloud_ccn_bandwidth_limit
 */
 package tencentcloud
 
@@ -168,6 +175,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_instances":               dataSourceTencentCloudVpcInstances(),
 			"tencentcloud_vpc_subnets":                 dataSourceTencentCloudVpcSubnets(),
 			"tencentcloud_vpc_route_tables":            dataSourceTencentCloudVpcRouteTables(),
+			"tencentcloud_ccn_instances":               dataSourceTencentCloudCcnInstances(),
+			"tencentcloud_ccn_bandwidth_limits":        dataSourceTencentCloudCcnBandwidthLimits(),
 			"tencentcloud_cbs_storages":                dataSourceTencentCloudCbsStorages(),
 			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
 		},
@@ -210,6 +219,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_schedule":                resourceTencentCloudAsSchedule(),
 			"tencentcloud_as_lifecycle_hook":          resourceTencentCloudAsLifecycleHook(),
 			"tencentcloud_as_notification":            resourceTencentCloudAsNotification(),
+			"tencentcloud_ccn":                        resourceTencentCloudCcn(),
+			"tencentcloud_ccn_attachment":             resourceTencentCloudCcnAttachment(),
+			"tencentcloud_ccn_bandwidth_limit":        resourceTencentCloudCcnBandwidthLimit(),
 		},
 
 		ConfigureFunc: providerConfigure,

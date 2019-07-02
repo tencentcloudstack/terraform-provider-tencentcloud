@@ -1,0 +1,47 @@
+---
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_ccn"
+sidebar_current: "docs-tencentcloud-resource-ccn"
+description: |-
+  Provides a resource to create a CCN instance.
+---
+
+# tencentcloud_ccn
+
+Provides a resource to create a CCN instance.
+
+## Example Usage
+
+```hcl
+resource tencentcloud_ccn main{
+	name ="ci-temp-test-ccn"
+	description="ci-temp-test-ccn-des"
+	qos ="AG"
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `name` - (Required) Name of the CCN to be queried, and maximum length does not exceed 60 bytes.
+* `description` - (Optional) Description of CCN, and maximum length does not exceed 100 bytes.
+* `qos` - (Optional, ForceNew)  Service quality of CCN, and the available value include 'PT', 'AU', 'AG'. The default is 'AU'.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `create_time` - Creation time of resource.
+* `instance_count` - Number of attached instances.
+* `state` - States of instance. The available value include 'ISOLATED'(arrears) and 'AVAILABLE'.
+
+
+## Import
+
+Ccn instance can be imported, e.g.
+
+```hcl
+$ terraform import tencentcloud_ccn.test ccn-id
+```
+

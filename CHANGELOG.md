@@ -1,4 +1,12 @@
 ## 1.11.0 (Unreleased)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_ccn_instances`
+* **New Data Source**: `tencentcloud_ccn_bandwidth_limits`
+* **New Resource**: `tencentcloud_ccn`
+* **New Resource**: `tencentcloud_ccn_attachment`
+* **New Resource**: `tencentcloud_ccn_bandwidth_limit`
+
 ## 1.10.0 (June 27, 2019)
 
 ENHANCEMENTS:
