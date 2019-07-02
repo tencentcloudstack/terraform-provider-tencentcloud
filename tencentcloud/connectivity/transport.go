@@ -64,12 +64,14 @@ func (me *LogRoundTripper) log(in []byte, out []byte, err error, start int64) {
 	}
 	if len(out) > 0 {
 		buf.WriteString("; response:")
-		out := bytes.ReplaceAll(out,
+		out := bytes.Replace(out,
 			[]byte("\n"),
-			[]byte(""))
-		out = bytes.ReplaceAll(out,
+			[]byte(""),
+			-1)
+		out = bytes.Replace(out,
 			[]byte(" "),
-			[]byte(""))
+			[]byte(""),
+			-1)
 		buf.Write(out)
 	}
 
