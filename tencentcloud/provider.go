@@ -178,13 +178,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_instances":               dataSourceTencentCloudVpcInstances(),
 			"tencentcloud_vpc_subnets":                 dataSourceTencentCloudVpcSubnets(),
 			"tencentcloud_vpc_route_tables":            dataSourceTencentCloudVpcRouteTables(),
-<<<<<<< .mine
 			"tencentcloud_ccn_instances":               dataSourceTencentCloudCcnInstances(),
 			"tencentcloud_ccn_bandwidth_limits":        dataSourceTencentCloudCcnBandwidthLimits(),
-=======
 			"tencentcloud_cbs_storages":                dataSourceTencentCloudCbsStorages(),
 			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
->>>>>>> .theirs
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
