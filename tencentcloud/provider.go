@@ -45,13 +45,10 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_subnets
   tencentcloud_vpc_route_tables
-<<<<<<< .mine
   tencentcloud_ccn_instances
   tencentcloud_ccn_bandwidth_limits
-=======
   tencentcloud_cbs_storages
   tencentcloud_cbs_snapshots
->>>>>>> .theirs
 
 CBS Resources
   tencentcloud_cbs_storage
