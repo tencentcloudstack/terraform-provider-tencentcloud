@@ -3,10 +3,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
-	"log"
-
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
@@ -67,7 +67,7 @@ func (me *VpcService) fillFilter(ins []*vpc.Filter, key, value string) (outs []*
 		ins = make([]*vpc.Filter, 0, 2)
 	}
 
-	var filter vpc.Filter = vpc.Filter{Name: &key, Values: []*string{&value}}
+	var filter = vpc.Filter{Name: &key, Values: []*string{&value}}
 	ins = append(ins, &filter)
 	outs = ins
 	return
@@ -306,8 +306,6 @@ getMoreData:
 		infos = append(infos, basicInfo)
 	}
 	goto getMoreData
-	return
-
 }
 
 func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string, isMulticast bool, dnsServers []string) (errRet error) {
@@ -814,4 +812,118 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 	*/
 
 	return
+}
+
+func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc, projectID *string) (id string, err error) {
+	logId := GetLogId(ctx)
+
+	request := vpc.NewCreateSecurityGroupRequest()
+
+	request.GroupName = name
+	request.GroupDescription = desc
+	request.ProjectId = projectID
+
+	response, err := me.client.UseVpcClient().CreateSecurityGroup(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return "", err
+	}
+
+	return *response.Response.RequestId, nil
+}
+
+func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg *vpc.SecurityGroup, has int, err error) {
+	logId := GetLogId(ctx)
+
+	request := vpc.NewDescribeSecurityGroupsRequest()
+
+	request.Offset = common.StringPtr("0")
+	request.Limit = common.StringPtr("1")
+	request.SecurityGroupIds = []*string{&id}
+
+	response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+
+		return nil, 0, err
+	}
+
+	has = int(*response.Response.TotalCount)
+
+	if has == 0 {
+		return nil, 0, nil
+	}
+
+	return response.Response.SecurityGroupSet[0], has, nil
+}
+
+func (me *VpcService) ModifySecurityGroup(ctx context.Context, id string, newName, newDesc *string) error {
+	logId := GetLogId(ctx)
+
+	request := vpc.NewModifySecurityGroupAttributeRequest()
+
+	request.SecurityGroupId = &id
+	request.GroupName = newName
+	request.GroupDescription = newDesc
+
+	_, err := me.client.UseVpcClient().ModifySecurityGroupAttribute(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) DeleteSecurityGroup(ctx context.Context, id string) error {
+	logId := GetLogId(ctx)
+
+	request := vpc.NewDeleteSecurityGroupRequest()
+
+	request.SecurityGroupId = &id
+
+	if _, err := me.client.UseVpcClient().DeleteSecurityGroup(request); err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) AttachEniToSecurityGroup(ctx context.Context, eni string, sgIds []string) error {
+	logId := GetLogId(ctx)
+
+	request := vpc.NewModifyNetworkInterfaceAttributeRequest()
+
+	request.NetworkInterfaceId = &eni
+	request.SecurityGroupIds = common.StringPtrs(sgIds)
+
+	if _, err := me.client.UseVpcClient().ModifyNetworkInterfaceAttribute(request); err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) DescribeNetworkInterfaces(ctx context.Context, eniIds []string) ([]*vpc.NetworkInterface, error) {
+	logId := GetLogId(ctx)
+
+	request := vpc.NewDescribeNetworkInterfacesRequest()
+	request.Limit = common.Uint64Ptr(100)
+	request.NetworkInterfaceIds = common.StringPtrs(eniIds)
+
+	response, err := me.client.UseVpcClient().DescribeNetworkInterfaces(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return nil, err
+	}
+
+	return response.Response.NetworkInterfaceSet, nil
 }
