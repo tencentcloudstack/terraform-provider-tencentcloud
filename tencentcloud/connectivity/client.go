@@ -11,13 +11,15 @@ import (
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
-//client for all TencentCloud service
+// client for all TencentCloud service
 type TencentCloudClient struct {
 	Region    string
 	SecretId  string
@@ -28,6 +30,8 @@ type TencentCloudClient struct {
 	asConn    *as.Client
 	vpcConn   *vpc.Client
 	cbsConn   *cbs.Client
+	cvmConn   *cvm.Client
+	clbConn   *clb.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -57,11 +61,11 @@ func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 	)
 
 	cpf := profile.NewClientProfile()
-	//all request use method POST
+	// all request use method POST
 	cpf.HttpProfile.ReqMethod = "POST"
-	//request timeout
+	// request timeout
 	cpf.HttpProfile.ReqTimeout = 300
-	//cpf.SignMethod = "HmacSHA1"
+	// cpf.SignMethod = "HmacSHA1"
 
 	mysqlClient, _ := cdb.NewClient(credential, me.Region, cpf)
 	me.mysqlConn = mysqlClient
@@ -133,7 +137,7 @@ func (me *TencentCloudClient) UseAsClient() *as.Client {
 	return me.asConn
 }
 
-//get vpc client for service
+// get vpc client for service
 func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	if me.vpcConn != nil {
 		return me.vpcConn
@@ -170,4 +174,39 @@ func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
 	me.cbsConn = cbsConn
 
 	return me.cbsConn
+}
+
+func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
+	if me.cvmConn != nil {
+		return me.cvmConn
+	}
+
+	credential, cpf := createCredentialAndClientProfile(me.SecretId, me.SecretKey)
+
+	me.cvmConn, _ = cvm.NewClient(credential, me.Region, cpf)
+
+	return me.cvmConn
+}
+
+func (me *TencentCloudClient) UseClbClient() *clb.Client {
+	if me.clbConn != nil {
+		return me.clbConn
+	}
+
+	credential, cpf := createCredentialAndClientProfile(me.SecretId, me.SecretKey)
+
+	me.clbConn, _ = clb.NewClient(credential, me.Region, cpf)
+
+	return me.clbConn
+}
+
+func createCredentialAndClientProfile(secretId, secretKey string) (*common.Credential, *profile.ClientProfile) {
+	credential := common.NewCredential(secretId, secretKey)
+
+	cpf := profile.NewClientProfile()
+	// all request use method POST
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+
+	return credential, cpf
 }
