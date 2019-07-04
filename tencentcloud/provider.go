@@ -73,6 +73,7 @@ VPC Resources
   tencentcloud_subnet
   tencentcloud_security_group
   tencentcloud_security_group_rule
+  tencentcloud_security_group_attach
   tencentcloud_route_table
   tencentcloud_route_entry
   tencentcloud_route_table_entry
@@ -192,6 +193,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_route_table":                resourceTencentCloudVpcRouteTable(),
 			"tencentcloud_security_group":             resourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_group_rule":        resourceTencentCloudSecurityGroupRule(),
+			"tencentcloud_security_group_attach":      resourceTencentCloudSecurityGroupAttach(),
 			"tencentcloud_subnet":                     resourceTencentCloudVpcSubnet(),
 			"tencentcloud_vpc":                        resourceTencentCloudVpcInstance(),
 			"tencentcloud_mysql_backup_policy":        resourceTencentCloudMysqlBackupPolicy(),
