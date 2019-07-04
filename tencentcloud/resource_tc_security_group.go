@@ -2,17 +2,14 @@ package tencentcloud
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/zqfan/tencentcloud-sdk-go/client"
 )
@@ -46,7 +43,7 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 				ForceNew: true,
 			},
 
-			"attach_ids": {
+			/*"attach_ids": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Schema{
@@ -63,7 +60,7 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 						return
 					},
 				},
-			},
+			},*/
 		},
 	}
 }
@@ -74,8 +71,7 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	client := m.(*TencentCloudClient)
-	vpcService := VpcService{client: client.apiV3Conn}
+	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	nameStr := d.Get("name").(string)
 	name := &nameStr
@@ -100,14 +96,14 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 		return err
 	}
 
-	// attach instances to this security group
+	/*// attach instances to this security group
 	if idsInterface, exist := d.GetOk("attach_ids"); exist {
 		ids := expandStringList(idsInterface.(*schema.Set).List())
 
 		if err := attachIds(ctx, ids, id, client.apiV3Conn, client.commonConn); err != nil {
 			return err
 		}
-	}
+	}*/
 
 	log.Printf("[DEBUG] SgId=%s", id)
 	d.SetId(id)
@@ -120,9 +116,7 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	client := m.(*TencentCloudClient).apiV3Conn
-
-	vpcService := VpcService{client: client}
+	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	id := d.Id()
 
@@ -151,7 +145,7 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 		}
 	}
 
-	var attachIds []string
+	/*var attachIds []string
 
 	// find cvm which attach this security group
 	cvmDescRequest := cvm.NewDescribeInstancesRequest()
@@ -222,7 +216,7 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 
 	if len(attachIds) > 0 {
 		_ = d.Set("attach_ids", attachIds)
-	}
+	}*/
 
 	return nil
 }
@@ -233,19 +227,18 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	commonClient := m.(*TencentCloudClient).commonConn
-	client := m.(*TencentCloudClient).apiV3Conn
+	// commonClient := m.(*TencentCloudClient).commonConn
 
-	vpcService := VpcService{client: client}
+	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	id := d.Id()
 
-	attributeUpdate := d.HasChange("name") || d.HasChange("description") || d.HasChange("attach_ids")
+	attributeUpdate := d.HasChange("name") || d.HasChange("description")
 	var (
-		newName         *string
-		newDesc         *string
-		removeAttachIds []string
-		newAttachIds    []string
+		newName *string
+		newDesc *string
+		/*removeAttachIds []string
+		newAttachIds    []string*/
 	)
 
 	d.Partial(true)
@@ -261,7 +254,7 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 		newDesc = common.StringPtr(d.Get("description").(string))
 	}
 
-	if d.HasChange("attach_ids") {
+	/*if d.HasChange("attach_ids") {
 		d.SetPartial("attach_ids")
 		o, n := d.GetChange("attach_ids")
 		oldSet := o.(*schema.Set)
@@ -269,7 +262,7 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 
 		removeAttachIds = expandStringList(oldSet.Difference(newSet).List())
 		newAttachIds = expandStringList(newSet.Difference(oldSet).List())
-	}
+	}*/
 
 	if !attributeUpdate {
 		return nil
@@ -280,7 +273,7 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 		return err
 	}
 
-	// update attach ids
+	/*// update attach ids
 	if len(removeAttachIds) > 0 {
 		if err := unattachIds(ctx, removeAttachIds, id, client, commonClient); err != nil {
 			return err
@@ -291,7 +284,7 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 		if err := attachIds(ctx, newAttachIds, id, client, commonClient); err != nil {
 			return err
 		}
-	}
+	}*/
 
 	return resourceTencentCloudSecurityGroupRead(d, m)
 }
@@ -560,8 +553,7 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 
 	id := d.Id()
 
-	client := m.(*TencentCloudClient).apiV3Conn
-	commonClient := m.(*TencentCloudClient).commonConn
+	/*commonClient := m.(*TencentCloudClient).commonConn
 
 	if idsInterface, exist := d.GetOk("attach_ids"); exist {
 		ids := expandStringList(idsInterface.(*schema.Set).List())
@@ -569,9 +561,9 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 		if err := unattachIds(ctx, ids, id, client, commonClient); err != nil {
 			return err
 		}
-	}
+	}*/
 
-	vpcService := VpcService{client: client}
+	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	return vpcService.DeleteSecurityGroup(ctx, id)
 }
