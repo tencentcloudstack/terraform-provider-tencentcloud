@@ -15,7 +15,7 @@ type MysqlService struct {
 	client *connectivity.TencentCloudClient
 }
 
-//check if the err means the mysql_id is not found
+// check if the err means the mysql_id is not found
 func (me *MysqlService) NotFoundMysqlInstance(err error) bool {
 
 	if err == nil {
@@ -420,7 +420,7 @@ func (me *MysqlService) DescribeAccounts(ctx context.Context, mysqlId string) (a
 		limit        int64 = 100
 		offset       int64 = 0
 		leftNumbers  int64 = 0
-		dofirst      bool  = true
+		dofirst            = true
 	)
 
 	accountInfos = make([]*cdb.AccountInfo, 0, listInitSize)
@@ -488,7 +488,7 @@ func (me *MysqlService) _innerDescribeAsyncRequestInfo(ctx context.Context, asyn
 
 func (me *MysqlService) DescribeAsyncRequestInfo(ctx context.Context, asyncRequestId string) (status, message string, errRet error) {
 
-	//Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
+	// Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
 	status, message, errRet = me._innerDescribeAsyncRequestInfo(ctx, asyncRequestId)
 	if errRet != nil {
 		if _, ok := errRet.(*errors.TencentCloudSDKError); !ok {
@@ -606,7 +606,7 @@ func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId s
 
 		}
 	}
-	//every exist database all has the privilege
+	// every exist database all has the privilege
 	for privilege, scount := range privilegeCountMap {
 		if scount == hasMapSize {
 			privileges = append(privileges, privilege)
@@ -619,7 +619,7 @@ func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId s
 
 func (me *MysqlService) DescribeDBInstanceById(ctx context.Context, mysqlId string) (mysqlInfo *cdb.InstanceInfo, errRet error) {
 
-	//Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
+	// Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
 	mysqlInfo, errRet = me._innerDescribeDBInstanceById(ctx, mysqlId)
 
 	if errRet != nil {
@@ -873,8 +873,8 @@ func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId string, pas
 	request.NewPassword = &password
 
 	paramsMap := map[string]string{
-		"character_set_server":   "utf8mb4", //["utf8","latin1","gbk","utf8mb4"]
-		"lower_case_table_names": "1",       //["0","1"]
+		"character_set_server":   "utf8mb4", // ["utf8","latin1","gbk","utf8mb4"]
+		"lower_case_table_names": "1",       // ["0","1"]
 	}
 	request.Parameters = make([]*cdb.ParamInfo, 0, len(paramsMap))
 	for k, v := range paramsMap {
@@ -1022,7 +1022,7 @@ func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
 
 	logId := GetLogId(ctx)
 
-	var waitSwitch int64 = 0 //0- switch immediately, 1- time window switch
+	var waitSwitch int64 = 0 // 0- switch immediately, 1- time window switch
 
 	request := cdb.NewUpgradeDBInstanceRequest()
 	request.InstanceId = &mysqlId
@@ -1175,4 +1175,20 @@ func (me *MysqlService) IsolateDBInstance(ctx context.Context, mysqlId string) (
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
+}
+
+func (me *MysqlService) DescribeDBInstancesBySecurityGroup(ctx context.Context, sgId string) ([]*cdb.InstanceInfo, error) {
+	logId := GetLogId(ctx)
+
+	request := cdb.NewDescribeDBInstancesRequest()
+	request.SecurityGroupId = &sgId
+
+	response, err := me.client.UseMysqlClient().DescribeDBInstances(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return nil, err
+	}
+
+	return response.Response.Items, nil
 }
