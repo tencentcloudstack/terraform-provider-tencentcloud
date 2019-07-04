@@ -134,7 +134,6 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 	)
 
 	d.Partial(true)
-	defer d.Partial(false)
 
 	if d.HasChange("name") {
 		d.SetPartial("name")
@@ -154,6 +153,8 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 	if err := vpcService.ModifySecurityGroup(ctx, id, newName, newDesc); err != nil {
 		return err
 	}
+
+	d.Partial(false)
 
 	return resourceTencentCloudSecurityGroupRead(d, m)
 }
