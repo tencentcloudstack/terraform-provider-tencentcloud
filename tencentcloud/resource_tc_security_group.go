@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"strconv"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -172,7 +171,7 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 	return vpcService.DeleteSecurityGroup(ctx, id)
 }
 
-func splitAttachIds(ids []string) (cvmIns, eniIns, mysqlIns, clbIns []string) {
+/*func splitAttachIds(ids []string) (cvmIns, eniIns, mysqlIns, clbIns []string) {
 	for _, id := range ids {
 		switch {
 		case strings.HasPrefix(id, "ins-"):
@@ -190,4 +189,4 @@ func splitAttachIds(ids []string) (cvmIns, eniIns, mysqlIns, clbIns []string) {
 	}
 
 	return
-}
+}*/
