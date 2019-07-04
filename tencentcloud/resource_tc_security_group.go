@@ -154,7 +154,7 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 		return err
 	}
 
-	return resourceTencentCloudSecurityGroupRead(d, m)
+	return nil
 }
 
 func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface{}) error {
