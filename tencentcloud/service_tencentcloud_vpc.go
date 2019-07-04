@@ -11,7 +11,7 @@ import (
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
-//VPC basic information
+// VPC basic information
 type VpcBasicInfo struct {
 	vpcId       string
 	name        string
@@ -22,7 +22,7 @@ type VpcBasicInfo struct {
 	createTime  string
 }
 
-//subnet basic information
+// subnet basic information
 type VpcSubnetBasicInfo struct {
 	vpcId            string
 	subnetId         string
@@ -36,7 +36,7 @@ type VpcSubnetBasicInfo struct {
 	createTime       string
 }
 
-//route entry basic information
+// route entry basic information
 type VpcRouteEntryBasicInfo struct {
 	routeEntryId    int64
 	destinationCidr string
@@ -46,7 +46,7 @@ type VpcRouteEntryBasicInfo struct {
 	entryType       string
 }
 
-//route table basic information
+// route table basic information
 type VpcRouteTableBasicInfo struct {
 	routeTableId string
 	name         string
@@ -61,7 +61,7 @@ type VpcService struct {
 	client *connectivity.TencentCloudClient
 }
 
-/////////common
+// ///////common
 func (me *VpcService) fillFilter(ins []*vpc.Filter, key, value string) (outs []*vpc.Filter) {
 	if ins == nil {
 		ins = make([]*vpc.Filter, 0, 2)
@@ -73,7 +73,7 @@ func (me *VpcService) fillFilter(ins []*vpc.Filter, key, value string) (outs []*
 	return
 }
 
-//////////api
+// ////////api
 func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 	isMulticast bool, dnsServers []string) (vpcId string, isDefault bool, errRet error) {
 
@@ -179,7 +179,7 @@ getMoreData:
 	if len(response.Response.VpcSet) > 0 {
 		offset += limit
 	} else {
-		//get empty Vpcinfo,we're done
+		// get empty Vpcinfo,we're done
 		return
 	}
 	for _, item := range response.Response.VpcSet {
@@ -279,7 +279,7 @@ getMoreData:
 	if len(response.Response.SubnetSet) > 0 {
 		offset += limit
 	} else {
-		//get empty subnet ,we're done
+		// get empty subnet ,we're done
 		return
 	}
 	for _, item := range response.Response.SubnetSet {
@@ -553,7 +553,7 @@ getMoreData:
 	if len(response.Response.RouteTableSet) > 0 {
 		offset += limit
 	} else {
-		//get empty Vpcinfo,we're done
+		// get empty Vpcinfo,we're done
 		return
 	}
 	for _, item := range response.Response.RouteTableSet {
