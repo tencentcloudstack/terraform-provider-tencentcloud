@@ -911,12 +911,20 @@ func (me *VpcService) AttachEniToSecurityGroup(ctx context.Context, eni string, 
 	return nil
 }
 
-func (me *VpcService) DescribeNetworkInterfaces(ctx context.Context, eniIds []string) ([]*vpc.NetworkInterface, error) {
+func (me *VpcService) DescribeNetworkInterfaces(ctx context.Context, eniIds []string, sgId *string) ([]*vpc.NetworkInterface, error) {
 	logId := GetLogId(ctx)
 
 	request := vpc.NewDescribeNetworkInterfacesRequest()
 	request.Limit = common.Uint64Ptr(100)
-	request.NetworkInterfaceIds = common.StringPtrs(eniIds)
+
+	if len(eniIds) > 0 {
+		request.NetworkInterfaceIds = common.StringPtrs(eniIds)
+	} else if sgId != nil {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   common.StringPtr("groups.security-group-id"),
+			Values: []*string{sgId},
+		})
+	}
 
 	response, err := me.client.UseVpcClient().DescribeNetworkInterfaces(request)
 	if err != nil {
