@@ -29,7 +29,7 @@ func (me *ClbService) ModifyLoadBalancerSecurityGroups(ctx context.Context, clbI
 	return nil
 }
 
-func (me *ClbService) DescribeLoadBalancers(ctx context.Context, ids []string, sgId *string) (lb []*clb.LoadBalancer, err error) {
+func (me *ClbService) DescribeLoadBalances(ctx context.Context, ids []string, sgId *string) (lb []*clb.LoadBalancer, err error) {
 	logId := GetLogId(ctx)
 
 	request := clb.NewDescribeLoadBalancersRequest()
