@@ -36,7 +36,6 @@ func resourceTencentCloudSecurityGroupAttach() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "cvm ids",
-				MinItems:    1,
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
 					ValidateFunc: validIdPrefix("ins-"),
@@ -47,7 +46,6 @@ func resourceTencentCloudSecurityGroupAttach() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "secondary eni ids",
-				MinItems:    1,
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
 					ValidateFunc: validIdPrefix("eni-"),
@@ -58,7 +56,6 @@ func resourceTencentCloudSecurityGroupAttach() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "mysql ids",
-				MinItems:    1,
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
 					ValidateFunc: validIdPrefix("cdb-"),
@@ -69,7 +66,6 @@ func resourceTencentCloudSecurityGroupAttach() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Description: "cloud load balance ids",
-				MinItems:    1,
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
 					ValidateFunc: validIdPrefix("clb-"),
