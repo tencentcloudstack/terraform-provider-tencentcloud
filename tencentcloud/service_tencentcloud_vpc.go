@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
@@ -814,14 +815,17 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 	return
 }
 
-func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc, projectID *string) (id string, err error) {
+func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string, projectID *string) (id string, err error) {
 	logId := GetLogId(ctx)
 
 	request := vpc.NewCreateSecurityGroupRequest()
 
-	request.GroupName = name
-	request.GroupDescription = desc
-	request.ProjectId = projectID
+	request.GroupName = &name
+	request.GroupDescription = &desc
+
+	if projectID != nil {
+		request.ProjectId = projectID
+	}
 
 	response, err := me.client.UseVpcClient().CreateSecurityGroup(request)
 	if err != nil {
@@ -830,7 +834,7 @@ func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc, proje
 		return "", err
 	}
 
-	return *response.Response.RequestId, nil
+	return *response.Response.SecurityGroup.SecurityGroupId, nil
 }
 
 func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg *vpc.SecurityGroup, has int, err error) {
@@ -844,9 +848,14 @@ func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg 
 
 	response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
 	if err != nil {
+		if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError.Code == "ResourceNotFound" {
+				return nil, 0, nil
+			}
+		}
+
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
-
 		return nil, 0, err
 	}
 

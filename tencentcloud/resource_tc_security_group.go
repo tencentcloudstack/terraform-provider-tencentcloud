@@ -29,7 +29,7 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 
 			"description": {
 				Type:         schema.TypeString,
-				Optional:     true,
+				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 100),
 			},
 
@@ -50,19 +50,10 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	nameStr := d.Get("name").(string)
-	name := &nameStr
+	name := d.Get("name").(string)
+	desc := d.Get("description").(string)
 
-	var (
-		desc      *string
-		projectID *string
-	)
-
-	if descInterface, exist := d.GetOk("description"); exist {
-		descStr := descInterface.(string)
-		desc = &descStr
-	}
-
+	var projectID *string
 	if projectIDInterface, exist := d.GetOk("project_id"); exist {
 		projectIDStr := projectIDInterface.(string)
 		projectID = &projectIDStr

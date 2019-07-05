@@ -1,7 +1,7 @@
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"testing"
 
@@ -22,6 +22,7 @@ func TestAccTencentCloudSecurityGroup_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityGroupExists("tencentcloud_security_group.foo", &sgId),
 					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "name", "ci-temp-test-sg"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "description", "ci-temp-test-sg-desc"),
 				),
 			},
 			{
@@ -46,6 +47,7 @@ func TestAccTencentCloudSecurityGroup_update(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityGroupExists("tencentcloud_security_group.foo", &sgId),
 					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "name", "ci-temp-test-sg"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "description", "ci-temp-test-sg-desc"),
 				),
 			},
 			{
@@ -53,6 +55,7 @@ func TestAccTencentCloudSecurityGroup_update(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityGroupExists("tencentcloud_security_group.foo", &sgId),
 					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "name", "ci-temp-test-sg-updated"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "description", "ci-temp-test-sg-desc-updated"),
 				),
 			},
 		},
@@ -61,30 +64,18 @@ func TestAccTencentCloudSecurityGroup_update(t *testing.T) {
 
 func testAccCheckSecurityGroupDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		conn := testAccProvider.Meta().(*TencentCloudClient).commonConn
-		params := map[string]string{
-			"Action":    "DescribeSecurityGroupEx",
-			"projectId": "0",
-			"sgId":      *id,
-		}
-		response, err := conn.SendRequest("dfw", params)
+		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
+		service := VpcService{client: client}
+
+		_, has, err := service.DescribeSecurityGroup(context.TODO(), *id)
 		if err != nil {
 			return err
 		}
-		var jsonresp struct {
-			Code     int    `json:"code"`
-			CodeDesc string `json:"codeDesc"`
-			Data     struct {
-				TotalNum int `json:"totalNum"`
-			} `json:"data"`
+
+		if has != 0 {
+			return fmt.Errorf("security group still exists")
 		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.Data.TotalNum != 0 {
-			return fmt.Errorf("Security group still exists.")
-		}
+
 		return nil
 	}
 }
@@ -93,14 +84,29 @@ func testAccCheckSecurityGroupExists(n string, id *string) resource.TestCheckFun
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("Not found: %s", n)
+			return fmt.Errorf("not found: %s", n)
 		}
 
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("No security group ID is set")
+			return fmt.Errorf("no security group ID is set")
 		}
 
-		client := testAccProvider.Meta().(*TencentCloudClient).commonConn
+		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+
+		_, has, err := service.DescribeSecurityGroup(context.TODO(), rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+
+		if has == 0 {
+			return fmt.Errorf("security group not found: %s", rs.Primary.ID)
+		}
+
+		*id = rs.Primary.ID
+
+		return nil
+
+		/*client := testAccProvider.Meta().(*TencentCloudClient).commonConn
 		params := map[string]string{
 			"Action":    "DescribeSecurityGroupEx",
 			"projectId": "0",
@@ -122,21 +128,23 @@ func testAccCheckSecurityGroupExists(n string, id *string) resource.TestCheckFun
 			return err
 		}
 		if jsonresp.Data.TotalNum == 0 {
-			return fmt.Errorf("Security group not found: %s", rs.Primary.ID)
+			return fmt.Errorf("security group not found: %s", rs.Primary.ID)
 		}
 
 		*id = rs.Primary.ID
-		return nil
+		return nil*/
 	}
 }
 
 const testAccSecurityGroupConfig = `
 resource "tencentcloud_security_group" "foo" {
   name = "ci-temp-test-sg"
+  description = "ci-temp-test-sg-desc"
 }
 `
 const testAccSecurityGroupConfigUpdate = `
 resource "tencentcloud_security_group" "foo" {
   name = "ci-temp-test-sg-updated"
+  description = "ci-temp-test-sg-desc-updated"
 }
 `
