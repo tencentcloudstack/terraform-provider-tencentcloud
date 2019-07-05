@@ -13,7 +13,7 @@ type ClbService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *ClbService) ModifyLoadBalancerSecurityGroups(ctx context.Context, clbId string, sgIds []string) error {
+func (me *ClbService) ModifyLoadBalanceSecurityGroups(ctx context.Context, clbId string, sgIds []string) error {
 	logId := GetLogId(ctx)
 
 	request := clb.NewSetLoadBalancerSecurityGroupsRequest()
