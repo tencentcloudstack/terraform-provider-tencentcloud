@@ -160,7 +160,7 @@ func resourceTencentCloudSecurityGroupAttachRead(d *schema.ResourceData, m inter
 
 	vpcService := VpcService{client: client}
 
-	_, has, err := vpcService.DescribeSecurityGroup(ctx, sgId)
+	sgResp, has, err := vpcService.DescribeSecurityGroup(ctx, sgId)
 	if err != nil {
 		log.Printf("[DEBUG]%s get security group by id %s error, reason: %v",
 			logId, sgId, err)
@@ -171,6 +171,8 @@ func resourceTencentCloudSecurityGroupAttachRead(d *schema.ResourceData, m inter
 		d.SetId("")
 		return nil
 	}
+
+	_ = d.Set("security_group_name", *sgResp.SecurityGroupName)
 
 	// find out all cvm which attach this security group
 	cvmService := CvmService{client: client}
@@ -466,7 +468,7 @@ func attachSecurityGroupToClb(ctx context.Context, clbId, sgId string, client *c
 
 	existSgIds = addSecurityGroupToExistSecurityGroups(existSgIds, sgId)
 
-	return clbService.ModifyLoadBalancerSecurityGroups(ctx, clbId, existSgIds)
+	return clbService.ModifyLoadBalanceSecurityGroups(ctx, clbId, existSgIds)
 }
 
 func unattachCvmFromSecurityGroup(ctx context.Context, cvmId, sgId string, client *connectivity.TencentCloudClient) error {
@@ -554,7 +556,7 @@ func unattachClbFromSecurityGroup(ctx context.Context, clbId, sgId string, clien
 		existSgIds = append(existSgIds, *existSgId)
 	}
 
-	return service.ModifyLoadBalancerSecurityGroups(ctx, clbId, existSgIds)
+	return service.ModifyLoadBalanceSecurityGroups(ctx, clbId, existSgIds)
 }
 
 func validIdPrefix(prefix string) schema.SchemaValidateFunc {
