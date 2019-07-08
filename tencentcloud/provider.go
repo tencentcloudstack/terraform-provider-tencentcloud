@@ -179,6 +179,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_bandwidth_limits":        dataSourceTencentCloudCcnBandwidthLimits(),
 			"tencentcloud_cbs_storages":                dataSourceTencentCloudCbsStorages(),
 			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
+			"tencentcloud_dc_instances":                dataSourceTencentCloudDcInstances(),
+			"tencentcloud_dcx_instances":               dataSourceTencentCloudDcxInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
