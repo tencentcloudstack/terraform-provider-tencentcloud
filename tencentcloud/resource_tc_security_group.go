@@ -123,16 +123,11 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 		newDesc *string
 	)
 
-	d.Partial(true)
-	defer d.Partial(false)
-
 	if d.HasChange("name") {
-		d.SetPartial("name")
 		newName = common.StringPtr(d.Get("name").(string))
 	}
 
 	if d.HasChange("description") {
-		d.SetPartial("description")
 		newDesc = common.StringPtr(d.Get("description").(string))
 	}
 
@@ -140,12 +135,11 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 		return nil
 	}
 
-	// update security group itself
 	if err := vpcService.ModifySecurityGroup(ctx, id, newName, newDesc); err != nil {
 		return err
 	}
 
-	return nil
+	return resourceTencentCloudSecurityGroupRead(d, m)
 }
 
 func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface{}) error {
@@ -160,23 +154,3 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 
 	return vpcService.DeleteSecurityGroup(ctx, id)
 }
-
-/*func splitAttachIds(ids []string) (cvmIns, eniIns, mysqlIns, clbIns []string) {
-	for _, id := range ids {
-		switch {
-		case strings.HasPrefix(id, "ins-"):
-			cvmIns = append(cvmIns, id)
-
-		case strings.HasPrefix(id, "eni-"):
-			eniIns = append(eniIns, id)
-
-		case strings.HasPrefix(id, "cdb-"):
-			mysqlIns = append(mysqlIns, id)
-
-		case strings.HasPrefix(id, "lb-"):
-			clbIns = append(clbIns, id)
-		}
-	}
-
-	return
-}*/
