@@ -1,14 +1,12 @@
 package tencentcloud
 
 import (
-	"encoding/json"
-	"errors"
+	"context"
 	"fmt"
-	"log"
-	"reflect"
 	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
 func dataSourceTencentCloudSecurityGroup() *schema.Resource {
@@ -48,65 +46,61 @@ func dataSourceTencentCloudSecurityGroup() *schema.Resource {
 }
 
 func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action": "DescribeSecurityGroupEx",
-		"sgId":   d.Get("security_group_id").(string),
-	}
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
 
-	log.Printf("[DEBUG] resource_tc_security_group read params:%v", params)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	response, err := client.SendRequest("dfw", params)
+	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	sgId := d.Get("security_group_id").(string)
+
+	sg, has, err := service.DescribeSecurityGroup(ctx, sgId)
 	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group read client.SendRequest error:%v", err)
 		return err
 	}
 
-	var jsonresp struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-		Data    struct {
-			TotalNum int `json:"totalNum"`
-			Detail   []struct {
-				SgId             string      `json:"sgId"`
-				SgName           string      `json:"sgName"`
-				SgRemark         string      `json:"sgRemark"`
-				BeAssociateCount int         `json:"beAssociateCount"`
-				CreateTime       string      `json:"createTime"`
-				ProjectId        interface{} `json:"projectId"`
-			}
-		}
+	if has == 0 {
+		return fmt.Errorf("security group %s not found", *sg.SecurityGroupId)
 	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
+
+	associateSet, err := service.DescribeSecurityGroupsAssociate(ctx, []string{*sg.SecurityGroupId})
 	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group read json.Unmarshal error:%v", err)
 		return err
 	}
-	if jsonresp.Code != 0 {
-		log.Printf("[ERROR] resource_tc_security_group read error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-		return errors.New(jsonresp.Message)
-	} else if jsonresp.Data.TotalNum <= 0 || len(jsonresp.Data.Detail) <= 0 {
-		return errors.New("Security group not found")
-	}
 
-	sg := jsonresp.Data.Detail[0]
-
-	d.SetId(sg.SgId)
-	d.Set("security_group_id", sg.SgId)
-	d.Set("name", sg.SgName)
-	d.Set("description", sg.SgRemark)
-	d.Set("create_time", sg.CreateTime)
-	d.Set("be_associate_count", sg.BeAssociateCount)
-
-	if "string" == reflect.TypeOf(sg.ProjectId).String() {
-		if intVal, err := strconv.ParseInt(sg.ProjectId.(string), 10, 64); err != nil {
-			return fmt.Errorf("create security_group project ParseInt  error ,%s", err.Error())
-		} else {
-			d.Set("project_id", int(intVal))
+	var associate *vpc.SecurityGroupAssociationStatistics
+	for _, v := range associateSet {
+		if *v.SecurityGroupId == *sg.SecurityGroupId {
+			associate = v
+			break
 		}
-
-	} else {
-		d.Set("project_id", sg.ProjectId.(int))
 	}
+
+	if associate == nil {
+		return fmt.Errorf("security group %s associate statistic not found", *sg.SecurityGroupId)
+	}
+
+	var count int
+	count += int(*associate.CVM)
+	count += int(*associate.ENI)
+	count += int(*associate.CDB)
+	count += int(*associate.CLB)
+
+	d.SetId(*sg.SecurityGroupId)
+	_ = d.Set("security_group_id", *sg.SecurityGroupId)
+	_ = d.Set("name", *sg.SecurityGroupName)
+	_ = d.Set("description", *sg.SecurityGroupDesc)
+	_ = d.Set("create_time", *sg.CreatedTime)
+	_ = d.Set("be_associate_count", count)
+
+	if sg.ProjectId != nil {
+		projectId, err := strconv.Atoi(*sg.ProjectId)
+		if err != nil {
+			return fmt.Errorf("project id %s is invalid", *sg.ProjectId)
+		}
+		_ = d.Set("project_id", projectId)
+	}
+
 	return nil
 }

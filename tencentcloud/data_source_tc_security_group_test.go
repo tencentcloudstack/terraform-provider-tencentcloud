@@ -15,7 +15,8 @@ func TestAccDataSourceTencentCloudSecurityGroup_basic(t *testing.T) {
 				Config: TestAccDataSourceTencentCloudSecurityGroupConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_security_group.foo"),
-					resource.TestCheckResourceAttr("data.tencentcloud_security_group.foo", "create_time", "2017-07-31 20:03:00"),
+					resource.TestCheckResourceAttr("data.tencentcloud_security_group.foo", "name", "test-foo"),
+					resource.TestCheckResourceAttr("data.tencentcloud_security_group.foo", "description", "test-foo"),
 				),
 			},
 		},
@@ -23,7 +24,12 @@ func TestAccDataSourceTencentCloudSecurityGroup_basic(t *testing.T) {
 }
 
 const TestAccDataSourceTencentCloudSecurityGroupConfig = `
+resource "tencentcloud_security_group" "foo" {
+    name = "test-foo"
+    description = "test-foo"
+}
+
 data "tencentcloud_security_group" "foo" {
-	security_group_id = "sg-icy671l9"
+	security_group_id = "${tencentcloud_security_group.foo.id}"
 }
 `
