@@ -255,11 +255,8 @@ func resourceTencentCloudSecurityGroupAttachUpdate(d *schema.ResourceData, m int
 	client := m.(*TencentCloudClient).apiV3Conn
 
 	d.Partial(true)
-	defer d.Partial(false)
 
 	if d.HasChange("cvm_ids") {
-		d.SetPartial("cvm_ids")
-
 		o, n := d.GetChange("cvm_ids")
 		oldSet := o.(*schema.Set)
 		newSet := n.(*schema.Set)
@@ -277,11 +274,11 @@ func resourceTencentCloudSecurityGroupAttachUpdate(d *schema.ResourceData, m int
 				return err
 			}
 		}
+
+		d.SetPartial("cvm_ids")
 	}
 
 	if d.HasChange("seni_ids") {
-		d.SetPartial("seni_ids")
-
 		o, n := d.GetChange("seni_ids")
 		oldSet := o.(*schema.Set)
 		newSet := n.(*schema.Set)
@@ -299,11 +296,11 @@ func resourceTencentCloudSecurityGroupAttachUpdate(d *schema.ResourceData, m int
 				return err
 			}
 		}
+
+		d.SetPartial("seni_ids")
 	}
 
 	if d.HasChange("mysql_ids") {
-		d.SetPartial("mysql_ids")
-
 		o, n := d.GetChange("mysql_ids")
 		oldSet := o.(*schema.Set)
 		newSet := n.(*schema.Set)
@@ -321,11 +318,11 @@ func resourceTencentCloudSecurityGroupAttachUpdate(d *schema.ResourceData, m int
 				return err
 			}
 		}
+
+		d.SetPartial("mysql_ids")
 	}
 
 	if d.HasChange("clb_ids") {
-		d.SetPartial("clb_ids")
-
 		o, n := d.GetChange("clb_ids")
 		oldSet := o.(*schema.Set)
 		newSet := n.(*schema.Set)
@@ -343,9 +340,13 @@ func resourceTencentCloudSecurityGroupAttachUpdate(d *schema.ResourceData, m int
 				return err
 			}
 		}
+
+		d.SetPartial("clb_ids")
 	}
 
-	return nil
+	d.Partial(false)
+
+	return resourceTencentCloudSecurityGroupAttachRead(d, m)
 }
 
 func resourceTencentCloudSecurityGroupAttachDelete(d *schema.ResourceData, m interface{}) error {
