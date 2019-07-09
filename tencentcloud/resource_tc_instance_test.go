@@ -240,7 +240,7 @@ func TestAccTencentCloudInstance_imageIdChanged(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstance_passwordChanged(t *testing.T) {
+func TestAccTencentCloudInstance_nameChanged(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
 
@@ -271,7 +271,7 @@ func TestAccTencentCloudInstance_passwordChanged(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstance_password(t *testing.T) {
+func TestAccTencentCloudInstance_passwordChanged(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
 
