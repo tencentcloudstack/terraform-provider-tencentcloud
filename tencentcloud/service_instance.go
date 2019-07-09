@@ -44,7 +44,7 @@ func queryInstancesStatus(client *client.Client, instanceIds []string) (instance
 
 	params := map[string]string{
 		"Version": "2017-03-12",
-		"Action":  "DescribeInstancesStatus",
+		"Action":  "DescribeInstances",
 	}
 	for i, instanceId := range instanceIds {
 		paramsKey := fmt.Sprintf("InstanceIds.%v", i+1)
@@ -63,8 +63,8 @@ func queryInstancesStatus(client *client.Client, instanceIds []string) (instance
 				Code    string `json:"Code"`
 				Message string `json:"Message"`
 			}
-			TotalCount        int
-			InstanceStatusSet []struct {
+			TotalCount  int
+			InstanceSet []struct {
 				InstanceId    string
 				InstanceState string
 			}
@@ -83,13 +83,13 @@ func queryInstancesStatus(client *client.Client, instanceIds []string) (instance
 		)
 		return
 	}
-	if jsonresp.Response.TotalCount == 0 && len(jsonresp.Response.InstanceStatusSet) == 0 {
+	if jsonresp.Response.TotalCount == 0 && len(jsonresp.Response.InstanceSet) == 0 {
 		err = fmt.Errorf(instanceNotFoundErrorMsg(instanceIds))
 		return
 	}
 
 	instanceStatusMap = make(map[string]string)
-	instanceStatusList := jsonresp.Response.InstanceStatusSet
+	instanceStatusList := jsonresp.Response.InstanceSet
 	for _, instanceStatus := range instanceStatusList {
 		instanceStatusMap[instanceStatus.InstanceId] = instanceStatus.InstanceState
 	}
