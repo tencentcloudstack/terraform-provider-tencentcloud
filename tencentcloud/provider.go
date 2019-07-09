@@ -224,6 +224,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn":                        resourceTencentCloudCcn(),
 			"tencentcloud_ccn_attachment":             resourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":        resourceTencentCloudCcnBandwidthLimit(),
+			"tencentcloud_dcx":                        resourceTencentCloudDcxInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

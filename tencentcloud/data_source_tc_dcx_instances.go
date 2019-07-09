@@ -48,6 +48,10 @@ func dataSourceTencentCloudDcxInstances() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"dcg_id":{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 						"network_region": {
 							Type:     schema.TypeString,
 							Computed: true,
@@ -168,6 +172,7 @@ func dataSourceTencentCloudDcxInstancesRead(d *schema.ResourceData, meta interfa
 		infoMap["vlan"] = service.int64Pt2int64(item.Vlan)
 		infoMap["tencent_address"] = service.strPt2str(item.TencentAddress)
 		infoMap["customer_address"] = service.strPt2str(item.CustomerAddress)
+		infoMap["dcg_id"] = service.strPt2str(item.DirectConnectGatewayId)
 
 		infoMap["dc_id"] = service.strPt2str(item.DirectConnectId)
 		infoMap["state"] = strings.ToUpper(service.strPt2str(item.State))

@@ -110,6 +110,23 @@ getMoreData:
 	goto getMoreData
 }
 
+func (me *DcService) DescribeDirectConnectTunnel(ctx context.Context, dcxId string) (info dc.DirectConnectTunnel, has int64, errRet error) {
+
+	infos, err := me.DescribeDirectConnectTunnels(ctx, dcxId, "")
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	has = int64(len(infos))
+
+	if has > 0 {
+		info = infos[0]
+
+	}
+	return
+}
+
 func (me *DcService) DescribeDirectConnectTunnels(ctx context.Context, dcxId,
 	name string) (infos []dc.DirectConnectTunnel, errRet error) {
 
@@ -169,4 +186,141 @@ getMoreData:
 		infos = append(infos, *item)
 	}
 	goto getMoreData
+}
+
+func (me *DcService) CreateDirectConnectTunnel(ctx context.Context, dcId, dcxName, networkType,
+	networkRegion, vpcId, routeType, bgpAuthKey,
+	tencentAddress, customerAddress, dcgId string,
+	bgpAsn, vlan, bandwidth int64,
+	routeFilterPrefixes []string) (dcxId string, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := dc.NewCreateDirectConnectTunnelRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.DirectConnectId = &dcId
+	request.DirectConnectTunnelName = &dcxName
+	request.NetworkType = &networkType
+	request.NetworkRegion = &networkRegion
+	if vpcId != "" {
+		request.VpcId = &vpcId
+	}
+	if bandwidth >= 0 {
+		request.Bandwidth = &bandwidth
+	}
+	request.RouteType = &routeType
+	request.DirectConnectGatewayId = &dcgId
+	if bgpAsn >= 0 {
+		var peer dc.BgpPeer
+		peer.Asn = &bgpAsn
+		peer.AuthKey = &bgpAuthKey
+		request.BgpPeer = &peer
+	}
+
+	request.Vlan = &vlan
+
+	if len(routeFilterPrefixes) > 0 {
+		request.RouteFilterPrefixes = make([]*dc.RouteFilterPrefix, 0, len(routeFilterPrefixes))
+		for index, _ := range routeFilterPrefixes {
+			var dcPrefix dc.RouteFilterPrefix
+			dcPrefix.Cidr = &routeFilterPrefixes[index]
+			request.RouteFilterPrefixes = append(request.RouteFilterPrefixes, &dcPrefix)
+		}
+	}
+
+	if tencentAddress != "" {
+		request.TencentAddress = &tencentAddress
+	}
+
+	if customerAddress != "" {
+		request.CustomerAddress = &customerAddress
+	}
+
+	response, err := me.client.UseDcClient().CreateDirectConnectTunnel(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.DirectConnectTunnelIdSet) != 1 {
+		errRet = fmt.Errorf("CreateDirectConnectTunnel  return %d DirectConnectTunnelIdSet",
+			len(response.Response.DirectConnectTunnelIdSet))
+		return
+	}
+	dcxId = *response.Response.DirectConnectTunnelIdSet[0]
+	return
+}
+
+func (me *DcService) DeleteDirectConnectTunnel(ctx context.Context, dcxId string) (errRet error) {
+
+	logId := GetLogId(ctx)
+	request := dc.NewDeleteDirectConnectTunnelRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.DirectConnectTunnelId = &dcxId
+	_, err := me.client.UseDcClient().DeleteDirectConnectTunnel(request)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func (me *DcService) ModifyDirectConnectTunnelAttribute(ctx context.Context, dcxId string,
+	name, bgpAuthKey, tencentAddress, customerAddress string,
+	bandwidth, bgpAsn int64,
+	routeFilterPrefixes []string) (errRet error) {
+
+	logId := GetLogId(ctx)
+	request := dc.NewModifyDirectConnectTunnelAttributeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.DirectConnectTunnelId = &dcxId
+	if name != "" {
+		request.DirectConnectTunnelName = &name
+	}
+	if tencentAddress != "" {
+		request.TencentAddress = &tencentAddress
+	}
+	if customerAddress != "" {
+		request.CustomerAddress = &customerAddress
+	}
+
+	if bgpAsn >= 0 {
+		var peer dc.BgpPeer
+		peer.Asn = &bgpAsn
+		peer.AuthKey = &bgpAuthKey
+		request.BgpPeer = &peer
+	}
+
+	if bandwidth > 0 {
+		request.Bandwidth = &bandwidth
+	}
+
+	if len(routeFilterPrefixes) > 0 {
+		request.RouteFilterPrefixes = make([]*dc.RouteFilterPrefix, 0, len(routeFilterPrefixes))
+		for index, _ := range routeFilterPrefixes {
+			var dcPrefix dc.RouteFilterPrefix
+			dcPrefix.Cidr = &routeFilterPrefixes[index]
+			request.RouteFilterPrefixes = append(request.RouteFilterPrefixes, &dcPrefix)
+		}
+	}
+	_, err := me.client.UseDcClient().ModifyDirectConnectTunnelAttribute(request)
+	if err != nil {
+		errRet = err
+	}
+	return
 }
