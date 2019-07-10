@@ -598,9 +598,10 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 				} `json:"SystemDisk"`
 
 				DataDisks []struct {
-					DiskType string `json:"DiskType"`
-					DiskId   string `json:"DiskId"`
-					DiskSize int    `json:"DiskSize"`
+					DiskType           string `json:"DiskType"`
+					DiskId             string `json:"DiskId"`
+					DiskSize           int    `json:"DiskSize"`
+					DeleteWithInstance bool   `json:"DeleteWithInstance"`
 				} `json:"DataDisks"`
 
 				PrivateIpAddresses []string `json:"PrivateIpAddresses"`
@@ -690,8 +691,10 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 		m := make(map[string]interface{})
 		diskType := dataDisk.DiskType
 		diskSize := dataDisk.DiskSize
+		deleteWithInstance := dataDisk.DeleteWithInstance
 		m["data_disk_type"] = diskType
 		m["data_disk_size"] = diskSize
+		m["delete_with_instance"] = deleteWithInstance
 		dataDiskList = append(dataDiskList, m)
 	}
 	d.Set("data_disks", dataDiskList)
