@@ -127,7 +127,7 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 		networkType               = d.Get("network_type").(string)
 		networkRegion             = service.client.Region
 		vpcId                     = d.Get("vpc_id").(string)
-		routeType                 = d.Get("route_type").(string)
+		routeType                 = strings.ToUpper(d.Get("route_type").(string))
 		bgpAsn              int64 = -1
 		bgpAuthKey                = ""
 		vlan                      = int64(d.Get("vlan").(int))
@@ -144,13 +144,17 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 
 	bgpAsnTemp, bgpAsnOk := d.GetOkExists("bgp_asn");
 	bgpKeyTemp, bgpKeyOk := d.GetOkExists("bgp_auth_key");
-	if (!bgpAsnOk && bgpKeyOk) || (bgpAsnOk && !bgpKeyOk) {
-		return fmt.Errorf("bgp_asn and bgp_auth_key should both set or both unset")
+
+	if bgpKeyOk && !bgpAsnOk {
+		return fmt.Errorf("bgp_auth_key need bgp_asn set")
 	}
-	if bgpAsnOk {
+	if bgpAsnOk{
 		bgpAsn = int64(bgpAsnTemp.(int))
+	}
+	if bgpKeyOk{
 		bgpAuthKey = bgpKeyTemp.(string)
 	}
+
 	if temp, ok := d.GetOk("tencent_address"); ok {
 		tencentAddress = temp.(string)
 	}
@@ -166,6 +170,15 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 			routeFilterPrefixes = append(routeFilterPrefixes, v.(string))
 		}
 	}
+
+	if routeType == DC_ROUTE_TYPE_BGP && len(routeFilterPrefixes) > 0 {
+		return fmt.Errorf("can not set `route_filter_prefixes` if `route_type` is '%s'", DC_ROUTE_TYPE_BGP)
+	}
+
+	if routeType != DC_ROUTE_TYPE_BGP  && bgpAsn!=-1  {
+		return fmt.Errorf("can not set `bgp_asn`,`bgp_auth_key` if  `route_type` is not '%s'", DC_ROUTE_TYPE_BGP)
+	}
+
 	dcxId, err := service.CreateDirectConnectTunnel(ctx, dcId, name, networkType,
 		networkRegion, vpcId, routeType,
 		bgpAuthKey, tencentAddress,
@@ -207,22 +220,27 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 	d.Set("network_region", service.strPt2str(item.NetworkRegion))
 	d.Set("vpc_id", service.strPt2str(item.VpcId))
 	d.Set("bandwidth", service.int64Pt2int64(item.Bandwidth))
-	d.Set("route_type", strings.ToUpper(service.strPt2str(item.RouteType)))
 
-	if item.BgpPeer == nil {
-		d.Set("bgp_asn", 0)
-		d.Set("bgp_auth_key", "")
-	} else {
-		d.Set("bgp_asn", service.int64Pt2int64(item.BgpPeer.Asn))
-		d.Set("bgp_auth_key", service.strPt2str(item.BgpPeer.AuthKey))
-	}
-	var routeFilterPrefixes = make([]string, 0, len(item.RouteFilterPrefixes))
-	for _, v := range item.RouteFilterPrefixes {
-		if v.Cidr != nil {
-			routeFilterPrefixes = append(routeFilterPrefixes, *v.Cidr)
+	var routeType = strings.ToUpper(service.strPt2str(item.RouteType))
+	d.Set("route_type", routeType)
+
+	if routeType == DC_ROUTE_TYPE_BGP {
+		if item.BgpPeer == nil {
+			d.Set("bgp_asn", 0)
+			d.Set("bgp_auth_key", "")
+		} else {
+			d.Set("bgp_asn", service.int64Pt2int64(item.BgpPeer.Asn))
+			d.Set("bgp_auth_key", service.strPt2str(item.BgpPeer.AuthKey))
 		}
+	}else {
+		var routeFilterPrefixes = make([]string, 0, len(item.RouteFilterPrefixes))
+		for _, v := range item.RouteFilterPrefixes {
+			if v.Cidr != nil {
+				routeFilterPrefixes = append(routeFilterPrefixes, *v.Cidr)
+			}
+		}
+		d.Set("route_filter_prefixes", routeFilterPrefixes)
 	}
-	d.Set("route_filter_prefixes", routeFilterPrefixes)
 
 	d.Set("vlan", service.int64Pt2int64(item.Vlan))
 	d.Set("tencent_address", service.strPt2str(item.TencentAddress))
@@ -245,64 +263,18 @@ func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interfac
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		dcxId                     = d.Id()
-		name                      = ""
-		bandwidth           int64 = -1
-		routeFilterPrefixes       = make([]string, 0, 10)
-		bgpAsn              int64 = -1
-		bgpAuthKey                = ""
-		tencentAddress            = ""
-		customerAddress           = ""
+		dcxId = d.Id()
+		name  = ""
 	)
 
 	if d.HasChange("name") {
 		name = d.Get("name").(string)
 	}
-	if d.HasChange("bandwidth") {
-		if temp, ok := d.GetOk("bandwidth"); ok {
-			bandwidth = int64(temp.(int))
-		}
-	}
-
-	if d.HasChange("route_filter_prefixes") {
-		if temp, ok := d.GetOk("route_filter_prefixes"); ok {
-			for _, v := range temp.(*schema.Set).List() {
-				routeFilterPrefixes = append(routeFilterPrefixes, v.(string))
-			}
-		}
-	}
-
-	if d.HasChange("bgp_asn") || d.HasChange("bgp_auth_key") {
-		bgpAsnTemp, bgpAsnOk := d.GetOkExists("bgp_asn");
-		bgpKeyTemp, bgpKeyOk := d.GetOkExists("bgp_auth_key");
-		if (!bgpAsnOk && bgpKeyOk) || (bgpAsnOk && !bgpKeyOk) {
-			return fmt.Errorf("bgp_asn and bgp_auth_key should both set or both unset")
-		}
-		if bgpAsnOk {
-			bgpAsn = int64(bgpAsnTemp.(int))
-			bgpAuthKey = bgpKeyTemp.(string)
-		}
-	}
-
-	if d.HasChange("tencent_address") {
-		if temp, ok := d.GetOk("tencent_address"); ok {
-			tencentAddress = temp.(string)
-		}
-	}
-	if d.HasChange("customer_address") {
-		if temp, ok := d.GetOk("customer_address"); ok {
-			customerAddress = temp.(string)
-		}
-	}
-	err := service.ModifyDirectConnectTunnelAttribute(ctx, dcxId,
-		name, bgpAuthKey, tencentAddress, customerAddress,
-		bandwidth, bgpAsn,
-		routeFilterPrefixes)
+	err := service.ModifyDirectConnectTunnelAttribute(ctx, dcxId, name, "", "", "", -1, -1, nil)
 
 	if err != nil {
 		return err
 	}
-	d.SetId(dcxId)
 	return resourceTencentCloudDcxInstanceRead(d, meta)
 }
 func resourceTencentCloudDcxInstanceDelete(d *schema.ResourceData, meta interface{}) error {
