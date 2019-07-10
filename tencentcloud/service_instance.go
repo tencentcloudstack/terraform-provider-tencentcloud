@@ -17,7 +17,7 @@ func waitInstanceReachTargetStatus(client *client.Client, instanceIds []string, 
 
 func waitInstanceReachOneOfTargetStatusList(client *client.Client, instanceIds []string, targetStatuses []string) (instanceStatusMap map[string]string, err error) {
 	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
-		instanceStatusMap, err = queryInstancesStatus(client, instanceIds)
+		instanceStatusMap, _, err = queryInstancesStatus(client, instanceIds)
 		if err != nil {
 			return resource.NonRetryableError(err)
 		}
@@ -36,7 +36,32 @@ func waitInstanceReachOneOfTargetStatusList(client *client.Client, instanceIds [
 	return
 }
 
-func queryInstancesStatus(client *client.Client, instanceIds []string) (instanceStatusMap map[string]string, err error) {
+func waitInstanceOperationReachTargetStatus(client *client.Client, instanceIds []string, targetStatus string) (operationStatusMap map[string]string, err error) {
+	return waitInstanceOperationReachOneOfTargetStatusList(client, instanceIds, []string{targetStatus})
+}
+
+func waitInstanceOperationReachOneOfTargetStatusList(client *client.Client, instanceIds []string, targetStatuses []string) (operationStatusMap map[string]string, err error) {
+	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+		_, operationStatusMap, err = queryInstancesStatus(client, instanceIds)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+		var targetStatusInstanceIds []string
+		for instanceId, instanceStatus := range operationStatusMap {
+			if goset.IsIncluded(targetStatuses, instanceStatus) {
+				targetStatusInstanceIds = append(targetStatusInstanceIds, instanceId)
+			}
+		}
+		if len(targetStatusInstanceIds) == len(operationStatusMap) {
+			return nil
+		}
+		_, _, penddingInstanceIds, _ := goset.Difference(instanceIds, targetStatusInstanceIds)
+		return resource.RetryableError(fmt.Errorf("query instances status, pendding instanceIds: %v, not all instances are ready, retry...", penddingInstanceIds))
+	})
+	return
+}
+
+func queryInstancesStatus(client *client.Client, instanceIds []string) (instanceStatusMap map[string]string, operationStatusMap map[string]string, err error) {
 	if len(instanceIds) == 0 {
 		err = fmt.Errorf("queryInstancesStatus, empty instanceIds")
 		return
@@ -65,8 +90,10 @@ func queryInstancesStatus(client *client.Client, instanceIds []string) (instance
 			}
 			TotalCount  int
 			InstanceSet []struct {
-				InstanceId    string
-				InstanceState string
+				InstanceId           string
+				InstanceState        string
+				LatestOperation      string
+				LatestOperationState string
 			}
 			RequestId string
 		}
@@ -89,10 +116,15 @@ func queryInstancesStatus(client *client.Client, instanceIds []string) (instance
 	}
 
 	instanceStatusMap = make(map[string]string)
+	operationStatusMap = make(map[string]string)
 	instanceStatusList := jsonresp.Response.InstanceSet
 	for _, instanceStatus := range instanceStatusList {
 		instanceStatusMap[instanceStatus.InstanceId] = instanceStatus.InstanceState
+		if instanceStatus.LatestOperation != "" {
+			operationStatusMap[instanceStatus.InstanceId] = instanceStatus.LatestOperationState
+		}
 	}
+
 	return
 }
 
@@ -217,16 +249,14 @@ func resetInstanceSystem(client *client.Client, d *schema.ResourceData, instance
 		return err
 	}
 
-	// NOTE don't wait for `RUNNING` at first
-	// status flow during resetting
-	// `RUNNING` -> `PENDING` -> ... -> `RUNNING`
-	// so let's wait for `PENDING` and then wait for `RUNNING`
-	if _, err := waitInstanceReachTargetStatus(client, []string{instanceId}, "PENDING"); err != nil {
+	if _, err := waitInstanceOperationReachTargetStatus(client, []string{instanceId}, "OPERATING"); err != nil {
 		return err
 	}
-	if _, err := waitInstanceReachTargetStatus(client, []string{instanceId}, "RUNNING"); err != nil {
+
+	if _, err := waitInstanceOperationReachTargetStatus(client, []string{instanceId}, "SUCCESS"); err != nil {
 		return err
 	}
+
 	return nil
 }
 
