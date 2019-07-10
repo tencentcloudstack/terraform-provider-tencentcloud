@@ -105,34 +105,6 @@ func testAccCheckSecurityGroupExists(n string, id *string) resource.TestCheckFun
 		*id = rs.Primary.ID
 
 		return nil
-
-		/*client := testAccProvider.Meta().(*TencentCloudClient).commonConn
-		params := map[string]string{
-			"Action":    "DescribeSecurityGroupEx",
-			"projectId": "0",
-			"sgId":      rs.Primary.ID,
-		}
-		response, err := client.SendRequest("dfw", params)
-		if err != nil {
-			return err
-		}
-		var jsonresp struct {
-			Code     int    `json:"code"`
-			CodeDesc string `json:"codeDesc"`
-			Data     struct {
-				TotalNum int `json:"totalNum"`
-			} `json:"data"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.Data.TotalNum == 0 {
-			return fmt.Errorf("security group not found: %s", rs.Primary.ID)
-		}
-
-		*id = rs.Primary.ID
-		return nil*/
 	}
 }
 
