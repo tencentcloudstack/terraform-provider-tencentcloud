@@ -12,7 +12,7 @@ func TestAccDataSourceTencentCloudDcxV3Instances_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccDataSourceTencentCloudDcInstances,
+				Config: TestAccDataSourceTencentCloudDcxInstances,
 				Check: resource.ComposeTestCheckFunc(
 					//name filter
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dcx_instances.name_select"),
@@ -25,7 +25,7 @@ func TestAccDataSourceTencentCloudDcxV3Instances_basic(t *testing.T) {
 }
 
 const TestAccDataSourceTencentCloudDcxInstances = `
-data tencentcloud_dcx_instances  name_select {
+data "tencentcloud_dcx_instances"  "name_select" {
     name ="a"
 }
 `

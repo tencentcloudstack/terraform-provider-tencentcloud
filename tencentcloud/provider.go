@@ -50,15 +50,33 @@ Data Sources
   tencentcloud_cbs_storages
   tencentcloud_cbs_snapshots
 
+AS Resources
+  tencentcloud_as_scaling_config
+  tencentcloud_as_scaling_group
+  tencentcloud_as_attachment
+  tencentcloud_as_scaling_policy
+  tencentcloud_as_schedule
+  tencentcloud_as_lifecycle_hook
+  tencentcloud_as_notification
+
 CBS Resources
   tencentcloud_cbs_storage
   tencentcloud_cbs_storage_attachment
   tencentcloud_cbs_snapshot
   tencentcloud_cbs_snapshot_policy
 
+CCN Resources
+  tencentcloud_ccn
+  tencentcloud_ccn_attachment
+  tencentcloud_ccn_bandwidth_limit
+
 Container Cluster Resources
   tencentcloud_container_cluster
   tencentcloud_container_cluster_instance
+
+COS Resources
+  tencentcloud_cos_bucket
+  tencentcloud_cos_bucket_object
 
 CVM Resources
   tencentcloud_instance
@@ -69,6 +87,17 @@ CVM Resources
 LB Resources
   tencentcloud_lb
   tencentcloud_alb_server_attachment
+
+MySQL Resources
+  tencentcloud_mysql_instance
+  tencentcloud_mysql_readonly_instance
+  tencentcloud_mysql_account
+  tencentcloud_mysql_account_privilege
+  tencentcloud_mysql_backup_policy
+
+Redis Resources
+  tencentcloud_redis_instance
+  tencentcloud_redis_backup_config
 
 VPC Resources
   tencentcloud_vpc
@@ -81,34 +110,7 @@ VPC Resources
   tencentcloud_dnat
   tencentcloud_nat_gateway
 
-MySQL Resources
-  tencentcloud_mysql_instance
-  tencentcloud_mysql_readonly_instance
-  tencentcloud_mysql_account
-  tencentcloud_mysql_account_privilege
-  tencentcloud_mysql_backup_policy
 
-COS Resources
-  tencentcloud_cos_bucket
-  tencentcloud_cos_bucket_object
-
-Redis Resources
-  tencentcloud_redis_instance
-  tencentcloud_redis_backup_config
-
-AS Resources
-  tencentcloud_as_scaling_config
-  tencentcloud_as_scaling_group
-  tencentcloud_as_attachment
-  tencentcloud_as_scaling_policy
-  tencentcloud_as_schedule
-  tencentcloud_as_lifecycle_hook
-  tencentcloud_as_notification
-
-CCN Resources
-  tencentcloud_ccn
-  tencentcloud_ccn_attachment
-  tencentcloud_ccn_bandwidth_limit
 */
 package tencentcloud
 
