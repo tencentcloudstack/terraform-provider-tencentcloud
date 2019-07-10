@@ -7,6 +7,7 @@ import (
 	"time"
 
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
@@ -1182,6 +1183,7 @@ func (me *MysqlService) DescribeDBInstancesBySecurityGroup(ctx context.Context, 
 
 	request := cdb.NewDescribeDBInstancesRequest()
 	request.SecurityGroupId = &sgId
+	request.WithSecurityGroup = common.Int64Ptr(1)
 
 	response, err := me.client.UseMysqlClient().DescribeDBInstances(request)
 	if err != nil {
