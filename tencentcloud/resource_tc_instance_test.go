@@ -936,11 +936,20 @@ data "tencentcloud_image" "my_favorate_image" {
   }
 }
 
+data "tencentcloud_instance_types" "my_favorate_instance_types" {
+  filter {
+    name   = "instance-family"
+    values = ["S2"]
+  }
+  cpu_core_count = 1
+  memory_size    = 2
+}
+
 resource "tencentcloud_instance" "foo" {
   instance_name = "terraform_ci_with_tags"
   availability_zone = "ap-guangzhou-3"
   image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "S4.SMALL1"
+  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   system_disk_type = "CLOUD_PREMIUM"
   tags = {
     "hello" = "world"
