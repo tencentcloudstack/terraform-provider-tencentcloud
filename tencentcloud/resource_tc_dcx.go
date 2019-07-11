@@ -207,8 +207,8 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 		networkRegion = temp.(string)
 	}
 
-	bgpAsnTemp, bgpAsnOk := d.GetOkExists("bgp_asn");
-	bgpKeyTemp, bgpKeyOk := d.GetOkExists("bgp_auth_key");
+	bgpAsnTemp, bgpAsnOk := d.GetOkExists("bgp_asn")
+	bgpKeyTemp, bgpKeyOk := d.GetOkExists("bgp_auth_key")
 	if bgpKeyOk && !bgpAsnOk {
 		return fmt.Errorf("bgp_auth_key need bgp_asn set")
 	}
