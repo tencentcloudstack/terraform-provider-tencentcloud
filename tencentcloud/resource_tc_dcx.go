@@ -20,7 +20,7 @@ variable "vpc_id" {
   default = "vpc-4h9v4mo3"
 }
 
-resource tencentcloud_dcx  bgp_main
+resource "tencentcloud_dcx"  "bgp_main"
  {
     bandwidth = 900
     dc_id = "${var.dc_id}"
@@ -32,7 +32,7 @@ resource tencentcloud_dcx  bgp_main
     vpc_id = "${var.vpc_id}"
 }
 
-resource tencentcloud_dcx  static_main
+resource "tencentcloud_dcx"  "static_main"
  {
     bandwidth = 900
     dc_id = "${var.dc_id}"
