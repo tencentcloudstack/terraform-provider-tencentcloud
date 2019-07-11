@@ -1,3 +1,53 @@
+/*
+Provides a resource to creating dedicated tunnels instances.
+
+~> **NOTE:** 1. ID of the DC is queried, can only apply for this resource offline.
+
+~> **NOTE:** 2. ID of the DC Gateway is queried, can only apply for this on console.
+
+Example Usage
+
+```hcl
+variable "dc_id" {
+  default = "dc-kax48sg7"
+}
+
+variable "dcg_id" {
+  default = "dcg-dmbhf7jf"
+}
+
+variable "vpc_id" {
+  default = "vpc-4h9v4mo3"
+}
+
+resource tencentcloud_dcx  bgp_main
+ {
+    bandwidth = 900
+    dc_id = "${var.dc_id}"
+    dcg_id = "${var.dcg_id}"
+    name = "bgp_main"
+    network_type = "VPC"
+    route_type = "BGP"
+    vlan = 306
+    vpc_id = "${var.vpc_id}"
+}
+
+resource tencentcloud_dcx  static_main
+ {
+    bandwidth = 900
+    dc_id = "${var.dc_id}"
+    dcg_id = "${var.dcg_id}"
+    name = "static_main"
+    network_type = "VPC"
+    route_type = "STATIC"
+    vlan = 301
+    vpc_id = "${var.vpc_id}"
+	route_filter_prefixes =["10.10.10.101/32"]
+	tencent_address = "100.93.46.1/30"
+	customer_address = "100.93.46.2/30"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -24,11 +74,13 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
+				Description:  "ID of the DC to be queried, application deployment offline.",
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
+				Description:  "Name of the dedicated tunnel.",
 			},
 			"network_type": {
 				Type:         schema.TypeString,
@@ -36,11 +88,13 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      DC_NETWORK_TYPE_VPC,
 				ValidateFunc: validateAllowedStringValue(DC_NETWORK_TYPES),
+				Description:  "Type of the network, and available values include VPC, BMVPC and CCN. The default value is VPC.",
 			},
 			"vpc_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the VPC or BMVPC.",
 			},
 			"route_type": {
 				Type:         schema.TypeString,
@@ -48,22 +102,26 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      DC_ROUTE_TYPE_BGP,
 				ValidateFunc: validateAllowedStringValue(DC_ROUTE_TYPES),
+				Description:  "Type of the route, and available values include BGP and STATIC. The default value is BGP.",
 			},
 			"dcg_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the DC Gateway. Currently only new in the console.",
 			},
 			"bgp_asn": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "BGP ASN of the user. A required field within BGP.",
 			},
 			"bgp_auth_key": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "BGP key of the user.",
 			},
 			"route_filter_prefixes": {
 				Type:     schema.TypeSet,
@@ -73,39 +131,46 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				Set: func(v interface{}) int {
 					return hashcode.String(v.(string))
 				},
+				Description: "Static route, the network address of the user IDC. It can be modified after setting but cannot be deleted. AN unable field within BGP.",
 			},
 			"vlan": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
-				Default:  0,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     0,
+				Description: "Vlan of the dedicated tunnels, and the range of values is [0-3000]. '0' means that only one tunnel can be created for the physical connect.",
 			},
 			"tencent_address": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Interconnect IP of the DC within Tencent.",
 			},
 			"customer_address": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: " Interconnect IP of the DC within client.",
 			},
 			"bandwidth": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
-				ForceNew: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Bandwidth of the DC.",
 			},
 			// Computed values
 			"state": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "State of the dedicated tunnels, and available values include PENDING, ALLOCATING, ALLOCATED, ALTERING, DELETING, DELETED, COMFIRMING and REJECTED.",
 			},
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of resource.",
 			},
 		},
 	}
@@ -144,14 +209,13 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 
 	bgpAsnTemp, bgpAsnOk := d.GetOkExists("bgp_asn");
 	bgpKeyTemp, bgpKeyOk := d.GetOkExists("bgp_auth_key");
-
 	if bgpKeyOk && !bgpAsnOk {
 		return fmt.Errorf("bgp_auth_key need bgp_asn set")
 	}
-	if bgpAsnOk{
+	if bgpAsnOk {
 		bgpAsn = int64(bgpAsnTemp.(int))
 	}
-	if bgpKeyOk{
+	if bgpKeyOk {
 		bgpAuthKey = bgpKeyTemp.(string)
 	}
 
@@ -175,7 +239,7 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("can not set `route_filter_prefixes` if `route_type` is '%s'", DC_ROUTE_TYPE_BGP)
 	}
 
-	if routeType != DC_ROUTE_TYPE_BGP  && bgpAsn!=-1  {
+	if routeType != DC_ROUTE_TYPE_BGP && bgpAsn != -1 {
 		return fmt.Errorf("can not set `bgp_asn`,`bgp_auth_key` if  `route_type` is not '%s'", DC_ROUTE_TYPE_BGP)
 	}
 
@@ -232,7 +296,7 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 			d.Set("bgp_asn", service.int64Pt2int64(item.BgpPeer.Asn))
 			d.Set("bgp_auth_key", service.strPt2str(item.BgpPeer.AuthKey))
 		}
-	}else {
+	} else {
 		var routeFilterPrefixes = make([]string, 0, len(item.RouteFilterPrefixes))
 		for _, v := range item.RouteFilterPrefixes {
 			if v.Cidr != nil {

@@ -1,3 +1,19 @@
+/*
+Use this data source to query detailed information of DC instances.
+
+Example Usage
+
+```hcl
+data tencentcloud_dc_instances name_select{
+    name = "t"
+}
+
+data tencentcloud_dc_instances  id {
+    dcx_id = "dc-kax48sg7"
+}
+
+```
+*/
 package tencentcloud
 
 import (
@@ -18,11 +34,13 @@ func dataSourceTencentCloudDcInstances() *schema.Resource {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Optional: true,
+				Description:"ID of the DC to be queried.",
 			},
 			"name": {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Optional: true,
+				Description:"Name of the DC to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -32,89 +50,111 @@ func dataSourceTencentCloudDcInstances() *schema.Resource {
 			},
 
 			// Computed values
-			"instance_list": {Type: schema.TypeList,
+			"instance_list": {
+				Type: schema.TypeList,
 				Computed: true,
+				Description:"Information list of the DC.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"dc_id": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"ID of the DC.",
 						},
 						"name": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Name of the DC.",
 						},
 						"state": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"State of the DC, and available values include REJECTED, TOPAY, PAID, ALLOCATED, AVAILABLE, DELETING and DELETED.",
 						},
 						"access_point_id": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Access point ID of tne DC.",
 						},
 						"line_operator": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Operator of the DC, and available values include ChinaTelecom, ChinaMobile, ChinaUnicom, In-houseWiring, ChinaOther and InternationalOperator.",
 						},
 						"location": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"The DC location where the connection is located.",
 						},
 						"bandwidth": {
 							Type:     schema.TypeInt,
 							Computed: true,
+							Description:"Bandwidth of the DC.",
 						},
 						"port_type": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Port type of the DC in client, and available values include 100Base-T, 1000Base-T, 1000Base-LX, 10GBase-T and 10GBase-LR. The default value is 1000Base-LX.",
 						},
 						"circuit_code": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"The circuit code provided by the operator for the DC.",
 						},
 						"redundant_dc_id": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"ID of the redundant DC.",
 						},
 						"tencent_address": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Interconnect IP of the DC within Tencent. Note: This field may return null, indicating that no valid values are taken.",
 						},
 						"customer_address": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Interconnect IP of the DC within client. Note: This field may return null, indicating that no valid values are taken.",
 						},
 						"customer_name": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Applicant name of the DC, the default is obtained from the account. Note: This field may return null, indicating that no valid values are taken.",
 						},
 						"customer_email": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Applicant email of the DC, the default is obtained from the account. Note: This field may return null, indicating that no valid values are taken.",
 						},
 						"customer_phone": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Applicant phone number of the DC, the default is obtained from the account. Note: This field may return null, indicating that no valid values are taken.",
 						},
 						"fault_report_contact_person": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Contact of reporting a faulty. Note: This field may return null, indicating that no valid values are taken.",
 						},
 						"fault_report_contact_phone": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Phone number of reporting a faulty. Note: This field may return null, indicating that no valid values are taken.",
 						},
 						"enabled_time": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Enable time of resource.",
 						},
 						"create_time": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Creation time of resource.",
 						},
 						"expired_time": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Expire date of resource.",
 						},
 					},
 				},

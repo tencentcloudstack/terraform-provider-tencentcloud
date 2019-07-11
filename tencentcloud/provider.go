@@ -20,35 +20,37 @@ provider "tencentcloud" {
 Resources List
 
 Data Sources
-  tencentcloud_availability_zones
-  tencentcloud_container_clusters
-  tencentcloud_container_cluster_instances
-  tencentcloud_instance_types
-  tencentcloud_image
-  tencentcloud_eip
-  tencentcloud_vpc
-  tencentcloud_subnet
-  tencentcloud_route_table
-  tencentcloud_security_group
-  tencentcloud_nats
-  tencentcloud_mysql_instance
-  tencentcloud_mysql_backup_list
-  tencentcloud_mysql_parameter_list
-  tencentcloud_mysql_zone_config
-  tencentcloud_cos_buckets
-  tencentcloud_cos_bucket_object
-  tencentcloud_redis_zone_config
-  tencentcloud_redis_instances
   tencentcloud_as_scaling_configs
   tencentcloud_as_scaling_groups
   tencentcloud_as_scaling_policies
-  tencentcloud_vpc_instances
-  tencentcloud_vpc_subnets
-  tencentcloud_vpc_route_tables
-  tencentcloud_ccn_instances
-  tencentcloud_ccn_bandwidth_limits
-  tencentcloud_cbs_storages
+  tencentcloud_availability_zones
   tencentcloud_cbs_snapshots
+  tencentcloud_cbs_storages
+  tencentcloud_ccn_bandwidth_limits
+  tencentcloud_ccn_instances
+  tencentcloud_container_cluster_instances
+  tencentcloud_container_clusters
+  tencentcloud_cos_bucket_object
+  tencentcloud_cos_buckets
+  tencentcloud_dc_instances
+  tencentcloud_dcx_instances
+  tencentcloud_eip
+  tencentcloud_image
+  tencentcloud_instance_types
+  tencentcloud_mysql_backup_list
+  tencentcloud_mysql_instance
+  tencentcloud_mysql_parameter_list
+  tencentcloud_mysql_zone_config
+  tencentcloud_nats
+  tencentcloud_redis_instances
+  tencentcloud_redis_zone_config
+  tencentcloud_route_table
+  tencentcloud_security_group
+  tencentcloud_subnet
+  tencentcloud_vpc
+  tencentcloud_vpc_instances
+  tencentcloud_vpc_route_tables
+  tencentcloud_vpc_subnets
 
 AS Resources
   tencentcloud_as_scaling_config
@@ -77,6 +79,9 @@ Container Cluster Resources
 COS Resources
   tencentcloud_cos_bucket
   tencentcloud_cos_bucket_object
+
+DC Resources
+  tencentcloud_dcx
 
 CVM Resources
   tencentcloud_instance
