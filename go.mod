@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/athom/goset v0.0.0-20151103071336-f07be69aa101
-	github.com/aws/aws-sdk-go v1.19.44
+	github.com/aws/aws-sdk-go v1.20.4
 	github.com/hashicorp/terraform v0.12.3
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/tencentcloud/tencentcloud-sdk-go v3.0.72-0.20190628165126-92c5b740bcc7+incompatible
