@@ -1,5 +1,10 @@
 ## 1.12.0 (Unreleased)
 
+FEATURES:
+* **New Data Source**: `  tencentcloud_dc_instances`
+* **New Data Source**: `tencentcloud_dcx_instances`
+* **New Resource**: `tencentcloud_dcx`
+
 BUG FIXIES:
 
 * resource/tencentcloud_instance: fixed issue when data disks set as delete_with_instance not works.
