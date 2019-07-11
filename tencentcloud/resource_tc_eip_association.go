@@ -158,7 +158,9 @@ func resourceTencentCloudEipAssociationDelete(d *schema.ResourceData, meta inter
 		}
 
 		status := *eip.AddressStatus
-		if goset.IsIncluded([]string{
+		if status == tencentCloudApiEipStatusUnbind {
+			return nil
+		} else if goset.IsIncluded([]string{
 			tencentCloudApiEipStatusBind,
 			tencentCloudApiEipStatusBindEni,
 		}, status) {

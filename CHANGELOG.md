@@ -1,4 +1,11 @@
 ## 1.12.0 (Unreleased)
+
+BUG FIXIES:
+
+* resource/tencentcloud_instance: fixed issue when data disks set as delete_with_instance not works.
+* resource/tencentcloud_instance: if managed public_ip manually, please don't define `allocate_public_ip` ([#62](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/62)).
+* resource/tencentcloud_eip_association: fixed issue when instances were manually deleted ([#60](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/60)).
+
 ## 1.11.0 (July 02, 2019)
 
 FEATURES:
