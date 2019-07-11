@@ -49,7 +49,7 @@ In addition to all arguments above, the following attributes are exported:
                 {{range $k, $v := .datasource}}
                 <li<%= sidebar_current("docs-{{$.cloud_mark}}-{{$v.ResType}}{{if ne $v.NameShort ""}}-{{$v.NameShort}}{{end}}") %>>
                     <a href="#">{{$v.Name}}</a>
-                    <ul class="nav nav-visible">
+                    <ul class="nav">
                         {{range $kk, $vv := $v.Resources}}
                         <li<%= sidebar_current("docs-{{$.cloud_mark}}-{{$v.ResType}}-{{index $vv 1}}") %>>
                             <a href="/docs/providers/{{$.cloud_mark}}/{{$v.ResTypeShort}}/{{index $vv 1}}.html">{{index $vv 0}}</a>

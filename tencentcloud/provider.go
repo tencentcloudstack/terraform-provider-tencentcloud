@@ -20,35 +20,46 @@ provider "tencentcloud" {
 Resources List
 
 Data Sources
-  tencentcloud_availability_zones
-  tencentcloud_container_clusters
-  tencentcloud_container_cluster_instances
-  tencentcloud_instance_types
-  tencentcloud_image
-  tencentcloud_eip
-  tencentcloud_vpc
-  tencentcloud_subnet
-  tencentcloud_route_table
-  tencentcloud_security_group
-  tencentcloud_nats
-  tencentcloud_mysql_instance
-  tencentcloud_mysql_backup_list
-  tencentcloud_mysql_parameter_list
-  tencentcloud_mysql_zone_config
-  tencentcloud_cos_buckets
-  tencentcloud_cos_bucket_object
-  tencentcloud_redis_zone_config
-  tencentcloud_redis_instances
   tencentcloud_as_scaling_configs
   tencentcloud_as_scaling_groups
   tencentcloud_as_scaling_policies
-  tencentcloud_vpc_instances
-  tencentcloud_vpc_subnets
-  tencentcloud_vpc_route_tables
-  tencentcloud_ccn_instances
-  tencentcloud_ccn_bandwidth_limits
-  tencentcloud_cbs_storages
+  tencentcloud_availability_zones
   tencentcloud_cbs_snapshots
+  tencentcloud_cbs_storages
+  tencentcloud_ccn_bandwidth_limits
+  tencentcloud_ccn_instances
+  tencentcloud_container_cluster_instances
+  tencentcloud_container_clusters
+  tencentcloud_cos_bucket_object
+  tencentcloud_cos_buckets
+  tencentcloud_dc_instances
+  tencentcloud_dcx_instances
+  tencentcloud_eip
+  tencentcloud_image
+  tencentcloud_instance_types
+  tencentcloud_mysql_backup_list
+  tencentcloud_mysql_instance
+  tencentcloud_mysql_parameter_list
+  tencentcloud_mysql_zone_config
+  tencentcloud_nats
+  tencentcloud_redis_instances
+  tencentcloud_redis_zone_config
+  tencentcloud_route_table
+  tencentcloud_security_group
+  tencentcloud_subnet
+  tencentcloud_vpc
+  tencentcloud_vpc_instances
+  tencentcloud_vpc_route_tables
+  tencentcloud_vpc_subnets
+
+AS Resources
+  tencentcloud_as_scaling_config
+  tencentcloud_as_scaling_group
+  tencentcloud_as_attachment
+  tencentcloud_as_scaling_policy
+  tencentcloud_as_schedule
+  tencentcloud_as_lifecycle_hook
+  tencentcloud_as_notification
 
 CBS Resources
   tencentcloud_cbs_storage
@@ -56,9 +67,21 @@ CBS Resources
   tencentcloud_cbs_snapshot
   tencentcloud_cbs_snapshot_policy
 
+CCN Resources
+  tencentcloud_ccn
+  tencentcloud_ccn_attachment
+  tencentcloud_ccn_bandwidth_limit
+
 Container Cluster Resources
   tencentcloud_container_cluster
   tencentcloud_container_cluster_instance
+
+COS Resources
+  tencentcloud_cos_bucket
+  tencentcloud_cos_bucket_object
+
+DC Resources
+  tencentcloud_dcx
 
 CVM Resources
   tencentcloud_instance
@@ -69,6 +92,17 @@ CVM Resources
 LB Resources
   tencentcloud_lb
   tencentcloud_alb_server_attachment
+
+MySQL Resources
+  tencentcloud_mysql_instance
+  tencentcloud_mysql_readonly_instance
+  tencentcloud_mysql_account
+  tencentcloud_mysql_account_privilege
+  tencentcloud_mysql_backup_policy
+
+Redis Resources
+  tencentcloud_redis_instance
+  tencentcloud_redis_backup_config
 
 VPC Resources
   tencentcloud_vpc
@@ -81,34 +115,7 @@ VPC Resources
   tencentcloud_dnat
   tencentcloud_nat_gateway
 
-MySQL Resources
-  tencentcloud_mysql_instance
-  tencentcloud_mysql_readonly_instance
-  tencentcloud_mysql_account
-  tencentcloud_mysql_account_privilege
-  tencentcloud_mysql_backup_policy
 
-COS Resources
-  tencentcloud_cos_bucket
-  tencentcloud_cos_bucket_object
-
-Redis Resources
-  tencentcloud_redis_instance
-  tencentcloud_redis_backup_config
-
-AS Resources
-  tencentcloud_as_scaling_config
-  tencentcloud_as_scaling_group
-  tencentcloud_as_attachment
-  tencentcloud_as_scaling_policy
-  tencentcloud_as_schedule
-  tencentcloud_as_lifecycle_hook
-  tencentcloud_as_notification
-
-CCN Resources
-  tencentcloud_ccn
-  tencentcloud_ccn_attachment
-  tencentcloud_ccn_bandwidth_limit
 */
 package tencentcloud
 
@@ -179,6 +186,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_bandwidth_limits":        dataSourceTencentCloudCcnBandwidthLimits(),
 			"tencentcloud_cbs_storages":                dataSourceTencentCloudCbsStorages(),
 			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
+			"tencentcloud_dc_instances":                dataSourceTencentCloudDcInstances(),
+			"tencentcloud_dcx_instances":               dataSourceTencentCloudDcxInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -222,6 +231,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn":                        resourceTencentCloudCcn(),
 			"tencentcloud_ccn_attachment":             resourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":        resourceTencentCloudCcnBandwidthLimit(),
+			"tencentcloud_dcx":                        resourceTencentCloudDcxInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

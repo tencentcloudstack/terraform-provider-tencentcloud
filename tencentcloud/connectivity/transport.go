@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const ReqClient = "Terraform_v1.11.0"
+
 type LogRoundTripper struct {
 }
 
@@ -24,6 +26,8 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	if errRet != nil {
 		return
 	}
+
+	request.Header.Set("X-TC-RequestClient", ReqClient)
 
 	inBytes, errRet = ioutil.ReadAll(bodyReader)
 	if errRet != nil {
