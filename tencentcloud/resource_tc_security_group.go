@@ -225,6 +225,7 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 			return resource.RetryableError(err)
 		}
 
+		time.Sleep(3 * time.Second)
 		response, err = client.SendRequest("dfw", params)
 		if err != nil {
 			log.Printf("[DEBUG] resource_tc_route_table delete client.SendRequest error:%v", err)
