@@ -10,6 +10,8 @@ description: |-
 
 Provides an eip resource associated with other resource like CVM or ENI.
 
+~> **NOTE:** Please DO NOT define `allocate_public_ip` in `tencentcloud_instance` resource.
+
 ## Example Usage
 
 Basic Usage
