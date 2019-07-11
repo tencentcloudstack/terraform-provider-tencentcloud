@@ -152,6 +152,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"allocate_public_ip": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Computed: true,
 			},
 			// vpc
 			"vpc_id": {
