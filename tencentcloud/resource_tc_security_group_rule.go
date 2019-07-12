@@ -1,21 +1,20 @@
 package tencentcloud
 
 import (
-	"encoding/json"
-	"errors"
+	"context"
 	"fmt"
-	"log"
+	"net"
 	"regexp"
-	"strconv"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 )
 
 func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSecurityGroupRuleCreate,
 		Read:   resourceTencentCloudSecurityGroupRuleRead,
+		Update: resourceTencentCloudSecurityGroupRuleUpdate,
 		Delete: resourceTencentCloudSecurityGroupRuleDelete,
 
 		Schema: map[string]*schema.Schema{
@@ -24,19 +23,20 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+
 			"type": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
-					value = strings.ToUpper(value)
-					if value != "INGRESS" && value != "EGRESS" {
+					if value != "ingress" && value != "egress" {
 						errors = append(errors, fmt.Errorf("%s of rule, ingress (inbound) or egress (outbound) value:%v", k, value))
 					}
 					return
 				},
 			},
+
 			"cidr_ip": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -45,33 +45,30 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					"source_sgid",
 				},
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					_, ip_err := validateIp(v, k)
-					log.Printf("[DEBUG] validateIp ip_err:%v", ip_err)
-					if len(ip_err) == 0 {
-						return
+					if _, _, err := net.ParseCIDR(v.(string)); err != nil {
+						errors = append(errors, err)
 					}
-					_, cidr_err := validateCIDRNetworkAddress(v, k)
-					log.Printf("[DEBUG] validateCIDRNetworkAddress cidr_err:%v", ip_err)
-					if len(cidr_err) == 0 {
-						return
-					}
-					errors = append(errors, fmt.Errorf("%s can be IP, or CIDR, otherwise it's invalid, value:%v", k, v))
+
 					return
 				},
 			},
+
 			"ip_protocol": {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
-					value = strings.ToUpper(value)
-					if value != "UDP" && value != "TCP" && value != "ICMP" {
+					switch value {
+					case "TCP", "UDP", "ICMP":
+
+					default:
 						errors = append(errors, fmt.Errorf("%s support 'UDP', 'TCP', 'ICMP' and not configured means all protocols. But got %s", k, v))
 					}
 					return
 				},
 			},
+
 			"port_range": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -86,18 +83,20 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					return
 				},
 			},
+
 			"policy": {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
-					if value != "accept" && value != "drop" {
-						errors = append(errors, fmt.Errorf("Policy of rule, 'accept' or 'drop'"))
+					if value != "ACCEPT" && value != "DROP" {
+						errors = append(errors, fmt.Errorf("policy of rule, 'ACCEPT' or 'DROP'"))
 					}
 					return
 				},
 			},
+
 			"source_sgid": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -106,208 +105,176 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					"cidr_ip",
 				},
 			},
+
+			"policy_index": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ForceNew:     true,
+				Description:  "security group rule index, start from 0",
+				ValidateFunc: validateIntegerMin(0),
+			},
+
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "security group rule description",
+			},
 		},
 	}
 }
 
 func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":           "CreateSecurityGroupPolicy",
-		"sgId":             d.Get("security_group_id").(string),
-		"direction":        d.Get("type").(string),
-		"index":            "-1",
-		"policys.0.action": d.Get("policy").(string),
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	sgId := d.Get("security_group_id").(string)
+
+	policyType := d.Get("type").(string)
+
+	var (
+		cidrIp     *string
+		sourceSgId *string
+		protocol   *string
+		portRange  *string
+		desc       *string
+		index      *int64
+	)
+
+	if raw, ok := d.GetOk("cidr_ip"); ok {
+		cidrIp = common.StringPtr(raw.(string))
 	}
 
-	cidrIpExist := false
-	if cidrIp, ok := d.GetOk("cidr_ip"); ok {
-		params["policys.0.cidrIp"] = cidrIp.(string)
-		cidrIpExist = true
+	if raw, ok := d.GetOk("source_sgid"); ok {
+		sourceSgId = common.StringPtr(raw.(string))
 	}
 
-	sgIdExist := false
-	if sgId, ok := d.GetOk("source_sgid"); ok {
-		params["policys.0.sgId"] = sgId.(string)
-		sgIdExist = true
+	if raw, ok := d.GetOk("ip_protocol"); ok {
+		protocol = common.StringPtr(raw.(string))
 	}
 
-	if !cidrIpExist && !sgIdExist {
-		return fmt.Errorf("source_sgid and cidr_ip are both empty")
-
-	}
-	if ipProtocol, ok := d.GetOk("ip_protocol"); ok {
-		params["policys.0.ipProtocol"] = ipProtocol.(string)
-	}
-	if portRange, ok := d.GetOk("port_range"); ok {
-		params["policys.0.portRange"] = portRange.(string)
+	if raw, ok := d.GetOk("port_range"); ok {
+		portRange = common.StringPtr(raw.(string))
 	}
 
-	log.Printf("[DEBUG] resource_tc_security_group_rule create params:%v", params)
+	if raw, ok := d.GetOk("description"); ok {
+		desc = common.StringPtr(raw.(string))
+	}
 
-	response, err := client.SendRequest("dfw", params)
+	if raw, ok := d.GetOk("policy_index"); ok {
+		index = common.Int64Ptr(int64(raw.(int)))
+	}
+
+	action := d.Get("policy").(string)
+
+	ruleId, err := service.CreateSecurityGroupPolicy(
+		ctx,
+		sgId,
+		policyType,
+		action,
+		cidrIp,
+		sourceSgId,
+		protocol,
+		portRange,
+		desc,
+		index,
+	)
 	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group_rule create client.SendRequest error:%v", err)
 		return err
 	}
-	var jsonresp struct {
-		Code     int    `json:"code"`
-		Message  string `json:"message"`
-		CodeDesc string `json:"codeDesc"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group_rule create json.Unmarshal error:%v", err)
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("resource_tc_security_group_rule create error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-	}
 
-	rule := map[string]string{
-		"sgId":       params["sgId"],
-		"direction":  params["direction"],
-		"action":     params["policys.0.action"],
-		"cidrIp":     "0.0.0.0/0",
-		"sourceSgid": "",
-		"ipProtocol": "ALL",
-		"portRange":  "ALL",
-	}
+	d.SetId(ruleId)
 
-	if cidrIp, ok := params["policys.0.cidrIp"]; ok {
-		rule["cidrIp"] = cidrIp
-	}
-	if sourceSgid, ok := params["policys.0.sgId"]; ok {
-		rule["sourceSgid"] = sourceSgid
-	}
-
-	if ipProtocol, ok := params["policys.0.ipProtocol"]; ok {
-		rule["ipProtocol"] = ipProtocol
-	}
-	if portRange, ok := params["policys.0.portRange"]; ok {
-		rule["portRange"] = portRange
-	}
-
-	uniqSecurityGroupRuleId := buildSecurityGroupRuleId(rule)
-	log.Printf("[DEBUG] uniqSecurityGroupRuleId=%s", uniqSecurityGroupRuleId)
-	d.SetId(uniqSecurityGroupRuleId)
-	return nil
+	return resourceTencentCloudSecurityGroupRuleRead(d, m)
 }
 
 func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interface{}) error {
-	log.Printf("[DEBUG] resource_tc_security_group_rule read id:%v", d.Id())
-	client := m.(*TencentCloudClient).commonConn
-	rule, ok := parseSecurityGroupRuleId(d.Id())
-	if ok == false {
-		return fmt.Errorf("resource_tc_security_group_rule read error, id decode faild! id:%v", d.Id())
-	}
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
 
-	_, err := describeSecurityGroupRuleIndex(client, rule)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	ruleId := d.Id()
+
+	sgId, policyType, policy, err := service.DescribeSecurityGroupPolicy(ctx, ruleId)
 	if err != nil {
-		if err == errSecurityGroupRuleNotFound {
-			d.SetId("")
-			return nil
-		}
 		return err
 	}
 
-	d.Set("security_group_id", rule["sgId"])
-	d.Set("type", rule["direction"])
-	cidrIp := rule["cidrIp"]
-	sourceSgid := rule["sourceSgid"]
-	if cidrIp != "0.0.0.0/0" {
-		d.Set("cidr_ip", rule["cidrIp"])
+	_ = d.Set("security_group_id", sgId)
+
+	_ = d.Set("type", policyType)
+
+	if policy.CidrBlock != nil {
+		_ = d.Set("cidr_ip", *policy.CidrBlock)
 	}
-	if sourceSgid != "" {
-		d.Set("source_sgid", rule["sourceSgid"])
+
+	if policy.SecurityGroupId != nil {
+		_ = d.Set("source_sgid", *policy.SecurityGroupId)
 	}
-	ipProtocol := strings.ToLower(rule["ipProtocol"])
-	portRange := strings.ToLower(rule["portRange"])
-	if ipProtocol != "all" {
-		d.Set("ip_protocol", rule["ipProtocol"])
+
+	if policy.Protocol != nil {
+		_ = d.Set("ip_protocol", *policy.Protocol)
 	}
-	if portRange != "all" {
-		d.Set("port_range", rule["portRange"])
+
+	if policy.Port != nil {
+		_ = d.Set("port_range", *policy.Port)
 	}
-	d.Set("policy", rule["action"])
+
+	_ = d.Set("policy", *policy.Action)
+
+	_ = d.Set("policy_index", int(*policy.PolicyIndex))
+
+	if policy.PolicyDescription != nil {
+		_ = d.Set("description", *policy.PolicyDescription)
+	}
+
+	return nil
+}
+
+func resourceTencentCloudSecurityGroupRuleUpdate(d *schema.ResourceData, m interface{}) error {
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	ruleId := d.Id()
+	index := d.Get("policy_index").(int)
+
+	if d.HasChange("description") {
+		var desc *string
+		if descRaw, ok := d.GetOk("description"); ok {
+			desc = common.StringPtr(descRaw.(string))
+		}
+
+		if err := service.ModifySecurityGroupPolicy(ctx, ruleId, index, desc); err != nil {
+			return err
+		}
+
+		return resourceTencentCloudSecurityGroupRuleRead(d, m)
+	}
 
 	return nil
 }
 
 func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	rule, ok := parseSecurityGroupRuleId(d.Id())
-	if ok == false {
-		return fmt.Errorf("resource_tc_security_group_rule read error, id decode faild! id:%v", d.Id())
-	}
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
 
-	index, err := describeSecurityGroupRuleIndex(client, rule)
-	if err != nil {
-		return err
-	}
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	params := map[string]string{
-		"Action":    "DeleteSecurityGroupPolicy",
-		"sgId":      rule["sgId"],
-		"direction": rule["direction"],
-		"indexes.0": strconv.Itoa(index),
-	}
+	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	log.Printf("[DEBUG] resource_tc_security_group_rule delete params:%v", params)
+	ruleId := d.Id()
 
-	response, err := client.SendRequest("dfw", params)
-	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group_rule delete client.SendRequest error:%v", err)
-		return err
-	}
-	var jsonresp struct {
-		Code     int    `json:"code"`
-		Message  string `json:"message"`
-		CodeDesc string `json:"codeDesc"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group_rule delete json.Unmarshal error:%v", err)
-		return err
-	}
+	index := d.Get("policy_index").(int)
 
-	if jsonresp.Code != 0 {
-		log.Printf("[DEBUG] resource_tc_security_group_rule delete error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-		return errors.New(jsonresp.Message)
-	}
-	return nil
-}
-
-// Build an ID for a Security Group Rule
-func buildSecurityGroupRuleId(rule map[string]string) (ruleId string) {
-	log.Printf("[DEBUG] buildSecurityGroupRuleId before: %v", rule)
-	var paramsArray []string
-	for k, v := range rule {
-		paramsArray = append(paramsArray, k+"="+v)
-	}
-	ruleId = strings.Join(paramsArray, "&")
-	log.Printf("[DEBUG] buildSecurityGroupRuleId after: %v", ruleId)
-	return
-}
-
-//Parse Security Group Rule ID
-func parseSecurityGroupRuleId(ruleId string) (rule map[string]string, ok bool) {
-	log.Printf("[DEBUG] parseSecurityGroupRuleId before: %v", ruleId)
-	ok = true
-	rule = map[string]string{}
-	ruleQueryStrings := strings.Split(ruleId, "&")
-	if len(ruleQueryStrings) == 0 {
-		ok = false
-		return
-	}
-	for _, str := range ruleQueryStrings {
-		arr := strings.Split(str, "=")
-		if len(arr) != 2 {
-			ok = false
-			return
-		}
-		rule[arr[0]] = arr[1]
-	}
-	log.Printf("[DEBUG] parseSecurityGroupRuleId after: %v", rule)
-	return
+	return service.DeleteSecurityGroupPolicy(ctx, ruleId, index)
 }
