@@ -225,7 +225,7 @@ func (me *DcService) CreateDirectConnectTunnel(ctx context.Context, dcId, dcxNam
 
 	if len(routeFilterPrefixes) > 0 {
 		request.RouteFilterPrefixes = make([]*dc.RouteFilterPrefix, 0, len(routeFilterPrefixes))
-		for index, _ := range routeFilterPrefixes {
+		for index := range routeFilterPrefixes {
 			var dcPrefix dc.RouteFilterPrefix
 			dcPrefix.Cidr = &routeFilterPrefixes[index]
 			request.RouteFilterPrefixes = append(request.RouteFilterPrefixes, &dcPrefix)
@@ -312,7 +312,7 @@ func (me *DcService) ModifyDirectConnectTunnelAttribute(ctx context.Context, dcx
 
 	if len(routeFilterPrefixes) > 0 {
 		request.RouteFilterPrefixes = make([]*dc.RouteFilterPrefix, 0, len(routeFilterPrefixes))
-		for index, _ := range routeFilterPrefixes {
+		for index := range routeFilterPrefixes {
 			var dcPrefix dc.RouteFilterPrefix
 			dcPrefix.Cidr = &routeFilterPrefixes[index]
 			request.RouteFilterPrefixes = append(request.RouteFilterPrefixes, &dcPrefix)
