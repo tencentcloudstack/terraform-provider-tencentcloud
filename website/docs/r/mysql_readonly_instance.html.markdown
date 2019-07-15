@@ -17,15 +17,15 @@ Provides a mysql instance resource to create read-only database instances.
 ```hcl
 resource "tencentcloud_mysql_readonly_instance" "default" {
   master_instance_id = "cdb-dnqksd9f"
-  instance_name ="myTestMysql"
-  mem_size = 128000
-  volume_size = 255
-  vpc_id = "vpc-12mt3l31"
-  subnet_id = "subnet-9uivyb1g"
-  intranet_port = 3306
-  security_groups = ["sg-ot8eclwz"]
+  instance_name      = "myTestMysql"
+  mem_size           = 128000
+  volume_size        = 255
+  vpc_id             = "vpc-12mt3l31"
+  subnet_id          = "subnet-9uivyb1g"
+  intranet_port      = 3306
+  security_groups    = ["sg-ot8eclwz"]
   tags = {
-    name ="test"
+    name = "test"
   }
 }
 ```

@@ -66,7 +66,7 @@ resource "tencentcloud_vpc" "app" {
   name       = "awesome_app_vpc"
 }
 resource "tencentcloud_subnet" "app" {
-  vpc_id = "${tencentcloud_vpc.app.id}"
+  vpc_id            = "${tencentcloud_vpc.app.id}"
   availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
   name              = "awesome_app_subnet"
   cidr_block        = "10.0.1.0/24"
@@ -81,17 +81,17 @@ resource "tencentcloud_instance" "my_awesome_app" {
   key_name          = "${tencentcloud_key_pair.random_key.id}"
   hostname          = "awesome_app"
   project_id        = 0
-  tags              = {
+  tags = {
     tagKey = "tagValue"
   }
 
   security_groups = [
     "${tencentcloud_security_group.app.id}",
   ]
-  
+
   vpc_id    = "${tencentcloud_vpc.app.id}"
   subnet_id = "${tencentcloud_subnet.app.id}"
-  
+
   internet_max_bandwidth_out = 20
   count                      = 10
 }

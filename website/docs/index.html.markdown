@@ -38,7 +38,7 @@ resource "tencentcloud_instance" "web" {
 
 # Create key pair with your public key
 resource "tencentcloud_key_pair" "my_ssh_key" {
-  key_name = "from_terraform_public_key"
+  key_name   = "from_terraform_public_key"
   public_key = "ssh-rsa AAAAB3NzaSuperLongString foo@bar"
 }
 
@@ -83,7 +83,7 @@ Usage:
 
 ```hcl
 provider "tencentcloud" {
-  secret_id = "${var.secret_id}"
+  secret_id  = "${var.secret_id}"
   secret_key = "${var.secret_key}"
   region     = "${var.region}"
 }

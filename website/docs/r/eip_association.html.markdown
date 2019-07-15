@@ -18,8 +18,8 @@ Basic Usage
 
 ```hcl
 resource "tencentcloud_eip_association" "foo" {
-	eip_id = "eip-xxxxxx"
-	instance_id = "ins-xxxxxx"
+  eip_id      = "eip-xxxxxx"
+  instance_id = "ins-xxxxxx"
 }
 ```
 
@@ -27,9 +27,9 @@ or
 
 ```hcl
 resource "tencentcloud_eip_association" "bar" {
-	eip_id = "eip-xxxxxx"
-	network_interface_id = "eni-xxxxxx"
-	private_ip = "10.0.1.22"
+  eip_id               = "eip-xxxxxx"
+  network_interface_id = "eni-xxxxxx"
+  private_ip           = "10.0.1.22"
 }
 ```
 

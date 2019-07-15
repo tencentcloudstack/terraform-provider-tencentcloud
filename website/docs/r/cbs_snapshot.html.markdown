@@ -14,8 +14,8 @@ Provide a resource to create a CBS snapshot.
 
 ```hcl
 resource "tencentcloud_cbs_snapshot" "snapshot" {
-        snapshot_name = "unnamed"
-        storage_id   = "disk-kdt0sq6m"
+  snapshot_name = "unnamed"
+  storage_id    = "disk-kdt0sq6m"
 }
 ```
 
