@@ -23,9 +23,11 @@ const (
 
 var (
 	errCreateEIPFailed   = errors.New("create eip failed")
+	errEIPStillBinding   = errors.New("eip still binding")
 	errEIPStillUnbinding = errors.New("eip still unbinding")
 	errEIPStillCreating  = errors.New("eip still creating")
 	errEIPStillDeleting  = errors.New("eip still deleting")
+	errEIPNotBind        = errors.New("eip should be bind")
 	errEIPNotUnbind      = errors.New("eip should be unbind")
 	errEIPInvalidName    = errors.New("eip name is invlid")
 )

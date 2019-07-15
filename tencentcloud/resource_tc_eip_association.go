@@ -90,6 +90,25 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 			return err
 		}
 
+		// make sure EIP is in bind status
+		err = resource.Retry(30*time.Second, func() *resource.RetryError {
+			eip, _, err := findEipById(cvmConn, eipId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if goset.IsIncluded([]string{
+				tencentCloudApiEipStatusUnbind,
+				tencentCloudApiEipStatusBinding,
+			}, *eip.AddressStatus) {
+				return resource.RetryableError(errEIPStillBinding)
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
 		associationId := fmt.Sprintf("%v::%v", eipId, instanceId)
 		d.SetId(associationId)
 		return resourceTencentCloudEipAssociationRead(d, meta)
@@ -114,6 +133,25 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 	req.NetworkInterfaceId = common.StringPtr(networkInterfaceId)
 	req.PrivateIpAddress = common.StringPtr(privateIp)
 	_, err = cvmConn.AssociateAddress(req)
+	if err != nil {
+		return err
+	}
+
+	// make sure EIP is in bind status
+	err = resource.Retry(30*time.Second, func() *resource.RetryError {
+		eip, _, err := findEipById(cvmConn, eipId)
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+		if goset.IsIncluded([]string{
+			tencentCloudApiEipStatusUnbind,
+			tencentCloudApiEipStatusBinding,
+		}, *eip.AddressStatus) {
+			return resource.RetryableError(errEIPStillBinding)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
