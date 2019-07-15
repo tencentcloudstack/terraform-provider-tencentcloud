@@ -1,16 +1,15 @@
 package tencentcloud
 
-import (
+/*import (
 	"context"
 	"fmt"
-	"log"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 )
 
-/*func TestAccTencentCloudSecurityGroupAttach_basic(t *testing.T) {
+func TestAccTencentCloudSecurityGroupAttach_basic(t *testing.T) {
 	var sgId string
 
 	resource.Test(t, resource.TestCase{
@@ -31,7 +30,7 @@ import (
 			},
 		},
 	})
-}*/
+}
 
 func TestAccTencentCloudSecurityGroupAttach_cvm(t *testing.T) {
 	var sgId string
@@ -82,9 +81,18 @@ func TestAccTencentCloudSecurityGroupAttach_mysql(t *testing.T) {
 			{
 				Config: testAccSecurityGroupAttachConfigMysql(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityGroupAttachExists("tencentcloud_security_group.sg_attach_test_mysql", &sgId),
-					testAccCheckTencentCloudDataSourceID("tencentcloud_security_group_attach.mysql"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_attach.mysql", "mysql_ids.#", "1"),
+					testAccCheckSecurityGroupAttachExists("tencentcloud_security_group_attach.mysql_sherlokyang", &sgId),
+					testAccCheckTencentCloudDataSourceID("tencentcloud_security_group_attach.mysql_sherlokyang"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_attach.mysql_sherlokyang", "mysql_ids.#", "1"),
+				),
+			},
+
+			{
+				Config: testAccSecurityGroupAttachConfigMysqlUpdate1(),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityGroupAttachExists("tencentcloud_security_group_attach.mysql_sherlokyang", &sgId),
+					testAccCheckTencentCloudDataSourceID("tencentcloud_security_group_attach.mysql_sherlokyang"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_attach.mysql_sherlokyang", "mysql_ids.#", "0"),
 				),
 			},
 		},
@@ -157,8 +165,6 @@ func testAccCheckSecurityGroupAttachExists(n string, sgId *string) resource.Test
 			return fmt.Errorf("security group not found: %s", rs.Primary.ID)
 		}
 
-		log.Println("exist")
-
 		return nil
 	}
 }
@@ -226,19 +232,19 @@ resource "tencentcloud_security_group" "sg_attach_test_cvm" {
 	name        = "sg_attach_test_cvm"
 	description = "sg_attach_test_cvm"
 }
-		
+
 resource "tencentcloud_vpc" "sg_attach_test_cvm" {
 	cidr_block = "10.0.0.0/16"
 	name       = "sg_attach_test_cvm"
 }
-		
+
 resource "tencentcloud_subnet" "sg_attach_test_cvm" {
 	vpc_id = "${tencentcloud_vpc.sg_attach_test_cvm.id}"
 	name              = "sg-attach-test-cvm"
     cidr_block        = "10.0.1.0/24"
 	availability_zone = "ap-guangzhou-3"
 }
-		
+
 resource "tencentcloud_instance" "sg_attach_test_cvm" {
 	instance_name     = "sg-attach-test-cvm"
 	availability_zone = "ap-guangzhou-3"
@@ -248,12 +254,12 @@ resource "tencentcloud_instance" "sg_attach_test_cvm" {
 
     system_disk_type = "CLOUD_PREMIUM"
     system_disk_size = 50
-		
+
 	vpc_id    = "${tencentcloud_vpc.sg_attach_test_cvm.id}"
 	subnet_id = "${tencentcloud_subnet.sg_attach_test_cvm.id}"
 }
-		
-		
+
+
 resource "tencentcloud_security_group_attach" "cvm" {
 	security_group_id = "${tencentcloud_security_group.sg_attach_test_cvm.id}"
 	cvm_ids = ["${tencentcloud_instance.sg_attach_test_cvm.id}"]
@@ -279,19 +285,19 @@ resource "tencentcloud_security_group" "sg_attach_test_cvm" {
 	name        = "sg_attach_test_cvm"
 	description = "sg_attach_test_cvm"
 }
-		
+
 resource "tencentcloud_vpc" "sg_attach_test_cvm" {
 	cidr_block = "10.0.0.0/16"
 	name       = "sg_attach_test_cvm"
 }
-		
+
 resource "tencentcloud_subnet" "sg_attach_test_cvm" {
 	vpc_id = "${tencentcloud_vpc.sg_attach_test_cvm.id}"
 	name              = "sg-attach-test-cvm"
     cidr_block        = "10.0.1.0/24"
 	availability_zone = "ap-guangzhou-3"
 }
-		
+
 resource "tencentcloud_instance" "sg_attach_test_cvm" {
 	instance_name     = "sg-attach-test-cvm"
 	availability_zone = "ap-guangzhou-3"
@@ -301,7 +307,7 @@ resource "tencentcloud_instance" "sg_attach_test_cvm" {
 
     system_disk_type = "CLOUD_PREMIUM"
     system_disk_size = 50
-		
+
 	vpc_id    = "${tencentcloud_vpc.sg_attach_test_cvm.id}"
 	subnet_id = "${tencentcloud_subnet.sg_attach_test_cvm.id}"
 }
@@ -315,12 +321,12 @@ resource "tencentcloud_instance" "sg_attach_test_cvm_2" {
 
     system_disk_type = "CLOUD_PREMIUM"
     system_disk_size = 50
-		
+
 	vpc_id    = "${tencentcloud_vpc.sg_attach_test_cvm.id}"
 	subnet_id = "${tencentcloud_subnet.sg_attach_test_cvm.id}"
 }
-		
-		
+
+
 resource "tencentcloud_security_group_attach" "cvm" {
 	security_group_id = "${tencentcloud_security_group.sg_attach_test_cvm.id}"
 	cvm_ids = [
@@ -349,19 +355,19 @@ resource "tencentcloud_security_group" "sg_attach_test_cvm" {
 	name        = "sg_attach_test_cvm"
 	description = "sg_attach_test_cvm"
 }
-		
+
 resource "tencentcloud_vpc" "sg_attach_test_cvm" {
 	cidr_block = "10.0.0.0/16"
 	name       = "sg_attach_test_cvm"
 }
-		
+
 resource "tencentcloud_subnet" "sg_attach_test_cvm" {
 	vpc_id = "${tencentcloud_vpc.sg_attach_test_cvm.id}"
 	name              = "sg-attach-test-cvm"
     cidr_block        = "10.0.1.0/24"
 	availability_zone = "ap-guangzhou-3"
 }
-		
+
 resource "tencentcloud_instance" "sg_attach_test_cvm" {
 	instance_name     = "sg-attach-test-cvm"
 	availability_zone = "ap-guangzhou-3"
@@ -371,7 +377,7 @@ resource "tencentcloud_instance" "sg_attach_test_cvm" {
 
     system_disk_type = "CLOUD_PREMIUM"
     system_disk_size = 50
-		
+
 	vpc_id    = "${tencentcloud_vpc.sg_attach_test_cvm.id}"
 	subnet_id = "${tencentcloud_subnet.sg_attach_test_cvm.id}"
 }
@@ -385,12 +391,12 @@ resource "tencentcloud_instance" "sg_attach_test_cvm_2" {
 
     system_disk_type = "CLOUD_PREMIUM"
     system_disk_size = 50
-		
+
 	vpc_id    = "${tencentcloud_vpc.sg_attach_test_cvm.id}"
 	subnet_id = "${tencentcloud_subnet.sg_attach_test_cvm.id}"
 }
-		
-		
+
+
 resource "tencentcloud_security_group_attach" "cvm" {
 	security_group_id = "${tencentcloud_security_group.sg_attach_test_cvm.id}"
 	cvm_ids = []
@@ -402,43 +408,56 @@ resource "tencentcloud_security_group_attach" "cvm" {
 
 func testAccSecurityGroupAttachConfigMysql() string {
 	return `
-resource "tencentcloud_security_group" "sg_attach_test_mysql" {
-  name        = "sg_attach_test_mysql"
-  description = "sg_attach_test_mysql"
+resource "tencentcloud_security_group" "sg_attach_test_mysql_sherlokyang" {
+  name        = "sg_attach_test_mysql_sherlokyang"
+  description = "sg_attach_test_mysql_sherlokyang"
 }
 
-resource "tencentcloud_vpc" "sg_attach_test_mysql" {
-  cidr_block = "10.0.0.0/16"
-  name       = "sg-attach-test"
-}
-
-resource "tencentcloud_subnet" "sg_attach_test_mysql_subnet" {
-  vpc_id = "${tencentcloud_vpc.sg_attach_test_mysql.id}"
-  name              = "sg-attach-test"
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "ap-guangzhou-3"
-}
-
-
-resource "tencentcloud_mysql_instance" "sg_attach_test_cdb" {
+resource "tencentcloud_mysql_instance" "sg_attach_test_mysql_sherlokyang" {
   internet_service = 0
   engine_version = "5.7"
   root_password = "243mh1F0PBHdFDjbllZhhw=="
   availability_zone = "ap-guangzhou-3"
-  instance_name = "sg-attach-test-mysql"
+  instance_name = "sg_attach_test_mysql_sherlokyang"
   mem_size = 1000
   volume_size = 50
-  vpc_id = "${tencentcloud_vpc.sg_attach_test_mysql.id}"
-  subnet_id = "${tencentcloud_subnet.sg_attach_test_mysql_subnet.id}"
   intranet_port = 3306
 }
 
 
-resource "tencentcloud_security_group_attach" "mysql" {
-  security_group_id = "${tencentcloud_security_group.sg_attach_test_mysql.id}"
+resource "tencentcloud_security_group_attach" "mysql_sherlokyang" {
+  security_group_id = "${tencentcloud_security_group.sg_attach_test_mysql_sherlokyang.id}"
   cvm_ids = []
   seni_ids = []
-  mysql_ids = ["${tencentcloud_mysql_instance.sg_attach_test_cdb.id}"]
+  mysql_ids = ["${tencentcloud_mysql_instance.sg_attach_test_mysql_sherlokyang.id}"]
+  clb_ids = []
+}`
+}
+
+func testAccSecurityGroupAttachConfigMysqlUpdate1() string {
+	return `
+resource "tencentcloud_security_group" "sg_attach_test_mysql_sherlokyang" {
+  name        = "sg_attach_test_mysql_sherlokyang"
+  description = "sg_attach_test_mysql_sherlokyang"
+}
+
+resource "tencentcloud_mysql_instance" "sg_attach_test_mysql_sherlokyang" {
+  internet_service = 0
+  engine_version = "5.7"
+  root_password = "243mh1F0PBHdFDjbllZhhw=="
+  availability_zone = "ap-guangzhou-3"
+  instance_name = "sg_attach_test_mysql_sherlokyang"
+  mem_size = 1000
+  volume_size = 50
+  intranet_port = 3306
+}
+
+
+resource "tencentcloud_security_group_attach" "mysql_sherlokyang" {
+  security_group_id = "${tencentcloud_security_group.sg_attach_test_mysql_sherlokyang.id}"
+  cvm_ids = []
+  seni_ids = []
+  mysql_ids = []
   clb_ids = []
 }`
 }
@@ -534,8 +553,7 @@ resource "tencentcloud_security_group_attach" "clb" {
 }
 
 func testAccSecurityGroupAttachConfig() string {
-	return `
-data "tencentcloud_instance_types" "sg_attach_test_types" {
+	return `data "tencentcloud_instance_types" "sg_attach_test_types" {
   filter {
     name   = "instance-family"
     values = ["S1"]
@@ -567,7 +585,10 @@ resource "tencentcloud_instance" "sg_attach_test-cvm" {
   availability_zone = "ap-guangzhou-3"
   image_id          = "img-6rrx0ymd"
   instance_type     = "${data.tencentcloud_instance_types.sg_attach_test_types.instance_types.0.instance_type}"
-  password          = "123abcDEF,._+-&="
+  password          = "243mh1F0PBHdFDjbllZhhw=="
+
+  system_disk_type = "CLOUD_PREMIUM"
+  system_disk_size = 50
 
   vpc_id    = "${tencentcloud_vpc.sg_attach_test.id}"
   subnet_id = "${tencentcloud_subnet.sg_attach_test_subnet.id}"
@@ -577,11 +598,11 @@ resource "tencentcloud_instance" "sg_attach_test-cvm" {
 resource "tencentcloud_mysql_instance" "sg_attach_test_cdb" {
   internet_service = 0
   engine_version = "5.7"
-  root_password = "123abcDEF,._+-&="
+  root_password = "243mh1F0PBHdFDjbllZhhw=="
   availability_zone = "ap-guangzhou-3"
   instance_name = "myTestMysql"
   mem_size = 1000
-  volume_size = 250
+  volume_size = 50
   vpc_id = "${tencentcloud_vpc.sg_attach_test.id}"
   subnet_id = "${tencentcloud_subnet.sg_attach_test_subnet.id}"
   intranet_port = 3306
@@ -603,4 +624,4 @@ resource "tencentcloud_security_group_attach" "foo" {
   mysql_ids = ["${tencentcloud_mysql_instance.sg_attach_test_cdb.id}"]
   clb_ids = ["${tencentcloud_lb.sg_attach_test_clb.id}"]
 }`
-}
+}*/

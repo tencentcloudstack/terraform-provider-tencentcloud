@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"context"
 	"errors"
 	"fmt"
@@ -445,7 +445,15 @@ func attachSecurityGroupToMysql(ctx context.Context, mysqlId, sgId string, clien
 
 	existSgIds = addSecurityGroupToExistSecurityGroups(existSgIds, sgId)
 
-	return service.ModifyDBInstanceSecurityGroups(ctx, mysqlId, existSgIds)
+	if len(existSgIds) < 1 {
+		panic("exit sg id len < 1")
+	}
+
+	if err := service.ModifyDBInstanceSecurityGroups(ctx, mysqlId, existSgIds); err != nil {
+		log.Printf("[CRITAL]%s attach security group %s to mysql %s error, reason: %v", GetLogId(ctx), sgId, mysqlId, err)
+		return err
+	}
+	return nil
 }
 
 func attachSecurityGroupToClb(ctx context.Context, clbId, sgId string, client *connectivity.TencentCloudClient) error {
@@ -519,19 +527,11 @@ func unattachSeniFromSecurityGroup(ctx context.Context, seniId, sgId string, cli
 func unattachMysqlFromSecurityGroup(ctx context.Context, mysqlId, sgId string, client *connectivity.TencentCloudClient) error {
 	service := MysqlService{client: client}
 
-	existSgIds, err := service.DescribeDBSecurityGroups(ctx, mysqlId)
-	if err != nil {
+	if err := service.DisassociateSecurityGroup(ctx, mysqlId, sgId); err != nil {
+		log.Printf("[CRITAL]%s unattach security group %s from mysql %s error, reason: %v", GetLogId(ctx), sgId, mysqlId, err)
 		return err
 	}
-
-	for i := range existSgIds {
-		if existSgIds[i] == sgId {
-			existSgIds = append(existSgIds[:i], existSgIds[i+1:]...)
-			break
-		}
-	}
-
-	return service.ModifyDBInstanceSecurityGroups(ctx, mysqlId, existSgIds)
+	return nil
 }
 
 func unattachClbFromSecurityGroup(ctx context.Context, clbId, sgId string, client *connectivity.TencentCloudClient) error {
@@ -585,4 +585,4 @@ func addSecurityGroupToExistSecurityGroups(existSecurityGroups []string, securit
 	}
 
 	return existSecurityGroups
-}
+}*/
