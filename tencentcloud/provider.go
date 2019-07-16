@@ -109,7 +109,6 @@ VPC Resources
   tencentcloud_subnet
   tencentcloud_security_group
   tencentcloud_security_group_rule
-  tencentcloud_security_group_attach
   tencentcloud_route_table
   tencentcloud_route_entry
   tencentcloud_route_table_entry
