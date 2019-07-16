@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -943,4 +944,25 @@ func (me *VpcService) DescribeNetworkInterfaces(ctx context.Context, eniIds []st
 	}
 
 	return response.Response.NetworkInterfaceSet, nil
+}
+
+func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids []string) ([]*vpc.SecurityGroupAssociationStatistics, error) {
+	logId := GetLogId(ctx)
+
+	request := vpc.NewDescribeSecurityGroupAssociationStatisticsRequest()
+	request.SecurityGroupIds = common.StringPtrs(ids)
+
+	response, err := me.client.UseVpcClient().DescribeSecurityGroupAssociationStatistics(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+	}
+
+	set := response.Response.SecurityGroupAssociationStatisticsSet
+
+	if len(set) == 0 {
+		return nil, errors.New("security groups not found")
+	}
+
+	return set, nil
 }
