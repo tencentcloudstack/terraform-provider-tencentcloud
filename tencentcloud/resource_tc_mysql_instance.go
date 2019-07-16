@@ -1184,17 +1184,21 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 		return err
 	}
 
+	var hasDeleted = false
+
 	err = resource.Retry(20*time.Minute, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
-		if mysqlInfo == nil {
-			return nil
-		}
+
 		if err != nil {
 			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
 				return resource.RetryableError(err)
 			} else {
 				return resource.NonRetryableError(err)
 			}
+		}
+		if mysqlInfo == nil {
+			hasDeleted = true
+			return nil
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_ISOLATING || *mysqlInfo.Status == MYSQL_STATUS_RUNNING {
 			return resource.RetryableError(fmt.Errorf("mysql isolating."))
@@ -1204,5 +1208,9 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 		}
 		return resource.NonRetryableError(fmt.Errorf("after IsolateDBInstance mysql Status is %d", *mysqlInfo.Status))
 	})
+
+	if hasDeleted {
+		return nil
+	}
 	return mysqlService.OfflineIsolatedInstances(ctx, d.Id())
 }
