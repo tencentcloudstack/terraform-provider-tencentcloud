@@ -17,26 +17,29 @@ Provides a mysql instance resource to create master database instances.
 ```hcl
 resource "tencentcloud_mysql_instance" "default" {
   internet_service = 1
-  engine_version = "5.7"
+  engine_version   = "5.7"
+
+  root_password     = "********"
+  slave_deploy_mode = 0
+  first_slave_zone  = "ap-guangzhou-4"
+  second_slave_zone = "ap-guangzhou-4"
+  slave_sync_mode   = 1
+  availability_zone = "ap-guangzhou-4"
+  project_id        = 201901010001
+  instance_name     = "myTestMysql"
+  mem_size          = 128000
+  volume_size       = 250
+  vpc_id            = "vpc-12mt3l31"
+  subnet_id         = "subnet-9uivyb1g"
+  intranet_port     = 3306
+  security_groups   = ["sg-ot8eclwz"]
+
+  tags = {
+    name = "test"
+  }
+
   parameters = {
     max_connections = "1000"
-  }
-  root_password = "********"
-  slave_deploy_mode = 0
-  first_slave_zone = "ap-guangzhou-4"
-  second_slave_zone = "ap-guangzhou-4"
-  slave_sync_mode = 1
-  availability_zone = "ap-guangzhou-4"
-  project_id = 201901010001
-  instance_name = "myTestMysql"
-  mem_size = 128000
-  volume_size = 250
-  vpc_id = "vpc-12mt3l31"
-  subnet_id = "subnet-9uivyb1g"
-  intranet_port = 3306
-  security_groups = ["sg-ot8eclwz"]
-  tags = {
-    name ="test"
   }
 }
 ```
@@ -75,4 +78,5 @@ In addition to all arguments above, the following attributes are exported:
 * `locked` - Indicates whether the instance is locked. 0 - No; 1 - Yes.
 * `status` - Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
+
 
