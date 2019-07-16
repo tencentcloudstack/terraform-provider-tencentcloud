@@ -1,4 +1,4 @@
-## 1.12.0 (Unreleased)
+## 1.12.0 (July 16, 2019)
 
 FEATURES:
 * **New Data Source**: `  tencentcloud_dc_instances`
