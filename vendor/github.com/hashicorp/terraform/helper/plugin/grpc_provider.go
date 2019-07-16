@@ -2,10 +2,10 @@ package plugin
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/zclconf/go-cty/cty"
 	ctyconvert "github.com/zclconf/go-cty/cty/convert"
@@ -16,6 +16,7 @@ import (
 	"github.com/hashicorp/terraform/configs/configschema"
 	"github.com/hashicorp/terraform/helper/schema"
 	proto "github.com/hashicorp/terraform/internal/tfplugin5"
+	"github.com/hashicorp/terraform/plans/objchange"
 	"github.com/hashicorp/terraform/plugin/convert"
 	"github.com/hashicorp/terraform/terraform"
 )
@@ -284,6 +285,17 @@ func (s *GRPCProviderServer) UpgradeResourceState(_ context.Context, req *proto.
 		return resp, nil
 	}
 
+	// Now we need to make sure blocks are represented correctly, which means
+	// that missing blocks are empty collections, rather than null.
+	// First we need to CoerceValue to ensure that all object types match.
+	val, err = schemaBlock.CoerceValue(val)
+	if err != nil {
+		resp.Diagnostics = convert.AppendProtoDiag(resp.Diagnostics, err)
+		return resp, nil
+	}
+	// Normalize the value and fill in any missing blocks.
+	val = objchange.NormalizeObjectFromLegacySDK(val, schemaBlock)
+
 	// encode the final state to the expected msgpack format
 	newStateMP, err := msgpack.Marshal(val, schemaBlock.ImpliedType())
 	if err != nil {
@@ -316,11 +328,15 @@ func (s *GRPCProviderServer) upgradeFlatmapState(version int, m map[string]strin
 		requiresMigrate = version < res.StateUpgraders[0].Version
 	}
 
-	if requiresMigrate {
-		if res.MigrateState == nil {
-			return nil, 0, errors.New("cannot upgrade state, missing MigrateState function")
+	if requiresMigrate && res.MigrateState == nil {
+		// Providers were previously allowed to bump the version
+		// without declaring MigrateState.
+		// If there are further upgraders, then we've only updated that far.
+		if len(res.StateUpgraders) > 0 {
+			schemaType = res.StateUpgraders[0].Type
+			upgradedVersion = res.StateUpgraders[0].Version
 		}
-
+	} else if requiresMigrate {
 		is := &terraform.InstanceState{
 			ID:         m["id"],
 			Attributes: m,
@@ -476,7 +492,12 @@ func (s *GRPCProviderServer) Configure(_ context.Context, req *proto.Configure_R
 }
 
 func (s *GRPCProviderServer) ReadResource(_ context.Context, req *proto.ReadResource_Request) (*proto.ReadResource_Response, error) {
-	resp := &proto.ReadResource_Response{}
+	resp := &proto.ReadResource_Response{
+		// helper/schema did previously handle private data during refresh, but
+		// core is now going to expect this to be maintained in order to
+		// persist it in the state.
+		Private: req.Private,
+	}
 
 	res := s.provider.ResourcesMap[req.TypeName]
 	schemaBlock := s.getResourceSchemaBlock(req.TypeName)
@@ -492,6 +513,15 @@ func (s *GRPCProviderServer) ReadResource(_ context.Context, req *proto.ReadReso
 		resp.Diagnostics = convert.AppendProtoDiag(resp.Diagnostics, err)
 		return resp, nil
 	}
+
+	private := make(map[string]interface{})
+	if len(req.Private) > 0 {
+		if err := json.Unmarshal(req.Private, &private); err != nil {
+			resp.Diagnostics = convert.AppendProtoDiag(resp.Diagnostics, err)
+			return resp, nil
+		}
+	}
+	instanceState.Meta = private
 
 	newInstanceState, err := res.RefreshWithoutUpgrade(instanceState, s.provider.Meta())
 	if err != nil {
@@ -569,6 +599,7 @@ func (s *GRPCProviderServer) PlanResourceChange(_ context.Context, req *proto.Pl
 	// We don't usually plan destroys, but this can return early in any case.
 	if proposedNewStateVal.IsNull() {
 		resp.PlannedState = req.ProposedNewState
+		resp.PlannedPrivate = req.PriorPrivate
 		return resp, nil
 	}
 
@@ -623,6 +654,7 @@ func (s *GRPCProviderServer) PlanResourceChange(_ context.Context, req *proto.Pl
 		// description that _shows_ there are no changes. This is always the
 		// prior state, because we force a diff above if this is a new instance.
 		resp.PlannedState = req.PriorState
+		resp.PlannedPrivate = req.PriorPrivate
 		return resp, nil
 	}
 
@@ -681,6 +713,18 @@ func (s *GRPCProviderServer) PlanResourceChange(_ context.Context, req *proto.Pl
 	}
 	resp.PlannedState = &proto.DynamicValue{
 		Msgpack: plannedMP,
+	}
+
+	// encode any timeouts into the diff Meta
+	t := &schema.ResourceTimeout{}
+	if err := t.ConfigDecode(res, cfg); err != nil {
+		resp.Diagnostics = convert.AppendProtoDiag(resp.Diagnostics, err)
+		return resp, nil
+	}
+
+	if err := t.DiffEncode(diff); err != nil {
+		resp.Diagnostics = convert.AppendProtoDiag(resp.Diagnostics, err)
+		return resp, nil
 	}
 
 	// Now we need to store any NewExtra values, which are where any actual
@@ -824,6 +868,7 @@ func (s *GRPCProviderServer) ApplyResourceChange(_ context.Context, req *proto.A
 		diff.Meta = private
 	}
 
+	var newRemoved []string
 	for k, d := range diff.Attributes {
 		// We need to turn off any RequiresNew. There could be attributes
 		// without changes in here inserted by helper/schema, but if they have
@@ -831,8 +876,10 @@ func (s *GRPCProviderServer) ApplyResourceChange(_ context.Context, req *proto.A
 		d.RequiresNew = false
 
 		// Check that any "removed" attributes that don't actually exist in the
-		// prior state, or helper/schema will confuse itself
+		// prior state, or helper/schema will confuse itself, and record them
+		// to make sure they are actually removed from the state.
 		if d.NewRemoved {
+			newRemoved = append(newRemoved, k)
 			if _, ok := priorState.Attributes[k]; !ok {
 				delete(diff.Attributes, k)
 			}
@@ -859,6 +906,19 @@ func (s *GRPCProviderServer) ApplyResourceChange(_ context.Context, req *proto.A
 			Msgpack: newStateMP,
 		}
 		return resp, nil
+	}
+
+	// Now remove any primitive zero values that were left from NewRemoved
+	// attributes. Any attempt to reconcile more complex structures to the best
+	// of our abilities happens in normalizeNullValues.
+	for _, r := range newRemoved {
+		if strings.HasSuffix(r, ".#") || strings.HasSuffix(r, ".%") {
+			continue
+		}
+		switch newInstanceState.Attributes[r] {
+		case "", "0", "false":
+			delete(newInstanceState.Attributes, r)
+		}
 	}
 
 	// We keep the null val if we destroyed the resource, otherwise build the
@@ -928,6 +988,9 @@ func (s *GRPCProviderServer) ImportResourceState(_ context.Context, req *proto.I
 			resp.Diagnostics = convert.AppendProtoDiag(resp.Diagnostics, err)
 			return resp, nil
 		}
+
+		// Normalize the value and fill in any missing blocks.
+		newStateVal = objchange.NormalizeObjectFromLegacySDK(newStateVal, schemaBlock)
 
 		newStateMP, err := msgpack.Marshal(newStateVal, schemaBlock.ImpliedType())
 		if err != nil {

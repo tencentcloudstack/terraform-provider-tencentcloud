@@ -15,6 +15,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
@@ -30,6 +31,7 @@ type TencentCloudClient struct {
 	asConn    *as.Client
 	vpcConn   *vpc.Client
 	cbsConn   *cbs.Client
+	dcConn    *dc.Client
 	cvmConn   *cvm.Client
 	clbConn   *clb.Client
 }
@@ -152,6 +154,11 @@ func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	cpf.HttpProfile.ReqTimeout = 300
 
 	vpcConn, _ := vpc.NewClient(credential, me.Region, cpf)
+
+	var round LogRoundTripper
+
+	vpcConn.WithHttpTransport(&round)
+
 	me.vpcConn = vpcConn
 
 	return me.vpcConn
@@ -174,6 +181,32 @@ func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
 	me.cbsConn = cbsConn
 
 	return me.cbsConn
+}
+
+func (me *TencentCloudClient) UseDcClient() *dc.Client {
+	if me.dcConn != nil {
+		return me.dcConn
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+
+	dcConn, _ := dc.NewClient(credential, me.Region, cpf)
+
+	var round LogRoundTripper
+
+	dcConn.WithHttpTransport(&round)
+
+	me.dcConn = dcConn
+
+	return me.dcConn
+
 }
 
 func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
