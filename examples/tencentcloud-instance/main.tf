@@ -24,11 +24,11 @@ resource "tencentcloud_key_pair" "random_key" {
 }
 
 resource "tencentcloud_instance" "instance-without-specified-image-id-example" {
-  instance_name = "${var.instance_name}"
-  availability_zone     = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  key_name      = "${tencentcloud_key_pair.random_key.id}"
+  instance_name     = "${var.instance_name}"
+  availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  key_name          = "${tencentcloud_key_pair.random_key.id}"
 
   //  instance_charge_type                = "PREPAID"
   //  instance_charge_type_prepaid_period = 1
