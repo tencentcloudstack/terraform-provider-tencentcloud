@@ -15,7 +15,6 @@ Provides a security group rule resource. Represents a single `ingress` or `egres
 Basic usage:
 
 ```hcl
-
 resource "tencentcloud_security_group" "default" {
   name        = "${var.security_group_name}"
   description = "test security group rule"

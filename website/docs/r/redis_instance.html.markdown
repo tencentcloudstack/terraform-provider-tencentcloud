@@ -13,13 +13,13 @@ Provides a resource to create a Redis instance and set its attributes.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_redis_instance" "redis_instance_test"{
-	availability_zone="ap-hongkong-3"
-	type="master_slave_redis"
-	password="test12345789"
-	mem_size=8192
-	name="terrform_test"
-	port=6379
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone = "ap-hongkong-3"
+  type              = "master_slave_redis"
+  password          = "test12345789"
+  mem_size          = 8192
+  name              = "terrform_test"
+  port              = 6379
 }
 ```
 
