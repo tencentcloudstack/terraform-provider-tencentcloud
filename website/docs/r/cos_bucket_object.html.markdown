@@ -27,12 +27,12 @@ Uploading a content to a bucket
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
   bucket = "mycos-1258798060"
-  acl = "public-read"
+  acl    = "public-read"
 }
 
 resource "tencentcloud_cos_bucket_object" "myobject" {
-  bucket = "${tencentcloud_cos_bucket.mycos.bucket}"
-  key    = "new_object_key"
+  bucket  = "${tencentcloud_cos_bucket.mycos.bucket}"
+  key     = "new_object_key"
   content = "the content that you want to upload."
 }
 ```

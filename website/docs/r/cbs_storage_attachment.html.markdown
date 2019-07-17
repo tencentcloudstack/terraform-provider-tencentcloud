@@ -14,8 +14,8 @@ Provides a CBS storage attachment resource.
 
 ```hcl
 resource "tencentcloud_cbs_storage_attachment" "attachment" {
-        storage_id  = "disk-kdt0sq6m"
-        instance_id = "ins-jqlegd42"
+  storage_id  = "disk-kdt0sq6m"
+  instance_id = "ins-jqlegd42"
 }
 ```
 

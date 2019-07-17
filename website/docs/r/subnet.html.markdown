@@ -14,19 +14,20 @@ Provide a resource to create a VPC subnet.
 
 ```hcl
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
+
 resource "tencentcloud_subnet" "subnet" {
-	availability_zone="${var.availability_zone}"
-	name="guagua-ci-temp-test"
-	vpc_id="${tencentcloud_vpc.foo.id}"
-	cidr_block="10.0.20.0/28"
-	is_multicast=false
+  availability_zone = "${var.availability_zone}"
+  name              = "guagua-ci-temp-test"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
 }
 ```
 

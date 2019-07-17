@@ -43,6 +43,7 @@ resource "tencentcloud_security_group" "app" {
   name        = "web accessibility"
   description = "make it accessible for both production and stage ports"
 }
+
 resource "tencentcloud_security_group_rule" "web" {
   security_group_id = "${tencentcloud_security_group.app.id}"
   type              = "ingress"
@@ -51,6 +52,7 @@ resource "tencentcloud_security_group_rule" "web" {
   port_range        = "80,3000,8080"
   policy            = "accept"
 }
+
 resource "tencentcloud_security_group_rule" "ssh" {
   security_group_id = "${tencentcloud_security_group.app.id}"
   type              = "ingress"
@@ -65,8 +67,9 @@ resource "tencentcloud_vpc" "app" {
   cidr_block = "10.0.0.0/16"
   name       = "awesome_app_vpc"
 }
+
 resource "tencentcloud_subnet" "app" {
-  vpc_id = "${tencentcloud_vpc.app.id}"
+  vpc_id            = "${tencentcloud_vpc.app.id}"
   availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
   name              = "awesome_app_subnet"
   cidr_block        = "10.0.1.0/24"
@@ -81,17 +84,18 @@ resource "tencentcloud_instance" "my_awesome_app" {
   key_name          = "${tencentcloud_key_pair.random_key.id}"
   hostname          = "awesome_app"
   project_id        = 0
-  tags              = {
+
+  tags = {
     tagKey = "tagValue"
   }
 
   security_groups = [
     "${tencentcloud_security_group.app.id}",
   ]
-  
+
   vpc_id    = "${tencentcloud_vpc.app.id}"
   subnet_id = "${tencentcloud_subnet.app.id}"
-  
+
   internet_max_bandwidth_out = 20
   count                      = 10
 }

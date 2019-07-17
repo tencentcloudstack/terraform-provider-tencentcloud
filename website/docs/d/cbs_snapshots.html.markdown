@@ -14,8 +14,8 @@ Use this data source to query detailed information of CBS snapshots.
 
 ```hcl
 data "tencentcloud_cbs_snapshots" "snapshots" {
-    snapshot_id        = "snap-f3io7adt"
-    result_output_file = "mytestpath"
+  snapshot_id        = "snap-f3io7adt"
+  result_output_file = "mytestpath"
 }
 ```
 
