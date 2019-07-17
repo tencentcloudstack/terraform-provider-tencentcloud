@@ -643,6 +643,43 @@ func (me *MysqlService) DescribeDBInstanceById(ctx context.Context, mysqlId stri
 	return
 }
 
+func (me *MysqlService) DescribeIsolatedDBInstanceById(ctx context.Context, mysqlId string) (mysqlInfo *cdb.InstanceInfo, errRet error) {
+
+	logId := GetLogId(ctx)
+	request := cdb.NewDescribeDBInstancesRequest()
+	request.InstanceIds = []*string{&mysqlId}
+
+	request.Status = []*uint64{uint64Pt(MYSQL_STATUS_ISOLATED),
+		uint64Pt(MYSQL_STATUS_ISOLATED_1),
+		uint64Pt(MYSQL_STATUS_ISOLATED_2)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseMysqlClient().DescribeDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) == 0 {
+		return
+	}
+	if len(response.Response.Items) > 1 {
+		errRet = fmt.Errorf("One mysql id got %d instance info", len(response.Response.Items))
+	}
+	mysqlInfo = response.Response.Items[0]
+
+	return
+}
+
 func (me *MysqlService) _innerDescribeDBInstanceById(ctx context.Context, mysqlId string) (mysqlInfo *cdb.InstanceInfo, errRet error) {
 
 	logId := GetLogId(ctx)

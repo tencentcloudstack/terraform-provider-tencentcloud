@@ -1212,5 +1212,30 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 	if hasDeleted {
 		return nil
 	}
-	return mysqlService.OfflineIsolatedInstances(ctx, d.Id())
+	if err!=nil{
+		return  err
+	}
+
+	err = mysqlService.OfflineIsolatedInstances(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(20*time.Minute, func() *resource.RetryError {
+		mysqlInfo, err := mysqlService.DescribeIsolatedDBInstanceById(ctx, d.Id())
+
+		if err != nil {
+			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if mysqlInfo == nil {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("after OfflineIsolatedInstances mysql Status is %d", *mysqlInfo.Status))
+		}
+	})
+	return err
 }

@@ -215,6 +215,10 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	if err != nil {
 		return err
 	}
+	if mysqlInfo == nil {
+		d.SetId("")
+		return nil
+	}
 	d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
 
 	return nil
@@ -293,6 +297,28 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 	if hasDeleted {
 		return nil
 	}
+	if err != nil {
+		return err
+	}
+	err = mysqlService.OfflineIsolatedInstances(ctx, d.Id())
+	if err != nil {
+		return err
+	}
 
-	return mysqlService.OfflineIsolatedInstances(ctx, d.Id())
+	err = resource.Retry(20*time.Minute, func() *resource.RetryError {
+		mysqlInfo, err := mysqlService.DescribeIsolatedDBInstanceById(ctx, d.Id())
+		if err != nil {
+			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if mysqlInfo == nil {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("after OfflineIsolatedInstances mysql Status is %d", *mysqlInfo.Status))
+		}
+	})
+	return err
 }
