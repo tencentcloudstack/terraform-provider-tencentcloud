@@ -43,7 +43,8 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 
 			"description": {
 				Type:         schema.TypeString,
-				Required:     true,
+				Optional:     true,
+				Default:      "",
 				ValidateFunc: validateStringLengthInRange(2, 100),
 				Description:  "Description of the security group.",
 			},
