@@ -1,7 +1,7 @@
 /*
 Provides a mysql instance resource to create master database instances.
 
-~> **NOTE:** The terminate operation of mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
 Example Usage
 
@@ -1212,5 +1212,33 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 	if hasDeleted {
 		return nil
 	}
-	return mysqlService.OfflineIsolatedInstances(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+
+	err = mysqlService.OfflineIsolatedInstances(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(20*time.Minute, func() *resource.RetryError {
+		mysqlInfo, err := mysqlService.DescribeIsolatedDBInstanceById(ctx, d.Id())
+		if err != nil {
+			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if mysqlInfo == nil {
+			return nil
+		} else {
+			if mysqlInfo.RoGroups != nil && len(mysqlInfo.RoGroups) > 0 {
+				log.Printf("[WARN]this mysql has RoGroups , RoGroups is released asynchronously, and the bound resource is not now fully released now\n")
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("after OfflineIsolatedInstances mysql Status is %d", *mysqlInfo.Status))
+		}
+	})
+	return err
 }
