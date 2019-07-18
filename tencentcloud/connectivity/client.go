@@ -11,10 +11,8 @@ import (
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -32,8 +30,6 @@ type TencentCloudClient struct {
 	vpcConn   *vpc.Client
 	cbsConn   *cbs.Client
 	dcConn    *dc.Client
-	cvmConn   *cvm.Client
-	clbConn   *clb.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -207,39 +203,4 @@ func (me *TencentCloudClient) UseDcClient() *dc.Client {
 
 	return me.dcConn
 
-}
-
-func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
-	if me.cvmConn != nil {
-		return me.cvmConn
-	}
-
-	credential, cpf := createCredentialAndClientProfile(me.SecretId, me.SecretKey)
-
-	me.cvmConn, _ = cvm.NewClient(credential, me.Region, cpf)
-
-	return me.cvmConn
-}
-
-func (me *TencentCloudClient) UseClbClient() *clb.Client {
-	if me.clbConn != nil {
-		return me.clbConn
-	}
-
-	credential, cpf := createCredentialAndClientProfile(me.SecretId, me.SecretKey)
-
-	me.clbConn, _ = clb.NewClient(credential, me.Region, cpf)
-
-	return me.clbConn
-}
-
-func createCredentialAndClientProfile(secretId, secretKey string) (*common.Credential, *profile.ClientProfile) {
-	credential := common.NewCredential(secretId, secretKey)
-
-	cpf := profile.NewClientProfile()
-	// all request use method POST
-	cpf.HttpProfile.ReqMethod = "POST"
-	cpf.HttpProfile.ReqTimeout = 300
-
-	return credential, cpf
 }
