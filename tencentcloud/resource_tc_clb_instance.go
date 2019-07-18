@@ -235,7 +235,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc") {
-		if d.Get("network_type") == "INTERNAL" {
+		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
 		}
 		changed = true
@@ -276,7 +276,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("security_groups") {
-		if d.Get("network_type") == "INTERNAL" {
+		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("INTERNAL network_type do not support this operation with sercurity_groups")
 		}
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
