@@ -83,6 +83,9 @@ COS Resources
 DC Resources
   tencentcloud_dcx
 
+CLB Resources
+  tencentcloud_clb_instance
+
 CVM Resources
   tencentcloud_instance
   tencentcloud_eip
@@ -187,6 +190,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_storages":                dataSourceTencentCloudCbsStorages(),
 			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
 			"tencentcloud_dc_instances":                dataSourceTencentCloudDcInstances(),
+			"tencentcloud_clb_instances":               dataSourceTencentCloudClbInstances(),
 			"tencentcloud_dcx_instances":               dataSourceTencentCloudDcxInstances(),
 		},
 
@@ -196,6 +200,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_snapshot_policy":        resourceTencentCloudCbsSnapshotPolicy(),
 			"tencentcloud_cbs_storage":                resourceTencentCloudCbsStorage(),
 			"tencentcloud_cbs_storage_attachment":     resourceTencentCloudCbsStorageAttachment(),
+			"tencentcloud_clb_instance":               resourceTencentCloudClbInstance(),
 			"tencentcloud_container_cluster":          resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance": resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_dnat":                       resourceTencentCloudDnat(),

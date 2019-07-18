@@ -11,6 +11,7 @@ import (
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
@@ -29,6 +30,7 @@ type TencentCloudClient struct {
 	asConn    *as.Client
 	vpcConn   *vpc.Client
 	cbsConn   *cbs.Client
+	clbConn   *clb.Client
 	dcConn    *dc.Client
 }
 
@@ -203,4 +205,24 @@ func (me *TencentCloudClient) UseDcClient() *dc.Client {
 
 	return me.dcConn
 
+}
+
+func (me *TencentCloudClient) UseClbClient() *clb.Client {
+	if me.clbConn != nil {
+		return me.clbConn
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+
+	clbConn, _ := clb.NewClient(credential, me.Region, cpf)
+	me.clbConn = clbConn
+
+	return me.clbConn
 }

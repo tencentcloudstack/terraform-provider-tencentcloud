@@ -1,0 +1,11 @@
+package tencentcloud
+
+const (
+	CLB_NETWORK_TYPE_OPEN     = "OPEN"
+	CLB_NETWORK_TYPE_INTERNAL = "INTERNAL"
+)
+
+var CLB_NETWORK_TYPE = []string{
+	CLB_NETWORK_TYPE_OPEN,
+	CLB_NETWORK_TYPE_INTERNAL,
+}
