@@ -2,9 +2,12 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -965,4 +968,253 @@ func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids [
 	}
 
 	return set, nil
+}
+
+func (me *VpcService) CreateSecurityGroupPolicy(
+	ctx context.Context,
+	sgId, policyType, action string,
+	cidrIp, sourceSgId, protocol, portRange, desc *string,
+) (ruleId string, err error) {
+	logId := GetLogId(ctx)
+
+	createRequest := vpc.NewCreateSecurityGroupPoliciesRequest()
+	createRequest.SecurityGroupId = &sgId
+
+	createRequest.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+	policy := new(vpc.SecurityGroupPolicy)
+
+	policy.CidrBlock = cidrIp
+	policy.SecurityGroupId = sourceSgId
+	policy.Protocol = protocol
+	policy.Port = portRange
+	policy.PolicyDescription = desc
+	policy.Action = &action
+
+	switch policyType {
+	case "ingress":
+		createRequest.SecurityGroupPolicySet.Ingress = []*vpc.SecurityGroupPolicy{policy}
+
+	case "egress":
+		createRequest.SecurityGroupPolicySet.Egress = []*vpc.SecurityGroupPolicy{policy}
+	}
+
+	if _, err := me.client.UseVpcClient().CreateSecurityGroupPolicies(createRequest); err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+		return "", err
+	}
+
+	info := securityGroupRuleBasicInfo{
+		SgId:       sgId,
+		CidrIp:     cidrIp,
+		Protocol:   protocol,
+		PortRange:  portRange,
+		PolicyType: policyType,
+		SourceSgId: sourceSgId,
+		Policy:     action,
+	}
+
+	ruleId, err = buildSecurityGroupRuleId(info)
+	if err != nil {
+		return "", fmt.Errorf("build rule id error, reason: %v", err)
+	}
+
+	return ruleId, nil
+}
+
+func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId string) (sgId string, policyType string, policy *vpc.SecurityGroupPolicy, err error) {
+	logId := GetLogId(ctx)
+
+	info, err := parseSecurityGroupRuleId(ruleId)
+	if err != nil {
+		return "", "", nil, err
+	}
+
+	request := vpc.NewDescribeSecurityGroupPoliciesRequest()
+	request.SecurityGroupId = &info.SgId
+
+	response, err := me.client.UseVpcClient().DescribeSecurityGroupPolicies(request)
+	if err != nil {
+		// if security group does not exist, security group rule does not exist too
+		if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound" {
+			return "", "", nil, nil
+		}
+
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return "", "", nil, err
+	}
+
+	policySet := response.Response.SecurityGroupPolicySet
+
+	var policies []*vpc.SecurityGroupPolicy
+
+	switch info.PolicyType {
+	case "ingress":
+		policies = policySet.Ingress
+
+	case "egress":
+		policies = policySet.Egress
+	}
+
+	for _, pl := range policies {
+		if comparePolicyAndSecurityGroupInfo(pl, info) {
+			policy = pl
+			break
+		}
+	}
+
+	if policy == nil {
+		log.Printf("[DEBUG]%s can't find security group rule, maybe user modify rules on web console", logId)
+		return "", "", nil, nil
+	}
+
+	return info.SgId, info.PolicyType, policy, nil
+}
+
+func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId string) error {
+	logId := GetLogId(ctx)
+
+	info, err := parseSecurityGroupRuleId(ruleId)
+	if err != nil {
+		return err
+	}
+
+	request := vpc.NewDeleteSecurityGroupPoliciesRequest()
+	request.SecurityGroupId = &info.SgId
+	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+	policy := &vpc.SecurityGroupPolicy{
+		Action:          &info.Policy,
+		CidrBlock:       info.CidrIp,
+		Protocol:        info.Protocol,
+		Port:            info.PortRange,
+		SecurityGroupId: info.SourceSgId,
+	}
+
+	switch info.PolicyType {
+	case "ingress":
+		request.SecurityGroupPolicySet.Ingress = []*vpc.SecurityGroupPolicy{policy}
+
+	case "egress":
+		request.SecurityGroupPolicySet.Egress = []*vpc.SecurityGroupPolicy{policy}
+	}
+
+	if _, err := me.client.UseVpcClient().DeleteSecurityGroupPolicies(request); err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId string, desc *string) error {
+	logId := GetLogId(ctx)
+
+	info, err := parseSecurityGroupRuleId(ruleId)
+	if err != nil {
+		return err
+	}
+
+	request := vpc.NewReplaceSecurityGroupPolicyRequest()
+	request.SecurityGroupId = &info.SgId
+	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+	policy := &vpc.SecurityGroupPolicy{
+		Action:            &info.Policy,
+		CidrBlock:         info.CidrIp,
+		Protocol:          info.Protocol,
+		Port:              info.PortRange,
+		SecurityGroupId:   info.SourceSgId,
+		PolicyDescription: desc,
+	}
+
+	switch info.PolicyType {
+	case "ingress":
+		request.SecurityGroupPolicySet.Ingress = []*vpc.SecurityGroupPolicy{policy}
+
+	case "egress":
+		request.SecurityGroupPolicySet.Egress = []*vpc.SecurityGroupPolicy{policy}
+	}
+
+	if _, err := me.client.UseVpcClient().ReplaceSecurityGroupPolicy(request); err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return err
+	}
+
+	return nil
+}
+
+type securityGroupRuleBasicInfo struct {
+	SgId       string  `json:"sg_id"`
+	PolicyType string  `json:"policy_type"`
+	CidrIp     *string `json:"cidr_ip,omitempty"`
+	Protocol   *string `json:"protocol,omitempty"`
+	PortRange  *string `json:"port_range,omitempty"`
+	Policy     string  `json:"policy"`
+	SourceSgId *string `json:"source_sg_id,omitempty"`
+}
+
+// Build an ID for a Security Group Rule
+func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string, err error) {
+	if info.Protocol != nil {
+		*info.Protocol = strings.ToLower(*info.Protocol)
+	}
+	b, err := json.Marshal(info)
+	if err != nil {
+		return "", err
+	}
+
+	return base64.StdEncoding.EncodeToString(b), nil
+}
+
+// Parse Security Group Rule ID
+func parseSecurityGroupRuleId(ruleId string) (ruleInfo securityGroupRuleBasicInfo, err error) {
+	b, err := base64.StdEncoding.DecodeString(ruleId)
+	if err != nil {
+		return securityGroupRuleBasicInfo{}, err
+	}
+
+	var info securityGroupRuleBasicInfo
+
+	if err := json.Unmarshal(b, &info); err != nil {
+		return securityGroupRuleBasicInfo{}, err
+	}
+
+	return info, nil
+}
+
+func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info securityGroupRuleBasicInfo) bool {
+	if info.CidrIp != nil {
+		if *policy.CidrBlock != *info.CidrIp {
+			return false
+		}
+	}
+
+	if info.PortRange != nil {
+		if *policy.Port != *info.PortRange {
+			return false
+		}
+	}
+
+	if info.Protocol != nil {
+		if *policy.Protocol != *info.Protocol {
+			return false
+		}
+	}
+
+	if info.SourceSgId != nil {
+		if *policy.SecurityGroupId != *info.SourceSgId {
+			return false
+		}
+	}
+
+	if *policy.Action != info.Policy {
+		return false
+	}
+
+	return true
 }
