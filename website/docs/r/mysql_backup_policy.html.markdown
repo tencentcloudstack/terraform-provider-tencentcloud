@@ -36,3 +36,4 @@ In addition to all arguments above, the following attributes are exported:
 
 * `binlog_period` - Retention period for binlog in days.
 
+

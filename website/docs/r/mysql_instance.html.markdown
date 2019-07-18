@@ -76,3 +76,4 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
 
+
