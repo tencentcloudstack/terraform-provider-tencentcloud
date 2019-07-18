@@ -7,7 +7,6 @@ import (
 	"time"
 
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
@@ -1176,21 +1175,4 @@ func (me *MysqlService) IsolateDBInstance(ctx context.Context, mysqlId string) (
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
-}
-
-func (me *MysqlService) DescribeDBInstancesBySecurityGroup(ctx context.Context, sgId string) ([]*cdb.InstanceInfo, error) {
-	logId := GetLogId(ctx)
-
-	request := cdb.NewDescribeDBInstancesRequest()
-	request.SecurityGroupId = &sgId
-	request.WithSecurityGroup = common.Int64Ptr(1)
-
-	response, err := me.client.UseMysqlClient().DescribeDBInstances(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-			logId, request.GetAction(), request.ToJsonString(), err)
-		return nil, err
-	}
-
-	return response.Response.Items, nil
 }
