@@ -1148,6 +1148,48 @@ func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId stri
 	return nil
 }
 
+func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName, projectId *string) (sgs []*vpc.SecurityGroup, err error) {
+	logId := GetLogId(ctx)
+
+	request := vpc.NewDescribeSecurityGroupsRequest()
+
+	request.Offset = common.StringPtr("0")
+	request.Limit = common.StringPtr("50")
+
+	if sgId != nil {
+		request.SecurityGroupIds = []*string{sgId}
+	} else {
+		if sgName != nil {
+			request.Filters = append(request.Filters, &vpc.Filter{
+				Name:   common.StringPtr("project-id"),
+				Values: []*string{sgName},
+			})
+		}
+
+		if projectId != nil {
+			request.Filters = append(request.Filters, &vpc.Filter{
+				Name:   common.StringPtr("security-group-name"),
+				Values: []*string{projectId},
+			})
+		}
+	}
+
+	response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
+	if err != nil {
+		if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkError.Code == "ResourceNotFound" {
+				return nil, nil
+			}
+		}
+
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return nil, err
+	}
+
+	return response.Response.SecurityGroupSet, nil
+}
+
 type securityGroupRuleBasicInfo struct {
 	SgId       string  `json:"sg_id"`
 	PolicyType string  `json:"policy_type"`

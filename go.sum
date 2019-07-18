@@ -13,8 +13,6 @@ github.com/Azure/go-autorest v10.15.4+incompatible/go.mod h1:r+4oMnoxhatjLLJ6zxS
 github.com/Azure/go-ntlmssp v0.0.0-20180810175552-4a21cbd618b4/go.mod h1:chxPXzSsl7ZWRAuOIE23GDNzjWuZquvFlgA8xmpunjU=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/ChrisTrenkamp/goxpath v0.0.0-20170922090931-c385f95c6022/go.mod h1:nuWgzSkT5PnyOd+272uUmV0dnAnAn42Mk7PiQC5VzN4=
-github.com/TencentCloud/tencentcloud-sdk-go v3.0.74+incompatible h1:xL56AaVb0Q1ZDO/OuJHP+1bysdczA/nW2f3kOr5B058=
-github.com/TencentCloud/tencentcloud-sdk-go v3.0.74+incompatible/go.mod h1:tg2f/yA8wsLc6zjkKvEXacwFROR7qd/whVEP3VUzldw=
 github.com/Unknwon/com v0.0.0-20151008135407-28b053d5a292/go.mod h1:KYCjqMOeHpNuTOiFQU6WEcTG7poCJrUs0YgyHNtn1no=
 github.com/abdullin/seq v0.0.0-20160510034733-d5467c17e7af/go.mod h1:5Jv4cbFiHJMsVxt52+i0Ha45fjshj6wxYr1r19tB9bw=
 github.com/agext/levenshtein v1.2.1/go.mod h1:JEDfjyjHDjOF/1e4FlBE/PkbqA9OfWu2ki2W0IB5558=
@@ -302,9 +300,6 @@ github.com/stretchr/testify v1.3.0 h1:TivCn/peBQ7UY8ooIcPgZFpTNSz0Q2U6UrFlUfqbe0
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/svanharmelen/jsonapi v0.0.0-20180618144545-0c0828c3f16d/go.mod h1:BSTlc8jOjh0niykqEGVXOLXdi9o0r0kR8tCYiMvjFgw=
 github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07/go.mod h1:kDXzergiv9cbyO7IOYJZWg1U88JhDg3PB6klq9Hg2pA=
-github.com/tencentcloud/tencentcloud-sdk-go v3.0.72-0.20190628165126-92c5b740bcc7+incompatible h1:eFLzy6U6543DPY6qBlx8tExoMc3USKIqoY5DSOI5N5U=
-github.com/tencentcloud/tencentcloud-sdk-go v3.0.72-0.20190628165126-92c5b740bcc7+incompatible/go.mod h1:0PfYow01SHPMhKY31xa+EFz2RStxIqj6JFAJS+IkCi4=
-github.com/tencentcloud/tencentcloud-sdk-go v3.0.72+incompatible h1:4nwqiBvLwmg6QYxz+eDrVvH6o1B9zMN2lnZ1F5Bhsd0=
 github.com/tencentcloud/tencentcloud-sdk-go v3.0.74+incompatible h1:/MNY7pVCC5htejL/U8A84ravBkHUkuT4GXhfWjvHNHo=
 github.com/tencentcloud/tencentcloud-sdk-go v3.0.74+incompatible/go.mod h1:0PfYow01SHPMhKY31xa+EFz2RStxIqj6JFAJS+IkCi4=
 github.com/terraform-providers/terraform-provider-openstack v1.15.0/go.mod h1:2aQ6n/BtChAl1y2S60vebhyJyZXBsuAI5G4+lHrT1Ew=
