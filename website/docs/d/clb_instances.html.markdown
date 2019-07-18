@@ -15,7 +15,7 @@ Use this data source to query detailed information of CLB
 ```hcl
 data "tencentcloud_clb" "clblab" {
     clb_id             = "lb-k2zjp9lv"
-    net_type           = "OPEN"
+    network_type           = "OPEN"
     clb_name           = "myclb"
     project_id         = "Default Project"
     result_output_file = "mytestpath"

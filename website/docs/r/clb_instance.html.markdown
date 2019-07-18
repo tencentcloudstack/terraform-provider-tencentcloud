@@ -33,7 +33,7 @@ resource "tencentcloud_clb_instance" "clblab" {
 The following arguments are supported:
 
 * `clb_name` - (Required) Name of the CLB to be queried. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'
-* `net_type` - (Required, ForceNew) Type of CLB instance, and available values include 'OPEN' and 'INTERNAL'.
+* `network_type` - (Required, ForceNew) Type of CLB instance, and available values include 'OPEN' and 'INTERNAL'.
 * `project_id` - (Optional, ForceNew) ID of the project to which the instance belongs.
 * `security_groups` - (Optional) Security groups to which a CLB instance belongs.
 * `subnet_id` - (Optional, ForceNew) ID of the subnet within this VPC. The VIP of the intranet CLB instance will be generated from this subnet
