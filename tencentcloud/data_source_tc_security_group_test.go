@@ -26,11 +26,11 @@ func TestAccDataSourceTencentCloudSecurityGroup_basic(t *testing.T) {
 
 const TestAccDataSourceTencentCloudSecurityGroupConfig = `
 resource "tencentcloud_security_group" "foo" {
-    name        = "test-foo"
-    description = "test-foo"
+  name        = "test-foo"
+  description = "test-foo"
 }
 
 data "tencentcloud_security_group" "foo" {
-	security_group_id = "${tencentcloud_security_group.foo.id}"
+  security_group_id = "${tencentcloud_security_group.foo.id}"
 }
 `
