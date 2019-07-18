@@ -17,6 +17,7 @@ func TestAccDataSourceTencentCloudSecurityGroup_basic(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_security_group.foo"),
 					resource.TestCheckResourceAttr("data.tencentcloud_security_group.foo", "name", "test-foo"),
 					resource.TestCheckResourceAttr("data.tencentcloud_security_group.foo", "description", "test-foo"),
+					resource.TestCheckResourceAttr("data.tencentcloud_security_group.foo", "be_associate_count", "0"),
 				),
 			},
 		},
@@ -25,7 +26,7 @@ func TestAccDataSourceTencentCloudSecurityGroup_basic(t *testing.T) {
 
 const TestAccDataSourceTencentCloudSecurityGroupConfig = `
 resource "tencentcloud_security_group" "foo" {
-    name = "test-foo"
+    name        = "test-foo"
     description = "test-foo"
 }
 
