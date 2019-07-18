@@ -2,9 +2,11 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"regexp"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -14,7 +16,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSecurityGroupRuleCreate,
 		Read:   resourceTencentCloudSecurityGroupRuleRead,
-		Update: resourceTencentCloudSecurityGroupRuleUpdate,
+		// Update: resourceTencentCloudSecurityGroupRuleUpdate,
 		Delete: resourceTencentCloudSecurityGroupRuleDelete,
 
 		Schema: map[string]*schema.Schema{
@@ -106,17 +108,10 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				},
 			},
 
-			"policy_index": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ForceNew:     true,
-				Description:  "security group rule index, start from 0",
-				ValidateFunc: validateIntegerMin(0),
-			},
-
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "security group rule description",
 			},
 		},
@@ -141,7 +136,6 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		protocol   *string
 		portRange  *string
 		desc       *string
-		index      *int64
 	)
 
 	if raw, ok := d.GetOk("cidr_ip"); ok {
@@ -164,8 +158,8 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		desc = common.StringPtr(raw.(string))
 	}
 
-	if raw, ok := d.GetOk("policy_index"); ok {
-		index = common.Int64Ptr(int64(raw.(int)))
+	if cidrIp == nil && sourceSgId == nil {
+		return errors.New("need cidr_ip or source_sgid")
 	}
 
 	action := d.Get("policy").(string)
@@ -180,7 +174,6 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		protocol,
 		portRange,
 		desc,
-		index,
 	)
 	if err != nil {
 		return err
@@ -206,6 +199,11 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 		return err
 	}
 
+	if policy == nil {
+		d.SetId("")
+		return nil
+	}
+
 	_ = d.Set("security_group_id", sgId)
 
 	_ = d.Set("type", policyType)
@@ -219,7 +217,7 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 	}
 
 	if policy.Protocol != nil {
-		_ = d.Set("ip_protocol", *policy.Protocol)
+		_ = d.Set("ip_protocol", strings.ToUpper(*policy.Protocol))
 	}
 
 	if policy.Port != nil {
@@ -228,8 +226,6 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 
 	_ = d.Set("policy", *policy.Action)
 
-	_ = d.Set("policy_index", int(*policy.PolicyIndex))
-
 	if policy.PolicyDescription != nil {
 		_ = d.Set("description", *policy.PolicyDescription)
 	}
@@ -237,7 +233,7 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 	return nil
 }
 
-func resourceTencentCloudSecurityGroupRuleUpdate(d *schema.ResourceData, m interface{}) error {
+/*func resourceTencentCloudSecurityGroupRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	logId := GetLogId(nil)
 	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
 
@@ -246,7 +242,6 @@ func resourceTencentCloudSecurityGroupRuleUpdate(d *schema.ResourceData, m inter
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	ruleId := d.Id()
-	index := d.Get("policy_index").(int)
 
 	if d.HasChange("description") {
 		var desc *string
@@ -254,7 +249,7 @@ func resourceTencentCloudSecurityGroupRuleUpdate(d *schema.ResourceData, m inter
 			desc = common.StringPtr(descRaw.(string))
 		}
 
-		if err := service.ModifySecurityGroupPolicy(ctx, ruleId, index, desc); err != nil {
+		if err := service.ModifySecurityGroupPolicy(ctx, ruleId, desc); err != nil {
 			return err
 		}
 
@@ -262,7 +257,7 @@ func resourceTencentCloudSecurityGroupRuleUpdate(d *schema.ResourceData, m inter
 	}
 
 	return nil
-}
+}*/
 
 func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m interface{}) error {
 	logId := GetLogId(nil)
@@ -274,7 +269,5 @@ func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m inter
 
 	ruleId := d.Id()
 
-	index := d.Get("policy_index").(int)
-
-	return service.DeleteSecurityGroupPolicy(ctx, ruleId, index)
+	return service.DeleteSecurityGroupPolicy(ctx, ruleId)
 }
