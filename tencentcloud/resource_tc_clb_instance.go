@@ -24,7 +24,7 @@ Import
 CLB instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb.instance clb-41s6jwy4 ?
+$ terraform import tencentcloud_clb.instance
 ```
 */
 package tencentcloud
@@ -82,7 +82,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
-				Description:  "ID of the subnet within this VPC. The VIP of the intranet CLB instance will be generated from this subnet", 
+				Description:  "ID of the subnet within this VPC. The VIP of the intranet CLB instance will be generated from this subnet",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,

@@ -79,7 +79,7 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_clb_instance" "clb" {
-	net_type      = "INTERNAL"
+	network_type      = "INTERNAL"
 	clb_name      = "tf-clb-internal"
   	vpc_id    		  = "${tencentcloud_vpc.foo.id}"
   	subnet_id		  = "${tencentcloud_subnet.subnet.id}"
@@ -105,7 +105,7 @@ resource "tencentcloud_vpc" "foo" {
 }
 
 resource "tencentcloud_clb_instance" "clb" {
-	net_type      = "OPEN"
+	network_type      = "OPEN"
 	clb_name      = "tf-clb-open"
 	project_id = 0
 	vpc_id="${tencentcloud_vpc.foo.id}"

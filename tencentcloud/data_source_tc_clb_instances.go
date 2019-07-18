@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 data "tencentcloud_clb" "clblab" {
     clb_id             = "lb-k2zjp9lv"
-    net_type           = "OPEN"
+    network_type           = "OPEN"
     clb_name           = "myclb"
     project_id         = "Default Project"
     result_output_file = "mytestpath"
@@ -160,7 +160,7 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	}
 
 	clbList := make([]map[string]interface{}, 0, len(clbs))
-	ids := make([]string, len(clbs))
+	ids := make([]string, 0, len(clbs))
 	for _, clb := range clbs {
 		mapping := map[string]interface{}{
 			"clb_id":             *clb.LoadBalancerId,
@@ -177,7 +177,7 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			"security_groups":    flattenStringList(clb.SecureGroups),
 			"tags":               flattenClbTagsMapping(clb.Tags),
 		}
-		
+
 		clbList = append(clbList, mapping)
 		ids = append(ids, *clb.LoadBalancerId)
 	}

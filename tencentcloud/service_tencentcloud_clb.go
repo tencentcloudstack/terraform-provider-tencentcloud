@@ -133,7 +133,6 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 	return nil
 }
 
-
 func flattenClbTagsMapping(tags []*clb.TagInfo) (mapping map[string]string) {
 	mapping = make(map[string]string)
 	for _, tag := range tags {
