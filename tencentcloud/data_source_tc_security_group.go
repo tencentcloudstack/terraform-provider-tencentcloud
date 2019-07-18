@@ -1,3 +1,14 @@
+/*
+Use this data source to query detailed information of security group.
+
+## Example Usage
+
+```hcl
+data "tencentcloud_security_group" "sglab" {
+    security_group_id = "sg-fh48e762"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -14,32 +25,43 @@ func dataSourceTencentCloudSecurityGroup() *schema.Resource {
 		Read: dataSourceTencentCloudSecurityGroupRead,
 		Schema: map[string]*schema.Schema{
 			"security_group_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "ID of the security group to be queried.",
 			},
+
 			"name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
+				Description:  "Name of the security group to be queried.",
 			},
+
 			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(2, 100),
+				Description:  "Description of the security group.",
 			},
+
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of security group.",
 			},
+
 			"be_associate_count": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Number of security group binding resources.",
 			},
+
 			"project_id": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Project ID of the security group.",
 			},
 		},
 	}

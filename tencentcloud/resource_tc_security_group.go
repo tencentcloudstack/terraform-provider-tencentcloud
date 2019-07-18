@@ -1,3 +1,16 @@
+/*
+Provide a resource to create security group.
+
+## Example Usage
+
+```hcl
+data "tencentcloud_security_group" "sglab" {
+    name        = "mysg"
+    description = "favourite sg"
+    project_id  = "Default project"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -25,18 +38,21 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
+				Description:  "Name of the security group to be queried.",
 			},
 
 			"description": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 100),
+				Description:  "Description of the security group.",
 			},
 
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Project ID of the security group.",
 			},
 		},
 	}
