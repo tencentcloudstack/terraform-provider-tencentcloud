@@ -1,7 +1,7 @@
 /*
 Use this data source to query detailed information of security group.
 
-## Example Usage
+Example Usage
 
 ```hcl
 data "tencentcloud_security_group" "sglab" {

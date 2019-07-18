@@ -1,7 +1,7 @@
 /*
 Provide a resource to create security group rule.
 
-## Example Usage
+Example Usage
 
 ```hcl
 data "tencentcloud_security_group_rule" "sglab" {
