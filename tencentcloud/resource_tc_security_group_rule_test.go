@@ -1,7 +1,8 @@
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
+	"errors"
 	"fmt"
 	"testing"
 
@@ -22,7 +23,7 @@ func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.http-in", &sgrId),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "cidr_ip", "0.0.0.0/0"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "ip_protocol", "tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "ip_protocol", "TCP"),
 				),
 			},
 		},
@@ -42,7 +43,7 @@ func TestAccTencentCloudSecurityGroupRule_ssh(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.ssh-in", &sgrId),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.ssh-in", "cidr_ip", "0.0.0.0/0"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.ssh-in", "ip_protocol", "tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.ssh-in", "ip_protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.ssh-in", "port_range", "22"),
 				),
 			},
@@ -61,11 +62,11 @@ func TestAccTencentCloudSecurityGroupRule_egress(t *testing.T) {
 			{
 				Config: testAccSecurityGroupRuleConfigEgress,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.egress-drop", &sgrId),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "cidr_ip", "10.2.3.0/24"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "ip_protocol", "udp"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "port_range", "3000-4000"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "policy", "drop"),
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.egress-DROP", &sgrId),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "cidr_ip", "10.2.3.0/24"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "ip_protocol", "UDP"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "port_range", "3000-4000"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "policy", "DROP"),
 				),
 			},
 		},
@@ -85,9 +86,9 @@ func TestAccTencentCloudSecurityGroupRule_sourcesgid(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.sourcesgid-in", &sgrId),
 					resource.TestCheckResourceAttrSet("tencentcloud_security_group_rule.sourcesgid-in", "source_sgid"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sourcesgid-in", "ip_protocol", "tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sourcesgid-in", "ip_protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sourcesgid-in", "port_range", "80,8080"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sourcesgid-in", "policy", "accept"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sourcesgid-in", "policy", "ACCEPT"),
 				),
 			},
 		},
@@ -96,42 +97,18 @@ func TestAccTencentCloudSecurityGroupRule_sourcesgid(t *testing.T) {
 
 func testAccCheckSecurityGroupRuleDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		conn := testAccProvider.Meta().(*TencentCloudClient).commonConn
+		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		rule, _ := parseSecurityGroupRuleId(*id)
-
-		params := map[string]string{
-			"Action":    "DescribeSecurityGroupEx",
-			"projectId": "0",
-			"sgId":      rule["sgId"],
-		}
-		response, err := conn.SendRequest("dfw", params)
+		_, _, policy, err := service.DescribeSecurityGroupPolicy(context.TODO(), *id)
 		if err != nil {
 			return err
 		}
-		var jsonresp struct {
-			Code     int    `json:"code"`
-			CodeDesc string `json:"codeDesc"`
-			Data     struct {
-				TotalNum int `json:"totalNum"`
-			} `json:"data"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.Data.TotalNum == 0 {
+
+		if policy == nil {
 			return nil
 		}
 
-		_, err = describeSecurityGroupRuleIndex(conn, rule)
-		if err == errSecurityGroupRuleNotFound {
-			return nil
-		}
-		if err != nil {
-			return err
-		}
-		return fmt.Errorf("Security group rule still exists.")
+		return errors.New("security group rule still exist")
 	}
 }
 
@@ -139,83 +116,96 @@ func testAccCheckSecurityGroupRuleExists(n string, id *string) resource.TestChec
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("Not found: %s", n)
+			return fmt.Errorf("not found: %s", n)
 		}
 
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("No security group ID is set")
+			return fmt.Errorf("no security group rule ID is set")
 		}
 
-		conn := testAccProvider.Meta().(*TencentCloudClient).commonConn
-		rule, _ := parseSecurityGroupRuleId(rs.Primary.ID)
-		_, err := describeSecurityGroupRuleIndex(conn, rule)
+		*id = rs.Primary.ID
+
+		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+
+		_, _, policy, err := service.DescribeSecurityGroupPolicy(context.TODO(), *id)
 		if err != nil {
 			return err
 		}
 
-		*id = rs.Primary.ID
+		if policy == nil {
+			return errors.New("security group rule not exist")
+		}
+
 		return nil
 	}
 }
 
 const testAccSecurityGroupRuleConfig = `
 resource "tencentcloud_security_group" "foo" {
-  name = "ci-temp-test-sg"
+  name        = "ci-temp-test-sg"
+  description = "ci-temp-test-sg"
 }
 
 resource "tencentcloud_security_group_rule" "http-in" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
   type              = "ingress"
   cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "tcp"
+  ip_protocol       = "TCP"
   port_range        = "80,8080"
-  policy            = "accept"
+  policy            = "ACCEPT"
 }
 `
 
 const testAccSecurityGroupRuleConfigSSH = `
 resource "tencentcloud_security_group" "foo" {
-  name = "ci-temp-test-sg"
+  name        = "ci-temp-test-sg"
+  description = "ci-temp-test-sg"
 }
 
 resource "tencentcloud_security_group_rule" "ssh-in" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
   type              = "ingress"
   cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "tcp"
+  ip_protocol       = "TCP"
   port_range        = "22"
-  policy            = "accept"
+  policy            = "ACCEPT"
+  description       = "ssh in rule"
 }
 `
 
 const testAccSecurityGroupRuleConfigEgress = `
 resource "tencentcloud_security_group" "foo" {
-  name = "ci-temp-test-sg"
+  name        = "ci-temp-test-sg"
+  description = "ci-temp-test-sg"
 }
 
-resource "tencentcloud_security_group_rule" "egress-drop" {
+resource "tencentcloud_security_group_rule" "egress-DROP" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
   type              = "egress"
   cidr_ip           = "10.2.3.0/24"
-  ip_protocol       = "udp"
+  ip_protocol       = "UDP"
   port_range        = "3000-4000"
-  policy            = "drop"
+  policy            = "DROP"
 }
 `
 
 const testAccSecurityGroupRuleConfigSourceSGID = `
 resource "tencentcloud_security_group" "foo" {
-  name = "ci-temp-test-sg"
+  name        = "ci-temp-test-sg"
+  description = "ci-temp-test-sg"
 }
+
 resource "tencentcloud_security_group" "boo" {
-  name = "ci-temp-test-sg"
+  name        = "ci-temp-test-sg"
+  description = "ci-temp-test-sg"
 }
+
 resource "tencentcloud_security_group_rule" "sourcesgid-in" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
   type              = "ingress"
   source_sgid		= "${tencentcloud_security_group.boo.id}"
-  ip_protocol       = "tcp"
+  ip_protocol       = "TCP"
   port_range        = "80,8080"
-  policy            = "accept"
+  policy            = "ACCEPT"
 }
 `
