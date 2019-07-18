@@ -12,9 +12,8 @@ resource "tencentcloud_clb_instance" "clblab" {
         subnet_id        = "subnet-0agspqdn"
         tags             = "mytags"
         security_groups = ["sg-o0ek7r93"]
-        target_region_info {
-             region      = "ap-guangzhou"
-             vpc_id      = "vpc-abcd1234"
+        target_region_info_region= "ap-guangzhou"
+        target_region_info_vpc_id= "vpc-abcd1234"
 		}
 }
 ```
@@ -60,7 +59,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			"clb_name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(2, 60),
+				ValidateFunc: validateStringLengthInRange(1, 60),
 				Description:  "Name of the CLB to be queried. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'",
 			},
 			"project_id": {
@@ -90,11 +89,17 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Security groups to which a CLB instance belongs.",
 			},
-			"target_region_info": {
-				Type:        schema.TypeMap,
+			"target_region_info_region": {
+				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Information of backend service are attached the CLB instance.",
+				Description: "Region information of backend service are attached the CLB instance.",
+			},
+			"target_region_info_vpc": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Vpc Id information of backend service are attached the CLB instance.",
 			},
 		},
 	}
@@ -105,9 +110,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	request := clb.NewCreateLoadBalancerRequest()
 	network_type := d.Get("network_type").(string)
 	request.LoadBalancerType = stringToPointer(network_type)
-	if v, ok := d.GetOk("clb_name"); ok {
-		request.LoadBalancerName = stringToPointer(v.(string))
-	}
+	request.LoadBalancerName = stringToPointer(d.Get("clb_name").(string))
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = stringToPointer(v.(string))
 	}
@@ -116,8 +119,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.ProjectId = &projectId
 	}
 	if v, ok := d.GetOk("subnet_id"); ok {
-		if network_type == "OPEN" {
-			//INTERNAL do not support subnet id set
+		if network_type == CLB_NETWORK_TYPE_OPEN {
 			return fmt.Errorf("OPEN network_type do not support this operation with subnet_id")
 		}
 		request.SubnetId = stringToPointer(v.(string))
@@ -139,9 +141,8 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	clbId := *response.Response.LoadBalancerIds[0]
 
 	time.Sleep(3 * time.Second)
-
 	if v, ok := d.GetOk("security_groups"); ok {
-		if network_type == "INTERNAL" {
+		if network_type == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("INTERNAL network_type do not support this operation with sercurity_groups")
 		}
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
@@ -162,13 +163,16 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 				logId, sgRequest.GetAction(), sgRequest.ToJsonString(), sgResponse.ToJsonString())
 		}
 	}
-	if v, ok := d.GetOk("target_region_info"); ok {
-		if network_type == "INTERNAL" {
+	if v, ok := d.GetOk("target_region_info_region"); ok {
+		region := v.(string)
+		vpcId := ""
+		if network_type == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
 		}
-		value := v.(map[string]interface{})
-		region := value["region"].(string)
-		vpcId := value["vpc_id"].(string)
+		if vv, ok := d.GetOk("target_region_info_vpc"); ok {
+			vpcId = vv.(string)
+		}
+
 		targetRegionInfo := clb.TargetRegionInfo{
 			Region: &region,
 			VpcId:  &vpcId,
@@ -207,10 +211,10 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	d.Set("clb_name", instance.LoadBalancerName)
 	d.Set("subnet_id", instance.SubnetId)
 	d.Set("vpc_id", instance.VpcId)
-	d.Set("target_region_info", flattenClbTargetRegionInfoMappings(instance.TargetRegionInfo))
+	d.Set("target_region_info_region", instance.TargetRegionInfo.Region)
+	d.Set("target_region_info_vpc", instance.TargetRegionInfo.VpcId)
 	d.Set("project_id", instance.ProjectId)
-	err = d.Set("security_groups", flattenStringList(instance.SecureGroups))
-	d.Set("tags", flattenClbTagsMapping(instance.Tags))
+	d.Set("security_groups", flattenStringList(instance.SecureGroups))
 
 	return nil
 }
@@ -230,14 +234,13 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		clbName = d.Get("clb_name").(string)
 	}
 
-	if d.HasChange("target_region_info") {
+	if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc") {
 		if d.Get("network_type") == "INTERNAL" {
 			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
 		}
 		changed = true
-		value := d.Get("target_region_info").(map[string]interface{})
-		region := value["region"].(string)
-		vpcId := value["vpc_id"].(string)
+		region := d.Get("target_region_info_region").(string)
+		vpcId := d.Get("target_region_info_vpc").(string)
 		targetRegionInfo = clb.TargetRegionInfo{
 			Region: &region,
 			VpcId:  &vpcId,
@@ -250,20 +253,11 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if d.HasChange("clb_name") {
 			request.LoadBalancerName = stringToPointer(clbName)
 		}
-		if d.HasChange("target_region_info") {
+		if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc") {
 			request.TargetRegionInfo = &targetRegionInfo
 		}
 		response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(request)
-		if err != nil {
-			return err
-		}
-		if d.HasChange("clb_name") {
-			d.SetPartial("clb_name")
-		}
 
-		if d.HasChange("target_region_info") {
-			d.SetPartial("target_region_info")
-		}
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -271,6 +265,13 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+		if d.HasChange("clb_name") {
+			d.SetPartial("clb_name")
+		}
+
+		if d.HasChange("target_region_info") {
+			d.SetPartial("target_region_info")
 		}
 	}
 
@@ -312,8 +313,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 	}
 	err := clbService.DeleteLoadBalancerById(ctx, clbId)
 	if err != nil {
-		log.Printf("[CRITAL]%s reason[%s]\n",
-			logId, err.Error())
+		log.Printf("[CRITAL]%s reason[%s]\n", logId, err.Error())
 		return err
 	}
 	return nil

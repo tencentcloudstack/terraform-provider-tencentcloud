@@ -53,7 +53,8 @@ func TestAccTencentCloudClbInstancesDataSource_open(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.status_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.status"),
-					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.target_region_info.region", "ap-guangzhou"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.target_region_info_region", "ap-guangzhou"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.target_region_info_vpc"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.security_groups.#", "1"),
 				),
 			},
@@ -109,9 +110,8 @@ resource "tencentcloud_clb_instance" "clb" {
 	clb_name      = "tf-clb-open"
 	project_id = 0
 	vpc_id="${tencentcloud_vpc.foo.id}"
-	target_region_info = {
-		region = "ap-guangzhou"
-		vpc_id = "${tencentcloud_vpc.foo.id}"
+	target_region_info_region = "ap-guangzhou"
+	target_region_info_vpc_id = "${tencentcloud_vpc.foo.id}"
 	}
 
 	security_groups = ["${tencentcloud_security_group.foo.id}"]

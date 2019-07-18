@@ -13,34 +13,6 @@ type ClbService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *ClbService) CreateLoadBalancer(ctx context.Context, clbName string, vpcId string, subnetId string, projectId int) (clbId string, errRet error) {
-	logId := GetLogId(ctx)
-	request := clb.NewCreateLoadBalancerRequest()
-	request.LoadBalancerName = &clbName
-	if vpcId != "" {
-		request.VpcId = &vpcId
-	}
-	if subnetId != "" {
-		request.SubnetId = &subnetId
-	}
-	if projectId != 0 {
-		projectId := int64(projectId)
-		request.ProjectId = &projectId
-	}
-	response, err := me.client.UseClbClient().CreateLoadBalancer(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	clbId = *response.Response.LoadBalancerIds[0]
-	return
-}
-
 func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string) (clbInstance *clb.LoadBalancer, errRet error) {
 	logId := GetLogId(ctx)
 	request := clb.NewDescribeLoadBalancersRequest()
@@ -92,8 +64,8 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 	for {
 		offset64 := int64(offset)
 		pageSize64 := int64(pageSize)
-		request.Offset = &offset64
-		request.Limit = &pageSize64
+		request.Offset = &(offset64)
+		request.Limit = &(pageSize64)
 		response, err := me.client.UseClbClient().DescribeLoadBalancers(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -139,12 +111,4 @@ func flattenClbTagsMapping(tags []*clb.TagInfo) (mapping map[string]string) {
 		mapping[*tag.TagKey] = *tag.TagValue
 	}
 	return
-}
-
-func flattenClbTargetRegionInfoMappings(targetRegionInfo *clb.TargetRegionInfo) map[string]string {
-	result := make(map[string]string)
-	result["region"] = *targetRegionInfo.Region
-	result["vpc_id"] = *targetRegionInfo.VpcId
-
-	return result
 }

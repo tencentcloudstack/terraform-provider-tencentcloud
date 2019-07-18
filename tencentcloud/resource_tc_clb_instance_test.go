@@ -48,8 +48,8 @@ func TestAccTencentCloudClbInstance_open(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "security_groups.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_open", "security_groups.0"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "target_region_info.region", "ap-guangzhou"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_open", "target_region_info.vpc_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "target_region_info_region", "ap-guangzhou"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_open", "target_region_info_vpc"),
 				),
 			},
 			{
@@ -62,8 +62,8 @@ func TestAccTencentCloudClbInstance_open(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_open", "vpc_id"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "security_groups.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_open", "security_groups.0"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "target_region_info.region", "ap-guangzhou"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_open", "target_region_info.vpc_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_open", "target_region_info_region", "ap-guangzhou"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_open", "target_region_info_vpc"),
 				),
 			},
 		},
@@ -198,13 +198,12 @@ resource "tencentcloud_vpc" "foo" {
 
 resource "tencentcloud_clb_instance" "clb_open" {
 	network_type      = "OPEN"
-	clb_name      = "tf-clb-open"
-	project_id = 0
-	vpc_id="${tencentcloud_vpc.foo.id}"
-	target_region_info = {
-		region = "ap-guangzhou"
-		vpc_id = "${tencentcloud_vpc.foo.id}"
-	}
+	clb_name          = "tf-clb-open"
+	project_id        = 0
+	vpc_id            = "${tencentcloud_vpc.foo.id}"
+	target_region_info_region = "ap-guangzhou"
+	target_region_info_vpc = "${tencentcloud_vpc.foo.id}"
+	
 
 	security_groups = ["${tencentcloud_security_group.foo.id}"]
 }
@@ -250,10 +249,9 @@ resource "tencentcloud_clb_instance" "clb_open" {
 	clb_name      = "tf-clb-update-open"
 	vpc_id    		  = "${tencentcloud_vpc.foo.id}"
 	project_id = 0
-	target_region_info = {
-		region = "ap-guangzhou"
-		vpc_id = "${tencentcloud_vpc.foo.id}"
-	}
+	target_region_info_region = "ap-guangzhou"
+	target_region_info_vpc = "${tencentcloud_vpc.foo.id}"
+
 
 	security_groups = ["${tencentcloud_security_group.foo.id}"]
 

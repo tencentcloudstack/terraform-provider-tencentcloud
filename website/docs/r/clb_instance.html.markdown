@@ -21,9 +21,8 @@ resource "tencentcloud_clb_instance" "clblab" {
         subnet_id        = "subnet-0agspqdn"
         tags             = "mytags"
         sercurity_groups = "sg-o0ek7r93"
-        target_region_info {
-             region      = "ap-guangzhou"
-             vpc_id      = "vpc-abcd1234"
+        target_region_info_region = "ap-guangzhou"
+        target_region_info_vpc_id = "vpc-abcd1234"
 		}
 }
 ```

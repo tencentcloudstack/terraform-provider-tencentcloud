@@ -116,15 +116,15 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "ID of the security groups.",
 						},
-						"target_region_info": {
-							Type:        schema.TypeMap,
+						"target_region_info_region": {
+							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Information of backend service are attached the CLB.",
+							Description: "Region information of backend service are attached the CLB.",
 						},
-						"tags": {
-							Type:        schema.TypeMap,
+						"target_region_info_vpc": {
+							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The available tags within this CLB.",
+							Description: "VpcId information of backend service are attached the CLB.",
 						},
 					},
 				},
@@ -135,6 +135,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 
 func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
+	defer LogElapsed(logId + "data_source.tencentcloud_clb_instances.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]interface{})
@@ -163,19 +164,20 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	ids := make([]string, 0, len(clbs))
 	for _, clb := range clbs {
 		mapping := map[string]interface{}{
-			"clb_id":             *clb.LoadBalancerId,
-			"clb_name":           *clb.LoadBalancerName,
-			"network_type":       *clb.LoadBalancerType,
-			"status":             *clb.Status,
-			"create_time":        *clb.CreateTime,
-			"status_time":        *clb.StatusTime,
-			"project_id":         *clb.ProjectId,
-			"vpc_id":             *clb.VpcId,
-			"subnet_id":          *clb.SubnetId,
-			"clb_vips":           flattenStringList(clb.LoadBalancerVips),
-			"target_region_info": flattenClbTargetRegionInfoMappings(clb.TargetRegionInfo),
-			"security_groups":    flattenStringList(clb.SecureGroups),
-			"tags":               flattenClbTagsMapping(clb.Tags),
+			"clb_id":                    *clb.LoadBalancerId,
+			"clb_name":                  *clb.LoadBalancerName,
+			"network_type":              *clb.LoadBalancerType,
+			"status":                    *clb.Status,
+			"create_time":               *clb.CreateTime,
+			"status_time":               *clb.StatusTime,
+			"project_id":                *clb.ProjectId,
+			"vpc_id":                    *clb.VpcId,
+			"subnet_id":                 *clb.SubnetId,
+			"clb_vips":                  flattenStringList(clb.LoadBalancerVips),
+			"target_region_info_region": *(clb.TargetRegionInfo.Region),
+			"target_region_info_vpc":    *(clb.TargetRegionInfo.VpcId),
+			"security_groups":           flattenStringList(clb.SecureGroups),
+			"tags":                      flattenClbTagsMapping(clb.Tags),
 		}
 
 		clbList = append(clbList, mapping)

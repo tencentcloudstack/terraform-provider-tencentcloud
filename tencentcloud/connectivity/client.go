@@ -222,6 +222,9 @@ func (me *TencentCloudClient) UseClbClient() *clb.Client {
 	cpf.HttpProfile.ReqTimeout = 300
 
 	clbConn, _ := clb.NewClient(credential, me.Region, cpf)
+	var round LogRoundTripper
+
+	clbConn.WithHttpTransport(&round)
 	me.clbConn = clbConn
 
 	return me.clbConn
