@@ -162,7 +162,6 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	clbList := make([]map[string]interface{}, 0, len(clbs))
 	ids := make([]string, len(clbs))
 	for _, clb := range clbs {
-		log.Printf("TTTTEEEESSSSTTT %s", *clb.LoadBalancerVips[0])
 		mapping := map[string]interface{}{
 			"clb_id":             *clb.LoadBalancerId,
 			"clb_name":           *clb.LoadBalancerName,
@@ -178,28 +177,11 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			"security_groups":    flattenStringList(clb.SecureGroups),
 			"tags":               flattenClbTagsMapping(clb.Tags),
 		}
-		//log.Printf("TTTTEEEESSSSTTT %s", mapping["clb_vips"].(list)[0])
-		/*if clb.LoadBalancerVips != nil {
-			vips := make([]string, len(clb.LoadBalancerVips))
-			for i, t := range clb.LoadBalancerVips {
-				vips[i] = *t
-
-			}
-			mapping["clb_vips"] = vips
-		}*/
-		/*if clb.Tags != nil {
-			tags := make(map[string]interface{}, len(clb.Tags))
-			for _, t := range clb.Tags {
-				tags[*t.Key] = *t.Value
-			}
-			mapping["tags"] = tags
-		}*/
+		
 		clbList = append(clbList, mapping)
 		ids = append(ids, *clb.LoadBalancerId)
 	}
 
-	//set target region info
-	//set sercurity group ids
 	d.SetId(dataResourceIdsHash(ids))
 	if err = d.Set("clb_list", clbList); err != nil {
 		log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, err.Error())
