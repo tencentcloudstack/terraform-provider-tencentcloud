@@ -14,10 +14,10 @@ Provides a mysql policy resource to create a backup policy.
 
 ```hcl
 resource "tencentcloud_mysql_backup_policy" "default" {
-  mysql_id = "cdb-dnqksd9f"
+  mysql_id         = "cdb-dnqksd9f"
   retention_period = 7
-  backup_model = "logical"
-  backup_time ="02:00–06:00"
+  backup_model     = "logical"
+  backup_time      = "02:00–06:00"
 }
 ```
 

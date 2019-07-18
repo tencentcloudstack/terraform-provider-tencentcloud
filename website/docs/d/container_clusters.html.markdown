@@ -14,8 +14,7 @@ By default every clusters in current region will be returned.
 ## Example Usage
 
 ```hcl
-data "tencentcloud_container_clusters" "foo" {
-}
+data "tencentcloud_container_clusters" "foo" {}
 ```
 
 ## Argument Reference

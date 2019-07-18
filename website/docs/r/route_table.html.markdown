@@ -14,13 +14,13 @@ Provides a resource to create a VPC routing table.
 
 ```hcl
 resource "tencentcloud_vpc" "foo" {
-    name = "ci-temp-test"
-    cidr_block = "10.0.0.0/16"
+  name       = "ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_route_table" "foo" {
-   vpc_id = "${tencentcloud_vpc.foo.id}"
-   name = "ci-temp-test-rt"
+  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = "ci-temp-test-rt"
 }
 ```
 

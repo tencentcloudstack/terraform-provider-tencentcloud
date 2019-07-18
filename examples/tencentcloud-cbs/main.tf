@@ -5,6 +5,7 @@ resource "tencentcloud_cbs_storage" "my_storage" {
   availability_zone = "${var.availability_zone}"
   project_id        = 0
   encrypt           = false
+
   tags = {
     test = "tf"
   }
@@ -12,6 +13,7 @@ resource "tencentcloud_cbs_storage" "my_storage" {
 
 data "tencentcloud_image" "my_favorate_image" {
   os_name = "centos"
+
   filter {
     name   = "image-type"
     values = ["PUBLIC_IMAGE"]

@@ -1,22 +1,23 @@
 /*
 Provides a mysql instance resource to create read-only database instances.
 
-~> **NOTE:** The terminate operation of mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** The terminate operation of read only mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_readonly_instance" "default" {
   master_instance_id = "cdb-dnqksd9f"
-  instance_name ="myTestMysql"
-  mem_size = 128000
-  volume_size = 255
-  vpc_id = "vpc-12mt3l31"
-  subnet_id = "subnet-9uivyb1g"
-  intranet_port = 3306
-  security_groups = ["sg-ot8eclwz"]
+  instance_name      = "myTestMysql"
+  mem_size           = 128000
+  volume_size        = 255
+  vpc_id             = "vpc-12mt3l31"
+  subnet_id          = "subnet-9uivyb1g"
+  intranet_port      = 3306
+  security_groups    = ["sg-ot8eclwz"]
+
   tags = {
-    name ="test"
+    name = "test"
   }
 }
 ```
@@ -26,6 +27,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 	"time"
 
@@ -48,6 +50,7 @@ func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 	for k, v := range basic {
 		readonlyInstanceInfo[k] = v
 	}
+	delete(readonlyInstanceInfo, "gtid")
 
 	return &schema.Resource{
 		Create: resourceTencentCloudMysqlReadonlyInstanceCreate,
@@ -208,9 +211,13 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	mysqlInfo, err := tencentMsyqlBasicInfoRead(ctx, d, meta)
+	mysqlInfo, err := tencentMsyqlBasicInfoRead(ctx, d, meta, false)
 	if err != nil {
 		return err
+	}
+	if mysqlInfo == nil {
+		d.SetId("")
+		return nil
 	}
 	d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
 
@@ -261,5 +268,43 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 	if err != nil {
 		return err
 	}
-	return nil
+	var hasDeleted = false
+
+	err = resource.Retry(20*time.Minute, func() *resource.RetryError {
+		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
+
+		if err != nil {
+			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+
+		if mysqlInfo == nil {
+			hasDeleted = true
+			return nil
+		}
+		if *mysqlInfo.Status == MYSQL_STATUS_ISOLATING || *mysqlInfo.Status == MYSQL_STATUS_RUNNING {
+			return resource.RetryableError(fmt.Errorf("mysql isolating."))
+		}
+		if *mysqlInfo.Status == MYSQL_STATUS_ISOLATED {
+			return nil
+		}
+		return resource.NonRetryableError(fmt.Errorf("after IsolateDBInstance mysql Status is %d", *mysqlInfo.Status))
+	})
+
+	if hasDeleted {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	err = mysqlService.OfflineIsolatedInstances(ctx, d.Id())
+
+	if err == nil {
+		log.Printf("[WARN]this mysql is readonly instance, it is released asynchronously, and the bound resource is not now fully released now\n")
+	}
+	return err
+
 }

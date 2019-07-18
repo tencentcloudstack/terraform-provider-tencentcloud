@@ -14,7 +14,7 @@ Use this data source to query the available database specifications for differen
 
 ```hcl
 data "tencentcloud_mysql_zone_config" "mysql" {
-  region = "ap-guangzhou"
+  region             = "ap-guangzhou"
   result_output_file = "mytestpath"
 }
 ```

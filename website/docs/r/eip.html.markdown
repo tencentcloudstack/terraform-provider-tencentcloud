@@ -16,7 +16,7 @@ Basic Usage
 
 ```hcl
 resource "tencentcloud_eip" "foo" {
-	name = "awesome_gateway_ip"
+  name = "awesome_gateway_ip"
 }
 ```
 

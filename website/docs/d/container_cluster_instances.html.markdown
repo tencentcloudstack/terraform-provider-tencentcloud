@@ -14,7 +14,7 @@ Use this data source to get all instances in a specific cluster.
 
 ```hcl
 data "tencentcloud_container_cluster_instances" "foo_instance" {
-    cluster_id = "cls-abcdefg"
+  cluster_id = "cls-abcdefg"
 }
 ```
 

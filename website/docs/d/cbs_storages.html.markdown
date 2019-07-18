@@ -14,8 +14,8 @@ Use this data source to query detailed information of CBS storages.
 
 ```hcl
 data "tencentcloud_cbs_storages" "storages" {
-    storage_id         = "disk-kdt0sq6m"
-    result_output_file = "mytestpath"
+  storage_id         = "disk-kdt0sq6m"
+  result_output_file = "mytestpath"
 }
 ```
 

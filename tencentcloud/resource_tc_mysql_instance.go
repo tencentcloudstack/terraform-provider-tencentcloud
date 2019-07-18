@@ -1,33 +1,36 @@
 /*
 Provides a mysql instance resource to create master database instances.
 
-~> **NOTE:** The terminate operation of mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_instance" "default" {
   internet_service = 1
-  engine_version = "5.7"
+  engine_version   = "5.7"
+
+  root_password     = "********"
+  slave_deploy_mode = 0
+  first_slave_zone  = "ap-guangzhou-4"
+  second_slave_zone = "ap-guangzhou-4"
+  slave_sync_mode   = 1
+  availability_zone = "ap-guangzhou-4"
+  project_id        = 201901010001
+  instance_name     = "myTestMysql"
+  mem_size          = 128000
+  volume_size       = 250
+  vpc_id            = "vpc-12mt3l31"
+  subnet_id         = "subnet-9uivyb1g"
+  intranet_port     = 3306
+  security_groups   = ["sg-ot8eclwz"]
+
+  tags = {
+    name = "test"
+  }
+
   parameters = {
     max_connections = "1000"
-  }
-  root_password = "********"
-  slave_deploy_mode = 0
-  first_slave_zone = "ap-guangzhou-4"
-  second_slave_zone = "ap-guangzhou-4"
-  slave_sync_mode = 1
-  availability_zone = "ap-guangzhou-4"
-  project_id = 201901010001
-  instance_name = "myTestMysql"
-  mem_size = 128000
-  volume_size = 250
-  vpc_id = "vpc-12mt3l31"
-  subnet_id = "subnet-9uivyb1g"
-  intranet_port = 3306
-  security_groups = ["sg-ot8eclwz"]
-  tags = {
-    name ="test"
   }
 }
 ```
@@ -603,7 +606,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
 
-func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta interface{}) (mysqlInfo *cdb.InstanceInfo,
+func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta interface{}, master bool) (mysqlInfo *cdb.InstanceInfo,
 	errRet error) {
 
 	if d.Id() == "" {
@@ -663,12 +666,14 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	d.Set("security_groups", securityGroups)
 
-	isGTIDOpen, err := mysqlService.CheckDBGTIDOpen(ctx, d.Id())
-	if err != nil {
-		errRet = err
-		return
+	if master {
+		isGTIDOpen, err := mysqlService.CheckDBGTIDOpen(ctx, d.Id())
+		if err != nil {
+			errRet = err
+			return
+		}
+		d.Set("gtid", int(isGTIDOpen))
 	}
-	d.Set("gtid", int(isGTIDOpen))
 
 	tags, err := mysqlService.DescribeTagsOfInstanceId(ctx, d.Id())
 	if err != nil {
@@ -698,7 +703,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	mysqlInfo, err := tencentMsyqlBasicInfoRead(ctx, d, meta)
+	mysqlInfo, err := tencentMsyqlBasicInfoRead(ctx, d, meta, true)
 	if err != nil {
 		return err
 	}
@@ -1175,9 +1180,65 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
-
 	if err != nil {
 		return err
 	}
-	return nil
+
+	var hasDeleted = false
+
+	err = resource.Retry(20*time.Minute, func() *resource.RetryError {
+		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
+
+		if err != nil {
+			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if mysqlInfo == nil {
+			hasDeleted = true
+			return nil
+		}
+		if *mysqlInfo.Status == MYSQL_STATUS_ISOLATING || *mysqlInfo.Status == MYSQL_STATUS_RUNNING {
+			return resource.RetryableError(fmt.Errorf("mysql isolating."))
+		}
+		if *mysqlInfo.Status == MYSQL_STATUS_ISOLATED {
+			return nil
+		}
+		return resource.NonRetryableError(fmt.Errorf("after IsolateDBInstance mysql Status is %d", *mysqlInfo.Status))
+	})
+
+	if hasDeleted {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+
+	err = mysqlService.OfflineIsolatedInstances(ctx, d.Id())
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(20*time.Minute, func() *resource.RetryError {
+		mysqlInfo, err := mysqlService.DescribeIsolatedDBInstanceById(ctx, d.Id())
+		if err != nil {
+			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if mysqlInfo == nil {
+			return nil
+		} else {
+			if mysqlInfo.RoGroups != nil && len(mysqlInfo.RoGroups) > 0 {
+				log.Printf("[WARN]this mysql has RoGroups , RoGroups is released asynchronously, and the bound resource is not now fully released now\n")
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("after OfflineIsolatedInstances mysql Status is %d", *mysqlInfo.Status))
+		}
+	})
+	return err
 }

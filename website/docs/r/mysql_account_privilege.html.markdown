@@ -14,9 +14,9 @@ Provides a mysql account privilege resource to grant different access privilege 
 
 ```hcl
 resource "tencentcloud_mysql_account_privilege" "default" {
-  mysql_id = "my-test-database"
-  account_name= "tf_account"
-  privileges = ["SELECT"]
+  mysql_id       = "my-test-database"
+  account_name   = "tf_account"
+  privileges     = ["SELECT"]
   database_names = ["instance.name"]
 }
 ```

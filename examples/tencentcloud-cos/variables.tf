@@ -1,15 +1,15 @@
 variable "bucket-name" {
-    default = "bucket-test-1258798060"
+  default = "bucket-test-1258798060"
 }
 
 variable "object-name" {
-    default = "object-test"
+  default = "object-test"
 }
 
 variable "acl" {
-    default = "public-read"
+  default = "public-read"
 }
 
 variable "object-content" {
-    default = "terraform tencent cloud cos object"
+  default = "terraform tencent cloud cos object"
 }
