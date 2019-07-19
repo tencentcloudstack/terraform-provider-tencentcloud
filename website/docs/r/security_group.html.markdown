@@ -1,22 +1,23 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_security_group"
-sidebar_current: "docs-tencentcloud-resource-security_group"
+sidebar_current: "docs-tencentcloud-resource-vpc-security-group-x"
 description: |-
-  Provide a resource to create security group.
+  Provides a security group resource.
 ---
 
 # tencentcloud_security_group
 
-Provide a resource to create security group.
+Provides a security group resource.
 
 ## Example Usage
 
+Basic usage:
+
 ```hcl
-data "tencentcloud_security_group" "sglab" {
-    name        = "mysg"
-    description = "favourite sg"
-    project_id  = "Default project"
+resource "tencentcloud_security_group" "sg" {
+  name        = "test security group"
+  description = "For testing security groups"
 }
 ```
 
@@ -24,8 +25,22 @@ data "tencentcloud_security_group" "sglab" {
 
 The following arguments are supported:
 
-* `description` - (Required) Description of the security group.
-* `name` - (Required) Name of the security group to be queried.
-* `project_id` - (Optional, ForceNew) Project ID of the security group.
+* `name` - (Required) The name of the security group. Name should be unique in each project, and no more than 60 characters.
+* `description` - (Optional) The security group's description, maximum length is 100 characters.
+* `project_id` - (Optional) The security group's project, default is 0.
 
+## Attributes Reference
 
+The following attributes are exported:
+
+* `id` - The ID of the security group.
+* `name` - The name of the security group.
+* `description` - The description of the security group.
+
+## Import
+
+Security group can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_security_group.foo sg-ey3wmiz1
+```

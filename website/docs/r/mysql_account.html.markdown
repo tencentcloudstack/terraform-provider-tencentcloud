@@ -30,4 +30,3 @@ The following arguments are supported:
 * `password` - (Required) Operation password.
 * `description` - (Optional) Database description.
 
-
