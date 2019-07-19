@@ -93,7 +93,7 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 
 func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interface{}) error {
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_groups.read")()
+	defer LogElapsed(logId + "data.tencentcloud_security_groups.read")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
