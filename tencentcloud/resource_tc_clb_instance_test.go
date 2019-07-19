@@ -154,37 +154,36 @@ func testAccCheckClbInstanceExists(n string) resource.TestCheckFunc {
 
 const testAccClbInstance_basic = `
 resource "tencentcloud_clb_instance" "clb_basic" {
-	network_type      = "OPEN"
-	clb_name      = "tf-clb-basic"
+  network_type = "OPEN"
+  clb_name     = "tf-clb-basic"
 
 }
 `
 const testAccClbInstance_internal = `
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 resource "tencentcloud_subnet" "subnet" {
-	availability_zone="${var.availability_zone}"
-	name="guagua-ci-temp-test"
-	vpc_id="${tencentcloud_vpc.foo.id}"
-	cidr_block="10.0.20.0/28"
-	is_multicast=false
+  availability_zone = "${var.availability_zone}"
+  name              = "guagua-ci-temp-test"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
 }
 
 resource "tencentcloud_clb_instance" "clb_internal" {
-	network_type      = "INTERNAL"
-	clb_name      = "tf-clb-internal"
-  	vpc_id    		  = "${tencentcloud_vpc.foo.id}"
-  	subnet_id		  = "${tencentcloud_subnet.subnet.id}"
-	project_id = 0
-	
-}
+  network_type = "INTERNAL"
+  clb_name     = "tf-clb-internal"
+  vpc_id       = "${tencentcloud_vpc.foo.id}"
+  subnet_id    = "${tencentcloud_subnet.subnet.id}"
+  project_id   = 0
 
+}
 `
 const testAccClbInstance_open = `
 resource "tencentcloud_security_group" "foo" {
@@ -192,46 +191,46 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_clb_instance" "clb_open" {
-	network_type      = "OPEN"
-	clb_name          = "tf-clb-open"
-	project_id        = 0
-	vpc_id            = "${tencentcloud_vpc.foo.id}"
-	target_region_info_region = "ap-guangzhou"
-	target_region_info_vpc = "${tencentcloud_vpc.foo.id}"
-	
+  network_type              = "OPEN"
+  clb_name                  = "tf-clb-open"
+  project_id                = 0
+  vpc_id                    = "${tencentcloud_vpc.foo.id}"
+  target_region_info_region = "ap-guangzhou"
+  target_region_info_vpc    = "${tencentcloud_vpc.foo.id}"
 
-	security_groups = ["${tencentcloud_security_group.foo.id}"]
+
+  security_groups = ["${tencentcloud_security_group.foo.id}"]
 }
 `
 
 const testAccClbInstance_update = `
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 resource "tencentcloud_subnet" "subnet" {
-	availability_zone="${var.availability_zone}"
-	name="guagua-ci-temp-test"
-	vpc_id="${tencentcloud_vpc.foo.id}"
-	cidr_block="10.0.20.0/28"
-	is_multicast=false
+  availability_zone = "${var.availability_zone}"
+  name              = "guagua-ci-temp-test"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
 }
 
 resource "tencentcloud_clb_instance" "clb_internal" {
-	network_type      = "INTERNAL"
-	clb_name      = "tf-clb-update"
-	vpc_id    		  = "${tencentcloud_vpc.foo.id}"
-  	subnet_id		  = "${tencentcloud_subnet.subnet.id}"
-	project_id = 0
+  network_type = "INTERNAL"
+  clb_name     = "tf-clb-update"
+  vpc_id       = "${tencentcloud_vpc.foo.id}"
+  subnet_id    = "${tencentcloud_subnet.subnet.id}"
+  project_id   = 0
 
 }
 `
@@ -241,19 +240,19 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 resource "tencentcloud_clb_instance" "clb_open" {
-	network_type      = "OPEN"
-	clb_name      = "tf-clb-update-open"
-	vpc_id    		  = "${tencentcloud_vpc.foo.id}"
-	project_id = 0
-	target_region_info_region = "ap-guangzhou"
-	target_region_info_vpc = "${tencentcloud_vpc.foo.id}"
+  network_type              = "OPEN"
+  clb_name                  = "tf-clb-update-open"
+  vpc_id                    = "${tencentcloud_vpc.foo.id}"
+  project_id                = 0
+  target_region_info_region = "ap-guangzhou"
+  target_region_info_vpc    = "${tencentcloud_vpc.foo.id}"
 
 
-	security_groups = ["${tencentcloud_security_group.foo.id}"]
+  security_groups = ["${tencentcloud_security_group.foo.id}"]
 
 }
 `

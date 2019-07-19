@@ -4,17 +4,16 @@ Provide a resource to create a CLB instance.
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_instance" "clblab" {
-        network_type         = "OPEN"
-        clb_name         = "myclb"
-        project_id       = "Default Project"
-        vpc_id           = "vpc-abcd1234"
-        subnet_id        = "subnet-0agspqdn"
-        tags             = "mytags"
-        security_groups = ["sg-o0ek7r93"]
-        target_region_info_region= "ap-guangzhou"
-        target_region_info_vpc_id= "vpc-abcd1234"
-		}
+resource "tencentcloud_clb_listener" "clblab" {
+  network_type              = "OPEN"
+  clb_name                  = "myclb"
+  project_id                = "Default Project"
+  vpc_id                    = "vpc-abcd1234"
+  subnet_id                 = "subnet-0agspqdn"
+  tags                      = "mytags"
+  security_groups           = ["sg-o0ek7r93"]
+  target_region_info_region = "ap-guangzhou"
+  target_region_info_vpc_id = "vpc-abcd1234"
 }
 ```
 

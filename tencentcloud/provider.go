@@ -26,6 +26,7 @@ Data Sources
   tencentcloud_availability_zones
   tencentcloud_cbs_snapshots
   tencentcloud_cbs_storages
+  tencentcloud_clb_instances
   tencentcloud_ccn_bandwidth_limits
   tencentcloud_ccn_instances
   tencentcloud_container_cluster_instances

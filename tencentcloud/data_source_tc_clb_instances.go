@@ -177,7 +177,6 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			"target_region_info_region": *(clb.TargetRegionInfo.Region),
 			"target_region_info_vpc":    *(clb.TargetRegionInfo.VpcId),
 			"security_groups":           flattenStringList(clb.SecureGroups),
-			"tags":                      flattenClbTagsMapping(clb.Tags),
 		}
 
 		clbList = append(clbList, mapping)

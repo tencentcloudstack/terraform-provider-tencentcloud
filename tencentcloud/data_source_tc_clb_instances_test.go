@@ -97,26 +97,24 @@ resource "tencentcloud_security_group" "foo" {
   name = "ci-temp-test-sg"
 }
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_clb_instance" "clb" {
-	network_type      = "OPEN"
-	clb_name      = "tf-clb-open"
-	project_id = 0
-	vpc_id="${tencentcloud_vpc.foo.id}"
-	target_region_info_region = "ap-guangzhou"
-	target_region_info_vpc_id = "${tencentcloud_vpc.foo.id}"
-	}
-
-	security_groups = ["${tencentcloud_security_group.foo.id}"]
+  network_type              = "OPEN"
+  clb_name                  = "tf-clb-open"
+  project_id                = 0
+  vpc_id                    = "${tencentcloud_vpc.foo.id}"
+  target_region_info_region = "ap-guangzhou"
+  target_region_info_vpc    = "${tencentcloud_vpc.foo.id}"
+  security_groups           = ["${tencentcloud_security_group.foo.id}"]
 }
 data "tencentcloud_clb_instances" "clbs" {
-	clb_id = "${tencentcloud_clb_instance.clb.id}"
+  clb_id = "${tencentcloud_clb_instance.clb.id}"
 }
 `

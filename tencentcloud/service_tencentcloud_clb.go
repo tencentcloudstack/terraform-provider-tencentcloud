@@ -58,14 +58,12 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 
 	}
 
-	offset := 0
-	pageSize := 100
+	offset := int64(0)
+	pageSize := int64(100)
 	clbs = make([]*clb.LoadBalancer, 0)
 	for {
-		offset64 := int64(offset)
-		pageSize64 := int64(pageSize)
-		request.Offset = &(offset64)
-		request.Limit = &(pageSize64)
+		request.Offset = &(offset)
+		request.Limit = &(pageSize)
 		response, err := me.client.UseClbClient().DescribeLoadBalancers(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -82,7 +80,7 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 
 		clbs = append(clbs, response.Response.LoadBalancerSet...)
 
-		if len(response.Response.LoadBalancerSet) < pageSize {
+		if int64(len(response.Response.LoadBalancerSet)) < pageSize {
 			break
 		}
 		offset += pageSize
