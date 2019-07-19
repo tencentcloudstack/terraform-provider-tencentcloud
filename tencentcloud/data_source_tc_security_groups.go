@@ -146,15 +146,13 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 			}
 		}
 
-		if associate == nil {
-			return fmt.Errorf("security group %s associate statistic not found", *sg.SecurityGroupId)
-		}
-
 		var count int
-		count += int(*associate.CVM)
-		count += int(*associate.ENI)
-		count += int(*associate.CDB)
-		count += int(*associate.CLB)
+		if associate != nil {
+			count += int(*associate.CVM)
+			count += int(*associate.ENI)
+			count += int(*associate.CDB)
+			count += int(*associate.CLB)
+		}
 
 		pjId, err := strconv.Atoi(*sg.ProjectId)
 		if err != nil {
