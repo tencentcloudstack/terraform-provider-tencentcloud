@@ -24,6 +24,24 @@ func TestAccDataSourceTencentCloudSecurityGroups_basic(t *testing.T) {
 	})
 }
 
+func TestAccDataSourceTencentCloudSecurityGroups_searchByName(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: TestAccDataSourceTencentCloudSecurityGroupsConfigSearchByName,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_security_groups.foo"),
+					resource.TestCheckResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.0.name", "ci-temp-security-groups-test"),
+					resource.TestCheckResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.0.description", "ci-temp-security-groups-test"),
+					resource.TestCheckResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.0.be_associate_count", "0"),
+				),
+			},
+		},
+	})
+}
+
 const TestAccDataSourceTencentCloudSecurityGroupsConfig = `
 resource "tencentcloud_security_group" "foo" {
   name        = "ci-temp-security-groups-test"
@@ -32,5 +50,16 @@ resource "tencentcloud_security_group" "foo" {
 
 data "tencentcloud_security_groups" "foo" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
+}
+`
+
+const TestAccDataSourceTencentCloudSecurityGroupsConfigSearchByName = `
+resource "tencentcloud_security_group" "foo" {
+  name        = "ci-temp-security-groups-test"
+  description = "ci-temp-security-groups-test"
+}
+
+data "tencentcloud_security_groups" "foo" {
+  name = "${tencentcloud_security_group.foo.name}"
 }
 `
