@@ -37,7 +37,7 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 			"name": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				ValidateFunc:  validateStringLengthInRange(2, 60),
+				ValidateFunc:  validateStringLengthInRange(1, 60),
 				ConflictsWith: []string{"security_group_id"},
 				Description:   "Name of the security group to be queried.",
 			},
