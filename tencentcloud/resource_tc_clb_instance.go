@@ -107,6 +107,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 
 func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_clb_instance.create")()
 	request := clb.NewCreateLoadBalancerRequest()
 	network_type := d.Get("network_type").(string)
 	request.LoadBalancerType = stringToPointer(network_type)
@@ -196,6 +197,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_clb_instance.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()
@@ -221,7 +223,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 
 func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
-
+	defer LogElapsed(logId + "resource.tencentcloud_clb_instance.update")()
 	d.Partial(true)
 
 	clbId := d.Id()
@@ -305,6 +307,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 
 func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_clb_instance.delete")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()
