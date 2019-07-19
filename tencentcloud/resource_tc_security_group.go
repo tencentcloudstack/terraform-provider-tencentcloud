@@ -52,7 +52,7 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Description: "Project ID of the security group.",
 			},
 		},
