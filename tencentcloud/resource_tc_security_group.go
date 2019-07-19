@@ -37,7 +37,7 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(2, 60),
+				ValidateFunc: validateStringLengthInRange(1, 60),
 				Description:  "Name of the security group to be queried.",
 			},
 
@@ -45,7 +45,7 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "",
-				ValidateFunc: validateStringLengthInRange(2, 100),
+				ValidateFunc: validateStringLengthInRange(1, 100),
 				Description:  "Description of the security group.",
 			},
 
