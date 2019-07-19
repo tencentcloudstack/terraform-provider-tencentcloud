@@ -100,11 +100,10 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	/*sgId := d.Get("security_group_id").(string)*/
 	var (
 		sgId      *string
-		sgname    *string
-		projectId *string
+		sgName    *string
+		projectId *int
 	)
 
 	if raw, ok := d.GetOk("security_group_id"); ok {
@@ -112,14 +111,14 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 	}
 
 	if raw, ok := d.GetOk("name"); ok {
-		sgname = common.StringPtr(raw.(string))
+		sgName = common.StringPtr(raw.(string))
 	}
 
 	if raw, ok := d.GetOk("project_id"); ok {
-		projectId = common.StringPtr(raw.(string))
+		projectId = common.IntPtr(raw.(int))
 	}
 
-	sgs, err := service.DescribeSecurityGroups(ctx, sgId, sgname, projectId)
+	sgs, err := service.DescribeSecurityGroups(ctx, sgId, sgName, projectId)
 	if err != nil {
 		return err
 	}
