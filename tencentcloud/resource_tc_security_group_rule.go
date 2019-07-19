@@ -4,15 +4,15 @@ Provide a resource to create security group rule.
 Example Usage
 
 ```hcl
-data "tencentcloud_security_group_rule" "sglab" {
-    security_group_id = "sg-fh48e762"
-    type              = "ingress"
-    cidr_ip           = "10.0.0.0/16"
-    ip_protocol       = "TCP"
-    port_range        = "80"
-    policy            = "ACCEPT"
-    source_sgid       = "sg-fh48e762"
-    description       = "favourite sg rule"
+resource "tencentcloud_security_group_rule" "sglab" {
+  security_group_id = "sg-fh48e762"
+  type              = "ingress"
+  cidr_ip           = "10.0.0.0/16"
+  ip_protocol       = "TCP"
+  port_range        = "80"
+  policy            = "ACCEPT"
+  source_sgid       = "sg-fh48e762"
+  description       = "favourite sg rule"
 }
 ```
 */
@@ -73,7 +73,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 
 					return
 				},
-				Description: "An IP address network or segment, and can't exist at the same time as source_sgid.",
+				Description: "An IP address network or segment, and conflict with 'source_sgid'.",
 			},
 
 			"ip_protocol": {
@@ -90,14 +90,14 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					}
 					return
 				},
-				Description: "Type of ip protocol, the available value include 'TCP', 'UDP' and 'ICMP'. Default to all types.",
+				Description: "Type of ip protocol, the available value include 'TCP', 'UDP' and 'ICMP'. Default to all types protocol.",
 			},
 
 			"port_range": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Range of the port. The available value can be one, multiple or one segment, e.g '80', '80,90' and '80-90'. Default to all ports.",
+				Description: "Range of the port. The available value can be one, multiple or one segment. E.g. '80', '80,90' and '80-90'. Default to all ports.",
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
 					match, _ := regexp.MatchString("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}\\-\\d{1,5}$", value)
@@ -129,7 +129,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				ConflictsWith: []string{
 					"cidr_ip",
 				},
-				Description: "ID of the nested security group, and can't exist at the same time as cidr_ip.",
+				Description: "ID of the nested security group, and conflict with 'cidr_ip'.",
 			},
 
 			"description": {

@@ -1,11 +1,13 @@
 /*
-Use this data source to query detailed information of security group.
+Use this data source to query detailed information of security groups.
 
 Example Usage
 
 ```hcl
-data "tencentcloud_security_group" "sglab" {
-    security_group_id = "sg-fh48e762"
+data "tencentcloud_security_groups" "sglab" {
+  security_group_id = "sg-fh48e762"
+  name              = "mysg"
+  project_id        = "Default project"
 }
 ```
 */
@@ -30,7 +32,7 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"name", "project_id"},
-				Description:   "ID of the security group to be queried.",
+				Description:   "ID of the security group to be queried. Conflict with 'name' and 'project_id'.",
 			},
 
 			"name": {
@@ -38,23 +40,26 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 				Optional:      true,
 				ValidateFunc:  validateStringLengthInRange(1, 60),
 				ConflictsWith: []string{"security_group_id"},
-				Description:   "Name of the security group to be queried.",
+				Description:   "Name of the security group to be queried. Conflict with 'security_group_id'.",
 			},
 
 			"project_id": {
 				Type:          schema.TypeInt,
 				Optional:      true,
 				ConflictsWith: []string{"security_group_id"},
+				Description:   "Project ID of the security group. Conflict with 'security_group_id'.",
 			},
 
 			"security_groups": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Information list of security group.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Inquired ID of the security group.",
 						},
 
 						"name": {
@@ -63,8 +68,9 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 						},
 
 						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Description of the security group.",
 						},
 
 						"create_time": {
@@ -80,9 +86,8 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 						},
 
 						"project_id": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Project ID of the security group.",
+							Type:     schema.TypeInt,
+							Computed: true,
 						},
 					},
 				},
