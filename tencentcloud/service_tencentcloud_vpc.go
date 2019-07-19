@@ -820,7 +820,7 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 	return
 }
 
-func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string, projectID *string) (id string, err error) {
+func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string, projectID *int) (id string, err error) {
 	logId := GetLogId(ctx)
 
 	request := vpc.NewCreateSecurityGroupRequest()
@@ -829,7 +829,7 @@ func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string
 	request.GroupDescription = &desc
 
 	if projectID != nil {
-		request.ProjectId = projectID
+		request.ProjectId = common.StringPtr(strconv.Itoa(*projectID))
 	}
 
 	response, err := me.client.UseVpcClient().CreateSecurityGroup(request)

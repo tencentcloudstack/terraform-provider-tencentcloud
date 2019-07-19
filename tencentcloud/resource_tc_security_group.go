@@ -70,10 +70,9 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 	name := d.Get("name").(string)
 	desc := d.Get("description").(string)
 
-	var projectID *string
+	var projectID *int
 	if projectIDInterface, exist := d.GetOk("project_id"); exist {
-		projectIDStr := projectIDInterface.(string)
-		projectID = &projectIDStr
+		projectID = common.IntPtr(projectIDInterface.(int))
 	}
 
 	id, err := vpcService.CreateSecurityGroup(ctx, name, desc, projectID)
@@ -81,7 +80,6 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 		return err
 	}
 
-	log.Printf("[DEBUG] SgId=%s", id)
 	d.SetId(id)
 	return resourceTencentCloudSecurityGroupRead(d, m)
 }
