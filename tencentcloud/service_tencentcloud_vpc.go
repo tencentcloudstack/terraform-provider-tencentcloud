@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"time"
 
@@ -1148,7 +1149,7 @@ func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId stri
 	return nil
 }
 
-func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName, projectId *string) (sgs []*vpc.SecurityGroup, err error) {
+func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *string, projectId *int) (sgs []*vpc.SecurityGroup, err error) {
 	logId := GetLogId(ctx)
 
 	request := vpc.NewDescribeSecurityGroupsRequest()
@@ -1161,15 +1162,15 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName, 
 	} else {
 		if sgName != nil {
 			request.Filters = append(request.Filters, &vpc.Filter{
-				Name:   common.StringPtr("project-id"),
+				Name:   common.StringPtr("security-group-name"),
 				Values: []*string{sgName},
 			})
 		}
 
 		if projectId != nil {
 			request.Filters = append(request.Filters, &vpc.Filter{
-				Name:   common.StringPtr("security-group-name"),
-				Values: []*string{projectId},
+				Name:   common.StringPtr("project-id"),
+				Values: []*string{common.StringPtr(strconv.Itoa(*projectId))},
 			})
 		}
 	}
