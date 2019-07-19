@@ -12,11 +12,10 @@ data "tencentcloud_security_group" "sglab" {
 package tencentcloud
 
 import (
-	"bytes"
 	"context"
-	"encoding/base64"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -106,16 +105,24 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 		projectId *int
 	)
 
+	idBuilder := strings.Builder{}
+	idBuilder.WriteString("securityGroups-")
+
 	if raw, ok := d.GetOk("security_group_id"); ok {
 		sgId = common.StringPtr(raw.(string))
+		idBuilder.WriteString(*sgId)
+		idBuilder.WriteRune('-')
 	}
 
 	if raw, ok := d.GetOk("name"); ok {
 		sgName = common.StringPtr(raw.(string))
+		idBuilder.WriteString(*sgName)
+		idBuilder.WriteRune('-')
 	}
 
 	if raw, ok := d.GetOk("project_id"); ok {
 		projectId = common.IntPtr(raw.(int))
+		idBuilder.WriteString(strconv.Itoa(*projectId))
 	}
 
 	sgs, err := service.DescribeSecurityGroups(ctx, sgId, sgName, projectId)
@@ -124,8 +131,6 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 	}
 
 	sgInstances := make([]map[string]interface{}, 0, len(sgs))
-
-	idBuilder := bytes.Buffer{}
 
 	for _, sg := range sgs {
 		associateSet, err := service.DescribeSecurityGroupsAssociate(ctx, []string{*sg.SecurityGroupId})
@@ -164,13 +169,11 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 			"be_associate_count": count,
 			"project_id":         pjId,
 		})
-
-		idBuilder.WriteString(*sg.SecurityGroupId)
 	}
 
 	_ = d.Set("security_groups", sgInstances)
 
-	d.SetId(base64.StdEncoding.EncodeToString(idBuilder.Bytes()))
+	d.SetId(idBuilder.String())
 
 	return nil
 }
