@@ -47,9 +47,8 @@ In addition to all arguments above, the following attributes are exported:
   * `status_time` - Latest state transition time of CLB.
   * `status` - The status of CLB.
   * `subnet_id` - ID of the subnet
-  * `tags` - The available tags within this CLB.
   * `target_region_info_region` - Region information of backend service are attached the CLB.
-   * `target_region_info_vpc` - VpcId information of backend service are attached the CLB.
+  * `target_region_info_vpc` - VpcId information of backend service are attached the CLB.
   * `vpc_id` - ID of the VPC
 
 

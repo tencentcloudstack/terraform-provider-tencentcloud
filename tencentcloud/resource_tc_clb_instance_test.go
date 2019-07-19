@@ -99,10 +99,9 @@ func TestAccTencentCloudClbInstance_internal(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_clb_instance.clb_internal",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"target_region_info"},
+				ResourceName:      "tencentcloud_clb_instance.clb_internal",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

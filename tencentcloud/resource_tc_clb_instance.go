@@ -22,7 +22,7 @@ Import
 CLB instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb.instance
+$ terraform import tencentcloud_clb.instance lb-7a0t6zqb
 ```
 */
 package tencentcloud
@@ -271,8 +271,11 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			d.SetPartial("clb_name")
 		}
 
-		if d.HasChange("target_region_info") {
-			d.SetPartial("target_region_info")
+		if d.HasChange("target_region_info_region") {
+			d.SetPartial("target_region_info_region")
+		}
+		if d.HasChange("target_region_info_vpc") {
+			d.SetPartial("target_region_info_vpc")
 		}
 	}
 
