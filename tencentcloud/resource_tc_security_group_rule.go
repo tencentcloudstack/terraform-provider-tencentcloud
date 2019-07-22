@@ -34,7 +34,6 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSecurityGroupRuleCreate,
 		Read:   resourceTencentCloudSecurityGroupRuleRead,
-		// Update: resourceTencentCloudSecurityGroupRuleUpdate,
 		Delete: resourceTencentCloudSecurityGroupRuleDelete,
 
 		Schema: map[string]*schema.Schema{
@@ -236,32 +235,6 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 
 	return nil
 }
-
-/*func resourceTencentCloudSecurityGroupRuleUpdate(d *schema.ResourceData, m interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
-
-	ctx := context.WithValue(context.TODO(), "logId", logId)
-
-	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
-
-	ruleId := d.Id()
-
-	if d.HasChange("description") {
-		var desc *string
-		if descRaw, ok := d.GetOk("description"); ok {
-			desc = common.StringPtr(descRaw.(string))
-		}
-
-		if err := service.ModifySecurityGroupPolicy(ctx, ruleId, desc); err != nil {
-			return err
-		}
-
-		return resourceTencentCloudSecurityGroupRuleRead(d, m)
-	}
-
-	return nil
-}*/
 
 func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m interface{}) error {
 	logId := GetLogId(nil)
