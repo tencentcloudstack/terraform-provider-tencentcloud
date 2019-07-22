@@ -1010,12 +1010,13 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 	return ruleId, nil
 }
 
-func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId string) (sgId string, policyType string, policy *vpc.SecurityGroupPolicy, err error) {
+func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId string) (sgId string, policyType string, policy *vpc.SecurityGroupPolicy, errRet error) {
 	logId := GetLogId(ctx)
 
 	info, err := parseSecurityGroupRuleId(ruleId)
 	if err != nil {
-		return "", "", nil, err
+		errRet = err
+		return
 	}
 
 	request := vpc.NewDescribeSecurityGroupPoliciesRequest()
@@ -1025,12 +1026,13 @@ func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId st
 	if err != nil {
 		// if security group does not exist, security group rule does not exist too
 		if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound" {
-			return "", "", nil, nil
+			return
 		}
 
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
-		return "", "", nil, err
+		errRet = err
+		return
 	}
 
 	policySet := response.Response.SecurityGroupPolicySet
@@ -1054,7 +1056,7 @@ func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId st
 
 	if policy == nil {
 		log.Printf("[DEBUG]%s can't find security group rule, maybe user modify rules on web console", logId)
-		return "", "", nil, nil
+		return
 	}
 
 	return info.SgId, info.PolicyType, policy, nil
