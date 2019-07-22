@@ -12,8 +12,6 @@ Provides a resource to creating dedicated tunnels instances.
 
 ~> **NOTE:** 1. ID of the DC is queried, can only apply for this resource offline.
 
-~> **NOTE:** 2. ID of the DC Gateway is queried, can only apply for this on console.
-
 ## Example Usage
 
 ```hcl
