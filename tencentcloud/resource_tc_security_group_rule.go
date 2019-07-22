@@ -46,17 +46,11 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 			},
 
 			"type": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := v.(string)
-					if value != "ingress" && value != "egress" {
-						errors = append(errors, fmt.Errorf("%s of rule, ingress (inbound) or egress (outbound) value:%v", k, value))
-					}
-					return
-				},
-				Description: "Type of the security group rule, the available value include 'ingress' and 'egress'.",
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue([]string{"ingress", "egress"}),
+				Description:  "Type of the security group rule, the available value include 'ingress' and 'egress'.",
 			},
 
 			"cidr_ip": {
@@ -77,20 +71,11 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 			},
 
 			"ip_protocol": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := v.(string)
-					switch value {
-					case "TCP", "UDP", "ICMP":
-
-					default:
-						errors = append(errors, fmt.Errorf("%s support 'UDP', 'TCP', 'ICMP' and not configured means all protocols. But got %s", k, v))
-					}
-					return
-				},
-				Description: "Type of ip protocol, the available value include 'TCP', 'UDP' and 'ICMP'. Default to all types protocol.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue([]string{"TCP", "UDP", "ICMP"}),
+				Description:  "Type of ip protocol, the available value include 'TCP', 'UDP' and 'ICMP'. Default to all types protocol.",
 			},
 
 			"port_range": {
@@ -109,17 +94,11 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 			},
 
 			"policy": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := v.(string)
-					if value != "ACCEPT" && value != "DROP" {
-						errors = append(errors, fmt.Errorf("policy of rule, 'ACCEPT' or 'DROP'"))
-					}
-					return
-				},
-				Description: "Rule policy of security group, the available value include 'ACCEPT' and 'DROP'.",
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue([]string{"ACCEPT", "DROP"}),
+				Description:  "Rule policy of security group, the available value include 'ACCEPT' and 'DROP'.",
 			},
 
 			"source_sgid": {
