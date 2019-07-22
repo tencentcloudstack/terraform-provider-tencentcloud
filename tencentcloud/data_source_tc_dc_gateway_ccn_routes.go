@@ -46,10 +46,10 @@ func dataSourceTencentCloudDcGatewayCCNRoutes() *schema.Resource {
 		Read: dataSourceTencentCloudDcGatewayCCNRoutesRead,
 		Schema: map[string]*schema.Schema{
 			"dcg_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
-				Description:"ID of the DCG to be queried.",
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "ID of the DCG to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -61,23 +61,23 @@ func dataSourceTencentCloudDcGatewayCCNRoutes() *schema.Resource {
 			"instance_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description:"Information list of the DCG route entries.",
+				Description: "Information list of the DCG route entries.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"dcg_id": {
-							Type:     schema.TypeString,
-							Computed: true,
-							Description:"ID of the DCG.",
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the DCG.",
 						},
 						"route_id": {
-							Type:     schema.TypeString,
-							Computed: true,
-							Description:"ID of the DCG route.",
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the DCG route.",
 						},
 						"cidr_block": {
-							Type:     schema.TypeString,
-							Computed: true,
-							Description:"A network address segment of IDC.",
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "A network address segment of IDC.",
 						},
 						"as_path": {
 							Type:     schema.TypeList,
@@ -85,7 +85,7 @@ func dataSourceTencentCloudDcGatewayCCNRoutes() *schema.Resource {
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description:"As_Path list of the BGP.",
+							Description: "As_Path list of the BGP.",
 						},
 					},
 				},
@@ -105,7 +105,7 @@ func dataSourceTencentCloudDcGatewayCCNRoutesRead(d *schema.ResourceData, meta i
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		id   string =  d.Get("dcg_id").(string)
+		id string = d.Get("dcg_id").(string)
 	)
 
 	var infos, err = service.DescribeDirectConnectGatewayCcnRoutes(ctx, id)
