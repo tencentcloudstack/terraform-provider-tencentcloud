@@ -167,17 +167,18 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 
 	action := d.Get("policy").(string)
 
-	ruleId, err := service.CreateSecurityGroupPolicy(
-		ctx,
-		sgId,
-		policyType,
-		action,
-		cidrIp,
-		sourceSgId,
-		protocol,
-		portRange,
-		desc,
-	)
+	info := securityGroupRuleBasicInfo{
+		SgId:        sgId,
+		Action:      action,
+		CidrIp:      cidrIp,
+		Protocol:    protocol,
+		PortRange:   portRange,
+		SourceSgId:  sourceSgId,
+		PolicyType:  policyType,
+		Description: desc,
+	}
+
+	ruleId, err := service.CreateSecurityGroupPolicy(ctx, info)
 	if err != nil {
 		return err
 	}

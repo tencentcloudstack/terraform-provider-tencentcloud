@@ -971,28 +971,24 @@ func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids [
 	return set, nil
 }
 
-func (me *VpcService) CreateSecurityGroupPolicy(
-	ctx context.Context,
-	sgId, policyType, action string,
-	cidrIp, sourceSgId, protocol, portRange, desc *string,
-) (ruleId string, err error) {
+func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securityGroupRuleBasicInfo) (ruleId string, err error) {
 	logId := GetLogId(ctx)
 
 	createRequest := vpc.NewCreateSecurityGroupPoliciesRequest()
-	createRequest.SecurityGroupId = &sgId
+	createRequest.SecurityGroupId = &info.SgId
 
 	createRequest.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
 
 	policy := new(vpc.SecurityGroupPolicy)
 
-	policy.CidrBlock = cidrIp
-	policy.SecurityGroupId = sourceSgId
-	policy.Protocol = protocol
-	policy.Port = portRange
-	policy.PolicyDescription = desc
-	policy.Action = &action
+	policy.CidrBlock = info.CidrIp
+	policy.SecurityGroupId = info.SourceSgId
+	policy.Protocol = info.Protocol
+	policy.Port = info.PortRange
+	policy.PolicyDescription = info.Description
+	policy.Action = &info.Action
 
-	switch policyType {
+	switch info.PolicyType {
 	case "ingress":
 		createRequest.SecurityGroupPolicySet.Ingress = []*vpc.SecurityGroupPolicy{policy}
 
@@ -1004,16 +1000,6 @@ func (me *VpcService) CreateSecurityGroupPolicy(
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
 		return "", err
-	}
-
-	info := securityGroupRuleBasicInfo{
-		SgId:       sgId,
-		CidrIp:     cidrIp,
-		Protocol:   protocol,
-		PortRange:  portRange,
-		PolicyType: policyType,
-		SourceSgId: sourceSgId,
-		Policy:     action,
 	}
 
 	ruleId, err = buildSecurityGroupRuleId(info)
@@ -1087,7 +1073,7 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
 
 	policy := &vpc.SecurityGroupPolicy{
-		Action:          &info.Policy,
+		Action:          &info.Action,
 		CidrBlock:       info.CidrIp,
 		Protocol:        info.Protocol,
 		Port:            info.PortRange,
@@ -1124,7 +1110,7 @@ func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId stri
 	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
 
 	policy := &vpc.SecurityGroupPolicy{
-		Action:            &info.Policy,
+		Action:            &info.Action,
 		CidrBlock:         info.CidrIp,
 		Protocol:          info.Protocol,
 		Port:              info.PortRange,
@@ -1192,13 +1178,14 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 }
 
 type securityGroupRuleBasicInfo struct {
-	SgId       string  `json:"sg_id"`
-	PolicyType string  `json:"policy_type"`
-	CidrIp     *string `json:"cidr_ip,omitempty"`
-	Protocol   *string `json:"protocol,omitempty"`
-	PortRange  *string `json:"port_range,omitempty"`
-	Policy     string  `json:"policy"`
-	SourceSgId *string `json:"source_sg_id,omitempty"`
+	SgId        string  `json:"sg_id"`
+	PolicyType  string  `json:"policy_type"`
+	CidrIp      *string `json:"cidr_ip,omitempty"`
+	Protocol    *string `json:"protocol,omitempty"`
+	PortRange   *string `json:"port_range,omitempty"`
+	Action      string  `json:"action"`
+	SourceSgId  *string `json:"source_sg_id,omitempty"`
+	Description *string `json:"description"`
 }
 
 // Build an ID for a Security Group Rule
@@ -1255,7 +1242,7 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 		}
 	}
 
-	if *policy.Action != info.Policy {
+	if *policy.Action != info.Action {
 		return false
 	}
 
