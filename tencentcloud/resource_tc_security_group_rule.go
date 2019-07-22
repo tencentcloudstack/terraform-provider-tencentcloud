@@ -122,7 +122,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 
 func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m interface{}) error {
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
+	defer LogElapsed(logId + "resource.tencentcloud_security_group_rule.create")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -189,7 +189,7 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 
 func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interface{}) error {
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
+	defer LogElapsed(logId + "resource.tencentcloud_security_group_rule.read")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -238,7 +238,7 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 
 func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m interface{}) error {
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
+	defer LogElapsed(logId + "resource.tencentcloud_security_group_rule.delete")()
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
