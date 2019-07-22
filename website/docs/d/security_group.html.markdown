@@ -10,6 +10,8 @@ description: |-
 
 Use this data source to query detailed information of security group.
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_security_groups.
+
 ## Example Usage
 
 ```hcl
