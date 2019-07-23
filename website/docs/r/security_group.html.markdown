@@ -34,6 +34,6 @@ The following arguments are supported:
 Security group can be imported using the id, e.g.
 
 ```
-  terraform import tencentcloud_security_group.sglab sg-ey3wmiz1
+  $ terraform import tencentcloud_security_group.sglab sg-ey3wmiz1
 ```
 
