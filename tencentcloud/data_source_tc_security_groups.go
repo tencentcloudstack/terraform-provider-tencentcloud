@@ -107,9 +107,9 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		sgId      *string
-		sgName    *string
-		projectId *int
+		sgId           *string
+		sgName         *string
+		inputProjectId *int
 	)
 
 	idBuilder := strings.Builder{}
@@ -128,11 +128,11 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 	}
 
 	if raw, ok := d.GetOk("project_id"); ok {
-		projectId = common.IntPtr(raw.(int))
-		idBuilder.WriteString(strconv.Itoa(*projectId))
+		inputProjectId = common.IntPtr(raw.(int))
+		idBuilder.WriteString(strconv.Itoa(*inputProjectId))
 	}
 
-	sgs, err := service.DescribeSecurityGroups(ctx, sgId, sgName, projectId)
+	sgs, err := service.DescribeSecurityGroups(ctx, sgId, sgName, inputProjectId)
 	if err != nil {
 		return err
 	}
@@ -158,7 +158,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 			count = int(*associate.CVM + *associate.ENI + *associate.CDB + *associate.CLB)
 		}
 
-		pjId, err := strconv.Atoi(*sg.ProjectId)
+		projectId, err := strconv.Atoi(*sg.ProjectId)
 		if err != nil {
 			return fmt.Errorf("securtiy group %s project id invalid: %v", *sg.SecurityGroupId, err)
 		}
@@ -169,7 +169,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 			"description":        *sg.SecurityGroupDesc,
 			"create_time":        *sg.CreatedTime,
 			"be_associate_count": count,
-			"project_id":         pjId,
+			"project_id":         projectId,
 		})
 	}
 
