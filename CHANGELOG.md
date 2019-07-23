@@ -1,4 +1,4 @@
-## 1.13.0 (Unreleased)
+## 1.13.0 (July 23, 2019)
 
 EATURES:
 * **New Data Source**: `tencentcloud_dc_gateway_instances`
