@@ -23,7 +23,7 @@ func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.http-in", &sgrId),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "cidr_ip", "0.0.0.0/0"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "ip_protocol", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "ip_protocol", "tcp"),
 				),
 			},
 		},
@@ -150,9 +150,9 @@ resource "tencentcloud_security_group_rule" "http-in" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
   type              = "ingress"
   cidr_ip           = "0.0.0.0/0"
-  ip_protocol       = "TCP"
+  ip_protocol       = "tcp"
   port_range        = "80,8080"
-  policy            = "ACCEPT"
+  policy            = "accept"
 }
 `
 
@@ -164,7 +164,7 @@ resource "tencentcloud_security_group" "foo" {
 
 resource "tencentcloud_security_group_rule" "ssh-in" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
-  type              = "ingress"
+  type              = "INGRESS"
   cidr_ip           = "0.0.0.0/0"
   ip_protocol       = "TCP"
   port_range        = "22"

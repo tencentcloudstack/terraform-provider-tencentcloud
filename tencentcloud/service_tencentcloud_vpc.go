@@ -983,12 +983,15 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 
 	policy.CidrBlock = info.CidrIp
 	policy.SecurityGroupId = info.SourceSgId
-	policy.Protocol = info.Protocol
+	if info.Protocol != nil {
+		policy.Protocol = common.StringPtr(strings.ToUpper(*info.Protocol))
+	}
+
 	policy.Port = info.PortRange
 	policy.PolicyDescription = info.Description
-	policy.Action = &info.Action
+	policy.Action = common.StringPtr(strings.ToUpper(info.Action))
 
-	switch info.PolicyType {
+	switch strings.ToLower(info.PolicyType) {
 	case "ingress":
 		createRequest.SecurityGroupPolicySet.Ingress = []*vpc.SecurityGroupPolicy{policy}
 
@@ -1039,7 +1042,7 @@ func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId st
 
 	var policies []*vpc.SecurityGroupPolicy
 
-	switch info.PolicyType {
+	switch strings.ToLower(info.PolicyType) {
 	case "ingress":
 		policies = policySet.Ingress
 
@@ -1074,15 +1077,18 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 	request.SecurityGroupId = &info.SgId
 	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
 
-	policy := &vpc.SecurityGroupPolicy{
-		Action:          &info.Action,
-		CidrBlock:       info.CidrIp,
-		Protocol:        info.Protocol,
-		Port:            info.PortRange,
-		SecurityGroupId: info.SourceSgId,
+	policy := new(vpc.SecurityGroupPolicy)
+	policy.Action = common.StringPtr(strings.ToUpper(info.Action))
+	policy.CidrBlock = info.CidrIp
+
+	if info.Protocol != nil {
+		policy.Protocol = common.StringPtr(strings.ToUpper(*info.Protocol))
 	}
 
-	switch info.PolicyType {
+	policy.Port = info.PortRange
+	policy.SecurityGroupId = info.SourceSgId
+
+	switch strings.ToLower(info.PolicyType) {
 	case "ingress":
 		request.SecurityGroupPolicySet.Ingress = []*vpc.SecurityGroupPolicy{policy}
 
@@ -1187,18 +1193,17 @@ type securityGroupRuleBasicInfo struct {
 	PortRange   *string `json:"port_range,omitempty"`
 	Action      string  `json:"action"`
 	SourceSgId  *string `json:"source_sg_id,omitempty"`
-	Description *string `json:"description"`
+	Description *string `json:"description,omitempty"`
 }
 
 // Build an ID for a Security Group Rule
 func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string, err error) {
-	if info.Protocol != nil {
-		*info.Protocol = strings.ToLower(*info.Protocol)
-	}
 	b, err := json.Marshal(info)
 	if err != nil {
 		return "", err
 	}
+
+	log.Printf("[DEBUG]%s build rule is %s", GetLogId(context.TODO()), string(b))
 
 	return base64.StdEncoding.EncodeToString(b), nil
 }
@@ -1209,6 +1214,8 @@ func parseSecurityGroupRuleId(ruleId string) (ruleInfo securityGroupRuleBasicInf
 	if err != nil {
 		return securityGroupRuleBasicInfo{}, err
 	}
+
+	log.Printf("[DEBUG]%s parse rule is %s", GetLogId(context.TODO()), string(b))
 
 	var info securityGroupRuleBasicInfo
 
@@ -1233,7 +1240,7 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 	}
 
 	if info.Protocol != nil {
-		if *policy.Protocol != *info.Protocol {
+		if *policy.Protocol != strings.ToLower(*info.Protocol) {
 			return false
 		}
 	}
@@ -1244,7 +1251,7 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 		}
 	}
 
-	if *policy.Action != info.Action {
+	if *policy.Action != strings.ToUpper(info.Action) {
 		return false
 	}
 

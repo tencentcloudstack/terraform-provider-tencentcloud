@@ -4,15 +4,50 @@ Provide a resource to create security group rule.
 Example Usage
 
 ```hcl
-resource "tencentcloud_security_group_rule" "sglab" {
-  security_group_id = "sg-fh48e762"
+resource "tencentcloud_security_group" "default" {
+  name        = "${var.security_group_name}"
+  description = "test security group rule"
+}
+
+resource "tencentcloud_security_group" "default2" {
+  name        = "${var.security_group_name}"
+  description = "anthor test security group rule"
+}
+
+resource "tencentcloud_security_group_rule" "http-in" {
+  security_group_id = "${tencentcloud_security_group.default.id}"
   type              = "ingress"
-  cidr_ip           = "10.0.0.0/16"
+  cidr_ip           = "0.0.0.0/0"
   ip_protocol       = "TCP"
-  port_range        = "80"
+  port_range        = "80,8080"
   policy            = "ACCEPT"
-  source_sgid       = "sg-fh48e762"
-  description       = "favourite sg rule"
+}
+
+resource "tencentcloud_security_group_rule" "ssh-in" {
+  security_group_id = "${tencentcloud_security_group.default.id}"
+  type              = "ingress"
+  cidr_ip           = "0.0.0.0/0"
+  ip_protocol       = "TCP"
+  port_range        = "22"
+  policy            = "ACCEPT"
+}
+
+resource "tencentcloud_security_group_rule" "egress-drop" {
+  security_group_id = "${tencentcloud_security_group.default.id}"
+  type              = "egress"
+  cidr_ip           = "10.2.3.0/24"
+  ip_protocol       = "UDP"
+  port_range        = "3000-4000"
+  policy            = "DROP"
+}
+
+resource "tencentcloud_security_group_rule" "sourcesgid-in" {
+  security_group_id = "${tencentcloud_security_group.default.id}"
+  type              = "ingress"
+  source_sgid       = "${tencentcloud_security_group.default2.id}"
+  ip_protocol       = "TCP"
+  port_range        = "80,8080"
+  policy            = "ACCEPT"
 }
 ```
 */
@@ -45,11 +80,18 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 			},
 
 			"type": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue([]string{"ingress", "egress"}),
-				Description:  "Type of the security group rule, the available value include 'ingress' and 'egress'.",
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+					value := v.(string)
+					value = strings.ToUpper(value)
+					if value != "INGRESS" && value != "EGRESS" {
+						errors = append(errors, fmt.Errorf("%s of rule, ingress (inbound) or egress (outbound) value:%v", k, value))
+					}
+					return
+				},
+				Description: "Type of the security group rule, the available value include 'ingress' and 'egress'.",
 			},
 
 			"cidr_ip": {
@@ -70,11 +112,18 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 			},
 
 			"ip_protocol": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue([]string{"TCP", "UDP", "ICMP"}),
-				Description:  "Type of ip protocol, the available value include 'TCP', 'UDP' and 'ICMP'. Default to all types protocol.",
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+					value := v.(string)
+					value = strings.ToUpper(value)
+					if value != "UDP" && value != "TCP" && value != "ICMP" {
+						errors = append(errors, fmt.Errorf("%s support 'UDP', 'TCP', 'ICMP' and not configured means all protocols. But got %s", k, v))
+					}
+					return
+				},
+				Description: "Type of ip protocol, the available value include 'TCP', 'UDP' and 'ICMP'. Default to all types protocol.",
 			},
 
 			"port_range": {
@@ -93,11 +142,17 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 			},
 
 			"policy": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue([]string{"ACCEPT", "DROP"}),
-				Description:  "Rule policy of security group, the available value include 'ACCEPT' and 'DROP'.",
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+					value := strings.ToUpper(v.(string))
+					if value != "ACCEPT" && value != "DROP" {
+						errors = append(errors, fmt.Errorf("policy of rule, 'ACCEPT' or 'DROP'"))
+					}
+					return
+				},
+				Description: "Rule policy of security group, the available value include 'ACCEPT' and 'DROP'.",
 			},
 
 			"source_sgid": {
@@ -220,13 +275,23 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 	}
 
 	if policy.Protocol != nil {
-		_ = d.Set("ip_protocol", strings.ToUpper(*policy.Protocol))
+		inputProtocol := d.Get("ip_protocol").(string)
+		if strings.ToLower(inputProtocol) != inputProtocol {
+			// inputProtocol is uppercase, api return is lowercase, convert api return response to uppercase
+			*policy.Protocol = strings.ToUpper(*policy.Protocol)
+		}
+		_ = d.Set("ip_protocol", *policy.Protocol)
 	}
 
 	if policy.Port != nil {
 		_ = d.Set("port_range", *policy.Port)
 	}
 
+	inputPolicy := d.Get("policy").(string)
+	if strings.ToUpper(inputPolicy) != inputPolicy {
+		// inputPolicy is lowercase, api return is uppercase, convert api return response to lowercase
+		*policy.Action = strings.ToLower(*policy.Action)
+	}
 	_ = d.Set("policy", *policy.Action)
 
 	if policy.PolicyDescription != nil {
