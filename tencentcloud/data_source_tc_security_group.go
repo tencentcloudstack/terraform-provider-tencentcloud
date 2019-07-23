@@ -113,21 +113,21 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface
 	sg := jsonresp.Data.Detail[0]
 
 	d.SetId(sg.SgId)
-	_ = d.Set("security_group_id", sg.SgId)
-	_ = d.Set("name", sg.SgName)
-	_ = d.Set("description", sg.SgRemark)
-	_ = d.Set("create_time", sg.CreateTime)
-	_ = d.Set("be_associate_count", sg.BeAssociateCount)
+	d.Set("security_group_id", sg.SgId)
+	d.Set("name", sg.SgName)
+	d.Set("description", sg.SgRemark)
+	d.Set("create_time", sg.CreateTime)
+	d.Set("be_associate_count", sg.BeAssociateCount)
 
 	if "string" == reflect.TypeOf(sg.ProjectId).String() {
 		if intVal, err := strconv.ParseInt(sg.ProjectId.(string), 10, 64); err != nil {
 			return fmt.Errorf("create security_group project ParseInt  error ,%s", err.Error())
 		} else {
-			_ = d.Set("project_id", int(intVal))
+			d.Set("project_id", int(intVal))
 		}
 
 	} else {
-		_ = d.Set("project_id", sg.ProjectId.(int))
+		d.Set("project_id", sg.ProjectId.(int))
 	}
 	return nil
 }

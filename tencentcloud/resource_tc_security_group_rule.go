@@ -246,16 +246,16 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 		return nil
 	}
 
-	_ = d.Set("security_group_id", sgId)
+	d.Set("security_group_id", sgId)
 
-	_ = d.Set("type", policyType)
+	d.Set("type", policyType)
 
 	if policy.CidrBlock != nil {
-		_ = d.Set("cidr_ip", *policy.CidrBlock)
+		d.Set("cidr_ip", *policy.CidrBlock)
 	}
 
 	if policy.SecurityGroupId != nil {
-		_ = d.Set("source_sgid", *policy.SecurityGroupId)
+		d.Set("source_sgid", *policy.SecurityGroupId)
 	}
 
 	if policy.Protocol != nil {
@@ -264,11 +264,11 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 			// inputProtocol is uppercase, api return is lowercase, convert api return response to uppercase
 			*policy.Protocol = strings.ToUpper(*policy.Protocol)
 		}
-		_ = d.Set("ip_protocol", *policy.Protocol)
+		d.Set("ip_protocol", *policy.Protocol)
 	}
 
 	if policy.Port != nil {
-		_ = d.Set("port_range", *policy.Port)
+		d.Set("port_range", *policy.Port)
 	}
 
 	inputPolicy := d.Get("policy").(string)
@@ -276,10 +276,10 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 		// inputPolicy is lowercase, api return is uppercase, convert api return response to lowercase
 		*policy.Action = strings.ToLower(*policy.Action)
 	}
-	_ = d.Set("policy", *policy.Action)
+	d.Set("policy", *policy.Action)
 
 	if policy.PolicyDescription != nil {
-		_ = d.Set("description", *policy.PolicyDescription)
+		d.Set("description", *policy.PolicyDescription)
 	}
 
 	return nil

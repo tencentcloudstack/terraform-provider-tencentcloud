@@ -175,7 +175,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 		})
 	}
 
-	_ = d.Set("security_groups", sgInstances)
+	d.Set("security_groups", sgInstances)
 
 	d.SetId(idBuilder.String())
 
