@@ -16,12 +16,12 @@ Use this data source to query detailed information of security groups.
 resource "tencentcloud_security_group" "sglab" {
   name        = "mysg"
   description = "favourite sg"
-  project_id  = "Default project"
+  project_id  = 0
 }
 data "tencentcloud_security_groups" "sglab" {
   security_group_id = "${tencentcloud_security_group.sglab.id}"
   name              = "mysg"
-  project_id        = "Default project"
+  project_id        = 0
 }
 ```
 
@@ -41,8 +41,8 @@ In addition to all arguments above, the following attributes are exported:
   * `be_associate_count` - Number of security group binding resources.
   * `create_time` - Creation time of security group.
   * `description` - Description of the security group.
-  * `id` - Inquired ID of the security group.
-  * `name` - Inquired name of the security group.
-  * `project_id` - Inquired project ID of the security group.
+  * `id` - ID of the security group.
+  * `name` - Name of the security group.
+  * `project_id` - Project ID of the security group.
 
 

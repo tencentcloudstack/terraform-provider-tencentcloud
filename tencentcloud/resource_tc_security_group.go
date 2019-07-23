@@ -7,7 +7,7 @@ Example Usage
 resource "tencentcloud_security_group" "sglab" {
   name        = "mysg"
   description = "favourite sg"
-  project_id  = "Default project"
+  project_id  = 0
 }
 ```
 

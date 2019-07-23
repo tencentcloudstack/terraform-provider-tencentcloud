@@ -16,7 +16,7 @@ Provide a resource to create security group.
 resource "tencentcloud_security_group" "sglab" {
   name        = "mysg"
   description = "favourite sg"
-  project_id  = "Default project"
+  project_id  = 0
 }
 ```
 
@@ -26,7 +26,7 @@ The following arguments are supported:
 
 * `name` - (Required) Name of the security group to be queried.
 * `description` - (Optional) Description of the security group.
-* `project_id` - (Optional) Project ID of the security group.
+* `project_id` - (Optional, ForceNew) Project ID of the security group.
 
 
 ## Import

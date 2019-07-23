@@ -7,12 +7,12 @@ Example Usage
 resource "tencentcloud_security_group" "sglab" {
   name        = "mysg"
   description = "favourite sg"
-  project_id  = "Default project"
+  project_id  = 0
 }
 data "tencentcloud_security_groups" "sglab" {
   security_group_id = "${tencentcloud_security_group.sglab.id}"
   name              = "mysg"
-  project_id        = "Default project"
+  project_id        = 0
 }
 ```
 */
@@ -61,13 +61,13 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Inquired ID of the security group.",
+							Description: "ID of the security group.",
 						},
 
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Inquired name of the security group.",
+							Description: "Nname of the security group.",
 						},
 
 						"description": {
@@ -91,7 +91,7 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Inquired project ID of the security group.",
+							Description: "Project ID of the security group.",
 						},
 					},
 				},
