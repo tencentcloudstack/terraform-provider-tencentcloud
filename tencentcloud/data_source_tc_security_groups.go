@@ -155,7 +155,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 
 		var count int
 		if associate != nil {
-			count += int(*associate.CVM + *associate.ENI + *associate.CDB + *associate.CLB)
+			count = int(*associate.CVM + *associate.ENI + *associate.CDB + *associate.CLB)
 		}
 
 		pjId, err := strconv.Atoi(*sg.ProjectId)
