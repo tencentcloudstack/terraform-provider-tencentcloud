@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -962,13 +961,7 @@ func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids [
 			logId, request.GetAction(), request.ToJsonString(), err)
 	}
 
-	set := response.Response.SecurityGroupAssociationStatisticsSet
-
-	if len(set) == 0 {
-		return nil, errors.New("security groups not found")
-	}
-
-	return set, nil
+	return response.Response.SecurityGroupAssociationStatisticsSet, nil
 }
 
 func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securityGroupRuleBasicInfo) (ruleId string, err error) {
