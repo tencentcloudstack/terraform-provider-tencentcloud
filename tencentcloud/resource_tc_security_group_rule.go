@@ -69,7 +69,6 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				ForceNew:    true,
 				Description: "ID of the security group to be queried.",
 			},
-
 			"type": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -84,7 +83,6 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				},
 				Description: "Type of the security group rule, the available value include 'ingress' and 'egress'.",
 			},
-
 			"cidr_ip": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -101,7 +99,6 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				},
 				Description: "An IP address network or segment, and conflict with 'source_sgid'.",
 			},
-
 			"ip_protocol": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -116,7 +113,6 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				},
 				Description: "Type of ip protocol, the available value include 'TCP', 'UDP' and 'ICMP'. Default to all types protocol.",
 			},
-
 			"port_range": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -131,7 +127,6 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					return
 				},
 			},
-
 			"policy": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -145,7 +140,6 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				},
 				Description: "Rule policy of security group, the available value include 'ACCEPT' and 'DROP'.",
 			},
-
 			"source_sgid": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -155,7 +149,6 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				},
 				Description: "ID of the nested security group, and conflict with 'cidr_ip'.",
 			},
-
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,

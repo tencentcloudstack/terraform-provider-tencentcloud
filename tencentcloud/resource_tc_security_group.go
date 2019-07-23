@@ -48,7 +48,6 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 				ValidateFunc: validateStringLengthInRange(1, 60),
 				Description:  "Name of the security group to be queried.",
 			},
-
 			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -56,7 +55,6 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 				ValidateFunc: validateStringLengthInRange(1, 100),
 				Description:  "Description of the security group.",
 			},
-
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
