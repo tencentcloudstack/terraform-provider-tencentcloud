@@ -77,12 +77,12 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 	name := d.Get("name").(string)
 	desc := d.Get("description").(string)
 
-	var projectID *int
-	if projectIDInterface, exist := d.GetOk("project_id"); exist {
-		projectID = common.IntPtr(projectIDInterface.(int))
+	var projectId *int
+	if projectIdInterface, exist := d.GetOk("project_id"); exist {
+		projectId = common.IntPtr(projectIdInterface.(int))
 	}
 
-	id, err := vpcService.CreateSecurityGroup(ctx, name, desc, projectID)
+	id, err := vpcService.CreateSecurityGroup(ctx, name, desc, projectId)
 	if err != nil {
 		return err
 	}
@@ -121,11 +121,11 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 		d.Set("name", *securityGroup.SecurityGroupName)
 		d.Set("description", *securityGroup.SecurityGroupDesc)
 		if securityGroup.ProjectId != nil {
-			projectID, err := strconv.Atoi(*securityGroup.ProjectId)
+			projectId, err := strconv.Atoi(*securityGroup.ProjectId)
 			if err != nil {
 				return fmt.Errorf("securtiy group %s project id invalid: %v", *securityGroup.SecurityGroupId, err)
 			}
-			d.Set("project_id", projectID)
+			d.Set("project_id", projectId)
 		}
 	}
 
