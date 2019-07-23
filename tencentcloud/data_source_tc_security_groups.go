@@ -67,7 +67,7 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Nname of the security group.",
+							Description: "Name of the security group.",
 						},
 
 						"description": {
