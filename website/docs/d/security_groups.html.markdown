@@ -13,8 +13,13 @@ Use this data source to query detailed information of security groups.
 ## Example Usage
 
 ```hcl
+resource "tencentcloud_security_group" "sglab" {
+  name        = "mysg"
+  description = "favourite sg"
+  project_id  = "Default project"
+}
 data "tencentcloud_security_groups" "sglab" {
-  security_group_id = "sg-fh48e762"
+  security_group_id = "${tencentcloud_security_group.sglab.id}"
   name              = "mysg"
   project_id        = "Default project"
 }
@@ -37,5 +42,7 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - Creation time of security group.
   * `description` - Description of the security group.
   * `id` - Inquired ID of the security group.
+  * `name` - Inquired name of the security group.
+  * `project_id` - Inquired project ID of the security group.
 
 

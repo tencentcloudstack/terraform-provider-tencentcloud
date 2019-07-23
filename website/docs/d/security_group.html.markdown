@@ -15,8 +15,13 @@ Use this data source to query detailed information of security group.
 ## Example Usage
 
 ```hcl
+resource "tencentcloud_security_group" "sglab" {
+  name        = "mysg"
+  description = "favourite sg"
+  project_id  = "Default project"
+}
 data "tencentcloud_security_group" "sglab" {
-  security_group_id = "sg-fh48e762"
+  security_group_id = "${tencentcloud_security_group.sglab.id}"
 }
 ```
 

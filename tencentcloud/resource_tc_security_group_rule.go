@@ -4,50 +4,41 @@ Provide a resource to create security group rule.
 Example Usage
 
 ```hcl
-resource "tencentcloud_security_group" "default" {
-  name        = "${var.security_group_name}"
-  description = "test security group rule"
+resource "tencentcloud_security_group" "sglab_1" {
+  name        = "mysg_1"
+  description = "favourite sg_1"
+  project_id  = "Default project"
 }
-
-resource "tencentcloud_security_group" "default2" {
-  name        = "${var.security_group_name}"
-  description = "anthor test security group rule"
-}
-
-resource "tencentcloud_security_group_rule" "http-in" {
-  security_group_id = "${tencentcloud_security_group.default.id}"
+resource "tencentcloud_security_group_rule" "sglab_1" {
+  security_group_id = "${tencentcloud_security_group.sglab_1.id}"
   type              = "ingress"
-  cidr_ip           = "0.0.0.0/0"
+  cidr_ip           = "10.0.0.0/16"
   ip_protocol       = "TCP"
-  port_range        = "80,8080"
+  port_range        = "80"
   policy            = "ACCEPT"
+  description       = "favourite sg rule_1"
 }
+```
 
-resource "tencentcloud_security_group_rule" "ssh-in" {
-  security_group_id = "${tencentcloud_security_group.default.id}"
+```hcl
+resource "tencentcloud_security_group" "sglab_2" {
+  name        = "mysg_2"
+  description = "favourite sg_2"
+  project_id  = "Default project"
+}
+resource "tencentcloud_security_group" "sglab_3" {
+  name        = "mysg_3"
+  description = "favourite sg_3"
+  project_id  = "Default project"
+}
+resource "tencentcloud_security_group_rule" "sglab_2" {
+  security_group_id = "${tencentcloud_security_group.sglab_2.id}"
   type              = "ingress"
-  cidr_ip           = "0.0.0.0/0"
   ip_protocol       = "TCP"
-  port_range        = "22"
+  port_range        = "80"
   policy            = "ACCEPT"
-}
-
-resource "tencentcloud_security_group_rule" "egress-drop" {
-  security_group_id = "${tencentcloud_security_group.default.id}"
-  type              = "egress"
-  cidr_ip           = "10.2.3.0/24"
-  ip_protocol       = "UDP"
-  port_range        = "3000-4000"
-  policy            = "DROP"
-}
-
-resource "tencentcloud_security_group_rule" "sourcesgid-in" {
-  security_group_id = "${tencentcloud_security_group.default.id}"
-  type              = "ingress"
-  source_sgid       = "${tencentcloud_security_group.default2.id}"
-  ip_protocol       = "TCP"
-  port_range        = "80,8080"
-  policy            = "ACCEPT"
+  source_sgid       = "${tencentcloud_security_group.sglab_3.id}"
+  description       = "favourite sg rule_2"
 }
 ```
 */

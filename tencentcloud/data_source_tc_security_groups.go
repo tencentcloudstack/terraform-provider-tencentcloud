@@ -4,8 +4,13 @@ Use this data source to query detailed information of security groups.
 Example Usage
 
 ```hcl
+resource "tencentcloud_security_group" "sglab" {
+  name        = "mysg"
+  description = "favourite sg"
+  project_id  = "Default project"
+}
 data "tencentcloud_security_groups" "sglab" {
-  security_group_id = "sg-fh48e762"
+  security_group_id = "${tencentcloud_security_group.sglab.id}"
   name              = "mysg"
   project_id        = "Default project"
 }
@@ -63,8 +68,9 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 						},
 
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Inquired name of the security group.",
 						},
 
 						"description": {
@@ -86,8 +92,9 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 						},
 
 						"project_id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Inquired project ID of the security group.",
 						},
 					},
 				},
