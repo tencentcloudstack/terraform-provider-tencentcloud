@@ -26,7 +26,9 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 )
@@ -176,6 +178,24 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 	id := d.Id()
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	// wait until all instances unbind this security group
+	if err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+		associateSet, err := vpcService.DescribeSecurityGroupsAssociate(ctx, []string{id})
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+
+		if len(associateSet) > 0 {
+			err := fmt.Errorf("security group %s still bind instances", id)
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		return nil
+	}); err != nil {
+		return err
+	}
 
 	return vpcService.DeleteSecurityGroup(ctx, id)
 }
