@@ -20,8 +20,6 @@ resource "tencentcloud_security_group" "sglab" {
 }
 data "tencentcloud_security_groups" "sglab" {
   security_group_id = "${tencentcloud_security_group.sglab.id}"
-  name              = "mysg"
-  project_id        = 0
 }
 ```
 
