@@ -59,6 +59,7 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 				Description: "Project ID of the security group.",
 			},
 		},
