@@ -33,6 +33,8 @@ Data Sources
   tencentcloud_cos_bucket_object
   tencentcloud_cos_buckets
   tencentcloud_dc_instances
+  tencentcloud_dc_gateway_ccn_routes
+  tencentcloud_dc_gateway_instances
   tencentcloud_dcx_instances
   tencentcloud_eip
   tencentcloud_image
@@ -82,6 +84,10 @@ COS Resources
 
 DC Resources
   tencentcloud_dcx
+
+DCG Resources
+  tencentcloud_dc_gateway
+  tencentcloud_dc_gateway_ccn_route
 
 CVM Resources
   tencentcloud_instance
@@ -188,6 +194,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
 			"tencentcloud_dc_instances":                dataSourceTencentCloudDcInstances(),
 			"tencentcloud_dcx_instances":               dataSourceTencentCloudDcxInstances(),
+			"tencentcloud_dc_gateway_instances":        dataSourceTencentCloudDcGatewayInstances(),
+			"tencentcloud_dc_gateway_ccn_routes":       dataSourceTencentCloudDcGatewayCCNRoutes(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -232,6 +240,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_attachment":             resourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":        resourceTencentCloudCcnBandwidthLimit(),
 			"tencentcloud_dcx":                        resourceTencentCloudDcxInstance(),
+			"tencentcloud_dc_gateway":                 resourceTencentCloudDcGatewayInstance(),
+			"tencentcloud_dc_gateway_ccn_route":       resourceTencentCloudDcGatewayCcnRouteInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
