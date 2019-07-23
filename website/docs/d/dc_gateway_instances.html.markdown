@@ -40,9 +40,9 @@ data "tencentcloud_dc_gateway_instances"  "id_select" {
 
 The following arguments are supported:
 
-* `dcg_id` - (Optional, ForceNew) ID of the DCG to be queried.
-* `name` - (Optional, ForceNew) Name of the DCG to be queried.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
+* `dcg_id` - (Optional) ID of the DCG to be queried.
+* `name` - (Optional) Name of the DCG to be queried.
+* `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
 

@@ -43,19 +43,16 @@ func dataSourceTencentCloudDcGatewayInstances() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"dcg_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "ID of the DCG to be queried.",
 			},
 			"name": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Name of the DCG to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
