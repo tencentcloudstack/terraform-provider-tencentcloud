@@ -48,7 +48,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net"
 	"regexp"
 	"strings"
 
@@ -91,14 +90,14 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					"source_sgid",
 				},
 				ValidateFunc: func(v interface{}, k string) (ws []string, errs []error) {
-					if net.ParseIP(v.(string)) != nil {
+					if _, err := validateIp(v, k); len(err) == 0 {
 						return
 					}
 
-					if _, _, err := net.ParseCIDR(v.(string)); err != nil {
-						errs = append(errs, errors.New("cidr_ip value is not valid IP address or valid CIDR IP address"))
+					if _, err := validateCIDRNetworkAddress(v, k); len(err) != 0 {
+						errs = append(errs, fmt.Errorf("%s %v is not valid IP address or valid CIDR IP address",
+							k, v))
 					}
-
 					return
 				},
 				Description: "An IP address network or segment, and conflict with 'source_sgid'.",
