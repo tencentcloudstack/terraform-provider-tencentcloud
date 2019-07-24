@@ -23,6 +23,7 @@ func TestAccTencentCloudSecurityGroup_basic(t *testing.T) {
 					testAccCheckSecurityGroupExists("tencentcloud_security_group.foo", &sgId),
 					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "name", "ci-temp-test-sg"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "description", ""),
+					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "project_id", "0"),
 				),
 			},
 			{
