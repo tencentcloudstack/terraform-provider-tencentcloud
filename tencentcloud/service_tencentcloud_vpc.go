@@ -972,6 +972,19 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 		return "", err
 	}
 
+	if info.CidrIp == nil {
+		info.CidrIp = common.StringPtr("")
+	}
+	if info.Protocol == nil {
+		info.Protocol = common.StringPtr("ALL")
+	}
+	if info.PortRange == nil {
+		info.PortRange = common.StringPtr("ALL")
+	}
+	if info.SourceSgId == nil {
+		info.SourceSgId = common.StringPtr("")
+	}
+
 	ruleId, err = buildSecurityGroupRuleId(info)
 	if err != nil {
 		return "", fmt.Errorf("build rule id error, reason: %v", err)
@@ -1048,14 +1061,19 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 
 	policy := new(vpc.SecurityGroupPolicy)
 	policy.Action = common.StringPtr(strings.ToUpper(info.Action))
-	policy.CidrBlock = info.CidrIp
+
+	if *info.CidrIp != "" {
+		policy.CidrBlock = info.CidrIp
+	}
 
 	if info.Protocol != nil {
 		policy.Protocol = common.StringPtr(strings.ToUpper(*info.Protocol))
 	}
 
 	policy.Port = info.PortRange
-	policy.SecurityGroupId = info.SourceSgId
+	if *info.SourceSgId != "" {
+		policy.SecurityGroupId = info.SourceSgId
+	}
 
 	switch strings.ToLower(info.PolicyType) {
 	case "ingress":
@@ -1158,10 +1176,10 @@ type securityGroupRuleBasicInfo struct {
 	SgId        string  `json:"sg_id"`
 	PolicyType  string  `json:"policy_type"`
 	CidrIp      *string `json:"cidr_ip,omitempty"`
-	Protocol    *string `json:"protocol,omitempty"`
-	PortRange   *string `json:"port_range,omitempty"`
+	Protocol    *string `json:"protocol"`
+	PortRange   *string `json:"port_range"`
 	Action      string  `json:"action"`
-	SourceSgId  *string `json:"source_sg_id,omitempty"`
+	SourceSgId  *string `json:"source_sg_id"`
 	Description *string `json:"description,omitempty"`
 }
 
@@ -1196,31 +1214,27 @@ func parseSecurityGroupRuleId(ruleId string) (ruleInfo securityGroupRuleBasicInf
 }
 
 func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info securityGroupRuleBasicInfo) bool {
-	if info.CidrIp != nil {
-		if *policy.CidrBlock != *info.CidrIp {
-			return false
-		}
+	// policy.CidrBlock always not nil
+	if *policy.CidrBlock != *info.CidrIp {
+		return false
 	}
 
-	if info.PortRange != nil {
-		if *policy.Port != *info.PortRange {
-			return false
-		}
+	// policy.Port always not nil
+	if *policy.Port != *info.PortRange {
+		return false
 	}
 
-	if info.Protocol != nil {
-		if *policy.Protocol != strings.ToLower(*info.Protocol) {
-			return false
-		}
+	// policy.Protocol always not nil
+	if strings.ToLower(*policy.Protocol) != strings.ToLower(*info.Protocol) {
+		return false
 	}
 
-	if info.SourceSgId != nil {
-		if *policy.SecurityGroupId != *info.SourceSgId {
-			return false
-		}
+	// policy.SecurityGroupId always not nil
+	if *policy.SecurityGroupId != *info.SourceSgId {
+		return false
 	}
 
-	if *policy.Action != strings.ToUpper(info.Action) {
+	if strings.ToUpper(*policy.Action) != strings.ToUpper(info.Action) {
 		return false
 	}
 

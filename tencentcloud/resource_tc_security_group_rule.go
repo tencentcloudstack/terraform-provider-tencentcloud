@@ -132,6 +132,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				ConflictsWith: []string{
 					"cidr_ip",
 				},
+				Computed:    true,
 				Description: "ID of the nested security group, and conflict with 'cidr_ip'.",
 			},
 			"description": {
