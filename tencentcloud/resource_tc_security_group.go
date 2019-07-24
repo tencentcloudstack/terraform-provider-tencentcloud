@@ -187,6 +187,8 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 		}
 
 		if len(associateSet) == 0 {
+			time.Sleep(3 * time.Second)
+
 			return nil
 		}
 
@@ -195,10 +197,10 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 			err := fmt.Errorf("security group %s still bind instances", id)
 			log.Printf("[DEBUG]%s %v", logId, err)
 
-			time.Sleep(3 * time.Second)
-
 			return resource.RetryableError(err)
 		}
+
+		time.Sleep(3 * time.Second)
 
 		return nil
 	}); err != nil {
