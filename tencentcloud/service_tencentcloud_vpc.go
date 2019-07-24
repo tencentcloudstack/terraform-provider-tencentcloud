@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -838,6 +839,10 @@ func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string
 		return "", err
 	}
 
+	if response.Response.SecurityGroup == nil || response.Response.SecurityGroup.SecurityGroupId == nil {
+		return "", errors.New("response is nil")
+	}
+
 	return *response.Response.SecurityGroup.SecurityGroupId, nil
 }
 
@@ -861,13 +866,11 @@ func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg 
 		return nil, 0, err
 	}
 
-	has = int(*response.Response.TotalCount)
-
-	if has == 0 {
+	if len(response.Response.SecurityGroupSet) == 0 {
 		return nil, 0, nil
 	}
 
-	return response.Response.SecurityGroupSet[0], has, nil
+	return response.Response.SecurityGroupSet[0], len(response.Response.SecurityGroupSet), nil
 }
 
 func (me *VpcService) ModifySecurityGroup(ctx context.Context, id string, newName, newDesc *string) error {
@@ -1021,6 +1024,11 @@ func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId st
 	}
 
 	policySet := response.Response.SecurityGroupPolicySet
+
+	if policySet == nil {
+		log.Printf("[DEBUG]%s policy set is nil", logId)
+		return
+	}
 
 	var policies []*vpc.SecurityGroupPolicy
 
