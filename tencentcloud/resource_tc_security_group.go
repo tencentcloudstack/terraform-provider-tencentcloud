@@ -194,6 +194,9 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 		if *statistics.CVM+*statistics.CLB+*statistics.CDB+*statistics.ENI+*statistics.SG > 0 {
 			err := fmt.Errorf("security group %s still bind instances", id)
 			log.Printf("[DEBUG]%s %v", logId, err)
+
+			time.Sleep(3 * time.Second)
+
 			return resource.RetryableError(err)
 		}
 
