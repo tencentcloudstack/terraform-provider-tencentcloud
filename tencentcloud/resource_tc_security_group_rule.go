@@ -103,7 +103,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				ForceNew: true,
-				Default:  "ALL",
+				Computed: true,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
 					value = strings.ToUpper(value)
@@ -118,7 +118,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Default:     "ALL",
+				Computed:    true,
 				Description: "Range of the port. The available value can be one, multiple or one segment. E.g. '80', '80,90' and '80-90'. Default to all ports.",
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)

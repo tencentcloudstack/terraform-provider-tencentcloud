@@ -95,6 +95,28 @@ func TestAccTencentCloudSecurityGroupRule_sourcesgid(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudSecurityGroupRule_allDrop(t *testing.T) {
+	var sgrId string
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckSecurityGroupRuleDestroy(&sgrId),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSecurityGroupRuleConfigAllDrop,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.egress-DROP", &sgrId),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "cidr_ip", "0.0.0.0/0"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "ip_protocol", "ALL"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "port_range", "ALL"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "policy", "DROP"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckSecurityGroupRuleDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
@@ -207,5 +229,19 @@ resource "tencentcloud_security_group_rule" "sourcesgid-in" {
   ip_protocol       = "TCP"
   port_range        = "80,8080"
   policy            = "ACCEPT"
+}
+`
+
+const testAccSecurityGroupRuleConfigAllDrop = `
+resource "tencentcloud_security_group" "foo" {
+  name        = "ci-temp-test-sg"
+  description = "ci-temp-test-sg"
+}
+
+resource "tencentcloud_security_group_rule" "egress-DROP" {
+  security_group_id = "${tencentcloud_security_group.foo.id}"
+  cidr_ip           = "0.0.0.0/0"
+  type              = "ingress"
+  policy            = "DROP"
 }
 `
