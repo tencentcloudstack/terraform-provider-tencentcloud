@@ -1143,9 +1143,6 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 
 	request := vpc.NewDescribeSecurityGroupsRequest()
 
-	request.Offset = common.StringPtr("0")
-	request.Limit = common.StringPtr("50")
-
 	if sgId != nil {
 		request.SecurityGroupIds = []*string{sgId}
 	} else {
@@ -1164,20 +1161,43 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 		}
 	}
 
-	response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
-	if err != nil {
-		if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-			if sdkError.Code == "ResourceNotFound" {
-				return nil, nil
+	offset := 0
+	pageSize := 50
+	sgs = make([]*vpc.SecurityGroup, 0)
+
+	for {
+		request.Offset = common.StringPtr(strconv.Itoa(offset))
+		request.Limit = common.StringPtr(strconv.Itoa(pageSize))
+
+		response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceNotFound" {
+					break
+				}
 			}
+
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return nil, err
 		}
 
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-			logId, request.GetAction(), request.ToJsonString(), err)
-		return nil, err
+		set := response.Response.SecurityGroupSet
+		if len(set) == 0 {
+			break
+		}
+		for _, sg := range set {
+			sgs = append(sgs, sg)
+		}
+
+		if len(set) < pageSize {
+			break
+		}
+
+		offset += pageSize
 	}
 
-	return response.Response.SecurityGroupSet, nil
+	return sgs, nil
 }
 
 type securityGroupRuleBasicInfo struct {
