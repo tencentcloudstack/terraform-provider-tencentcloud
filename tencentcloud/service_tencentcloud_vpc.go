@@ -846,8 +846,6 @@ func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg 
 
 	request := vpc.NewDescribeSecurityGroupsRequest()
 
-	request.Offset = common.StringPtr("0")
-	request.Limit = common.StringPtr("1")
 	request.SecurityGroupIds = []*string{&id}
 
 	response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
