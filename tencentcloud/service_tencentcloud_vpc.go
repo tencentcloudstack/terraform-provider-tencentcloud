@@ -993,9 +993,11 @@ func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId st
 
 	response, err := me.client.UseVpcClient().DescribeSecurityGroupPolicies(request)
 	if err != nil {
-		// if security group does not exist, security group rule does not exist too
-		if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound" {
-			return
+		if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			// if security group does not exist, security group rule does not exist too
+			if sdkError.Code == "ResourceNotFound" {
+				return
+			}
 		}
 
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
