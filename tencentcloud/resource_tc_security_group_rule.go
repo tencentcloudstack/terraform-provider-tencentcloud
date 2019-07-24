@@ -90,9 +90,13 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				ConflictsWith: []string{
 					"source_sgid",
 				},
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+				ValidateFunc: func(v interface{}, k string) (ws []string, errs []error) {
+					if net.ParseIP(v.(string)) != nil {
+						return
+					}
+
 					if _, _, err := net.ParseCIDR(v.(string)); err != nil {
-						errors = append(errors, err)
+						errs = append(errs, errors.New("cidr_ip value is not valid IP address or valid CIDR IP address"))
 					}
 
 					return
@@ -205,6 +209,12 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 	}
 
 	action := d.Get("policy").(string)
+
+	if protocol != nil {
+		if strings.ToUpper(*protocol) == "ICMP" && portRange != nil {
+			return errors.New("when ip_protocol is ICMP, can't set port_range")
+		}
+	}
 
 	info := securityGroupRuleBasicInfo{
 		SgId:        sgId,

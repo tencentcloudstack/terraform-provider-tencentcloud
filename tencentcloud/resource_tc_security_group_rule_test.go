@@ -22,7 +22,7 @@ func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
 				Config: testAccSecurityGroupRuleConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.http-in", &sgrId),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "cidr_ip", "0.0.0.0/0"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "cidr_ip", "1.1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "ip_protocol", "tcp"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "description", ""),
 				),
@@ -172,7 +172,7 @@ resource "tencentcloud_security_group" "foo" {
 resource "tencentcloud_security_group_rule" "http-in" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
   type              = "ingress"
-  cidr_ip           = "0.0.0.0/0"
+  cidr_ip           = "1.1.1.1"
   ip_protocol       = "tcp"
   port_range        = "80,8080"
   policy            = "accept"
