@@ -39,8 +39,8 @@ In addition to all arguments above, the following attributes are exported:
   * `be_associate_count` - Number of security group binding resources.
   * `create_time` - Creation time of security group.
   * `description` - Description of the security group.
-  * `id` - ID of the security group.
   * `name` - Name of the security group.
   * `project_id` - Project ID of the security group.
+  * `security_group_id` - ID of the security group.
 
 
