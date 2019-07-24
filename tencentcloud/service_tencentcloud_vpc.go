@@ -924,31 +924,6 @@ func (me *VpcService) AttachEniToSecurityGroup(ctx context.Context, eni string, 
 	return nil
 }
 
-func (me *VpcService) DescribeNetworkInterfaces(ctx context.Context, eniIds []string, sgId *string) ([]*vpc.NetworkInterface, error) {
-	logId := GetLogId(ctx)
-
-	request := vpc.NewDescribeNetworkInterfacesRequest()
-	request.Limit = common.Uint64Ptr(100)
-
-	if len(eniIds) > 0 {
-		request.NetworkInterfaceIds = common.StringPtrs(eniIds)
-	} else if sgId != nil {
-		request.Filters = append(request.Filters, &vpc.Filter{
-			Name:   common.StringPtr("groups.security-group-id"),
-			Values: []*string{sgId},
-		})
-	}
-
-	response, err := me.client.UseVpcClient().DescribeNetworkInterfaces(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-			logId, request.GetAction(), request.ToJsonString(), err)
-		return nil, err
-	}
-
-	return response.Response.NetworkInterfaceSet, nil
-}
-
 func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids []string) ([]*vpc.SecurityGroupAssociationStatistics, error) {
 	logId := GetLogId(ctx)
 
