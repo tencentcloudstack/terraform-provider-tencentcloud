@@ -122,13 +122,12 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 	case 1:
 		d.Set("name", *securityGroup.SecurityGroupName)
 		d.Set("description", *securityGroup.SecurityGroupDesc)
-		if securityGroup.ProjectId != nil {
-			projectId, err := strconv.Atoi(*securityGroup.ProjectId)
-			if err != nil {
-				return fmt.Errorf("securtiy group %s project id invalid: %v", *securityGroup.SecurityGroupId, err)
-			}
-			d.Set("project_id", projectId)
+
+		projectId, err := strconv.Atoi(*securityGroup.ProjectId)
+		if err != nil {
+			return fmt.Errorf("securtiy group %s project id invalid: %v", *securityGroup.SecurityGroupId, err)
 		}
+		d.Set("project_id", projectId)
 	}
 
 	return nil
