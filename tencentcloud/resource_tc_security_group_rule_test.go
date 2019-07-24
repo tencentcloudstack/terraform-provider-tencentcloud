@@ -24,6 +24,7 @@ func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
 					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.http-in", &sgrId),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "cidr_ip", "0.0.0.0/0"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "ip_protocol", "tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "description", ""),
 				),
 			},
 		},

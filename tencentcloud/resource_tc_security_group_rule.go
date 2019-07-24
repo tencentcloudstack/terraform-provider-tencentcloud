@@ -155,6 +155,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Default:     "",
 				Description: "Description of the security group rule.",
 			},
 		},
@@ -197,9 +198,7 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 		portRange = common.StringPtr(raw.(string))
 	}
 
-	if raw, ok := d.GetOk("description"); ok {
-		desc = common.StringPtr(raw.(string))
-	}
+	desc = common.StringPtr(d.Get("description").(string))
 
 	if cidrIp == nil && sourceSgId == nil {
 		return errors.New("need cidr_ip or source_sgid")
