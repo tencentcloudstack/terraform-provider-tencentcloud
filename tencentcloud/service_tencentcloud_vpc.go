@@ -932,6 +932,7 @@ func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids [
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
+		return nil, err
 	}
 
 	return response.Response.SecurityGroupAssociationStatisticsSet, nil
@@ -1171,7 +1172,7 @@ func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string, e
 		return "", err
 	}
 
-	log.Printf("[DEBUG]%s build rule is %s", GetLogId(context.TODO()), string(b))
+	log.Printf("[DEBUG] build rule is %s", string(b))
 
 	return base64.StdEncoding.EncodeToString(b), nil
 }
@@ -1183,7 +1184,7 @@ func parseSecurityGroupRuleId(ruleId string) (ruleInfo securityGroupRuleBasicInf
 		return securityGroupRuleBasicInfo{}, err
 	}
 
-	log.Printf("[DEBUG]%s parse rule is %s", GetLogId(context.TODO()), string(b))
+	log.Printf("[DEBUG] parse rule is %s", string(b))
 
 	var info securityGroupRuleBasicInfo
 
