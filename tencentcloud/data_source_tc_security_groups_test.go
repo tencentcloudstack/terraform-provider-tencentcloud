@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -33,9 +34,7 @@ func TestAccDataSourceTencentCloudSecurityGroups_searchByName(t *testing.T) {
 				Config: TestAccDataSourceTencentCloudSecurityGroupsConfigSearchByName,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_security_groups.foo"),
-					resource.TestCheckResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.0.name", "ci-temp-security-groups-test"),
-					resource.TestCheckResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.0.description", "ci-temp-security-groups-test"),
-					resource.TestCheckResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.0.be_associate_count", "0"),
+					resource.TestMatchResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.#", regexp.MustCompile(`^[1-9]\d*$`)),
 				),
 			},
 		},
