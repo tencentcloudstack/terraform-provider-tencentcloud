@@ -1074,11 +1074,14 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 		policy.CidrBlock = info.CidrIp
 	}
 
-	if info.Protocol != nil {
+	if *info.Protocol != "ALL" {
 		policy.Protocol = common.StringPtr(strings.ToUpper(*info.Protocol))
 	}
 
-	policy.Port = info.PortRange
+	if *info.PortRange != "ALL" {
+		policy.Port = info.PortRange
+	}
+
 	if *info.SourceSgId != "" {
 		policy.SecurityGroupId = info.SourceSgId
 	}

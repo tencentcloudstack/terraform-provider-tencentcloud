@@ -251,23 +251,17 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 
 	if policy.Protocol != nil {
 		inputProtocol := d.Get("ip_protocol").(string)
-		if strings.ToLower(inputProtocol) != inputProtocol {
-			// inputProtocol is uppercase, api return is lowercase, convert api return response to uppercase
-			*policy.Protocol = strings.ToUpper(*policy.Protocol)
+		if inputProtocol == "" {
+			inputProtocol = "ALL"
 		}
-		d.Set("ip_protocol", *policy.Protocol)
+		d.Set("ip_protocol", inputProtocol)
 	}
 
 	if policy.Port != nil {
 		d.Set("port_range", *policy.Port)
 	}
 
-	inputPolicy := d.Get("policy").(string)
-	if strings.ToUpper(inputPolicy) != inputPolicy {
-		// inputPolicy is lowercase, api return is uppercase, convert api return response to lowercase
-		*policy.Action = strings.ToLower(*policy.Action)
-	}
-	d.Set("policy", *policy.Action)
+	d.Set("policy", d.Get("policy").(string))
 
 	if policy.PolicyDescription != nil {
 		d.Set("description", *policy.PolicyDescription)
