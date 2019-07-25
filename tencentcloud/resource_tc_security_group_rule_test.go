@@ -63,11 +63,11 @@ func TestAccTencentCloudSecurityGroupRule_egress(t *testing.T) {
 			{
 				Config: testAccSecurityGroupRuleConfigEgress,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.egress-DROP", &sgrId),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "cidr_ip", "10.2.3.0/24"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "ip_protocol", "UDP"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "port_range", "3000-4000"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "policy", "DROP"),
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.egress-drop", &sgrId),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "cidr_ip", "10.2.3.0/24"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "ip_protocol", "UDP"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "port_range", "3000-4000"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "policy", "DROP"),
 				),
 			},
 		},
@@ -107,11 +107,11 @@ func TestAccTencentCloudSecurityGroupRule_allDrop(t *testing.T) {
 			{
 				Config: testAccSecurityGroupRuleConfigAllDrop,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.egress-DROP", &sgrId),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "cidr_ip", "0.0.0.0/0"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "ip_protocol", "ALL"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "port_range", "ALL"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-DROP", "policy", "DROP"),
+					testAccCheckSecurityGroupRuleExists("tencentcloud_security_group_rule.egress-drop", &sgrId),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "cidr_ip", "0.0.0.0/0"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "ip_protocol", "ALL"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "port_range", "ALL"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "policy", "DROP"),
 				),
 			},
 		},
@@ -202,7 +202,7 @@ resource "tencentcloud_security_group" "foo" {
   description = "ci-temp-test-sg"
 }
 
-resource "tencentcloud_security_group_rule" "egress-DROP" {
+resource "tencentcloud_security_group_rule" "egress-drop" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
   type              = "egress"
   cidr_ip           = "10.2.3.0/24"
@@ -239,7 +239,7 @@ resource "tencentcloud_security_group" "foo" {
   description = "ci-temp-test-sg"
 }
 
-resource "tencentcloud_security_group_rule" "egress-DROP" {
+resource "tencentcloud_security_group_rule" "egress-drop" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
   cidr_ip           = "0.0.0.0/0"
   type              = "ingress"
