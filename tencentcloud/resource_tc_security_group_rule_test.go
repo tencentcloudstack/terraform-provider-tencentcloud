@@ -25,6 +25,7 @@ func TestAccTencentCloudSecurityGroupRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "cidr_ip", "1.1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "ip_protocol", "tcp"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "description", ""),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.http-in", "type", "ingress"),
 					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.http-in", "source_sgid"),
 				),
 			},
@@ -70,6 +71,7 @@ func TestAccTencentCloudSecurityGroupRule_egress(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "ip_protocol", "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "port_range", "3000-4000"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "policy", "DROP"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.egress-drop", "type", "EGRESS"),
 					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.egress-drop", "source_sgid"),
 				),
 			},
@@ -209,7 +211,7 @@ resource "tencentcloud_security_group" "foo" {
 
 resource "tencentcloud_security_group_rule" "egress-drop" {
   security_group_id = "${tencentcloud_security_group.foo.id}"
-  type              = "egress"
+  type              = "EGRESS"
   cidr_ip           = "10.2.3.0/24"
   ip_protocol       = "UDP"
   port_range        = "3000-4000"
