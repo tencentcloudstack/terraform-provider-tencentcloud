@@ -52,7 +52,7 @@ func TestAccDataSourceTencentCloudSecurityGroups_emptyResult(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_security_groups.foo"),
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_security_groups.bar"),
 					resource.TestCheckResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.#", "0"),
-					resource.TestCheckResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.#", "0"),
+					resource.TestCheckResourceAttr("data.tencentcloud_security_groups.bar", "security_groups.#", "0"),
 				),
 			},
 		},
