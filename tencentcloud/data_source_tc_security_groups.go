@@ -18,6 +18,7 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -132,44 +133,64 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 		return err
 	}
 
-	sgInstances := make([]map[string]interface{}, 0, len(sgs))
+	if len(sgs) == 0 {
+		d.Set("security_groups", []map[string]interface{}{})
+		d.SetId(idBuilder.String())
+		return nil
+	}
 
+	sgMap := make(map[string]*vpc.SecurityGroup, len(sgs))
 	for _, sg := range sgs {
-		associateSet, err := service.DescribeSecurityGroupsAssociate(ctx, []string{*sg.SecurityGroupId})
-		if err != nil {
-			return err
+		if sg.SecurityGroupId == nil {
+			return errors.New("security group id is nil")
+		}
+		sgMap[*sg.SecurityGroupId] = sg
+	}
+
+	sgIds := make([]string, 0, len(sgs))
+	for _, sg := range sgs {
+		sgIds = append(sgIds, *sg.SecurityGroupId)
+	}
+
+	associateSet, err := service.DescribeSecurityGroupsAssociate(ctx, sgIds)
+	if err != nil {
+		return err
+	}
+
+	sgInstances := make([]map[string]interface{}, 0, len(sgs))
+	for _, associate := range associateSet {
+		if associate.SecurityGroupId == nil {
+			return errors.New("associate statistics security group id is nil")
 		}
 
-		var associate *vpc.SecurityGroupAssociationStatistics
-		for _, v := range associateSet {
-			if *v.SecurityGroupId == *sg.SecurityGroupId {
-				associate = v
-				break
+		if sg, ok := sgMap[*associate.SecurityGroupId]; ok {
+			count := int(*associate.CVM + *associate.ENI + *associate.CDB + *associate.CLB)
+
+			if sg.ProjectId == nil {
+				return errors.New("associate statistics project id is nil")
 			}
-		}
 
-		var count int
-		if associate != nil {
-			count = int(*associate.CVM + *associate.ENI + *associate.CDB + *associate.CLB)
-		}
+			projectId, err := strconv.Atoi(*sg.ProjectId)
+			if err != nil {
+				return fmt.Errorf("securtiy group %s project id invalid: %v", *sg.SecurityGroupId, err)
+			}
 
-		projectId, err := strconv.Atoi(*sg.ProjectId)
-		if err != nil {
-			return fmt.Errorf("securtiy group %s project id invalid: %v", *sg.SecurityGroupId, err)
+			sgInstances = append(sgInstances, map[string]interface{}{
+				"security_group_id":  *sg.SecurityGroupId,
+				"name":               *sg.SecurityGroupName,
+				"description":        *sg.SecurityGroupDesc,
+				"create_time":        *sg.CreatedTime,
+				"be_associate_count": count,
+				"project_id":         projectId,
+			})
 		}
+	}
 
-		sgInstances = append(sgInstances, map[string]interface{}{
-			"security_group_id":  *sg.SecurityGroupId,
-			"name":               *sg.SecurityGroupName,
-			"description":        *sg.SecurityGroupDesc,
-			"create_time":        *sg.CreatedTime,
-			"be_associate_count": count,
-			"project_id":         projectId,
-		})
+	if len(sgInstances) != len(sgs) {
+		return errors.New("security group associate statistics is not enough")
 	}
 
 	d.Set("security_groups", sgInstances)
-
 	d.SetId(idBuilder.String())
 
 	return nil
