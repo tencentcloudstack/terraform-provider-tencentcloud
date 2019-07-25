@@ -166,6 +166,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 		if sg, ok := sgMap[*associate.SecurityGroupId]; ok {
 			count := int(*associate.CVM + *associate.ENI + *associate.CDB + *associate.CLB)
 
+			// normally projectId default value is 0
 			if sg.ProjectId == nil {
 				return errors.New("associate statistics project id is nil")
 			}
