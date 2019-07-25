@@ -908,23 +908,6 @@ func (me *VpcService) DeleteSecurityGroup(ctx context.Context, id string) error 
 	return nil
 }
 
-func (me *VpcService) AttachEniToSecurityGroup(ctx context.Context, eni string, sgIds []string) error {
-	logId := GetLogId(ctx)
-
-	request := vpc.NewModifyNetworkInterfaceAttributeRequest()
-
-	request.NetworkInterfaceId = &eni
-	request.SecurityGroupIds = common.StringPtrs(sgIds)
-
-	if _, err := me.client.UseVpcClient().ModifyNetworkInterfaceAttribute(request); err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-			logId, request.GetAction(), request.ToJsonString(), err)
-		return err
-	}
-
-	return nil
-}
-
 func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids []string) ([]*vpc.SecurityGroupAssociationStatistics, error) {
 	logId := GetLogId(ctx)
 
