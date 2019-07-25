@@ -241,11 +241,11 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 
 	d.Set("type", policyType)
 
-	if policy.CidrBlock != nil {
+	if policy.CidrBlock != nil && *policy.CidrBlock != "" {
 		d.Set("cidr_ip", *policy.CidrBlock)
 	}
 
-	if policy.SecurityGroupId != nil {
+	if policy.SecurityGroupId != nil && *policy.SecurityGroupId != "" {
 		d.Set("source_sgid", *policy.SecurityGroupId)
 	}
 

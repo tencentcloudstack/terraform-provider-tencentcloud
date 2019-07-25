@@ -90,6 +90,7 @@ func TestAccTencentCloudSecurityGroupRule_sourcesgid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sourcesgid-in", "ip_protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sourcesgid-in", "port_range", "80,8080"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sourcesgid-in", "policy", "ACCEPT"),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.sourcesgid-in", "cidr_ip"),
 				),
 			},
 		},
