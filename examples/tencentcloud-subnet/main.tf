@@ -4,7 +4,7 @@ resource "tencentcloud_vpc" "test_vpc" {
 }
 
 resource "tencentcloud_route_table" "foo" {
-  vpc_id = "${tencentcloud_vpc.foo.id}"
+  vpc_id = "${tencentcloud_vpc.test_vpc.id}"
   name   = "ci-temp-test-rt"
 }
 
