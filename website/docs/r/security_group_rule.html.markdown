@@ -55,13 +55,13 @@ resource "tencentcloud_security_group_rule" "sglab_2" {
 
 The following arguments are supported:
 
-* `policy` - (Required, ForceNew) Rule policy of security group, the available value include 'ACCEPT' and 'DROP'.
+* `policy` - (Required, ForceNew) Rule policy of security group, the available value include `ACCEPT` and `DROP`.
 * `security_group_id` - (Required, ForceNew) ID of the security group to be queried.
-* `type` - (Required, ForceNew) Type of the security group rule, the available value include 'ingress' and 'egress'.
-* `cidr_ip` - (Optional, ForceNew) An IP address network or segment, and conflict with 'source_sgid'.
+* `type` - (Required, ForceNew) Type of the security group rule, the available value include `ingress` and `egress`.
+* `cidr_ip` - (Optional, ForceNew) An IP address network or segment, and conflict with `source_sgid`.
 * `description` - (Optional, ForceNew) Description of the security group rule.
-* `ip_protocol` - (Optional, ForceNew) Type of ip protocol, the available value include 'TCP', 'UDP' and 'ICMP'. Default to all types protocol.
-* `port_range` - (Optional, ForceNew) Range of the port. The available value can be one, multiple or one segment. E.g. '80', '80,90' and '80-90'. Default to all ports.
-* `source_sgid` - (Optional, ForceNew) ID of the nested security group, and conflict with 'cidr_ip'.
+* `ip_protocol` - (Optional, ForceNew) Type of ip protocol, the available value include `TCP`, `UDP` and `ICMP`. Default to all types protocol.
+* `port_range` - (Optional, ForceNew) Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports.
+* `source_sgid` - (Optional, ForceNew) ID of the nested security group, and conflict with `cidr_ip`.
 
 

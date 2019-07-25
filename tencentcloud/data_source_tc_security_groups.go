@@ -36,20 +36,20 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"name", "project_id"},
-				Description:   "ID of the security group to be queried. Conflict with 'name' and 'project_id'.",
+				Description:   "ID of the security group to be queried. Conflict with `name` and `project_id`.",
 			},
 			"name": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ValidateFunc:  validateStringLengthInRange(1, 60),
 				ConflictsWith: []string{"security_group_id"},
-				Description:   "Name of the security group to be queried. Conflict with 'security_group_id'.",
+				Description:   "Name of the security group to be queried. Conflict with `security_group_id`.",
 			},
 			"project_id": {
 				Type:          schema.TypeInt,
 				Optional:      true,
 				ConflictsWith: []string{"security_group_id"},
-				Description:   "Project ID of the security group. Conflict with 'security_group_id'.",
+				Description:   "Project ID of the security group. Conflict with `security_group_id`.",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,

@@ -73,7 +73,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValueIgnoreCase([]string{"ingress", "egress"}),
-				Description:  "Type of the security group rule, the available value include 'ingress' and 'egress'.",
+				Description:  "Type of the security group rule, the available value include `ingress` and `egress`.",
 			},
 			"cidr_ip": {
 				Type:     schema.TypeString,
@@ -93,7 +93,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					}
 					return
 				},
-				Description: "An IP address network or segment, and conflict with 'source_sgid'.",
+				Description: "An IP address network or segment, and conflict with `source_sgid`.",
 			},
 			"ip_protocol": {
 				Type:         schema.TypeString,
@@ -101,14 +101,14 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValueIgnoreCase([]string{"TCP", "UDP", "ICMP"}),
-				Description:  "Type of ip protocol, the available value include 'TCP', 'UDP' and 'ICMP'. Default to all types protocol.",
+				Description:  "Type of ip protocol, the available value include `TCP`, `UDP` and `ICMP`. Default to all types protocol.",
 			},
 			"port_range": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
 				Computed:    true,
-				Description: "Range of the port. The available value can be one, multiple or one segment. E.g. '80', '80,90' and '80-90'. Default to all ports.",
+				Description: "Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports.",
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
 					match, _ := regexp.MatchString("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}\\-\\d{1,5}$", value)
@@ -123,7 +123,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValueIgnoreCase([]string{"ACCEPT", "DROP"}),
-				Description:  "Rule policy of security group, the available value include 'ACCEPT' and 'DROP'.",
+				Description:  "Rule policy of security group, the available value include `ACCEPT` and `DROP`.",
 			},
 			"source_sgid": {
 				Type:     schema.TypeString,
@@ -133,7 +133,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					"cidr_ip",
 				},
 				Computed:    true,
-				Description: "ID of the nested security group, and conflict with 'cidr_ip'.",
+				Description: "ID of the nested security group, and conflict with `cidr_ip`.",
 			},
 			"description": {
 				Type:        schema.TypeString,
