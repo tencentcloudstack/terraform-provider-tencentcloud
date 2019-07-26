@@ -14,22 +14,24 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
 //client for all TencentCloud service
 type TencentCloudClient struct {
-	Region    string
-	SecretId  string
-	SecretKey string
-	mysqlConn *cdb.Client
-	cosConn   *s3.S3
-	redisConn *redis.Client
-	asConn    *as.Client
-	vpcConn   *vpc.Client
-	cbsConn   *cbs.Client
-	dcConn    *dc.Client
+	Region      string
+	SecretId    string
+	SecretKey   string
+	mysqlConn   *cdb.Client
+	cosConn     *s3.S3
+	redisConn   *redis.Client
+	asConn      *as.Client
+	vpcConn     *vpc.Client
+	cbsConn     *cbs.Client
+	dcConn      *dc.Client
+	mongodbConn *mongodb.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -206,4 +208,25 @@ func (me *TencentCloudClient) UseDcClient() *dc.Client {
 
 	return me.dcConn
 
+}
+
+func (me *TencentCloudClient) UseMongodbClient() *mongodb.Client {
+	if me.mongodbConn != nil {
+		return me.mongodbConn
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+
+	mongodbConn, _ := mongodb.NewClient(credential, me.Region, cpf)
+	var round LogRoundTripper
+	mongodbConn.WithHttpTransport(&round)
+	me.mongodbConn = mongodbConn
+
+	return me.mongodbConn
 }

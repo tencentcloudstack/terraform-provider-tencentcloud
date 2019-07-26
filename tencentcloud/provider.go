@@ -188,6 +188,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
 			"tencentcloud_dc_instances":                dataSourceTencentCloudDcInstances(),
 			"tencentcloud_dcx_instances":               dataSourceTencentCloudDcxInstances(),
+			"tencentcloud_mongodb_zone_config":         dataSourceTencentCloudMongodbZoneConfig(),
+			"tencentcloud_mongodb_instances":           dataSourceTencentCloudMongodbInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -232,6 +234,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_attachment":             resourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":        resourceTencentCloudCcnBandwidthLimit(),
 			"tencentcloud_dcx":                        resourceTencentCloudDcxInstance(),
+			"tencentcloud_mongodb_instance":           resourceTencentCloudMongodbInstance(),
+			"tencentcloud_mongodb_sharding_instance":  resourceTencentCloudMongodbShardingInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
