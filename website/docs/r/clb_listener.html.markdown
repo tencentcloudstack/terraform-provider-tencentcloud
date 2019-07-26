@@ -38,8 +38,8 @@ The following arguments are supported:
 * `clb_id` - (Required, ForceNew) ID of the CLB to be queried.
 * `listener_name` - (Required) Name of the CLB listener to be queried, and available values can only be Chinese characters, English letters, numbers, underscore and hyphen '-'
 * `protocol` - (Required, ForceNew) Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL' ('TCP_SSL' is in the internal test, please apply if you need to use).
-* `certificate_ca_id` - (Optional) ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listners of protocol 'HTTPS'.
-* `certificate_id` - (Optional) ID of the server certificate. If not specified, the content, key, and name of the server certificate must be set. NOTES: only supported by listners of protocol 'HTTPS'.
+* `certificate_ca_id` - (Optional) ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of protocol 'HTTPS'.
+* `certificate_id` - (Optional) ID of the server certificate. If not specified, the content, key, and name of the server certificate must be set. NOTES: only supported by listeners of protocol 'HTTPS'.
 * `certificate_ssl_mode` - (Optional) Type of SSL Mode, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'.
 * `health_check_health_num` - (Optional) Health threshold of health check, and the default is 3. If a success result is returned for the health check for 3 consecutive times, the backend CVM is identified as healthy. The value range is 2-10.
 * `health_check_interval_time` - (Optional) Interval time of health check. The value range is 5-300 sec, and the default is 5 sec.
