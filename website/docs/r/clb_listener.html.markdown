@@ -35,8 +35,8 @@ resource "tencentcloud_clb_listener" "clb_listener" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required, ForceNew) ID of the CLB to be queried.
-* `listener_name` - (Required) Name of the CLB listener to be queried, and available values can only be Chinese characters, English letters, numbers, underscore and hyphen '-'
+* `clb_id` - (Required, ForceNew) ID of the CLB.
+* `listener_name` - (Required) Name of the CLB listener, and available values can only be Chinese characters, English letters, numbers, underscore and hyphen '-'
 * `protocol` - (Required, ForceNew) Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL' ('TCP_SSL' is in the internal test, please apply if you need to use).
 * `certificate_ca_id` - (Optional) ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of protocol 'HTTPS'.
 * `certificate_id` - (Optional) ID of the server certificate. If not specified, the content, key, and name of the server certificate must be set. NOTES: only supported by listeners of protocol 'HTTPS'.

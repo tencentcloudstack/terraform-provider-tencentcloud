@@ -59,13 +59,13 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "ID of the CLB to be queried.",
+				Description:  "ID of the CLB.",
 			},
 			"listener_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "Name of the CLB listener to be queried, and available values can only be Chinese characters, English letters, numbers, underscore and hyphen '-'",
+				Description:  "Name of the CLB listener, and available values can only be Chinese characters, English letters, numbers, underscore and hyphen '-'",
 			},
 			"port": {
 				Type:         schema.TypeInt,
