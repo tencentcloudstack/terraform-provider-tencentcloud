@@ -3,11 +3,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"testing"
-	"time"
-
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
+
+	"testing"
+	"time"
 )
 
 func TestAccTencentCloudClbInstance_basic(t *testing.T) {
