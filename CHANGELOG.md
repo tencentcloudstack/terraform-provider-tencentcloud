@@ -2,9 +2,11 @@
 
 FEATURES:
 * **New Data Source**: `tencentcloud_clb_instances`
+* **New Data Source**: `tencentcloud_clb_listeners`
 * **New Data Source**: `  tencentcloud_dc_instances`
 * **New Data Source**: `tencentcloud_dcx_instances`
 * **New Resource**: `tencentcloud_clb_instance`
+* **New Resource**: `tencentcloud_clb_listener`
 * **New Resource**: `tencentcloud_dcx`
 
 BUG FIXIES:

@@ -26,6 +26,7 @@ Data Sources
   tencentcloud_availability_zones
   tencentcloud_cbs_snapshots
   tencentcloud_cbs_storages
+  tencentcloud_clb_listeners
   tencentcloud_clb_instances
   tencentcloud_ccn_bandwidth_limits
   tencentcloud_ccn_instances
@@ -86,6 +87,7 @@ DC Resources
 
 CLB Resources
   tencentcloud_clb_instance
+  tencentcloud_clb_listener
 
 CVM Resources
   tencentcloud_instance
@@ -192,6 +194,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
 			"tencentcloud_dc_instances":                dataSourceTencentCloudDcInstances(),
 			"tencentcloud_clb_instances":               dataSourceTencentCloudClbInstances(),
+			"tencentcloud_clb_listeners":               dataSourceTencentCloudClbListeners(),
 			"tencentcloud_dcx_instances":               dataSourceTencentCloudDcxInstances(),
 		},
 
@@ -202,6 +205,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_storage":                resourceTencentCloudCbsStorage(),
 			"tencentcloud_cbs_storage_attachment":     resourceTencentCloudCbsStorageAttachment(),
 			"tencentcloud_clb_instance":               resourceTencentCloudClbInstance(),
+			"tencentcloud_clb_listener":               resourceTencentCloudClbListener(),
 			"tencentcloud_container_cluster":          resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance": resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_dnat":                       resourceTencentCloudDnat(),
