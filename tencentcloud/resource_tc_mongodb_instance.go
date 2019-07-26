@@ -231,7 +231,15 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	d.Set("memory", *instance.Memory/1024)
 	d.Set("volume", *instance.Volume/1024)
 	d.Set("engine_version", instance.MongoVersion)
-	d.Set("machine_type", instance.MachineType)
+
+	switch *instance.MachineType {
+	case "HIO10G":
+		d.Set("machine_type", "TGIO")
+
+	case "HIO":
+		d.Set("machine_type", "GIO")
+	}
+
 	d.Set("available_zone", instance.Zone)
 	d.Set("vpc_id", instance.VpcId)
 	d.Set("subnet_id", instance.SubnetId)
