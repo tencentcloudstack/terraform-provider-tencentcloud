@@ -10,22 +10,23 @@ description: |-
 
 Provides a mysql instance resource to create read-only database instances.
 
-~> **NOTE:** The terminate operation of mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** The terminate operation of read only mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_readonly_instance" "default" {
   master_instance_id = "cdb-dnqksd9f"
-  instance_name ="myTestMysql"
-  mem_size = 128000
-  volume_size = 255
-  vpc_id = "vpc-12mt3l31"
-  subnet_id = "subnet-9uivyb1g"
-  intranet_port = 3306
-  security_groups = ["sg-ot8eclwz"]
+  instance_name      = "myTestMysql"
+  mem_size           = 128000
+  volume_size        = 255
+  vpc_id             = "vpc-12mt3l31"
+  subnet_id          = "subnet-9uivyb1g"
+  intranet_port      = 3306
+  security_groups    = ["sg-ot8eclwz"]
+
   tags = {
-    name ="test"
+    name = "test"
   }
 }
 ```
@@ -48,9 +49,9 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `gtid` - Indicates whether GTID is enable. 0 - Not enabled; 1 - Enabled.
 * `intranet_ip` - instance intranet IP.
 * `locked` - Indicates whether the instance is locked. 0 - No; 1 - Yes.
 * `status` - Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
+
 

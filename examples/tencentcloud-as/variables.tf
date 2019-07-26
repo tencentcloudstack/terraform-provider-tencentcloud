@@ -3,17 +3,17 @@ variable "availability_zone" {
 }
 
 variable "instance_type" {
-  default     = "SA1.SMALL1"
+  default = "SA1.SMALL1"
 }
 
 variable "min_size" {
-  default     = 0
+  default = 0
 }
 
 variable "max_size" {
-  default     = 5
+  default = 5
 }
 
 variable "desired_capacity" {
-  default     = 0
+  default = 0
 }

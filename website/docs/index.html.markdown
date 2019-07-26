@@ -38,7 +38,7 @@ resource "tencentcloud_instance" "web" {
 
 # Create key pair with your public key
 resource "tencentcloud_key_pair" "my_ssh_key" {
-  key_name = "from_terraform_public_key"
+  key_name   = "from_terraform_public_key"
   public_key = "ssh-rsa AAAAB3NzaSuperLongString foo@bar"
 }
 
@@ -48,6 +48,7 @@ resource "tencentcloud_security_group" "default" {
   name        = "web accessibility"
   description = "make it accessible for both production and stage ports"
 }
+
 resource "tencentcloud_security_group_rule" "web" {
   security_group_id = "${tencentcloud_security_group.default.id}"
   type              = "ingress"
@@ -56,6 +57,7 @@ resource "tencentcloud_security_group_rule" "web" {
   port_range        = "80,3000,8080"
   policy            = "accept"
 }
+
 resource "tencentcloud_security_group_rule" "ssh" {
   security_group_id = "${tencentcloud_security_group.default.id}"
   type              = "ingress"
@@ -83,7 +85,7 @@ Usage:
 
 ```hcl
 provider "tencentcloud" {
-  secret_id = "${var.secret_id}"
+  secret_id  = "${var.secret_id}"
   secret_key = "${var.secret_key}"
   region     = "${var.region}"
 }

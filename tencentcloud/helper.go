@@ -138,3 +138,7 @@ func intToPointer(i int) *uint64 {
 	u := uint64(i)
 	return &u
 }
+
+func uint64Pt(i uint64) *uint64 {
+	return &i
+}

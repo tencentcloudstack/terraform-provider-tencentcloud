@@ -1,19 +1,32 @@
-## 1.12.0 (Unreleased)
+## 1.14.0 (Unreleased)
 
-FEATURES:
 * **New Data Source**: `tencentcloud_clb_instances`
 * **New Data Source**: `tencentcloud_clb_listeners`
-* **New Data Source**: `  tencentcloud_dc_instances`
-* **New Data Source**: `tencentcloud_dcx_instances`
 * **New Resource**: `tencentcloud_clb_instance`
 * **New Resource**: `tencentcloud_clb_listener`
+
+## 1.13.0 (July 23, 2019)
+
+EATURES:
+* **New Data Source**: `tencentcloud_dc_gateway_instances`
+* **New Data Source**: `tencentcloud_dc_gateway_ccn_routes`
+* **New Resource**: `tencentcloud_dc_gateway`
+* **New Resource**: `tencentcloud_dc_gateway_ccn_route`
+
+## 1.12.0 (July 16, 2019)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_dc_instances`
+* **New Data Source**: `tencentcloud_dcx_instances`
 * **New Resource**: `tencentcloud_dcx`
+* **UPDATE Resource**:`tencentcloud_mysql_instance` and `tencentcloud_mysql_readonly_instance` completely delete instance. 
 
 BUG FIXIES:
 
 * resource/tencentcloud_instance: fixed issue when data disks set as delete_with_instance not works.
 * resource/tencentcloud_instance: if managed public_ip manually, please don't define `allocate_public_ip` ([#62](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/62)).
 * resource/tencentcloud_eip_association: fixed issue when instances were manually deleted ([#60](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/60)).
+* resource/tencentcloud_mysql_readonly_instance:remove an unsupported property `gtid`
 
 ## 1.11.0 (July 02, 2019)
 

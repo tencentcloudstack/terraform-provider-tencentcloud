@@ -14,8 +14,8 @@ Provides a resource to attach or detach CVM instances to a specified scaling gro
 
 ```hcl
 resource "tencentcloud_as_attachment" "attachment" {
-  scaling_group_id           = "sg-afasfa"
-  instance_ids               = ["ins-01", "ins-02"]
+  scaling_group_id = "sg-afasfa"
+  instance_ids     = ["ins-01", "ins-02"]
 }
 ```
 
