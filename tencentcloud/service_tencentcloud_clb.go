@@ -3,13 +3,14 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+	"time"
+
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
-	"log"
-	"strings"
-	"time"
 )
 
 type ClbService struct {
@@ -35,6 +36,7 @@ func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string
 		errRet = fmt.Errorf("loadBalancer id is not found")
 		return
 	}
+
 	clbInstance = response.Response.LoadBalancerSet[0]
 	return
 }
@@ -47,7 +49,6 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 		if k == "clb_id" {
 			request.LoadBalancerIds = []*string{stringToPointer(v.(string))}
 		}
-
 		if k == "network_type" {
 			request.LoadBalancerType = stringToPointer(v.(string))
 		}
@@ -58,7 +59,6 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 			projectId := int64(v.(int))
 			request.ProjectId = &projectId
 		}
-
 	}
 
 	offset := int64(0)
@@ -92,7 +92,6 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 }
 
 func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) error {
-
 	logId := GetLogId(ctx)
 	request := clb.NewDeleteLoadBalancerRequest()
 	request.LoadBalancerIds = []*string{&clbId}

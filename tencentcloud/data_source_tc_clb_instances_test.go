@@ -64,33 +64,34 @@ func TestAccTencentCloudClbInstancesDataSource_open(t *testing.T) {
 
 const testAccClbInstancesDataSource_internal = `
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 resource "tencentcloud_subnet" "subnet" {
-	availability_zone="${var.availability_zone}"
-	name="guagua-ci-temp-test"
-	vpc_id="${tencentcloud_vpc.foo.id}"
-	cidr_block="10.0.20.0/28"
-	is_multicast=false
+  availability_zone = "${var.availability_zone}"
+  name              = "guagua-ci-temp-test"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
 }
 
 resource "tencentcloud_clb_instance" "clb" {
-	network_type      = "INTERNAL"
-	clb_name      = "tf-clb-internal"
-  	vpc_id    		  = "${tencentcloud_vpc.foo.id}"
-  	subnet_id		  = "${tencentcloud_subnet.subnet.id}"
-	project_id = 0
-	
+  network_type = "INTERNAL"
+  clb_name     = "tf-clb-internal"
+  vpc_id       = "${tencentcloud_vpc.foo.id}"
+  subnet_id    = "${tencentcloud_subnet.subnet.id}"
+  project_id   = 0
+
 }
 
 data "tencentcloud_clb_instances" "clbs" {
-	clb_id = "${tencentcloud_clb_instance.clb.id}"
+  clb_id = "${tencentcloud_clb_instance.clb.id}"
 }
+
 `
 const testAccClbInstancesDataSource_open = `
 resource "tencentcloud_security_group" "foo" {

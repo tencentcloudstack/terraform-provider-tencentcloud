@@ -6,9 +6,9 @@ Example Usage
 ```hcl
 data "tencentcloud_clb_listener" "clblistener" {
   clb_id      = "lb-k2zjp9lv"
-  listener_id = "lb-k2zjp9lv"
+  listener_id = "lbl-mwr6vbtv"
   protocol    = "TCP"
-  pory        = 90
+  port        = 80
 }
 ```
 */
@@ -29,7 +29,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: " ID of the CLB to be queried.",
+				Description: "ID of the CLB to be queried.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -46,7 +46,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateIntegerInRange(1, 65535),
-				Description:  "Port of the listener. ",
+				Description:  "Port of the listener.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -56,33 +56,33 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 			"listener_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of cloud load balancers. Each element contains the following attributes:",
+				Description: "A list of listeners of cloud load balancers. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"clb_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
-							Description: " ID of the CLB to be queried.",
+							Computed:    true,
+							Description: "ID of the CLB.",
 						},
 						"listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the listener to be queried",
+							Description: "ID of the listener.",
 						},
 						"listener_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the listener to be queried",
+							Description: "Name of the listener.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Protocol of the listener. Available values are 'HTTP', 'HTTPS', 'TCP', 'UDP' ",
+							Description: "Protocol of the listener. Available values are 'HTTP', 'HTTPS', 'TCP', 'UDP'.",
 						},
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Port of the listener. ",
+							Description: "Port of the listener.",
 						},
 						"health_check_switch": {
 							Type:        schema.TypeInt,
@@ -148,12 +148,13 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 
 func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "data_source.tencentcloud_clb_instances.read")()
+	defer LogElapsed(logId + "data_source.tencentcloud_clb_listeners.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	params := make(map[string]interface{})
-	params["clb_id"] = d.Get("clb_id").(string)
 	clbId := d.Get("clb_id").(string)
+
+	params := make(map[string]interface{})
+	params["clb_id"] = clbId
 	if v, ok := d.GetOk("listener_id"); ok {
 		params["listener_id"] = v.(string)
 	}
@@ -176,6 +177,7 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 	ids := make([]string, 0, len(listeners))
 	for _, listener := range listeners {
 		mapping := map[string]interface{}{
+			"clb_id":                     clbId,
 			"listener_id":                *listener.ListenerId,
 			"listener_name":              *listener.ListenerName,
 			"protocol":                   *listener.Protocol,
