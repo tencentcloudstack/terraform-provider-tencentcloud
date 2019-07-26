@@ -272,12 +272,14 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	d.Set("sni_switch", instance.SniSwitch)
 
 	//health check
-	d.Set("health_check_switch", instance.HealthCheck.HealthSwitch)
-	d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
-	d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
-	d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
-	d.Set("health_check_health_num ", instance.HealthCheck.HealthNum)
-	d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
+	if instance.HealthCheck != nil {
+		d.Set("health_check_switch", instance.HealthCheck.HealthSwitch)
+		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
+		d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
+		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
+		d.Set("health_check_health_num ", instance.HealthCheck.HealthNum)
+		d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
+	}
 
 	if instance.Certificate != nil {
 		d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
