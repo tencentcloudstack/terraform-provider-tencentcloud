@@ -28,7 +28,7 @@ func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "port"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vport"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "create_time"),
 				),
 			},
@@ -38,6 +38,89 @@ func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-update"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "memory", "8"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "volume", "200"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_mongodb_instance.mongodb",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"security_groups", "password"},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudMongodbInstanceResourceGIO(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckMongodbInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMongodbInstanceGIO,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-test"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "memory", "4"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "volume", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "engine_version", "MONGO_36_WT"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "machine_type", "GIO"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "available_zone", "ap-guangzhou-2"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "project_id", "0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vport"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "create_time"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_mongodb_instance.mongodb",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"security_groups", "password"},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudMongodbInstanceResourceUpdateName(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckMongodbInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMongodbInstanceUpdateNameOld,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-test"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "memory", "4"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "volume", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "engine_version", "MONGO_36_WT"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "machine_type", "TGIO"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "available_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "project_id", "0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vport"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "create_time"),
+				),
+			},
+			{
+				Config: testAccMongodbInstanceUpdateNameNew,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-test-update"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "memory", "4"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "volume", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "engine_version", "MONGO_36_WT"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "machine_type", "TGIO"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "available_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "project_id", "0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vport"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "create_time"),
 				),
 			},
 			{
@@ -116,5 +199,44 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 	available_zone = "ap-guangzhou-3"
 	project_id = 0
 	password = "tests1234"
+}
+`
+
+const testAccMongodbInstanceGIO string = `
+resource "tencentcloud_mongodb_instance" "mongodb" {
+	instance_name = "tf-mongodb-test"
+	memory = 4
+	volume = 100
+	engine_version = "MONGO_36_WT"
+	machine_type = "GIO"
+	available_zone = "ap-guangzhou-2"
+	project_id = 0
+	password = "test1234"
+}
+`
+
+const testAccMongodbInstanceUpdateNameOld string = `
+resource "tencentcloud_mongodb_instance" "mongodb" {
+	instance_name = "tf-mongodb-test"
+	memory = 4
+	volume = 100
+	engine_version = "MONGO_36_WT"
+	machine_type = "TGIO"
+	available_zone = "ap-guangzhou-3"
+	project_id = 0
+	password = "test1234"
+}
+`
+
+const testAccMongodbInstanceUpdateNameNew string = `
+resource "tencentcloud_mongodb_instance" "mongodb" {
+	instance_name = "tf-mongodb-test-update"
+	memory = 4
+	volume = 100
+	engine_version = "MONGO_36_WT"
+	machine_type = "TGIO"
+	available_zone = "ap-guangzhou-3"
+	project_id = 0
+	password = "test1234"
 }
 `
