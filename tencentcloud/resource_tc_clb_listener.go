@@ -17,7 +17,7 @@ resource "tencentcloud_clb_listener" "clb_listener" {
   certificate_ssl_mode       = "MUTUAL"
   certificate_id             = "mycert server ID "
   certificate_ca_id          = "mycert ca ID"
-  session_expire_time        = 0
+  session_expire_time        = 30
   scheduler                  = "WRR"
 }
 ```
@@ -38,7 +38,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -66,7 +65,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "Name of the CLB listener, and available values can only be Chinese characters, English letters, numbers, underscore and hyphen '-'",
+				Description:  "Name of the CLB listener, and available values can only be Chinese characters, English letters, numbers, underscore and hyphen '-'.",
 			},
 			"port": {
 				Type:         schema.TypeInt,
@@ -161,12 +160,12 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	logId := GetLogId(nil)
 	defer LogElapsed(logId + "resource.tencentcloud_clb_listener.create")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-
 	clbId := d.Get("clb_id").(string)
 	listenerName := d.Get("listener_name").(string)
-
 	request := clb.NewCreateListenerRequest()
+
 	request.LoadBalancerId = stringToPointer(clbId)
+
 	request.ListenerNames = []*string{&listenerName}
 
 	port := int64(d.Get("port").(int))
@@ -188,11 +187,18 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	}
 
 	certificateSetFlag, certificateInput, certErr := checkCertificateInputPara(ctx, d)
+
 	if certErr != nil {
 		return certErr
 	}
 	if certificateSetFlag == true {
 		request.Certificate = certificateInput
+	} else {
+		if protocol == CLB_LISTENER_PROTOCOL_HTTPS {
+
+			fmt.Errorf("certificated need to be set when protocol is HTTPS")
+
+		}
 	}
 
 	if v, ok := d.GetOk("session_expire_time"); ok {
@@ -233,15 +239,11 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 			return retryErr
 		}
 	}
-
 	if len(response.Response.ListenerIds) < 1 {
 		return fmt.Errorf("load balancer id is nil")
 	}
-
 	listenerId := *response.Response.ListenerIds[0]
 	d.SetId(listenerId + "#" + clbId)
-
-	time.Sleep(6 * time.Second)
 	return resourceTencentCloudClbListenerRead(d, meta)
 }
 
@@ -294,7 +296,6 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
 	defer LogElapsed(logId + "resource.tencentcloud_clb_listener.update")()
-	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")
 	if len(items) != 2 {
@@ -323,6 +324,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		sessionExpireTime = d.Get("session_expire_time").(int)
 	}
 
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol)
 	if healthErr != nil {
 		return healthErr

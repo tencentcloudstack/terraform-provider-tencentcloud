@@ -36,7 +36,6 @@ func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string
 		errRet = fmt.Errorf("loadBalancer id is not found")
 		return
 	}
-
 	clbInstance = response.Response.LoadBalancerSet[0]
 	return
 }
@@ -49,6 +48,7 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 		if k == "clb_id" {
 			request.LoadBalancerIds = []*string{stringToPointer(v.(string))}
 		}
+
 		if k == "network_type" {
 			request.LoadBalancerType = stringToPointer(v.(string))
 		}
@@ -59,6 +59,7 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 			projectId := int64(v.(int))
 			request.ProjectId = &projectId
 		}
+
 	}
 
 	offset := int64(0)
@@ -92,6 +93,7 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 }
 
 func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) error {
+
 	logId := GetLogId(ctx)
 	request := clb.NewDeleteLoadBalancerRequest()
 	request.LoadBalancerIds = []*string{&clbId}
@@ -327,18 +329,18 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData) (cer
 	if v, ok := d.GetOk("certificate_ca_id"); ok {
 		certificateSetFlag = true
 		certificateCaId = v.(string)
-		certificateInput.CertId = stringToPointer(v.(string))
+		certificateInput.CertCaId = stringToPointer(v.(string))
 	}
 
 	if certificateSetFlag == true && certificateId == "" {
 		certificateSetFlag = false
-		errRet = fmt.Errorf("Certificate_key and certificate_name and certificate_content must be set when certificate_id is null")
+		errRet = fmt.Errorf("certificatedId is null")
 		return
 	}
 
 	if certificateSetFlag == true && certificateSSLMode == CERT_SSL_MODE_MUT && certificateCaId == "" {
 		certificateSetFlag = false
-		errRet = fmt.Errorf("Certificate_ca_key and certificate_ca_name and certificate_ca_content must be set when certificate_ca_id is null and ssl mode is 'MUTUAL' ")
+		errRet = fmt.Errorf("Certificate_ca_key is null and the ssl mode is 'MUTUAL' ")
 		return
 	}
 

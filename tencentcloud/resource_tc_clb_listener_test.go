@@ -107,6 +107,8 @@ func TestAccTencentCloudClblistener_https(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "protocol", "HTTPS"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "listener_name", "listener_https_update"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "port", "33"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_ssl_mode", "UNIDIRECTIONAL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VjAYq9xc"),
 				),
 			},
 		},
@@ -224,6 +226,7 @@ resource "tencentcloud_clb_listener" "listener_https" {
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
   certificate_id       = "VfqcL1ME"
+
 }
 `
 const testAccClbListener_https_update = `
@@ -237,6 +240,6 @@ resource "tencentcloud_clb_listener" "listener_https" {
   port                = 33
   protocol            = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VfqcL1ME"
+  certificate_id       = "VjAYq9xc"
 }
 `
