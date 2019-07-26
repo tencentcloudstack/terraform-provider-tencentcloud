@@ -14,17 +14,17 @@ Provides a resource to create a group of AS (Auto scaling) instances.
 
 ```hcl
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-	scaling_group_name = "tf-as-scaling-group"
-	configuration_id = "asc-oqio4yyj"
-	max_size = 1
-	min_size = 0
-	vpc_id = "vpc-3efmz0z"
-	subnet_ids = ["subnet-mc3egos"]
-	project_id = 0
-	default_cooldown = 400
-	desired_capacity = 1
-	termination_policies = ["NEWEST_INSTANCE"]
-	retry_policy = "INCREMENTAL_INTERVALS"
+  scaling_group_name   = "tf-as-scaling-group"
+  configuration_id     = "asc-oqio4yyj"
+  max_size             = 1
+  min_size             = 0
+  vpc_id               = "vpc-3efmz0z"
+  subnet_ids           = ["subnet-mc3egos"]
+  project_id           = 0
+  default_cooldown     = 400
+  desired_capacity     = 1
+  termination_policies = ["NEWEST_INSTANCE"]
+  retry_policy         = "INCREMENTAL_INTERVALS"
 }
 ```
 

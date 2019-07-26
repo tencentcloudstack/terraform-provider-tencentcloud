@@ -17,19 +17,20 @@ Provides Load Balancer server attachment resource.
 ```hcl
 resource "tencentcloud_alb_server_attachment" "service1" {
   loadbalancer_id = "lb-qk1dqox5"
-  listener_id = "lbl-ghoke4tl"
-  location_id = "loc-i858qv1l"
+  listener_id     = "lbl-ghoke4tl"
+  location_id     = "loc-i858qv1l"
+
   backends = [
     {
       instance_id = "ins-4j30i5pe"
-      port = 80
-      weight = 50
+      port        = 80
+      weight      = 50
     },
     {
       instance_id = "ins-4j30i5pe"
-      port = 8080
-      weight = 50
-    }
+      port        = 8080
+      weight      = 50
+    },
   ]
 }
 ```

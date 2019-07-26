@@ -67,8 +67,11 @@ func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 	cpf.HttpProfile.ReqTimeout = 300
 	//cpf.SignMethod = "HmacSHA1"
 
+	var round LogRoundTripper
+
 	mysqlClient, _ := cdb.NewClient(credential, me.Region, cpf)
 	me.mysqlConn = mysqlClient
+	me.mysqlConn.WithHttpTransport(&round)
 
 	return me.mysqlConn
 }

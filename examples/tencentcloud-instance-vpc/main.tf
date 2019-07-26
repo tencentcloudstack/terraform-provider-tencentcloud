@@ -34,10 +34,10 @@ resource "tencentcloud_subnet" "my_subnet" {
 }
 
 resource "tencentcloud_instance" "instance-vpc-example" {
-  instance_name = "${var.instance_name}"
-  availability_zone     = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  instance_name     = "${var.instance_name}"
+  availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
 
   vpc_id    = "${tencentcloud_vpc.my_vpc.id}"
   subnet_id = "${tencentcloud_subnet.my_subnet.id}"

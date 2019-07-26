@@ -24,16 +24,18 @@ resource "tencentcloud_vpc" "main" {
 resource "tencentcloud_eip" "eip_dev_dnat" {
   name = "terraform_test"
 }
+
 resource "tencentcloud_eip" "eip_test_dnat" {
   name = "terraform_test"
 }
 
 # Create NAT Gateway
 resource "tencentcloud_nat_gateway" "my_nat" {
-  vpc_id           = "${tencentcloud_vpc.main.id}"
-  name             = "terraform test"
-  max_concurrent   = 3000000
-  bandwidth        = 500
+  vpc_id         = "${tencentcloud_vpc.main.id}"
+  name           = "terraform test"
+  max_concurrent = 3000000
+  bandwidth      = 500
+
   assigned_eip_set = [
     "${tencentcloud_eip.eip_dev_dnat.public_ip}",
     "${tencentcloud_eip.eip_test_dnat.public_ip}",

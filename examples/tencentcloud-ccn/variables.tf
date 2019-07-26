@@ -1,8 +1,7 @@
 variable "region" {
-    default = "ap-guangzhou"
+  default = "ap-guangzhou"
 }
+
 variable "other_region" {
-    default = "ap-shanghai"
+  default = "ap-shanghai"
 }
-
-
