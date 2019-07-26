@@ -7,7 +7,7 @@ Example Usage
 resource "tencentcloud_clb_listener" "clblab" {
   network_type              = "OPEN"
   clb_name                  = "myclb"
-  project_id                = "Default Project"
+  project_id                = 0
   vpc_id                    = "vpc-abcd1234"
   subnet_id                 = "subnet-0agspqdn"
   tags                      = "mytags"
@@ -59,7 +59,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "Name of the CLB to be queried. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'",
+				Description:  "Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -107,10 +107,13 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
 	defer LogElapsed(logId + "resource.tencentcloud_clb_instance.create")()
-	request := clb.NewCreateLoadBalancerRequest()
+
 	network_type := d.Get("network_type").(string)
+	clb_name := d.Get("clb_name").(string)
+
+	request := clb.NewCreateLoadBalancerRequest()
 	request.LoadBalancerType = stringToPointer(network_type)
-	request.LoadBalancerName = stringToPointer(d.Get("clb_name").(string))
+	request.LoadBalancerName = stringToPointer(clb_name)
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = stringToPointer(v.(string))
 	}

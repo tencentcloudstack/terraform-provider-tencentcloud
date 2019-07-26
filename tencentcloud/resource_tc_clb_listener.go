@@ -7,17 +7,17 @@ Example Usage
 resource "tencentcloud_clb_listener" "clb_listener" {
   clb_id                     = "lb-k2zjp9lv"
   listener_name              = "mylistener"
-  port                       = "80"
+  port                       = 80
   protocol                   = "HTTP"
-  health_check_switch        = "0"
-  health_check_time_out      = "2"
-  health_check_interval_time = "5"
-  health_check_health_num    = "3"
-  health_check_unhealth_num  = "3"
+  health_check_switch        = 0
+  health_check_time_out      = 2
+  health_check_interval_time = 5
+  health_check_health_num    = 3
+  health_check_unhealth_num  = 3
   certificate_ssl_mode       = "MUTUAL"
   certificate_id             = "mycert server ID "
   certificate_ca_id          = "mycert ca ID"
-  session_expire_time        = "0"
+  session_expire_time        = 0
   scheduler                  = "WRR"
 }
 ```
@@ -36,11 +36,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform/helper/schema"
-	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/hashicorp/terraform/helper/schema"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
 func resourceTencentCloudClbListener() *schema.Resource {
@@ -159,10 +160,13 @@ func resourceTencentCloudClbListener() *schema.Resource {
 func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
 	defer LogElapsed(logId + "resource.tencentcloud_clb_listener.create")()
-	request := clb.NewCreateListenerRequest()
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	clbId := d.Get("clb_id").(string)
-	request.LoadBalancerId = stringToPointer(clbId)
 	listenerName := d.Get("listener_name").(string)
+
+	request := clb.NewCreateListenerRequest()
+	request.LoadBalancerId = stringToPointer(clbId)
 	request.ListenerNames = []*string{&listenerName}
 
 	port := int64(d.Get("port").(int))
@@ -174,8 +178,6 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	} else {
 		request.Protocol = stringToPointer(protocol)
 	}
-
-	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol)
 	if healthErr != nil {
@@ -235,8 +237,10 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	if len(response.Response.ListenerIds) < 1 {
 		return fmt.Errorf("load balancer id is nil")
 	}
+
 	listenerId := *response.Response.ListenerIds[0]
 	d.SetId(listenerId + "#" + clbId)
+
 	time.Sleep(6 * time.Second)
 	return resourceTencentCloudClbListenerRead(d, meta)
 }
@@ -266,6 +270,7 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	d.Set("session_expire_time", instance.SessionExpireTime)
 	d.Set("scheduler", instance.Scheduler)
 	d.Set("sni_switch", instance.SniSwitch)
+
 	//health check
 	d.Set("health_check_switch", instance.HealthCheck.HealthSwitch)
 	d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
@@ -287,6 +292,7 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interface{}) error {
 	logId := GetLogId(nil)
 	defer LogElapsed(logId + "resource.tencentcloud_clb_listener.update")()
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")
 	if len(items) != 2 {
@@ -315,7 +321,6 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		sessionExpireTime = d.Get("session_expire_time").(int)
 	}
 
-	ctx := context.WithValue(context.TODO(), "logId", logId)
 	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol)
 	if healthErr != nil {
 		return healthErr

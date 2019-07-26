@@ -151,9 +151,10 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 	defer LogElapsed(logId + "data_source.tencentcloud_clb_listeners.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	params := make(map[string]interface{})
-	params["clb_id"] = d.Get("clb_id").(string)
 	clbId := d.Get("clb_id").(string)
+
+	params := make(map[string]interface{})
+	params["clb_id"] = clbId
 	if v, ok := d.GetOk("listener_id"); ok {
 		params["listener_id"] = v.(string)
 	}
@@ -176,6 +177,7 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 	ids := make([]string, 0, len(listeners))
 	for _, listener := range listeners {
 		mapping := map[string]interface{}{
+			"clb_id":                     clbId,
 			"listener_id":                *listener.ListenerId,
 			"listener_name":              *listener.ListenerName,
 			"protocol":                   *listener.Protocol,

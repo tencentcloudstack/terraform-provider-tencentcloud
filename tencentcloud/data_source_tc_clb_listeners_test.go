@@ -17,6 +17,7 @@ func TestAccTencentCloudClbListenersDataSource(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.#", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_listeners.listeners", "listener_list.0.clb_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_listeners.listeners", "listener_list.0.listener_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.listener_name", "mylistener1234"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_listeners.listeners", "listener_list.0.port", "1"),

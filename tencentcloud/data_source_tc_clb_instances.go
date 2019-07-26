@@ -6,9 +6,9 @@ Example Usage
 ```hcl
 data "tencentcloud_clb" "clblab" {
     clb_id             = "lb-k2zjp9lv"
-    network_type           = "OPEN"
+    network_type       = "OPEN"
     clb_name           = "myclb"
-    project_id         = "Default Project"
+    project_id         = 0
     result_output_file = "mytestpath"
 }
 ```
@@ -30,7 +30,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: " ID of the CLB to be queried.",
+				Description: "ID of the CLB to be queried.",
 			},
 			"network_type": {
 				Type:         schema.TypeString,
@@ -41,7 +41,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 			"clb_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The available zone that the CBS instance locates at.",
+				Description: "Name of CLB instance",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
