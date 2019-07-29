@@ -83,6 +83,10 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"mongo_version": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 						"cpu": {
 							Type:     schema.TypeInt,
 							Computed: true,
@@ -141,6 +145,14 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 			continue
 		}
 
+		switch *mongo.MachineType {
+		case "HIO10G":
+			*mongo.MachineType = "TGIO"
+
+		case "HIO":
+			*mongo.MachineType = "GIO"
+		}
+
 		instance := map[string]interface{}{
 			"instance_id":    mongo.InstanceId,
 			"instance_name":  mongo.InstanceName,
@@ -155,8 +167,8 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 			"create_time":    mongo.CreateTime,
 			"mongo_version":  mongo.MongoVersion,
 			"cpu":            mongo.CpuNum,
-			"memory":         mongo.Memory,
-			"volume":         mongo.Volume,
+			"memory":         *mongo.Memory / 1024,
+			"volume":         *mongo.Volume / 1024,
 			"machine_type":   mongo.MachineType,
 			"shard_quantity": mongo.ReplicationSetNum,
 		}
@@ -165,7 +177,7 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("instane_list", instanceList); err != nil {
+	if err = d.Set("instance_list", instanceList); err != nil {
 		log.Printf("[CRITAL]%s provider set mongodb instance list fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
