@@ -171,6 +171,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_subnet":                      dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                 dataSourceTencentCloudRouteTable(),
 			"tencentcloud_security_group":              dataSourceTencentCloudSecurityGroup(),
+			"tencentcloud_security_groups":             dataSourceTencentCloudSecurityGroups(),
 			"tencentcloud_nats":                        dataSourceTencentCloudNats(),
 			"tencentcloud_container_clusters":          dataSourceTencentCloudContainerClusters(),
 			"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),

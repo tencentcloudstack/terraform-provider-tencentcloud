@@ -18,7 +18,7 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
-//client for all TencentCloud service
+// client for all TencentCloud service
 type TencentCloudClient struct {
 	Region    string
 	SecretId  string
@@ -59,11 +59,11 @@ func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 	)
 
 	cpf := profile.NewClientProfile()
-	//all request use method POST
+	// all request use method POST
 	cpf.HttpProfile.ReqMethod = "POST"
-	//request timeout
+	// request timeout
 	cpf.HttpProfile.ReqTimeout = 300
-	//cpf.SignMethod = "HmacSHA1"
+	// cpf.SignMethod = "HmacSHA1"
 
 	var round LogRoundTripper
 
@@ -138,7 +138,7 @@ func (me *TencentCloudClient) UseAsClient() *as.Client {
 	return me.asConn
 }
 
-//get vpc client for service
+// get vpc client for service
 func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	if me.vpcConn != nil {
 		return me.vpcConn

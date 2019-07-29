@@ -1,24 +1,27 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_security_group"
-sidebar_current: "docs-tencentcloud-datasource-security-group"
+sidebar_current: "docs-tencentcloud-datasource-security_group"
 description: |-
-  Provides details about a specific Security Group.
+  Use this data source to query detailed information of security group.
 ---
 
 # tencentcloud_security_group
 
-`tencentcloud_security_group` provides details about a specific Security Group.
+Use this data source to query detailed information of security group.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_security_groups.
 
 ## Example Usage
 
-Basic usage:
-
 ```hcl
-variable "security_group_id" {}
-
-data "tencentcloud_security_group" "selected" {
-  id = "${var.security_group_id}"
+resource "tencentcloud_security_group" "sglab" {
+  name        = "mysg"
+  description = "favourite sg"
+  project_id  = 0
+}
+data "tencentcloud_security_group" "sglab" {
+  security_group_id = "${tencentcloud_security_group.sglab.id}"
 }
 ```
 
@@ -26,13 +29,15 @@ data "tencentcloud_security_group" "selected" {
 
 The following arguments are supported:
 
-* `security_group_id` - (Required) The ID of the security group.
+* `security_group_id` - (Required) ID of the security group to be queried.
+* `description` - (Optional) Description of the security group.
+* `name` - (Optional) Name of the security group to be queried.
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `name` - The name of the security group.
-* `description` - The description of the security group.
-* `be_associate_count` - Number of associated instances.
-* `create_time` - Creation time of security group, for example: 2018-01-22 17:50:21.
+* `be_associate_count` - Number of security group binding resources.
+* `create_time` - Creation time of security group.
+
+
