@@ -2,6 +2,10 @@
 
 FEATURES:
 * **New Data Source**: `tencentcloud_security_groups`
+* **New Data Source**: `tencentcloud_mongodb_instances`
+* **New Data Source**: `tencentcloud_mongodb_zone_config`
+* **New Resource**: `tencentcloud_mongodb_instance`
+* **New Resource**: `tencentcloud_mongodb_sharding_instance`
 * **Update Resource**: `tencentcloud_security_group_rule` add optional argument `description`
 
 DEPRECATED:

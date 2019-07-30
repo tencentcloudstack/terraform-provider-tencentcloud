@@ -213,12 +213,13 @@ github.com/satori/go.uuid
 # github.com/spf13/afero v1.2.1
 github.com/spf13/afero
 github.com/spf13/afero/mem
-# github.com/tencentcloud/tencentcloud-sdk-go v3.0.74+incompatible
+# github.com/tencentcloud/tencentcloud-sdk-go v3.0.75-0.20190716122323-107481b6c7fa+incompatible
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
