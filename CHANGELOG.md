@@ -1,4 +1,4 @@
-## 1.14.0 (Unreleased)
+## 1.14.0 (July 30, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_security_groups`
