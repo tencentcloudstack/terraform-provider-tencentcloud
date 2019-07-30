@@ -1,7 +1,7 @@
 /*
 Provides a mysql instance resource to create read-only database instances.
 
-~> **NOTE:** The terminate operation of mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** The terminate operation of read only mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
 Example Usage
 
@@ -215,6 +215,10 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	if err != nil {
 		return err
 	}
+	if mysqlInfo == nil {
+		d.SetId("")
+		return nil
+	}
 	d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
 
 	return nil
@@ -293,6 +297,14 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 	if hasDeleted {
 		return nil
 	}
+	if err != nil {
+		return err
+	}
+	err = mysqlService.OfflineIsolatedInstances(ctx, d.Id())
 
-	return mysqlService.OfflineIsolatedInstances(ctx, d.Id())
+	if err == nil {
+		log.Printf("[WARN]this mysql is readonly instance, it is released asynchronously, and the bound resource is not now fully released now\n")
+	}
+	return err
+
 }

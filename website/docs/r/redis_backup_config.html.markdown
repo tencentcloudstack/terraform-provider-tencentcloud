@@ -14,9 +14,9 @@ Use this data source to query which instance types of Redis are available in a s
 
 ```hcl
 resource "tencentcloud_redis_backup_config" "redislab" {
-  redis_id       = "crs-7yl0q0dd"
-  backup_time    = "04:00-05:00"
-  backup_period  = ["Monday"]
+  redis_id      = "crs-7yl0q0dd"
+  backup_time   = "04:00-05:00"
+  backup_period = ["Monday"]
 }
 ```
 

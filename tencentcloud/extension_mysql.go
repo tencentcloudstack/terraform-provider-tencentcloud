@@ -15,6 +15,10 @@ const (
 	MYSQL_STATUS_RUNNING   = 1
 	MYSQL_STATUS_ISOLATING = 4
 	MYSQL_STATUS_ISOLATED  = 5
+	//https://cloud.tencent.com/document/api/236/36197
+	//Internal business state , not public
+	MYSQL_STATUS_ISOLATED_1 = 6
+	MYSQL_STATUS_ISOLATED_2 = 7
 )
 
 //Async  task  status,  from  https://cloud.tencent.com/document/api/236/20410

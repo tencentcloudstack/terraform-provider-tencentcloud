@@ -19,7 +19,7 @@ Basic usage:
 
 ```hcl
 resource "tencentcloud_vpc" "main" {
-  name       = "Used to test the routing entry" 
+  name       = "Used to test the routing entry"
   cidr_block = "10.4.0.0/16"
 }
 

@@ -30,7 +30,7 @@ data "tencentcloud_nats" "multi_nat" {
   name           = "terraform test"
   vpc_id         = "vpc-ezij4ltv"
   max_concurrent = 3000000
-  bandwidth      = 500 
+  bandwidth      = 500
 }
 ```
 

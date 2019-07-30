@@ -33,6 +33,8 @@ Data Sources
   tencentcloud_cos_bucket_object
   tencentcloud_cos_buckets
   tencentcloud_dc_instances
+  tencentcloud_dc_gateway_ccn_routes
+  tencentcloud_dc_gateway_instances
   tencentcloud_dcx_instances
   tencentcloud_eip
   tencentcloud_image
@@ -82,6 +84,10 @@ COS Resources
 
 DC Resources
   tencentcloud_dcx
+
+DCG Resources
+  tencentcloud_dc_gateway
+  tencentcloud_dc_gateway_ccn_route
 
 CVM Resources
   tencentcloud_instance
@@ -165,6 +171,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_subnet":                      dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                 dataSourceTencentCloudRouteTable(),
 			"tencentcloud_security_group":              dataSourceTencentCloudSecurityGroup(),
+			"tencentcloud_security_groups":             dataSourceTencentCloudSecurityGroups(),
 			"tencentcloud_nats":                        dataSourceTencentCloudNats(),
 			"tencentcloud_container_clusters":          dataSourceTencentCloudContainerClusters(),
 			"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),
@@ -190,6 +197,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcx_instances":               dataSourceTencentCloudDcxInstances(),
 			"tencentcloud_mongodb_zone_config":         dataSourceTencentCloudMongodbZoneConfig(),
 			"tencentcloud_mongodb_instances":           dataSourceTencentCloudMongodbInstances(),
+			"tencentcloud_dc_gateway_instances":        dataSourceTencentCloudDcGatewayInstances(),
+			"tencentcloud_dc_gateway_ccn_routes":       dataSourceTencentCloudDcGatewayCCNRoutes(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -236,6 +245,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcx":                        resourceTencentCloudDcxInstance(),
 			"tencentcloud_mongodb_instance":           resourceTencentCloudMongodbInstance(),
 			"tencentcloud_mongodb_sharding_instance":  resourceTencentCloudMongodbShardingInstance(),
+			"tencentcloud_dc_gateway":                 resourceTencentCloudDcGatewayInstance(),
+			"tencentcloud_dc_gateway_ccn_route":       resourceTencentCloudDcGatewayCcnRouteInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

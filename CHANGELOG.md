@@ -1,8 +1,27 @@
-## 1.13.0 (Unreleased)
+## 1.14.0 (Unreleased)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_security_groups`
+* **Update Resource**: `tencentcloud_security_group_rule` add optional argument `description`
+
+DEPRECATED:
+* Data Source: `tencnetcloud_security_group` replaced by `tencentcloud_security_groups`
+
+ENHANCEMENTS:
+* Refactoring security_group logic with api3.0
+
+## 1.13.0 (July 23, 2019)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_dc_gateway_instances`
+* **New Data Source**: `tencentcloud_dc_gateway_ccn_routes`
+* **New Resource**: `tencentcloud_dc_gateway`
+* **New Resource**: `tencentcloud_dc_gateway_ccn_route`
+
 ## 1.12.0 (July 16, 2019)
 
 FEATURES:
-* **New Data Source**: `  tencentcloud_dc_instances`
+* **New Data Source**: `tencentcloud_dc_instances`
 * **New Data Source**: `tencentcloud_dcx_instances`
 * **New Resource**: `tencentcloud_dcx`
 * **UPDATE Resource**:`tencentcloud_mysql_instance` and `tencentcloud_mysql_readonly_instance` completely delete instance. 

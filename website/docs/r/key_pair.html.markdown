@@ -16,7 +16,7 @@ Basic Usage
 
 ```hcl
 resource "tencentcloud_key_pair" "foo" {
-  key_name = "from_terraform_public_key"
+  key_name   = "from_terraform_public_key"
   public_key = "ssh-rsa AAAAB3NzaSuperLongString foo@bar"
 }
 ```
