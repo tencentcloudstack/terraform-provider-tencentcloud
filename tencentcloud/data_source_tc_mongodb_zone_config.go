@@ -1,3 +1,14 @@
+/*
+Use this data source to query the available mongodb specifications for different zone.
+
+Example Usage
+
+```hcl
+data "tencentcloud_mongodb_zone_config" "mongodb" {
+  available_zone = "ap-guangzhou-2"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -12,54 +23,65 @@ func dataSourceTencentCloudMongodbZoneConfig() *schema.Resource {
 		Read: dataSourceTencentCloudMongodbZoneConfigRead,
 
 		Schema: map[string]*schema.Schema{
-			"zone": {
-				Type:     schema.TypeString,
-				Optional: true,
+			"available_zone": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The available zone of the Mongodb.",
 			},
 			"result_output_file": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to store results.",
 			},
 			"list": {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"zone": {
-							Type:     schema.TypeString,
-							Computed: true,
+						"available_zone": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The available zone of the Mongodb.",
 						},
 						"cluster_type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Type of Mongodb cluster.",
 						},
 						"machine_type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Type of Mongodb instance.",
 						},
 						"cpu": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Number of cpu's core.",
 						},
 						"memory": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Memory size.",
 						},
 						"default_storage": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Default disk size.",
 						},
 						"min_storage": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Minimum sie of the disk.",
 						},
 						"max_storage": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Maximum size of the disk.",
 						},
 						"engine_version": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Version of the Mongodb version.",
 						},
 					},
 				},
@@ -73,7 +95,7 @@ func dataSourceTencentCloudMongodbZoneConfigRead(d *schema.ResourceData, meta in
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	zone := ""
-	if v, ok := d.GetOk("zone"); ok {
+	if v, ok := d.GetOk("available_zone"); ok {
 		zone = v.(string)
 	}
 	mongodbService := MongodbService{
@@ -87,9 +109,13 @@ func dataSourceTencentCloudMongodbZoneConfigRead(d *schema.ResourceData, meta in
 	configList := make([]map[string]interface{}, 0)
 	for _, info := range infos {
 		for _, item := range info.SpecItem {
+			clusterType := MONGODB_CLUSTER_TYPE_REPLSET
+			if *item.ClusterType == 1 {
+				clusterType = MONGODB_CLUSTER_TYPE_SHARD
+			}
 			mapping := map[string]interface{}{
-				"zone":            info.Zone,
-				"cluster_type":    item.ClusterType,
+				"available_zone":  info.Zone,
+				"cluster_type":    clusterType,
 				"machine_type":    item.MachineType,
 				"cpu":             item.Cpu,
 				"memory":          item.Memory,

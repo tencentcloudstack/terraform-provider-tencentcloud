@@ -1,3 +1,31 @@
+/*
+Provide a resource to create a Mongodb instance.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_mongodb_instance" "mongodb" {
+  instance_name     = "mongodb"
+  memory            = 4
+  volume            = 100
+  engine_version    = "MONGO_3_WT"
+  machine_type      = "GIO"
+  available_zone    = "ap-guangzhou-2"
+  vpc_id            = "vpc-mz3efvbw"
+  subnet_id         = "subnet-lk0svi3p"
+  project_id        = 0
+  password          = "mypassword"
+}
+```
+
+Import
+
+Mongodb instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_mongodb_instance.mongodb cmgo-41s6jwy4
+```
+*/
 package tencentcloud
 
 import (
@@ -27,49 +55,58 @@ func resourceTencentCloudMongodbInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
+				Description:  "Name of the Mongodb instance.",
 			},
 			"memory": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerMin(4),
+				Description:  "Memory size.",
 			},
 			"volume": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerMin(100),
+				Description:  "Disk size.",
 			},
 			"engine_version": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				// ValidateFunc:
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue(MONGODB_ENGINE_VERSION),
+				Description:  "Version of the Mongodb, and available values include MONGO_3_WT, MONGO_3_ROCKS and MONGO_36_WT.",
 			},
 			"machine_type": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				// ValidateFunc:
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue(MONGODB_MACHINE_TYPE),
+				Description:  "Type of Mongodb instance, and available values include GIO and TGIO.",
 			},
 			"available_zone": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The available zone of the Mongodb.",
 			},
 			"vpc_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Default:  "",
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     "",
+				Description: "ID of the VPC.",
 			},
 			"subnet_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "ID of the subnet within this VPC. The vaule is required if VpcId is set.",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "ID of the project which the instance belongs.",
 			},
 			"security_groups": {
 				Type:     schema.TypeSet,
@@ -80,29 +117,35 @@ func resourceTencentCloudMongodbInstance() *schema.Resource {
 				Set: func(v interface{}) int {
 					return hashcode.String(v.(string))
 				},
+				Description: "ID of the security group.",
 			},
 			"password": {
-				Type:      schema.TypeString,
-				Required:  true,
-				Sensitive: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Sensitive:   true,
+				Description: "Password of this Mongodb account.",
 			},
 
 			// Computed
 			"status": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Status of the Mongodb instance, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2)",
 			},
 			"vip": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "IP of the Mongodb instance.",
 			},
 			"vport": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "IP port of the Mongodb instance.",
 			},
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of the Mongodb instance.",
 			},
 		},
 	}
@@ -234,17 +277,16 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 
 	switch *instance.MachineType {
 	case "HIO10G":
-		d.Set("machine_type", "TGIO")
+		d.Set("machine_type", MONGODB_MACHINE_TYPE_TGIO)
 
 	case "HIO":
-		d.Set("machine_type", "GIO")
+		d.Set("machine_type", MONGODB_MACHINE_TYPE_GIO)
 	}
 
 	d.Set("available_zone", instance.Zone)
 	d.Set("vpc_id", instance.VpcId)
 	d.Set("subnet_id", instance.SubnetId)
 	d.Set("project_id", instance.ProjectId)
-	// d.Set("security_groups",)
 	d.Set("status", instance.Status)
 	d.Set("vip", instance.Vip)
 	d.Set("vport", instance.Vport)
@@ -272,7 +314,24 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		// todo: wait for finish?
+		err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+			instance, e := mongodbService.DescribeInstanceById(ctx, instanceId)
+			if e != nil {
+				return resource.NonRetryableError(e)
+			}
+			if *instance.Status == MONGODB_INSTANCE_STATUS_RUNNING {
+				return nil
+			}
+			if *instance.Status == MONGODB_INSTANCE_STATUS_PROCESSING {
+				return resource.RetryableError(fmt.Errorf("mongodb instance status is processing"))
+			}
+			e = fmt.Errorf("mongodb instance status is %d, we won't wait for it finish.", *instance.Status)
+			return resource.NonRetryableError(e)
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s upgrade mongodb instance failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
 
 		if d.HasChange("memory") {
 			d.SetPartial("memory")
@@ -306,6 +365,26 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
+
+		err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+			instance, e := mongodbService.DescribeInstanceById(ctx, instanceId)
+			if e != nil {
+				return resource.NonRetryableError(e)
+			}
+			if *instance.Status == MONGODB_INSTANCE_STATUS_RUNNING {
+				return nil
+			}
+			if *instance.Status == MONGODB_INSTANCE_STATUS_PROCESSING {
+				return resource.RetryableError(fmt.Errorf("mongodb instance status is processing"))
+			}
+			e = fmt.Errorf("mongodb instance status is %d, we won't wait for it finish.", *instance.Status)
+			return resource.NonRetryableError(e)
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s setting mongodb instance password failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+
 		d.SetPartial("password")
 	}
 

@@ -1,3 +1,15 @@
+/*
+Use this data source to query detailed information of Mongodb instances.
+
+Example Usage
+
+```hcl
+data "tencentcloud_mongodb_instances" "mongodb" {
+  instance_id  = "cmgo-l6lwdsel"
+  cluster_type = "REPLSET"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -14,21 +26,25 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of the Mongodb instance to be queried.",
 			},
 			"instance_name_prefix": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name prefix of the Mongodb instance.",
 			},
 			"cluster_type": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
+				ValidateFunc: validateAllowedStringValue(MONGODB_CLUSTER_TYPE),
+				Description:  "Type of Mongodb cluster, and available values include replica set cluster(expressed with `REPLSET`), sharding cluster(expressed with `SHARD`).",
 			},
 			"result_output_file": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to store results.",
 			},
 			"instance_list": {
 				Type:     schema.TypeList,
@@ -36,76 +52,89 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the Mongodb instance.",
 						},
 						"instance_name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the Mongodb instance.",
 						},
 						"project_id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "ID of the project which the instance belongs.",
 						},
 						"cluster_type": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Type of Mongodb cluster.",
 						},
-						"zone": {
-							Type:     schema.TypeString,
-							Computed: true,
+						"available_zone": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The available zone of the Mongodb.",
 						},
 						"vpc_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the VPC.",
 						},
 						"subnet_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the subnet.",
 						},
 						"status": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Status of the Mongodb, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2)",
 						},
 						"vip": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IP of the Mongodb instance.",
 						},
 						"vport": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "IP port of the Mongodb instance.",
 						},
 						"create_time": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Creation time of the Mongodb instance.",
 						},
 						"engine_version": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"mongo_version": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Version of the Mongodb engine.",
 						},
 						"cpu": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Number of cpu's core.",
 						},
 						"memory": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Memory size.",
 						},
 						"volume": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Disk size.",
 						},
 						"machine_type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Type of Mongodb instance.",
 						},
 						"shard_quantity": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Number of sharding.",
 						},
 					},
 				},
@@ -119,13 +148,18 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := ""
-	instanceType := -1
+	clusterType := -1
 	namePrefix := ""
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
-	if v, ok := d.GetOk("instance_type"); ok {
-		instanceType = v.(int)
+	if v, ok := d.GetOk("cluster_type"); ok {
+		vv := v.(string)
+		if vv == MONGODB_CLUSTER_TYPE_REPLSET {
+			clusterType = 0
+		} else if vv == MONGODB_CLUSTER_TYPE_SHARD {
+			clusterType = 1
+		}
 	}
 	if v, ok := d.GetOk("instance_name_prefix"); ok {
 		namePrefix = v.(string)
@@ -133,7 +167,7 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 	mongodbService := MongodbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	mongodbs, err := mongodbService.DescribeInstancesByFilter(ctx, instanceId, instanceType)
+	mongodbs, err := mongodbService.DescribeInstancesByFilter(ctx, instanceId, clusterType)
 	if err != nil {
 		return err
 	}
@@ -147,25 +181,30 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 
 		switch *mongo.MachineType {
 		case "HIO10G":
-			*mongo.MachineType = "TGIO"
+			*mongo.MachineType = MONGODB_MACHINE_TYPE_TGIO
 
 		case "HIO":
-			*mongo.MachineType = "GIO"
+			*mongo.MachineType = MONGODB_MACHINE_TYPE_GIO
+		}
+
+		clusterType := MONGODB_CLUSTER_TYPE_REPLSET
+		if *mongo.ClusterType == 1 {
+			clusterType = MONGODB_CLUSTER_TYPE_SHARD
 		}
 
 		instance := map[string]interface{}{
 			"instance_id":    mongo.InstanceId,
 			"instance_name":  mongo.InstanceName,
 			"project_id":     mongo.ProjectId,
-			"cluster_type":   mongo.ClusterType,
-			"zone":           mongo.Zone,
+			"cluster_type":   clusterType,
+			"available_zone": mongo.Zone,
 			"vpc_id":         mongo.VpcId,
 			"subnet_id":      mongo.SubnetId,
 			"status":         mongo.Status,
 			"vip":            mongo.Vip,
 			"vport":          mongo.Vport,
 			"create_time":    mongo.CreateTime,
-			"mongo_version":  mongo.MongoVersion,
+			"engine_version": mongo.MongoVersion,
 			"cpu":            mongo.CpuNum,
 			"memory":         *mongo.Memory / 1024,
 			"volume":         *mongo.Volume / 1024,

@@ -137,16 +137,16 @@ func (me *MongodbService) DescribeSpecInfo(ctx context.Context, zone string) (in
 }
 
 func (me *MongodbService) DescribeInstancesByFilter(ctx context.Context, instanceId string,
-	instanceType int) (mongodbs []*mongodb.MongoDBInstanceDetail, errRet error) {
+	clusterType int) (mongodbs []*mongodb.MongoDBInstanceDetail, errRet error) {
 
 	logId := GetLogId(ctx)
 	request := mongodb.NewDescribeDBInstancesRequest()
 	if instanceId != "" {
 		request.InstanceIds = []*string{&instanceId}
 	}
-	if instanceType > 0 {
-		temp := int64(instanceType)
-		request.InstanceType = &temp
+	if clusterType > 0 {
+		temp := int64(clusterType)
+		request.ClusterType = &temp
 	}
 
 	offset := 0
