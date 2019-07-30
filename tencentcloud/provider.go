@@ -39,6 +39,8 @@ Data Sources
   tencentcloud_eip
   tencentcloud_image
   tencentcloud_instance_types
+  tencentcloud_mongodb_instances
+  tencentcloud_mongodb_zone_config
   tencentcloud_mysql_backup_list
   tencentcloud_mysql_instance
   tencentcloud_mysql_parameter_list
@@ -98,6 +100,10 @@ CVM Resources
 LB Resources
   tencentcloud_lb
   tencentcloud_alb_server_attachment
+
+MongoDB Resources
+  tencentcloud_mongodb_instance
+  tencentcloud_mongodb_sharding_instance
 
 MySQL Resources
   tencentcloud_mysql_instance

@@ -492,7 +492,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		i = i + 1
 	}
 
-	err := resource.Retry(1*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
 		response, err := client.SendRequest("cvm", params)
 		if err != nil {
 			return resource.NonRetryableError(err)
