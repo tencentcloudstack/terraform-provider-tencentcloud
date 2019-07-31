@@ -28,4 +28,27 @@ The following arguments are supported:
 * `instance_name_prefix` - (Optional) Name prefix of the Mongodb instance.
 * `result_output_file` - (Optional) Used to store results.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `instance_list` - A list of instances. Each element contains the following attributes:
+  * `available_zone` - The available zone of the Mongodb.
+  * `cluster_type` - Type of Mongodb cluster.
+  * `cpu` - Number of cpu's core.
+  * `create_time` - Creation time of the Mongodb instance.
+  * `engine_version` - Version of the Mongodb engine.
+  * `instance_id` - ID of the Mongodb instance.
+  * `instance_name` - Name of the Mongodb instance.
+  * `machine_type` - Type of Mongodb instance.
+  * `memory` - Memory size.
+  * `project_id` - ID of the project which the instance belongs.
+  * `shard_quantity` - Number of sharding.
+  * `status` - Status of the Mongodb, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2)
+  * `subnet_id` - ID of the subnet.
+  * `vip` - IP of the Mongodb instance.
+  * `volume` - Disk size.
+  * `vpc_id` - ID of the VPC.
+  * `vport` - IP port of the Mongodb instance.
+
 
