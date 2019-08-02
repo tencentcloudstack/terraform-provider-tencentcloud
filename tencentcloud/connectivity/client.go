@@ -22,19 +22,18 @@ import (
 
 // client for all TencentCloud service
 type TencentCloudClient struct {
-
-	Region    string
-	SecretId  string
-	SecretKey string
-	mysqlConn *cdb.Client
-	cosConn   *s3.S3
-	redisConn *redis.Client
-	asConn    *as.Client
-	vpcConn   *vpc.Client
-	cbsConn   *cbs.Client
-	clbConn   *clb.Client
-	dcConn    *dc.Client
-  mongodbConn *mongodb.Client
+	Region      string
+	SecretId    string
+	SecretKey   string
+	mysqlConn   *cdb.Client
+	cosConn     *s3.S3
+	redisConn   *redis.Client
+	asConn      *as.Client
+	vpcConn     *vpc.Client
+	cbsConn     *cbs.Client
+	clbConn     *clb.Client
+	dcConn      *dc.Client
+	mongodbConn *mongodb.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -212,7 +211,6 @@ func (me *TencentCloudClient) UseDcClient() *dc.Client {
 	return me.dcConn
 
 }
-
 
 func (me *TencentCloudClient) UseMongodbClient() *mongodb.Client {
 	if me.mongodbConn != nil {
