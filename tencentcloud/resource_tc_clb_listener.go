@@ -117,9 +117,8 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Description:  "Unhealth threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, the CVM is identified as unhealthy. The value range is 2-10.",
 			},
 			"certificate_ssl_mode": {
-				Type:     schema.TypeString,
-				Optional: true,
-
+				Type:         schema.TypeString,
+				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
 				Description:  "Type of SSL Mode, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'.",
 			},
