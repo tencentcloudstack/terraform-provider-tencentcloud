@@ -1,10 +1,17 @@
-## 1.14.1 (Unreleased)
+## 1.15.0 (Unreleased)
+
+FEATURES:
 * **New Data Source**: `tencentcloud_clb_instances`
 * **New Data Source**: `tencentcloud_clb_listeners`
 * **New Data Source**: `tencentcloud_clb_listener_rules`
 * **New Resource**: `tencentcloud_clb_instance`
 * **New Resource**: `tencentcloud_clb_listener`
 * **New Resource**: `tencentcloud_clb_listener_rule`
+
+DEPRECATED:
+* Resource: `tencentcloud_lb` replaced by `tencentcloud_clb_instances`.
+* Resource: `tencentcloud_alb_server_attachment` replaced by `tencentcloud_clb_attachment`.
+
 ## 1.14.0 (July 30, 2019)
 
 FEATURES:
@@ -20,7 +27,6 @@ DEPRECATED:
 
 ENHANCEMENTS:
 * Refactoring security_group logic with api3.0
-
 
 ## 1.13.0 (July 23, 2019)
 
