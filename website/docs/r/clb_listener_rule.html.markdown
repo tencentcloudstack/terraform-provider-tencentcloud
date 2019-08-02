@@ -41,8 +41,8 @@ The following arguments are supported:
 * `domain` - (Required, ForceNew) Domain name of the forwarding rules
 * `listener_id` - (Required, ForceNew) ID of CLB listener.
 * `url` - (Required, ForceNew) Url of the forwarding rules
-* `certificate_ca_id` - (Optional, ForceNew) Id of the client certificate.If not set, the content, key, name of client certificate must be set when SSLMode is 'mutual', only supported by listners of protocol 'HTTPS'. 
-* `certificate_id` - (Optional, ForceNew) Id of the server certificate.If not set, the content, key, name of server certificate must be set, only supported by listners of protocol 'HTTPS'. 
+* `certificate_ca_id` - (Optional, ForceNew) Id of the client certificate.If not set, the content, key, name of client certificate must be set when SSLMode is 'mutual', only supported by listeners of protocol 'HTTPS'. 
+* `certificate_id` - (Optional, ForceNew) Id of the server certificate.If not set, the content, key, name of server certificate must be set, only supported by listeners of protocol 'HTTPS'. 
 * `certificate_ssl_mode` - (Optional, ForceNew) Type of SSL Mode. Available values are 'UNIDRECTIONAL', 'MUTUAL' 
 * `health_check_health_num` - (Optional) Health threshold of health check, and the default is 3. If a success result is returned for the health check for 3 consecutive times, the backend CVM is identified as healthy. The value range is 2-10
 * `health_check_http_code` - (Optional) Path of health check (applicable only to HTTP/HTTPS check methods).

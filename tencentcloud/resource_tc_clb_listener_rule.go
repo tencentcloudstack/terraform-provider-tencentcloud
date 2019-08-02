@@ -135,13 +135,13 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Id of the server certificate.If not set, the content, key, name of server certificate must be set, only supported by listners of protocol 'HTTPS'. ",
+				Description: "Id of the server certificate.If not set, the content, key, name of server certificate must be set, only supported by listeners of protocol 'HTTPS'. ",
 			},
 			"certificate_ca_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Id of the client certificate.If not set, the content, key, name of client certificate must be set when SSLMode is 'mutual', only supported by listners of protocol 'HTTPS'. ",
+				Description: "Id of the client certificate.If not set, the content, key, name of client certificate must be set when SSLMode is 'mutual', only supported by listeners of protocol 'HTTPS'. ",
 			},
 			"session_expire_time": {
 				Type:         schema.TypeInt,
