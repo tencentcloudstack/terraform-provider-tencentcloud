@@ -54,7 +54,7 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "session_expire_time", "30"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "url", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "scheduler", "WRR"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_switch", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_switch", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_interval_time", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_health_num", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_unhealth_num", "3"),
@@ -75,7 +75,7 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "session_expire_time", "60"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "url", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "scheduler", "WRR"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_switch", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_switch", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_interval_time", "300"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_health_num", "6"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_unhealth_num", "6"),
@@ -194,7 +194,7 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
   url                        = "/"
   session_expire_time        = 30
   scheduler                  = "WRR"
-  health_check_switch        = 1
+  health_check_switch        = true
   health_check_interval_time = 200
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
@@ -227,7 +227,7 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
   url                        = "/"
   session_expire_time        = 60
   scheduler                  = "WRR"
-  health_check_switch        = 1
+  health_check_switch        = true
   health_check_interval_time = 300
   health_check_health_num    = 6
   health_check_unhealth_num  = 6

@@ -23,7 +23,7 @@ resource "tencentcloud_clb_listener" "my_listener" {
   listener_name              = "listener_tcp"
   port                       = 44
   protocol                   = "TCP"
-  health_check_switch        = 1
+  health_check_switch        = true
   health_check_time_out      = 30
   health_check_interval_time = 100
   health_check_health_num    = 2

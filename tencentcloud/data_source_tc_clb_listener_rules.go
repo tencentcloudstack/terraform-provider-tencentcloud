@@ -98,7 +98,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 							Description: "ID of the rule.",
 						},
 						"health_check_switch": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Indicates whether health check is enabled.",
 						},
@@ -224,7 +224,11 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 			"scheduler":           *rule.Scheduler,
 		}
 		if rule.HealthCheck != nil {
-			mapping["health_check_switch"] = *rule.HealthCheck.HealthSwitch
+			health_check_switch := false
+			if *rule.HealthCheck.HealthSwitch == int64(1) {
+				health_check_switch = true
+			}
+			mapping["health_check_switch"] = health_check_switch
 			mapping["health_check_interval_time"] = *rule.HealthCheck.IntervalTime
 			mapping["health_check_health_num"] = *rule.HealthCheck.HealthNum
 			mapping["health_check_unhealth_num"] = *rule.HealthCheck.UnHealthNum

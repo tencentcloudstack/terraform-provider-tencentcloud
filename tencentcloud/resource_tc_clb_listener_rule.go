@@ -9,7 +9,7 @@ resource "tencentcloud_clb_listener_rule" "rule" {
   clb_id                     = "lb-k2zjp9lv"
   domain                     = "foo.net"
   url                        = "/bar"
-  health_check_switch        = "0"
+  health_check_switch        = true
   health_check_interval_time = "5"
   health_check_health_num    = "3"
   health_check_unhealth_num  = "3"
@@ -71,11 +71,10 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Description: "Url of the forwarding rules",
 			},
 			"health_check_switch": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
-				Computed:     true,
-				Description:  "Indicates whether health check is enabled.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Indicates whether health check is enabled.",
 			},
 			"health_check_interval_time": {
 				Type:         schema.TypeInt,
@@ -282,7 +281,11 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 
 	//health check
 	if instance.HealthCheck != nil {
-		d.Set("health_check_switch", instance.HealthCheck.HealthSwitch)
+		health_check_switch := false
+		if *instance.HealthCheck.HealthSwitch == int64(1) {
+			health_check_switch = true
+		}
+		d.Set("health_check_switch", health_check_switch)
 		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
 		//d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
 		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)

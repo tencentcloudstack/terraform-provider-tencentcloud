@@ -443,8 +443,12 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	healthCheckPara = &healthCheck
 	if v, ok := d.GetOk("health_check_switch"); ok {
 		healthSetFlag = true
-		vv := int64(v.(int))
-		healthCheck.HealthSwitch = &vv
+		vv := v.(bool)
+		vvv := int64(0)
+		if vv {
+			vvv = 1
+		}
+		healthCheck.HealthSwitch = &vvv
 	}
 	if v, ok := d.GetOk("health_check_time_out"); ok {
 		healthSetFlag = true

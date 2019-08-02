@@ -53,7 +53,7 @@ func TestAccTencentCloudClblistener_tcp(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "session_expire_time", "30"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "port", "44"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "scheduler", "WRR"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_switch", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_switch", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_time_out", "30"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_interval_time", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "2"),
@@ -70,7 +70,7 @@ func TestAccTencentCloudClblistener_tcp(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "session_expire_time", "60"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "port", "44"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "scheduler", "WRR"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_switch", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_switch", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_time_out", "20"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_interval_time", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcp", "health_check_health_num", "3"),
@@ -184,7 +184,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   listener_name              = "listener_tcp"
   port                       = 44
   protocol                   = "TCP"
-  health_check_switch        = 1
+  health_check_switch        = true
   health_check_time_out      = 30
   health_check_interval_time = 100
   health_check_health_num    = 2
@@ -204,7 +204,7 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
         listener_name              = "listener_tcp_update"
         port                       = 44
         protocol                   = "TCP"
-        health_check_switch        = 1
+        health_check_switch        = true
         health_check_time_out      = 20
         health_check_interval_time = 200
         health_check_health_num    = 3

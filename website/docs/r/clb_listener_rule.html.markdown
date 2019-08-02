@@ -3,22 +3,22 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_clb_listener_rule"
 sidebar_current: "docs-tencentcloud-resource-clb_listener_rule"
 description: |-
-  Provide a resource to create a CLB listener rule.
+  Provides a resource to create a CLB listener rule.
 ---
 
 # tencentcloud_clb_listener_rule
 
-Provide a resource to create a CLB listener rule.
+Provides a resource to create a CLB listener rule.
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_clb_listener_forward_rule" "rule" {
+resource "tencentcloud_clb_listener_rule" "rule" {
   listener_id                = "lbl-hh141sn9"
   clb_id                     = "lb-k2zjp9lv"
   domain                     = "foo.net"
   url                        = "/bar"
-  health_check_switch        = "0"
+  health_check_switch        = true
   health_check_interval_time = "5"
   health_check_health_num    = "3"
   health_check_unhealth_num  = "3"

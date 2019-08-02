@@ -9,7 +9,7 @@ resource "tencentcloud_clb_listener" "clb_listener" {
   listener_name              = "mylistener"
   port                       = 80
   protocol                   = "HTTP"
-  health_check_switch        = 0
+  health_check_switch        = true
   health_check_time_out      = 2
   health_check_interval_time = 5
   health_check_health_num    = 3
@@ -82,11 +82,10 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Description:  "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL' ('TCP_SSL' is in the internal test, please apply if you need to use).",
 			},
 			"health_check_switch": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
-				Computed:     true,
-				Description:  "Indicates whether health check is enabled.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Indicates whether health check is enabled.",
 			},
 			"health_check_time_out": {
 				Type:         schema.TypeInt,
@@ -273,7 +272,11 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 
 	//health check
 	if instance.HealthCheck != nil {
-		d.Set("health_check_switch", instance.HealthCheck.HealthSwitch)
+		health_check_switch := false
+		if *instance.HealthCheck.HealthSwitch == int64(1) {
+			health_check_switch = true
+		}
+		d.Set("health_check_switch", health_check_switch)
 		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
 		d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
 		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)

@@ -149,7 +149,6 @@ needMoreItems:
 	} else {
 		goto needMoreItems
 	}
-	return
 }
 
 func (me *RedisService) CreateInstances(ctx context.Context,

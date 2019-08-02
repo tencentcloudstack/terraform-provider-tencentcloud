@@ -85,7 +85,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 							Description: "Port of the listener.",
 						},
 						"health_check_switch": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Indicates whether health check is enabled.",
 						},
@@ -194,7 +194,11 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 			mapping["scheduler"] = *listener.Scheduler
 		}
 		if listener.HealthCheck != nil {
-			mapping["health_check_switch"] = *listener.HealthCheck.HealthSwitch
+			health_check_switch := false
+			if *listener.HealthCheck.HealthSwitch == int64(1) {
+				health_check_switch = true
+			}
+			mapping["health_check_switch"] = health_check_switch
 			mapping["health_check_time_out"] = *listener.HealthCheck.TimeOut
 			mapping["health_check_interval_time"] = *listener.HealthCheck.IntervalTime
 			mapping["health_check_health_num"] = *listener.HealthCheck.HealthNum
