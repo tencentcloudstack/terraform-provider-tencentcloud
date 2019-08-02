@@ -1,5 +1,5 @@
 /*
-Provide a resource to create a CLB listener.
+Provides a resource to create a CLB listener.
 
 Example Usage
 
@@ -27,7 +27,7 @@ Import
 CLB listener can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb.listener lbl-qckdffns#lb-p7nlgs4t
+$ terraform import tencentcloud_clb_listener.foo lbl-qckdffns#lb-p7nlgs4t
 
 ```
 */
@@ -157,15 +157,16 @@ func resourceTencentCloudClbListener() *schema.Resource {
 }
 
 func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_listener.create")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_listener.create")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	clbId := d.Get("clb_id").(string)
 	listenerName := d.Get("listener_name").(string)
 	request := clb.NewCreateListenerRequest()
 
 	request.LoadBalancerId = stringToPointer(clbId)
-
 	request.ListenerNames = []*string{&listenerName}
 
 	port := int64(d.Get("port").(int))
@@ -195,9 +196,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		request.Certificate = certificateInput
 	} else {
 		if protocol == CLB_LISTENER_PROTOCOL_HTTPS {
-
-			fmt.Errorf("certificated need to be set when protocol is HTTPS")
-
+			return fmt.Errorf("certificated need to be set when protocol is HTTPS")
 		}
 	}
 
@@ -213,7 +212,6 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP) {
 			return fmt.Errorf("Scheduler can only be set with protocol TCP/UDP")
 		}
-
 		request.Scheduler = stringToPointer(v.(string))
 	}
 	if v, ok := d.GetOk("sni_switch"); ok {
@@ -248,8 +246,9 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_listener.read")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_listener.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")
@@ -287,15 +286,15 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
 		d.Set("certificate_id", instance.Certificate.CertId)
 		d.Set("certificate_ca_id", instance.Certificate.CertCaId)
-
 	}
 
 	return nil
 }
 
 func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_listener.update")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_listener.update")()
 
 	items := strings.Split(d.Id(), "#")
 	if len(items) != 2 {
@@ -319,6 +318,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		scheduler = d.Get("scheduler").(string)
 	}
+
 	if d.HasChange("session_expire_time") {
 		changed = true
 		sessionExpireTime = d.Get("session_expire_time").(int)
@@ -379,15 +379,15 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 				return retryErr
 			}
 		}
-
 	}
 
 	return nil
 }
 
 func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_listener.delete")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_listener.delete")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")
@@ -396,9 +396,11 @@ func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interfac
 	}
 	listenerId := items[0]
 	clbId := items[1]
+
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+
 	err := clbService.DeleteListenerById(ctx, clbId, listenerId)
 	if err != nil {
 		log.Printf("[CRITAL]%s reason[%s]\n", logId, err.Error())

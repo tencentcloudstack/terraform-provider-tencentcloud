@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 data "tencentcloud_clb" "clblab" {
     clb_id             = "lb-k2zjp9lv"
-    network_type           = "OPEN"
+    network_type       = "OPEN"
     clb_name           = "myclb"
     project_id         = "Default Project"
     result_output_file = "mytestpath"
@@ -134,8 +134,9 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("data_source.tencentcloud_clb_instances.read")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "data_source.tencentcloud_clb_instances.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]interface{})

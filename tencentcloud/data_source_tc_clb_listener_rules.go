@@ -1,10 +1,10 @@
 /*
-Use this data source to query detailed information of CLB listener
+Use this data source to query detailed information of CLB listener rule
 
 Example Usage
 
 ```hcl
-data "tencentcloud_clb_listener" "clblistener" {
+data "tencentcloud_clb_listener_rules" "foo" {
   clb_id      = "lb-k2zjp9lv"
   listener_id = "lbl-mwr6vbtv"
   location_id = "loc-inem40hz"
@@ -170,8 +170,9 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("data_source.tencentcloud_clb_listener_rules.read")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "data_source.tencentcloud_clb_listener_rules.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	combinedId := d.Get("listener_id").(string)
@@ -239,7 +240,6 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 		}
 		ruleList = append(ruleList, mapping)
 		ids = append(ids, *rule.LocationId+"#"+combinedId)
-		log.Printf("iiiiiiiiiiiiiiiid %s", *rule.LocationId+"#"+combinedId)
 	}
 
 	d.SetId(dataResourceIdsHash(ids))

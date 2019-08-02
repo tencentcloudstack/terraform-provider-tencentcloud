@@ -1,10 +1,10 @@
 /*
-Provide a resource to create a CLB instance.
+Provides a resource to create a CLB instance.
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_listener" "clblab" {
+resource "tencentcloud_clb_instance" "foo" {
   network_type              = "OPEN"
   clb_name                  = "myclb"
   project_id                = 0
@@ -22,7 +22,7 @@ Import
 CLB instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb.instance lb-7a0t6zqb
+$ terraform import tencentcloud_clb_instance.foo lb-7a0t6zqb
 ```
 */
 package tencentcloud
@@ -59,7 +59,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'",
+				Description:  "Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -73,14 +73,14 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Computed:    true,
-				Description: "ID of the subnet within this VPC. The VIP of the intranet CLB instance will be generated from this subnet",
+				Description: "ID of the VPC.",
 			},
 			"subnet_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
-				Description:  "ID of the subnet within this VPC. The VIP of the intranet CLB instance will be generated from this subnet",
+				Description:  "ID of the subnet within this VPC. The VIP of the intranet CLB instance will be generated from this subnet.",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,
@@ -105,8 +105,9 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 }
 
 func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_instance.create")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_instance.create")()
 
 	network_type := d.Get("network_type").(string)
 	clb_name := d.Get("clb_name").(string)
@@ -198,8 +199,9 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_instance.read")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_instance.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()
@@ -224,8 +226,10 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_instance.update")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_instance.update")()
+
 	d.Partial(true)
 
 	clbId := d.Id()
@@ -249,8 +253,8 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			Region: &region,
 			VpcId:  &vpcId,
 		}
-
 	}
+
 	if changed {
 		request := clb.NewModifyLoadBalancerAttributesRequest()
 		request.LoadBalancerId = stringToPointer(clbId)
@@ -311,18 +315,21 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_instance.delete")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_instance.delete")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+
 	err := clbService.DeleteLoadBalancerById(ctx, clbId)
 	if err != nil {
 		log.Printf("[CRITAL]%s reason[%s]\n", logId, err.Error())
 		return err
 	}
+
 	return nil
 }

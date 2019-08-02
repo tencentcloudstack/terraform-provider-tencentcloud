@@ -1,10 +1,10 @@
 /*
-Provide a resource to create a CLB listener rule.
+Provides a resource to create a CLB listener rule.
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_listener_forward_rule" "rule" {
+resource "tencentcloud_clb_listener_rule" "rule" {
   listener_id                = "lbl-hh141sn9"
   clb_id                     = "lb-k2zjp9lv"
   domain                     = "foo.net"
@@ -160,9 +160,9 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 }
 
 func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_listener_rule.create")()
+	defer LogElapsed("resource.tencentcloud_clb_listener_rule.create")()
 
+	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Get("listener_id").(string), "#")
@@ -246,8 +246,9 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_listener_rule.read")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_listener_rule.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	ruleId := d.Id()
@@ -268,7 +269,7 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 		return err
 	}
 	if len(instances) == 0 {
-		fmt.Errorf("rule not found!")
+		return fmt.Errorf("rule not found!")
 	}
 	instance := instances[0]
 	d.Set("clb_id", clbId)
@@ -297,15 +298,15 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 		d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
 		d.Set("certificate_id", instance.Certificate.CertId)
 		d.Set("certificate_ca_id", instance.Certificate.CertCaId)
-
 	}
 
 	return nil
 }
 
 func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_listener_rule.update")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_listener_rule.update")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Get("listener_id").(string), "#")
@@ -390,15 +391,17 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 				return retryErr
 			}
 		}
-
 	}
 
 	return nil
 }
+
 func resourceTencentCloudClbListenerRuleDelete(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_listener_rule.delete")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_listener_rule.delete")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	ruleId := d.Id()
 	items := strings.Split(ruleId, "#")
 	if len(items) != 3 {
@@ -407,13 +410,16 @@ func resourceTencentCloudClbListenerRuleDelete(d *schema.ResourceData, meta inte
 	locationId := items[0]
 	listenerId := items[1]
 	clbId := items[2]
+
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+
 	err := clbService.DeleteRuleById(ctx, clbId, listenerId, locationId)
 	if err != nil {
 		log.Printf("[CRITAL]%s reason[%s]\n", logId, err.Error())
 		return err
 	}
+
 	return nil
 }
