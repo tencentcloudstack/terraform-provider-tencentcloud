@@ -2,8 +2,10 @@
 
 * **New Data Source**: `tencentcloud_clb_instances`
 * **New Data Source**: `tencentcloud_clb_listeners`
+* **New Data Source**: `tencentcloud_clb_listener_rules`
 * **New Resource**: `tencentcloud_clb_instance`
 * **New Resource**: `tencentcloud_clb_listener`
+* **New Resource**: `tencentcloud_clb_listener_rule`
 
 ## 1.13.0 (July 23, 2019)
 

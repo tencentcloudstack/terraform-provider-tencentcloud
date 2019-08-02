@@ -102,3 +102,8 @@ const (
 	CLB_TASK_FAIL      = 1
 	CLB_TASK_EXPANDING = 2
 )
+
+const (
+	HEALTH_APPLY_TYPE_LISTENER = "listener"
+	HEALTH_APPLY_TYPE_RULE     = "rule"
+)

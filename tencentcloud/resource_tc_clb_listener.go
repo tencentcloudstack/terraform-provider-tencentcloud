@@ -178,7 +178,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		request.Protocol = stringToPointer(protocol)
 	}
 
-	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol)
+	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol, HEALTH_APPLY_TYPE_LISTENER)
 	if healthErr != nil {
 		return healthErr
 	}
@@ -232,9 +232,9 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	} else {
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-		request_id := *response.Response.RequestId
+		requestId := *response.Response.RequestId
 
-		retryErr := retrySet(request_id, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+		retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 		if retryErr != nil {
 			return retryErr
 		}
@@ -325,7 +325,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol)
+	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol, HEALTH_APPLY_TYPE_LISTENER)
 	if healthErr != nil {
 		return healthErr
 	}
@@ -373,8 +373,8 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-			request_id := *response.Response.RequestId
-			retryErr := retrySet(request_id, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			requestId := *response.Response.RequestId
+			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
 				return retryErr
 			}

@@ -1,0 +1,241 @@
+package tencentcloud
+
+import (
+	"context"
+	"fmt"
+	"strings"
+	"testing"
+	"time"
+
+	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/terraform"
+)
+
+func TestAccTencentCloudClbListenerRule_basic(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbListenerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbListenerRule_basic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_basic", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_basic", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "domain", "abc.com"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "session_expire_time", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "url", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "scheduler", "WRR"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_clb_listener_rule.rule_basic",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbListenerRuleDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbListenerRule_full,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_full"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_full", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_full", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "domain", "abc.com"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "session_expire_time", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "url", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_switch", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_interval_time", "200"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_health_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_unhealth_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_method", "GET"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_code", "31"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_domain", "abc.com"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_path", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_ssl_mode", "UNIDIRECTIONAL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", "VjAYq9xc"),
+				),
+			}, {
+				Config: testAccClbListenerRule_update,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_full"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_full", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_full", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "domain", "abcdr.com"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "session_expire_time", "60"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "url", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_switch", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_interval_time", "300"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_health_num", "6"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_unhealth_num", "6"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_method", "HEAD"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_code", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_domain", "abcd.com"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_path", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_ssl_mode", "UNIDIRECTIONAL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", "VjAYq9xc"),
+				),
+			},
+		},
+	})
+}
+
+func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	clbService := ClbService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_clb_listener_rule" {
+			continue
+		}
+		time.Sleep(5 * time.Second)
+		items := strings.Split(rs.Primary.ID, "#")
+		if len(items) != 3 {
+			return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
+		}
+		locationId := items[0]
+		listenerId := items[1]
+		clbId := items[2]
+		//this function is not supported by api, need to be travelled
+		filter := map[string]string{"location_id": locationId, "listener_id": listenerId, "clb_id": clbId}
+		_, err := clbService.DescribeRulesByFilter(ctx, filter)
+		if err == nil {
+			return fmt.Errorf("clb listener rule still exists: %s", rs.Primary.ID)
+		}
+	}
+	return nil
+}
+
+func testAccCheckClbListenerRuleExists(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		logId := GetLogId(nil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
+
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("clb listener rule %s is not found", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("clb listener rule id is not set")
+		}
+		clbService := ClbService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+		}
+		items := strings.Split(rs.Primary.ID, "#")
+		if len(items) != 3 {
+			return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
+		}
+		locationId := items[0]
+		listenerId := items[1]
+		clbId := items[2]
+		filter := map[string]string{"location_id": locationId, "listener_id": listenerId, "clb_id": clbId}
+		_, err := clbService.DescribeRulesByFilter(ctx, filter)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+}
+
+const testAccClbListenerRule_basic = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-basic"
+}
+
+resource "tencentcloud_clb_listener" "listener_basic" {
+  clb_id        = "${tencentcloud_clb_instance.clb_basic.id}"
+  port          = 1
+  protocol      = "HTTP"
+  listener_name = "listener_basic"
+}
+
+resource "tencentcloud_clb_listener_rule" "rule_basic" {
+  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
+  listener_id         = "${tencentcloud_clb_listener.listener_basic.id}"
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+}
+`
+const testAccClbListenerRule_full = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-basic"
+}
+resource "tencentcloud_clb_listener" "listener_basic" {
+  clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
+  listener_name        = "listener_https"
+  port                 = 77
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "VfqcL1ME"
+
+}
+resource "tencentcloud_clb_listener_rule" "rule_full" {
+  clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
+  listener_id                = "${tencentcloud_clb_listener.listener_basic.id}"
+  domain                     = "abc.com"
+  url                        = "/"
+  session_expire_time        = 30
+  scheduler                  = "WRR"
+  health_check_switch        = 1
+  health_check_interval_time = 200
+  health_check_health_num    = 3
+  health_check_unhealth_num  = 3
+  health_check_http_path     = "/"
+  health_check_http_domain   = "abc.com"
+  health_check_http_code     = "31"
+  health_check_http_method   = "GET"
+  certificate_ssl_mode       = "UNIDIRECTIONAL"
+  certificate_id             = "VjAYq9xc"
+}
+`
+const testAccClbListenerRule_update = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-basic"
+}
+resource "tencentcloud_clb_listener" "listener_basic" {
+  clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
+  listener_name        = "listener_https"
+  port                 = 77
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "VfqcL1ME"
+
+}
+resource "tencentcloud_clb_listener_rule" "rule_full" {
+  clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
+  listener_id                = "${tencentcloud_clb_listener.listener_basic.id}"
+  domain                     = "abcdr.com"
+  url                        = "/"
+  session_expire_time        = 60
+  scheduler                  = "WRR"
+  health_check_switch        = 1
+  health_check_interval_time = 300
+  health_check_health_num    = 6
+  health_check_unhealth_num  = 6
+  health_check_http_path     = "/"
+  health_check_http_domain   = "abcd.com"
+  health_check_http_code     = "1"
+  health_check_http_method   = "HEAD"
+  certificate_ssl_mode       = "UNIDIRECTIONAL"
+  certificate_id             = "VjAYq9xc"
+}
+`

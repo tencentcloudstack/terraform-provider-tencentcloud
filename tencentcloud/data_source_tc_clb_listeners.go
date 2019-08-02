@@ -177,19 +177,27 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 	ids := make([]string, 0, len(listeners))
 	for _, listener := range listeners {
 		mapping := map[string]interface{}{
-			"clb_id":                     clbId,
-			"listener_id":                *listener.ListenerId,
-			"listener_name":              *listener.ListenerName,
-			"protocol":                   *listener.Protocol,
-			"port":                       *listener.Port,
-			"session_expire_time":        *listener.SessionExpireTime,
-			"sni_switch":                 *listener.SniSwitch,
-			"scheduler":                  *listener.Scheduler,
-			"health_check_switch":        *listener.HealthCheck.HealthSwitch,
-			"health_check_time_out":      *listener.HealthCheck.TimeOut,
-			"health_check_interval_time": *listener.HealthCheck.IntervalTime,
-			"health_check_health_num":    *listener.HealthCheck.HealthNum,
-			"health_check_unhealth_num":  *listener.HealthCheck.UnHealthNum,
+			"clb_id":        clbId,
+			"listener_id":   *listener.ListenerId,
+			"listener_name": *listener.ListenerName,
+			"protocol":      *listener.Protocol,
+			"port":          *listener.Port,
+		}
+		if listener.SessionExpireTime != nil {
+			mapping["session_expire_time"] = *listener.SessionExpireTime
+		}
+		if listener.SniSwitch != nil {
+			mapping["sni_switch"] = *listener.SniSwitch
+		}
+		if listener.Scheduler != nil {
+			mapping["scheduler"] = *listener.Scheduler
+		}
+		if listener.HealthCheck != nil {
+			mapping["health_check_switch"] = *listener.HealthCheck.HealthSwitch
+			mapping["health_check_time_out"] = *listener.HealthCheck.TimeOut
+			mapping["health_check_interval_time"] = *listener.HealthCheck.IntervalTime
+			mapping["health_check_health_num"] = *listener.HealthCheck.HealthNum
+			mapping["health_check_unhealth_num"] = *listener.HealthCheck.UnHealthNum
 		}
 		if listener.Certificate != nil {
 			mapping["certificate_ssl_mode"] = *listener.Certificate.SSLMode
@@ -197,12 +205,12 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 			mapping["certificate_ca_id"] = *listener.Certificate.CertCaId
 		}
 		listenerList = append(listenerList, mapping)
-		ids = append(ids, clbId+"#"+*listener.ListenerId)
+		ids = append(ids, *listener.ListenerId+"#"+clbId)
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
 	if err = d.Set("listener_list", listenerList); err != nil {
-		log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set clb listener list fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
