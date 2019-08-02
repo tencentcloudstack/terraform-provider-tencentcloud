@@ -95,9 +95,9 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 }
 
 func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "data.tencentcloud_security_groups.read")()
+	defer LogElapsed("data_source.tencentcloud_security_groups.read")()
 
+	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
