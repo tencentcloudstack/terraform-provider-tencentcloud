@@ -1,16 +1,36 @@
+/*
+Provide a resource to create security group.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_security_group" "sglab" {
+  name        = "mysg"
+  description = "favourite sg"
+  project_id  = 0
+}
+```
+
+Import
+
+Security group can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_security_group.sglab sg-ey3wmiz1
+```
+*/
 package tencentcloud
 
 import (
-	"encoding/json"
-	"errors"
+	"context"
 	"fmt"
 	"log"
-	"reflect"
 	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 )
 
 func resourceTencentCloudSecurityGroup() *schema.Resource {
@@ -27,229 +47,164 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(2, 60),
+				ValidateFunc: validateStringLengthInRange(1, 60),
+				Description:  "Name of the security group to be queried.",
 			},
 			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(2, 100),
+				Default:      "",
+				ValidateFunc: validateStringLengthInRange(1, 100),
+				Description:  "Description of the security group.",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Project ID of the security group.",
 			},
 		},
 	}
 }
 
 func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action": "CreateSecurityGroup",
-	}
-	if _, ok := d.GetOk("name"); ok {
-		params["sgName"] = d.Get("name").(string)
-	}
-	if _, ok := d.GetOk("description"); ok {
-		params["sgRemark"] = d.Get("description").(string)
-	}
-	if _, ok := d.GetOk("project_id"); ok {
-		params["projectId"] = strconv.Itoa(d.Get("project_id").(int))
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_security_group.create")()
+
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	name := d.Get("name").(string)
+	desc := d.Get("description").(string)
+
+	var projectId *int
+	if projectIdInterface, exist := d.GetOk("project_id"); exist {
+		projectId = common.IntPtr(projectIdInterface.(int))
 	}
 
-	log.Printf("[DEBUG] resource_tc_security_group create params:%v", params)
+	id, err := vpcService.CreateSecurityGroup(ctx, name, desc, projectId)
+	if err != nil {
+		return err
+	}
 
-	response, err := client.SendRequest("dfw", params)
-	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group create client.SendRequest error:%v", err)
-		return err
-	}
-	var jsonresp struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-		Data    struct {
-			SgId string `json:"sgId"`
-		}
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group create json.Unmarshal error:%v", err)
-		return err
-	}
-	if jsonresp.Code != 0 {
-		log.Printf("[ERROR] resource_tc_security_group create error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-		return errors.New(jsonresp.Message)
-	}
-	log.Printf("[DEBUG] SgId=%s", jsonresp.Data.SgId)
-	d.SetId(jsonresp.Data.SgId)
-	return nil
+	d.SetId(id)
+	return resourceTencentCloudSecurityGroupRead(d, m)
 }
 
 func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action": "DescribeSecurityGroupEx",
-		"sgId":   d.Id(),
-	}
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
 
-	log.Printf("[DEBUG] resource_tc_security_group read params:%v", params)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	response, err := client.SendRequest("dfw", params)
+	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	id := d.Id()
+
+	securityGroup, has, err := vpcService.DescribeSecurityGroup(ctx, id)
 	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group read client.SendRequest error:%v", err)
 		return err
 	}
 
-	var jsonresp struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-		Data    struct {
-			TotalNum int `json:"totalNum"`
-			Detail   []struct {
-				SgName    string      `json:"sgName"`
-				SgRemark  string      `json:"sgRemark"`
-				ProjectId interface{} `json:"projectId"`
-			}
-		}
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group read json.Unmarshal error:%v", err)
+	switch has {
+	default:
+		err := fmt.Errorf("one security_group_id read get %d security_group info", has)
+		log.Printf("[CRITAL]%s %v", logId, err)
+
 		return err
-	}
-	if jsonresp.Code != 0 {
-		log.Printf("[ERROR] resource_tc_security_group read error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-		return errors.New(jsonresp.Message)
-	} else if jsonresp.Data.TotalNum <= 0 || len(jsonresp.Data.Detail) <= 0 {
+
+	case 0:
 		d.SetId("")
 		return nil
-	}
-	sg := jsonresp.Data.Detail[0]
-	d.Set("name", sg.SgName)
-	d.Set("description", sg.SgRemark)
 
-	if "string" == reflect.TypeOf(sg.ProjectId).String() {
-		if intVal, err := strconv.ParseInt(sg.ProjectId.(string), 10, 64); err != nil {
-			return fmt.Errorf("create security_group project ParseInt  error ,%s", err.Error())
-		} else {
-			d.Set("project_id", int(intVal))
+	case 1:
+		d.Set("name", *securityGroup.SecurityGroupName)
+		d.Set("description", *securityGroup.SecurityGroupDesc)
+
+		projectId, err := strconv.Atoi(*securityGroup.ProjectId)
+		if err != nil {
+			return fmt.Errorf("securtiy group %s project id invalid: %v", *securityGroup.SecurityGroupId, err)
 		}
-	} else {
-		d.Set("project_id", sg.ProjectId.(int))
+		d.Set("project_id", projectId)
 	}
 
 	return nil
 }
 
 func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action": "ModifySecurityGroupAttributes",
-		"sgId":   d.Id(),
-	}
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_security_group.update")()
 
-	d.Partial(true)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	attributeUpdate := false
+	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	id := d.Id()
+
+	attributeUpdate := d.HasChange("name") || d.HasChange("description")
+	var (
+		newName *string
+		newDesc *string
+	)
 
 	if d.HasChange("name") {
-		params["sgName"] = d.Get("name").(string)
-		d.SetPartial("name")
-		attributeUpdate = true
+		newName = common.StringPtr(d.Get("name").(string))
 	}
 
 	if d.HasChange("description") {
-		params["sgRemark"] = d.Get("description").(string)
-		d.SetPartial("description")
-		attributeUpdate = true
+		newDesc = common.StringPtr(d.Get("description").(string))
 	}
 
-	if attributeUpdate {
-
-		log.Printf("[DEBUG] resource_tc_security_group update params:%v", params)
-
-		response, err := client.SendRequest("dfw", params)
-		if err != nil {
-			log.Printf("[ERROR] resource_tc_security_group update client.SendRequest error:%v", err)
-			return err
-		}
-		var jsonresp struct {
-			Code     int    `json:"code"`
-			Message  string `json:"message"`
-			CodeDesc string `json:"codeDesc"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			log.Printf("[ERROR] resource_tc_security_group update json.Unmarshal error:%v", err)
-			return err
-		}
-		if jsonresp.Code != 0 {
-			log.Printf("[ERROR] resource_tc_security_group update error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-			return errors.New(jsonresp.Message)
-		}
+	if !attributeUpdate {
+		return nil
 	}
 
-	d.Partial(false)
+	if err := vpcService.ModifySecurityGroup(ctx, id, newName, newDesc); err != nil {
+		return err
+	}
 
 	return resourceTencentCloudSecurityGroupRead(d, m)
 }
 
 func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	var sgId = d.Id()
+	logId := GetLogId(nil)
+	defer LogElapsed(logId + "resource.tencentcloud_security_group.delete")()
 
-	params := map[string]string{
-		"Action": "DeleteSecurityGroup",
-		"sgId":   sgId,
-	}
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	return resource.Retry(3*time.Minute, func() *resource.RetryError {
-		var (
-			err         error
-			instanceIds []string
-			response    string
-		)
-		instanceIds, err = getSecurityGroupAssociatedInstancesBySgId(client, sgId)
+	id := d.Id()
+
+	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	// wait until all instances unbind this security group
+	if err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+		associateSet, err := vpcService.DescribeSecurityGroupsAssociate(ctx, []string{id})
 		if err != nil {
 			return resource.NonRetryableError(err)
 		}
-		if len(instanceIds) > 0 {
-			s := fmt.Sprintf(
-				"security group: %v still bind with instanceIds: %v",
-				sgId,
-				instanceIds,
-			)
-			log.Printf("[DEBUG] %v", s)
-			err = fmt.Errorf(s)
+
+		if len(associateSet) == 0 {
+			time.Sleep(3 * time.Second)
+
+			return nil
+		}
+
+		statistics := associateSet[0]
+		if *statistics.CVM+*statistics.CLB+*statistics.CDB+*statistics.ENI+*statistics.SG > 0 {
+			err := fmt.Errorf("security group %s still bind instances", id)
+			log.Printf("[DEBUG]%s %v", logId, err)
+
 			return resource.RetryableError(err)
 		}
 
 		time.Sleep(3 * time.Second)
-		response, err = client.SendRequest("dfw", params)
-		if err != nil {
-			log.Printf("[DEBUG] resource_tc_route_table delete client.SendRequest error:%v", err)
-			return resource.NonRetryableError(err)
-		}
-		var jsonresp struct {
-			Code    int    `json:"code"`
-			Message string `json:"message"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			log.Printf("[ERROR] resource_tc_security_group delete client.SendRequest error:%v", err)
-			return resource.NonRetryableError(err)
-		}
-
-		//The security group does not exist, doc: https://intl.cloud.tencent.com/document/api/213/1362
-		if jsonresp.Code == 7001 {
-			return nil
-		} else if jsonresp.Code != 0 {
-			log.Printf("[ERROR] resource_tc_security_group delete error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-			err = errors.New(jsonresp.Message)
-			return resource.NonRetryableError(err)
-		}
 
 		return nil
-	})
+	}); err != nil {
+		return err
+	}
+
+	return vpcService.DeleteSecurityGroup(ctx, id)
 }

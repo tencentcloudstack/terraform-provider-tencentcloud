@@ -42,6 +42,8 @@ Data Sources
   tencentcloud_eip
   tencentcloud_image
   tencentcloud_instance_types
+  tencentcloud_mongodb_instances
+  tencentcloud_mongodb_zone_config
   tencentcloud_mysql_backup_list
   tencentcloud_mysql_instance
   tencentcloud_mysql_parameter_list
@@ -104,6 +106,10 @@ LB Resources
   tencentcloud_clb_listener_rule
   tencentcloud_lb
   tencentcloud_alb_server_attachment
+
+MongoDB Resources
+  tencentcloud_mongodb_instance
+  tencentcloud_mongodb_sharding_instance
 
 MySQL Resources
   tencentcloud_mysql_instance
@@ -177,6 +183,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_subnet":                      dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                 dataSourceTencentCloudRouteTable(),
 			"tencentcloud_security_group":              dataSourceTencentCloudSecurityGroup(),
+			"tencentcloud_security_groups":             dataSourceTencentCloudSecurityGroups(),
 			"tencentcloud_nats":                        dataSourceTencentCloudNats(),
 			"tencentcloud_container_clusters":          dataSourceTencentCloudContainerClusters(),
 			"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),
@@ -203,6 +210,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_listeners":               dataSourceTencentCloudClbListeners(),
 			"tencentcloud_clb_listener_rules":          dataSourceTencentCloudClbListenerRules(),
 			"tencentcloud_dcx_instances":               dataSourceTencentCloudDcxInstances(),
+			"tencentcloud_mongodb_zone_config":         dataSourceTencentCloudMongodbZoneConfig(),
+			"tencentcloud_mongodb_instances":           dataSourceTencentCloudMongodbInstances(),
 			"tencentcloud_dc_gateway_instances":        dataSourceTencentCloudDcGatewayInstances(),
 			"tencentcloud_dc_gateway_ccn_routes":       dataSourceTencentCloudDcGatewayCCNRoutes(),
 		},
@@ -253,6 +262,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_attachment":             resourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":        resourceTencentCloudCcnBandwidthLimit(),
 			"tencentcloud_dcx":                        resourceTencentCloudDcxInstance(),
+			"tencentcloud_mongodb_instance":           resourceTencentCloudMongodbInstance(),
+			"tencentcloud_mongodb_sharding_instance":  resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_dc_gateway":                 resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":       resourceTencentCloudDcGatewayCcnRouteInstance(),
 		},

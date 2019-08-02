@@ -1,15 +1,30 @@
-## 1.14.0 (Unreleased)
-
+## 1.14.1 (Unreleased)
 * **New Data Source**: `tencentcloud_clb_instances`
 * **New Data Source**: `tencentcloud_clb_listeners`
 * **New Data Source**: `tencentcloud_clb_listener_rules`
 * **New Resource**: `tencentcloud_clb_instance`
 * **New Resource**: `tencentcloud_clb_listener`
 * **New Resource**: `tencentcloud_clb_listener_rule`
+## 1.14.0 (July 30, 2019)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_security_groups`
+* **New Data Source**: `tencentcloud_mongodb_instances`
+* **New Data Source**: `tencentcloud_mongodb_zone_config`
+* **New Resource**: `tencentcloud_mongodb_instance`
+* **New Resource**: `tencentcloud_mongodb_sharding_instance`
+* **Update Resource**: `tencentcloud_security_group_rule` add optional argument `description`
+
+DEPRECATED:
+* Data Source: `tencnetcloud_security_group` replaced by `tencentcloud_security_groups`
+
+ENHANCEMENTS:
+* Refactoring security_group logic with api3.0
+
 
 ## 1.13.0 (July 23, 2019)
 
-EATURES:
+FEATURES:
 * **New Data Source**: `tencentcloud_dc_gateway_instances`
 * **New Data Source**: `tencentcloud_dc_gateway_ccn_routes`
 * **New Resource**: `tencentcloud_dc_gateway`

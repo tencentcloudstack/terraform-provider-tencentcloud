@@ -15,12 +15,14 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
-//client for all TencentCloud service
+// client for all TencentCloud service
 type TencentCloudClient struct {
+
 	Region    string
 	SecretId  string
 	SecretKey string
@@ -32,6 +34,7 @@ type TencentCloudClient struct {
 	cbsConn   *cbs.Client
 	clbConn   *clb.Client
 	dcConn    *dc.Client
+  mongodbConn *mongodb.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -61,11 +64,11 @@ func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 	)
 
 	cpf := profile.NewClientProfile()
-	//all request use method POST
+	// all request use method POST
 	cpf.HttpProfile.ReqMethod = "POST"
-	//request timeout
+	// request timeout
 	cpf.HttpProfile.ReqTimeout = 300
-	//cpf.SignMethod = "HmacSHA1"
+	// cpf.SignMethod = "HmacSHA1"
 
 	var round LogRoundTripper
 
@@ -140,7 +143,7 @@ func (me *TencentCloudClient) UseAsClient() *as.Client {
 	return me.asConn
 }
 
-//get vpc client for service
+// get vpc client for service
 func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	if me.vpcConn != nil {
 		return me.vpcConn
@@ -208,6 +211,29 @@ func (me *TencentCloudClient) UseDcClient() *dc.Client {
 
 	return me.dcConn
 
+}
+
+
+func (me *TencentCloudClient) UseMongodbClient() *mongodb.Client {
+	if me.mongodbConn != nil {
+		return me.mongodbConn
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+
+	mongodbConn, _ := mongodb.NewClient(credential, me.Region, cpf)
+	var round LogRoundTripper
+	mongodbConn.WithHttpTransport(&round)
+	me.mongodbConn = mongodbConn
+
+	return me.mongodbConn
 }
 
 func (me *TencentCloudClient) UseClbClient() *clb.Client {
