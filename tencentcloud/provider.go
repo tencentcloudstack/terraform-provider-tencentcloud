@@ -221,7 +221,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_snapshot":               resourceTencentCloudCbsSnapshot(),
 			"tencentcloud_cbs_snapshot_policy":        resourceTencentCloudCbsSnapshotPolicy(),
 			"tencentcloud_cbs_storage":                resourceTencentCloudCbsStorage(),
-			"tencentcloud_cbs_storage_attachment":     resourceTencentCloudCbsStorageAttachment(),
 			"tencentcloud_clb_instance":               resourceTencentCloudClbInstance(),
 			"tencentcloud_clb_listener":               resourceTencentCloudClbListener(),
 			"tencentcloud_clb_listener_rule":          resourceTencentCloudClbListenerRule(),
