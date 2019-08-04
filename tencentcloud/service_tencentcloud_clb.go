@@ -364,7 +364,6 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	request := clb.NewDescribeListenersRequest()
 	request.ListenerIds = []*string{&listenerId}
 	request.LoadBalancerId = stringToPointer(clbId)
-
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -409,6 +408,73 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	return
 }
 
+func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params map[string]string) (clbAttachments []*clb.ListenerBackend, errRet error) {
+	logId := GetLogId(ctx)
+	//listener filter
+	clbId := ""
+	listenerId := ""
+	//rule filter
+
+	for k, v := range params {
+		if k == "listener_id" {
+			listenerId = v
+		}
+		if k == "clb_id" {
+			clbId = v
+		}
+	}
+	//get listener first
+	request := clb.NewDescribeListenersRequest()
+	if listenerId == "" || clbId == "" {
+		errRet = fmt.Errorf("Listener id and clb id can not be null")
+		return
+	}
+	request.LoadBalancerId = stringToPointer(clbId)
+	request.ListenerIds = []*string{&listenerId}
+
+	response, err := me.client.UseClbClient().DescribeListeners(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if len(response.Response.Listeners) < 1 {
+		errRet = fmt.Errorf("Listener id is not found")
+		return
+	}
+	clbListener := response.Response.Listeners[0]
+	protocol := clbListener.Protocol
+	port := clbListener.Port
+
+	aRequest := clb.NewDescribeTargetsRequest()
+	aRequest.ListenerIds = []*string{&listenerId}
+	aRequest.LoadBalancerId = stringToPointer(clbId)
+	aRequest.Protocol = protocol
+	aRequest.Port = port
+	aResponse, aErr := me.client.UseClbClient().DescribeTargets(aRequest)
+
+	if aErr != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, aRequest.GetAction(), aRequest.ToJsonString(), aErr.Error())
+		errRet = aErr
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, aRequest.GetAction(), aRequest.ToJsonString(), aResponse.ToJsonString())
+
+	if len(aResponse.Response.Listeners) < 1 {
+		errRet = fmt.Errorf("Listener id is not found")
+		return
+	} else {
+		clbAttachments = append(clbAttachments, aResponse.Response.Listeners[0])
+	}
+
+	return
+}
+
 func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, listenerId string, locationId string, targets []interface{}) error {
 	logId := GetLogId(ctx)
 	request := clb.NewDeregisterTargetsRequest()
@@ -422,6 +488,161 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 		request.LocationId = stringToPointer(locationId)
 	}
 	response, err := me.client.UseClbClient().DeregisterTargets(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	requestId := *response.Response.RequestId
+	retryErr := retrySet(requestId, me.client.UseClbClient())
+	if retryErr != nil {
+		return retryErr
+	}
+	return nil
+}
+
+func (me *ClbService) DescribeRewriteInfoById(ctx context.Context, rewriteId string) (rewriteInfo *map[string]string, errRet error) {
+	logId := GetLogId(ctx)
+	items := strings.Split(rewriteId, "#")
+	if len(items) != 5 {
+		errRet = fmt.Errorf("rewriteInfo id is not exist!%s", rewriteId)
+		return
+	}
+	sourceLocId := items[0]
+	targetLocId := items[1]
+	sourceListenerId := items[2]
+	targetListenerId := items[3]
+	clbId := items[4]
+	result := make(map[string]string)
+	request := clb.NewDescribeRewriteRequest()
+	request.LoadBalancerId = stringToPointer(clbId)
+	request.SourceListenerIds = []*string{&sourceListenerId}
+	request.SourceLocationIds = []*string{&sourceLocId}
+	response, err := me.client.UseClbClient().DescribeRewrite(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RewriteSet) < 1 {
+		errRet = fmt.Errorf("rewrite id is not found")
+		return
+	}
+
+	ruleOutput := response.Response.RewriteSet[0]
+	if ruleOutput.RewriteTarget != nil {
+		if *ruleOutput.RewriteTarget.TargetListenerId == targetListenerId && *ruleOutput.RewriteTarget.TargetLocationId == targetLocId {
+			result["rewrite_source_loc_id"] = sourceLocId
+			result["rewrite_target_loc_id"] = targetLocId
+			result["source_listener_id"] = sourceListenerId
+			result["target_listener_id"] = targetListenerId
+			result["clb_id"] = clbId
+			rewriteInfo = &result
+		} else {
+			errRet = fmt.Errorf("rewrite id is not found")
+		}
+	} else {
+		errRet = fmt.Errorf("rewrite id is not found")
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeRewriteInfosByFilter(ctx context.Context, params map[string]string) (rewriteInfos []*map[string]string, errRet error) {
+	logId := GetLogId(ctx)
+	clbId := ""
+	sourceListenerId := ""
+	sourceLocId := ""
+	targetListenerId := ""
+	targetLocId := ""
+	for k, v := range params {
+		if k == "source_listener_id" {
+			sourceListenerId = v
+		}
+		if k == "clb_id" {
+			clbId = v
+		}
+		if k == "rewrite_source_loc_id" {
+			sourceLocId = v
+		}
+		if k == "target_listener_id" {
+			targetListenerId = v
+		}
+		if k == "rewrite_target_loc_id" {
+			targetLocId = v
+		}
+	}
+	request := clb.NewDescribeRewriteRequest()
+	request.LoadBalancerId = stringToPointer(clbId)
+	request.SourceListenerIds = []*string{&sourceListenerId}
+	request.SourceLocationIds = []*string{&sourceLocId}
+	response, err := me.client.UseClbClient().DescribeRewrite(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RewriteSet) < 1 {
+		errRet = fmt.Errorf("rewrite id is not found")
+		return
+	}
+	ruleOutput := response.Response.RewriteSet[0]
+	if ruleOutput.RewriteTarget != nil {
+		if targetListenerId != "" && *ruleOutput.RewriteTarget.TargetListenerId != targetListenerId {
+			errRet = fmt.Errorf("rewrite id is not found")
+			return
+		}
+		if targetLocId != "" && *ruleOutput.RewriteTarget.TargetLocationId != targetLocId {
+			errRet = fmt.Errorf("rewrite id is not found")
+			return
+		}
+		result := make(map[string]string)
+		result["rewrite_source_loc_id"] = sourceLocId
+		result["rewrite_target_loc_id"] = *ruleOutput.RewriteTarget.TargetLocationId
+		result["source_listener_id"] = sourceListenerId
+		result["target_listener_id"] = *ruleOutput.RewriteTarget.TargetListenerId
+		result["clb_id"] = clbId
+		rewriteInfos = append(rewriteInfos, &result)
+	} else {
+		errRet = fmt.Errorf("rewrite id is not found")
+	}
+
+	return
+}
+
+func (me *ClbService) DeleteRewriteInfoById(ctx context.Context, rewriteId string) error {
+	logId := GetLogId(ctx)
+	items := strings.Split(rewriteId, "#")
+	if len(items) != 5 {
+		return fmt.Errorf("rewriteInfo id is not exist!!! %s", rewriteId)
+
+	}
+	sourceLocId := items[0]
+	targetLocId := items[1]
+	sourceListenerId := items[2]
+	targetListenerId := items[3]
+	clbId := items[4]
+
+	request := clb.NewDeleteRewriteRequest()
+	request.LoadBalancerId = stringToPointer(clbId)
+	request.SourceListenerId = stringToPointer(sourceListenerId)
+	request.TargetListenerId = stringToPointer(targetListenerId)
+	var rewriteInfo clb.RewriteLocationMap
+	rewriteInfo.SourceLocationId = stringToPointer(sourceLocId)
+	rewriteInfo.TargetLocationId = stringToPointer(targetLocId)
+	request.RewriteInfos = []*clb.RewriteLocationMap{&rewriteInfo}
+
+	response, err := me.client.UseClbClient().DeleteRewrite(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -595,19 +816,6 @@ func flattenClbTagsMapping(tags []*clb.TagInfo) (mapping map[string]string) {
 		mapping[*tag.TagKey] = *tag.TagValue
 	}
 	return
-}
-
-func flattenTargetsList(list []*clb.Target) (mapping []map[string]interface{}) {
-	result := make([]map[string]interface{}, 0, len(list))
-	for _, v := range list {
-		target := map[string]interface{}{
-			"instance_id": v.InstanceId,
-			"port":        v.Port,
-			"weight":      v.Weight,
-		}
-		result = append(result, target)
-	}
-	return result
 }
 
 func flattenBackendList(list []*clb.Backend) (mapping []map[string]interface{}) {

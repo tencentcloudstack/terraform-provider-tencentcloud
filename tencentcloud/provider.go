@@ -39,6 +39,8 @@ Data Sources
   tencentcloud_clb_instances
   tencentcloud_clb_listeners
   tencentcloud_clb_listener_rules
+  tencentcloud_clb_server_attachments
+  tencentcloud_clb_rewrites
   tencentcloud_eip
   tencentcloud_image
   tencentcloud_instance_types
@@ -104,6 +106,8 @@ LB Resources
   tencentcloud_clb_instance
   tencentcloud_clb_listener
   tencentcloud_clb_listener_rule
+  tencentcloud_clb_server_attachment
+  tencentcloud_clb_rewrite
   tencentcloud_lb
   tencentcloud_alb_server_attachment
 
@@ -209,6 +213,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_instances":               dataSourceTencentCloudClbInstances(),
 			"tencentcloud_clb_listeners":               dataSourceTencentCloudClbListeners(),
 			"tencentcloud_clb_listener_rules":          dataSourceTencentCloudClbListenerRules(),
+			"tencentcloud_clb_server_attachments":      dataSourceTencentCloudClbServerAttachments(),
+			"tencentcloud_clb_rewrites":                dataSourceTencentCloudClbRewrites(),
 			"tencentcloud_dcx_instances":               dataSourceTencentCloudDcxInstances(),
 			"tencentcloud_mongodb_zone_config":         dataSourceTencentCloudMongodbZoneConfig(),
 			"tencentcloud_mongodb_instances":           dataSourceTencentCloudMongodbInstances(),
@@ -225,6 +231,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_instance":               resourceTencentCloudClbInstance(),
 			"tencentcloud_clb_listener":               resourceTencentCloudClbListener(),
 			"tencentcloud_clb_listener_rule":          resourceTencentCloudClbListenerRule(),
+			"tencentcloud_clb_server_attachment":      resourceTencentCloudClbServerAttachment(),
+			"tencentcloud_clb_rewrite":                resourceTencentCloudClbRewrite(),
 			"tencentcloud_container_cluster":          resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance": resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_dnat":                       resourceTencentCloudDnat(),
