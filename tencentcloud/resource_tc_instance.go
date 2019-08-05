@@ -495,7 +495,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
 		response, err := client.SendRequest("cvm", params)
 		if err != nil {
-			return resource.NonRetryableError(err)
+			return resource.RetryableError(err)
 		}
 
 		var jsonresp struct {
@@ -511,7 +511,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {
-			return resource.NonRetryableError(err)
+			return resource.RetryableError(err)
 		}
 
 		if jsonresp.Response.Error.Code == "VpcIpIsUsed" {
@@ -525,7 +525,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 				jsonresp.Response.Error.Message,
 				jsonresp.Response.RequestId,
 			)
-			return resource.NonRetryableError(err)
+			return resource.RetryableError(err)
 		}
 
 		if len(jsonresp.Response.InstanceIdSet) == 0 {
@@ -858,7 +858,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
 		response, err := client.SendRequest("cvm", params)
 		if err != nil {
-			return resource.NonRetryableError(err)
+			return resource.RetryableError(err)
 		}
 		var jsonresp struct {
 			Response struct {
@@ -871,7 +871,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 		}
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {
-			return resource.NonRetryableError(err)
+			return resource.RetryableError(err)
 		}
 		if jsonresp.Response.Error.Code == "InternalError" {
 			return resource.RetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))

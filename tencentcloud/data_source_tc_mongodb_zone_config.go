@@ -34,8 +34,9 @@ func dataSourceTencentCloudMongodbZoneConfig() *schema.Resource {
 				Description: "Used to store results.",
 			},
 			"list": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list of zone config. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"available_zone": {

@@ -16,6 +16,12 @@ DEPRECATED:
 * Resource: `tencentcloud_lb` replaced by `tencentcloud_clb_instances`.
 * Resource: `tencentcloud_alb_server_attachment` replaced by `tencentcloud_clb_server_attachment`.
 
+## 1.14.1 (Unreleased)
+
+BUG FIXIES:
+
+* resource/tencentcloud_security_group_rule: fixed security group rule id is not compatible with previous version.
+
 ## 1.14.0 (July 30, 2019)
 
 FEATURES:

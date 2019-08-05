@@ -3,19 +3,19 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cbs_snapshot"
 sidebar_current: "docs-tencentcloud-resource-cbs_snapshot"
 description: |-
-  Provide a resource to create a CBS snapshot.
+  Provides a resource to create a CBS snapshot.
 ---
 
 # tencentcloud_cbs_snapshot
 
-Provide a resource to create a CBS snapshot.
+Provides a resource to create a CBS snapshot.
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_cbs_snapshot" "snapshot" {
   snapshot_name = "unnamed"
-  storage_id    = "disk-kdt0sq6m"
+  storage_id   = "disk-kdt0sq6m"
 }
 ```
 

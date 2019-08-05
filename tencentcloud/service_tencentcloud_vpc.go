@@ -1197,7 +1197,7 @@ type securityGroupRuleBasicInfo struct {
 	Description *string `json:"description,omitempty"`
 }
 
-// Build an ID for a Security Group Rule
+// Build an ID for a Security Group Rule (new version)
 func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string, err error) {
 	b, err := json.Marshal(info)
 	if err != nil {
@@ -1210,21 +1210,46 @@ func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string, e
 }
 
 // Parse Security Group Rule ID
-func parseSecurityGroupRuleId(ruleId string) (ruleInfo securityGroupRuleBasicInfo, err error) {
-	b, err := base64.StdEncoding.DecodeString(ruleId)
-	if err != nil {
-		return securityGroupRuleBasicInfo{}, err
+func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, errRet error) {
+	log.Printf("[DEBUG] parseSecurityGroupRuleId before: %v", ruleId)
+
+	// new version ID
+	if b, err := base64.StdEncoding.DecodeString(ruleId); err == nil {
+		errRet = json.Unmarshal(b, &info)
+		return
 	}
 
-	log.Printf("[DEBUG] parse rule is %s", string(b))
-
-	var info securityGroupRuleBasicInfo
-
-	if err := json.Unmarshal(b, &info); err != nil {
-		return securityGroupRuleBasicInfo{}, err
+	// old version ID
+	m := make(map[string]string)
+	ruleQueryStrings := strings.Split(ruleId, "&")
+	if len(ruleQueryStrings) == 0 {
+		errRet = errors.New("ruleId is invalid")
+		return
+	}
+	for _, str := range ruleQueryStrings {
+		arr := strings.Split(str, "=")
+		if len(arr) != 2 {
+			errRet = errors.New("ruleId is invalid")
+			return
+		}
+		m[arr[0]] = arr[1]
 	}
 
-	return info, nil
+	info.SgId = m["sgId"]
+	info.PolicyType = m["direction"]
+	info.Action = m["action"]
+	if m["sourceSgid"] == "" {
+		info.CidrIp = common.StringPtr(m["cidrIp"])
+	} else {
+		info.CidrIp = common.StringPtr("")
+	}
+	info.SourceSgId = common.StringPtr(m["sourceSgid"])
+	info.Protocol = common.StringPtr(m["ipProtocol"])
+	info.PortRange = common.StringPtr(m["portRange"])
+	info.Description = common.StringPtr(m["description"])
+
+	log.Printf("[DEBUG] parseSecurityGroupRuleId after: %v", info)
+	return
 }
 
 func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info securityGroupRuleBasicInfo) bool {
