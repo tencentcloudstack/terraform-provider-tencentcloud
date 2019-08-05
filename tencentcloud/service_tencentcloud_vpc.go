@@ -1199,11 +1199,11 @@ func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string) {
 	m["sgId"] = info.SgId
 	m["direction"] = info.PolicyType
 	m["action"] = info.Action
-	m["cidrIp"] = ""
+
 	if info.CidrIp != nil {
 		m["cidrIp"] = *info.CidrIp
 	}
-	m["sourceSgid"] = ""
+
 	if info.SourceSgId != nil {
 		m["sourceSgid"] = *info.SourceSgId
 	}
