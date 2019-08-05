@@ -33,33 +33,33 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the CLB.",
+				Description: "ID of the CLB to be queried.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "ID of the listener to be queried.",
+				Description: "ID of the CLB listener to be queried.",
 			},
 			"location_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the rule.",
+				Description: "ID of the forwarding rule to be queried.",
 			},
 			"domain": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Domain of the rule.",
+				Description: "Domain name of the forwarding rule to be queried.",
 			},
 			"url": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Url of the rule.",
+				Description: "Url of the forwarding rule to be queried.",
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'.",
+				Description:  " Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -120,22 +120,22 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						"health_check_http_code": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Path of health check (applicable only to HTTP/HTTPS check methods).",
+							Description: "HTTP Status Code. The default is 31 and value range is 1-31. '0b0001' means the return value '1xx' is health. '0b0010' means the return value '2xx' is health. '0b0100' means the return value '3xx' is health. '0b1000' means the return value 4xx is health. '0b10000' means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values. NOTES: The 'HTTP' health check of the 'TCP' listener only supports specifying one health check status code. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.",
 						},
 						"health_check_http_path": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Path of health check (applicable only to HTTP/HTTPS check methods). ",
+							Description: "Path of health check. NOTES: Only supports listeners of 'HTTPS' and 'HTTP' protocol.",
 						},
 						"health_check_http_domain": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Domain name of health check (applicable only to HTTP/HTTPS check methods)",
+							Description: "Domain name of health check. NOTES: Only supports listeners of 'HTTPS' and 'HTTP' protocol.",
 						},
 						"health_check_http_method": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Methods of health check (applicable only to HTTP/HTTPS check methods). Available values include 'HEAD' and 'GET'.",
+							Description: "Methods of health check. NOTES: Only supports listeners of 'HTTPS' and 'HTTP' protocol. The default is 'HEAD', the available value include 'HEAD' and 'GET'.",
 						},
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
@@ -145,17 +145,17 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						"certificate_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the server certificate. If not specified, the content, key, and name of the server certificate must be set. NOTES: only supported by listeners of protocol 'HTTPS'.",
+							Description: "ID of the server certificate. NOTES: Only supports listeners of 'HTTPS' protocol.",
 						},
 						"certificate_ca_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of protocol 'HTTPS'.",
+							Description: "ID of the client certificate. NOTES: Only supports listeners of 'HTTPS' protocol.",
 						},
 						"session_expire_time": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Time of session persistence within the CLB listener.",
+							Description: "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR'.",
 						},
 						"scheduler": {
 							Type:        schema.TypeString,

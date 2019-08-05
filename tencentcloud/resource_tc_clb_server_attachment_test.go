@@ -20,26 +20,20 @@ func TestAccTencentCloudClbServerAttachment_tcp(t *testing.T) {
 			{
 				Config: testAccClbServerAttachment_tcp,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckClbServerAttachmentExists("tencentcloud_clb_server_attachment.server_attachment_tcp"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_server_attachment.server_attachment_tcp", "clb_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_server_attachment.server_attachment_tcp", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_tcp", "protocol_type", "TCP"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_tcp", "targets.#", "1"),
-					/*resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_tcp", "targets.0.port", "23"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_tcp", "targets.0.weight", "10"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_tcp", "targets.0.instance_id", "ins-1flbqyp8"),*/
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.attachment_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.attachment_tcp", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.attachment_tcp", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.attachment_tcp", "protocol_type", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.attachment_tcp", "targets.#", "1"),
 				),
 			}, {
 				Config: testAccClbServerAttachment_tcp_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckClbServerAttachmentExists("tencentcloud_clb_server_attachment.server_attachment_tcp"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_server_attachment.server_attachment_tcp", "clb_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_server_attachment.server_attachment_tcp", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_tcp", "protocol_type", "TCP"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_tcp", "targets.#", "1"),
-					/*resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_tcp", "targets.0.port", "23"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_tcp", "targets.0.weight", "10"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_tcp", "targets.0.instance_id", "ins-1flbqyp8"),*/
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.attachment_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.attachment_tcp", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.attachment_tcp", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.attachment_tcp", "protocol_type", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.attachment_tcp", "targets.#", "1"),
 				),
 			},
 		},
@@ -55,15 +49,15 @@ func TestAccTencentCloudClbServerAttachment_http(t *testing.T) {
 			{
 				Config: testAccClbServerAttachment_http,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckClbServerAttachmentExists("tencentcloud_clb_server_attachment.server_attachment_http"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_server_attachment.server_attachment_http", "clb_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_server_attachment.server_attachment_http", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_http", "protocol_type", "HTTPS"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_server_attachment.server_attachment_http", "targets.#", "1"),
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.attachment_http"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.attachment_http", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.attachment_http", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.attachment_http", "protocol_type", "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.attachment_http", "targets.#", "1"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_clb_server_attachment.server_attachment_http",
+				ResourceName:      "tencentcloud_clb_attachment.attachment_http",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -79,13 +73,13 @@ func testAccCheckClbServerAttachmentDestroy(s *terraform.State) error {
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 	}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_clb_server_attachment" {
+		if rs.Type != "tencentcloud_clb_attachment" {
 			continue
 		}
 		time.Sleep(5 * time.Second)
 		items := strings.Split(rs.Primary.ID, "#")
 		if len(items) != 3 {
-			return fmt.Errorf("id of resource.tencentcloud_clb_server_attachment is wrong")
+			return fmt.Errorf("id of resource.tencentcloud_clb_attachment is wrong")
 		}
 		locationId := items[0]
 		listenerId := items[1]
@@ -115,7 +109,7 @@ func testAccCheckClbServerAttachmentExists(n string) resource.TestCheckFunc {
 		}
 		items := strings.Split(rs.Primary.ID, "#")
 		if len(items) != 3 {
-			return fmt.Errorf("id of resource.tencentcloud_clb_server_attachment is wrong")
+			return fmt.Errorf("id of resource.tencentcloud_clb_attachment is wrong")
 		}
 		locationId := items[0]
 		listenerId := items[1]
@@ -139,7 +133,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   listener_name              = "listener_tcp"
   port                       = 44
   protocol                   = "TCP"
-  health_check_switch        = 1
+  health_check_switch        = true
   health_check_time_out      = 30
   health_check_interval_time = 100
   health_check_health_num    = 2
@@ -148,11 +142,12 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   scheduler                  = "WRR"
 }
 
-resource "tencentcloud_clb_server_attachment" "server_attachment_tcp" {
+resource "tencentcloud_clb_attachment" "attachment_tcp" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
+  location_id = "#${tencentcloud_clb_listener.listener_basic.id}"
   targets {
-    instance_id = "ins-1flbqyp8"
+    instance_id = "ins-n5nkgkv6"
     port        = 23
     weight      = 10
   }
@@ -170,7 +165,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   listener_name              = "listener_tcp"
   port                       = 44
   protocol                   = "TCP"
-  health_check_switch        = 1
+  health_check_switch        = true
   health_check_time_out      = 30
   health_check_interval_time = 100
   health_check_health_num    = 2
@@ -179,11 +174,12 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   scheduler                  = "WRR"
 }
 
-resource "tencentcloud_clb_server_attachment" "server_attachment_tcp" {
+resource "tencentcloud_clb_attachment" "attachment_tcp" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
+  location_id = "#${tencentcloud_clb_listener.listener_basic.id}"
   targets {
-    instance_id = "ins-1flbqyp8"
+    instance_id = "ins-n5nkgkv6"
     port        = 23
     weight      = 50
   }
@@ -213,12 +209,12 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
   session_expire_time = 30
   scheduler           = "WRR"
 }
-resource "tencentcloud_clb_server_attachment" "server_attachment_http" {
+resource "tencentcloud_clb_attachment" "attachment_http" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
   location_id = "${tencentcloud_clb_listener_rule.rule_basic.id}"
   targets {
-    instance_id = "ins-1flbqyp8"
+    instance_id = "ins-n5nkgkv6"
     port        = 23
     weight      = 10
   }

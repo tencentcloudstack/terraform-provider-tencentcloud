@@ -30,7 +30,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: " ID of the CLB to be queried.",
+				Description: "ID of the CLB to be queried.",
 			},
 			"network_type": {
 				Type:         schema.TypeString,
@@ -41,12 +41,12 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 			"clb_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The available zone that the CBS instance locates at.",
+				Description: "Name of the CLB to be queried.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "ID of the project within the CLB.",
+				Description: "Project ID of the CLB.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

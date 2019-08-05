@@ -4,7 +4,7 @@ Provides a resource to create a CLB listener rule.
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_listener_rule" "rule" {
+resource "tencentcloud_clb_listener_rule" "foo" {
   listener_id                = "lbl-hh141sn9"
   clb_id                     = "lb-k2zjp9lv"
   domain                     = "foo.net"
@@ -22,6 +22,13 @@ resource "tencentcloud_clb_listener_rule" "rule" {
   session_expire_time        = "0"
   schedule                   = "WRR"
 }
+```
+Import
+
+CLB instance rule can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_clb_listener_rule.foo #loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv
 ```
 */
 package tencentcloud
@@ -62,13 +69,13 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Domain name of the forwarding rules",
+				Description: "Domain name of the forwarding rule.",
 			},
 			"url": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Url of the forwarding rules",
+				Description: "Url of the forwarding rule.",
 			},
 			"health_check_switch": {
 				Type:        schema.TypeBool,
@@ -88,40 +95,40 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(2, 10),
-				Description:  "Health threshold of health check, and the default is 3. If a success result is returned for the health check for 3 consecutive times, the backend CVM is identified as healthy. The value range is 2-10",
+				Description:  "Health threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is 2-10.",
 			},
 			"health_check_unhealth_num": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(2, 10),
-				Description:  "Health threshold of health check, and the default is 3. If a success result is returned for the health check for 3 consecutive times, the backend CVM is identified as healthy. The value range is 2-10",
+				Description:  "Unhealth threshold of health check, and the default is 3. If the unhealth result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is 2-10.",
 			},
 			"health_check_http_code": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(1, 31),
-				Description:  "Path of health check (applicable only to HTTP/HTTPS check methods).",
+				Description:  "HTTP Status Code. The default is 31 and value range is 1-31. '0b0001' means the return value '1xx' is health. '0b0010' means the return value '2xx' is health. '0b0100' means the return value '3xx' is health. '0b1000' means the return value '4xx' is health. 0b10000 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values. NOTES: The 'HTTP' health check of the 'TCP' listener only supports specifying one health check status code. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.",
 			},
 			"health_check_http_path": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Path of health check (applicable only to HTTP/HTTPS check methods). ",
+				Description: "Path of health check. NOTES: Only supports listeners of 'HTTPS'/'HTTP protocol. ",
 			},
 			"health_check_http_domain": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Domain name of health check (applicable only to HTTP/HTTPS check methods)",
+				Description: "Domain name of health check. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.",
 			},
 			"health_check_http_method": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_HTTP_METHOD),
-				Description:  "Methods of health check (applicable only to HTTP/HTTPS check methods). Available values include 'HEAD' and 'GET'.",
+				Description:  "Methods of health check. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol. The default is 'HEAD', the available value include 'HEAD' and 'GET'.",
 			},
 			"certificate_ssl_mode": {
 				Type:         schema.TypeString,
@@ -146,13 +153,13 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateIntegerInRange(30, 300),
-				Description:  "Time of session persistence within the CLB listener.",
+				Description:  "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR'",
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'.",
+				Description:  "Scheduling method of the CLB listener, and available values include 'WRR', 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.",
 			},
 		},
 	}
@@ -160,6 +167,8 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 
 func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta interface{}) error {
 	defer LogElapsed("resource.tencentcloud_clb_listener_rule.create")()
+	clbActionMu.Lock()
+	defer clbActionMu.Unlock()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -193,15 +202,26 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	rule.Domain = stringToPointer(domain)
 	url := d.Get("url").(string)
 	rule.Url = stringToPointer(url)
+	scheduler := ""
+	if v, ok := d.GetOk("scheduler"); ok {
+		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+			return fmt.Errorf("Scheduler can only be set with listener protocol TCP/UDP or rule of listener HTTP/HTTPS")
+		}
+
+		scheduler = v.(string)
+		rule.Scheduler = stringToPointer(scheduler)
+	}
 
 	if v, ok := d.GetOk("session_expire_time"); ok {
-		sessionExpireTime := int64(v.(int))
-		rule.SessionExpireTime = &sessionExpireTime
+		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+			return fmt.Errorf("session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS")
+		}
+		if scheduler != CLB_LISTENER_SCHEDULER_WRR && scheduler != "" {
+			return fmt.Errorf("session_expire_time can only be set when scheduler is WRR ")
+		}
+		vv := int64(v.(int))
+		rule.SessionExpireTime = &vv
 	}
-	if v, ok := d.GetOk("scheduler"); ok {
-		rule.Scheduler = stringToPointer(v.(string))
-	}
-
 	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol, HEALTH_APPLY_TYPE_RULE)
 	if healthErr != nil {
 		return healthErr
@@ -308,6 +328,8 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 
 func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer LogElapsed("resource.tencentcloud_clb_listener_rule.update")()
+	clbActionMu.Lock()
+	defer clbActionMu.Unlock()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -336,9 +358,14 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 	scheduler := ""
 	sessionExpireTime := 0
 
+	request := clb.NewModifyRuleRequest()
+	request.ListenerId = stringToPointer(listenerId)
+	request.LoadBalancerId = stringToPointer(clbId)
+	request.LocationId = stringToPointer(locationId)
 	if d.HasChange("url") {
 		changed = true
 		url = d.Get("url").(string)
+		request.Url = stringToPointer(url)
 	}
 
 	if d.HasChange("scheduler") {
@@ -349,6 +376,28 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		changed = true
 		sessionExpireTime = d.Get("session_expire_time").(int)
 	}
+	if d.HasChange("scheduler") {
+		changed = true
+		scheduler = d.Get("scheduler").(string)
+		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+			return fmt.Errorf("Scheduler can only be set with listener protocol TCP/UDP or rule of listener HTTP/HTTPS")
+		}
+		request.Scheduler = stringToPointer(scheduler)
+	}
+
+	if d.HasChange("session_expire_time") {
+		changed = true
+		sessionExpireTime = d.Get("session_expire_time").(int)
+		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+			return fmt.Errorf("session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS")
+		}
+		if scheduler != CLB_LISTENER_SCHEDULER_WRR && scheduler != "" {
+			return fmt.Errorf("session_expire_time can only be set when scheduler is WRR")
+		}
+		sessionExpireTime64 := int64(sessionExpireTime)
+		request.SessionExpireTime = &sessionExpireTime64
+
+	}
 
 	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol, HEALTH_APPLY_TYPE_RULE)
 	if healthErr != nil {
@@ -357,28 +406,10 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 
 	if healthSetFlag == true {
 		changed = true
+		request.HealthCheck = healthCheck
 	}
 
 	if changed {
-		request := clb.NewModifyRuleRequest()
-		request.ListenerId = stringToPointer(listenerId)
-		request.LoadBalancerId = stringToPointer(clbId)
-		request.LocationId = stringToPointer(locationId)
-		if d.HasChange("url") {
-			request.Url = stringToPointer(url)
-		}
-
-		if d.HasChange("scheduler") {
-			request.Scheduler = stringToPointer(scheduler)
-		}
-		if d.HasChange("session_expire_time") {
-			sessionExpireTime64 := int64(sessionExpireTime)
-			request.SessionExpireTime = &sessionExpireTime64
-		}
-		if healthSetFlag == true {
-			request.HealthCheck = healthCheck
-		}
-
 		response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyRule(request)
 
 		if err != nil {
@@ -401,6 +432,8 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 
 func resourceTencentCloudClbListenerRuleDelete(d *schema.ResourceData, meta interface{}) error {
 	defer LogElapsed("resource.tencentcloud_clb_listener_rule.delete")()
+	clbActionMu.Lock()
+	defer clbActionMu.Unlock()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

@@ -27,34 +27,34 @@ data "tencentcloud_clb_listener_rules" "foo" {
 
 The following arguments are supported:
 
-* `listener_id` - (Required) ID of the listener to be queried.
-* `clb_id` - (Optional) ID of the CLB.
-* `domain` - (Optional) Domain of the rule.
-* `location_id` - (Optional) ID of the rule.
+* `listener_id` - (Required) ID of the CLB listener to be queried.
+* `clb_id` - (Optional) ID of the CLB to be queried.
+* `domain` - (Optional) Domain name of the forwarding rule to be queried.
+* `location_id` - (Optional) ID of the forwarding rule to be queried.
 * `result_output_file` - (Optional) Used to save results.
-* `scheduler` - (Optional) Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'.
-* `url` - (Optional) Url of the rule.
+* `scheduler` - (Optional)  Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.
+* `url` - (Optional) Url of the forwarding rule to be queried.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `rule_list` - A list of forward rules of listeners. Each element contains the following attributes:
-  * `certificate_ca_id` - ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of protocol 'HTTPS'.
-  * `certificate_id` - ID of the server certificate. If not specified, the content, key, and name of the server certificate must be set. NOTES: only supported by listeners of protocol 'HTTPS'.
+  * `certificate_ca_id` - ID of the client certificate. NOTES: Only supports listeners of 'HTTPS' protocol.
+  * `certificate_id` - ID of the server certificate. NOTES: Only supports listeners of 'HTTPS' protocol.
   * `certificate_ssl_mode` - Type of SSL Mode, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'.
   * `clb_id` - ID of the CLB.
   * `health_check_health_num` - Health threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as healthy. The value range is 2-10.
-  * `health_check_http_code` - Path of health check (applicable only to HTTP/HTTPS check methods).
-  * `health_check_http_domain` - Domain name of health check (applicable only to HTTP/HTTPS check methods)
-  * `health_check_http_method` - Methods of health check (applicable only to HTTP/HTTPS check methods). Available values include 'HEAD' and 'GET'.
-  * `health_check_http_path` - Path of health check (applicable only to HTTP/HTTPS check methods). 
+  * `health_check_http_code` - HTTP Status Code. The default is 31 and value range is 1-31. '0b0001' means the return value '1xx' is health. '0b0010' means the return value '2xx' is health. '0b0100' means the return value '3xx' is health. '0b1000' means the return value 4xx is health. '0b10000' means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values. NOTES: The 'HTTP' health check of the 'TCP' listener only supports specifying one health check status code. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.
+  * `health_check_http_domain` - Domain name of health check. NOTES: Only supports listeners of 'HTTPS' and 'HTTP' protocol.
+  * `health_check_http_method` - Methods of health check. NOTES: Only supports listeners of 'HTTPS' and 'HTTP' protocol. The default is 'HEAD', the available value include 'HEAD' and 'GET'.
+  * `health_check_http_path` - Path of health check. NOTES: Only supports listeners of 'HTTPS' and 'HTTP' protocol.
   * `health_check_interval_time` - Interval time of health check. The value range is 5-300 sec, and the default is 5 sec.
   * `health_check_switch` - Indicates whether health check is enabled.
   * `health_check_unhealth_num` - Unhealth threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as unhealthy. The value range is 2-10.
   * `listener_id` - ID of the listener.
   * `location_id` - ID of the rule.
   * `scheduler` - Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'.
-  * `session_expire_time` - Time of session persistence within the CLB listener.
+  * `session_expire_time` - Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR'.
 
 

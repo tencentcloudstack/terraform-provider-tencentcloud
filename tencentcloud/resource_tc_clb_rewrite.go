@@ -1,10 +1,10 @@
 /*
-Provides a resource to create a CLB rewrite.
+Provides a resource to create a CLB redirection.
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_rewrite" "rewrite" {
+resource "tencentcloud_clb_redirection" "foo" {
   clb_id                = "lb-p7olt9e5"
   source_listener_id    = "lbl-jc1dx6ju#lb-p7olt9e5"
   target_listener_id    = "lbl-asj1hzuo#lb-p7olt9e5"
@@ -15,10 +15,10 @@ resource "tencentcloud_clb_rewrite" "rewrite" {
 
 Import
 
-CLB instance can be imported using the id, e.g.
+CLB redirection can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb_rewrite.foo loc-ft8fmngv#loc-4xxr2cy7#lbl-jc1dx6ju#lbl-asj1hzuo#lb-p7olt9e5
+$ terraform import tencentcloud_clb_redirection.foo loc-ft8fmngv#loc-4xxr2cy7#lbl-jc1dx6ju#lbl-asj1hzuo#lb-p7olt9e5
 ```
 */
 package tencentcloud
@@ -32,11 +32,11 @@ import (
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
-func resourceTencentCloudClbRewrite() *schema.Resource {
+func resourceTencentCloudClbRedirection() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudClbRewriteCreate,
-		Read:   resourceTencentCloudClbRewriteRead,
-		Delete: resourceTencentCloudClbRewriteDelete,
+		Create: resourceTencentCloudClbRedirectionCreate,
+		Read:   resourceTencentCloudClbRedirectionRead,
+		Delete: resourceTencentCloudClbRedirectionDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -64,20 +64,20 @@ func resourceTencentCloudClbRewrite() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of rule id of source listener.",
+				Description: "Rule ID of source listener.",
 			},
 			"rewrite_target_loc_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of rule id of target listener.",
+				Description: "Rule ID of target listener.",
 			},
 		},
 	}
 }
 
-func resourceTencentCloudClbRewriteCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_rewrite.create")()
+func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_redirection.create")()
 
 	logId := GetLogId(nil)
 
@@ -113,11 +113,11 @@ func resourceTencentCloudClbRewriteCreate(d *schema.ResourceData, meta interface
 		}
 	}
 	d.SetId(sourceLocId + "#" + targetLocId + "#" + sourceListenerId + "#" + targertListenerId + "#" + clbId)
-	return resourceTencentCloudClbRewriteRead(d, meta)
+	return resourceTencentCloudClbRedirectionRead(d, meta)
 }
 
-func resourceTencentCloudClbRewriteRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_rewrite.read")()
+func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_redirection.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -127,7 +127,7 @@ func resourceTencentCloudClbRewriteRead(d *schema.ResourceData, meta interface{}
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	instance, err := clbService.DescribeRewriteInfoById(ctx, rewriteId)
+	instance, err := clbService.DescribeRedirectionById(ctx, rewriteId)
 	if err != nil {
 		return err
 	}
@@ -142,8 +142,8 @@ func resourceTencentCloudClbRewriteRead(d *schema.ResourceData, meta interface{}
 	return nil
 }
 
-func resourceTencentCloudClbRewriteDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_rewrite.delete")()
+func resourceTencentCloudClbRedirectionDelete(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_redirection.delete")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -152,7 +152,7 @@ func resourceTencentCloudClbRewriteDelete(d *schema.ResourceData, meta interface
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := clbService.DeleteRewriteInfoById(ctx, clbId)
+	err := clbService.DeleteRedirectionById(ctx, clbId)
 	if err != nil {
 		log.Printf("[CRITAL]%s reason[%s]\n", logId, err.Error())
 		return err

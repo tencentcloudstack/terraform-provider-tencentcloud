@@ -37,7 +37,7 @@ func TestAccTencentCloudClbListener_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClblistener_tcp(t *testing.T) {
+func TestAccTencentCloudClbListener_tcp(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -81,7 +81,7 @@ func TestAccTencentCloudClblistener_tcp(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClblistener_https(t *testing.T) {
+func TestAccTencentCloudClbListener_https(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

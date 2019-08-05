@@ -10,25 +10,25 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudClbRewrite_basic(t *testing.T) {
+func TestAccTencentCloudClbRedirection_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
-		//CheckDestroy: testAccCheckClbRewriteDestroy,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbRedirectionDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClbRewrite_basic,
+				Config: testAccClbRedirection_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckClbRewriteExists("tencentcloud_clb_rewrite.rewrite_basic"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_rewrite.rewrite_basic", "clb_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_rewrite.rewrite_basic", "source_listener_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_rewrite.rewrite_basic", "target_listener_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_rewrite.rewrite_basic", "rewrite_source_loc_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_rewrite.rewrite_basic", "rewrite_target_loc_id"),
+					testAccCheckClbRedirectionExists("tencentcloud_clb_redirection.redirection_basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "source_listener_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "target_listener_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "rewrite_source_loc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "rewrite_target_loc_id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_clb_rewrite.rewrite_basic",
+				ResourceName:      "tencentcloud_clb_redirection.redirection_basic",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -36,7 +36,7 @@ func TestAccTencentCloudClbRewrite_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckClbRewriteDestroy(s *terraform.State) error {
+func testAccCheckClbRedirectionDestroy(s *terraform.State) error {
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -48,30 +48,30 @@ func testAccCheckClbRewriteDestroy(s *terraform.State) error {
 			continue
 		}
 		time.Sleep(5 * time.Second)
-		_, err := clbService.DescribeRewriteInfoById(ctx, rs.Primary.ID)
+		_, err := clbService.DescribeRedirectionById(ctx, rs.Primary.ID)
 		if err == nil {
-			return fmt.Errorf("clb rewrite still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("clb redirection still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
 }
 
-func testAccCheckClbRewriteExists(n string) resource.TestCheckFunc {
+func testAccCheckClbRedirectionExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := GetLogId(nil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("clb rewrite %s is not found", n)
+			return fmt.Errorf("clb redirection %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("clb rewrite id is not set")
+			return fmt.Errorf("clb redirection id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := clbService.DescribeRewriteInfoById(ctx, rs.Primary.ID)
+		_, err := clbService.DescribeRedirectionById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -79,9 +79,14 @@ func testAccCheckClbRewriteExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccClbRewrite_basic = `
+const testAccClbRedirection_basic = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-basic"
+}
+
 resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id        = "lb-p7olt9e5"
+  clb_id        = "${tencentcloud_clb_instance.clb_basic.id}"
   port          = 1
   protocol      = "HTTP"
   listener_name = "listener_basic"
@@ -89,7 +94,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
-  clb_id              = "lb-p7olt9e5"
+  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id         = "${tencentcloud_clb_listener.listener_basic.id}"
   domain              = "abc.com"
   url                 = "/"
@@ -99,7 +104,7 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
 
 
 resource "tencentcloud_clb_listener" "listener_target" {
-  clb_id        = "lb-p7olt9e5"
+  clb_id        = "${tencentcloud_clb_instance.clb_basic.id}"
   port          = 44
   protocol      = "HTTP"
   listener_name = "listener_basic1"
@@ -107,15 +112,15 @@ resource "tencentcloud_clb_listener" "listener_target" {
 
 
 resource "tencentcloud_clb_listener_rule" "rule_target" {
-  clb_id              = "lb-p7olt9e5"
+  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id         = "${tencentcloud_clb_listener.listener_target.id}"
   domain              = "abcd.com"
   url                 = "/"
   session_expire_time = 30
   scheduler           = "WRR"
 }
-resource "tencentcloud_clb_rewrite" "rewrite_basic" {
-  clb_id                = "lb-p7olt9e5"
+resource "tencentcloud_clb_redirection" "redirection_basic" {
+  clb_id                = "${tencentcloud_clb_instance.clb_basic.id}"
   source_listener_id    = "${tencentcloud_clb_listener.listener_basic.id}"
   target_listener_id    = "${tencentcloud_clb_listener.listener_target.id}"
   rewrite_source_loc_id = "${tencentcloud_clb_listener_rule.rule_basic.id}"

@@ -1,10 +1,10 @@
 /*
-Use this data source to query detailed information of CLB rewrite
+Use this data source to query detailed information of CLB redirections
 
 Example Usage
 
 ```hcl
-data "tencentcloud_clb_rewrites" "clblab" {
+data "tencentcloud_clb_redirections" "foo" {
   clb_id                = "lb-p7olt9e5"
   source_listener_id    = "lbl-jc1dx6ju#lb-p7olt9e5"
   target_listener_id    = "lbl-asj1hzuo#lb-p7olt9e5"
@@ -24,9 +24,9 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func dataSourceTencentCloudClbRewrites() *schema.Resource {
+func dataSourceTencentCloudClbRedirections() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudClbRewritesRead,
+		Read: dataSourceTencentCloudClbRedirectionsRead,
 
 		Schema: map[string]*schema.Schema{
 			"clb_id": {
@@ -37,29 +37,29 @@ func dataSourceTencentCloudClbRewrites() *schema.Resource {
 			"source_listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of source listener.",
+				Description: "Id of source listener to be queried.",
 			},
 			"target_listener_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of source listener.",
+				Description: "Id of source listener to be queried.",
 			},
 			"rewrite_source_loc_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of rule id of source listener.",
+				Description: "Rule ID of source listener to be queried.",
 			},
 			"rewrite_target_loc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of rule id of target listener.",
+				Description: "Rule ID of target listener to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
-			"rewrite_list": {
+			"redirection_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "A list of cloud load redirection configurations. Each element contains the following attributes:",
@@ -68,7 +68,7 @@ func dataSourceTencentCloudClbRewrites() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: " ID of the CLB to be queried.",
+							Description: " ID of the CLB.",
 						},
 						"source_listener_id": {
 							Type:        schema.TypeString,
@@ -83,12 +83,12 @@ func dataSourceTencentCloudClbRewrites() *schema.Resource {
 						"rewrite_source_loc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of rule id of source listener.",
+							Description: "Rule IDd of source listener.",
 						},
 						"rewrite_target_loc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of rule id of target listener.",
+							Description: "Rule ID of target listener.",
 						},
 					},
 				},
@@ -97,8 +97,8 @@ func dataSourceTencentCloudClbRewrites() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudClbRewritesRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_clb_rewrites.read")()
+func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("data_source.tencentcloud_clb_redirections.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -117,14 +117,14 @@ func dataSourceTencentCloudClbRewritesRead(d *schema.ResourceData, meta interfac
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	rewrites, err := clbService.DescribeRewriteInfosByFilter(ctx, params)
+	redirections, err := clbService.DescribeRedirectionsByFilter(ctx, params)
 	if err != nil {
 		return err
 	}
 
-	rewriteList := make([]map[string]interface{}, 0, len(rewrites))
-	ids := make([]string, 0, len(rewrites))
-	for _, rewrite := range rewrites {
+	redirectionList := make([]map[string]interface{}, 0, len(redirections))
+	ids := make([]string, 0, len(redirections))
+	for _, rewrite := range redirections {
 		mapping := map[string]interface{}{
 			"clb_id":                (*rewrite)["clb_id"],
 			"source_listener_id":    (*rewrite)["source_listener_id"] + "#" + (*rewrite)["clb_id"],
@@ -133,19 +133,19 @@ func dataSourceTencentCloudClbRewritesRead(d *schema.ResourceData, meta interfac
 			"rewrite_target_loc_id": (*rewrite)["rewrite_target_loc_id"] + "#" + (*rewrite)["target_listener_id"] + "#" + (*rewrite)["clb_id"],
 		}
 
-		rewriteList = append(rewriteList, mapping)
+		redirectionList = append(redirectionList, mapping)
 		ids = append(ids, (*rewrite)["rewrite_source_loc_id"]+"#"+(*rewrite)["rewrite_target_loc_id"]+(*rewrite)["source_listener_id"]+"#"+(*rewrite)["target_listener_id"]+"#"+(*rewrite)["clb_id"])
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("rewrite_list", rewriteList); err != nil {
-		log.Printf("[CRITAL]%s provider set rewrite list fail, reason:%s\n ", logId, err.Error())
+	if err = d.Set("redirection_list", redirectionList); err != nil {
+		log.Printf("[CRITAL]%s provider set redirection list fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), rewriteList); err != nil {
+		if err := writeToFile(output.(string), redirectionList); err != nil {
 			return err
 		}
 	}

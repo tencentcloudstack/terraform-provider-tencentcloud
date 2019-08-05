@@ -34,19 +34,19 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 			"listener_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the listener to be queried",
+				Description: "ID of the listener to be queried.",
 			},
 			"protocol": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_PROTOCOL),
-				Description:  "Protocol of the listener. Available values are 'HTTP', 'HTTPS', 'TCP', 'UDP'('TCP_SSL' is in the internal test, please apply if you need to use). ",
+				Description:  " Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'. NOTES: 'TCP_SSL' is testing internally, please apply if you need to use.",
 			},
 			"port": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateIntegerInRange(1, 65535),
-				Description:  "Port of the listener.",
+				Description:  "Port of the CLB listener.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -72,7 +72,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"listener_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the listener.",
+							Description: "Name of the CLB listener.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
@@ -82,7 +82,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Port of the listener.",
+							Description: "Port of the CLB listener.",
 						},
 						"health_check_switch": {
 							Type:        schema.TypeBool,
@@ -92,7 +92,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"health_check_time_out": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Response timeout of health check. The value range is 2-60 sec, and the default is 2 sec. Response timeout needs to be less than check interval.",
+							Description: "Response timeout of health check. The value range is 2-60 sec, and the default is 2 sec. Response timeout needs to be less than check interval. NOTES: Only supports listeners of 'TCP','UDP','TCP_SSL' protocol.",
 						},
 						"health_check_interval_time": {
 							Type:        schema.TypeInt,
@@ -112,17 +112,17 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of SSL Mode, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'.",
+							Description: " Type of certificate, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
 						},
 						"certificate_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the server certificate. If not specified, the content, key, and name of the server certificate must be set. NOTES: only supported by listeners of protocol 'HTTPS'.",
+							Description: "ID of the server certificate. If not specified, the content, key, and name of the server certificate must be set. NOTES: only supported by listeners of 'HTTPS' protocol.",
 						},
 						"certificate_ca_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of protocol 'HTTPS'.",
+							Description: "ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of 'HTTPS' protocol .",
 						},
 						"session_expire_time": {
 							Type:        schema.TypeInt,
@@ -132,12 +132,12 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"scheduler": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'.",
+							Description: " Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
 						},
 						"sni_switch": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Indicates whether SNI is enabled, and only supported with protocol 'HTTPS'",
+							Description: " Indicates whether SNI is enabled. NOTES: Only supported by 'HTTPS' protocol.",
 						},
 					},
 				},

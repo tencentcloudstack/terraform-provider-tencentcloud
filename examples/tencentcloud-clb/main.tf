@@ -50,7 +50,7 @@ resource "tencentcloud_clb_listener_rule" "rule" {
   scheduler           = "WRR"
 }
 
-resource "tencentcloud_clb_server_attachment" "server_attachment_http" {
+resource "tencentcloud_clb_attachment" "attachment_http" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_https.id}"
   location_id = "${tencentcloud_clb_listener_rule.rule.id}"
@@ -91,7 +91,7 @@ resource "tencentcloud_clb_listener_rule" "rule_target" {
   session_expire_time = 30
   scheduler           = "WRR"
 }
-resource "tencentcloud_clb_rewrite" "rewrite_basic" {
+resource "tencentcloud_clb_redirection" "redirection_basic" {
   clb_id                = "${tencentcloud_clb_instance.clb_basic.id}"
   source_listener_id    = "${tencentcloud_clb_listener.listener_basic.id}"
   target_listener_id    = "${tencentcloud_clb_listener.listener_target.id}"
@@ -112,13 +112,13 @@ data "tencentcloud_clb_listener_rules" "rules" {
   domain      = "${tencentcloud_clb_listener_rule.rule.domain}"
   url         = "${tencentcloud_clb_listener_rule.rule.url}"
 }
-data "tencentcloud_clb_server_attachments" "attachments" {
+data "tencentcloud_clb_attachments" "attachments" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_https.id}"
-  location_id = "${tencentcloud_clb_server_attachment.server_attachment_http.id}"
+  location_id = "${tencentcloud_clb_attachment.attachment_http.id}"
 }
-data "tencentcloud_clb_rewrites" "rewrites" {
+data "tencentcloud_clb_redirections" "redirections" {
   clb_id                = "${tencentcloud_clb_instance.clb_basic.id}"
-  source_listener_id    = "${tencentcloud_clb_rewrite.rewrite_basic.source_listener_id}"
-  rewrite_source_loc_id = "${tencentcloud_clb_rewrite.rewrite_basic.rewrite_source_loc_id}"
+  source_listener_id    = "${tencentcloud_clb_redirection.redirection_basic.source_listener_id}"
+  rewrite_source_loc_id = "${tencentcloud_clb_redirection.redirection_basic.rewrite_source_loc_id}"
 }

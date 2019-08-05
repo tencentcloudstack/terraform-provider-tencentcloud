@@ -31,11 +31,13 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
+	"sync"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
+
+var clbActionMu = &sync.Mutex{}
 
 func resourceTencentCloudClbInstance() *schema.Resource {
 	return &schema.Resource{
@@ -66,39 +68,39 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     0,
-				Description: "ID of the project to which the instance belongs.",
+				Description: "ID of the project within the CLB instance, '0' - Default Project.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
 				Computed:    true,
-				Description: "ID of the VPC.",
+				Description: "VPC ID of the CLB.",
 			},
 			"subnet_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
-				Description:  "ID of the subnet within this VPC. The VIP of the intranet CLB instance will be generated from this subnet.",
+				Description:  "Subnet ID of the CLB. Effective only for CLB within the VPC.",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Security groups to which a CLB instance belongs.",
+				Description: "Security groups of the CLB instance.",
 			},
 			"target_region_info_region": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Region information of backend service are attached the CLB instance.",
+				Description: "Region information of backend services are attached the CLB instance.",
 			},
 			"target_region_info_vpc": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Vpc Id information of backend service are attached the CLB instance.",
+				Description: "Vpc information of backend services are attached the CLB instance.",
 			},
 		},
 	}
@@ -106,15 +108,21 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 
 func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer LogElapsed("resource.tencentcloud_clb_instance.create")()
-
+	clbActionMu.Lock()
+	defer clbActionMu.Unlock()
 	logId := GetLogId(nil)
-
-	network_type := d.Get("network_type").(string)
-	clb_name := d.Get("clb_name").(string)
-
+	networkType := d.Get("network_type").(string)
+	clbName := d.Get("clb_name").(string)
+	flag, err := checkSameName(clbName, meta)
+	if err != nil {
+		return err
+	}
+	if flag {
+		return fmt.Errorf("Same clb name exists!")
+	}
 	request := clb.NewCreateLoadBalancerRequest()
-	request.LoadBalancerType = stringToPointer(network_type)
-	request.LoadBalancerName = stringToPointer(clb_name)
+	request.LoadBalancerType = stringToPointer(networkType)
+	request.LoadBalancerName = stringToPointer(clbName)
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = stringToPointer(v.(string))
 	}
@@ -123,7 +131,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.ProjectId = &projectId
 	}
 	if v, ok := d.GetOk("subnet_id"); ok {
-		if network_type == CLB_NETWORK_TYPE_OPEN {
+		if networkType == CLB_NETWORK_TYPE_OPEN {
 			return fmt.Errorf("OPEN network_type do not support this operation with subnet_id")
 		}
 		request.SubnetId = stringToPointer(v.(string))
@@ -137,6 +145,12 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	} else {
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		requestId := *response.Response.RequestId
+
+		retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+		if retryErr != nil {
+			return retryErr
+		}
 	}
 	if len(response.Response.LoadBalancerIds) < 1 {
 		return fmt.Errorf("load balancer id is nil")
@@ -144,9 +158,8 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	d.SetId(*response.Response.LoadBalancerIds[0])
 	clbId := *response.Response.LoadBalancerIds[0]
 
-	time.Sleep(3 * time.Second)
 	if v, ok := d.GetOk("security_groups"); ok {
-		if network_type == CLB_NETWORK_TYPE_INTERNAL {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("INTERNAL network_type do not support this operation with sercurity_groups")
 		}
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
@@ -165,12 +178,18 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, sgRequest.GetAction(), sgRequest.ToJsonString(), sgResponse.ToJsonString())
+			requestId := *sgResponse.Response.RequestId
+
+			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			if retryErr != nil {
+				return retryErr
+			}
 		}
 	}
 	if v, ok := d.GetOk("target_region_info_region"); ok {
 		region := v.(string)
 		vpcId := ""
-		if network_type == CLB_NETWORK_TYPE_INTERNAL {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
 		}
 		if vv, ok := d.GetOk("target_region_info_vpc"); ok {
@@ -192,6 +211,12 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, mRequest.GetAction(), mRequest.ToJsonString(), mResponse.ToJsonString())
+			requestId := *mResponse.Response.RequestId
+
+			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			if retryErr != nil {
+				return retryErr
+			}
 		}
 
 	}
@@ -227,6 +252,8 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 
 func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer LogElapsed("resource.tencentcloud_clb_instance.update")()
+	clbActionMu.Lock()
+	defer clbActionMu.Unlock()
 
 	logId := GetLogId(nil)
 
@@ -240,6 +267,13 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("clb_name") {
 		changed = true
 		clbName = d.Get("clb_name").(string)
+		flag, err := checkSameName(clbName, meta)
+		if err != nil {
+			return err
+		}
+		if flag {
+			return fmt.Errorf("Same clb name exists!")
+		}
 	}
 
 	if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc") {
@@ -273,6 +307,12 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			requestId := *response.Response.RequestId
+
+			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			if retryErr != nil {
+				return retryErr
+			}
 		}
 		if d.HasChange("clb_name") {
 			d.SetPartial("clb_name")
@@ -306,6 +346,12 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, sgRequest.GetAction(), sgRequest.ToJsonString(), sgResponse.ToJsonString())
+			requestId := *sgResponse.Response.RequestId
+
+			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			if retryErr != nil {
+				return retryErr
+			}
 		}
 		d.SetPartial("security_groups")
 	}
@@ -316,6 +362,8 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 
 func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer LogElapsed("resource.tencentcloud_clb_instance.delete")()
+	clbActionMu.Lock()
+	defer clbActionMu.Unlock()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -332,4 +380,24 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 	}
 
 	return nil
+}
+
+func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
+	logId := GetLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	flag = false
+	clbService := ClbService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	params := make(map[string]interface{})
+	params["clb_name"] = name
+	clbs, err := clbService.DescribeLoadBalancerByFilter(ctx, params)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if len(clbs) > 0 {
+		flag = true
+	}
+	return
 }

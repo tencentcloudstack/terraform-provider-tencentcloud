@@ -4,7 +4,7 @@ Use this data source to query detailed information of CLB attachments
 Example Usage
 
 ```hcl
-data "tencentcloud_clb_server_attachments" "clblab" {
+data "tencentcloud_clb_attachments" "clblab" {
   listener_id   = "lbl-hh141sn9#lb-k2zjp9lv"
   clb_id        = "lb-k2zjp9lv"
   location_id   = "loc-4xxr2cy7"
@@ -29,17 +29,17 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: " ID of the CLB.",
+				Description: "ID of the CLB to be queried.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: " ID of the CLB listener.",
+				Description: "ID of the CLB listener to be queried.",
 			},
 			"location_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: " ID of the CLB listener rule.",
+				Description: "ID of the CLB listener rule to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -55,30 +55,30 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the cloud load balancer.",
+							Description: "ID of the CLB.",
 						},
 
 						"listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the cloud load balance listener.",
+							Description: "ID of the CLB listener.",
 						},
 						"protocol_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.",
+							Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.NOTES: TCP_SSL is testing internally, please apply if you need to use.",
 						},
 						"location_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the cloud load balance listener rule.",
+							Description: "ID of the CLB listener rule.",
 						},
 						"targets": {
 							Type:        schema.TypeSet,
 							Computed:    true,
 							MinItems:    1,
 							MaxItems:    100,
-							Description: "Backend infos.",
+							Description: "Information of the backends to be attached.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"instance_id": {
@@ -94,7 +94,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 									"weight": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Weight of the backend server.",
+										Description: " Forwarding weight of the backend service, the range of [0, 100], defaults to 10.",
 									},
 								},
 							},
@@ -107,7 +107,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_clb_server_attachments.read")()
+	defer LogElapsed("data_source.tencentcloud_clb_attachments.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

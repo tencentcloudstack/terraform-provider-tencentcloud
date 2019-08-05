@@ -503,7 +503,7 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 	return nil
 }
 
-func (me *ClbService) DescribeRewriteInfoById(ctx context.Context, rewriteId string) (rewriteInfo *map[string]string, errRet error) {
+func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId string) (rewriteInfo *map[string]string, errRet error) {
 	logId := GetLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
@@ -554,7 +554,7 @@ func (me *ClbService) DescribeRewriteInfoById(ctx context.Context, rewriteId str
 	return
 }
 
-func (me *ClbService) DescribeRewriteInfosByFilter(ctx context.Context, params map[string]string) (rewriteInfos []*map[string]string, errRet error) {
+func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params map[string]string) (rewriteInfos []*map[string]string, errRet error) {
 	logId := GetLogId(ctx)
 	clbId := ""
 	sourceListenerId := ""
@@ -620,7 +620,7 @@ func (me *ClbService) DescribeRewriteInfosByFilter(ctx context.Context, params m
 	return
 }
 
-func (me *ClbService) DeleteRewriteInfoById(ctx context.Context, rewriteId string) error {
+func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId string) error {
 	logId := GetLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
@@ -698,7 +698,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		//仅适用于HTTP/HTTPS转发规则、TCP监听器的HTTP健康检查方式
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_code can only be set with protocol TCP %s", protocol)
+			errRet = fmt.Errorf("health_check_http_code can only be set with protocol TCP.")
 			return
 		} else {
 			healthSetFlag = true

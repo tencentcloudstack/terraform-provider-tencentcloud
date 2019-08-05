@@ -3,11 +3,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-
-	"testing"
-	"time"
 )
 
 func TestAccTencentCloudClbInstance_basic(t *testing.T) {
@@ -118,7 +117,6 @@ func testAccCheckClbInstanceDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_clb_instance" {
 			continue
 		}
-		time.Sleep(5 * time.Second)
 
 		_, err := clbService.DescribeLoadBalancerById(ctx, rs.Primary.ID)
 		if err == nil {

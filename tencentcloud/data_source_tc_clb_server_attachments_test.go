@@ -15,12 +15,12 @@ func TestAccTencentCloudClbServerAttachmentsDataSource(t *testing.T) {
 			{
 				Config: testAccClbServerAttachmentsDataSource,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckClbServerAttachmentExists("tencentcloud_clb_server_attachment.server_attachment_tcp"),
-					resource.TestCheckResourceAttr("data.tencentcloud_clb_server_attachments.attachments", "attachment_list.#", "1"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_server_attachments.attachments", "attachment_list.0.clb_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_server_attachments.attachments", "attachment_list.0.listener_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_server_attachments.attachments", "attachment_list.0.location_id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_clb_server_attachments.attachments", "attachment_list.0.targets.#", "1"),
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.attachment_tcp"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_attachments.attachments", "attachment_list.#", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_attachments.attachments", "attachment_list.0.clb_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_attachments.attachments", "attachment_list.0.listener_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_attachments.attachments", "attachment_list.0.location_id"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_attachments.attachments", "attachment_list.0.targets.#", "1"),
 				),
 			},
 		},
@@ -38,7 +38,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   listener_name              = "listener_tcp"
   port                       = 44
   protocol                   = "TCP"
-  health_check_switch        = 1
+  health_check_switch        = true
   health_check_time_out      = 30
   health_check_interval_time = 100
   health_check_health_num    = 2
@@ -47,19 +47,19 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   scheduler                  = "WRR"
 }
 
-resource "tencentcloud_clb_server_attachment" "server_attachment_tcp" {
+resource "tencentcloud_clb_attachment" "attachment_tcp" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
   location_id = "#${tencentcloud_clb_listener.listener_basic.id}"
   targets {
-    instance_id = "ins-1flbqyp8"
+    instance_id = "ins-n5nkgkv6"
     port        = 23
     weight      = 10
   }
 }
-data "tencentcloud_clb_server_attachments" "attachments" {
+data "tencentcloud_clb_attachments" "attachments" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
-  location_id = "${tencentcloud_clb_server_attachment.server_attachment_tcp.id}"
+  location_id = "${tencentcloud_clb_attachment.attachment_tcp.id}"
 }
 `

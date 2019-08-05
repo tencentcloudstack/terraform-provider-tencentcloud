@@ -32,12 +32,12 @@ The following arguments are supported:
 
 * `clb_name` - (Required) Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.
 * `network_type` - (Required, ForceNew) Type of CLB instance, and available values include 'OPEN' and 'INTERNAL'.
-* `project_id` - (Optional, ForceNew) ID of the project to which the instance belongs.
-* `security_groups` - (Optional) Security groups to which a CLB instance belongs.
-* `subnet_id` - (Optional, ForceNew) ID of the subnet within this VPC. The VIP of the intranet CLB instance will be generated from this subnet.
-* `target_region_info_region` - (Optional) Region information of backend service are attached the CLB instance.
-* `target_region_info_vpc` - (Optional) Vpc Id information of backend service are attached the CLB instance.
-* `vpc_id` - (Optional, ForceNew) ID of the VPC.
+* `project_id` - (Optional, ForceNew) ID of the project within the CLB instance, '0' - Default Project.
+* `security_groups` - (Optional) Security groups of the CLB instance.
+* `subnet_id` - (Optional, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC.
+* `target_region_info_region` - (Optional) Region information of backend services are attached the CLB instance.
+* `target_region_info_vpc` - (Optional) Vpc information of backend services are attached the CLB instance.
+* `vpc_id` - (Optional, ForceNew) VPC ID of the CLB.
 
 
 ## Import

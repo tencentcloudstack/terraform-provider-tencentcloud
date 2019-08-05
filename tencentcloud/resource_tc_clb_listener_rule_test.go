@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
@@ -102,7 +101,7 @@ func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_clb_listener_rule" {
 			continue
 		}
-		time.Sleep(5 * time.Second)
+
 		items := strings.Split(rs.Primary.ID, "#")
 		if len(items) != 3 {
 			return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")

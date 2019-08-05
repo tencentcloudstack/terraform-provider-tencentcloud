@@ -4,11 +4,11 @@ Provides a resource to create a CLB attachment.
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_server_attachment" "attachment" {
+resource "tencentcloud_clb_attachment" "attachment" {
   listener_id   = "lbl-hh141sn9#lb-k2zjp9lv"
   clb_id        = "lb-k2zjp9lv"
   protocol_type = "tcp"
-  location_id   = "loc-4xxr2cy7"
+  location_id   = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
   targets = {
     instance_id = "ins-1flbqyp8"
     port        = 50
@@ -19,10 +19,10 @@ resource "tencentcloud_clb_server_attachment" "attachment" {
 
 Import
 
-CLB instance can be imported using the id, e.g.
+CLB attachment can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb_server_attachment.foo loc-4xxr2cy7#lbl-hh141sn9#lb-7a0t6zqb
+$ terraform import tencentcloud_clb_attachment.foo loc-4xxr2cy7#lbl-hh141sn9#lb-7a0t6zqb
 ```
 */
 package tencentcloud
@@ -51,32 +51,32 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of the cloud load balancer.",
+				Description: "ID of the clb.",
 			},
 
 			"listener_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of the cloud load balance listener.",
+				Description: " ID of the clb listener.",
 			},
 			"protocol_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.",
+				Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.NOTES: TCP_SSL is testing internally, please apply if you need to use.",
 			},
 			"location_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "Id of the cloud load balance listener rule.",
+				Description: "ID of the clb listener rule.",
 			},
 			"targets": {
 				Type:        schema.TypeSet,
 				Required:    true,
 				MinItems:    1,
 				MaxItems:    100,
-				Description: "Backend infos.",
+				Description: " Information of the backends to be attached.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
@@ -94,7 +94,7 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							ValidateFunc: validateIntegerInRange(0, 100),
-							Description:  "Weight of the backend server.",
+							Description:  "Forwarding weight of the backend service, the range of [0, 100], defaults to 10.",
 						},
 					},
 				},
@@ -104,7 +104,7 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_server_attachment.create")()
+	defer LogElapsed("resource.tencentcloud_clb_attachment.create")()
 
 	logId := GetLogId(nil)
 
@@ -155,7 +155,7 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_server_attachment.delete")()
+	defer LogElapsed("resource.tencentcloud_clb_attachment.delete")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -182,38 +182,53 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta interface{}, remove []interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_server_attachment.remove")()
+	defer LogElapsed("resource.tencentcloud_clb_attachment.remove")()
 
 	logId := GetLogId(nil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
-
 	attachmentId := d.Id()
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_server_attachment is wrong")
+		return fmt.Errorf("id of resource.tencentcloud_clb_attachment is wrong")
 	}
 	locationId := items[0]
 	listenerId := items[1]
 	clbId := items[2]
-
-	clbService := ClbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+	request := clb.NewDeregisterTargetsRequest()
+	request.ListenerId = stringToPointer(listenerId)
+	request.LoadBalancerId = stringToPointer(clbId)
+	if locationId != "" {
+		request.LocationId = stringToPointer(locationId)
 	}
-	err := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, d.Get("targets").(*schema.Set).List())
+	for _, inst_ := range remove {
+		inst := inst_.(map[string]interface{})
+		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+	}
+
+	requestId := ""
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().DeregisterTargets(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s reason[%s]\n", logId, err.Error())
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
+	} else {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		requestId = *response.Response.RequestId
+		retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+		if retryErr != nil {
+			return retryErr
+		}
 	}
 	return nil
 }
 
 func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta interface{}, add []interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_server_attachment.add")()
+	defer LogElapsed("resource.tencentcloud_clb_attachment.add")()
 
 	logId := GetLogId(nil)
 	items := strings.Split(d.Get("listener_id").(string), "#")
 	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_server_attachment is wrong")
+		return fmt.Errorf("id of resource.tencentcloud_clb_attachment is wrong")
 	}
 
 	listenerId := items[0]
@@ -226,10 +241,12 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 	if v, ok := d.GetOk("location_id"); ok {
 		items := strings.Split(v.(string), "#")
 		locationId = items[0]
-		request.LocationId = stringToPointer(locationId)
+		if locationId != "" {
+			request.LocationId = stringToPointer(locationId)
+		}
 	}
 
-	for _, inst_ := range d.Get("targets").(*schema.Set).List() {
+	for _, inst_ := range add {
 		inst := inst_.(map[string]interface{})
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
 	}
@@ -253,7 +270,7 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_server_attachment.update")()
+	defer LogElapsed("resource.tencentcloud_clb_attachment.update")()
 
 	if d.HasChange("targets") {
 		o, n := d.GetChange("targets")
@@ -282,7 +299,7 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_server_attachment.read")()
+	defer LogElapsed("resource.tencentcloud_clb_attachment.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
