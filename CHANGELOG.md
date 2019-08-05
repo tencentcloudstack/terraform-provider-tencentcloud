@@ -1,4 +1,9 @@
 ## 1.14.1 (Unreleased)
+
+BUG FIXIES:
+
+* resource/tencentcloud_security_group_rule: fixed security group rule id is not compatible with previous version.
+
 ## 1.14.0 (July 30, 2019)
 
 FEATURES:
