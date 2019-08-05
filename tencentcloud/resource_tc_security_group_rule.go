@@ -139,7 +139,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Default:     "",
+				Computed:    true,
 				Description: "Description of the security group rule.",
 			},
 		},
