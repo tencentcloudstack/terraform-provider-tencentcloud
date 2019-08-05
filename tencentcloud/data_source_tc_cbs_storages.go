@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cbs_storages" "storages" {
-    storage_id         = "disk-kdt0sq6m"
-    result_output_file = "mytestpath"
+  storage_id         = "disk-kdt0sq6m"
+  result_output_file = "mytestpath"
 }
 ```
 */
@@ -140,6 +140,8 @@ func dataSourceTencentCloudCbsStorages() *schema.Resource {
 }
 
 func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("data_source.tencentcloud_cbs_storages.read")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

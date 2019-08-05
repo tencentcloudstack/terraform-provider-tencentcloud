@@ -48,6 +48,7 @@ func TestAccTencentCloudSecurityGroupRule_ssh(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.ssh-in", "cidr_ip", "0.0.0.0/0"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.ssh-in", "ip_protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.ssh-in", "port_range", "22"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.ssh-in", "description", "ssh in rule"),
 					resource.TestCheckNoResourceAttr("tencentcloud_security_group_rule.ssh-in", "source_sgid"),
 				),
 			},
