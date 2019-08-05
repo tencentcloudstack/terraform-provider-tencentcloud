@@ -37,7 +37,7 @@ resource "tencentcloud_dc_gateway_ccn_route" "route2" {
 }
 
 #You need to sleep for a few seconds because there is a cache on the server
-data "tencentcloud_dc_gateway_ccn_routes"  "test" {
+data "tencentcloud_dc_gateway_ccn_routes" "test" {
   dcg_id = "${tencentcloud_dc_gateway.ccn_main.id}"
 }
 ```

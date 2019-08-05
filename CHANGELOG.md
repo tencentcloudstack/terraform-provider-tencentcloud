@@ -1,3 +1,4 @@
+
 ## 1.15.0 (Unreleased)
 
 FEATURES:
@@ -16,7 +17,10 @@ DEPRECATED:
 * Resource: `tencentcloud_lb` replaced by `tencentcloud_clb_instances`.
 * Resource: `tencentcloud_alb_server_attachment` replaced by `tencentcloud_clb_server_attachment`.
 
-## 1.14.1 (Unreleased)
+
+## 1.14.2 (Unreleased)
+## 1.14.1 (August 05, 2019)
+
 
 BUG FIXIES:
 

@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_security_group"
 sidebar_current: "docs-tencentcloud-resource-security_group"
 description: |-
-  Provide a resource to create security group.
+  Provides a resource to create security group.
 ---
 
 # tencentcloud_security_group
 
-Provide a resource to create security group.
+Provides a resource to create security group.
 
 ## Example Usage
 
