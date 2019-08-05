@@ -330,3 +330,13 @@ func validateAsScheduleTimestamp(v interface{}, k string) (ws []string, errors [
 	}
 	return
 }
+
+func validateStringPrefix(prefix string) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(string)
+		if !strings.HasPrefix(value, prefix) {
+			errors = append(errors, fmt.Errorf("%s doesn't have preifx %s", k, prefix))
+		}
+		return
+	}
+}
