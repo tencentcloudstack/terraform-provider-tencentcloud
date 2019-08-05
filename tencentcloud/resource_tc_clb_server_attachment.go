@@ -1,5 +1,5 @@
 /*
-Provide a resource to create a CLB instance.
+Provides a resource to create a CLB attachment.
 
 Example Usage
 
@@ -22,7 +22,7 @@ Import
 CLB instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb_server_attachment.attachment loc-4xxr2cy7#lbl-hh141sn9#lb-7a0t6zqb
+$ terraform import tencentcloud_clb_server_attachment.foo loc-4xxr2cy7#lbl-hh141sn9#lb-7a0t6zqb
 ```
 */
 package tencentcloud
@@ -51,25 +51,25 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of the cloud load balancer. ",
+				Description: "Id of the cloud load balancer.",
 			},
 
 			"listener_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of the cloud load balance listener. ",
+				Description: "Id of the cloud load balance listener.",
 			},
 			"protocol_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'. ",
+				Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.",
 			},
 			"location_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "Id of the cloud load balance listener rule. ",
+				Description: "Id of the cloud load balance listener rule.",
 			},
 			"targets": {
 				Type:        schema.TypeSet,
@@ -104,8 +104,9 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_server_attachment.create")()
+
 	logId := GetLogId(nil)
-	//ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Get("listener_id").(string), "#")
 	if len(items) != 2 {
@@ -154,10 +155,10 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_server_attachment.delete")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_listener_rule.delete")()
 
 	attachmentId := d.Id()
 	items := strings.Split(attachmentId, "#")
@@ -178,13 +179,13 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	}
 
 	return nil
-
 }
 
 func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta interface{}, remove []interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_server_attachment.remove")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_listener_rule.delete")()
 
 	attachmentId := d.Id()
 	items := strings.Split(attachmentId, "#")
@@ -205,7 +206,10 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 	}
 	return nil
 }
+
 func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta interface{}, add []interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_server_attachment.add")()
+
 	logId := GetLogId(nil)
 	items := strings.Split(d.Get("listener_id").(string), "#")
 	if len(items) != 2 {
@@ -249,6 +253,7 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_server_attachment.update")()
 
 	if d.HasChange("targets") {
 		o, n := d.GetChange("targets")
@@ -272,12 +277,14 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 		}
 		return resourceTencentCloudClbServerAttachmentRead(d, meta)
 	}
+
 	return nil
 }
 
 func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_server_attachment.read")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_instance.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	items := strings.Split(d.Id(), "#")
 

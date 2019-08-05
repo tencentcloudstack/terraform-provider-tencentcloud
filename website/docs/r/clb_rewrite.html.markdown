@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_clb_rewrite"
 sidebar_current: "docs-tencentcloud-resource-clb_rewrite"
 description: |-
-  Provide a resource to create a CLB instance.
+  Provides a resource to create a CLB rewrite.
 ---
 
 # tencentcloud_clb_rewrite
 
-Provide a resource to create a CLB instance.
+Provides a resource to create a CLB rewrite.
 
 ## Example Usage
 
@@ -27,10 +27,10 @@ resource "tencentcloud_clb_rewrite" "rewrite" {
 The following arguments are supported:
 
 * `clb_id` - (Required, ForceNew) Id of CLB instance.
-* `rewrite_source_loc_id` - (Required, ForceNew) Id of rule id of source listener. 
-* `rewrite_target_loc_id` - (Required, ForceNew) Id of rule id of target listener. 
-* `source_listener_id` - (Required, ForceNew) Id of source listener. 
-* `target_listener_id` - (Required, ForceNew) Id of source listener. 
+* `rewrite_source_loc_id` - (Required, ForceNew) Id of rule id of source listener.
+* `rewrite_target_loc_id` - (Required, ForceNew) Id of rule id of target listener.
+* `source_listener_id` - (Required, ForceNew) Id of source listener.
+* `target_listener_id` - (Required, ForceNew) Id of source listener.
 
 
 ## Import
@@ -38,6 +38,6 @@ The following arguments are supported:
 CLB instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb_rewrite.rewrite loc-ft8fmngv#loc-4xxr2cy7#lbl-jc1dx6ju#lbl-asj1hzuo#lb-p7olt9e5
+$ terraform import tencentcloud_clb_rewrite.foo loc-ft8fmngv#loc-4xxr2cy7#lbl-jc1dx6ju#lbl-asj1hzuo#lb-p7olt9e5
 ```
 

@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_clb_server_attachment"
 sidebar_current: "docs-tencentcloud-resource-clb_server_attachment"
 description: |-
-  Provide a resource to create a CLB instance.
+  Provides a resource to create a CLB attachment.
 ---
 
 # tencentcloud_clb_server_attachment
 
-Provide a resource to create a CLB instance.
+Provides a resource to create a CLB attachment.
 
 ## Example Usage
 
@@ -30,10 +30,10 @@ resource "tencentcloud_clb_server_attachment" "attachment" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required, ForceNew) Id of the cloud load balancer. 
-* `listener_id` - (Required, ForceNew) Id of the cloud load balance listener. 
+* `clb_id` - (Required, ForceNew) Id of the cloud load balancer.
+* `listener_id` - (Required, ForceNew) Id of the cloud load balance listener.
 * `targets` - (Required) Backend infos.
-* `location_id` - (Optional, ForceNew) Id of the cloud load balance listener rule. 
+* `location_id` - (Optional, ForceNew) Id of the cloud load balance listener rule.
 
 The `targets` object supports the following:
 
@@ -45,7 +45,7 @@ The `targets` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `protocol_type` - Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'. 
+* `protocol_type` - Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.
 
 
 ## Import
@@ -53,6 +53,6 @@ In addition to all arguments above, the following attributes are exported:
 CLB instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb_server_attachment.attachment loc-4xxr2cy7#lbl-hh141sn9#lb-7a0t6zqb
+$ terraform import tencentcloud_clb_server_attachment.foo loc-4xxr2cy7#lbl-hh141sn9#lb-7a0t6zqb
 ```
 

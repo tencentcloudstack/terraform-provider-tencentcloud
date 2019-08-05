@@ -14,7 +14,7 @@ FEATURES:
 
 DEPRECATED:
 * Resource: `tencentcloud_lb` replaced by `tencentcloud_clb_instances`.
-* Resource: `tencentcloud_alb_server_attachment` replaced by `tencentcloud_clb_attachment`.
+* Resource: `tencentcloud_alb_server_attachment` replaced by `tencentcloud_clb_server_attachment`.
 
 ## 1.14.0 (July 30, 2019)
 
@@ -91,8 +91,6 @@ DEPRECATED:
 * Data Source: `tencentcloud_subnet` replaced by  `tencentcloud_vpc_subnets`.
 * Data Source: `tencentcloud_route_table` replaced by `tencentcloud_vpc_route_tables`.
 * Resource: `tencentcloud_route_entry` replaced by `tencentcloud_route_table_entry`.
-
-
 
 ## 1.9.1 (June 24, 2019)
 

@@ -1,10 +1,10 @@
 /*
-Use this data source to query detailed information of CLB
+Use this data source to query detailed information of CLB rewrite
 
 Example Usage
 
 ```hcl
-data "tencentcloud_clb" "clblab" {
+data "tencentcloud_clb_rewrites" "clblab" {
   clb_id                = "lb-p7olt9e5"
   source_listener_id    = "lbl-jc1dx6ju#lb-p7olt9e5"
   target_listener_id    = "lbl-asj1hzuo#lb-p7olt9e5"
@@ -37,22 +37,22 @@ func dataSourceTencentCloudClbRewrites() *schema.Resource {
 			"source_listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of source listener. ",
+				Description: "Id of source listener.",
 			},
 			"target_listener_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of source listener. ",
+				Description: "Id of source listener.",
 			},
 			"rewrite_source_loc_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of rule id of source listener. ",
+				Description: "Id of rule id of source listener.",
 			},
 			"rewrite_target_loc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of rule id of target listener. ",
+				Description: "Id of rule id of target listener.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -73,22 +73,22 @@ func dataSourceTencentCloudClbRewrites() *schema.Resource {
 						"source_listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of source listener. ",
+							Description: "Id of source listener.",
 						},
 						"target_listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of source listener. ",
+							Description: "Id of source listener.",
 						},
 						"rewrite_source_loc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of rule id of source listener. ",
+							Description: "Id of rule id of source listener.",
 						},
 						"rewrite_target_loc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of rule id of target listener. ",
+							Description: "Id of rule id of target listener.",
 						},
 					},
 				},
@@ -98,8 +98,9 @@ func dataSourceTencentCloudClbRewrites() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbRewritesRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("data_source.tencentcloud_clb_rewrites.read")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "data_source.tencentcloud_clb_instances.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]string)

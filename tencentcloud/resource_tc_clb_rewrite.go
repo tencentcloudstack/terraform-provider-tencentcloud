@@ -1,5 +1,5 @@
 /*
-Provide a resource to create a CLB instance.
+Provides a resource to create a CLB rewrite.
 
 Example Usage
 
@@ -18,7 +18,7 @@ Import
 CLB instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_clb_rewrite.rewrite loc-ft8fmngv#loc-4xxr2cy7#lbl-jc1dx6ju#lbl-asj1hzuo#lb-p7olt9e5
+$ terraform import tencentcloud_clb_rewrite.foo loc-ft8fmngv#loc-4xxr2cy7#lbl-jc1dx6ju#lbl-asj1hzuo#lb-p7olt9e5
 ```
 */
 package tencentcloud
@@ -52,33 +52,34 @@ func resourceTencentCloudClbRewrite() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of source listener. ",
+				Description: "Id of source listener.",
 			},
 			"target_listener_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of source listener. ",
+				Description: "Id of source listener.",
 			},
 			"rewrite_source_loc_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of rule id of source listener. ",
+				Description: "Id of rule id of source listener.",
 			},
 			"rewrite_target_loc_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of rule id of target listener. ",
+				Description: "Id of rule id of target listener.",
 			},
 		},
 	}
 }
 
 func resourceTencentCloudClbRewriteCreate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_rewrite.create")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_rewrite.create")()
 
 	//暂时不支持auto
 	clbId := d.Get("clb_id").(string)
@@ -116,8 +117,9 @@ func resourceTencentCloudClbRewriteCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudClbRewriteRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_rewrite.read")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_rewrite.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	rewriteId := d.Id()
@@ -141,8 +143,9 @@ func resourceTencentCloudClbRewriteRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudClbRewriteDelete(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_clb_rewrite.delete")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_clb_rewrite.delete")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()

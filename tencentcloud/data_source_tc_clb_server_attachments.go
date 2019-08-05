@@ -1,10 +1,10 @@
 /*
-Use this data source to query detailed information of CLB
+Use this data source to query detailed information of CLB attachments
 
 Example Usage
 
 ```hcl
-data "tencentcloud_clb" "clblab" {
+data "tencentcloud_clb_server_attachments" "clblab" {
   listener_id   = "lbl-hh141sn9#lb-k2zjp9lv"
   clb_id        = "lb-k2zjp9lv"
   location_id   = "loc-4xxr2cy7"
@@ -39,7 +39,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 			"location_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: " ID of the CLB listener rule. ",
+				Description: " ID of the CLB listener rule.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -55,23 +55,23 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the cloud load balancer. ",
+							Description: "Id of the cloud load balancer.",
 						},
 
 						"listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the cloud load balance listener. ",
+							Description: "Id of the cloud load balance listener.",
 						},
 						"protocol_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'. ",
+							Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.",
 						},
 						"location_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the cloud load balance listener rule. ",
+							Description: "Id of the cloud load balance listener rule.",
 						},
 						"targets": {
 							Type:        schema.TypeSet,
@@ -107,8 +107,9 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("data_source.tencentcloud_clb_server_attachments.read")()
+
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "data_source.tencentcloud_clb_instances.read")()
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]string)
