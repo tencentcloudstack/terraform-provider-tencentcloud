@@ -47,8 +47,9 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 				Description: "Used to store results.",
 			},
 			"instance_list": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list of instances. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
