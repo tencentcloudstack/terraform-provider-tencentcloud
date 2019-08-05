@@ -10,16 +10,16 @@ resource "tencentcloud_clb_listener_rule" "foo" {
   domain                     = "foo.net"
   url                        = "/bar"
   health_check_switch        = true
-  health_check_interval_time = "5"
-  health_check_health_num    = "3"
-  health_check_unhealth_num  = "3"
+  health_check_interval_time = 5
+  health_check_health_num    = 3
+  health_check_unhealth_num  = 3
   health_check_http_code     = "http_1xx"
   health_check_http_path     = "Default Path"
   health_check_http_domain   = "Default Domain"
   health_check_http_method   = "GET"
   certificate_server_id      = "my server certificate ID "
   certificate_ca_id          = "my client certificate ID"
-  session_expire_time        = "0"
+  session_expire_time        = 0
   schedule                   = "WRR"
 }
 ```
