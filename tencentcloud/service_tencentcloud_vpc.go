@@ -2,8 +2,6 @@ package tencentcloud
 
 import (
 	"context"
-	"encoding/base64"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -971,10 +969,7 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 		info.SourceSgId = common.StringPtr("")
 	}
 
-	ruleId, err = buildSecurityGroupRuleId(info)
-	if err != nil {
-		return "", fmt.Errorf("build rule id error, reason: %v", err)
-	}
+	ruleId = buildSecurityGroupRuleId(info)
 
 	return ruleId, nil
 }
@@ -1198,33 +1193,74 @@ type securityGroupRuleBasicInfo struct {
 }
 
 // Build an ID for a Security Group Rule
-func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string, err error) {
-	b, err := json.Marshal(info)
-	if err != nil {
-		return "", err
+func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string) {
+	m := make(map[string]string)
+
+	m["sgId"] = info.SgId
+	m["direction"] = info.PolicyType
+	m["action"] = info.Action
+
+	if info.CidrIp != nil {
+		m["cidrIp"] = *info.CidrIp
 	}
 
-	log.Printf("[DEBUG] build rule is %s", string(b))
+	if info.SourceSgId != nil {
+		m["sourceSgid"] = *info.SourceSgId
+	}
+	m["ipProtocol"] = "ALL"
+	if info.Protocol != nil {
+		m["ipProtocol"] = *info.Protocol
+	}
+	m["portRange"] = "ALL"
+	if info.PortRange != nil {
+		m["portRange"] = *info.PortRange
+	}
+	if info.Description != nil {
+		m["description"] = *info.Description
+	}
 
-	return base64.StdEncoding.EncodeToString(b), nil
+	paramsArray := make([]string, 0, len(m))
+	for k, v := range m {
+		paramsArray = append(paramsArray, k+"="+v)
+	}
+	ruleId = strings.Join(paramsArray, "&")
+	log.Printf("[DEBUG] buildSecurityGroupRuleId: %s", ruleId)
+	return
 }
 
 // Parse Security Group Rule ID
-func parseSecurityGroupRuleId(ruleId string) (ruleInfo securityGroupRuleBasicInfo, err error) {
-	b, err := base64.StdEncoding.DecodeString(ruleId)
-	if err != nil {
-		return securityGroupRuleBasicInfo{}, err
+func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, err error) {
+	log.Printf("[DEBUG] parseSecurityGroupRuleId before: %v", ruleId)
+	m := make(map[string]string)
+	ruleQueryStrings := strings.Split(ruleId, "&")
+	if len(ruleQueryStrings) == 0 {
+		err = errors.New("ruleId is invalid")
+		return
+	}
+	for _, str := range ruleQueryStrings {
+		arr := strings.Split(str, "=")
+		if len(arr) != 2 {
+			err = errors.New("ruleId is invalid")
+			return
+		}
+		m[arr[0]] = arr[1]
 	}
 
-	log.Printf("[DEBUG] parse rule is %s", string(b))
-
-	var info securityGroupRuleBasicInfo
-
-	if err := json.Unmarshal(b, &info); err != nil {
-		return securityGroupRuleBasicInfo{}, err
+	info.SgId = m["sgId"]
+	info.PolicyType = m["direction"]
+	info.Action = m["action"]
+	if m["sourceSgid"] == "" {
+		info.CidrIp = common.StringPtr(m["cidrIp"])
+	} else {
+		info.CidrIp = common.StringPtr("")
 	}
+	info.SourceSgId = common.StringPtr(m["sourceSgid"])
+	info.Protocol = common.StringPtr(m["ipProtocol"])
+	info.PortRange = common.StringPtr(m["portRange"])
+	info.Description = common.StringPtr(m["description"])
 
-	return info, nil
+	log.Printf("[DEBUG] parseSecurityGroupRuleId after: %v", info)
+	return
 }
 
 func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info securityGroupRuleBasicInfo) bool {
