@@ -2,6 +2,8 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -969,7 +971,10 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 		info.SourceSgId = common.StringPtr("")
 	}
 
-	ruleId = buildSecurityGroupRuleId(info)
+	ruleId, err = buildSecurityGroupRuleId(info)
+	if err != nil {
+		return "", fmt.Errorf("build rule id error, reason: %v", err)
+	}
 
 	return ruleId, nil
 }
@@ -1192,45 +1197,32 @@ type securityGroupRuleBasicInfo struct {
 	Description *string `json:"description,omitempty"`
 }
 
-// Build an ID for a Security Group Rule
-func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string) {
-	m := make(map[string]string)
-
-	m["sgId"] = info.SgId
-	m["direction"] = info.PolicyType
-	m["action"] = info.Action
-
-	if info.CidrIp != nil {
-		m["cidrIp"] = *info.CidrIp
+// Build an ID for a Security Group Rule (new version)
+func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string, err error) {
+	b, err := json.Marshal(info)
+	if err != nil {
+		return "", err
 	}
 
-	if info.SourceSgId != nil {
-		m["sourceSgid"] = *info.SourceSgId
-	}
-	m["ipProtocol"] = "ALL"
-	if info.Protocol != nil {
-		m["ipProtocol"] = *info.Protocol
-	}
-	m["portRange"] = "ALL"
-	if info.PortRange != nil {
-		m["portRange"] = *info.PortRange
-	}
-	if info.Description != nil {
-		m["description"] = *info.Description
-	}
+	log.Printf("[DEBUG] build rule is %s", string(b))
 
-	paramsArray := make([]string, 0, len(m))
-	for k, v := range m {
-		paramsArray = append(paramsArray, k+"="+v)
-	}
-	ruleId = strings.Join(paramsArray, "&")
-	log.Printf("[DEBUG] buildSecurityGroupRuleId: %s", ruleId)
-	return
+	return base64.StdEncoding.EncodeToString(b), nil
 }
 
 // Parse Security Group Rule ID
 func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, err error) {
 	log.Printf("[DEBUG] parseSecurityGroupRuleId before: %v", ruleId)
+
+	// new version ID
+	b, err := base64.StdEncoding.DecodeString(ruleId)
+	if err == nil {
+		if err := json.Unmarshal(b, &info); err != nil {
+			return securityGroupRuleBasicInfo{}, err
+		}
+		return info, nil
+	}
+
+	// old version ID
 	m := make(map[string]string)
 	ruleQueryStrings := strings.Split(ruleId, "&")
 	if len(ruleQueryStrings) == 0 {
