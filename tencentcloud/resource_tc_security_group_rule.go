@@ -3,12 +3,15 @@ Provides a resource to create security group rule.
 
 Example Usage
 
+Source is CIDR ip
+
 ```hcl
 resource "tencentcloud_security_group" "sglab_1" {
   name        = "mysg_1"
   description = "favourite sg_1"
   project_id  = 0
 }
+
 resource "tencentcloud_security_group_rule" "sglab_1" {
   security_group_id = "${tencentcloud_security_group.sglab_1.id}"
   type              = "ingress"
@@ -20,17 +23,21 @@ resource "tencentcloud_security_group_rule" "sglab_1" {
 }
 ```
 
+Source is a security group id
+
 ```hcl
 resource "tencentcloud_security_group" "sglab_2" {
   name        = "mysg_2"
   description = "favourite sg_2"
   project_id  = 0
 }
+
 resource "tencentcloud_security_group" "sglab_3" {
   name        = "mysg_3"
   description = "favourite sg_3"
   project_id  = 0
 }
+
 resource "tencentcloud_security_group_rule" "sglab_2" {
   security_group_id = "${tencentcloud_security_group.sglab_2.id}"
   type              = "ingress"

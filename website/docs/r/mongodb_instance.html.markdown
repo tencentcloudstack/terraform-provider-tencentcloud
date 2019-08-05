@@ -14,16 +14,16 @@ Provide a resource to create a Mongodb instance.
 
 ```hcl
 resource "tencentcloud_mongodb_instance" "mongodb" {
-  instance_name     = "mongodb"
-  memory            = 4
-  volume            = 100
-  engine_version    = "MONGO_3_WT"
-  machine_type      = "GIO"
-  available_zone    = "ap-guangzhou-2"
-  vpc_id            = "vpc-mz3efvbw"
-  subnet_id         = "subnet-lk0svi3p"
-  project_id        = 0
-  password          = "mypassword"
+  instance_name  = "mongodb"
+  memory         = 4
+  volume         = 100
+  engine_version = "MONGO_3_WT"
+  machine_type   = "GIO"
+  available_zone = "ap-guangzhou-2"
+  vpc_id         = "vpc-mz3efvbw"
+  subnet_id      = "subnet-lk0svi3p"
+  project_id     = 0
+  password       = "mypassword"
 }
 ```
 
