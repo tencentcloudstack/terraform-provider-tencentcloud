@@ -11,6 +11,7 @@ resource "tencentcloud_cbs_storage" "storage" {
   availability_zone = "ap-guangzhou-3"
   project_id        = 0
   encrypt           = false
+
   tags = {
     test = "tf"
   }
