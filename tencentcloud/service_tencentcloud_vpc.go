@@ -1251,6 +1251,8 @@ func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, e
 	info.Action = m["action"]
 	if m["sourceSgid"] == "" {
 		info.CidrIp = common.StringPtr(m["cidrIp"])
+	} else {
+		info.CidrIp = common.StringPtr("")
 	}
 	info.SourceSgId = common.StringPtr(m["sourceSgid"])
 	info.Protocol = common.StringPtr(m["ipProtocol"])
