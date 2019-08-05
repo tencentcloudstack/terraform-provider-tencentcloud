@@ -16,7 +16,7 @@ func waitInstanceReachTargetStatus(client *client.Client, instanceIds []string, 
 }
 
 func waitInstanceReachOneOfTargetStatusList(client *client.Client, instanceIds []string, targetStatuses []string) (instanceStatusMap map[string]string, err error) {
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 		instanceStatusMap, _, err = queryInstancesStatus(client, instanceIds)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -41,7 +41,7 @@ func waitInstanceOperationReachTargetStatus(client *client.Client, instanceIds [
 }
 
 func waitInstanceOperationReachOneOfTargetStatusList(client *client.Client, instanceIds []string, targetStatuses []string) (operationStatusMap map[string]string, err error) {
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 		_, operationStatusMap, err = queryInstancesStatus(client, instanceIds)
 		if err != nil {
 			return resource.NonRetryableError(err)
