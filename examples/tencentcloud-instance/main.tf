@@ -20,7 +20,7 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 data "tencentcloud_availability_zones" "my_favorate_zones" {}
 
 resource "tencentcloud_key_pair" "random_key" {
-  "key_name" = "tf_example_key6"
+  key_name = "tf_example_key6"
 }
 
 resource "tencentcloud_instance" "instance-without-specified-image-id-example" {
