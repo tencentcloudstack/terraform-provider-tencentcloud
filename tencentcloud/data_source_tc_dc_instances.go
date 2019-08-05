@@ -11,7 +11,6 @@ data "tencentcloud_dc_instances" "name_select"{
 data "tencentcloud_dc_instances"  "id" {
     dcx_id = "dc-kax48sg7"
 }
-
 ```
 */
 package tencentcloud

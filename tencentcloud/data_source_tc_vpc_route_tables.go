@@ -21,6 +21,7 @@ resource "tencentcloud_route_table" "route_table" {
 data "tencentcloud_vpc_route_tables" "id_instances" {
 	route_table_id="${tencentcloud_route_table.route_table.id}"
 }
+
 data "tencentcloud_vpc_route_tables" "name_instances" {
 	name="${tencentcloud_route_table.route_table.name}"
 }
