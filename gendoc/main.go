@@ -8,11 +8,13 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"runtime"
 	"sort"
 	"strings"
 	"text/template"
 
+	"github.com/hashicorp/hcl2/hclwrite"
 	"github.com/hashicorp/terraform/helper/schema"
 	cloud "github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud"
 )
@@ -22,6 +24,10 @@ const (
 	cloudTitle     = "TencentCloud"
 	cloudMarkShort = "tc"
 	docRoot        = "../website/docs"
+)
+
+var (
+	hclMatch = regexp.MustCompile("(?si)([^`]+)?```(hcl)?(.*?)```")
 )
 
 func main() {
@@ -190,7 +196,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 
 	pos := strings.Index(description, "\nExample Usage\n")
 	if pos != -1 {
-		data["example"] = strings.TrimSpace(description[pos+15:])
+		data["example"] = formatHCL(description[pos+15:])
 		description = strings.TrimSpace(description[:pos])
 	} else {
 		log.Printf("[SKIP!]example usage missing, skip: %s\n", fname)
@@ -348,4 +354,24 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 		}
 	}
 	return subStructs
+}
+
+// formatHCL format HLC code
+func formatHCL(s string) string {
+	rr := []string{}
+
+	s = strings.TrimSpace(s)
+	m := hclMatch.FindAllStringSubmatch(s, -1)
+	if len(m) > 0 {
+		for _, v := range m {
+			p := strings.TrimSpace(v[1])
+			if p != "" {
+				p = fmt.Sprintf("\n%s\n\n", p)
+			}
+			b := hclwrite.Format([]byte(strings.TrimSpace(v[3])))
+			rr = append(rr, fmt.Sprintf("%s```hcl\n%s\n```", p, string(b)))
+		}
+	}
+
+	return strings.TrimSpace(strings.Join(rr, "\n"))
 }

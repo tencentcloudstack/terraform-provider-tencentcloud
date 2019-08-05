@@ -14,8 +14,8 @@ Provides a resource to creating direct connect gateway instance.
 
 ```hcl
 resource "tencentcloud_vpc" "main" {
-    name="ci-vpc-instance-test"
-    cidr_block="10.0.0.0/16"
+  name       = "ci-vpc-instance-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_dc_gateway" "vpc_main" {
