@@ -1,5 +1,5 @@
 /*
-Provide a resource to create security group.
+Provides a resource to create security group.
 
 Example Usage
 
@@ -69,9 +69,9 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 }
 
 func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group.create")()
+	defer LogElapsed("resource.tencentcloud_security_group.create")()
 
+	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -94,9 +94,9 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 }
 
 func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group.read")()
+	defer LogElapsed("resource.tencentcloud_security_group.read")()
 
+	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -134,9 +134,9 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 }
 
 func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group.update")()
+	defer LogElapsed("resource.tencentcloud_security_group.update")()
 
+	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -169,9 +169,9 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 }
 
 func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group.delete")()
+	defer LogElapsed("resource.tencentcloud_security_group.delete")()
 
+	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	id := d.Id()
@@ -182,29 +182,50 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 	if err := resource.Retry(3*time.Minute, func() *resource.RetryError {
 		associateSet, err := vpcService.DescribeSecurityGroupsAssociate(ctx, []string{id})
 		if err != nil {
-			return resource.NonRetryableError(err)
+			return resource.RetryableError(err)
 		}
 
 		if len(associateSet) == 0 {
-			time.Sleep(3 * time.Second)
-
 			return nil
 		}
 
 		statistics := associateSet[0]
-		if *statistics.CVM+*statistics.CLB+*statistics.CDB+*statistics.ENI+*statistics.SG > 0 {
-			err := fmt.Errorf("security group %s still bind instances", id)
-			log.Printf("[DEBUG]%s %v", logId, err)
-
-			return resource.RetryableError(err)
+		if *statistics.CVM > 0 {
+			return resource.RetryableError(fmt.Errorf("security group %s still bind %d CVM instances", id, *statistics.CVM))
 		}
 
-		time.Sleep(3 * time.Second)
+		if *statistics.CLB > 0 {
+			return resource.RetryableError(fmt.Errorf("security group %s still bind %d CLB instances", id, *statistics.CLB))
+		}
+
+		if *statistics.CDB > 0 {
+			return resource.RetryableError(fmt.Errorf("security group %s still bind %d CDB instances", id, *statistics.CDB))
+		}
+
+		if *statistics.ENI > 0 {
+			return resource.RetryableError(fmt.Errorf("security group %s still bind %d ENI instances", id, *statistics.ENI))
+		}
+
+		if *statistics.SG > 0 {
+			return resource.RetryableError(fmt.Errorf("security group %s still bind %d SG instances", id, *statistics.SG))
+		}
 
 		return nil
 	}); err != nil {
 		return err
 	}
 
-	return vpcService.DeleteSecurityGroup(ctx, id)
+	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+		e := vpcService.DeleteSecurityGroup(ctx, id)
+		if e != nil {
+			return resource.RetryableError(fmt.Errorf("security group delete failed: %s", e.Error()))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s security group delete failed: %s\n ", logId, err.Error())
+		return err
+	}
+
+	return nil
 }

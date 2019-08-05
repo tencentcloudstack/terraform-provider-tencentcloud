@@ -1,12 +1,12 @@
 /*
-Provide a resource to create a CBS snapshot.
+Provides a resource to create a CBS snapshot.
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_cbs_snapshot" "snapshot" {
-        snapshot_name = "unnamed"
-        storage_id   = "disk-kdt0sq6m"
+  snapshot_name = "unnamed"
+  storage_id   = "disk-kdt0sq6m"
 }
 ```
 
@@ -83,6 +83,8 @@ func resourceTencentCloudCbsSnapshot() *schema.Resource {
 }
 
 func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_cbs_snapshot.create")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -120,6 +122,8 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_cbs_snapshot.read")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -142,6 +146,8 @@ func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_cbs_snapshot.update")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	snapshotId := d.Id()
@@ -160,6 +166,8 @@ func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCbsSnapshotDelete(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_cbs_snapshot.delete")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
