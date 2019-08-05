@@ -1210,29 +1210,26 @@ func buildSecurityGroupRuleId(info securityGroupRuleBasicInfo) (ruleId string, e
 }
 
 // Parse Security Group Rule ID
-func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, err error) {
+func parseSecurityGroupRuleId(ruleId string) (info securityGroupRuleBasicInfo, errRet error) {
 	log.Printf("[DEBUG] parseSecurityGroupRuleId before: %v", ruleId)
 
 	// new version ID
-	b, err := base64.StdEncoding.DecodeString(ruleId)
-	if err == nil {
-		if err := json.Unmarshal(b, &info); err != nil {
-			return securityGroupRuleBasicInfo{}, err
-		}
-		return info, nil
+	if b, err := base64.StdEncoding.DecodeString(ruleId); err == nil {
+		errRet = json.Unmarshal(b, &info)
+		return
 	}
 
 	// old version ID
 	m := make(map[string]string)
 	ruleQueryStrings := strings.Split(ruleId, "&")
 	if len(ruleQueryStrings) == 0 {
-		err = errors.New("ruleId is invalid")
+		errRet = errors.New("ruleId is invalid")
 		return
 	}
 	for _, str := range ruleQueryStrings {
 		arr := strings.Split(str, "=")
 		if len(arr) != 2 {
-			err = errors.New("ruleId is invalid")
+			errRet = errors.New("ruleId is invalid")
 			return
 		}
 		m[arr[0]] = arr[1]
