@@ -102,7 +102,7 @@ CVM Resources
   tencentcloud_eip_association
   tencentcloud_key_pair
 
-LB Resources
+CLB Resources
   tencentcloud_clb_instance
   tencentcloud_clb_listener
   tencentcloud_clb_listener_rule
