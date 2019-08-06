@@ -23,7 +23,6 @@ func waitForLBReady(client *lb.Client, lbid *string) error {
 		} else {
 			return resource.NonRetryableError(fmt.Errorf("LB %s status unknown...", *lbid))
 		}
-		return nil
 	})
 }
 
@@ -42,6 +41,5 @@ func waitForLBTaskFinish(client *lb.Client, taskid *int) error {
 		} else {
 			return resource.RetryableError(fmt.Errorf("LB task %d is still waiting...", *taskid))
 		}
-		return nil
 	})
 }

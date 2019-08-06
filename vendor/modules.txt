@@ -217,6 +217,7 @@ github.com/spf13/afero/mem
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408

@@ -10,6 +10,8 @@ description: |-
 
 Provides Load Balancer server attachment resource.
 
+~> **NOTE:** It has been deprecated and replaced by `tencentcloud_clb_attachment`.
+
 ~> **NOTE:** Currently only support existing `loadbalancer_id` `listener_id` `location_id` and Application layer 7 load balancer
 
 ## Example Usage
