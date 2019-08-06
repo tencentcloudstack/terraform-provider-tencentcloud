@@ -593,17 +593,14 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.RewriteSet) < 1 {
-		// errRet = fmt.Errorf("redirection rule is not found")
 		return
 	}
 	ruleOutput := response.Response.RewriteSet[0]
 	if ruleOutput.RewriteTarget != nil {
 		if targetListenerId != "" && *ruleOutput.RewriteTarget.TargetListenerId != targetListenerId {
-			// errRet = fmt.Errorf("redirection rule is not found")
 			return
 		}
 		if targetLocId != "" && *ruleOutput.RewriteTarget.TargetLocationId != targetLocId {
-			// errRet = fmt.Errorf("redirection rule is not found")
 			return
 		}
 		result := make(map[string]string)
@@ -613,10 +610,7 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 		result["target_listener_id"] = *ruleOutput.RewriteTarget.TargetListenerId
 		result["clb_id"] = clbId
 		rewriteInfos = append(rewriteInfos, &result)
-	} else {
-		// errRet = fmt.Errorf("redirection rule is not found")
 	}
-
 	return
 }
 
@@ -695,7 +689,6 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	}
 
 	if v, ok := d.GetOk("health_check_http_code"); ok {
-		//仅适用于HTTP/HTTPS转发规则、TCP监听器的HTTP健康检查方式
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health_check_http_code can only be set with protocol TCP.")

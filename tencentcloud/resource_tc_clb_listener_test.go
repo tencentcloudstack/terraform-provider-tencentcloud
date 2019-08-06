@@ -226,7 +226,8 @@ resource "tencentcloud_clb_listener" "listener_https" {
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
   certificate_id       = "VfqcL1ME"
-
+  sni_switch           = true
+}
 }
 `
 const testAccClbListener_https_update = `
@@ -235,11 +236,12 @@ resource "tencentcloud_clb_instance" "clb_basic" {
   clb_name     = "tf-clb-basic"
 }
 resource "tencentcloud_clb_listener" "listener_https" {
-  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_name       = "listener_https_update"
-  port                = 33
-  protocol            = "HTTPS"
+  clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
+  listener_name        = "listener_https_update"
+  port                 = 33
+  protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
   certificate_id       = "VjAYq9xc"
+  sni_switch           = true
 }
 `

@@ -144,11 +144,10 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Description:  "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of HTTP and 'HTTPS' protocol additionally supports the 'IP Hash' method.",
 			},
 			"sni_switch": {
-				Type:         schema.TypeInt,
-				ForceNew:     true,
-				Optional:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
-				Description:  "Indicates whether SNI is enabled, and only supported with protocol 'HTTPS'.",
+				Type:        schema.TypeBool,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Indicates whether SNI is enabled, and only supported with protocol 'HTTPS'.",
 			},
 		},
 	}
@@ -225,8 +224,12 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		if protocol != CLB_LISTENER_PROTOCOL_HTTPS {
 			return fmt.Errorf("sni_switch can only be set with protocol HTTPS ")
 		} else {
-			vv := int64(v.(int))
-			request.SniSwitch = &vv
+			vv := v.(bool)
+			vvv := int64(0)
+			if vv {
+				vvv = 1
+			}
+			request.SniSwitch = &vvv
 		}
 	}
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateListener(request)

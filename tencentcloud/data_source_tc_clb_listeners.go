@@ -135,7 +135,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 							Description: " Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
 						},
 						"sni_switch": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: " Indicates whether SNI is enabled. NOTES: Only supported by 'HTTPS' protocol.",
 						},
@@ -188,7 +188,11 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 			mapping["session_expire_time"] = *listener.SessionExpireTime
 		}
 		if listener.SniSwitch != nil {
-			mapping["sni_switch"] = *listener.SniSwitch
+			sniSwitch := false
+			if *listener.SniSwitch == int64(1) {
+				sniSwitch = true
+			}
+			mapping["sni_switch"] = sniSwitch
 		}
 		if listener.Scheduler != nil {
 			mapping["scheduler"] = *listener.Scheduler
