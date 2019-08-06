@@ -177,8 +177,9 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 const testAccClbListener_tcp = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-tcp"
 }
+
 resource "tencentcloud_clb_listener" "listener_tcp" {
   clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_name              = "listener_tcp"
@@ -197,28 +198,30 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 const testAccClbListener_tcp_update = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-tcp"
 }
+
 resource "tencentcloud_clb_listener" "listener_tcp"{
-        clb_id = "${tencentcloud_clb_instance.clb_basic.id}"
-        listener_name              = "listener_tcp_update"
-        port                       = 44
-        protocol                   = "TCP"
-        health_check_switch        = true
-        health_check_time_out      = 20
-        health_check_interval_time = 200
-        health_check_health_num    = 3
-        health_check_unhealth_num  = 3
-        session_expire_time        = 60
-        scheduler                  = "WRR"
+  clb_id = "${tencentcloud_clb_instance.clb_basic.id}"
+  listener_name              = "listener_tcp_update"
+  port                       = 44
+  protocol                   = "TCP"
+  health_check_switch        = true
+  health_check_time_out      = 20
+  health_check_interval_time = 200
+  health_check_health_num    = 3
+  health_check_unhealth_num  = 3
+  session_expire_time        = 60
+  scheduler                  = "WRR"
 }
 `
 
 const testAccClbListener_https = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-https"
 }
+
 resource "tencentcloud_clb_listener" "listener_https" {
   clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_name        = "listener_https"
@@ -226,14 +229,15 @@ resource "tencentcloud_clb_listener" "listener_https" {
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
   certificate_id       = "VfqcL1ME"
-
 }
 `
+
 const testAccClbListener_https_update = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-https"
 }
+
 resource "tencentcloud_clb_listener" "listener_https" {
   clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_name       = "listener_https_update"

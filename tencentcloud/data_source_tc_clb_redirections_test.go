@@ -41,7 +41,6 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   listener_name = "listener_basic"
 }
 
-
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
   clb_id              = "${tencentcloud_clb_instance.clb.id}"
   listener_id         = "${tencentcloud_clb_listener.listener_basic.id}"
@@ -51,14 +50,12 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
   scheduler           = "WRR"
 }
 
-
 resource "tencentcloud_clb_listener" "listener_target" {
   clb_id        = "${tencentcloud_clb_instance.clb.id}"
   port          = 44
   protocol      = "HTTP"
   listener_name = "listener_basic1"
 }
-
 
 resource "tencentcloud_clb_listener_rule" "rule_target" {
   clb_id              = "${tencentcloud_clb_instance.clb.id}"
@@ -68,6 +65,7 @@ resource "tencentcloud_clb_listener_rule" "rule_target" {
   session_expire_time = 30
   scheduler           = "WRR"
 }
+
 resource "tencentcloud_clb_redirection" "redirection_basic" {
   clb_id                = "${tencentcloud_clb_instance.clb.id}"
   source_listener_id    = "${tencentcloud_clb_listener.listener_basic.id}"
@@ -81,5 +79,4 @@ data "tencentcloud_clb_redirections" "redirections" {
   source_listener_id    = "${tencentcloud_clb_redirection.redirection_basic.source_listener_id}"
   rewrite_source_loc_id = "${tencentcloud_clb_redirection.redirection_basic.rewrite_source_loc_id}"
 }
-
 `

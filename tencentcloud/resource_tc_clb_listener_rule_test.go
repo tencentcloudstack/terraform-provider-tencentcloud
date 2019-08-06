@@ -172,11 +172,13 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
   scheduler           = "WRR"
 }
 `
+
 const testAccClbListenerRule_full = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
   clb_name     = "tf-clb-basic"
 }
+
 resource "tencentcloud_clb_listener" "listener_basic" {
   clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_name        = "listener_https"
@@ -184,8 +186,8 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
   certificate_id       = "VfqcL1ME"
-
 }
+
 resource "tencentcloud_clb_listener_rule" "rule_full" {
   clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id                = "${tencentcloud_clb_listener.listener_basic.id}"
@@ -205,11 +207,13 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
   certificate_id             = "VjAYq9xc"
 }
 `
+
 const testAccClbListenerRule_update = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
   clb_name     = "tf-clb-basic"
 }
+
 resource "tencentcloud_clb_listener" "listener_basic" {
   clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_name        = "listener_https"
@@ -217,8 +221,8 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
   certificate_id       = "VfqcL1ME"
-
 }
+
 resource "tencentcloud_clb_listener_rule" "rule_full" {
   clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id                = "${tencentcloud_clb_listener.listener_basic.id}"

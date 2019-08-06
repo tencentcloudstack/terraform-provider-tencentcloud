@@ -36,7 +36,6 @@ resource "tencentcloud_clb_instance" "clb" {
   clb_name     = "tf-clb-basic"
 }
 
-
 resource "tencentcloud_clb_listener" "listener" {
   clb_id              = "${tencentcloud_clb_instance.clb.id}"
   port                = 1

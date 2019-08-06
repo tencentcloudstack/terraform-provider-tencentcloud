@@ -28,9 +28,38 @@ func TestAccTencentCloudClbServerAttachmentsDataSource(t *testing.T) {
 }
 
 const testAccClbServerAttachmentsDataSource = `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name       = "example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "foo" {
+  name              = "example"
+  availability_zone = "${var.availability_zone}"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.0.0/24"
+  is_multicast      = false
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name              = "example"
+  availability_zone          = "${var.availability_zone}"
+  image_id                   = "img-9qabwvbn"
+  instance_type              = "S2.SMALL1"
+  system_disk_type           = "CLOUD_PREMIUM"
+  internet_max_bandwidth_out = 0
+  vpc_id                     = "${tencentcloud_vpc.foo.id}"
+  subnet_id                  = "${tencentcloud_subnet.foo.id}"
+}
+
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
   clb_name     = "tf-clb-basic"
+  vpc_id       = "${tencentcloud_vpc.foo.id}"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
@@ -52,11 +81,12 @@ resource "tencentcloud_clb_attachment" "attachment_tcp" {
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
   location_id = "#${tencentcloud_clb_listener.listener_basic.id}"
   targets {
-    instance_id = "ins-n5nkgkv6"
+    instance_id = "${tencentcloud_instance.foo.id}"
     port        = 23
     weight      = 10
   }
 }
+
 data "tencentcloud_clb_attachments" "attachments" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"

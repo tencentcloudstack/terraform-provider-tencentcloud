@@ -82,7 +82,7 @@ func testAccCheckClbRedirectionExists(n string) resource.TestCheckFunc {
 const testAccClbRedirection_basic = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-redirection"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
@@ -91,7 +91,6 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   protocol      = "HTTP"
   listener_name = "listener_basic"
 }
-
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
   clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
@@ -102,14 +101,12 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
   scheduler           = "WRR"
 }
 
-
 resource "tencentcloud_clb_listener" "listener_target" {
   clb_id        = "${tencentcloud_clb_instance.clb_basic.id}"
   port          = 44
   protocol      = "HTTP"
   listener_name = "listener_basic1"
 }
-
 
 resource "tencentcloud_clb_listener_rule" "rule_target" {
   clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
@@ -119,6 +116,7 @@ resource "tencentcloud_clb_listener_rule" "rule_target" {
   session_expire_time = 30
   scheduler           = "WRR"
 }
+
 resource "tencentcloud_clb_redirection" "redirection_basic" {
   clb_id                = "${tencentcloud_clb_instance.clb_basic.id}"
   source_listener_id    = "${tencentcloud_clb_listener.listener_basic.id}"

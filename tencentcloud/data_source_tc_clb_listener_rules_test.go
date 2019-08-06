@@ -34,14 +34,13 @@ resource "tencentcloud_clb_instance" "clb" {
   clb_name     = "tf-clb-basic"
 }
 
-
 resource "tencentcloud_clb_listener" "listener" {
   clb_id        = "${tencentcloud_clb_instance.clb.id}"
   port          = 1
   protocol      = "HTTP"
   listener_name = "mylistener1234"
-
 }
+
 resource "tencentcloud_clb_listener_rule" "rule" {
   clb_id              = "${tencentcloud_clb_instance.clb.id}"
   listener_id         = "${tencentcloud_clb_listener.listener.id}"
@@ -49,8 +48,8 @@ resource "tencentcloud_clb_listener_rule" "rule" {
   url                 = "/"
   session_expire_time = 30
   scheduler           = "WRR"
-
 }
+
 data "tencentcloud_clb_listener_rules" "rules" {
   listener_id = "${tencentcloud_clb_listener.listener.id}"
   domain      = "${tencentcloud_clb_listener_rule.rule.domain}"
