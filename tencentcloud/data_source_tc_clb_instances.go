@@ -121,7 +121,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Region information of backend service are attached the CLB.",
 						},
-						"target_region_info_vpc": {
+						"target_region_info_vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "VpcId information of backend service are attached the CLB.",
@@ -176,7 +176,7 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			"subnet_id":                 *clb.SubnetId,
 			"clb_vips":                  flattenStringList(clb.LoadBalancerVips),
 			"target_region_info_region": *(clb.TargetRegionInfo.Region),
-			"target_region_info_vpc":    *(clb.TargetRegionInfo.VpcId),
+			"target_region_info_vpc_id": *(clb.TargetRegionInfo.VpcId),
 			"security_groups":           flattenStringList(clb.SecureGroups),
 		}
 

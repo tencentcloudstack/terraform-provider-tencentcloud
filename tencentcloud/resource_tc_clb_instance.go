@@ -96,7 +96,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Region information of backend services are attached the CLB instance.",
 			},
-			"target_region_info_vpc": {
+			"target_region_info_vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
@@ -192,7 +192,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
 		}
-		if vv, ok := d.GetOk("target_region_info_vpc"); ok {
+		if vv, ok := d.GetOk("target_region_info_vpc_id"); ok {
 			vpcId = vv.(string)
 		}
 
@@ -243,7 +243,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	d.Set("subnet_id", instance.SubnetId)
 	d.Set("vpc_id", instance.VpcId)
 	d.Set("target_region_info_region", instance.TargetRegionInfo.Region)
-	d.Set("target_region_info_vpc", instance.TargetRegionInfo.VpcId)
+	d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
 	d.Set("project_id", instance.ProjectId)
 	d.Set("security_groups", flattenStringList(instance.SecureGroups))
 
@@ -276,13 +276,13 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc") {
+	if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc_id") {
 		if d.Get("network_type") == CLB_NETWORK_TYPE_INTERNAL {
 			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
 		}
 		changed = true
 		region := d.Get("target_region_info_region").(string)
-		vpcId := d.Get("target_region_info_vpc").(string)
+		vpcId := d.Get("target_region_info_vpc_id").(string)
 		targetRegionInfo = clb.TargetRegionInfo{
 			Region: &region,
 			VpcId:  &vpcId,
@@ -295,7 +295,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if d.HasChange("clb_name") {
 			request.LoadBalancerName = stringToPointer(clbName)
 		}
-		if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc") {
+		if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc_id") {
 			request.TargetRegionInfo = &targetRegionInfo
 		}
 		response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(request)
@@ -321,8 +321,8 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if d.HasChange("target_region_info_region") {
 			d.SetPartial("target_region_info_region")
 		}
-		if d.HasChange("target_region_info_vpc") {
-			d.SetPartial("target_region_info_vpc")
+		if d.HasChange("target_region_info_vpc_id") {
+			d.SetPartial("target_region_info_vpc_id")
 		}
 	}
 

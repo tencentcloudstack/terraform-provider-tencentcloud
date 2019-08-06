@@ -48,7 +48,7 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - The status of CLB.
   * `subnet_id` - ID of the subnet
   * `target_region_info_region` - Region information of backend service are attached the CLB.
-  * `target_region_info_vpc` - VpcId information of backend service are attached the CLB.
+  * `target_region_info_vpc_id` - VpcId information of backend service are attached the CLB.
   * `vpc_id` - ID of the VPC
 
 

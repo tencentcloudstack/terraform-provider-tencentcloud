@@ -32,7 +32,7 @@ resource "tencentcloud_clb_instance" "example" {
   project_id                = 0
   vpc_id                    = "${tencentcloud_vpc.foo.id}"
   target_region_info_region = "ap-guangzhou"
-  target_region_info_vpc    = "${tencentcloud_vpc.foo.id}"
+  target_region_info_vpc_id = "${tencentcloud_vpc.foo.id}"
   security_groups           = ["${tencentcloud_security_group.foo.id}"]
 }
 

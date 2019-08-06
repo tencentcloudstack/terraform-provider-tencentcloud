@@ -36,7 +36,7 @@ The following arguments are supported:
 * `security_groups` - (Optional) Security groups of the CLB instance.
 * `subnet_id` - (Optional, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC.
 * `target_region_info_region` - (Optional) Region information of backend services are attached the CLB instance.
-* `target_region_info_vpc` - (Optional) Vpc information of backend services are attached the CLB instance.
+* `target_region_info_vpc_id` - (Optional) Vpc information of backend services are attached the CLB instance.
 * `vpc_id` - (Optional, ForceNew) VPC ID of the CLB.
 
 
