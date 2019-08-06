@@ -45,11 +45,28 @@ resource "tencentcloud_subnet" "foo" {
   is_multicast      = false
 }
 
+data "tencentcloud_image" "my_favorate_image" {
+  os_name = "centos"
+  filter {
+    name   = "image-type"
+    values = ["PUBLIC_IMAGE"]
+  }
+}
+
+data "tencentcloud_instance_types" "my_favorate_instance_types" {
+  filter {
+    name   = "instance-family"
+    values = ["S2"]
+  }
+  cpu_core_count = 1
+  memory_size    = 2
+}
+
 resource "tencentcloud_instance" "foo" {
   instance_name              = "example"
   availability_zone          = "${var.availability_zone}"
-  image_id                   = "img-9qabwvbn"
-  instance_type              = "S2.SMALL1"
+  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   system_disk_type           = "CLOUD_PREMIUM"
   internet_max_bandwidth_out = 0
   vpc_id                     = "${tencentcloud_vpc.foo.id}"

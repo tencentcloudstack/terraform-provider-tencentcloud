@@ -9,7 +9,7 @@ resource "tencentcloud_clb_attachment" "attachment" {
   clb_id        = "lb-k2zjp9lv"
   protocol_type = "tcp"
   location_id   = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
-  targets = {
+  targets {
     instance_id = "ins-1flbqyp8"
     port        = 50
     weight      = 10
@@ -276,8 +276,6 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 		o, n := d.GetChange("targets")
 		os := o.(*schema.Set)
 		ns := n.(*schema.Set)
-		log.Println("os", os.List())
-		log.Println("ns", ns.List())
 		add := ns.Difference(os).List()
 		remove := os.Difference(ns).List()
 		if len(remove) > 0 {
