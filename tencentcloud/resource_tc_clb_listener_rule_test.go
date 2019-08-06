@@ -110,7 +110,7 @@ func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
 		listenerId := items[1]
 		clbId := items[2]
 		//this function is not supported by api, need to be travelled
-		filter := map[string]string{"location_id": locationId, "listener_id": listenerId, "clb_id": clbId}
+		filter := map[string]string{"rule_id": locationId, "listener_id": listenerId, "clb_id": clbId}
 		_, err := clbService.DescribeRulesByFilter(ctx, filter)
 		if err == nil {
 			return fmt.Errorf("clb listener rule still exists: %s", rs.Primary.ID)
@@ -141,7 +141,7 @@ func testAccCheckClbListenerRuleExists(n string) resource.TestCheckFunc {
 		locationId := items[0]
 		listenerId := items[1]
 		clbId := items[2]
-		filter := map[string]string{"location_id": locationId, "listener_id": listenerId, "clb_id": clbId}
+		filter := map[string]string{"rule_id": locationId, "listener_id": listenerId, "clb_id": clbId}
 		_, err := clbService.DescribeRulesByFilter(ctx, filter)
 		if err != nil {
 			return err

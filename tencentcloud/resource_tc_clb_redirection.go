@@ -8,8 +8,8 @@ resource "tencentcloud_clb_redirection" "foo" {
   clb_id                = "lb-p7olt9e5"
   source_listener_id    = "lbl-jc1dx6ju#lb-p7olt9e5"
   target_listener_id    = "lbl-asj1hzuo#lb-p7olt9e5"
-  rewrite_source_loc_id = "loc-ft8fmngv#lbl-jc1dx6ju#lb-p7olt9e5"
-  rewrite_target_loc_id = "loc-4xxr2cy7#lbl-asj1hzuo#lb-p7olt9e5"
+  rewrite_source_rule_id = "loc-ft8fmngv#lbl-jc1dx6ju#lb-p7olt9e5"
+  rewrite_target_rule_id = "loc-4xxr2cy7#lbl-asj1hzuo#lb-p7olt9e5"
 }
 ```
 
@@ -60,13 +60,13 @@ func resourceTencentCloudClbRedirection() *schema.Resource {
 				Required:    true,
 				Description: "Id of source listener.",
 			},
-			"rewrite_source_loc_id": {
+			"rewrite_source_rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
 				Description: "Rule ID of source listener.",
 			},
-			"rewrite_target_loc_id": {
+			"rewrite_target_rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
@@ -78,15 +78,16 @@ func resourceTencentCloudClbRedirection() *schema.Resource {
 
 func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta interface{}) error {
 	defer LogElapsed("resource.tencentcloud_clb_redirection.create")()
-
+	clbActionMu.Lock()
+	defer clbActionMu.Unlock()
 	logId := GetLogId(nil)
 
 	//暂时不支持auto
 	clbId := d.Get("clb_id").(string)
 	sourceListenerId := strings.Split(d.Get("source_listener_id").(string), "#")[0]
 	targertListenerId := strings.Split(d.Get("target_listener_id").(string), "#")[0]
-	sourceLocId := strings.Split(d.Get("rewrite_source_loc_id").(string), "#")[0]
-	targetLocId := strings.Split(d.Get("rewrite_target_loc_id").(string), "#")[0]
+	sourceLocId := strings.Split(d.Get("rewrite_source_rule_id").(string), "#")[0]
+	targetLocId := strings.Split(d.Get("rewrite_target_rule_id").(string), "#")[0]
 
 	request := clb.NewManualRewriteRequest()
 
@@ -136,15 +137,16 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	d.Set("clb_id", (*instance)["clb_id"])
 	d.Set("source_listener_id", (*instance)["source_listener_id"]+"#"+(*instance)["clb_id"])
 	d.Set("target_listener_id", (*instance)["target_listener_id"]+"#"+(*instance)["clb_id"])
-	d.Set("rewrite_source_loc_id", (*instance)["rewrite_source_loc_id"]+"#"+(*instance)["source_listener_id"]+"#"+(*instance)["clb_id"])
-	d.Set("rewrite_target_loc_id", (*instance)["rewrite_target_loc_id"]+"#"+(*instance)["target_listener_id"]+"#"+(*instance)["clb_id"])
+	d.Set("rewrite_source_rule_id", (*instance)["rewrite_source_rule_id"]+"#"+(*instance)["source_listener_id"]+"#"+(*instance)["clb_id"])
+	d.Set("rewrite_target_rule_id", (*instance)["rewrite_target_rule_id"]+"#"+(*instance)["target_listener_id"]+"#"+(*instance)["clb_id"])
 
 	return nil
 }
 
 func resourceTencentCloudClbRedirectionDelete(d *schema.ResourceData, meta interface{}) error {
 	defer LogElapsed("resource.tencentcloud_clb_redirection.delete")()
-
+	clbActionMu.Lock()
+	defer clbActionMu.Unlock()
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

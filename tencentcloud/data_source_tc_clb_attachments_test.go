@@ -19,7 +19,7 @@ func TestAccTencentCloudClbServerAttachmentsDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_attachments.attachments", "attachment_list.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_attachments.attachments", "attachment_list.0.clb_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_attachments.attachments", "attachment_list.0.listener_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_attachments.attachments", "attachment_list.0.location_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_attachments.attachments", "attachment_list.0.rule_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_attachments.attachments", "attachment_list.0.targets.#", "1"),
 				),
 			},
@@ -96,7 +96,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 resource "tencentcloud_clb_attachment" "attachment_tcp" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
-  location_id = "#${tencentcloud_clb_listener.listener_basic.id}"
+  rule_id = "#${tencentcloud_clb_listener.listener_basic.id}"
   targets {
     instance_id = "${tencentcloud_instance.foo.id}"
     port        = 23
@@ -107,6 +107,6 @@ resource "tencentcloud_clb_attachment" "attachment_tcp" {
 data "tencentcloud_clb_attachments" "attachments" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
-  location_id = "${tencentcloud_clb_attachment.attachment_tcp.id}"
+  rule_id = "${tencentcloud_clb_attachment.attachment_tcp.id}"
 }
 `

@@ -7,7 +7,7 @@ Example Usage
 data "tencentcloud_clb_listener_rules" "foo" {
   clb_id      = "lb-k2zjp9lv"
   listener_id = "lbl-mwr6vbtv"
-  location_id = "loc-inem40hz"
+  rule_id = "loc-inem40hz"
   domain      = "abc.com"
   url         = "/"
   scheduler   = "WRR"
@@ -40,7 +40,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 				Required:    true,
 				Description: "ID of the CLB listener to be queried.",
 			},
-			"location_id": {
+			"rule_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "ID of the forwarding rule to be queried.",
@@ -92,7 +92,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 							Optional:    true,
 							Description: "Url of the rule.",
 						},
-						"location_id": {
+						"rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "ID of the rule.",
@@ -192,8 +192,8 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	if v, ok := d.GetOk("scheduler"); ok {
 		params["scheduler"] = v.(string)
 	}
-	if v, ok := d.GetOk("location_id"); ok {
-		params["location_id"] = v.(string)
+	if v, ok := d.GetOk("rule_id"); ok {
+		params["rule_id"] = v.(string)
 	}
 	if v, ok := d.GetOk("domain"); ok {
 		params["domain"] = v.(string)
@@ -217,7 +217,7 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 		mapping := map[string]interface{}{
 			"clb_id":              clbId,
 			"listener_id":         combinedId,
-			"location_id":         *rule.LocationId,
+			"rule_id":             *rule.LocationId,
 			"domain":              *rule.Domain,
 			"url":                 *rule.Url,
 			"session_expire_time": *rule.SessionExpireTime,

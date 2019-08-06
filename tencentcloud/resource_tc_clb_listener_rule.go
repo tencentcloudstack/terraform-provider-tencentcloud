@@ -282,7 +282,7 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	//this function is not supported by api, need to be travelled
-	filter := map[string]string{"location_id": locationId, "listener_id": listenerId, "clb_id": clbId}
+	filter := map[string]string{"rule_id": locationId, "listener_id": listenerId, "clb_id": clbId}
 	instances, err := clbService.DescribeRulesByFilter(ctx, filter)
 	if err != nil {
 		return err
@@ -294,7 +294,7 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	d.Set("clb_id", clbId)
 	d.Set("listener_id", listenerId+"#"+clbId)
 	d.Set("domain", instance.Domain)
-	d.Set("location_id", instance.LocationId)
+	d.Set("rule_id", instance.LocationId)
 	d.Set("url", instance.Url)
 	d.Set("scheduler", instance.Scheduler)
 	d.Set("session_expire_time", instance.SessionExpireTime)
@@ -352,7 +352,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 
 	protocol := *(instance.Protocol)
 
-	locationId := d.Get("location_id").(string)
+	locationId := d.Get("rule_id").(string)
 	changed := false
 	url := ""
 	scheduler := ""

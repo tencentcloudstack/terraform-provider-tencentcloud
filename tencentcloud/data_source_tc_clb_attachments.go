@@ -7,7 +7,7 @@ Example Usage
 data "tencentcloud_clb_attachments" "clblab" {
   listener_id   = "lbl-hh141sn9#lb-k2zjp9lv"
   clb_id        = "lb-k2zjp9lv"
-  location_id   = "loc-4xxr2cy7"
+  rule_id   = "loc-4xxr2cy7"
 }
 ```
 */
@@ -36,7 +36,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 				Required:    true,
 				Description: "ID of the CLB listener to be queried.",
 			},
-			"location_id": {
+			"rule_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "ID of the CLB listener rule to be queried.",
@@ -68,7 +68,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 							Computed:    true,
 							Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.NOTES: TCP_SSL is testing internally, please apply if you need to use.",
 						},
-						"location_id": {
+						"rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "ID of the CLB listener rule.",
@@ -115,11 +115,11 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 	params := make(map[string]string)
 	clbId := d.Get("clb_id").(string)
 	listenerId := d.Get("listener_id").(string)
-	locationId := d.Get("location_id").(string)
+	locationId := d.Get("rule_id").(string)
 
 	params["clb_id"] = clbId
 	params["listener_id"] = strings.Split(listenerId, "#")[0]
-	params["location_id"] = strings.Split(locationId, "#")[0]
+	params["rule_id"] = strings.Split(locationId, "#")[0]
 
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -135,7 +135,7 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 		mapping := map[string]interface{}{
 			"clb_id":        clbId,
 			"listener_id":   listenerId,
-			"location_id":   locationId,
+			"rule_id":       locationId,
 			"protocol_type": attachment.Protocol,
 		}
 		if *attachment.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *attachment.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {

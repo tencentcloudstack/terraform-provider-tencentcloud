@@ -19,7 +19,7 @@ func TestAccTencentCloudClbListenerRulesDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_listener_rules.rules", "rule_list.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_listener_rules.rules", "rule_list.0.clb_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_listener_rules.rules", "rule_list.0.listener_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_listener_rules.rules", "rule_list.0.location_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_listener_rules.rules", "rule_list.0.rule_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_listener_rules.rules", "rule_list.0.session_expire_time", "30"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_listener_rules.rules", "rule_list.0.scheduler", "WRR"),
 				),

@@ -17,7 +17,7 @@ resource "tencentcloud_clb_attachment" "attachment" {
   listener_id   = "lbl-hh141sn9#lb-k2zjp9lv"
   clb_id        = "lb-k2zjp9lv"
   protocol_type = "tcp"
-  location_id   = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
+  rule_id   = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
   targets = {
     instance_id = "ins-1flbqyp8"
     port        = 50
@@ -33,7 +33,7 @@ The following arguments are supported:
 * `clb_id` - (Required, ForceNew) ID of the clb.
 * `listener_id` - (Required, ForceNew)  ID of the clb listener.
 * `targets` - (Required)  Information of the backends to be attached.
-* `location_id` - (Optional, ForceNew) ID of the clb listener rule.
+* `rule_id` - (Optional, ForceNew) ID of the clb listener rule.
 
 The `targets` object supports the following:
 
