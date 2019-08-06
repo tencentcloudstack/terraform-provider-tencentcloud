@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -512,6 +513,14 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {
 			return resource.RetryableError(err)
+		}
+
+		if jsonresp.Response.Error.Code == "MissingParameter" || jsonresp.Response.Error.Code == "LimitExceeded" {
+			return resource.NonRetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
+		}
+
+		if strings.HasPrefix(jsonresp.Response.Error.Code, "Invalid") {
+			return resource.NonRetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
 		}
 
 		if jsonresp.Response.Error.Code == "VpcIpIsUsed" {

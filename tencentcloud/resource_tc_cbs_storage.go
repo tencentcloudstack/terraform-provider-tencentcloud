@@ -32,11 +32,13 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudCbsStorage() *schema.Resource {
@@ -159,6 +161,12 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			if e.(*errors.TencentCloudSDKError).GetCode() == "MissingParameter" || e.(*errors.TencentCloudSDKError).GetCode() == "LimitExceeded" {
+				return resource.NonRetryableError(e)
+			}
+			if strings.HasPrefix(e.(*errors.TencentCloudSDKError).GetCode(), "Invalid") {
+				return resource.NonRetryableError(e)
+			}
 			return resource.RetryableError(e)
 		}
 
