@@ -44,7 +44,7 @@ func testAccCheckClbRedirectionDestroy(s *terraform.State) error {
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 	}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_clb_rewrite" {
+		if rs.Type != "tencentcloud_clb_redirection" {
 			continue
 		}
 		time.Sleep(5 * time.Second)

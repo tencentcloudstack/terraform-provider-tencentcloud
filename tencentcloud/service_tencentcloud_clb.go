@@ -531,7 +531,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.RewriteSet) < 1 {
-		errRet = fmt.Errorf("rewrite id is not found")
+		errRet = fmt.Errorf("redirection id %s is not found", rewriteId)
 		return
 	}
 
@@ -545,10 +545,10 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 			result["clb_id"] = clbId
 			rewriteInfo = &result
 		} else {
-			errRet = fmt.Errorf("rewrite id is not found")
+			errRet = fmt.Errorf("redirection id %s is not found", rewriteId)
 		}
 	} else {
-		errRet = fmt.Errorf("rewrite id is not found")
+		errRet = fmt.Errorf("redirection id %s is not found", rewriteId)
 	}
 
 	return
@@ -593,17 +593,17 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.RewriteSet) < 1 {
-		errRet = fmt.Errorf("rewrite id is not found")
+		// errRet = fmt.Errorf("redirection rule is not found")
 		return
 	}
 	ruleOutput := response.Response.RewriteSet[0]
 	if ruleOutput.RewriteTarget != nil {
 		if targetListenerId != "" && *ruleOutput.RewriteTarget.TargetListenerId != targetListenerId {
-			errRet = fmt.Errorf("rewrite id is not found")
+			// errRet = fmt.Errorf("redirection rule is not found")
 			return
 		}
 		if targetLocId != "" && *ruleOutput.RewriteTarget.TargetLocationId != targetLocId {
-			errRet = fmt.Errorf("rewrite id is not found")
+			// errRet = fmt.Errorf("redirection rule is not found")
 			return
 		}
 		result := make(map[string]string)
@@ -614,7 +614,7 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 		result["clb_id"] = clbId
 		rewriteInfos = append(rewriteInfos, &result)
 	} else {
-		errRet = fmt.Errorf("rewrite id is not found")
+		// errRet = fmt.Errorf("redirection rule is not found")
 	}
 
 	return

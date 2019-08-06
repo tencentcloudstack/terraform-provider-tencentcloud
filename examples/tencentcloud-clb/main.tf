@@ -1,27 +1,45 @@
 resource "tencentcloud_security_group" "foo" {
-  name = "ci-temp-test-sg"
+  name = "example"
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "vpc-temp-test"
+  name       = "example"
   cidr_block = "10.0.0.0/16"
 }
-resource "tencentcloud_clb_instance" "my_clb" {
+
+resource "tencentcloud_subnet" "foo" {
+  name              = "example"
+  availability_zone = "${var.availability_zone}"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.0.0/24"
+  is_multicast      = false
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name              = "example"
+  availability_zone          = "${var.availability_zone}"
+  image_id                   = "img-9qabwvbn"
+  instance_type              = "S2.SMALL1"
+  system_disk_type           = "CLOUD_PREMIUM"
+  internet_max_bandwidth_out = 0
+  vpc_id                     = "${tencentcloud_vpc.foo.id}"
+  subnet_id                  = "${tencentcloud_subnet.foo.id}"
+}
+
+resource "tencentcloud_clb_instance" "example" {
   network_type              = "${var.network_type}"
   clb_name                  = "tf-test-clb"
   project_id                = 0
   vpc_id                    = "${tencentcloud_vpc.foo.id}"
   target_region_info_region = "ap-guangzhou"
-  target_region_info_vpc_id = "${tencentcloud_vpc.foo.id}"
-
-
-  security_groups = ["${tencentcloud_security_group.foo.id}"]
+  target_region_info_vpc    = "${tencentcloud_vpc.foo.id}"
+  security_groups           = ["${tencentcloud_security_group.foo.id}"]
 }
 
-resource "tencentcloud_clb_listener" "my_listener" {
-  clb_id                     = "${tencentcloud_clb_instance.my_clb.id}"
+resource "tencentcloud_clb_listener" "listener_tcp" {
+  clb_id                     = "${tencentcloud_clb_instance.example.id}"
   listener_name              = "listener_tcp"
-  port                       = 44
+  port                       = 22
   protocol                   = "TCP"
   health_check_switch        = true
   health_check_time_out      = 30
@@ -33,16 +51,17 @@ resource "tencentcloud_clb_listener" "my_listener" {
 }
 
 resource "tencentcloud_clb_listener" "listener_https" {
-  clb_id               = "${tencentcloud_clb_instance.my_clb.id}"
+  clb_id               = "${tencentcloud_clb_instance.example.id}"
   listener_name        = "listener_https"
-  port                 = 77
+  port                 = 443
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
   certificate_id       = "VfqcL1ME"
 
 }
-resource "tencentcloud_clb_listener_rule" "rule" {
-  clb_id              = "${tencentcloud_clb_instance.my_clb.id}"
+
+resource "tencentcloud_clb_listener_rule" "rule_https" {
+  clb_id              = "${tencentcloud_clb_instance.example.id}"
   listener_id         = "${tencentcloud_clb_listener.listener_https.id}"
   domain              = "abc.com"
   url                 = "/"
@@ -50,75 +69,80 @@ resource "tencentcloud_clb_listener_rule" "rule" {
   scheduler           = "WRR"
 }
 
-resource "tencentcloud_clb_attachment" "attachment_http" {
-  clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
+resource "tencentcloud_clb_attachment" "attachment_https" {
+  clb_id      = "${tencentcloud_clb_instance.example.id}"
   listener_id = "${tencentcloud_clb_listener.listener_https.id}"
-  location_id = "${tencentcloud_clb_listener_rule.rule.id}"
+  location_id = "${tencentcloud_clb_listener_rule.rule_https.id}"
   targets {
-    instance_id = "ins-1flbqyp8"
-    port        = 23
+    instance_id = "${tencentcloud_instance.foo.id}"
+    port        = 443
     weight      = 10
   }
 }
 
-resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id        = "lb-p7olt9e5"
-  port          = 1
+resource "tencentcloud_clb_listener" "listener_http_src" {
+  clb_id        = "${tencentcloud_clb_instance.example.id}"
+  port          = 8080
   protocol      = "HTTP"
-  listener_name = "listener_basic"
+  listener_name = "listener_http_src"
 }
 
-
-resource "tencentcloud_clb_listener_rule" "rule_basic" {
-  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id         = "${tencentcloud_clb_listener.listener_basic.id}"
+resource "tencentcloud_clb_listener_rule" "rule_http_src" {
+  clb_id              = "${tencentcloud_clb_instance.example.id}"
+  listener_id         = "${tencentcloud_clb_listener.listener_http_src.id}"
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
   scheduler           = "WRR"
 }
-resource "tencentcloud_clb_listener" "listener_target" {
-  clb_id        = "${tencentcloud_clb_instance.clb_basic.id}"
-  port          = 44
+
+resource "tencentcloud_clb_listener" "listener_http_dst" {
+  clb_id        = "${tencentcloud_clb_instance.example.id}"
+  port          = 80
   protocol      = "HTTP"
-  listener_name = "listener_basic1"
+  listener_name = "listener_http_dst"
 }
-resource "tencentcloud_clb_listener_rule" "rule_target" {
-  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id         = "${tencentcloud_clb_listener.listener_target.id}"
+
+resource "tencentcloud_clb_listener_rule" "rule_http_dst" {
+  clb_id              = "${tencentcloud_clb_instance.example.id}"
+  listener_id         = "${tencentcloud_clb_listener.listener_http_dst.id}"
   domain              = "abcd.com"
   url                 = "/"
   session_expire_time = 30
   scheduler           = "WRR"
 }
-resource "tencentcloud_clb_redirection" "redirection_basic" {
-  clb_id                = "${tencentcloud_clb_instance.clb_basic.id}"
-  source_listener_id    = "${tencentcloud_clb_listener.listener_basic.id}"
-  target_listener_id    = "${tencentcloud_clb_listener.listener_target.id}"
-  rewrite_source_loc_id = "${tencentcloud_clb_listener_rule.rule_basic.id}"
-  rewrite_target_loc_id = "${tencentcloud_clb_listener_rule.rule_target.id}"
+
+resource "tencentcloud_clb_redirection" "redirection_http" {
+  clb_id                = "${tencentcloud_clb_instance.example.id}"
+  source_listener_id    = "${tencentcloud_clb_listener.listener_http_src.id}"
+  target_listener_id    = "${tencentcloud_clb_listener.listener_http_dst.id}"
+  rewrite_source_loc_id = "${tencentcloud_clb_listener_rule.rule_http_src.id}"
+  rewrite_target_loc_id = "${tencentcloud_clb_listener_rule.rule_http_dst.id}"
 }
 
-data "tencentcloud_clb_instances" "clbs" {
-  clb_id = "${tencentcloud_clb_instance.my_clb.id}"
+data "tencentcloud_clb_instances" "instances" {
+  clb_id = "${tencentcloud_clb_instance.example.id}"
 }
 
 data "tencentcloud_clb_listeners" "listeners" {
-  clb_id      = "${tencentcloud_clb_instance.my_clb.id}"
-  listener_id = "${tencentcloud_clb_listener.my_listener.id}"
+  clb_id      = "${tencentcloud_clb_instance.example.id}"
+  listener_id = "${tencentcloud_clb_listener.listener_tcp.id}"
 }
+
 data "tencentcloud_clb_listener_rules" "rules" {
   listener_id = "${tencentcloud_clb_listener.listener_https.id}"
-  domain      = "${tencentcloud_clb_listener_rule.rule.domain}"
-  url         = "${tencentcloud_clb_listener_rule.rule.url}"
+  domain      = "${tencentcloud_clb_listener_rule.rule_https.domain}"
+  url         = "${tencentcloud_clb_listener_rule.rule_https.url}"
 }
+
 data "tencentcloud_clb_attachments" "attachments" {
-  clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id      = "${tencentcloud_clb_instance.example.id}"
   listener_id = "${tencentcloud_clb_listener.listener_https.id}"
-  location_id = "${tencentcloud_clb_attachment.attachment_http.id}"
+  location_id = "${tencentcloud_clb_attachment.attachment_https.id}"
 }
+
 data "tencentcloud_clb_redirections" "redirections" {
-  clb_id                = "${tencentcloud_clb_instance.clb_basic.id}"
-  source_listener_id    = "${tencentcloud_clb_redirection.redirection_basic.source_listener_id}"
-  rewrite_source_loc_id = "${tencentcloud_clb_redirection.redirection_basic.rewrite_source_loc_id}"
+  clb_id                = "${tencentcloud_clb_instance.example.id}"
+  source_listener_id    = "${tencentcloud_clb_redirection.redirection_http.source_listener_id}"
+  rewrite_source_loc_id = "${tencentcloud_clb_redirection.redirection_http.rewrite_target_loc_id}"
 }
