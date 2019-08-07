@@ -23,9 +23,10 @@ var nextTypes = map[string]int{
 
 func resourceTencentCloudRouteEntry() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudRouteEntryCreate,
-		Read:   resourceTencentCloudRouteEntryRead,
-		Delete: resourceTencentCloudRouteEntryDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.10.0. Please use 'tencentcloud_route_table_entry' instead.",
+		Create:             resourceTencentCloudRouteEntryCreate,
+		Read:               resourceTencentCloudRouteEntryRead,
+		Delete:             resourceTencentCloudRouteEntryDelete,
 
 		Schema: map[string]*schema.Schema{
 			"vpc_id": {
