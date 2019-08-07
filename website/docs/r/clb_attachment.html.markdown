@@ -13,14 +13,14 @@ Provides a resource to create a CLB attachment.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_clb_attachment" "attachment" {
-  listener_id   = "lbl-hh141sn9#lb-k2zjp9lv"
-  clb_id        = "lb-k2zjp9lv"
-  protocol_type = "tcp"
-  rule_id   = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
-  targets = {
+resource "tencentcloud_clb_attachment" "attachment_http" {
+  clb_id      = "lb-k2zjp9lv"
+  listener_id = "lbl-hh141sn9#lb-k2zjp9lv"
+  rule_id     = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
+
+  targets {
     instance_id = "ins-1flbqyp8"
-    port        = 50
+    port        = 80
     weight      = 10
   }
 }
@@ -33,7 +33,7 @@ The following arguments are supported:
 * `clb_id` - (Required, ForceNew) ID of the clb.
 * `listener_id` - (Required, ForceNew)  ID of the clb listener.
 * `targets` - (Required)  Information of the backends to be attached.
-* `rule_id` - (Optional, ForceNew) ID of the clb listener rule.
+* `rule_id` - (Optional, ForceNew) ID of the clb listener rule. Only supports listeners of 'HTTPS'/'HTTP' protocol.
 
 The `targets` object supports the following:
 
@@ -45,7 +45,7 @@ The `targets` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `protocol_type` - Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.NOTES: TCP_SSL is testing internally, please apply if you need to use.
+* `protocol_type` - Type of protocol within the listener.
 
 
 ## Import

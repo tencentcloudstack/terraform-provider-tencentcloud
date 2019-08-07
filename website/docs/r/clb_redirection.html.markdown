@@ -14,9 +14,9 @@ Provides a resource to create a CLB redirection.
 
 ```hcl
 resource "tencentcloud_clb_redirection" "foo" {
-  clb_id                = "lb-p7olt9e5"
-  source_listener_id    = "lbl-jc1dx6ju#lb-p7olt9e5"
-  target_listener_id    = "lbl-asj1hzuo#lb-p7olt9e5"
+  clb_id                 = "lb-p7olt9e5"
+  source_listener_id     = "lbl-jc1dx6ju#lb-p7olt9e5"
+  target_listener_id     = "lbl-asj1hzuo#lb-p7olt9e5"
   rewrite_source_rule_id = "loc-ft8fmngv#lbl-jc1dx6ju#lb-p7olt9e5"
   rewrite_target_rule_id = "loc-4xxr2cy7#lbl-asj1hzuo#lb-p7olt9e5"
 }
