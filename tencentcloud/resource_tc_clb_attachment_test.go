@@ -191,7 +191,6 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 resource "tencentcloud_clb_attachment" "attachment_tcp" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
-  rule_id = "#${tencentcloud_clb_listener.listener_basic.id}"
 
   targets {
     instance_id = "${tencentcloud_instance.foo.id}"
@@ -270,7 +269,6 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 resource "tencentcloud_clb_attachment" "attachment_tcp" {
   clb_id      = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
-  rule_id = "#${tencentcloud_clb_listener.listener_basic.id}"
 
   targets {
     instance_id = "${tencentcloud_instance.foo.id}"
