@@ -72,7 +72,7 @@ resource "tencentcloud_clb_listener_rule" "rule_https" {
 resource "tencentcloud_clb_attachment" "attachment_https" {
   clb_id      = "${tencentcloud_clb_instance.example.id}"
   listener_id = "${tencentcloud_clb_listener.listener_https.id}"
-  rule_id = "${tencentcloud_clb_listener_rule.rule_https.id}"
+  rule_id     = "${tencentcloud_clb_listener_rule.rule_https.id}"
   targets {
     instance_id = "${tencentcloud_instance.foo.id}"
     port        = 443
@@ -113,9 +113,9 @@ resource "tencentcloud_clb_listener_rule" "rule_http_dst" {
 }
 
 resource "tencentcloud_clb_redirection" "redirection_http" {
-  clb_id                = "${tencentcloud_clb_instance.example.id}"
-  source_listener_id    = "${tencentcloud_clb_listener.listener_http_src.id}"
-  target_listener_id    = "${tencentcloud_clb_listener.listener_http_dst.id}"
+  clb_id                 = "${tencentcloud_clb_instance.example.id}"
+  source_listener_id     = "${tencentcloud_clb_listener.listener_http_src.id}"
+  target_listener_id     = "${tencentcloud_clb_listener.listener_http_dst.id}"
   rewrite_source_rule_id = "${tencentcloud_clb_listener_rule.rule_http_src.id}"
   rewrite_target_rule_id = "${tencentcloud_clb_listener_rule.rule_http_dst.id}"
 }
@@ -138,11 +138,11 @@ data "tencentcloud_clb_listener_rules" "rules" {
 data "tencentcloud_clb_attachments" "attachments" {
   clb_id      = "${tencentcloud_clb_instance.example.id}"
   listener_id = "${tencentcloud_clb_listener.listener_https.id}"
-  rule_id = "${tencentcloud_clb_attachment.attachment_https.id}"
+  rule_id     = "${tencentcloud_clb_attachment.attachment_https.id}"
 }
 
 data "tencentcloud_clb_redirections" "redirections" {
-  clb_id                = "${tencentcloud_clb_instance.example.id}"
-  source_listener_id    = "${tencentcloud_clb_redirection.redirection_http.source_listener_id}"
+  clb_id                 = "${tencentcloud_clb_instance.example.id}"
+  source_listener_id     = "${tencentcloud_clb_redirection.redirection_http.source_listener_id}"
   rewrite_source_rule_id = "${tencentcloud_clb_redirection.redirection_http.rewrite_target_rule_id}"
 }
