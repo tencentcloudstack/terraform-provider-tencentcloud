@@ -125,12 +125,11 @@ func dataSourceTencentCloudVpcSubnets() *schema.Resource {
 		},
 	}
 }
+
 func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_vpc_subnets.read")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "data_source.tencentcloud_vpc_subnets.read")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}

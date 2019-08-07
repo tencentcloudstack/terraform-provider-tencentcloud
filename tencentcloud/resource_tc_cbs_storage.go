@@ -123,7 +123,7 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 }
 
 func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.create")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.create")()
 
 	logId := GetLogId(nil)
 	request := cbs.NewCreateDisksRequest()
@@ -190,7 +190,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.read")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -218,7 +218,7 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.update")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.update")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -312,7 +312,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.delete")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.delete")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

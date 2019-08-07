@@ -173,11 +173,9 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 }
 
 func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dcx.create")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dcx.create")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -249,15 +247,14 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 	d.SetId(dcxId)
+
 	return resourceTencentCloudDcxInstanceRead(d, meta)
 }
 
 func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dcx.read")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dcx.read")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -267,13 +264,14 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 	)
 
 	item, has, err := service.DescribeDirectConnectTunnel(ctx, dcxId)
-
 	if err != nil {
 		return err
 	}
+
 	if has == 0 {
 		d.SetId("")
 	}
+
 	d.Set("dc_id", service.strPt2str(item.DirectConnectId))
 	d.Set("name", *item.DirectConnectTunnelName)
 	d.Set("network_type", strings.ToUpper(service.strPt2str(item.NetworkType)))
@@ -312,12 +310,11 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 
 	return nil
 }
+
 func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dcx.update")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dcx.update")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -330,19 +327,19 @@ func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("name") {
 		name = d.Get("name").(string)
 	}
-	err := service.ModifyDirectConnectTunnelAttribute(ctx, dcxId, name, "", "", "", -1, -1, nil)
 
+	err := service.ModifyDirectConnectTunnelAttribute(ctx, dcxId, name, "", "", "", -1, -1, nil)
 	if err != nil {
 		return err
 	}
+
 	return resourceTencentCloudDcxInstanceRead(d, meta)
 }
+
 func resourceTencentCloudDcxInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dcx.delete")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dcx.delete")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -350,5 +347,6 @@ func resourceTencentCloudDcxInstanceDelete(d *schema.ResourceData, meta interfac
 	var (
 		dcxId = d.Id()
 	)
+
 	return service.DeleteDirectConnectTunnel(ctx, dcxId)
 }

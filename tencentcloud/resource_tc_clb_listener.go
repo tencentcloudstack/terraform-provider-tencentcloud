@@ -154,7 +154,8 @@ func resourceTencentCloudClbListener() *schema.Resource {
 }
 
 func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener.create")()
+	defer logElapsed("resource.tencentcloud_clb_listener.create")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
@@ -256,7 +257,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener.read")()
+	defer logElapsed("resource.tencentcloud_clb_listener.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -306,11 +307,14 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener.update")()
+	defer logElapsed("resource.tencentcloud_clb_listener.update")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	items := strings.Split(d.Id(), "#")
 	if len(items) != 2 {
 		return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
@@ -400,7 +404,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener.delete")()
+	defer logElapsed("resource.tencentcloud_clb_listener.delete")()
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 

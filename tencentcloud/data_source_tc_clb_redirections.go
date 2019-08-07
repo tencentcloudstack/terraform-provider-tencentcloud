@@ -98,7 +98,7 @@ func dataSourceTencentCloudClbRedirections() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_clb_redirections.read")()
+	defer logElapsed("data_source.tencentcloud_clb_redirections.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

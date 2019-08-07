@@ -140,7 +140,7 @@ func dataSourceTencentCloudCbsStorages() *schema.Resource {
 }
 
 func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_cbs_storages.read")()
+	defer logElapsed("data_source.tencentcloud_cbs_storages.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

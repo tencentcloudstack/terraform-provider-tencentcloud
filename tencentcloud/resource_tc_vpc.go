@@ -89,12 +89,11 @@ func resourceTencentCloudVpcInstance() *schema.Resource {
 		},
 	}
 }
+
 func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_vpc.create")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_vpc.create")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -132,16 +131,16 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
+
 	d.SetId(vpcId)
+
 	return resourceTencentCloudVpcInstanceRead(d, meta)
 }
 
 func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_vpc.read")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_vpc.read")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -150,31 +149,34 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 	if err != nil {
 		return err
 	}
+
 	//deleted
 	if has == 0 {
 		log.Printf("[WARN]%s %s\n", logId, "vpc has been delete")
 		d.SetId("")
 		return nil
 	}
+
 	if has != 1 {
 		errRet := fmt.Errorf("one vpc_id read get %d vpc info", has)
 		log.Printf("[CRITAL]%s %s\n", logId, errRet.Error())
 		return errRet
 	}
+
 	d.Set("name", info.name)
 	d.Set("cidr_block", info.cidr)
 	d.Set("dns_servers", info.dnsServers)
 	d.Set("is_multicast", info.isMulticast)
 	d.Set("create_time", info.createTime)
 	d.Set("is_default", info.isDefault)
+
 	return nil
 }
 
 func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_vpc.update")()
+
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_vpc.update")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -185,6 +187,7 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 		slice              = make([]interface{}, 0, 4)
 		isMulticast bool   = true
 	)
+
 	old, now := d.GetChange("name")
 	if d.HasChange("name") {
 		name = now.(string)
@@ -193,7 +196,6 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	old, now = d.GetChange("dns_servers")
-
 	if d.HasChange("dns_servers") {
 		slice = now.(*schema.Set).List()
 		if len(slice) < 1 {
@@ -205,6 +207,7 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 	} else {
 		slice = old.([]interface{})
 	}
+
 	if len(slice) > 0 {
 		for _, v := range slice {
 			dnsServers = append(dnsServers, v.(string))
@@ -226,11 +229,9 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudVpcInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_vpc.delete")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_vpc.delete")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -246,6 +247,6 @@ func resourceTencentCloudVpcInstanceDelete(d *schema.ResourceData, meta interfac
 		}
 		return nil
 	})
-	return err
 
+	return err
 }

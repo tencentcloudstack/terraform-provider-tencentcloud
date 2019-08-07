@@ -191,6 +191,8 @@ func dataSourceTencentCloudAsScalingGroups() *schema.Resource {
 }
 
 func dataSourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_as_scaling_groups.read")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

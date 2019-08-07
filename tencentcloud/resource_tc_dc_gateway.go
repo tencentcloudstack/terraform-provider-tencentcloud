@@ -94,11 +94,9 @@ func resourceTencentCloudDcGatewayInstance() *schema.Resource {
 }
 
 func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dc_gateway.create")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dc_gateway.create")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -132,7 +130,6 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 	}
 
 	dcgId, err := service.CreateDirectConnectGateway(ctx, name, networkType, networkInstanceId, gatewayType)
-
 	if err != nil {
 		return err
 	}
@@ -143,20 +140,18 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dc_gateway.read")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dc_gateway.read")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	info, has, err := service.DescribeDirectConnectGateway(ctx, d.Id())
-
 	if err != nil {
 		return err
 	}
+
 	if has == 0 {
 		d.SetId("")
 		return nil
@@ -172,16 +167,14 @@ func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{})
 
 	return nil
 }
+
 func resourceTencentCloudDcGatewayUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dc_gateway.update")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dc_gateway.update")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	if d.HasChange("name") {
 		var name = d.Get("name").(string)
 		return service.ModifyDirectConnectGatewayAttribute(ctx, d.Id(), name)
@@ -191,20 +184,17 @@ func resourceTencentCloudDcGatewayUpdate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudDcGatewayDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dc_gateway.delete")()
 
 	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dc_gateway.delete")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	_, has, err := service.DescribeDirectConnectGateway(ctx, d.Id())
-
 	if err != nil {
 		return err
 	}
+
 	if has == 0 {
 		return nil
 	}

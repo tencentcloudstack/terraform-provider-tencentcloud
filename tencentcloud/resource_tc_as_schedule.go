@@ -84,6 +84,8 @@ func resourceTencentCloudAsSchedule() *schema.Resource {
 }
 
 func resourceTencentCloudAsScheduleCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_schedule.create")()
+
 	logId := GetLogId(nil)
 
 	request := as.NewCreateScheduledActionRequest()
@@ -126,6 +128,8 @@ func resourceTencentCloudAsScheduleCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudAsScheduleRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_schedule.read")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -156,6 +160,8 @@ func resourceTencentCloudAsScheduleRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudAsScheduleUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_schedule.update")()
+
 	logId := GetLogId(nil)
 
 	request := as.NewModifyScheduledActionRequest()
@@ -198,6 +204,8 @@ func resourceTencentCloudAsScheduleUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudAsScheduleDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_schedule.delete")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

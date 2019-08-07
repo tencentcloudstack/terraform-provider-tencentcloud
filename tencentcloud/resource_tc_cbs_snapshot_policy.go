@@ -77,7 +77,7 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 }
 
 func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_snapshot_policy.create")()
+	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy.create")()
 
 	logId := GetLogId(nil)
 
@@ -120,7 +120,7 @@ func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_snapshot_policy.read")()
+	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -144,7 +144,7 @@ func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_snapshot_policy.update")()
+	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy.update")()
 
 	logId := GetLogId(nil)
 
@@ -186,7 +186,7 @@ func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudCbsSnapshotPolicyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_snapshot_policy.delete")()
+	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy.delete")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

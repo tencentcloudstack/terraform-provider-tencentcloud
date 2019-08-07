@@ -97,12 +97,13 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 		},
 	}
 }
+
 func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ccn_attachment.create")()
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_ccn_attachment.create")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
@@ -136,11 +137,11 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ccn_attachment.read")()
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_ccn_attachment.read")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
@@ -177,12 +178,13 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ccn_attachment.delete")()
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_ccn_attachment.delete")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
 	var (
 		ccnId          = d.Get("ccn_id").(string)
 		instanceType   = d.Get("instance_type").(string)

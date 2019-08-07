@@ -151,7 +151,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 }
 
 func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("source.tencentcloud_redis_instance.create")()
+	defer logElapsed("resource.tencentcloud_redis_instance.create")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -225,7 +225,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("source.tencentcloud_redis_instance.read")()
+	defer logElapsed("resource.tencentcloud_redis_instance.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -295,8 +295,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-
-	defer LogElapsed("source.tencentcloud_redis_instance.update")()
+	defer logElapsed("resource.tencentcloud_redis_instance.update")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -415,14 +414,12 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-
-	defer LogElapsed("source.tencentcloud_redis_instance.delete")()
+	defer logElapsed("resource.tencentcloud_redis_instance.delete")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	_, err := service.DestroyPostpaidInstance(ctx, d.Id())
 
 	return err

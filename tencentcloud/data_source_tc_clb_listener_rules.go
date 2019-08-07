@@ -170,7 +170,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_clb_listener_rules.read")()
+	defer logElapsed("data_source.tencentcloud_clb_listener_rules.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

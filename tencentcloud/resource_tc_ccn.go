@@ -81,12 +81,13 @@ func resourceTencentCloudCcn() *schema.Resource {
 		},
 	}
 }
+
 func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ccn.create")()
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_ccn.create")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
@@ -105,12 +106,13 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 
 	return resourceTencentCloudCcnRead(d, meta)
 }
+
 func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ccn.read")()
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_ccn.read")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	info, has, err := service.DescribeCcn(ctx, d.Id())
@@ -132,12 +134,13 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 
 	return nil
 }
+
 func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ccn.update")()
 
 	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_ccn.update")()
-
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
@@ -169,10 +172,11 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceTencentCloudCcnDelete(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_ccn.delete")()
+	defer logElapsed("resource.tencentcloud_ccn.delete")()
 
+	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	_, has, err := service.DescribeCcn(ctx, d.Id())

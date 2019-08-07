@@ -213,6 +213,8 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 }
 
 func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_scaling_config.create")()
+
 	logId := GetLogId(nil)
 	request := as.NewCreateLaunchConfigurationRequest()
 
@@ -358,6 +360,8 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_scaling_config.read")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -392,6 +396,8 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_scaling_config.update")()
+
 	logId := GetLogId(nil)
 	request := as.NewUpgradeLaunchConfigurationRequest()
 
@@ -537,6 +543,8 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudAsScalingConfigDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_scaling_config.delete")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

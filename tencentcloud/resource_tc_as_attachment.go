@@ -44,6 +44,8 @@ func resourceTencentCloudAsAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudAsAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_attachment.create")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -60,7 +62,10 @@ func resourceTencentCloudAsAttachmentCreate(d *schema.ResourceData, meta interfa
 
 	return resourceTencentCloudAsAttachmentRead(d, meta)
 }
+
 func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_attachment.read")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -76,7 +81,10 @@ func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface
 
 	return nil
 }
+
 func resourceTencentCloudAsAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_attachment.update")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -107,7 +115,10 @@ func resourceTencentCloudAsAttachmentUpdate(d *schema.ResourceData, meta interfa
 
 	return nil
 }
+
 func resourceTencentCloudAsAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_as_attachment.delete")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -124,5 +135,6 @@ func resourceTencentCloudAsAttachmentDelete(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

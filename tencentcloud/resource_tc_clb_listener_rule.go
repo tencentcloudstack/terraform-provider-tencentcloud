@@ -166,7 +166,8 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 }
 
 func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener_rule.create")()
+	defer logElapsed("resource.tencentcloud_clb_listener_rule.create")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
@@ -265,7 +266,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener_rule.read")()
+	defer logElapsed("resource.tencentcloud_clb_listener_rule.read")()
 
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -327,7 +328,8 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener_rule.update")()
+	defer logElapsed("resource.tencentcloud_clb_listener_rule.update")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
@@ -431,7 +433,8 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudClbListenerRuleDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener_rule.delete")()
+	defer logElapsed("resource.tencentcloud_clb_listener_rule.delete")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
