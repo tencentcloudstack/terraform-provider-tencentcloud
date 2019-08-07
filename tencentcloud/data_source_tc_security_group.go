@@ -26,7 +26,8 @@ import (
 
 func dataSourceTencentCloudSecurityGroup() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudSecurityGroupRead,
+		DeprecationMessage: "This data source has been deprecated in Terraform TencentCloud provider version 1.14.0. Please use 'tencentcloud_security_groups' instead.",
+		Read:               dataSourceTencentCloudSecurityGroupRead,
 		Schema: map[string]*schema.Schema{
 			"security_group_id": {
 				Type:        schema.TypeString,
