@@ -50,7 +50,7 @@ func (me *DcService) int64Pt2int64(pt *int64) (ret int64) {
 func (me *DcService) DescribeDirectConnects(ctx context.Context, dcId,
 	name string) (infos []dc.DirectConnect, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := dc.NewDescribeDirectConnectsRequest()
 	defer func() {
 		if errRet != nil {
@@ -130,7 +130,7 @@ func (me *DcService) DescribeDirectConnectTunnel(ctx context.Context, dcxId stri
 func (me *DcService) DescribeDirectConnectTunnels(ctx context.Context, dcxId,
 	name string) (infos []dc.DirectConnectTunnel, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := dc.NewDescribeDirectConnectTunnelsRequest()
 	defer func() {
 		if errRet != nil {
@@ -194,7 +194,7 @@ func (me *DcService) CreateDirectConnectTunnel(ctx context.Context, dcId, dcxNam
 	bgpAsn, vlan, bandwidth int64,
 	routeFilterPrefixes []string) (dcxId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := dc.NewCreateDirectConnectTunnelRequest()
 	defer func() {
 		if errRet != nil {
@@ -257,7 +257,7 @@ func (me *DcService) CreateDirectConnectTunnel(ctx context.Context, dcId, dcxNam
 
 func (me *DcService) DeleteDirectConnectTunnel(ctx context.Context, dcxId string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := dc.NewDeleteDirectConnectTunnelRequest()
 	defer func() {
 		if errRet != nil {
@@ -279,7 +279,7 @@ func (me *DcService) ModifyDirectConnectTunnelAttribute(ctx context.Context, dcx
 	bandwidth, bgpAsn int64,
 	routeFilterPrefixes []string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := dc.NewModifyDirectConnectTunnelAttributeRequest()
 	defer func() {
 		if errRet != nil {

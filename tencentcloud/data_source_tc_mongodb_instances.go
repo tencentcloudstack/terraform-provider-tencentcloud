@@ -147,7 +147,7 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_mongodb_instances.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := ""

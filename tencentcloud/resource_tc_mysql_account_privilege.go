@@ -97,7 +97,7 @@ func resourceTencentCloudMysqlAccountPrivilegeCreate(d *schema.ResourceData, met
 func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_account_privilege.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	var privilegeId resourceTencentCloudMysqlAccountPrivilegeId
@@ -161,7 +161,7 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_account_privilege.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -227,7 +227,7 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 func resourceTencentCloudMysqlAccountPrivilegeDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_account_privilege.delete")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}

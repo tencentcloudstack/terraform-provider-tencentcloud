@@ -18,8 +18,8 @@ const FILED_SP = "#"
 var firstLogTime = ""
 var logAtomaticId int64 = 0
 
-// GetLogId get logid  for trace, return a new logid if ctx is nil
-func GetLogId(ctx context.Context) string {
+// getLogId get logid  for trace, return a new logid if ctx is nil
+func getLogId(ctx context.Context) string {
 	if ctx != nil {
 		logId, ok := ctx.Value("logId").(string)
 		if ok {

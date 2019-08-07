@@ -154,7 +154,7 @@ func resourceTencentCloudMongodbInstance() *schema.Resource {
 func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mongodb_instance.create")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mongodbService := MongodbService{
@@ -263,7 +263,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mongodb_instance.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := d.Id()
@@ -303,7 +303,7 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mongodb_instance.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := d.Id()
@@ -403,7 +403,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 func resourceTencentCloudMongodbInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mongodb_instance.delete")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := d.Id()

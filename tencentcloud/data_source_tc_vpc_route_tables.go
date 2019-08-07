@@ -144,7 +144,7 @@ func dataSourceTencentCloudVpcRouteTables() *schema.Resource {
 func dataSourceTencentCloudVpcRouteTablesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_route_tables.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}

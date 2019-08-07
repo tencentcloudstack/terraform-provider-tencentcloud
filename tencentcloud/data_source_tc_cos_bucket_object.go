@@ -84,7 +84,7 @@ func dataSourceTencentCloudCosBucketObject() *schema.Resource {
 func dataSourceTencentCloudCosBucketObjectsRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_cos_bucket_object.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Get("bucket").(string)

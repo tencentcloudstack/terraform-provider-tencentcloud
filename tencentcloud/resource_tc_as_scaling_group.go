@@ -205,7 +205,7 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_group.create")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	request := as.NewCreateAutoScalingGroupRequest()
 
 	request.AutoScalingGroupName = stringToPointer(d.Get("scaling_group_name").(string))
@@ -303,7 +303,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_group.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingGroupId := d.Id()
@@ -360,7 +360,7 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_group.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 
 	request := as.NewModifyAutoScalingGroupRequest()
 	scalingGroupId := d.Id()
@@ -478,7 +478,7 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 func resourceTencentCloudAsScalingGroupDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_group.delete")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingGroupId := d.Id()

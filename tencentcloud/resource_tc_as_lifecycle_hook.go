@@ -95,7 +95,7 @@ func resourceTencentCloudAsLifecycleHook() *schema.Resource {
 func resourceTencentCloudAsLifecycleHookCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_lifecycle_hook.create")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 
 	request := as.NewCreateLifecycleHookRequest()
 	request.AutoScalingGroupId = stringToPointer(d.Get("scaling_group_id").(string))
@@ -150,7 +150,7 @@ func resourceTencentCloudAsLifecycleHookCreate(d *schema.ResourceData, meta inte
 func resourceTencentCloudAsLifecycleHookRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_lifecycle_hook.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	lifecycleHookId := d.Id()
@@ -190,7 +190,7 @@ func resourceTencentCloudAsLifecycleHookRead(d *schema.ResourceData, meta interf
 func resourceTencentCloudAsLifecycleHookUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_lifecycle_hook.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 
 	request := as.NewUpgradeLifecycleHookRequest()
 	lifecycleHookId := d.Id()
@@ -240,7 +240,7 @@ func resourceTencentCloudAsLifecycleHookUpdate(d *schema.ResourceData, meta inte
 func resourceTencentCloudAsLifecycleHookDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_lifecycle_hook.delete")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	lifecycleHookId := d.Id()

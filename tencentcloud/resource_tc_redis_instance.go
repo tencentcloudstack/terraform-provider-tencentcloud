@@ -153,7 +153,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_instance.create")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -227,7 +227,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_instance.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -297,7 +297,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_instance.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	d.Partial(true)
@@ -416,7 +416,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_instance.delete")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}

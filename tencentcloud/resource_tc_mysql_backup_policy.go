@@ -79,7 +79,7 @@ func resourceTencentCloudMysqlBackupPolicyCreate(d *schema.ResourceData, meta in
 func resourceTencentCloudMysqlBackupPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("tencentcloud_mysql_backup_policy.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -118,7 +118,7 @@ func resourceTencentCloudMysqlBackupPolicyRead(d *schema.ResourceData, meta inte
 func resourceTencentCloudMysqlBackupPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_backup_policy.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -149,7 +149,7 @@ func resourceTencentCloudMysqlBackupPolicyUpdate(d *schema.ResourceData, meta in
 func resourceTencentCloudMysqlBackupPolicyDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_backup_policy.delete")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}

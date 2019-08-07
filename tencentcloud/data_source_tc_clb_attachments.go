@@ -109,7 +109,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_clb_attachments.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]string)

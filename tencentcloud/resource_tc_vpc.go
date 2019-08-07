@@ -93,7 +93,7 @@ func resourceTencentCloudVpcInstance() *schema.Resource {
 func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpc.create")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -140,7 +140,7 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpc.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -176,7 +176,7 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpc.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -231,7 +231,7 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudVpcInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpc.delete")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
