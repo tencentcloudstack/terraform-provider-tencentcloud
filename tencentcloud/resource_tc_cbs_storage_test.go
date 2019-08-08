@@ -70,7 +70,7 @@ func TestAccTencentCloudCbsStorage_full(t *testing.T) {
 }
 
 func testAccCheckCbsStorageDestroy(s *terraform.State) error {
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	cbsService := CbsService{
@@ -91,7 +91,7 @@ func testAccCheckCbsStorageDestroy(s *terraform.State) error {
 
 func testAccCheckStorageExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := GetLogId(nil)
+		logId := getLogId(nil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]

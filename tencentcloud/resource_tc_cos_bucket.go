@@ -258,7 +258,9 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 }
 
 func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_cos_bucket.create")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Get("bucket").(string)
@@ -277,7 +279,9 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_cos_bucket.read")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Id()
@@ -321,7 +325,9 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_cos_bucket.update")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn.UseCosClient()
@@ -370,7 +376,9 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_cos_bucket.delete")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Id()
@@ -390,7 +398,7 @@ func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudCosBucketAclUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
 	acl := d.Get("acl").(string)
@@ -411,7 +419,7 @@ func resourceTencentCloudCosBucketAclUpdate(ctx context.Context, client *s3.S3, 
 }
 
 func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
 	cors := d.Get("cors_rules").([]interface{})
@@ -476,7 +484,7 @@ func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, client *s3.S3,
 }
 
 func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
 	lifecycleRules := d.Get("lifecycle_rules").([]interface{})
@@ -568,7 +576,7 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 }
 
 func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
 	website := d.Get("website").([]interface{})

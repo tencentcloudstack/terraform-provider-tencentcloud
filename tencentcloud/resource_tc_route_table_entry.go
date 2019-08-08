@@ -93,12 +93,11 @@ func resourceTencentCloudVpcRouteEntry() *schema.Resource {
 }
 
 func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_route_table_entry.create")()
 
-	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_vpc_route_entry.create")()
-
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
@@ -145,26 +144,23 @@ func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_route_table_entry.read")()
 
-	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_vpc_route_entry.read")()
-
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	items := strings.Split(d.Id(), ".")
-
 	if len(items) != 2 {
 		return fmt.Errorf("entry id be destroyed, we can not get route table id")
 	}
 
 	info, has, err := service.DescribeRouteTable(ctx, items[1])
-
 	if err != nil {
 		return err
 	}
+
 	if has == 0 {
 		d.SetId("")
 		return nil
@@ -186,25 +182,24 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 	}
 
 	d.SetId("")
+
 	return nil
 }
+
 func resourceTencentCloudVpcRouteEntryDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_route_table_entry.delete")()
 
-	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_vpc_route_entry.delete")()
-
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	items := strings.Split(d.Id(), ".")
-
 	if len(items) != 2 {
 		return fmt.Errorf("entry id be destroyed, we can not get route table id")
 	}
-	routeTableId := items[1]
 
+	routeTableId := items[1]
 	entryId, err := strconv.ParseUint(items[0], 10, 64)
 	if err != nil {
 		return fmt.Errorf("entry id be destroyed, we can not get route entry id")
@@ -221,6 +216,6 @@ func resourceTencentCloudVpcRouteEntryDelete(d *schema.ResourceData, meta interf
 		}
 		return nil
 	})
-	return err
 
+	return err
 }

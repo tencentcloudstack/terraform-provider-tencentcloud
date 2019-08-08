@@ -123,9 +123,9 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 }
 
 func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.create")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.create")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	request := cbs.NewCreateDisksRequest()
 
 	request.DiskName = stringToPointer(d.Get("storage_name").(string))
@@ -190,9 +190,9 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.read")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	storageId := d.Id()
@@ -218,9 +218,9 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.update")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	d.Partial(true)
@@ -312,9 +312,9 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.delete")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.delete")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	storageId := d.Id()

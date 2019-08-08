@@ -77,10 +77,12 @@ func resourceTencentCloudClbRedirection() *schema.Resource {
 }
 
 func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_redirection.create")()
+	defer logElapsed("resource.tencentcloud_clb_redirection.create")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
-	logId := GetLogId(nil)
+
+	logId := getLogId(nil)
 
 	//暂时不支持auto
 	clbId := d.Get("clb_id").(string)
@@ -118,9 +120,9 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_redirection.read")()
+	defer logElapsed("resource.tencentcloud_clb_redirection.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	rewriteId := d.Id()
@@ -144,10 +146,12 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudClbRedirectionDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_redirection.delete")()
+	defer logElapsed("resource.tencentcloud_clb_redirection.delete")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
-	logId := GetLogId(nil)
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()

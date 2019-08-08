@@ -19,7 +19,7 @@ type CosService struct {
 }
 
 func (me *CosService) HeadObject(ctx context.Context, bucket, key string) (info *s3.HeadObjectOutput, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.HeadObjectInput{
 		Bucket: aws.String(bucket),
@@ -44,7 +44,7 @@ func (me *CosService) HeadObject(ctx context.Context, bucket, key string) (info 
 }
 
 func (me *CosService) DeleteObject(ctx context.Context, bucket, key string) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.DeleteObjectInput{
 		Bucket: aws.String(bucket),
@@ -69,7 +69,7 @@ func (me *CosService) DeleteObject(ctx context.Context, bucket, key string) (err
 }
 
 func (me *CosService) PutObjectAcl(ctx context.Context, bucket, key, acl string) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.PutObjectAclInput{
 		Bucket: aws.String(bucket),
@@ -95,7 +95,7 @@ func (me *CosService) PutObjectAcl(ctx context.Context, bucket, key, acl string)
 }
 
 func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.CreateBucketInput{
 		Bucket: aws.String(bucket),
@@ -120,7 +120,7 @@ func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet
 }
 
 func (me *CosService) HeadBucket(ctx context.Context, bucket string) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.HeadBucketInput{
 		Bucket: aws.String(bucket),
@@ -140,7 +140,7 @@ func (me *CosService) HeadBucket(ctx context.Context, bucket string) (errRet err
 }
 
 func (me *CosService) DeleteBucket(ctx context.Context, bucket string) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.DeleteBucketInput{
 		Bucket: aws.String(bucket),
@@ -158,7 +158,7 @@ func (me *CosService) DeleteBucket(ctx context.Context, bucket string) (errRet e
 }
 
 func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRules []map[string]interface{}, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.GetBucketCorsInput{
 		Bucket: aws.String(bucket),
@@ -198,7 +198,7 @@ func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRul
 }
 
 func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (lifecycleRules []map[string]interface{}, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.GetBucketLifecycleConfigurationInput{
 		Bucket: aws.String(bucket),
@@ -267,7 +267,7 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 }
 
 func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket string) (lifecycleRules []map[string]interface{}, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.GetBucketLifecycleConfigurationInput{
 		Bucket: aws.String(bucket),
@@ -336,7 +336,7 @@ func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket s
 }
 
 func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (websites []map[string]interface{}, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.GetBucketWebsiteInput{
 		Bucket: aws.String(bucket),
@@ -370,7 +370,7 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (webs
 }
 
 func (me *CosService) ListBuckets(ctx context.Context) (buckets []*s3.Bucket, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.ListBucketsInput{}
 	response, err := me.client.UseCosClient().ListBuckets(&request)
@@ -388,7 +388,7 @@ func (me *CosService) ListBuckets(ctx context.Context) (buckets []*s3.Bucket, er
 }
 
 func (me *CosService) ListObjects(ctx context.Context, bucket string) (objects []*s3.Object, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := s3.ListObjectsInput{
 		Bucket: aws.String(bucket),

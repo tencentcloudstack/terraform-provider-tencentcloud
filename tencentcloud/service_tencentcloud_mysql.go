@@ -36,7 +36,7 @@ func (me *MysqlService) DescribeBackupsByMysqlId(ctx context.Context,
 	mysqlId string,
 	leftNumber int64) (backupInfos []*cdb.BackupInfo, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	listInitSize := leftNumber
 	if listInitSize > 500 {
@@ -88,7 +88,7 @@ needMoreItems:
 
 func (me *MysqlService) CreateBackup(ctx context.Context, mysqlId string) (backupId int64, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewCreateBackupRequest()
 
 	backupMethod := "logical"
@@ -113,7 +113,7 @@ func (me *MysqlService) CreateBackup(ctx context.Context, mysqlId string) (backu
 
 func (me *MysqlService) DescribeDBZoneConfig(ctx context.Context) (sellConfigures []*cdb.RegionSellConf, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewDescribeDBZoneConfigRequest()
 
 	defer func() {
@@ -134,7 +134,7 @@ func (me *MysqlService) DescribeDBZoneConfig(ctx context.Context) (sellConfigure
 
 func (me *MysqlService) DescribeBackupConfigByMysqlId(ctx context.Context, mysqlId string) (desResponse *cdb.DescribeBackupConfigResponse, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewDescribeBackupConfigRequest()
 	request.InstanceId = &mysqlId
 
@@ -157,7 +157,7 @@ func (me *MysqlService) DescribeBackupConfigByMysqlId(ctx context.Context, mysql
 func (me *MysqlService) ModifyBackupConfigByMysqlId(ctx context.Context, mysqlId string,
 	retentionPeriod int64, backupModel, backupTime string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewModifyBackupConfigRequest()
 	request.InstanceId = &mysqlId
 	request.ExpireDays = &retentionPeriod
@@ -180,7 +180,7 @@ func (me *MysqlService) ModifyBackupConfigByMysqlId(ctx context.Context, mysqlId
 	return
 }
 func (me *MysqlService) DescribeDefaultParameters(ctx context.Context, engineVersion string) (parameterList []*cdb.ParameterDetail, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewDescribeDefaultParamsRequest()
 	request.EngineVersion = &engineVersion
@@ -207,7 +207,7 @@ func (me *MysqlService) DescribeDefaultParameters(ctx context.Context, engineVer
 
 func (me *MysqlService) DescribeInstanceParameters(ctx context.Context, instanceId string) (parameterList []*cdb.ParameterDetail, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewDescribeInstanceParamsRequest()
 	request.InstanceId = &instanceId
@@ -231,7 +231,7 @@ func (me *MysqlService) DescribeInstanceParameters(ctx context.Context, instance
 
 func (me *MysqlService) ModifyInstanceParam(ctx context.Context, instanceId string, params map[string]string) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewModifyInstanceParamRequest()
 	request.InstanceIds = []*string{&instanceId}
@@ -294,7 +294,7 @@ func (me *MysqlService) DescribeCaresParameters(ctx context.Context, instanceId 
 func (me *MysqlService) CreateAccount(ctx context.Context, mysqlId string,
 	accountName, accountPassword, accountDescription string) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewCreateAccountsRequest()
 
@@ -325,7 +325,7 @@ func (me *MysqlService) CreateAccount(ctx context.Context, mysqlId string,
 func (me *MysqlService) ModifyAccountPassword(ctx context.Context, mysqlId string,
 	accountName, accountPassword string) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewModifyAccountPasswordRequest()
 
@@ -355,7 +355,7 @@ func (me *MysqlService) ModifyAccountPassword(ctx context.Context, mysqlId strin
 func (me *MysqlService) ModifyAccountDescription(ctx context.Context, mysqlId string,
 	accountName, accountDescription string) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewModifyAccountDescriptionRequest()
 
@@ -385,7 +385,7 @@ func (me *MysqlService) ModifyAccountDescription(ctx context.Context, mysqlId st
 func (me *MysqlService) DeleteAccount(ctx context.Context, mysqlId string,
 	accountName string) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewDeleteAccountsRequest()
 
@@ -413,7 +413,7 @@ func (me *MysqlService) DeleteAccount(ctx context.Context, mysqlId string,
 
 func (me *MysqlService) DescribeAccounts(ctx context.Context, mysqlId string) (accountInfos []*cdb.AccountInfo, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	var (
 		listInitSize int64 = 100
@@ -462,7 +462,7 @@ needMoreItems:
 }
 
 func (me *MysqlService) _innerDescribeAsyncRequestInfo(ctx context.Context, asyncRequestId string) (status, message string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewDescribeAsyncRequestInfoRequest()
 	request.AsyncRequestId = &asyncRequestId
 
@@ -513,7 +513,7 @@ func (me *MysqlService) DescribeAsyncRequestInfo(ctx context.Context, asyncReque
 func (me *MysqlService) ModifyAccountPrivileges(ctx context.Context, mysqlId string,
 	accountName string, databaseNames []string, privileges []string) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewModifyAccountPrivilegesRequest()
 	request.InstanceId = &mysqlId
 
@@ -557,7 +557,7 @@ func (me *MysqlService) ModifyAccountPrivileges(ctx context.Context, mysqlId str
 func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId string,
 	accountName string, databaseNames []string) (privileges []string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	privileges = make([]string, 0, len(MYSQL_DATABASE_PRIVILEGE))
 
@@ -645,7 +645,7 @@ func (me *MysqlService) DescribeDBInstanceById(ctx context.Context, mysqlId stri
 
 func (me *MysqlService) DescribeIsolatedDBInstanceById(ctx context.Context, mysqlId string) (mysqlInfo *cdb.InstanceInfo, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewDescribeDBInstancesRequest()
 	request.InstanceIds = []*string{&mysqlId}
 
@@ -682,7 +682,7 @@ func (me *MysqlService) DescribeIsolatedDBInstanceById(ctx context.Context, mysq
 
 func (me *MysqlService) _innerDescribeDBInstanceById(ctx context.Context, mysqlId string) (mysqlInfo *cdb.InstanceInfo, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewDescribeDBInstancesRequest()
 	request.InstanceIds = []*string{&mysqlId}
 
@@ -715,7 +715,7 @@ func (me *MysqlService) _innerDescribeDBInstanceById(ctx context.Context, mysqlI
 
 func (me *MysqlService) DescribeRunningDBInstanceById(ctx context.Context, mysqlId string) (mysqlInfo *cdb.InstanceInfo, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewDescribeDBInstancesRequest()
 	request.InstanceIds = []*string{&mysqlId}
 	runningStatus := uint64(1)
@@ -750,7 +750,7 @@ func (me *MysqlService) DescribeRunningDBInstanceById(ctx context.Context, mysql
 
 func (me *MysqlService) CheckDBGTIDOpen(ctx context.Context, mysqlId string) (open int64, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewDescribeDBInstanceGTIDRequest()
 	request.InstanceId = &mysqlId
 
@@ -775,7 +775,7 @@ func (me *MysqlService) CheckDBGTIDOpen(ctx context.Context, mysqlId string) (op
 }
 
 func (me *MysqlService) DescribeDBSecurityGroups(ctx context.Context, mysqlId string) (securityGroups []string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewDescribeDBSecurityGroupsRequest()
 	request.InstanceId = &mysqlId
 	securityGroups = make([]string, 0, 10)
@@ -803,7 +803,7 @@ func (me *MysqlService) DescribeDBSecurityGroups(ctx context.Context, mysqlId st
 
 func (me *MysqlService) ModifyInstanceTag(ctx context.Context, mysqlId string, deleteTags, modifyTags map[string]string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewModifyInstanceTagRequest()
 	request.InstanceId = &mysqlId
@@ -845,7 +845,7 @@ func (me *MysqlService) ModifyInstanceTag(ctx context.Context, mysqlId string, d
 
 func (me *MysqlService) DescribeTagsOfInstanceId(ctx context.Context, mysqlId string) (tags map[string]string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewDescribeTagsOfInstanceIdsRequest()
 	request.InstanceIds = []*string{&mysqlId}
 	tags = make(map[string]string)
@@ -878,7 +878,7 @@ func (me *MysqlService) DescribeTagsOfInstanceId(ctx context.Context, mysqlId st
 
 func (me *MysqlService) DescribeDBInstanceConfig(ctx context.Context, mysqlId string) (backupConfig *cdb.DescribeDBInstanceConfigResponse,
 	errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewDescribeDBInstanceConfigRequest()
 	request.InstanceId = &mysqlId
 
@@ -904,7 +904,7 @@ func (me *MysqlService) DescribeDBInstanceConfig(ctx context.Context, mysqlId st
 }
 
 func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId string, password string) (asyncRequestId string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewInitDBInstancesRequest()
 	request.InstanceIds = []*string{&mysqlId}
 	request.NewPassword = &password
@@ -944,7 +944,7 @@ func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId string, pas
 
 func (me *MysqlService) OpenWanService(ctx context.Context, mysqlId string) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewOpenWanServiceRequest()
 	request.InstanceId = &mysqlId
 
@@ -966,7 +966,7 @@ func (me *MysqlService) OpenWanService(ctx context.Context, mysqlId string) (asy
 
 func (me *MysqlService) CloseWanService(ctx context.Context, mysqlId string) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewCloseWanServiceRequest()
 	request.InstanceId = &mysqlId
 	defer func() {
@@ -987,7 +987,7 @@ func (me *MysqlService) CloseWanService(ctx context.Context, mysqlId string) (as
 
 func (me *MysqlService) OpenDBInstanceGTID(ctx context.Context, mysqlId string) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewOpenDBInstanceGTIDRequest()
 	request.InstanceId = &mysqlId
 	defer func() {
@@ -1009,7 +1009,7 @@ func (me *MysqlService) OpenDBInstanceGTID(ctx context.Context, mysqlId string) 
 func (me *MysqlService) ModifyDBInstanceName(ctx context.Context, mysqlId,
 	newInstanceName string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewModifyDBInstanceNameRequest()
 	request.InstanceId = &mysqlId
 	request.InstanceName = &newInstanceName
@@ -1029,7 +1029,7 @@ func (me *MysqlService) ModifyDBInstanceName(ctx context.Context, mysqlId,
 }
 
 func (me *MysqlService) ModifyDBInstanceVipVport(ctx context.Context, mysqlId, vpcId, subnetId string, port int64) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewModifyDBInstanceVipVportRequest()
 	request.InstanceId = &mysqlId
 	request.DstPort = &port
@@ -1057,7 +1057,7 @@ func (me *MysqlService) ModifyDBInstanceVipVport(ctx context.Context, mysqlId, v
 func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
 	memSize, volumeSize int64) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	var waitSwitch int64 = 0 // 0- switch immediately, 1- time window switch
 
@@ -1086,7 +1086,7 @@ func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
 
 func (me *MysqlService) ModifyDBInstanceProject(ctx context.Context, mysqlId string, newProjectId int64) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewModifyDBInstanceProjectRequest()
 	request.InstanceIds = []*string{&mysqlId}
@@ -1112,7 +1112,7 @@ func (me *MysqlService) ModifyDBInstanceProject(ctx context.Context, mysqlId str
 
 func (me *MysqlService) ModifyDBInstanceSecurityGroups(ctx context.Context, mysqlId string, securityGroups []string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewModifyDBInstanceSecurityGroupsRequest()
 	request.InstanceId = &mysqlId
@@ -1141,7 +1141,7 @@ func (me *MysqlService) ModifyDBInstanceSecurityGroups(ctx context.Context, mysq
 
 func (me *MysqlService) DisassociateSecurityGroup(ctx context.Context, mysqlId string, securityGroup string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := cdb.NewDisassociateSecurityGroupsRequest()
 	request.InstanceIds = []*string{&mysqlId}
@@ -1167,7 +1167,7 @@ func (me *MysqlService) DisassociateSecurityGroup(ctx context.Context, mysqlId s
 
 func (me *MysqlService) ModifyAutoRenewFlag(ctx context.Context, mysqlId string, newRenewFlag int64) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewModifyAutoRenewFlagRequest()
 	request.InstanceIds = []*string{&mysqlId}
 	request.AutoRenew = &newRenewFlag
@@ -1192,7 +1192,7 @@ func (me *MysqlService) ModifyAutoRenewFlag(ctx context.Context, mysqlId string,
 
 func (me *MysqlService) IsolateDBInstance(ctx context.Context, mysqlId string) (asyncRequestId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewIsolateDBInstanceRequest()
 	request.InstanceId = &mysqlId
 
@@ -1217,7 +1217,7 @@ func (me *MysqlService) IsolateDBInstance(ctx context.Context, mysqlId string) (
 
 func (me *MysqlService) OfflineIsolatedInstances(ctx context.Context, mysqlId string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cdb.NewOfflineIsolatedInstancesRequest()
 	request.InstanceIds = []*string{&mysqlId}
 

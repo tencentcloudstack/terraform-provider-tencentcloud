@@ -14,7 +14,7 @@ type MongodbService struct {
 }
 
 func (me *MongodbService) DescribeInstanceById(ctx context.Context, instanceId string) (instance *mongodb.MongoDBInstanceDetail, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := mongodb.NewDescribeDBInstancesRequest()
 	request.InstanceIds = []*string{&instanceId}
 	response, err := me.client.UseMongodbClient().DescribeDBInstances(request)
@@ -36,7 +36,7 @@ func (me *MongodbService) DescribeInstanceById(ctx context.Context, instanceId s
 }
 
 func (me *MongodbService) ModifyInstanceName(ctx context.Context, instanceId, instanceName string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := mongodb.NewRenameInstanceRequest()
 	request.InstanceId = &instanceId
 	request.NewName = &instanceName
@@ -52,7 +52,7 @@ func (me *MongodbService) ModifyInstanceName(ctx context.Context, instanceId, in
 }
 
 func (me *MongodbService) SetInstancePassword(ctx context.Context, instanceId, accountName, password string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := mongodb.NewSetPasswordRequest()
 	request.InstanceId = &instanceId
 	request.UserName = &accountName
@@ -69,7 +69,7 @@ func (me *MongodbService) SetInstancePassword(ctx context.Context, instanceId, a
 }
 
 func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string, memory, volume int) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := mongodb.NewUpgradeDBInstanceHourRequest()
 	request.InstanceId = &instanceId
 	request.Memory = intToPointer(memory)
@@ -86,7 +86,7 @@ func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string
 }
 
 func (me *MongodbService) ModifyProjectId(ctx context.Context, instanceId string, projectId int) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := mongodb.NewAssignProjectRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.ProjectId = intToPointer(projectId)
@@ -102,7 +102,7 @@ func (me *MongodbService) ModifyProjectId(ctx context.Context, instanceId string
 }
 
 func (me *MongodbService) DeleteInstance(ctx context.Context, instanceId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := mongodb.NewTerminateDBInstanceRequest()
 	request.InstanceId = &instanceId
 	response, err := me.client.UseMongodbClient().TerminateDBInstance(request)
@@ -117,7 +117,7 @@ func (me *MongodbService) DeleteInstance(ctx context.Context, instanceId string)
 }
 
 func (me *MongodbService) DescribeSpecInfo(ctx context.Context, zone string) (infos []*mongodb.SpecificationInfo, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := mongodb.NewDescribeSpecInfoRequest()
 	if zone != "" {
 		request.Zone = &zone
@@ -139,7 +139,7 @@ func (me *MongodbService) DescribeSpecInfo(ctx context.Context, zone string) (in
 func (me *MongodbService) DescribeInstancesByFilter(ctx context.Context, instanceId string,
 	clusterType int) (mongodbs []*mongodb.MongoDBInstanceDetail, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := mongodb.NewDescribeDBInstancesRequest()
 	if instanceId != "" {
 		request.InstanceIds = []*string{&instanceId}
