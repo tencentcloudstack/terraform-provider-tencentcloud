@@ -190,34 +190,34 @@ func testAccCheckMysqlMasterInstanceExists(n string) resource.TestCheckFunc {
 
 func testAccMysqlMasterInstance_basic() string {
 	return `
-	resource "tencentcloud_mysql_instance" "mysql_master" {
-		pay_type = 1
-		mem_size = 1000
-		volume_size = 50
-		instance_name = "testAccMysql"
-		engine_version = "5.7"
-		root_password = "test1234"
-		intranet_port =3360
-		availability_zone = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
-		first_slave_zone = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
+resource "tencentcloud_mysql_instance" "mysql_master" {
+  pay_type          = 1
+  mem_size          = 1000
+  volume_size       = 50
+  instance_name     = "testAccMysql"
+  engine_version    = "5.7"
+  root_password     = "test1234"
+  intranet_port     = 3360
+  availability_zone = "ap-guangzhou-3"
+  first_slave_zone  = "ap-guangzhou-3"
 }`
 }
 
 func testAccMysqlMasterInstance_fullslave() string {
 	return `
-	resource "tencentcloud_mysql_instance" "mysql_master" {
-		pay_type = 1
-		mem_size = 1000
-		volume_size = 50
-		instance_name = "testAccMysql"
-		engine_version = "5.7"
-		root_password = "test1234"
-		intranet_port =3360
-		availability_zone = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
-		slave_deploy_mode = 0
-		first_slave_zone = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
-		second_slave_zone  = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
-		slave_sync_mode     = 2
+resource "tencentcloud_mysql_instance" "mysql_master" {
+  pay_type          = 1
+  mem_size          = 1000
+  volume_size       = 50
+  instance_name     = "testAccMysql"
+  engine_version    = "5.7"
+  root_password     = "test1234"
+  intranet_port     = 3360
+  availability_zone = "ap-guangzhou-3"
+  slave_deploy_mode = 0
+  first_slave_zone  = "ap-guangzhou-3"
+  second_slave_zone = "ap-guangzhou-3"
+  slave_sync_mode   = 2
 }`
 }
 
@@ -227,71 +227,72 @@ func testAccMysqlMasterInstance_internet_service(open bool) string {
 		tag = "1"
 	}
 	return `
-	resource "tencentcloud_mysql_instance" "mysql_master" {
-		pay_type = 1
-		mem_size = 1000
-		volume_size = 50
-		instance_name = "testAccMysql"
-		engine_version = "5.7"
-		root_password = "test1234"
-		intranet_port =3360
-		availability_zone = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
-		first_slave_zone = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
-		internet_service = ` + tag + `
+resource "tencentcloud_mysql_instance" "mysql_master" {
+  pay_type          = 1
+  mem_size          = 1000
+  volume_size       = 50
+  instance_name     = "testAccMysql"
+  engine_version    = "5.7"
+  root_password     = "test1234"
+  intranet_port     = 3360
+  availability_zone = "ap-guangzhou-3"
+  first_slave_zone  = "ap-guangzhou-3"
+  internet_service  = ` + tag + `
 }`
 
 }
 
 func testAccMysqlMasterInstance_parameters() string {
 	return `
-	resource "tencentcloud_mysql_instance" "mysql_master" {
-		pay_type = 1
-		mem_size = 1000
-		volume_size = 50
-		instance_name = "testAccMysql"
-		engine_version = "5.7"
-		root_password = "test1234"
-		intranet_port =3360
-		availability_zone = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
-		first_slave_zone = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
-		parameters = {
-			max_connections = "1000"
-		}
+resource "tencentcloud_mysql_instance" "mysql_master" {
+  pay_type          = 1
+  mem_size          = 1000
+  volume_size       = 50
+  instance_name     = "testAccMysql"
+  engine_version    = "5.7"
+  root_password     = "test1234"
+  intranet_port     = 3360
+  availability_zone = "ap-guangzhou-3"
+  first_slave_zone  = "ap-guangzhou-3"
+  
+  parameters = {
+    max_connections = "1000"
+  }
 }`
 }
 
 func testAccMysqlMasterInstance_multiTags(value string) string {
 	return fmt.Sprintf(`
-    resource "tencentcloud_mysql_instance" "mysql_master" {
-		pay_type = 1
-		mem_size = 1000
-		volume_size = 50
-		instance_name = "testAccMysql"
-		engine_version = "5.7"
-		root_password = "test1234"
-		intranet_port =3360
-		availability_zone = "`+TestAccTencentCloudMysqlMasterInstance_availability_zone+`"
-		first_slave_zone = "`+TestAccTencentCloudMysqlMasterInstance_availability_zone+`"
-		tags = {
-			test = "test-tf"
-			role = "%s"
-		}
+resource "tencentcloud_mysql_instance" "mysql_master" {
+  pay_type          = 1
+  mem_size          = 1000
+  volume_size       = 50
+  instance_name     = "testAccMysql"
+  engine_version    = "5.7"
+  root_password     = "test1234"
+  intranet_port     = 3360
+  availability_zone = "ap-guangzhou-3"
+  first_slave_zone  = "ap-guangzhou-3"
+  tags = {
+    test = "test-tf"
+    role = "%s"
+  }
 }
 	`, value)
 }
 
 func testAccMysqlMasterInstance_update(instance_name, instranet_port string) string {
 	tpl := `
-	resource "tencentcloud_mysql_instance" "mysql_master" {
-		pay_type = 1
-		mem_size = 1000
-		volume_size = 50
-		instance_name =  "%s"
-		engine_version = "5.7"
-		root_password = "test1234"
-		intranet_port = %s
-		availability_zone = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
-		first_slave_zone = "` + TestAccTencentCloudMysqlMasterInstance_availability_zone + `"
+resource "tencentcloud_mysql_instance" "mysql_master" {
+  pay_type          = 1
+  mem_size          = 1000
+  volume_size       = 50
+  instance_name     = "%s"
+  engine_version    = "5.7"
+  root_password     = "test1234"
+  intranet_port     = %s
+  availability_zone = "ap-guangzhou-3"
+  first_slave_zone  = "ap-guangzhou-3"
 }`
 	return fmt.Sprintf(tpl, instance_name, instranet_port)
 }

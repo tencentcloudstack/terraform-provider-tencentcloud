@@ -114,35 +114,35 @@ func testAccTencentCloudRedisInstanceDestroy(s *terraform.State) error {
 
 func testAccRedisInstanceBasic() string {
 	return `
-resource "tencentcloud_redis_instance" "redis_instance_test"{
-	availability_zone="ap-guangzhou-3"
-	type="master_slave_redis"
-	password="test12345789"
-	mem_size=8192
-	name="terrform_test"
-	port=6379
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone = "ap-guangzhou-3"
+  type              = "master_slave_redis"
+  password          = "test12345789"
+  mem_size          = 8192
+  name              = "terrform_test"
+  port              = 6379
 }`
 }
 
 func testAccRedisInstanceUpdateName() string {
 	return `
-resource "tencentcloud_redis_instance" "redis_instance_test"{
-	availability_zone="ap-guangzhou-3"
-	type="master_slave_redis"
-	password="test12345789"
-	mem_size=8192
-	name="terrform_test_update"
-	port=6379
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone = "ap-guangzhou-3"
+  type              = "master_slave_redis"
+  password          = "test12345789"
+  mem_size          = 8192
+  name              = "terrform_test_update"
+  port              = 6379
 }`
 }
 func testAccRedisInstanceUpdateMemsizeAndPassword() string {
 	return `
-resource "tencentcloud_redis_instance" "redis_instance_test"{
-	availability_zone="ap-guangzhou-3"
-	type="master_slave_redis"
-	password="AAA123456BBB"
-	mem_size=12288
-	name="terrform_test_update"
-	port=6379
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone = "ap-guangzhou-3"
+  type              = "master_slave_redis"
+  password          = "AAA123456BBB"
+  mem_size          = 12288
+  name              = "terrform_test_update"
+  port              = 6379
 }`
 }

@@ -158,14 +158,14 @@ func testAccCheckCosBucketObjectDestroy(s *terraform.State) error {
 func testAccCosBucketObject_source(appid string, source string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "object_bucket" {
-	bucket = "tf-bucket-%d-%s"
+  bucket = "tf-bucket-%d-%s"
 }
 
 resource "tencentcloud_cos_bucket_object" "object_source" {
-	bucket = "${tencentcloud_cos_bucket.object_bucket.bucket}"
-	key = "tf-object-source"
-	source = "%s"
-	content_type = "binary/octet-stream"
+  bucket       = "${tencentcloud_cos_bucket.object_bucket.bucket}"
+  key          = "tf-object-source"
+  source       = "%s"
+  content_type = "binary/octet-stream"
 }
 `, acctest.RandInt(), appid, source)
 }
@@ -173,14 +173,14 @@ resource "tencentcloud_cos_bucket_object" "object_source" {
 func testAccCosBucketObject_content(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "object_bucket" {
-	bucket = "tf-bucket-%d-%s"
+  bucket = "tf-bucket-%d-%s"
 }
 
 resource "tencentcloud_cos_bucket_object" "object_content" {
-	bucket = "${tencentcloud_cos_bucket.object_bucket.bucket}"
-	key = "tf-object-content"
-	content = "aaaaaaaaaaaaaaaa"
-	content_type = "binary/octet-stream"
+  bucket       = "${tencentcloud_cos_bucket.object_bucket.bucket}"
+  key          = "tf-object-content"
+  content      = "aaaaaaaaaaaaaaaa"
+  content_type = "binary/octet-stream"
 }
 `, acctest.RandInt(), appid)
 }
@@ -188,15 +188,15 @@ resource "tencentcloud_cos_bucket_object" "object_content" {
 func testAccCosBucketObject_storageClass(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "object_bucket" {
-	bucket = "tf-bucket-%d-%s"
+  bucket = "tf-bucket-%d-%s"
 }
 
 resource "tencentcloud_cos_bucket_object" "object_storage" {
-	bucket = "${tencentcloud_cos_bucket.object_bucket.bucket}"
-	key = "tf-object-full"
-	content = "aaaaaaaaaaaaaaaa"
-	content_type = "binary/octet-stream"
-	storage_class = "STANDARD_IA"
+  bucket        = "${tencentcloud_cos_bucket.object_bucket.bucket}"
+  key           = "tf-object-full"
+  content       = "aaaaaaaaaaaaaaaa"
+  content_type  = "binary/octet-stream"
+  storage_class = "STANDARD_IA"
 }
 `, acctest.RandInt(), appid)
 }
@@ -204,14 +204,14 @@ resource "tencentcloud_cos_bucket_object" "object_storage" {
 func testAccCosBucketObject_acl(appid, acl string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "object_bucket" {
-	bucket = "tf-bucket-acl-%s"
+  bucket = "tf-bucket-acl-%s"
 }
 
 resource "tencentcloud_cos_bucket_object" "object_acl" {
-	bucket = "${tencentcloud_cos_bucket.object_bucket.bucket}"
-	key = "tf-object-acl"
-	content = "aaaaaaaaaaaaaaaa"
-	acl = "%s"
+  bucket  = "${tencentcloud_cos_bucket.object_bucket.bucket}"
+  key     = "tf-object-acl"
+  content = "aaaaaaaaaaaaaaaa"
+  acl     = "%s"
 }
 `, appid, acl)
 }

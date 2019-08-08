@@ -89,30 +89,30 @@ func testAccTencentCloudRedisBackupConfigDestroy(s *terraform.State) error {
 
 func testAccRedisBackupConfigUpdate() string {
 	return fmt.Sprintf(`
-resource "tencentcloud_redis_instance" "redis_instance_test"{
-	availability_zone="ap-guangzhou-3"
-	password="test12345789"
-	mem_size=8192
-	name="terrform_test"
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone = "ap-guangzhou-3"
+  password          = "test12345789"
+  mem_size          = 8192
+  name              = "terrform_test"
 }
 resource "tencentcloud_redis_backup_config" "redis_backup_config" {
-	redis_id="${tencentcloud_redis_instance.redis_instance_test.id}"
-	backup_time="01:00-02:00"
-	backup_period=["Saturday", "Sunday"]
+  redis_id      = "${tencentcloud_redis_instance.redis_instance_test.id}"
+  backup_time   = "01:00-02:00"
+  backup_period = ["Saturday", "Sunday"]
 }`)
 }
 
 func testAccRedisBackupConfig() string {
 	return fmt.Sprintf(`
-resource "tencentcloud_redis_instance" "redis_instance_test"{
-	availability_zone="ap-guangzhou-3"
-	password="test12345789"
-	mem_size=8192
-	name="terrform_test"
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone = "ap-guangzhou-3"
+  password          = "test12345789"
+  mem_size          = 8192
+  name              = "terrform_test"
 }
 resource "tencentcloud_redis_backup_config" "redis_backup_config" {
-	redis_id="${tencentcloud_redis_instance.redis_instance_test.id}"
-	backup_time="06:00-07:00"
-	backup_period=["Wednesday"]
+  redis_id      = "${tencentcloud_redis_instance.redis_instance_test.id}"
+  backup_time   = "06:00-07:00"
+  backup_period = ["Wednesday"]
 }`)
 }

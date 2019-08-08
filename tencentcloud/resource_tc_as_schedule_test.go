@@ -93,41 +93,41 @@ func testAccCheckAsScheduleDestroy(s *terraform.State) error {
 func testAccAsSchedule(startTime, endTime string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_vpc" "vpc" {
-	name = "tf-as-vpc"
-	cidr_block = "10.2.0.0/16"
+  name       = "tf-as-vpc"
+  cidr_block = "10.2.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	name = "tf-as-subnet"
-	cidr_block = "10.2.11.0/24"
-	availability_zone = "ap-guangzhou-3"
+  vpc_id            = "${tencentcloud_vpc.vpc.id}"
+  name              = "tf-as-subnet"
+  cidr_block        = "10.2.11.0/24"
+  availability_zone = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-configuration"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
+  configuration_name = "tf-as-configuration"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
 }
 
-resource "tencentcloud_as_scaling_group" "scaling_group" {	
-	scaling_group_name = "tf-as-scaling-group"
-	configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
-	max_size = 1
-	min_size = 0
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	subnet_ids = ["${tencentcloud_subnet.subnet.id}"]
+resource "tencentcloud_as_scaling_group" "scaling_group" {
+  scaling_group_name = "tf-as-scaling-group"
+  configuration_id   = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  max_size           = 1
+  min_size           = 0
+  vpc_id             = "${tencentcloud_vpc.vpc.id}"
+  subnet_ids         = ["${tencentcloud_subnet.subnet.id}"]
 }
 
 resource "tencentcloud_as_schedule" "schedule" {
-	scaling_group_id = "${tencentcloud_as_scaling_group.scaling_group.id}"
-	schedule_action_name = "tf-as-schedule"
-	max_size = 1
-	min_size = 0
-	desired_capacity = 0
-	start_time = "%s"
-	end_time = "%s"
-	recurrence = "0 0 */1 * *"
+  scaling_group_id     = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  schedule_action_name = "tf-as-schedule"
+  max_size             = 1
+  min_size             = 0
+  desired_capacity     = 0
+  start_time           = "%s"
+  end_time             = "%s"
+  recurrence           = "0 0 */1 * *"
 }
 `, startTime, endTime)
 }
@@ -135,41 +135,41 @@ resource "tencentcloud_as_schedule" "schedule" {
 func testAccAsSchedule_update(startTime, endTime string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_vpc" "vpc" {
-	name = "tf-as-vpc"
-	cidr_block = "10.2.0.0/16"
+  name       = "tf-as-vpc"
+  cidr_block = "10.2.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	name = "tf-as-subnet"
-	cidr_block = "10.2.11.0/24"
-	availability_zone = "ap-guangzhou-3"
+  vpc_id            = "${tencentcloud_vpc.vpc.id}"
+  name              = "tf-as-subnet"
+  cidr_block        = "10.2.11.0/24"
+  availability_zone = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-configuration"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
+  configuration_name = "tf-as-configuration"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
 }
 
-resource "tencentcloud_as_scaling_group" "scaling_group" {	
-	scaling_group_name = "tf-as-scaling-group"
-	configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
-	max_size = 1
-	min_size = 0
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	subnet_ids = ["${tencentcloud_subnet.subnet.id}"]
+resource "tencentcloud_as_scaling_group" "scaling_group" {
+  scaling_group_name = "tf-as-scaling-group"
+  configuration_id   = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  max_size           = 1
+  min_size           = 0
+  vpc_id             = "${tencentcloud_vpc.vpc.id}"
+  subnet_ids         = ["${tencentcloud_subnet.subnet.id}"]
 }
 
 resource "tencentcloud_as_schedule" "schedule" {
-	scaling_group_id = "${tencentcloud_as_scaling_group.scaling_group.id}"
-	schedule_action_name = "tf-as-schedule-update"
-	max_size = 2
-	min_size = 0
-	desired_capacity = 0
-	start_time = "%s"
-	end_time = "%s"
-	recurrence = "1 1 */1 * *"
+  scaling_group_id     = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  schedule_action_name = "tf-as-schedule-update"
+  max_size             = 2
+  min_size             = 0
+  desired_capacity     = 0
+  start_time           = "%s"
+  end_time             = "%s"
+  recurrence           = "1 1 */1 * *"
 }
 `, startTime, endTime)
 }

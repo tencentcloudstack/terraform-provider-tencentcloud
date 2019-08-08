@@ -42,12 +42,12 @@ data "tencentcloud_eip" "my_eip" {
 
 const testAccTencentCloudEipDataSourceConfig_filter = `
 resource "tencentcloud_eip" "foo" {
+	name = "gateway_eip"
 }
 
 data "tencentcloud_eip" "my_eip" {
   filter {
-    name   = "address-status"
-    values = ["UNBIND"]
+    name   = "gateway_eip"
   }
 }
 `

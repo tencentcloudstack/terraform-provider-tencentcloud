@@ -264,7 +264,7 @@ func testAccCosBucket_basic(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_basic" {
 	bucket = "tf-bucket-basic-%s"
-	acl = "public-read"
+	acl    = "public-read"
 }
 `, appid)
 }
@@ -273,7 +273,7 @@ func testAccCosBucket_basicUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_basic" {
 	bucket = "tf-bucket-basic-%s"
-	acl = "private"
+	acl    = "private"
 }
 `, appid)
 }
@@ -282,12 +282,13 @@ func testAccCosBucket_cors(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_cors" {
 	bucket = "tf-bucket-cors-%s"
-	acl = "public-read"
+	acl    = "public-read"
+
 	cors_rules {
 		allowed_headers = ["*"]
 		allowed_methods = ["GET","POST"]
 		allowed_origins = ["https://www.test.com"]
-		expose_headers = ["x-cos-test"]
+		expose_headers  = ["x-cos-test"]
 		max_age_seconds = 300
 	}
 }
@@ -298,12 +299,12 @@ func testAccCosBucket_corsUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_cors" {
 	bucket = "tf-bucket-cors-%s"
-	acl = "public-read"
+	acl    = "public-read"
 	cors_rules {
 		allowed_headers = ["*"]
 		allowed_methods = ["GET","POST","PUT"]
 		allowed_origins = ["https://www.example.com"]
-		expose_headers = ["x-cos-test"]
+		expose_headers  = ["x-cos-test"]
 		max_age_seconds = 100
 	}
 }
@@ -314,18 +315,18 @@ func testAccBucket_lifecycle(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
 	bucket = "tf-bucket-lifecycle-%s"
-	acl = "public-read"
+	acl    = "public-read"
 	lifecycle_rules {
 		filter_prefix = "test/"
 		expiration {
 			days = 365
 		}
 		transition {
-			days = 30
+			days          = 30
 			storage_class = "STANDARD_IA"
 		}
 		transition {
-			days = 60
+			days          = 60
 			storage_class = "ARCHIVE"
 		}
 	}
@@ -337,18 +338,18 @@ func testAccBucket_lifecycleUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
 	bucket = "tf-bucket-lifecycle-%s"
-	acl = "public-read"
+	acl    = "public-read"
 	lifecycle_rules {
 		filter_prefix = "test/"
 		expiration {
 			days = 300
 		}
 		transition {
-			days = 30
+			days          = 30
 			storage_class = "STANDARD_IA"
 		}
 		transition {
-			days = 90
+			days          = 90
 			storage_class = "ARCHIVE"
 		}
 	}
@@ -360,7 +361,7 @@ func testAccBucket_website(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_website" {
 	bucket = "tf-bucket-website-%s"
-	acl = "public-read"
+	acl    = "public-read"
 	website {
 		index_document = "index.html"
 		error_document = "error.html"
@@ -373,7 +374,7 @@ func testAccBucket_websiteUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_website" {
 	bucket = "tf-bucket-website-%s"
-	acl = "public-read"
+	acl    = "public-read"
 	website {
 		index_document = "testindex.html"
 		error_document = "testerror.html"

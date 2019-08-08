@@ -94,42 +94,42 @@ func testAccCheckSnapshotPolicyExists(n string) resource.TestCheckFunc {
 
 const testAccCbsSnapshotPolicy = `
 resource "tencentcloud_cbs_storage" "storage" {
-	availability_zone = "ap-guangzhou-3"
-	storage_size      = 50
-	storage_type      = "CLOUD_PREMIUM"
-	storage_name      = "tf-test-storage"
+  availability_zone = "ap-guangzhou-3"
+  storage_size      = 50
+  storage_type      = "CLOUD_PREMIUM"
+  storage_name      = "tf-test-storage"
 }
 
 resource "tencentcloud_cbs_snapshot" "snapshot" {
-	storage_id    = "${tencentcloud_cbs_storage.storage.id}"
-	snapshot_name = "tf-test-snapshot"
+  storage_id    = "${tencentcloud_cbs_storage.storage.id}"
+  snapshot_name = "tf-test-snapshot"
 }
 
 resource "tencentcloud_cbs_snapshot_policy" "snapshot_policy" {
-	snapshot_policy_name = "tf-test-snapshot-policy"
-	repeat_weekdays = [0, 3]
-	repeat_hours = [0]
-	retention_days = 30
+  snapshot_policy_name = "tf-test-snapshot-policy"
+  repeat_weekdays      = [0, 3]
+  repeat_hours         = [0]
+  retention_days       = 30
 }
 `
 
 const testAccCbsSnapshotPolicy_update = `
 resource "tencentcloud_cbs_storage" "storage" {
-	availability_zone = "ap-guangzhou-3"
-	storage_size      = 50
-	storage_type      = "CLOUD_PREMIUM"
-	storage_name      = "tf-test-storage"
+  availability_zone = "ap-guangzhou-3"
+  storage_size      = 50
+  storage_type      = "CLOUD_PREMIUM"
+  storage_name      = "tf-test-storage"
 }
 
 resource "tencentcloud_cbs_snapshot" "snapshot" {
-	storage_id    = "${tencentcloud_cbs_storage.storage.id}"
-	snapshot_name = "tf-test-snapshot"
+  storage_id    = "${tencentcloud_cbs_storage.storage.id}"
+  snapshot_name = "tf-test-snapshot"
 }
 
 resource "tencentcloud_cbs_snapshot_policy" "snapshot_policy" {
-	snapshot_policy_name = "tf-snapshot-policy-update"
-	repeat_weekdays = [1, 4]
-	repeat_hours = [1]
-	retention_days = 7
+  snapshot_policy_name = "tf-snapshot-policy-update"
+  repeat_weekdays      = [1, 4]
+  repeat_hours         = [1]
+  retention_days       = 7
 }
 `

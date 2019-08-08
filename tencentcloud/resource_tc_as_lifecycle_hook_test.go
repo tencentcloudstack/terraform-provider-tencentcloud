@@ -88,39 +88,39 @@ func testAccCheckAsLifecycleHookDestroy(s *terraform.State) error {
 func testAccAsLifecycleHook() string {
 	return `
 resource "tencentcloud_vpc" "vpc" {
-	name = "tf-as-vpc"
-	cidr_block = "10.2.0.0/16"
+  name       = "tf-as-vpc"
+  cidr_block = "10.2.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	name = "tf-as-subnet"
-	cidr_block = "10.2.11.0/24"
-	availability_zone = "ap-guangzhou-3"
+  vpc_id            = "${tencentcloud_vpc.vpc.id}"
+  name              = "tf-as-subnet"
+  cidr_block        = "10.2.11.0/24"
+  availability_zone = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-configuration"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
+  configuration_name = "tf-as-configuration"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
 }
 
-resource "tencentcloud_as_scaling_group" "scaling_group" {	
-	scaling_group_name = "tf-as-scaling-group"
-	configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
-	max_size = 1
-	min_size = 0
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	subnet_ids = ["${tencentcloud_subnet.subnet.id}"]
+resource "tencentcloud_as_scaling_group" "scaling_group" {
+  scaling_group_name = "tf-as-scaling-group"
+  configuration_id   = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  max_size           = 1
+  min_size           = 0
+  vpc_id             = "${tencentcloud_vpc.vpc.id}"
+  subnet_ids         = ["${tencentcloud_subnet.subnet.id}"]
 }
 
 resource "tencentcloud_as_lifecycle_hook" "lifecycle_hook" {
-	scaling_group_id = "${tencentcloud_as_scaling_group.scaling_group.id}"
-	lifecycle_hook_name = "tf-as-lifecycle-hook"
-	lifecycle_transition = "INSTANCE_LAUNCHING"
-	default_result = "CONTINUE"
-	heartbeat_timeout = 500
-	notification_metadata = "tf test"
+  scaling_group_id      = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  lifecycle_hook_name   = "tf-as-lifecycle-hook"
+  lifecycle_transition  = "INSTANCE_LAUNCHING"
+  default_result        = "CONTINUE"
+  heartbeat_timeout     = 500
+  notification_metadata = "tf test"
 }
 `
 }
@@ -128,39 +128,39 @@ resource "tencentcloud_as_lifecycle_hook" "lifecycle_hook" {
 func testAccAsLifecycleHook_update() string {
 	return `
 resource "tencentcloud_vpc" "vpc" {
-	name = "tf-as-vpc"
-	cidr_block = "10.2.0.0/16"
+  name       = "tf-as-vpc"
+  cidr_block = "10.2.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	name = "tf-as-subnet"
-	cidr_block = "10.2.11.0/24"
-	availability_zone = "ap-guangzhou-3"
+  vpc_id            = "${tencentcloud_vpc.vpc.id}"
+  name              = "tf-as-subnet"
+  cidr_block        = "10.2.11.0/24"
+  availability_zone = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-configuration"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
+  configuration_name = "tf-as-configuration"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
 }
 
-resource "tencentcloud_as_scaling_group" "scaling_group" {	
-	scaling_group_name = "tf-as-scaling-group"
-	configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
-	max_size = 1
-	min_size = 0
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	subnet_ids = ["${tencentcloud_subnet.subnet.id}"]
+resource "tencentcloud_as_scaling_group" "scaling_group" {
+  scaling_group_name = "tf-as-scaling-group"
+  configuration_id   = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  max_size           = 1
+  min_size           = 0
+  vpc_id             = "${tencentcloud_vpc.vpc.id}"
+  subnet_ids         = ["${tencentcloud_subnet.subnet.id}"]
 }
 
 resource "tencentcloud_as_lifecycle_hook" "lifecycle_hook" {
-	scaling_group_id = "${tencentcloud_as_scaling_group.scaling_group.id}"
-	lifecycle_hook_name = "tf-as-lifecycle-test"
-	lifecycle_transition = "INSTANCE_TERMINATING"
-	default_result = "ABANDON"
-	heartbeat_timeout = 300
-	notification_metadata = "tf lifecycle test"
+  scaling_group_id      = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  lifecycle_hook_name   = "tf-as-lifecycle-test"
+  lifecycle_transition  = "INSTANCE_TERMINATING"
+  default_result        = "ABANDON"
+  heartbeat_timeout     = 300
+  notification_metadata = "tf lifecycle test"
 }
 `
 }
