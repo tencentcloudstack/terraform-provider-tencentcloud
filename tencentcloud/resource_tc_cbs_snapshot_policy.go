@@ -27,6 +27,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
@@ -102,20 +103,24 @@ func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta in
 		request.RetentionDays = intToPointer(v.(int))
 	}
 
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CreateAutoSnapshotPolicy(request)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CreateAutoSnapshotPolicy(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		}
+		if response.Response.AutoSnapshotPolicyId == nil {
+			return resource.NonRetryableError(fmt.Errorf("snapshot policy id is nil"))
+		}
+		d.SetId(*response.Response.AutoSnapshotPolicyId)
+		return nil
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		log.Printf("[CRITAL]%s create cbs snapshot policy failed, reason:%s\n ", logId, err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
 
-	if response.Response.AutoSnapshotPolicyId == nil {
-		return fmt.Errorf("snapshot policy id is nil")
-	}
-	d.SetId(*response.Response.AutoSnapshotPolicyId)
 	return resourceTencentCloudCbsSnapshotPolicyRead(d, meta)
 }
 
@@ -129,17 +134,25 @@ func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta inte
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	policy, err := cbsService.DescribeSnapshotPolicyById(ctx, policyId)
+
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		policy, e := cbsService.DescribeSnapshotPolicyById(ctx, policyId)
+		if e != nil {
+			return retryError(e)
+		}
+		d.Set("snapshot_policy_name", policy.AutoSnapshotPolicyName)
+		if len(policy.Policy) > 0 {
+			d.Set("repeat_weekdays", flattenIntList(policy.Policy[0].DayOfWeek))
+			d.Set("repeat_hours", flattenIntList(policy.Policy[0].Hour))
+		}
+		d.Set("retention_days", policy.RetentionDays)
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read cbs snapshot policy failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
-	d.Set("snapshot_policy_name", policy.AutoSnapshotPolicyName)
-	if len(policy.Policy) > 0 {
-		d.Set("repeat_weekdays", flattenIntList(policy.Policy[0].DayOfWeek))
-		d.Set("repeat_hours", flattenIntList(policy.Policy[0].Hour))
-	}
-	d.Set("retention_days", policy.RetentionDays)
 	return nil
 }
 
@@ -173,14 +186,19 @@ func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta in
 		request.Policy = append(request.Policy, policy)
 	}
 
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().ModifyAutoSnapshotPolicyAttribute(request)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().ModifyAutoSnapshotPolicyAttribute(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		}
+		return nil
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		log.Printf("[CRITAL]%s update cbs snapshot policy failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return nil
 }
@@ -195,9 +213,18 @@ func resourceTencentCloudCbsSnapshotPolicyDelete(d *schema.ResourceData, meta in
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := cbsService.DeleteSnapshotPolicy(ctx, policyId)
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := cbsService.DeleteSnapshotPolicy(ctx, policyId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s delete cbs snapshot policy failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+
 	return nil
 }
