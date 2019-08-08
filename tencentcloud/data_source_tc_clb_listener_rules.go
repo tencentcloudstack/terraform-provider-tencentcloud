@@ -59,7 +59,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.",
+				Description:  " Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -140,7 +140,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of SSL Mode, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'.",
+							Description: "Type of SSL Mode, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'.",
 						},
 						"certificate_id": {
 							Type:        schema.TypeString,

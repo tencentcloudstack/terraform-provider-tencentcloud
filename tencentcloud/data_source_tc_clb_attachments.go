@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_clb_attachments" "clblab" {
-  listener_id = "lbl-hh141sn9#lb-k2zjp9lv"
-  clb_id      = "lb-k2zjp9lv"
-  rule_id     = "loc-4xxr2cy7"
+  listener_id   = "lbl-hh141sn9#lb-k2zjp9lv"
+  clb_id        = "lb-k2zjp9lv"
+  rule_id   = "loc-4xxr2cy7"
 }
 ```
 */

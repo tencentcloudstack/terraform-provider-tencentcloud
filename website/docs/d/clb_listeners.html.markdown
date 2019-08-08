@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 * `listener_list` - A list of listeners of cloud load balancers. Each element contains the following attributes:
   * `certificate_ca_id` - ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of 'HTTPS' protocol .
   * `certificate_id` - ID of the server certificate. If not specified, the content, key, and name of the server certificate must be set. NOTES: only supported by listeners of 'HTTPS' protocol.
-  * `certificate_ssl_mode` - Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.
+  * `certificate_ssl_mode` -  Type of certificate, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.
   * `clb_id` - ID of the CLB.
   * `health_check_health_num` - Health threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as healthy. The value range is 2-10.
   * `health_check_interval_time` - Interval time of health check. The value range is 5-300 sec, and the default is 5 sec.
