@@ -9,6 +9,7 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
+				ForceNew:     true,
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -19,10 +20,12 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validatePort,
+				ForceNew:     true,
 			},
 			"proxy_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"certificate_id": {
 				Type:     schema.TypeString,
@@ -37,10 +40,12 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				ForceNew:     true,
 			},
 			"client_certificate_id": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 
 			// computed
