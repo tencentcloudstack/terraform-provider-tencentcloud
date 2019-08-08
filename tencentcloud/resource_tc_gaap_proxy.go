@@ -28,10 +28,12 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 			"access_region": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"realserver_region": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"enable": {
 				Type:     schema.TypeBool,
@@ -41,6 +43,7 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 			"tags": {
 				Type:     schema.TypeMap,
 				Optional: true,
+				ForceNew: true,
 			},
 
 			// computed

@@ -15,6 +15,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"TCP", "UDP"}),
+				ForceNew:     true,
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -25,6 +26,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validatePort,
+				ForceNew:     true,
 			},
 			"scheduler": {
 				Type:         schema.TypeString,

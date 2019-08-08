@@ -12,11 +12,13 @@ func resourceTencentCloudGaapRealserver() *schema.Resource {
 				Optional:      true,
 				ValidateFunc:  validateIp,
 				ConflictsWith: []string{"domain"},
+				ForceNew:      true,
 			},
 			"domain": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ip"},
+				ForceNew:      true,
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -27,10 +29,12 @@ func resourceTencentCloudGaapRealserver() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				Default:  0,
+				ForceNew: true,
 			},
 			"tags": {
 				Type:     schema.TypeMap,
 				Optional: true,
+				ForceNew: true,
 			},
 		},
 	}

@@ -8,11 +8,13 @@ func resourceTencentCloudGaapSecurityPolicy() *schema.Resource {
 			"proxy_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"action": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"ACCEPT", "DROP"}),
+				ForceNew:     true,
 			},
 			"enable": {
 				Type:     schema.TypeBool,

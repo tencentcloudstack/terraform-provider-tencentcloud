@@ -13,10 +13,12 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 			"policy_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"cidr_ip": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errs []error) {
 					if _, err := validateIp(v, k); len(err) == 0 {
 						return
@@ -33,6 +35,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"ACCEPT", "DROP"}),
+				ForceNew:     true,
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -43,17 +46,19 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 				Required:     true,
 				Default:      "ALL",
 				ValidateFunc: validateAllowedStringValue([]string{"ALL", "TCP", "UDP"}),
+				ForceNew:     true,
 			},
 			"port": {
 				Type:     schema.TypeString,
 				Required: true,
 				Default:  "ALL",
+				ForceNew: true,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
 					if value == "ALL" {
 						return
 					}
-					match, _ := regexp.MatchString("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}\\-\\d{1,5}$", value)
+					match, _ := regexp.MatchString("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}-\\d{1,5}$", value)
 					if !match {
 						errors = append(errors, fmt.Errorf("%s example: 53、80,443、80-90, Not configured to represent all ports", k))
 					}
