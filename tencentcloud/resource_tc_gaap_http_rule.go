@@ -15,20 +15,29 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 			"listener_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"domain": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
 			"path": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validateStringPrefix("/"),
+				Type:     schema.TypeString,
+				Required: true,
+				ValidateFunc: func(v interface{}, k string) (ws []string, errs []error) {
+					_, errs = validateStringLengthInRange(1, 80)(v, k)
+					if len(errs) > 0 {
+						return
+					}
+
+					return validateStringPrefix("/")(v, k)
+				},
 			},
 			"realserver_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"IP", "DOMAIN"}),
+				ForceNew:     true,
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
@@ -56,7 +65,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 			"health_check_method": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateAllowedStringValue([]string{http.MethodGet, http.MethodPost}),
+				ValidateFunc: validateAllowedStringValue([]string{http.MethodGet, http.MethodHead}),
 			},
 			"health_check_status_codes": {
 				Type:     schema.TypeSet,
@@ -75,10 +84,6 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 					}
 					return
 				},
-			},
-			"health_check_domain": {
-				Type:     schema.TypeString,
-				Optional: true,
 			},
 			"certificate_id": {
 				Type:     schema.TypeString,
