@@ -94,7 +94,6 @@ resource "tencentcloud_container_cluster" "foo" {
   is_vpc_gateway    = 0
   storage_size      = 0
   root_size         = 50
-  root_type         = "CLOUD_SSD"
   goods_num         = 1
   password          = "Admin12345678"
   vpc_id            = "${var.my_vpc}"
