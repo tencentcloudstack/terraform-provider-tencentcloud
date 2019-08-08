@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud-cbs_snapshot_policy" "snapshot_policy" {
-	snapshot_policy_name  = "mysnapshotpolicyname"
-	repeat_weekdays = [1, 4]
-	repeat_hours = [1]
-	retention_days = 7
+  snapshot_policy_name  = "mysnapshotpolicyname"
+  repeat_weekdays = [1, 4]
+  repeat_hours = [1]
+  retention_days = 7
 }
 ```
 
@@ -77,6 +77,8 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 }
 
 func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_cbs_snapshot_policy.create")()
+
 	logId := GetLogId(nil)
 
 	request := cbs.NewCreateAutoSnapshotPolicyRequest()
@@ -118,6 +120,8 @@ func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_cbs_snapshot_policy.read")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -140,6 +144,8 @@ func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_cbs_snapshot_policy.update")()
+
 	logId := GetLogId(nil)
 
 	policyId := d.Id()
@@ -180,6 +186,8 @@ func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudCbsSnapshotPolicyDelete(d *schema.ResourceData, meta interface{}) error {
+	defer LogElapsed("resource.tencentcloud_cbs_snapshot_policy.delete")()
+
 	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

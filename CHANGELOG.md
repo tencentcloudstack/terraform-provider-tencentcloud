@@ -1,7 +1,36 @@
-## 1.14.0 (Unreleased)
+## 1.16.0 (Unreleased)
+## 1.15.0 (August 07, 2019)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_clb_instances`
+* **New Data Source**: `tencentcloud_clb_listeners`
+* **New Data Source**: `tencentcloud_clb_listener_rules`
+* **New Data Source**: `tencentcloud_clb_attachments`
+* **New Data Source**: `tencentcloud_clb_redirections`
+* **New Resource**: `tencentcloud_clb_instance`
+* **New Resource**: `tencentcloud_clb_listener`
+* **New Resource**: `tencentcloud_clb_listener_rule`
+* **New Resource**: `tencentcloud_clb_attachment`
+* **New Resource**: `tencentcloud_clb_redirection`
+
+DEPRECATED:
+* Resource: `tencentcloud_lb` replaced by `tencentcloud_clb_instance`.
+* Resource: `tencentcloud_alb_server_attachment` replaced by `tencentcloud_clb_attachment`.
+
+## 1.14.1 (August 05, 2019)
+
+BUG FIXIES:
+
+* resource/tencentcloud_security_group_rule: fixed security group rule id is not compatible with previous version.
+
+## 1.14.0 (July 30, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_security_groups`
+* **New Data Source**: `tencentcloud_mongodb_instances`
+* **New Data Source**: `tencentcloud_mongodb_zone_config`
+* **New Resource**: `tencentcloud_mongodb_instance`
+* **New Resource**: `tencentcloud_mongodb_sharding_instance`
 * **Update Resource**: `tencentcloud_security_group_rule` add optional argument `description`
 
 DEPRECATED:
@@ -69,8 +98,6 @@ DEPRECATED:
 * Data Source: `tencentcloud_subnet` replaced by  `tencentcloud_vpc_subnets`.
 * Data Source: `tencentcloud_route_table` replaced by `tencentcloud_vpc_route_tables`.
 * Resource: `tencentcloud_route_entry` replaced by `tencentcloud_route_table_entry`.
-
-
 
 ## 1.9.1 (June 24, 2019)
 

@@ -36,9 +36,16 @@ Data Sources
   tencentcloud_dc_gateway_ccn_routes
   tencentcloud_dc_gateway_instances
   tencentcloud_dcx_instances
+  tencentcloud_clb_instances
+  tencentcloud_clb_listeners
+  tencentcloud_clb_listener_rules
+  tencentcloud_clb_attachments
+  tencentcloud_clb_redirections
   tencentcloud_eip
   tencentcloud_image
   tencentcloud_instance_types
+  tencentcloud_mongodb_instances
+  tencentcloud_mongodb_zone_config
   tencentcloud_mysql_backup_list
   tencentcloud_mysql_instance
   tencentcloud_mysql_parameter_list
@@ -48,6 +55,7 @@ Data Sources
   tencentcloud_redis_zone_config
   tencentcloud_route_table
   tencentcloud_security_group
+  tencentcloud_security_groups
   tencentcloud_subnet
   tencentcloud_vpc
   tencentcloud_vpc_instances
@@ -95,9 +103,18 @@ CVM Resources
   tencentcloud_eip_association
   tencentcloud_key_pair
 
-LB Resources
+CLB Resources
+  tencentcloud_clb_instance
+  tencentcloud_clb_listener
+  tencentcloud_clb_listener_rule
+  tencentcloud_clb_attachment
+  tencentcloud_clb_redirection
   tencentcloud_lb
   tencentcloud_alb_server_attachment
+
+MongoDB Resources
+  tencentcloud_mongodb_instance
+  tencentcloud_mongodb_sharding_instance
 
 MySQL Resources
   tencentcloud_mysql_instance
@@ -194,7 +211,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_storages":                dataSourceTencentCloudCbsStorages(),
 			"tencentcloud_cbs_snapshots":               dataSourceTencentCloudCbsSnapshots(),
 			"tencentcloud_dc_instances":                dataSourceTencentCloudDcInstances(),
+			"tencentcloud_clb_instances":               dataSourceTencentCloudClbInstances(),
+			"tencentcloud_clb_listeners":               dataSourceTencentCloudClbListeners(),
+			"tencentcloud_clb_listener_rules":          dataSourceTencentCloudClbListenerRules(),
+			"tencentcloud_clb_attachments":             dataSourceTencentCloudClbServerAttachments(),
+			"tencentcloud_clb_redirections":            dataSourceTencentCloudClbRedirections(),
 			"tencentcloud_dcx_instances":               dataSourceTencentCloudDcxInstances(),
+			"tencentcloud_mongodb_zone_config":         dataSourceTencentCloudMongodbZoneConfig(),
+			"tencentcloud_mongodb_instances":           dataSourceTencentCloudMongodbInstances(),
 			"tencentcloud_dc_gateway_instances":        dataSourceTencentCloudDcGatewayInstances(),
 			"tencentcloud_dc_gateway_ccn_routes":       dataSourceTencentCloudDcGatewayCCNRoutes(),
 		},
@@ -205,6 +229,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_snapshot_policy":        resourceTencentCloudCbsSnapshotPolicy(),
 			"tencentcloud_cbs_storage":                resourceTencentCloudCbsStorage(),
 			"tencentcloud_cbs_storage_attachment":     resourceTencentCloudCbsStorageAttachment(),
+			"tencentcloud_clb_instance":               resourceTencentCloudClbInstance(),
+			"tencentcloud_clb_listener":               resourceTencentCloudClbListener(),
+			"tencentcloud_clb_listener_rule":          resourceTencentCloudClbListenerRule(),
+			"tencentcloud_clb_attachment":             resourceTencentCloudClbServerAttachment(),
+			"tencentcloud_clb_redirection":            resourceTencentCloudClbRedirection(),
 			"tencentcloud_container_cluster":          resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance": resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_dnat":                       resourceTencentCloudDnat(),
@@ -241,6 +270,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_attachment":             resourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":        resourceTencentCloudCcnBandwidthLimit(),
 			"tencentcloud_dcx":                        resourceTencentCloudDcxInstance(),
+			"tencentcloud_mongodb_instance":           resourceTencentCloudMongodbInstance(),
+			"tencentcloud_mongodb_sharding_instance":  resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_dc_gateway":                 resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":       resourceTencentCloudDcGatewayCcnRouteInstance(),
 		},

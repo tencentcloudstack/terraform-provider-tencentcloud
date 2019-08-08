@@ -7,6 +7,7 @@ Example Usage
 variable "other_region1" {
     default = "ap-shanghai"
 }
+
 resource "tencentcloud_ccn" "main"{
 	name ="ci-temp-test-ccn"
 	description="ci-temp-test-ccn-des"

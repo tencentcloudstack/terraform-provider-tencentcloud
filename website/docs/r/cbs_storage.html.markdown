@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cbs_storage"
 sidebar_current: "docs-tencentcloud-resource-cbs_storage"
 description: |-
-  Provide a resource to create a CBS.
+  Provides a resource to create a CBS.
 ---
 
 # tencentcloud_cbs_storage
 
-Provide a resource to create a CBS.
+Provides a resource to create a CBS.
 
 ## Example Usage
 

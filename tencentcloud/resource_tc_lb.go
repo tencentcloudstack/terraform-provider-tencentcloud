@@ -17,10 +17,11 @@ const (
 
 func resourceTencentCloudLB() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudLBCreate,
-		Read:   resourceTencentCloudLBRead,
-		Update: resourceTencentCloudLBUpdate,
-		Delete: resourceTencentCloudLBDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.15.0. Please use 'tencentcloud_clb_instance' instead.",
+		Create:             resourceTencentCloudLBCreate,
+		Read:               resourceTencentCloudLBRead,
+		Update:             resourceTencentCloudLBUpdate,
+		Delete:             resourceTencentCloudLBDelete,
 
 		Schema: map[string]*schema.Schema{
 			"type": {

@@ -12,7 +12,8 @@ import (
 
 func dataSourceTencentCloudSubnet() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudSubnetRead,
+		DeprecationMessage: "This data source has been deprecated in Terraform TencentCloud provider version 1.10.0. Please use 'tencentcloud_vpc_subnets' instead.",
+		Read:               dataSourceTencentCloudSubnetRead,
 
 		Schema: map[string]*schema.Schema{
 			"vpc_id": {

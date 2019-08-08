@@ -1,7 +1,9 @@
 /*
-Provide a resource to create security group rule.
+Provides a resource to create security group rule.
 
 Example Usage
+
+Source is CIDR ip
 
 ```hcl
 resource "tencentcloud_security_group" "sglab_1" {
@@ -9,6 +11,7 @@ resource "tencentcloud_security_group" "sglab_1" {
   description = "favourite sg_1"
   project_id  = 0
 }
+
 resource "tencentcloud_security_group_rule" "sglab_1" {
   security_group_id = "${tencentcloud_security_group.sglab_1.id}"
   type              = "ingress"
@@ -20,17 +23,21 @@ resource "tencentcloud_security_group_rule" "sglab_1" {
 }
 ```
 
+Source is a security group id
+
 ```hcl
 resource "tencentcloud_security_group" "sglab_2" {
   name        = "mysg_2"
   description = "favourite sg_2"
   project_id  = 0
 }
+
 resource "tencentcloud_security_group" "sglab_3" {
   name        = "mysg_3"
   description = "favourite sg_3"
   project_id  = 0
 }
+
 resource "tencentcloud_security_group_rule" "sglab_2" {
   security_group_id = "${tencentcloud_security_group.sglab_2.id}"
   type              = "ingress"
@@ -48,9 +55,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"regexp"
 	"strings"
+	"time"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 )
@@ -139,7 +149,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Default:     "",
+				Computed:    true,
 				Description: "Description of the security group rule.",
 			},
 		},
@@ -147,9 +157,9 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 }
 
 func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group_rule.create")()
+	defer LogElapsed("resource.tencentcloud_security_group_rule.create")()
 
+	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -218,9 +228,9 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 }
 
 func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group_rule.read")()
+	defer LogElapsed("resource.tencentcloud_security_group_rule.read")()
 
+	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -271,14 +281,25 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 }
 
 func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m interface{}) error {
-	logId := GetLogId(nil)
-	defer LogElapsed(logId + "resource.tencentcloud_security_group_rule.delete")()
+	defer LogElapsed("resource.tencentcloud_security_group_rule.delete")()
 
+	logId := GetLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	ruleId := d.Id()
+	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+		e := service.DeleteSecurityGroupPolicy(ctx, ruleId)
+		if e != nil {
+			return resource.RetryableError(fmt.Errorf("security group delete failed: %s", e.Error()))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s security group rule delete failed: %s\n ", logId, err.Error())
+		return err
+	}
 
-	return service.DeleteSecurityGroupPolicy(ctx, ruleId)
+	return nil
 }

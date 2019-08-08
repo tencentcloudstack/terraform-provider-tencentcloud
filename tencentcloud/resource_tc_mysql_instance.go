@@ -482,7 +482,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
 	if len(response.Response.InstanceIds) != 1 {
-		fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
+		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
 	d.SetId(*response.Response.InstanceIds[0])
 	return nil
@@ -511,7 +511,7 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
 	if len(response.Response.InstanceIds) != 1 {
-		fmt.Errorf("mysql CreateDBInstanceHour return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
+		return fmt.Errorf("mysql CreateDBInstanceHour return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
 	d.SetId(*response.Response.InstanceIds[0])
 	return nil

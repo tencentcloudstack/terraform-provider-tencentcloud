@@ -12,6 +12,7 @@ resource "tencentcloud_vpc" "foo" {
     name="guagua-ci-temp-test"
     cidr_block="10.0.0.0/16"
 }
+
 resource "tencentcloud_subnet" "subnet" {
 	availability_zone="${var.availability_zone}"
 	name="guagua-ci-temp-test"

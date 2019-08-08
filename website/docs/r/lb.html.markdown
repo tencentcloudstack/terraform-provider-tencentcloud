@@ -10,6 +10,8 @@ description: |-
 
 Provides a Load Balancer resource.
 
+~> **NOTE:** It has been deprecated and replaced by `tencentcloud_clb_instance`.
+
 ## Example Usage
 
 Basic usage:
