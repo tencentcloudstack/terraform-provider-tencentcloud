@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_clb_listener_rule" "foo" {
-  listener_id                = "lbl-hh141sn9"
+  listener_id                = "lbl-hh141sn9#lb-k2zjp9lv"
   clb_id                     = "lb-k2zjp9lv"
   domain                     = "foo.net"
   url                        = "/bar"

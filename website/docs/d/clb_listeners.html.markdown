@@ -15,7 +15,7 @@ Use this data source to query detailed information of CLB listener
 ```hcl
 data "tencentcloud_clb_listeners" "foo" {
   clb_id      = "lb-k2zjp9lv"
-  listener_id = "lbl-mwr6vbtv"
+  listener_id = "lbl-mwr6vbtv#lb-k2zjp9lv"
   protocol    = "TCP"
   port        = 80
 }

@@ -16,7 +16,7 @@ Use this data source to query detailed information of CLB listener rule
 data "tencentcloud_clb_listener_rules" "foo" {
   clb_id      = "lb-k2zjp9lv"
   listener_id = "lbl-mwr6vbtv"
-  rule_id     = "loc-inem40hz"
+  rule_id     = "loc-inem40hz#lbl-mwr6vbtv#lb-k2zjp9lv"
   domain      = "abc.com"
   url         = "/"
   scheduler   = "WRR"
