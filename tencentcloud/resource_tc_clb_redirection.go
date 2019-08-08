@@ -82,7 +82,6 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 	defer clbActionMu.Unlock()
 	logId := GetLogId(nil)
 
-	//暂时不支持auto
 	clbId := d.Get("clb_id").(string)
 	sourceListenerId := strings.Split(d.Get("source_listener_id").(string), "#")[0]
 	targertListenerId := strings.Split(d.Get("target_listener_id").(string), "#")[0]
@@ -132,7 +131,6 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return err
 	}
-	//遍历得到符合target的重定向
 
 	d.Set("clb_id", (*instance)["clb_id"])
 	d.Set("source_listener_id", (*instance)["source_listener_id"]+"#"+(*instance)["clb_id"])
