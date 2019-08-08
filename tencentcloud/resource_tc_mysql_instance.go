@@ -543,7 +543,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	mysqlID := d.Id()
 
-	err := resource.Retry(30*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(10*time.Minute, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -1168,6 +1168,7 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("mysql not support this pay type yet.")
 	}
 	d.Partial(false)
+	time.Sleep(7*time.Second)
 
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
