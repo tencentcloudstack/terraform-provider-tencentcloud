@@ -10,7 +10,17 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
+/*
+If you want to run through the test case,
+the following must be changed to your resource id
+*/
 const appid string = "1259649581"
+
+// 10.6.0.0/16
+const DefaultVpcId  = "vpc-ezufjgr3"
+// 10.6.0.0/24
+const DefaultSubnetId  = "subnet-gvhzzx5k"
+
 
 func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv(PROVIDER_SECRET_ID); v == "" {

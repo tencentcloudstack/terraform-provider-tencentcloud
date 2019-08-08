@@ -23,17 +23,23 @@ func TestAccTencentCloudContainerClusterInstance_basic(t *testing.T) {
 }
 
 const testAccTencentCloudContainerClusterInstanceConfig_basic = `
-resource "tencentcloud_vpc" "my_vpc" {
-  cidr_block = "10.6.0.0/16"
-  name       = "terraform_vpc_test"
+variable "my_vpc" {
+   default = "`+DefaultVpcId+`"
 }
 
-resource "tencentcloud_subnet" "my_subnet" {
-  vpc_id            = "${tencentcloud_vpc.my_vpc.id}"
-  availability_zone = "ap-guangzhou-3"
-  name              = "terraform_test_subnet"
-  cidr_block        = "10.6.0.0/24"
+variable "my_subnet" {
+  default = "`+DefaultSubnetId+`"
 }
+
+data "tencentcloud_instance_types" "my_favorate_instance_types" {
+  filter {
+    name   = "instance-family"
+    values = ["S2"]
+  }
+  cpu_core_count = 1
+  memory_size    = 2
+}
+
 
 resource "tencentcloud_container_cluster" "foo" {
   cluster_name      = "terraform-acc-test-inst"
@@ -43,20 +49,20 @@ resource "tencentcloud_container_cluster" "foo" {
   bandwidth         = 1
   bandwidth_type    = "PayByHour"
   require_wan_ip    = 1
-  subnet_id         = "${tencentcloud_subnet.my_subnet.id}"
+  subnet_id         = "${var.my_subnet}"
   is_vpc_gateway    = 0
   storage_size      = 0
   root_size         = 50
   root_type         = "CLOUD_SSD"
   goods_num         = 1
   password          = "Admin12345678#!"
-  vpc_id            = "${tencentcloud_vpc.my_vpc.id}"
+  vpc_id            = "${var.my_vpc}"
   cluster_cidr      = "10.0.0.0/19"
   cvm_type          = "PayByHour"
   cluster_desc      = "foofoofoo"
   period            = 1
   zone_id           = 100003
-  instance_type     = "S4.SMALL1"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   mount_target      = ""
   docker_graph_path = ""
   instance_name     = "terraform-container-acc-test-vm"
@@ -77,10 +83,10 @@ resource "tencentcloud_container_cluster_instance" "bar_instance" {
   cvm_type          = "PayByHour"
   period            = 1
   zone_id           = 100003
-  instance_type     = "CVM.S3"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   mount_target      = "/data"
   docker_graph_path = ""
-  subnet_id         = "${tencentcloud_subnet.my_subnet.id}"
+  subnet_id         = "${var.my_subnet}"
   cluster_id        = "${tencentcloud_container_cluster.foo.id}"
 }
 `

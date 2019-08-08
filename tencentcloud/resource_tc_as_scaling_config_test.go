@@ -151,7 +151,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   system_disk_type   = "CLOUD_PREMIUM"
   system_disk_size   = "50"
   
-  data_disk = {
+  data_disk   {
     disk_type = "CLOUD_PREMIUM"
     disk_size = 50
   }
