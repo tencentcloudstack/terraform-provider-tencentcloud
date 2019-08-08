@@ -28,7 +28,6 @@ CLB listener can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_clb_listener.foo lbl-qckdffns#lb-p7nlgs4t
-
 ```
 */
 package tencentcloud
@@ -119,7 +118,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of certificate, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
+				Description:  "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,

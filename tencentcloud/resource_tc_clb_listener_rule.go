@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_clb_listener_rule" "foo" {
-  listener_id                = "lbl-hh141sn9"
+  listener_id                = "lbl-hh141sn9#lb-k2zjp9lv"
   clb_id                     = "lb-k2zjp9lv"
   domain                     = "foo.net"
   url                        = "/bar"
@@ -17,10 +17,11 @@ resource "tencentcloud_clb_listener_rule" "foo" {
   health_check_http_path     = "Default Path"
   health_check_http_domain   = "Default Domain"
   health_check_http_method   = "GET"
-  certificate_server_id      = "my server certificate ID "
-  certificate_ca_id          = "my client certificate ID"
-  session_expire_time        = 0
-  schedule                   = "WRR"
+  certificate_ssl_mode       = "MUTUAL"
+  certificate_id             = "mycert server ID "
+  certificate_ca_id          = "mycert ca ID"
+  session_expire_time        = 30
+  scheduler                  = "WRR"
 }
 ```
 Import
@@ -135,7 +136,7 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of SSL Mode. Available values are 'UNIDRECTIONAL', 'MUTUAL' ",
+				Description:  "Type of SSL Mode. Available values are 'UNIDIRECTIONAL', 'MUTUAL' ",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,

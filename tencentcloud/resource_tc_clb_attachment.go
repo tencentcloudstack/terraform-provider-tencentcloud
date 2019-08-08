@@ -4,10 +4,10 @@ Provides a resource to create a CLB attachment.
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_attachment" "attachment_http" {
-  clb_id        = "lb-k2zjp9lv"
-  listener_id   = "lbl-hh141sn9#lb-k2zjp9lv"
-  rule_id   = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
+resource "tencentcloud_clb_attachment" "foo" {
+  clb_id      = "lb-k2zjp9lv"
+  listener_id = "lbl-hh141sn9#lb-k2zjp9lv"
+  rule_id     = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
 
   targets {
     instance_id = "ins-1flbqyp8"

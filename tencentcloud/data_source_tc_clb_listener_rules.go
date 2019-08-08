@@ -7,7 +7,7 @@ Example Usage
 data "tencentcloud_clb_listener_rules" "foo" {
   clb_id      = "lb-k2zjp9lv"
   listener_id = "lbl-mwr6vbtv"
-  rule_id = "loc-inem40hz"
+  rule_id     = "loc-inem40hz#lbl-mwr6vbtv#lb-k2zjp9lv"
   domain      = "abc.com"
   url         = "/"
   scheduler   = "WRR"
@@ -59,7 +59,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  " Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.",
+				Description:  "Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -140,7 +140,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of SSL Mode, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'.",
+							Description: "Type of SSL Mode, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'.",
 						},
 						"certificate_id": {
 							Type:        schema.TypeString,

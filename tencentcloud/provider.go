@@ -86,23 +86,6 @@ Container Cluster Resources
   tencentcloud_container_cluster
   tencentcloud_container_cluster_instance
 
-COS Resources
-  tencentcloud_cos_bucket
-  tencentcloud_cos_bucket_object
-
-DC Resources
-  tencentcloud_dcx
-
-DCG Resources
-  tencentcloud_dc_gateway
-  tencentcloud_dc_gateway_ccn_route
-
-CVM Resources
-  tencentcloud_instance
-  tencentcloud_eip
-  tencentcloud_eip_association
-  tencentcloud_key_pair
-
 CLB Resources
   tencentcloud_clb_instance
   tencentcloud_clb_listener
@@ -111,6 +94,23 @@ CLB Resources
   tencentcloud_clb_redirection
   tencentcloud_lb
   tencentcloud_alb_server_attachment
+
+COS Resources
+  tencentcloud_cos_bucket
+  tencentcloud_cos_bucket_object
+
+CVM Resources
+  tencentcloud_instance
+  tencentcloud_eip
+  tencentcloud_eip_association
+  tencentcloud_key_pair
+
+DC Resources
+  tencentcloud_dcx
+
+DCG Resources
+  tencentcloud_dc_gateway
+  tencentcloud_dc_gateway_ccn_route
 
 MongoDB Resources
   tencentcloud_mongodb_instance
