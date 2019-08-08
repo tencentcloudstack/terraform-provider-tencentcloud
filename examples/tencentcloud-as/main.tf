@@ -18,7 +18,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   system_disk_type   = "CLOUD_PREMIUM"
   system_disk_size   = "50"
 
-  data_disk = {
+  data_disk {
     disk_type = "CLOUD_PREMIUM"
     disk_size = 50
   }
@@ -70,8 +70,8 @@ resource "tencentcloud_as_schedule" "schedule" {
   max_size             = "${var.max_size}"
   min_size             = "${var.min_size}"
   desired_capacity     = "${var.desired_capacity}"
-  start_time           = "2019-01-01T00:00:00+08:00"
-  end_time             = "2019-12-01T00:00:00+08:00"
+  start_time           = "2020-01-01T00:00:00+08:00"
+  end_time             = "2020-12-01T00:00:00+08:00"
   recurrence           = "0 0 */1 * *"
 }
 

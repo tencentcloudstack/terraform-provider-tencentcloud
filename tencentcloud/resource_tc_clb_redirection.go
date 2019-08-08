@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_clb_redirection" "foo" {
-  clb_id                = "lb-p7olt9e5"
-  source_listener_id    = "lbl-jc1dx6ju#lb-p7olt9e5"
-  target_listener_id    = "lbl-asj1hzuo#lb-p7olt9e5"
+  clb_id                 = "lb-p7olt9e5"
+  source_listener_id     = "lbl-jc1dx6ju#lb-p7olt9e5"
+  target_listener_id     = "lbl-asj1hzuo#lb-p7olt9e5"
   rewrite_source_rule_id = "loc-ft8fmngv#lbl-jc1dx6ju#lb-p7olt9e5"
   rewrite_target_rule_id = "loc-4xxr2cy7#lbl-asj1hzuo#lb-p7olt9e5"
 }
@@ -77,12 +77,13 @@ func resourceTencentCloudClbRedirection() *schema.Resource {
 }
 
 func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_redirection.create")()
+	defer logElapsed("resource.tencentcloud_clb_redirection.create")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
-	logId := GetLogId(nil)
 
-	//暂时不支持auto
+	logId := getLogId(nil)
+
 	clbId := d.Get("clb_id").(string)
 	sourceListenerId := strings.Split(d.Get("source_listener_id").(string), "#")[0]
 	targertListenerId := strings.Split(d.Get("target_listener_id").(string), "#")[0]
@@ -118,9 +119,9 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_redirection.read")()
+	defer logElapsed("resource.tencentcloud_clb_redirection.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	rewriteId := d.Id()
@@ -132,7 +133,6 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return err
 	}
-	//遍历得到符合target的重定向
 
 	d.Set("clb_id", (*instance)["clb_id"])
 	d.Set("source_listener_id", (*instance)["source_listener_id"]+"#"+(*instance)["clb_id"])
@@ -144,10 +144,12 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudClbRedirectionDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_redirection.delete")()
+	defer logElapsed("resource.tencentcloud_clb_redirection.delete")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
-	logId := GetLogId(nil)
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()

@@ -14,7 +14,7 @@ Provides a resource to create a CLB listener rule.
 
 ```hcl
 resource "tencentcloud_clb_listener_rule" "foo" {
-  listener_id                = "lbl-hh141sn9"
+  listener_id                = "lbl-hh141sn9#lb-k2zjp9lv"
   clb_id                     = "lb-k2zjp9lv"
   domain                     = "foo.net"
   url                        = "/bar"
@@ -26,10 +26,11 @@ resource "tencentcloud_clb_listener_rule" "foo" {
   health_check_http_path     = "Default Path"
   health_check_http_domain   = "Default Domain"
   health_check_http_method   = "GET"
-  certificate_server_id      = "my server certificate ID "
-  certificate_ca_id          = "my client certificate ID"
-  session_expire_time        = 0
-  schedule                   = "WRR"
+  certificate_ssl_mode       = "MUTUAL"
+  certificate_id             = "mycert server ID "
+  certificate_ca_id          = "mycert ca ID"
+  session_expire_time        = 30
+  scheduler                  = "WRR"
 }
 ```
 
@@ -43,7 +44,7 @@ The following arguments are supported:
 * `url` - (Required, ForceNew) Url of the forwarding rule.
 * `certificate_ca_id` - (Optional, ForceNew) Id of the client certificate.If not set, the content, key, name of client certificate must be set when SSLMode is 'mutual', only supported by listeners of protocol 'HTTPS'.
 * `certificate_id` - (Optional, ForceNew) Id of the server certificate.If not set, the content, key, name of server certificate must be set, only supported by listeners of protocol 'HTTPS'.
-* `certificate_ssl_mode` - (Optional, ForceNew) Type of SSL Mode. Available values are 'UNIDRECTIONAL', 'MUTUAL' 
+* `certificate_ssl_mode` - (Optional, ForceNew) Type of SSL Mode. Available values are 'UNIDIRECTIONAL', 'MUTUAL' 
 * `health_check_health_num` - (Optional) Health threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is 2-10.
 * `health_check_http_code` - (Optional) HTTP Status Code. The default is 31 and value range is 1-31. '0b0001' means the return value '1xx' is health. '0b0010' means the return value '2xx' is health. '0b0100' means the return value '3xx' is health. '0b1000' means the return value '4xx' is health. 0b10000 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values. NOTES: The 'HTTP' health check of the 'TCP' listener only supports specifying one health check status code. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.
 * `health_check_http_domain` - (Optional) Domain name of health check. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.

@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 data "tencentcloud_clb_listeners" "foo" {
   clb_id      = "lb-k2zjp9lv"
-  listener_id = "lbl-mwr6vbtv"
+  listener_id = "lbl-mwr6vbtv#lb-k2zjp9lv"
   protocol    = "TCP"
   port        = 80
 }
@@ -112,7 +112,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: " Type of certificate, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
+							Description: "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
 						},
 						"certificate_id": {
 							Type:        schema.TypeString,
@@ -132,12 +132,12 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"scheduler": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: " Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
+							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
 						},
 						"sni_switch": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: " Indicates whether SNI is enabled. NOTES: Only supported by 'HTTPS' protocol.",
+							Description: "Indicates whether SNI is enabled. NOTES: Only supported by 'HTTPS' protocol.",
 						},
 					},
 				},
@@ -147,9 +147,9 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_clb_listeners.read")()
+	defer logElapsed("data_source.tencentcloud_clb_listeners.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Get("clb_id").(string)

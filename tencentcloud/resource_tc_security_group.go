@@ -69,9 +69,9 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 }
 
 func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface{}) error {
-	defer LogElapsed("resource.tencentcloud_security_group.create")()
+	defer logElapsed("resource.tencentcloud_security_group.create")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -94,9 +94,9 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 }
 
 func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}) error {
-	defer LogElapsed("resource.tencentcloud_security_group.read")()
+	defer logElapsed("resource.tencentcloud_security_group.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -134,9 +134,9 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 }
 
 func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface{}) error {
-	defer LogElapsed("resource.tencentcloud_security_group.update")()
+	defer logElapsed("resource.tencentcloud_security_group.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -169,9 +169,9 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 }
 
 func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface{}) error {
-	defer LogElapsed("resource.tencentcloud_security_group.delete")()
+	defer logElapsed("resource.tencentcloud_security_group.delete")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	id := d.Id()

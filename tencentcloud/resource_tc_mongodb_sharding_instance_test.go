@@ -45,7 +45,7 @@ func TestAccTencentCloudMongodbShardingInstance(t *testing.T) {
 }
 
 func testAccCheckMongodbShardingInstanceDestroy(s *terraform.State) error {
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mongodbService := MongodbService{

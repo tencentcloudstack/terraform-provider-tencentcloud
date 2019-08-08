@@ -72,17 +72,19 @@ func resourceTencentCloudRedisBackupConfig() *schema.Resource {
 }
 
 func resourceTencentCloudRedisBackupConfigCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_redis_backup_config.create")()
+
 	d.SetId(d.Get("redis_id").(string))
+
 	return resourceTencentCloudRedisBackupConfigUpdate(d, meta)
 }
 
 func resourceTencentCloudRedisBackupConfigRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_redis_backup_config.read")()
 
-	defer LogElapsed("source.tencentcloud_redis_backup_policy.read")()
-
-	logId := GetLogId(nil)
-
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	backupPeriods, backupTime, err := service.DescribeAutoBackupConfig(ctx, d.Id())
@@ -96,14 +98,16 @@ func resourceTencentCloudRedisBackupConfigRead(d *schema.ResourceData, meta inte
 
 	return nil
 }
+
 func resourceTencentCloudRedisBackupConfigUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_redis_backup_config.update")()
+
 	weeksAllows := map[string]bool{
 		"Monday": true, "Tuesday": true, "Wednesday": true,
 		"Thursday": true, "Friday": true, "Saturday": true, "Sunday": true,
 	}
-	defer LogElapsed("source.tencentcloud_redis_backup_policy.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -139,10 +143,11 @@ func resourceTencentCloudRedisBackupConfigUpdate(d *schema.ResourceData, meta in
 	}
 	return resourceTencentCloudRedisBackupConfigRead(d, meta)
 }
-func resourceTencentCloudRedisBackupConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("source.tencentcloud_redis_backup_policy.delete")()
 
-	logId := GetLogId(nil)
+func resourceTencentCloudRedisBackupConfigDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_redis_backup_config.delete")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -151,10 +156,12 @@ func resourceTencentCloudRedisBackupConfigDelete(d *schema.ResourceData, meta in
 		backupPeriods = []string{"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"}
 		backupTime    = "00:00-01:00"
 	)
+
 	err := service.ModifyAutoBackupConfig(ctx, d.Id(), backupPeriods, backupTime)
 	if err != nil {
 		return err
 	}
 	d.SetId("")
+
 	return nil
 }

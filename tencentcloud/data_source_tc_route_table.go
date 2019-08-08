@@ -11,7 +11,7 @@ import (
 
 func dataSourceTencentCloudRouteTable() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This data resource has been deprecated in Terraform TencentCloud provider version 1.10.0. Please use 'tencentcloud_vpc_route_tables' instead.",
+		DeprecationMessage: "This data source has been deprecated in Terraform TencentCloud provider version 1.10.0. Please use 'tencentcloud_vpc_route_tables' instead.",
 		Read:               dataSourceTencentCloudRouteTableRead,
 
 		Schema: map[string]*schema.Schema{

@@ -28,7 +28,6 @@ CLB listener can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_clb_listener.foo lbl-qckdffns#lb-p7nlgs4t
-
 ```
 */
 package tencentcloud
@@ -119,7 +118,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of certificate, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
+				Description:  "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,
@@ -154,11 +153,12 @@ func resourceTencentCloudClbListener() *schema.Resource {
 }
 
 func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener.create")()
+	defer logElapsed("resource.tencentcloud_clb_listener.create")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Get("clb_id").(string)
@@ -256,9 +256,9 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener.read")()
+	defer logElapsed("resource.tencentcloud_clb_listener.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")
@@ -306,11 +306,14 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener.update")()
+	defer logElapsed("resource.tencentcloud_clb_listener.update")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
-	logId := GetLogId(nil)
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	items := strings.Split(d.Id(), "#")
 	if len(items) != 2 {
 		return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
@@ -400,11 +403,11 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_listener.delete")()
+	defer logElapsed("resource.tencentcloud_clb_listener.delete")()
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")
