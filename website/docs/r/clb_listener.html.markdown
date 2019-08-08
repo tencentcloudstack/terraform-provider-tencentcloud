@@ -24,7 +24,6 @@ resource "tencentcloud_clb_listener" "clb_listener" {
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
   certificate_ssl_mode       = "MUTUAL"
-  certificate_ssl_mode       = "MUTUAL"
   certificate_id             = "mycert server ID "
   certificate_ca_id          = "mycert ca ID"
   session_expire_time        = 30
