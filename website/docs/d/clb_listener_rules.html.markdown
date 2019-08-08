@@ -32,7 +32,7 @@ The following arguments are supported:
 * `domain` - (Optional) Domain name of the forwarding rule to be queried.
 * `result_output_file` - (Optional) Used to save results.
 * `rule_id` - (Optional) ID of the forwarding rule to be queried.
-* `scheduler` - (Optional)  Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.
+* `scheduler` - (Optional) Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.
 * `url` - (Optional) Url of the forwarding rule to be queried.
 
 ## Attributes Reference
@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_list` - A list of forward rules of listeners. Each element contains the following attributes:
   * `certificate_ca_id` - ID of the client certificate. NOTES: Only supports listeners of 'HTTPS' protocol.
   * `certificate_id` - ID of the server certificate. NOTES: Only supports listeners of 'HTTPS' protocol.
-  * `certificate_ssl_mode` - Type of SSL Mode, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'.
+  * `certificate_ssl_mode` - Type of SSL Mode, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'.
   * `clb_id` - ID of the CLB.
   * `health_check_health_num` - Health threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as healthy. The value range is 2-10.
   * `health_check_http_code` - HTTP Status Code. The default is 31 and value range is 1-31. '0b0001' means the return value '1xx' is health. '0b0010' means the return value '2xx' is health. '0b0100' means the return value '3xx' is health. '0b1000' means the return value 4xx is health. '0b10000' means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values. NOTES: The 'HTTP' health check of the 'TCP' listener only supports specifying one health check status code. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.

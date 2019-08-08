@@ -14,6 +14,7 @@ resource "tencentcloud_clb_listener" "clb_listener" {
   health_check_interval_time = 5
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
+    certificate_ssl_mode       = "MUTUAL"
   certificate_ssl_mode       = "MUTUAL"
   certificate_id             = "mycert server ID "
   certificate_ca_id          = "mycert ca ID"
@@ -119,7 +120,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of certificate, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
+				Description:  "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,

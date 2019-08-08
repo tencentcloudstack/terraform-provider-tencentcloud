@@ -112,7 +112,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: " Type of certificate, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
+							Description: "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
 						},
 						"certificate_id": {
 							Type:        schema.TypeString,
@@ -132,12 +132,12 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"scheduler": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: " Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
+							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
 						},
 						"sni_switch": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: " Indicates whether SNI is enabled. NOTES: Only supported by 'HTTPS' protocol.",
+							Description: "Indicates whether SNI is enabled. NOTES: Only supported by 'HTTPS' protocol.",
 						},
 					},
 				},
