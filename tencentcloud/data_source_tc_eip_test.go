@@ -12,14 +12,6 @@ func TestAccTencentCloudEipDataSource(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudEipDataSourceConfig_basic,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_eip.my_eip"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_eip.my_eip", "id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_eip.my_eip", "public_ip"),
-				),
-			},
-			{
 				Config: testAccTencentCloudEipDataSourceConfig_filter,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_eip.my_eip"),
@@ -32,14 +24,6 @@ func TestAccTencentCloudEipDataSource(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudEipDataSourceConfig_basic = `
-resource "tencentcloud_eip" "foo" {
-}
-
-data "tencentcloud_eip" "my_eip" {
-}
-`
-
 const testAccTencentCloudEipDataSourceConfig_filter = `
 resource "tencentcloud_eip" "foo" {
 	name = "gateway_eip"
@@ -47,7 +31,8 @@ resource "tencentcloud_eip" "foo" {
 
 data "tencentcloud_eip" "my_eip" {
   filter {
-    name   = "gateway_eip"
+    name   = "address-status"
+    values = ["${tencentcloud_eip.foo.status}"]
   }
 }
 `
