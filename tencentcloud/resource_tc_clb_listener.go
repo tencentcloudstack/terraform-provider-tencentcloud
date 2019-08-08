@@ -119,12 +119,12 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of certificate, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
+				Description:  "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: " ID of the server certificate. NOTES: Only supports listeners of 'HTTPS' protocol.",
+				Description: "ID of the server certificate. NOTES: Only supports listeners of 'HTTPS' protocol.",
 			},
 			"certificate_ca_id": {
 				Type:        schema.TypeString,

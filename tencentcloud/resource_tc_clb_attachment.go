@@ -4,14 +4,14 @@ Provides a resource to create a CLB attachment.
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_attachment" "attachment_http" {
-  clb_id        = "lb-k2zjp9lv"
+resource "tencentcloud_clb_attachment" "attachment" {
   listener_id   = "lbl-hh141sn9#lb-k2zjp9lv"
-  rule_id   = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
-
+  clb_id        = "lb-k2zjp9lv"
+  protocol_type = "tcp"
+  rule_id       = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
   targets {
     instance_id = "ins-1flbqyp8"
-    port        = 80
+    port        = 50
     weight      = 10
   }
 }
@@ -53,29 +53,30 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Required:    true,
 				Description: "ID of the clb.",
 			},
+
 			"listener_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
 				Description: " ID of the clb listener.",
 			},
+			"protocol_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.NOTES: TCP_SSL is testing internally, please apply if you need to use.",
+			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "ID of the clb listener rule. Only supports listeners of 'HTTPS'/'HTTP' protocol.",
-			},
-			"protocol_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Type of protocol within the listener.",
+				Description: "ID of the clb listener rule.",
 			},
 			"targets": {
 				Type:        schema.TypeSet,
 				Required:    true,
 				MinItems:    1,
 				MaxItems:    100,
-				Description: " Information of the backends to be attached.",
+				Description: "Information of the backends to be attached.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
@@ -319,9 +320,8 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	d.Set("clb_id", clbId)
 	d.Set("listener_id", listenerId+"#"+clbId)
 	d.Set("protocol_type", instance.Protocol)
-
+	d.Set("rule_id", locationId+"#"+listenerId+"#"+clbId)
 	if *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
-		d.Set("rule_id", locationId+"#"+listenerId+"#"+clbId)
 		if len(instance.Rules) > 0 {
 			for _, loc := range instance.Rules {
 				if locationId == "" || locationId == *loc.LocationId {

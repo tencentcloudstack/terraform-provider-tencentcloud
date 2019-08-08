@@ -5,22 +5,22 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_clb_listener_rule" "foo" {
-  listener_id                = "lbl-hh141sn9"
   clb_id                     = "lb-k2zjp9lv"
-  domain                     = "foo.net"
-  url                        = "/bar"
+  listener_id                = "lbl-hh141sn9"
+  domain                     = "abc.com"
+  url                        = "/"
+  session_expire_time        = 30
+  scheduler                  = "WRR"
   health_check_switch        = true
-  health_check_interval_time = 5
+  health_check_interval_time = 200
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
-  health_check_http_code     = "http_1xx"
-  health_check_http_path     = "Default Path"
-  health_check_http_domain   = "Default Domain"
+  health_check_http_path     = "/"
+  health_check_http_domain   = "abc.com"
+  health_check_http_code     = "31"
   health_check_http_method   = "GET"
-  certificate_server_id      = "my server certificate ID "
-  certificate_ca_id          = "my client certificate ID"
-  session_expire_time        = 0
-  schedule                   = "WRR"
+  certificate_ssl_mode       = "UNIDIRECTIONAL"
+  certificate_id             = "my server cert id"
 }
 ```
 Import
@@ -135,7 +135,7 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of SSL Mode. Available values are 'UNIDRECTIONAL', 'MUTUAL' ",
+				Description:  "Type of SSL Mode. Available values are 'UNIDIRECTIONAL', 'MUTUAL' ",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,

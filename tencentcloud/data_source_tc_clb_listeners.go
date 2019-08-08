@@ -112,7 +112,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: " Type of certificate, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
+							Description: " Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
 						},
 						"certificate_id": {
 							Type:        schema.TypeString,
@@ -122,7 +122,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"certificate_ca_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of 'HTTPS' protocol .",
+							Description: "ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'MUTUAL'. NOTES: only supported by listeners of 'HTTPS' protocol .",
 						},
 						"session_expire_time": {
 							Type:        schema.TypeInt,
@@ -132,7 +132,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"scheduler": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: " Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
+							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
 						},
 						"sni_switch": {
 							Type:        schema.TypeBool,
