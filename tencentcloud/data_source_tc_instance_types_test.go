@@ -32,14 +32,14 @@ func TestAccTencentCloudInstanceTypesDataSource_basic(t *testing.T) {
 const testAccTencentCloudInstanceTypesDataSourceConfigBasic = `
 data "tencentcloud_instance_types" "t4c8g" {
   filter {
-    name = "zone"
+    name   = "zone"
     values = ["ap-guangzhou-3"]
   }
   filter {
-    name = "instance-family"
+    name   = "instance-family"
     values = ["S1"]
   }
   cpu_core_count = 4
-  memory_size = 8
+  memory_size    = 8
 }
 `

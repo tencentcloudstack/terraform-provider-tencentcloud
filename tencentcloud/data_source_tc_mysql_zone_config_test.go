@@ -71,9 +71,7 @@ func testAccDataSourceMysqlZoneConfig() string {
 }
 
 func testAccDataSourceMysqlZoneConfigWithRegion() string {
-	return `
-         data "tencentcloud_mysql_zone_config" "testWithRegion" {
-              region = "ap-guangzhou"
-		      result_output_file ="/tmp/zone_config_list"
-         }`
+	return `data "tencentcloud_mysql_zone_config" "testWithRegion" {
+       region = "ap-guangzhou"
+    }`
 }

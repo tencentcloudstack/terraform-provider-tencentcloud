@@ -45,9 +45,9 @@ resource "tencentcloud_eip" "foo" {
 }
 
 data "tencentcloud_eip" "my_eip" {
-	filter {
-		name = "address-status"
-		values = ["UNBIND"]
-	}
+  filter {
+    name   = "address-status"
+    values = ["UNBIND"]
+  }
 }
 `

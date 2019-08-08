@@ -15,14 +15,7 @@ func TestAccDataSourceTencentCloudVpc_basic(t *testing.T) {
 				Config: TestAccDataSourceTencentCloudVpcConfig_id,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpc.id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vpc.id", "name", "ci-terraform-vpc-do-not-delete"),
-				),
-			},
-			{
-				Config: TestAccDataSourceTencentCloudVpcConfig_name,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpc.name"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vpc.name", "id", "vpc-8ek64x3d"),
+					resource.TestCheckResourceAttr("data.tencentcloud_vpc.id", "name", "guagua_vpc_instance_test"),
 				),
 			},
 		},
@@ -30,13 +23,13 @@ func TestAccDataSourceTencentCloudVpc_basic(t *testing.T) {
 }
 
 const TestAccDataSourceTencentCloudVpcConfig_id = `
+resource "tencentcloud_vpc" "foo" {
+    name       = "guagua_vpc_instance_test"
+    cidr_block = "10.0.0.0/16"
+}
+
 data "tencentcloud_vpc" "id" {
-	id = "vpc-8ek64x3d"
+	id = "${tencentcloud_vpc.foo.id}"
 }
 `
 
-const TestAccDataSourceTencentCloudVpcConfig_name = `
-data "tencentcloud_vpc" "name" {
-    name = "ci-terraform"
-}
-`

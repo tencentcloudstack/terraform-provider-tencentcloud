@@ -57,7 +57,7 @@ func TestAccTencentCloudImagesDataSource_filter(t *testing.T) {
 const testAccTencentCloudImagesDataSourceConfigFilter = `
 data "tencentcloud_image" "public_image" {
   filter {
-    name = "image-type"
+    name   = "image-type"
     values = ["PUBLIC_IMAGE"]
   }
 }
@@ -67,7 +67,7 @@ const testAccTencentCloudImagesDataSourceConfigFilterWithOsName = `
 data "tencentcloud_image" "public_image" {
   os_name = "CentOS 7.5 64位"
   filter {
-    name = "image-type"
+    name   = "image-type"
     values = ["PUBLIC_IMAGE"]
   }
 }
@@ -77,7 +77,7 @@ const testAccTencentCloudImagesDataSourceConfigFilterWithImageNameRegex = `
 data "tencentcloud_image" "public_image" {
   image_name_regex = "^CentOS\\s+7\\.5\\s+64\\w*"
   filter {
-    name = "image-type"
+    name   = "image-type"
     values = ["PUBLIC_IMAGE"]
   }
 }
@@ -87,7 +87,7 @@ const testAccTencentCloudImagesDataSourceConfigFilterWithPrivateImage = `
 data "tencentcloud_image" "private_image" {
   image_name_regex = "^batch-tensorflow"
   filter {
-    name = "image-type"
+    name   = "image-type"
     values = ["PRIVATE_IMAGE"]
   }
 }
@@ -97,7 +97,7 @@ const testAccTencentCloudImagesDataSourceConfigFilterWithShareImageAndOsName = `
 data "tencentcloud_image" "private_image" {
   os_name = "ubuntu"
   filter {
-    name = "image-type"
+    name   = "image-type"
     values = ["SHARED_IMAGE"]
   }
 }

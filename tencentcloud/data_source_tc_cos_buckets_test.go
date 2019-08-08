@@ -80,36 +80,36 @@ data "tencentcloud_cos_buckets" "bucket_list" {
 func testAccCosBucketDataSource_full(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_full" {
-	bucket = "tf-bucket-%d-%s"
-	cors_rules {
-		allowed_headers = ["*"]
-		allowed_methods = ["GET","POST"]
-		allowed_origins = ["https://www.test.com"]
-		expose_headers = ["x-cos-test"]
-		max_age_seconds = 300
-	}
-	lifecycle_rules {
-		filter_prefix = "test/"
-		expiration {
-			days = 365
-		}
-		transition {
-			days = 30
-			storage_class = "STANDARD_IA"
-		}
-		transition {
-			days = 60
-			storage_class = "ARCHIVE"
-		}
-	}
-	website {
-		index_document = "index.html"
-		error_document = "error.html"
-	}
+  bucket = "tf-bucket-%d-%s"
+  cors_rules {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "POST"]
+    allowed_origins = ["https://www.test.com"]
+    expose_headers  = ["x-cos-test"]
+    max_age_seconds = 300
+  }
+  lifecycle_rules {
+    filter_prefix = "test/"
+    expiration {
+      days = 365
+    }
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+    transition {
+      days          = 60
+      storage_class = "ARCHIVE"
+    }
+  }
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
 }
 
 data "tencentcloud_cos_buckets" "bucket_list" {
-	bucket_prefix = "${tencentcloud_cos_bucket.bucket_full.bucket}"
+  bucket_prefix = "${tencentcloud_cos_bucket.bucket_full.bucket}"
 }
 `, acctest.RandInt(), appid)
 }
