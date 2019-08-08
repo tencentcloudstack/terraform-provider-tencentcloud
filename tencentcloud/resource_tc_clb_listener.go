@@ -28,7 +28,6 @@ CLB listener can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_clb_listener.foo lbl-qckdffns#lb-p7nlgs4t
-
 ```
 */
 package tencentcloud
