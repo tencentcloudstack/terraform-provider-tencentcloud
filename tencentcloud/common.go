@@ -30,13 +30,14 @@ const writeRetryTimeout = 5 * time.Minute
 
 // retryableErrorCode is retryable error code
 var retryableErrorCode = []string{
+	// commom
 	"FailedOperation",
 	"InternalError",
 	"RequestLimitExceeded",
 	"ResourceInUse",
 	"ResourceInsufficient",
 	"ResourceUnavailable",
-	// CBS
+	// cbs
 	"ResourceBusy",
 }
 
@@ -73,8 +74,8 @@ func retryError(err error) *resource.RetryError {
 func isErrorRetryable(err error) bool {
 	e, ok := err.(*errors.TencentCloudSDKError)
 	if !ok {
-		log.Printf("[CRITAL] Retryable error: %s", e.Error())
-		return true
+		log.Printf("[CRITAL] NonRetryable error: %s", e.Error())
+		return false
 	}
 
 	code := e.Code
