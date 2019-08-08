@@ -39,7 +39,7 @@ func TestAccTencentCloudGaapRealserver_domain(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_realserver.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "domain", "www.qq.com"),
-					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "domain"),
+					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "ip"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "name", "ci-test-gaap-realserver"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "project_id", "0"),
 				),
@@ -69,10 +69,7 @@ func TestAccTencentCloudGaapRealserver_updateName(t *testing.T) {
 				Config: testAccGaapRealserverNewName,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_realserver.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "ip", "1.1.1.1"),
-					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "domain"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "name", "ci-test-gaap-realserver-new"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "project_id", "0"),
 				),
 			},
 		},

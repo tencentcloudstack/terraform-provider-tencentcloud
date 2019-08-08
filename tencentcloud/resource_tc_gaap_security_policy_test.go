@@ -44,9 +44,7 @@ func TestAccTencentCloudGaapSecurityPolicy_disable(t *testing.T) {
 				Config: testAccGaapSecurityPolicyDisable,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_security_policy.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_security_policy.foo", "action", "ACCEPT"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_policy.foo", "enable", "false"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_security_policy.foo", "status"),
 				),
 			},
 		},

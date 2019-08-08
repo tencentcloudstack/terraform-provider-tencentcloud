@@ -88,10 +88,6 @@ func TestAccTencentCloudGaapSecurityRule_updateName(t *testing.T) {
 				Config: testAccGaapSecurityRuleUpdateName,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_security_rule.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "cidr_ip", "1.1.1.1"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "action", "ACCEPT"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "protocol", "TCP"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "port", "80"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "name", "ci-test-gaap-sr-new"),
 				),
 			},
