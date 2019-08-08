@@ -10,7 +10,8 @@ import (
 
 func dataSourceTencentCloudVpc() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudVpcRead,
+		DeprecationMessage: "This data source has been deprecated in Terraform TencentCloud provider version 1.10.0. Please use 'tencentcloud_vpc_instances' instead.",
+		Read:               dataSourceTencentCloudVpcRead,
 
 		Schema: map[string]*schema.Schema{
 			"id": {

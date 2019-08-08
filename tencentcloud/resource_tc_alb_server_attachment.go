@@ -18,10 +18,11 @@ var lbActionMu = &sync.Mutex{}
 
 func resourceTencentCloudAlbServerAttachment() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudAlbServerAttachmentCreate,
-		Read:   resourceTencentCloudAlbServerAttachmentRead,
-		Delete: resourceTencentCloudAlbServerAttachmentDelete,
-		Update: resourceTencentCloudAlbServerAttachmentUpdate,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.15.0. Please use 'tencentcloud_clb_attachment' instead.",
+		Create:             resourceTencentCloudAlbServerAttachmentCreate,
+		Read:               resourceTencentCloudAlbServerAttachmentRead,
+		Delete:             resourceTencentCloudAlbServerAttachmentDelete,
+		Update:             resourceTencentCloudAlbServerAttachmentUpdate,
 
 		Schema: map[string]*schema.Schema{
 			"loadbalancer_id": {

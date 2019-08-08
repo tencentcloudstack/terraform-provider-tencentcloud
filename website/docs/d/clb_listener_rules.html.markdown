@@ -16,7 +16,7 @@ Use this data source to query detailed information of CLB listener rule
 data "tencentcloud_clb_listener_rules" "foo" {
   clb_id      = "lb-k2zjp9lv"
   listener_id = "lbl-mwr6vbtv"
-  rule_id = "loc-inem40hz"
+  rule_id     = "loc-inem40hz"
   domain      = "abc.com"
   url         = "/"
   scheduler   = "WRR"
@@ -30,8 +30,8 @@ The following arguments are supported:
 * `listener_id` - (Required) ID of the CLB listener to be queried.
 * `clb_id` - (Optional) ID of the CLB to be queried.
 * `domain` - (Optional) Domain name of the forwarding rule to be queried.
-* `rule_id` - (Optional) ID of the forwarding rule to be queried.
 * `result_output_file` - (Optional) Used to save results.
+* `rule_id` - (Optional) ID of the forwarding rule to be queried.
 * `scheduler` - (Optional)  Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.
 * `url` - (Optional) Url of the forwarding rule to be queried.
 
