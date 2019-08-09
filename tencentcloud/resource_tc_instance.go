@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -493,10 +492,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		i = i + 1
 	}
 
-	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		response, err := client.SendRequest("cvm", params)
 		if err != nil {
-			return resource.RetryableError(err)
+			return resource.NonRetryableError(err)
 		}
 
 		var jsonresp struct {
@@ -512,19 +511,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {
-			return resource.RetryableError(err)
-		}
-
-		if jsonresp.Response.Error.Code == "MissingParameter" || jsonresp.Response.Error.Code == "LimitExceeded" {
-			return resource.NonRetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
-		}
-
-		if strings.HasPrefix(jsonresp.Response.Error.Code, "Invalid") {
-			return resource.NonRetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
-		}
-
-		if jsonresp.Response.Error.Code == "VpcIpIsUsed" {
-			return resource.RetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
+			return resource.NonRetryableError(err)
 		}
 
 		if jsonresp.Response.Error.Code != "" {
@@ -534,7 +521,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 				jsonresp.Response.Error.Message,
 				jsonresp.Response.RequestId,
 			)
-			return resource.RetryableError(err)
+			if jsonresp.Response.Error.Code == "InternalError" || jsonresp.Response.Error.Code == "VpcIpIsUsed" || jsonresp.Response.Error.Code == "RequestLimitExceeded" {
+				return resource.RetryableError(err)
+			}
+			return resource.NonRetryableError(err)
 		}
 
 		if len(jsonresp.Response.InstanceIdSet) == 0 {
@@ -555,7 +545,6 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
@@ -864,10 +853,10 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 		"InstanceIds.0": d.Id(),
 	}
 
-	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		response, err := client.SendRequest("cvm", params)
 		if err != nil {
-			return resource.RetryableError(err)
+			return resource.NonRetryableError(err)
 		}
 		var jsonresp struct {
 			Response struct {
@@ -880,16 +869,27 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 		}
 		err = json.Unmarshal([]byte(response), &jsonresp)
 		if err != nil {
-			return resource.RetryableError(err)
+			return resource.NonRetryableError(err)
 		}
-		if jsonresp.Response.Error.Code == "InternalError" {
-			return resource.RetryableError(fmt.Errorf("error: %v, request id: %v", jsonresp.Response.Error.Message, jsonresp.Response.RequestId))
+		if jsonresp.Response.Error.Code != "" {
+			err = fmt.Errorf(
+				"tencentcloud_instance got error, code:%v, message:%v, request id:%v",
+				jsonresp.Response.Error.Code,
+				jsonresp.Response.Error.Message,
+				jsonresp.Response.RequestId,
+			)
+			if jsonresp.Response.Error.Code == "InternalError" || jsonresp.Response.Error.Code == "RequestLimitExceeded" {
+				return resource.RetryableError(err)
+			}
+			return resource.NonRetryableError(err)
 		}
 		return nil
 	})
 	if err != nil {
 		return err
 	}
+
 	d.SetId("")
+
 	return nil
 }
