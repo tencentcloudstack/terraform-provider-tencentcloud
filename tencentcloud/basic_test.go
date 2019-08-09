@@ -16,9 +16,9 @@ the following must be changed to your resource id
 */
 const appid string = "1259649581"
 
-// 10.6.0.0/16
+// 172.16.0.0/16
 const DefaultVpcId  = "vpc-h70b6b49"
-// 10.6.0.0/24
+
 const DefaultSubnetId  = "subnet-1uwh63so"
 
 

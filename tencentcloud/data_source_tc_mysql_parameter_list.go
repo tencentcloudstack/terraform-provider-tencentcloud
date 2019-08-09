@@ -160,7 +160,9 @@ func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interf
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		writeToFile(output.(string), parameterList)
+		if err = writeToFile(output.(string), parameterList); err != nil {
+			return err
+		}
 	}
 	return nil
 }
