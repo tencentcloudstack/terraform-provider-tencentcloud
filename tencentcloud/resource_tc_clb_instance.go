@@ -9,7 +9,6 @@ resource "tencentcloud_clb_instance" "foo" {
   clb_name                  = "myclb"
   project_id                = 0
   vpc_id                    = "vpc-abcd1234"
-  subnet_id                 = "subnet-0agspqdn"
   security_groups           = ["sg-o0ek7r93"]
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = "vpc-abcd1234"
@@ -85,25 +84,25 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
-				Description:  "Subnet ID of the CLB. Effective only for CLB within the VPC.",
+				Description:  "Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports 'INTERNAL' CLBs.",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Security groups of the CLB instance.",
+				Description: "Security groups of the CLB instance. Only supports 'OPEN' CLBs.",
 			},
 			"target_region_info_region": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Region information of backend services are attached the CLB instance.",
+				Description: "Region information of backend services are attached the CLB instance. Only supports 'OPEN' CLBs.",
 			},
 			"target_region_info_vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Vpc information of backend services are attached the CLB instance.",
+				Description: "Vpc information of backend services are attached the CLB instance. Only supports 'OPEN' CLBs.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -203,9 +202,6 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	clbId := *response.Response.LoadBalancerIds[0]
 
 	if v, ok := d.GetOk("security_groups"); ok {
-		if networkType == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("INTERNAL network_type do not support this operation with sercurity_groups")
-		}
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
 		sgRequest.LoadBalancerId = stringToPointer(clbId)
 		securityGroups := v.([]interface{})
