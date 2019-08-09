@@ -10,8 +10,6 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-const masterMysqlId = "cdb-d4on2aox"
-
 func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
