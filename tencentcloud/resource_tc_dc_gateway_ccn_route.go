@@ -69,12 +69,11 @@ func resourceTencentCloudDcGatewayCcnRouteInstance() *schema.Resource {
 		},
 	}
 }
+
 func resourceTencentCloudDcGatewayCcnRouteCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dc_gateway_ccn_route.create")()
 
-	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dc_gateway_ccn_route.create")()
-
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -97,28 +96,24 @@ func resourceTencentCloudDcGatewayCcnRouteCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudDcGatewayCcnRouteRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dc_gateway_ccn_route.read")()
 
-	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dc_gateway_ccn_route.read")()
-
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	items := strings.Split(d.Id(), "#")
-
 	if len(items) != 2 {
 		return fmt.Errorf("id of resource.tencentcloud_dc_gateway_ccn_route is wrong")
 	}
 
 	dcgId, routeId := items[0], items[1]
-
 	info, has, err := service.DescribeDirectConnectGatewayCcnRoute(ctx, dcgId, routeId)
-
 	if err != nil {
 		return err
 	}
+
 	if has == 0 {
 		d.SetId("")
 		return nil
@@ -130,29 +125,26 @@ func resourceTencentCloudDcGatewayCcnRouteRead(d *schema.ResourceData, meta inte
 
 	return nil
 }
+
 func resourceTencentCloudDcGatewayCcnRouteDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dc_gateway_ccn_route.delete")()
 
-	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "resource.tencentcloud_dc_gateway_ccn_route.delete")()
-
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	items := strings.Split(d.Id(), "#")
-
 	if len(items) != 2 {
 		return fmt.Errorf("id of resource.tencentcloud_dc_gateway_ccn_route is wrong")
 	}
 
 	dcgId, routeId := items[0], items[1]
-
 	_, has, err := service.DescribeDirectConnectGatewayCcnRoute(ctx, dcgId, routeId)
-
 	if err != nil {
 		return err
 	}
+
 	if has == 0 {
 		return nil
 	}

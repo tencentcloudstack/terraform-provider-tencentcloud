@@ -55,6 +55,7 @@ Data Sources
   tencentcloud_redis_zone_config
   tencentcloud_route_table
   tencentcloud_security_group
+  tencentcloud_security_groups
   tencentcloud_subnet
   tencentcloud_vpc
   tencentcloud_vpc_instances

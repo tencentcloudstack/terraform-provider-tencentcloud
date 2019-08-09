@@ -1,4 +1,5 @@
-## 1.15.0 (Unreleased)
+## 1.16.0 (Unreleased)
+## 1.15.0 (August 07, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_clb_instances`

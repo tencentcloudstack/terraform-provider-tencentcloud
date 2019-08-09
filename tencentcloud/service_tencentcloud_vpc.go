@@ -83,7 +83,7 @@ func (me *VpcService) fillFilter(ins []*vpc.Filter, key, value string) (outs []*
 func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 	isMulticast bool, dnsServers []string) (vpcId string, isDefault bool, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewCreateVpcRequest()
 	defer func() {
 		if errRet != nil {
@@ -130,7 +130,7 @@ func (me *VpcService) DescribeVpc(ctx context.Context, vpcId string) (info VpcBa
 }
 
 func (me *VpcService) DescribeVpcs(ctx context.Context, vpcId, name string) (infos []VpcBasicInfo, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDescribeVpcsRequest()
 	defer func() {
 		if errRet != nil {
@@ -227,7 +227,7 @@ func (me *VpcService) DescribeSubnet(ctx context.Context, subnetId string) (info
 
 func (me *VpcService) DescribeSubnets(ctx context.Context, subnet_id, vpc_id, subnet_name, zone string) (infos []VpcSubnetBasicInfo, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDescribeSubnetsRequest()
 	defer func() {
 		if errRet != nil {
@@ -315,7 +315,7 @@ getMoreData:
 }
 
 func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string, isMulticast bool, dnsServers []string) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewModifyVpcAttributeRequest()
 	defer func() {
 		if errRet != nil {
@@ -346,7 +346,7 @@ func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string
 }
 
 func (me *VpcService) DeleteVpc(ctx context.Context, vpcId string) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDeleteVpcRequest()
 	defer func() {
 		if errRet != nil {
@@ -372,7 +372,7 @@ func (me *VpcService) DeleteVpc(ctx context.Context, vpcId string) (errRet error
 }
 
 func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone string) (subnetId string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewCreateSubnetRequest()
 	defer func() {
 		if errRet != nil {
@@ -402,7 +402,7 @@ func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone 
 }
 
 func (me *VpcService) ModifySubnetAttribute(ctx context.Context, subnetId, name string, isMulticast bool) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewModifySubnetAttributeRequest()
 	defer func() {
 		if errRet != nil {
@@ -429,7 +429,7 @@ func (me *VpcService) ModifySubnetAttribute(ctx context.Context, subnetId, name 
 
 func (me *VpcService) DeleteSubnet(ctx context.Context, subnetId string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDeleteSubnetRequest()
 	defer func() {
 		if errRet != nil {
@@ -450,7 +450,7 @@ func (me *VpcService) DeleteSubnet(ctx context.Context, subnetId string) (errRet
 }
 
 func (me *VpcService) ReplaceRouteTableAssociation(ctx context.Context, subnetId string, routeTableId string) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewReplaceRouteTableAssociationRequest()
 	defer func() {
 		if errRet != nil {
@@ -504,7 +504,7 @@ func (me *VpcService) DescribeRouteTable(ctx context.Context, routeTableId strin
 }
 func (me *VpcService) DescribeRouteTables(ctx context.Context, routeTableId, routeTableName, vpcId string) (infos []VpcRouteTableBasicInfo, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDescribeRouteTablesRequest()
 	defer func() {
 		if errRet != nil {
@@ -600,7 +600,7 @@ getMoreData:
 
 func (me *VpcService) CreateRouteTable(ctx context.Context, name, vpcId string) (routeTableId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewCreateRouteTableRequest()
 	defer func() {
 		if errRet != nil {
@@ -629,7 +629,7 @@ func (me *VpcService) CreateRouteTable(ctx context.Context, name, vpcId string) 
 
 func (me *VpcService) DeleteRouteTable(ctx context.Context, routeTableId string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDeleteRouteTableRequest()
 	defer func() {
 		if errRet != nil {
@@ -655,7 +655,7 @@ func (me *VpcService) DeleteRouteTable(ctx context.Context, routeTableId string)
 
 func (me *VpcService) ModifyRouteTableAttribute(ctx context.Context, routeTableId string, name string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewModifyRouteTableAttributeRequest()
 	defer func() {
 		if errRet != nil {
@@ -683,7 +683,7 @@ func (me *VpcService) ModifyRouteTableAttribute(ctx context.Context, routeTableI
 func (me *VpcService) GetRouteId(ctx context.Context,
 	routeTableId, destinationCidrBlock, nextType, nextHub, description string) (entryId int64, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	info, has, err := me.DescribeRouteTable(ctx, routeTableId)
 	if err != nil {
@@ -727,7 +727,7 @@ func (me *VpcService) GetRouteId(ctx context.Context,
 
 func (me *VpcService) DeleteRoutes(ctx context.Context, routeTableId string, entryId uint64) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDeleteRoutesRequest()
 	defer func() {
 		if errRet != nil {
@@ -757,7 +757,7 @@ func (me *VpcService) DeleteRoutes(ctx context.Context, routeTableId string, ent
 func (me *VpcService) CreateRoutes(ctx context.Context,
 	routeTableId, destinationCidrBlock, nextType, nextHub, description string) (entryId int64, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewCreateRoutesRequest()
 	defer func() {
 		if errRet != nil {
@@ -821,7 +821,7 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 }
 
 func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string, projectId *int) (id string, err error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := vpc.NewCreateSecurityGroupRequest()
 
@@ -847,7 +847,7 @@ func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string
 }
 
 func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg *vpc.SecurityGroup, has int, err error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := vpc.NewDescribeSecurityGroupsRequest()
 
@@ -874,7 +874,7 @@ func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg 
 }
 
 func (me *VpcService) ModifySecurityGroup(ctx context.Context, id string, newName, newDesc *string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := vpc.NewModifySecurityGroupAttributeRequest()
 
@@ -893,7 +893,7 @@ func (me *VpcService) ModifySecurityGroup(ctx context.Context, id string, newNam
 }
 
 func (me *VpcService) DeleteSecurityGroup(ctx context.Context, id string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := vpc.NewDeleteSecurityGroupRequest()
 
@@ -909,7 +909,7 @@ func (me *VpcService) DeleteSecurityGroup(ctx context.Context, id string) error 
 }
 
 func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids []string) ([]*vpc.SecurityGroupAssociationStatistics, error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := vpc.NewDescribeSecurityGroupAssociationStatisticsRequest()
 	request.SecurityGroupIds = common.StringPtrs(ids)
@@ -925,7 +925,7 @@ func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids [
 }
 
 func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securityGroupRuleBasicInfo) (ruleId string, err error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	createRequest := vpc.NewCreateSecurityGroupPoliciesRequest()
 	createRequest.SecurityGroupId = &info.SgId
@@ -980,7 +980,7 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 }
 
 func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId string) (sgId string, policyType string, policy *vpc.SecurityGroupPolicy, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	info, err := parseSecurityGroupRuleId(ruleId)
 	if err != nil {
@@ -1039,7 +1039,7 @@ func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId st
 }
 
 func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	info, err := parseSecurityGroupRuleId(ruleId)
 	if err != nil {
@@ -1087,7 +1087,7 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 }
 
 func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId string, desc *string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	info, err := parseSecurityGroupRuleId(ruleId)
 	if err != nil {
@@ -1125,7 +1125,7 @@ func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId stri
 }
 
 func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *string, projectId *int) (sgs []*vpc.SecurityGroup, err error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := vpc.NewDescribeSecurityGroupsRequest()
 

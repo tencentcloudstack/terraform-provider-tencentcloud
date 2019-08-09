@@ -262,9 +262,9 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 }
 
 func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_mysql_instance.read")()
+	defer logElapsed("data_source.tencentcloud_mysql_instance.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 
 	request := cdb.NewDescribeDBInstancesRequest()
 

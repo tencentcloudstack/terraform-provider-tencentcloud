@@ -7,6 +7,7 @@ require (
 	github.com/aws/aws-sdk-go v1.20.4
 	github.com/hashicorp/hcl2 v0.0.0-20190618163856-0b64543c968c
 	github.com/hashicorp/terraform v0.12.3
+	github.com/likexian/gokit v0.0.0-20190604165112-68b8a4ba758c
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/tencentcloud/tencentcloud-sdk-go v3.0.75-0.20190716122323-107481b6c7fa+incompatible
 	github.com/terraform-providers/terraform-provider-template v1.0.0

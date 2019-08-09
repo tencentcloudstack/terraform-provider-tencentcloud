@@ -47,7 +47,7 @@ func TestAccTencentCloudMysqlBackupPolicy(t *testing.T) {
 func testAccTencentCloudMysqlBackupPolicyExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
-		logId := GetLogId(nil)
+		logId := getLogId(nil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[r]
@@ -67,7 +67,7 @@ func testAccTencentCloudMysqlBackupPolicyExists(r string) resource.TestCheckFunc
 }
 
 func testAccTencentCloudMysqlBackupPolicyDestroy(s *terraform.State) error {
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}

@@ -32,13 +32,11 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudCbsStorage() *schema.Resource {
@@ -123,11 +121,11 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 }
 
 func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.create")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.create")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
+
 	request := cbs.NewCreateDisksRequest()
-
 	request.DiskName = stringToPointer(d.Get("storage_name").(string))
 	request.DiskType = stringToPointer(d.Get("storage_type").(string))
 	request.DiskSize = intToPointer(d.Get("storage_size").(int))
@@ -156,18 +154,12 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	}
 	request.DiskChargeType = stringToPointer("POSTPAID_BY_HOUR")
 
-	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CreateDisks(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			if e.(*errors.TencentCloudSDKError).GetCode() == "MissingParameter" || e.(*errors.TencentCloudSDKError).GetCode() == "LimitExceeded" {
-				return resource.NonRetryableError(e)
-			}
-			if strings.HasPrefix(e.(*errors.TencentCloudSDKError).GetCode(), "Invalid") {
-				return resource.NonRetryableError(e)
-			}
-			return resource.RetryableError(e)
+			return retryError(e)
 		}
 
 		if len(response.Response.DiskIdSet) < 1 {
@@ -190,43 +182,53 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.read")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	storageId := d.Id()
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	storage, err := cbsService.DescribeDiskById(ctx, storageId)
+
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		storage, e := cbsService.DescribeDiskById(ctx, storageId)
+		if e != nil {
+			return retryError(e)
+		}
+
+		d.Set("storage_type", storage.DiskType)
+		d.Set("storage_size", storage.DiskSize)
+		d.Set("availability_zone", storage.Placement.Zone)
+		d.Set("storage_name", storage.DiskName)
+		d.Set("project_id", storage.Placement.ProjectId)
+		d.Set("encrypt", storage.Encrypt)
+		d.Set("tags", flattenCbsTagsMapping(storage.Tags))
+		d.Set("storage_status", storage.DiskState)
+		d.Set("attached", storage.Attached)
+
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read cbs failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
-	d.Set("storage_type", storage.DiskType)
-	d.Set("storage_size", storage.DiskSize)
-	d.Set("availability_zone", storage.Placement.Zone)
-	d.Set("storage_name", storage.DiskName)
-	d.Set("project_id", storage.Placement.ProjectId)
-	d.Set("encrypt", storage.Encrypt)
-	d.Set("tags", flattenCbsTagsMapping(storage.Tags))
-	d.Set("storage_status", storage.DiskState)
-	d.Set("attached", storage.Attached)
 
 	return nil
 }
 
 func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.update")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.update")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	d.Partial(true)
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+
+	d.Partial(true)
 	storageId := d.Id()
 	storageName := ""
 	projectId := -1
@@ -236,14 +238,22 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		changed = true
 		storageName = d.Get("storage_name").(string)
 	}
+
 	if d.HasChange("project_id") {
 		changed = true
 		projectId = d.Get("project_id").(int)
 	}
 
 	if changed {
-		err := cbsService.ModifyDiskAttributes(ctx, storageId, storageName, projectId)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := cbsService.ModifyDiskAttributes(ctx, storageId, storageName, projectId)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
 		if err != nil {
+			log.Printf("[CRITAL]%s update cbs failed, reason:%s\n ", logId, err.Error())
 			return err
 		}
 		if d.HasChange("storage_name") {
@@ -262,14 +272,22 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			return fmt.Errorf("storage size must be greater than current storage size")
 		}
 
-		err := cbsService.ResizeDisk(ctx, storageId, newValue)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := cbsService.ResizeDisk(ctx, storageId, newValue)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
 		if err != nil {
+			log.Printf("[CRITAL]%s update cbs failed, reason:%s\n ", logId, err.Error())
 			return err
 		}
-		err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			storage, e := cbsService.DescribeDiskById(ctx, storageId)
 			if e != nil {
-				return resource.NonRetryableError(e)
+				return retryError(e)
 			}
 			if *storage.DiskState == CBS_STORAGE_STATUS_EXPANDING {
 				return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
@@ -277,22 +295,31 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s cbs storage create failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s update cbs failed, reason:%s\n ", logId, err.Error())
 			return err
 		}
+
 		d.SetPartial("storage_size")
 	}
 
 	if d.HasChange("snapshot_id") {
 		snapshotId := d.Get("snapshot_id").(string)
-		err := cbsService.ApplySnapshot(ctx, storageId, snapshotId)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := cbsService.ApplySnapshot(ctx, storageId, snapshotId)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
 		if err != nil {
+			log.Printf("[CRITAL]%s update cbs failed, reason:%s\n ", logId, err.Error())
 			return err
 		}
-		err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			storage, e := cbsService.DescribeDiskById(ctx, storageId)
 			if e != nil {
-				return resource.NonRetryableError(e)
+				return retryError(e)
 			}
 			if *storage.DiskState == CBS_STORAGE_STATUS_ROLLBACKING {
 				return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
@@ -300,9 +327,10 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s cbs storage create failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s update cbs failed, reason:%s\n ", logId, err.Error())
 			return err
 		}
+
 		d.SetPartial("snapshot_id")
 	}
 
@@ -312,9 +340,9 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_cbs_storage.delete")()
+	defer logElapsed("resource.tencentcloud_cbs_storage.delete")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	storageId := d.Id()
@@ -322,10 +350,10 @@ func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := cbsService.DeleteDiskById(ctx, storageId)
 		if e != nil {
-			return resource.RetryableError(e)
+			return retryError(e)
 		}
 		return nil
 	})
