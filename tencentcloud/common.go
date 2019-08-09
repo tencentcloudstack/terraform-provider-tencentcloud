@@ -11,12 +11,35 @@ import (
 	"strings"
 	"sync/atomic"
 	"time"
+
+	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/likexian/gokit/assert"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 const FILED_SP = "#"
 
 var firstLogTime = ""
 var logAtomaticId int64 = 0
+
+// readRetryTimeout is read retry timeout
+const readRetryTimeout = 3 * time.Minute
+
+// writeRetryTimeout is write retry timeout
+const writeRetryTimeout = 5 * time.Minute
+
+// retryableErrorCode is retryable error code
+var retryableErrorCode = []string{
+	// commom
+	"FailedOperation",
+	"InternalError",
+	"RequestLimitExceeded",
+	"ResourceInUse",
+	"ResourceInsufficient",
+	"ResourceUnavailable",
+	// cbs
+	"ResourceBusy",
+}
 
 // getLogId get logid  for trace, return a new logid if ctx is nil
 func getLogId(ctx context.Context) string {
@@ -36,6 +59,38 @@ func logElapsed(mark ...string) func() {
 	return func() {
 		log.Printf("[DEBUG] [ELAPSED] %s elapsed %d ms\n", strings.Join(mark, " "), int64(time.Since(start_at)/time.Millisecond))
 	}
+}
+
+// retryError returns retry error
+func retryError(err error) *resource.RetryError {
+	if isErrorRetryable(err) {
+		return resource.RetryableError(err)
+	}
+
+	return resource.NonRetryableError(err)
+}
+
+// isErrorRetryable returns whether error is retryable
+func isErrorRetryable(err error) bool {
+	e, ok := err.(*errors.TencentCloudSDKError)
+	if !ok {
+		log.Printf("[CRITAL] NonRetryable error: %s", e.Error())
+		return false
+	}
+
+	code := e.Code
+	if strings.Contains(code, ".") {
+		code = strings.Split(code, ".")[0]
+	}
+
+	if assert.IsContains(retryableErrorCode, code) {
+		log.Printf("[CRITAL] Retryable error: %s", e.Error())
+		return true
+	}
+
+	log.Printf("[CRITAL] NonRetryable error: %s", e.Error())
+
+	return false
 }
 
 // writeToFile write data to file
