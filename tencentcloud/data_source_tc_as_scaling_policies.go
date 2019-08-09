@@ -142,7 +142,7 @@ func dataSourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta inte
 
 	scalingPolicies, err := asService.DescribeScalingPolicyByFilter(ctx, scalingPolicyId, policyName, scalingGroupId)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	scalingPolicyList := make([]map[string]interface{}, 0, len(scalingPolicies))

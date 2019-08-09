@@ -24,7 +24,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -90,19 +89,30 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 
 	storageId := d.Get("storage_id").(string)
 	snapshotName := d.Get("snapshot_name").(string)
+
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	snapshotId, err := cbsService.CreateSnapshot(ctx, storageId, snapshotName)
-	if err != nil {
-		return nil
-	}
-	d.SetId(snapshotId)
 
-	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+	snapshotId := ""
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		var e error
+		snapshotId, e = cbsService.CreateSnapshot(ctx, storageId, snapshotName)
+		if e != nil {
+			return retryError(e)
+		}
+		d.SetId(snapshotId)
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create cbs snapshot failed, reason:%s\n ", logId, err.Error())
+		return err
+	}
+
+	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		snapshot, e := cbsService.DescribeSnapshotById(ctx, snapshotId)
 		if e != nil {
-			return resource.NonRetryableError(e)
+			return retryError(e)
 		}
 		if *snapshot.SnapshotState == CBS_SNAPSHOT_STATUS_CREATING {
 			return resource.RetryableError(fmt.Errorf("cbs snapshot status is %s", *snapshot.SnapshotState))
@@ -110,11 +120,10 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 		if *snapshot.SnapshotState == CBS_SNAPSHOT_STATUS_NORMAL {
 			return nil
 		}
-		e = fmt.Errorf("cbs snapshot status is %s, we won't wait for it finish.", *snapshot.SnapshotState)
-		return resource.NonRetryableError(e)
+		return resource.NonRetryableError(fmt.Errorf("cbs snapshot status is %s, we won't wait for it finish.", *snapshot.SnapshotState))
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s cbs snapshot attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create cbs snapshot failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
@@ -131,17 +140,25 @@ func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	snapshot, err := cbsService.DescribeSnapshotById(ctx, snapshotId)
+
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		snapshot, e := cbsService.DescribeSnapshotById(ctx, snapshotId)
+		if e != nil {
+			return retryError(e)
+		}
+		d.Set("disk_type", snapshot.DiskUsage)
+		d.Set("percent", snapshot.Percent)
+		d.Set("storage_size", snapshot.DiskSize)
+		d.Set("storage_id", snapshot.DiskId)
+		d.Set("snapshot_name", snapshot.SnapshotName)
+		d.Set("snapshot_status", snapshot.SnapshotState)
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read cbs snapshot failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
-	d.Set("disk_type", snapshot.DiskUsage)
-	d.Set("percent", snapshot.Percent)
-	d.Set("storage_size", snapshot.DiskSize)
-	d.Set("storage_id", snapshot.DiskId)
-	d.Set("snapshot_name", snapshot.SnapshotName)
-	d.Set("snapshot_status", snapshot.SnapshotState)
 	return nil
 }
 
@@ -150,6 +167,7 @@ func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, meta interfac
 
 	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	snapshotId := d.Id()
 
 	if d.HasChange("snapshot_name") {
@@ -157,8 +175,15 @@ func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, meta interfac
 		cbsService := CbsService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
-		err := cbsService.ModifySnapshotName(ctx, snapshotId, snapshotName)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := cbsService.ModifySnapshotName(ctx, snapshotId, snapshotName)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
 		if err != nil {
+			log.Printf("[CRITAL]%s update cbs snapshot failed, reason:%s\n ", logId, err.Error())
 			return err
 		}
 	}
@@ -176,8 +201,16 @@ func resourceTencentCloudCbsSnapshotDelete(d *schema.ResourceData, meta interfac
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := cbsService.DeleteSnapshot(ctx, snapshotId)
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := cbsService.DeleteSnapshot(ctx, snapshotId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s delete cbs snapshot failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
