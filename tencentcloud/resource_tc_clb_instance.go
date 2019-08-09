@@ -10,10 +10,13 @@ resource "tencentcloud_clb_instance" "foo" {
   project_id                = 0
   vpc_id                    = "vpc-abcd1234"
   subnet_id                 = "subnet-0agspqdn"
-  tags                      = "mytags"
   security_groups           = ["sg-o0ek7r93"]
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = "vpc-abcd1234"
+
+  tags = {
+    test = "tf"
+  }
 }
 ```
 
@@ -102,6 +105,12 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Vpc information of backend services are attached the CLB instance.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The available tags within this CLB.",
+			},
 		},
 	}
 }
@@ -136,7 +145,17 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 		request.SubnetId = stringToPointer(v.(string))
 	}
-
+	if v, ok := d.GetOk("tags"); ok {
+		tags := v.(map[string]interface{})
+		request.Tags = make([]*clb.TagInfo, 0, len(tags))
+		for key, value := range tags {
+			tag := clb.TagInfo{
+				TagKey:   &key,
+				TagValue: stringToPointer(value.(string)),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateLoadBalancer(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -246,7 +265,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
 	d.Set("project_id", instance.ProjectId)
 	d.Set("security_groups", flattenStringList(instance.SecureGroups))
-
+	d.Set("tags", flattenClbTagsMapping(instance.Tags))
 	return nil
 }
 
