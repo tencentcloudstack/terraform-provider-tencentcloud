@@ -129,6 +129,28 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	if flag {
 		return fmt.Errorf("Same clb name exists!")
 	}
+	targetRegionInfoRegion := ""
+	targetRegionInfoVpcId := ""
+	if v, ok := d.GetOk("target_region_info_region"); ok {
+		targetRegionInfoRegion = v.(string)
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
+		}
+	}
+	if v, ok := d.GetOk("target_region_info_vpc_id"); ok {
+		targetRegionInfoVpcId = v.(string)
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
+		}
+	}
+	if (targetRegionInfoRegion != "" && targetRegionInfoVpcId == "") || (targetRegionInfoRegion == "" && targetRegionInfoVpcId != "") {
+		return fmt.Errorf("region and vpc_id must be set at same time")
+	}
+	if _, ok := d.GetOk("security_groups"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("INTERNAL network_type do not support this operation with sercurity_groups")
+		}
+	}
 	request := clb.NewCreateLoadBalancerRequest()
 	request.LoadBalancerType = stringToPointer(networkType)
 	request.LoadBalancerName = stringToPointer(clbName)
@@ -205,19 +227,11 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			}
 		}
 	}
-	if v, ok := d.GetOk("target_region_info_region"); ok {
-		region := v.(string)
-		vpcId := ""
-		if networkType == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
-		}
-		if vv, ok := d.GetOk("target_region_info_vpc_id"); ok {
-			vpcId = vv.(string)
-		}
+	if targetRegionInfoRegion != "" {
 
 		targetRegionInfo := clb.TargetRegionInfo{
-			Region: &region,
-			VpcId:  &vpcId,
+			Region: &targetRegionInfoRegion,
+			VpcId:  &targetRegionInfoVpcId,
 		}
 		mRequest := clb.NewModifyLoadBalancerAttributesRequest()
 		mRequest.LoadBalancerId = stringToPointer(clbId)
