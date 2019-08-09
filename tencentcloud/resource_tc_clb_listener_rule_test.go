@@ -62,7 +62,7 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_domain", "abc.com"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_ssl_mode", "UNIDIRECTIONAL"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", "VjAYq9xc"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", "VfqO4zkB"),
 				),
 			}, {
 				Config: testAccClbListenerRule_update,
@@ -83,7 +83,7 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_domain", "abcd.com"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_ssl_mode", "UNIDIRECTIONAL"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", "VjAYq9xc"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", "VfqO4zkB"),
 				),
 			},
 		},
@@ -185,7 +185,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VfqcL1ME"
+  certificate_id       = "VjANRdz8"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_full" {
@@ -204,7 +204,7 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
   health_check_http_code     = "31"
   health_check_http_method   = "GET"
   certificate_ssl_mode       = "UNIDIRECTIONAL"
-  certificate_id             = "VjAYq9xc"
+  certificate_id             = "VfqO4zkB"
 }
 `
 
@@ -220,7 +220,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VfqcL1ME"
+  certificate_id       = "VjANRdz8"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_full" {
@@ -239,6 +239,6 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
   health_check_http_code     = "1"
   health_check_http_method   = "HEAD"
   certificate_ssl_mode       = "UNIDIRECTIONAL"
-  certificate_id             = "VjAYq9xc"
+  certificate_id             = "VfqO4zkB"
 }
 `

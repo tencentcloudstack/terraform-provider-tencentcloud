@@ -583,9 +583,6 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 					return resource.NonRetryableError(err)
 				}
 			}
-			if err != nil {
-				return resource.NonRetryableError(err)
-			}
 			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
 				return nil
 			}
@@ -1048,9 +1045,6 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 					return resource.NonRetryableError(err)
 				}
 			}
-			if err != nil {
-				return resource.NonRetryableError(err)
-			}
 			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
 				return nil
 			}
@@ -1089,9 +1083,6 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 				} else {
 					return resource.NonRetryableError(err)
 				}
-			}
-			if err != nil {
-				return resource.NonRetryableError(err)
 			}
 			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
 				return nil
@@ -1168,6 +1159,7 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("mysql not support this pay type yet.")
 	}
 	d.Partial(false)
+	time.Sleep(7 * time.Second)
 
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }

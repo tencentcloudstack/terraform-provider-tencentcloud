@@ -124,17 +124,17 @@ func testAccCheckCcnDestroy(s *terraform.State) error {
 }
 
 const testAccCcnConfig = `
-resource tencentcloud_ccn main{
-	name ="ci-temp-test-ccn"
-	description="ci-temp-test-ccn-des"
-	qos ="AG"
+resource tencentcloud_ccn main {
+  name        = "ci-temp-test-ccn"
+  description = "ci-temp-test-ccn-des"
+  qos         = "AG"
 }
 `
 
 const testAccCcnConfigUpdate = `
-resource tencentcloud_ccn main{
-	name ="ci-temp-test-ccn-update"
-	description="ci-temp-test-ccn-des-update"
-	qos ="AG"
+resource tencentcloud_ccn main {
+  name        = "ci-temp-test-ccn-update"
+  description = "ci-temp-test-ccn-des-update"
+  qos         = "AG"
 }
 `

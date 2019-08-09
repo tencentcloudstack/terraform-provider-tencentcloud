@@ -97,44 +97,44 @@ func testAccCheckAsScalingPolicyDestroy(s *terraform.State) error {
 func testAccAsScalingPolicy() string {
 	return `
 resource "tencentcloud_vpc" "vpc" {
-	name = "tf-as-vpc"
-	cidr_block = "10.2.0.0/16"
+  name       = "tf-as-vpc"
+  cidr_block = "10.2.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	name = "tf-as-subnet"
-	cidr_block = "10.2.11.0/24"
-	availability_zone = "ap-guangzhou-3"
+  vpc_id            = "${tencentcloud_vpc.vpc.id}"
+  name              = "tf-as-subnet"
+  cidr_block        = "10.2.11.0/24"
+  availability_zone = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-configuration"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
+  configuration_name = "tf-as-configuration"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
 }
 
-resource "tencentcloud_as_scaling_group" "scaling_group" {	
-	scaling_group_name = "tf-as-scaling-group"
-	configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
-	max_size = 1
-	min_size = 0
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	subnet_ids = ["${tencentcloud_subnet.subnet.id}"]
+resource "tencentcloud_as_scaling_group" "scaling_group" {
+  scaling_group_name = "tf-as-scaling-group"
+  configuration_id   = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  max_size           = 1
+  min_size           = 0
+  vpc_id             = "${tencentcloud_vpc.vpc.id}"
+  subnet_ids         = ["${tencentcloud_subnet.subnet.id}"]
 }
 
 resource "tencentcloud_as_scaling_policy" "scaling_policy" {
-	scaling_group_id = "${tencentcloud_as_scaling_group.scaling_group.id}"
-	policy_name = "tf-as-scaling-policy"
-	adjustment_type = "EXACT_CAPACITY"
-	adjustment_value = 0
-	comparison_operator = "GREATER_THAN"
-	metric_name = "CPU_UTILIZATION"
-	threshold = 80
-	period = 300
-	continuous_time = 10
-	statistic = "AVERAGE"
-	cooldown = 360
+  scaling_group_id    = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  policy_name         = "tf-as-scaling-policy"
+  adjustment_type     = "EXACT_CAPACITY"
+  adjustment_value    = 0
+  comparison_operator = "GREATER_THAN"
+  metric_name         = "CPU_UTILIZATION"
+  threshold           = 80
+  period              = 300
+  continuous_time     = 10
+  statistic           = "AVERAGE"
+  cooldown            = 360
 }
 `
 }
@@ -142,44 +142,44 @@ resource "tencentcloud_as_scaling_policy" "scaling_policy" {
 func testAccAsScalingPolicy_update() string {
 	return `
 resource "tencentcloud_vpc" "vpc" {
-	name = "tf-as-vpc"
-	cidr_block = "10.2.0.0/16"
+  name       = "tf-as-vpc"
+  cidr_block = "10.2.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	name = "tf-as-subnet"
-	cidr_block = "10.2.11.0/24"
-	availability_zone = "ap-guangzhou-3"
+  vpc_id            = "${tencentcloud_vpc.vpc.id}"
+  name              = "tf-as-subnet"
+  cidr_block        = "10.2.11.0/24"
+  availability_zone = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-configuration"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
+  configuration_name = "tf-as-configuration"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
 }
 
-resource "tencentcloud_as_scaling_group" "scaling_group" {	
-	scaling_group_name = "tf-as-scaling-group"
-	configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
-	max_size = 1
-	min_size = 0
-	vpc_id = "${tencentcloud_vpc.vpc.id}"
-	subnet_ids = ["${tencentcloud_subnet.subnet.id}"]
+resource "tencentcloud_as_scaling_group" "scaling_group" {
+  scaling_group_name = "tf-as-scaling-group"
+  configuration_id   = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  max_size           = 1
+  min_size           = 0
+  vpc_id             = "${tencentcloud_vpc.vpc.id}"
+  subnet_ids         = ["${tencentcloud_subnet.subnet.id}"]
 }
 
 resource "tencentcloud_as_scaling_policy" "scaling_policy" {
-	scaling_group_id = "${tencentcloud_as_scaling_group.scaling_group.id}"
-	policy_name = "tf-as-scaling-policy"
-	adjustment_type = "CHANGE_IN_CAPACITY"
-	adjustment_value = 1
-	comparison_operator = "GREATER_THAN_OR_EQUAL_TO"
-	metric_name = "MEM_UTILIZATION"
-	threshold = 85
-	period = 60
-	continuous_time = 9
-	statistic = "MAXIMUM"
-	cooldown = 300
+  scaling_group_id    = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  policy_name         = "tf-as-scaling-policy"
+  adjustment_type     = "CHANGE_IN_CAPACITY"
+  adjustment_value    = 1
+  comparison_operator = "GREATER_THAN_OR_EQUAL_TO"
+  metric_name         = "MEM_UTILIZATION"
+  threshold           = 85
+  period              = 60
+  continuous_time     = 9
+  statistic           = "MAXIMUM"
+  cooldown            = 300
 }
 `
 }

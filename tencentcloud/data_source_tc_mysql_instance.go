@@ -402,7 +402,10 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 	}
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		writeToFile(output.(string), instanceList)
+		err = writeToFile(output.(string), instanceList)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

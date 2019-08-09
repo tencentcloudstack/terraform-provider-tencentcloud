@@ -95,26 +95,26 @@ func testAccCheckMongodbInstanceExists(n string) resource.TestCheckFunc {
 
 const testAccMongodbInstance string = `
 resource "tencentcloud_mongodb_instance" "mongodb" {
-	instance_name = "tf-mongodb-test"
-	memory = 4
-	volume = 100
-	engine_version = "MONGO_36_WT"
-	machine_type = "GIO"
-	available_zone = "ap-guangzhou-2"
-	project_id = 0
-	password = "test1234"
+  instance_name  = "tf-mongodb-test"
+  memory         = 4
+  volume         = 100
+  engine_version = "MONGO_36_WT"
+  machine_type   = "GIO"
+  available_zone = "ap-guangzhou-2"
+  project_id     = 0
+  password       = "test1234"
 }
 `
 
 const testAccMongodbInstance_update string = `
 resource "tencentcloud_mongodb_instance" "mongodb" {
-	instance_name = "tf-mongodb-update"
-	memory = 8
-	volume = 200
-	engine_version = "MONGO_36_WT"
-	machine_type = "GIO"
-	available_zone = "ap-guangzhou-2"
-	project_id = 0
-	password = "tests1234"
+  instance_name  = "tf-mongodb-update"
+  memory         = 8
+  volume         = 200
+  engine_version = "MONGO_36_WT"
+  machine_type   = "GIO"
+  available_zone = "ap-guangzhou-2"
+  project_id     = 0
+  password       = "tests1234"
 }
 `

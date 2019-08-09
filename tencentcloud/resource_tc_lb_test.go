@@ -54,8 +54,8 @@ func testAccCheckLBDestroy(s *terraform.State) error {
 
 const testAccLBConfig = `
 resource "tencentcloud_lb" "classic" {
-  type = "OPEN"
+  type    = "OPEN"
   forward = "APPLICATION"
-  name = "tf-ci-test"
+  name    = "tf-ci-test"
 }
 `

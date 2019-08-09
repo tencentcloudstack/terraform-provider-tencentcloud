@@ -126,43 +126,43 @@ func testAccCheckVpcSubnetDestroy(s *terraform.State) error {
 
 const testAccVpcSubnetConfig = `
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 resource "tencentcloud_subnet" "subnet" {
-	availability_zone="${var.availability_zone}"
-	name="guagua-ci-temp-test"
-	vpc_id="${tencentcloud_vpc.foo.id}"
-	cidr_block="10.0.20.0/28"
-	is_multicast=false
+  availability_zone = "${var.availability_zone}"
+  name              = "guagua-ci-temp-test"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
 }
 `
 
 const testAccVpcSubnetConfigUpdate = `
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_route_table" "route_table" {
-    vpc_id = "${tencentcloud_vpc.foo.id}"
-    name = "ci-temp-test-rt"
+  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = "ci-temp-test-rt"
 }
 
 resource "tencentcloud_subnet" "subnet" {
-    availability_zone="${var.availability_zone}"
-    name = "ci-temp-test-subnet-updated"
-    vpc_id = "${tencentcloud_vpc.foo.id}"
-    cidr_block="10.0.20.0/28"
-    is_multicast=true
-    route_table_id = "${tencentcloud_route_table.route_table.id}"
+  availability_zone = "${var.availability_zone}"
+  name              = "ci-temp-test-subnet-updated"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = true
+  route_table_id    = "${tencentcloud_route_table.route_table.id}"
 }
 `

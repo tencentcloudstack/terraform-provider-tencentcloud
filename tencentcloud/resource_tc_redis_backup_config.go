@@ -122,7 +122,7 @@ func resourceTencentCloudRedisBackupConfigUpdate(d *schema.ResourceData, meta in
 	backupPeriods := make([]string, 0, len(interfaceBackupPeriods))
 
 	for _, v := range interfaceBackupPeriods {
-		if weeksAllows[v.(string)] == false {
+		if !weeksAllows[v.(string)] {
 			return fmt.Errorf("redis backup config[backup_period] not supports %s", v.(string))
 		}
 		backupPeriods = append(backupPeriods, v.(string))
