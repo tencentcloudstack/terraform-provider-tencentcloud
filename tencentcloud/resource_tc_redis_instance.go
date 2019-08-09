@@ -241,7 +241,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
-	if !has  {
+	if !has {
 		d.SetId("")
 		return nil
 	}

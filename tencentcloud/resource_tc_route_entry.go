@@ -111,7 +111,7 @@ func resourceTencentCloudRouteEntryCreate(d *schema.ResourceData, m interface{})
 		"nextHub":              params["routeSet.0.nextHub"],
 	}
 	uniqRouteEntryId, ok := routeIdEncode(route)
-	if !ok  {
+	if !ok {
 		return errors.New("resource_tc_route_entry create error, Build route entry id fail")
 	}
 	log.Printf("[DEBUG] uniqRouteEntryId=%s", uniqRouteEntryId)
@@ -123,7 +123,7 @@ func resourceTencentCloudRouteEntryRead(d *schema.ResourceData, m interface{}) e
 	log.Printf("[DEBUG] resource_tc_route_entry read id:%v", d.Id())
 	client := m.(*TencentCloudClient).commonConn
 	_route, ok := routeIdDecode(d.Id())
-	if !ok  {
+	if !ok {
 		return fmt.Errorf("resource_tc_route_entry read error, id decode faild! id:%v", d.Id())
 	}
 

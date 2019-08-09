@@ -1159,7 +1159,7 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("mysql not support this pay type yet.")
 	}
 	d.Partial(false)
-	time.Sleep(7*time.Second)
+	time.Sleep(7 * time.Second)
 
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }

@@ -71,6 +71,7 @@ func TestAccTencentCloudAsScalingGroupsDataSource_full(t *testing.T) {
 		},
 	})
 }
+
 //todo
 func testAccAsScalingGroupsDataSource_basic() string {
 	return `

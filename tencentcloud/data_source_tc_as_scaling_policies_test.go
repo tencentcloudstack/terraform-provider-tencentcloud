@@ -46,6 +46,7 @@ func TestAccTencentCloudAsScalingPoliciesDataSource(t *testing.T) {
 		},
 	})
 }
+
 //todo
 func testAccAsScalingPoliciesDataSource() string {
 	return `

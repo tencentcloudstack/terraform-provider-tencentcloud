@@ -65,11 +65,11 @@ func checkContainerClusterInstancesAllNormal(n string) resource.TestCheckFunc {
 
 const testAccTencentCloudContainerClusterConfig_basic = `
 variable "my_vpc" {
-   default = "`+DefaultVpcId+`"
+   default = "` + DefaultVpcId + `"
 }
 
 variable "my_subnet" {
-  default = "`+DefaultSubnetId+`"
+  default = "` + DefaultSubnetId + `"
 }
 
 data "tencentcloud_instance_types" "my_favorate_instance_types" {

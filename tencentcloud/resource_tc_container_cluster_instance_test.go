@@ -24,11 +24,11 @@ func TestAccTencentCloudContainerClusterInstance_basic(t *testing.T) {
 
 const testAccTencentCloudContainerClusterInstanceConfig_basic = `
 variable "my_vpc" {
-   default = "`+DefaultVpcId+`"
+   default = "` + DefaultVpcId + `"
 }
 
 variable "my_subnet" {
-  default = "`+DefaultSubnetId+`"
+  default = "` + DefaultSubnetId + `"
 }
 
 resource "tencentcloud_container_cluster" "foo" {
