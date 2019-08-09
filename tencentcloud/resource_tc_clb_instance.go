@@ -174,7 +174,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.Tags = make([]*clb.TagInfo, 0, len(tags))
 		for key, value := range tags {
 			tag := clb.TagInfo{
-				TagKey:   &key,
+				TagKey:   stringToPointer(key),
 				TagValue: stringToPointer(value.(string)),
 			}
 			request.Tags = append(request.Tags, &tag)
