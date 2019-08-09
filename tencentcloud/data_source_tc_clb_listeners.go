@@ -112,17 +112,17 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
+							Description: "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.",
 						},
 						"certificate_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the server certificate. If not specified, the content, key, and name of the server certificate must be set. NOTES: only supported by listeners of 'HTTPS' protocol.",
+							Description: "ID of the server certificate. If not specified, the content, key, and name of the server certificate must be set. NOTES: only supported by listeners of 'HTTPS' and 'TCP_SSL' protocol.",
 						},
 						"certificate_ca_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of 'HTTPS' protocol .",
+							Description: "ID of the client certificate. If not specified, the content, key, name of client certificate must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of 'HTTPS' and 'TCP_SSL' protocol .",
 						},
 						"session_expire_time": {
 							Type:        schema.TypeInt,

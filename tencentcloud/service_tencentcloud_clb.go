@@ -735,7 +735,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	}
 
 	if healthSetFlag == true {
-		if !(((protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP) && applyType == HEALTH_APPLY_TYPE_LISTENER) || ((protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) && applyType == HEALTH_APPLY_TYPE_RULE)) {
+		if !(((protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) && applyType == HEALTH_APPLY_TYPE_LISTENER) || ((protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) && applyType == HEALTH_APPLY_TYPE_RULE)) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health para can only be set with TCP/UDP listener or rule of HTTP/HTTPS listener")
 			return
