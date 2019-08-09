@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
@@ -17,6 +18,7 @@ func (me *MongodbService) DescribeInstanceById(ctx context.Context, instanceId s
 	logId := GetLogId(ctx)
 	request := mongodb.NewDescribeDBInstancesRequest()
 	request.InstanceIds = []*string{&instanceId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().DescribeDBInstances(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -40,6 +42,7 @@ func (me *MongodbService) ModifyInstanceName(ctx context.Context, instanceId, in
 	request := mongodb.NewRenameInstanceRequest()
 	request.InstanceId = &instanceId
 	request.NewName = &instanceName
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().RenameInstance(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -57,6 +60,7 @@ func (me *MongodbService) SetInstancePassword(ctx context.Context, instanceId, a
 	request.InstanceId = &instanceId
 	request.UserName = &accountName
 	request.Password = &password
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().SetPassword(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -74,6 +78,7 @@ func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string
 	request.InstanceId = &instanceId
 	request.Memory = intToPointer(memory)
 	request.Volume = intToPointer(volume)
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().UpgradeDBInstanceHour(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -90,6 +95,7 @@ func (me *MongodbService) ModifyProjectId(ctx context.Context, instanceId string
 	request := mongodb.NewAssignProjectRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.ProjectId = intToPointer(projectId)
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().AssignProject(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -105,6 +111,7 @@ func (me *MongodbService) DeleteInstance(ctx context.Context, instanceId string)
 	logId := GetLogId(ctx)
 	request := mongodb.NewTerminateDBInstanceRequest()
 	request.InstanceId = &instanceId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().TerminateDBInstance(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -122,6 +129,7 @@ func (me *MongodbService) DescribeSpecInfo(ctx context.Context, zone string) (in
 	if zone != "" {
 		request.Zone = &zone
 	}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().DescribeSpecInfo(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -155,6 +163,7 @@ func (me *MongodbService) DescribeInstancesByFilter(ctx context.Context, instanc
 	for {
 		request.Offset = intToPointer(offset)
 		request.Limit = intToPointer(pageSize)
+		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseMongodbClient().DescribeDBInstances(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",

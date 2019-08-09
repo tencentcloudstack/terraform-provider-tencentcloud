@@ -5,6 +5,7 @@ import (
 	"fmt"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 )
 
@@ -82,7 +83,7 @@ getMoreData:
 	}
 	request.Limit = &limit
 	request.Offset = &offset
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDcClient().DescribeDirectConnects(request)
 	if err != nil {
 		errRet = err
@@ -161,7 +162,7 @@ getMoreData:
 	}
 	request.Limit = &limit
 	request.Offset = &offset
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDcClient().DescribeDirectConnectTunnels(request)
 	if err != nil {
 		errRet = err
@@ -239,7 +240,7 @@ func (me *DcService) CreateDirectConnectTunnel(ctx context.Context, dcId, dcxNam
 	if customerAddress != "" {
 		request.CustomerAddress = &customerAddress
 	}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDcClient().CreateDirectConnectTunnel(request)
 	if err != nil {
 		errRet = err
@@ -267,6 +268,7 @@ func (me *DcService) DeleteDirectConnectTunnel(ctx context.Context, dcxId string
 	}()
 
 	request.DirectConnectTunnelId = &dcxId
+	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseDcClient().DeleteDirectConnectTunnel(request)
 	if err != nil {
 		errRet = err
@@ -318,6 +320,7 @@ func (me *DcService) ModifyDirectConnectTunnelAttribute(ctx context.Context, dcx
 			request.RouteFilterPrefixes = append(request.RouteFilterPrefixes, &dcPrefix)
 		}
 	}
+	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseDcClient().ModifyDirectConnectTunnelAttribute(request)
 	if err != nil {
 		errRet = err

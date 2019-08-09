@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"strconv"
 	"strings"
@@ -104,6 +105,7 @@ func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 			request.DnsServers = append(request.DnsServers, &dnsServers[index])
 		}
 	}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateVpc(request)
 	if err == nil {
 		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
@@ -169,7 +171,7 @@ getMoreData:
 
 	var strOffset = fmt.Sprintf("%d", offset)
 	request.Offset = &strOffset
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeVpcs(request)
 	if err != nil {
 		errRet = err
@@ -269,7 +271,7 @@ getMoreData:
 
 	var strOffset = fmt.Sprintf("%d", offset)
 	request.Offset = &strOffset
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeSubnets(request)
 	if err != nil {
 		errRet = err
@@ -335,7 +337,7 @@ func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string
 	}
 	var enableMulticast = map[bool]string{true: "true", false: "false"}[isMulticast]
 	request.EnableMulticast = &enableMulticast
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().ModifyVpcAttribute(request)
 	if err == nil {
 		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
@@ -360,7 +362,7 @@ func (me *VpcService) DeleteVpc(ctx context.Context, vpcId string) (errRet error
 	}
 
 	request.VpcId = &vpcId
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DeleteVpc(request)
 	if err == nil {
 		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
@@ -389,7 +391,7 @@ func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone 
 	request.SubnetName = &name
 	request.CidrBlock = &cidr
 	request.Zone = &zone
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateSubnet(request)
 	errRet = err
 	if err == nil {
@@ -416,7 +418,7 @@ func (me *VpcService) ModifySubnetAttribute(ctx context.Context, subnetId, name 
 	request.SubnetId = &subnetId
 	request.SubnetName = &name
 	request.EnableBroadcast = &enableMulticast
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().ModifySubnetAttribute(request)
 
 	errRet = err
@@ -438,6 +440,7 @@ func (me *VpcService) DeleteSubnet(ctx context.Context, subnetId string) (errRet
 		}
 	}()
 	request.SubnetId = &subnetId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DeleteSubnet(request)
 
 	errRet = err
@@ -460,7 +463,7 @@ func (me *VpcService) ReplaceRouteTableAssociation(ctx context.Context, subnetId
 	}()
 	request.SubnetId = &subnetId
 	request.RouteTableId = &routeTableId
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().ReplaceRouteTableAssociation(request)
 
 	errRet = err
@@ -544,6 +547,7 @@ getMoreData:
 
 	var strOffset = fmt.Sprintf("%d", offset)
 	request.Offset = &strOffset
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeRouteTables(request)
 	if err != nil {
 		errRet = err
@@ -615,7 +619,7 @@ func (me *VpcService) CreateRouteTable(ctx context.Context, name, vpcId string) 
 	}
 	request.VpcId = &vpcId
 	request.RouteTableName = &name
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateRouteTable(request)
 	errRet = err
 	if err == nil {
@@ -643,6 +647,7 @@ func (me *VpcService) DeleteRouteTable(ctx context.Context, routeTableId string)
 		return
 	}
 	request.RouteTableId = &routeTableId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DeleteRouteTable(request)
 	errRet = err
 	if err == nil {
@@ -670,6 +675,7 @@ func (me *VpcService) ModifyRouteTableAttribute(ctx context.Context, routeTableI
 	}
 	request.RouteTableId = &routeTableId
 	request.RouteTableName = &name
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().ModifyRouteTableAttribute(request)
 	errRet = err
 	if err == nil {
@@ -745,6 +751,7 @@ func (me *VpcService) DeleteRoutes(ctx context.Context, routeTableId string, ent
 	var route vpc.Route
 	route.RouteId = &entryId
 	request.Routes = []*vpc.Route{&route}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DeleteRoutes(request)
 	errRet = err
 	if err == nil {
@@ -777,6 +784,7 @@ func (me *VpcService) CreateRoutes(ctx context.Context,
 	route.GatewayType = &nextType
 	route.GatewayId = &nextHub
 	request.Routes = []*vpc.Route{&route}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateRoutes(request)
 	errRet = err
 	if err == nil {
@@ -831,7 +839,7 @@ func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string
 	if projectId != nil {
 		request.ProjectId = common.StringPtr(strconv.Itoa(*projectId))
 	}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateSecurityGroup(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
@@ -852,7 +860,7 @@ func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg 
 	request := vpc.NewDescribeSecurityGroupsRequest()
 
 	request.SecurityGroupIds = []*string{&id}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
 	if err != nil {
 		if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
@@ -881,7 +889,7 @@ func (me *VpcService) ModifySecurityGroup(ctx context.Context, id string, newNam
 	request.SecurityGroupId = &id
 	request.GroupName = newName
 	request.GroupDescription = newDesc
-
+	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseVpcClient().ModifySecurityGroupAttribute(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
@@ -898,7 +906,7 @@ func (me *VpcService) DeleteSecurityGroup(ctx context.Context, id string) error 
 	request := vpc.NewDeleteSecurityGroupRequest()
 
 	request.SecurityGroupId = &id
-
+	ratelimit.Check(request.GetAction())
 	if _, err := me.client.UseVpcClient().DeleteSecurityGroup(request); err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
@@ -913,7 +921,7 @@ func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids [
 
 	request := vpc.NewDescribeSecurityGroupAssociationStatisticsRequest()
 	request.SecurityGroupIds = common.StringPtrs(ids)
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeSecurityGroupAssociationStatistics(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
@@ -951,7 +959,7 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 	case "egress":
 		createRequest.SecurityGroupPolicySet.Egress = []*vpc.SecurityGroupPolicy{policy}
 	}
-
+	ratelimit.Check(createRequest.GetAction())
 	if _, err := me.client.UseVpcClient().CreateSecurityGroupPolicies(createRequest); err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
@@ -990,7 +998,7 @@ func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId st
 
 	request := vpc.NewDescribeSecurityGroupPoliciesRequest()
 	request.SecurityGroupId = &info.SgId
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeSecurityGroupPolicies(request)
 	if err != nil {
 		if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
@@ -1076,7 +1084,7 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 	case "egress":
 		request.SecurityGroupPolicySet.Egress = []*vpc.SecurityGroupPolicy{policy}
 	}
-
+	ratelimit.Check(request.GetAction())
 	if _, err := me.client.UseVpcClient().DeleteSecurityGroupPolicies(request); err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
@@ -1114,7 +1122,7 @@ func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId stri
 	case "egress":
 		request.SecurityGroupPolicySet.Egress = []*vpc.SecurityGroupPolicy{policy}
 	}
-
+	ratelimit.Check(request.GetAction())
 	if _, err := me.client.UseVpcClient().ReplaceSecurityGroupPolicy(request); err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
@@ -1154,7 +1162,7 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 	for {
 		request.Offset = common.StringPtr(strconv.Itoa(offset))
 		request.Limit = common.StringPtr(strconv.Itoa(pageSize))
-
+		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
 		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
