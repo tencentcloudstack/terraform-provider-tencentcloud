@@ -45,8 +45,7 @@ func testAccDataSourceRedisZoneConfig() string {
 }
 
 func testAccDataSourceRedisZoneConfigWithRegion() string {
-	return `
-         data "tencentcloud_redis_zone_config" "testWithRegion" {
-              region = "ap-guangzhou"
-         }`
+	return `data "tencentcloud_redis_zone_config" "testWithRegion" {
+       region = "ap-guangzhou"
+    }`
 }

@@ -64,27 +64,27 @@ func testAccCheckCcnBandwidthLimitExists(r string) resource.TestCheckFunc {
 
 const testAccCcnBandwidthLimitConfig = `
 variable "other_region1" {
-    default = "ap-shanghai"
+  default = "ap-shanghai"
 }
 
 variable "other_region2" {
-    default = "ap-beijing"
+  default = "ap-beijing"
 }
 
-resource tencentcloud_ccn main{
-	name ="ci-temp-test-ccn"
-	description="ci-temp-test-ccn-des"
-	qos ="AG"
+resource tencentcloud_ccn main {
+  name        = "ci-temp-test-ccn"
+  description = "ci-temp-test-ccn-des"
+  qos         = "AG"
 }
 
 resource tencentcloud_ccn_bandwidth_limit limit1 {
-	ccn_id ="${tencentcloud_ccn.main.id}"
-	region ="${var.other_region1}"
-	bandwidth_limit = 500
+  ccn_id          = "${tencentcloud_ccn.main.id}"
+  region          = "${var.other_region1}"
+  bandwidth_limit = 500
 }
 
 resource tencentcloud_ccn_bandwidth_limit limit2 {
-	ccn_id ="${tencentcloud_ccn.main.id}"
-	region ="${var.other_region2}"
+  ccn_id = "${tencentcloud_ccn.main.id}"
+  region = "${var.other_region2}"
 }
 `

@@ -485,12 +485,12 @@ resource "tencentcloud_key_pair" "my_key" {
 }
 
 resource "tencentcloud_instance" "login" {
-  instance_name = "terraform_automation_test_kuruk"
+  instance_name     = "terraform_automation_test_kuruk"
   availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  key_name = "${tencentcloud_key_pair.my_key.id}"
-  system_disk_type = "CLOUD_PREMIUM"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  key_name          = "${tencentcloud_key_pair.my_key.id}"
+  system_disk_type  = "CLOUD_PREMIUM"
 }
 `,
 		keyname,
@@ -518,11 +518,11 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 }
 
 resource "tencentcloud_instance" "hello" {
-  instance_name = "%s"
+  instance_name     = "%s"
   availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type = "CLOUD_PREMIUM"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  system_disk_type  = "CLOUD_PREMIUM"
 }
 `,
 		name,
@@ -542,12 +542,12 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 }
 
 resource "tencentcloud_instance" "hello" {
-  instance_name = "tf_test_reset_instance"
+  instance_name     = "tf_test_reset_instance"
   availability_zone = "ap-guangzhou-3"
-  image_id      = "%s"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  password      = "%s"
-  system_disk_type = "CLOUD_PREMIUM"
+  image_id          = "%s"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  password          = "%s"
+  system_disk_type  = "CLOUD_PREMIUM"
 }
 `,
 		imageId,
@@ -574,24 +574,24 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name = "terraform_automation_test_kuruk"
+  instance_name     = "terraform_automation_test_kuruk"
   availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
 
   system_disk_type = "CLOUD_PREMIUM"
   data_disks {
-    data_disk_type = "CLOUD_PREMIUM"
-    data_disk_size = 100
+    data_disk_type       = "CLOUD_PREMIUM"
+    data_disk_size       = 100
     delete_with_instance = true
   }
   data_disks {
-    data_disk_type = "CLOUD_PREMIUM"
-    data_disk_size = 100
+    data_disk_type       = "CLOUD_PREMIUM"
+    data_disk_size       = 100
     delete_with_instance = true
   }
   disable_security_service = true
-  disable_monitor_service = true
+  disable_monitor_service  = true
 }
 `
 
@@ -605,12 +605,12 @@ data "tencentcloud_image" "myimage" {
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name = "terraform_ci_test"
-  availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.myimage.image_id}"
-  instance_type = "S2.SMALL1"
-  system_disk_type = "CLOUD_PREMIUM"
-  instance_charge_type = "PREPAID"
+  instance_name                       = "terraform_ci_test"
+  availability_zone                   = "ap-guangzhou-3"
+  image_id                            = "${data.tencentcloud_image.myimage.image_id}"
+  instance_type                       = "S2.SMALL1"
+  system_disk_type                    = "CLOUD_PREMIUM"
+  instance_charge_type                = "PREPAID"
   instance_charge_type_prepaid_period = 1
 }
 `
@@ -634,14 +634,14 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 }
 
 resource "tencentcloud_instance" "network" {
-  instance_name = "terraform_automation_test_kuruk"
-  availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
+  instance_name              = "terraform_automation_test_kuruk"
+  availability_zone          = "ap-guangzhou-3"
+  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 1
-  allocate_public_ip = true
-  system_disk_type = "CLOUD_PREMIUM"
+  allocate_public_ip         = true
+  system_disk_type           = "CLOUD_PREMIUM"
 }
 `
 
@@ -664,14 +664,14 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 }
 
 resource "tencentcloud_instance" "network" {
-  instance_name = "terraform_automation_test_kuruk"
-  availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
+  instance_name              = "terraform_automation_test_kuruk"
+  availability_zone          = "ap-guangzhou-3"
+  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 1
-  allocate_public_ip = false
-  system_disk_type = "CLOUD_PREMIUM"
+  allocate_public_ip         = false
+  system_disk_type           = "CLOUD_PREMIUM"
 }
 `
 
@@ -696,13 +696,13 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 }
 
 resource "tencentcloud_instance" "login" {
-  instance_name = "terraform_automation_test_kuruk"
-  availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  instance_name              = "terraform_automation_test_kuruk"
+  availability_zone          = "ap-guangzhou-3"
+  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   internet_max_bandwidth_out = 1
-  password = "%s"
-  system_disk_type = "CLOUD_PREMIUM"
+  password                   = "%s"
+  system_disk_type           = "CLOUD_PREMIUM"
 }
 `,
 		pwd,
@@ -733,20 +733,20 @@ resource "tencentcloud_vpc" "my_vpc" {
 }
 
 resource "tencentcloud_subnet" "my_subnet" {
-  vpc_id = "${tencentcloud_vpc.my_vpc.id}"
+  vpc_id            = "${tencentcloud_vpc.my_vpc.id}"
   availability_zone = "ap-guangzhou-3"
   name              = "tf_test_subnet"
   cidr_block        = "10.0.2.0/24"
 }
 
 resource "tencentcloud_instance" "vpc_ins" {
-  instance_name = "terraform_automation_test_kuruk_vpc"
+  instance_name     = "terraform_automation_test_kuruk_vpc"
   availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  vpc_id = "${tencentcloud_vpc.my_vpc.id}"
-  subnet_id = "${tencentcloud_subnet.my_subnet.id}"
-  system_disk_type = "CLOUD_PREMIUM"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  vpc_id            = "${tencentcloud_vpc.my_vpc.id}"
+  subnet_id         = "${tencentcloud_subnet.my_subnet.id}"
+  system_disk_type  = "CLOUD_PREMIUM"
 }
 `
 
@@ -769,15 +769,15 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 }
 
 data "tencentcloud_availability_zones" "my_favorate_zones" {
-	name = "ap-guangzhou-3"
+  name = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_instance" "hostname" {
-  instance_name = "terraform_automation_test_kuruk"
-  availability_zone     = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  hostname      = "testing"
+  instance_name     = "terraform_automation_test_kuruk"
+  availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  hostname          = "testing"
 
   system_disk_type = "CLOUD_PREMIUM"
 }
@@ -802,15 +802,15 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 }
 
 data "tencentcloud_availability_zones" "my_favorate_zones" {
-	name = "ap-guangzhou-3"
+  name = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_instance" "project_id" {
-  instance_name = "terraform_automation_test_kuruk"
-  availability_zone     = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  project_id    = 0
+  instance_name     = "terraform_automation_test_kuruk"
+  availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  project_id        = 0
 
   system_disk_type = "CLOUD_PREMIUM"
 }
@@ -836,43 +836,42 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 }
 
 resource "tencentcloud_security_group" "my_sg1" {
-  name = "tf_test_sg_name"
+  name        = "tf_test_sg_name"
   description = "tf_test_sg_desc"
 }
 
 resource "tencentcloud_security_group_rule" "sg_rule_1" {
   security_group_id = "${tencentcloud_security_group.my_sg1.id}"
-  type = "ingress"
-  cidr_ip = "0.0.0.0/0"
-  ip_protocol = "tcp"
-  port_range = "80,8080"
-  policy = "accept"
+  type              = "ingress"
+  cidr_ip           = "0.0.0.0/0"
+  ip_protocol       = "tcp"
+  port_range        = "80,8080"
+  policy            = "accept"
 }
 
 resource "tencentcloud_security_group" "my_sg2" {
-  name = "tf_test_sg_name"
+  name        = "tf_test_sg_name"
   description = "tf_test_sg_desc"
 }
 
 resource "tencentcloud_security_group_rule" "sg_rule_2" {
   security_group_id = "${tencentcloud_security_group.my_sg2.id}"
-  type = "ingress"
-  cidr_ip = "0.0.0.0/0"
-  ip_protocol = "tcp"
-  port_range = "3000"
-  policy = "accept"
+  type              = "ingress"
+  cidr_ip           = "0.0.0.0/0"
+  ip_protocol       = "tcp"
+  port_range        = "3000"
+  policy            = "accept"
 }
 
 resource "tencentcloud_instance" "sg" {
-  instance_name = "terraform_automation_test_kuruk_sg"
+  instance_name     = "terraform_automation_test_kuruk_sg"
   availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type = "CLOUD_PREMIUM"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  system_disk_type  = "CLOUD_PREMIUM"
 
   internet_max_bandwidth_out = 1
-
-  security_groups = %s
+  security_groups            = %s
 }
 `,
 		rule,
@@ -905,22 +904,22 @@ resource "tencentcloud_vpc" "my_vpc" {
 }
 
 resource "tencentcloud_subnet" "my_subnet" {
-  vpc_id = "${tencentcloud_vpc.my_vpc.id}"
+  vpc_id            = "${tencentcloud_vpc.my_vpc.id}"
   availability_zone = "ap-guangzhou-3"
   name              = "tf_test_subnet"
   cidr_block        = "10.0.2.0/24"
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name = "test_with_private_ip"
+  instance_name     = "test_with_private_ip"
   availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type = "CLOUD_PREMIUM"
-  vpc_id = "${tencentcloud_vpc.my_vpc.id}"
-  subnet_id = "${tencentcloud_subnet.my_subnet.id}"
-  private_ip = "10.0.2.2"
-  hostname = "%s"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  system_disk_type  = "CLOUD_PREMIUM"
+  vpc_id            = "${tencentcloud_vpc.my_vpc.id}"
+  subnet_id         = "${tencentcloud_subnet.my_subnet.id}"
+  private_ip        = "10.0.2.2"
+  hostname          = "%s"
 }
 `,
 		name,
@@ -946,11 +945,11 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name = "terraform_ci_with_tags"
+  instance_name     = "terraform_ci_with_tags"
   availability_zone = "ap-guangzhou-3"
-  image_id      = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type = "CLOUD_PREMIUM"
+  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  system_disk_type  = "CLOUD_PREMIUM"
   tags = {
     "hello" = "world"
     "happy" = "hour"

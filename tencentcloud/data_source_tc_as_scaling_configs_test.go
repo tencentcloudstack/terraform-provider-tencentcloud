@@ -72,17 +72,17 @@ func TestAccTencentCloudAsScalingConfigsDataSource_full(t *testing.T) {
 func testAccAsScalingConfigsDataSource_basic() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-config-basic"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
+  configuration_name = "tf-as-config-basic"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
 }
 
 data "tencentcloud_as_scaling_configs" "scaling_configs" {
-	configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
 }
 
 data "tencentcloud_as_scaling_configs" "scaling_configs_name" {
-	configuration_name = "${tencentcloud_as_scaling_config.launch_configuration.configuration_name}"
+  configuration_name = "${tencentcloud_as_scaling_config.launch_configuration.configuration_name}"
 }
 `
 }
@@ -90,30 +90,34 @@ data "tencentcloud_as_scaling_configs" "scaling_configs_name" {
 func testAccAsScalingConfigsDataSource_full() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-config-full"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
-	project_id = 0
-	system_disk_type = "CLOUD_PREMIUM"
-	system_disk_size = "50"
-	data_disk = {
-		disk_type = "CLOUD_PREMIUM"
-		disk_size = 50
-	}
-	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
-	internet_max_bandwidth_out = 10
-	public_ip_assigned = true
-	password = "test123#"
-	enhanced_security_service = false
-	enhanced_monitor_service = false
-	user_data = "test"
-	instance_tags = {
-		tag = "as"
-	}
+  configuration_name = "tf-as-config-full"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
+  project_id         = 0
+  system_disk_type   = "CLOUD_PREMIUM"
+  system_disk_size   = "50"
+  
+  data_disk {
+    disk_type = "CLOUD_PREMIUM"
+    disk_size = 50
+  }
+  
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 10
+  public_ip_assigned         = true
+  password                   = "test123#"
+  enhanced_security_service  = false
+  enhanced_monitor_service   = false
+  user_data                  = "test"
+  
+  instance_tags = {
+    tag = "as"
+  }
+  
 }
 
 data "tencentcloud_as_scaling_configs" "scaling_configs" {
-	configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
 }
 `
 }

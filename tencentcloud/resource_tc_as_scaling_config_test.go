@@ -144,26 +144,30 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 func testAccAsScalingConfig_full() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-full"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
-	project_id = 0
-	system_disk_type = "CLOUD_PREMIUM"
-	system_disk_size = "50"
-	data_disk = {
-		disk_type = "CLOUD_PREMIUM"
-		disk_size = 50
-	}
-	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
-	internet_max_bandwidth_out = 10
-	public_ip_assigned = true
-	password = "test123#"
-	enhanced_security_service = false
-	enhanced_monitor_service = false
-	user_data = "test"
-	instance_tags = {
-		tag = "as"
-	}
+  configuration_name = "tf-as-full"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
+  project_id         = 0
+  system_disk_type   = "CLOUD_PREMIUM"
+  system_disk_size   = "50"
+  
+  data_disk   {
+    disk_type = "CLOUD_PREMIUM"
+    disk_size = 50
+  }
+  
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 10
+  public_ip_assigned         = true
+  password                   = "test123#"
+  enhanced_security_service  = false
+  enhanced_monitor_service   = false
+  user_data                  = "test"
+  
+  instance_tags = {
+    tag = "as"
+  }
+  
 }
 	`
 }
@@ -171,27 +175,31 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 func testAccAsScalingConfig_update() string {
 	return `
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "tf-as-full-update"
-	image_id = "img-9qabwvbn"
-	instance_types = ["S4.SMALL2"]
-	project_id = 0
-	system_disk_type = "CLOUD_PREMIUM"
-	system_disk_size = "60"
-	data_disk = {
-		disk_type = "CLOUD_SSD"
-		disk_size = 100
-	}
-	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
-	internet_max_bandwidth_out = 20
-	public_ip_assigned = false
-	password = "test123#"
-	enhanced_security_service = true
-	enhanced_monitor_service = true
-	user_data = "dGVzdA=="
-	instance_tags = {
-		tag = "as"
-		test = "update"
-	}
+  configuration_name = "tf-as-full-update"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["S4.SMALL2"]
+  project_id         = 0
+  system_disk_type   = "CLOUD_PREMIUM"
+  system_disk_size   = "60"
+  
+  data_disk   {
+    disk_type = "CLOUD_SSD"
+    disk_size = 100
+  }
+  
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 20
+  public_ip_assigned         = false
+  password                   = "test123#"
+  enhanced_security_service  = true
+  enhanced_monitor_service   = true
+  user_data                  = "dGVzdA=="
+  
+  instance_tags = {
+    tag  = "as"
+    test = "update"
+  }
+  
 }
 	`
 }

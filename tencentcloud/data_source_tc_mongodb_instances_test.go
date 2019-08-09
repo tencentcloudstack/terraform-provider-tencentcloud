@@ -42,17 +42,17 @@ func TestAccTencentCloudMongodbInstancesDataSource(t *testing.T) {
 
 const testAccMongodbInstancesDataSource = `
 resource "tencentcloud_mongodb_instance" "mongodb_instance" {
-	instance_name = "tf-mongodb-test"
-	memory = 4
-	volume = 100
-	engine_version = "MONGO_36_WT"
-	machine_type = "TGIO"
-	available_zone = "ap-guangzhou-3"
-	project_id = 0
-	password = "test1234"
+  instance_name  = "tf-mongodb-test"
+  memory         = 4
+  volume         = 100
+  engine_version = "MONGO_36_WT"
+  machine_type   = "TGIO"
+  available_zone = "ap-guangzhou-3"
+  project_id     = 0
+  password       = "test1234"
 }
 
 data "tencentcloud_mongodb_instances" "mongodb_instances" {
-	instance_id = "${tencentcloud_mongodb_instance.mongodb_instance.id}"
+  instance_id = "${tencentcloud_mongodb_instance.mongodb_instance.id}"
 }
 `

@@ -96,7 +96,7 @@ func TestAccTencentCloudClbListener_https(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "listener_name", "listener_https"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "port", "77"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_ssl_mode", "UNIDIRECTIONAL"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VfqcL1ME"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VjANRdz8"),
 				),
 			},
 			{
@@ -108,7 +108,7 @@ func TestAccTencentCloudClbListener_https(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "listener_name", "listener_https_update"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "port", "33"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_ssl_mode", "UNIDIRECTIONAL"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VjAYq9xc"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VfqO4zkB"),
 				),
 			},
 		},
@@ -228,7 +228,7 @@ resource "tencentcloud_clb_listener" "listener_https" {
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VfqcL1ME"
+  certificate_id       = "VjANRdz8"
   sni_switch           = true
 }
 `
@@ -245,7 +245,7 @@ resource "tencentcloud_clb_listener" "listener_https" {
   port                 = 33
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VjAYq9xc"
+  certificate_id       = "VfqO4zkB"
   sni_switch           = true
 }
 `
