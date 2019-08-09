@@ -34,6 +34,10 @@ func dataSourceTencentCloudGaapRealservers() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+						"name": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
 						"ip": {
 							Type:     schema.TypeString,
 							Computed: true,

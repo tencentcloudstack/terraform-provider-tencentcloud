@@ -65,15 +65,7 @@ func dataSourceTencentCloudGaapProxies() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"access_region_id": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
 						"access_region": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"realserver_region_id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
