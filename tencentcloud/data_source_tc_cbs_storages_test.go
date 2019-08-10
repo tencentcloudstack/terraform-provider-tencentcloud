@@ -36,18 +36,19 @@ func TestAccTencentCloudCbsStoragesDataSource(t *testing.T) {
 
 const testAccCbsStoragesDataSource = `
 resource "tencentcloud_cbs_storage" "storage" {
-	storage_type      = "CLOUD_PREMIUM"
-	storage_name      = "tf-test-storage"
-	storage_size      = 50
-	availability_zone = "ap-guangzhou-3"
-	project_id = 0
-	encrypt = false
-	tags = {
-		test = "tf"
-	}
+  storage_type      = "CLOUD_PREMIUM"
+  storage_name      = "tf-test-storage"
+  storage_size      = 50
+  availability_zone = "ap-guangzhou-3"
+  project_id        = 0
+  encrypt           = false
+  
+  tags = {
+    test = "tf"
+  }
 }
 
 data "tencentcloud_cbs_storages" "storages" {
-	storage_id = "${tencentcloud_cbs_storage.storage.id}"
+  storage_id = "${tencentcloud_cbs_storage.storage.id}"
 }
 `

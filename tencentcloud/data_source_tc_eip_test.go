@@ -33,21 +33,15 @@ func TestAccTencentCloudEipDataSource(t *testing.T) {
 }
 
 const testAccTencentCloudEipDataSourceConfig_basic = `
-resource "tencentcloud_eip" "foo" {
-}
-
 data "tencentcloud_eip" "my_eip" {
 }
 `
 
 const testAccTencentCloudEipDataSourceConfig_filter = `
-resource "tencentcloud_eip" "foo" {
-}
-
 data "tencentcloud_eip" "my_eip" {
-	filter {
-		name = "address-status"
-		values = ["UNBIND"]
-	}
+  filter {
+    name   = "address-status"
+    values = ["UNBIND"]
+  }
 }
 `

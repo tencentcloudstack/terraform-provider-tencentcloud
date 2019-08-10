@@ -45,24 +45,23 @@ func TestAccDataSourceTencentCloudVpcV3RouteTables_basic(t *testing.T) {
 
 const TestAccDataSourceTencentCloudVpcRouteTables = `
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_route_table" "route_table" {
-   vpc_id = "${tencentcloud_vpc.foo.id}"
-   name = "ci-temp-test-rt"
+  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = "ci-temp-test-rt"
 }
 
 data "tencentcloud_vpc_route_tables" "id_instances" {
-	route_table_id="${tencentcloud_route_table.route_table.id}"
+  route_table_id = "${tencentcloud_route_table.route_table.id}"
 }
 data "tencentcloud_vpc_route_tables" "name_instances" {
-	name="${tencentcloud_route_table.route_table.name}"
+  name = "${tencentcloud_route_table.route_table.name}"
 }
-
 `

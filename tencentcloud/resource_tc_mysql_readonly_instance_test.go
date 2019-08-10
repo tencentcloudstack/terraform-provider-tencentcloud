@@ -10,8 +10,6 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-const masterMysqlId = "cdb-d4on2aox"
-
 func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -130,14 +128,14 @@ func testAccMysqlReadonlyInstance(mysqlTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-    master_instance_id = "${tencentcloud_mysql_instance.default.id}"
-    mem_size = 1000
-    volume_size = 50
-    instance_name = "mysql-readonly-test"
-	intranet_port = 3360
-	tags = {
-		test = "test-tf"
-	}
+  master_instance_id = "${tencentcloud_mysql_instance.default.id}"
+  mem_size           = 1000
+  volume_size        = 50
+  instance_name      = "mysql-readonly-test"
+  intranet_port      = 3360
+  tags = {
+    test = "test-tf"
+  }
 }
 	`, mysqlTestCase)
 }
@@ -146,15 +144,15 @@ func testAccMysqlReadonlyInstance_multiTags(mysqlTestCase, value string) string 
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-	master_instance_id = "${tencentcloud_mysql_instance.default.id}"
-    mem_size = 1000
-    volume_size = 50
-    instance_name = "mysql-readonly-test"
-	intranet_port = 3360
-	tags = {
-		test = "test-tf"
-		role = "%s"
-	}
+  master_instance_id = "${tencentcloud_mysql_instance.default.id}"
+  mem_size           = 1000
+  volume_size        = 50
+  instance_name      = "mysql-readonly-test"
+  intranet_port      = 3360
+  tags = {
+    test = "test-tf"
+    role = "%s"
+  }
 }
 	`, mysqlTestCase, value)
 }
@@ -163,14 +161,14 @@ func testAccMysqlReadonlyInstance_update(mysqlTestCase, instance_name, instranet
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-	master_instance_id = "${tencentcloud_mysql_instance.default.id}"
-    mem_size = 1000
-    volume_size = 50
-    instance_name = "%s"
-	intranet_port = %s
-	tags = {
-		test = "test-tf"
-	}
+  master_instance_id = "${tencentcloud_mysql_instance.default.id}"
+  mem_size           = 1000
+  volume_size        = 50
+  instance_name      = "%s"
+  intranet_port      = %s 
+  tags = {
+    test = "test-tf"
+  }
 }
 	`, mysqlTestCase, instance_name, instranet_port)
 }

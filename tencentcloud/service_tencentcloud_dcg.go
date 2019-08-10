@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"log"
 )
@@ -256,6 +257,14 @@ getMoreData:
 	request.Offset = &offset
 
 	response, err := me.client.UseVpcClient().DescribeDirectConnectGatewayCcnRoutes(request)
+
+	if err != nil {
+		if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+			if sdkErr.Code == "ResourceNotFound" {
+				return
+			}
+		}
+	}
 
 	if err != nil {
 		errRet = err

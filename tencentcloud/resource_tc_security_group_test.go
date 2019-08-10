@@ -117,13 +117,13 @@ resource "tencentcloud_security_group" "foo" {
 
 const testAccSecurityGroupConfig = `
 resource "tencentcloud_security_group" "foo" {
-  name = "ci-temp-test-sg"
+  name        = "ci-temp-test-sg"
   description = "ci-temp-test-sg-desc"
 }
 `
 const testAccSecurityGroupConfigUpdate = `
 resource "tencentcloud_security_group" "foo" {
-  name = "ci-temp-test-sg-updated"
+  name        = "ci-temp-test-sg-updated"
   description = "ci-temp-test-sg-desc-updated"
 }
 `

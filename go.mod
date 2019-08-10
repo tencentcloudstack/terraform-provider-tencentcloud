@@ -5,6 +5,9 @@ go 1.12
 require (
 	github.com/athom/goset v0.0.0-20151103071336-f07be69aa101
 	github.com/aws/aws-sdk-go v1.20.4
+	github.com/bflad/tfproviderlint v0.4.0
+	github.com/client9/misspell v0.3.4
+	github.com/golangci/golangci-lint v1.17.1
 	github.com/hashicorp/hcl2 v0.0.0-20190618163856-0b64543c968c
 	github.com/hashicorp/terraform v0.12.3
 	github.com/likexian/gokit v0.0.0-20190604165112-68b8a4ba758c
