@@ -6,8 +6,9 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"protocol": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
 			},
 			"listener_id": {
 				Type:     schema.TypeString,
@@ -22,62 +23,42 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateStringPrefix("/"),
 			},
-			"certificate_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"certificate_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"client_certificate_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"client_certificate_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"basic_auth": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"basic_auth_config_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"basic_auth_config_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"realserver_auth": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"realserver_certificate_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"realserver_certificate_Name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"gaap_auth": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"gaap_certificate_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"gaap_certificate_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"realserver_certificate_domain": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
+			/*			"certificate_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"client_certificate_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"basic_auth": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"basic_auth_config_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"realserver_auth": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"realserver_certificate_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"gaap_auth": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"gaap_certificate_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"realserver_certificate_domain": {
+							Type:     schema.TypeString,
+							Optional: true,
+									},*/
 
 			// computed
 			"rules": {
@@ -138,23 +119,11 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 							Computed: true,
 							Elem:     schema.TypeInt,
 						},
-						"health_check_domain": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
 						"certificate_id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"certificate_name": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
 						"client_certificate_id": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"client_certificate_name": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -166,10 +135,6 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"basic_auth_config_name": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
 						"realserver_auth": {
 							Type:     schema.TypeBool,
 							Computed: true,
@@ -178,19 +143,11 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"realserver_certificate_Name": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
 						"gaap_auth": {
 							Type:     schema.TypeBool,
 							Computed: true,
 						},
 						"gaap_certificate_id": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"gaap_certificate_name": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
