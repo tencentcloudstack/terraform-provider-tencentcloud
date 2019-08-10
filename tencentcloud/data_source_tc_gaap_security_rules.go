@@ -18,10 +18,6 @@ func dataSourceTencentCloudGaapSecurityRules() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"proxy_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
 			"action": {
 				Type:     schema.TypeString,
 				Optional: true,
