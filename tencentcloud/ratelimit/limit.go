@@ -27,7 +27,7 @@ func ProCheck(namespace, action string) {
 
 	locker.Lock()
 
-	limitNumber :=  limitConfig[key]
+	limitNumber := limitConfig[key]
 	if limitNumber == 0 {
 		limitNumber = DefaultLimit
 
