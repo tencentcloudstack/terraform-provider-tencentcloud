@@ -19,6 +19,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -161,52 +162,58 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	clbs, err := clbService.DescribeLoadBalancerByFilter(ctx, params)
-	if err != nil {
-		return err
-	}
-
-	clbList := make([]map[string]interface{}, 0, len(clbs))
-	ids := make([]string, 0, len(clbs))
-	for _, clb := range clbs {
-		mapping := map[string]interface{}{
-			"clb_id":                    *clb.LoadBalancerId,
-			"clb_name":                  *clb.LoadBalancerName,
-			"network_type":              *clb.LoadBalancerType,
-			"status":                    *clb.Status,
-			"create_time":               *clb.CreateTime,
-			"status_time":               *clb.StatusTime,
-			"project_id":                *clb.ProjectId,
-			"vpc_id":                    *clb.VpcId,
-			"subnet_id":                 *clb.SubnetId,
-			"clb_vips":                  flattenStringList(clb.LoadBalancerVips),
-			"target_region_info_region": *(clb.TargetRegionInfo.Region),
-			"target_region_info_vpc_id": *(clb.TargetRegionInfo.VpcId),
-			"security_groups":           flattenStringList(clb.SecureGroups),
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		clbs, e := clbService.DescribeLoadBalancerByFilter(ctx, params)
+		if e != nil {
+			return retryError(e)
 		}
-		if clb.Tags != nil {
-			tags := make(map[string]interface{}, len(clb.Tags))
-			for _, t := range clb.Tags {
-				tags[*t.TagKey] = *t.TagValue
+
+		clbList := make([]map[string]interface{}, 0, len(clbs))
+		ids := make([]string, 0, len(clbs))
+		for _, clb := range clbs {
+			mapping := map[string]interface{}{
+				"clb_id":                    *clb.LoadBalancerId,
+				"clb_name":                  *clb.LoadBalancerName,
+				"network_type":              *clb.LoadBalancerType,
+				"status":                    *clb.Status,
+				"create_time":               *clb.CreateTime,
+				"status_time":               *clb.StatusTime,
+				"project_id":                *clb.ProjectId,
+				"vpc_id":                    *clb.VpcId,
+				"subnet_id":                 *clb.SubnetId,
+				"clb_vips":                  flattenStringList(clb.LoadBalancerVips),
+				"target_region_info_region": *(clb.TargetRegionInfo.Region),
+				"target_region_info_vpc_id": *(clb.TargetRegionInfo.VpcId),
+				"security_groups":           flattenStringList(clb.SecureGroups),
 			}
-			mapping["tags"] = tags
+			if clb.Tags != nil {
+				tags := make(map[string]interface{}, len(clb.Tags))
+				for _, t := range clb.Tags {
+					tags[*t.TagKey] = *t.TagValue
+				}
+				mapping["tags"] = tags
+			}
+			clbList = append(clbList, mapping)
+			ids = append(ids, *clb.LoadBalancerId)
 		}
-		clbList = append(clbList, mapping)
-		ids = append(ids, *clb.LoadBalancerId)
-	}
 
-	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("clb_list", clbList); err != nil {
-		log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, err.Error())
+		d.SetId(dataResourceIdsHash(ids))
+		if e = d.Set("clb_list", clbList); e != nil {
+			log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, e.Error())
+			return retryError(e)
+		}
+
+		output, ok := d.GetOk("result_output_file")
+		if ok && output.(string) != "" {
+			if e := writeToFile(output.(string), clbList); e != nil {
+				return retryError(e)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read clb instances failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
-	output, ok := d.GetOk("result_output_file")
-	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), clbList); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }

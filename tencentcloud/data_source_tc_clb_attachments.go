@@ -7,7 +7,7 @@ Example Usage
 data "tencentcloud_clb_attachments" "clblab" {
   listener_id = "lbl-hh141sn9#lb-k2zjp9lv"
   clb_id      = "lb-k2zjp9lv"
-  rule_id     = "loc-4xxr2cy7"
+  rule_id     = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
 }
 ```
 */
@@ -18,6 +18,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -124,47 +125,54 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	attachments, err := clbService.DescribeAttachmentsByFilter(ctx, params)
-	if err != nil {
-		return err
-	}
-
-	attachmentList := make([]map[string]interface{}, 0, len(attachments))
-	ids := make([]string, 0, len(attachments))
-	for _, attachment := range attachments {
-		mapping := map[string]interface{}{
-			"clb_id":        clbId,
-			"listener_id":   listenerId,
-			"rule_id":       locationId,
-			"protocol_type": attachment.Protocol,
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		attachments, e := clbService.DescribeAttachmentsByFilter(ctx, params)
+		if e != nil {
+			return retryError(e)
 		}
-		if *attachment.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *attachment.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
-			if len(attachment.Rules) > 0 {
-				for _, loc := range attachment.Rules {
-					if locationId == "" || locationId == *loc.LocationId {
-						mapping["targets"] = flattenBackendList(loc.Targets)
+
+		attachmentList := make([]map[string]interface{}, 0, len(attachments))
+		ids := make([]string, 0, len(attachments))
+		for _, attachment := range attachments {
+			mapping := map[string]interface{}{
+				"clb_id":        clbId,
+				"listener_id":   listenerId,
+				"rule_id":       locationId,
+				"protocol_type": attachment.Protocol,
+			}
+			if *attachment.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *attachment.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
+				if len(attachment.Rules) > 0 {
+					for _, loc := range attachment.Rules {
+						if locationId == "" || locationId == *loc.LocationId {
+							mapping["targets"] = flattenBackendList(loc.Targets)
+						}
 					}
 				}
+			} else if *attachment.Protocol == CLB_LISTENER_PROTOCOL_TCP || *attachment.Protocol == CLB_LISTENER_PROTOCOL_UDP {
+				mapping["targets"] = flattenBackendList(attachment.Targets)
 			}
-		} else if *attachment.Protocol == CLB_LISTENER_PROTOCOL_TCP || *attachment.Protocol == CLB_LISTENER_PROTOCOL_UDP {
-			mapping["targets"] = flattenBackendList(attachment.Targets)
+			attachmentList = append(attachmentList, mapping)
+			ids = append(ids, locationId)
 		}
-		attachmentList = append(attachmentList, mapping)
-		ids = append(ids, locationId)
-	}
 
-	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("attachment_list", attachmentList); err != nil {
-		log.Printf("[CRITAL]%s provider set attachment list fail, reason:%s\n ", logId, err.Error())
+		d.SetId(dataResourceIdsHash(ids))
+		if e = d.Set("attachment_list", attachmentList); e != nil {
+			log.Printf("[CRITAL]%s provider set attachment list fail, reason:%s\n ", logId, e.Error())
+			return retryError(e)
+		}
+
+		output, ok := d.GetOk("result_output_file")
+		if ok && output.(string) != "" {
+			if e := writeToFile(output.(string), attachmentList); e != nil {
+				return retryError(e)
+			}
+		}
+
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read clb attachments failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
-	output, ok := d.GetOk("result_output_file")
-	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), attachmentList); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
