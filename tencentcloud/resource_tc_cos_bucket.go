@@ -424,7 +424,7 @@ func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, client *s3.S3,
 	bucket := d.Get("bucket").(string)
 	cors := d.Get("cors_rules").([]interface{})
 
-	if cors == nil || len(cors) == 0 {
+	if len(cors) == 0 {
 		request := s3.DeleteBucketCorsInput{
 			Bucket: aws.String(bucket),
 		}
@@ -488,7 +488,7 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 
 	bucket := d.Get("bucket").(string)
 	lifecycleRules := d.Get("lifecycle_rules").([]interface{})
-	if lifecycleRules == nil || len(lifecycleRules) == 0 {
+	if len(lifecycleRules) == 0 {
 		request := s3.DeleteBucketLifecycleInput{
 			Bucket: aws.String(bucket),
 		}
@@ -581,7 +581,7 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, client *s3.
 	bucket := d.Get("bucket").(string)
 	website := d.Get("website").([]interface{})
 
-	if website == nil || len(website) == 0 {
+	if len(website) == 0 {
 		request := s3.DeleteBucketWebsiteInput{
 			Bucket: aws.String(bucket),
 		}

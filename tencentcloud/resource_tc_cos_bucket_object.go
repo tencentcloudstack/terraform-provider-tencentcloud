@@ -186,7 +186,7 @@ func resourceTencentCloudCosBucketObjectCreate(d *schema.ResourceData, meta inte
 
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().PutObject(request)
 	if err != nil {
-		return fmt.Errorf("puting object (%s) in cos bucket (%s) error: %s", key, bucket, err.Error())
+		return fmt.Errorf("putting object (%s) in cos bucket (%s) error: %s", key, bucket, err.Error())
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "put object", request.String(), response.String())

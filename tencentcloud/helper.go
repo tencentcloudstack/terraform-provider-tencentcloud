@@ -27,7 +27,7 @@ func dataResourceIdHash(id string) string {
 	return fmt.Sprintf("%d", hashcode.String(id))
 }
 
-// Tranform filter condition to API's param
+// Transform filter condition to API's param
 func buildFiltersParam(params map[string]string, filterList *schema.Set, maxFiltersLimit int, maxFilterValuesLimit int) error {
 	if len(filterList.List()) > maxFiltersLimit {
 		return fmt.Errorf("Too many filters, should not be more than %v", maxFiltersLimit)
@@ -57,7 +57,7 @@ func buildFiltersParam(params map[string]string, filterList *schema.Set, maxFilt
 	return nil
 }
 
-// Tranform filter condition to TecentCloud Go SDK's param
+// Transform filter condition to TecentCloud Go SDK's param
 func buildFiltersParamForSDK(filterList *schema.Set) (r []*cvm.Filter) {
 	for _, v := range filterList.List() {
 		m := v.(map[string]interface{})
@@ -105,15 +105,6 @@ func flattenIntList(list []*uint64) []interface{} {
 		vi = append(vi, int(*v))
 	}
 	return vi
-}
-
-// Tranform sdk map[string]*string to terraform TypeMap
-func pointersMapToStringMap(pointers map[string]*string) map[string]interface{} {
-	list := make(map[string]interface{}, len(pointers))
-	for i, v := range pointers {
-		list[i] = *v
-	}
-	return list
 }
 
 func pointerToString(pointer *string) string {

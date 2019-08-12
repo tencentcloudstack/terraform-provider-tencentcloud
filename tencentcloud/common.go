@@ -124,5 +124,5 @@ func writeToFile(filePath string, data interface{}) error {
 		return fmt.Errorf("json decode error,reason %s", err.Error())
 	}
 
-	return ioutil.WriteFile(filePath, []byte(jsonStr), 422)
+	return ioutil.WriteFile(filePath, jsonStr, 0422)
 }

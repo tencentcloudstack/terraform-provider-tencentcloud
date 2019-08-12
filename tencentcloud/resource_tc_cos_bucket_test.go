@@ -24,7 +24,7 @@ func testSweepCosBuckets(region string) error {
 
 	sharedClient, err := sharedClientForRegion(region)
 	if err != nil {
-		return fmt.Errorf("geting tencentcloud client error: %s", err.Error())
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
 	client := sharedClient.(TencentCloudClient)
 

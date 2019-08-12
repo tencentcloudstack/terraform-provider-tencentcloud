@@ -146,7 +146,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		request.Tags = make([]*cbs.Tag, 0, len(tags))
 		for key, value := range tags {
 			tag := cbs.Tag{
-				Key:   &key,
+				Key:   stringToPointer(key),
 				Value: stringToPointer(value.(string)),
 			}
 			request.Tags = append(request.Tags, &tag)
