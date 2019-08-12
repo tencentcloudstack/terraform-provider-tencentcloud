@@ -2,6 +2,7 @@ package connectivity
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -15,6 +16,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -34,6 +36,7 @@ type TencentCloudClient struct {
 	clbConn     *clb.Client
 	dcConn      *dc.Client
 	mongodbConn *mongodb.Client
+	gaapCoon    *gaap.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -255,4 +258,27 @@ func (me *TencentCloudClient) UseClbClient() *clb.Client {
 	me.clbConn = clbConn
 
 	return me.clbConn
+}
+
+func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
+	if me.gaapCoon != nil {
+		return me.gaapCoon
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = http.MethodPost
+	cpf.HttpProfile.ReqTimeout = 300
+
+	gaapConn, _ := gaap.NewClient(credential, me.Region, cpf)
+	var round LogRoundTripper
+	gaapConn.WithHttpTransport(&round)
+
+	me.gaapCoon = gaapConn
+
+	return me.gaapCoon
 }
