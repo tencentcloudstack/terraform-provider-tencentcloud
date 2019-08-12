@@ -40,7 +40,7 @@ The following arguments are supported:
 * `protocol` - (Required, ForceNew) Type of protocol within the listener, and available values include TCP, UDP, HTTP, HTTPS and TCP_SSL. NOTES: TCP_SSL is testing internally, please apply if you need to use.
 * `certificate_ca_id` - (Optional) ID of the client certificate. NOTES: Only supports listeners of 'HTTPS' protocol.
 * `certificate_id` - (Optional)  ID of the server certificate. NOTES: Only supports listeners of 'HTTPS' protocol.
-* `certificate_ssl_mode` - (Optional) Type of certificate, and available values inclue 'UNIDRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.
+* `certificate_ssl_mode` - (Optional) Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.
 * `health_check_health_num` - (Optional) Health threshold of health check, and the default is 3. If a success result is returned for the health check for 3 consecutive times, the backend CVM is identified as healthy. The value range is 2-10.
 * `health_check_interval_time` - (Optional) Interval time of health check. The value range is 5-300 sec, and the default is 5 sec.
 * `health_check_switch` - (Optional) Indicates whether health check is enabled.
@@ -58,6 +58,5 @@ CLB listener can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_clb_listener.foo lbl-qckdffns#lb-p7nlgs4t
-
 ```
 

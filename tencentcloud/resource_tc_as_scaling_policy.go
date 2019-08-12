@@ -113,7 +113,9 @@ func resourceTencentCloudAsScalingPolicy() *schema.Resource {
 }
 
 func resourceTencentCloudAsScalingPolicyCreate(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_as_scaling_policy.create")()
+
+	logId := getLogId(nil)
 
 	request := as.NewCreateScalingPolicyRequest()
 	request.AutoScalingGroupId = stringToPointer(d.Get("scaling_group_id").(string))
@@ -160,7 +162,9 @@ func resourceTencentCloudAsScalingPolicyCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_as_scaling_policy.read")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingPolicyId := d.Id()
@@ -191,7 +195,9 @@ func resourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudAsScalingPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_as_scaling_policy.update")()
+
+	logId := getLogId(nil)
 
 	request := as.NewModifyScalingPolicyRequest()
 	scalingPolicyId := d.Id()
@@ -244,11 +250,14 @@ func resourceTencentCloudAsScalingPolicyUpdate(d *schema.ResourceData, meta inte
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return nil
 }
 
 func resourceTencentCloudAsScalingPolicyDelete(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_as_scaling_policy.delete")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingPolicyId := d.Id()

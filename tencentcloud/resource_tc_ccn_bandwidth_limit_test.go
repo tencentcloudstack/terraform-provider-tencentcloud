@@ -37,7 +37,7 @@ func TestAccTencentCloudCcnV3BandwidthLimitBasic(t *testing.T) {
 
 func testAccCheckCcnBandwidthLimitExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := GetLogId(nil)
+		logId := getLogId(nil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[r]

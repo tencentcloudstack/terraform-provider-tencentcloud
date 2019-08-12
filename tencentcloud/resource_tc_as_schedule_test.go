@@ -51,7 +51,7 @@ func TestAccTencentCloudAsSchedule(t *testing.T) {
 
 func testAccCheckAsScheduleExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := GetLogId(nil)
+		logId := getLogId(nil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]
@@ -71,7 +71,7 @@ func testAccCheckAsScheduleExists(n string) resource.TestCheckFunc {
 }
 
 func testAccCheckAsScheduleDestroy(s *terraform.State) error {
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	asService := AsService{

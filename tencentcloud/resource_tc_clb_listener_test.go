@@ -116,7 +116,7 @@ func TestAccTencentCloudClbListener_https(t *testing.T) {
 }
 
 func testAccCheckClbListenerDestroy(s *terraform.State) error {
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbService := ClbService{
@@ -137,7 +137,7 @@ func testAccCheckClbListenerDestroy(s *terraform.State) error {
 
 func testAccCheckClbListenerExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := GetLogId(nil)
+		logId := getLogId(nil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]

@@ -36,7 +36,7 @@ func TestAccTencentCloudCcnV3AttachmentBasic(t *testing.T) {
 
 func testAccCheckCcnAttachmentExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := GetLogId(nil)
+		logId := getLogId(nil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[r]
@@ -64,7 +64,7 @@ func testAccCheckCcnAttachmentExists(r string) resource.TestCheckFunc {
 
 func testAccCheckCcnAttachmentDestroy(s *terraform.State) error {
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}

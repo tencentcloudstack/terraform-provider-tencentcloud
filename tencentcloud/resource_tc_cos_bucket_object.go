@@ -128,7 +128,9 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 }
 
 func resourceTencentCloudCosBucketObjectCreate(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_cos_bucket_object.create")()
+
+	logId := getLogId(nil)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
@@ -194,7 +196,9 @@ func resourceTencentCloudCosBucketObjectCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_cos_bucket_object.read")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Get("bucket").(string)
@@ -222,7 +226,9 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_cos_bucket_object.update")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	fields := []string{
@@ -259,11 +265,14 @@ func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudCosBucketObjectDelete(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_cos_bucket_object.delete")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
+
 	cosService := CosService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}

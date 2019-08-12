@@ -19,7 +19,7 @@ type ClbService struct {
 }
 
 func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string) (clbInstance *clb.LoadBalancer, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := clb.NewDescribeLoadBalancersRequest()
 	request.LoadBalancerIds = []*string{&clbId}
 	ratelimit.Check(request.GetAction())
@@ -42,7 +42,7 @@ func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string
 }
 
 func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params map[string]interface{}) (clbs []*clb.LoadBalancer, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := clb.NewDescribeLoadBalancersRequest()
 
 	for k, v := range params {
@@ -96,7 +96,7 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 
 func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) error {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := clb.NewDeleteLoadBalancerRequest()
 	request.LoadBalancerIds = []*string{&clbId}
 	ratelimit.Check(request.GetAction())
@@ -117,7 +117,7 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 }
 
 func (me *ClbService) DescribeListenerById(ctx context.Context, id string) (clbListener *clb.Listener, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
 	items := strings.Split(id, "#")
 	if len(items) != 2 {
@@ -149,7 +149,7 @@ func (me *ClbService) DescribeListenerById(ctx context.Context, id string) (clbL
 }
 
 func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[string]interface{}) (listeners []*clb.Listener, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
 	clbId := ""
 	for k, v := range params {
@@ -199,7 +199,7 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 }
 
 func (me *ClbService) DeleteListenerById(ctx context.Context, clbId string, listenerId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := clb.NewDeleteListenerRequest()
 	request.ListenerId = stringToPointer(listenerId)
 	request.LoadBalancerId = stringToPointer(clbId)
@@ -221,7 +221,7 @@ func (me *ClbService) DeleteListenerById(ctx context.Context, clbId string, list
 }
 
 func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[string]string) (rules []*clb.RuleOutput, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	//listener filter
 	clbId := ""
 	listenerId := ""
@@ -303,7 +303,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 }
 
 func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, listenerId string, domain string, url string) (clbRule *clb.RuleOutput, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
 	request.ListenerIds = []*string{&listenerId}
 	request.LoadBalancerId = stringToPointer(clbId)
@@ -342,7 +342,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 }
 
 func (me *ClbService) DeleteRuleById(ctx context.Context, clbId string, listenerId string, locationId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := clb.NewDeleteRuleRequest()
 	request.ListenerId = stringToPointer(listenerId)
 	request.LoadBalancerId = stringToPointer(clbId)
@@ -365,7 +365,7 @@ func (me *ClbService) DeleteRuleById(ctx context.Context, clbId string, listener
 }
 
 func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string, listenerId string, locationId string) (clbAttachment *clb.ListenerBackend, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
 	request.ListenerIds = []*string{&listenerId}
 	request.LoadBalancerId = stringToPointer(clbId)
@@ -416,7 +416,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 }
 
 func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params map[string]string) (clbAttachments []*clb.ListenerBackend, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	//listener filter
 	clbId := ""
 	listenerId := ""
@@ -484,7 +484,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 }
 
 func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, listenerId string, locationId string, targets []interface{}) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := clb.NewDeregisterTargetsRequest()
 	request.ListenerId = stringToPointer(listenerId)
 	request.LoadBalancerId = stringToPointer(clbId)
@@ -513,7 +513,7 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 }
 
 func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId string) (rewriteInfo *map[string]string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
 		errRet = fmt.Errorf("rewriteInfo id is not exist!%s", rewriteId)
@@ -565,7 +565,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 }
 
 func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params map[string]string) (rewriteInfos []*map[string]string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	clbId := ""
 	sourceListenerId := ""
 	sourceLocId := ""
@@ -626,7 +626,7 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 }
 
 func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
 		return fmt.Errorf("rewriteInfo id is not exist!!! %s", rewriteId)

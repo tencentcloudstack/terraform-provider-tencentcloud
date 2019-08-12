@@ -17,6 +17,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -140,9 +141,9 @@ func dataSourceTencentCloudCbsStorages() *schema.Resource {
 }
 
 func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_cbs_storages.read")()
+	defer logElapsed("data_source.tencentcloud_cbs_storages.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]string)
@@ -168,50 +169,58 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	storages, err := cbsService.DescribeDisksByFilter(ctx, params)
-	if err != nil {
-		return err
-	}
 
-	storageList := make([]map[string]interface{}, 0, len(storages))
-	ids := make([]string, len(storages))
-	for _, storage := range storages {
-		mapping := map[string]interface{}{
-			"storage_id":        *storage.DiskId,
-			"storage_name":      *storage.DiskName,
-			"storage_usage":     *storage.DiskUsage,
-			"storage_type":      *storage.DiskType,
-			"availability_zone": *storage.Placement.Zone,
-			"project_id":        *storage.Placement.ProjectId,
-			"storage_size":      *storage.DiskSize,
-			"attached":          *storage.Attached,
-			"instance_id":       *storage.InstanceId,
-			"encrypt":           *storage.Encrypt,
-			"create_time":       *storage.CreateTime,
-			"status":            *storage.DiskState,
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		storages, e := cbsService.DescribeDisksByFilter(ctx, params)
+		if e != nil {
+			return retryError(e)
 		}
-		if storage.Tags != nil {
-			tags := make(map[string]interface{}, len(storage.Tags))
-			for _, t := range storage.Tags {
-				tags[*t.Key] = *t.Value
+		ids := make([]string, len(storages))
+		storageList := make([]map[string]interface{}, 0, len(storages))
+		for _, storage := range storages {
+			mapping := map[string]interface{}{
+				"storage_id":        *storage.DiskId,
+				"storage_name":      *storage.DiskName,
+				"storage_usage":     *storage.DiskUsage,
+				"storage_type":      *storage.DiskType,
+				"availability_zone": *storage.Placement.Zone,
+				"project_id":        *storage.Placement.ProjectId,
+				"storage_size":      *storage.DiskSize,
+				"attached":          *storage.Attached,
+				"instance_id":       *storage.InstanceId,
+				"encrypt":           *storage.Encrypt,
+				"create_time":       *storage.CreateTime,
+				"status":            *storage.DiskState,
 			}
-			mapping["tags"] = tags
+			if storage.Tags != nil {
+				tags := make(map[string]interface{}, len(storage.Tags))
+				for _, t := range storage.Tags {
+					tags[*t.Key] = *t.Value
+				}
+				mapping["tags"] = tags
+			}
+			storageList = append(storageList, mapping)
+			ids = append(ids, *storage.DiskId)
 		}
-		storageList = append(storageList, mapping)
-		ids = append(ids, *storage.DiskId)
-	}
 
-	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("storage_list", storageList); err != nil {
-		log.Printf("[CRITAL]%s provider set storage list fail, reason:%s\n ", logId, err.Error())
+		d.SetId(dataResourceIdsHash(ids))
+		if e = d.Set("storage_list", storageList); e != nil {
+			log.Printf("[CRITAL]%s provider set storage list fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+
+		output, ok := d.GetOk("result_output_file")
+		if ok && output.(string) != "" {
+			if e := writeToFile(output.(string), storageList); e != nil {
+				return resource.NonRetryableError(e)
+			}
+		}
+
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read cbs storages failed, reason:%s\n ", logId, err.Error())
 		return err
-	}
-
-	output, ok := d.GetOk("result_output_file")
-	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), storageList); err != nil {
-			return err
-		}
 	}
 
 	return nil

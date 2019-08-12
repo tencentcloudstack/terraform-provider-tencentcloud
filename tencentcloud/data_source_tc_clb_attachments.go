@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_clb_attachments" "clblab" {
-  listener_id   = "lbl-hh141sn9#lb-k2zjp9lv"
-  clb_id        = "lb-k2zjp9lv"
-  rule_id   = "loc-4xxr2cy7"
+  listener_id = "lbl-hh141sn9#lb-k2zjp9lv"
+  clb_id      = "lb-k2zjp9lv"
+  rule_id     = "loc-4xxr2cy7"
 }
 ```
 */
@@ -107,9 +107,9 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_clb_attachments.read")()
+	defer logElapsed("data_source.tencentcloud_clb_attachments.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]string)

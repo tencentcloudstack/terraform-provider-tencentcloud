@@ -77,7 +77,7 @@ func TestAccTencentCloudVpcV3_update(t *testing.T) {
 
 func testAccCheckVpcExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := GetLogId(nil)
+		logId := getLogId(nil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[r]
@@ -99,7 +99,7 @@ func testAccCheckVpcExists(r string) resource.TestCheckFunc {
 }
 
 func testAccCheckVpcDestroy(s *terraform.State) error {
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}

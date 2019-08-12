@@ -15,7 +15,7 @@ type CbsService struct {
 }
 
 func (me *CbsService) DescribeDiskById(ctx context.Context, diskId string) (disk *cbs.Disk, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewDescribeDisksRequest()
 	request.DiskIds = []*string{&diskId}
 	ratelimit.Check(request.GetAction())
@@ -38,7 +38,7 @@ func (me *CbsService) DescribeDiskById(ctx context.Context, diskId string) (disk
 }
 
 func (me *CbsService) DescribeDisksByFilter(ctx context.Context, params map[string]string) (disks []*cbs.Disk, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewDescribeDisksRequest()
 	request.Filters = make([]*cbs.Filter, 0, len(params))
 	for k, v := range params {
@@ -81,7 +81,7 @@ func (me *CbsService) DescribeDisksByFilter(ctx context.Context, params map[stri
 }
 
 func (me *CbsService) ModifyDiskAttributes(ctx context.Context, diskId, diskName string, projectId int) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewModifyDiskAttributesRequest()
 	request.DiskIds = []*string{&diskId}
 	if diskName != "" {
@@ -104,7 +104,7 @@ func (me *CbsService) ModifyDiskAttributes(ctx context.Context, diskId, diskName
 }
 
 func (me *CbsService) DeleteDiskById(ctx context.Context, diskId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewTerminateDisksRequest()
 	request.DiskIds = []*string{&diskId}
 	ratelimit.Check(request.GetAction())
@@ -120,7 +120,7 @@ func (me *CbsService) DeleteDiskById(ctx context.Context, diskId string) error {
 }
 
 func (me *CbsService) ResizeDisk(ctx context.Context, diskId string, diskSize int) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewResizeDiskRequest()
 	request.DiskId = &diskId
 	request.DiskSize = intToPointer(diskSize)
@@ -137,7 +137,7 @@ func (me *CbsService) ResizeDisk(ctx context.Context, diskId string, diskSize in
 }
 
 func (me *CbsService) ApplySnapshot(ctx context.Context, diskId, snapshotId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewApplySnapshotRequest()
 	request.DiskId = &diskId
 	request.SnapshotId = &snapshotId
@@ -154,7 +154,7 @@ func (me *CbsService) ApplySnapshot(ctx context.Context, diskId, snapshotId stri
 }
 
 func (me *CbsService) AttachDisk(ctx context.Context, diskId, instanceId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewAttachDisksRequest()
 	request.DiskIds = []*string{&diskId}
 	request.InstanceId = &instanceId
@@ -171,7 +171,7 @@ func (me *CbsService) AttachDisk(ctx context.Context, diskId, instanceId string)
 }
 
 func (me *CbsService) DetachDisk(ctx context.Context, diskId, instanceId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewDetachDisksRequest()
 	request.DiskIds = []*string{&diskId}
 	request.InstanceId = &instanceId
@@ -188,7 +188,7 @@ func (me *CbsService) DetachDisk(ctx context.Context, diskId, instanceId string)
 }
 
 func (me *CbsService) CreateSnapshot(ctx context.Context, diskId, snapshotName string) (snapshotId string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewCreateSnapshotRequest()
 	request.DiskId = &diskId
 	request.SnapshotName = &snapshotName
@@ -208,7 +208,7 @@ func (me *CbsService) CreateSnapshot(ctx context.Context, diskId, snapshotName s
 }
 
 func (me *CbsService) DescribeSnapshotById(ctx context.Context, snapshotId string) (snapshot *cbs.Snapshot, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewDescribeSnapshotsRequest()
 	request.SnapshotIds = []*string{&snapshotId}
 	ratelimit.Check(request.GetAction())
@@ -231,7 +231,7 @@ func (me *CbsService) DescribeSnapshotById(ctx context.Context, snapshotId strin
 }
 
 func (me *CbsService) DescribeSnapshotsByFilter(ctx context.Context, params map[string]string) (snapshots []*cbs.Snapshot, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewDescribeSnapshotsRequest()
 	request.Filters = make([]*cbs.Filter, 0, len(params))
 	for k, v := range params {
@@ -273,7 +273,7 @@ func (me *CbsService) DescribeSnapshotsByFilter(ctx context.Context, params map[
 }
 
 func (me *CbsService) ModifySnapshotName(ctx context.Context, snapshotId, snapshotName string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewModifySnapshotAttributeRequest()
 	request.SnapshotId = &snapshotId
 	request.SnapshotName = &snapshotName
@@ -290,7 +290,7 @@ func (me *CbsService) ModifySnapshotName(ctx context.Context, snapshotId, snapsh
 }
 
 func (me *CbsService) DeleteSnapshot(ctx context.Context, snapshotId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewDeleteSnapshotsRequest()
 	request.SnapshotIds = []*string{&snapshotId}
 	ratelimit.Check(request.GetAction())
@@ -306,7 +306,7 @@ func (me *CbsService) DeleteSnapshot(ctx context.Context, snapshotId string) err
 }
 
 func (me *CbsService) DescribeSnapshotPolicyById(ctx context.Context, policyId string) (policy *cbs.AutoSnapshotPolicy, errRet error) {
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	request := cbs.NewDescribeAutoSnapshotPoliciesRequest()
 	request.AutoSnapshotPolicyIds = []*string{&policyId}
 	ratelimit.Check(request.GetAction())
@@ -329,7 +329,7 @@ func (me *CbsService) DescribeSnapshotPolicyById(ctx context.Context, policyId s
 }
 
 func (me *CbsService) DeleteSnapshotPolicy(ctx context.Context, policyId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := cbs.NewDeleteAutoSnapshotPoliciesRequest()
 	request.AutoSnapshotPolicyIds = []*string{&policyId}
 	ratelimit.Check(request.GetAction())

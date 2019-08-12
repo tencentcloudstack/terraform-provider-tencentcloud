@@ -33,7 +33,7 @@ type TencentCloudRedisDetail struct {
 
 func (me *RedisService) DescribeRedisZoneConfig(ctx context.Context) (sellConfigures []*redis.RegionConf, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := redis.NewDescribeProductInfoRequest()
 	defer func() {
 		if errRet != nil {
@@ -54,7 +54,7 @@ func (me *RedisService) DescribeRedisZoneConfig(ctx context.Context) (sellConfig
 func (me *RedisService) DescribeInstances(ctx context.Context, zoneName, searchKey string,
 	projectId, needLimit int64) (instances []TencentCloudRedisDetail, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	var zoneId int64 = -1
 
@@ -158,7 +158,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	memSize, projectId, port int64,
 	securityGroups []string) (dealId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := redis.NewCreateInstancesRequest()
 	defer func() {
 		if errRet != nil {
@@ -256,7 +256,7 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 	info *redis.InstanceSet,
 	errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := redis.NewDescribeInstancesRequest()
 
@@ -328,7 +328,7 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 
 func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId string) (done bool, redisId string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := redis.NewDescribeInstanceDealDetailRequest()
 
 	defer func() {
@@ -400,7 +400,7 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 }
 
 func (me *RedisService) ModifyInstanceName(ctx context.Context, redisId string, name string) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := redis.NewModifyInstanceRequest()
 
 	defer func() {
@@ -424,7 +424,7 @@ func (me *RedisService) ModifyInstanceName(ctx context.Context, redisId string, 
 }
 
 func (me *RedisService) ModifyInstanceProjectId(ctx context.Context, redisId string, projectId int64) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := redis.NewModifyInstanceRequest()
 
 	defer func() {
@@ -450,7 +450,7 @@ func (me *RedisService) ModifyInstanceProjectId(ctx context.Context, redisId str
 
 func (me *RedisService) DescribeInstanceSecurityGroup(ctx context.Context, redisId string) (sg []string, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := redis.NewDescribeInstanceSecurityGroupRequest()
 	request.InstanceIds = []*string{&redisId}
 	defer func() {
@@ -485,7 +485,7 @@ func (me *RedisService) DescribeInstanceSecurityGroup(ctx context.Context, redis
 }
 
 func (me *RedisService) DestroyPostpaidInstance(ctx context.Context, redisId string) (taskId int64, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := redis.NewDestroyPostpaidInstanceRequest()
 	request.InstanceId = &redisId
 	defer func() {
@@ -509,7 +509,7 @@ func (me *RedisService) DestroyPostpaidInstance(ctx context.Context, redisId str
 }
 
 func (me *RedisService) UpgradeInstance(ctx context.Context, redisId string, newMemSize int64) (dealId string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	var uintNewMemSize = uint64(newMemSize)
 
@@ -539,7 +539,7 @@ func (me *RedisService) UpgradeInstance(ctx context.Context, redisId string, new
 
 func (me *RedisService) DescribeTaskInfo(ctx context.Context, redisId string, taskId int64) (ok bool, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	var uintTaskId = uint64(taskId)
 	request := redis.NewDescribeTaskInfoRequest()
 	request.TaskId = &uintTaskId
@@ -570,7 +570,7 @@ func (me *RedisService) DescribeTaskInfo(ctx context.Context, redisId string, ta
 
 func (me *RedisService) ResetPassword(ctx context.Context, redisId string, newPassword string) (taskId int64, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := redis.NewResetPasswordRequest()
 	request.InstanceId = &redisId
@@ -598,7 +598,7 @@ func (me *RedisService) ResetPassword(ctx context.Context, redisId string, newPa
 }
 
 func (me *RedisService) ModifyAutoBackupConfig(ctx context.Context, redisId string, weekDays []string, timePeriod string) (errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := redis.NewModifyAutoBackupConfigRequest()
 	request.InstanceId = &redisId
@@ -625,7 +625,7 @@ func (me *RedisService) ModifyAutoBackupConfig(ctx context.Context, redisId stri
 }
 
 func (me *RedisService) DescribeAutoBackupConfig(ctx context.Context, redisId string) (weekDays []string, timePeriod string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 
 	request := redis.NewDescribeAutoBackupConfigRequest()
 	request.InstanceId = &redisId

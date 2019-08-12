@@ -111,7 +111,7 @@ func TestAccTencentCloudCosBucketObject_acl(t *testing.T) {
 
 func testAccCheckCosBucketObjectExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := GetLogId(nil)
+		logId := getLogId(nil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]
@@ -134,7 +134,7 @@ func testAccCheckCosBucketObjectExists(n string) resource.TestCheckFunc {
 }
 
 func testAccCheckCosBucketObjectDestroy(s *terraform.State) error {
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	cosService := CosService{

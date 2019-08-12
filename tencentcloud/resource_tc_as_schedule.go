@@ -84,7 +84,9 @@ func resourceTencentCloudAsSchedule() *schema.Resource {
 }
 
 func resourceTencentCloudAsScheduleCreate(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_as_schedule.create")()
+
+	logId := getLogId(nil)
 
 	request := as.NewCreateScheduledActionRequest()
 	request.AutoScalingGroupId = stringToPointer(d.Get("scaling_group_id").(string))
@@ -126,7 +128,9 @@ func resourceTencentCloudAsScheduleCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudAsScheduleRead(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_as_schedule.read")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scheduledActionId := d.Id()
@@ -156,7 +160,9 @@ func resourceTencentCloudAsScheduleRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudAsScheduleUpdate(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_as_schedule.update")()
+
+	logId := getLogId(nil)
 
 	request := as.NewModifyScheduledActionRequest()
 	scheduledActionId := d.Id()
@@ -198,7 +204,9 @@ func resourceTencentCloudAsScheduleUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudAsScheduleDelete(d *schema.ResourceData, meta interface{}) error {
-	logId := GetLogId(nil)
+	defer logElapsed("resource.tencentcloud_as_schedule.delete")()
+
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scheduledActionId := d.Id()

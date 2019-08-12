@@ -8,7 +8,7 @@ data "tencentcloud_clb_instances" "foo" {
     clb_id             = "lb-k2zjp9lv"
     network_type       = "OPEN"
     clb_name           = "myclb"
-    project_id         = "Default Project"
+    project_id         = 0
     result_output_file = "mytestpath"
 }
 ```
@@ -134,9 +134,9 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_clb_instances.read")()
+	defer logElapsed("data_source.tencentcloud_clb_instances.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]interface{})

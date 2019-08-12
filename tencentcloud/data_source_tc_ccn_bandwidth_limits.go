@@ -77,11 +77,9 @@ func dataSourceTencentCloudCcnBandwidthLimits() *schema.Resource {
 }
 
 func dataSourceTencentCloudCcnBandwidthLimitsRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_ccn_bandwidth_limit.read")()
 
-	logId := GetLogId(nil)
-
-	defer LogElapsed(logId + "data_source.tencentcloud_ccn_bandwidth_limit.read")()
-
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}

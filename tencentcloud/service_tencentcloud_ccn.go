@@ -51,7 +51,7 @@ func (me *VpcService) DescribeCcn(ctx context.Context, ccnId string) (info CcnBa
 
 func (me *VpcService) DescribeCcns(ctx context.Context, ccnId, name string) (infos []CcnBasicInfo, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDescribeCcnsRequest()
 	defer func() {
 		if errRet != nil {
@@ -144,7 +144,7 @@ getMoreData:
 
 func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, ccnId string) (infos []CcnBandwidthLimit, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDescribeCcnRegionBandwidthLimitsRequest()
 
 	infos = make([]CcnBandwidthLimit, 0, 100)
@@ -190,7 +190,7 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, ccnI
 
 func (me *VpcService) CreateCcn(ctx context.Context, name, description, qos string) (basicInfo CcnBasicInfo, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewCreateCcnRequest()
 
 	request.CcnName = &name
@@ -243,7 +243,7 @@ func (me *VpcService) CreateCcn(ctx context.Context, name, description, qos stri
 
 func (me *VpcService) DeleteCcn(ctx context.Context, ccnId string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDeleteCcnRequest()
 	request.CcnId = &ccnId
 	ratelimit.Check(request.GetAction())
@@ -278,7 +278,7 @@ func (me *VpcService) DeleteCcn(ctx context.Context, ccnId string) (errRet error
 
 func (me *VpcService) ModifyCcnAttribute(ctx context.Context, ccnId, name, description string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewModifyCcnAttributeRequest()
 	request.CcnId = &ccnId
 
@@ -342,7 +342,7 @@ func (me *VpcService) DescribeCcnAttachedInstance(ctx context.Context, ccnId,
 
 func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId string) (infos []CcnAttachedInstanceInfo, errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDescribeCcnAttachedInstancesRequest()
 	request.CcnId = &ccnId
 	ratelimit.Check(request.GetAction())
@@ -398,7 +398,7 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId st
 
 func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceRegion, instanceType, instanceId string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewAttachCcnInstancesRequest()
 	request.CcnId = &ccnId
 
@@ -440,7 +440,7 @@ func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceReg
 
 func (me *VpcService) DetachCcnInstances(ctx context.Context, ccnId, instanceRegion, instanceType, instanceId string) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewDetachCcnInstancesRequest()
 	request.CcnId = &ccnId
 
@@ -499,7 +499,7 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimit(ctx context.Context, ccnId
 
 func (me *VpcService) SetCcnRegionBandwidthLimits(ctx context.Context, ccnId, region string, bandwidth int64) (errRet error) {
 
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := vpc.NewSetCcnRegionBandwidthLimitsRequest()
 	request.CcnId = &ccnId
 

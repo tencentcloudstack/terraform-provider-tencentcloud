@@ -107,10 +107,13 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 }
 
 func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_instance.create")()
+	defer logElapsed("resource.tencentcloud_clb_instance.create")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
-	logId := GetLogId(nil)
+
+	logId := getLogId(nil)
+
 	networkType := d.Get("network_type").(string)
 	clbName := d.Get("clb_name").(string)
 	flag, err := checkSameName(clbName, meta)
@@ -224,9 +227,9 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_instance.read")()
+	defer logElapsed("resource.tencentcloud_clb_instance.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()
@@ -251,11 +254,12 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_instance.update")()
+	defer logElapsed("resource.tencentcloud_clb_instance.update")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 
 	d.Partial(true)
 
@@ -361,11 +365,12 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("resource.tencentcloud_clb_instance.delete")()
+	defer logElapsed("resource.tencentcloud_clb_instance.delete")()
+
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()
@@ -383,7 +388,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 }
 
 func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	flag = false
 	clbService := ClbService{

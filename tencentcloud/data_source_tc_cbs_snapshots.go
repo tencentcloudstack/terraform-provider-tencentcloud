@@ -16,6 +16,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -124,9 +125,9 @@ func dataSourceTencentCloudCbsSnapshots() *schema.Resource {
 }
 
 func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interface{}) error {
-	defer LogElapsed("data_source.tencentcloud_cbs_snapshots.read")()
+	defer logElapsed("data_source.tencentcloud_cbs_snapshots.read")()
 
-	logId := GetLogId(nil)
+	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]string)
@@ -152,41 +153,50 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	snapshots, err := cbsService.DescribeSnapshotsByFilter(ctx, params)
+
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		snapshots, e := cbsService.DescribeSnapshotsByFilter(ctx, params)
+		if e != nil {
+			return retryError(e)
+		}
+		ids := make([]string, len(snapshots))
+		snapshotList := make([]map[string]interface{}, 0, len(snapshots))
+		for _, snapshot := range snapshots {
+			mapping := map[string]interface{}{
+				"snapshot_id":       *snapshot.SnapshotId,
+				"snapshot_name":     *snapshot.SnapshotName,
+				"storage_id":        *snapshot.DiskId,
+				"storage_usage":     *snapshot.DiskUsage,
+				"storage_size":      *snapshot.DiskSize,
+				"availability_zone": *snapshot.Placement.Zone,
+				"project_id":        *snapshot.Placement.ProjectId,
+				"percent":           *snapshot.Percent,
+				"create_time":       *snapshot.CreateTime,
+				"encrypt":           *snapshot.Encrypt,
+			}
+			snapshotList = append(snapshotList, mapping)
+			ids = append(ids, *snapshot.SnapshotId)
+		}
+
+		d.SetId(dataResourceIdsHash(ids))
+		if e = d.Set("snapshot_list", snapshotList); e != nil {
+			log.Printf("[CRITAL]%s provider set snapshot list fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+
+		output, ok := d.GetOk("result_output_file")
+		if ok && output.(string) != "" {
+			if e := writeToFile(output.(string), snapshotList); e != nil {
+				return resource.NonRetryableError(e)
+			}
+		}
+
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read cbs snapshots failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
-	snapshotList := make([]map[string]interface{}, 0, len(snapshots))
-	ids := make([]string, len(snapshots))
-	for _, snapshot := range snapshots {
-		mapping := map[string]interface{}{
-			"snapshot_id":       *snapshot.SnapshotId,
-			"snapshot_name":     *snapshot.SnapshotName,
-			"storage_id":        *snapshot.DiskId,
-			"storage_usage":     *snapshot.DiskUsage,
-			"storage_size":      *snapshot.DiskSize,
-			"availability_zone": *snapshot.Placement.Zone,
-			"project_id":        *snapshot.Placement.ProjectId,
-			"percent":           *snapshot.Percent,
-			"create_time":       *snapshot.CreateTime,
-			"encrypt":           *snapshot.Encrypt,
-		}
-		snapshotList = append(snapshotList, mapping)
-		ids = append(ids, *snapshot.SnapshotId)
-	}
-
-	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("snapshot_list", snapshotList); err != nil {
-		log.Printf("[CRITAL]%s provider set snapshot list fail, reason:%s\n ", logId, err.Error())
-		return err
-	}
-
-	output, ok := d.GetOk("result_output_file")
-	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), snapshotList); err != nil {
-			return err
-		}
-	}
 	return nil
 }

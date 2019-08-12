@@ -17,7 +17,7 @@ type AsService struct {
 }
 
 func (me *AsService) DescribeLaunchConfigurationById(ctx context.Context, configurationId string) (config *as.LaunchConfiguration, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeLaunchConfigurationsRequest()
 	request.LaunchConfigurationIds = []*string{&configurationId}
 	ratelimit.Check(request.GetAction())
@@ -40,7 +40,7 @@ func (me *AsService) DescribeLaunchConfigurationById(ctx context.Context, config
 }
 
 func (me *AsService) DescribeLaunchConfigurationByFilter(ctx context.Context, configurationId, configurationName string) (configs []*as.LaunchConfiguration, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeLaunchConfigurationsRequest()
 	request.Filters = make([]*as.Filter, 0)
 	if configurationId != "" {
@@ -91,7 +91,7 @@ func (me *AsService) DescribeLaunchConfigurationByFilter(ctx context.Context, co
 }
 
 func (me *AsService) DeleteLaunchConfiguration(ctx context.Context, configurationId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDeleteLaunchConfigurationRequest()
 	request.LaunchConfigurationId = &configurationId
 	ratelimit.Check(request.GetAction())
@@ -107,7 +107,7 @@ func (me *AsService) DeleteLaunchConfiguration(ctx context.Context, configuratio
 }
 
 func (me *AsService) DescribeAutoScalingGroupById(ctx context.Context, scalingGroupId string) (scalingGroup *as.AutoScalingGroup, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeAutoScalingGroupsRequest()
 	request.AutoScalingGroupIds = []*string{&scalingGroupId}
 	ratelimit.Check(request.GetAction())
@@ -130,7 +130,7 @@ func (me *AsService) DescribeAutoScalingGroupById(ctx context.Context, scalingGr
 }
 
 func (me *AsService) DescribeAutoScalingGroupByFilter(ctx context.Context, scalingGroupId, configurationId, scalingGroupName string) (scalingGroups []*as.AutoScalingGroup, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeAutoScalingGroupsRequest()
 	request.Filters = make([]*as.Filter, 0)
 	if scalingGroupId != "" {
@@ -189,7 +189,7 @@ func (me *AsService) DescribeAutoScalingGroupByFilter(ctx context.Context, scali
 
 // set the scaling group desired capacity to 0
 func (me *AsService) ClearScalingGroupInstance(ctx context.Context, scalingGroupId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewModifyAutoScalingGroupRequest()
 	request.AutoScalingGroupId = &scalingGroupId
 	request.MinSize = intToPointer(0)
@@ -208,7 +208,7 @@ func (me *AsService) ClearScalingGroupInstance(ctx context.Context, scalingGroup
 }
 
 func (me *AsService) DeleteScalingGroup(ctx context.Context, scalingGroupId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDeleteAutoScalingGroupRequest()
 	request.AutoScalingGroupId = &scalingGroupId
 	ratelimit.Check(request.GetAction())
@@ -224,7 +224,7 @@ func (me *AsService) DeleteScalingGroup(ctx context.Context, scalingGroupId stri
 }
 
 func (me *AsService) AttachInstances(ctx context.Context, scalingGroupId string, instanceIds []string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewAttachInstancesRequest()
 	request.AutoScalingGroupId = &scalingGroupId
 	request.InstanceIds = make([]*string, 0, len(instanceIds))
@@ -263,7 +263,7 @@ func (me *AsService) AttachInstances(ctx context.Context, scalingGroupId string,
 }
 
 func (me *AsService) DescribeActivityById(ctx context.Context, activityId string) (status string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeAutoScalingActivitiesRequest()
 	request.ActivityIds = []*string{&activityId}
 	ratelimit.Check(request.GetAction())
@@ -285,7 +285,7 @@ func (me *AsService) DescribeActivityById(ctx context.Context, activityId string
 }
 
 func (me *AsService) DetachInstances(ctx context.Context, scalingGroupId string, instanceIds []string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDetachInstancesRequest()
 	request.AutoScalingGroupId = &scalingGroupId
 	request.InstanceIds = make([]*string, 0, len(instanceIds))
@@ -324,7 +324,7 @@ func (me *AsService) DetachInstances(ctx context.Context, scalingGroupId string,
 }
 
 func (me *AsService) DescribeAutoScalingAttachment(ctx context.Context, scalingGroupId string) (instanceIds []string, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeAutoScalingInstancesRequest()
 	request.Filters = []*as.Filter{
 		{
@@ -353,7 +353,7 @@ func (me *AsService) DescribeAutoScalingAttachment(ctx context.Context, scalingG
 }
 
 func (me *AsService) DescribeScalingPolicyById(ctx context.Context, scalingPolicyId string) (scalingPolicy *as.ScalingPolicy, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeScalingPoliciesRequest()
 	request.AutoScalingPolicyIds = []*string{&scalingPolicyId}
 	ratelimit.Check(request.GetAction())
@@ -376,7 +376,7 @@ func (me *AsService) DescribeScalingPolicyById(ctx context.Context, scalingPolic
 }
 
 func (me *AsService) DescribeScalingPolicyByFilter(ctx context.Context, policyId, policyName, scalingGroupId string) (scalingPolicies []*as.ScalingPolicy, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeScalingPoliciesRequest()
 	request.Filters = make([]*as.Filter, 0)
 	if policyId != "" {
@@ -434,7 +434,7 @@ func (me *AsService) DescribeScalingPolicyByFilter(ctx context.Context, policyId
 }
 
 func (me *AsService) DeleteScalingPolicy(ctx context.Context, scalingPolicyId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDeleteScalingPolicyRequest()
 	request.AutoScalingPolicyId = &scalingPolicyId
 	ratelimit.Check(request.GetAction())
@@ -450,7 +450,7 @@ func (me *AsService) DeleteScalingPolicy(ctx context.Context, scalingPolicyId st
 }
 
 func (me *AsService) DescribeScheduledActionById(ctx context.Context, scheduledActionId string) (scheduledAction *as.ScheduledAction, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeScheduledActionsRequest()
 	request.ScheduledActionIds = []*string{&scheduledActionId}
 	ratelimit.Check(request.GetAction())
@@ -473,7 +473,7 @@ func (me *AsService) DescribeScheduledActionById(ctx context.Context, scheduledA
 }
 
 func (me *AsService) DeleteScheduledAction(ctx context.Context, scheduledActonId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDeleteScheduledActionRequest()
 	request.ScheduledActionId = &scheduledActonId
 	ratelimit.Check(request.GetAction())
@@ -489,7 +489,7 @@ func (me *AsService) DeleteScheduledAction(ctx context.Context, scheduledActonId
 }
 
 func (me *AsService) DescribeLifecycleHookById(ctx context.Context, lifecycleHookId string) (lifecycleHook *as.LifecycleHook, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeLifecycleHooksRequest()
 	request.LifecycleHookIds = []*string{&lifecycleHookId}
 	ratelimit.Check(request.GetAction())
@@ -512,7 +512,7 @@ func (me *AsService) DescribeLifecycleHookById(ctx context.Context, lifecycleHoo
 }
 
 func (me *AsService) DeleteLifecycleHook(ctx context.Context, lifecycleHookId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDeleteLifecycleHookRequest()
 	request.LifecycleHookId = &lifecycleHookId
 	ratelimit.Check(request.GetAction())
@@ -528,7 +528,7 @@ func (me *AsService) DeleteLifecycleHook(ctx context.Context, lifecycleHookId st
 }
 
 func (me *AsService) DescribeNotificationById(ctx context.Context, notificationId string) (notification *as.AutoScalingNotification, errRet error) {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDescribeNotificationConfigurationsRequest()
 	request.AutoScalingNotificationIds = []*string{&notificationId}
 	ratelimit.Check(request.GetAction())
@@ -551,7 +551,7 @@ func (me *AsService) DescribeNotificationById(ctx context.Context, notificationI
 }
 
 func (me *AsService) DeleteNotification(ctx context.Context, notificationId string) error {
-	logId := GetLogId(ctx)
+	logId := getLogId(ctx)
 	request := as.NewDeleteNotificationConfigurationRequest()
 	request.AutoScalingNotificationId = &notificationId
 	ratelimit.Check(request.GetAction())
