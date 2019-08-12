@@ -53,6 +53,7 @@ func ProCheck(namespace, action string) {
 
 		if time.Now().Sub(old) > 5*time.Minute {
 			log.Printf("[WARN] %s wait too long, we try to release it", key)
+			break
 		}
 	}
 
