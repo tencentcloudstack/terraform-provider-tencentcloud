@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
@@ -17,6 +18,7 @@ func (me *CbsService) DescribeDiskById(ctx context.Context, diskId string) (disk
 	logId := getLogId(ctx)
 	request := cbs.NewDescribeDisksRequest()
 	request.DiskIds = []*string{&diskId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().DescribeDisks(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -53,6 +55,7 @@ func (me *CbsService) DescribeDisksByFilter(ctx context.Context, params map[stri
 	for {
 		request.Offset = intToPointer(offset)
 		request.Limit = intToPointer(pageSize)
+		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseCbsClient().DescribeDisks(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -87,6 +90,7 @@ func (me *CbsService) ModifyDiskAttributes(ctx context.Context, diskId, diskName
 	if projectId >= 0 {
 		request.ProjectId = intToPointer(projectId)
 	}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().ModifyDiskAttributes(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -103,6 +107,7 @@ func (me *CbsService) DeleteDiskById(ctx context.Context, diskId string) error {
 	logId := getLogId(ctx)
 	request := cbs.NewTerminateDisksRequest()
 	request.DiskIds = []*string{&diskId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().TerminateDisks(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -119,6 +124,7 @@ func (me *CbsService) ResizeDisk(ctx context.Context, diskId string, diskSize in
 	request := cbs.NewResizeDiskRequest()
 	request.DiskId = &diskId
 	request.DiskSize = intToPointer(diskSize)
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().ResizeDisk(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -135,6 +141,7 @@ func (me *CbsService) ApplySnapshot(ctx context.Context, diskId, snapshotId stri
 	request := cbs.NewApplySnapshotRequest()
 	request.DiskId = &diskId
 	request.SnapshotId = &snapshotId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().ApplySnapshot(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -151,6 +158,7 @@ func (me *CbsService) AttachDisk(ctx context.Context, diskId, instanceId string)
 	request := cbs.NewAttachDisksRequest()
 	request.DiskIds = []*string{&diskId}
 	request.InstanceId = &instanceId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().AttachDisks(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -167,6 +175,7 @@ func (me *CbsService) DetachDisk(ctx context.Context, diskId, instanceId string)
 	request := cbs.NewDetachDisksRequest()
 	request.DiskIds = []*string{&diskId}
 	request.InstanceId = &instanceId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().DetachDisks(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -183,6 +192,7 @@ func (me *CbsService) CreateSnapshot(ctx context.Context, diskId, snapshotName s
 	request := cbs.NewCreateSnapshotRequest()
 	request.DiskId = &diskId
 	request.SnapshotName = &snapshotName
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().CreateSnapshot(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -201,6 +211,7 @@ func (me *CbsService) DescribeSnapshotById(ctx context.Context, snapshotId strin
 	logId := getLogId(ctx)
 	request := cbs.NewDescribeSnapshotsRequest()
 	request.SnapshotIds = []*string{&snapshotId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().DescribeSnapshots(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -236,6 +247,7 @@ func (me *CbsService) DescribeSnapshotsByFilter(ctx context.Context, params map[
 	for {
 		request.Offset = intToPointer(offset)
 		request.Limit = intToPointer(pageSize)
+		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseCbsClient().DescribeSnapshots(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -265,6 +277,7 @@ func (me *CbsService) ModifySnapshotName(ctx context.Context, snapshotId, snapsh
 	request := cbs.NewModifySnapshotAttributeRequest()
 	request.SnapshotId = &snapshotId
 	request.SnapshotName = &snapshotName
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().ModifySnapshotAttribute(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -280,6 +293,7 @@ func (me *CbsService) DeleteSnapshot(ctx context.Context, snapshotId string) err
 	logId := getLogId(ctx)
 	request := cbs.NewDeleteSnapshotsRequest()
 	request.SnapshotIds = []*string{&snapshotId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().DeleteSnapshots(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -295,6 +309,7 @@ func (me *CbsService) DescribeSnapshotPolicyById(ctx context.Context, policyId s
 	logId := getLogId(nil)
 	request := cbs.NewDescribeAutoSnapshotPoliciesRequest()
 	request.AutoSnapshotPolicyIds = []*string{&policyId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().DescribeAutoSnapshotPolicies(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -317,6 +332,7 @@ func (me *CbsService) DeleteSnapshotPolicy(ctx context.Context, policyId string)
 	logId := getLogId(ctx)
 	request := cbs.NewDeleteAutoSnapshotPoliciesRequest()
 	request.AutoSnapshotPolicyIds = []*string{&policyId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().DeleteAutoSnapshotPolicies(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",

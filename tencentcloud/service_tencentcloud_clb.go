@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"strings"
 	"time"
@@ -21,7 +22,7 @@ func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string
 	logId := getLogId(ctx)
 	request := clb.NewDescribeLoadBalancersRequest()
 	request.LoadBalancerIds = []*string{&clbId}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeLoadBalancers(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -68,6 +69,7 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 	for {
 		request.Offset = &(offset)
 		request.Limit = &(pageSize)
+		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseClbClient().DescribeLoadBalancers(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -97,6 +99,7 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 	logId := getLogId(ctx)
 	request := clb.NewDeleteLoadBalancerRequest()
 	request.LoadBalancerIds = []*string{&clbId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteLoadBalancer(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -126,7 +129,7 @@ func (me *ClbService) DescribeListenerById(ctx context.Context, id string) (clbL
 	clbId := items[1]
 	request.ListenerIds = []*string{&listenerId}
 	request.LoadBalancerId = stringToPointer(clbId)
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -179,7 +182,7 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 	}
 
 	listeners = make([]*clb.Listener, 0)
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -200,6 +203,7 @@ func (me *ClbService) DeleteListenerById(ctx context.Context, clbId string, list
 	request := clb.NewDeleteListenerRequest()
 	request.ListenerId = stringToPointer(listenerId)
 	request.LoadBalancerId = stringToPointer(clbId)
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteListener(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -254,7 +258,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 	}
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.ListenerIds = []*string{&listenerId}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -303,7 +307,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 	request := clb.NewDescribeListenersRequest()
 	request.ListenerIds = []*string{&listenerId}
 	request.LoadBalancerId = stringToPointer(clbId)
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -343,6 +347,7 @@ func (me *ClbService) DeleteRuleById(ctx context.Context, clbId string, listener
 	request.ListenerId = stringToPointer(listenerId)
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.LocationIds = []*string{&locationId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteRule(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -364,6 +369,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	request := clb.NewDescribeListenersRequest()
 	request.ListenerIds = []*string{&listenerId}
 	request.LoadBalancerId = stringToPointer(clbId)
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -387,6 +393,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	aRequest.LoadBalancerId = stringToPointer(clbId)
 	aRequest.Protocol = protocol
 	aRequest.Port = port
+	ratelimit.Check(request.GetAction())
 	aResponse, aErr := me.client.UseClbClient().DescribeTargets(aRequest)
 
 	if aErr != nil {
@@ -431,7 +438,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	}
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.ListenerIds = []*string{&listenerId}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -454,6 +461,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	aRequest.LoadBalancerId = stringToPointer(clbId)
 	aRequest.Protocol = protocol
 	aRequest.Port = port
+	ratelimit.Check(request.GetAction())
 	aResponse, aErr := me.client.UseClbClient().DescribeTargets(aRequest)
 
 	if aErr != nil {
@@ -487,6 +495,7 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 	if locationId != "" {
 		request.LocationId = stringToPointer(locationId)
 	}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeregisterTargets(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -520,6 +529,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.SourceListenerIds = []*string{&sourceListenerId}
 	request.SourceLocationIds = []*string{&sourceLocId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeRewrite(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -582,6 +592,7 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.SourceListenerIds = []*string{&sourceListenerId}
 	request.SourceLocationIds = []*string{&sourceLocId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeRewrite(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -635,7 +646,7 @@ func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId strin
 	rewriteInfo.SourceLocationId = stringToPointer(sourceLocId)
 	rewriteInfo.TargetLocationId = stringToPointer(targetLocId)
 	request.RewriteInfos = []*clb.RewriteLocationMap{&rewriteInfo}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteRewrite(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",

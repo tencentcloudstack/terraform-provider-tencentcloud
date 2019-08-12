@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"time"
 
@@ -19,6 +20,7 @@ func (me *AsService) DescribeLaunchConfigurationById(ctx context.Context, config
 	logId := getLogId(ctx)
 	request := as.NewDescribeLaunchConfigurationsRequest()
 	request.LaunchConfigurationIds = []*string{&configurationId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DescribeLaunchConfigurations(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -62,6 +64,7 @@ func (me *AsService) DescribeLaunchConfigurationByFilter(ctx context.Context, co
 	for {
 		request.Offset = intToPointer(offset)
 		request.Limit = intToPointer(pageSize)
+		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAsClient().DescribeLaunchConfigurations(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -91,6 +94,7 @@ func (me *AsService) DeleteLaunchConfiguration(ctx context.Context, configuratio
 	logId := getLogId(ctx)
 	request := as.NewDeleteLaunchConfigurationRequest()
 	request.LaunchConfigurationId = &configurationId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DeleteLaunchConfiguration(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -106,6 +110,7 @@ func (me *AsService) DescribeAutoScalingGroupById(ctx context.Context, scalingGr
 	logId := getLogId(ctx)
 	request := as.NewDescribeAutoScalingGroupsRequest()
 	request.AutoScalingGroupIds = []*string{&scalingGroupId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DescribeAutoScalingGroups(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -156,6 +161,7 @@ func (me *AsService) DescribeAutoScalingGroupByFilter(ctx context.Context, scali
 	for {
 		request.Offset = intToPointer(offset)
 		request.Limit = intToPointer(pageSize)
+		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAsClient().DescribeAutoScalingGroups(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -189,6 +195,7 @@ func (me *AsService) ClearScalingGroupInstance(ctx context.Context, scalingGroup
 	request.MinSize = intToPointer(0)
 	request.MaxSize = intToPointer(0)
 	request.DesiredCapacity = intToPointer(0)
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().ModifyAutoScalingGroup(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -204,6 +211,7 @@ func (me *AsService) DeleteScalingGroup(ctx context.Context, scalingGroupId stri
 	logId := getLogId(ctx)
 	request := as.NewDeleteAutoScalingGroupRequest()
 	request.AutoScalingGroupId = &scalingGroupId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DeleteAutoScalingGroup(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -223,6 +231,7 @@ func (me *AsService) AttachInstances(ctx context.Context, scalingGroupId string,
 	for i := range instanceIds {
 		request.InstanceIds = append(request.InstanceIds, &instanceIds[i])
 	}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().AttachInstances(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -257,6 +266,7 @@ func (me *AsService) DescribeActivityById(ctx context.Context, activityId string
 	logId := getLogId(ctx)
 	request := as.NewDescribeAutoScalingActivitiesRequest()
 	request.ActivityIds = []*string{&activityId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DescribeAutoScalingActivities(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -282,6 +292,7 @@ func (me *AsService) DetachInstances(ctx context.Context, scalingGroupId string,
 	for i := range instanceIds {
 		request.InstanceIds = append(request.InstanceIds, &instanceIds[i])
 	}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DetachInstances(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -321,6 +332,7 @@ func (me *AsService) DescribeAutoScalingAttachment(ctx context.Context, scalingG
 			Values: []*string{&scalingGroupId},
 		},
 	}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DescribeAutoScalingInstances(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -344,6 +356,7 @@ func (me *AsService) DescribeScalingPolicyById(ctx context.Context, scalingPolic
 	logId := getLogId(ctx)
 	request := as.NewDescribeScalingPoliciesRequest()
 	request.AutoScalingPolicyIds = []*string{&scalingPolicyId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DescribeScalingPolicies(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -394,6 +407,7 @@ func (me *AsService) DescribeScalingPolicyByFilter(ctx context.Context, policyId
 	for {
 		request.Offset = intToPointer(offset)
 		request.Limit = intToPointer(pageSize)
+		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAsClient().DescribeScalingPolicies(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -423,6 +437,7 @@ func (me *AsService) DeleteScalingPolicy(ctx context.Context, scalingPolicyId st
 	logId := getLogId(ctx)
 	request := as.NewDeleteScalingPolicyRequest()
 	request.AutoScalingPolicyId = &scalingPolicyId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DeleteScalingPolicy(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -438,6 +453,7 @@ func (me *AsService) DescribeScheduledActionById(ctx context.Context, scheduledA
 	logId := getLogId(ctx)
 	request := as.NewDescribeScheduledActionsRequest()
 	request.ScheduledActionIds = []*string{&scheduledActionId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DescribeScheduledActions(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -460,6 +476,7 @@ func (me *AsService) DeleteScheduledAction(ctx context.Context, scheduledActonId
 	logId := getLogId(ctx)
 	request := as.NewDeleteScheduledActionRequest()
 	request.ScheduledActionId = &scheduledActonId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DeleteScheduledAction(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -475,6 +492,7 @@ func (me *AsService) DescribeLifecycleHookById(ctx context.Context, lifecycleHoo
 	logId := getLogId(ctx)
 	request := as.NewDescribeLifecycleHooksRequest()
 	request.LifecycleHookIds = []*string{&lifecycleHookId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DescribeLifecycleHooks(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -497,6 +515,7 @@ func (me *AsService) DeleteLifecycleHook(ctx context.Context, lifecycleHookId st
 	logId := getLogId(ctx)
 	request := as.NewDeleteLifecycleHookRequest()
 	request.LifecycleHookId = &lifecycleHookId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DeleteLifecycleHook(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -512,6 +531,7 @@ func (me *AsService) DescribeNotificationById(ctx context.Context, notificationI
 	logId := getLogId(ctx)
 	request := as.NewDescribeNotificationConfigurationsRequest()
 	request.AutoScalingNotificationIds = []*string{&notificationId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DescribeNotificationConfigurations(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -534,6 +554,7 @@ func (me *AsService) DeleteNotification(ctx context.Context, notificationId stri
 	logId := getLogId(ctx)
 	request := as.NewDeleteNotificationConfigurationRequest()
 	request.AutoScalingNotificationId = &notificationId
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DeleteNotificationConfiguration(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",

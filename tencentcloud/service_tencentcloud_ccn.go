@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"strings"
 
@@ -84,7 +85,7 @@ getMoreData:
 	}
 	request.Limit = &limit
 	request.Offset = &offset
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeCcns(request)
 
 	if err != nil {
@@ -149,7 +150,7 @@ func (me *VpcService) DescribeCcnRegionBandwidthLimits(ctx context.Context, ccnI
 	infos = make([]CcnBandwidthLimit, 0, 100)
 
 	request.CcnId = &ccnId
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeCcnRegionBandwidthLimits(request)
 
 	defer func() {
@@ -195,7 +196,7 @@ func (me *VpcService) CreateCcn(ctx context.Context, name, description, qos stri
 	request.CcnName = &name
 	request.CcnDescription = &description
 	request.QosLevel = &qos
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateCcn(request)
 
 	defer func() {
@@ -245,7 +246,7 @@ func (me *VpcService) DeleteCcn(ctx context.Context, ccnId string) (errRet error
 	logId := getLogId(ctx)
 	request := vpc.NewDeleteCcnRequest()
 	request.CcnId = &ccnId
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DeleteCcn(request)
 
 	defer func() {
@@ -287,7 +288,7 @@ func (me *VpcService) ModifyCcnAttribute(ctx context.Context, ccnId, name, descr
 	if description != "" {
 		request.CcnDescription = &description
 	}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().ModifyCcnAttribute(request)
 
 	defer func() {
@@ -344,7 +345,7 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId st
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeCcnAttachedInstancesRequest()
 	request.CcnId = &ccnId
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeCcnAttachedInstances(request)
 
 	defer func() {
@@ -407,7 +408,7 @@ func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceReg
 	ccnInstance.InstanceType = &instanceType
 
 	request.Instances = []*vpc.CcnInstance{&ccnInstance}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().AttachCcnInstances(request)
 
 	defer func() {
@@ -449,7 +450,7 @@ func (me *VpcService) DetachCcnInstances(ctx context.Context, ccnId, instanceReg
 	ccnInstance.InstanceType = &instanceType
 
 	request.Instances = []*vpc.CcnInstance{&ccnInstance}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DetachCcnInstances(request)
 
 	defer func() {
@@ -509,7 +510,7 @@ func (me *VpcService) SetCcnRegionBandwidthLimits(ctx context.Context, ccnId, re
 	ccnRegionBandwidthLimit.Region = &region
 
 	request.CcnRegionBandwidthLimits = []*vpc.CcnRegionBandwidthLimit{&ccnRegionBandwidthLimit}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().SetCcnRegionBandwidthLimits(request)
 
 	defer func() {
