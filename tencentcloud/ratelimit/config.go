@@ -21,14 +21,14 @@ func init() {
 	limitConfig["service_tencentcloud_mysql.CreateBackup"] = 5
 	limitConfig["service_tencentcloud_mysql.ModifyInstanceParam"] = 20
 
-	//filename
-	limitConfig["service_tencentcloud_cos"] = 10
-	limitConfig["service_tencentcloud_vpc"] = 10
-	limitConfig["service_tencentcloud_redis"] = 10
-	limitConfig["service_tencentcloud_mongodb"] = 10
-	limitConfig["service_tencentcloud_dcg"] = 10
+	//new(filename)
+	limitConfig["service_tencentcloud_cos"] = DefaultLimit
+	limitConfig["service_tencentcloud_vpc"] = DefaultLimit
+	limitConfig["service_tencentcloud_redis"] = DefaultLimit
+	limitConfig["service_tencentcloud_mongodb"] = DefaultLimit
+	limitConfig["service_tencentcloud_dcg"] = DefaultLimit
 	limitConfig["service_tencentcloud_dc"] = 5
-	limitConfig["service_tencentcloud_ccn"] = 20
-	limitConfig["service_tencentcloud_cbs"] = 20
-	limitConfig["service_tencentcloud_as"] = 10
+	limitConfig["service_tencentcloud_ccn"] = DefaultLimit
+	limitConfig["service_tencentcloud_cbs"] = DefaultLimit
+	limitConfig["service_tencentcloud_as"] = DefaultLimit
 }
