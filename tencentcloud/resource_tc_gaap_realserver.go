@@ -101,17 +101,17 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 	tags := getTags(d)
 	projectId := d.Get("project_id").(int)
 
-	var address string
+	var address *string
 	if ip, ok := d.GetOk("ip"); ok {
-		address = ip.(string)
+		address = stringToPointer(ip.(string))
 	}
 	if domain, ok := d.GetOk("domain"); ok {
-		address = domain.(string)
+		address = stringToPointer(domain.(string))
 	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	realservers, err := service.DescribeRealservers(ctx, &address, &name, tags, projectId)
+	realservers, err := service.DescribeRealservers(ctx, address, &name, tags, projectId)
 	if err != nil {
 		return err
 	}
