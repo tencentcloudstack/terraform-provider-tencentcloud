@@ -138,6 +138,9 @@ VPC Resources
   tencentcloud_dnat
   tencentcloud_nat_gateway
 
+GAAP Resources
+  tencentcloud_gaap_realserver
+
 
 */
 package tencentcloud
@@ -274,6 +277,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_sharding_instance":  resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_dc_gateway":                 resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":       resourceTencentCloudDcGatewayCcnRouteInstance(),
+			"tencentcloud_gaap_realserver":            resourceTencentCloudGaapRealserver(),
 		},
 
 		ConfigureFunc: providerConfigure,
