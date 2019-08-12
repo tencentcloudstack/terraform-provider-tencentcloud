@@ -508,6 +508,29 @@ func (me *RedisService) DestroyPostpaidInstance(ctx context.Context, redisId str
 	return
 }
 
+func (me *RedisService) CleanUpInstance(ctx context.Context, redisId string) (taskId int64, errRet error) {
+	logId := getLogId(ctx)
+	request := redis.NewCleanUpInstanceRequest()
+	request.InstanceId = &redisId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	respone, err := me.client.UseRedisClient().CleanUpInstance(request)
+	if err == nil {
+		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), respone.ToJsonString())
+	} else {
+		errRet = err
+		return
+	}
+	taskId = *respone.Response.TaskId
+	return
+}
+
 func (me *RedisService) UpgradeInstance(ctx context.Context, redisId string, newMemSize int64) (dealId string, errRet error) {
 	logId := getLogId(ctx)
 
