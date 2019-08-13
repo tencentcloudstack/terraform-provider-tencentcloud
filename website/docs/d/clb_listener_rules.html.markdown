@@ -54,7 +54,7 @@ In addition to all arguments above, the following attributes are exported:
   * `health_check_unhealth_num` - Unhealth threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as unhealthy. The value range is 2-10.
   * `listener_id` - ID of the listener.
   * `rule_id` - ID of the rule.
-  * `scheduler` - Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'.
+  * `scheduler` - Scheduling method of the CLB listener, and available values include 'WRR', 'IP_HASH' and 'LEAST_CONN'. The default is 'WRR'.
   * `session_expire_time` - Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR'.
 
 

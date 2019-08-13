@@ -66,6 +66,13 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				ValidateFunc: validateStringLengthInRange(1, 60),
 				Description:  "Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.",
 			},
+			"clb_vips": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "The virtual service address table of the CLB.",
+			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -306,6 +313,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 
 	d.Set("network_type", instance.LoadBalancerType)
 	d.Set("clb_name", instance.LoadBalancerName)
+	d.Set("clb_vips", flattenStringList(instance.LoadBalancerVips))
 	d.Set("subnet_id", instance.SubnetId)
 	d.Set("vpc_id", instance.VpcId)
 	d.Set("target_region_info_region", instance.TargetRegionInfo.Region)
@@ -391,7 +399,9 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if d.HasChange("clb_name") {
 			d.SetPartial("clb_name")
 		}
-
+		if d.HasChange("clb_vips") {
+			d.SetPartial("clb_vips")
+		}
 		if d.HasChange("target_region_info_region") {
 			d.SetPartial("target_region_info_region")
 		}
