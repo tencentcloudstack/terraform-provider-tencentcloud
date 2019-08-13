@@ -94,6 +94,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"image_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"availability_zone": {
 				Type:     schema.TypeString,

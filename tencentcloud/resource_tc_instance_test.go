@@ -203,42 +203,6 @@ func TestAccTencentCloudInstance_keypair(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstance_imageIdChanged(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.hello",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccInstanceConfigWithImageIdChanged(
-					"img-8toqc6s3",
-					"testpwd123",
-				),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.hello"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.hello"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "password", "testpwd123"),
-				),
-			},
-			{
-				Config: testAccInstanceConfigWithImageIdChanged(
-					"img-oikl1tzv",
-					"testpwd1234",
-				),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.hello"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.hello"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "image_id", "img-oikl1tzv"),
-				),
-			},
-		},
-	})
-}
 
 func TestAccTencentCloudInstance_nameChanged(t *testing.T) {
 	resource.Test(t, resource.TestCase{
@@ -529,31 +493,7 @@ resource "tencentcloud_instance" "hello" {
 	)
 }
 
-func testAccInstanceConfigWithImageIdChanged(imageId, password string) string {
-	return fmt.Sprintf(
-		`
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 1
-}
 
-resource "tencentcloud_instance" "hello" {
-  instance_name     = "tf_test_reset_instance"
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "%s"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  password          = "%s"
-  system_disk_type  = "CLOUD_PREMIUM"
-}
-`,
-		imageId,
-		password,
-	)
-}
 
 const testAccInstanceConfigWithSmallInstanceType = `
 data "tencentcloud_image" "my_favorate_image" {
