@@ -10,6 +10,8 @@ description: |-
 
 Provides a resource to create a CLB listener rule.
 
+~> **NOTE:** This resource only be created in the HTTP or HTTPS listeners.
+
 ## Example Usage
 
 ```hcl

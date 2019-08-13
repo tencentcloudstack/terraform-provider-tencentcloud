@@ -139,6 +139,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
+				Default:      CLB_LISTENER_SCHEDULER_WRR,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
 				Description:  "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of HTTP and 'HTTPS' protocol additionally supports the 'IP Hash' method.",
@@ -197,9 +198,6 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	}
 	scheduler := ""
 	if v, ok := d.GetOk("scheduler"); ok {
-		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) {
-			return fmt.Errorf("Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS")
-		}
 		if v == CLB_LISTENER_SCHEDULER_IP_HASH {
 			return fmt.Errorf("Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS")
 		}
@@ -294,7 +292,9 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	d.Set("port", instance.Port)
 	d.Set("protocol", instance.Protocol)
 	d.Set("session_expire_time", instance.SessionExpireTime)
-	d.Set("scheduler", instance.Scheduler)
+	if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
+		d.Set("scheduler", instance.Scheduler)
+	}
 	d.Set("sni_switch", instance.SniSwitch)
 
 	//health check

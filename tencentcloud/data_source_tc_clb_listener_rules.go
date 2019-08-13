@@ -161,8 +161,9 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						},
 						"scheduler": {
 							Type:        schema.TypeString,
+							Optional:    true,
 							Computed:    true,
-							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'.",
+							Description: "Scheduling method of the CLB listener, and available values include 'WRR', 'IP_HASH' and 'LEAST_CONN'. The default is 'WRR'.",
 						},
 					},
 				},

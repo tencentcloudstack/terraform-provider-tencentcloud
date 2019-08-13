@@ -1,6 +1,8 @@
 /*
 Provides a resource to create a CLB listener rule.
 
+~> **NOTE:** This resource only be created in the HTTP or HTTPS listeners.
+
 Example Usage
 
 ```hcl
@@ -160,6 +162,7 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 			"scheduler": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Default:      CLB_LISTENER_SCHEDULER_WRR,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
 				Description:  "Scheduling method of the CLB listener rules, and available values include 'WRR', 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.",
 			},
