@@ -180,6 +180,10 @@ resource "tencentcloud_clb_instance" "clb_internal" {
   vpc_id       = "${tencentcloud_vpc.foo.id}"
   subnet_id    = "${tencentcloud_subnet.subnet.id}"
   project_id   = 0
+
+  tags = {
+    test = "tf1"
+  }
 }
 `
 
@@ -200,7 +204,11 @@ resource "tencentcloud_clb_instance" "clb_open" {
   vpc_id                    = "${tencentcloud_vpc.foo.id}"
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = "${tencentcloud_vpc.foo.id}"
-  security_groups = ["${tencentcloud_security_group.foo.id}"]
+  security_groups           = ["${tencentcloud_security_group.foo.id}"]
+
+  tags = {
+    test = "tf"
+  }
 }
 `
 
@@ -228,6 +236,10 @@ resource "tencentcloud_clb_instance" "clb_internal" {
   vpc_id       = "${tencentcloud_vpc.foo.id}"
   subnet_id    = "${tencentcloud_subnet.subnet.id}"
   project_id   = 0
+
+  tags = {
+    test = "tf1"
+  }
 }
 `
 
@@ -248,6 +260,10 @@ resource "tencentcloud_clb_instance" "clb_open" {
   project_id                = 0
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = "${tencentcloud_vpc.foo.id}"
-  security_groups = ["${tencentcloud_security_group.foo.id}"]
+  security_groups           = ["${tencentcloud_security_group.foo.id}"]
+
+  tags = {
+    test = "tf"
+  }
 }
 `

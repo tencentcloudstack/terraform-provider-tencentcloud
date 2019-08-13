@@ -414,13 +414,54 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+
 	defer logElapsed("resource.tencentcloud_redis_instance.delete")()
 
 	logId := getLogId(nil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	_, err := service.DestroyPostpaidInstance(ctx, d.Id())
 
-	return err
+	var wait = func(action string, taskId int64) (errRet error) {
+
+		errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ok, err := service.DescribeTaskInfo(ctx, d.Id(), taskId)
+			if err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			if ok {
+				return nil
+			} else {
+				return resource.RetryableError(fmt.Errorf("%s timeout.", action))
+			}
+		})
+
+		if errRet != nil {
+			log.Printf("[CRITAL]%s redis %s  fail, reason:%s\n ", logId, action, errRet.Error())
+		}
+		return errRet
+	}
+
+	action := "DestroyPostpaidInstance"
+	taskId, err := service.DestroyPostpaidInstance(ctx, d.Id())
+	if err != nil {
+		log.Printf("[CRITAL]%s redis %s  fail, reason:%s\n ", logId, action, err.Error())
+		return err
+	}
+	if err = wait(action, taskId); err != nil {
+		return err
+	}
+
+	action = "CleanUpInstance"
+	taskId, err = service.CleanUpInstance(ctx, d.Id())
+	if err != nil {
+		log.Printf("[CRITAL]%s redis %s  fail, reason:%s\n ", logId, action, err.Error())
+		return err
+	}
+
+	return wait(action, taskId)
 }

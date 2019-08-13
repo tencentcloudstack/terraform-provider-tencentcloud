@@ -116,7 +116,7 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Path of health check. NOTES: Only supports listeners of 'HTTPS'/'HTTP' protocol.",
+				Description: "Path of health check. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.",
 			},
 			"health_check_http_domain": {
 				Type:        schema.TypeString,
@@ -136,31 +136,31 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of SSL Mode. Available values are 'UNIDIRECTIONAL', 'MUTUAL' ",
+				Description:  "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Id of the server certificate.If not set, the content, key, name of server certificate must be set, only supported by listeners of protocol 'HTTPS'.",
+				Description: "ID of the server certificate. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.",
 			},
 			"certificate_ca_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Id of the client certificate.If not set, the content, key, name of client certificate must be set when SSLMode is 'mutual', only supported by listeners of protocol 'HTTPS'.",
+				Description: "ID of the client certificate. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.",
 			},
 			"session_expire_time": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateIntegerInRange(30, 300),
-				Description:  "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR'",
+				Description:  "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR', and not available when listener protocol is TCP_SSL.",
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the CLB listener, and available values include 'WRR', 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.",
+				Description:  "Scheduling method of the CLB listener, and available values include 'WRR', 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.",
 			},
 		},
 	}
@@ -192,7 +192,9 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	}
 
 	protocol := *(instance.Protocol)
-
+	if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+		return fmt.Errorf("The rule can only be created/modified with listeners of protocol HTTP/HTTPS")
+	}
 	request := clb.NewCreateRuleRequest()
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.ListenerId = stringToPointer(listenerId)
@@ -207,7 +209,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	scheduler := ""
 	if v, ok := d.GetOk("scheduler"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
-			return fmt.Errorf("Scheduler can only be set with listener protocol TCP/UDP or rule of listener HTTP/HTTPS")
+			return fmt.Errorf("Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS")
 		}
 
 		scheduler = v.(string)
@@ -237,6 +239,9 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		return certErr
 	}
 	if certificateSetFlag == true {
+		if !(protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
+			return fmt.Errorf("certificate para can only be set with rule of linstener with protocol 'HTTPS'")
+		}
 		rule.Certificate = certificateInput
 	}
 

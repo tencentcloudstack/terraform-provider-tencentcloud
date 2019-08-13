@@ -71,6 +71,7 @@ func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 	// request timeout
 	cpf.HttpProfile.ReqTimeout = 300
 	// cpf.SignMethod = "HmacSHA1"
+	cpf.Language = "en-US"
 
 	var round LogRoundTripper
 
@@ -119,6 +120,7 @@ func (me *TencentCloudClient) UseRedisClient() *redis.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
 
 	redisConn, _ := redis.NewClient(credential, me.Region, cpf)
 	me.redisConn = redisConn
@@ -138,6 +140,7 @@ func (me *TencentCloudClient) UseAsClient() *as.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
 
 	asConn, _ := as.NewClient(credential, me.Region, cpf)
 	me.asConn = asConn
@@ -158,6 +161,7 @@ func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
 
 	vpcConn, _ := vpc.NewClient(credential, me.Region, cpf)
 
@@ -182,6 +186,7 @@ func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
 
 	cbsConn, _ := cbs.NewClient(credential, me.Region, cpf)
 	me.cbsConn = cbsConn
@@ -202,6 +207,7 @@ func (me *TencentCloudClient) UseDcClient() *dc.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
 
 	dcConn, _ := dc.NewClient(credential, me.Region, cpf)
 
@@ -228,6 +234,7 @@ func (me *TencentCloudClient) UseMongodbClient() *mongodb.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
 
 	mongodbConn, _ := mongodb.NewClient(credential, me.Region, cpf)
 	var round LogRoundTripper
@@ -250,6 +257,7 @@ func (me *TencentCloudClient) UseClbClient() *clb.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
 
 	clbConn, _ := clb.NewClient(credential, me.Region, cpf)
 	var round LogRoundTripper

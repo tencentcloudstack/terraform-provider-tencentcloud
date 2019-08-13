@@ -63,7 +63,7 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "ID of the clb listener rule. Only supports listeners of 'HTTPS'/'HTTP' protocol.",
+				Description: "ID of the clb listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.",
 			},
 			"protocol_type": {
 				Type:        schema.TypeString,
@@ -112,7 +112,7 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 
 	items := strings.Split(d.Get("listener_id").(string), "#")
 	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong ?%d %s", len(items), d.Get("listener_id").(string))
+		return fmt.Errorf("id of resource.tencentcloud_clb_attachment listener is wrong ")
 	}
 
 	listenerId := items[0]
@@ -232,7 +232,7 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 	logId := getLogId(nil)
 	items := strings.Split(d.Get("listener_id").(string), "#")
 	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_attachment is wrong")
+		return fmt.Errorf("id of resource.tencentcloud_clb_attachment listener is wrong")
 	}
 
 	listenerId := items[0]

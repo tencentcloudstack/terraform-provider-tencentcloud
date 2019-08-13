@@ -9,6 +9,7 @@ import (
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type MysqlService struct {
@@ -65,6 +66,8 @@ needMoreItems:
 		}
 	}()
 
+	ratelimit.Check(request.GetAction())
+
 	response, err := me.client.UseMysqlClient().DescribeBackups(request)
 	if err != nil {
 		errRet = err
@@ -101,7 +104,7 @@ func (me *MysqlService) CreateBackup(ctx context.Context, mysqlId string) (backu
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().CreateBackup(request)
 	if err != nil {
 		errRet = err
@@ -122,7 +125,7 @@ func (me *MysqlService) DescribeDBZoneConfig(ctx context.Context) (sellConfigure
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeDBZoneConfig(request)
 	if err != nil {
 		errRet = err
@@ -144,7 +147,7 @@ func (me *MysqlService) DescribeBackupConfigByMysqlId(ctx context.Context, mysql
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeBackupConfig(request)
 	if err != nil {
 		errRet = err
@@ -170,6 +173,8 @@ func (me *MysqlService) ModifyBackupConfigByMysqlId(ctx context.Context, mysqlId
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().ModifyBackupConfig(request)
 	if err != nil {
 		errRet = err
@@ -192,6 +197,7 @@ func (me *MysqlService) DescribeDefaultParameters(ctx context.Context, engineVer
 		}
 	}()
 
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeDefaultParams(request)
 	if err != nil {
 		errRet = err
@@ -219,6 +225,7 @@ func (me *MysqlService) DescribeInstanceParameters(ctx context.Context, instance
 		}
 	}()
 
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeInstanceParams(request)
 	if err != nil {
 		errRet = err
@@ -249,6 +256,7 @@ func (me *MysqlService) ModifyInstanceParam(ctx context.Context, instanceId stri
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().ModifyInstanceParam(request)
 	if err != nil {
 		errRet = err
@@ -312,7 +320,7 @@ func (me *MysqlService) CreateAccount(ctx context.Context, mysqlId string,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().CreateAccounts(request)
 	if err != nil {
 		errRet = err
@@ -342,7 +350,7 @@ func (me *MysqlService) ModifyAccountPassword(ctx context.Context, mysqlId strin
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().ModifyAccountPassword(request)
 	if err != nil {
 		errRet = err
@@ -372,7 +380,7 @@ func (me *MysqlService) ModifyAccountDescription(ctx context.Context, mysqlId st
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().ModifyAccountDescription(request)
 	if err != nil {
 		errRet = err
@@ -401,7 +409,7 @@ func (me *MysqlService) DeleteAccount(ctx context.Context, mysqlId string,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DeleteAccounts(request)
 	if err != nil {
 		errRet = err
@@ -438,6 +446,7 @@ func (me *MysqlService) DescribeAccounts(ctx context.Context, mysqlId string) (a
 	}()
 
 needMoreItems:
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeAccounts(request)
 	if err != nil {
 		errRet = err
@@ -472,7 +481,7 @@ func (me *MysqlService) _innerDescribeAsyncRequestInfo(ctx context.Context, asyn
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeAsyncRequestInfo(request)
 	if err != nil {
 		errRet = err
@@ -540,7 +549,7 @@ func (me *MysqlService) ModifyAccountPrivileges(ctx context.Context, mysqlId str
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().ModifyAccountPrivileges(request)
 	if err != nil {
 		errRet = err
@@ -572,7 +581,7 @@ func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId s
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeAccountPrivileges(request)
 	if err != nil {
 		errRet = err
@@ -659,7 +668,7 @@ func (me *MysqlService) DescribeIsolatedDBInstanceById(ctx context.Context, mysq
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeDBInstances(request)
 	if err != nil {
 		errRet = err
@@ -692,7 +701,7 @@ func (me *MysqlService) _innerDescribeDBInstanceById(ctx context.Context, mysqlI
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeDBInstances(request)
 	if err != nil {
 		errRet = err
@@ -727,7 +736,7 @@ func (me *MysqlService) DescribeRunningDBInstanceById(ctx context.Context, mysql
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeDBInstances(request)
 	if err != nil {
 		errRet = err
@@ -760,6 +769,7 @@ func (me *MysqlService) CheckDBGTIDOpen(ctx context.Context, mysqlId string) (op
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeDBInstanceGTID(request)
 	if err != nil {
 		sdkErr, ok := err.(*errors.TencentCloudSDKError)
@@ -785,7 +795,7 @@ func (me *MysqlService) DescribeDBSecurityGroups(ctx context.Context, mysqlId st
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeDBSecurityGroups(request)
 	if err != nil {
 		errRet = err
@@ -832,7 +842,7 @@ func (me *MysqlService) ModifyInstanceTag(ctx context.Context, mysqlId string, d
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().ModifyInstanceTag(request)
 	if err != nil {
 		errRet = err
@@ -856,7 +866,7 @@ func (me *MysqlService) DescribeTagsOfInstanceId(ctx context.Context, mysqlId st
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeTagsOfInstanceIds(request)
 	if err != nil {
 		errRet = err
@@ -888,6 +898,7 @@ func (me *MysqlService) DescribeDBInstanceConfig(ctx context.Context, mysqlId st
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeDBInstanceConfig(request)
 
 	if err != nil {
@@ -927,6 +938,7 @@ func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId string, pas
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().InitDBInstances(request)
 
 	if err != nil {
@@ -954,6 +966,7 @@ func (me *MysqlService) OpenWanService(ctx context.Context, mysqlId string) (asy
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().OpenWanService(request)
 
 	if err != nil {
@@ -975,6 +988,7 @@ func (me *MysqlService) CloseWanService(ctx context.Context, mysqlId string) (as
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().CloseWanService(request)
 
 	if err != nil {
@@ -996,6 +1010,7 @@ func (me *MysqlService) OpenDBInstanceGTID(ctx context.Context, mysqlId string) 
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().OpenDBInstanceGTID(request)
 
 	if err != nil {
@@ -1020,6 +1035,7 @@ func (me *MysqlService) ModifyDBInstanceName(ctx context.Context, mysqlId,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, errRet := me.client.UseMysqlClient().ModifyDBInstanceName(request)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -1046,7 +1062,7 @@ func (me *MysqlService) ModifyDBInstanceVipVport(ctx context.Context, mysqlId, v
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, errRet := me.client.UseMysqlClient().ModifyDBInstanceVipVport(request)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -1073,7 +1089,7 @@ func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().UpgradeDBInstance(request)
 
 	if err != nil {
@@ -1098,6 +1114,7 @@ func (me *MysqlService) ModifyDBInstanceProject(ctx context.Context, mysqlId str
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().ModifyDBInstanceProject(request)
 
 	if err != nil {
@@ -1128,6 +1145,7 @@ func (me *MysqlService) ModifyDBInstanceSecurityGroups(ctx context.Context, mysq
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().ModifyDBInstanceSecurityGroups(request)
 
 	if err != nil {
@@ -1153,6 +1171,7 @@ func (me *MysqlService) DisassociateSecurityGroup(ctx context.Context, mysqlId s
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DisassociateSecurityGroups(request)
 
 	if err != nil {
@@ -1178,7 +1197,7 @@ func (me *MysqlService) ModifyAutoRenewFlag(ctx context.Context, mysqlId string,
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().ModifyAutoRenewFlag(request)
 
 	if err != nil {
@@ -1202,6 +1221,7 @@ func (me *MysqlService) IsolateDBInstance(ctx context.Context, mysqlId string) (
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().IsolateDBInstance(request)
 
 	if err != nil {
@@ -1227,6 +1247,7 @@ func (me *MysqlService) OfflineIsolatedInstances(ctx context.Context, mysqlId st
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	ratelimit.Check(request.GetAction())
 	_, errRet = me.client.UseMysqlClient().OfflineIsolatedInstances(request)
 
 	return
