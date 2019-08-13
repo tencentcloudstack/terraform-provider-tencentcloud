@@ -2,13 +2,16 @@ package tencentcloud
 
 import (
 	"bytes"
+	"crypto/md5"
+	"encoding/base64"
 	"fmt"
-
+	"math/rand"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
-	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
+	"github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
 )
 
 // Generates a hash for the set hash function used by the IDs
@@ -27,7 +30,7 @@ func dataResourceIdHash(id string) string {
 	return fmt.Sprintf("%d", hashcode.String(id))
 }
 
-// Tranform filter condition to API's param
+// Transform filter condition to API's param
 func buildFiltersParam(params map[string]string, filterList *schema.Set, maxFiltersLimit int, maxFilterValuesLimit int) error {
 	if len(filterList.List()) > maxFiltersLimit {
 		return fmt.Errorf("Too many filters, should not be more than %v", maxFiltersLimit)
@@ -57,7 +60,7 @@ func buildFiltersParam(params map[string]string, filterList *schema.Set, maxFilt
 	return nil
 }
 
-// Tranform filter condition to TecentCloud Go SDK's param
+// Transform filter condition to TencentCloud Go SDK's param
 func buildFiltersParamForSDK(filterList *schema.Set) (r []*cvm.Filter) {
 	for _, v := range filterList.List() {
 		m := v.(map[string]interface{})
@@ -107,7 +110,7 @@ func flattenIntList(list []*uint64) []interface{} {
 	return vi
 }
 
-// Tranform sdk map[string]*string to terraform TypeMap
+// Transform sdk map[string]*string to terraform TypeMap
 func pointersMapToStringMap(pointers map[string]*string) map[string]interface{} {
 	list := make(map[string]interface{}, len(pointers))
 	for i, v := range pointers {
@@ -141,4 +144,24 @@ func intToPointer(i int) *uint64 {
 
 func uint64Pt(i uint64) *uint64 {
 	return &i
+}
+
+func getTags(d *schema.ResourceData, k string) map[string]string {
+	var tags map[string]string
+	if raw, ok := d.GetOk(k); ok {
+		rawTags := raw.(map[string]interface{})
+		tags = make(map[string]string, len(rawTags))
+		for k, v := range rawTags {
+			tags[k] = v.(string)
+		}
+	}
+	return tags
+}
+
+func buildToken() string {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	buf := make([]byte, 16)
+	r.Read(buf)
+	sum := md5.Sum(buf)
+	return base64.StdEncoding.EncodeToString(sum[:])
 }

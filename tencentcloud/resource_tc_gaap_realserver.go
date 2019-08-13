@@ -77,7 +77,7 @@ func resourceTencentCloudGaapRealserverCreate(d *schema.ResourceData, m interfac
 		return errors.New("ip or domain must be set")
 	}
 
-	tags := getTags(d)
+	tags := getTags(d, "tags")
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -98,7 +98,7 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 
 	id := d.Id()
 	name := d.Get("name").(string)
-	tags := getTags(d)
+	tags := getTags(d, "tags")
 	projectId := d.Get("project_id").(int)
 
 	var address *string
@@ -205,17 +205,4 @@ func resourceTencentCloudGaapRealserverDelete(d *schema.ResourceData, m interfac
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	return service.DeleteRealserver(ctx, id)
-}
-
-func getTags(d *schema.ResourceData) map[string]string {
-	var tags map[string]string
-	if raw, ok := d.GetOk("tags"); ok {
-		rawTags := raw.(map[string]interface{})
-		tags = make(map[string]string, len(rawTags))
-		for k, v := range rawTags {
-			tags[k] = v.(string)
-		}
-	}
-
-	return tags
 }
