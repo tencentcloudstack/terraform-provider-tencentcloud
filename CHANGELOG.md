@@ -1,4 +1,8 @@
 ## 1.16.0 (Unreleased)
+
+ENHANCEMENTS:
+* The `tencentcloud_instance.image_id` property becomes ForceNew.
+
 ## 1.15.0 (August 07, 2019)
 
 FEATURES:
