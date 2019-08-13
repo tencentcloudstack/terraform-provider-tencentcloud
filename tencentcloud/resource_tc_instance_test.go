@@ -203,7 +203,6 @@ func TestAccTencentCloudInstance_keypair(t *testing.T) {
 	})
 }
 
-
 func TestAccTencentCloudInstance_nameChanged(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
@@ -492,8 +491,6 @@ resource "tencentcloud_instance" "hello" {
 		name,
 	)
 }
-
-
 
 const testAccInstanceConfigWithSmallInstanceType = `
 data "tencentcloud_image" "my_favorate_image" {
