@@ -49,7 +49,7 @@ In addition to all arguments above, the following attributes are exported:
   * `listener_name` - Name of the CLB listener.
   * `port` - Port of the CLB listener.
   * `protocol` - Protocol of the listener. Available values are 'HTTP', 'HTTPS', 'TCP', 'UDP'.
-  * `scheduler` - Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.
+  * `scheduler` - Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.
   * `session_expire_time` - Time of session persistence within the CLB listener.
   * `sni_switch` - Indicates whether SNI is enabled. NOTES: Only supported by 'HTTPS' protocol.
 

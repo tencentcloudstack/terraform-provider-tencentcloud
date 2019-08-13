@@ -7,7 +7,7 @@ Example Usage
 data "tencentcloud_clb_attachments" "clblab" {
   listener_id = "lbl-hh141sn9#lb-k2zjp9lv"
   clb_id      = "lb-k2zjp9lv"
-  rule_id     = "loc-4xxr2cy7"
+  rule_id     = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
 }
 ```
 */
@@ -18,7 +18,9 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
 func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
@@ -124,11 +126,19 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	attachments, err := clbService.DescribeAttachmentsByFilter(ctx, params)
+	var attachments []*clb.ListenerBackend
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := clbService.DescribeAttachmentsByFilter(ctx, params)
+		if e != nil {
+			return retryError(e)
+		}
+		attachments = results
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read clb attachments failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
 	attachmentList := make([]map[string]interface{}, 0, len(attachments))
 	ids := make([]string, 0, len(attachments))
 	for _, attachment := range attachments {
@@ -154,15 +164,15 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("attachment_list", attachmentList); err != nil {
-		log.Printf("[CRITAL]%s provider set attachment list fail, reason:%s\n ", logId, err.Error())
-		return err
+	if e := d.Set("attachment_list", attachmentList); e != nil {
+		log.Printf("[CRITAL]%s provider set attachment list fail, reason:%s\n ", logId, e.Error())
+		return e
 	}
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), attachmentList); err != nil {
-			return err
+		if e := writeToFile(output.(string), attachmentList); e != nil {
+			return e
 		}
 	}
 

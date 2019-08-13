@@ -28,6 +28,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
@@ -100,21 +101,29 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 	rewriteInfo.SourceLocationId = stringToPointer(sourceLocId)
 	rewriteInfo.TargetLocationId = stringToPointer(targetLocId)
 	request.RewriteInfos = []*clb.RewriteLocationMap{&rewriteInfo}
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ManualRewrite(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-		requestId := *response.Response.RequestId
-		retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-		if retryErr != nil {
-			return retryErr
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ManualRewrite(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			requestId := *response.Response.RequestId
+			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			if retryErr != nil {
+				return resource.NonRetryableError(retryErr)
+			}
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create clb redirection failed, reason:%s\n ", logId, err.Error())
+		return err
 	}
 	d.SetId(sourceLocId + "#" + targetLocId + "#" + sourceListenerId + "#" + targertListenerId + "#" + clbId)
+
 	return resourceTencentCloudClbRedirectionRead(d, meta)
 }
 
@@ -129,11 +138,19 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	instance, err := clbService.DescribeRedirectionById(ctx, rewriteId)
+	var instance *map[string]string
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := clbService.DescribeRedirectionById(ctx, rewriteId)
+		if e != nil {
+			return retryError(e)
+		}
+		instance = result
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read clb redirection failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
 	d.Set("clb_id", (*instance)["clb_id"])
 	d.Set("source_listener_id", (*instance)["source_listener_id"]+"#"+(*instance)["clb_id"])
 	d.Set("target_listener_id", (*instance)["target_listener_id"]+"#"+(*instance)["clb_id"])
@@ -156,9 +173,16 @@ func resourceTencentCloudClbRedirectionDelete(d *schema.ResourceData, meta inter
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := clbService.DeleteRedirectionById(ctx, clbId)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := clbService.DeleteRedirectionById(ctx, clbId)
+		if e != nil {
+			log.Printf("[CRITAL]%s reason[%s]\n", logId, e.Error())
+			return retryError(e)
+		}
+		return nil
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s reason[%s]\n", logId, err.Error())
+		log.Printf("[CRITAL]%s delete clb redirection failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 	return nil
