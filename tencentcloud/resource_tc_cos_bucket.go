@@ -260,7 +260,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Get("bucket").(string)
@@ -281,7 +281,7 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Id()
@@ -327,7 +327,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.update")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn.UseCosClient()
@@ -378,7 +378,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Id()
@@ -424,7 +424,7 @@ func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, client *s3.S3,
 	bucket := d.Get("bucket").(string)
 	cors := d.Get("cors_rules").([]interface{})
 
-	if cors == nil || len(cors) == 0 {
+	if len(cors) == 0 {
 		request := s3.DeleteBucketCorsInput{
 			Bucket: aws.String(bucket),
 		}
@@ -488,7 +488,7 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 
 	bucket := d.Get("bucket").(string)
 	lifecycleRules := d.Get("lifecycle_rules").([]interface{})
-	if lifecycleRules == nil || len(lifecycleRules) == 0 {
+	if len(lifecycleRules) == 0 {
 		request := s3.DeleteBucketLifecycleInput{
 			Bucket: aws.String(bucket),
 		}
@@ -581,7 +581,7 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, client *s3.
 	bucket := d.Get("bucket").(string)
 	website := d.Get("website").([]interface{})
 
-	if website == nil || len(website) == 0 {
+	if len(website) == 0 {
 		request := s3.DeleteBucketWebsiteInput{
 			Bucket: aws.String(bucket),
 		}

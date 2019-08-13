@@ -8,7 +8,7 @@ import (
 
 var testAccProviders map[string]terraform.ResourceProvider
 
-var testAccProvidersWithTLS map[string]terraform.ResourceProvider
+// var testAccProvidersWithTLS map[string]terraform.ResourceProvider
 var testAccProvider *schema.Provider
 
 var testAccTemplateProvider *schema.Provider

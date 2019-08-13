@@ -11,14 +11,14 @@ import (
 )
 
 const (
-	tencentCloudApiEipStatusCreating     = "CREATING"
 	tencentCloudApiEipStatusBinding      = "BINDING"
 	tencentCloudApiEipStatusBind         = "BIND"
-	tencentCloudApiEipStatusUnbinding    = "UNBINDING"
 	tencentCloudApiEipStatusUnbind       = "UNBIND"
-	tencentCloudApiEipStatusOfflining    = "OFFLINING"
 	tencentCloudApiEipStatusCreateFailed = "CREATE_FAILED"
 	tencentCloudApiEipStatusBindEni      = "BIND_ENI"
+	// tencentCloudApiEipStatusCreating     = "CREATING"
+	// tencentCloudApiEipStatusOfflining    = "OFFLINING"
+	// tencentCloudApiEipStatusUnbinding    = "UNBINDING"
 )
 
 var (
@@ -27,9 +27,9 @@ var (
 	errEIPStillUnbinding = errors.New("eip still unbinding")
 	errEIPStillCreating  = errors.New("eip still creating")
 	errEIPStillDeleting  = errors.New("eip still deleting")
-	errEIPNotBind        = errors.New("eip should be bind")
 	errEIPNotUnbind      = errors.New("eip should be unbind")
-	errEIPInvalidName    = errors.New("eip name is invlid")
+	errEIPInvalidName    = errors.New("eip name is invalid")
+	// errEIPNotBind        = errors.New("eip should be bind")
 )
 
 func resourceTencentCloudEip() *schema.Resource {

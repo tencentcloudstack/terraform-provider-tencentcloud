@@ -194,7 +194,7 @@ func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m
 		}
 	}
 
-	if found == false {
+	if !found {
 		d.SetId("")
 	}
 
@@ -389,10 +389,10 @@ func waitClusterInstanceRunning(conn *ccs.Client, clusterId, nodeId string) erro
 	err := resource.Retry(15*time.Minute, func() *resource.RetryError {
 		resp, err := conn.DescribeClusterInstances(req)
 		if err != nil {
+			if _, ok := err.(*common.APIError); ok {
+				return resource.NonRetryableError(err)
+			}
 			return resource.RetryableError(err)
-		}
-		if _, ok := err.(*common.APIError); ok {
-			return resource.NonRetryableError(err)
 		}
 		for _, node := range resp.Data.Nodes {
 			if *node.InstanceId != nodeId {
@@ -438,7 +438,7 @@ func resourceTencentCloudContainerClusterInstancesDelete(d *schema.ResourceData,
 	}
 
 	// node no longer exists
-	if nodeFound == false {
+	if !nodeFound {
 		return nil
 	}
 

@@ -32,7 +32,7 @@ func TestAccTencentCloudMysqlAccountResource(t *testing.T) {
 
 func testAccCheckMysqlAccountExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[r]
@@ -59,7 +59,7 @@ func testAccCheckMysqlAccountExists(r string) resource.TestCheckFunc {
 }
 
 func testAccCheckMysqlAccountDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}

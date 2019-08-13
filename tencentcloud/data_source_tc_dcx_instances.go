@@ -19,9 +19,10 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
-	"github.com/hashicorp/terraform/helper/schema"
 	"log"
 	"strings"
+
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func dataSourceTencentCloudDcxInstances() *schema.Resource {
@@ -153,7 +154,7 @@ func dataSourceTencentCloudDcxInstances() *schema.Resource {
 func dataSourceTencentCloudDcxInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_dcx_instances.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -229,7 +230,10 @@ func dataSourceTencentCloudDcxInstancesRead(d *schema.ResourceData, meta interfa
 	}
 
 	m := md5.New()
-	m.Write([]byte(id + "_" + name))
+	_, err = m.Write([]byte(id + "_" + name))
+	if err != nil {
+		return err
+	}
 	d.SetId(fmt.Sprintf("%x", m.Sum(nil)))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

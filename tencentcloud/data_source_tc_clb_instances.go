@@ -143,7 +143,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_clb_instances.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]interface{})

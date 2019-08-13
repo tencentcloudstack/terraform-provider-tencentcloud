@@ -80,7 +80,7 @@ func TestAccTencentCloudCcnV3Update(t *testing.T) {
 
 func testAccCheckCcnExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[r]
@@ -102,7 +102,7 @@ func testAccCheckCcnExists(r string) resource.TestCheckFunc {
 }
 
 func testAccCheckCcnDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
