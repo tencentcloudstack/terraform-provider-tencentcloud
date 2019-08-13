@@ -106,7 +106,7 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	requestId := *response.Response.RequestId
-	retryErr := retrySet(requestId, me.client.UseClbClient())
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
 	if retryErr != nil {
 		return retryErr
 	}
@@ -209,7 +209,7 @@ func (me *ClbService) DeleteListenerById(ctx context.Context, clbId string, list
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	requestId := *response.Response.RequestId
-	retryErr := retrySet(requestId, me.client.UseClbClient())
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
 	if retryErr != nil {
 		return retryErr
 	}
@@ -352,7 +352,7 @@ func (me *ClbService) DeleteRuleById(ctx context.Context, clbId string, listener
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	requestId := *response.Response.RequestId
-	retryErr := retrySet(requestId, me.client.UseClbClient())
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
 	if retryErr != nil {
 		return retryErr
 	}
@@ -496,7 +496,7 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	requestId := *response.Response.RequestId
-	retryErr := retrySet(requestId, me.client.UseClbClient())
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
 	if retryErr != nil {
 		return retryErr
 	}
@@ -645,7 +645,7 @@ func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId strin
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	requestId := *response.Response.RequestId
-	retryErr := retrySet(requestId, me.client.UseClbClient())
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
 	if retryErr != nil {
 		return retryErr
 	}
@@ -787,7 +787,7 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData) (cer
 
 	return
 }
-func retrySet(requestId string, meta *clb.Client) (err error) {
+func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 	taskQueryRequest := clb.NewDescribeTaskStatusRequest()
 	taskQueryRequest.TaskId = &requestId
 	err = resource.Retry(10*time.Minute, func() *resource.RetryError {

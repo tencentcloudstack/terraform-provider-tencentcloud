@@ -1,7 +1,7 @@
 /*
 Provides a resource to create a CLB listener rule.
 
-~> **NOTE:** This resource only be created in the HTTP or HTTPS listeners.
+-> **NOTE:** This resource only be created in the HTTP or HTTPS listeners.
 
 Example Usage
 
@@ -271,7 +271,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 			requestId = *response.Response.RequestId
 
-			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
 				return resource.NonRetryableError(retryErr)
 			}
@@ -469,7 +469,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 				requestId := *response.Response.RequestId
-				retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 				if retryErr != nil {
 					return resource.NonRetryableError(retryErr)
 				}
