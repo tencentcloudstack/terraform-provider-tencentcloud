@@ -113,16 +113,17 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 			requestId := *response.Response.RequestId
 			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
-				return retryError(retryErr)
+				return resource.NonRetryableError(retryErr)
 			}
 		}
-		d.SetId(sourceLocId + "#" + targetLocId + "#" + sourceListenerId + "#" + targertListenerId + "#" + clbId)
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s create clb redirection failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	d.SetId(sourceLocId + "#" + targetLocId + "#" + sourceListenerId + "#" + targertListenerId + "#" + clbId)
+
 	return resourceTencentCloudClbRedirectionRead(d, meta)
 }
 
@@ -137,23 +138,25 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	var instance *map[string]string
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		instance, e := clbService.DescribeRedirectionById(ctx, rewriteId)
+		result, e := clbService.DescribeRedirectionById(ctx, rewriteId)
 		if e != nil {
 			return retryError(e)
 		}
-
-		d.Set("clb_id", (*instance)["clb_id"])
-		d.Set("source_listener_id", (*instance)["source_listener_id"]+"#"+(*instance)["clb_id"])
-		d.Set("target_listener_id", (*instance)["target_listener_id"]+"#"+(*instance)["clb_id"])
-		d.Set("rewrite_source_rule_id", (*instance)["rewrite_source_rule_id"]+"#"+(*instance)["source_listener_id"]+"#"+(*instance)["clb_id"])
-		d.Set("rewrite_target_rule_id", (*instance)["rewrite_target_rule_id"]+"#"+(*instance)["target_listener_id"]+"#"+(*instance)["clb_id"])
+		instance = result
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read clb redirection failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	d.Set("clb_id", (*instance)["clb_id"])
+	d.Set("source_listener_id", (*instance)["source_listener_id"]+"#"+(*instance)["clb_id"])
+	d.Set("target_listener_id", (*instance)["target_listener_id"]+"#"+(*instance)["clb_id"])
+	d.Set("rewrite_source_rule_id", (*instance)["rewrite_source_rule_id"]+"#"+(*instance)["source_listener_id"]+"#"+(*instance)["clb_id"])
+	d.Set("rewrite_target_rule_id", (*instance)["rewrite_target_rule_id"]+"#"+(*instance)["target_listener_id"]+"#"+(*instance)["clb_id"])
+
 	return nil
 }
 

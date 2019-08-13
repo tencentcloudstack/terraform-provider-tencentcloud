@@ -24,6 +24,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
 func dataSourceTencentCloudClbListenerRules() *schema.Resource {
@@ -60,7 +61,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.",
+				Description:  "Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -161,7 +162,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						"scheduler": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'.",
+							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'.",
 						},
 					},
 				},
@@ -206,65 +207,67 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	var rules []*clb.RuleOutput
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		rules, e := clbService.DescribeRulesByFilter(ctx, params)
+		results, e := clbService.DescribeRulesByFilter(ctx, params)
 		if e != nil {
 			return retryError(e)
 		}
-
-		ruleList := make([]map[string]interface{}, 0, len(rules))
-		log.Printf("the length %d", len(rules))
-		ids := make([]string, 0, len(rules))
-		for _, rule := range rules {
-			mapping := map[string]interface{}{
-				"clb_id":              clbId,
-				"listener_id":         combinedId,
-				"rule_id":             *rule.LocationId,
-				"domain":              *rule.Domain,
-				"url":                 *rule.Url,
-				"session_expire_time": *rule.SessionExpireTime,
-				"scheduler":           *rule.Scheduler,
-			}
-			if rule.HealthCheck != nil {
-				health_check_switch := false
-				if *rule.HealthCheck.HealthSwitch == int64(1) {
-					health_check_switch = true
-				}
-				mapping["health_check_switch"] = health_check_switch
-				mapping["health_check_interval_time"] = *rule.HealthCheck.IntervalTime
-				mapping["health_check_health_num"] = *rule.HealthCheck.HealthNum
-				mapping["health_check_unhealth_num"] = *rule.HealthCheck.UnHealthNum
-				mapping["health_check_http_code"] = *rule.HealthCheck.HttpCode
-				mapping["health_check_http_method"] = *rule.HealthCheck.HttpCheckMethod
-				mapping["health_check_http_domain"] = *rule.HealthCheck.HttpCheckDomain
-				mapping["health_check_http_path"] = *rule.HealthCheck.HttpCheckPath
-			}
-			if rule.Certificate != nil {
-				mapping["certificate_ssl_mode"] = *rule.Certificate.SSLMode
-				mapping["certificate_id"] = *rule.Certificate.CertId
-				mapping["certificate_ca_id"] = *rule.Certificate.CertCaId
-			}
-			ruleList = append(ruleList, mapping)
-			ids = append(ids, *rule.LocationId+"#"+combinedId)
-		}
-
-		d.SetId(dataResourceIdsHash(ids))
-		if e = d.Set("rule_list", ruleList); e != nil {
-			log.Printf("[CRITAL]%s provider set clb listener rule list fail, reason:%s\n ", logId, e.Error())
-			return retryError(e)
-		}
-
-		output, ok := d.GetOk("result_output_file")
-		if ok && output.(string) != "" {
-			if e := writeToFile(output.(string), ruleList); e != nil {
-				return retryError(e)
-			}
-		}
+		rules = results
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read clb listener rules failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	ruleList := make([]map[string]interface{}, 0, len(rules))
+	log.Printf("the length %d", len(rules))
+	ids := make([]string, 0, len(rules))
+	for _, rule := range rules {
+		mapping := map[string]interface{}{
+			"clb_id":              clbId,
+			"listener_id":         combinedId,
+			"rule_id":             *rule.LocationId,
+			"domain":              *rule.Domain,
+			"url":                 *rule.Url,
+			"session_expire_time": *rule.SessionExpireTime,
+			"scheduler":           *rule.Scheduler,
+		}
+		if rule.HealthCheck != nil {
+			health_check_switch := false
+			if *rule.HealthCheck.HealthSwitch == int64(1) {
+				health_check_switch = true
+			}
+			mapping["health_check_switch"] = health_check_switch
+			mapping["health_check_interval_time"] = *rule.HealthCheck.IntervalTime
+			mapping["health_check_health_num"] = *rule.HealthCheck.HealthNum
+			mapping["health_check_unhealth_num"] = *rule.HealthCheck.UnHealthNum
+			mapping["health_check_http_code"] = *rule.HealthCheck.HttpCode
+			mapping["health_check_http_method"] = *rule.HealthCheck.HttpCheckMethod
+			mapping["health_check_http_domain"] = *rule.HealthCheck.HttpCheckDomain
+			mapping["health_check_http_path"] = *rule.HealthCheck.HttpCheckPath
+		}
+		if rule.Certificate != nil {
+			mapping["certificate_ssl_mode"] = *rule.Certificate.SSLMode
+			mapping["certificate_id"] = *rule.Certificate.CertId
+			mapping["certificate_ca_id"] = *rule.Certificate.CertCaId
+		}
+		ruleList = append(ruleList, mapping)
+		ids = append(ids, *rule.LocationId+"#"+combinedId)
+	}
+
+	d.SetId(dataResourceIdsHash(ids))
+	if e := d.Set("rule_list", ruleList); e != nil {
+		log.Printf("[CRITAL]%s provider set clb listener rule list fail, reason:%s\n ", logId, e.Error())
+		return e
+	}
+
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if e := writeToFile(output.(string), ruleList); e != nil {
+			return e
+		}
+	}
+
 	return nil
 }

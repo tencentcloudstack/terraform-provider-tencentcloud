@@ -161,7 +161,7 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the CLB listener, and available values include 'WRR', 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.",
+				Description:  "Scheduling method of the CLB listener rules, and available values include 'WRR', 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.",
 			},
 		},
 	}
@@ -270,7 +270,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 
 			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
-				return retryError(retryErr)
+				return resource.NonRetryableError(retryErr)
 			}
 		}
 		return nil
@@ -280,18 +280,22 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 	err = nil
+	locationId := ""
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ruleInstance, ruleErr := clbService.DescribeRuleByPara(ctx, clbId, listenerId, domain, url)
 		if ruleErr != nil {
 			return retryError(ruleErr)
 		}
-		d.SetId(*ruleInstance.LocationId + "#" + listenerId + "#" + clbId)
+		locationId = *ruleInstance.LocationId
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read clb listener rule failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+
+	d.SetId(locationId + "#" + listenerId + "#" + clbId)
+
 	return resourceTencentCloudClbListenerRuleRead(d, meta)
 }
 
@@ -314,50 +318,54 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	}
 	//this function is not supported by api, need to be travelled
 	filter := map[string]string{"rule_id": locationId, "listener_id": listenerId, "clb_id": clbId}
+	var instances []*clb.RuleOutput
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		instances, e := clbService.DescribeRulesByFilter(ctx, filter)
+		results, e := clbService.DescribeRulesByFilter(ctx, filter)
 		if e != nil {
 			return retryError(e)
 		}
-		if len(instances) == 0 {
-			return retryError(fmt.Errorf("rule not found!"))
-		}
-		instance := instances[0]
-		d.Set("clb_id", clbId)
-		d.Set("listener_id", listenerId+"#"+clbId)
-		d.Set("domain", instance.Domain)
-		d.Set("rule_id", instance.LocationId)
-		d.Set("url", instance.Url)
-		d.Set("scheduler", instance.Scheduler)
-		d.Set("session_expire_time", instance.SessionExpireTime)
-
-		//health check
-		if instance.HealthCheck != nil {
-			health_check_switch := false
-			if *instance.HealthCheck.HealthSwitch == int64(1) {
-				health_check_switch = true
-			}
-			d.Set("health_check_switch", health_check_switch)
-			d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
-			d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
-			d.Set("health_check_health_num", instance.HealthCheck.HealthNum)
-			d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
-			d.Set("health_check_http_method", stringToPointer(strings.ToUpper(*instance.HealthCheck.HttpCheckMethod)))
-			d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
-			d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
-			d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
-		}
-
-		if instance.Certificate != nil {
-			d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
-			d.Set("certificate_id", instance.Certificate.CertId)
-			d.Set("certificate_ca_id", instance.Certificate.CertCaId)
-		}
+		instances = results
 		return nil
+
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read clb listener rule failed, reason:%s\n ", logId, err.Error())
 		return err
+	}
+
+	if len(instances) == 0 {
+		return fmt.Errorf("rule not found!")
+	}
+	instance := instances[0]
+	d.Set("clb_id", clbId)
+	d.Set("listener_id", listenerId+"#"+clbId)
+	d.Set("domain", instance.Domain)
+	d.Set("rule_id", instance.LocationId)
+	d.Set("url", instance.Url)
+	d.Set("scheduler", instance.Scheduler)
+	d.Set("session_expire_time", instance.SessionExpireTime)
+
+	//health check
+	if instance.HealthCheck != nil {
+		health_check_switch := false
+		if *instance.HealthCheck.HealthSwitch == int64(1) {
+			health_check_switch = true
+		}
+		d.Set("health_check_switch", health_check_switch)
+		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
+		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
+		d.Set("health_check_health_num", instance.HealthCheck.HealthNum)
+		d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
+		d.Set("health_check_http_method", stringToPointer(strings.ToUpper(*instance.HealthCheck.HttpCheckMethod)))
+		d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
+		d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
+		d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
+	}
+
+	if instance.Certificate != nil {
+		d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
+		d.Set("certificate_id", instance.Certificate.CertId)
+		d.Set("certificate_ca_id", instance.Certificate.CertCaId)
 	}
 
 	return nil
@@ -416,16 +424,8 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 	if d.HasChange("scheduler") {
 		changed = true
 		scheduler = d.Get("scheduler").(string)
-	}
-	if d.HasChange("session_expire_time") {
-		changed = true
-		sessionExpireTime = d.Get("session_expire_time").(int)
-	}
-	if d.HasChange("scheduler") {
-		changed = true
-		scheduler = d.Get("scheduler").(string)
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
-			return fmt.Errorf("Scheduler can only be set with listener protocol TCP/UDP or rule of listener HTTP/HTTPS")
+			return fmt.Errorf("Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS")
 		}
 		request.Scheduler = stringToPointer(scheduler)
 	}
@@ -468,7 +468,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 				requestId := *response.Response.RequestId
 				retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 				if retryErr != nil {
-					return retryError(retryErr)
+					return resource.NonRetryableError(retryErr)
 				}
 			}
 			return nil

@@ -118,44 +118,46 @@ func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta inte
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	var redirections []*map[string]string
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		redirections, e := clbService.DescribeRedirectionsByFilter(ctx, params)
+		results, e := clbService.DescribeRedirectionsByFilter(ctx, params)
 		if e != nil {
 			return retryError(e)
 		}
-
-		redirectionList := make([]map[string]interface{}, 0, len(redirections))
-		ids := make([]string, 0, len(redirections))
-		for _, rewrite := range redirections {
-			mapping := map[string]interface{}{
-				"clb_id":                 (*rewrite)["clb_id"],
-				"source_listener_id":     (*rewrite)["source_listener_id"] + "#" + (*rewrite)["clb_id"],
-				"target_listener_id":     (*rewrite)["target_listener_id"] + "#" + (*rewrite)["clb_id"],
-				"rewrite_source_rule_id": (*rewrite)["rewrite_source_rule_id"] + "#" + (*rewrite)["source_listener_id"] + "#" + (*rewrite)["clb_id"],
-				"rewrite_target_rule_id": (*rewrite)["rewrite_target_rule_id"] + "#" + (*rewrite)["target_listener_id"] + "#" + (*rewrite)["clb_id"],
-			}
-
-			redirectionList = append(redirectionList, mapping)
-			ids = append(ids, (*rewrite)["rewrite_source_rule_id"]+"#"+(*rewrite)["rewrite_target_rule_id"]+(*rewrite)["source_listener_id"]+"#"+(*rewrite)["target_listener_id"]+"#"+(*rewrite)["clb_id"])
-		}
-
-		d.SetId(dataResourceIdsHash(ids))
-		if e = d.Set("redirection_list", redirectionList); e != nil {
-			log.Printf("[CRITAL]%s provider set redirection list fail, reason:%s\n ", logId, e.Error())
-			return retryError(e)
-		}
-
-		output, ok := d.GetOk("result_output_file")
-		if ok && output.(string) != "" {
-			if e := writeToFile(output.(string), redirectionList); e != nil {
-				return retryError(e)
-			}
-		}
+		redirections = results
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read clb redirections failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	redirectionList := make([]map[string]interface{}, 0, len(redirections))
+	ids := make([]string, 0, len(redirections))
+	for _, rewrite := range redirections {
+		mapping := map[string]interface{}{
+			"clb_id":                 (*rewrite)["clb_id"],
+			"source_listener_id":     (*rewrite)["source_listener_id"] + "#" + (*rewrite)["clb_id"],
+			"target_listener_id":     (*rewrite)["target_listener_id"] + "#" + (*rewrite)["clb_id"],
+			"rewrite_source_rule_id": (*rewrite)["rewrite_source_rule_id"] + "#" + (*rewrite)["source_listener_id"] + "#" + (*rewrite)["clb_id"],
+			"rewrite_target_rule_id": (*rewrite)["rewrite_target_rule_id"] + "#" + (*rewrite)["target_listener_id"] + "#" + (*rewrite)["clb_id"],
+		}
+
+		redirectionList = append(redirectionList, mapping)
+		ids = append(ids, (*rewrite)["rewrite_source_rule_id"]+"#"+(*rewrite)["rewrite_target_rule_id"]+(*rewrite)["source_listener_id"]+"#"+(*rewrite)["target_listener_id"]+"#"+(*rewrite)["clb_id"])
+	}
+
+	d.SetId(dataResourceIdsHash(ids))
+	if e := d.Set("redirection_list", redirectionList); e != nil {
+		log.Printf("[CRITAL]%s provider set redirection list fail, reason:%s\n ", logId, e.Error())
+		return e
+	}
+
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if e := writeToFile(output.(string), redirectionList); e != nil {
+			return e
+		}
+	}
+
 	return nil
 }

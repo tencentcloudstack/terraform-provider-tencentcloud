@@ -691,7 +691,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if v, ok := d.GetOk("health_check_http_code"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_code can only be set with protocol TCP.")
+			errRet = fmt.Errorf("health_check_http_code can only be set with protocol HTTP/HTTPS.")
 			return
 		} else {
 			healthSetFlag = true
@@ -703,7 +703,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if v, ok := d.GetOk("health_check_http_path"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_path can only be set with protocol TCP")
+			errRet = fmt.Errorf("health_check_http_path can only be set with protocol HTTP/HTTPS")
 			return
 		} else {
 			healthSetFlag = true
@@ -714,7 +714,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if v, ok := d.GetOk("health_check_http_domain"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_domain can only be set with protocol TCP")
+			errRet = fmt.Errorf("health_check_http_domain can only be set with protocol HTTP/HTTPS")
 			return
 		} else {
 			healthSetFlag = true
@@ -725,7 +725,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if v, ok := d.GetOk("health_check_http_method"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_method can only be set with protocol TCP")
+			errRet = fmt.Errorf("health_check_http_method can only be set with protocol HTTP/HTTPS")
 			return
 		} else {
 			healthSetFlag = true

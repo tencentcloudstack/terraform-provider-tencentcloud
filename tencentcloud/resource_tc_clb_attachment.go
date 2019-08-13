@@ -134,31 +134,30 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 		inst := inst_.(map[string]interface{})
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
 	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		requestId := ""
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-			requestId = *response.Response.RequestId
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			requestId = *result.Response.RequestId
 			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
-				return retryError(retryErr)
+				return resource.NonRetryableError(retryErr)
 			}
 		}
-		id := fmt.Sprintf("%s#%v", locationId, d.Get("listener_id"))
-		d.SetId(id)
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s create clb attachment failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	id := fmt.Sprintf("%s#%v", locationId, d.Get("listener_id"))
+	d.SetId(id)
 
 	return resourceTencentCloudClbServerAttachmentRead(d, meta)
 }
@@ -237,7 +236,7 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 			requestId = *response.Response.RequestId
 			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
-				return retryError(retryErr)
+				return resource.NonRetryableError(retryErr)
 			}
 		}
 		return nil
@@ -289,7 +288,7 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 			requestId = *response.Response.RequestId
 			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
-				return retryError(retryErr)
+				return resource.NonRetryableError(retryErr)
 			}
 		}
 		return nil
@@ -345,33 +344,35 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	var instance *clb.ListenerBackend
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		instance, e := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+		result, e := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
 		if e != nil {
 			return retryError(e)
 		}
-
-		d.Set("clb_id", clbId)
-		d.Set("listener_id", listenerId+"#"+clbId)
-		d.Set("protocol_type", instance.Protocol)
-
-		if *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
-			d.Set("rule_id", locationId+"#"+listenerId+"#"+clbId)
-			if len(instance.Rules) > 0 {
-				for _, loc := range instance.Rules {
-					if locationId == "" || locationId == *loc.LocationId {
-						d.Set("targets", flattenBackendList(loc.Targets))
-					}
-				}
-			}
-		} else if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
-			d.Set("targets", flattenBackendList(instance.Targets))
-		}
+		instance = result
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read clb attachment failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	d.Set("clb_id", clbId)
+	d.Set("listener_id", listenerId+"#"+clbId)
+	d.Set("protocol_type", instance.Protocol)
+
+	if *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
+		d.Set("rule_id", locationId+"#"+listenerId+"#"+clbId)
+		if len(instance.Rules) > 0 {
+			for _, loc := range instance.Rules {
+				if locationId == "" || locationId == *loc.LocationId {
+					d.Set("targets", flattenBackendList(loc.Targets))
+				}
+			}
+		}
+	} else if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
+		d.Set("targets", flattenBackendList(instance.Targets))
+	}
+
 	return nil
 }

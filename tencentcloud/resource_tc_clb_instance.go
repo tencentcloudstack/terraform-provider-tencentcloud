@@ -182,34 +182,35 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 	clbId := ""
+	var response *clb.CreateLoadBalancerResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateLoadBalancer(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateLoadBalancer(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-			requestId := *response.Response.RequestId
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			requestId := *result.Response.RequestId
 
 			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
 				return retryError(retryErr)
 			}
 		}
-		if len(response.Response.LoadBalancerIds) < 1 {
-			return retryError(fmt.Errorf("load balancer id is nil"))
-		}
-		d.SetId(*response.Response.LoadBalancerIds[0])
-		clbId = *response.Response.LoadBalancerIds[0]
-
+		response = result
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s create clb instance failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	if len(response.Response.LoadBalancerIds) < 1 {
+		return fmt.Errorf("load balancer id is nil")
+	}
+	d.SetId(*response.Response.LoadBalancerIds[0])
+	clbId = *response.Response.LoadBalancerIds[0]
 
 	if v, ok := d.GetOk("security_groups"); ok {
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
@@ -289,27 +290,29 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	var instance *clb.LoadBalancer
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		instance, e := clbService.DescribeLoadBalancerById(ctx, clbId)
+		result, e := clbService.DescribeLoadBalancerById(ctx, clbId)
 		if e != nil {
 			return retryError(e)
 		}
-
-		d.Set("network_type", instance.LoadBalancerType)
-		d.Set("clb_name", instance.LoadBalancerName)
-		d.Set("subnet_id", instance.SubnetId)
-		d.Set("vpc_id", instance.VpcId)
-		d.Set("target_region_info_region", instance.TargetRegionInfo.Region)
-		d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
-		d.Set("project_id", instance.ProjectId)
-		d.Set("security_groups", flattenStringList(instance.SecureGroups))
-		d.Set("tags", flattenClbTagsMapping(instance.Tags))
+		instance = result
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read clb instance failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+
+	d.Set("network_type", instance.LoadBalancerType)
+	d.Set("clb_name", instance.LoadBalancerName)
+	d.Set("subnet_id", instance.SubnetId)
+	d.Set("vpc_id", instance.VpcId)
+	d.Set("target_region_info_region", instance.TargetRegionInfo.Region)
+	d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
+	d.Set("project_id", instance.ProjectId)
+	d.Set("security_groups", flattenStringList(instance.SecureGroups))
+	d.Set("tags", flattenClbTagsMapping(instance.Tags))
 	return nil
 }
 
@@ -460,7 +463,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s update clb instance failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete clb instance failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 

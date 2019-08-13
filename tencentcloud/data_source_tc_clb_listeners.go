@@ -20,6 +20,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
 func dataSourceTencentCloudClbListeners() *schema.Resource {
@@ -133,7 +134,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"scheduler": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
+							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
 						},
 						"sni_switch": {
 							Type:        schema.TypeBool,
@@ -170,72 +171,74 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	var listeners []*clb.Listener
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		listeners, e := clbService.DescribeListenersByFilter(ctx, params)
+		results, e := clbService.DescribeListenersByFilter(ctx, params)
 		if e != nil {
 			return retryError(e)
 		}
-
-		listenerList := make([]map[string]interface{}, 0, len(listeners))
-		ids := make([]string, 0, len(listeners))
-		for _, listener := range listeners {
-			mapping := map[string]interface{}{
-				"clb_id":        clbId,
-				"listener_id":   *listener.ListenerId,
-				"listener_name": *listener.ListenerName,
-				"protocol":      *listener.Protocol,
-				"port":          *listener.Port,
-			}
-			if listener.SessionExpireTime != nil {
-				mapping["session_expire_time"] = *listener.SessionExpireTime
-			}
-			if listener.SniSwitch != nil {
-				sniSwitch := false
-				if *listener.SniSwitch == int64(1) {
-					sniSwitch = true
-				}
-				mapping["sni_switch"] = sniSwitch
-			}
-			if listener.Scheduler != nil {
-				mapping["scheduler"] = *listener.Scheduler
-			}
-			if listener.HealthCheck != nil {
-				health_check_switch := false
-				if *listener.HealthCheck.HealthSwitch == int64(1) {
-					health_check_switch = true
-				}
-				mapping["health_check_switch"] = health_check_switch
-				mapping["health_check_time_out"] = *listener.HealthCheck.TimeOut
-				mapping["health_check_interval_time"] = *listener.HealthCheck.IntervalTime
-				mapping["health_check_health_num"] = *listener.HealthCheck.HealthNum
-				mapping["health_check_unhealth_num"] = *listener.HealthCheck.UnHealthNum
-			}
-			if listener.Certificate != nil {
-				mapping["certificate_ssl_mode"] = *listener.Certificate.SSLMode
-				mapping["certificate_id"] = *listener.Certificate.CertId
-				mapping["certificate_ca_id"] = *listener.Certificate.CertCaId
-			}
-			listenerList = append(listenerList, mapping)
-			ids = append(ids, *listener.ListenerId+"#"+clbId)
-		}
-
-		d.SetId(dataResourceIdsHash(ids))
-		if e = d.Set("listener_list", listenerList); e != nil {
-			log.Printf("[CRITAL]%s provider set clb listener list fail, reason:%s\n ", logId, e.Error())
-			return retryError(e)
-		}
-
-		output, ok := d.GetOk("result_output_file")
-		if ok && output.(string) != "" {
-			if e := writeToFile(output.(string), listenerList); e != nil {
-				return retryError(e)
-			}
-		}
+		listeners = results
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read clb listeners failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	listenerList := make([]map[string]interface{}, 0, len(listeners))
+	ids := make([]string, 0, len(listeners))
+	for _, listener := range listeners {
+		mapping := map[string]interface{}{
+			"clb_id":        clbId,
+			"listener_id":   *listener.ListenerId,
+			"listener_name": *listener.ListenerName,
+			"protocol":      *listener.Protocol,
+			"port":          *listener.Port,
+		}
+		if listener.SessionExpireTime != nil {
+			mapping["session_expire_time"] = *listener.SessionExpireTime
+		}
+		if listener.SniSwitch != nil {
+			sniSwitch := false
+			if *listener.SniSwitch == int64(1) {
+				sniSwitch = true
+			}
+			mapping["sni_switch"] = sniSwitch
+		}
+		if listener.Scheduler != nil {
+			mapping["scheduler"] = *listener.Scheduler
+		}
+		if listener.HealthCheck != nil {
+			health_check_switch := false
+			if *listener.HealthCheck.HealthSwitch == int64(1) {
+				health_check_switch = true
+			}
+			mapping["health_check_switch"] = health_check_switch
+			mapping["health_check_time_out"] = *listener.HealthCheck.TimeOut
+			mapping["health_check_interval_time"] = *listener.HealthCheck.IntervalTime
+			mapping["health_check_health_num"] = *listener.HealthCheck.HealthNum
+			mapping["health_check_unhealth_num"] = *listener.HealthCheck.UnHealthNum
+		}
+		if listener.Certificate != nil {
+			mapping["certificate_ssl_mode"] = *listener.Certificate.SSLMode
+			mapping["certificate_id"] = *listener.Certificate.CertId
+			mapping["certificate_ca_id"] = *listener.Certificate.CertCaId
+		}
+		listenerList = append(listenerList, mapping)
+		ids = append(ids, *listener.ListenerId+"#"+clbId)
+	}
+
+	d.SetId(dataResourceIdsHash(ids))
+	if e := d.Set("listener_list", listenerList); e != nil {
+		log.Printf("[CRITAL]%s provider set clb listener list fail, reason:%s\n ", logId, e.Error())
+		return e
+	}
+
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if e := writeToFile(output.(string), listenerList); e != nil {
+			return e
+		}
+	}
+
 	return nil
 }
