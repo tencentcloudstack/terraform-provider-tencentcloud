@@ -105,7 +105,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
 
 The following arguments are supported:
 
-* `image_id` - (Required) The Image to use for the instance. CVM instance's image can be replaced via changing 'image_id'.
+* `image_id` - (Required,ForceNew) The Image to use for the instance. CVM instance's image can be replaced via changing 'image_id'.
 
 * `availability_zone` - (Required) The available zone that the CVM instance locates at.
 

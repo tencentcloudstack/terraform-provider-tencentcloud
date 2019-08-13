@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"strconv"
 	"time"
@@ -93,6 +94,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"image_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"availability_zone": {
 				Type:     schema.TypeString,
@@ -493,6 +495,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+
+		ratelimit.Check("create")
+
 		response, err := client.SendRequest("cvm", params)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -561,6 +566,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 	params["InstanceIds.0"] = instanceId
 
 	client := m.(*TencentCloudClient).commonConn
+	ratelimit.Check("read")
 	response, err := client.SendRequest("cvm", params)
 	if err != nil {
 		return err
@@ -735,6 +741,9 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 }
 
 func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, m interface{}) (err error) {
+
+	ratelimit.Check("update")
+
 	client := m.(*TencentCloudClient).commonConn
 	instanceId := d.Id()
 
@@ -854,6 +863,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) e
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check("delete")
 		response, err := client.SendRequest("cvm", params)
 		if err != nil {
 			return resource.NonRetryableError(err)
