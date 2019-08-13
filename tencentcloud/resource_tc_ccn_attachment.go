@@ -101,7 +101,7 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ccn_attachment.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -142,7 +142,7 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ccn_attachment.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -183,7 +183,7 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ccn_attachment.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}

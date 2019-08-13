@@ -120,7 +120,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 
 	networkType := d.Get("network_type").(string)
 	clbName := d.Get("clb_name").(string)
@@ -258,7 +258,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_instance.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()
@@ -288,7 +288,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 
 	d.Partial(true)
 
@@ -399,7 +399,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Id()
@@ -417,7 +417,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 }
 
 func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	flag = false
 	clbService := ClbService{

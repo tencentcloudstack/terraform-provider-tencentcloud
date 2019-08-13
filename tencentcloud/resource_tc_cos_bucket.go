@@ -260,7 +260,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Get("bucket").(string)
@@ -281,7 +281,7 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Id()
@@ -327,7 +327,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.update")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn.UseCosClient()
@@ -378,7 +378,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Id()

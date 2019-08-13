@@ -96,7 +96,7 @@ func resourceTencentCloudDcGatewayInstance() *schema.Resource {
 func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dc_gateway.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -142,7 +142,7 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dc_gateway.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -171,7 +171,7 @@ func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{})
 func resourceTencentCloudDcGatewayUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dc_gateway.update")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -186,7 +186,7 @@ func resourceTencentCloudDcGatewayUpdate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudDcGatewayDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dc_gateway.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}

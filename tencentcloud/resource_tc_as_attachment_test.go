@@ -39,7 +39,7 @@ func TestAccTencentCloudAsAttachment(t *testing.T) {
 
 func testAccCheckAsAttachmentExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]
@@ -59,7 +59,7 @@ func testAccCheckAsAttachmentExists(n string) resource.TestCheckFunc {
 }
 
 func testAccCheckAsAttachmentDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	asService := AsService{

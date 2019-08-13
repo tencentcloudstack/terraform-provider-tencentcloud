@@ -19,6 +19,8 @@ import (
 
 const FILED_SP = "#"
 
+var contextNil context.Context = nil
+
 var firstLogTime = ""
 var logAtomaticId int64 = 0
 

@@ -16,7 +16,7 @@ install:
 - make tools
 
 script:
-# - make lint
+- make lint
 - make test
 - make website-lint
 - make website-test

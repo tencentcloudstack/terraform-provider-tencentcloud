@@ -110,7 +110,7 @@ func dataSourceTencentCloudMysqlParameterList() *schema.Resource {
 func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_mysql_parameter_list.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	mysqlService := MysqlService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

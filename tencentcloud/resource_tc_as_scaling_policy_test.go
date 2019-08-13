@@ -55,7 +55,7 @@ func TestAccTencentCloudAsScalingPolicy(t *testing.T) {
 
 func testAccCheckAsScalingPolicyExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]
@@ -75,7 +75,7 @@ func testAccCheckAsScalingPolicyExists(n string) resource.TestCheckFunc {
 }
 
 func testAccCheckAsScalingPolicyDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	asService := AsService{

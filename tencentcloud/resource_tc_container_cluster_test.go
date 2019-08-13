@@ -13,8 +13,9 @@ import (
 
 func TestAccTencentCloudContainerCluster_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckContainerClusterDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudContainerClusterConfig_basic,
@@ -25,6 +26,10 @@ func TestAccTencentCloudContainerCluster_basic(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccCheckContainerClusterDestroy(s *terraform.State) error {
+	return nil
 }
 
 // For ordinary usage, it doesn't require all nodes in a cluster to be in normal state.

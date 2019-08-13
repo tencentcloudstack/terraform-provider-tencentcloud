@@ -136,7 +136,7 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_redis_instances.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}

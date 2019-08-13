@@ -1271,7 +1271,7 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 	}
 
 	// policy.Protocol always not nil
-	if strings.ToLower(*policy.Protocol) != strings.ToLower(*info.Protocol) {
+	if !strings.EqualFold(*policy.Protocol, *info.Protocol) {
 		return false
 	}
 
@@ -1280,7 +1280,7 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 		return false
 	}
 
-	if strings.ToUpper(*policy.Action) != strings.ToUpper(info.Action) {
+	if !strings.EqualFold(*policy.Action, info.Action) {
 		return false
 	}
 

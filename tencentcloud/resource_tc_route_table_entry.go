@@ -95,7 +95,7 @@ func resourceTencentCloudVpcRouteEntry() *schema.Resource {
 func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_route_table_entry.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -146,7 +146,7 @@ func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interf
 func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_route_table_entry.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -189,7 +189,7 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 func resourceTencentCloudVpcRouteEntryDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_route_table_entry.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}

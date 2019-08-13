@@ -51,7 +51,7 @@ func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
 }
 
 func testAccCheckMongodbInstanceDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mongodbService := MongodbService{
@@ -72,7 +72,7 @@ func testAccCheckMongodbInstanceDestroy(s *terraform.State) error {
 
 func testAccCheckMongodbInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]
