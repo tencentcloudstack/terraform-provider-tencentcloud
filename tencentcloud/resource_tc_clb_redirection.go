@@ -111,7 +111,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 			requestId := *response.Response.RequestId
-			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
 				return resource.NonRetryableError(retryErr)
 			}

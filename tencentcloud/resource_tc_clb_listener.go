@@ -239,7 +239,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			requestId := *result.Response.RequestId
 
-			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
 				return resource.NonRetryableError(retryErr)
 			}
@@ -407,7 +407,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 				requestId := *response.Response.RequestId
-				retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 				if retryErr != nil {
 					return resource.NonRetryableError(retryErr)
 				}

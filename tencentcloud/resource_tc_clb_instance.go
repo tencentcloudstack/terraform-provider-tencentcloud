@@ -201,7 +201,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			requestId := *result.Response.RequestId
 
-			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
 				return retryError(retryErr)
 			}
@@ -239,7 +239,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 					logId, sgRequest.GetAction(), sgRequest.ToJsonString(), sgResponse.ToJsonString())
 				requestId := *sgResponse.Response.RequestId
 
-				retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 				if retryErr != nil {
 					return retryError(retryErr)
 				}
@@ -272,7 +272,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 					logId, mRequest.GetAction(), mRequest.ToJsonString(), mResponse.ToJsonString())
 				requestId := *mResponse.Response.RequestId
 
-				retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 				if retryErr != nil {
 					return retryError(retryErr)
 				}
@@ -385,7 +385,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 				requestId := *response.Response.RequestId
 
-				retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 				if retryErr != nil {
 					return retryError(retryErr)
 				}
@@ -433,7 +433,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 					logId, sgRequest.GetAction(), sgRequest.ToJsonString(), sgResponse.ToJsonString())
 				requestId := *sgResponse.Response.RequestId
 
-				retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 				if retryErr != nil {
 					return retryError(retryErr)
 				}
