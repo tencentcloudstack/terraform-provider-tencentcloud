@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
@@ -153,6 +154,112 @@ func (me *GaapService) DeleteRealserver(ctx context.Context, id string) error {
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s delete realserver %s failed, reason: %v", logId, id, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) createCertificate(ctx context.Context, certificateType int, content string, name, key *string) (id string, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewCreateCertificateRequest()
+	request.CertificateType = common.Int64Ptr(int64(certificateType))
+	request.CertificateContent = &content
+	request.CertificateAlias = name
+	request.CertificateKey = key
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err := me.client.UseGaapClient().CreateCertificate(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+		if response.Response.CertificateId == nil {
+			err := fmt.Errorf("certificate id is nil")
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		id = *response.Response.CertificateId
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create certiciate failed, reason: %v", logId, err)
+		return "", err
+	}
+
+	return
+}
+
+func (me *GaapService) DescribeCertificateById(ctx context.Context, id string) (certificate *gaap.CertificateDetail, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeCertificateDetailRequest()
+	request.CertificateId = &id
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := me.client.UseGaapClient().DescribeCertificateDetail(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Message == "CertificateId not found" {
+					return nil
+				}
+			}
+
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		certificate = response.Response.CertificateDetail
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read certificate failed, reason: %v", logId, err)
+		return nil, err
+	}
+
+	return
+}
+
+func (me *GaapService) ModifyCertificateName(ctx context.Context, id, name string) error {
+	logId := getLogId(ctx)
+
+	request := gaap.NewModifyCertificateAttributesRequest()
+	request.CertificateId = &id
+	request.CertificateAlias = &name
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := me.client.UseGaapClient().ModifyCertificateAttributes(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify certificate name failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) DeleteCertificate(ctx context.Context, id string) error {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDeleteCertificateRequest()
+	request.CertificateId = &id
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := me.client.UseGaapClient().DeleteCertificate(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete certificate failed, reason: %v", logId, err)
 		return err
 	}
 
