@@ -232,7 +232,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
   listener_name              = "listener_tcp"
   port                       = 44
-  protocol                   = "UDP"
+  protocol                   = "TCP"
   health_check_switch        = true
   health_check_time_out      = 30
   health_check_interval_time = 100

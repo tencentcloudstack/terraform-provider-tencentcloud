@@ -110,7 +110,7 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	requestId := *response.Response.RequestId
-	retryErr := retrySet(requestId, me.client.UseClbClient())
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
 	if retryErr != nil {
 		return retryErr
 	}
@@ -214,7 +214,7 @@ func (me *ClbService) DeleteListenerById(ctx context.Context, clbId string, list
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	requestId := *response.Response.RequestId
-	retryErr := retrySet(requestId, me.client.UseClbClient())
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
 	if retryErr != nil {
 		return retryErr
 	}
@@ -358,7 +358,7 @@ func (me *ClbService) DeleteRuleById(ctx context.Context, clbId string, listener
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	requestId := *response.Response.RequestId
-	retryErr := retrySet(requestId, me.client.UseClbClient())
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
 	if retryErr != nil {
 		return retryErr
 	}
@@ -506,7 +506,7 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	requestId := *response.Response.RequestId
-	retryErr := retrySet(requestId, me.client.UseClbClient())
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
 	if retryErr != nil {
 		return retryErr
 	}
@@ -657,7 +657,7 @@ func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId strin
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	requestId := *response.Response.RequestId
-	retryErr := retrySet(requestId, me.client.UseClbClient())
+	retryErr := waitForTaskFinish(requestId, me.client.UseClbClient())
 	if retryErr != nil {
 		return retryErr
 	}
@@ -703,7 +703,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if v, ok := d.GetOk("health_check_http_code"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_code can only be set with protocol TCP.")
+			errRet = fmt.Errorf("health_check_http_code can only be set with protocol HTTP/HTTPS.")
 			return
 		} else {
 			healthSetFlag = true
@@ -715,7 +715,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if v, ok := d.GetOk("health_check_http_path"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_path can only be set with protocol TCP")
+			errRet = fmt.Errorf("health_check_http_path can only be set with protocol HTTP/HTTPS")
 			return
 		} else {
 			healthSetFlag = true
@@ -726,7 +726,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if v, ok := d.GetOk("health_check_http_domain"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_domain can only be set with protocol TCP")
+			errRet = fmt.Errorf("health_check_http_domain can only be set with protocol HTTP/HTTPS")
 			return
 		} else {
 			healthSetFlag = true
@@ -737,7 +737,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if v, ok := d.GetOk("health_check_http_method"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health_check_http_method can only be set with protocol TCP")
+			errRet = fmt.Errorf("health_check_http_method can only be set with protocol HTTP/HTTPS")
 			return
 		} else {
 			healthSetFlag = true
@@ -749,7 +749,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	if healthSetFlag {
 		if !(((protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) && applyType == HEALTH_APPLY_TYPE_LISTENER) || ((protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) && applyType == HEALTH_APPLY_TYPE_RULE)) {
 			healthSetFlag = false
-			errRet = fmt.Errorf("health para can only be set with TCP/UDP listener or rule of HTTP/HTTPS listener")
+			errRet = fmt.Errorf("health para can only be set with TCP/UDP/TCP_SSL listener or rule of HTTP/HTTPS listener")
 			return
 		}
 		healthCheckPara = &healthCheck
@@ -799,7 +799,7 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData) (cer
 
 	return
 }
-func retrySet(requestId string, meta *clb.Client) (err error) {
+func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 	taskQueryRequest := clb.NewDescribeTaskStatusRequest()
 	taskQueryRequest.TaskId = &requestId
 	err = resource.Retry(10*time.Minute, func() *resource.RetryError {

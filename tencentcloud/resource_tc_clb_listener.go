@@ -38,6 +38,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
@@ -138,6 +139,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
+				Default:      CLB_LISTENER_SCHEDULER_WRR,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
 				Description:  "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of HTTP and 'HTTPS' protocol additionally supports the 'IP Hash' method.",
@@ -196,9 +198,6 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	}
 	scheduler := ""
 	if v, ok := d.GetOk("scheduler"); ok {
-		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) {
-			return fmt.Errorf("Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS")
-		}
 		if v == CLB_LISTENER_SCHEDULER_IP_HASH {
 			return fmt.Errorf("Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS")
 		}
@@ -228,26 +227,36 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 			request.SniSwitch = &vvv
 		}
 	}
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateListener(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-		requestId := *response.Response.RequestId
+	var response *clb.CreateListenerResponse
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateListener(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			requestId := *result.Response.RequestId
 
-		retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-		if retryErr != nil {
-			return retryErr
+			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			if retryErr != nil {
+				return resource.NonRetryableError(retryErr)
+			}
 		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create clb listener failed, reason:%s\n ", logId, err.Error())
+		return err
 	}
 	if len(response.Response.ListenerIds) < 1 {
-		return fmt.Errorf("listener id is nil")
+		return fmt.Errorf("listener id is wrong")
 	}
 	listenerId := *response.Response.ListenerIds[0]
 	d.SetId(listenerId + "#" + clbId)
+
 	return resourceTencentCloudClbListenerRead(d, meta)
 }
 
@@ -265,17 +274,27 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	instance, err := clbService.DescribeListenerById(ctx, d.Id())
+	var instance *clb.Listener
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := clbService.DescribeListenerById(ctx, d.Id())
+		if e != nil {
+			return retryError(e)
+		}
+		instance = result
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read clb listener failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
 	d.Set("clb_id", items[1])
 	d.Set("listener_name", instance.ListenerName)
 	d.Set("port", instance.Port)
 	d.Set("protocol", instance.Protocol)
 	d.Set("session_expire_time", instance.SessionExpireTime)
-	d.Set("scheduler", instance.Scheduler)
+	if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
+		d.Set("scheduler", instance.Scheduler)
+	}
 	d.Set("sni_switch", instance.SniSwitch)
 
 	//health check
@@ -377,21 +396,27 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if changed {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyListener(request)
 
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyListener(request)
-
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			return err
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-			requestId := *response.Response.RequestId
-			retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-			if retryErr != nil {
-				return retryErr
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				requestId := *response.Response.RequestId
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				if retryErr != nil {
+					return resource.NonRetryableError(retryErr)
+				}
 			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update clb listener failed, reason:%s\n ", logId, err.Error())
+			return err
 		}
 	}
 
@@ -416,10 +441,16 @@ func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interfac
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-
-	err := clbService.DeleteListenerById(ctx, clbId, listenerId)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := clbService.DeleteListenerById(ctx, clbId, listenerId)
+		if e != nil {
+			log.Printf("[CRITAL]%s reason[%s]\n", logId, e.Error())
+			return retryError(e)
+		}
+		return nil
+	})
 	if err != nil {
-		log.Printf("[CRITAL]%s reason[%s]\n", logId, err.Error())
+		log.Printf("[CRITAL]%s delete clb listener failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
