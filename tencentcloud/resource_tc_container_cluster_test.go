@@ -49,10 +49,10 @@ func checkContainerClusterInstancesAllNormal(n string) resource.TestCheckFunc {
 		err := resource.Retry(20*time.Minute, func() *resource.RetryError {
 			resp, err := conn.DescribeCluster(req)
 			if err != nil {
+				if _, ok := err.(*common.APIError); ok {
+					return resource.NonRetryableError(err)
+				}
 				return resource.RetryableError(err)
-			}
-			if _, ok := err.(*common.APIError); ok {
-				return resource.NonRetryableError(err)
 			}
 			if *resp.Data.Clusters[0].NodeStatus == "AllNormal" {
 				return nil

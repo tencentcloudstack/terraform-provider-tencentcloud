@@ -124,7 +124,7 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 		availabilityZone string = ""
 		name             string = ""
 		cidrBlock        string = ""
-		isMulticast      bool   = true
+		isMulticast      bool
 		routeTableId     string = ""
 	)
 	if temp, ok := d.GetOk("vpc_id"); ok {
@@ -235,8 +235,8 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name        string = ""
-		isMulticast bool   = true
+		name        string
+		isMulticast bool
 	)
 	old, now := d.GetChange("name")
 	if d.HasChange("name") {

@@ -595,6 +595,7 @@ resource "tencentcloud_instance" "foo" {
 }
 `
 
+/*
 const testAccInstanceConfigChargeTypePrepaid = `
 data "tencentcloud_image" "myimage" {
   os_name = "centos"
@@ -614,6 +615,7 @@ resource "tencentcloud_instance" "foo" {
   instance_charge_type_prepaid_period = 1
 }
 `
+*/
 
 const testAccInstanceConfigWithInternet = `
 data "tencentcloud_image" "my_favorate_image" {

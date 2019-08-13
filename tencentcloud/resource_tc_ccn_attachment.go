@@ -130,7 +130,10 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 	}
 
 	m := md5.New()
-	m.Write([]byte(ccnId + instanceType + instanceRegion + instanceId))
+	_, err = m.Write([]byte(ccnId + instanceType + instanceRegion + instanceId))
+	if err != nil {
+		return err
+	}
 	d.SetId(fmt.Sprintf("%x", m.Sum(nil)))
 
 	return resourceTencentCloudCcnAttachmentRead(d, meta)

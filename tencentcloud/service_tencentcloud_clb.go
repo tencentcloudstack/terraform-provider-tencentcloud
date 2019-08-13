@@ -3,10 +3,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -332,7 +333,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 			break
 		}
 	}
-	if find_flag == false {
+	if !find_flag {
 		errRet = fmt.Errorf("rule not found!")
 		return
 	} else {
@@ -745,7 +746,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 
 	}
 
-	if healthSetFlag == true {
+	if healthSetFlag {
 		if !(((protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) && applyType == HEALTH_APPLY_TYPE_LISTENER) || ((protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) && applyType == HEALTH_APPLY_TYPE_RULE)) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health para can only be set with TCP/UDP listener or rule of HTTP/HTTPS listener")
@@ -782,13 +783,13 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData) (cer
 		certificateInput.CertCaId = stringToPointer(v.(string))
 	}
 
-	if certificateSetFlag == true && certificateId == "" {
+	if certificateSetFlag && certificateId == "" {
 		certificateSetFlag = false
 		errRet = fmt.Errorf("certificatedId is null")
 		return
 	}
 
-	if certificateSetFlag == true && certificateSSLMode == CERT_SSL_MODE_MUT && certificateCaId == "" {
+	if certificateSetFlag && certificateSSLMode == CERT_SSL_MODE_MUT && certificateCaId == "" {
 		certificateSetFlag = false
 		errRet = fmt.Errorf("Certificate_ca_key is null and the ssl mode is 'MUTUAL' ")
 		return

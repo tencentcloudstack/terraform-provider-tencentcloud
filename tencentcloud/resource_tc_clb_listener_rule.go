@@ -230,7 +230,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	if healthErr != nil {
 		return healthErr
 	}
-	if healthSetFlag == true {
+	if healthSetFlag {
 		rule.HealthCheck = healthCheck
 	}
 
@@ -238,7 +238,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	if certErr != nil {
 		return certErr
 	}
-	if certificateSetFlag == true {
+	if certificateSetFlag {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			return fmt.Errorf("certificate para can only be set with rule of linstener with protocol 'HTTPS'")
 		}
@@ -380,10 +380,6 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		changed = true
 		scheduler = d.Get("scheduler").(string)
 	}
-	if d.HasChange("session_expire_time") {
-		changed = true
-		sessionExpireTime = d.Get("session_expire_time").(int)
-	}
 	if d.HasChange("scheduler") {
 		changed = true
 		scheduler = d.Get("scheduler").(string)
@@ -412,7 +408,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		return healthErr
 	}
 
-	if healthSetFlag == true {
+	if healthSetFlag {
 		changed = true
 		request.HealthCheck = healthCheck
 	}

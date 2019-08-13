@@ -54,6 +54,9 @@ func testAccCheckVpcRouteEntryExists(r string) resource.TestCheckFunc {
 		routeTableId := items[1]
 
 		entryId, err := strconv.ParseUint(items[0], 10, 64)
+		if err != nil {
+			return err
+		}
 
 		info, has, err := service.DescribeRouteTable(ctx, routeTableId)
 
@@ -95,6 +98,9 @@ func testAccCheckVpcRouteEntryDestroy(s *terraform.State) error {
 		routeTableId := items[1]
 
 		entryId, err := strconv.ParseUint(items[0], 10, 64)
+		if err != nil {
+			return err
+		}
 
 		info, has, err := service.DescribeRouteTable(ctx, routeTableId)
 

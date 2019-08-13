@@ -102,7 +102,7 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 		name        string = ""
 		cidrBlock   string = ""
 		dnsServers         = make([]string, 0, 4)
-		isMulticast bool   = true
+		isMulticast bool
 	)
 	if temp, ok := d.GetOk("name"); ok {
 		name = temp.(string)
@@ -182,10 +182,10 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name        string = ""
-		dnsServers         = make([]string, 0, 4)
-		slice              = make([]interface{}, 0, 4)
-		isMulticast bool   = true
+		name        string
+		dnsServers  = make([]string, 0, 4)
+		slice       []interface{}
+		isMulticast bool
 	)
 
 	old, now := d.GetChange("name")

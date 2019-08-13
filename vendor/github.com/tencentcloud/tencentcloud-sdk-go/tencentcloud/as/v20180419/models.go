@@ -294,7 +294,7 @@ type CreateAutoScalingGroupRequest struct {
 	// 应用型负载均衡器列表，目前长度上限为5，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers" list`
 
-	// 子网ID列表，VPC场景下必须指定子网
+	// 子网ID列表，VPC场景下必须指定子网。多个子网以填写顺序为优先级，依次进行尝试，直至可以成功创建实例。
 	SubnetIds []*string `json:"SubnetIds,omitempty" name:"SubnetIds" list`
 
 	// 销毁策略，目前长度上限为1。取值包括 OLDEST_INSTANCE 和 NEWEST_INSTANCE，默认取值为 OLDEST_INSTANCE。
@@ -302,7 +302,7 @@ type CreateAutoScalingGroupRequest struct {
 	// <br><li> NEWEST_INSTANCE，优先销毁伸缩组中最新的实例。
 	TerminationPolicies []*string `json:"TerminationPolicies,omitempty" name:"TerminationPolicies" list`
 
-	// 可用区列表，基础网络场景下必须指定可用区
+	// 可用区列表，基础网络场景下必须指定可用区。多个可用区以填写顺序为优先级，依次进行尝试，直至可以成功创建实例。
 	Zones []*string `json:"Zones,omitempty" name:"Zones" list`
 
 	// 重试策略，取值包括 IMMEDIATE_RETRY、 INCREMENTAL_INTERVALS、NO_RETRY，默认取值为 IMMEDIATE_RETRY。
@@ -401,7 +401,7 @@ type CreateLaunchConfigurationRequest struct {
 	// 实例的市场相关选项，如竞价实例相关参数，若指定实例的付费模式为竞价付费则该参数必传。
 	InstanceMarketOptions *InstanceMarketOptionsRequest `json:"InstanceMarketOptions,omitempty" name:"InstanceMarketOptions"`
 
-	// 实例机型列表，不同实例机型指定了不同的资源规格，最多支持5种实例机型。
+	// 实例机型列表，不同实例机型指定了不同的资源规格，最多支持10种实例机型。
 	// `InstanceType`和`InstanceTypes`参数互斥，二者必填一个且只能填写一个。
 	InstanceTypes []*string `json:"InstanceTypes,omitempty" name:"InstanceTypes" list`
 
@@ -700,7 +700,7 @@ type CreateScheduledActionRequest struct {
 	// 定时任务的结束时间，取值为`北京时间`（UTC+8），按照`ISO8601`标准，格式：`YYYY-MM-DDThh:mm:ss+08:00`。<br><br>此参数与`Recurrence`需要同时指定，到达结束时间之后，定时任务将不再生效。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 定时任务的重复方式。为标准[Cron](https://zh.wikipedia.org/wiki/Cron)格式<br><br>此参数与`EndTime`需要同时指定。
+	// 定时任务的重复方式。为标准 Cron 格式<br><br>此参数与`EndTime`需要同时指定。
 	Recurrence *string `json:"Recurrence,omitempty" name:"Recurrence"`
 }
 
@@ -1697,6 +1697,9 @@ type Instance struct {
 
 	// 版本号
 	VersionNumber *int64 `json:"VersionNumber,omitempty" name:"VersionNumber"`
+
+	// 伸缩组名称
+	AutoScalingGroupName *string `json:"AutoScalingGroupName,omitempty" name:"AutoScalingGroupName"`
 }
 
 type InstanceChargePrepaid struct {
@@ -2240,7 +2243,7 @@ type ModifyScheduledActionRequest struct {
 	// 定时任务的结束时间，取值为`北京时间`（UTC+8），按照`ISO8601`标准，格式：`YYYY-MM-DDThh:mm:ss+08:00`。<br>此参数与`Recurrence`需要同时指定，到达结束时间之后，定时任务将不再生效。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 定时任务的重复方式。为标准[Cron](https://zh.wikipedia.org/wiki/Cron)格式<br>此参数与`EndTime`需要同时指定。
+	// 定时任务的重复方式。为标准 Cron 格式<br>此参数与`EndTime`需要同时指定。
 	Recurrence *string `json:"Recurrence,omitempty" name:"Recurrence"`
 }
 

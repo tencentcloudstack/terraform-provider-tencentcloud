@@ -109,7 +109,7 @@ func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, meta i
 		if e != nil {
 			return retryError(e)
 		}
-		if *storage.Attached == false {
+		if !*storage.Attached {
 			log.Printf("[DEBUG]%s, disk id %s is not attached", logId, storageId)
 			d.SetId("")
 		}
@@ -142,7 +142,7 @@ func resourceTencentCloudCbsStorageAttachmentDelete(d *schema.ResourceData, meta
 		if e != nil {
 			return retryError(e)
 		}
-		if *storage.Attached == false {
+		if !*storage.Attached {
 			log.Printf("[DEBUG]%s, disk id %s is not attached", logId, storageId)
 			return nil
 		}
@@ -175,10 +175,10 @@ func resourceTencentCloudCbsStorageAttachmentDelete(d *schema.ResourceData, meta
 		if e != nil {
 			return retryError(e)
 		}
-		if *storage.Attached == true {
+		if *storage.Attached {
 			return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
 		}
-		if *storage.Attached == false {
+		if !*storage.Attached {
 			return nil
 		}
 		return resource.NonRetryableError(fmt.Errorf("cbs storage status is %s, we won't wait for it finish.", *storage.DiskState))

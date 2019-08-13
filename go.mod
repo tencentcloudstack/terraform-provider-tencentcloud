@@ -12,9 +12,10 @@ require (
 	github.com/hashicorp/terraform v0.12.3
 	github.com/likexian/gokit v0.0.0-20190604165112-68b8a4ba758c
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/tencentcloud/tencentcloud-sdk-go v3.0.75-0.20190716122323-107481b6c7fa+incompatible
+	github.com/tencentcloud/tencentcloud-sdk-go v3.0.81+incompatible
 	github.com/terraform-providers/terraform-provider-template v1.0.0
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	github.com/zqfan/tencentcloud-sdk-go v0.0.0-0.20181105105106-4c76f78ff2e6
+	labix.org/v2/mgo v0.0.0-20140701140051-000000000287 // indirect
 	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 )

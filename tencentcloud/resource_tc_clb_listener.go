@@ -178,7 +178,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	if healthErr != nil {
 		return healthErr
 	}
-	if healthSetFlag == true {
+	if healthSetFlag {
 		request.HealthCheck = healthCheck
 	}
 
@@ -187,7 +187,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	if certErr != nil {
 		return certErr
 	}
-	if certificateSetFlag == true {
+	if certificateSetFlag {
 		request.Certificate = certificateInput
 	} else {
 		if protocol == CLB_LISTENER_PROTOCOL_HTTPS || protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
@@ -362,7 +362,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	if healthErr != nil {
 		return healthErr
 	}
-	if healthSetFlag == true {
+	if healthSetFlag {
 		changed = true
 		request.HealthCheck = healthCheck
 	}
@@ -371,7 +371,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	if certErr != nil {
 		return certErr
 	}
-	if certificateSetFlag == true {
+	if certificateSetFlag {
 		changed = true
 		request.Certificate = certificateInput
 	}

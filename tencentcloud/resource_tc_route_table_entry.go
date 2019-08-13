@@ -108,19 +108,19 @@ func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interf
 		nextHub              = ""
 	)
 
-	if temp, ok := d.GetOk("description"); ok == true {
+	if temp, ok := d.GetOk("description"); ok {
 		description = temp.(string)
 	}
-	if temp, ok := d.GetOk("route_table_id"); ok == true {
+	if temp, ok := d.GetOk("route_table_id"); ok {
 		routeTableId = temp.(string)
 	}
-	if temp, ok := d.GetOk("destination_cidr_block"); ok == true {
+	if temp, ok := d.GetOk("destination_cidr_block"); ok {
 		destinationCidrBlock = temp.(string)
 	}
-	if temp, ok := d.GetOk("next_type"); ok == true {
+	if temp, ok := d.GetOk("next_type"); ok {
 		nextType = temp.(string)
 	}
-	if temp, ok := d.GetOk("next_hub"); ok == true {
+	if temp, ok := d.GetOk("next_hub"); ok {
 		nextHub = temp.(string)
 	}
 

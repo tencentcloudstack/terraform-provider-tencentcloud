@@ -114,13 +114,6 @@ func pointerToString(pointer *string) string {
 	return *pointer
 }
 
-func pointerToInt(pointer *uint64) int {
-	if pointer == nil {
-		return 0
-	}
-	return int(*pointer)
-}
-
 func stringToPointer(s string) *string {
 	return &s
 }
