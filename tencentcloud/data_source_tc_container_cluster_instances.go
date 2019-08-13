@@ -95,7 +95,7 @@ func dataSourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData,
 	id := fmt.Sprintf("%d", time.Now().Unix())
 	nodes := make([]map[string]interface{}, 0)
 	for _, node := range response.Data.Nodes {
-		nodeInfo := make(map[string]interface{}, 0)
+		nodeInfo := make(map[string]interface{})
 		if node.AbnormalReason != nil {
 			nodeInfo["abnormal_reason"] = *node.AbnormalReason
 		}

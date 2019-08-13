@@ -83,6 +83,7 @@ data "tencentcloud_image" "public_image" {
 }
 `
 
+/*
 const testAccTencentCloudImagesDataSourceConfigFilterWithPrivateImage = `
 data "tencentcloud_image" "private_image" {
   image_name_regex = "^batch-tensorflow"
@@ -102,3 +103,4 @@ data "tencentcloud_image" "private_image" {
   }
 }
 `
+*/

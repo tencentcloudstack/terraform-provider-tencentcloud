@@ -160,7 +160,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Get("clb_id").(string)
@@ -180,7 +180,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	if healthErr != nil {
 		return healthErr
 	}
-	if healthSetFlag == true {
+	if healthSetFlag {
 		request.HealthCheck = healthCheck
 	}
 
@@ -189,7 +189,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	if certErr != nil {
 		return certErr
 	}
-	if certificateSetFlag == true {
+	if certificateSetFlag {
 		request.Certificate = certificateInput
 	} else {
 		if protocol == CLB_LISTENER_PROTOCOL_HTTPS || protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
@@ -263,7 +263,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_listener.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")
@@ -326,7 +326,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")
@@ -381,7 +381,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	if healthErr != nil {
 		return healthErr
 	}
-	if healthSetFlag == true {
+	if healthSetFlag {
 		changed = true
 		request.HealthCheck = healthCheck
 	}
@@ -390,7 +390,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	if certErr != nil {
 		return certErr
 	}
-	if certificateSetFlag == true {
+	if certificateSetFlag {
 		changed = true
 		request.Certificate = certificateInput
 	}
@@ -428,7 +428,7 @@ func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interfac
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")

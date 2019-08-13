@@ -144,7 +144,7 @@ func dataSourceTencentCloudCcnInstances() *schema.Resource {
 func dataSourceTencentCloudCcnInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_ccn_instances.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -212,7 +212,10 @@ func dataSourceTencentCloudCcnInstancesRead(d *schema.ResourceData, meta interfa
 	}
 
 	m := md5.New()
-	m.Write([]byte("ccn_instances" + ccnId + "_" + name))
+	_, err = m.Write([]byte("ccn_instances" + ccnId + "_" + name))
+	if err != nil {
+		return err
+	}
 	d.SetId(fmt.Sprintf("%x", m.Sum(nil)))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

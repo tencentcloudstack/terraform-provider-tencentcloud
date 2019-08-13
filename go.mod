@@ -16,5 +16,6 @@ require (
 	github.com/terraform-providers/terraform-provider-template v1.0.0
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	github.com/zqfan/tencentcloud-sdk-go v0.0.0-0.20181105105106-4c76f78ff2e6
+	labix.org/v2/mgo v0.0.0-20140701140051-000000000287 // indirect
 	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 )

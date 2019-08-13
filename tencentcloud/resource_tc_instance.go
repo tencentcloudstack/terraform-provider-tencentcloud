@@ -4,13 +4,13 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 const (
@@ -490,8 +490,8 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 		for key, value := range v.(map[string]interface{}) {
 			params["TagSpecification.0.Tags."+strconv.Itoa(i)+".Key"] = key
 			params["TagSpecification.0.Tags."+strconv.Itoa(i)+".Value"] = value.(string)
+			i = i + 1
 		}
-		i = i + 1
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

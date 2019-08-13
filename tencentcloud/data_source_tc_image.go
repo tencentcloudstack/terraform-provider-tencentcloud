@@ -43,7 +43,7 @@ func (a imageSorter) Less(i, j int) bool {
 // Sort images by creation date, in descending order.
 func sortImages(images imageSorter) imageSorter {
 	sortedImages := images
-	sort.Sort(sort.Reverse(imageSorter(sortedImages)))
+	sort.Sort(sort.Reverse(sortedImages))
 	return sortedImages
 }
 

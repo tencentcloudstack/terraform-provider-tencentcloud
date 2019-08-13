@@ -4,12 +4,14 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/terraform"
 )
 
 func TestAccTencentCloudContainerClusterInstance_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckContainerClusterInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudContainerClusterInstanceConfig_basic,
@@ -20,6 +22,10 @@ func TestAccTencentCloudContainerClusterInstance_basic(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccCheckContainerClusterInstanceDestroy(s *terraform.State) error {
+	return nil
 }
 
 const testAccTencentCloudContainerClusterInstanceConfig_basic = `

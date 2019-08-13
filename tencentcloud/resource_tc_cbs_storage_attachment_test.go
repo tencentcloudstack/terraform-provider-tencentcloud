@@ -11,8 +11,9 @@ import (
 
 func TestAccTencentCloudCbsStorageAttachment(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCsbStorageAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCbsStorageAttachmentConfig,
@@ -26,9 +27,34 @@ func TestAccTencentCloudCbsStorageAttachment(t *testing.T) {
 	})
 }
 
+func testAccCheckCsbStorageAttachmentDestroy(s *terraform.State) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	cbsService := CbsService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_cbs_storage_attachment" {
+			continue
+		}
+
+		storage, err := cbsService.DescribeDiskById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if *storage.Attached {
+			return fmt.Errorf("cbs storage attchment still exists")
+		}
+
+	}
+
+	return nil
+}
+
 func testAccCheckCbsStorageAttachmentExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]

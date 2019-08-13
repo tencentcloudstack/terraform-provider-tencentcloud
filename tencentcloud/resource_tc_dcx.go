@@ -175,7 +175,7 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dcx.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -254,7 +254,7 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dcx.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -314,7 +314,7 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dcx.update")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -339,7 +339,7 @@ func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudDcxInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dcx.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}

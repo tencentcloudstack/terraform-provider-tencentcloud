@@ -82,7 +82,7 @@ func resourceTencentCloudRedisBackupConfigCreate(d *schema.ResourceData, meta in
 func resourceTencentCloudRedisBackupConfigRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_backup_config.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -107,7 +107,7 @@ func resourceTencentCloudRedisBackupConfigUpdate(d *schema.ResourceData, meta in
 		"Thursday": true, "Friday": true, "Saturday": true, "Sunday": true,
 	}
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -147,7 +147,7 @@ func resourceTencentCloudRedisBackupConfigUpdate(d *schema.ResourceData, meta in
 func resourceTencentCloudRedisBackupConfigDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_backup_config.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}

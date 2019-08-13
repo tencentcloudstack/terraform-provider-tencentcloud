@@ -3,9 +3,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"strings"
+
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
@@ -331,7 +332,7 @@ func (me *VpcService) DescribeCcnAttachedInstance(ctx context.Context, ccnId,
 	for _, item := range infos {
 		if item.instanceId == instanceId &&
 			item.instanceRegion == instanceRegion &&
-			strings.ToUpper(item.instanceType) == strings.ToUpper(instanceType) {
+			strings.EqualFold(item.instanceType, instanceType) {
 			has = 1
 			info = item
 			return

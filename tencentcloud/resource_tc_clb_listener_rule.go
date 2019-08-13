@@ -176,7 +176,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Get("listener_id").(string), "#")
@@ -242,7 +242,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	if healthErr != nil {
 		return healthErr
 	}
-	if healthSetFlag == true {
+	if healthSetFlag {
 		rule.HealthCheck = healthCheck
 	}
 
@@ -250,7 +250,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	if certErr != nil {
 		return certErr
 	}
-	if certificateSetFlag == true {
+	if certificateSetFlag {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			return fmt.Errorf("certificate para can only be set with rule of linstener with protocol 'HTTPS'")
 		}
@@ -305,7 +305,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_listener_rule.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	ruleId := d.Id()
@@ -380,7 +380,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Get("listener_id").(string), "#")
@@ -452,7 +452,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		return healthErr
 	}
 
-	if healthSetFlag == true {
+	if healthSetFlag {
 		changed = true
 		request.HealthCheck = healthCheck
 	}
@@ -490,7 +490,7 @@ func resourceTencentCloudClbListenerRuleDelete(d *schema.ResourceData, meta inte
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	ruleId := d.Id()

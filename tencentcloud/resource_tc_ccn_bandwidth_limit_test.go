@@ -14,8 +14,9 @@ func TestAccTencentCloudCcnV3BandwidthLimitBasic(t *testing.T) {
 	keyNameLimit1 := "tencentcloud_ccn_bandwidth_limit.limit1"
 	keyNameLimit2 := "tencentcloud_ccn_bandwidth_limit.limit2"
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCcnBandwidthLimitDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCcnBandwidthLimitConfig,
@@ -35,9 +36,13 @@ func TestAccTencentCloudCcnV3BandwidthLimitBasic(t *testing.T) {
 	})
 }
 
+func testAccCheckCcnBandwidthLimitDestroy(s *terraform.State) error {
+	return nil
+}
+
 func testAccCheckCcnBandwidthLimitExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[r]

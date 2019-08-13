@@ -66,7 +66,7 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 
 func testAccTencentCloudRedisInstanceExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[r]
@@ -88,7 +88,7 @@ func testAccTencentCloudRedisInstanceExists(r string) resource.TestCheckFunc {
 
 func testAccTencentCloudRedisInstanceDestroy(s *terraform.State) error {
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}

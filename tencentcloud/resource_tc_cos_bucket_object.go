@@ -130,7 +130,7 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 func resourceTencentCloudCosBucketObjectCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket_object.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
@@ -186,7 +186,7 @@ func resourceTencentCloudCosBucketObjectCreate(d *schema.ResourceData, meta inte
 
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().PutObject(request)
 	if err != nil {
-		return fmt.Errorf("puting object (%s) in cos bucket (%s) error: %s", key, bucket, err.Error())
+		return fmt.Errorf("putting object (%s) in cos bucket (%s) error: %s", key, bucket, err.Error())
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "put object", request.String(), response.String())
@@ -198,7 +198,7 @@ func resourceTencentCloudCosBucketObjectCreate(d *schema.ResourceData, meta inte
 func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket_object.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Get("bucket").(string)
@@ -228,7 +228,7 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket_object.update")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	fields := []string{
@@ -267,7 +267,7 @@ func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta inte
 func resourceTencentCloudCosBucketObjectDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket_object.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Get("bucket").(string)

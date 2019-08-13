@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -32,12 +31,10 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 				StateFunc: func(v interface{}) string {
-					switch v.(type) {
-					case string:
-						return strings.TrimSpace(v.(string))
-					default:
-						return ""
+					if key, ok := v.(string); ok {
+						return key
 					}
+					return ""
 				},
 			},
 		},

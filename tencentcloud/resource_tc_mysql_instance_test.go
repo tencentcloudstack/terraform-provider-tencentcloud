@@ -141,7 +141,7 @@ func TestAccTencentCloudMysqlMasterInstance_basic_and_update(t *testing.T) {
 }
 
 func testAccCheckMysqlMasterInstanceDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	mysqlService := MysqlService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
@@ -165,7 +165,7 @@ func testAccCheckMysqlMasterInstanceDestroy(s *terraform.State) error {
 
 func testAccCheckMysqlMasterInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]

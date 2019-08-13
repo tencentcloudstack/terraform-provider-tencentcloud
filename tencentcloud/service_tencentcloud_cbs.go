@@ -306,7 +306,7 @@ func (me *CbsService) DeleteSnapshot(ctx context.Context, snapshotId string) err
 }
 
 func (me *CbsService) DescribeSnapshotPolicyById(ctx context.Context, policyId string) (policy *cbs.AutoSnapshotPolicy, errRet error) {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	request := cbs.NewDescribeAutoSnapshotPoliciesRequest()
 	request.AutoSnapshotPolicyIds = []*string{&policyId}
 	ratelimit.Check(request.GetAction())

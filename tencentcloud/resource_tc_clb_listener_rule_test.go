@@ -91,7 +91,7 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 }
 
 func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbService := ClbService{
@@ -121,7 +121,7 @@ func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
 
 func testAccCheckClbListenerRuleExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]

@@ -52,7 +52,7 @@ func TestAccTencentCloudMysqlAccountPrivilege(t *testing.T) {
 
 func testAccMysqlAccountPrivilegeExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 		mysqlService := MysqlService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
@@ -94,7 +94,7 @@ func testAccMysqlAccountPrivilegeExists(r string) resource.TestCheckFunc {
 }
 
 func testAccMysqlAccountPrivilegeDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}

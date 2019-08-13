@@ -109,7 +109,7 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 
 	items := strings.Split(d.Get("listener_id").(string), "#")
 	if len(items) != 2 {
@@ -168,7 +168,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	attachmentId := d.Id()
@@ -203,7 +203,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta interface{}, remove []interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.remove")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	attachmentId := d.Id()
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
@@ -250,7 +250,7 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 
 func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta interface{}, add []interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.add")()
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	items := strings.Split(d.Get("listener_id").(string), "#")
 	if len(items) != 2 {
 		return fmt.Errorf("id of resource.tencentcloud_clb_attachment listener is wrong")
@@ -333,7 +333,7 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")
