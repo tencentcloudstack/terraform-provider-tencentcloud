@@ -125,11 +125,11 @@ resource "tencentcloud_clb_listener_rule" "rule_http_dst" {
 }
 
 resource "tencentcloud_clb_redirection" "redirection_http" {
-  clb_id                 = "${tencentcloud_clb_instance.example.id}"
-  source_listener_id     = "${tencentcloud_clb_listener.listener_http_src.id}"
-  target_listener_id     = "${tencentcloud_clb_listener.listener_http_dst.id}"
-  rewrite_source_rule_id = "${tencentcloud_clb_listener_rule.rule_http_src.id}"
-  rewrite_target_rule_id = "${tencentcloud_clb_listener_rule.rule_http_dst.id}"
+  clb_id                  = "${tencentcloud_clb_instance.example.id}"
+  source_listener_id      = "${tencentcloud_clb_listener.listener_http_src.id}"
+  target_listener_id      = "${tencentcloud_clb_listener.listener_http_dst.id}"
+  source_listener_rule_id = "${tencentcloud_clb_listener_rule.rule_http_src.id}"
+  target_listener_rule_id = "${tencentcloud_clb_listener_rule.rule_http_dst.id}"
 }
 
 data "tencentcloud_clb_instances" "instances" {
@@ -154,7 +154,7 @@ data "tencentcloud_clb_attachments" "attachments" {
 }
 
 data "tencentcloud_clb_redirections" "redirections" {
-  clb_id                 = "${tencentcloud_clb_instance.example.id}"
-  source_listener_id     = "${tencentcloud_clb_redirection.redirection_http.source_listener_id}"
-  rewrite_source_rule_id = "${tencentcloud_clb_redirection.redirection_http.rewrite_target_rule_id}"
+  clb_id                  = "${tencentcloud_clb_instance.example.id}"
+  source_listener_id      = "${tencentcloud_clb_redirection.redirection_http.source_listener_id}"
+  source_listener_rule_id = "${tencentcloud_clb_redirection.redirection_http.source_listener_rule_id}"
 }
