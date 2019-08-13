@@ -9,11 +9,13 @@ resource "tencentcloud_clb_instance" "foo" {
   clb_name                  = "myclb"
   project_id                = 0
   vpc_id                    = "vpc-abcd1234"
-  subnet_id                 = "subnet-0agspqdn"
-  tags                      = "mytags"
   security_groups           = ["sg-o0ek7r93"]
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = "vpc-abcd1234"
+
+  tags = {
+    test = "tf"
+  }
 }
 ```
 
@@ -82,25 +84,31 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
-				Description:  "Subnet ID of the CLB. Effective only for CLB within the VPC.",
+				Description:  "Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports 'INTERNAL' CLBs.",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Security groups of the CLB instance.",
+				Description: "Security groups of the CLB instance. Only supports 'OPEN' CLBs.",
 			},
 			"target_region_info_region": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Region information of backend services are attached the CLB instance.",
+				Description: "Region information of backend services are attached the CLB instance. Only supports 'OPEN' CLBs.",
 			},
 			"target_region_info_vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Vpc information of backend services are attached the CLB instance.",
+				Description: "Vpc information of backend services are attached the CLB instance. Only supports 'OPEN' CLBs.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The available tags within this CLB.",
 			},
 		},
 	}
@@ -123,6 +131,28 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	if flag {
 		return fmt.Errorf("Same clb name exists!")
 	}
+	targetRegionInfoRegion := ""
+	targetRegionInfoVpcId := ""
+	if v, ok := d.GetOk("target_region_info_region"); ok {
+		targetRegionInfoRegion = v.(string)
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
+		}
+	}
+	if v, ok := d.GetOk("target_region_info_vpc_id"); ok {
+		targetRegionInfoVpcId = v.(string)
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
+		}
+	}
+	if (targetRegionInfoRegion != "" && targetRegionInfoVpcId == "") || (targetRegionInfoRegion == "" && targetRegionInfoVpcId != "") {
+		return fmt.Errorf("region and vpc_id must be set at same time")
+	}
+	if _, ok := d.GetOk("security_groups"); ok {
+		if networkType == CLB_NETWORK_TYPE_INTERNAL {
+			return fmt.Errorf("INTERNAL network_type do not support this operation with sercurity_groups")
+		}
+	}
 	request := clb.NewCreateLoadBalancerRequest()
 	request.LoadBalancerType = stringToPointer(networkType)
 	request.LoadBalancerName = stringToPointer(clbName)
@@ -139,7 +169,17 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 		request.SubnetId = stringToPointer(v.(string))
 	}
-
+	if v, ok := d.GetOk("tags"); ok {
+		tags := v.(map[string]interface{})
+		request.Tags = make([]*clb.TagInfo, 0, len(tags))
+		for key, value := range tags {
+			tag := clb.TagInfo{
+				TagKey:   stringToPointer(key),
+				TagValue: stringToPointer(value.(string)),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateLoadBalancer(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -162,9 +202,6 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	clbId := *response.Response.LoadBalancerIds[0]
 
 	if v, ok := d.GetOk("security_groups"); ok {
-		if networkType == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("INTERNAL network_type do not support this operation with sercurity_groups")
-		}
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
 		sgRequest.LoadBalancerId = stringToPointer(clbId)
 		securityGroups := v.([]interface{})
@@ -189,19 +226,11 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			}
 		}
 	}
-	if v, ok := d.GetOk("target_region_info_region"); ok {
-		region := v.(string)
-		vpcId := ""
-		if networkType == CLB_NETWORK_TYPE_INTERNAL {
-			return fmt.Errorf("INTERNAL network_type do not support this operation with target_region_info")
-		}
-		if vv, ok := d.GetOk("target_region_info_vpc_id"); ok {
-			vpcId = vv.(string)
-		}
+	if targetRegionInfoRegion != "" {
 
 		targetRegionInfo := clb.TargetRegionInfo{
-			Region: &region,
-			VpcId:  &vpcId,
+			Region: &targetRegionInfoRegion,
+			VpcId:  &targetRegionInfoVpcId,
 		}
 		mRequest := clb.NewModifyLoadBalancerAttributesRequest()
 		mRequest.LoadBalancerId = stringToPointer(clbId)
@@ -249,7 +278,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
 	d.Set("project_id", instance.ProjectId)
 	d.Set("security_groups", flattenStringList(instance.SecureGroups))
-
+	d.Set("tags", flattenClbTagsMapping(instance.Tags))
 	return nil
 }
 

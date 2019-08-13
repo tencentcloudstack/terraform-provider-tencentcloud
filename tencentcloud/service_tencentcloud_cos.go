@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -31,6 +32,7 @@ func (me *CosService) HeadObject(ctx context.Context, bucket, key string) (info 
 				logId, "head object", request.String(), errRet.Error())
 		}
 	}()
+	ratelimit.Check("HeadObject")
 	response, err := me.client.UseCosClient().HeadObject(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos head object error: %s, bucket: %s, object: %s", err.Error(), bucket, key)
@@ -56,6 +58,7 @@ func (me *CosService) DeleteObject(ctx context.Context, bucket, key string) (err
 				logId, "delete object", request.String(), errRet.Error())
 		}
 	}()
+	ratelimit.Check("DeleteObject")
 	response, err := me.client.UseCosClient().DeleteObject(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos delete object error: %s, bucket: %s, object: %s", err.Error(), bucket, key)
@@ -82,6 +85,7 @@ func (me *CosService) PutObjectAcl(ctx context.Context, bucket, key, acl string)
 				logId, "put object acl", request.String(), errRet.Error())
 		}
 	}()
+	ratelimit.Check("PutObjectAcl")
 	response, err := me.client.UseCosClient().PutObjectAcl(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos put object acl error: %s, bucket: %s, object: %s", err.Error(), bucket, key)
@@ -107,6 +111,7 @@ func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet
 				logId, "put bucket", request.String(), errRet.Error())
 		}
 	}()
+	ratelimit.Check("CreateBucket")
 	response, err := me.client.UseCosClient().CreateBucket(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos put bucket error: %s, bucket: %s", err.Error(), bucket)
@@ -125,6 +130,7 @@ func (me *CosService) HeadBucket(ctx context.Context, bucket string) (errRet err
 	request := s3.HeadBucketInput{
 		Bucket: aws.String(bucket),
 	}
+	ratelimit.Check("HeadBucket")
 	response, err := me.client.UseCosClient().HeadBucket(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -145,6 +151,7 @@ func (me *CosService) DeleteBucket(ctx context.Context, bucket string) (errRet e
 	request := s3.DeleteBucketInput{
 		Bucket: aws.String(bucket),
 	}
+	ratelimit.Check("DeleteBucket")
 	response, err := me.client.UseCosClient().DeleteBucket(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -163,6 +170,8 @@ func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRul
 	request := s3.GetBucketCorsInput{
 		Bucket: aws.String(bucket),
 	}
+
+	ratelimit.Check("GetBucketCors")
 	response, err := me.client.UseCosClient().GetBucketCors(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
@@ -203,6 +212,7 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 	request := s3.GetBucketLifecycleConfigurationInput{
 		Bucket: aws.String(bucket),
 	}
+	ratelimit.Check("GetBucketLifecycleConfiguration")
 	response, err := me.client.UseCosClient().GetBucketLifecycleConfiguration(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
@@ -272,6 +282,8 @@ func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket s
 	request := s3.GetBucketLifecycleConfigurationInput{
 		Bucket: aws.String(bucket),
 	}
+
+	ratelimit.Check("GetBucketLifecycleConfiguration")
 	response, err := me.client.UseCosClient().GetBucketLifecycleConfiguration(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
@@ -341,6 +353,7 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (webs
 	request := s3.GetBucketWebsiteInput{
 		Bucket: aws.String(bucket),
 	}
+	ratelimit.Check("GetBucketWebsite")
 	response, err := me.client.UseCosClient().GetBucketWebsite(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
@@ -373,6 +386,7 @@ func (me *CosService) ListBuckets(ctx context.Context) (buckets []*s3.Bucket, er
 	logId := getLogId(ctx)
 
 	request := s3.ListBucketsInput{}
+	ratelimit.Check("ListBuckets")
 	response, err := me.client.UseCosClient().ListBuckets(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -393,6 +407,7 @@ func (me *CosService) ListObjects(ctx context.Context, bucket string) (objects [
 	request := s3.ListObjectsInput{
 		Bucket: aws.String(bucket),
 	}
+	ratelimit.Check("ListObjects")
 	response, err := me.client.UseCosClient().ListObjects(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",

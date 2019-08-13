@@ -126,6 +126,11 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 							Computed:    true,
 							Description: "VpcId information of backend service are attached the CLB.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "The available tags within this CLB.",
+						},
 					},
 				},
 			},
@@ -179,7 +184,13 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			"target_region_info_vpc_id": *(clb.TargetRegionInfo.VpcId),
 			"security_groups":           flattenStringList(clb.SecureGroups),
 		}
-
+		if clb.Tags != nil {
+			tags := make(map[string]interface{}, len(clb.Tags))
+			for _, t := range clb.Tags {
+				tags[*t.TagKey] = *t.TagValue
+			}
+			mapping["tags"] = tags
+		}
 		clbList = append(clbList, mapping)
 		ids = append(ids, *clb.LoadBalancerId)
 	}

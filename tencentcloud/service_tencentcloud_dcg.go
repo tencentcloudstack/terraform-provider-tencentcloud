@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 )
 
@@ -90,7 +91,7 @@ getMoreData:
 	}
 	request.Limit = &limit
 	request.Offset = &offset
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeDirectConnectGateways(request)
 
 	if err != nil {
@@ -255,7 +256,7 @@ getMoreData:
 	}
 	request.Limit = &limit
 	request.Offset = &offset
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeDirectConnectGatewayCcnRoutes(request)
 
 	if err != nil {
@@ -324,7 +325,7 @@ func (me *VpcService) CreateDirectConnectGateway(ctx context.Context, name, netw
 	request.NetworkType = &networkType
 	request.NetworkInstanceId = &networkInstanceId
 	request.GatewayType = &gatewayType
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateDirectConnectGateway(request)
 
 	defer func() {
@@ -366,7 +367,7 @@ func (me *VpcService) ModifyDirectConnectGatewayAttribute(ctx context.Context, d
 	request := vpc.NewModifyDirectConnectGatewayAttributeRequest()
 	request.DirectConnectGatewayId = &dcgId
 	request.DirectConnectGatewayName = &name
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().ModifyDirectConnectGatewayAttribute(request)
 
 	defer func() {
@@ -393,7 +394,7 @@ func (me *VpcService) DeleteDirectConnectGateway(ctx context.Context, dcgId stri
 	logId := getLogId(ctx)
 	request := vpc.NewDeleteDirectConnectGatewayRequest()
 	request.DirectConnectGatewayId = &dcgId
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DeleteDirectConnectGateway(request)
 
 	defer func() {
@@ -430,7 +431,7 @@ func (me *VpcService) CreateDirectConnectGatewayCcnRoute(ctx context.Context, dc
 		ccnRoute.ASPath = append(ccnRoute.ASPath, &asPaths[index])
 	}
 	request.Routes = []*vpc.DirectConnectGatewayCcnRoute{&ccnRoute}
-
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().CreateDirectConnectGatewayCcnRoutes(request)
 
 	defer func() {
@@ -476,6 +477,7 @@ func (me *VpcService) DeleteDirectConnectGatewayCcnRoute(ctx context.Context, dc
 	request := vpc.NewDeleteDirectConnectGatewayCcnRoutesRequest()
 	request.DirectConnectGatewayId = &dcgId
 	request.RouteIds = []*string{&routeId}
+	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DeleteDirectConnectGatewayCcnRoutes(request)
 
 	defer func() {
