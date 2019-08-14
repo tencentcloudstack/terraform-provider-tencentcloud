@@ -535,8 +535,8 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	ruleOutput := response.Response.RewriteSet[0]
 	if ruleOutput.RewriteTarget != nil {
 		if *ruleOutput.RewriteTarget.TargetListenerId == targetListenerId && *ruleOutput.RewriteTarget.TargetLocationId == targetLocId {
-			result["source_listener_rule_id"] = sourceLocId
-			result["target_listener_rule_id"] = targetLocId
+			result["source_rule_id"] = sourceLocId
+			result["target_rule_id"] = targetLocId
 			result["source_listener_id"] = sourceListenerId
 			result["target_listener_id"] = targetListenerId
 			result["clb_id"] = clbId
@@ -565,13 +565,13 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 		if k == "clb_id" {
 			clbId = v
 		}
-		if k == "source_listener_rule_id" {
+		if k == "source_rule_id" {
 			sourceLocId = v
 		}
 		if k == "target_listener_id" {
 			targetListenerId = v
 		}
-		if k == "target_listener_rule_id" {
+		if k == "target_rule_id" {
 			targetLocId = v
 		}
 	}
@@ -602,8 +602,8 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 			return
 		}
 		result := make(map[string]string)
-		result["source_listener_rule_id"] = sourceLocId
-		result["target_listener_rule_id"] = *ruleOutput.RewriteTarget.TargetLocationId
+		result["source_rule_id"] = sourceLocId
+		result["target_rule_id"] = *ruleOutput.RewriteTarget.TargetLocationId
 		result["source_listener_id"] = sourceListenerId
 		result["target_listener_id"] = *ruleOutput.RewriteTarget.TargetListenerId
 		result["clb_id"] = clbId
