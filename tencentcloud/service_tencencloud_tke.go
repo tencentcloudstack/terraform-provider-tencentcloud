@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -36,15 +37,156 @@ type ClusterCidrSettings struct {
 	MaxClusterServiceNum      int64
 }
 
+type ClusterInfo struct {
+	ClusterBasicSetting
+	ClusterCidrSettings
+	ClusterAdvancedSettings
+
+	DeployType string
+}
+
+type InstanceInfo struct {
+	InstanceId    string
+	InstanceRole  string
+	InstanceState string
+	FailedReason  string
+}
+
 type TkeService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *TkeService) DescribeClusters(ctx context.Context, id string) (
-	basic ClusterBasicSetting,
-	cidrSetting ClusterCidrSettings,
-	deployType string,
-	ipvs bool,
+func (me *TkeService) DescribeClusterInstances(ctx context.Context, id string) (masters []InstanceInfo, workers []InstanceInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeClusterInstancesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = &id
+	masters = make([]InstanceInfo, 0, 100)
+	workers = make([]InstanceInfo, 0, 100)
+	var offset int64 = 0
+	var limit int64 = 20
+	var has = map[string]bool{}
+	var total int64 = -1
+
+getMoreData:
+	if total >= 0 && offset >= total {
+		return
+	}
+	request.Limit = &limit
+	request.Offset = &offset
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if total < 0 {
+		total = int64(*response.Response.TotalCount)
+	}
+
+	if len(response.Response.InstanceSet) > 0 {
+		offset += limit
+	} else {
+		//get empty set,we're done
+		return
+	}
+
+	for _, item := range response.Response.InstanceSet {
+		if has[*item.InstanceId] {
+			errRet = fmt.Errorf("get repeated instance_id[%s] when doing DescribeClusterInstances", *item.InstanceId)
+			return
+		}
+		has[*item.InstanceId] = true
+		instanceInfo := InstanceInfo{
+			InstanceId:    *item.InstanceId,
+			InstanceRole:  *item.InstanceRole,
+			InstanceState: *item.InstanceState,
+			FailedReason:  *item.FailedReason,
+		}
+		if instanceInfo.InstanceRole == TKE_ROLE_MASTER_WORKER {
+			workers = append(workers, instanceInfo)
+		} else {
+			masters = append(masters, instanceInfo)
+		}
+	}
+	goto getMoreData
+
+}
+
+func (me *TkeService) DescribeClusters(ctx context.Context, id string, name string) (clusterInfos []ClusterInfo, errRet error) {
+
+	logId := getLogId(ctx)
+	request := tke.NewDescribeClustersRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if (id == "" && name != "") || (id != "" && name == "") {
+		errRet = fmt.Errorf("cluster_id ,cluster_id only one can be set")
+		return
+	}
+
+	if id != "" {
+		request.ClusterIds = []*string{&id}
+	}
+	if name != "" {
+		request.Filters = []*tke.Filter{&tke.Filter{
+			Name:   stringToPointer("ClusterName"),
+			Values: []*string{&name},
+		}}
+	}
+
+	response, err := me.client.UseTkeClient().DescribeClusters(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	lenClusters := len(response.Response.Clusters)
+
+	if lenClusters == 0 {
+		return
+	}
+	clusterInfos = make([]ClusterInfo, 0, lenClusters)
+
+	for index := range response.Response.Clusters {
+		cluster := response.Response.Clusters[index]
+		var clusterInfo ClusterInfo
+		clusterInfo.ClusterOs = *cluster.ClusterOs
+		clusterInfo.ClusterVersion = *cluster.ClusterVersion
+		clusterInfo.ClusterDescription = *cluster.ClusterDescription
+		clusterInfo.ClusterName = *cluster.ClusterName
+
+		clusterInfo.ProjectId = int64(*cluster.ProjectId)
+		clusterInfo.VpcId = *cluster.ClusterNetworkSettings.VpcId
+		clusterInfo.ClusterNodeNum = int64(*cluster.ClusterNodeNum)
+
+		clusterInfo.IgnoreClusterCidrConflict = *cluster.ClusterNetworkSettings.IgnoreClusterCIDRConflict
+		clusterInfo.ClusterCidr = *cluster.ClusterNetworkSettings.ClusterCIDR
+		clusterInfo.MaxClusterServiceNum = int64(*cluster.ClusterNetworkSettings.MaxClusterServiceNum)
+
+		clusterInfo.MaxNodePodNum = int64(*cluster.ClusterNetworkSettings.MaxNodePodNum)
+		clusterInfo.DeployType = strings.ToUpper(*cluster.ClusterType)
+		clusterInfo.Ipvs = *cluster.ClusterNetworkSettings.Ipvs
+		clusterInfos = append(clusterInfos, clusterInfo)
+	}
+	return
+}
+
+func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
+	clusterInfo ClusterInfo,
 	has bool,
 	errRet error) {
 
@@ -75,22 +217,23 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string) (
 	has = true
 	cluster := response.Response.Clusters[0]
 
-	basic.ClusterOs = *cluster.ClusterOs
-	basic.ClusterVersion = *cluster.ClusterVersion
-	basic.ClusterDescription = *cluster.ClusterDescription
-	basic.ClusterName = *cluster.ClusterName
-	basic.ProjectId = int64(*cluster.ProjectId)
-	basic.VpcId = *cluster.ClusterNetworkSettings.VpcId
-	basic.ClusterNodeNum = int64(*cluster.ClusterNodeNum)
+	clusterInfo.ClusterOs = *cluster.ClusterOs
+	clusterInfo.ClusterVersion = *cluster.ClusterVersion
+	clusterInfo.ClusterDescription = *cluster.ClusterDescription
+	clusterInfo.ClusterName = *cluster.ClusterName
 
-	cidrSetting.IgnoreClusterCidrConflict = *cluster.ClusterNetworkSettings.IgnoreClusterCIDRConflict
-	cidrSetting.ClusterCidr = *cluster.ClusterNetworkSettings.ClusterCIDR
-	cidrSetting.MaxClusterServiceNum = int64(*cluster.ClusterNetworkSettings.MaxClusterServiceNum)
-	cidrSetting.MaxNodePodNum = int64(*cluster.ClusterNetworkSettings.MaxNodePodNum)
+	clusterInfo.ProjectId = int64(*cluster.ProjectId)
+	clusterInfo.VpcId = *cluster.ClusterNetworkSettings.VpcId
+	clusterInfo.ClusterNodeNum = int64(*cluster.ClusterNodeNum)
 
-	deployType = strings.ToUpper(*cluster.ClusterType)
+	clusterInfo.IgnoreClusterCidrConflict = *cluster.ClusterNetworkSettings.IgnoreClusterCIDRConflict
+	clusterInfo.ClusterCidr = *cluster.ClusterNetworkSettings.ClusterCIDR
+	clusterInfo.MaxClusterServiceNum = int64(*cluster.ClusterNetworkSettings.MaxClusterServiceNum)
 
-	ipvs = *cluster.ClusterNetworkSettings.Ipvs
+	clusterInfo.MaxNodePodNum = int64(*cluster.ClusterNetworkSettings.MaxNodePodNum)
+	clusterInfo.DeployType = strings.ToUpper(*cluster.ClusterType)
+	clusterInfo.Ipvs = *cluster.ClusterNetworkSettings.Ipvs
+
 	return
 }
 
