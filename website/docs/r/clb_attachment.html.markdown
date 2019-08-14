@@ -30,10 +30,10 @@ resource "tencentcloud_clb_attachment" "foo" {
 
 The following arguments are supported:
 
-* `clb_id` - (Required, ForceNew) ID of the clb.
-* `listener_id` - (Required, ForceNew)  ID of the clb listener.
-* `targets` - (Required)  Information of the backends to be attached.
-* `rule_id` - (Optional, ForceNew) ID of the clb listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.
+* `clb_id` - (Required, ForceNew) Id of the clb.
+* `listener_id` - (Required, ForceNew) Id of the clb listener.
+* `targets` - (Required) Information of the backends to be attached.
+* `rule_id` - (Optional, ForceNew) Id of the clb listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.
 
 The `targets` object supports the following:
 

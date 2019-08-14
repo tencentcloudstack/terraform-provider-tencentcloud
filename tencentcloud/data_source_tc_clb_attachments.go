@@ -30,17 +30,17 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "ID of the CLB to be queried.",
+				Description: "Id of the CLB to be queried.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "ID of the CLB listener to be queried.",
+				Description: "Id of the CLB listener to be queried.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "ID of the CLB listener rule to be queried.",
+				Optional:    true,
+				Description: "Id of the CLB listener rule. If the protocol of listener is HTTP/HTTPS, this para is required.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -56,9 +56,8 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the CLB.",
+							Description: "Id of the CLB.",
 						},
-
 						"listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -72,7 +71,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 						"rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the CLB listener rule.",
+							Description: "Id of the CLB listener rule.",
 						},
 						"targets": {
 							Type:        schema.TypeSet,
@@ -116,11 +115,13 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 	params := make(map[string]string)
 	clbId := d.Get("clb_id").(string)
 	listenerId := d.Get("listener_id").(string)
-	locationId := d.Get("rule_id").(string)
-
+	locationId := ""
+	if v, ok := d.GetOk("rule_id"); ok {
+		locationId = v.(string)
+		params["rule_id"] = locationId
+	}
 	params["clb_id"] = clbId
 	params["listener_id"] = listenerId
-	params["rule_id"] = locationId
 
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -144,8 +145,10 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 		mapping := map[string]interface{}{
 			"clb_id":        clbId,
 			"listener_id":   listenerId,
-			"rule_id":       locationId,
 			"protocol_type": attachment.Protocol,
+		}
+		if locationId != "" {
+			mapping["rule_id"] = locationId
 		}
 		if *attachment.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *attachment.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
 			if len(attachment.Rules) > 0 {
@@ -159,7 +162,7 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 			mapping["targets"] = flattenBackendList(attachment.Targets)
 		}
 		attachmentList = append(attachmentList, mapping)
-		ids = append(ids, locationId)
+		ids = append(ids, locationId+"#"+listenerId+"#"+clbId)
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
