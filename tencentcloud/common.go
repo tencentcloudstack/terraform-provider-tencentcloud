@@ -35,6 +35,7 @@ var retryableErrorCode = []string{
 	// commom
 	"FailedOperation",
 	"InternalError",
+	"TradeUnknownError",
 	"RequestLimitExceeded",
 	"ResourceInUse",
 	"ResourceInsufficient",
