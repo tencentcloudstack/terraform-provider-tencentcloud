@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_clb_attachments" "clblab" {
-  listener_id = "lbl-hh141sn9#lb-k2zjp9lv"
+  listener_id = "lbl-hh141sn9"
   clb_id      = "lb-k2zjp9lv"
-  rule_id     = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
+  rule_id     = "loc-4xxr2cy7"
 }
 ```
 */
@@ -16,7 +16,6 @@ package tencentcloud
 import (
 	"context"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -120,8 +119,8 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 	locationId := d.Get("rule_id").(string)
 
 	params["clb_id"] = clbId
-	params["listener_id"] = strings.Split(listenerId, "#")[0]
-	params["rule_id"] = strings.Split(locationId, "#")[0]
+	params["listener_id"] = listenerId
+	params["rule_id"] = locationId
 
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

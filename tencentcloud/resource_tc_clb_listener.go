@@ -4,30 +4,29 @@ Provides a resource to create a CLB listener.
 Example Usage
 
 ```hcl
-resource "tencentcloud_clb_listener" "clb_listener" {
+resource "tencentcloud_clb_listener" "tcp_listener" {
   clb_id                     = "lb-k2zjp9lv"
   listener_name              = "mylistener"
   port                       = 80
-  protocol                   = "HTTP"
+  protocol                   = "TCP"
   health_check_switch        = true
   health_check_time_out      = 2
   health_check_interval_time = 5
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
-  certificate_ssl_mode       = "MUTUAL"
-  certificate_id             = "mycert server ID "
-  certificate_ca_id          = "mycert ca ID"
   session_expire_time        = 30
   scheduler                  = "WRR"
 }
-```
-
-Import
-
-CLB listener can be imported using the id, e.g.
-
-```
-$ terraform import tencentcloud_clb_listener.foo lbl-qckdffns#lb-p7nlgs4t
+resource "tencentcloud_clb_listener" "https_listener" {
+  clb_id               = "lb-k2zjp9lv"
+  listener_name        = "listener_https"
+  port                 = 80
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "MUTUAL"
+  certificate_id       = "mycert server ID "
+  certificate_ca_id    = "mycert ca ID"
+  sni_switch           = true
+}
 ```
 */
 package tencentcloud
@@ -36,7 +35,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -49,9 +47,6 @@ func resourceTencentCloudClbListener() *schema.Resource {
 		Read:   resourceTencentCloudClbListenerRead,
 		Update: resourceTencentCloudClbListenerUpdate,
 		Delete: resourceTencentCloudClbListenerDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"clb_id": {
@@ -134,7 +129,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 			"session_expire_time": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateIntegerInRange(30, 300),
+				ValidateFunc: validateIntegerInRange(30, 3600),
 				Description:  "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR', and not available when listener protocol is TCP_SSL.",
 			},
 			"scheduler": {
@@ -255,7 +250,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("listener id is wrong")
 	}
 	listenerId := *response.Response.ListenerIds[0]
-	d.SetId(listenerId + "#" + clbId)
+	d.SetId(listenerId)
 
 	return resourceTencentCloudClbListenerRead(d, meta)
 }
@@ -265,18 +260,13 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-
-	items := strings.Split(d.Id(), "#")
-	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
-	}
-
+	clbId := d.Get("clb_id").(string)
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	var instance *clb.Listener
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := clbService.DescribeListenerById(ctx, d.Id())
+		result, e := clbService.DescribeListenerById(ctx, d.Id(), clbId)
 		if e != nil {
 			return retryError(e)
 		}
@@ -287,7 +277,7 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		log.Printf("[CRITAL]%s read clb listener failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	d.Set("clb_id", items[1])
+	d.Set("clb_id", clbId)
 	d.Set("listener_name", instance.ListenerName)
 	d.Set("port", instance.Port)
 	d.Set("protocol", instance.Protocol)
@@ -328,14 +318,8 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-
-	items := strings.Split(d.Id(), "#")
-	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
-	}
-
-	listenerId := items[0]
-	clbId := items[1]
+	listenerId := d.Id()
+	clbId := d.Get("clb_id").(string)
 	changed := false
 	scheduler := ""
 	listenerName := ""
@@ -430,13 +414,8 @@ func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interfac
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-
-	items := strings.Split(d.Id(), "#")
-	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
-	}
-	listenerId := items[0]
-	clbId := items[1]
+	listenerId := d.Id()
+	clbId := d.Get("clb_id").(string)
 
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

@@ -16,7 +16,7 @@ Provides a resource to create a CLB listener rule.
 
 ```hcl
 resource "tencentcloud_clb_listener_rule" "foo" {
-  listener_id                = "lbl-hh141sn9#lb-k2zjp9lv"
+  listener_id                = "lbl-hh141sn9"
   clb_id                     = "lb-k2zjp9lv"
   domain                     = "foo.net"
   url                        = "/bar"
@@ -58,12 +58,4 @@ The following arguments are supported:
 * `scheduler` - (Optional) Scheduling method of the CLB listener rules, and available values include 'WRR', 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.
 * `session_expire_time` - (Optional) Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR', and not available when listener protocol is TCP_SSL.
 
-
-## Import
-
-CLB instance rule can be imported using the id, e.g.
-
-```
-$ terraform import tencentcloud_clb_listener_rule.foo #loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv
-```
 

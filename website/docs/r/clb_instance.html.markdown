@@ -34,7 +34,6 @@ The following arguments are supported:
 
 * `clb_name` - (Required) Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.
 * `network_type` - (Required, ForceNew) Type of CLB instance, and available values include 'OPEN' and 'INTERNAL'.
-* `clb_vips` - (Optional) The virtual service address table of the CLB.
 * `project_id` - (Optional, ForceNew) ID of the project within the CLB instance, '0' - Default Project.
 * `security_groups` - (Optional) Security groups of the CLB instance. Only supports 'OPEN' CLBs.
 * `subnet_id` - (Optional, ForceNew) Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports 'INTERNAL' CLBs.
@@ -42,6 +41,12 @@ The following arguments are supported:
 * `target_region_info_region` - (Optional) Region information of backend services are attached the CLB instance. Only supports 'OPEN' CLBs.
 * `target_region_info_vpc_id` - (Optional) Vpc information of backend services are attached the CLB instance. Only supports 'OPEN' CLBs.
 * `vpc_id` - (Optional, ForceNew) VPC ID of the CLB.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `clb_vips` - The virtual service address table of the CLB.
 
 
 ## Import

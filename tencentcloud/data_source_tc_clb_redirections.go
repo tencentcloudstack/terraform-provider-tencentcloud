@@ -6,10 +6,10 @@ Example Usage
 ```hcl
 data "tencentcloud_clb_redirections" "foo" {
   clb_id                 = "lb-p7olt9e5"
-  source_listener_id     = "lbl-jc1dx6ju#lb-p7olt9e5"
-  target_listener_id     = "lbl-asj1hzuo#lb-p7olt9e5"
-  source_listener_rule_id = "loc-ft8fmngv#lbl-jc1dx6ju#lb-p7olt9e5"
-  target_listener_rule_id = "loc-4xxr2cy7#lbl-asj1hzuo#lb-p7olt9e5"
+  source_listener_id     = "lbl-jc1dx6ju"
+  target_listener_id     = "lbl-asj1hzuo"
+  source_listener_rule_id = "loc-ft8fmngv"
+  target_listener_rule_id = "loc-4xxr2cy7"
   result_output_file     = "mytestpath"
 }
 ```
@@ -19,7 +19,6 @@ package tencentcloud
 import (
 	"context"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -106,13 +105,13 @@ func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta inte
 
 	params := make(map[string]string)
 	params["clb_id"] = d.Get("clb_id").(string)
-	params["source_listener_id"] = strings.Split(d.Get("source_listener_id").(string), "#")[0]
-	params["source_listener_rule_id"] = strings.Split(d.Get("source_listener_rule_id").(string), "#")[0]
+	params["source_listener_id"] = d.Get("source_listener_id").(string)
+	params["source_listener_rule_id"] = d.Get("source_listener_rule_id").(string)
 	if v, ok := d.GetOk("target_listener_id"); ok {
-		params["target_listener_id"] = strings.Split(v.(string), "#")[0]
+		params["target_listener_id"] = v.(string)
 	}
 	if v, ok := d.GetOk("target_listener_rule_id"); ok {
-		params["target_listener_rule_id"] = strings.Split(v.(string), "#")[0]
+		params["target_listener_rule_id"] = v.(string)
 	}
 
 	clbService := ClbService{
@@ -136,10 +135,10 @@ func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta inte
 	for _, r := range redirections {
 		mapping := map[string]interface{}{
 			"clb_id":                  (*r)["clb_id"],
-			"source_listener_id":      (*r)["source_listener_id"] + "#" + (*r)["clb_id"],
-			"target_listener_id":      (*r)["target_listener_id"] + "#" + (*r)["clb_id"],
-			"source_listener_rule_id": (*r)["source_listener_rule_id"] + "#" + (*r)["source_listener_id"] + "#" + (*r)["clb_id"],
-			"target_listener_rule_id": (*r)["target_listener_rule_id"] + "#" + (*r)["target_listener_id"] + "#" + (*r)["clb_id"],
+			"source_listener_id":      (*r)["source_listener_id"],
+			"target_listener_id":      (*r)["target_listener_id"],
+			"source_listener_rule_id": (*r)["source_listener_rule_id"],
+			"target_listener_rule_id": (*r)["target_listener_rule_id"],
 		}
 
 		redirectionList = append(redirectionList, mapping)

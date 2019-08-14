@@ -13,21 +13,28 @@ Provides a resource to create a CLB listener.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_clb_listener" "clb_listener" {
+resource "tencentcloud_clb_listener" "tcp_listener" {
   clb_id                     = "lb-k2zjp9lv"
   listener_name              = "mylistener"
   port                       = 80
-  protocol                   = "HTTP"
+  protocol                   = "TCP"
   health_check_switch        = true
   health_check_time_out      = 2
   health_check_interval_time = 5
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
-  certificate_ssl_mode       = "MUTUAL"
-  certificate_id             = "mycert server ID "
-  certificate_ca_id          = "mycert ca ID"
   session_expire_time        = 30
   scheduler                  = "WRR"
+}
+resource "tencentcloud_clb_listener" "https_listener" {
+  clb_id               = "lb-k2zjp9lv"
+  listener_name        = "listener_https"
+  port                 = 80
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "MUTUAL"
+  certificate_id       = "mycert server ID "
+  certificate_ca_id    = "mycert ca ID"
+  sni_switch           = true
 }
 ```
 
@@ -51,12 +58,4 @@ The following arguments are supported:
 * `session_expire_time` - (Optional) Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR', and not available when listener protocol is TCP_SSL.
 * `sni_switch` - (Optional, ForceNew) Indicates whether SNI is enabled, and only supported with protocol 'HTTPS'.
 
-
-## Import
-
-CLB listener can be imported using the id, e.g.
-
-```
-$ terraform import tencentcloud_clb_listener.foo lbl-qckdffns#lb-p7nlgs4t
-```
 

@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 data "tencentcloud_clb_listeners" "foo" {
   clb_id      = "lb-k2zjp9lv"
-  listener_id = "lbl-mwr6vbtv#lb-k2zjp9lv"
+  listener_id = "lbl-mwr6vbtv"
   protocol    = "TCP"
   port        = 80
 }
@@ -224,7 +224,7 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 			mapping["certificate_ca_id"] = *listener.Certificate.CertCaId
 		}
 		listenerList = append(listenerList, mapping)
-		ids = append(ids, *listener.ListenerId+"#"+clbId)
+		ids = append(ids, *listener.ListenerId)
 	}
 
 	d.SetId(dataResourceIdsHash(ids))

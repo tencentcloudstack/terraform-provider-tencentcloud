@@ -117,17 +117,10 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 	return nil
 }
 
-func (me *ClbService) DescribeListenerById(ctx context.Context, id string) (clbListener *clb.Listener, errRet error) {
+func (me *ClbService) DescribeListenerById(ctx context.Context, listenerId string, clbId string) (clbListener *clb.Listener, errRet error) {
 	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
-	items := strings.Split(id, "#")
-	if len(items) != 2 {
-		errRet = fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
-		return
-	}
 
-	listenerId := items[0]
-	clbId := items[1]
 	request.ListenerIds = []*string{&listenerId}
 	request.LoadBalancerId = stringToPointer(clbId)
 	ratelimit.Check(request.GetAction())
@@ -155,14 +148,7 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 	clbId := ""
 	for k, v := range params {
 		if k == "listener_id" {
-			items := strings.Split(v.(string), "#")
-			if len(items) != 2 {
-				errRet = fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
-				return
-			}
-
-			listenerId := items[0]
-			clbId = items[1]
+			listenerId := v.(string)
 			request.ListenerIds = []*string{stringToPointer(listenerId)}
 			request.LoadBalancerId = stringToPointer(clbId)
 		}
