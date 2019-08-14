@@ -41,6 +41,6 @@ In addition to all arguments above, the following attributes are exported:
   * `targets` - Information of the backends to be attached.
     * `instance_id` - Id of the backend server.
     * `port` - Port of the backend server.
-    * `weight` -  Forwarding weight of the backend service, the range of [0, 100], defaults to 10.
+    * `weight` - Forwarding weight of the backend service, the range of [0, 100], defaults to 10.
 
 

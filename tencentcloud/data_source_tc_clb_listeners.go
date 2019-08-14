@@ -42,7 +42,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_PROTOCOL),
-				Description:  " Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'. NOTES: 'TCP_SSL' is testing internally, please apply if you need to use.",
+				Description:  "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'. NOTES: 'TCP_SSL' is testing internally, please apply if you need to use.",
 			},
 			"port": {
 				Type:         schema.TypeInt,

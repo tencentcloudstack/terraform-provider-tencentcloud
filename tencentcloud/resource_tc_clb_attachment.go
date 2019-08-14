@@ -58,7 +58,7 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: " ID of the clb listener.",
+				Description: "ID of the clb listener.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
@@ -76,7 +76,7 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Required:    true,
 				MinItems:    1,
 				MaxItems:    100,
-				Description: " Information of the backends to be attached.",
+				Description: "Information of the backends to be attached.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
