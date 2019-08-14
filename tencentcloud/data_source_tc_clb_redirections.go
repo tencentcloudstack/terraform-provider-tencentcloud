@@ -32,7 +32,7 @@ func dataSourceTencentCloudClbRedirections() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: " ID of the CLB to be queried.",
+				Description: "Id of the CLB to be queried.",
 			},
 			"source_listener_id": {
 				Type:        schema.TypeString,
@@ -42,17 +42,17 @@ func dataSourceTencentCloudClbRedirections() *schema.Resource {
 			"target_listener_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of source listener to be queried.",
+				Description: "Id of target listener to be queried.",
 			},
 			"source_listener_rule_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Rule ID of source listener to be queried.",
+				Description: "Rule Id of source listener to be queried.",
 			},
 			"target_listener_rule_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Rule ID of target listener to be queried.",
+				Description: "Rule Id of target listener to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -68,7 +68,7 @@ func dataSourceTencentCloudClbRedirections() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: " ID of the CLB.",
+							Description: "Id of the CLB.",
 						},
 						"source_listener_id": {
 							Type:        schema.TypeString,
@@ -78,17 +78,17 @@ func dataSourceTencentCloudClbRedirections() *schema.Resource {
 						"target_listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of source listener.",
+							Description: "Id of target listener.",
 						},
 						"source_listener_rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Rule IDd of source listener.",
+							Description: "Rule Id of source listener.",
 						},
 						"target_listener_rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Rule ID of target listener.",
+							Description: "Rule Id of target listener.",
 						},
 					},
 				},
