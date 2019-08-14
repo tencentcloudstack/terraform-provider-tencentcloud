@@ -215,11 +215,11 @@ func validateAllowedStringValue(ss []string) schema.SchemaValidateFunc {
 
 func validatePort(v interface{}, k string) (ws []string, errors []error) {
 	value := 0
-	switch v.(type) {
+	switch t := v.(type) {
 	case string:
-		value, _ = strconv.Atoi(v.(string))
+		value, _ = strconv.Atoi(t)
 	case int:
-		value = v.(int)
+		value = t
 	default:
 		errors = append(errors, fmt.Errorf("%q data type error ", k))
 		return

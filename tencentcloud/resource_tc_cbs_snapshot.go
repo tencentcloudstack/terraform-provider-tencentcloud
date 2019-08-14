@@ -84,7 +84,7 @@ func resourceTencentCloudCbsSnapshot() *schema.Resource {
 func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_snapshot.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	storageId := d.Get("storage_id").(string)
@@ -133,7 +133,7 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_snapshot.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	snapshotId := d.Id()
@@ -165,7 +165,7 @@ func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{
 func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_snapshot.update")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	snapshotId := d.Id()
@@ -194,7 +194,7 @@ func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudCbsSnapshotDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_snapshot.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	snapshotId := d.Id()

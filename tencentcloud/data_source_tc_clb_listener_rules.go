@@ -22,7 +22,9 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
 func dataSourceTencentCloudClbListenerRules() *schema.Resource {
@@ -59,7 +61,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.",
+				Description:  "Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -159,8 +161,9 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						},
 						"scheduler": {
 							Type:        schema.TypeString,
+							Optional:    true,
 							Computed:    true,
-							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'.",
+							Description: "Scheduling method of the CLB listener, and available values include 'WRR', 'IP_HASH' and 'LEAST_CONN'. The default is 'WRR'.",
 						},
 					},
 				},
@@ -172,7 +175,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_clb_listener_rules.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	combinedId := d.Get("listener_id").(string)
@@ -205,11 +208,19 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	rules, err := clbService.DescribeRulesByFilter(ctx, params)
+	var rules []*clb.RuleOutput
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := clbService.DescribeRulesByFilter(ctx, params)
+		if e != nil {
+			return retryError(e)
+		}
+		rules = results
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read clb listener rules failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
 	ruleList := make([]map[string]interface{}, 0, len(rules))
 	log.Printf("the length %d", len(rules))
 	ids := make([]string, 0, len(rules))
@@ -247,15 +258,15 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("rule_list", ruleList); err != nil {
-		log.Printf("[CRITAL]%s provider set clb listener rule list fail, reason:%s\n ", logId, err.Error())
-		return err
+	if e := d.Set("rule_list", ruleList); e != nil {
+		log.Printf("[CRITAL]%s provider set clb listener rule list fail, reason:%s\n ", logId, e.Error())
+		return e
 	}
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), ruleList); err != nil {
-			return err
+		if e := writeToFile(output.(string), ruleList); e != nil {
+			return e
 		}
 	}
 

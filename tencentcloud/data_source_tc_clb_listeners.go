@@ -18,7 +18,9 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
 func dataSourceTencentCloudClbListeners() *schema.Resource {
@@ -132,7 +134,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"scheduler": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
+							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method.",
 						},
 						"sni_switch": {
 							Type:        schema.TypeBool,
@@ -149,7 +151,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_clb_listeners.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbId := d.Get("clb_id").(string)
@@ -169,11 +171,19 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	listeners, err := clbService.DescribeListenersByFilter(ctx, params)
+	var listeners []*clb.Listener
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := clbService.DescribeListenersByFilter(ctx, params)
+		if e != nil {
+			return retryError(e)
+		}
+		listeners = results
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read clb listeners failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
 	listenerList := make([]map[string]interface{}, 0, len(listeners))
 	ids := make([]string, 0, len(listeners))
 	for _, listener := range listeners {
@@ -218,15 +228,15 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("listener_list", listenerList); err != nil {
-		log.Printf("[CRITAL]%s provider set clb listener list fail, reason:%s\n ", logId, err.Error())
-		return err
+	if e := d.Set("listener_list", listenerList); e != nil {
+		log.Printf("[CRITAL]%s provider set clb listener list fail, reason:%s\n ", logId, e.Error())
+		return e
 	}
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), listenerList); err != nil {
-			return err
+		if e := writeToFile(output.(string), listenerList); e != nil {
+			return e
 		}
 	}
 

@@ -1,7 +1,12 @@
-## 1.16.0 (Unreleased)
+## 1.15.2 (Unreleased)
+## 1.15.1 (August 13, 2019)
 
 ENHANCEMENTS:
-* The `tencentcloud_instance.image_id` property becomes ForceNew.
+
+* `tencentcloud_instance`: changed `image_id` property to ForceNew (#78)
+* `tencentcloud_instance`: improved with retry (#82)
+* `tencentcloud_cbs_storages`: improved with retry (#82)
+* `tencentcloud_clb_instance`: bug fixed and improved with retry (#37)
 
 ## 1.15.0 (August 07, 2019)
 

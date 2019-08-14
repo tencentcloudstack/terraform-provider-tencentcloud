@@ -3,10 +3,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"log"
 )
 
 type DcService struct {
@@ -32,6 +33,8 @@ func (me *DcService) strPt2str(pt *string) (ret string) {
 		return *pt
 	}
 }
+
+/*
 func (me *DcService) intPt2int(pt *int) (ret int) {
 	if pt == nil {
 		return
@@ -39,6 +42,7 @@ func (me *DcService) intPt2int(pt *int) (ret int) {
 		return *pt
 	}
 }
+*/
 
 func (me *DcService) int64Pt2int64(pt *int64) (ret int64) {
 	if pt == nil {

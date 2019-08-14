@@ -45,7 +45,7 @@ func TestAccTencentCloudRedisBackupConfig(t *testing.T) {
 func testAccTencentCloudRedisBackupConfigExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[r]
@@ -63,7 +63,7 @@ func testAccTencentCloudRedisBackupConfigExists(r string) resource.TestCheckFunc
 }
 
 func testAccTencentCloudRedisBackupConfigDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}

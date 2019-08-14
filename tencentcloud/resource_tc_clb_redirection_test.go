@@ -23,8 +23,8 @@ func TestAccTencentCloudClbRedirection_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "clb_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "source_listener_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "target_listener_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "rewrite_source_rule_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "rewrite_target_rule_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "source_listener_rule_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "target_listener_rule_id"),
 				),
 			},
 			{
@@ -37,7 +37,7 @@ func TestAccTencentCloudClbRedirection_basic(t *testing.T) {
 }
 
 func testAccCheckClbRedirectionDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbService := ClbService{
@@ -58,7 +58,7 @@ func testAccCheckClbRedirectionDestroy(s *terraform.State) error {
 
 func testAccCheckClbRedirectionExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]
@@ -121,7 +121,7 @@ resource "tencentcloud_clb_redirection" "redirection_basic" {
   clb_id                = "${tencentcloud_clb_instance.clb_basic.id}"
   source_listener_id    = "${tencentcloud_clb_listener.listener_basic.id}"
   target_listener_id    = "${tencentcloud_clb_listener.listener_target.id}"
-  rewrite_source_rule_id = "${tencentcloud_clb_listener_rule.rule_basic.id}"
-  rewrite_target_rule_id = "${tencentcloud_clb_listener_rule.rule_target.id}"
+  source_listener_rule_id = "${tencentcloud_clb_listener_rule.rule_basic.id}"
+  target_listener_rule_id = "${tencentcloud_clb_listener_rule.rule_target.id}"
 }
 `

@@ -198,7 +198,7 @@ func resetInstancePassword(client *client.Client, instanceId string, newPassword
 	return operateInstanceBetweenStopAndStart(client, params, instanceId, func() error {
 		// just wait, 95% change password will be reset
 		// a little stupid, but it's ok for now
-		// need to improve it when there is API for reseting proccess query
+		// need to improve it when there is API for reseting process query
 		time.Sleep(42 * time.Second)
 		return nil
 	})

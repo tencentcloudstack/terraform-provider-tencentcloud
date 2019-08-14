@@ -94,7 +94,7 @@ func dataSourceTencentCloudMongodbZoneConfig() *schema.Resource {
 func dataSourceTencentCloudMongodbZoneConfigRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_mongodb_zone_config.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	zone := ""

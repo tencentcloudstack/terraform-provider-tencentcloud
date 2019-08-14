@@ -110,27 +110,11 @@ func flattenIntList(list []*uint64) []interface{} {
 	return vi
 }
 
-// Transform sdk map[string]*string to terraform TypeMap
-func pointersMapToStringMap(pointers map[string]*string) map[string]interface{} {
-	list := make(map[string]interface{}, len(pointers))
-	for i, v := range pointers {
-		list[i] = *v
-	}
-	return list
-}
-
 func pointerToString(pointer *string) string {
 	if pointer == nil {
 		return ""
 	}
 	return *pointer
-}
-
-func pointerToInt(pointer *uint64) int {
-	if pointer == nil {
-		return 0
-	}
-	return int(*pointer)
 }
 
 func stringToPointer(s string) *string {

@@ -6,11 +6,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -1180,9 +1181,7 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 		if len(set) == 0 {
 			break
 		}
-		for _, sg := range set {
-			sgs = append(sgs, sg)
-		}
+		sgs = append(sgs, set...)
 
 		if len(set) < pageSize {
 			break
@@ -1272,7 +1271,7 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 	}
 
 	// policy.Protocol always not nil
-	if strings.ToLower(*policy.Protocol) != strings.ToLower(*info.Protocol) {
+	if !strings.EqualFold(*policy.Protocol, *info.Protocol) {
 		return false
 	}
 
@@ -1281,7 +1280,7 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 		return false
 	}
 
-	if strings.ToUpper(*policy.Action) != strings.ToUpper(info.Action) {
+	if !strings.EqualFold(*policy.Action, info.Action) {
 		return false
 	}
 

@@ -46,7 +46,7 @@ func resourceTencentCloudAsAttachment() *schema.Resource {
 func resourceTencentCloudAsAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_attachment.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingGroupId := d.Get("scaling_group_id").(string)
@@ -66,7 +66,7 @@ func resourceTencentCloudAsAttachmentCreate(d *schema.ResourceData, meta interfa
 func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_attachment.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingGroupId := d.Id()
@@ -85,7 +85,7 @@ func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface
 func resourceTencentCloudAsAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_attachment.update")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingGroupId := d.Id()
@@ -119,7 +119,7 @@ func resourceTencentCloudAsAttachmentUpdate(d *schema.ResourceData, meta interfa
 func resourceTencentCloudAsAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_attachment.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingGroupId := d.Id()

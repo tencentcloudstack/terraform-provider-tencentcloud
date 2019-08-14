@@ -39,7 +39,7 @@ func TestAccTencentCloudCbsSnapshot(t *testing.T) {
 }
 
 func testAccCheckCbsSnapshotDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	cbsService := CbsService{
@@ -60,7 +60,7 @@ func testAccCheckCbsSnapshotDestroy(s *terraform.State) error {
 
 func testAccCheckSnapshotExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]

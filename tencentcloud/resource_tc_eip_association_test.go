@@ -149,7 +149,7 @@ resource "tencentcloud_eip_association" "foo" {
 }
 `
 
-// TODO remove hard code and make netwrok_interface_id as a resource
+// TODO remove hard code and make network_interface_id as a resource
 const testAccEipAssociationWithNetworkInterface = `
 resource "tencentcloud_eip" "my_eip" {
   name = "tf_auto_test"

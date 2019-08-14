@@ -19,12 +19,12 @@ func init() {
 }
 
 func testSweepAsScalingGroups(region string) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	sharedClient, err := sharedClientForRegion(region)
 	if err != nil {
-		return fmt.Errorf("geting tencentcloud client error: %s", err.Error())
+		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
 	client := sharedClient.(TencentCloudClient)
 
@@ -125,7 +125,7 @@ func TestAccTencentCloudAsScalingGroup_full(t *testing.T) {
 
 func testAccCheckAsScalingGroupExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]
@@ -145,7 +145,7 @@ func testAccCheckAsScalingGroupExists(n string) resource.TestCheckFunc {
 }
 
 func testAccCheckAsScalingGroupDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	asService := AsService{

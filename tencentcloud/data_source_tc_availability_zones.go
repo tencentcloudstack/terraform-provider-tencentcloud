@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	tencentCloudApiAvailibilityZoneStateAvailable   = "AVAILABLE"
+	// tencentCloudApiAvailibilityZoneStateAvailable   = "AVAILABLE"
 	tencentCloudApiAvailibilityZoneStateUnavailable = "UNAVAILABLE"
 )
 

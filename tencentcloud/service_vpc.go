@@ -76,8 +76,6 @@ func (client *TencentCloudClient) DescribeDnat(entry *vpc.DnaptRule) (response *
 			return
 		}
 	}
-	if response == nil {
-		err = dnatNotFound
-	}
+	err = dnatNotFound
 	return
 }

@@ -196,7 +196,7 @@ func resourceTencentCloudRouteEntryRead(d *schema.ResourceData, m interface{}) e
 func resourceTencentCloudRouteEntryDelete(d *schema.ResourceData, m interface{}) error {
 	client := m.(*TencentCloudClient).commonConn
 	routes, ok := routeIdDecode(d.Id())
-	if ok == false {
+	if !ok {
 		return fmt.Errorf("resource_tc_route_entry delete error, id decode faild! id:%v", d.Id())
 	}
 	params := map[string]string{
