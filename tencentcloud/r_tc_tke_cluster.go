@@ -11,11 +11,11 @@ import (
 
 func TkeCvmCreateInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"count":{
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ForceNew:true,
-			Default:      1,
+		"count": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			ForceNew: true,
+			Default:  1,
 		},
 		"availability_zone": {
 			Type:        schema.TypeString,
@@ -25,17 +25,20 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 		},
 		"instance_type": {
 			Type:        schema.TypeString,
+			ForceNew:    true,
 			Required:    true,
 			Description: "Specified types of CVM instance.",
 		},
 		"subnet_id": {
 			Type:         schema.TypeString,
+			ForceNew:     true,
 			Optional:     true,
 			ValidateFunc: validateStringLengthInRange(4, 100),
 			Description:  "Private network ID. If vpc_id is set, this value is required.",
 		},
 		"system_disk_type": {
 			Type:         schema.TypeString,
+			ForceNew:     true,
 			Optional:     true,
 			Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 			ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
@@ -43,6 +46,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 		},
 		"system_disk_size": {
 			Type:         schema.TypeInt,
+			ForceNew:     true,
 			Optional:     true,
 			Default:      50,
 			ValidateFunc: validateIntegerInRange(50, 500),
@@ -50,6 +54,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 		},
 		"data_disk": {
 			Type:        schema.TypeList,
+			ForceNew:    true,
 			Optional:    true,
 			MaxItems:    11,
 			Description: "Configurations of data disk.",
@@ -57,6 +62,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 				Schema: map[string]*schema.Schema{
 					"disk_type": {
 						Type:         schema.TypeString,
+						ForceNew:     true,
 						Optional:     true,
 						Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 						ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
@@ -64,12 +70,14 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 					},
 					"disk_size": {
 						Type:        schema.TypeInt,
+						ForceNew:    true,
 						Optional:    true,
 						Default:     0,
 						Description: "Volume of disk in GB. Default is 0.",
 					},
 					"snapshot_id": {
 						Type:        schema.TypeString,
+						ForceNew:    true,
 						Optional:    true,
 						Description: "Data disk snapshot ID.",
 					},
@@ -78,6 +86,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 		},
 		"internet_charge_type": {
 			Type:         schema.TypeString,
+			ForceNew:     true,
 			Optional:     true,
 			Default:      INTERNET_CHARGE_TYPE_TRAFFIC_POSTPAID_BY_HOUR,
 			ValidateFunc: validateAllowedStringValue(INTERNET_CHARGE_ALLOW_TYPE),
@@ -85,6 +94,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 		},
 		"internet_max_bandwidth_out": {
 			Type:         schema.TypeInt,
+			ForceNew:     true,
 			Optional:     true,
 			Default:      0,
 			ValidateFunc: validateIntegerInRange(0, 100),
@@ -92,51 +102,64 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 		},
 		"public_ip_assigned": {
 			Type:        schema.TypeBool,
+			ForceNew:    true,
 			Optional:    true,
 			Description: "Specify whether to assign an Internet IP address.",
 		},
 		"password": {
 			Type:         schema.TypeString,
+			ForceNew:     true,
 			Optional:     true,
 			Sensitive:    true,
 			ValidateFunc: validateAsConfigPassword,
 			Description:  "Password to access.",
 		},
 		"key_ids": {
-			MaxItems:1,
+			MaxItems:    1,
 			Type:        schema.TypeList,
+			ForceNew:    true,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "ID list of keys.",
 		},
 		"security_group_ids": {
 			Type:        schema.TypeList,
+			ForceNew:    true,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "Security groups to which a CVM instance belongs.",
 		},
 		"enhanced_security_service": {
 			Type:        schema.TypeBool,
+			ForceNew:    true,
 			Optional:    true,
 			Default:     true,
 			Description: "To specify whether to enable cloud security service. Default is TRUE.",
 		},
 		"enhanced_monitor_service": {
 			Type:        schema.TypeBool,
+			ForceNew:    true,
 			Optional:    true,
 			Default:     true,
 			Description: "To specify whether to enable cloud monitor service. Default is TRUE.",
 		},
 		"user_data": {
 			Type:        schema.TypeString,
+			ForceNew:    true,
 			Optional:    true,
 			Description: "ase64-encoded User Data text, the length limit is 16KB.",
+		},
+
+		// Computed values
+		"cluster_node_num": {
+			Type:     schema.TypeInt,
+			Computed: true,
 		},
 	}
 }
 
 func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
-	vpcId string, projectId int64) (cvmJson string,count int64, errRet error) {
+	vpcId string, projectId int64) (cvmJson string, count int64, errRet error) {
 
 	request := cvm.NewRunInstancesRequest()
 
@@ -296,12 +319,12 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 
 	cvmJson = request.ToJsonString()
 
-	if v,ok:=dMap["count"];ok{
+	if v, ok := dMap["count"]; ok {
 		count = int64(v.(int))
-	}else{
-		count =1
+	} else {
+		count = 1
 	}
-	cvmJson= strings.Replace(cvmJson,`"Password":"",`,"",-1)
+	cvmJson = strings.Replace(cvmJson, `"Password":"",`, "", -1)
 
 	return
 }
@@ -310,7 +333,6 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTkeClusterCreate,
 		Read:   resourceTencentCloudTkeClusterRead,
-		Update: resourceTencentCloudTkeClusterUpdate,
 		Delete: resourceTencentCloudTkeClusterDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -318,73 +340,86 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"cluster_name": {
 				Type:     schema.TypeString,
+				ForceNew: true,
 				Optional: true,
 			},
 			"cluster_desc": {
 				Type:     schema.TypeString,
+				ForceNew: true,
 				Optional: true,
 			},
 			"cluster_os": {
 				Type:         schema.TypeString,
+				ForceNew:     true,
 				Optional:     true,
 				Default:      TKE_CLUSTER_OS_UBUNTU,
 				ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS),
 			},
 			"container_runtime": {
 				Type:         schema.TypeString,
+				ForceNew:     true,
 				Optional:     true,
 				Default:      TKE_RUNTIME_DOCKER,
 				ValidateFunc: validateAllowedStringValue(TKE_RUNTIMES),
 			},
 			"cluster_deploy_type": {
 				Type:         schema.TypeString,
+				ForceNew:     true,
 				Optional:     true,
 				Default:      TKE_DEPLOY_TYPE_MANAGED,
 				ValidateFunc: validateAllowedStringValue(TKE_DEPLOY_TYPES),
 			},
 			"cluster_version": {
 				Type:     schema.TypeString,
+				ForceNew: true,
 				Optional: true,
 				Default:  "1.10.5",
 			},
 			"cluster_ipvs": {
 				Type:     schema.TypeBool,
+				ForceNew: true,
 				Optional: true,
 				Default:  true,
 			},
 			"vpc_id": {
 				Type:         schema.TypeString,
+				ForceNew:     true,
 				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(4, 100),
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
+				ForceNew:    true,
 				Optional:    true,
 				Description: "Project ID, default value is 0.",
 			},
 			"cluster_cidr": {
 				Type:         schema.TypeString,
+				ForceNew:     true,
 				Required:     true,
 				ValidateFunc: validateCIDRNetworkAddress,
 			},
 			"ignore_cluster_cidr_conflict": {
 				Type:     schema.TypeBool,
+				ForceNew: true,
 				Optional: true,
 				Default:  false,
 			},
 			"cluster_max_pod_num": {
 				Type:     schema.TypeInt,
+				ForceNew: true,
 				Optional: true,
 				Default:  256,
 			},
 			"cluster_max_service_num": {
 				Type:     schema.TypeInt,
+				ForceNew: true,
 				Optional: true,
 				Default:  256,
 			},
 			"masters": {
 				Type:     schema.TypeList,
-				MinItems: 1,
+				ForceNew: true,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: TkeCvmCreateInfo(),
@@ -392,6 +427,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			},
 			"workers": {
 				Type:     schema.TypeList,
+				ForceNew: true,
 				MinItems: 1,
 				Required: true,
 				Elem: &schema.Resource{
@@ -412,7 +448,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	var advanced ClusterAdvancedSettings
 	var cvms RunInstancesForNode
 	var cidrSet ClusterCidrSettings
-	cvms.Master =[]string{}
+	cvms.Master = []string{}
 	cvms.Work = []string{}
 
 	clusterDeployType := d.Get("cluster_deploy_type").(string)
@@ -440,27 +476,26 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	cidrSet.MaxClusterServiceNum = int64(d.Get("cluster_max_service_num").(int))
 	cidrSet.MaxNodePodNum = int64(d.Get("cluster_max_pod_num").(int))
 
-
 	if masters, ok := d.GetOk("masters"); ok {
 		if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED {
 			return fmt.Errorf("if `cluster_deploy_type` is `MANAGED_CLUSTER` , You don't need define the master yourself")
 		}
 
 		masterList := masters.([]interface{})
-		for index:=range masterList{
+		for index := range masterList {
 			master := masterList[index].(map[string]interface{})
-			paraJson,count, err := tkeGetCvmRunInstancesPara(master, meta, vpcId, int64(basic.ProjectId))
+			paraJson, count, err := tkeGetCvmRunInstancesPara(master, meta, vpcId, int64(basic.ProjectId))
 			if err != nil {
 				return err
 			}
-			for count>0{
-				cvms.Master = append(cvms.Master,paraJson)
+			for count > 0 {
+				cvms.Master = append(cvms.Master, paraJson)
 				count--
 			}
 		}
 
-		if len(cvms.Master ) <3{
-			return  fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(masters) should  >=3 ")
+		if len(cvms.Master) < 3 {
+			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(masters) should  >=3 ")
 		}
 
 	} else {
@@ -472,13 +507,13 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	if workers, ok := d.GetOk("workers"); ok {
 		workerList := workers.([]interface{})
-		for index:=range workerList{
+		for index := range workerList {
 			worker := workerList[index].(map[string]interface{})
-			paraJson,count, err := tkeGetCvmRunInstancesPara(worker, meta, vpcId, int64(basic.ProjectId))
+			paraJson, count, err := tkeGetCvmRunInstancesPara(worker, meta, vpcId, int64(basic.ProjectId))
 			if err != nil {
 				return err
 			}
-			for count>0 {
+			for count > 0 {
 				cvms.Work = append(cvms.Work, paraJson)
 				count--
 			}
@@ -486,23 +521,62 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-	id,err:=service.CreateCluster(ctx,basic,advanced,cvms,cidrSet)
+	id, err := service.CreateCluster(ctx, basic, advanced, cvms, cidrSet)
 
-	if err!=nil{
-		return  err
+	if err != nil {
+		return err
 	}
+
 	d.SetId(id)
+
 	return nil
 }
 
 func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}) error {
 
-	return nil
-}
-func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_kubernetes_cluster.read")()
+
+	logId := getLogId(nil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	basic, cidrSetting, deployType, ipvs, has, err := service.DescribeClusters(ctx, d.Id())
+
+	if err != nil {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			basic, cidrSetting, deployType, ipvs, has, err = service.DescribeClusters(ctx, d.Id())
+			if err != nil {
+				return retryError(err)
+			}
+			return nil
+		})
+	}
+	if err != nil {
+		return nil
+	}
+
+	if !has {
+		d.SetId("")
+		return nil
+	}
+
+	d.Set("cluster_name", basic.ClusterName)
+	d.Set("cluster_desc", basic.ClusterDescription)
+	d.Set("cluster_os", basic.ClusterOs)
+	d.Set("cluster_deploy_type", deployType)
+	d.Set("cluster_version", basic.ClusterVersion)
+	d.Set("cluster_ipvs", ipvs)
+	d.Set("vpc_id", basic.VpcId)
+	d.Set("project_id", basic.ProjectId)
+	d.Set("cluster_cidr", cidrSetting.ClusterCidr)
+	d.Set("ignore_cluster_cidr_conflict", cidrSetting.IgnoreClusterCidrConflict)
+	d.Set("cluster_max_pod_num", cidrSetting.MaxClusterServiceNum)
+	d.Set("cluster_max_service_num", cidrSetting.MaxClusterServiceNum)
+	d.Set("cluster_node_num", basic.ClusterNodeNum)
 
 	return nil
 }
+
 func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster.delete")()
 
@@ -510,8 +584,8 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	return resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		err:=service.DeleteCluster(ctx,d.Id())
+	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := service.DeleteCluster(ctx, d.Id())
 		if err != nil {
 			return retryError(err)
 		}

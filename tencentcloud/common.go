@@ -49,7 +49,6 @@ func getLogId(ctx context.Context) string {
 			return logId
 		}
 	}
-
 	return fmt.Sprintf("%s-%d", firstLogTime, atomic.AddInt64(&logAtomaticId, 1))
 }
 
