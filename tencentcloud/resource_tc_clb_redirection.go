@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_clb_redirection" "foo" {
-  clb_id                  = "lb-p7olt9e5"
-  source_listener_id      = "lbl-jc1dx6ju"
-  target_listener_id      = "lbl-asj1hzuo"
-  source_listener_rule_id = "loc-ft8fmngv"
-  target_listener_rule_id = "loc-4xxr2cy7"
+  clb_id             = "lb-p7olt9e5"
+  source_listener_id = "lbl-jc1dx6ju"
+  target_listener_id = "lbl-asj1hzuo"
+  source_rule_id     = "loc-ft8fmngv"
+  target_rule_id     = "loc-4xxr2cy7"
 }
 ```
 
@@ -60,17 +60,17 @@ func resourceTencentCloudClbRedirection() *schema.Resource {
 				Required:    true,
 				Description: "Id of source listener.",
 			},
-			"source_listener_rule_id": {
+			"source_rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Rule ID of source listener.",
+				Description: "Rule id of source listener.",
 			},
-			"target_listener_rule_id": {
+			"target_rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Rule ID of target listener.",
+				Description: "Rule id of target listener.",
 			},
 		},
 	}
@@ -87,8 +87,8 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 	clbId := d.Get("clb_id").(string)
 	sourceListenerId := d.Get("source_listener_id").(string)
 	targertListenerId := d.Get("target_listener_id").(string)
-	sourceLocId := d.Get("source_listener_rule_id").(string)
-	targetLocId := d.Get("target_listener_rule_id").(string)
+	sourceLocId := d.Get("source_rule_id").(string)
+	targetLocId := d.Get("target_rule_id").(string)
 
 	request := clb.NewManualRewriteRequest()
 
@@ -153,8 +153,8 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	d.Set("clb_id", (*instance)["clb_id"])
 	d.Set("source_listener_id", (*instance)["source_listener_id"])
 	d.Set("target_listener_id", (*instance)["target_listener_id"])
-	d.Set("source_listener_rule_id", (*instance)["source_listener_rule_id"])
-	d.Set("target_listener_rule_id", (*instance)["target_listener_rule_id"])
+	d.Set("source_rule_id", (*instance)["source_rule_id"])
+	d.Set("target_rule_id", (*instance)["target_rule_id"])
 
 	return nil
 }

@@ -14,11 +14,11 @@ Provides a resource to create a CLB redirection.
 
 ```hcl
 resource "tencentcloud_clb_redirection" "foo" {
-  clb_id                  = "lb-p7olt9e5"
-  source_listener_id      = "lbl-jc1dx6ju"
-  target_listener_id      = "lbl-asj1hzuo"
-  source_listener_rule_id = "loc-ft8fmngv"
-  target_listener_rule_id = "loc-4xxr2cy7"
+  clb_id             = "lb-p7olt9e5"
+  source_listener_id = "lbl-jc1dx6ju"
+  target_listener_id = "lbl-asj1hzuo"
+  source_rule_id     = "loc-ft8fmngv"
+  target_rule_id     = "loc-4xxr2cy7"
 }
 ```
 
@@ -28,9 +28,9 @@ The following arguments are supported:
 
 * `clb_id` - (Required, ForceNew) Id of CLB instance.
 * `source_listener_id` - (Required, ForceNew) Id of source listener.
-* `source_listener_rule_id` - (Required, ForceNew) Rule ID of source listener.
+* `source_rule_id` - (Required, ForceNew) Rule id of source listener.
 * `target_listener_id` - (Required, ForceNew) Id of source listener.
-* `target_listener_rule_id` - (Required, ForceNew) Rule ID of target listener.
+* `target_rule_id` - (Required, ForceNew) Rule id of target listener.
 
 
 ## Import

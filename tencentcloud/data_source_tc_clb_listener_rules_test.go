@@ -51,6 +51,7 @@ resource "tencentcloud_clb_listener_rule" "rule" {
 }
 
 data "tencentcloud_clb_listener_rules" "rules" {
+  clb_id      = "${tencentcloud_clb_instance.clb.id}"
   listener_id = "${tencentcloud_clb_listener.listener.id}"
   domain      = "${tencentcloud_clb_listener_rule.rule.domain}"
   url         = "${tencentcloud_clb_listener_rule.rule.url}"
