@@ -42,7 +42,7 @@ func dataSourceTencentCloudClbRedirections() *schema.Resource {
 			"target_listener_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of source listener to be queried.",
+				Description: "Id of target listener to be queried.",
 			},
 			"source_rule_id": {
 				Type:        schema.TypeString,
@@ -78,7 +78,7 @@ func dataSourceTencentCloudClbRedirections() *schema.Resource {
 						"target_listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of source listener.",
+							Description: "Id of target listener.",
 						},
 						"source_rule_id": {
 							Type:        schema.TypeString,

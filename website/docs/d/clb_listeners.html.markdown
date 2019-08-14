@@ -28,7 +28,7 @@ The following arguments are supported:
 * `clb_id` - (Required) ID of the CLB to be queried.
 * `listener_id` - (Optional) ID of the listener to be queried.
 * `port` - (Optional) Port of the CLB listener.
-* `protocol` - (Optional)  Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'. NOTES: 'TCP_SSL' is testing internally, please apply if you need to use.
+* `protocol` - (Optional) Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'. NOTES: 'TCP_SSL' is testing internally, please apply if you need to use.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference

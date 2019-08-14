@@ -95,7 +95,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 									"weight": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: " Forwarding weight of the backend service, the range of [0, 100], defaults to 10.",
+										Description: "Forwarding weight of the backend service, the range of [0, 100], defaults to 10.",
 									},
 								},
 							},
