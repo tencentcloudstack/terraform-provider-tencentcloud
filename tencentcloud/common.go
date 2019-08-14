@@ -32,6 +32,8 @@ const writeRetryTimeout = 5 * time.Minute
 
 // retryableErrorCode is retryable error code
 var retryableErrorCode = []string{
+	// client
+	"ClientError.HttpStatusCodeError",
 	// commom
 	"FailedOperation",
 	"InternalError",
@@ -85,12 +87,13 @@ func isErrorRetryable(err error) bool {
 		return false
 	}
 
-	code := e.Code
-	if strings.Contains(code, ".") {
-		code = strings.Split(code, ".")[0]
+	longCode := e.Code
+	shortCode := e.Code
+	if strings.Contains(shortCode, ".") {
+		shortCode = strings.Split(shortCode, ".")[0]
 	}
 
-	if assert.IsContains(retryableErrorCode, code) {
+	if assert.IsContains(retryableErrorCode, longCode) || assert.IsContains(retryableErrorCode, shortCode) {
 		log.Printf("[CRITAL] Retryable error: %s", e.Error())
 		return true
 	}
