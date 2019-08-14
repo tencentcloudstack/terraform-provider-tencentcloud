@@ -7,6 +7,9 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"log"
+	"math"
+	"net"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -35,10 +38,11 @@ func TkeCvmState() map[string]*schema.Schema {
 func TkeCvmCreateInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"count": {
-			Type:     schema.TypeInt,
-			Optional: true,
-			ForceNew: true,
-			Default:  1,
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ForceNew:     true,
+			Default:      1,
+			ValidateFunc: validateIntegerInRange(1, 50),
 		},
 		"availability_zone": {
 			Type:        schema.TypeString,
@@ -51,6 +55,14 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:    true,
 			Required:    true,
 			Description: "Specified types of CVM instance.",
+			ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+				value := strings.ToUpper(v.(string))
+				if !strings.Contains(value, "LARGE") {
+					errors = append(errors, fmt.Errorf(
+						"%q  has to be `LARGE` type", k))
+				}
+				return
+			},
 		},
 		"subnet_id": {
 			Type:         schema.TypeString,
@@ -180,9 +192,6 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		Create: resourceTencentCloudTkeClusterCreate,
 		Read:   resourceTencentCloudTkeClusterRead,
 		Delete: resourceTencentCloudTkeClusterDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"cluster_name": {
 				Type:     schema.TypeString,
@@ -240,10 +249,31 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				Description: "Project ID, default value is 0.",
 			},
 			"cluster_cidr": {
-				Type:         schema.TypeString,
-				ForceNew:     true,
-				Required:     true,
-				ValidateFunc: validateCIDRNetworkAddress,
+				Type:     schema.TypeString,
+				ForceNew: true,
+				Required: true,
+
+				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+					value := v.(string)
+					_, ipnet, err := net.ParseCIDR(value)
+					if err != nil {
+						errors = append(errors, fmt.Errorf("%q must contain a valid CIDR, got error parsing: %s", k, err))
+						return
+					}
+					if ipnet == nil || value != ipnet.String() {
+						errors = append(errors, fmt.Errorf("%q must contain a valid network CIDR, expected %q, got %q", k, ipnet, value))
+						return
+					}
+					if !strings.Contains(value, "/") {
+						errors = append(errors, fmt.Errorf("%q must be a network segment", k))
+						return
+					}
+					if !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.") {
+						errors = append(errors, fmt.Errorf("%q must in  10. or 192.", k))
+						return
+					}
+					return
+				},
 			},
 			"ignore_cluster_cidr_conflict": {
 				Type:     schema.TypeBool,
@@ -256,17 +286,38 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				ForceNew: true,
 				Optional: true,
 				Default:  256,
+				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+					value := v.(int)
+					if value%16 != 0 {
+						errors = append(errors, fmt.Errorf(
+							"%q  has to be a multiple of 16 ", k))
+					}
+					if value < 32 {
+						errors = append(errors, fmt.Errorf(
+							"%q cannot be lower than %d: %d", k, 32, value))
+					}
+					return
+				},
 			},
 			"cluster_max_service_num": {
 				Type:     schema.TypeInt,
 				ForceNew: true,
 				Optional: true,
 				Default:  256,
+				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+					value := v.(int)
+					if value%16 != 0 {
+						errors = append(errors, fmt.Errorf(
+							"%q  has to be a multiple of 16 ", k))
+					}
+					return
+				},
 			},
 			"master_config": {
 				Type:     schema.TypeList,
 				ForceNew: true,
 				Optional: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: TkeCvmCreateInfo(),
 				},
@@ -274,7 +325,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			"worker_config": {
 				Type:     schema.TypeList,
 				ForceNew: true,
-				MinItems: 1,
+				MaxItems: 1,
 				Required: true,
 				Elem: &schema.Resource{
 					Schema: TkeCvmCreateInfo(),
@@ -284,13 +335,6 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			"cluster_node_num": {
 				Type:     schema.TypeInt,
 				Computed: true,
-			},
-			"master_instances_list": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: TkeCvmState(),
-				},
 			},
 			"worker_instances_list": {
 				Type:     schema.TypeList,
@@ -302,7 +346,6 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		},
 	}
 }
-
 
 func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 	vpcId string, projectId int64) (cvmJson string, count int64, errRet error) {
@@ -463,18 +506,19 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 	chargeType := INSTANCE_CHARGE_TYPE_POSTPAID
 	request.InstanceChargeType = &chargeType
 
-	cvmJson = request.ToJsonString()
-
 	if v, ok := dMap["count"]; ok {
 		count = int64(v.(int))
 	} else {
 		count = 1
 	}
+	request.InstanceCount = &count
+
+	cvmJson = request.ToJsonString()
+
 	cvmJson = strings.Replace(cvmJson, `"Password":"",`, "", -1)
 
 	return
 }
-
 
 func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster.create")()
@@ -514,11 +558,26 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	cidrSet.MaxClusterServiceNum = int64(d.Get("cluster_max_service_num").(int))
 	cidrSet.MaxNodePodNum = int64(d.Get("cluster_max_pod_num").(int))
 
+	items := strings.Split(cidrSet.ClusterCidr, "/")
+	if len(items) != 2 {
+		return fmt.Errorf("`cluster_cidr` must be network segment ")
+	}
+
+	bitNumber, err := strconv.ParseInt(items[1], 10, 64)
+
+	if err != nil {
+		return fmt.Errorf("`cluster_cidr` must be network segment ")
+	}
+
+	if math.Pow(2, float64(32-bitNumber)) <= float64(cidrSet.MaxNodePodNum) {
+		return fmt.Errorf("`cluster_cidr` Network segment range is too small, can not cover cluster_max_service_num")
+	}
+
 	if masters, ok := d.GetOk("master_config"); ok {
 		if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED {
 			return fmt.Errorf("if `cluster_deploy_type` is `MANAGED_CLUSTER` , You don't need define the master yourself")
 		}
-
+		var masterCount int64 = 0
 		masterList := masters.([]interface{})
 		for index := range masterList {
 			master := masterList[index].(map[string]interface{})
@@ -526,16 +585,13 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 			if err != nil {
 				return err
 			}
-			for count > 0 {
-				cvms.Master = append(cvms.Master, paraJson)
-				count--
-			}
-		}
 
-		if len(cvms.Master) < 3 {
+			cvms.Master = append(cvms.Master, paraJson)
+			masterCount += count
+		}
+		if masterCount < 3 {
 			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(masters) should  >=3 ")
 		}
-
 	} else {
 		if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
 			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` , You need define the master yourself")
@@ -547,14 +603,12 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		workerList := workers.([]interface{})
 		for index := range workerList {
 			worker := workerList[index].(map[string]interface{})
-			paraJson, count, err := tkeGetCvmRunInstancesPara(worker, meta, vpcId, int64(basic.ProjectId))
+			paraJson, _, err := tkeGetCvmRunInstancesPara(worker, meta, vpcId, int64(basic.ProjectId))
+
 			if err != nil {
 				return err
 			}
-			for count > 0 {
-				cvms.Work = append(cvms.Work, paraJson)
-				count--
-			}
+			cvms.Work = append(cvms.Work, paraJson)
 		}
 	}
 
@@ -567,12 +621,12 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	d.SetId(id)
 
-	_,_, err = service.DescribeClusterInstances(ctx, d.Id())
+	_, _, err = service.DescribeClusterInstances(ctx, d.Id())
 
 	if err != nil {
 		//create often cost more than half an hour.
 		err = resource.Retry(time.Hour, func() *resource.RetryError {
-			_,_, err = service.DescribeClusterInstances(ctx, d.Id())
+			_, _, err = service.DescribeClusterInstances(ctx, d.Id())
 			if err != nil {
 				return retryError(err)
 			}
@@ -580,12 +634,12 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		})
 	}
 
-	if err!=nil{
-		log.Printf("[WARN]%s resource.kubernetes_cluster DescribeClusterInstances fail , %s",logId,err.Error())
+	if err != nil {
+		log.Printf("[WARN]%s resource.kubernetes_cluster DescribeClusterInstances fail , %s", logId, err.Error())
 	}
 
-	if err = resourceTencentCloudTkeClusterRead(d, meta);err!=nil{
-		log.Printf("[WARN]%s resource.kubernetes_cluster.read after create fail , %s",logId,err.Error())
+	if err = resourceTencentCloudTkeClusterRead(d, meta); err != nil {
+		log.Printf("[WARN]%s resource.kubernetes_cluster.read after create fail , %s", logId, err.Error())
 	}
 
 	return nil
@@ -633,10 +687,10 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	d.Set("cluster_max_service_num", info.MaxClusterServiceNum)
 	d.Set("cluster_node_num", info.ClusterNodeNum)
 
-	masters, workers, err := service.DescribeClusterInstances(ctx, d.Id())
+	_, workers, err := service.DescribeClusterInstances(ctx, d.Id())
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			masters, workers, err = service.DescribeClusterInstances(ctx, d.Id())
+			_, workers, err = service.DescribeClusterInstances(ctx, d.Id())
 			if err != nil {
 				return retryError(err)
 			}
@@ -646,20 +700,8 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return err
 	}
-	masterInstancesList := make([]map[string]interface{}, 0, len(masters))
-	for _, cvm := range masters {
-		tempMap := make(map[string]interface{})
-		tempMap["instance_id"] = cvm.InstanceId
-		tempMap["instance_role"] = cvm.InstanceRole
-		tempMap["instance_state"] = cvm.InstanceState
-		tempMap["failed_reason"] = cvm.FailedReason
-		masterInstancesList = append(masterInstancesList, tempMap)
-	}
-	if len(masterInstancesList) > 0 {
-		d.Set("master_instances_list", masterInstancesList)
-	}
 
-	workerInstancesList := make([]map[string]interface{}, 0, len(masters))
+	workerInstancesList := make([]map[string]interface{}, 0, len(workers))
 	for _, cvm := range workers {
 		tempMap := make(map[string]interface{})
 		tempMap["instance_id"] = cvm.InstanceId
@@ -668,9 +710,8 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		tempMap["failed_reason"] = cvm.FailedReason
 		workerInstancesList = append(workerInstancesList, tempMap)
 	}
-	if len(workerInstancesList) > 0 {
-		d.Set("worker_instances_list", workerInstancesList)
-	}
+
+	d.Set("worker_instances_list", workerInstancesList)
 
 	return nil
 }

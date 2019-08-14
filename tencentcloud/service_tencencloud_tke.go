@@ -11,6 +11,7 @@ import (
 )
 
 type ClusterBasicSetting struct {
+	ClusterId          string
 	ClusterOs          string
 	ClusterVersion     string
 	ClusterName        string
@@ -132,14 +133,15 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 		}
 	}()
 
-	if (id == "" && name != "") || (id != "" && name == "") {
-		errRet = fmt.Errorf("cluster_id ,cluster_id only one can be set")
+	if id != "" && name != "" {
+		errRet = fmt.Errorf("cluster_id ,cluster_name only one can be set one")
 		return
 	}
 
 	if id != "" {
 		request.ClusterIds = []*string{&id}
 	}
+
 	if name != "" {
 		request.Filters = []*tke.Filter{&tke.Filter{
 			Name:   stringToPointer("ClusterName"),
@@ -164,6 +166,8 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 	for index := range response.Response.Clusters {
 		cluster := response.Response.Clusters[index]
 		var clusterInfo ClusterInfo
+
+		clusterInfo.ClusterId = *cluster.ClusterId
 		clusterInfo.ClusterOs = *cluster.ClusterOs
 		clusterInfo.ClusterVersion = *cluster.ClusterVersion
 		clusterInfo.ClusterDescription = *cluster.ClusterDescription
@@ -216,7 +220,7 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 
 	has = true
 	cluster := response.Response.Clusters[0]
-
+	clusterInfo.ClusterId = *cluster.ClusterId
 	clusterInfo.ClusterOs = *cluster.ClusterOs
 	clusterInfo.ClusterVersion = *cluster.ClusterVersion
 	clusterInfo.ClusterDescription = *cluster.ClusterDescription

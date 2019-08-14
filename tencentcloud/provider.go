@@ -221,6 +221,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_instances":           dataSourceTencentCloudMongodbInstances(),
 			"tencentcloud_dc_gateway_instances":        dataSourceTencentCloudDcGatewayInstances(),
 			"tencentcloud_dc_gateway_ccn_routes":       dataSourceTencentCloudDcGatewayCCNRoutes(),
+			"tencentcloud_kubernetes_clusters":         dataSourceTencentCloudKubernetesClusters(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

@@ -73,7 +73,7 @@ func retryError(err error) *resource.RetryError {
 func isErrorRetryable(err error) bool {
 	e, ok := err.(*errors.TencentCloudSDKError)
 	if !ok {
-		log.Printf("[CRITAL] NonRetryable error: %s", e.Error())
+		log.Printf("[CRITAL] NonRetryable error: %+v", e.Error())
 		return false
 	}
 
