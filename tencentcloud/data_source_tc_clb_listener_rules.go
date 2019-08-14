@@ -7,7 +7,7 @@ Example Usage
 data "tencentcloud_clb_listener_rules" "foo" {
   clb_id      = "lb-k2zjp9lv"
   listener_id = "lbl-mwr6vbtv"
-  rule_id     = "loc-inem40hz#lbl-mwr6vbtv#lb-k2zjp9lv"
+  rule_id     = "loc-inem40hz"
   domain      = "abc.com"
   url         = "/"
   scheduler   = "WRR"
@@ -18,9 +18,7 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -34,7 +32,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"clb_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "ID of the CLB to be queried.",
 			},
 			"listener_id": {
@@ -178,14 +176,8 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	combinedId := d.Get("listener_id").(string)
-	items := strings.Split(combinedId, "#")
-	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_listener_rules is wrong")
-	}
-
-	listenerId := items[0]
-	clbId := items[1]
+	listenerId := d.Get("listener_id").(string)
+	clbId := d.Get("clb_id").(string)
 	params := make(map[string]string)
 	params["clb_id"] = clbId
 	params["listener_id"] = listenerId
@@ -227,7 +219,7 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	for _, rule := range rules {
 		mapping := map[string]interface{}{
 			"clb_id":              clbId,
-			"listener_id":         combinedId,
+			"listener_id":         listenerId,
 			"rule_id":             *rule.LocationId,
 			"domain":              *rule.Domain,
 			"url":                 *rule.Url,
@@ -254,7 +246,7 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 			mapping["certificate_ca_id"] = *rule.Certificate.CertCaId
 		}
 		ruleList = append(ruleList, mapping)
-		ids = append(ids, *rule.LocationId+"#"+combinedId)
+		ids = append(ids, *rule.LocationId)
 	}
 
 	d.SetId(dataResourceIdsHash(ids))

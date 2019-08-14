@@ -142,6 +142,7 @@ data "tencentcloud_clb_listeners" "listeners" {
 }
 
 data "tencentcloud_clb_listener_rules" "rules" {
+  clb_id      = "${tencentcloud_clb_instance.example.id}"
   listener_id = "${tencentcloud_clb_listener.listener_https.id}"
   domain      = "${tencentcloud_clb_listener_rule.rule_https.domain}"
   url         = "${tencentcloud_clb_listener_rule.rule_https.url}"

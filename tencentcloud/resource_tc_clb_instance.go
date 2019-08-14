@@ -69,7 +69,6 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			"clb_vips": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "The virtual service address table of the CLB.",
 			},
