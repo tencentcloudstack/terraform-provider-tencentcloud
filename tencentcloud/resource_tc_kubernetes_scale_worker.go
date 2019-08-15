@@ -149,10 +149,10 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("tke.`cluster_id` is empty.")
 	}
 
-	info, has, err := service.DescribeCluster(ctx, clusterId)
+	_, has, err := service.DescribeCluster(ctx, clusterId)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			info, has, err = service.DescribeCluster(ctx, clusterId)
+			_, has, err = service.DescribeCluster(ctx, clusterId)
 			if err != nil {
 				return retryError(err)
 			}
@@ -246,10 +246,10 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`cluster_id` is empty.")
 	}
 
-	info, has, err := service.DescribeCluster(ctx, clusterId)
+	_, has, err := service.DescribeCluster(ctx, clusterId)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			info, has, err = service.DescribeCluster(ctx, clusterId)
+			_, has, err = service.DescribeCluster(ctx, clusterId)
 			if err != nil {
 				return retryError(err)
 			}

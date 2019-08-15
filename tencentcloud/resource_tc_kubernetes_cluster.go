@@ -267,9 +267,18 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 						errors = append(errors, fmt.Errorf("%q must be a network segment", k))
 						return
 					}
-					if !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.") {
-						errors = append(errors, fmt.Errorf("%q must in  10. or 192.", k))
+					if !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
+						errors = append(errors, fmt.Errorf("%q must in  10.  |  192.168. |  172.[16-31]", k))
 						return
+					}
+
+					if strings.HasPrefix(value, "172.") {
+						nextNo := strings.Split(value, ".")[1]
+						no, _ := strconv.ParseInt(nextNo, 10, 64)
+						if no < 16 || no > 31 {
+							errors = append(errors, fmt.Errorf("%q must in  10.  |  192.168. |  172.[16-31]", k))
+							return
+						}
 					}
 					return
 				},
