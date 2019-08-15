@@ -30,6 +30,7 @@ func TestAccDataSourceTencentCloudTke(t *testing.T) {
 
 const testAccDataSourceTencentCloudTkeStr = `
 data "tencentcloud_kubernetes_clusters"  "name" {
+    #examples have been created to serve other resources
     cluster_name ="terraform"
 }
 `
