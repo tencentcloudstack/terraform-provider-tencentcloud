@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"log"
 	"strings"
 )
 
@@ -48,6 +49,7 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	var cvms RunInstancesForNode
+
 	cvms.Work = []string{}
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -88,6 +90,11 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	if len(cvms.Work) !=1 {
+		return  fmt.Errorf("only one additional configuration of virtual machines is now supported now, " +
+			"so len(cvms.Work) should be 1")
+	}
+
 	instanceIds, err := service.CreateClusterInstances(ctx, clusterId, cvms.Work[0])
 
 	if err != nil {
@@ -98,26 +105,33 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 
 	for _, v := range instanceIds {
 		if v == "" {
-			err = fmt.Errorf("CreateClusterInstances return one instanceId is empty")
-			return err
+			return  fmt.Errorf("CreateClusterInstances return one instanceId is empty")
 		}
 		infoMap := make(map[string]interface{})
 		infoMap["instance_id"] = v
 		infoMap["instance_role"] = TKE_ROLE_WORKER
 		workerInstancesList = append(workerInstancesList, infoMap)
 	}
+
 	if err = d.Set("worker_instances_list", workerInstancesList); err != nil {
 		return err
 	}
 
 	md := md5.New()
+
 	if _, err = md.Write([]byte(clusterId)); err != nil {
 		return err
 	}
-	if _, err = md.Write([]byte(strings.Join(instanceIds, "#"))); err != nil {
+
+	instanceIdJoin:=strings.Join(instanceIds, "#")
+
+	if _, err = md.Write([]byte(instanceIdJoin)); err != nil {
 		return err
 	}
-	d.SetId(fmt.Sprintf("%x", md.Sum(nil)))
+
+	id:=fmt.Sprintf("TkeScaleWorker.%x",fmt.Sprintf("%x", md.Sum(nil)))
+
+	d.SetId(id)
 
 	return nil
 }
@@ -132,7 +146,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 
 	clusterId := d.Get("cluster_id").(string)
 	if clusterId == "" {
-		return fmt.Errorf("`cluster_id` is empty.")
+		return fmt.Errorf("tke.`cluster_id` is empty.")
 	}
 
 	info, has, err := service.DescribeCluster(ctx, clusterId)
@@ -155,12 +169,12 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
-	workerInstancesList := d.Get("worker_instances_list").([]interface{})
+	oldWorkerInstancesList := d.Get("worker_instances_list").([]interface{})
 
-	instanceIds := make([]string, 0, len(workerInstancesList))
+	instanceIds := make([]string, 0, len(oldWorkerInstancesList))
 	instanceMap := make(map[string]bool)
 
-	for _, v := range workerInstancesList {
+	for _, v := range oldWorkerInstancesList {
 
 		infoMap, ok := v.(map[string]interface{})
 
@@ -171,6 +185,11 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		if !ok || instanceId == "" {
 			return fmt.Errorf("worker_instances_list.instance_id is broken.")
 		}
+
+		if instanceMap[instanceId]{
+			log.Printf("[WARN]The same instance id exists in the list")
+		}
+
 		instanceMap[instanceId] = true
 
 		instanceIds = append(instanceIds, instanceId)
@@ -190,7 +209,8 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return err
 	}
-	newWorkerInstancesList := make([]map[string]interface{}, 0, len(instanceMap))
+
+	newWorkerInstancesList := make([]map[string]interface{}, 0, len(workers))
 
 	for _, cvm := range workers {
 		if _, ok := instanceMap[cvm.InstanceId]; !ok {
@@ -221,6 +241,7 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	clusterId := d.Get("cluster_id").(string)
+
 	if clusterId == "" {
 		return fmt.Errorf("`cluster_id` is empty.")
 	}
@@ -259,6 +280,11 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 		if !ok || instanceId == "" {
 			return fmt.Errorf("worker_instances_list.instance_id is broken.")
 		}
+
+		if instanceMap[instanceId]{
+			log.Printf("[WARN]The same instance id exists in the list")
+		}
+
 		instanceMap[instanceId] = true
 
 		instanceIds = append(instanceIds, instanceId)

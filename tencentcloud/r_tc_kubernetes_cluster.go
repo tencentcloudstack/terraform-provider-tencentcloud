@@ -701,12 +701,12 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	}
 
 	workerInstancesList := make([]map[string]interface{}, 0, len(workers))
-	for _, cvm := range workers {
+	for _, worker := range workers {
 		tempMap := make(map[string]interface{})
-		tempMap["instance_id"] = cvm.InstanceId
-		tempMap["instance_role"] = cvm.InstanceRole
-		tempMap["instance_state"] = cvm.InstanceState
-		tempMap["failed_reason"] = cvm.FailedReason
+		tempMap["instance_id"] = worker.InstanceId
+		tempMap["instance_role"] = worker.InstanceRole
+		tempMap["instance_state"] = worker.InstanceState
+		tempMap["failed_reason"] = worker.FailedReason
 		workerInstancesList = append(workerInstancesList, tempMap)
 	}
 
