@@ -1582,11 +1582,146 @@ func (me *GaapService) DeleteSecurityPolicy(ctx context.Context, id string) erro
 			return retryError(err)
 		}
 
-		err = fmt.Errorf("security policy still exists")
+		err = errors.New("security policy still exists")
 		log.Printf("[DEBUG]%s %v", logId, err)
 		return resource.RetryableError(err)
 	}); err != nil {
 		log.Printf("[CRITAL]%s delete security policy failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) CreateSecurityRule(
+	ctx context.Context,
+	policyId, name, cidrIp, port, action, protocol string,
+) (id string, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewCreateSecurityRulesRequest()
+	request.PolicyId = &policyId
+	request.RuleList = []*gaap.SecurityPolicyRuleIn{
+		{
+			SourceCidr:    &cidrIp,
+			DestPortRange: &port,
+			Protocol:      &protocol,
+			AliasName:     &name,
+			Action:        &action,
+		},
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err := me.client.UseGaapClient().CreateSecurityRules(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if len(response.Response.RuleIdList) == 0 {
+			err := fmt.Errorf("api[%s] return empty rule id set", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if response.Response.RuleIdList[0] == nil {
+			err := fmt.Errorf("api[%s] rule id is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		id = *response.Response.RuleIdList[0]
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create security rule failed, reason: %v", logId, err)
+		return "", err
+	}
+
+	return
+}
+
+func (me *GaapService) DescribeSecurityRule(ctx context.Context, policyId, ruleId string) (securityRule *gaap.SecurityPolicyRuleOut, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeSecurityPolicyDetailRequest()
+	request.PolicyId = &policyId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := me.client.UseGaapClient().DescribeSecurityPolicyDetail(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		for _, rule := range response.Response.RuleList {
+			if rule.RuleId == nil {
+				err := fmt.Errorf("api[%s] security rule id is nil", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			if *rule.RuleId == ruleId {
+				securityRule = rule
+				break
+			}
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read security rule failed, reason: %v", logId, err)
+		return nil, err
+	}
+
+	return
+}
+
+func (me *GaapService) ModifySecurityRuleName(ctx context.Context, policyId, ruleId, name string) error {
+	logId := getLogId(ctx)
+
+	request := gaap.NewModifySecurityRuleRequest()
+	request.PolicyId = &policyId
+	request.RuleId = &ruleId
+	request.AliasName = &name
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := me.client.UseGaapClient().ModifySecurityRule(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify security rule name failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) DeleteSecurityRule(ctx context.Context, policyId, ruleId string) error {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDeleteSecurityRulesRequest()
+	request.PolicyId = &policyId
+	request.RuleIdList = []*string{&ruleId}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := me.client.UseGaapClient().DeleteSecurityRules(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete security rule failed, reason: %v", logId, err)
 		return err
 	}
 
