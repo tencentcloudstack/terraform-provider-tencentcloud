@@ -141,6 +141,7 @@ VPC Resources
 GAAP Resources
   tencentcloud_gaap_proxy
   tencentcloud_gaap_realserver
+  tencentcloud_gaap_layer4_listener
   tencentcloud_gaap_certificate
 
 
@@ -281,6 +282,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dc_gateway_ccn_route":       resourceTencentCloudDcGatewayCcnRouteInstance(),
 			"tencentcloud_gaap_proxy":                 resourceTencentCloudGaapProxy(),
 			"tencentcloud_gaap_realserver":            resourceTencentCloudGaapRealserver(),
+			"tencentcloud_gaap_layer4_listener":       resourceTencentCloudGaapLayer4Listener(),
 			"tencentcloud_gaap_certificate":           resourceTencentCloudGaapCertificate(),
 		},
 

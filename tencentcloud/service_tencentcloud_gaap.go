@@ -14,6 +14,13 @@ import (
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
+type realserverBind struct {
+	id     string
+	ip     string
+	port   int
+	weight int
+}
+
 type GaapService struct {
 	client *connectivity.TencentCloudClient
 }
@@ -618,20 +625,20 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	nodifyRequest := gaap.NewModifyProxyConfigurationRequest()
-	nodifyRequest.ProxyId = &id
+	modifyRequest := gaap.NewModifyProxyConfigurationRequest()
+	modifyRequest.ProxyId = &id
 	if bandwidth != nil {
-		nodifyRequest.Bandwidth = intToPointer(*bandwidth)
+		modifyRequest.Bandwidth = intToPointer(*bandwidth)
 	}
 	if concurrent != nil {
-		nodifyRequest.Concurrent = intToPointer(*concurrent)
+		modifyRequest.Concurrent = intToPointer(*concurrent)
 	}
-	nodifyRequest.ClientToken = stringToPointer(buildToken())
+	modifyRequest.ClientToken = stringToPointer(buildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if _, err := client.ModifyProxyConfiguration(nodifyRequest); err != nil {
+		if _, err := client.ModifyProxyConfiguration(modifyRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, nodifyRequest.GetAction(), nodifyRequest.ToJsonString(), err)
+				logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), err)
 			return retryError(err)
 		}
 		return nil
@@ -736,6 +743,620 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 	}); err != nil {
 		log.Printf("[CRITAL]%s delete proxy failed, reason: %v", logId, err)
 		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) CreateTCPListener(
+	ctx context.Context,
+	name, scheduler, realserverType, proxyId string,
+	port int,
+	healthCheck bool,
+	delayLoop, connectTimeout *int,
+) (id string, err error) {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	createRequest := gaap.NewCreateTCPListenersRequest()
+	createRequest.ListenerName = &name
+	createRequest.Scheduler = &scheduler
+	createRequest.RealServerType = &realserverType
+	createRequest.ProxyId = &proxyId
+	createRequest.Ports = []*uint64{intToPointer(port)}
+	if healthCheck {
+		createRequest.HealthCheck = intToPointer(1)
+	} else {
+		createRequest.HealthCheck = intToPointer(0)
+	}
+	if delayLoop != nil {
+		createRequest.DelayLoop = intToPointer(*delayLoop)
+	}
+	if connectTimeout != nil {
+		createRequest.ConnectTimeout = intToPointer(*connectTimeout)
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err := client.CreateTCPListeners(createRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if len(response.Response.ListenerIds) == 0 {
+			err := fmt.Errorf("api[%s] return empty TCP listener ID set", createRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+		if response.Response.ListenerIds[0] == nil {
+			err := fmt.Errorf("api[%s] TCP listener ID is nil", createRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		id = *response.Response.ListenerIds[0]
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create TCP listener failed, reason: %v", logId, err)
+		return "", err
+	}
+
+	describeRequest := gaap.NewDescribeTCPListenersRequest()
+	describeRequest.ProxyId = &proxyId
+	describeRequest.ListenerId = &id
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeTCPListeners(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if len(response.Response.ListenerSet) == 0 {
+			err := fmt.Errorf("api[%s] read no TCP listener", describeRequest.GetAction())
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		listener := response.Response.ListenerSet[0]
+		if listener.ListenerStatus == nil {
+			err := fmt.Errorf("api[%s] TCP listener status is nil", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
+			err := fmt.Errorf("api[%s] TCP listener is still creating", describeRequest.GetAction())
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create TCP listener failed, reason: %v", logId, err)
+		return "", err
+	}
+
+	return
+}
+
+func (me *GaapService) CreateUDPListener(
+	ctx context.Context,
+	name, scheduler, realserverType, proxyId string,
+	port int,
+) (id string, err error) {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	createRequest := gaap.NewCreateUDPListenersRequest()
+	createRequest.ListenerName = &name
+	createRequest.Scheduler = &scheduler
+	createRequest.RealServerType = &realserverType
+	createRequest.ProxyId = &proxyId
+	createRequest.Ports = []*uint64{intToPointer(port)}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err := client.CreateUDPListeners(createRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if len(response.Response.ListenerIds) == 0 {
+			err := fmt.Errorf("api[%s] return empty UDP listener ID set", createRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+		if response.Response.ListenerIds[0] == nil {
+			err := fmt.Errorf("api[%s] UDP listener ID is nil", createRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		id = *response.Response.ListenerIds[0]
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create UDP listener failed, reason: %v", logId, err)
+		return "", err
+	}
+
+	describeRequest := gaap.NewDescribeUDPListenersRequest()
+	describeRequest.ProxyId = &proxyId
+	describeRequest.ListenerId = &id
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeUDPListeners(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if len(response.Response.ListenerSet) == 0 {
+			err := fmt.Errorf("api[%s] read no UDP listener", describeRequest.GetAction())
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		listener := response.Response.ListenerSet[0]
+		if listener.ListenerStatus == nil {
+			err := fmt.Errorf("api[%s] UDP listener status is nil", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
+			err := errors.New("UDP listener is still creating")
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create UDP listener failed, reason: %v", logId, err)
+		return "", err
+	}
+
+	return
+}
+
+func (me *GaapService) BindLayer4ListenerRealservers(ctx context.Context, id, protocol, proxyId string, realserverBinds []realserverBind) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	bindRequest := gaap.NewBindListenerRealServersRequest()
+	bindRequest.ListenerId = &id
+	if len(realserverBinds) > 0 {
+		bindRequest.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realserverBinds))
+		for _, bind := range realserverBinds {
+			bindRequest.RealServerBindSet = append(bindRequest.RealServerBindSet, &gaap.RealServerBindSetReq{
+				RealServerId:     stringToPointer(bind.id),
+				RealServerWeight: intToPointer(bind.weight),
+				RealServerPort:   intToPointer(bind.port),
+				RealServerIP:     stringToPointer(bind.ip),
+			})
+		}
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.BindListenerRealServers(bindRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, bindRequest.GetAction(), bindRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s bind realservers to layer4 listener failed, reason: %v", logId, err)
+		return err
+	}
+
+	var (
+		describeTCPRequest *gaap.DescribeTCPListenersRequest
+		describeUDPRequest *gaap.DescribeUDPListenersRequest
+	)
+
+	switch protocol {
+	case "TCP":
+		describeTCPRequest = gaap.NewDescribeTCPListenersRequest()
+		describeTCPRequest.ProxyId = &proxyId
+		describeTCPRequest.ListenerId = &id
+
+	case "UDP":
+		describeUDPRequest = gaap.NewDescribeUDPListenersRequest()
+		describeUDPRequest.ProxyId = &proxyId
+		describeUDPRequest.ListenerId = &id
+	}
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		switch protocol {
+		case "TCP":
+			response, err := client.DescribeTCPListeners(describeTCPRequest)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+					logId, describeTCPRequest.GetAction(), describeTCPRequest.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			if len(response.Response.ListenerSet) == 0 {
+				err := fmt.Errorf("api[%s] return empty layer4 listener set", describeTCPRequest.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			listener := response.Response.ListenerSet[0]
+			if listener.ListenerStatus == nil {
+				err := fmt.Errorf("api[%s] layer4 listener status is nil", describeTCPRequest.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+			if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
+				err := errors.New("layer4 listener still binding")
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.RetryableError(err)
+			}
+
+		case "UDP":
+			response, err := client.DescribeUDPListeners(describeUDPRequest)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+					logId, describeUDPRequest.GetAction(), describeUDPRequest.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			if len(response.Response.ListenerSet) == 0 {
+				err := fmt.Errorf("api[%s] return empty layer4 listener set", describeUDPRequest.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			listener := response.Response.ListenerSet[0]
+			if listener.ListenerStatus == nil {
+				err := fmt.Errorf("api[%s] layer4 listener status is nil", describeUDPRequest.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+			if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
+				err := errors.New("layer4 listener still binding")
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.RetryableError(err)
+			}
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s bind realservers to layer4 listener failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) DescribeTCPListener(ctx context.Context, proxyId string, id, name *string, port *int) (listeners []*gaap.TCPListener, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeTCPListenersRequest()
+	request.ProxyId = &proxyId
+	request.ListenerId = id
+	request.ListenerName = name
+	if port != nil {
+		request.Port = intToPointer(*port)
+	}
+	request.Limit = intToPointer(50)
+
+	offset := 0
+
+	// to run loop at least once
+	count := 50
+	for count == 50 {
+		request.Offset = intToPointer(offset)
+
+		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			response, err := me.client.UseGaapClient().DescribeTCPListeners(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+					logId, request.GetAction(), request.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			count = len(response.Response.ListenerSet)
+			listeners = append(listeners, response.Response.ListenerSet...)
+
+			return nil
+		}); err != nil {
+			log.Printf("[CRITAL]%s read TCP listeners failed, reason: %v", logId, err)
+			return nil, err
+		}
+
+		offset += count
+	}
+
+	return
+}
+
+func (me *GaapService) DescribeUDPListener(ctx context.Context, proxyId string, id, name *string, port *int) (listeners []*gaap.UDPListener, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeUDPListenersRequest()
+	request.ProxyId = &proxyId
+	request.ListenerId = id
+	request.ListenerName = name
+	if port != nil {
+		request.Port = intToPointer(*port)
+	}
+	request.Limit = intToPointer(50)
+
+	offset := 0
+
+	// to run loop at least once
+	count := 50
+	for count == 50 {
+		request.Offset = intToPointer(offset)
+
+		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			response, err := me.client.UseGaapClient().DescribeUDPListeners(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+					logId, request.GetAction(), request.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			count = len(response.Response.ListenerSet)
+			listeners = append(listeners, response.Response.ListenerSet...)
+
+			return nil
+		}); err != nil {
+			log.Printf("[CRITAL]%s read UDP listeners failed, reason: %v", logId, err)
+			return nil, err
+		}
+
+		offset += count
+	}
+
+	return
+}
+
+func (me *GaapService) ModifyTCPListenerAttribute(
+	ctx context.Context,
+	proxyId, id string,
+	name, scheduler *string,
+	healthCheck *bool,
+	delayLoop, connectTimeout *int,
+) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	modifyRequest := gaap.NewModifyTCPListenerAttributeRequest()
+	modifyRequest.ProxyId = &proxyId
+	modifyRequest.ListenerId = &id
+	modifyRequest.ListenerName = name
+	modifyRequest.Scheduler = scheduler
+	if healthCheck != nil {
+		if *healthCheck {
+			modifyRequest.HealthCheck = intToPointer(1)
+		} else {
+			modifyRequest.HealthCheck = intToPointer(0)
+		}
+	}
+	if delayLoop != nil {
+		modifyRequest.DelayLoop = intToPointer(*delayLoop)
+	}
+	if connectTimeout != nil {
+		modifyRequest.ConnectTimeout = intToPointer(*connectTimeout)
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.ModifyTCPListenerAttribute(modifyRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify TCP listener attribute failed, reason: %v", logId, err)
+		return err
+	}
+
+	describeRequest := gaap.NewDescribeTCPListenersRequest()
+	describeRequest.ProxyId = &proxyId
+	describeRequest.ListenerId = &id
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeTCPListeners(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if len(response.Response.ListenerSet) == 0 {
+			err := fmt.Errorf("api[%s] read no TCP listener", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		listener := response.Response.ListenerSet[0]
+		if listener.ListenerStatus == nil {
+			err := fmt.Errorf("api[%s] TCP listener status is nil", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
+			err := errors.New("TCP listener is still creating")
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify TCP listener attribute failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) ModifyUDPListenerAttribute(
+	ctx context.Context,
+	proxyId, id string,
+	name, scheduler *string,
+) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	modifyRequest := gaap.NewModifyUDPListenerAttributeRequest()
+	modifyRequest.ProxyId = &proxyId
+	modifyRequest.ListenerId = &id
+	modifyRequest.ListenerName = name
+	modifyRequest.Scheduler = scheduler
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.ModifyUDPListenerAttribute(modifyRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify UDP listener attribute failed, reason: %v", logId, err)
+		return err
+	}
+
+	describeRequest := gaap.NewDescribeUDPListenersRequest()
+	describeRequest.ProxyId = &proxyId
+	describeRequest.ListenerId = &id
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeUDPListeners(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if len(response.Response.ListenerSet) == 0 {
+			err := fmt.Errorf("api[%s] read no UDP listener", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		listener := response.Response.ListenerSet[0]
+		if listener.ListenerStatus == nil {
+			err := fmt.Errorf("api[%s] UDP listener status is nil", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
+			err := errors.New("UDP listener is still creating")
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify UDP listener attribute failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, protocol string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	deleteRequest := gaap.NewDeleteListenersRequest()
+	deleteRequest.ProxyId = &proxyId
+	deleteRequest.ListenerIds = []*string{stringToPointer(id)}
+	deleteRequest.Force = intToPointer(0)
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err := client.DeleteListeners(deleteRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, deleteRequest.GetAction(), deleteRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		// listener may not exist
+		if len(response.Response.InvalidStatusListenerSet) > 0 {
+			return nil
+		}
+
+		// delete failed
+		if len(response.Response.OperationFailedListenerSet) > 0 {
+			err := fmt.Errorf("api[%s] listener delete failed", deleteRequest.GetAction())
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		// delete successfully
+		if len(response.Response.OperationSucceedListenerSet) > 0 {
+			return nil
+		}
+
+		err = fmt.Errorf("api[%s] listener delete status unknow", deleteRequest.GetAction())
+		log.Printf("[CRITAL]%s %v", logId, err)
+		return resource.NonRetryableError(err)
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete listener failed, reason: %v", logId, err)
+		return err
+	}
+
+	switch protocol {
+	case "TCP":
+		describeRequest := gaap.NewDescribeTCPListenersRequest()
+		describeRequest.ProxyId = &proxyId
+		describeRequest.ListenerId = &id
+
+		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			response, err := client.DescribeTCPListeners(describeRequest)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+					logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			if len(response.Response.ListenerSet) > 0 {
+				err := errors.New("listener still exists")
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.RetryableError(err)
+			}
+
+			return nil
+		}); err != nil {
+			log.Printf("[CRITAL]%s delete listener failed, reason: %v", logId, err)
+			return err
+		}
+
+	case "UDP":
+		describeRequest := gaap.NewDescribeUDPListenersRequest()
+		describeRequest.ProxyId = &proxyId
+		describeRequest.ListenerId = &id
+
+		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			response, err := client.DescribeUDPListeners(describeRequest)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+					logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			if len(response.Response.ListenerSet) > 0 {
+				err := errors.New("listener still exists")
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.RetryableError(err)
+			}
+
+			return nil
+		}); err != nil {
+			log.Printf("[CRITAL]%s delete listener failed, reason: %v", logId, err)
+			return err
+		}
 	}
 
 	return nil

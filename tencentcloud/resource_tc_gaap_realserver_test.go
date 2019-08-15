@@ -21,7 +21,6 @@ func TestAccTencentCloudGaapRealserver_basic(t *testing.T) {
 			{
 				Config: testAccGaapRealserverBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_realserver.foo"),
 					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "ip", "1.1.1.1"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "domain"),
@@ -45,7 +44,6 @@ func TestAccTencentCloudGaapRealserver_domain(t *testing.T) {
 			{
 				Config: testAccGaapRealserverDomain,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_realserver.foo"),
 					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "domain", "www.qq.com"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "ip"),
@@ -69,7 +67,6 @@ func TestAccTencentCloudGaapRealserver_updateName(t *testing.T) {
 			{
 				Config: testAccGaapRealserverBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_realserver.foo"),
 					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "ip", "1.1.1.1"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "domain"),
@@ -100,7 +97,7 @@ func testAccCheckGaapRealserverDestroy(id *string) resource.TestCheckFunc {
 		}
 
 		if len(realservers) != 0 {
-			return fmt.Errorf("realserver still exists")
+			return errors.New("realserver still exists")
 		}
 
 		return nil
@@ -115,7 +112,7 @@ func testAccCheckGaapRealserverExists(n string, id *string) resource.TestCheckFu
 		}
 
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("no realserver ID is set")
+			return errors.New("no realserver ID is set")
 		}
 
 		service := GaapService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
