@@ -117,17 +117,10 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 	return nil
 }
 
-func (me *ClbService) DescribeListenerById(ctx context.Context, id string) (clbListener *clb.Listener, errRet error) {
+func (me *ClbService) DescribeListenerById(ctx context.Context, listenerId string, clbId string) (clbListener *clb.Listener, errRet error) {
 	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
-	items := strings.Split(id, "#")
-	if len(items) != 2 {
-		errRet = fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
-		return
-	}
 
-	listenerId := items[0]
-	clbId := items[1]
 	request.ListenerIds = []*string{&listenerId}
 	request.LoadBalancerId = stringToPointer(clbId)
 	ratelimit.Check(request.GetAction())
@@ -155,14 +148,7 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 	clbId := ""
 	for k, v := range params {
 		if k == "listener_id" {
-			items := strings.Split(v.(string), "#")
-			if len(items) != 2 {
-				errRet = fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
-				return
-			}
-
-			listenerId := items[0]
-			clbId = items[1]
+			listenerId := v.(string)
 			request.ListenerIds = []*string{stringToPointer(listenerId)}
 			request.LoadBalancerId = stringToPointer(clbId)
 		}
@@ -549,8 +535,8 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	ruleOutput := response.Response.RewriteSet[0]
 	if ruleOutput.RewriteTarget != nil {
 		if *ruleOutput.RewriteTarget.TargetListenerId == targetListenerId && *ruleOutput.RewriteTarget.TargetLocationId == targetLocId {
-			result["source_listener_rule_id"] = sourceLocId
-			result["target_listener_rule_id"] = targetLocId
+			result["source_rule_id"] = sourceLocId
+			result["target_rule_id"] = targetLocId
 			result["source_listener_id"] = sourceListenerId
 			result["target_listener_id"] = targetListenerId
 			result["clb_id"] = clbId
@@ -579,13 +565,13 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 		if k == "clb_id" {
 			clbId = v
 		}
-		if k == "source_listener_rule_id" {
+		if k == "source_rule_id" {
 			sourceLocId = v
 		}
 		if k == "target_listener_id" {
 			targetListenerId = v
 		}
-		if k == "target_listener_rule_id" {
+		if k == "target_rule_id" {
 			targetLocId = v
 		}
 	}
@@ -616,8 +602,8 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 			return
 		}
 		result := make(map[string]string)
-		result["source_listener_rule_id"] = sourceLocId
-		result["target_listener_rule_id"] = *ruleOutput.RewriteTarget.TargetLocationId
+		result["source_rule_id"] = sourceLocId
+		result["target_rule_id"] = *ruleOutput.RewriteTarget.TargetLocationId
 		result["source_listener_id"] = sourceListenerId
 		result["target_listener_id"] = *ruleOutput.RewriteTarget.TargetListenerId
 		result["clb_id"] = clbId

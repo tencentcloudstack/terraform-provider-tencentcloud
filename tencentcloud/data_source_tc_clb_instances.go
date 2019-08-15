@@ -32,7 +32,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the CLB to be queried.",
+				Description: "Id of the CLB to be queried.",
 			},
 			"network_type": {
 				Type:         schema.TypeString,
@@ -48,7 +48,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Project ID of the CLB.",
+				Description: "Project id of the CLB.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -64,7 +64,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of CLB.",
+							Description: "Id of CLB.",
 						},
 						"clb_name": {
 							Type:        schema.TypeString,
@@ -79,7 +79,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "ID of the project.",
+							Description: "Id of the project.",
 						},
 						"clb_vips": {
 							Type:        schema.TypeList,
@@ -105,18 +105,18 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the VPC",
+							Description: "Id of the VPC",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the subnet",
+							Description: "Id of the subnet",
 						},
 						"security_groups": {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "ID of the security groups.",
+							Description: "Id of the security groups.",
 						},
 						"target_region_info_region": {
 							Type:        schema.TypeString,

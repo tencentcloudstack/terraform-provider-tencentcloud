@@ -3,15 +3,33 @@ Provides a resource to create a CLB instance.
 
 Example Usage
 
+INTERNAL CLB
+
 ```hcl
-resource "tencentcloud_clb_instance" "foo" {
+resource "tencentcloud_clb_instance" "internal_clb" {
+  network_type              = "INTERNAL"
+  clb_name                  = "myclb"
+  project_id                = 0
+  vpc_id                    = "vpc-7007ll7q"
+  subnet_id                 = "subnet-12rastkr"
+
+  tags = {
+    test = "tf"
+  }
+}
+```
+
+OPEN CLB
+
+```hcl
+resource "tencentcloud_clb_instance" "open_clb" {
   network_type              = "OPEN"
   clb_name                  = "myclb"
   project_id                = 0
-  vpc_id                    = "vpc-abcd1234"
+  vpc_id                    = "vpc-da7ffa61"
   security_groups           = ["sg-o0ek7r93"]
   target_region_info_region = "ap-guangzhou"
-  target_region_info_vpc_id = "vpc-abcd1234"
+  target_region_info_vpc_id = "vpc-da7ffa61"
 
   tags = {
     test = "tf"
@@ -69,7 +87,6 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			"clb_vips": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "The virtual service address table of the CLB.",
 			},
@@ -78,21 +95,21 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     0,
-				Description: "ID of the project within the CLB instance, '0' - Default Project.",
+				Description: "Id of the project within the CLB instance, '0' - Default Project.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
 				Computed:    true,
-				Description: "VPC ID of the CLB.",
+				Description: "VPC id of the CLB.",
 			},
 			"subnet_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
-				Description:  "Subnet ID of the CLB. Effective only for CLB within the VPC. Only supports 'INTERNAL' CLBs.",
+				Description:  "Subnet id of the CLB. Effective only for CLB within the VPC. Only supports 'INTERNAL' CLBs.",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,

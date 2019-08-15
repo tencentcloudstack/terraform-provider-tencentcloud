@@ -28,11 +28,6 @@ func TestAccTencentCloudClbListener_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic", "scheduler", "WRR"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_clb_listener.listener_basic",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }
@@ -175,7 +170,8 @@ func testAccCheckClbListenerDestroy(s *terraform.State) error {
 			continue
 		}
 		time.Sleep(5 * time.Second)
-		_, err := clbService.DescribeListenerById(ctx, rs.Primary.ID)
+		clbId := rs.Primary.Attributes["clb_id"]
+		_, err := clbService.DescribeListenerById(ctx, rs.Primary.ID, clbId)
 		if err == nil {
 			return fmt.Errorf("clb listener still exists: %s", rs.Primary.ID)
 		}
@@ -198,7 +194,8 @@ func testAccCheckClbListenerExists(n string) resource.TestCheckFunc {
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := clbService.DescribeListenerById(ctx, rs.Primary.ID)
+		clbId := rs.Primary.Attributes["clb_id"]
+		_, err := clbService.DescribeListenerById(ctx, rs.Primary.ID, clbId)
 		if err != nil {
 			return err
 		}

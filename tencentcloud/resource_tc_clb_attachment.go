@@ -6,8 +6,8 @@ Example Usage
 ```hcl
 resource "tencentcloud_clb_attachment" "foo" {
   clb_id      = "lb-k2zjp9lv"
-  listener_id = "lbl-hh141sn9#lb-k2zjp9lv"
-  rule_id     = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
+  listener_id = "lbl-hh141sn9"
+  rule_id     = "loc-4xxr2cy7"
 
   targets {
     instance_id = "ins-1flbqyp8"
@@ -52,19 +52,19 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "ID of the clb.",
+				Description: "Id of the clb.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: " ID of the clb listener.",
+				Description: "Id of the clb listener.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "ID of the clb listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.",
+				Description: "Id of the clb listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.",
 			},
 			"protocol_type": {
 				Type:        schema.TypeString,
@@ -76,7 +76,7 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Required:    true,
 				MinItems:    1,
 				MaxItems:    100,
-				Description: " Information of the backends to be attached.",
+				Description: "Information of the backends to be attached.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
@@ -110,21 +110,14 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-
-	items := strings.Split(d.Get("listener_id").(string), "#")
-	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_attachment listener is wrong ")
-	}
-
-	listenerId := items[0]
-	clbId := items[1]
+	listenerId := d.Get("listener_id").(string)
+	clbId := d.Get("clb_id").(string)
 	locationId := ""
 	request := clb.NewRegisterTargetsRequest()
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.ListenerId = stringToPointer(listenerId)
 	if v, ok := d.GetOk("rule_id"); ok {
-		items := strings.Split(v.(string), "#")
-		locationId = items[0]
+		locationId = v.(string)
 		if locationId != "" {
 			request.LocationId = stringToPointer(locationId)
 		}
@@ -156,7 +149,7 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 		log.Printf("[CRITAL]%s create clb attachment failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	id := fmt.Sprintf("%s#%v", locationId, d.Get("listener_id"))
+	id := fmt.Sprintf("%s#%v#%v", locationId, d.Get("listener_id"), d.Get("clb_id"))
 	d.SetId(id)
 
 	return resourceTencentCloudClbServerAttachmentRead(d, meta)
@@ -172,10 +165,12 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	attachmentId := d.Id()
+
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
 		return fmt.Errorf("id of resource.tencentcloud_clb_attachment listener is wrong")
 	}
+
 	locationId := items[0]
 	listenerId := items[1]
 	clbId := items[2]
@@ -251,21 +246,16 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta interface{}, add []interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.add")()
 	logId := getLogId(contextNil)
-	items := strings.Split(d.Get("listener_id").(string), "#")
-	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_attachment listener is wrong")
-	}
 
-	listenerId := items[0]
-	clbId := items[1]
+	listenerId := d.Get("listener_id").(string)
+	clbId := d.Get("clb_id").(string)
 	locationId := ""
 	request := clb.NewRegisterTargetsRequest()
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.ListenerId = stringToPointer(listenerId)
 
 	if v, ok := d.GetOk("rule_id"); ok {
-		items := strings.Split(v.(string), "#")
-		locationId = items[0]
+		locationId = v.(string)
 		if locationId != "" {
 			request.LocationId = stringToPointer(locationId)
 		}
@@ -358,11 +348,11 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 		return err
 	}
 	d.Set("clb_id", clbId)
-	d.Set("listener_id", listenerId+"#"+clbId)
+	d.Set("listener_id", listenerId)
 	d.Set("protocol_type", instance.Protocol)
 
 	if *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
-		d.Set("rule_id", locationId+"#"+listenerId+"#"+clbId)
+		d.Set("rule_id", locationId)
 		if len(instance.Rules) > 0 {
 			for _, loc := range instance.Rules {
 				if locationId == "" || locationId == *loc.LocationId {

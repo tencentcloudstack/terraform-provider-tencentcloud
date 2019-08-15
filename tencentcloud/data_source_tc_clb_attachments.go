@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_clb_attachments" "clblab" {
-  listener_id = "lbl-hh141sn9#lb-k2zjp9lv"
+  listener_id = "lbl-hh141sn9"
   clb_id      = "lb-k2zjp9lv"
-  rule_id     = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
+  rule_id     = "loc-4xxr2cy7"
 }
 ```
 */
@@ -16,7 +16,6 @@ package tencentcloud
 import (
 	"context"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -31,17 +30,17 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "ID of the CLB to be queried.",
+				Description: "Id of the CLB to be queried.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "ID of the CLB listener to be queried.",
+				Description: "Id of the CLB listener to be queried.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "ID of the CLB listener rule to be queried.",
+				Optional:    true,
+				Description: "Id of the CLB listener rule. If the protocol of listener is HTTP/HTTPS, this para is required.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -57,9 +56,8 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the CLB.",
+							Description: "Id of the CLB.",
 						},
-
 						"listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -73,7 +71,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 						"rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the CLB listener rule.",
+							Description: "Id of the CLB listener rule.",
 						},
 						"targets": {
 							Type:        schema.TypeSet,
@@ -96,7 +94,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 									"weight": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: " Forwarding weight of the backend service, the range of [0, 100], defaults to 10.",
+										Description: "Forwarding weight of the backend service, the range of [0, 100], defaults to 10.",
 									},
 								},
 							},
@@ -117,11 +115,13 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 	params := make(map[string]string)
 	clbId := d.Get("clb_id").(string)
 	listenerId := d.Get("listener_id").(string)
-	locationId := d.Get("rule_id").(string)
-
+	locationId := ""
+	if v, ok := d.GetOk("rule_id"); ok {
+		locationId = v.(string)
+		params["rule_id"] = locationId
+	}
 	params["clb_id"] = clbId
-	params["listener_id"] = strings.Split(listenerId, "#")[0]
-	params["rule_id"] = strings.Split(locationId, "#")[0]
+	params["listener_id"] = listenerId
 
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -145,8 +145,10 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 		mapping := map[string]interface{}{
 			"clb_id":        clbId,
 			"listener_id":   listenerId,
-			"rule_id":       locationId,
 			"protocol_type": attachment.Protocol,
+		}
+		if locationId != "" {
+			mapping["rule_id"] = locationId
 		}
 		if *attachment.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *attachment.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
 			if len(attachment.Rules) > 0 {
@@ -160,7 +162,7 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 			mapping["targets"] = flattenBackendList(attachment.Targets)
 		}
 		attachmentList = append(attachmentList, mapping)
-		ids = append(ids, locationId)
+		ids = append(ids, locationId+"#"+listenerId+"#"+clbId)
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
