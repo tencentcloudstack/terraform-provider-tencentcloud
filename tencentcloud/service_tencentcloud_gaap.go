@@ -1361,3 +1361,234 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 
 	return nil
 }
+
+func (me *GaapService) CreateSecurityPolicy(ctx context.Context, proxyId, action string) (id string, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewCreateSecurityPolicyRequest()
+	request.ProxyId = &proxyId
+	request.DefaultAction = &action
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err := me.client.UseGaapClient().CreateSecurityPolicy(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if response.Response.PolicyId == nil {
+			err := fmt.Errorf("api[%s] security policy id is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		id = *response.Response.PolicyId
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create security policy failed, reason: %v", logId, err)
+		return "", err
+	}
+
+	return
+}
+
+func (me *GaapService) EnableSecurityPolicy(ctx context.Context, proxyId, policyId string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	enableRequest := gaap.NewOpenSecurityPolicyRequest()
+	enableRequest.ProxyId = &proxyId
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.OpenSecurityPolicy(enableRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, enableRequest.GetAction(), enableRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s enable security policy failed, reason: %v", logId, err)
+		return err
+	}
+
+	describeRequest := gaap.NewDescribeSecurityPolicyDetailRequest()
+	describeRequest.PolicyId = &policyId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeSecurityPolicyDetail(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if response.Response.Status == nil {
+			err := fmt.Errorf("api[%s] security policy status is nil", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if *response.Response.Status != GAAP_SECURITY_POLICY_BOUND {
+			err := errors.New("security policy still binding")
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s enable security policy failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) DisableSecurityPolicy(ctx context.Context, proxyId, policyId string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	disableRequest := gaap.NewCloseSecurityPolicyRequest()
+	disableRequest.ProxyId = &proxyId
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.CloseSecurityPolicy(disableRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, disableRequest.GetAction(), disableRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s disable security policy failed, reason: %v", logId, err)
+		return err
+	}
+
+	describeRequest := gaap.NewDescribeSecurityPolicyDetailRequest()
+	describeRequest.PolicyId = &policyId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeSecurityPolicyDetail(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if response.Response.Status == nil {
+			err := fmt.Errorf("api[%s] security policy status is nil", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if *response.Response.Status != GAAP_SECURITY_POLICY_UNBIND {
+			err := errors.New("security policy still unbinding")
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s disable security policy failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) DescribeSecurityPolicy(ctx context.Context, id string) (proxyId, status, action string, exist bool, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeSecurityPolicyDetailRequest()
+	request.PolicyId = &id
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := me.client.UseGaapClient().DescribeSecurityPolicyDetail(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if response.Response.ProxyId == nil {
+			err := fmt.Errorf("api[%s] security policy id is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+		proxyId = *response.Response.ProxyId
+
+		if response.Response.Status == nil {
+			err := fmt.Errorf("api[%s] security policy status is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+		status = *response.Response.Status
+
+		if response.Response.DefaultAction == nil {
+			err := fmt.Errorf("api[%s] security policy action is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+		action = *response.Response.DefaultAction
+
+		exist = true
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read security policy failed, reason: %v", logId, err)
+		return "", "", "", false, err
+	}
+
+	return
+}
+
+func (me *GaapService) DeleteSecurityPolicy(ctx context.Context, id string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	deleteRequest := gaap.NewDeleteSecurityPolicyRequest()
+	deleteRequest.PolicyId = &id
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.DeleteSecurityPolicy(deleteRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, deleteRequest.GetAction(), deleteRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete security policy failed, reason: %v", logId, err)
+		return err
+	}
+
+	describeRequest := gaap.NewDescribeSecurityPolicyDetailRequest()
+	describeRequest.PolicyId = &id
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, err := client.DescribeSecurityPolicyDetail(describeRequest)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		err = fmt.Errorf("security policy still exists")
+		log.Printf("[DEBUG]%s %v", logId, err)
+		return resource.RetryableError(err)
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete security policy failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}

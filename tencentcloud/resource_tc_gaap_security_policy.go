@@ -1,9 +1,17 @@
 package tencentcloud
 
-import "github.com/hashicorp/terraform/helper/schema"
+import (
+	"context"
+
+	"github.com/hashicorp/terraform/helper/schema"
+)
 
 func resourceTencentCloudGaapSecurityPolicy() *schema.Resource {
 	return &schema.Resource{
+		Create: resourceTencentCloudGaapSecurityPolicyCreate,
+		Read:   resourceTencentCloudGaapSecurityPolicyRead,
+		Update: resourceTencentCloudGaapSecurityPolicyUpdate,
+		Delete: resourceTencentCloudGaapSecurityPolicyDelete,
 		Schema: map[string]*schema.Schema{
 			"proxy_id": {
 				Type:     schema.TypeString,
@@ -18,15 +26,106 @@ func resourceTencentCloudGaapSecurityPolicy() *schema.Resource {
 			},
 			"enable": {
 				Type:     schema.TypeBool,
-				Required: true,
+				Optional: true,
 				Default:  true,
-			},
-
-			// computed
-			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
 			},
 		},
 	}
+}
+
+func resourceTencentCloudGaapSecurityPolicyCreate(d *schema.ResourceData, m interface{}) error {
+	defer logElapsed("resource.tencentcloud_gaap_security_policy.create")()
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	proxyId := d.Get("proxy_id").(string)
+	action := d.Get("action").(string)
+	enable := d.Get("enable").(bool)
+
+	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	id, err := service.CreateSecurityPolicy(ctx, proxyId, action)
+	if err != nil {
+		return err
+	}
+
+	if enable {
+		if err := service.EnableSecurityPolicy(ctx, proxyId, id); err != nil {
+			return err
+		}
+	}
+
+	d.SetId(id)
+
+	return resourceTencentCloudGaapSecurityPolicyRead(d, m)
+}
+
+func resourceTencentCloudGaapSecurityPolicyRead(d *schema.ResourceData, m interface{}) error {
+	defer logElapsed("resource.tencentcloud_gaap_security_policy.read")()
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	id := d.Id()
+
+	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	proxyId, status, action, exist, err := service.DescribeSecurityPolicy(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	if !exist {
+		d.SetId("")
+		return nil
+	}
+
+	d.Set("proxy_id", proxyId)
+	d.Set("action", action)
+	d.Set("enable", status == GAAP_SECURITY_POLICY_BOUND)
+
+	return nil
+}
+
+func resourceTencentCloudGaapSecurityPolicyUpdate(d *schema.ResourceData, m interface{}) error {
+	defer logElapsed("resource.tencentcloud_gaap_security_policy.update")()
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	id := d.Id()
+	proxyId := d.Get("proxy_id").(string)
+	enable := d.Get("enable").(bool)
+
+	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	if enable {
+		if err := service.EnableSecurityPolicy(ctx, proxyId, id); err != nil {
+			return err
+		}
+	} else {
+		if err := service.DisableSecurityPolicy(ctx, proxyId, id); err != nil {
+			return err
+		}
+	}
+
+	return resourceTencentCloudGaapSecurityPolicyRead(d, m)
+}
+
+func resourceTencentCloudGaapSecurityPolicyDelete(d *schema.ResourceData, m interface{}) error {
+	defer logElapsed("resource.tencentcloud_gaap_security_policy.delete")()
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	id := d.Id()
+	enable := d.Get("enable").(bool)
+	proxyId := d.Get("proxy_id").(string)
+
+	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
+
+	if enable {
+		if err := service.DisableSecurityPolicy(ctx, proxyId, id); err != nil {
+			return err
+		}
+	}
+
+	return service.DeleteSecurityPolicy(ctx, id)
 }

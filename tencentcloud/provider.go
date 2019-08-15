@@ -143,6 +143,7 @@ GAAP Resources
   tencentcloud_gaap_realserver
   tencentcloud_gaap_layer4_listener
   tencentcloud_gaap_certificate
+  tencentcloud_gaap_security_policy
 
 
 */
@@ -284,6 +285,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_realserver":            resourceTencentCloudGaapRealserver(),
 			"tencentcloud_gaap_layer4_listener":       resourceTencentCloudGaapLayer4Listener(),
 			"tencentcloud_gaap_certificate":           resourceTencentCloudGaapCertificate(),
+			"tencentcloud_gaap_security_policy":       resourceTencentCloudGaapSecurityPolicy(),
 		},
 
 		ConfigureFunc: providerConfigure,
