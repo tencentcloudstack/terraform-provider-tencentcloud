@@ -111,7 +111,7 @@ getMoreData:
 			InstanceState: *item.InstanceState,
 			FailedReason:  *item.FailedReason,
 		}
-		if instanceInfo.InstanceRole == TKE_ROLE_MASTER_WORKER {
+		if instanceInfo.InstanceRole == TKE_ROLE_WORKER {
 			workers = append(workers, instanceInfo)
 		} else {
 			masters = append(masters, instanceInfo)
@@ -287,7 +287,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	}
 
 	var node tke.RunInstancesForNode
-	node.NodeRole = stringToPointer(TKE_ROLE_MASTER_WORKER)
+	node.NodeRole = stringToPointer(TKE_ROLE_WORKER)
 	node.RunInstancesPara = []*string{}
 	for v := range cvms.Work {
 		node.RunInstancesPara = append(node.RunInstancesPara, &cvms.Work[v])
@@ -316,6 +316,63 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	return
 }
 
+func (me *TkeService) CreateClusterInstances(ctx context.Context, id string, runInstancePara string) (instanceIds []string, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewCreateClusterInstancesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.RunInstancePara = &runInstancePara
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().CreateClusterInstances(request)
+
+	if err != nil {
+		errRet = err
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("CreateClusterInstances return nil response")
+		return
+	}
+
+	instanceIds = make([]string, 0, len(response.Response.InstanceIdSet))
+
+	for _, v := range response.Response.InstanceIdSet {
+
+		instanceIds = append(instanceIds, *v)
+	}
+	return
+}
+
+func (me *TkeService) DeleteClusterInstances(ctx context.Context, id string, instanceIds []string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDeleteClusterInstancesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.InstanceIds = make([]*string, 0, len(instanceIds))
+
+	for index := range instanceIds {
+		request.InstanceIds = append(request.InstanceIds, &instanceIds[index])
+	}
+
+	request.InstanceDeleteMode = stringToPointer("terminate")
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().DeleteClusterInstances(request)
+	return err
+}
+
 func (me *TkeService) DeleteCluster(ctx context.Context, id string) (errRet error) {
 
 	logId := getLogId(ctx)
@@ -330,6 +387,7 @@ func (me *TkeService) DeleteCluster(ctx context.Context, id string) (errRet erro
 	request.ClusterId = &id
 	request.InstanceDeleteMode = stringToPointer("terminate")
 
+	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTkeClient().DeleteCluster(request)
 
 	return err

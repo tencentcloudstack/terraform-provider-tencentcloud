@@ -38,11 +38,10 @@ func TkeCvmState() map[string]*schema.Schema {
 func TkeCvmCreateInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"count": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ForceNew:     true,
-			Default:      1,
-			ValidateFunc: validateIntegerInRange(1, 50),
+			Type:     schema.TypeInt,
+			Optional: true,
+			ForceNew: true,
+			Default:  1,
 		},
 		"availability_zone": {
 			Type:        schema.TypeString,
@@ -590,7 +589,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 			masterCount += count
 		}
 		if masterCount < 3 {
-			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(masters) should  >=3 ")
+			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(master_config) should  >=3 ")
 		}
 	} else {
 		if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
@@ -711,9 +710,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		workerInstancesList = append(workerInstancesList, tempMap)
 	}
 
-	d.Set("worker_instances_list", workerInstancesList)
-
-	return nil
+	return d.Set("worker_instances_list", workerInstancesList)
 }
 
 func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface{}) error {
