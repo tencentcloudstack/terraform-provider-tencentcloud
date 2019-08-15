@@ -27,6 +27,7 @@ func TestAccTencentCloudClbInstancesDataSource_internal(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.status_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.status"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.tags.test", "tf"),
 				),
 			},
 		},
@@ -56,6 +57,7 @@ func TestAccTencentCloudClbInstancesDataSource_open(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.target_region_info_region", "ap-guangzhou"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.target_region_info_vpc_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.security_groups.#", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.tags.test", "tf"),
 				),
 			},
 		},
@@ -87,6 +89,9 @@ resource "tencentcloud_clb_instance" "clb" {
   subnet_id    = "${tencentcloud_subnet.subnet.id}"
   project_id   = 0
 
+  tags = {
+    test = "tf"
+  }
 }
 
 data "tencentcloud_clb_instances" "clbs" {
@@ -116,6 +121,10 @@ resource "tencentcloud_clb_instance" "clb" {
   target_region_info_region = "ap-guangzhou"
   target_region_info_vpc_id = "${tencentcloud_vpc.foo.id}"
   security_groups           = ["${tencentcloud_security_group.foo.id}"]
+
+  tags = {
+    test = "tf"
+  }
 }
 
 data "tencentcloud_clb_instances" "clbs" {

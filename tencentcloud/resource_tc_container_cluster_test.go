@@ -13,8 +13,9 @@ import (
 
 func TestAccTencentCloudContainerCluster_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckContainerClusterDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudContainerClusterConfig_basic,
@@ -25,6 +26,10 @@ func TestAccTencentCloudContainerCluster_basic(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccCheckContainerClusterDestroy(s *terraform.State) error {
+	return nil
 }
 
 // For ordinary usage, it doesn't require all nodes in a cluster to be in normal state.
@@ -49,10 +54,10 @@ func checkContainerClusterInstancesAllNormal(n string) resource.TestCheckFunc {
 		err := resource.Retry(20*time.Minute, func() *resource.RetryError {
 			resp, err := conn.DescribeCluster(req)
 			if err != nil {
+				if _, ok := err.(*common.APIError); ok {
+					return resource.NonRetryableError(err)
+				}
 				return resource.RetryableError(err)
-			}
-			if _, ok := err.(*common.APIError); ok {
-				return resource.NonRetryableError(err)
 			}
 			if *resp.Data.Clusters[0].NodeStatus == "AllNormal" {
 				return nil

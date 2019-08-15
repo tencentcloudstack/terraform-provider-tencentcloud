@@ -19,7 +19,9 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
 func dataSourceTencentCloudClbInstances() *schema.Resource {
@@ -30,7 +32,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 			"clb_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the CLB to be queried.",
+				Description: "Id of the CLB to be queried.",
 			},
 			"network_type": {
 				Type:         schema.TypeString,
@@ -46,7 +48,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Project ID of the CLB.",
+				Description: "Project id of the CLB.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -62,7 +64,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of CLB.",
+							Description: "Id of CLB.",
 						},
 						"clb_name": {
 							Type:        schema.TypeString,
@@ -77,7 +79,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "ID of the project.",
+							Description: "Id of the project.",
 						},
 						"clb_vips": {
 							Type:        schema.TypeList,
@@ -103,18 +105,18 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the VPC",
+							Description: "Id of the VPC",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the subnet",
+							Description: "Id of the subnet",
 						},
 						"security_groups": {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "ID of the security groups.",
+							Description: "Id of the security groups.",
 						},
 						"target_region_info_region": {
 							Type:        schema.TypeString,
@@ -126,6 +128,11 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 							Computed:    true,
 							Description: "VpcId information of backend service are attached the CLB.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "The available tags within this CLB.",
+						},
 					},
 				},
 			},
@@ -136,7 +143,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_clb_instances.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	params := make(map[string]interface{})
@@ -156,11 +163,19 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	clbs, err := clbService.DescribeLoadBalancerByFilter(ctx, params)
+	var clbs []*clb.LoadBalancer
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := clbService.DescribeLoadBalancerByFilter(ctx, params)
+		if e != nil {
+			return retryError(e)
+		}
+		clbs = results
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read clb instances failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
 	clbList := make([]map[string]interface{}, 0, len(clbs))
 	ids := make([]string, 0, len(clbs))
 	for _, clb := range clbs {
@@ -179,21 +194,27 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			"target_region_info_vpc_id": *(clb.TargetRegionInfo.VpcId),
 			"security_groups":           flattenStringList(clb.SecureGroups),
 		}
-
+		if clb.Tags != nil {
+			tags := make(map[string]interface{}, len(clb.Tags))
+			for _, t := range clb.Tags {
+				tags[*t.TagKey] = *t.TagValue
+			}
+			mapping["tags"] = tags
+		}
 		clbList = append(clbList, mapping)
 		ids = append(ids, *clb.LoadBalancerId)
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("clb_list", clbList); err != nil {
-		log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, err.Error())
-		return err
+	if e := d.Set("clb_list", clbList); e != nil {
+		log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, e.Error())
+		return e
 	}
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), clbList); err != nil {
-			return err
+		if e := writeToFile(output.(string), clbList); e != nil {
+			return e
 		}
 	}
 

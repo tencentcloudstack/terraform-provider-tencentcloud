@@ -28,11 +28,6 @@ func TestAccTencentCloudClbListener_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_basic", "scheduler", "WRR"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_clb_listener.listener_basic",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }
@@ -96,7 +91,7 @@ func TestAccTencentCloudClbListener_https(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "listener_name", "listener_https"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "port", "77"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_ssl_mode", "UNIDIRECTIONAL"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VjANRdz8"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VjAYq9xc"),
 				),
 			},
 			{
@@ -108,7 +103,55 @@ func TestAccTencentCloudClbListener_https(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "listener_name", "listener_https_update"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "port", "33"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_ssl_mode", "UNIDIRECTIONAL"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VfqO4zkB"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VfqcL1ME"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudClbListener_tcpssl(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbListenerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbListener_tcpssl,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_tcpssl"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_tcpssl", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "protocol", "TCP_SSL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "listener_name", "listener_tcpssl"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "port", "44"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "certificate_ssl_mode", "UNIDIRECTIONAL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "certificate_id", "VjAYq9xc"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "port", "44"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "health_check_switch", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "health_check_time_out", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "health_check_interval_time", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "health_check_health_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "health_check_unhealth_num", "2"),
+				),
+			},
+			{
+				Config: testAccClbListener_tcpssl_update,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_tcpssl"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_tcpssl", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "protocol", "TCP_SSL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "listener_name", "listener_tcpssl_update"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "port", "44"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "certificate_ssl_mode", "UNIDIRECTIONAL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "certificate_id", "VfqcL1ME"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "port", "44"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "health_check_switch", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "health_check_time_out", "20"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "health_check_interval_time", "200"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "health_check_health_num", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_tcpssl", "health_check_unhealth_num", "3"),
 				),
 			},
 		},
@@ -116,7 +159,7 @@ func TestAccTencentCloudClbListener_https(t *testing.T) {
 }
 
 func testAccCheckClbListenerDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbService := ClbService{
@@ -127,7 +170,8 @@ func testAccCheckClbListenerDestroy(s *terraform.State) error {
 			continue
 		}
 		time.Sleep(5 * time.Second)
-		_, err := clbService.DescribeListenerById(ctx, rs.Primary.ID)
+		clbId := rs.Primary.Attributes["clb_id"]
+		_, err := clbService.DescribeListenerById(ctx, rs.Primary.ID, clbId)
 		if err == nil {
 			return fmt.Errorf("clb listener still exists: %s", rs.Primary.ID)
 		}
@@ -137,7 +181,7 @@ func testAccCheckClbListenerDestroy(s *terraform.State) error {
 
 func testAccCheckClbListenerExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]
@@ -150,7 +194,8 @@ func testAccCheckClbListenerExists(n string) resource.TestCheckFunc {
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := clbService.DescribeListenerById(ctx, rs.Primary.ID)
+		clbId := rs.Primary.Attributes["clb_id"]
+		_, err := clbService.DescribeListenerById(ctx, rs.Primary.ID, clbId)
 		if err != nil {
 			return err
 		}
@@ -192,6 +237,8 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   health_check_unhealth_num  = 2
   session_expire_time        = 30
   scheduler                  = "WRR"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "VjAYq9xc"
 }
 `
 
@@ -216,6 +263,48 @@ resource "tencentcloud_clb_listener" "listener_tcp"{
 }
 `
 
+const testAccClbListener_tcpssl = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-tcp"
+}
+
+resource "tencentcloud_clb_listener" "listener_tcpssl" {
+  clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
+  listener_name              = "listener_tcpssl"
+  port                       = 44
+  protocol                   = "TCP_SSL"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "VjAYq9xc"
+  health_check_switch        = true
+  health_check_time_out      = 30
+  health_check_interval_time = 100
+  health_check_health_num    = 2
+  health_check_unhealth_num  = 2
+  scheduler                  = "WRR"
+}
+`
+const testAccClbListener_tcpssl_update = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-tcp"
+}
+
+resource "tencentcloud_clb_listener" "listener_tcpssl"{
+  clb_id = "${tencentcloud_clb_instance.clb_basic.id}"
+  listener_name              = "listener_tcpssl_update"
+  port                       = 44
+  protocol                   = "TCP_SSL"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "VfqcL1ME"
+  health_check_switch        = true
+  health_check_time_out      = 20
+  health_check_interval_time = 200
+  health_check_health_num    = 3
+  health_check_unhealth_num  = 3
+  scheduler                  = "WRR"
+}
+`
 const testAccClbListener_https = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
@@ -228,7 +317,7 @@ resource "tencentcloud_clb_listener" "listener_https" {
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VjANRdz8"
+  certificate_id       = "VjAYq9xc"
   sni_switch           = true
 }
 `
@@ -245,7 +334,7 @@ resource "tencentcloud_clb_listener" "listener_https" {
   port                 = 33
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VfqO4zkB"
+  certificate_id       = "VfqcL1ME"
   sni_switch           = true
 }
 `

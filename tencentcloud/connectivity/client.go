@@ -17,7 +17,6 @@ import (
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
@@ -35,7 +34,6 @@ type TencentCloudClient struct {
 	clbConn     *clb.Client
 	dcConn      *dc.Client
 	mongodbConn *mongodb.Client
-	tkeConn     *tke.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -70,7 +68,7 @@ func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 	// request timeout
 	cpf.HttpProfile.ReqTimeout = 300
 	// cpf.SignMethod = "HmacSHA1"
-	cpf.Language="en-US"
+	cpf.Language = "en-US"
 
 	var round LogRoundTripper
 
@@ -119,7 +117,8 @@ func (me *TencentCloudClient) UseRedisClient() *redis.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language="en-US"
+	cpf.Language = "en-US"
+
 	redisConn, _ := redis.NewClient(credential, me.Region, cpf)
 	me.redisConn = redisConn
 
@@ -138,7 +137,8 @@ func (me *TencentCloudClient) UseAsClient() *as.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language="en-US"
+	cpf.Language = "en-US"
+
 	asConn, _ := as.NewClient(credential, me.Region, cpf)
 	me.asConn = asConn
 
@@ -158,7 +158,8 @@ func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language="en-US"
+	cpf.Language = "en-US"
+
 	vpcConn, _ := vpc.NewClient(credential, me.Region, cpf)
 
 	var round LogRoundTripper
@@ -182,7 +183,8 @@ func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language="en-US"
+	cpf.Language = "en-US"
+
 	cbsConn, _ := cbs.NewClient(credential, me.Region, cpf)
 	me.cbsConn = cbsConn
 
@@ -202,7 +204,8 @@ func (me *TencentCloudClient) UseDcClient() *dc.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language="en-US"
+	cpf.Language = "en-US"
+
 	dcConn, _ := dc.NewClient(credential, me.Region, cpf)
 
 	var round LogRoundTripper
@@ -228,7 +231,8 @@ func (me *TencentCloudClient) UseMongodbClient() *mongodb.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language="en-US"
+	cpf.Language = "en-US"
+
 	mongodbConn, _ := mongodb.NewClient(credential, me.Region, cpf)
 	var round LogRoundTripper
 	mongodbConn.WithHttpTransport(&round)
@@ -250,7 +254,8 @@ func (me *TencentCloudClient) UseClbClient() *clb.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = "POST"
 	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language="en-US"
+	cpf.Language = "en-US"
+
 	clbConn, _ := clb.NewClient(credential, me.Region, cpf)
 	var round LogRoundTripper
 
@@ -258,27 +263,4 @@ func (me *TencentCloudClient) UseClbClient() *clb.Client {
 	me.clbConn = clbConn
 
 	return me.clbConn
-}
-
-func (me *TencentCloudClient) UseTkeClient() *tke.Client {
-
-	if me.tkeConn != nil {
-		return me.tkeConn
-	}
-	credential := common.NewCredential(
-		me.SecretId,
-		me.SecretKey,
-	)
-
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.ReqMethod = "POST"
-	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language="en-US"
-	tkeConn, _ := tke.NewClient(credential, me.Region, cpf)
-	var round LogRoundTripper
-	tkeConn.WithHttpTransport(&round)
-	me.tkeConn = tkeConn
-
-	return me.tkeConn
-
 }

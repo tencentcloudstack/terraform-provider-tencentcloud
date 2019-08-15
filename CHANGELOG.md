@@ -1,4 +1,20 @@
-## 1.16.0 (Unreleased)
+## 1.15.3 (Unreleased)
+## 1.15.2 (August 14, 2019)
+
+ENHANCEMENTS:
+
+* `tencentcloud_as_scaling_group`: fixed issue that binding scaling group to load balancer does not work.
+* `tencentcloud_clb_attachements`: rename `rewrite_source_rule_id` with `source_rule_id` and rename `rewrite_target_rule_id` with `target_rule_id`.
+
+## 1.15.1 (August 13, 2019)
+
+ENHANCEMENTS:
+
+* `tencentcloud_instance`: changed `image_id` property to ForceNew (#78)
+* `tencentcloud_instance`: improved with retry (#82)
+* `tencentcloud_cbs_storages`: improved with retry (#82)
+* `tencentcloud_clb_instance`: bug fixed and improved with retry (#37)
+
 ## 1.15.0 (August 07, 2019)
 
 FEATURES:

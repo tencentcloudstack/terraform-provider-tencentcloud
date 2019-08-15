@@ -93,7 +93,7 @@ func resourceTencentCloudVpcInstance() *schema.Resource {
 func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpc.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -102,7 +102,7 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 		name        string = ""
 		cidrBlock   string = ""
 		dnsServers         = make([]string, 0, 4)
-		isMulticast bool   = true
+		isMulticast bool
 	)
 	if temp, ok := d.GetOk("name"); ok {
 		name = temp.(string)
@@ -140,7 +140,7 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpc.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -176,16 +176,16 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpc.update")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name        string = ""
-		dnsServers         = make([]string, 0, 4)
-		slice              = make([]interface{}, 0, 4)
-		isMulticast bool   = true
+		name        string
+		dnsServers  = make([]string, 0, 4)
+		slice       []interface{}
+		isMulticast bool
 	)
 
 	old, now := d.GetChange("name")
@@ -231,7 +231,7 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudVpcInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpc.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}

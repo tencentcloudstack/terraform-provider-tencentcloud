@@ -42,10 +42,10 @@ resource "tencentcloud_cos_bucket_object" "object" {
 }
 
 data "tencentcloud_cos_bucket_object" "data_object" {
-  bucket = "${tencentcloud_cos_bucket_object.object.bucket}"
+  bucket = "${tencentcloud_cos_bucket.bucket.id}"
   key    = "${tencentcloud_cos_bucket_object.object.key}"
 }
 
 data "tencentcloud_cos_buckets" "data_bucket" {
-  bucket_prefix = "${tencentcloud_cos_bucket.bucket.bucket}"
+  bucket_prefix = "${tencentcloud_cos_bucket.bucket.id}"
 }

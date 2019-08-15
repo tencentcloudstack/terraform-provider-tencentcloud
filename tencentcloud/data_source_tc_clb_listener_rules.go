@@ -7,7 +7,7 @@ Example Usage
 data "tencentcloud_clb_listener_rules" "foo" {
   clb_id      = "lb-k2zjp9lv"
   listener_id = "lbl-mwr6vbtv"
-  rule_id     = "loc-inem40hz#lbl-mwr6vbtv#lb-k2zjp9lv"
+  rule_id     = "loc-inem40hz"
   domain      = "abc.com"
   url         = "/"
   scheduler   = "WRR"
@@ -18,11 +18,11 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"strings"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
 func dataSourceTencentCloudClbListenerRules() *schema.Resource {
@@ -32,18 +32,18 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"clb_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "ID of the CLB to be queried.",
+				Required:    true,
+				Description: "Id of the CLB to be queried.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "ID of the CLB listener to be queried.",
+				Description: "Id of the CLB listener to be queried.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the forwarding rule to be queried.",
+				Description: "Id of the forwarding rule to be queried.",
 			},
 			"domain": {
 				Type:        schema.TypeString,
@@ -59,7 +59,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The defaule is 'WRR'.",
+				Description:  "Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -75,12 +75,12 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						"clb_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the CLB.",
+							Description: "Id of the CLB.",
 						},
 						"listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the listener.",
+							Description: "Id of the listener.",
 						},
 						"domain": {
 							Type:        schema.TypeString,
@@ -95,7 +95,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						"rule_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the rule.",
+							Description: "Id of the rule.",
 						},
 						"health_check_switch": {
 							Type:        schema.TypeBool,
@@ -105,17 +105,17 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						"health_check_interval_time": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Interval time of health check. The value range is 5-300 sec, and the default is 5 sec.",
+							Description: "Interval time of health check. The value range is 5-300 sec, and the default is 5 sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"health_check_health_num": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Health threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as healthy. The value range is 2-10.",
+							Description: "Health threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as healthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"health_check_unhealth_num": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Unhealth threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as unhealthy. The value range is 2-10.",
+							Description: "Unhealth threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"health_check_http_code": {
 							Type:        schema.TypeInt,
@@ -140,27 +140,28 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of SSL Mode, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'.",
+							Description: "Type of SSL Mode, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'.NOTES: Only supports listeners of 'HTTPS'  and 'TCP_SSL' protocol.",
 						},
 						"certificate_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the server certificate. NOTES: Only supports listeners of 'HTTPS' protocol.",
+							Description: "Id of the server certificate. NOTES: Only supports listeners of 'HTTPS'  and 'TCP_SSL' protocol.",
 						},
 						"certificate_ca_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the client certificate. NOTES: Only supports listeners of 'HTTPS' protocol.",
+							Description: "Id of the client certificate. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.",
 						},
 						"session_expire_time": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR'.",
+							Description: "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR'. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"scheduler": {
 							Type:        schema.TypeString,
+							Optional:    true,
 							Computed:    true,
-							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The defaule is 'WRR'.",
+							Description: "Scheduling method of the CLB listener, and available values include 'WRR', 'IP_HASH' and 'LEAST_CONN'. The default is 'WRR'. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 					},
 				},
@@ -172,17 +173,11 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_clb_listener_rules.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	combinedId := d.Get("listener_id").(string)
-	items := strings.Split(combinedId, "#")
-	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_listener_rules is wrong")
-	}
-
-	listenerId := items[0]
-	clbId := items[1]
+	listenerId := d.Get("listener_id").(string)
+	clbId := d.Get("clb_id").(string)
 	params := make(map[string]string)
 	params["clb_id"] = clbId
 	params["listener_id"] = listenerId
@@ -205,18 +200,26 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	rules, err := clbService.DescribeRulesByFilter(ctx, params)
+	var rules []*clb.RuleOutput
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := clbService.DescribeRulesByFilter(ctx, params)
+		if e != nil {
+			return retryError(e)
+		}
+		rules = results
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read clb listener rules failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
 	ruleList := make([]map[string]interface{}, 0, len(rules))
 	log.Printf("the length %d", len(rules))
 	ids := make([]string, 0, len(rules))
 	for _, rule := range rules {
 		mapping := map[string]interface{}{
 			"clb_id":              clbId,
-			"listener_id":         combinedId,
+			"listener_id":         listenerId,
 			"rule_id":             *rule.LocationId,
 			"domain":              *rule.Domain,
 			"url":                 *rule.Url,
@@ -243,19 +246,19 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 			mapping["certificate_ca_id"] = *rule.Certificate.CertCaId
 		}
 		ruleList = append(ruleList, mapping)
-		ids = append(ids, *rule.LocationId+"#"+combinedId)
+		ids = append(ids, *rule.LocationId)
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
-	if err = d.Set("rule_list", ruleList); err != nil {
-		log.Printf("[CRITAL]%s provider set clb listener rule list fail, reason:%s\n ", logId, err.Error())
-		return err
+	if e := d.Set("rule_list", ruleList); e != nil {
+		log.Printf("[CRITAL]%s provider set clb listener rule list fail, reason:%s\n ", logId, e.Error())
+		return e
 	}
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), ruleList); err != nil {
-			return err
+		if e := writeToFile(output.(string), ruleList); e != nil {
+			return e
 		}
 	}
 

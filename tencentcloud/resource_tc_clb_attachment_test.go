@@ -66,7 +66,7 @@ func TestAccTencentCloudClbServerAttachment_http(t *testing.T) {
 }
 
 func testAccCheckClbServerAttachmentDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbService := ClbService{
@@ -94,7 +94,7 @@ func testAccCheckClbServerAttachmentDestroy(s *terraform.State) error {
 
 func testAccCheckClbServerAttachmentExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]

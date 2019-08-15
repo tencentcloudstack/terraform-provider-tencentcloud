@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -14,7 +13,7 @@ func TestAccTencentCloudClbListenerRule_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckClbListenerDestroy,
+		CheckDestroy: testAccCheckClbListenerRuleDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccClbListenerRule_basic,
@@ -27,11 +26,6 @@ func TestAccTencentCloudClbListenerRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "url", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "scheduler", "WRR"),
 				),
-			},
-			{
-				ResourceName:      "tencentcloud_clb_listener_rule.rule_basic",
-				ImportState:       true,
-				ImportStateVerify: true,
 			},
 		},
 	})
@@ -91,7 +85,7 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 }
 
 func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	clbService := ClbService{
@@ -101,14 +95,9 @@ func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_clb_listener_rule" {
 			continue
 		}
-
-		items := strings.Split(rs.Primary.ID, "#")
-		if len(items) != 3 {
-			return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
-		}
-		locationId := items[0]
-		listenerId := items[1]
-		clbId := items[2]
+		locationId := rs.Primary.ID
+		listenerId := rs.Primary.Attributes["listener_id"]
+		clbId := rs.Primary.Attributes["clb_id"]
 		//this function is not supported by api, need to be travelled
 		filter := map[string]string{"rule_id": locationId, "listener_id": listenerId, "clb_id": clbId}
 		_, err := clbService.DescribeRulesByFilter(ctx, filter)
@@ -121,7 +110,7 @@ func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
 
 func testAccCheckClbListenerRuleExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(nil)
+		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
 		rs, ok := s.RootModule().Resources[n]
@@ -134,13 +123,9 @@ func testAccCheckClbListenerRuleExists(n string) resource.TestCheckFunc {
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		items := strings.Split(rs.Primary.ID, "#")
-		if len(items) != 3 {
-			return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
-		}
-		locationId := items[0]
-		listenerId := items[1]
-		clbId := items[2]
+		locationId := rs.Primary.ID
+		listenerId := rs.Primary.Attributes["listener_id"]
+		clbId := rs.Primary.Attributes["clb_id"]
 		filter := map[string]string{"rule_id": locationId, "listener_id": listenerId, "clb_id": clbId}
 		_, err := clbService.DescribeRulesByFilter(ctx, filter)
 		if err != nil {
@@ -176,7 +161,7 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
 const testAccClbListenerRule_full = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-basic1"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
@@ -211,7 +196,7 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
 const testAccClbListenerRule_update = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-basic1"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {

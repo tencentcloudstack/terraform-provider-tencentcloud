@@ -47,7 +47,7 @@ func resourceTencentCloudCbsStorageAttachment() *schema.Resource {
 func resourceTencentCloudCbsStorageAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_storage_attachment.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	storageId := d.Get("storage_id").(string)
@@ -96,7 +96,7 @@ func resourceTencentCloudCbsStorageAttachmentCreate(d *schema.ResourceData, meta
 func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_storage_attachment.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	storageId := d.Id()
@@ -109,7 +109,7 @@ func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, meta i
 		if e != nil {
 			return retryError(e)
 		}
-		if *storage.Attached == false {
+		if !*storage.Attached {
 			log.Printf("[DEBUG]%s, disk id %s is not attached", logId, storageId)
 			d.SetId("")
 		}
@@ -128,7 +128,7 @@ func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, meta i
 func resourceTencentCloudCbsStorageAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_storage_attachment.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	storageId := d.Id()
@@ -142,7 +142,7 @@ func resourceTencentCloudCbsStorageAttachmentDelete(d *schema.ResourceData, meta
 		if e != nil {
 			return retryError(e)
 		}
-		if *storage.Attached == false {
+		if !*storage.Attached {
 			log.Printf("[DEBUG]%s, disk id %s is not attached", logId, storageId)
 			return nil
 		}
@@ -175,10 +175,10 @@ func resourceTencentCloudCbsStorageAttachmentDelete(d *schema.ResourceData, meta
 		if e != nil {
 			return retryError(e)
 		}
-		if *storage.Attached == true {
+		if *storage.Attached {
 			return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
 		}
-		if *storage.Attached == false {
+		if !*storage.Attached {
 			return nil
 		}
 		return resource.NonRetryableError(fmt.Errorf("cbs storage status is %s, we won't wait for it finish.", *storage.DiskState))

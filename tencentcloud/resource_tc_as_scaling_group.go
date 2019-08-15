@@ -5,17 +5,28 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_scaling_group" "scaling_group" {
-	scaling_group_name = "tf-as-scaling-group"
-	configuration_id = "asc-oqio4yyj"
-	max_size = 1
-	min_size = 0
-	vpc_id = "vpc-3efmz0z"
-	subnet_ids = ["subnet-mc3egos"]
-	project_id = 0
-	default_cooldown = 400
-	desired_capacity = 1
-	termination_policies = ["NEWEST_INSTANCE"]
-	retry_policy = "INCREMENTAL_INTERVALS"
+  scaling_group_name   = "tf-as-scaling-group"
+  configuration_id     = "asc-oqio4yyj"
+  max_size             = 1
+  min_size             = 0
+  vpc_id               = "vpc-3efmz0z"
+  subnet_ids           = ["subnet-mc3egos"]
+  project_id           = 0
+  default_cooldown     = 400
+  desired_capacity     = 1
+  termination_policies = ["NEWEST_INSTANCE"]
+  retry_policy         = "INCREMENTAL_INTERVALS"
+
+  forward_balancer_ids {
+    load_balancer_id = "lb-hk693b1l"
+    listener_id      = "lbl-81wr497k"
+    rule_id          = "loc-kiodx943"
+
+    target_attribute {
+      port   = 80
+      weight = 90
+    }
+  }
 }
 ```
 
@@ -134,7 +145,7 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 							Required:    true,
 							Description: "Listener ID for application load balancers.",
 						},
-						"location_id": {
+						"rule_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "ID of forwarding rules.",
@@ -205,7 +216,7 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_group.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	request := as.NewCreateAutoScalingGroupRequest()
 
 	request.AutoScalingGroupName = stringToPointer(d.Get("scaling_group_name").(string))
@@ -250,19 +261,20 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if v, ok := d.GetOk("forward_load_balancers"); ok {
+	if v, ok := d.GetOk("forward_balancer_ids"); ok {
 		forwardBalancers := v.([]interface{})
 		request.ForwardLoadBalancers = make([]*as.ForwardLoadBalancer, 0, len(forwardBalancers))
 		for _, v := range forwardBalancers {
 			vv := v.(map[string]interface{})
-			target := vv["target_attribute"].([]map[string]interface{})
+			targets := vv["target_attribute"].([]interface{})
 			forwardBalancer := as.ForwardLoadBalancer{
 				LoadBalancerId: stringToPointer(vv["load_balancer_id"].(string)),
 				ListenerId:     stringToPointer(vv["listener_id"].(string)),
-				LocationId:     stringToPointer(vv["location_id"].(string)),
+				LocationId:     stringToPointer(vv["rule_id"].(string)),
 			}
-			forwardBalancer.TargetAttributes = make([]*as.TargetAttribute, 0, len(target))
-			for _, t := range target {
+			forwardBalancer.TargetAttributes = make([]*as.TargetAttribute, 0, len(targets))
+			for _, target := range targets {
+				t := target.(map[string]interface{})
 				targetAttribute := as.TargetAttribute{
 					Port:   intToPointer(t["port"].(int)),
 					Weight: intToPointer(t["weight"].(int)),
@@ -303,7 +315,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_group.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingGroupId := d.Id()
@@ -347,11 +359,11 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 				"load_balancer_id":  *v.LoadBalancerId,
 				"listener_id":       *v.ListenerId,
 				"target_attributes": targetAttributes,
-				"location_id":       *v.LocationId,
+				"rule_id":           *v.LocationId,
 			}
 			forwardLoadBalancers = append(forwardLoadBalancers, forwardLoadBalancer)
 		}
-		d.Set("forward_load_balancers", forwardLoadBalancers)
+		d.Set("forward_balancer_ids", forwardLoadBalancers)
 	}
 
 	return nil
@@ -360,7 +372,7 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_group.update")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 
 	request := as.NewModifyAutoScalingGroupRequest()
 	scalingGroupId := d.Id()
@@ -436,20 +448,21 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if d.HasChange("forward_load_balancers") {
+	if d.HasChange("forward_balancer_ids") {
 		balancerChanged = true
-		forwardBalancers := d.Get("forward_load_balancers").([]interface{})
+		forwardBalancers := d.Get("forward_balancer_ids").([]interface{})
 		balancerRequest.ForwardLoadBalancers = make([]*as.ForwardLoadBalancer, 0, len(forwardBalancers))
 		for _, v := range forwardBalancers {
 			vv := v.(map[string]interface{})
-			target := vv["target_attribute"].([]map[string]interface{})
+			targets := vv["target_attribute"].([]interface{})
 			forwardBalancer := as.ForwardLoadBalancer{
 				LoadBalancerId: stringToPointer(vv["load_balancer_id"].(string)),
 				ListenerId:     stringToPointer(vv["listener_id"].(string)),
-				LocationId:     stringToPointer(vv["location_id"].(string)),
+				LocationId:     stringToPointer(vv["rule_id"].(string)),
 			}
-			forwardBalancer.TargetAttributes = make([]*as.TargetAttribute, 0, len(target))
-			for _, t := range target {
+			forwardBalancer.TargetAttributes = make([]*as.TargetAttribute, 0, len(targets))
+			for _, target := range targets {
+				t := target.(map[string]interface{})
 				targetAttribute := as.TargetAttribute{
 					Port:   intToPointer(t["port"].(int)),
 					Weight: intToPointer(t["weight"].(int)),
@@ -478,7 +491,7 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 func resourceTencentCloudAsScalingGroupDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_group.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingGroupId := d.Id()

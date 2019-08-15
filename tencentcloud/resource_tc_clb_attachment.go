@@ -6,8 +6,8 @@ Example Usage
 ```hcl
 resource "tencentcloud_clb_attachment" "foo" {
   clb_id      = "lb-k2zjp9lv"
-  listener_id = "lbl-hh141sn9#lb-k2zjp9lv"
-  rule_id     = "loc-4xxr2cy7#lbl-hh141sn9#lb-k2zjp9lv"
+  listener_id = "lbl-hh141sn9"
+  rule_id     = "loc-4xxr2cy7"
 
   targets {
     instance_id = "ins-1flbqyp8"
@@ -33,6 +33,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
@@ -51,19 +52,19 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "ID of the clb.",
+				Description: "Id of the clb.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: " ID of the clb listener.",
+				Description: "Id of the clb listener.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "ID of the clb listener rule. Only supports listeners of 'HTTPS'/'HTTP' protocol.",
+				Description: "Id of the clb listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.",
 			},
 			"protocol_type": {
 				Type:        schema.TypeString,
@@ -75,7 +76,7 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Required:    true,
 				MinItems:    1,
 				MaxItems:    100,
-				Description: " Information of the backends to be attached.",
+				Description: "Information of the backends to be attached.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
@@ -108,22 +109,15 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
-
-	items := strings.Split(d.Get("listener_id").(string), "#")
-	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong ?%d %s", len(items), d.Get("listener_id").(string))
-	}
-
-	listenerId := items[0]
-	clbId := items[1]
+	logId := getLogId(contextNil)
+	listenerId := d.Get("listener_id").(string)
+	clbId := d.Get("clb_id").(string)
 	locationId := ""
 	request := clb.NewRegisterTargetsRequest()
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.ListenerId = stringToPointer(listenerId)
 	if v, ok := d.GetOk("rule_id"); ok {
-		items := strings.Split(v.(string), "#")
-		locationId = items[0]
+		locationId = v.(string)
 		if locationId != "" {
 			request.LocationId = stringToPointer(locationId)
 		}
@@ -133,24 +127,29 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 		inst := inst_.(map[string]interface{})
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
 	}
-
-	requestId := ""
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-		requestId = *response.Response.RequestId
-		retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-		if retryErr != nil {
-			return retryErr
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		requestId := ""
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			requestId = *result.Response.RequestId
+			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			if retryErr != nil {
+				return resource.NonRetryableError(retryErr)
+			}
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create clb attachment failed, reason:%s\n ", logId, err.Error())
+		return err
 	}
-
-	id := fmt.Sprintf("%s#%v", locationId, d.Get("listener_id"))
+	id := fmt.Sprintf("%s#%v#%v", locationId, d.Get("listener_id"), d.Get("clb_id"))
 	d.SetId(id)
 
 	return resourceTencentCloudClbServerAttachmentRead(d, meta)
@@ -162,34 +161,44 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	attachmentId := d.Id()
+
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_listener is wrong")
+		return fmt.Errorf("id of resource.tencentcloud_clb_attachment listener is wrong")
 	}
+
 	locationId := items[0]
 	listenerId := items[1]
 	clbId := items[2]
+
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, d.Get("targets").(*schema.Set).List())
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, d.Get("targets").(*schema.Set).List())
 
+		if e != nil {
+
+			return retryError(e)
+		}
+
+		return nil
+	})
 	if err != nil {
 		log.Printf("[CRITAL]%s reason[%s]\n", logId, err.Error())
 		return err
 	}
-
 	return nil
 }
 
 func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta interface{}, remove []interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.remove")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	attachmentId := d.Id()
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
@@ -209,42 +218,44 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
 	}
 
-	requestId := ""
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().DeregisterTargets(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-		requestId = *response.Response.RequestId
-		retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-		if retryErr != nil {
-			return retryErr
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		requestId := ""
+		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().DeregisterTargets(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			requestId = *response.Response.RequestId
+			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			if retryErr != nil {
+				return resource.NonRetryableError(retryErr)
+			}
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s remove clb attachment failed, reason:%s\n ", logId, err.Error())
+		return err
 	}
 	return nil
 }
 
 func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta interface{}, add []interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.add")()
-	logId := getLogId(nil)
-	items := strings.Split(d.Get("listener_id").(string), "#")
-	if len(items) != 2 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_attachment is wrong")
-	}
+	logId := getLogId(contextNil)
 
-	listenerId := items[0]
-	clbId := items[1]
+	listenerId := d.Get("listener_id").(string)
+	clbId := d.Get("clb_id").(string)
 	locationId := ""
 	request := clb.NewRegisterTargetsRequest()
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.ListenerId = stringToPointer(listenerId)
 
 	if v, ok := d.GetOk("rule_id"); ok {
-		items := strings.Split(v.(string), "#")
-		locationId = items[0]
+		locationId = v.(string)
 		if locationId != "" {
 			request.LocationId = stringToPointer(locationId)
 		}
@@ -254,21 +265,27 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 		inst := inst_.(map[string]interface{})
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
 	}
-
-	requestId := ""
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-		requestId = *response.Response.RequestId
-		retryErr := retrySet(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-		if retryErr != nil {
-			return retryErr
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		requestId := ""
+		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			requestId = *response.Response.RequestId
+			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			if retryErr != nil {
+				return resource.NonRetryableError(retryErr)
+			}
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s add clb attachment failed, reason:%s\n ", logId, err.Error())
+		return err
 	}
 	return nil
 }
@@ -306,7 +323,7 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	items := strings.Split(d.Id(), "#")
@@ -317,17 +334,25 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	instance, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+	var instance *clb.ListenerBackend
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+		if e != nil {
+			return retryError(e)
+		}
+		instance = result
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s read clb attachment failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-
 	d.Set("clb_id", clbId)
-	d.Set("listener_id", listenerId+"#"+clbId)
+	d.Set("listener_id", listenerId)
 	d.Set("protocol_type", instance.Protocol)
 
 	if *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
-		d.Set("rule_id", locationId+"#"+listenerId+"#"+clbId)
+		d.Set("rule_id", locationId)
 		if len(instance.Rules) > 0 {
 			for _, loc := range instance.Rules {
 				if locationId == "" || locationId == *loc.LocationId {
