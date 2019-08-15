@@ -45,7 +45,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 
 func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kubernetes_scale_worker.create")()
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	var cvms RunInstancesForNode
@@ -139,7 +139,7 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interface{}) error {
 
 	defer logElapsed("resource.tencentcloud_kubernetes_scale_worker.read")()
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -235,7 +235,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta interface{}) error {
 
 	defer logElapsed("resource.tencentcloud_kubernetes_scale_worker.delete")()
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}

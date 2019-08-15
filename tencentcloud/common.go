@@ -84,10 +84,7 @@ func isErrorRetryable(err error) bool {
 		return false
 	}
 
-	code := e.Code
-	if strings.Contains(code, ".") {
-		code = strings.Split(code, ".")[0]
-	}
+	code := strings.Split(e.Code, ".")[0]
 
 	if assert.IsContains(retryableErrorCode, code) {
 		log.Printf("[CRITAL] Retryable error: %s", e.Error())

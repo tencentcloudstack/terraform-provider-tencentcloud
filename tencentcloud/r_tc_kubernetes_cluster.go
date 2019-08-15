@@ -522,7 +522,7 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster.create")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	var basic ClusterBasicSetting
@@ -648,7 +648,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -716,7 +716,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster.delete")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
