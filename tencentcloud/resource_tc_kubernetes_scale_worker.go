@@ -90,8 +90,8 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if len(cvms.Work) !=1 {
-		return  fmt.Errorf("only one additional configuration of virtual machines is now supported now, " +
+	if len(cvms.Work) != 1 {
+		return fmt.Errorf("only one additional configuration of virtual machines is now supported now, " +
 			"so len(cvms.Work) should be 1")
 	}
 
@@ -105,7 +105,7 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 
 	for _, v := range instanceIds {
 		if v == "" {
-			return  fmt.Errorf("CreateClusterInstances return one instanceId is empty")
+			return fmt.Errorf("CreateClusterInstances return one instanceId is empty")
 		}
 		infoMap := make(map[string]interface{})
 		infoMap["instance_id"] = v
@@ -123,13 +123,13 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	instanceIdJoin:=strings.Join(instanceIds, "#")
+	instanceIdJoin := strings.Join(instanceIds, "#")
 
 	if _, err = md.Write([]byte(instanceIdJoin)); err != nil {
 		return err
 	}
 
-	id:=fmt.Sprintf("TkeScaleWorker.%x",fmt.Sprintf("%x", md.Sum(nil)))
+	id := fmt.Sprintf("TkeScaleWorker.%x", md.Sum(nil))
 
 	d.SetId(id)
 
@@ -186,7 +186,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 			return fmt.Errorf("worker_instances_list.instance_id is broken.")
 		}
 
-		if instanceMap[instanceId]{
+		if instanceMap[instanceId] {
 			log.Printf("[WARN]The same instance id exists in the list")
 		}
 
@@ -281,7 +281,7 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 			return fmt.Errorf("worker_instances_list.instance_id is broken.")
 		}
 
-		if instanceMap[instanceId]{
+		if instanceMap[instanceId] {
 			log.Printf("[WARN]The same instance id exists in the list")
 		}
 
