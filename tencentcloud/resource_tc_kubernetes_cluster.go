@@ -66,7 +66,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 		"subnet_id": {
 			Type:         schema.TypeString,
 			ForceNew:     true,
-			Optional:     true,
+			Required:     true,
 			ValidateFunc: validateStringLengthInRange(4, 100),
 			Description:  "Private network ID. If vpc_id is set, this value is required.",
 		},
@@ -238,7 +238,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			"vpc_id": {
 				Type:         schema.TypeString,
 				ForceNew:     true,
-				Optional:     true,
+				Required:     true,
 				ValidateFunc: validateStringLengthInRange(4, 100),
 			},
 			"project_id": {
