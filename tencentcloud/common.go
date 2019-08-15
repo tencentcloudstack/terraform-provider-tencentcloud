@@ -22,7 +22,7 @@ const FILED_SP = "#"
 var contextNil context.Context = nil
 
 var logFirstTime = ""
-var logAtomaticId int64 = 0
+var logAtomicId int64 = 0
 
 // readRetryTimeout is read retry timeout
 const readRetryTimeout = 3 * time.Minute
@@ -48,7 +48,7 @@ func init() {
 	logFirstTime = fmt.Sprintf("%d", time.Now().UnixNano()/int64(time.Millisecond))
 }
 
-// getLogId get logid  for trace, return a new logid if ctx is nil
+// getLogId get logId for trace, return a new logId if ctx is nil
 func getLogId(ctx context.Context) string {
 	if ctx != nil {
 		logId, ok := ctx.Value("logId").(string)
@@ -57,7 +57,7 @@ func getLogId(ctx context.Context) string {
 		}
 	}
 
-	return fmt.Sprintf("%s-%d", logFirstTime, atomic.AddInt64(&logAtomaticId, 1))
+	return fmt.Sprintf("%s-%d", logFirstTime, atomic.AddInt64(&logAtomicId, 1))
 }
 
 // logElapsed log func elapsed time, using in defer
