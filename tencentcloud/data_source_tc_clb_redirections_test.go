@@ -20,8 +20,8 @@ func TestAccTencentCloudClbRedirectionsDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_redirections.redirections", "redirection_list.0.clb_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_redirections.redirections", "redirection_list.0.source_listener_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_redirections.redirections", "redirection_list.0.target_listener_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_redirections.redirections", "redirection_list.0.source_listener_rule_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_redirections.redirections", "redirection_list.0.target_listener_rule_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_redirections.redirections", "redirection_list.0.source_rule_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_redirections.redirections", "redirection_list.0.target_rule_id"),
 				),
 			},
 		},
@@ -67,16 +67,16 @@ resource "tencentcloud_clb_listener_rule" "rule_target" {
 }
 
 resource "tencentcloud_clb_redirection" "redirection_basic" {
-  clb_id                  = "${tencentcloud_clb_instance.clb.id}"
-  source_listener_id      = "${tencentcloud_clb_listener.listener_basic.id}"
-  target_listener_id      = "${tencentcloud_clb_listener.listener_target.id}"
-  source_listener_rule_id = "${tencentcloud_clb_listener_rule.rule_basic.id}"
-  target_listener_rule_id = "${tencentcloud_clb_listener_rule.rule_target.id}"
+  clb_id             = "${tencentcloud_clb_instance.clb.id}"
+  source_listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
+  target_listener_id = "${tencentcloud_clb_listener.listener_target.id}"
+  source_rule_id     = "${tencentcloud_clb_listener_rule.rule_basic.id}"
+  target_rule_id     = "${tencentcloud_clb_listener_rule.rule_target.id}"
 }
 
 data "tencentcloud_clb_redirections" "redirections" {
-  clb_id                  = "${tencentcloud_clb_instance.clb.id}"
-  source_listener_id      = "${tencentcloud_clb_redirection.redirection_basic.source_listener_id}"
-  source_listener_rule_id = "${tencentcloud_clb_redirection.redirection_basic.source_listener_rule_id}"
+  clb_id             = "${tencentcloud_clb_instance.clb.id}"
+  source_listener_id = "${tencentcloud_clb_redirection.redirection_basic.source_listener_id}"
+  source_rule_id     = "${tencentcloud_clb_redirection.redirection_basic.source_rule_id}"
 }
 `
