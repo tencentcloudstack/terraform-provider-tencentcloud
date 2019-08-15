@@ -14,10 +14,10 @@ import (
 
 func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudLayer4ListenerCreate,
-		Read:   resourceTencentCloudLayer4ListenerRead,
-		Update: resourceTencentCloudLayer4ListenerUpdate,
-		Delete: resourceTencentCloudLayer4ListenerDelete,
+		Create: resourceTencentCloudGaapLayer4ListenerCreate,
+		Read:   resourceTencentCloudGaapLayer4ListenerRead,
+		Update: resourceTencentCloudGaapLayer4ListenerUpdate,
+		Delete: resourceTencentCloudGaapLayer4ListenerDelete,
 		Schema: map[string]*schema.Schema{
 			"protocol": {
 				Type:         schema.TypeString,
@@ -117,7 +117,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudLayer4ListenerCreate(d *schema.ResourceData, m interface{}) error {
+func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer4_listener.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -202,10 +202,10 @@ func resourceTencentCloudLayer4ListenerCreate(d *schema.ResourceData, m interfac
 	}
 
 	d.SetId(id)
-	return resourceTencentCloudLayer4ListenerRead(d, m)
+	return resourceTencentCloudGaapLayer4ListenerRead(d, m)
 }
 
-func resourceTencentCloudLayer4ListenerRead(d *schema.ResourceData, m interface{}) error {
+func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer4_listener.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -426,7 +426,7 @@ func resourceTencentCloudLayer4ListenerRead(d *schema.ResourceData, m interface{
 	return nil
 }
 
-func resourceTencentCloudLayer4ListenerUpdate(d *schema.ResourceData, m interface{}) error {
+func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer4_listener.update")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -510,10 +510,10 @@ func resourceTencentCloudLayer4ListenerUpdate(d *schema.ResourceData, m interfac
 
 	d.Partial(false)
 
-	return resourceTencentCloudLayer4ListenerRead(d, m)
+	return resourceTencentCloudGaapLayer4ListenerRead(d, m)
 }
 
-func resourceTencentCloudLayer4ListenerDelete(d *schema.ResourceData, m interface{}) error {
+func resourceTencentCloudGaapLayer4ListenerDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer4_listener.delete")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
