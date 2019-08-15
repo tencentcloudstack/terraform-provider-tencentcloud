@@ -21,7 +21,6 @@ func TestAccTencentCloudGaapCertificate_basic(t *testing.T) {
 			{
 				Config: testAccGaapCertificate(0, "\"test:tx2KGdo3zJg/.\"", "", ""),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_certificate.foo"),
 					testAccCheckGaapCertificateExists("tencentcloud_gaap_certificate.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "type", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "content", "test:tx2KGdo3zJg/."),
@@ -49,7 +48,6 @@ func TestAccTencentCloudGaapCertificate_clientCA(t *testing.T) {
 			{
 				Config: testAccGaapCertificate(1, "<<EOF\n"+testAccGaapCertificateClientCA+"EOF", "", "<<EOF\n"+testAccGaapCertificateClientCAKey+"EOF"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_certificate.foo"),
 					testAccCheckGaapCertificateExists("tencentcloud_gaap_certificate.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "type", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "content", testAccGaapCertificateClientCA),
@@ -77,7 +75,6 @@ func TestAccTencentCloudGaapCertificate_ServerSSL(t *testing.T) {
 			{
 				Config: testAccGaapCertificate(2, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_certificate.foo"),
 					testAccCheckGaapCertificateExists("tencentcloud_gaap_certificate.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "type", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "content", testAccGaapCertificateServerCert),
@@ -105,7 +102,6 @@ func TestAccTencentCloudGaapCertificate_realserverCA(t *testing.T) {
 			{
 				Config: testAccGaapCertificate(3, "<<EOF\n"+testAccGaapCertificateClientCA+"EOF", "", "<<EOF\n"+testAccGaapCertificateClientCAKey+"EOF"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_certificate.foo"),
 					testAccCheckGaapCertificateExists("tencentcloud_gaap_certificate.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "type", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "content", testAccGaapCertificateClientCA),
@@ -133,7 +129,6 @@ func TestAccTencentCloudGaapCertificate_ProxySSL(t *testing.T) {
 			{
 				Config: testAccGaapCertificate(4, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF"),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_certificate.foo"),
 					testAccCheckGaapCertificateExists("tencentcloud_gaap_certificate.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "type", "4"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "content", testAccGaapCertificateServerCert),
@@ -161,7 +156,6 @@ func TestAccTencentCloudGaapCertificate_updateName(t *testing.T) {
 			{
 				Config: testAccGaapCertificate(0, "\"test:tx2KGdo3zJg/.\"", "", ""),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_gaap_certificate.foo"),
 					testAccCheckGaapCertificateExists("tencentcloud_gaap_certificate.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "type", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_certificate.foo", "content", "test:tx2KGdo3zJg/."),
