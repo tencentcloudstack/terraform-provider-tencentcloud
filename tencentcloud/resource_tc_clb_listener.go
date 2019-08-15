@@ -3,10 +3,23 @@ Provides a resource to create a CLB listener.
 
 Example Usage
 
+HTTP Listener
+
 ```hcl
-resource "tencentcloud_clb_listener" "tcp_listener" {
-  clb_id                     = "lb-k2zjp9lv"
-  listener_name              = "mylistener"
+resource "tencentcloud_clb_listener" "HTTP_listener" {
+  clb_id                     = "lb-0lh5au7v"
+  listener_name              = "test_listener"
+  port                       = 80
+  protocol                   = "HTTP"
+}
+```
+
+TCP/UDP Listener
+
+```hcl
+resource "tencentcloud_clb_listener" "TCP_listener" {
+  clb_id                     = "lb-0lh5au7v"
+  listener_name              = "test_listener"
   port                       = 80
   protocol                   = "TCP"
   health_check_switch        = true
@@ -17,15 +30,40 @@ resource "tencentcloud_clb_listener" "tcp_listener" {
   session_expire_time        = 30
   scheduler                  = "WRR"
 }
-resource "tencentcloud_clb_listener" "https_listener" {
-  clb_id               = "lb-k2zjp9lv"
-  listener_name        = "listener_https"
-  port                 = 80
-  protocol             = "HTTPS"
-  certificate_ssl_mode = "MUTUAL"
-  certificate_id       = "mycert server ID "
-  certificate_ca_id    = "mycert ca ID"
-  sni_switch           = true
+```
+
+HTTPS Listener
+
+```hcl
+resource "tencentcloud_clb_listener" "HTTPS_listener" {
+  clb_id                     = "lb-0lh5au7v"
+  listener_name              = "test_listener"
+  port                       = "80"
+  protocol                   = "HTTPS"
+  certificate_ssl_mode       = "MUTUAL"
+  certificate_id             = "VjAYq9xc"
+  certificate_ca_id          = "VfqcL1ME"
+  sni_switch                 = true
+}
+```
+
+TCP SSL Listener
+
+```hcl
+resource "tencentcloud_clb_listener" "TCPSSL_listener" {
+  clb_id                     = "lb-0lh5au7v"
+  listener_name              = "test_listener"
+  port                       = "80"
+  protocol                   = "TCP_SSL"
+  certificate_ssl_mode       = "MUTUAL"
+  certificate_id             = "VjAYq9xc"
+  certificate_ca_id          = "VfqcL1ME"
+  health_check_switch        = true
+  health_check_time_out      = 2
+  health_check_interval_time = 5
+  health_check_health_num    = 3
+  health_check_unhealth_num  = 3
+  scheduler                  = "WRR"
 }
 ```
 */
@@ -54,7 +92,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "ID of the CLB.",
+				Description:  "Id of the CLB.",
 			},
 			"listener_name": {
 				Type:         schema.TypeString,
@@ -74,7 +112,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_PROTOCOL),
-				Description:  "Type of protocol within the listener, and available values include TCP, UDP, HTTP, HTTPS and TCP_SSL.",
+				Description:  "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.",
 			},
 			"health_check_switch": {
 				Type:        schema.TypeBool,
@@ -94,50 +132,50 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(5, 300),
-				Description:  "Interval time of health check. The value range is 5-300 sec, and the default is 5 sec.",
+				Description:  "Interval time of health check. The value range is 5-300 sec, and the default is 5 sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 			},
 			"health_check_health_num": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(2, 10),
-				Description:  "Health threshold of health check, and the default is 3. If a success result is returned for the health check for 3 consecutive times, the backend CVM is identified as healthy. The value range is 2-10.",
+				Description:  "Health threshold of health check, and the default is 3. If a success result is returned for the health check for 3 consecutive times, the backend CVM is identified as healthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 			},
 			"health_check_unhealth_num": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(2, 10),
-				Description:  "Unhealth threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, the CVM is identified as unhealthy. The value range is 2-10.",
+				Description:  "Unhealth threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 			},
 			"certificate_ssl_mode": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.",
+				Description:  "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol and must be set when it is available.",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the server certificate. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.",
+				Description: "Id of the server certificate. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol and must be set when it is available.",
 			},
 			"certificate_ca_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the client certificate. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.",
+				Description: "Id of the client certificate. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol and must be set when the ssl mode is 'MUTUAL'.",
 			},
 			"session_expire_time": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateIntegerInRange(30, 3600),
-				Description:  "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR', and not available when listener protocol is TCP_SSL.",
+				Description:  "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as 'WRR', and not available when listener protocol is 'TCP_SSL'. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
 				Default:      CLB_LISTENER_SCHEDULER_WRR,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of HTTP and 'HTTPS' protocol additionally supports the 'IP Hash' method.",
+				Description:  "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of HTTP and 'HTTPS' protocol additionally supports the 'IP Hash' method. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 			},
 			"sni_switch": {
 				Type:        schema.TypeBool,

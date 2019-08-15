@@ -25,6 +25,17 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   desired_capacity     = 1
   termination_policies = ["NEWEST_INSTANCE"]
   retry_policy         = "INCREMENTAL_INTERVALS"
+
+  forward_balancer_ids {
+    load_balancer_id = "lb-hk693b1l"
+    listener_id      = "lbl-81wr497k"
+    rule_id          = "loc-kiodx943"
+
+    target_attribute {
+      port   = 80
+      weight = 90
+    }
+  }
 }
 ```
 
@@ -52,7 +63,7 @@ The `forward_balancer_ids` object supports the following:
 * `listener_id` - (Required) Listener ID for application load balancers.
 * `load_balancer_id` - (Required) ID of available load balancers.
 * `target_attribute` - (Required) Attribute list of target rules.
-* `location_id` - (Optional) ID of forwarding rules.
+* `rule_id` - (Optional) ID of forwarding rules.
 
 The `target_attribute` object supports the following:
 

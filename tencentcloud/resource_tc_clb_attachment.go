@@ -52,19 +52,19 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "ID of the clb.",
+				Description: "Id of the clb.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "ID of the clb listener.",
+				Description: "Id of the clb listener.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "ID of the clb listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.",
+				Description: "Id of the clb listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.",
 			},
 			"protocol_type": {
 				Type:        schema.TypeString,
@@ -117,8 +117,7 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 	request.LoadBalancerId = stringToPointer(clbId)
 	request.ListenerId = stringToPointer(listenerId)
 	if v, ok := d.GetOk("rule_id"); ok {
-		items := strings.Split(v.(string), "#")
-		locationId = items[0]
+		locationId = v.(string)
 		if locationId != "" {
 			request.LocationId = stringToPointer(locationId)
 		}
