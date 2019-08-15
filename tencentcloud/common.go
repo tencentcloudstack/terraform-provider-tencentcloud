@@ -88,14 +88,17 @@ func isErrorRetryable(err error) bool {
 	}
 
 	longCode := e.Code
-	shortCode := e.Code
-	if strings.Contains(shortCode, ".") {
-		shortCode = strings.Split(shortCode, ".")[0]
-	}
-
-	if assert.IsContains(retryableErrorCode, longCode) || assert.IsContains(retryableErrorCode, shortCode) {
+	if assert.IsContains(retryableErrorCode, longCode) {
 		log.Printf("[CRITAL] Retryable error: %s", e.Error())
 		return true
+	}
+
+	if strings.Contains(longCode, ".") {
+		shortCode := strings.Split(longCode, ".")[0]
+		if assert.IsContains(retryableErrorCode, shortCode) {
+			log.Printf("[CRITAL] Retryable error: %s", e.Error())
+			return true
+		}
 	}
 
 	log.Printf("[CRITAL] NonRetryable error: %s", e.Error())
