@@ -643,8 +643,8 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	_, _, err = service.DescribeClusterInstances(ctx, d.Id())
 
 	if err != nil {
-		//create often cost more than half an hour.
-		err = resource.Retry(time.Hour, func() *resource.RetryError {
+		//create often cost more than 20 Minutes.
+		err = resource.Retry(30*time.Minute, func() *resource.RetryError {
 			_, _, err = service.DescribeClusterInstances(ctx, d.Id())
 			if err != nil {
 				return retryError(err)
@@ -654,7 +654,19 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 
 	if err != nil {
-		log.Printf("[WARN]%s resource.kubernetes_cluster DescribeClusterInstances fail , %s", logId, err.Error())
+		log.Printf("[CRITAL]%s resource.kubernetes_cluster DescribeClusterInstances fail , %s", logId, err.Error())
+
+		deleteErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err := service.DeleteCluster(ctx, d.Id())
+			if err != nil {
+				return retryError(err)
+			}
+			return nil
+		})
+		if deleteErr != nil {
+			log.Printf("[CRITAL]%s resource.kubernetes_cluster create to delete error , %s", logId, deleteErr.Error())
+		}
+		return err
 	}
 
 	if err = resourceTencentCloudTkeClusterRead(d, meta); err != nil {
