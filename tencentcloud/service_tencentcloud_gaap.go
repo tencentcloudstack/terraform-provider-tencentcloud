@@ -790,7 +790,7 @@ func (me *GaapService) CreateTCPListener(
 			return resource.NonRetryableError(err)
 		}
 		if response.Response.ListenerIds[0] == nil {
-			err := fmt.Errorf("api[%s] TCP listener ID is nil", createRequest.GetAction())
+			err := fmt.Errorf("api[%s] TCP listener id is nil", createRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -839,7 +839,7 @@ func (me *GaapService) CreateUDPListener(
 			return resource.NonRetryableError(err)
 		}
 		if response.Response.ListenerIds[0] == nil {
-			err := fmt.Errorf("api[%s] UDP listener ID is nil", createRequest.GetAction())
+			err := fmt.Errorf("api[%s] UDP listener id is nil", createRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -1098,7 +1098,7 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 			return nil
 		}
 
-		err = fmt.Errorf("api[%s] listener delete status unknow", deleteRequest.GetAction())
+		err = fmt.Errorf("api[%s] listener delete status unknown", deleteRequest.GetAction())
 		log.Printf("[CRITAL]%s %v", logId, err)
 		return resource.NonRetryableError(err)
 	}); err != nil {
@@ -1531,21 +1531,21 @@ func (me *GaapService) CreateHTTPListener(ctx context.Context, name, proxyId str
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	createRequest := gaap.NewCreateHTTPListenerRequest()
-	createRequest.ProxyId = &proxyId
-	createRequest.ListenerName = &name
-	createRequest.Port = intToPointer(port)
+	request := gaap.NewCreateHTTPListenerRequest()
+	request.ProxyId = &proxyId
+	request.ListenerName = &name
+	request.Port = intToPointer(port)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, err := client.CreateHTTPListener(createRequest)
+		response, err := client.CreateHTTPListener(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 
 		if response.Response.ListenerId == nil {
-			err := fmt.Errorf("api[%s] HTTP listener ID is nil", createRequest.GetAction())
+			err := fmt.Errorf("api[%s] HTTP listener id is nil", request.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -1574,25 +1574,25 @@ func (me *GaapService) CreateHTTPSListener(
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	createRequest := gaap.NewCreateHTTPSListenerRequest()
-	createRequest.ProxyId = &proxyId
-	createRequest.CertificateId = &certificateId
-	createRequest.ForwardProtocol = &forwardProtocol
-	createRequest.ListenerName = &name
-	createRequest.Port = intToPointer(port)
-	createRequest.AuthType = intToPointer(authType)
-	createRequest.ClientCertificateId = clientCertificateId
+	request := gaap.NewCreateHTTPSListenerRequest()
+	request.ProxyId = &proxyId
+	request.CertificateId = &certificateId
+	request.ForwardProtocol = &forwardProtocol
+	request.ListenerName = &name
+	request.Port = intToPointer(port)
+	request.AuthType = intToPointer(authType)
+	request.ClientCertificateId = clientCertificateId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, err := client.CreateHTTPSListener(createRequest)
+		response, err := client.CreateHTTPSListener(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 
 		if response.Response.ListenerId == nil {
-			err := fmt.Errorf("api[%s] HTTPS listener ID is nil", createRequest.GetAction())
+			err := fmt.Errorf("api[%s] HTTPS listener id is nil", request.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -1637,12 +1637,6 @@ func (me *GaapService) DescribeHTTPListeners(
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			response, err := me.client.UseGaapClient().DescribeHTTPListeners(request)
 			if err != nil {
-				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					if sdkError.Code == "ResourceNotFound" {
-						return nil
-					}
-				}
-
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -1688,12 +1682,6 @@ func (me *GaapService) DescribeHTTPSListeners(
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			response, err := me.client.UseGaapClient().DescribeHTTPSListeners(request)
 			if err != nil {
-				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					if sdkError.Code == "ResourceNotFound" {
-						return nil
-					}
-				}
-
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -1718,15 +1706,15 @@ func (me *GaapService) ModifyHTTPListener(ctx context.Context, id, proxyId, name
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	modifyRequest := gaap.NewModifyHTTPListenerAttributeRequest()
-	modifyRequest.ListenerId = &id
-	modifyRequest.ListenerName = &name
-	modifyRequest.ProxyId = &proxyId
+	request := gaap.NewModifyHTTPListenerAttributeRequest()
+	request.ListenerId = &id
+	request.ListenerName = &name
+	request.ProxyId = &proxyId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if _, err := client.ModifyHTTPListenerAttribute(modifyRequest); err != nil {
+		if _, err := client.ModifyHTTPListenerAttribute(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 		return nil
@@ -1751,18 +1739,18 @@ func (me *GaapService) ModifyHTTPSListener(
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	modifyRequest := gaap.NewModifyHTTPSListenerAttributeRequest()
-	modifyRequest.ProxyId = &proxyId
-	modifyRequest.ListenerId = &id
-	modifyRequest.ListenerName = name
-	modifyRequest.ForwardProtocol = forwardProtocol
-	modifyRequest.CertificateId = certificateId
-	modifyRequest.ClientCertificateId = clientCertificateId
+	request := gaap.NewModifyHTTPSListenerAttributeRequest()
+	request.ProxyId = &proxyId
+	request.ListenerId = &id
+	request.ListenerName = name
+	request.ForwardProtocol = forwardProtocol
+	request.CertificateId = certificateId
+	request.ClientCertificateId = clientCertificateId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if _, err := client.ModifyHTTPSListenerAttribute(modifyRequest); err != nil {
+		if _, err := client.ModifyHTTPSListenerAttribute(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 		return nil
@@ -1813,7 +1801,7 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 			return nil
 		}
 
-		err = fmt.Errorf("api[%s] listener delete status unknow", deleteRequest.GetAction())
+		err = fmt.Errorf("api[%s] listener delete status unknown", deleteRequest.GetAction())
 		log.Printf("[CRITAL]%s %v", logId, err)
 		return resource.NonRetryableError(err)
 	}); err != nil {
@@ -1905,7 +1893,7 @@ func waitLayer4ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 			}
 
 			if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
-				err := errors.New("TCP listener still creating")
+				err := errors.New("TCP listener is still creating")
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
 			}
@@ -1940,7 +1928,7 @@ func waitLayer4ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 			}
 
 			if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
-				err := errors.New("UDP listener still creating")
+				err := errors.New("UDP listener is still creating")
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
 			}
@@ -1983,7 +1971,7 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 			}
 
 			if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
-				err := errors.New("HTTP listener still creating")
+				err := errors.New("HTTP listener is still creating")
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
 			}
@@ -2018,7 +2006,7 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 			}
 
 			if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
-				err := errors.New("HTTPS listener still creating")
+				err := errors.New("HTTPS listener is still creating")
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
 			}

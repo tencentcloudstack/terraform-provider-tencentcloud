@@ -310,7 +310,6 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 		}
 
 	case "HTTPS":
-
 		var (
 			name                *string
 			certificateId       *string
