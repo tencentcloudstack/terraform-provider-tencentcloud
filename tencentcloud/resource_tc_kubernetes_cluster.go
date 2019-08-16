@@ -49,6 +49,13 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "Indicates which availability zone will be used.",
 		},
+		"instance_name": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     "sub machine of tke",
+			Description: "Indicates which availability zone will be used.",
+		},
 		"instance_type": {
 			Type:        schema.TypeString,
 			ForceNew:    true,
@@ -334,7 +341,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				Type:     schema.TypeList,
 				ForceNew: true,
 				MaxItems: 1,
-				Required: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: TkeCvmCreateInfo(),
 				},
@@ -464,6 +471,10 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 			request.LoginSettings = &cvm.LoginSettings{}
 		}
 		request.LoginSettings.Password = stringToPointer(v.(string))
+	}
+
+	if v, ok := dMap["instance_name"]; ok {
+		request.InstanceName = stringToPointer(v.(string))
 	}
 
 	if v, ok := dMap["key_ids"]; ok {

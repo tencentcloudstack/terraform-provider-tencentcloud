@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-var testTkeClusterName ="tencentcloud_kubernetes_scale_worker"
-var testTkeClusterResourceKey = testTkeScaleWorkerResourceName+".test_scale"
+var testTkeClusterName ="tencentcloud_kubernetes_cluster"
+var testTkeClusterResourceKey = testTkeClusterName+".managed_cluster"
 
 func TestAccTencentCloudTkeResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
@@ -23,7 +23,7 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 				Config: testAccTkeCluster,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
-					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "10.60.0.0/16"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "172.31.0.0/16"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_max_pod_num", "32"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc"),
@@ -123,6 +123,10 @@ variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
+variable "cluster_cidr" {
+  default = "172.31.0.0/16"
+}
+
 variable "vpc" {
   default = "` + DefaultVpcId + `"
 }
@@ -134,9 +138,12 @@ variable "subnet" {
 variable "default_instance_type" {
   default = "SA1.LARGE8"
 }
+
+
+
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = "${var.vpc}"
-  cluster_cidr            = "172.31.0.0/16"
+  cluster_cidr            = "${var.cluster_cidr}"
   cluster_max_pod_num     = 32
   cluster_name            = "test"
   cluster_desc            = "test cluster desc"

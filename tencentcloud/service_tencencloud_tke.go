@@ -350,6 +350,9 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context, id string, run
 	return
 }
 
+/*
+	if cluster is creating , return error:TencentCloudSDKError] Code=InternalError.ClusterState
+*/
 func (me *TkeService) DeleteClusterInstances(ctx context.Context, id string, instanceIds []string) (errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDeleteClusterInstancesRequest()
