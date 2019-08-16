@@ -600,7 +600,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		masterList := masters.([]interface{})
 		for index := range masterList {
 			master := masterList[index].(map[string]interface{})
-			paraJson, count, err := tkeGetCvmRunInstancesPara(master, meta, vpcId, int64(basic.ProjectId))
+			paraJson, count, err := tkeGetCvmRunInstancesPara(master, meta, vpcId, basic.ProjectId)
 			if err != nil {
 				return err
 			}
@@ -622,7 +622,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		workerList := workers.([]interface{})
 		for index := range workerList {
 			worker := workerList[index].(map[string]interface{})
-			paraJson, _, err := tkeGetCvmRunInstancesPara(worker, meta, vpcId, int64(basic.ProjectId))
+			paraJson, _, err := tkeGetCvmRunInstancesPara(worker, meta, vpcId, basic.ProjectId)
 
 			if err != nil {
 				return err

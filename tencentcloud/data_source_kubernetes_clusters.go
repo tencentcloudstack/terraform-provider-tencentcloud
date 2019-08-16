@@ -105,7 +105,7 @@ func dataSourceTencentCloudKubernetesClusters() *schema.Resource {
 func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_kubernetes_clusters.read")()
 
-	logId := getLogId(nil)
+	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := TkeService{
@@ -125,7 +125,7 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 
 	infos, err := service.DescribeClusters(ctx, id, name)
 
-	if err != nil && id=="" {
+	if err != nil && id == "" {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			infos, err = service.DescribeClusters(ctx, id, name)
 			if err != nil {
@@ -164,7 +164,7 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		}
 		if err != nil {
 			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters DescribeClusterInstances fail, reason:%s\n ", logId, err.Error())
-			return  err
+			return err
 		} else {
 
 			workerInstancesList := make([]map[string]interface{}, 0, len(workers))
@@ -188,7 +188,7 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 	err = d.Set("list", list)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set tencentcloud_kubernetes_clusters list fail, reason:%s\n ", logId, err.Error())
-		return  err
+		return err
 	}
 
 	output, ok := d.GetOk("result_output_file")

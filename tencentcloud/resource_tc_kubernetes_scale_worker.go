@@ -82,7 +82,7 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 		workerList := workers.([]interface{})
 		for index := range workerList {
 			worker := workerList[index].(map[string]interface{})
-			paraJson, _, err := tkeGetCvmRunInstancesPara(worker, meta, info.VpcId, int64(info.ProjectId))
+			paraJson, _, err := tkeGetCvmRunInstancesPara(worker, meta, info.VpcId, info.ProjectId)
 			if err != nil {
 				return err
 			}
@@ -171,7 +171,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 
 	oldWorkerInstancesList := d.Get("worker_instances_list").([]interface{})
 
-	instanceIds := make([]string, 0, len(oldWorkerInstancesList))
+
 	instanceMap := make(map[string]bool)
 
 	for _, v := range oldWorkerInstancesList {
@@ -192,7 +192,6 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 
 		instanceMap[instanceId] = true
 
-		instanceIds = append(instanceIds, instanceId)
 	}
 
 	_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
@@ -266,7 +265,6 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 	}
 	workerInstancesList := d.Get("worker_instances_list").([]interface{})
 
-	instanceIds := make([]string, 0, len(workerInstancesList))
 	instanceMap := make(map[string]bool)
 
 	for _, v := range workerInstancesList {
@@ -287,7 +285,6 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 
 		instanceMap[instanceId] = true
 
-		instanceIds = append(instanceIds, instanceId)
 	}
 
 	_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
