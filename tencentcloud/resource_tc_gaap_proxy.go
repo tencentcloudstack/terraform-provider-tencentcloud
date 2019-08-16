@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -311,6 +313,13 @@ func resourceTencentCloudGaapProxyDelete(d *schema.ResourceData, m interface{}) 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	id := d.Id()
+	createTime := d.Get("create_time").(int)
+
+	if time.Now().Unix()-int64(createTime) < 120 {
+		log.Printf("[DEBUG]%s proxy can't be deleted unless it has lived 2 minutes", logId)
+		sleepTime := 2*time.Minute - time.Duration(time.Now().UnixNano()-int64(createTime)*1000000000)
+		time.Sleep(sleepTime)
+	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 

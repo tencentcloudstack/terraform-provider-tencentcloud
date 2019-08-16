@@ -286,7 +286,7 @@ func testAccCheckGaapLayer7ListenerDestroy(id, proxyId *string, protocol string)
 	}
 }
 
-var testAccGaapLayer7ListenerBasic = `
+const testAccGaapLayer7ListenerBasic = `
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
@@ -303,7 +303,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 `
 
-var testAccGaapLayer7ListenerHttpUpdateName = `
+const testAccGaapLayer7ListenerHttpUpdateName = `
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
