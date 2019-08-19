@@ -1,14 +1,14 @@
 package tencentcloud
 
 import (
-"testing"
+	"testing"
 
-"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/helper/resource"
 )
 
 func TestAccDataSourceTencentCloudTke(t *testing.T) {
 
-	key:="data.tencentcloud_kubernetes_clusters.name"
+	key := "data.tencentcloud_kubernetes_clusters.name"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -19,9 +19,8 @@ func TestAccDataSourceTencentCloudTke(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					//name filter
 					testAccCheckTencentCloudDataSourceID(key),
-					resource.TestCheckResourceAttr(key, "cluster_name","terraform"),
+					resource.TestCheckResourceAttr(key, "cluster_name", "terraform"),
 					resource.TestCheckResourceAttrSet(key, "list.#"),
-
 				),
 			},
 		},
@@ -34,6 +33,3 @@ data "tencentcloud_kubernetes_clusters"  "name" {
     cluster_name ="terraform"
 }
 `
-
-
-

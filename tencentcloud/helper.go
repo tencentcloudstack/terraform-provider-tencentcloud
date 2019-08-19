@@ -127,6 +127,6 @@ func uint64Pt(i uint64) *uint64 {
 	return &i
 }
 
-func int64Pt(i int64)*int64  {
+func int64Pt(i int64) *int64 {
 	return &i
 }

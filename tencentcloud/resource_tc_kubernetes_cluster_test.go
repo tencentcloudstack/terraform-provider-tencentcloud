@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-var testTkeClusterName ="tencentcloud_kubernetes_cluster"
-var testTkeClusterResourceKey = testTkeClusterName+".managed_cluster"
+var testTkeClusterName = "tencentcloud_kubernetes_cluster"
+var testTkeClusterResourceKey = testTkeClusterName + ".managed_cluster"
 
 func TestAccTencentCloudTkeResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
@@ -30,7 +30,6 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_node_num", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "worker_instances_list.#", "1"),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "worker_instances_list.0.instance_id"),
-
 				),
 			},
 		},
@@ -65,10 +64,10 @@ func testAccCheckTkeDestroy(s *terraform.State) error {
 		}
 
 		if !has {
-			log.Printf("[DEBUG]tke cluster  %s delete  ok",rs.Primary.ID)
+			log.Printf("[DEBUG]tke cluster  %s delete  ok", rs.Primary.ID)
 			return nil
-		}else{
-			return  fmt.Errorf("tke cluster delete fail,%s",rs.Primary.ID)
+		} else {
+			return fmt.Errorf("tke cluster delete fail,%s", rs.Primary.ID)
 		}
 
 	}
@@ -109,9 +108,9 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 			return nil
 		}
 		if !has {
-			return  fmt.Errorf("tke cluster create fail")
-		}else{
-			log.Printf("[DEBUG]tke cluster  %s create  ok",rs.Primary.ID)
+			return fmt.Errorf("tke cluster create fail")
+		} else {
+			log.Printf("[DEBUG]tke cluster  %s create  ok", rs.Primary.ID)
 			return nil
 		}
 

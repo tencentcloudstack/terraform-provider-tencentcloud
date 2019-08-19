@@ -148,7 +148,7 @@ func TkeCvmState() map[string]*schema.Schema {
 		"failed_reason": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "Infomation of the cvm when it is failed.",
+			Description: "Information of the cvm when it is failed.",
 		},
 	}
 }
