@@ -143,10 +143,11 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 	}
 
 	if name != "" {
-		request.Filters = []*tke.Filter{&tke.Filter{
+		filter := &tke.Filter{
 			Name:   stringToPointer("ClusterName"),
 			Values: []*string{&name},
-		}}
+		}
+		request.Filters = []*tke.Filter{filter}
 	}
 
 	response, err := me.client.UseTkeClient().DescribeClusters(request)
