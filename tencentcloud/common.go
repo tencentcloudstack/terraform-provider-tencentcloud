@@ -94,8 +94,7 @@ func isExpectError(err error, expectError []string) bool {
 	if !ok {
 		return false
 	}
-
-
+	
 	longCode := e.Code
 	if assert.IsContains(expectError, longCode) {
 		return true
