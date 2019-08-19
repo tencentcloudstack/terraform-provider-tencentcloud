@@ -138,7 +138,7 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 	var (
 		delayLoop      *int
 		connectTimeout *int
-		realservers    []realserverBind
+		realservers    []gaapRealserverBind
 	)
 	if raw, ok := d.GetOk("delay_loop"); ok {
 		delayLoop = common.IntPtr(raw.(int))
@@ -158,10 +158,10 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 
 	if raw, ok := d.GetOk("realserver_bind_set"); ok {
 		list := raw.(*schema.Set).List()
-		realservers = make([]realserverBind, 0, len(list))
+		realservers = make([]gaapRealserverBind, 0, len(list))
 		for _, v := range list {
 			m := v.(map[string]interface{})
-			realservers = append(realservers, realserverBind{
+			realservers = append(realservers, gaapRealserverBind{
 				id:     m["id"].(string),
 				ip:     m["ip"].(string),
 				port:   m["port"].(int),
@@ -440,7 +440,7 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 		healthCheck    *bool
 		delayLoop      *int
 		connectTimeout *int
-		realservers    []realserverBind
+		realservers    []gaapRealserverBind
 		hasChange      []string
 	)
 
@@ -471,10 +471,10 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 
 	if d.HasChange("realserver_bind_set") {
 		list := d.Get("realserver_bind_set").(*schema.Set).List()
-		realservers = make([]realserverBind, 0, len(list))
+		realservers = make([]gaapRealserverBind, 0, len(list))
 		for _, v := range list {
 			m := v.(map[string]interface{})
-			realservers = append(realservers, realserverBind{
+			realservers = append(realservers, gaapRealserverBind{
 				id:     m["id"].(string),
 				ip:     m["ip"].(string),
 				port:   m["port"].(int),

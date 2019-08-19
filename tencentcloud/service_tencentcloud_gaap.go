@@ -14,7 +14,7 @@ import (
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
-type realserverBind struct {
+type gaapRealserverBind struct {
 	id     string
 	ip     string
 	port   int
@@ -859,7 +859,7 @@ func (me *GaapService) CreateUDPListener(
 	return
 }
 
-func (me *GaapService) BindLayer4ListenerRealservers(ctx context.Context, id, protocol, proxyId string, realserverBinds []realserverBind) error {
+func (me *GaapService) BindLayer4ListenerRealservers(ctx context.Context, id, protocol, proxyId string, realserverBinds []gaapRealserverBind) error {
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
@@ -2018,19 +2018,13 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 	return
 }
 
-func (me *GaapService) CreateHttpDomain(
-	ctx context.Context,
-	listenerId, domain string,
-	certificateId, clientCertificateId *string,
-) (id string, err error) {
+func (me *GaapService) CreateHTTPDomain(ctx context.Context, listenerId, domain string) error {
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
 	createRequest := gaap.NewCreateDomainRequest()
 	createRequest.ListenerId = &listenerId
 	createRequest.Domain = &domain
-	createRequest.CertificateId = certificateId
-	createRequest.ClientCertificateId = clientCertificateId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if _, err := client.CreateDomain(createRequest); err != nil {
@@ -2041,7 +2035,7 @@ func (me *GaapService) CreateHttpDomain(
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s create http domain failed, reason: %v", logId, err)
-		return "", err
+		return err
 	}
 
 	describeRequest := gaap.NewDescribeRulesRequest()
@@ -2055,14 +2049,14 @@ func (me *GaapService) CreateHttpDomain(
 			return retryError(err)
 		}
 
-		for _, d := range response.Response.DomainRuleSet {
-			if d.Domain == nil {
+		for _, rule := range response.Response.DomainRuleSet {
+			if rule.Domain == nil {
 				err := fmt.Errorf("api[%s] domain is nil", describeRequest.GetAction())
 				log.Printf("[CRITAL]%s %v", logId, err)
 				return resource.NonRetryableError(err)
 			}
 
-			if *d.Domain == domain {
+			if *rule.Domain == domain {
 				return nil
 			}
 		}
@@ -2072,12 +2066,66 @@ func (me *GaapService) CreateHttpDomain(
 		return resource.RetryableError(err)
 	}); err != nil {
 		log.Printf("[CRITAL]%s create http domain failed, reason: %v", logId, err)
-		return "", err
+		return err
 	}
 
-	id = fmt.Sprintf("%s+%s", listenerId, domain)
+	return nil
+}
 
-	return
+func (me *GaapService) CreateHTTPSDomain(ctx context.Context, listenerId, domain, certificateId, clientCertificateId string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	createRequest := gaap.NewCreateDomainRequest()
+	createRequest.ListenerId = &listenerId
+	createRequest.Domain = &domain
+	createRequest.CertificateId = &certificateId
+	createRequest.ClientCertificateId = &clientCertificateId
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.CreateDomain(createRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create https domain failed, reason: %v", logId, err)
+		return err
+	}
+
+	describeRequest := gaap.NewDescribeRulesRequest()
+	describeRequest.ListenerId = &listenerId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeRules(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		for _, rule := range response.Response.DomainRuleSet {
+			if rule.Domain == nil {
+				err := fmt.Errorf("api[%s] domain is nil", describeRequest.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			if *rule.Domain == domain {
+				return nil
+			}
+		}
+
+		err = errors.New("domain not found")
+		log.Printf("[DEBUG]%s %v", logId, err)
+		return resource.RetryableError(err)
+	}); err != nil {
+		log.Printf("[CRITAL]%s create https domain failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
 }
 
 func (me *GaapService) SetAdvancedAuth(
@@ -2094,19 +2142,22 @@ func (me *GaapService) SetAdvancedAuth(
 
 	if realserverAuth != nil {
 		if *realserverAuth {
-			request.RealServerAuth = common.Int64Ptr(1)
+			request.RealServerAuth = int64ToPointer(1)
 		} else {
-			request.RealServerAuth = common.Int64Ptr(0)
+			request.RealServerAuth = int64ToPointer(0)
 		}
 	}
+	request.RealServerCertificateId = realserverCertificateId
+	request.RealServerCertificateDomain = realserverCertificateDomain
 
 	if basicAuth != nil {
 		if *basicAuth {
-			request.BasicAuth = common.Int64Ptr(1)
+			request.BasicAuth = int64ToPointer(1)
 		} else {
-			request.BasicAuth = common.Int64Ptr(0)
+			request.BasicAuth = int64ToPointer(0)
 		}
 	}
+	request.BasicAuthConfId = basicAuthId
 
 	if gaapAuth != nil {
 		if *gaapAuth {
@@ -2115,10 +2166,6 @@ func (me *GaapService) SetAdvancedAuth(
 			request.GaapAuth = common.Int64Ptr(0)
 		}
 	}
-
-	request.RealServerCertificateId = realserverCertificateId
-	request.RealServerCertificateDomain = realserverCertificateDomain
-	request.BasicAuthConfId = basicAuthId
 	request.GaapCertificateId = gaapAuthId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -2130,6 +2177,125 @@ func (me *GaapService) SetAdvancedAuth(
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s set advanced auth failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) DescribeDomain(ctx context.Context, listenerId, domain string) (domainRet *gaap.DomainRuleSet, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeRulesRequest()
+	request.ListenerId = &listenerId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := me.client.UseGaapClient().DescribeRules(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		for _, rule := range response.Response.DomainRuleSet {
+			if rule.Domain == nil {
+				err := fmt.Errorf("api[%s] domain rule domain is nil", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			if *rule.Domain == domain {
+				domainRet = rule
+				break
+			}
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read domain failed, reason: %v", logId, err)
+		return nil, err
+	}
+
+	return
+}
+
+func (me *GaapService) UpdateDomainCertificate(
+	ctx context.Context,
+	listenerId, domain string,
+	certificateId, clientCertificateId *string,
+) error {
+	logId := getLogId(ctx)
+
+	request := gaap.NewModifyCertificateRequest()
+	request.ListenerId = &listenerId
+	request.Domain = &domain
+	request.CertificateId = certificateId
+	request.ClientCertificateId = clientCertificateId
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := me.client.UseGaapClient().ModifyCertificate(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s update domain certificate failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) DeleteDomain(ctx context.Context, listenerId, domain string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	deleteRequest := gaap.NewDeleteDomainRequest()
+	deleteRequest.ListenerId = &listenerId
+	deleteRequest.Domain = &domain
+	deleteRequest.Force = intToPointer(0)
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.DeleteDomain(deleteRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, deleteRequest.GetAction(), deleteRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete domain failed, reason: %v", logId, err)
+		return err
+	}
+
+	describeRequest := gaap.NewDescribeRulesRequest()
+	describeRequest.ListenerId = &listenerId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeRules(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		for _, rule := range response.Response.DomainRuleSet {
+			if rule.Domain == nil {
+				err := fmt.Errorf("api[%s] domain rule domain is nil", describeRequest.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			if *rule.Domain == domain {
+				err := errors.New("domain still exists")
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.RetryableError(err)
+			}
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete domain failed, reason: %v", logId, err)
 		return err
 	}
 

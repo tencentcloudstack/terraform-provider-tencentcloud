@@ -149,3 +149,12 @@ func buildToken() string {
 	sum := md5.Sum(buf)
 	return base64.StdEncoding.EncodeToString(sum[:])
 }
+
+func boolToPointer(b bool) *bool {
+	return &b
+}
+
+func int64ToPointer(n int) *int64 {
+	i64 := int64(n)
+	return &i64
+}
