@@ -159,7 +159,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			return retryError(e, "InternalError")
 		}
 
 		if len(response.Response.DiskIdSet) < 1 {
@@ -353,7 +353,7 @@ func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := cbsService.DeleteDiskById(ctx, storageId)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "InternalError")
 		}
 		return nil
 	})
