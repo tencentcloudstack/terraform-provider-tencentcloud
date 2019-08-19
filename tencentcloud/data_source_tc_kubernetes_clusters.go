@@ -1,3 +1,18 @@
+/*
+Use this data source to query detailed information of kubernetes clusters.
+
+Example Usage
+
+```hcl
+data "tencentcloud_kubernetes_clusters"  "name" {
+    cluster_name ="terraform"
+}
+
+data "tencentcloud_kubernetes_clusters"  "id" {
+    cluster_id ="cls-godovr32"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -14,12 +29,14 @@ func dataSourceTencentCloudKubernetesClusters() *schema.Resource {
 			"cluster_id": {
 				Type:          schema.TypeString,
 				ConflictsWith: []string{"cluster_name"},
+				Description:" ID of the cluster. Conflict with cluster_name, can not be set at the same time.",
 				Optional:      true,
 			},
 			"cluster_name": {
 				Type:          schema.TypeString,
 				ConflictsWith: []string{"cluster_id"},
 				Optional:      true,
+				Description:"Name of the cluster. Conflict with cluster_id, can not be set at the same time.",
 			},
 
 			"result_output_file": {
@@ -30,67 +47,83 @@ func dataSourceTencentCloudKubernetesClusters() *schema.Resource {
 			"list": {
 				Type:     schema.TypeList,
 				Computed: true,
+				Description:"An information  list of kubernetes clusters . Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cluster_name": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Name of the cluster.",
 						},
 						"cluster_desc": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Description of the cluster",
 						},
 						"cluster_os": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Operating system of the cluster.",
 						},
 						"container_runtime": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Container runtime of the cluster.",
 						},
 						"cluster_deploy_type": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Deployment type of the cluster.",
 						},
 						"cluster_version": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:" Version of the cluster.",
 						},
 						"cluster_ipvs": {
 							Type:     schema.TypeBool,
 							Computed: true,
+							Description:" Indicates whether ipvs is enabled.",
 						},
 						"vpc_id": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"Vpc Id of the cluster.",
 						},
 						"project_id": {
 							Type:     schema.TypeInt,
 							Computed: true,
+							Description:"Project Id of the cluster.",
 						},
 						"cluster_cidr": {
 							Type:     schema.TypeString,
 							Computed: true,
+							Description:"A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc.",
 						},
 						"ignore_cluster_cidr_conflict": {
 							Type:     schema.TypeBool,
 							Computed: true,
+							Description:"Indicates whether to ignore the cluster cidr conflict error.",
 						},
 						"cluster_max_pod_num": {
 							Type:     schema.TypeInt,
 							Computed: true,
+							Description:"The maximum number of Pods per node in the cluster.",
 						},
 						"cluster_max_service_num": {
 							Type:     schema.TypeInt,
 							Computed: true,
+							Description:"The maximum number of services in the cluster.",
 						},
 						"cluster_node_num": {
 							Type:     schema.TypeInt,
 							Computed: true,
+							Description:"Number of nodes in the  cluster.",
 						},
 						"worker_instances_list": {
 							Type:     schema.TypeList,
 							Computed: true,
+							Description:"An information list of cvm within the WORKER clusters. Each element contains the following attributes.",
 							Elem: &schema.Resource{
 								Schema: TkeCvmState(),
 							},

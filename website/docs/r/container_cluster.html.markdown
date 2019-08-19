@@ -10,6 +10,7 @@ description: |-
 
 Provides a Container Cluster resource.
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_kubernetes_cluster.
 ## Example Usage
 
 Basic Usage

@@ -1,3 +1,116 @@
+/*
+Provide a resource to create a kubernetes cluster.
+
+Example Usage
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "vpc" {
+  default = "vpc-dk8zmwuf"
+}
+
+variable "subnet" {
+  default = "subnet-pqfek0t8"
+}
+
+variable "default_instance_type" {
+  default = "SA1.LARGE8"
+}
+
+#examples for MANAGED_CLUSTER  cluster
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                  = "${var.vpc}"
+  cluster_cidr            = "10.1.0.0/16"
+  cluster_max_pod_num     = 32
+  cluster_name            = "test"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 32
+
+  worker_config {
+    count                      = 2
+    availability_zone          = "${var.availability_zone}"
+    instance_type              = "${var.default_instance_type}"
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = "${var.subnet}"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+}
+
+#examples for INDEPENDENT_CLUSTER  cluster
+resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
+  vpc_id                  = "${var.vpc}"
+  cluster_cidr            = "10.1.0.0/16"
+  cluster_max_pod_num     = 32
+  cluster_name            = "test"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 32
+
+  master_config {
+    count                      = 3
+    availability_zone          = "${var.availability_zone}"
+    instance_type              = "${var.default_instance_type}"
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = "${var.subnet}"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "MMMZZXXccvv1212"
+  }
+
+  worker_config {
+    count                      = 2
+    availability_zone          = "${var.availability_zone}"
+    instance_type              = "${var.default_instance_type}"
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = "${var.subnet}"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "INDEPENDENT_CLUSTER"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -19,18 +132,22 @@ func TkeCvmState() map[string]*schema.Schema {
 		"instance_id": {
 			Type:     schema.TypeString,
 			Computed: true,
+			Description:"ID of the cvm.",
 		},
 		"instance_role": {
 			Type:     schema.TypeString,
 			Computed: true,
+			Description:"Role of the cvm.",
 		},
 		"instance_state": {
 			Type:     schema.TypeString,
 			Computed: true,
+			Description:"State of the cvm.",
 		},
 		"failed_reason": {
 			Type:     schema.TypeString,
 			Computed: true,
+			Description:"Infomation of the cvm when it is failed.",
 		},
 	}
 }
@@ -42,6 +159,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional: true,
 			ForceNew: true,
 			Default:  1,
+			Description:"Number of cvm.",
 		},
 		"availability_zone": {
 			Type:        schema.TypeString,
@@ -54,7 +172,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:    true,
 			Optional:    true,
 			Default:     "sub machine of tke",
-			Description: "Indicates which availability zone will be used.",
+			Description: "Name of the CVMs.",
 		},
 		"instance_type": {
 			Type:        schema.TypeString,
@@ -75,7 +193,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:     true,
 			Required:     true,
 			ValidateFunc: validateStringLengthInRange(4, 100),
-			Description:  "Private network ID. If vpc_id is set, this value is required.",
+			Description:  "Private network ID.",
 		},
 		"system_disk_type": {
 			Type:         schema.TypeString,
@@ -83,7 +201,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional:     true,
 			Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 			ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-			Description:  "Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM",
+			Description:  "Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.",
 		},
 		"system_disk_size": {
 			Type:         schema.TypeInt,
@@ -203,11 +321,13 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Optional: true,
+				Description:"Name of the cluster.",
 			},
 			"cluster_desc": {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Optional: true,
+				Description:"Description of the cluster.",
 			},
 			"cluster_os": {
 				Type:         schema.TypeString,
@@ -215,6 +335,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				Optional:     true,
 				Default:      TKE_CLUSTER_OS_UBUNTU,
 				ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS),
+				Description:"Operating system of the cluster, the available values include: 'centos7.2x86_64' and 'ubuntu16.04.1 LTSx86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.",
 			},
 			"container_runtime": {
 				Type:         schema.TypeString,
@@ -222,6 +343,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				Optional:     true,
 				Default:      TKE_RUNTIME_DOCKER,
 				ValidateFunc: validateAllowedStringValue(TKE_RUNTIMES),
+				Description: "Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.",
 			},
 			"cluster_deploy_type": {
 				Type:         schema.TypeString,
@@ -229,24 +351,28 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				Optional:     true,
 				Default:      TKE_DEPLOY_TYPE_MANAGED,
 				ValidateFunc: validateAllowedStringValue(TKE_DEPLOY_TYPES),
+				Description: "Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER', Default is 'MANAGED_CLUSTER'.",
 			},
 			"cluster_version": {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Optional: true,
 				Default:  "1.10.5",
+				Description: "Version of the cluster, Default is '1.10.5'.",
 			},
 			"cluster_ipvs": {
 				Type:     schema.TypeBool,
 				ForceNew: true,
 				Optional: true,
 				Default:  true,
+				Description: "Indicates whether ipvs is enabled. Default is true.",
 			},
 			"vpc_id": {
 				Type:         schema.TypeString,
 				ForceNew:     true,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(4, 100),
+				Description: "Vpc Id of the cluster.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -258,7 +384,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Required: true,
-
+				Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
 					_, ipnet, err := net.ParseCIDR(value)
@@ -295,6 +421,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				ForceNew: true,
 				Optional: true,
 				Default:  false,
+				Description:"Indicates whether to ignore the cluster cidr conflict error. Default is false.",
 			},
 			"cluster_max_pod_num": {
 				Type:     schema.TypeInt,
@@ -313,6 +440,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					}
 					return
 				},
+				Description:"The maximum number of Pods per node in the cluster. Default is 256. Must be a multiple of 16 and large than 32.",
 			},
 			"cluster_max_service_num": {
 				Type:     schema.TypeInt,
@@ -327,6 +455,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					}
 					return
 				},
+				Description:"The maximum number of services in the cluster. Default is 256. Must be a multiple of 16.",
 			},
 			"master_config": {
 				Type:     schema.TypeList,
@@ -336,6 +465,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: TkeCvmCreateInfo(),
 				},
+				Description:"Deploy the machine configuration information of the 'MASTER_ETCD' service, and create <=7 units for common users.",
 			},
 			"worker_config": {
 				Type:     schema.TypeList,
@@ -345,11 +475,13 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: TkeCvmCreateInfo(),
 				},
+				Description:"Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.",
 			},
 			// Computed values
 			"cluster_node_num": {
 				Type:     schema.TypeInt,
 				Computed: true,
+				Description:"Number of nodes in the cluster.",
 			},
 			"worker_instances_list": {
 				Type:     schema.TypeList,
@@ -357,6 +489,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: TkeCvmState(),
 				},
+				Description:"An information list of cvm within the 'WORKER' clusters. Each element contains the following attributes:",
 			},
 		},
 	}

@@ -10,6 +10,8 @@ description: |-
 
 Use this data source to get all instances in a specific cluster. 
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_kubernetes_clusters.
+
 ## Example Usage
 
 ```hcl

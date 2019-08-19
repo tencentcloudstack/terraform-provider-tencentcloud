@@ -1,3 +1,50 @@
+/*
+Provide a resource to increase instance to cluster
+
+Example Usage
+
+```hcl
+
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "subnet" {
+  default = "subnet-pqfek0t8"
+}
+
+variable "scale_instance_type" {
+  default = "S2.LARGE16"
+}
+
+
+resource tencentcloud_kubernetes_scale_worker test_scale {
+  cluster_id = "cls-godovr32"
+
+  worker_config {
+    count                      = 3
+    availability_zone          = "${var.availability_zone}"
+    instance_type              = "${var.scale_instance_type}"
+    subnet_id                  = "${var.subnet}"
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 50
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "AABBccdd1122"
+  }
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -20,6 +67,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Required: true,
+				Description:"ID of the cluster.",
 			},
 			"worker_config": {
 				Type:     schema.TypeList,
@@ -30,6 +78,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: TkeCvmCreateInfo(),
 				},
+				Description:"Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users. ",
 			},
 			// Computed values
 			"worker_instances_list": {
@@ -38,6 +87,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: TkeCvmState(),
 				},
+				Description:"An information list of kubernetes cluster 'WORKER'. Each element contains the following attributes:",
 			},
 		},
 	}
