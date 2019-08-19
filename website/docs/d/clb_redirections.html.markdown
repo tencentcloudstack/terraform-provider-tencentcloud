@@ -31,7 +31,7 @@ The following arguments are supported:
 * `source_listener_id` - (Required) Id of source listener to be queried.
 * `source_rule_id` - (Required) Rule id of source listener to be queried.
 * `result_output_file` - (Optional) Used to save results.
-* `target_listener_id` - (Optional) Id of target listener to be queried.
+* `target_listener_id` - (Optional) Id of source listener to be queried.
 * `target_rule_id` - (Optional) Rule id of target listener to be queried.
 
 ## Attributes Reference
@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
   * `clb_id` - Id of the CLB.
   * `source_listener_id` - Id of source listener.
   * `source_rule_id` - Rule id of source listener.
-  * `target_listener_id` - Id of target listener.
+  * `target_listener_id` - Id of source listener.
   * `target_rule_id` - Rule id of target listener.
 
 
