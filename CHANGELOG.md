@@ -1,4 +1,17 @@
-## 1.15.3 (Unreleased)
+## 1.16.0 (Unreleased)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_kubernetes_clusters`
+* **New Resource**: `tencentcloud_kubernetes_scale_worker`
+* **New Resource**: `tencentcloud_kubernetes_cluster`
+
+
+DEPRECATED:
+* Data Source: `tencentcloud_container_clusters` replaced by `tencentcloud_kubernetes_clusters`.
+* Data Source: `tencentcloud_container_cluster_instances` replaced by `tencentcloud_kubernetes_clusters`.
+* Resource: `tencentcloud_container_cluster` replaced by `tencentcloud_kubernetes_cluster`.
+* Resource: `tencentcloud_container_cluster_instance` replaced by `tencentcloud_kubernetes_scale_worker`.
+* 
 ## 1.15.2 (August 14, 2019)
 
 ENHANCEMENTS:
