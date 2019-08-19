@@ -58,6 +58,7 @@ func getLogId(ctx context.Context) string {
 			return logId
 		}
 	}
+
 	return fmt.Sprintf("%s-%d", logFirstTime, atomic.AddInt64(&logAtomaticId, 1))
 }
 
@@ -94,7 +95,7 @@ func isExpectError(err error, expectError []string) bool {
 	if !ok {
 		return false
 	}
-	
+
 	longCode := e.Code
 	if assert.IsContains(expectError, longCode) {
 		return true
