@@ -90,7 +90,7 @@ The `data_disk` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `worker_instances_list` - An information list of kubernetes cluster 'WORKER' . Each element contains the following attributes:
-  * `failed_reason` - Infomation of the cvm when it is failed.
+  * `failed_reason` - Information of the cvm when it is failed.
   * `instance_id` - ID of the cvm
   * `instance_role` - Role of the cvm
   * `instance_state` - State of the cvm
