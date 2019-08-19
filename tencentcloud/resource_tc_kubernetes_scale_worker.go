@@ -53,6 +53,7 @@ import (
 	"fmt"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 	"strings"
 )
@@ -64,10 +65,10 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 		Delete: resourceTencentCloudTkeScaleWorkerDelete,
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
-				Description:"ID of the cluster.",
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "ID of the cluster.",
 			},
 			"worker_config": {
 				Type:     schema.TypeList,
@@ -78,7 +79,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: TkeCvmCreateInfo(),
 				},
-				Description:"Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users. ",
+				Description: "Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users. ",
 			},
 			// Computed values
 			"worker_instances_list": {
@@ -87,7 +88,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: TkeCvmState(),
 				},
-				Description:"An information list of kubernetes cluster 'WORKER'. Each element contains the following attributes:",
+				Description: "An information list of kubernetes cluster 'WORKER' . Each element contains the following attributes:",
 			},
 		},
 	}
@@ -221,7 +222,6 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 
 	oldWorkerInstancesList := d.Get("worker_instances_list").([]interface{})
 
-
 	instanceMap := make(map[string]bool)
 
 	for _, v := range oldWorkerInstancesList {
@@ -248,6 +248,13 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
+
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InternalError.ClusterNotFound" {
+					return nil
+				}
+			}
+
 			if err != nil {
 				return retryError(err)
 			}
@@ -341,6 +348,13 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
+
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InternalError.ClusterNotFound" {
+					return nil
+				}
+			}
+
 			if err != nil {
 				return retryError(err)
 			}
@@ -367,6 +381,13 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 	if err != nil {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
+
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InternalError.ClusterNotFound" {
+					return nil
+				}
+			}
+
 			if err != nil {
 				return retryError(err)
 			}

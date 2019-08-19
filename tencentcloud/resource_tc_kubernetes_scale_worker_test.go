@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 	"testing"
 
@@ -10,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-var testTkeScaleWorkerResourceName ="tencentcloud_kubernetes_scale_worker"
-var testTkeScaleWorkerResourceKey = testTkeScaleWorkerResourceName+".test_scale"
+var testTkeScaleWorkerResourceName = "tencentcloud_kubernetes_scale_worker"
+var testTkeScaleWorkerResourceKey = testTkeScaleWorkerResourceName + ".test_scale"
 
 func TestAccTencentCloudTkeScaleWorkerResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
@@ -40,21 +41,26 @@ func testAccCheckTkeScaleWorkerDestroy(s *terraform.State) error {
 			continue
 		}
 		instanceId := rs.Primary.Attributes["worker_instances_list.0.instance_id"]
-		clusterId :=rs.Primary.Attributes["cluster_id"]
+		clusterId := rs.Primary.Attributes["cluster_id"]
 
-		if clusterId =="" || instanceId==""{
-			return  fmt.Errorf("miss worker_instances_list.0.instance_id[%s] or cluster_id[%s]",instanceId,clusterId)
+		if clusterId == "" || instanceId == "" {
+			return fmt.Errorf("miss worker_instances_list.0.instance_id[%s] or cluster_id[%s]", instanceId, clusterId)
 		}
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
-		service := TkeService{client:
-		testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
 		if err != nil {
 			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
+
+				if e, ok := err.(*errors.TencentCloudSDKError); ok {
+					if e.GetCode() == "InternalError.ClusterNotFound" {
+						return nil
+					}
+				}
 				if err != nil {
 					return retryError(err)
 				}
@@ -65,12 +71,12 @@ func testAccCheckTkeScaleWorkerDestroy(s *terraform.State) error {
 			return err
 		}
 
-		for _,worker:=range workers{
-			if worker.InstanceId == instanceId{
-				return  fmt.Errorf("cvm %s  found in DescribeClusterInstances", instanceId)
+		for _, worker := range workers {
+			if worker.InstanceId == instanceId {
+				return fmt.Errorf("cvm %s  found in DescribeClusterInstances", instanceId)
 			}
 		}
-		log.Printf("[DEBUG]instance %s delelte  ok",instanceId)
+		log.Printf("[DEBUG]instance %s delelte  ok", instanceId)
 
 	}
 	return nil
@@ -83,23 +89,29 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 		if !ok {
 			return fmt.Errorf("tke worker scale instance %s is not found", n)
 		}
-		instanceId :=  rs.Primary.Attributes["worker_instances_list.0.instance_id"]
-		clusterId :=rs.Primary.Attributes["cluster_id"]
+		instanceId := rs.Primary.Attributes["worker_instances_list.0.instance_id"]
+		clusterId := rs.Primary.Attributes["cluster_id"]
 
-		if clusterId =="" || instanceId==""{
-			return  fmt.Errorf("miss worker_instances_list.0.instance_id[%s] or cluster_id[%s]",instanceId,clusterId)
+		if clusterId == "" || instanceId == "" {
+			return fmt.Errorf("miss worker_instances_list.0.instance_id[%s] or cluster_id[%s]", instanceId, clusterId)
 		}
 
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
-		service := TkeService{client:
-			testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
 		if err != nil {
 			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
+
+				if e, ok := err.(*errors.TencentCloudSDKError); ok {
+					if e.GetCode() == "InternalError.ClusterNotFound" {
+						return nil
+					}
+				}
+
 				if err != nil {
 					return retryError(err)
 				}
@@ -110,10 +122,10 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 			return err
 		}
 
-		for _,worker:=range workers{
-			if worker.InstanceId == instanceId{
-				log.Printf("[DEBUG]instance %s create  ok",instanceId)
-				return  nil
+		for _, worker := range workers {
+			if worker.InstanceId == instanceId {
+				log.Printf("[DEBUG]instance %s create  ok", instanceId)
+				return nil
 			}
 		}
 		return fmt.Errorf("cvm %s  not found in DescribeClusterInstances", instanceId)
