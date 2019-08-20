@@ -526,7 +526,8 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 				jsonresp.Response.Error.Message,
 				jsonresp.Response.RequestId,
 			)
-			if jsonresp.Response.Error.Code == "InternalError" || jsonresp.Response.Error.Code == "VpcIpIsUsed" || jsonresp.Response.Error.Code == "RequestLimitExceeded" {
+			if jsonresp.Response.Error.Code == "InternalError" || jsonresp.Response.Error.Code == "TradeUnknownError" ||
+				jsonresp.Response.Error.Code == "VpcIpIsUsed" || jsonresp.Response.Error.Code == "RequestLimitExceeded" {
 				return resource.RetryableError(err)
 			}
 			return resource.NonRetryableError(err)

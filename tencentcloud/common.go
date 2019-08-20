@@ -32,9 +32,11 @@ const writeRetryTimeout = 5 * time.Minute
 
 // retryableErrorCode is retryable error code
 var retryableErrorCode = []string{
+	// client
+	"ClientError.NetworkError",
+	"ClientError.HttpStatusCodeError",
 	// commom
 	"FailedOperation",
-	"InternalError",
 	"TradeUnknownError",
 	"RequestLimitExceeded",
 	"ResourceInUse",
@@ -69,33 +71,42 @@ func logElapsed(mark ...string) func() {
 }
 
 // retryError returns retry error
-func retryError(err error) *resource.RetryError {
-	if isErrorRetryable(err) {
+func retryError(err error, additionRetryableError ...string) *resource.RetryError {
+	if isExpectError(err, retryableErrorCode) {
+		log.Printf("[CRITAL] Retryable defined error: %v", err)
 		return resource.RetryableError(err)
 	}
+
+	if len(additionRetryableError) > 0 {
+		if isExpectError(err, additionRetryableError) {
+			log.Printf("[CRITAL] Retryable addition error: %v", err)
+			return resource.RetryableError(err)
+		}
+	}
+
+	log.Printf("[CRITAL] NonRetryable error: %v", err)
 
 	return resource.NonRetryableError(err)
 }
 
-// isErrorRetryable returns whether error is retryable
-func isErrorRetryable(err error) bool {
+// isExpectError returns whether error is expect error
+func isExpectError(err error, expectError []string) bool {
 	e, ok := err.(*errors.TencentCloudSDKError)
 	if !ok {
-		log.Printf("[CRITAL] NonRetryable error: %v", err)
 		return false
 	}
 
-	code := e.Code
-	if strings.Contains(code, ".") {
-		code = strings.Split(code, ".")[0]
-	}
-
-	if assert.IsContains(retryableErrorCode, code) {
-		log.Printf("[CRITAL] Retryable error: %s", e.Error())
+	longCode := e.Code
+	if assert.IsContains(expectError, longCode) {
 		return true
 	}
 
-	log.Printf("[CRITAL] NonRetryable error: %s", e.Error())
+	if strings.Contains(longCode, ".") {
+		shortCode := strings.Split(longCode, ".")[0]
+		if assert.IsContains(expectError, shortCode) {
+			return true
+		}
+	}
 
 	return false
 }
