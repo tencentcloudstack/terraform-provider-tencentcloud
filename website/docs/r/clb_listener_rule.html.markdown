@@ -44,9 +44,9 @@ The following arguments are supported:
 * `domain` - (Required, ForceNew) Domain name of the listener rule.
 * `listener_id` - (Required, ForceNew) Id of CLB listener.
 * `url` - (Required, ForceNew) Url of the listener rule.
-* `certificate_ca_id` - (Optional, ForceNew) Id of the client certificate. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.
-* `certificate_id` - (Optional, ForceNew) Id of the server certificate. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.
-* `certificate_ssl_mode` - (Optional, ForceNew) Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol.
+* `certificate_ca_id` - (Optional, ForceNew) Id of the client certificate. NOTES: Only supports listeners of 'HTTPS' protocol.
+* `certificate_id` - (Optional, ForceNew) Id of the server certificate. NOTES: Only supports listeners of 'HTTPS' protocol.
+* `certificate_ssl_mode` - (Optional, ForceNew) Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.
 * `health_check_health_num` - (Optional) Health threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.
 * `health_check_http_code` - (Optional) HTTP Status Code. The default is 31 and value range is 1-31. '0b0001' means the return value '1xx' is health. '0b0010' means the return value '2xx' is health. '0b0100' means the return value '3xx' is health. '0b1000' means the return value '4xx' is health. 0b10000 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values. NOTES: The 'HTTP' health check of the 'TCP' listener only supports specifying one health check status code. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.
 * `health_check_http_domain` - (Optional) Domain name of health check. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.

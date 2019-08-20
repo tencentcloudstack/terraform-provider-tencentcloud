@@ -181,7 +181,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Type:        schema.TypeBool,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "Indicates whether SNI is enabled, and only supported with protocol 'HTTPS'.",
+				Description: "Indicates whether SNI is enabled, and only supported with protocol 'HTTPS'. If enabled, you can set a certificate for each rule in `tencentcloud_clb_listener_rule`, otherwise all rules have a certificate.",
 			},
 		},
 	}
