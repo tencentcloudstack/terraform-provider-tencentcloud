@@ -1,4 +1,4 @@
-## 1.16.0 (Unreleased)
+## 1.16.0 (August 20, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_kubernetes_clusters`
