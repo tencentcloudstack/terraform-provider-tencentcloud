@@ -21,6 +21,20 @@ type gaapRealserverBind struct {
 	weight int
 }
 
+type gaapHttpRule struct {
+	listenerId             string
+	domain                 string
+	path                   string
+	realserverType         string
+	scheduler              string
+	healthCheck            bool
+	delayLoop              int
+	connectTimeout         int
+	healthCheckPath        string
+	healthCheckMethod      string
+	healthCheckStatusCodes []int
+}
+
 type GaapService struct {
 	client *connectivity.TencentCloudClient
 }
@@ -1893,7 +1907,7 @@ func waitLayer4ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 			}
 
 			if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
-				err := errors.New("TCP listener is still creating")
+				err := errors.New("TCP listener is not ready")
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
 			}
@@ -1928,7 +1942,7 @@ func waitLayer4ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 			}
 
 			if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
-				err := errors.New("UDP listener is still creating")
+				err := errors.New("UDP listener is not ready")
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
 			}
@@ -1971,7 +1985,7 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 			}
 
 			if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
-				err := errors.New("HTTP listener is still creating")
+				err := errors.New("HTTP listener is not ready")
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
 			}
@@ -2006,7 +2020,7 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 			}
 
 			if *listener.ListenerStatus != GAAP_LISTENER_RUNNING {
-				err := errors.New("HTTPS listener is still creating")
+				err := errors.New("HTTPS listener is not ready")
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
 			}
@@ -2219,7 +2233,7 @@ func (me *GaapService) DescribeDomain(ctx context.Context, listenerId, domain st
 	return
 }
 
-func (me *GaapService) UpdateDomainCertificate(
+func (me *GaapService) ModifyDomainCertificate(
 	ctx context.Context,
 	listenerId, domain string,
 	certificateId, clientCertificateId *string,
@@ -2300,4 +2314,493 @@ func (me *GaapService) DeleteDomain(ctx context.Context, listenerId, domain stri
 	}
 
 	return nil
+}
+
+func (me *GaapService) CreateHttpRule(ctx context.Context, httpRule gaapHttpRule) (id string, err error) {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	createRequest := gaap.NewCreateRuleRequest()
+	createRequest.ListenerId = &httpRule.listenerId
+	createRequest.Domain = &httpRule.domain
+	createRequest.Path = &httpRule.path
+	createRequest.RealServerType = &httpRule.realserverType
+	createRequest.Scheduler = &httpRule.scheduler
+	if httpRule.healthCheck {
+		createRequest.HealthCheck = intToPointer(1)
+	} else {
+		createRequest.HealthCheck = intToPointer(0)
+	}
+
+	createRequest.CheckParams = &gaap.RuleCheckParams{
+		DelayLoop:      intToPointer(httpRule.delayLoop),
+		ConnectTimeout: intToPointer(httpRule.connectTimeout),
+		Path:           &httpRule.healthCheckPath,
+		Method:         &httpRule.healthCheckMethod,
+		StatusCode:     make([]*uint64, 0, len(httpRule.healthCheckStatusCodes)),
+	}
+	for _, code := range httpRule.healthCheckStatusCodes {
+		createRequest.CheckParams.StatusCode = append(createRequest.CheckParams.StatusCode, intToPointer(code))
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err := client.CreateRule(createRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if response.Response.RuleId == nil {
+			err := fmt.Errorf("api[%s] http rule id is nil", createRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		id = *response.Response.RuleId
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create http rule failed, reason: %v", logId, err)
+		return "", err
+	}
+
+	describeRequest := gaap.NewDescribeRulesRequest()
+	describeRequest.ListenerId = &httpRule.listenerId
+
+	if err := waitHttpRuleReady(ctx, client, httpRule.listenerId, id); err != nil {
+		log.Printf("[CRITAL]%s create http rule failed, reason: %v", logId, err)
+		return "", err
+	}
+	/*if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeRules(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		for _, domainRule := range response.Response.DomainRuleSet {
+			for _, rule := range domainRule.RuleSet {
+				if rule.RuleId == nil {
+					err := fmt.Errorf("api[%s] http rule id is nil", describeRequest.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if *rule.RuleId == id {
+					if rule.RuleStatus == nil {
+						err := fmt.Errorf("api[%s] http rule status is nil", describeRequest.GetAction())
+						log.Printf("[CRITAL]%s %v", logId, err)
+						return resource.NonRetryableError(err)
+					}
+					if *rule.RuleStatus != GAAP_HTTP_RULE_RUNNING {
+						err := errors.New("http rule is still creating")
+						log.Printf("[DEBUG]%s %v", logId, err)
+						return resource.RetryableError(err)
+					}
+					return nil
+				}
+			}
+		}
+
+		err = fmt.Errorf("ap[%s] reutrn empty domain rule set", describeRequest.GetAction())
+		log.Printf("[DEBUG]%s %v", logId, err)
+		return resource.RetryableError(err)
+	}); err != nil {
+		log.Printf("[CRITAL]%s create http rule failed, reason: %v", logId, err)
+		return "", err
+	}*/
+
+	return
+}
+
+func (me *GaapService) BindHttpRuleRealservers(ctx context.Context, listenerId, ruleId string, realservers []gaapRealserverBind) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	bindRequest := gaap.NewBindRuleRealServersRequest()
+	bindRequest.RuleId = &ruleId
+	bindRequest.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realservers))
+	for _, realserver := range realservers {
+		bindRequest.RealServerBindSet = append(bindRequest.RealServerBindSet, &gaap.RealServerBindSetReq{
+			RealServerId:     stringToPointer(realserver.id),
+			RealServerPort:   intToPointer(realserver.port),
+			RealServerIP:     stringToPointer(realserver.ip),
+			RealServerWeight: intToPointer(realserver.weight),
+		})
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.BindRuleRealServers(bindRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, bindRequest.GetAction(), bindRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s bind http rule realservers failed, reason: %v", logId, err)
+		return err
+	}
+
+	/*describeRequest := gaap.NewDescribeRulesRequest()
+	describeRequest.ListenerId = &id
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeRules(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		for _, domainRule := range response.Response.DomainRuleSet {
+			for _, rule := range domainRule.RuleSet {
+				if rule.RuleId == nil {
+					err := fmt.Errorf("api[%s] rule id is nil", describeRequest.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if rule.RuleStatus == nil {
+					err := fmt.Errorf("api[%s] rule status is nil", describeRequest.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if *rule.RuleStatus != GAAP_HTTP_RULE_RUNNING {
+					err := errors.New("http rule is still binding")
+					log.Printf("[DEBUG]%s %v", logId, err)
+					return resource.RetryableError(err)
+				}
+			}
+		}
+
+		err = fmt.Errorf("api[%s] doesn't return right http rule", describeRequest.GetAction())
+		log.Printf("[CRITAL]%s %v", logId, err)
+		return resource.NonRetryableError(err)
+	}); err != nil {
+		log.Printf("[CRITAL]%s bind http rule realservers failed, reason: %v", logId, err)
+		return err
+	}*/
+	if err := waitHttpRuleReady(ctx, client, listenerId, ruleId); err != nil {
+		log.Printf("[CRITAL]%s bind http rule realservers failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *GaapService) DescribeHttpRule(ctx context.Context, listenerId, ruleId string) (httpRule *gaapHttpRule, realservers []gaapRealserverBind, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeRulesRequest()
+	request.ListenerId = &listenerId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := me.client.UseGaapClient().DescribeRules(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		var (
+			domainRule *gaap.DomainRuleSet
+			rule       *gaap.RuleInfo
+		)
+
+	LOOP:
+		for _, dr := range response.Response.DomainRuleSet {
+			for _, r := range dr.RuleSet {
+				if r.RuleId == nil {
+					err := fmt.Errorf("api[%s] rule id is nil", request.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if *r.RuleId == ruleId {
+					domainRule = dr
+					rule = r
+					break LOOP
+				}
+			}
+		}
+
+		if rule == nil {
+			return nil
+		}
+
+		if domainRule.Domain == nil {
+			err := fmt.Errorf("api[%s] domain rule domain is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if rule.Path == nil {
+			err := fmt.Errorf("api[%s] rule path is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if rule.RealServerType == nil {
+			err := fmt.Errorf("api[%s] rule realserver type is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if rule.Scheduler == nil {
+			err := fmt.Errorf("api[%s] rule scheduler type is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if rule.HealthCheck == nil {
+			err := fmt.Errorf("api[%s] rule health check is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		httpRule = &gaapHttpRule{
+			listenerId:     listenerId,
+			domain:         *domainRule.Domain,
+			path:           *rule.Path,
+			realserverType: *rule.RealServerType,
+			scheduler:      *rule.Scheduler,
+			healthCheck:    *rule.HealthCheck == 1,
+		}
+
+		checkParams := rule.CheckParams
+
+		if checkParams == nil {
+			err := fmt.Errorf("api[%s] rule health check params is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if checkParams.DelayLoop == nil {
+			err := fmt.Errorf("api[%s] rule health check delay loop is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+		httpRule.delayLoop = int(*checkParams.DelayLoop)
+
+		if checkParams.ConnectTimeout == nil {
+			err := fmt.Errorf("api[%s] rule health check connect timeout is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+		httpRule.connectTimeout = int(*checkParams.ConnectTimeout)
+
+		if checkParams.Path == nil {
+			err := fmt.Errorf("api[%s] rule health check path is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+		httpRule.healthCheckPath = *checkParams.Path
+
+		if checkParams.Method == nil {
+			err := fmt.Errorf("api[%s] rule health check method is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+		httpRule.healthCheckMethod = *checkParams.Method
+
+		if len(checkParams.StatusCode) == 0 {
+			err := fmt.Errorf("api[%s] rule health check status codes set is empty", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+		httpRule.healthCheckStatusCodes = make([]int, 0, len(checkParams.StatusCode))
+		for _, code := range checkParams.StatusCode {
+			httpRule.healthCheckStatusCodes = append(httpRule.healthCheckStatusCodes, int(*code))
+		}
+
+		for _, rs := range rule.RealServerSet {
+			if rs.RealServerId == nil {
+				err := fmt.Errorf("api[%s] realserver id is nil", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+			if rs.RealServerIP == nil {
+				err := fmt.Errorf("api[%s] realserver ip is nil", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+			if rs.RealServerPort == nil {
+				err := fmt.Errorf("api[%s] realserver port is nil", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+			if rs.RealServerWeight == nil {
+				err := fmt.Errorf("api[%s] realserver weight is nil", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			realservers = append(realservers, gaapRealserverBind{
+				id:     *rs.RealServerId,
+				ip:     *rs.RealServerIP,
+				port:   int(*rs.RealServerPort),
+				weight: int(*rs.RealServerWeight),
+			})
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s describe http rule failed, reason: %v", logId, err)
+		return nil, nil, err
+	}
+
+	return
+}
+
+func (me *GaapService) ModifyHTTPRuleAttribute(
+	ctx context.Context,
+	listenerId, ruleId, healthCheckPath, healthCheckMethod string,
+	path, scheduler *string,
+	healthCheck bool,
+	delayLoop, connectTimeout int,
+	healthCheckStatusCodes []int,
+) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	request := gaap.NewModifyRuleAttributeRequest()
+	request.ListenerId = &listenerId
+	request.RuleId = &ruleId
+	request.Path = path
+	request.Scheduler = scheduler
+
+	if healthCheck {
+		request.HealthCheck = intToPointer(1)
+	} else {
+		request.HealthCheck = intToPointer(0)
+	}
+
+	request.CheckParams = &gaap.RuleCheckParams{
+		DelayLoop:      intToPointer(delayLoop),
+		ConnectTimeout: intToPointer(connectTimeout),
+		Path:           &healthCheckPath,
+		Method:         &healthCheckMethod,
+		StatusCode:     make([]*uint64, 0, len(healthCheckStatusCodes)),
+	}
+	for _, code := range healthCheckStatusCodes {
+		request.CheckParams.StatusCode = append(request.CheckParams.StatusCode, intToPointer(code))
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.ModifyRuleAttribute(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify http rule attribute failed, reason: %v", logId, err)
+		return err
+	}
+
+	return waitHttpRuleReady(ctx, client, listenerId, ruleId)
+}
+
+func (me *GaapService) DeleteHttpRule(ctx context.Context, listenerId, ruleId string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	deleteRequest := gaap.NewDeleteRuleRequest()
+	deleteRequest.ListenerId = &listenerId
+	deleteRequest.RuleId = &ruleId
+	deleteRequest.Force = intToPointer(1)
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.DeleteRule(deleteRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, deleteRequest.GetAction(), deleteRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete http rule failed, reason: %v", logId, err)
+		return err
+	}
+
+	describeRequest := gaap.NewDescribeRulesRequest()
+	describeRequest.ListenerId = &listenerId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeRules(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		for _, domainRule := range response.Response.DomainRuleSet {
+			for _, rule := range domainRule.RuleSet {
+				if rule.RuleId == nil {
+					err := fmt.Errorf("api[%s] http rule id is nil", describeRequest.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if *rule.RuleId == ruleId {
+					err := errors.New("http rule still exists")
+					log.Printf("[DEBUG]%s %v", logId, err)
+					return resource.RetryableError(err)
+				}
+			}
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete http rule failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func waitHttpRuleReady(ctx context.Context, client *gaap.Client, listenerId, ruleId string) error {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeRulesRequest()
+	request.ListenerId = &listenerId
+
+	return resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := client.DescribeRules(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		for _, domainRule := range response.Response.DomainRuleSet {
+			for _, rule := range domainRule.RuleSet {
+				if rule.RuleId == nil {
+					err := fmt.Errorf("api[%s] rule id is nil", request.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if rule.RuleStatus == nil {
+					err := fmt.Errorf("api[%s] rule status is nil", request.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if *rule.RuleId == ruleId {
+					if *rule.RuleStatus != GAAP_HTTP_RULE_RUNNING {
+						err := errors.New("http rule is not ready")
+						log.Printf("[DEBUG]%s %v", logId, err)
+						return resource.RetryableError(err)
+					}
+					return nil
+				}
+			}
+		}
+
+		err = fmt.Errorf("api[%s] doesn't return right http rule", request.GetAction())
+		log.Printf("[DEBUG]%s %v", logId, err)
+		return resource.RetryableError(err)
+	})
 }

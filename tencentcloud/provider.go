@@ -144,6 +144,7 @@ GAAP Resources
   tencentcloud_gaap_layer4_listener
   tencentcloud_gaap_layer7_listener
   tencentcloud_gaap_http_domain
+  tencentcloud_gaap_http_rule
   tencentcloud_gaap_certificate
   tencentcloud_gaap_security_policy
   tencentcloud_gaap_security_rule
@@ -289,6 +290,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_layer4_listener":       resourceTencentCloudGaapLayer4Listener(),
 			"tencentcloud_gaap_layer7_listener":       resourceTencentCloudGaapLayer7Listener(),
 			"tencentcloud_gaap_http_domain":           resourceTencentCloudGaapHttpDomain(),
+			"tencentcloud_gaap_http_rule":             resourceTencentCloudGaapHttpRule(),
 			"tencentcloud_gaap_certificate":           resourceTencentCloudGaapCertificate(),
 			"tencentcloud_gaap_security_policy":       resourceTencentCloudGaapSecurityPolicy(),
 			"tencentcloud_gaap_security_rule":         resourceTencentCloudGaapSecurityRule(),

@@ -345,7 +345,7 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 			clientCertificateId = stringToPointer(d.Get("client_certificate_id").(string))
 		}
 
-		if err := service.UpdateDomainCertificate(ctx, listenerId, domain, certificateId, clientCertificateId); err != nil {
+		if err := service.ModifyDomainCertificate(ctx, listenerId, domain, certificateId, clientCertificateId); err != nil {
 			return err
 		}
 
