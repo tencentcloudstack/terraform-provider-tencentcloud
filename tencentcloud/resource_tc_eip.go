@@ -64,6 +64,8 @@ func resourceTencentCloudEip() *schema.Resource {
 }
 
 func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_eip.create")()
+
 	cvmConn := meta.(*TencentCloudClient).cvmConn
 
 	req := cvm.NewAllocateAddressesRequest()
@@ -95,6 +97,8 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_eip.read")()
+
 	cvmConn := meta.(*TencentCloudClient).cvmConn
 	eipId := d.Id()
 
@@ -116,6 +120,8 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_eip.update")()
+
 	if d.HasChange("name") {
 		eipId := d.Id()
 		cvmConn := meta.(*TencentCloudClient).cvmConn
@@ -134,6 +140,8 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_eip.delete")()
+
 	cvmConn := meta.(*TencentCloudClient).cvmConn
 	eipId := d.Id()
 

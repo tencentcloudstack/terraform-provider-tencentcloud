@@ -61,6 +61,8 @@ func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
 }
 
 func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_availability_zones.read")()
+
 	client := meta.(*TencentCloudClient).commonConn
 
 	params := map[string]string{

@@ -65,6 +65,8 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 }
 
 func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_eip_association.create")()
+
 	cvmConn := meta.(*TencentCloudClient).cvmConn
 
 	v := d.Get("eip_id")
@@ -162,6 +164,8 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_eip_association.read")()
+
 	associationId := d.Id()
 	association, err := parseAssociationId(associationId)
 	if err != nil {
@@ -180,6 +184,8 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudEipAssociationDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_eip_association.delete")()
+
 	cvmConn := meta.(*TencentCloudClient).cvmConn
 	associationId := d.Id()
 	association, err := parseAssociationId(associationId)
