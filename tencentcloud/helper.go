@@ -130,6 +130,10 @@ func uint64Pt(i uint64) *uint64 {
 	return &i
 }
 
+func int64Pt(i int64) *int64 {
+	return &i
+}
+
 func getTags(d *schema.ResourceData, k string) map[string]string {
 	var tags map[string]string
 	if raw, ok := d.GetOk(k); ok {

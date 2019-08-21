@@ -19,6 +19,7 @@ import (
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
@@ -36,6 +37,7 @@ type TencentCloudClient struct {
 	clbConn     *clb.Client
 	dcConn      *dc.Client
 	mongodbConn *mongodb.Client
+	tkeConn     *tke.Client
 	gaapCoon    *gaap.Client
 }
 
@@ -266,6 +268,30 @@ func (me *TencentCloudClient) UseClbClient() *clb.Client {
 	me.clbConn = clbConn
 
 	return me.clbConn
+}
+
+func (me *TencentCloudClient) UseTkeClient() *tke.Client {
+	if me.tkeConn != nil {
+		return me.tkeConn
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
+
+	tkeConn, _ := tke.NewClient(credential, me.Region, cpf)
+	var round LogRoundTripper
+
+	tkeConn.WithHttpTransport(&round)
+	me.tkeConn = tkeConn
+
+	return me.tkeConn
 }
 
 func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
