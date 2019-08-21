@@ -48,6 +48,8 @@ func dataSourceTencentCloudEip() *schema.Resource {
 }
 
 func dataSourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_eip.read")()
+
 	cvmConn := meta.(*TencentCloudClient).cvmConn
 
 	req := cvm.NewDescribeAddressesRequest()

@@ -315,6 +315,8 @@ func resourceTencentCloudInstance() *schema.Resource {
 }
 
 func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) error {
+	defer logElapsed("resource.tencentcloud_instance.create")()
+
 	client := m.(*TencentCloudClient).commonConn
 
 	params := map[string]string{
@@ -559,6 +561,8 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, m interface{}) e
 }
 
 func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) error {
+	defer logElapsed("resource.tencentcloud_instance.read")()
+
 	instanceId := d.Id()
 	params := map[string]string{
 		"Version": "2017-03-12",
@@ -742,6 +746,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, m interface{}) err
 }
 
 func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, m interface{}) (err error) {
+	defer logElapsed("resource.tencentcloud_instance.update")()
 
 	ratelimit.Check("update")
 
@@ -855,6 +860,8 @@ LABEL_REINSTALL:
 }
 
 func resourceTencentCloudInstanceDelete(d *schema.ResourceData, m interface{}) error {
+	defer logElapsed("resource.tencentcloud_instance.delete")()
+
 	client := m.(*TencentCloudClient).commonConn
 
 	params := map[string]string{

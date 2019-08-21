@@ -89,6 +89,8 @@ func dataSourceTencentCloudSourceImages() *schema.Resource {
 }
 
 func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_image.read")()
+
 	client := meta.(*TencentCloudClient).commonConn
 	filters, filtersOk := d.GetOk("filter")
 	imageNameRegex, nameRegexOk := d.GetOk("image_name_regex")
