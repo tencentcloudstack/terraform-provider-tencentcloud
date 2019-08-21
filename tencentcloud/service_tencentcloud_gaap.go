@@ -545,7 +545,7 @@ func (me *GaapService) DescribeProxies(
 			Values: []*string{accessRegion},
 		})
 	}
-	if accessRegion != nil {
+	if realserverRegion != nil {
 		request.Filters = append(request.Filters, &gaap.Filter{
 			Name:   stringToPointer("RealServerRegion"),
 			Values: []*string{realserverRegion},
