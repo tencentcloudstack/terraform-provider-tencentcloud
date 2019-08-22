@@ -63,6 +63,7 @@ Data Sources
   tencentcloud_vpc_route_tables
   tencentcloud_vpc_subnets
   tencentcloud_gaap_proxies
+  tencentcloud_gaap_realservers
 
 AS Resources
   tencentcloud_as_scaling_config
@@ -240,6 +241,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dc_gateway_ccn_routes":       dataSourceTencentCloudDcGatewayCCNRoutes(),
 			"tencentcloud_kubernetes_clusters":         dataSourceTencentCloudKubernetesClusters(),
 			"tencentcloud_gaap_proxies":                dataSourceTencentCloudGaapProxies(),
+			"tencentcloud_gaap_realservers":            dataSourceTencentCloudGaapRealservers(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
