@@ -911,18 +911,27 @@ func (me *GaapService) BindLayer4ListenerRealservers(ctx context.Context, id, pr
 	return nil
 }
 
-func (me *GaapService) DescribeTCPListener(ctx context.Context, proxyId string, id, name *string, port *int) (listeners []*gaap.TCPListener, err error) {
+func (me *GaapService) DescribeTCPListeners(ctx context.Context, proxyId string, listenerId, name *string, port *int) (listeners []*gaap.TCPListener, err error) {
 	logId := getLogId(ctx)
 
 	request := gaap.NewDescribeTCPListenersRequest()
 	request.ProxyId = &proxyId
-	request.ListenerId = id
-	request.ListenerName = name
+	request.ListenerId = listenerId
+
 	if port != nil {
 		request.Port = intToPointer(*port)
 	}
-	request.Limit = intToPointer(50)
 
+	// if port set, name can't use fuzzy search
+	if name != nil {
+		if port != nil {
+			request.ListenerName = name
+		} else {
+			request.SearchValue = name
+		}
+	}
+
+	request.Limit = intToPointer(50)
 	offset := 0
 
 	// to run loop at least once
@@ -953,18 +962,27 @@ func (me *GaapService) DescribeTCPListener(ctx context.Context, proxyId string, 
 	return
 }
 
-func (me *GaapService) DescribeUDPListener(ctx context.Context, proxyId string, id, name *string, port *int) (listeners []*gaap.UDPListener, err error) {
+func (me *GaapService) DescribeUDPListeners(ctx context.Context, proxyId string, id, name *string, port *int) (listeners []*gaap.UDPListener, err error) {
 	logId := getLogId(ctx)
 
 	request := gaap.NewDescribeUDPListenersRequest()
 	request.ProxyId = &proxyId
 	request.ListenerId = id
-	request.ListenerName = name
+
 	if port != nil {
 		request.Port = intToPointer(*port)
 	}
-	request.Limit = intToPointer(50)
 
+	// if port set, name can't use fuzzy search
+	if name != nil {
+		if port != nil {
+			request.ListenerName = name
+		} else {
+			request.SearchValue = name
+		}
+	}
+
+	request.Limit = intToPointer(50)
 	offset := 0
 
 	// to run loop at least once
@@ -1636,12 +1654,21 @@ func (me *GaapService) DescribeHTTPListeners(
 	request := gaap.NewDescribeHTTPListenersRequest()
 	request.ProxyId = proxyId
 	request.ListenerId = id
-	request.ListenerName = name
+
 	if port != nil {
 		request.Port = intToPointer(*port)
 	}
-	request.Limit = intToPointer(50)
 
+	// if port set, name can't use fuzzy search
+	if name != nil {
+		if port != nil {
+			request.ListenerName = name
+		} else {
+			request.SearchValue = name
+		}
+	}
+
+	request.Limit = intToPointer(50)
 	offset := 0
 	// run loop at least once
 	count := 50
@@ -1673,20 +1700,29 @@ func (me *GaapService) DescribeHTTPListeners(
 
 func (me *GaapService) DescribeHTTPSListeners(
 	ctx context.Context,
-	proxyId, id, name *string,
+	proxyId, listenerId, name *string,
 	port *int,
 ) (listeners []*gaap.HTTPSListener, err error) {
 	logId := getLogId(ctx)
 
 	request := gaap.NewDescribeHTTPSListenersRequest()
 	request.ProxyId = proxyId
-	request.ListenerId = id
-	request.ListenerName = name
+	request.ListenerId = listenerId
+
 	if port != nil {
 		request.Port = intToPointer(*port)
 	}
-	request.Limit = intToPointer(50)
 
+	// if port set, name can't use fuzzy search
+	if name != nil {
+		if port != nil {
+			request.ListenerName = name
+		} else {
+			request.SearchValue = name
+		}
+	}
+
+	request.Limit = intToPointer(50)
 	offset := 0
 	// run loop at least once
 	count := 50
@@ -2371,45 +2407,6 @@ func (me *GaapService) CreateHttpRule(ctx context.Context, httpRule gaapHttpRule
 		log.Printf("[CRITAL]%s create http rule failed, reason: %v", logId, err)
 		return "", err
 	}
-	/*if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, err := client.DescribeRules(describeRequest)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
-			return retryError(err)
-		}
-
-		for _, domainRule := range response.Response.DomainRuleSet {
-			for _, rule := range domainRule.RuleSet {
-				if rule.RuleId == nil {
-					err := fmt.Errorf("api[%s] http rule id is nil", describeRequest.GetAction())
-					log.Printf("[CRITAL]%s %v", logId, err)
-					return resource.NonRetryableError(err)
-				}
-
-				if *rule.RuleId == id {
-					if rule.RuleStatus == nil {
-						err := fmt.Errorf("api[%s] http rule status is nil", describeRequest.GetAction())
-						log.Printf("[CRITAL]%s %v", logId, err)
-						return resource.NonRetryableError(err)
-					}
-					if *rule.RuleStatus != GAAP_HTTP_RULE_RUNNING {
-						err := errors.New("http rule is still creating")
-						log.Printf("[DEBUG]%s %v", logId, err)
-						return resource.RetryableError(err)
-					}
-					return nil
-				}
-			}
-		}
-
-		err = fmt.Errorf("ap[%s] reutrn empty domain rule set", describeRequest.GetAction())
-		log.Printf("[DEBUG]%s %v", logId, err)
-		return resource.RetryableError(err)
-	}); err != nil {
-		log.Printf("[CRITAL]%s create http rule failed, reason: %v", logId, err)
-		return "", err
-	}*/
 
 	return
 }
@@ -2442,46 +2439,6 @@ func (me *GaapService) BindHttpRuleRealservers(ctx context.Context, listenerId, 
 		return err
 	}
 
-	/*describeRequest := gaap.NewDescribeRulesRequest()
-	describeRequest.ListenerId = &id
-
-	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, err := client.DescribeRules(describeRequest)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
-			return retryError(err)
-		}
-
-		for _, domainRule := range response.Response.DomainRuleSet {
-			for _, rule := range domainRule.RuleSet {
-				if rule.RuleId == nil {
-					err := fmt.Errorf("api[%s] rule id is nil", describeRequest.GetAction())
-					log.Printf("[CRITAL]%s %v", logId, err)
-					return resource.NonRetryableError(err)
-				}
-
-				if rule.RuleStatus == nil {
-					err := fmt.Errorf("api[%s] rule status is nil", describeRequest.GetAction())
-					log.Printf("[CRITAL]%s %v", logId, err)
-					return resource.NonRetryableError(err)
-				}
-
-				if *rule.RuleStatus != GAAP_HTTP_RULE_RUNNING {
-					err := errors.New("http rule is still binding")
-					log.Printf("[DEBUG]%s %v", logId, err)
-					return resource.RetryableError(err)
-				}
-			}
-		}
-
-		err = fmt.Errorf("api[%s] doesn't return right http rule", describeRequest.GetAction())
-		log.Printf("[CRITAL]%s %v", logId, err)
-		return resource.NonRetryableError(err)
-	}); err != nil {
-		log.Printf("[CRITAL]%s bind http rule realservers failed, reason: %v", logId, err)
-		return err
-	}*/
 	if err := waitHttpRuleReady(ctx, client, listenerId, ruleId); err != nil {
 		log.Printf("[CRITAL]%s bind http rule realservers failed, reason: %v", logId, err)
 		return err
@@ -2526,7 +2483,7 @@ func (me *GaapService) DescribeHttpRule(ctx context.Context, listenerId, ruleId 
 			}
 		}
 
-		if rule == nil {
+		if rule == nil || domainRule == nil {
 			return nil
 		}
 

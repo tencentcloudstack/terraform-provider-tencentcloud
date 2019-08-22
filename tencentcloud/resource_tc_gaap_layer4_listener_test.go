@@ -278,7 +278,7 @@ func testAccCheckGaapLayer4ListenerExists(n string, id, proxyId *string, protoco
 
 		switch protocol {
 		case "TCP":
-			listeners, err := service.DescribeTCPListener(context.TODO(), attrProxyId, &rs.Primary.ID, nil, nil)
+			listeners, err := service.DescribeTCPListeners(context.TODO(), attrProxyId, &rs.Primary.ID, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -295,7 +295,7 @@ func testAccCheckGaapLayer4ListenerExists(n string, id, proxyId *string, protoco
 			}
 
 		case "UDP":
-			listeners, err := service.DescribeUDPListener(context.TODO(), attrProxyId, &rs.Primary.ID, nil, nil)
+			listeners, err := service.DescribeUDPListeners(context.TODO(), attrProxyId, &rs.Primary.ID, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -327,7 +327,7 @@ func testAccCheckGaapLayer4ListenerDestroy(id, proxyId *string, protocol string)
 
 		switch protocol {
 		case "TCP":
-			listeners, err := service.DescribeTCPListener(context.TODO(), *proxyId, id, nil, nil)
+			listeners, err := service.DescribeTCPListeners(context.TODO(), *proxyId, id, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -336,7 +336,7 @@ func testAccCheckGaapLayer4ListenerDestroy(id, proxyId *string, protocol string)
 			}
 
 		case "UDP":
-			listeners, err := service.DescribeUDPListener(context.TODO(), *proxyId, id, nil, nil)
+			listeners, err := service.DescribeUDPListeners(context.TODO(), *proxyId, id, nil, nil)
 			if err != nil {
 				return err
 			}

@@ -230,7 +230,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 
 	switch protocol {
 	case "TCP":
-		listeners, err := service.DescribeTCPListener(ctx, proxyId, &id, nil, nil)
+		listeners, err := service.DescribeTCPListeners(ctx, proxyId, &id, nil, nil)
 		if err != nil {
 			return err
 		}
@@ -321,7 +321,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		}
 
 	case "UDP":
-		listeners, err := service.DescribeUDPListener(ctx, proxyId, &id, nil, nil)
+		listeners, err := service.DescribeUDPListeners(ctx, proxyId, &id, nil, nil)
 		if err != nil {
 			return err
 		}

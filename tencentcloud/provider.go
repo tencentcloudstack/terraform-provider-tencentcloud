@@ -64,6 +64,8 @@ Data Sources
   tencentcloud_vpc_subnets
   tencentcloud_gaap_proxies
   tencentcloud_gaap_realservers
+  tencentcloud_gaap_layer4_listeners
+  tencentcloud_gaap_layer7_listeners
 
 AS Resources
   tencentcloud_as_scaling_config
@@ -242,6 +244,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_clusters":         dataSourceTencentCloudKubernetesClusters(),
 			"tencentcloud_gaap_proxies":                dataSourceTencentCloudGaapProxies(),
 			"tencentcloud_gaap_realservers":            dataSourceTencentCloudGaapRealservers(),
+			"tencentcloud_gaap_layer4_listeners":       dataSourceTencentCloudGaapLayer4Listeners(),
+			"tencentcloud_gaap_layer7_listeners":       dataSourceTencentCloudGaapLayer7Listeners(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
