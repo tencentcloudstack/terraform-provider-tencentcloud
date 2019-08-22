@@ -42,6 +42,8 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 }
 
 func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_key_pair.create")()
+
 	client := meta.(*TencentCloudClient).commonConn
 	params := map[string]string{
 		"Version":   "2017-03-12",
@@ -126,6 +128,8 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_key_pair.read")()
+
 	id := d.Id()
 	client := meta.(*TencentCloudClient).commonConn
 	keyName, _, err := findKeyPairById(client, id)
@@ -144,6 +148,8 @@ func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_key_pair.delete")()
+
 	id := d.Id()
 	log.Printf("[DEBUG] tencentcloud_key_pair - deleting key pair:% v", id)
 	params := map[string]string{
