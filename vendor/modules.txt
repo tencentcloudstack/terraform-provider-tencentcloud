@@ -416,7 +416,7 @@ github.com/spf13/jwalterweatherman
 github.com/spf13/pflag
 # github.com/spf13/viper v1.0.2
 github.com/spf13/viper
-# github.com/tencentcloud/tencentcloud-sdk-go v3.0.81+incompatible
+# github.com/tencentcloud/tencentcloud-sdk-go v3.0.82-0.20190816164403-f8fa457a3c72+incompatible
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320
@@ -425,6 +425,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
