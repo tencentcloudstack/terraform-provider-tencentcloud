@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -2760,4 +2761,39 @@ func waitHttpRuleReady(ctx context.Context, client *gaap.Client, listenerId, rul
 		log.Printf("[DEBUG]%s %v", logId, err)
 		return resource.RetryableError(err)
 	})
+}
+
+func (me *GaapService) DescribeDomains(ctx context.Context, listenerId, domain string) (domains []*gaap.DomainRuleSet, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeRulesRequest()
+	request.ListenerId = &listenerId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := me.client.UseGaapClient().DescribeRules(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		for _, domainRule := range response.Response.DomainRuleSet {
+			if domainRule.Domain == nil {
+				err := fmt.Errorf("api[%s] domain rule domain is nil", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			if strings.Contains(*domainRule.Domain, domain) {
+				domains = append(domains, domainRule)
+			}
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read domain failed, reason: %v", logId, err)
+		return nil, err
+	}
+
+	return
 }
