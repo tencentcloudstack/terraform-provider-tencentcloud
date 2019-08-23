@@ -22,20 +22,10 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 				ForceNew: true,
 			},
 			"cidr_ip": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errs []error) {
-					if _, err := validateIp(v, k); len(err) == 0 {
-						return
-					}
-
-					if _, err := validateCIDRNetworkAddress(v, k); len(err) != 0 {
-						errs = append(errs, fmt.Errorf("%s %v is not valid IP address or valid CIDR IP address",
-							k, v))
-					}
-					return
-				},
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validateCidrIp,
 			},
 			"action": {
 				Type:         schema.TypeString,

@@ -14,10 +14,10 @@ func TestAccDataSourceTencentCloudGaapSecurityPolices_basic(t *testing.T) {
 			{
 				Config: TestAccDataSourceTencentCloudGaapSecurityPolicesBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_gaap_security_polices.foo"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_polices.foo", "proxy_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_polices.foo", "status"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_polices.foo", "action", "ACCEPT"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_gaap_security_policies.foo"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_policies.foo", "proxy_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_policies.foo", "status"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_policies.foo", "action", "ACCEPT"),
 				),
 			},
 		},
@@ -29,8 +29,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "unknown" // TODO
-  realserver_region = "unknown" // TODO
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
 }
 
 resource tencentcloud_gaap_security_policy "foo" {
@@ -38,7 +38,7 @@ resource tencentcloud_gaap_security_policy "foo" {
   action   = "ACCEPT"
 }
 
-data tencentcloud_gaap_security_polices "foo" {
+data tencentcloud_gaap_security_policies "foo" {
   id = "${tencentcloud_gaap_security_policy.foo.id}"
 }
 `

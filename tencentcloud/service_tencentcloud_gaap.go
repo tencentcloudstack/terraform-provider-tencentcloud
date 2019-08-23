@@ -2797,3 +2797,34 @@ func (me *GaapService) DescribeDomains(ctx context.Context, listenerId, domain s
 
 	return
 }
+
+func (me *GaapService) DescribeSecurityRules(ctx context.Context, policyId string) (securityRules []*gaap.SecurityPolicyRuleOut, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeSecurityPolicyDetailRequest()
+	request.PolicyId = &policyId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err := me.client.UseGaapClient().DescribeSecurityPolicyDetail(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		securityRules = response.Response.RuleList
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read security rule failed, reason: %v", logId, err)
+		return nil, err
+	}
+
+	return
+}
