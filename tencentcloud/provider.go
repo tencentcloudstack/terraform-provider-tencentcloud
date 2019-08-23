@@ -67,6 +67,7 @@ Data Sources
   tencentcloud_gaap_layer4_listeners
   tencentcloud_gaap_layer7_listeners
   tencentcloud_gaap_http_domains
+  tencentcloud_gaap_http_rules
 
 AS Resources
   tencentcloud_as_scaling_config
@@ -248,6 +249,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_layer4_listeners":       dataSourceTencentCloudGaapLayer4Listeners(),
 			"tencentcloud_gaap_layer7_listeners":       dataSourceTencentCloudGaapLayer7Listeners(),
 			"tencentcloud_gaap_http_domains":           dataSourceTencentCloudGaapHttpDomains(),
+			"tencentcloud_gaap_http_rules":             dataSourceTencentCloudGaapHttpRules(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
