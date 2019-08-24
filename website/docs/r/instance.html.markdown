@@ -161,7 +161,7 @@ If this parameter is specified as NOTIFY_AND_AUTO_RENEW, the instance will be au
 
 * `user_data_raw` - (Optional) The user data to be specified into this instance, plain text. Conflicts with `user_data`. Limited in 16 KB after encrypted in base64 format.
 
-* `tags` - (Optional) A mapping of tags to assign to the resource.
+* `tags` - (Optional) A mapping of tags to assign to the resource.**Note** A tag key starting with "qcs:" or "project" is a system reserved tag key and cannot be used.
 
 ## Attributes Reference
 
