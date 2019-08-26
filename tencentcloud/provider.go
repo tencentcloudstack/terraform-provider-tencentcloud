@@ -44,6 +44,7 @@ Data Sources
   tencentcloud_eip
   tencentcloud_image
   tencentcloud_instance_types
+  tencentcloud_kubernetes_clusters
   tencentcloud_mongodb_instances
   tencentcloud_mongodb_zone_config
   tencentcloud_mysql_backup_list
@@ -111,6 +112,10 @@ DC Resources
 DCG Resources
   tencentcloud_dc_gateway
   tencentcloud_dc_gateway_ccn_route
+
+Kubernetes Resources
+  tencentcloud_kubernetes_cluster
+  tencentcloud_kubernetes_scale_worker
 
 MongoDB Resources
   tencentcloud_mongodb_instance
@@ -221,6 +226,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_instances":           dataSourceTencentCloudMongodbInstances(),
 			"tencentcloud_dc_gateway_instances":        dataSourceTencentCloudDcGatewayInstances(),
 			"tencentcloud_dc_gateway_ccn_routes":       dataSourceTencentCloudDcGatewayCCNRoutes(),
+			"tencentcloud_kubernetes_clusters":         dataSourceTencentCloudKubernetesClusters(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -274,6 +280,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_sharding_instance":  resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_dc_gateway":                 resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":       resourceTencentCloudDcGatewayCcnRouteInstance(),
+			"tencentcloud_kubernetes_cluster":         resourceTencentCloudTkeCluster(),
+			"tencentcloud_kubernetes_scale_worker":    resourceTencentCloudTkeScaleWorker(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -19,6 +19,7 @@ import (
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
@@ -38,6 +39,7 @@ type TencentCloudClient struct {
 	dcConn      *dc.Client
 	tagConn     *tag.Client
 	mongodbConn *mongodb.Client
+	tkeConn     *tke.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -273,6 +275,7 @@ func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
 	if me.cvmConn != nil {
 		return me.cvmConn
 	}
+
 	credential := common.NewCredential(
 		me.SecretId,
 		me.SecretKey,
@@ -309,4 +312,28 @@ func (me *TencentCloudClient) UseTagClient() *tag.Client {
 	tagConn.WithHttpTransport(&round)
 	me.tagConn = tagConn
 	return me.tagConn
+}
+
+func (me *TencentCloudClient) UseTkeClient() *tke.Client {
+	if me.tkeConn != nil {
+		return me.tkeConn
+	}
+  
+  credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
+
+	tkeConn, _ := tke.NewClient(credential, me.Region, cpf)
+	var round LogRoundTripper
+
+	tkeConn.WithHttpTransport(&round)
+	me.tkeConn = tkeConn
+
+	return me.tkeConn
 }

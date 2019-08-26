@@ -93,6 +93,7 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 						"weight": {
 							Type:         schema.TypeInt,
 							Optional:     true,
+							Default:      10,
 							ValidateFunc: validateIntegerInRange(0, 100),
 							Description:  "Forwarding weight of the backend service, the range of [0, 100], defaults to 10.",
 						},

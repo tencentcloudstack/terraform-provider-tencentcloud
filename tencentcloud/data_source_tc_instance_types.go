@@ -66,6 +66,8 @@ func dataSourceInstanceTypes() *schema.Resource {
 }
 
 func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_instance_types.read")()
+
 	client := meta.(*TencentCloudClient).commonConn
 	filters, filtersOk := d.GetOk("filter")
 	cpuCoreCount, cpuCoreCountOk := d.GetOk("cpu_core_count")

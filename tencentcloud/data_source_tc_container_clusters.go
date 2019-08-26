@@ -11,7 +11,8 @@ import (
 
 func dataSourceTencentCloudContainerClusters() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudContainerClustersRead,
+		DeprecationMessage: "This data source has been deprecated in Terraform TencentCloud provider version 1.16.0. Please use 'tencentcloud_kubernetes_clusters' instead.",
+		Read:               dataSourceTencentCloudContainerClustersRead,
 
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {

@@ -17,10 +17,11 @@ const (
 
 func resourceTencentCloudContainerCluster() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudContainerClusterCreate,
-		Read:   resourceTencentCloudContainerClusterRead,
-		Update: resourceTencentCloudContainerClusterUpdate,
-		Delete: resourceTencentCloudContainerClusterDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.16.0. Please use 'tencentcloud_kubernetes_cluster' instead.",
+		Create:             resourceTencentCloudContainerClusterCreate,
+		Read:               resourceTencentCloudContainerClusterRead,
+		Update:             resourceTencentCloudContainerClusterUpdate,
+		Delete:             resourceTencentCloudContainerClusterDelete,
 
 		Schema: map[string]*schema.Schema{
 			"cluster_name": {
