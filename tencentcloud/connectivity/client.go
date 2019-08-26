@@ -318,8 +318,8 @@ func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 	if me.tkeConn != nil {
 		return me.tkeConn
 	}
-  
-  credential := common.NewCredential(
+
+	credential := common.NewCredential(
 		me.SecretId,
 		me.SecretKey,
 	)
