@@ -58,7 +58,7 @@ func dataSourceTencentCloudGaapSecurityRules() *schema.Resource {
 
 			// computed
 			"rules": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{

@@ -70,6 +70,7 @@ Data Sources
   tencentcloud_gaap_http_rules
   tencentcloud_gaap_security_policies
   tencentcloud_gaap_security_rules
+  tencentcloud_gaap_certificates
 
 AS Resources
   tencentcloud_as_scaling_config
@@ -254,6 +255,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_http_rules":             dataSourceTencentCloudGaapHttpRules(),
 			"tencentcloud_gaap_security_policies":      dataSourceTencentCloudGaapSecurityPolices(),
 			"tencentcloud_gaap_security_rules":         dataSourceTencentCloudGaapSecurityRules(),
+			"tencentcloud_gaap_certificates":           dataSourceTencentCloudGaapCertificates(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

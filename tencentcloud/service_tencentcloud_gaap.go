@@ -2828,3 +2828,79 @@ func (me *GaapService) DescribeSecurityRules(ctx context.Context, policyId strin
 
 	return
 }
+
+func (me *GaapService) DescribeCertificates(ctx context.Context, id, name *string, certificateType *int) (certificates []*gaap.Certificate, err error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeCertificatesRequest()
+
+	if certificateType != nil {
+		request.CertificateType = int64ToPointer(*certificateType)
+	}
+
+	request.Limit = intToPointer(50)
+
+	offset := 0
+	count := 50
+	// at least run once
+	for count == 50 {
+		request.Offset = intToPointer(offset)
+
+		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			response, err := me.client.UseGaapClient().DescribeCertificates(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+					logId, request.GetAction(), request.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			count = len(response.Response.CertificateSet)
+
+			for _, certificate := range response.Response.CertificateSet {
+				if certificate.CertificateId == nil {
+					err := fmt.Errorf("api[%s] certificate id is nil", request.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if id != nil && *certificate.CertificateId != *id {
+					continue
+				}
+
+				if certificate.CertificateAlias == nil {
+					err := fmt.Errorf("api[%s] certificate name is nil", request.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if certificate.CertificateType == nil {
+					err := fmt.Errorf("api[%s] certificate type is nil", request.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if certificate.CreateTime == nil {
+					err := fmt.Errorf("api[%s] certificate create time is nil", request.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				// if name set, use fuzzy search
+				if name != nil && !strings.Contains(*certificate.CertificateAlias, *name) {
+					continue
+				}
+
+				certificates = append(certificates, certificate)
+			}
+
+			return nil
+		}); err != nil {
+			log.Printf("[CRITAL]%s read gaap certificates failed, reason: %v", logId, err)
+			return nil, err
+		}
+
+		offset += count
+	}
+
+	return
+}
