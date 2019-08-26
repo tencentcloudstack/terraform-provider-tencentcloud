@@ -17,13 +17,6 @@ var (
 	errKeyPairNotFound = fmt.Errorf("tencentcloud_key_pair not found")
 )
 
-func bindKeyPiar(client *client.Client, instanceId string, keyId string) error {
-	if err := operateKeyPiar(client, instanceId, keyId, "AssociateInstancesKeyPairs", waitForKeyPairBinded); err != nil {
-		return err
-	}
-	return nil
-}
-
 func unbindKeyPiar(client *client.Client, instanceId string, keyId string) error {
 	if err := operateKeyPiar(client, instanceId, keyId, "DisassociateInstancesKeyPairs", waitForKeyPairUnbinded); err != nil {
 		return err
@@ -58,21 +51,6 @@ func waitForKeyPairUnbinded(client *client.Client, instanceId string, keyId stri
 			return resource.RetryableError(err)
 		}
 		return nil
-	})
-}
-
-func waitForKeyPairBinded(client *client.Client, instanceId string, keyId string) error {
-	return resource.Retry(3*time.Minute, func() *resource.RetryError {
-		log.Printf("[DEBUG] waitForKeyPairBinded: keyId: %v, instanceId: %v", keyId, instanceId)
-		_, associatedInstanceIds, err := findKeyPairById(client, keyId)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if goset.IsIncluded(associatedInstanceIds, instanceId) {
-			return nil
-		}
-		err = fmt.Errorf("key pair: %v not bind in instance: %v yet, retry", keyId, instanceId)
-		return resource.RetryableError(err)
 	})
 }
 

@@ -41,30 +41,6 @@ func validateInstanceType(v interface{}, k string) (ws []string, errors []error)
 	return
 }
 
-func validateInstanceChargeType(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	if !goset.IsIncluded(availableInstanceChargeTypes, value) {
-		errors = append(errors, fmt.Errorf("invalid instance_charge_type: %v", value))
-	}
-	return
-}
-
-func validateInstanceChargeTypePrePaidPeriod(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(int)
-	if !goset.IsIncluded(availableInstanceChargeTypePrePaidPeriodValues, value) {
-		errors = append(errors, fmt.Errorf("invalid instance_charge_type_prepaid_period: %v", value))
-	}
-	return
-}
-
-func validateInstanceChargeTypePrePaidRenewFlag(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	if !goset.IsIncluded(availableInstanceChargeTypePrePaidRenewFlagValues, value) {
-		errors = append(errors, fmt.Errorf("invalid instance_charge_type_prepaid_period: %v", value))
-	}
-	return
-}
-
 // validateCIDRNetworkAddress ensures that the string value is a valid CIDR that
 // represents a network address - it adds an error otherwise
 func validateCIDRNetworkAddress(v interface{}, k string) (ws []string, errors []error) {
@@ -85,26 +61,6 @@ func validateIp(v interface{}, k string) (ws []string, errors []error) {
 	ip := net.ParseIP(value)
 	if ip == nil {
 		errors = append(errors, fmt.Errorf("%q must contain a valid IP", k))
-	}
-	return
-}
-
-func validateInternetChargeType(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	if !goset.IsIncluded(availableInternetChargeTypes, value) {
-		errors = append(errors, fmt.Errorf("invalid internet_charge_type: %v", value))
-	}
-	return
-}
-
-func validateInternetMaxBandwidthOut(v interface{}, k string) (ws []string, errors []error) {
-	return
-}
-
-func validateDiskType(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	if !goset.IsIncluded(availableDiskTypes, value) {
-		errors = append(errors, fmt.Errorf("invalid disk type: %v", value))
 	}
 	return
 }
@@ -151,17 +107,6 @@ func validateStringLengthInRange(min, max int) schema.SchemaValidateFunc {
 	}
 }
 
-func validateDiskSize(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(int)
-	if value < 0 || value%10 != 0 {
-		errors = append(errors, fmt.Errorf("invalid data disk size: %v", value))
-	}
-	ws2, err2 := validateIntegerInRange(50, 16000)(v, k)
-	ws = append(ws, ws2...)
-	errors = append(errors, err2...)
-	return
-}
-
 func validateKeyPairName(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 25 || len(value) == 0 {
@@ -172,19 +117,6 @@ func validateKeyPairName(v interface{}, k string) (ws []string, errors []error) 
 	if match, _ := regexp.Match(pattern, []byte(value)); !match {
 		errors = append(errors, fmt.Errorf("invalid key pair: %v, wrong format", value))
 	}
-	return
-}
-
-func validateInstanceName(v interface{}, k string) (ws []string, errors []error) {
-	value := v.(string)
-	if len(value) < 2 || len(value) > 60 {
-		errors = append(errors, fmt.Errorf("%q cannot be longer than 60 characters", k))
-	}
-
-	if strings.HasPrefix(value, "http://") || strings.HasPrefix(value, "https://") {
-		errors = append(errors, fmt.Errorf("%s cannot starts with http:// or https://", k))
-	}
-
 	return
 }
 
