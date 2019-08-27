@@ -1,4 +1,4 @@
-## 1.16.1 (Unreleased)
+## 1.16.1 (August 27, 2019)
 
 ENHANCEMENTS:
 * `tencentcloud_instance`: refactor logic with api3.0 .
