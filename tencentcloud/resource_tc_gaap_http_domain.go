@@ -45,7 +45,6 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 			"basic_auth_id": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Computed: true,
 			},
 			"realserver_auth": {
 				Type:     schema.TypeBool,
@@ -55,12 +54,10 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 			"realserver_certificate_id": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Computed: true,
 			},
 			"realserver_certificate_domain": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Computed: true,
 			},
 			"gaap_auth": {
 				Type:     schema.TypeBool,
@@ -70,7 +67,6 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 			"gaap_auth_id": {
 				Type:     schema.TypeString,
 				Optional: true,
-				Computed: true,
 			},
 		},
 	}
@@ -240,11 +236,6 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 		return nil
 	}
 
-	if listeners[0].ForwardProtocol == nil {
-		return errors.New("listener forward protocol is nil")
-	}
-	forwardProtocol := *listeners[0].ForwardProtocol
-
 	if httpDomain.CertificateId == nil {
 		return errors.New("domain certificate id is nil")
 	}
@@ -264,28 +255,25 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 		d.Set("basic_auth_id", httpDomain.BasicAuthConfId)
 	}
 
-	if forwardProtocol == "HTTPS" {
-		if httpDomain.RealServerAuth == nil {
-			return errors.New("domain realserver auth is nil")
-		}
-		d.Set("realserver_auth", *httpDomain.RealServerAuth == 1)
+	if httpDomain.RealServerAuth == nil {
+		return errors.New("domain realserver auth is nil")
+	}
+	d.Set("realserver_auth", *httpDomain.RealServerAuth == 1)
 
-		if httpDomain.RealServerCertificateId != nil {
-			d.Set("realserver_certificate_id", httpDomain.RealServerCertificateId)
-		}
+	if httpDomain.RealServerCertificateId != nil {
+		d.Set("realserver_certificate_id", httpDomain.RealServerCertificateId)
+	}
+	if httpDomain.RealServerCertificateDomain != nil {
+		d.Set("realserver_certificate_domain", httpDomain.RealServerCertificateDomain)
+	}
 
-		if httpDomain.RealServerCertificateDomain != nil {
-			d.Set("realserver_certificate_domain", httpDomain.RealServerCertificateDomain)
-		}
+	if httpDomain.GaapAuth == nil {
+		return errors.New("domain gaap auth is nil")
+	}
+	d.Set("gaap_auth", *httpDomain.GaapAuth == 1)
 
-		if httpDomain.GaapAuth == nil {
-			return errors.New("domain gaap auth is nil")
-		}
-		d.Set("gaap_auth", *httpDomain.GaapAuth == 1)
-
-		if httpDomain.GaapCertificateId != nil {
-			d.Set("gaap_auth_id", httpDomain.GaapCertificateId)
-		}
+	if httpDomain.GaapCertificateId != nil {
+		d.Set("gaap_auth_id", httpDomain.GaapCertificateId)
 	}
 
 	return nil
@@ -332,15 +320,9 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	d.Partial(true)
 
 	if d.HasChange("certificate_id") || d.HasChange("client_certificate_id") {
-		var (
-			certificateId       *string
-			clientCertificateId *string
-		)
+		certificateId := d.Get("certificate_id").(string)
 
-		if d.HasChange("certificate_id") {
-			certificateId = stringToPointer(d.Get("certificate_id").(string))
-		}
-
+		var clientCertificateId *string
 		if d.HasChange("client_certificate_id") {
 			clientCertificateId = stringToPointer(d.Get("client_certificate_id").(string))
 		}

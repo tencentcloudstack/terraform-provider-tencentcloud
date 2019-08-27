@@ -3,8 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
-	"fmt"
-	"log"
+	"net"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
@@ -70,12 +69,12 @@ func resourceTencentCloudGaapRealserverCreate(d *schema.ResourceData, m interfac
 		address = domain.(string)
 	}
 
-	name := d.Get("name").(string)
-	projectId := d.Get("project_id").(int)
-
 	if !addressIsSet {
 		return errors.New("ip or domain must be set")
 	}
+
+	name := d.Get("name").(string)
+	projectId := d.Get("project_id").(int)
 
 	tags := getTags(d, "tags")
 
@@ -97,28 +96,12 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	id := d.Id()
-	name := d.Get("name").(string)
-	tags := getTags(d, "tags")
-	projectId := d.Get("project_id").(int)
-
-	var address *string
-	if ip, ok := d.GetOk("ip"); ok {
-		address = stringToPointer(ip.(string))
-	}
-	if domain, ok := d.GetOk("domain"); ok {
-		address = stringToPointer(domain.(string))
-	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	realservers, err := service.DescribeRealservers(ctx, address, &name, tags, projectId)
+	realservers, err := service.DescribeRealservers(ctx, nil, nil, nil, -1)
 	if err != nil {
 		return err
-	}
-
-	if len(realservers) == 0 {
-		d.SetId("")
-		return nil
 	}
 
 	var realserver *gaap.BindRealServerInfo
@@ -139,37 +122,28 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 	}
 
 	if realserver.RealServerIP == nil {
-		err := fmt.Errorf("realserver %s ip or domain is nil", *realserver.RealServerId)
-		log.Printf("[CRITAL]%s %v", logId, err)
-		return err
+		return errors.New("realserver ip or domain is nil")
 	}
-	if _, ok := d.GetOk("ip"); ok {
+	if net.ParseIP(*realserver.RealServerIP) != nil {
 		d.Set("ip", realserver.RealServerIP)
-	}
-	if _, ok := d.GetOk("domain"); ok {
+	} else {
 		d.Set("domain", realserver.RealServerIP)
 	}
 
 	if realserver.RealServerName == nil {
-		err := fmt.Errorf("realserver %s name is nil", *realserver.RealServerId)
-		log.Printf("[CRITAL]%s %v", logId, err)
-		return err
+		return errors.New("realserver name is nil")
 	}
 	d.Set("name", realserver.RealServerName)
 
 	if realserver.ProjectId == nil {
-		err := fmt.Errorf("realserver %s project id is nil", *realserver.RealServerId)
-		log.Printf("[CRITAL]%s %v", logId, err)
-		return err
+		return errors.New("realserver project id is nil")
 	}
 	d.Set("project_id", realserver.ProjectId)
 
 	respTags := make(map[string]string, len(realserver.TagSet))
 	for _, tag := range realserver.TagSet {
 		if tag.TagKey == nil || tag.TagValue == nil {
-			err := fmt.Errorf("one of realserver %s tag key or value is nil", *realserver.RealServerId)
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return err
+			return errors.New("realserver tag key or value is nil")
 		}
 		respTags[*tag.TagKey] = *tag.TagValue
 	}

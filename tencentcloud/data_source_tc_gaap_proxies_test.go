@@ -31,7 +31,6 @@ func TestAccDataSourceTencentCloudGaapProxies_basic(t *testing.T) {
 					resource.TestMatchResourceAttr("data.tencentcloud_gaap_proxies.foo", "proxies.0.support_protocols.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.foo", "proxies.0.forward_ip"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_proxies.foo", "proxies.0.version"),
-					resource.TestCheckNoResourceAttr("data.tencentcloud_gaap_proxies.foo", "proxies.0.tags"),
 				),
 			},
 		},

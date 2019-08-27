@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"time"
 
@@ -144,10 +143,10 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 
 	var proxy *gaap.ProxyInfo
 	for _, p := range proxies {
-		if p.InstanceId == nil {
+		if p.ProxyId == nil {
 			return errors.New("proxy id is nil")
 		}
-		if *p.InstanceId == id {
+		if *p.ProxyId == id {
 			proxy = p
 			break
 		}
@@ -159,39 +158,39 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 	}
 
 	if proxy.ProxyName == nil {
-		return fmt.Errorf("proxy %s name is nil", id)
+		return errors.New("proxy name is nil")
 	}
 	d.Set("name", proxy.ProxyName)
 
 	if proxy.ProjectId == nil {
-		return fmt.Errorf("proxy %s project id is nil", id)
+		return errors.New("proxy project id is nil")
 	}
 	d.Set("project_id", proxy.ProjectId)
 
 	if proxy.Bandwidth == nil {
-		return fmt.Errorf("proxy %s bandwidth is nil", id)
+		return errors.New("proxy bandwidth is nil")
 	}
 	d.Set("bandwidth", proxy.Bandwidth)
 
 	if proxy.Concurrent == nil {
-		return fmt.Errorf("proxy %s concurrent is nil", id)
+		return errors.New("proxy concurrent is nil")
 	}
-	d.Set("concurrent", *proxy.Concurrent)
+	d.Set("concurrent", proxy.Concurrent)
 
 	if proxy.AccessRegion == nil {
-		return fmt.Errorf("proxy %s access region is nil", id)
+		return errors.New("proxy access region is nil")
 	}
 	d.Set("access_region", proxy.AccessRegion)
 
 	if proxy.RealServerRegion == nil {
-		return fmt.Errorf("proxy %s realserver region is nil", id)
+		return errors.New("proxy realserver region is nil")
 	}
 	d.Set("realserver_region", proxy.RealServerRegion)
 
 	if proxy.Status == nil {
-		return fmt.Errorf("proxy %s status is nil", id)
+		return errors.New("proxy status is nil")
 	}
-	d.Set("enable", *proxy.Status == "RUNNING")
+	d.Set("enable", *proxy.Status == GAAP_PROXY_RUNNING)
 	d.Set("status", proxy.Status)
 
 	if len(proxy.TagSet) > 0 {
@@ -203,27 +202,27 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 	}
 
 	if proxy.CreateTime == nil {
-		return fmt.Errorf("proxy %s create time is nil", id)
+		return errors.New("proxy create time is nil")
 	}
 	d.Set("create_time", proxy.CreateTime)
 
 	if proxy.Domain == nil {
-		return fmt.Errorf("proxy %s access domain is nil", id)
+		return errors.New("proxy access domain is nil")
 	}
 	d.Set("access_domain", proxy.Domain)
 
 	if proxy.IP == nil {
-		return fmt.Errorf("proxy %s access IP is nil", id)
+		return errors.New("proxy access IP is nil")
 	}
 	d.Set("access_ip", proxy.IP)
 
 	if proxy.Scalarable == nil {
-		return fmt.Errorf("proxy %s scalable is nil", id)
+		return errors.New("proxy scalable is nil")
 	}
 	d.Set("scalable", *proxy.Scalarable == 1)
 
 	if len(proxy.SupportProtocols) == 0 {
-		return fmt.Errorf("proxy %s no suuport protocols", id)
+		return errors.New("proxy support protocols is empty")
 	}
 	supportProtocols := make([]string, 0, len(proxy.SupportProtocols))
 	for _, sp := range proxy.SupportProtocols {
@@ -232,7 +231,7 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 	d.Set("support_protocols", supportProtocols)
 
 	if proxy.ForwardIP == nil {
-		return fmt.Errorf("proxy %s forward IPs is nil", id)
+		return errors.New("proxy forward ip is nil")
 	}
 	d.Set("forward_ip", proxy.ForwardIP)
 
@@ -317,7 +316,7 @@ func resourceTencentCloudGaapProxyDelete(d *schema.ResourceData, m interface{}) 
 
 	if time.Now().Unix()-int64(createTime) < 120 {
 		log.Printf("[DEBUG]%s proxy can't be deleted unless it has lived 2 minutes", logId)
-		sleepTime := 2*time.Minute - time.Duration(time.Now().UnixNano()-int64(createTime)*1000000000)
+		sleepTime := 2*time.Minute - time.Duration(time.Now().UnixNano()-int64(createTime)*int64(time.Second))
 		time.Sleep(sleepTime)
 	}
 

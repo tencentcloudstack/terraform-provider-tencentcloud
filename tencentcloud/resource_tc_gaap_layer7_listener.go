@@ -41,11 +41,13 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 			"certificate_id": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Default:  "",
 			},
 			"forward_protocol": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
+				ForceNew:     true,
 			},
 			"auth_type": {
 				Type:         schema.TypeInt,
@@ -56,7 +58,7 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 			"client_certificate_id": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
+				Default:  "",
 			},
 
 			// computed
@@ -95,16 +97,13 @@ func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m inte
 
 	case "HTTPS":
 		var (
-			certificateId       string
-			forwardProtocol     string
-			authType            int
-			clientCertificateId *string
+			forwardProtocol string
+			authType        int
 		)
 
-		if raw, ok := d.GetOk("certificate_id"); ok {
-			certificateId = raw.(string)
-		} else {
-			return errors.New("when protocol is HTTPS, certificate_id is required")
+		certificateId := d.Get("certificate_id").(string)
+		if certificateId == "" {
+			return errors.New("when protocol is HTTPS, certificate_id can't be empty")
 		}
 
 		if raw, ok := d.GetOk("forward_protocol"); ok {
@@ -119,11 +118,16 @@ func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m inte
 			return errors.New("when protocol is HTTPS, auth_type is required")
 		}
 
-		if raw, ok := d.GetOk("client_certificate_id"); ok {
-			clientCertificateId = stringToPointer(raw.(string))
+		clientCertificateId := d.Get("client_certificate_id").(string)
+
+		if authType == 1 && clientCertificateId == "" {
+			return errors.New("when protocol is HTTPS and auth type is 1, client_certificate_id can't be empty")
 		}
 
-		id, err = service.CreateHTTPSListener(ctx, name, certificateId, forwardProtocol, proxyId, port, authType, clientCertificateId)
+		id, err = service.CreateHTTPSListener(
+			ctx,
+			name, certificateId, clientCertificateId, forwardProtocol, proxyId, port, authType,
+		)
 	}
 
 	if err != nil {
@@ -146,10 +150,10 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 	var (
 		name                string
 		port                int
-		certificateId       *string
+		certificateId       string
 		forwardProtocol     *string
 		authType            *int
-		clientCertificateId *string
+		clientCertificateId string
 		status              int
 		createTime          int
 	)
@@ -161,11 +165,6 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 		listeners, err := service.DescribeHTTPListeners(ctx, &proxyId, &id, nil, nil)
 		if err != nil {
 			return err
-		}
-
-		if len(listeners) == 0 {
-			d.SetId("")
-			return nil
 		}
 
 		var listener *gaap.HTTPListener
@@ -210,11 +209,6 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 			return err
 		}
 
-		if len(listeners) == 0 {
-			d.SetId("")
-			return nil
-		}
-
 		var listener *gaap.HTTPSListener
 		for _, l := range listeners {
 			if l.ListenerId == nil {
@@ -244,7 +238,7 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 		if listener.CertificateId == nil {
 			return errors.New("listener certificate id is nil")
 		}
-		certificateId = listener.CertificateId
+		certificateId = *listener.CertificateId
 
 		if listener.ForwardProtocol == nil {
 			return errors.New("listener forward protocol is nil")
@@ -256,7 +250,9 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 		}
 		authType = common.IntPtr(int(*listener.AuthType))
 
-		clientCertificateId = listener.ClientCertificateId
+		if listener.ClientCertificateId != nil {
+			clientCertificateId = *listener.ClientCertificateId
+		}
 
 		if listener.ListenerStatus == nil {
 			return errors.New("listener status is nil")
@@ -271,18 +267,14 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 
 	d.Set("name", name)
 	d.Set("port", port)
-	if certificateId != nil {
-		d.Set("certificate_id", certificateId)
-	}
+	d.Set("certificate_id", certificateId)
 	if forwardProtocol != nil {
 		d.Set("forward_protocol", forwardProtocol)
 	}
 	if authType != nil {
 		d.Set("auth_type", authType)
 	}
-	if clientCertificateId != nil {
-		d.Set("client_certificate_id", clientCertificateId)
-	}
+	d.Set("client_certificate_id", clientCertificateId)
 	d.Set("status", status)
 	d.Set("create_time", createTime)
 

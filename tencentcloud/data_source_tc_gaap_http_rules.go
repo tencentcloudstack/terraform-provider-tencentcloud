@@ -80,6 +80,9 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 							Type:     schema.TypeSet,
 							Computed: true,
 							Elem:     &schema.Schema{Type: schema.TypeInt},
+							Set: func(v interface{}) int {
+								return v.(int)
+							},
 						},
 						"realservers": {
 							Type:     schema.TypeSet,

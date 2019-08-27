@@ -56,8 +56,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 					if value == "ALL" {
 						return
 					}
-					match, _ := regexp.MatchString("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}-\\d{1,5}$", value)
-					if !match {
+					if !regexp.MustCompile("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}-\\d{1,5}$").MatchString(value) {
 						errors = append(errors, fmt.Errorf("%s example: 53、80,443、80-90, Not configured to represent all ports", k))
 					}
 					return
@@ -116,27 +115,27 @@ func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interfac
 	}
 
 	if rule.SourceCidr == nil {
-		return fmt.Errorf("security rule %s cidr IP is nil", id)
+		return errors.New("security rule cidr IP is nil")
 	}
 	d.Set("cidr_ip", rule.SourceCidr)
 
 	if rule.Action == nil {
-		return fmt.Errorf("security rule %s action is nil", id)
+		return errors.New("security rule action is nil")
 	}
 	d.Set("action", rule.Action)
 
 	if rule.AliasName == nil {
-		return fmt.Errorf("security rule %s name is nil", id)
+		return errors.New("security rule name is nil")
 	}
 	d.Set("name", rule.AliasName)
 
 	if rule.Protocol == nil {
-		return fmt.Errorf("security rule %s protocol is nil", id)
+		return errors.New("security rule protocol is nil")
 	}
 	d.Set("protocol", rule.Protocol)
 
 	if rule.DestPortRange == nil {
-		return fmt.Errorf("security rule %s port is nil", id)
+		return errors.New("security rule port is nil")
 	}
 	d.Set("port", rule.DestPortRange)
 
@@ -151,6 +150,10 @@ func resourceTencentCloudGaapSecurityRuleUpdate(d *schema.ResourceData, m interf
 	id := d.Id()
 	policyId := d.Get("policy_id").(string)
 	name := d.Get("name").(string)
+
+	if name == "" {
+		return errors.New("new name can't be empty")
+	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 

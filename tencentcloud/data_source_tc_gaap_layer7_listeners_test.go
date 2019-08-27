@@ -177,7 +177,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 data tencentcloud_gaap_layer7_listeners "port" {
   protocol = "HTTP"
   proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
-  port     = 80
+  port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
 }
 `
 
@@ -255,6 +255,6 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 data tencentcloud_gaap_layer7_listeners "port" {
   protocol = "HTTPS"
   proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
-  port     = "80"
+  port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
 }
 ` + testAccGaapCertificate(2, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")

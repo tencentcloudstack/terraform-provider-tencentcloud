@@ -45,11 +45,11 @@ func (me *GaapService) CreateRealserver(ctx context.Context, address, name strin
 
 	request := gaap.NewAddRealServersRequest()
 	request.RealServerName = &name
-	request.RealServerIP = common.StringPtrs([]string{address})
+	request.RealServerIP = []*string{&address}
 	request.ProjectId = intToPointer(projectId)
 	for k, v := range tags {
 		request.TagSet = append(request.TagSet, &gaap.TagPair{
-			TagKey:   common.StringPtr(k),
+			TagKey:   stringToPointer(k),
 			TagValue: stringToPointer(v),
 		})
 	}
@@ -110,7 +110,7 @@ func (me *GaapService) DescribeRealservers(ctx context.Context, address, name *s
 			TagValue: stringToPointer(v),
 		})
 	}
-	request.ProjectId = common.Int64Ptr(int64(projectId))
+	request.ProjectId = int64ToPointer(projectId)
 
 	request.Limit = intToPointer(50)
 	offset := 0
@@ -130,13 +130,14 @@ func (me *GaapService) DescribeRealservers(ctx context.Context, address, name *s
 
 			realservers = append(realservers, response.Response.RealServerSet...)
 			count = len(response.Response.RealServerSet)
-			offset += count
 
 			return nil
 		}); err != nil {
 			log.Printf("[CRITAL]%s read realservers failed, reason: %v", logId, err)
 			return nil, err
 		}
+
+		offset += count
 	}
 
 	return
@@ -184,13 +185,13 @@ func (me *GaapService) DeleteRealserver(ctx context.Context, id string) error {
 	return nil
 }
 
-func (me *GaapService) createCertificate(ctx context.Context, certificateType int, content string, name, key *string) (id string, err error) {
+func (me *GaapService) createCertificate(ctx context.Context, certificateType int, content, name string, key *string) (id string, err error) {
 	logId := getLogId(ctx)
 
 	request := gaap.NewCreateCertificateRequest()
-	request.CertificateType = common.Int64Ptr(int64(certificateType))
+	request.CertificateType = int64ToPointer(certificateType)
 	request.CertificateContent = &content
-	request.CertificateAlias = name
+	request.CertificateAlias = &name
 	request.CertificateKey = key
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -301,11 +302,12 @@ func (me *GaapService) CreateProxy(
 
 	createRequest := gaap.NewCreateProxyRequest()
 	createRequest.ProxyName = &name
-	createRequest.ProjectId = common.Int64Ptr(int64(projectId))
+	createRequest.ProjectId = int64ToPointer(projectId)
 	createRequest.Bandwidth = intToPointer(bandwidth)
 	createRequest.Concurrent = intToPointer(concurrent)
 	createRequest.AccessRegion = &accessRegion
 	createRequest.RealServerRegion = &realserverRegion
+	createRequest.ClientToken = stringToPointer(buildToken())
 	for k, v := range tags {
 		createRequest.TagSet = append(createRequest.TagSet, &gaap.TagPair{
 			TagKey:   stringToPointer(k),
@@ -391,12 +393,12 @@ func (me *GaapService) EnableProxy(ctx context.Context, id string) error {
 		}
 
 		if len(response.Response.OperationFailedInstanceSet) > 0 {
-			err := errors.New("enable proxy failed")
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
+			err := fmt.Errorf("api[%s] enable proxy failed", enableRequest.GetAction())
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
 		}
 
-		// proxy is enabled
+		// proxy may be enabled
 		if len(response.Response.InvalidStatusInstanceSet) > 0 {
 			return nil
 		}
@@ -421,14 +423,14 @@ func (me *GaapService) EnableProxy(ctx context.Context, id string) error {
 
 		proxies := response.Response.ProxySet
 		if len(proxies) == 0 {
-			err := errors.New("read no proxy")
+			err := fmt.Errorf("api[%s] read no proxy", describeRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
 
 		proxy := proxies[0]
 		if proxy.Status == nil {
-			err := errors.New("proxy status is nil")
+			err := fmt.Errorf("api[%s] proxy status is nil", describeRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -465,15 +467,16 @@ func (me *GaapService) DisableProxy(ctx context.Context, id string) error {
 		}
 
 		if len(response.Response.OperationFailedInstanceSet) > 0 {
-			err := errors.New("disable proxy failed")
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
+			err := fmt.Errorf("api[%s] disable proxy failed", disableRequest.GetAction())
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
 		}
 
-		// proxy is disabled
+		// proxy may be disabled
 		if len(response.Response.InvalidStatusInstanceSet) > 0 {
 			return nil
 		}
+
 		// disable proxy successfully
 		return nil
 	}); err != nil {
@@ -494,20 +497,20 @@ func (me *GaapService) DisableProxy(ctx context.Context, id string) error {
 
 		proxies := response.Response.ProxySet
 		if len(proxies) == 0 {
-			err := errors.New("read no proxy")
+			err := fmt.Errorf("api[%s] read no proxy", describeRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
 
 		proxy := proxies[0]
 		if proxy.Status == nil {
-			err := errors.New("proxy status is nil")
+			err := fmt.Errorf("api[%s] proxy status is nil", describeRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
 
 		if *proxy.Status != GAAP_PROXY_CLOSED {
-			err := errors.New("proxy is still enabling")
+			err := errors.New("proxy is still disabling")
 			log.Printf("[DEBUG]%s %v", logId, err)
 			return resource.RetryableError(err)
 		}
@@ -618,7 +621,7 @@ func (me *GaapService) ModifyProxyProjectId(ctx context.Context, id string, proj
 
 	request := gaap.NewModifyProxiesProjectRequest()
 	request.ProxyIds = []*string{&id}
-	request.ProjectId = common.Int64Ptr(int64(projectId))
+	request.ProjectId = int64ToPointer(projectId)
 	request.ClientToken = stringToPointer(buildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -675,14 +678,14 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 
 		proxies := response.Response.ProxySet
 		if len(proxies) == 0 {
-			err := errors.New("read no proxy")
+			err := fmt.Errorf("api[%s] read no proxy", describeRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
 
 		proxy := proxies[0]
 		if proxy.Status == nil {
-			err := errors.New("proxy status is nil")
+			err := fmt.Errorf("api[%s] proxy status is nil", describeRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -708,7 +711,7 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 
 	deleteRequest := gaap.NewDestroyProxiesRequest()
 	deleteRequest.ProxyIds = []*string{&id}
-	deleteRequest.Force = common.Int64Ptr(0)
+	deleteRequest.Force = int64ToPointer(0)
 	deleteRequest.ClientToken = stringToPointer(buildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -720,13 +723,13 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 		}
 
 		if len(response.Response.OperationFailedInstanceSet) > 0 {
-			err := errors.New("delete proxy failed")
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
+			err := fmt.Errorf("api[%s] delete proxy failed", deleteRequest.GetAction())
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
 		}
 
 		if len(response.Response.InvalidStatusInstanceSet) > 0 {
-			err := errors.New("proxy can't be deleted")
+			err := fmt.Errorf("api[%s] proxy can't be deleted", deleteRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -766,9 +769,8 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 func (me *GaapService) CreateTCPListener(
 	ctx context.Context,
 	name, scheduler, realserverType, proxyId string,
-	port int,
+	port, delayLoop, connectTimeout int,
 	healthCheck bool,
-	delayLoop, connectTimeout *int,
 ) (id string, err error) {
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
@@ -784,12 +786,8 @@ func (me *GaapService) CreateTCPListener(
 	} else {
 		createRequest.HealthCheck = intToPointer(0)
 	}
-	if delayLoop != nil {
-		createRequest.DelayLoop = intToPointer(*delayLoop)
-	}
-	if connectTimeout != nil {
-		createRequest.ConnectTimeout = intToPointer(*connectTimeout)
-	}
+	createRequest.DelayLoop = intToPointer(delayLoop)
+	createRequest.ConnectTimeout = intToPointer(connectTimeout)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		response, err := client.CreateTCPListeners(createRequest)
@@ -800,12 +798,7 @@ func (me *GaapService) CreateTCPListener(
 		}
 
 		if len(response.Response.ListenerIds) == 0 {
-			err := fmt.Errorf("api[%s] return empty TCP listener ID set", createRequest.GetAction())
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
-		if response.Response.ListenerIds[0] == nil {
-			err := fmt.Errorf("api[%s] TCP listener id is nil", createRequest.GetAction())
+			err := fmt.Errorf("api[%s] return empty TCP listener id set", createRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -849,7 +842,7 @@ func (me *GaapService) CreateUDPListener(
 		}
 
 		if len(response.Response.ListenerIds) == 0 {
-			err := fmt.Errorf("api[%s] return empty UDP listener ID set", createRequest.GetAction())
+			err := fmt.Errorf("api[%s] return empty UDP listener id set", createRequest.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -880,16 +873,14 @@ func (me *GaapService) BindLayer4ListenerRealservers(ctx context.Context, id, pr
 
 	bindRequest := gaap.NewBindListenerRealServersRequest()
 	bindRequest.ListenerId = &id
-	if len(realserverBinds) > 0 {
-		bindRequest.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realserverBinds))
-		for _, bind := range realserverBinds {
-			bindRequest.RealServerBindSet = append(bindRequest.RealServerBindSet, &gaap.RealServerBindSetReq{
-				RealServerId:     stringToPointer(bind.id),
-				RealServerWeight: intToPointer(bind.weight),
-				RealServerPort:   intToPointer(bind.port),
-				RealServerIP:     stringToPointer(bind.ip),
-			})
-		}
+	bindRequest.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realserverBinds))
+	for _, bind := range realserverBinds {
+		bindRequest.RealServerBindSet = append(bindRequest.RealServerBindSet, &gaap.RealServerBindSetReq{
+			RealServerId:     stringToPointer(bind.id),
+			RealServerPort:   intToPointer(bind.port),
+			RealServerIP:     stringToPointer(bind.ip),
+			RealServerWeight: intToPointer(bind.weight),
+		})
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -1019,7 +1010,7 @@ func (me *GaapService) ModifyTCPListenerAttribute(
 	proxyId, id string,
 	name, scheduler *string,
 	healthCheck *bool,
-	delayLoop, connectTimeout *int,
+	delayLoop, connectTimeout int,
 ) error {
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
@@ -1036,12 +1027,8 @@ func (me *GaapService) ModifyTCPListenerAttribute(
 			modifyRequest.HealthCheck = intToPointer(0)
 		}
 	}
-	if delayLoop != nil {
-		modifyRequest.DelayLoop = intToPointer(*delayLoop)
-	}
-	if connectTimeout != nil {
-		modifyRequest.ConnectTimeout = intToPointer(*connectTimeout)
-	}
+	modifyRequest.DelayLoop = intToPointer(delayLoop)
+	modifyRequest.ConnectTimeout = intToPointer(connectTimeout)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if _, err := client.ModifyTCPListenerAttribute(modifyRequest); err != nil {
@@ -1103,7 +1090,7 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 
 	deleteRequest := gaap.NewDeleteListenersRequest()
 	deleteRequest.ProxyId = &proxyId
-	deleteRequest.ListenerIds = []*string{stringToPointer(id)}
+	deleteRequest.ListenerIds = []*string{&id}
 	deleteRequest.Force = intToPointer(0)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -1600,9 +1587,8 @@ func (me *GaapService) CreateHTTPListener(ctx context.Context, name, proxyId str
 
 func (me *GaapService) CreateHTTPSListener(
 	ctx context.Context,
-	name, certificateId, forwardProtocol, proxyId string,
+	name, certificateId, clientCertificateId, forwardProtocol, proxyId string,
 	port, authType int,
-	clientCertificateId *string,
 ) (id string, err error) {
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
@@ -1610,11 +1596,13 @@ func (me *GaapService) CreateHTTPSListener(
 	request := gaap.NewCreateHTTPSListenerRequest()
 	request.ProxyId = &proxyId
 	request.CertificateId = &certificateId
+	if clientCertificateId != "" {
+		request.ClientCertificateId = &clientCertificateId
+	}
 	request.ForwardProtocol = &forwardProtocol
 	request.ListenerName = &name
 	request.Port = intToPointer(port)
 	request.AuthType = intToPointer(authType)
-	request.ClientCertificateId = clientCertificateId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		response, err := client.CreateHTTPSListener(request)
@@ -1671,6 +1659,7 @@ func (me *GaapService) DescribeHTTPListeners(
 
 	request.Limit = intToPointer(50)
 	offset := 0
+
 	// run loop at least once
 	count := 50
 	for count == 50 {
@@ -1725,6 +1714,7 @@ func (me *GaapService) DescribeHTTPSListeners(
 
 	request.Limit = intToPointer(50)
 	offset := 0
+
 	// run loop at least once
 	count := 50
 	for count == 50 {
@@ -1863,6 +1853,7 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 	switch protocol {
 	case "HTTP":
 		describeRequest := gaap.NewDescribeHTTPListenersRequest()
+		describeRequest.ProxyId = &proxyId
 		describeRequest.ListenerId = &id
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -1887,6 +1878,7 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 
 	case "HTTPS":
 		describeRequest := gaap.NewDescribeHTTPSListenersRequest()
+		describeRequest.ProxyId = &proxyId
 		describeRequest.ListenerId = &id
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -2085,7 +2077,7 @@ func (me *GaapService) CreateHTTPDomain(ctx context.Context, listenerId, domain 
 		}
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s create http domain failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s create HTTP domain failed, reason: %v", logId, err)
 		return err
 	}
 
@@ -2116,7 +2108,7 @@ func (me *GaapService) CreateHTTPDomain(ctx context.Context, listenerId, domain 
 		log.Printf("[DEBUG]%s %v", logId, err)
 		return resource.RetryableError(err)
 	}); err != nil {
-		log.Printf("[CRITAL]%s create http domain failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s create HTTP domain failed, reason: %v", logId, err)
 		return err
 	}
 
@@ -2141,7 +2133,7 @@ func (me *GaapService) CreateHTTPSDomain(ctx context.Context, listenerId, domain
 		}
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s create https domain failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s create HTTPS domain failed, reason: %v", logId, err)
 		return err
 	}
 
@@ -2172,7 +2164,7 @@ func (me *GaapService) CreateHTTPSDomain(ctx context.Context, listenerId, domain
 		log.Printf("[DEBUG]%s %v", logId, err)
 		return resource.RetryableError(err)
 	}); err != nil {
-		log.Printf("[CRITAL]%s create https domain failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s create HTTPS domain failed, reason: %v", logId, err)
 		return err
 	}
 
@@ -2212,9 +2204,9 @@ func (me *GaapService) SetAdvancedAuth(
 
 	if gaapAuth != nil {
 		if *gaapAuth {
-			request.GaapAuth = common.Int64Ptr(1)
+			request.GaapAuth = int64ToPointer(1)
 		} else {
-			request.GaapAuth = common.Int64Ptr(0)
+			request.GaapAuth = int64ToPointer(0)
 		}
 	}
 	request.GaapCertificateId = gaapAuthId
@@ -2272,15 +2264,15 @@ func (me *GaapService) DescribeDomain(ctx context.Context, listenerId, domain st
 
 func (me *GaapService) ModifyDomainCertificate(
 	ctx context.Context,
-	listenerId, domain string,
-	certificateId, clientCertificateId *string,
+	listenerId, domain, certificateId string,
+	clientCertificateId *string,
 ) error {
 	logId := getLogId(ctx)
 
 	request := gaap.NewModifyCertificateRequest()
 	request.ListenerId = &listenerId
 	request.Domain = &domain
-	request.CertificateId = certificateId
+	request.CertificateId = &certificateId
 	request.ClientCertificateId = clientCertificateId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -2357,19 +2349,19 @@ func (me *GaapService) CreateHttpRule(ctx context.Context, httpRule gaapHttpRule
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	createRequest := gaap.NewCreateRuleRequest()
-	createRequest.ListenerId = &httpRule.listenerId
-	createRequest.Domain = &httpRule.domain
-	createRequest.Path = &httpRule.path
-	createRequest.RealServerType = &httpRule.realserverType
-	createRequest.Scheduler = &httpRule.scheduler
+	request := gaap.NewCreateRuleRequest()
+	request.ListenerId = &httpRule.listenerId
+	request.Domain = &httpRule.domain
+	request.Path = &httpRule.path
+	request.RealServerType = &httpRule.realserverType
+	request.Scheduler = &httpRule.scheduler
 	if httpRule.healthCheck {
-		createRequest.HealthCheck = intToPointer(1)
+		request.HealthCheck = intToPointer(1)
 	} else {
-		createRequest.HealthCheck = intToPointer(0)
+		request.HealthCheck = intToPointer(0)
 	}
 
-	createRequest.CheckParams = &gaap.RuleCheckParams{
+	request.CheckParams = &gaap.RuleCheckParams{
 		DelayLoop:      intToPointer(httpRule.delayLoop),
 		ConnectTimeout: intToPointer(httpRule.connectTimeout),
 		Path:           &httpRule.healthCheckPath,
@@ -2377,19 +2369,19 @@ func (me *GaapService) CreateHttpRule(ctx context.Context, httpRule gaapHttpRule
 		StatusCode:     make([]*uint64, 0, len(httpRule.healthCheckStatusCodes)),
 	}
 	for _, code := range httpRule.healthCheckStatusCodes {
-		createRequest.CheckParams.StatusCode = append(createRequest.CheckParams.StatusCode, intToPointer(code))
+		request.CheckParams.StatusCode = append(request.CheckParams.StatusCode, intToPointer(code))
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, err := client.CreateRule(createRequest)
+		response, err := client.CreateRule(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 
 		if response.Response.RuleId == nil {
-			err := fmt.Errorf("api[%s] http rule id is nil", createRequest.GetAction())
+			err := fmt.Errorf("api[%s] HTTP rule id is nil", request.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -2397,15 +2389,12 @@ func (me *GaapService) CreateHttpRule(ctx context.Context, httpRule gaapHttpRule
 		id = *response.Response.RuleId
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s create http rule failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s create HTTP rule failed, reason: %v", logId, err)
 		return "", err
 	}
 
-	describeRequest := gaap.NewDescribeRulesRequest()
-	describeRequest.ListenerId = &httpRule.listenerId
-
 	if err := waitHttpRuleReady(ctx, client, httpRule.listenerId, id); err != nil {
-		log.Printf("[CRITAL]%s create http rule failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s create HTTP rule failed, reason: %v", logId, err)
 		return "", err
 	}
 
@@ -2416,11 +2405,11 @@ func (me *GaapService) BindHttpRuleRealservers(ctx context.Context, listenerId, 
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	bindRequest := gaap.NewBindRuleRealServersRequest()
-	bindRequest.RuleId = &ruleId
-	bindRequest.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realservers))
+	request := gaap.NewBindRuleRealServersRequest()
+	request.RuleId = &ruleId
+	request.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realservers))
 	for _, realserver := range realservers {
-		bindRequest.RealServerBindSet = append(bindRequest.RealServerBindSet, &gaap.RealServerBindSetReq{
+		request.RealServerBindSet = append(request.RealServerBindSet, &gaap.RealServerBindSetReq{
 			RealServerId:     stringToPointer(realserver.id),
 			RealServerPort:   intToPointer(realserver.port),
 			RealServerIP:     stringToPointer(realserver.ip),
@@ -2429,19 +2418,19 @@ func (me *GaapService) BindHttpRuleRealservers(ctx context.Context, listenerId, 
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if _, err := client.BindRuleRealServers(bindRequest); err != nil {
+		if _, err := client.BindRuleRealServers(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, bindRequest.GetAction(), bindRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s bind http rule realservers failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s bind HTTP rule realservers failed, reason: %v", logId, err)
 		return err
 	}
 
 	if err := waitHttpRuleReady(ctx, client, listenerId, ruleId); err != nil {
-		log.Printf("[CRITAL]%s bind http rule realservers failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s bind HTTP rule realservers failed, reason: %v", logId, err)
 		return err
 	}
 
@@ -2605,7 +2594,7 @@ func (me *GaapService) DescribeHttpRule(ctx context.Context, listenerId, ruleId 
 
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s describe http rule failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s describe HTTP rule failed, reason: %v", logId, err)
 		return nil, nil, err
 	}
 
@@ -2654,7 +2643,7 @@ func (me *GaapService) ModifyHTTPRuleAttribute(
 		}
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s modify http rule attribute failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s modify HTTP rule attribute failed, reason: %v", logId, err)
 		return err
 	}
 
@@ -2678,7 +2667,7 @@ func (me *GaapService) DeleteHttpRule(ctx context.Context, listenerId, ruleId st
 		}
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s delete http rule failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s delete HTTP rule failed, reason: %v", logId, err)
 		return err
 	}
 
@@ -2696,13 +2685,13 @@ func (me *GaapService) DeleteHttpRule(ctx context.Context, listenerId, ruleId st
 		for _, domainRule := range response.Response.DomainRuleSet {
 			for _, rule := range domainRule.RuleSet {
 				if rule.RuleId == nil {
-					err := fmt.Errorf("api[%s] http rule id is nil", describeRequest.GetAction())
+					err := fmt.Errorf("api[%s] HTTP rule id is nil", describeRequest.GetAction())
 					log.Printf("[CRITAL]%s %v", logId, err)
 					return resource.NonRetryableError(err)
 				}
 
 				if *rule.RuleId == ruleId {
-					err := errors.New("http rule still exists")
+					err := errors.New("HTTP rule still exists")
 					log.Printf("[DEBUG]%s %v", logId, err)
 					return resource.RetryableError(err)
 				}
@@ -2711,7 +2700,7 @@ func (me *GaapService) DeleteHttpRule(ctx context.Context, listenerId, ruleId st
 
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s delete http rule failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s delete HTTP rule failed, reason: %v", logId, err)
 		return err
 	}
 
@@ -2748,7 +2737,7 @@ func waitHttpRuleReady(ctx context.Context, client *gaap.Client, listenerId, rul
 
 				if *rule.RuleId == ruleId {
 					if *rule.RuleStatus != GAAP_HTTP_RULE_RUNNING {
-						err := errors.New("http rule is not ready")
+						err := errors.New("HTTP rule is not ready")
 						log.Printf("[DEBUG]%s %v", logId, err)
 						return resource.RetryableError(err)
 					}
@@ -2757,7 +2746,7 @@ func waitHttpRuleReady(ctx context.Context, client *gaap.Client, listenerId, rul
 			}
 		}
 
-		err = fmt.Errorf("api[%s] doesn't return right http rule", request.GetAction())
+		err = fmt.Errorf("api[%s] HTTP rule not found", request.GetAction())
 		log.Printf("[DEBUG]%s %v", logId, err)
 		return resource.RetryableError(err)
 	})
@@ -2842,7 +2831,7 @@ func (me *GaapService) DescribeCertificates(ctx context.Context, id, name *strin
 
 	offset := 0
 	count := 50
-	// at least run once
+	// run loop at least once
 	for count == 50 {
 		request.Offset = intToPointer(offset)
 
@@ -2873,6 +2862,11 @@ func (me *GaapService) DescribeCertificates(ctx context.Context, id, name *strin
 					return resource.NonRetryableError(err)
 				}
 
+				// if name set, use fuzzy search
+				if name != nil && !strings.Contains(*certificate.CertificateAlias, *name) {
+					continue
+				}
+
 				if certificate.CertificateType == nil {
 					err := fmt.Errorf("api[%s] certificate type is nil", request.GetAction())
 					log.Printf("[CRITAL]%s %v", logId, err)
@@ -2883,11 +2877,6 @@ func (me *GaapService) DescribeCertificates(ctx context.Context, id, name *strin
 					err := fmt.Errorf("api[%s] certificate create time is nil", request.GetAction())
 					log.Printf("[CRITAL]%s %v", logId, err)
 					return resource.NonRetryableError(err)
-				}
-
-				// if name set, use fuzzy search
-				if name != nil && !strings.Contains(*certificate.CertificateAlias, *name) {
-					continue
 				}
 
 				certificates = append(certificates, certificate)

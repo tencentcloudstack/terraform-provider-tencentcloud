@@ -56,15 +56,18 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 			"health_check": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Default:  false,
 			},
 			"delay_loop": {
 				Type:         schema.TypeInt,
 				Optional:     true,
+				Default:      5,
 				ValidateFunc: validateIntegerInRange(5, 300),
 			},
 			"connect_timeout": {
 				Type:         schema.TypeInt,
 				Optional:     true,
+				Default:      2,
 				ValidateFunc: validateIntegerInRange(2, 60),
 			},
 			"realserver_bind_set": {
@@ -98,7 +101,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Default:      1,
-							ValidateFunc: validateIntegerMin(1),
+							ValidateFunc: validateIntegerInRange(1, 100),
 						},
 					},
 				},
@@ -135,44 +138,35 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 	proxyId := d.Get("proxy_id").(string)
 	healthCheck := d.Get("health_check").(bool)
 
-	var (
-		delayLoop      *int
-		connectTimeout *int
-		realservers    []gaapRealserverBind
-	)
-	if raw, ok := d.GetOk("delay_loop"); ok {
-		delayLoop = common.IntPtr(raw.(int))
-	}
-	if raw, ok := d.GetOk("connect_timeout"); ok {
-		connectTimeout = common.IntPtr(raw.(int))
-	}
-	if (connectTimeout == nil && delayLoop != nil) || (connectTimeout != nil && delayLoop == nil) {
-		return errors.New("connect_timeout and delay_loop must be set together")
+	if protocol == "UDP" && healthCheck {
+		return errors.New("UDP listener can't use health check")
 	}
 
-	if connectTimeout != nil {
-		if *connectTimeout >= *delayLoop {
-			return errors.New("connect_timeout must be less than delay_loop")
-		}
+	delayLoop := d.Get("delay_loop").(int)
+	connectTimeout := d.Get("connect_timeout").(int)
+
+	// only check for TCP listener
+	if protocol == "TCP" && connectTimeout >= delayLoop {
+		return errors.New("connect_timeout must be less than delay_loop")
 	}
 
+	var realservers []gaapRealserverBind
 	if raw, ok := d.GetOk("realserver_bind_set"); ok {
 		list := raw.(*schema.Set).List()
 		realservers = make([]gaapRealserverBind, 0, len(list))
 		for _, v := range list {
 			m := v.(map[string]interface{})
+
+			if scheduler == "rr" && m["weight"].(int) != 1 {
+				return errors.New("when scheduler is rr, realserver weight should be 1 or null")
+			}
+
 			realservers = append(realservers, gaapRealserverBind{
 				id:     m["id"].(string),
 				ip:     m["ip"].(string),
 				port:   m["port"].(int),
 				weight: m["weight"].(int),
 			})
-		}
-	}
-
-	for _, rs := range realservers {
-		if scheduler == "rr" && rs.weight != 1 {
-			return errors.New("when scheduler is rr, realserver weight should be 1 or null")
 		}
 	}
 
@@ -185,7 +179,7 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 
 	switch protocol {
 	case "TCP":
-		id, err = service.CreateTCPListener(ctx, name, scheduler, realserverType, proxyId, port, healthCheck, delayLoop, connectTimeout)
+		id, err = service.CreateTCPListener(ctx, name, scheduler, realserverType, proxyId, port, delayLoop, connectTimeout, healthCheck)
 		if err != nil {
 			return err
 		}
@@ -197,11 +191,15 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 		}
 	}
 
-	if err := service.BindLayer4ListenerRealservers(ctx, id, protocol, proxyId, realservers); err != nil {
-		return err
+	// set id first so that can destroy listener if bind realservers failed
+	d.SetId(id)
+
+	if len(realservers) > 0 {
+		if err := service.BindLayer4ListenerRealservers(ctx, id, protocol, proxyId, realservers); err != nil {
+			return err
+		}
 	}
 
-	d.SetId(id)
 	return resourceTencentCloudGaapLayer4ListenerRead(d, m)
 }
 
@@ -221,8 +219,8 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		healthCheck    *bool
 		delayLoop      *int
 		connectTimeout *int
-		status         *int
-		createTime     *int
+		status         int
+		createTime     int
 		realservers    []map[string]interface{}
 	)
 
@@ -233,11 +231,6 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		listeners, err := service.DescribeTCPListeners(ctx, proxyId, &id, nil, nil)
 		if err != nil {
 			return err
-		}
-
-		if len(listeners) == 0 {
-			d.SetId("")
-			return nil
 		}
 
 		var listener *gaap.TCPListener
@@ -256,36 +249,39 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		}
 
 		if listener.ListenerName == nil {
-			return fmt.Errorf("listener %s name is nil", id)
+			return errors.New("listener name is nil")
 		}
 		name = *listener.ListenerName
 
 		if listener.Port == nil {
-			return fmt.Errorf("listener %s port is nil", id)
+			return errors.New("listener port is nil")
 		}
 		port = int(*listener.Port)
 
 		if listener.Scheduler == nil {
-			return fmt.Errorf("listener %s scheduler is nil", id)
+			return errors.New("listener scheduler is nil")
 		}
 		scheduler = *listener.Scheduler
 
 		if listener.RealServerType == nil {
-			return fmt.Errorf("listener %s realserver type is nil", id)
+			return errors.New("listener realserver type is nil")
 		}
 		realServerType = *listener.RealServerType
 
-		if listener.HealthCheck != nil {
-			healthCheck = common.BoolPtr(*listener.HealthCheck == 1)
+		if listener.HealthCheck == nil {
+			return errors.New("listener health check is nil")
 		}
+		healthCheck = boolToPointer(*listener.HealthCheck == 1)
 
-		if listener.DelayLoop != nil {
-			delayLoop = common.IntPtr(int(*listener.DelayLoop))
+		if listener.DelayLoop == nil {
+			return errors.New("listener delay loop is nil")
 		}
+		delayLoop = common.IntPtr(int(*listener.DelayLoop))
 
-		if listener.ConnectTimeout != nil {
-			connectTimeout = common.IntPtr(int(*listener.ConnectTimeout))
+		if listener.ConnectTimeout == nil {
+			return errors.New("listener connect timeout is nil")
 		}
+		connectTimeout = common.IntPtr(int(*listener.ConnectTimeout))
 
 		if len(listener.RealServerSet) > 0 {
 			realservers = make([]map[string]interface{}, 0, len(listener.RealServerSet))
@@ -312,23 +308,20 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 			}
 		}
 
-		if listener.ListenerStatus != nil {
-			status = common.IntPtr(int(*listener.ListenerStatus))
+		if listener.ListenerStatus == nil {
+			return errors.New("listener status is nil")
 		}
+		status = int(*listener.ListenerStatus)
 
-		if listener.CreateTime != nil {
-			createTime = common.IntPtr(int(*listener.CreateTime))
+		if listener.CreateTime == nil {
+			return errors.New("listener create time is nil")
 		}
+		createTime = int(*listener.CreateTime)
 
 	case "UDP":
 		listeners, err := service.DescribeUDPListeners(ctx, proxyId, &id, nil, nil)
 		if err != nil {
 			return err
-		}
-
-		if len(listeners) == 0 {
-			d.SetId("")
-			return nil
 		}
 
 		var listener *gaap.UDPListener
@@ -347,22 +340,22 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		}
 
 		if listener.ListenerName == nil {
-			return fmt.Errorf("listener %s name is nil", id)
+			return errors.New("listener name is nil")
 		}
 		name = *listener.ListenerName
 
 		if listener.Port == nil {
-			return fmt.Errorf("listener %s port is nil", id)
+			return errors.New("listener port is nil")
 		}
 		port = int(*listener.Port)
 
 		if listener.Scheduler == nil {
-			return fmt.Errorf("listener %s scheduler is nil", id)
+			return errors.New("listener scheduler is nil")
 		}
 		scheduler = *listener.Scheduler
 
 		if listener.RealServerType == nil {
-			return fmt.Errorf("listener %s realserver type is nil", id)
+			return errors.New("listener realserver type is nil")
 		}
 		realServerType = *listener.RealServerType
 
@@ -391,13 +384,15 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 			}
 		}
 
-		if listener.ListenerStatus != nil {
-			status = common.IntPtr(int(*listener.ListenerStatus))
+		if listener.ListenerStatus == nil {
+			return errors.New("listener status is nil")
 		}
+		status = int(*listener.ListenerStatus)
 
-		if listener.CreateTime != nil {
-			createTime = common.IntPtr(int(*listener.CreateTime))
+		if listener.CreateTime == nil {
+			return errors.New("listener create time is nil")
 		}
+		createTime = int(*listener.CreateTime)
 	}
 
 	d.Set("name", name)
@@ -416,12 +411,8 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 	if len(realservers) > 0 {
 		d.Set("realserver_bind_set", realservers)
 	}
-	if status != nil {
-		d.Set("status", status)
-	}
-	if createTime != nil {
-		d.Set("create_time", createTime)
-	}
+	d.Set("status", status)
+	d.Set("create_time", createTime)
 
 	return nil
 }
@@ -438,10 +429,9 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 		name           *string
 		scheduler      *string
 		healthCheck    *bool
-		delayLoop      *int
-		connectTimeout *int
-		realservers    []gaapRealserverBind
-		hasChange      []string
+		delayLoop      int
+		connectTimeout int
+		attrChange     []string
 	)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -449,41 +439,39 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 	d.Partial(true)
 
 	if d.HasChange("name") {
-		hasChange = append(hasChange, "name")
+		attrChange = append(attrChange, "name")
 		name = stringToPointer(d.Get("name").(string))
 	}
+
 	if d.HasChange("scheduler") {
-		hasChange = append(hasChange, "scheduler")
+		attrChange = append(attrChange, "scheduler")
 		scheduler = stringToPointer(d.Get("scheduler").(string))
 	}
+
 	if d.HasChange("health_check") {
-		hasChange = append(hasChange, "health_check")
-		healthCheck = common.BoolPtr(d.Get("health_check").(bool))
+		attrChange = append(attrChange, "health_check")
+		healthCheck = boolToPointer(d.Get("health_check").(bool))
 	}
+	if protocol == "UDP" && healthCheck != nil && *healthCheck {
+		return errors.New("UDP listener can't enable health check")
+	}
+
 	if d.HasChange("delay_loop") {
-		hasChange = append(hasChange, "delay_loop")
-		delayLoop = common.IntPtr(d.Get("delay_loop").(int))
+		attrChange = append(attrChange, "delay_loop")
 	}
+	delayLoop = d.Get("delay_loop").(int)
+
 	if d.HasChange("connect_timeout") {
-		hasChange = append(hasChange, "connect_timeout")
-		connectTimeout = common.IntPtr(d.Get("connect_timeout").(int))
+		attrChange = append(attrChange, "connect_timeout")
+	}
+	connectTimeout = d.Get("connect_timeout").(int)
+
+	// only check for TCP listener
+	if protocol == "TCP" && connectTimeout >= delayLoop {
+		return errors.New("connect_timeout must be less than delay_loop")
 	}
 
-	if d.HasChange("realserver_bind_set") {
-		list := d.Get("realserver_bind_set").(*schema.Set).List()
-		realservers = make([]gaapRealserverBind, 0, len(list))
-		for _, v := range list {
-			m := v.(map[string]interface{})
-			realservers = append(realservers, gaapRealserverBind{
-				id:     m["id"].(string),
-				ip:     m["ip"].(string),
-				port:   m["port"].(int),
-				weight: m["weight"].(int),
-			})
-		}
-	}
-
-	if len(hasChange) > 0 {
+	if len(attrChange) > 0 {
 		switch protocol {
 		case "TCP":
 			if err := service.ModifyTCPListenerAttribute(ctx, proxyId, id, name, scheduler, healthCheck, delayLoop, connectTimeout); err != nil {
@@ -496,12 +484,24 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 			}
 		}
 
-		for _, attr := range hasChange {
+		for _, attr := range attrChange {
 			d.SetPartial(attr)
 		}
 	}
 
-	if len(realservers) > 0 {
+	if d.HasChange("realserver_bind_set") {
+		list := d.Get("realserver_bind_set").(*schema.Set).List()
+		realservers := make([]gaapRealserverBind, 0, len(list))
+		for _, v := range list {
+			m := v.(map[string]interface{})
+			realservers = append(realservers, gaapRealserverBind{
+				id:     m["id"].(string),
+				ip:     m["ip"].(string),
+				port:   m["port"].(int),
+				weight: m["weight"].(int),
+			})
+		}
+
 		if err := service.BindLayer4ListenerRealservers(ctx, id, protocol, proxyId, realservers); err != nil {
 			return err
 		}

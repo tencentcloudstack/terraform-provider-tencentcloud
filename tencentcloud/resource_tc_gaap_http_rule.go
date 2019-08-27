@@ -126,7 +126,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Default:      1,
-							ValidateFunc: validateIntegerMin(1),
+							ValidateFunc: validateIntegerInRange(1, 100),
 						},
 					},
 				},
@@ -279,24 +279,26 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 	if d.HasChange("delay_loop") {
 		updateAttr = append(updateAttr, "delay_loop")
 	}
+	delayLoop := d.Get("delay_loop").(int)
+
 	if d.HasChange("connect_timeout") {
 		updateAttr = append(updateAttr, "connect_timeout")
 	}
+	connectTimeout := d.Get("connect_timeout").(int)
+
 	if d.HasChange("health_check_path") {
 		updateAttr = append(updateAttr, "health_check_path")
 	}
+	healthCheckPath := d.Get("health_check_path").(string)
+
 	if d.HasChange("health_check_method") {
 		updateAttr = append(updateAttr, "health_check_method")
 	}
+	healthCheckMethod := d.Get("health_check_method").(string)
+
 	if d.HasChange("health_check_status_codes") {
 		updateAttr = append(updateAttr, "health_check_status_codes")
 	}
-
-	delayLoop := d.Get("delay_loop").(int)
-	connectTimeout := d.Get("connect_timeout").(int)
-	healthCheckPath := d.Get("health_check_path").(string)
-	healthCheckMethod := d.Get("health_check_method").(string)
-
 	var healthCheckStatusCodes []int
 	if raw, ok := d.GetOk("health_check_status_codes"); ok {
 		statusCodeSet := raw.(*schema.Set).List()

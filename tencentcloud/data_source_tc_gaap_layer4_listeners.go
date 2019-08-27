@@ -155,6 +155,12 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 			if ls.CreateTime == nil {
 				return errors.New("listener create time is nil")
 			}
+			if ls.ConnectTimeout == nil {
+				return errors.New("listener connect timeout is nil")
+			}
+			if ls.DelayLoop == nil {
+				return errors.New("listener delay loop is nil")
+			}
 
 			ids = append(ids, *ls.ListenerId)
 
@@ -168,13 +174,8 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 				"scheduler":       *ls.Scheduler,
 				"health_check":    *ls.HealthCheck == 1,
 				"create_time":     *ls.CreateTime,
-			}
-
-			if ls.ConnectTimeout != nil {
-				m["connect_timeout"] = *ls.ConnectTimeout
-			}
-			if ls.DelayLoop != nil {
-				m["delay_loop"] = *ls.DelayLoop
+				"connect_timeout": *ls.ConnectTimeout,
+				"delay_loop":      *ls.DelayLoop,
 			}
 
 			listeners = append(listeners, m)

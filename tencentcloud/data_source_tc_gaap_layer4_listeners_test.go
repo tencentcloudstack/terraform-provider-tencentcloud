@@ -46,9 +46,9 @@ func TestAccDataSourceTencentCloudGaapLayer4Listeners_tcp(t *testing.T) {
 					resource.TestMatchResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.protocol", "TCP"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.name", "ci-test-gaap-4-listener"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.port", "80"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.realserver_type", "IP"),
+					resource.TestMatchResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.name", regexp.MustCompile("ci-test-gaap-4-listener")),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.port"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.realserver_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.scheduler"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.health_check"),
@@ -62,9 +62,9 @@ func TestAccDataSourceTencentCloudGaapLayer4Listeners_tcp(t *testing.T) {
 					resource.TestMatchResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.protocol", "TCP"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.name", "ci-test-gaap-4-listener"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.name"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.port", "80"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.realserver_type", "IP"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.realserver_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.scheduler"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.health_check"),
@@ -102,9 +102,9 @@ func TestAccDataSourceTencentCloudGaapLayer4Listeners_UDP(t *testing.T) {
 					resource.TestMatchResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.protocol", "UDP"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.name", "ci-test-gaap-4-listener"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.port", "80"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.realserver_type", "IP"),
+					resource.TestMatchResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.name", regexp.MustCompile("ci-test-gaap-4-listener")),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.port"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.realserver_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.scheduler"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.name", "listeners.0.health_check", "false"),
@@ -118,9 +118,9 @@ func TestAccDataSourceTencentCloudGaapLayer4Listeners_UDP(t *testing.T) {
 					resource.TestMatchResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.protocol", "UDP"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.name", "ci-test-gaap-4-listener"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.name"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.port", "80"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.realserver_type", "IP"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.realserver_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.scheduler"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.port", "listeners.0.health_check", "false"),
@@ -149,14 +149,14 @@ resource "tencentcloud_gaap_realserver" "foo" {
 }
 
 resource "tencentcloud_gaap_layer4_listener" "foo" {
-  protocol            = "TCP"
-  name                = "ci-test-gaap-4-listener"
-  port                = 80
-  realserver_type     = "IP"
-  proxy_id            = "${tencentcloud_gaap_proxy.foo.id}"
-  health_check        = true
-  delay_loop          = 5
-  connect_timeout     = 2
+  protocol        = "TCP"
+  name            = "ci-test-gaap-4-listener"
+  port            = 80
+  realserver_type = "IP"
+  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  health_check    = true
+  delay_loop      = 5
+  connect_timeout = 2
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"
@@ -173,14 +173,14 @@ resource tencentcloud_gaap_realserver "bar" {
 }
 
 resource tencentcloud_gaap_layer4_listener "bar" {
-  protocol            = "TCP"
-  name                = "ci-test-gaap-4-listener-bar"
-  port                = 443
-  realserver_type     = "IP"
-  proxy_id            = "${tencentcloud_gaap_proxy.foo.id}"
-  health_check        = true
-  delay_loop          = 5
-  connect_timeout     = 2
+  protocol        = "TCP"
+  name            = "ci-test-gaap-4-listener-bar"
+  port            = 443
+  realserver_type = "IP"
+  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  health_check    = true
+  delay_loop      = 5
+  connect_timeout = 2
   realserver_bind_set {
     id     = "${tencentcloud_gaap_realserver.bar.id}"
     ip     = "${tencentcloud_gaap_realserver.bar.ip}"
@@ -224,12 +224,12 @@ resource tencentcloud_gaap_realserver "foo" {
 }
 
 resource tencentcloud_gaap_layer4_listener "foo" {
-  protocol            = "UDP"
-  name                = "ci-test-gaap-4-listener"
-  port                = 80
-  realserver_type     = "IP"
-  proxy_id            = "${tencentcloud_gaap_proxy.foo.id}"
-  health_check        = false
+  protocol        = "UDP"
+  name            = "ci-test-gaap-4-listener"
+  port            = 80
+  realserver_type = "IP"
+  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  health_check    = false
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"

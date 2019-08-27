@@ -2,8 +2,7 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"errors"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -29,6 +28,7 @@ func resourceTencentCloudGaapCertificate() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Default:  "",
 			},
 			"key": {
 				Type:      schema.TypeString,
@@ -70,15 +70,9 @@ func resourceTencentCloudGaapCertificateCreate(d *schema.ResourceData, m interfa
 	certificateType := d.Get("type").(int)
 	content := d.Get("content").(string)
 
-	var (
-		name *string
-		key  *string
-	)
+	name := d.Get("name").(string)
 
-	if rawName, ok := d.GetOk("name"); ok {
-		name = stringToPointer(rawName.(string))
-	}
-
+	var key *string
 	if rawKey, ok := d.GetOk("key"); ok {
 		key = stringToPointer(rawKey.(string))
 	}
@@ -114,44 +108,31 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 		return nil
 	}
 
-	if certificate.CertificateId == nil {
-		err := fmt.Errorf("certificate id is nil")
-		log.Printf("[CRITAL]%s %v", logId, err)
-		return err
-	}
-
 	if certificate.CertificateType == nil {
-		err := fmt.Errorf("certificate type is nil")
-		log.Printf("[CRITAL]%s %v", logId, err)
-		return err
+		return errors.New("certificate type is nil")
 	}
 	d.Set("type", certificate.CertificateType)
 
 	if certificate.CertificateContent == nil {
-		err := fmt.Errorf("certificate content is nil")
-		log.Printf("[CRITAL]%s %v", logId, err)
-		return err
+		return errors.New("certificate content is nil")
 	}
 	d.Set("content", certificate.CertificateContent)
 
-	if _, ok := d.GetOk("name"); ok {
-		if certificate.CertificateAlias == nil {
-			err := fmt.Errorf("certificate name is nil")
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return err
-		}
-		d.Set("name", certificate.CertificateAlias)
+	if certificate.CertificateAlias == nil {
+		return errors.New("certificate name is nil")
 	}
+	d.Set("name", certificate.CertificateAlias)
 
 	if _, ok := d.GetOk("key"); ok {
 		if certificate.CertificateKey == nil {
-			err := fmt.Errorf("certificate key is nil")
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return err
+			return errors.New("certificate key is nil")
 		}
 		d.Set("key", certificate.CertificateKey)
 	}
 
+	if certificate.CreateTime == nil {
+		return errors.New("certificate create time is nil")
+	}
 	d.Set("create_time", certificate.CreateTime)
 
 	if certificate.BeginTime != nil {

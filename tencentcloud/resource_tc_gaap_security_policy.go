@@ -49,13 +49,13 @@ func resourceTencentCloudGaapSecurityPolicyCreate(d *schema.ResourceData, m inte
 		return err
 	}
 
+	d.SetId(id)
+
 	if enable {
 		if err := service.EnableSecurityPolicy(ctx, proxyId, id); err != nil {
 			return err
 		}
 	}
-
-	d.SetId(id)
 
 	return resourceTencentCloudGaapSecurityPolicyRead(d, m)
 }
