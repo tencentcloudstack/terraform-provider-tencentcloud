@@ -51,7 +51,7 @@ resource "tencentcloud_subnet" "app" {
   cidr_block        = "10.0.1.0/24"
 }
 
-// Create 10 CVM instances to host awesome_app
+// Create 2 CVM instances to host awesome_app
 resource "tencentcloud_instance" "my_awesome_app" {
   instance_name              = "awesome_app"
   availability_zone          = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
@@ -64,7 +64,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
   vpc_id                     = "${tencentcloud_vpc.app.id}"
   subnet_id                  = "${tencentcloud_subnet.app.id}"
   internet_max_bandwidth_out = 20
-  count                      = 100
+  count                      = 2
 
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -99,6 +99,7 @@ The following arguments are supported:
 * `password` - (Optional) Password to an instance. In order to take effect new password, the instance will be restarted after modifying the password.
 * `private_ip` - (Optional) The private ip to be assigned to this instance, must be in the provided subnet and available.
 * `project_id` - (Optional) The project CVM belongs to, default to 0.
+* `running_flag` - (Optional) Set instance to running or stop. Default value is true, the instance will shutdown when flag is false.
 * `security_groups` - (Optional) A list of security group ids to associate with.
 * `subnet_id` - (Optional) The id of a VPC subnetwork. If you want to create instances in VPC network, this parameter must be set.
 * `system_disk_id` - (Optional) System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.

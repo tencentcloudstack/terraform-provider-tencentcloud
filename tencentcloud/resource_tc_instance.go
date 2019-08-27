@@ -42,7 +42,7 @@ resource "tencentcloud_subnet" "app" {
   cidr_block        = "10.0.1.0/24"
 }
 
-// Create 10 CVM instances to host awesome_app
+// Create 2 CVM instances to host awesome_app
 resource "tencentcloud_instance" "my_awesome_app" {
   instance_name              = "awesome_app"
   availability_zone          = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
@@ -55,7 +55,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
   vpc_id                     = "${tencentcloud_vpc.app.id}"
   subnet_id                  = "${tencentcloud_subnet.app.id}"
   internet_max_bandwidth_out = 20
-  count                      = 100
+  count                      = 2
 
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -142,9 +142,10 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Description: "The project CVM belongs to, default to 0.",
 			},
 			"running_flag": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Set instance to running or stop. Default value is true, the instance will shutdown when flag is false.",
 			},
 			// payment
 			"instance_charge_type": {
@@ -346,7 +347,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 }
 
 func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_instance.create")()
+	defer logElapsed("resource.tencentcloud_instance.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	cvmService := CvmService{
@@ -576,7 +577,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_instance.read")()
+	defer logElapsed("resource.tencentcloud_instance.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -652,7 +653,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 }
 
 func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}) (err error) {
-	defer logElapsed("resource.tencentclouvm_instance.update")()
+	defer logElapsed("resource.tencentcloud_instance.update")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -825,7 +826,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cvm_instance_delete")()
+	defer logElapsed("resource.tencentcloud_instance.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
