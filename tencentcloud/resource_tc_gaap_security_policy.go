@@ -12,6 +12,9 @@ func resourceTencentCloudGaapSecurityPolicy() *schema.Resource {
 		Read:   resourceTencentCloudGaapSecurityPolicyRead,
 		Update: resourceTencentCloudGaapSecurityPolicyUpdate,
 		Delete: resourceTencentCloudGaapSecurityPolicyDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"proxy_id": {
 				Type:     schema.TypeString,

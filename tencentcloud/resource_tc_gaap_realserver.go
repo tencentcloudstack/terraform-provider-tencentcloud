@@ -15,6 +15,9 @@ func resourceTencentCloudGaapRealserver() *schema.Resource {
 		Read:   resourceTencentCloudGaapRealserverRead,
 		Update: resourceTencentCloudGaapRealserverUpdate,
 		Delete: resourceTencentCloudGaapRealserverDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"ip": {
 				Type:          schema.TypeString,

@@ -29,6 +29,11 @@ func TestAccTencentCloudGaapRealserver_basic(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "tags"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_gaap_realserver.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

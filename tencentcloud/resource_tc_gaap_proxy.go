@@ -17,6 +17,9 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 		Read:   resourceTencentCloudGaapProxyRead,
 		Update: resourceTencentCloudGaapProxyUpdate,
 		Delete: resourceTencentCloudGaapProxyDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:         schema.TypeString,
@@ -68,11 +71,11 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"access_domain": {
+			"domain": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"access_ip": {
+			"ip": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -209,12 +212,12 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 	if proxy.Domain == nil {
 		return errors.New("proxy access domain is nil")
 	}
-	d.Set("access_domain", proxy.Domain)
+	d.Set("domain", proxy.Domain)
 
 	if proxy.IP == nil {
 		return errors.New("proxy access IP is nil")
 	}
-	d.Set("access_ip", proxy.IP)
+	d.Set("ip", proxy.IP)
 
 	if proxy.Scalarable == nil {
 		return errors.New("proxy scalable is nil")

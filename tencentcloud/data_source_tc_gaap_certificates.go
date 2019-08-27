@@ -20,8 +20,9 @@ func dataSourceTencentCloudGaapCertificates() *schema.Resource {
 				Optional: true,
 			},
 			"type": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateIntegerInRange(0, 4),
 			},
 
 			// computed

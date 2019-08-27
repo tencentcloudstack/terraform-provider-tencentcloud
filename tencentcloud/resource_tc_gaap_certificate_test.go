@@ -32,6 +32,11 @@ func TestAccTencentCloudGaapCertificate_basic(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_certificate.foo", "subject_cn"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_gaap_certificate.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

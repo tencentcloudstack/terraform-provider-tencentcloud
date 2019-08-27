@@ -26,6 +26,11 @@ func TestAccTencentCloudGaapSecurityPolicy_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_policy.foo", "enable", "true"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_gaap_security_policy.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

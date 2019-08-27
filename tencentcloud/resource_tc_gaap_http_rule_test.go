@@ -186,6 +186,11 @@ func TestAccTencentCloudGaapHttpRule_domainRealserver(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "2"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_gaap_http_rule.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

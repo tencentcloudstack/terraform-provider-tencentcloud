@@ -33,12 +33,17 @@ func TestAccTencentCloudGaapProxy_basic(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "access_domain"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "access_ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "scalable"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_proxy.foo", "support_protocols.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "forward_ip"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_gaap_proxy.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -66,8 +71,8 @@ func TestAccTencentCloudGaapProxy_updateName(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "access_domain"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "access_ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "scalable"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_proxy.foo", "support_protocols.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "forward_ip"),
@@ -106,8 +111,8 @@ func TestAccTencentCloudGaapProxy_updateBandwidth(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "access_domain"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "access_ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "scalable"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_proxy.foo", "support_protocols.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "forward_ip"),
@@ -146,8 +151,8 @@ func TestAccTencentCloudGaapProxy_updateConcurrent(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "access_domain"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "access_ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "scalable"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_proxy.foo", "support_protocols.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "forward_ip"),
@@ -185,8 +190,8 @@ func TestAccTencentCloudGaapProxy_enable(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "access_domain"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "access_ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "scalable"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_proxy.foo", "support_protocols.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "forward_ip"),
@@ -202,16 +207,6 @@ func TestAccTencentCloudGaapProxy_enable(t *testing.T) {
 		},
 	})
 }
-
-const testAccGaapProxyBasic = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-`
 
 func testAccCheckGaapProxyDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
@@ -270,6 +265,16 @@ func testAccCheckGaapProxyExists(n string, id *string) resource.TestCheckFunc {
 		return nil
 	}
 }
+
+const testAccGaapProxyBasic = `
+resource tencentcloud_gaap_proxy "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+`
 
 const testAccGaapProxyNewName = `
 resource tencentcloud_gaap_proxy "foo" {

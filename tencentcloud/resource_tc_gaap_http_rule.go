@@ -17,6 +17,9 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 		Read:   resourceTencentCloudGaapHttpRuleRead,
 		Update: resourceTencentCloudGaapHttpRuleUpdate,
 		Delete: resourceTencentCloudGaapHttpRuleDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"listener_id": {
 				Type:     schema.TypeString,
@@ -156,8 +159,15 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 	if raw, ok := d.GetOk("health_check_status_codes"); ok {
 		statusCodeSet := raw.(*schema.Set).List()
 		rule.healthCheckStatusCodes = make([]int, 0, len(statusCodeSet))
-		for _, code := range statusCodeSet {
-			rule.healthCheckStatusCodes = append(rule.healthCheckStatusCodes, code.(int))
+		for _, c := range statusCodeSet {
+			code := c.(int)
+			switch code {
+			case 100, 200, 300, 400, 500:
+				rule.healthCheckStatusCodes = append(rule.healthCheckStatusCodes, code)
+
+			default:
+				return fmt.Errorf("invalid health check status code %d", code)
+			}
 		}
 	} else {
 		rule.healthCheckStatusCodes = []int{100, 200, 300, 400, 500}

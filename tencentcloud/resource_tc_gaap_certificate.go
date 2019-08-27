@@ -13,6 +13,9 @@ func resourceTencentCloudGaapCertificate() *schema.Resource {
 		Read:   resourceTencentCloudGaapCertificateRead,
 		Update: resourceTencentCloudGaapCertificateUpdate,
 		Delete: resourceTencentCloudGaapCertificateDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"type": {
 				Type:         schema.TypeInt,

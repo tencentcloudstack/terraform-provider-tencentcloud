@@ -56,7 +56,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 					if value == "ALL" {
 						return
 					}
-					if !regexp.MustCompile("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}-\\d{1,5}$").MatchString(value) {
+					if !regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`).MatchString(value) {
 						errors = append(errors, fmt.Errorf("%s example: 53、80,443、80-90, Not configured to represent all ports", k))
 					}
 					return
