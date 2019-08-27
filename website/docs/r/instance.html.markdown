@@ -121,7 +121,12 @@ The following arguments are supported:
 
 * `instance_charge_type_prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance, **NOTE**: it only works when `instance_charge_type` is set to `PREPAID`.
 
-* `instance_charge_type_prepaid_renew_flag` - (Optional) When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy, **NOTE**: it only works when `instance_charge_type` is set to `PREPAID`.
+* `instance_charge_type_prepaid_renew_flag` - (Optional) Auto renewal flag. Value range:
+NOTIFY_AND_AUTO_RENEW: notify expiry and renew automatically
+NOTIFY_AND_MANUAL_RENEW: notify expiry but not renew automatically
+DISABLE_NOTIFY_AND_MANUAL_RENEW: neither notify expiry nor renew automatically
+
+If this parameter is specified as NOTIFY_AND_AUTO_RENEW, the instance will be automatically renewed on a monthly basis when the account balance is sufficient. **NOTE**: it only works when `instance_charge_type` is set to `PREPAID`.
 
 * `internet_charge_type` - (Optional) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. Default is `TRAFFIC_POSTPAID_BY_HOUR`.
 
@@ -156,7 +161,7 @@ The following arguments are supported:
 
 * `user_data_raw` - (Optional) The user data to be specified into this instance, plain text. Conflicts with `user_data`. Limited in 16 KB after encrypted in base64 format.
 
-* `tags` - (Optional) A mapping of tags to assign to the resource.
+* `tags` - (Optional) A mapping of tags to assign to the resource.**Note** A tag key starting with "qcs:" or "project" is a system reserved tag key and cannot be used.
 
 ## Attributes Reference
 
