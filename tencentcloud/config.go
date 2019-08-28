@@ -11,9 +11,10 @@ import (
 )
 
 type Config struct {
-	SecretId  string
-	SecretKey string
-	Region    string
+	SecretId      string
+	SecretKey     string
+	SecurityToken string
+	Region        string
 }
 
 type TencentCloudClient struct {
@@ -68,7 +69,7 @@ func (c *Config) Client() (interface{}, error) {
 	}
 	tcClient.lbConn = lbConn
 
-	tcClient.apiV3Conn = connectivity.NewTencentCloudClient(c.SecretId, c.SecretKey, c.Region)
+	tcClient.apiV3Conn = connectivity.NewTencentCloudClient(c.SecretId, c.SecretKey, c.SecurityToken, c.Region)
 
 	return &tcClient, nil
 }

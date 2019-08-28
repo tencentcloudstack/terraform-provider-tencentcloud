@@ -21,13 +21,13 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
-// client for all TencentCloud service
+// TencentCloudClient is client for all TencentCloud service
 type TencentCloudClient struct {
-	Region      string
-	SecretId    string
-	SecretKey   string
-	mysqlConn   *cdb.Client
+	Region     string
+	Credential *common.Credential
+
 	cosConn     *s3.S3
+	mysqlConn   *cdb.Client
 	redisConn   *redis.Client
 	asConn      *as.Client
 	vpcConn     *vpc.Client
@@ -38,50 +38,33 @@ type TencentCloudClient struct {
 	tkeConn     *tke.Client
 }
 
-func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
-
-	var tencentCloudClient TencentCloudClient
-
-	tencentCloudClient.SecretId,
-		tencentCloudClient.SecretKey,
-		tencentCloudClient.Region =
-
-		secretId,
-		secretKey,
-		region
-
-	return &tencentCloudClient
+// NewTencentCloudClient returns a new TencentCloudClient
+func NewTencentCloudClient(secretId, secretKey, securityToken, region string) *TencentCloudClient {
+	return &TencentCloudClient{
+		Region: region,
+		Credential: common.NewTokenCredential(
+			secretId,
+			secretKey,
+			securityToken,
+		),
+	}
 }
 
-// get mysql(cdb) client for service
-func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
-	if me.mysqlConn != nil {
-		return me.mysqlConn
-	}
-
-	credential := common.NewCredential(
-		me.SecretId,
-		me.SecretKey,
-	)
-
+// newTencentCloudClientProfile returns a new ClientProfile
+func newTencentCloudClientProfile(timeout int) *profile.ClientProfile {
 	cpf := profile.NewClientProfile()
+
 	// all request use method POST
 	cpf.HttpProfile.ReqMethod = "POST"
 	// request timeout
-	cpf.HttpProfile.ReqTimeout = 300
-	// cpf.SignMethod = "HmacSHA1"
+	cpf.HttpProfile.ReqTimeout = timeout
+	// default language
 	cpf.Language = "en-US"
 
-	var round LogRoundTripper
-
-	mysqlClient, _ := cdb.NewClient(credential, me.Region, cpf)
-	me.mysqlConn = mysqlClient
-	me.mysqlConn.WithHttpTransport(&round)
-
-	return me.mysqlConn
+	return cpf
 }
 
-// get cos client for service
+// UseCosClient returns cos client for service
 func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 	if me.cosConn != nil {
 		return me.cosConn
@@ -96,197 +79,130 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 		}
 		return endpoints.DefaultResolver().EndpointFor(service, region, optFns...)
 	}
-	creds := credentials.NewStaticCredentials(me.SecretId, me.SecretKey, "")
 
+	creds := credentials.NewStaticCredentials(me.Credential.SecretId, me.Credential.SecretKey, me.Credential.Token)
 	sess := session.Must(session.NewSession(&aws.Config{
 		Credentials:      creds,
 		Region:           aws.String(me.Region),
 		EndpointResolver: endpoints.ResolverFunc(resolver),
 	}))
+
 	return s3.New(sess)
 }
 
-// get redis client for service
+// UseMysqlClient returns mysql(cdb) client for service
+func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
+	if me.mysqlConn != nil {
+		return me.mysqlConn
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.mysqlConn, _ = cdb.NewClient(me.Credential, me.Region, cpf)
+	me.mysqlConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.mysqlConn
+}
+
+// UseRedisClient returns redis client for service
 func (me *TencentCloudClient) UseRedisClient() *redis.Client {
 	if me.redisConn != nil {
 		return me.redisConn
 	}
-	credential := common.NewCredential(
-		me.SecretId,
-		me.SecretKey,
-	)
 
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.ReqMethod = "POST"
-	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language = "en-US"
-
-	redisConn, _ := redis.NewClient(credential, me.Region, cpf)
-	me.redisConn = redisConn
+	cpf := newTencentCloudClientProfile(300)
+	me.redisConn, _ = redis.NewClient(me.Credential, me.Region, cpf)
+	me.redisConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.redisConn
 }
 
+// UseAsClient returns as client for service
 func (me *TencentCloudClient) UseAsClient() *as.Client {
 	if me.asConn != nil {
 		return me.asConn
 	}
-	credential := common.NewCredential(
-		me.SecretId,
-		me.SecretKey,
-	)
 
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.ReqMethod = "POST"
-	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language = "en-US"
-
-	asConn, _ := as.NewClient(credential, me.Region, cpf)
-	me.asConn = asConn
+	cpf := newTencentCloudClientProfile(300)
+	me.asConn, _ = as.NewClient(me.Credential, me.Region, cpf)
+	me.asConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.asConn
 }
 
-// get vpc client for service
+// UseVpcClient returns vpc client for service
 func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	if me.vpcConn != nil {
 		return me.vpcConn
 	}
-	credential := common.NewCredential(
-		me.SecretId,
-		me.SecretKey,
-	)
 
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.ReqMethod = "POST"
-	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language = "en-US"
-
-	vpcConn, _ := vpc.NewClient(credential, me.Region, cpf)
-
-	var round LogRoundTripper
-
-	vpcConn.WithHttpTransport(&round)
-
-	me.vpcConn = vpcConn
+	cpf := newTencentCloudClientProfile(300)
+	me.vpcConn, _ = vpc.NewClient(me.Credential, me.Region, cpf)
+	me.vpcConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.vpcConn
 }
 
+// UseCbsClient returns cbs client for service
 func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
 	if me.cbsConn != nil {
 		return me.cbsConn
 	}
-	credential := common.NewCredential(
-		me.SecretId,
-		me.SecretKey,
-	)
 
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.ReqMethod = "POST"
-	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language = "en-US"
-
-	cbsConn, _ := cbs.NewClient(credential, me.Region, cpf)
-	me.cbsConn = cbsConn
+	cpf := newTencentCloudClientProfile(300)
+	me.cbsConn, _ = cbs.NewClient(me.Credential, me.Region, cpf)
+	me.cbsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cbsConn
 }
 
+// UseDcClient returns dc client for service
 func (me *TencentCloudClient) UseDcClient() *dc.Client {
 	if me.dcConn != nil {
 		return me.dcConn
 	}
 
-	credential := common.NewCredential(
-		me.SecretId,
-		me.SecretKey,
-	)
-
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.ReqMethod = "POST"
-	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language = "en-US"
-
-	dcConn, _ := dc.NewClient(credential, me.Region, cpf)
-
-	var round LogRoundTripper
-
-	dcConn.WithHttpTransport(&round)
-
-	me.dcConn = dcConn
+	cpf := newTencentCloudClientProfile(300)
+	me.dcConn, _ = dc.NewClient(me.Credential, me.Region, cpf)
+	me.dcConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dcConn
-
 }
 
+// UseMongodbClient returns mongodb client for service
 func (me *TencentCloudClient) UseMongodbClient() *mongodb.Client {
 	if me.mongodbConn != nil {
 		return me.mongodbConn
 	}
 
-	credential := common.NewCredential(
-		me.SecretId,
-		me.SecretKey,
-	)
-
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.ReqMethod = "POST"
-	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language = "en-US"
-
-	mongodbConn, _ := mongodb.NewClient(credential, me.Region, cpf)
-	var round LogRoundTripper
-	mongodbConn.WithHttpTransport(&round)
-	me.mongodbConn = mongodbConn
+	cpf := newTencentCloudClientProfile(300)
+	me.mongodbConn, _ = mongodb.NewClient(me.Credential, me.Region, cpf)
+	me.mongodbConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.mongodbConn
 }
 
+// UseClbClient returns clb client for service
 func (me *TencentCloudClient) UseClbClient() *clb.Client {
 	if me.clbConn != nil {
 		return me.clbConn
 	}
 
-	credential := common.NewCredential(
-		me.SecretId,
-		me.SecretKey,
-	)
-
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.ReqMethod = "POST"
-	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language = "en-US"
-
-	clbConn, _ := clb.NewClient(credential, me.Region, cpf)
-	var round LogRoundTripper
-
-	clbConn.WithHttpTransport(&round)
-	me.clbConn = clbConn
+	cpf := newTencentCloudClientProfile(300)
+	me.clbConn, _ = clb.NewClient(me.Credential, me.Region, cpf)
+	me.clbConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.clbConn
 }
 
+// UseTkeClient returns tke client for service
 func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 	if me.tkeConn != nil {
 		return me.tkeConn
 	}
 
-	credential := common.NewCredential(
-		me.SecretId,
-		me.SecretKey,
-	)
-
-	cpf := profile.NewClientProfile()
-	cpf.HttpProfile.ReqMethod = "POST"
-	cpf.HttpProfile.ReqTimeout = 300
-	cpf.Language = "en-US"
-
-	tkeConn, _ := tke.NewClient(credential, me.Region, cpf)
-	var round LogRoundTripper
-
-	tkeConn.WithHttpTransport(&round)
-	me.tkeConn = tkeConn
+	cpf := newTencentCloudClientProfile(300)
+	me.tkeConn, _ = tke.NewClient(me.Credential, me.Region, cpf)
+	me.tkeConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tkeConn
 }
