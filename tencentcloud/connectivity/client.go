@@ -14,9 +14,11 @@ import (
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
@@ -32,8 +34,10 @@ type TencentCloudClient struct {
 	asConn      *as.Client
 	vpcConn     *vpc.Client
 	cbsConn     *cbs.Client
+	cvmConn     *cvm.Client
 	clbConn     *clb.Client
 	dcConn      *dc.Client
+	tagConn     *tag.Client
 	mongodbConn *mongodb.Client
 	tkeConn     *tke.Client
 }
@@ -192,6 +196,32 @@ func (me *TencentCloudClient) UseClbClient() *clb.Client {
 	me.clbConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.clbConn
+}
+
+// UseCvmClient returns cvm client for service
+func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
+	if me.cvmConn != nil {
+		return me.cvmConn
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.cvmConn, _ = cvm.NewClient(me.Credential, me.Region, cpf)
+	me.cvmConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cvmConn
+}
+
+// UseTagClient returns tag client for service
+func (me *TencentCloudClient) UseTagClient() *tag.Client {
+	if me.tagConn != nil {
+		return me.tagConn
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.tagConn, _ = tag.NewClient(me.Credential, me.Region, cpf)
+	me.tagConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tagConn
 }
 
 // UseTkeClient returns tke client for service
