@@ -2,7 +2,9 @@
 
 BUG FIXIES:
 
-* resource/tencentcloud_instance: fixed cvm data disks missing computed.
+* Resource: `tencentcloud_instance`: fixed cvm data disks missing computed.
+* Resource: `tencentcloud_mysql_backup_policy`: `backup_model` remove logical backup support. 
+* Resource: `tencentcloud_mysql_instance`: `tags` adapt to the new official api.
 
 ## 1.16.1 (August 27, 2019)
 

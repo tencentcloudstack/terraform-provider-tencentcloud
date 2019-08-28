@@ -46,9 +46,9 @@ func resourceTencentCloudMysqlBackupPolicy() *schema.Resource {
 			"backup_model": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      MYSQL_ALLOW_BACKUP_MODEL[0],
+				Default:      MYSQL_ALLOW_BACKUP_MODEL[1],
 				ValidateFunc: validateAllowedStringValue(MYSQL_ALLOW_BACKUP_MODEL),
-				Description:  "Backup method. Supported values include: physical - physical backup, and logical - logical backup.",
+				Description:  "Backup method. Supported values include: 'physical' - physical backup",
 			},
 			"backup_time": {
 				Type:         schema.TypeString,
@@ -133,6 +133,9 @@ func resourceTencentCloudMysqlBackupPolicyUpdate(d *schema.ResourceData, meta in
 	)
 
 	if d.HasChange("retention_period") || d.HasChange("backup_model") || d.HasChange("backup_time") {
+		if backupModel != "physical" {
+			return fmt.Errorf("`backup_model` only support 'physical'")
+		}
 		isUpdate = true
 	}
 
@@ -156,7 +159,7 @@ func resourceTencentCloudMysqlBackupPolicyDelete(d *schema.ResourceData, meta in
 
 	var (
 		retentionPeriod int64 = 7
-		backupModel           = MYSQL_ALLOW_BACKUP_MODEL[0]
+		backupModel           = MYSQL_ALLOW_BACKUP_MODEL[1]
 		backupTime            = MYSQL_ALLOW_BACKUP_TIME[0]
 	)
 	err := mysqlService.ModifyBackupConfigByMysqlId(ctx, d.Id(), retentionPeriod, backupModel, backupTime)

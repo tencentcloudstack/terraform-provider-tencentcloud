@@ -24,7 +24,6 @@ func TestAccTencentCloudMysqlBackupPolicy(t *testing.T) {
 					testAccTencentCloudMysqlBackupPolicyExists("tencentcloud_mysql_backup_policy.mysql_backup_policy"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "mysql_id"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "retention_period", "56"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "backup_model", "physical"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "backup_time", "10:00-14:00"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "binlog_period"),
 				),
@@ -35,7 +34,6 @@ func TestAccTencentCloudMysqlBackupPolicy(t *testing.T) {
 					testAccTencentCloudMysqlBackupPolicyExists("tencentcloud_mysql_backup_policy.mysql_backup_policy"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "mysql_id"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "retention_period", "80"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "backup_model", "logical"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "backup_time", "06:00-10:00"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "binlog_period"),
 				),
@@ -75,6 +73,15 @@ func testAccTencentCloudMysqlBackupPolicyDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_mysql_backup_policy" {
 			continue
 		}
+
+		instance, err := mysqlService.DescribeDBInstanceById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if instance == nil {
+			return nil
+		}
+
 		desResponse, err := mysqlService.DescribeBackupConfigByMysqlId(ctx, rs.Primary.ID)
 
 		if err != nil {
@@ -87,7 +94,7 @@ func testAccTencentCloudMysqlBackupPolicyDestroy(s *terraform.State) error {
 		if *desResponse.Response.BackupExpireDays != 7 {
 			return fmt.Errorf("mysql  backup  policy  BackupExpireDays  is not default")
 		}
-		if *desResponse.Response.BackupMethod != "logical" {
+		if *desResponse.Response.BackupMethod != "physical" {
 			return fmt.Errorf("mysql  backup  policy  BackupMethod  is not default")
 		}
 		if *desResponse.Response.StartTimeMax != 6 || *desResponse.Response.StartTimeMin != 2 {
@@ -104,7 +111,6 @@ func testAccMysqlBackupPolicy(commonTestCase string) string {
 resource "tencentcloud_mysql_backup_policy" "mysql_backup_policy" {
   mysql_id         = "${tencentcloud_mysql_instance.default.id}"
   retention_period = 56
-  backup_model     = "physical"
   backup_time      = "10:00-14:00"
 }`, commonTestCase)
 }
@@ -115,7 +121,6 @@ func testAccMysqlBackupPolicyUpdate(commonTestCase string) string {
 resource "tencentcloud_mysql_backup_policy" "mysql_backup_policy" {
   mysql_id         = "${tencentcloud_mysql_instance.default.id}"
   retention_period = 80
-  backup_model     = "logical"
   backup_time      = "06:00-10:00"
 }`, commonTestCase)
 }
