@@ -7,6 +7,8 @@ import (
 )
 
 func TestAccTencentCloudClbServerAttachmentsDataSource(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -74,7 +76,7 @@ resource "tencentcloud_instance" "foo" {
 
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-attachments"
   vpc_id       = "${tencentcloud_vpc.foo.id}"
 }
 

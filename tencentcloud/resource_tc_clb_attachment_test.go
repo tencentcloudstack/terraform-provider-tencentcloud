@@ -12,6 +12,8 @@ import (
 )
 
 func TestAccTencentCloudClbServerAttachment_tcp(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -41,6 +43,8 @@ func TestAccTencentCloudClbServerAttachment_tcp(t *testing.T) {
 }
 
 func TestAccTencentCloudClbServerAttachment_http(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -170,7 +174,7 @@ resource "tencentcloud_instance" "foo" {
 
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-attachment-tcp"
   vpc_id       = "${tencentcloud_vpc.foo.id}"
 }
 
@@ -248,7 +252,7 @@ resource "tencentcloud_instance" "foo" {
 
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-attachment-tcp"
   vpc_id       = "${tencentcloud_vpc.foo.id}"
 }
 
@@ -326,7 +330,7 @@ resource "tencentcloud_instance" "foo" {
 
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-attachment-http"
   vpc_id       = "${tencentcloud_vpc.foo.id}"
 }
 

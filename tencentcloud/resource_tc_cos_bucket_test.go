@@ -62,6 +62,8 @@ func testSweepCosBuckets(region string) error {
 }
 
 func TestAccTencentCloudCosBucket_basic(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -91,6 +93,8 @@ func TestAccTencentCloudCosBucket_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudCosBucket_cors(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -138,6 +142,8 @@ func TestAccTencentCloudCosBucket_cors(t *testing.T) {
 }
 
 func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -185,6 +191,8 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 }
 
 func TestAccTencentCloudCosBucket_website(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

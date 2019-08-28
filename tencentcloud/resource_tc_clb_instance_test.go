@@ -10,6 +10,8 @@ import (
 )
 
 func TestAccTencentCloudClbInstance_basic(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -33,6 +35,8 @@ func TestAccTencentCloudClbInstance_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudClbInstance_open(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -70,6 +74,8 @@ func TestAccTencentCloudClbInstance_open(t *testing.T) {
 }
 
 func TestAccTencentCloudClbInstance_internal(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

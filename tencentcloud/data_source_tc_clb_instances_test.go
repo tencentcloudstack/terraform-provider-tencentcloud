@@ -7,6 +7,8 @@ import (
 )
 
 func TestAccTencentCloudClbInstancesDataSource_internal(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -18,7 +20,7 @@ func TestAccTencentCloudClbInstancesDataSource_internal(t *testing.T) {
 					testAccCheckClbInstanceExists("tencentcloud_clb_instance.clb"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.clb_id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.clb_name", "tf-clb-internal"),
+					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.clb_name", "tf-clb-data-internal"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.network_type", "INTERNAL"),
 					resource.TestCheckResourceAttr("data.tencentcloud_clb_instances.clbs", "clb_list.0.clb_vips.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_clb_instances.clbs", "clb_list.0.vpc_id"),
@@ -35,6 +37,8 @@ func TestAccTencentCloudClbInstancesDataSource_internal(t *testing.T) {
 }
 
 func TestAccTencentCloudClbInstancesDataSource_open(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -84,7 +88,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_clb_instance" "clb" {
   network_type = "INTERNAL"
-  clb_name     = "tf-clb-internal"
+  clb_name     = "tf-clb-data-internal"
   vpc_id       = "${tencentcloud_vpc.foo.id}"
   subnet_id    = "${tencentcloud_subnet.subnet.id}"
   project_id   = 0
@@ -115,7 +119,7 @@ resource "tencentcloud_vpc" "foo" {
 
 resource "tencentcloud_clb_instance" "clb" {
   network_type              = "OPEN"
-  clb_name                  = "tf-clb-open"
+  clb_name                  = "tf-clb-data-open"
   project_id                = 0
   vpc_id                    = "${tencentcloud_vpc.foo.id}"
   target_region_info_region = "ap-guangzhou"

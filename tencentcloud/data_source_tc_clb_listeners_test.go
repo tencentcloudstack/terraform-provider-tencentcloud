@@ -7,6 +7,8 @@ import (
 )
 
 func TestAccTencentCloudClbListenersDataSource(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -33,7 +35,7 @@ func TestAccTencentCloudClbListenersDataSource(t *testing.T) {
 const testAccClbListenersDataSource = `
 resource "tencentcloud_clb_instance" "clb" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-listeners"
 }
 
 resource "tencentcloud_clb_listener" "listener" {
