@@ -1,4 +1,9 @@
 ## 1.16.2 (Unreleased)
+
+BUG FIXIES:
+
+* resource/tencentcloud_instance: fixed cvm data disks missing computed.
+
 ## 1.16.1 (August 27, 2019)
 
 ENHANCEMENTS:

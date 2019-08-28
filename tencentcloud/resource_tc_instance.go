@@ -245,6 +245,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    10,
 				Optional:    true,
+				Computed:    true,
 				Description: "Settings for data disk.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
