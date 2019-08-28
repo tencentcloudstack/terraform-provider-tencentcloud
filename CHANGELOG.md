@@ -1,4 +1,4 @@
-## 1.16.2 (Unreleased)
+## 1.16.2 (August 28, 2019)
 
 BUG FIXIES:
 
