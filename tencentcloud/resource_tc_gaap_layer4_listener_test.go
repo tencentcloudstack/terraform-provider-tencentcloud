@@ -29,7 +29,7 @@ func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "IP"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "health_check", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "delay_loop", "5"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "interval", "5"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "connect_timeout", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
@@ -59,7 +59,7 @@ func TestAccTencentCloudGaapLayer4Listener_TcpDomain(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "DOMAIN"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "health_check", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "delay_loop", "5"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "interval", "5"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "connect_timeout", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
@@ -90,7 +90,7 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "IP"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "health_check", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "delay_loop", "5"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "interval", "5"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "connect_timeout", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
@@ -103,7 +103,7 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-listener-new"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "scheduler", "wrr"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "delay_loop", "11"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "interval", "11"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "connect_timeout", "10"),
 				),
 			},
@@ -138,7 +138,7 @@ func TestAccTencentCloudGaapLayer4Listener_updateRealserverSet(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "IP"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "health_check", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "delay_loop", "5"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "interval", "5"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "connect_timeout", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
@@ -448,7 +448,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   realserver_type = "IP"
   proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
   health_check    = true
-  delay_loop      = 11
+  interval      = 11
   connect_timeout = 10
 
   realserver_bind_set {

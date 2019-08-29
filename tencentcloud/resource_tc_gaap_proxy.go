@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -59,7 +60,6 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 			"tags": {
 				Type:     schema.TypeMap,
 				Optional: true,
-				ForceNew: true,
 			},
 
 			// computed
@@ -248,13 +248,13 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 
 	id := d.Id()
 
-	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
+	gaapService := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	d.Partial(true)
 
 	if d.HasChange("name") {
 		name := d.Get("name").(string)
-		if err := service.ModifyProxyName(ctx, id, name); err != nil {
+		if err := gaapService.ModifyProxyName(ctx, id, name); err != nil {
 			return err
 		}
 		d.SetPartial("name")
@@ -262,7 +262,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 
 	if d.HasChange("project_id") {
 		projectId := d.Get("project_id").(int)
-		if err := service.ModifyProxyProjectId(ctx, id, projectId); err != nil {
+		if err := gaapService.ModifyProxyProjectId(ctx, id, projectId); err != nil {
 			return err
 		}
 		d.SetPartial("project_id")
@@ -279,7 +279,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 		if d.HasChange("concurrent") {
 			concurrent = common.IntPtr(d.Get("concurrent").(int))
 		}
-		if err := service.ModifyProxyConfiguration(ctx, id, bandwidth, concurrent); err != nil {
+		if err := gaapService.ModifyProxyConfiguration(ctx, id, bandwidth, concurrent); err != nil {
 			return err
 		}
 		if d.HasChange("bandwidth") {
@@ -293,15 +293,31 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 	if d.HasChange("enable") {
 		enable := d.Get("enable").(bool)
 		if enable {
-			if err := service.EnableProxy(ctx, id); err != nil {
+			if err := gaapService.EnableProxy(ctx, id); err != nil {
 				return err
 			}
 		} else {
-			if err := service.DisableProxy(ctx, id); err != nil {
+			if err := gaapService.DisableProxy(ctx, id); err != nil {
 				return err
 			}
 		}
 		d.SetPartial("enable")
+	}
+
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
+
+		region := m.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::gaap:%s:uin/:proxy/%s", region, id)
+
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

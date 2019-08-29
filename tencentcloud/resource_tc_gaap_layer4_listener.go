@@ -58,7 +58,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
-			"delay_loop": {
+			"interval": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      5,
@@ -142,12 +142,12 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 		return errors.New("UDP listener can't use health check")
 	}
 
-	delayLoop := d.Get("delay_loop").(int)
+	interval := d.Get("interval").(int)
 	connectTimeout := d.Get("connect_timeout").(int)
 
 	// only check for TCP listener
-	if protocol == "TCP" && connectTimeout >= delayLoop {
-		return errors.New("connect_timeout must be less than delay_loop")
+	if protocol == "TCP" && connectTimeout >= interval {
+		return errors.New("connect_timeout must be less than interval")
 	}
 
 	var realservers []gaapRealserverBind
@@ -179,7 +179,7 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 
 	switch protocol {
 	case "TCP":
-		id, err = service.CreateTCPListener(ctx, name, scheduler, realserverType, proxyId, port, delayLoop, connectTimeout, healthCheck)
+		id, err = service.CreateTCPListener(ctx, name, scheduler, realserverType, proxyId, port, interval, connectTimeout, healthCheck)
 		if err != nil {
 			return err
 		}
@@ -217,7 +217,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		scheduler      string
 		realServerType string
 		healthCheck    *bool
-		delayLoop      *int
+		interval       *int
 		connectTimeout *int
 		status         int
 		createTime     int
@@ -274,9 +274,9 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		healthCheck = boolToPointer(*listener.HealthCheck == 1)
 
 		if listener.DelayLoop == nil {
-			return errors.New("listener delay loop is nil")
+			return errors.New("listener interval is nil")
 		}
-		delayLoop = common.IntPtr(int(*listener.DelayLoop))
+		interval = common.IntPtr(int(*listener.DelayLoop))
 
 		if listener.ConnectTimeout == nil {
 			return errors.New("listener connect timeout is nil")
@@ -402,8 +402,8 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 	if healthCheck != nil {
 		d.Set("health_check", healthCheck)
 	}
-	if delayLoop != nil {
-		d.Set("delay_loop", delayLoop)
+	if interval != nil {
+		d.Set("interval", interval)
 	}
 	if connectTimeout != nil {
 		d.Set("connect_timeout", connectTimeout)
@@ -429,7 +429,7 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 		name           *string
 		scheduler      *string
 		healthCheck    *bool
-		delayLoop      int
+		interval       int
 		connectTimeout int
 		attrChange     []string
 	)
@@ -456,10 +456,10 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 		return errors.New("UDP listener can't enable health check")
 	}
 
-	if d.HasChange("delay_loop") {
-		attrChange = append(attrChange, "delay_loop")
+	if d.HasChange("interval") {
+		attrChange = append(attrChange, "interval")
 	}
-	delayLoop = d.Get("delay_loop").(int)
+	interval = d.Get("interval").(int)
 
 	if d.HasChange("connect_timeout") {
 		attrChange = append(attrChange, "connect_timeout")
@@ -467,14 +467,14 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 	connectTimeout = d.Get("connect_timeout").(int)
 
 	// only check for TCP listener
-	if protocol == "TCP" && connectTimeout >= delayLoop {
-		return errors.New("connect_timeout must be less than delay_loop")
+	if protocol == "TCP" && connectTimeout >= interval {
+		return errors.New("connect_timeout must be less than interval")
 	}
 
 	if len(attrChange) > 0 {
 		switch protocol {
 		case "TCP":
-			if err := service.ModifyTCPListenerAttribute(ctx, proxyId, id, name, scheduler, healthCheck, delayLoop, connectTimeout); err != nil {
+			if err := service.ModifyTCPListenerAttribute(ctx, proxyId, id, name, scheduler, healthCheck, interval, connectTimeout); err != nil {
 				return err
 			}
 

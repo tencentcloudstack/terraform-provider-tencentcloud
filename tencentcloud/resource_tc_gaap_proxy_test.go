@@ -208,6 +208,46 @@ func TestAccTencentCloudGaapProxy_enable(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudGaapProxy_updateTags(t *testing.T) {
+	id := new(string)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckGaapProxyDestroy(id),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccGaapProxyBasic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapProxyExists("tencentcloud_gaap_proxy.foo", id),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "name", "ci-test-gaap-proxy"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "bandwidth", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "concurrent", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "project_id", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "SouthChina"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "NorthChina"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "enable", "true"),
+					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "scalable"),
+					resource.TestMatchResourceAttr("tencentcloud_gaap_proxy.foo", "support_protocols.#", regexp.MustCompile(`^[1-9]\d*$`)),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "forward_ip"),
+				),
+			},
+			{
+				Config: testAccGaapProxyUpdateTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapProxyExists("tencentcloud_gaap_proxy.foo", id),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "tags.test", "test"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckGaapProxyDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
@@ -325,5 +365,18 @@ resource tencentcloud_gaap_proxy "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
   enable            = true
+}
+`
+
+const testAccGaapProxyUpdateTags = `
+resource tencentcloud_gaap_proxy "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+  tags = {
+    "test" = "test"
+  }
 }
 `

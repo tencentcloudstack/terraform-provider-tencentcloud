@@ -60,7 +60,7 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 							Type:     schema.TypeBool,
 							Computed: true,
 						},
-						"delay_loop": {
+						"interval": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
@@ -177,7 +177,7 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 			checkParams := rule.CheckParams
 
 			if checkParams.DelayLoop == nil {
-				return errors.New("rule health check delay loop is nil")
+				return errors.New("rule health check interval is nil")
 			}
 			if checkParams.ConnectTimeout == nil {
 				return errors.New("rule health check connect timeout is nil")
@@ -206,7 +206,7 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 				"realserver_type":     *rule.RealServerType,
 				"scheduler":           *rule.Scheduler,
 				"health_check":        *rule.HealthCheck == 1,
-				"delay_loop":          *checkParams.DelayLoop,
+				"interval":            *checkParams.DelayLoop,
 				"connect_timeout":     *checkParams.ConnectTimeout,
 				"health_check_path":   *checkParams.Path,
 				"health_check_method": *checkParams.Method,

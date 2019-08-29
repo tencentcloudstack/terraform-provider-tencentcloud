@@ -29,7 +29,7 @@ type gaapHttpRule struct {
 	realserverType         string
 	scheduler              string
 	healthCheck            bool
-	delayLoop              int
+	interval               int
 	connectTimeout         int
 	healthCheckPath        string
 	healthCheckMethod      string
@@ -769,7 +769,7 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 func (me *GaapService) CreateTCPListener(
 	ctx context.Context,
 	name, scheduler, realserverType, proxyId string,
-	port, delayLoop, connectTimeout int,
+	port, interval, connectTimeout int,
 	healthCheck bool,
 ) (id string, err error) {
 	logId := getLogId(ctx)
@@ -786,7 +786,7 @@ func (me *GaapService) CreateTCPListener(
 	} else {
 		createRequest.HealthCheck = intToPointer(0)
 	}
-	createRequest.DelayLoop = intToPointer(delayLoop)
+	createRequest.DelayLoop = intToPointer(interval)
 	createRequest.ConnectTimeout = intToPointer(connectTimeout)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -1010,7 +1010,7 @@ func (me *GaapService) ModifyTCPListenerAttribute(
 	proxyId, id string,
 	name, scheduler *string,
 	healthCheck *bool,
-	delayLoop, connectTimeout int,
+	interval, connectTimeout int,
 ) error {
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
@@ -1027,7 +1027,7 @@ func (me *GaapService) ModifyTCPListenerAttribute(
 			modifyRequest.HealthCheck = intToPointer(0)
 		}
 	}
-	modifyRequest.DelayLoop = intToPointer(delayLoop)
+	modifyRequest.DelayLoop = intToPointer(interval)
 	modifyRequest.ConnectTimeout = intToPointer(connectTimeout)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -2362,7 +2362,7 @@ func (me *GaapService) CreateHttpRule(ctx context.Context, httpRule gaapHttpRule
 	}
 
 	request.CheckParams = &gaap.RuleCheckParams{
-		DelayLoop:      intToPointer(httpRule.delayLoop),
+		DelayLoop:      intToPointer(httpRule.interval),
 		ConnectTimeout: intToPointer(httpRule.connectTimeout),
 		Path:           &httpRule.healthCheckPath,
 		Method:         &httpRule.healthCheckMethod,
@@ -2525,11 +2525,11 @@ func (me *GaapService) DescribeHttpRule(ctx context.Context, listenerId, ruleId 
 		}
 
 		if checkParams.DelayLoop == nil {
-			err := fmt.Errorf("api[%s] rule health check delay loop is nil", request.GetAction())
+			err := fmt.Errorf("api[%s] rule health check interval is nil", request.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
-		httpRule.delayLoop = int(*checkParams.DelayLoop)
+		httpRule.interval = int(*checkParams.DelayLoop)
 
 		if checkParams.ConnectTimeout == nil {
 			err := fmt.Errorf("api[%s] rule health check connect timeout is nil", request.GetAction())
@@ -2606,7 +2606,7 @@ func (me *GaapService) ModifyHTTPRuleAttribute(
 	listenerId, ruleId, healthCheckPath, healthCheckMethod string,
 	path, scheduler *string,
 	healthCheck bool,
-	delayLoop, connectTimeout int,
+	interval, connectTimeout int,
 	healthCheckStatusCodes []int,
 ) error {
 	logId := getLogId(ctx)
@@ -2625,7 +2625,7 @@ func (me *GaapService) ModifyHTTPRuleAttribute(
 	}
 
 	request.CheckParams = &gaap.RuleCheckParams{
-		DelayLoop:      intToPointer(delayLoop),
+		DelayLoop:      intToPointer(interval),
 		ConnectTimeout: intToPointer(connectTimeout),
 		Path:           &healthCheckPath,
 		Method:         &healthCheckMethod,

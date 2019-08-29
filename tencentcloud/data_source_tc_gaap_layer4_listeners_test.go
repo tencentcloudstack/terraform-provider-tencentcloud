@@ -26,7 +26,7 @@ func TestAccDataSourceTencentCloudGaapLayer4Listeners_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.foo", "listeners.0.scheduler", "rr"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.foo", "listeners.0.health_check", "true"),
 					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.foo", "listeners.0.connect_timeout", "2"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.foo", "listeners.0.delay_loop", "5"),
+					resource.TestCheckResourceAttr("data.tencentcloud_gaap_layer4_listeners.foo", "listeners.0.interval", "5"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_layer4_listeners.foo", "listeners.0.create_time"),
 				),
 			},
@@ -155,7 +155,7 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
   realserver_type = "IP"
   proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
   health_check    = true
-  delay_loop      = 5
+  interval      = 5
   connect_timeout = 2
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
@@ -179,7 +179,7 @@ resource tencentcloud_gaap_layer4_listener "bar" {
   realserver_type = "IP"
   proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
   health_check    = true
-  delay_loop      = 5
+  interval      = 5
   connect_timeout = 2
   realserver_bind_set {
     id     = "${tencentcloud_gaap_realserver.bar.id}"

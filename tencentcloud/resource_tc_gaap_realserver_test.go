@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -91,6 +92,36 @@ func TestAccTencentCloudGaapRealserver_updateName(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudGaapRealserver_updateTags(t *testing.T) {
+	id := new(string)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckGaapRealserverDestroy(id),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccGaapRealserverBasic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "ip", "1.1.1.1"),
+					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "domain"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "name", "ci-test-gaap-realserver"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "project_id", "0"),
+					resource.TestCheckNoResourceAttr("tencentcloud_gaap_realserver.foo", "tags"),
+				),
+			},
+			{
+				Config: testAccGaapRealserverUpdateTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapRealserverExists("tencentcloud_gaap_realserver.foo", id),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_realserver.foo", "tags.test", "test"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckGaapRealserverDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
@@ -120,9 +151,15 @@ func testAccCheckGaapRealserverExists(n string, id *string) resource.TestCheckFu
 			return errors.New("no realserver ID is set")
 		}
 
+		projectIdStr := rs.Primary.Attributes["project_id"]
+		projectId, err := strconv.Atoi(projectIdStr)
+		if err != nil {
+			return err
+		}
+
 		service := GaapService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		realservers, err := service.DescribeRealservers(context.TODO(), id, nil, nil, -1)
+		realservers, err := service.DescribeRealservers(context.TODO(), nil, nil, nil, projectId)
 		if err != nil {
 			return err
 		}
@@ -167,5 +204,15 @@ const testAccGaapRealserverNewName = `
 resource tencentcloud_gaap_realserver "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver-new"
+}
+`
+
+const testAccGaapRealserverUpdateTags = `
+resource tencentcloud_gaap_realserver "foo" {
+  ip   = "1.1.1.1"
+  name = "ci-test-gaap-realserver"
+  tags = {
+    "test" = "test"
+  }
 }
 `

@@ -77,7 +77,7 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
-						"delay_loop": {
+						"interval": {
 							Type:     schema.TypeInt,
 							Computed: true,
 						},
@@ -159,7 +159,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 				return errors.New("listener connect timeout is nil")
 			}
 			if ls.DelayLoop == nil {
-				return errors.New("listener delay loop is nil")
+				return errors.New("listener interval is nil")
 			}
 
 			ids = append(ids, *ls.ListenerId)
@@ -175,7 +175,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 				"health_check":    *ls.HealthCheck == 1,
 				"create_time":     *ls.CreateTime,
 				"connect_timeout": *ls.ConnectTimeout,
-				"delay_loop":      *ls.DelayLoop,
+				"interval":        *ls.DelayLoop,
 			}
 
 			listeners = append(listeners, m)

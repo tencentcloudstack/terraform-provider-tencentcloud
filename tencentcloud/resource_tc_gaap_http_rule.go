@@ -59,7 +59,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Type:     schema.TypeBool,
 				Required: true,
 			},
-			"delay_loop": {
+			"interval": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      5,
@@ -150,7 +150,7 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 		realserverType:    d.Get("realserver_type").(string),
 		scheduler:         d.Get("scheduler").(string),
 		healthCheck:       d.Get("health_check").(bool),
-		delayLoop:         d.Get("delay_loop").(int),
+		interval:          d.Get("interval").(int),
 		connectTimeout:    d.Get("connect_timeout").(int),
 		healthCheckPath:   d.Get("health_check_path").(string),
 		healthCheckMethod: d.Get("health_check_method").(string),
@@ -234,7 +234,7 @@ func resourceTencentCloudGaapHttpRuleRead(d *schema.ResourceData, m interface{})
 	d.Set("realserver_type", httpRule.realserverType)
 	d.Set("scheduler", httpRule.scheduler)
 	d.Set("health_check", httpRule.healthCheck)
-	d.Set("delay_loop", httpRule.delayLoop)
+	d.Set("interval", httpRule.interval)
 	d.Set("connect_timeout", httpRule.connectTimeout)
 	d.Set("health_check_path", httpRule.healthCheckPath)
 	d.Set("health_check_method", httpRule.healthCheckMethod)
@@ -286,10 +286,10 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 	}
 	healthCheck := d.Get("health_check").(bool)
 
-	if d.HasChange("delay_loop") {
-		updateAttr = append(updateAttr, "delay_loop")
+	if d.HasChange("interval") {
+		updateAttr = append(updateAttr, "interval")
 	}
-	delayLoop := d.Get("delay_loop").(int)
+	interval := d.Get("interval").(int)
 
 	if d.HasChange("connect_timeout") {
 		updateAttr = append(updateAttr, "connect_timeout")
@@ -342,7 +342,7 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 	if err := service.ModifyHTTPRuleAttribute(
 		ctx,
 		listenerId, id, healthCheckPath, healthCheckMethod,
-		path, scheduler, healthCheck, delayLoop, connectTimeout, healthCheckStatusCodes,
+		path, scheduler, healthCheck, interval, connectTimeout, healthCheckStatusCodes,
 	); err != nil {
 		return err
 	}

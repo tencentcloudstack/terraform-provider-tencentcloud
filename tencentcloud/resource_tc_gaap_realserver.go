@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -46,7 +47,6 @@ func resourceTencentCloudGaapRealserver() *schema.Resource {
 			"tags": {
 				Type:     schema.TypeMap,
 				Optional: true,
-				ForceNew: true,
 			},
 		},
 	}
@@ -161,13 +161,38 @@ func resourceTencentCloudGaapRealserverUpdate(d *schema.ResourceData, m interfac
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	id := d.Id()
-	newName := d.Get("name").(string)
 
-	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
+	d.Partial(true)
 
-	if err := service.ModifyRealserverName(ctx, id, newName); err != nil {
-		return err
+	if d.HasChange("name") {
+		newName := d.Get("name").(string)
+
+		gaapService := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
+
+		if err := gaapService.ModifyRealserverName(ctx, id, newName); err != nil {
+			return err
+		}
+
+		d.SetPartial("name")
 	}
+
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
+
+		region := m.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::gaap:%s:uin/:realserver/%s", region, id)
+
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
+	}
+
+	d.Partial(false)
 
 	return resourceTencentCloudGaapRealserverRead(d, m)
 }
