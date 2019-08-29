@@ -428,6 +428,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile
