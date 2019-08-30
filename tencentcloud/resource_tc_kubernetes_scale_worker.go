@@ -254,9 +254,8 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 					return nil
 				}
 			}
-
 			if err != nil {
-				return retryError(err)
+				return resource.RetryableError(err)
 			}
 			return nil
 		})
@@ -356,7 +355,7 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 			}
 
 			if err != nil {
-				return retryError(err)
+				return resource.RetryableError(err)
 			}
 			return nil
 		})

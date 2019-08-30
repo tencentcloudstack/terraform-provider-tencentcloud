@@ -788,7 +788,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 			}
 
 			if err != nil {
-				return retryError(err)
+				return resource.RetryableError(err)
 			}
 			return nil
 		})
@@ -869,9 +869,8 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 					return nil
 				}
 			}
-
 			if err != nil {
-				return retryError(err)
+				return resource.RetryableError(err)
 			}
 			return nil
 		})
