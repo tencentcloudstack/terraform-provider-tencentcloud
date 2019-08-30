@@ -1,3 +1,44 @@
+/*
+Use this data source to query forward rule of layer7 listeners.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+resource "tencentcloud_gaap_layer7_listener" "foo" {
+  protocol = "HTTP"
+  name     = "ci-test-gaap-l7-listener"
+  port     = 80
+  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+}
+resource "tencentcloud_gaap_realserver" "foo" {
+  ip   = "1.1.1.1"
+  name = "ci-test-gaap-realserver"
+}
+resource "tencentcloud_gaap_http_rule" "foo" {
+  listener_id     = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  domain          = "www.qq.com"
+  path            = "/"
+  realserver_type = "IP"
+  health_check    = true
+  realservers {
+    id   = "${tencentcloud_gaap_realserver.foo.id}"
+    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    port = 80
+  }
+}
+data "tencentcloud_gaap_http_rules" "foo" {
+  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  domain      = "${tencentcloud_gaap_http_rule.foo.domain}"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -13,68 +54,83 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 		Read: dataSourceTencentCloudGaapHttpRulesRead,
 		Schema: map[string]*schema.Schema{
 			"listener_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "ID of the layer7 listener to be queried.",
 			},
 			"domain": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Forward domain of the layer7 listener to be queried.",
 			},
 			"path": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateStringPrefix("/"),
+				Description:  "Path of the forward rule to be queried.",
 			},
 
 			// computed
 			"rules": {
-				Type:     schema.TypeSet,
-				Computed: true,
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "An information list of forward rule of the layer7 listeners. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the forward rule.",
 						},
 						"listener_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the layer7 listener.",
 						},
 						"domain": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Forward domain of the layer7 listener.",
 						},
 						"path": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Path of the forward rule.",
 						},
 						"realserver_type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Type of the realserver.",
 						},
 						"scheduler": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Scheduling policy of the layer4 listener.",
 						},
 						"health_check": {
-							Type:     schema.TypeBool,
-							Computed: true,
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Indicates whether health check is enable.",
 						},
 						"interval": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Interval of the health check.",
 						},
 						"connect_timeout": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Timeout of the health check response.",
 						},
 						"health_check_path": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Path of health check.",
 						},
 						"health_check_method": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Method of the health check.",
 						},
 						"health_check_status_codes": {
 							Type:     schema.TypeSet,
@@ -83,35 +139,43 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 							Set: func(v interface{}) int {
 								return v.(int)
 							},
+							Description: "Return code of confirmed normal.",
 						},
 						"realservers": {
-							Type:     schema.TypeList,
-							Computed: true,
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "An information list of GAAP realserver. Each element contains the following attributes:",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "ID of the GAAP realserver.",
 									},
 									"ip": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "IP of the GAAP realserver.",
 									},
 									"domain": {
-										Type:     schema.TypeString,
-										Computed: true,
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Domain of the GAAP realserver.",
 									},
 									"port": {
-										Type:     schema.TypeInt,
-										Computed: true,
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Port of the GAAP realserver.",
 									},
 									"weight": {
-										Type:     schema.TypeInt,
-										Computed: true,
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Scheduling weight.",
 									},
 									"status": {
-										Type:     schema.TypeInt,
-										Computed: true,
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Status of the GAAP realserver.",
 									},
 								},
 							},

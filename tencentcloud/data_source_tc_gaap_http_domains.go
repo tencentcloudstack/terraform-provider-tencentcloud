@@ -1,3 +1,32 @@
+/*
+Use this data source to query forward domain of layer7 listeners.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+resource "tencentcloud_gaap_layer7_listener" "foo" {
+  protocol = "HTTP"
+  name     = "ci-test-gaap-l7-listener"
+  port     = 80
+  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+}
+resource "tencentcloud_gaap_http_domain" "foo" {
+  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  domain      = "www.qq.com"
+}
+data "tencentcloud_gaap_http_domains" "foo" {
+  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  domain      = "${tencentcloud_gaap_http_domain.foo.domain}"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -12,59 +41,72 @@ func dataSourceTencentCloudGaapHttpDomains() *schema.Resource {
 		Read: dataSourceTencentCloudGaapHttpDomainsRead,
 		Schema: map[string]*schema.Schema{
 			"listener_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "ID of the layer7 listener to be queried.",
 			},
 			"domain": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Forward domain of the layer7 listener to be queried.",
 			},
 
 			// computed
 			"domains": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "An information list of forward domain of the layer7 listeners. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"domain": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Forward domain of the layer7 listener.",
 						},
 						"certificate_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the server certificate",
 						},
 						"client_certificate_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the client certificate",
 						},
 						"realserver_auth": {
-							Type:     schema.TypeBool,
-							Computed: true,
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Indicates whether realserver authentication is enable",
 						},
 						"realserver_certificate_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "CA certificate ID of the realserver.",
 						},
 						"realserver_certificate_domain": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "CA certificate domain of the realserver.",
 						},
 						"basic_auth": {
-							Type:     schema.TypeBool,
-							Computed: true,
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Indicates whether basic authentication is enable",
 						},
 						"basic_auth_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the basic authentication.",
 						},
 						"gaap_auth": {
-							Type:     schema.TypeBool,
-							Computed: true,
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Indicates whether SSL certificate authentication is enable.",
 						},
 						"gaap_auth_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the SSL certificate.",
 						},
 					},
 				},

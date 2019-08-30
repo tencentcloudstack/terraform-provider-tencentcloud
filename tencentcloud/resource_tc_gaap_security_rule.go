@@ -1,3 +1,28 @@
+/*
+Provides a resource to create a security policy rule.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+resource "tencentcloud_gaap_security_policy" "foo" {
+  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  action   = "ACCEPT"
+}
+resource "tencentcloud_gaap_security_rule" "foo" {
+  policy_id = "${tencentcloud_gaap_security_policy.foo.id}"
+  cidr_ip   = "1.1.1.1"
+  action    = "ACCEPT"
+  protocol  = "TCP"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -17,27 +42,31 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 		Delete: resourceTencentCloudGaapSecurityRuleDelete,
 		Schema: map[string]*schema.Schema{
 			"policy_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the security policy.",
 			},
 			"cidr_ip": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateCidrIp,
+				Description:  "A network address block of the request source.",
 			},
 			"action": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"ACCEPT", "DROP"}),
 				ForceNew:     true,
+				Description:  "Policy of the rule, the available values includes `ACCEPT` and `DROP`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "",
 				ValidateFunc: validateStringLengthInRange(0, 30),
+				Description:  "Name of the security policy rule. Maximum length is 30.",
 			},
 			"protocol": {
 				Type:         schema.TypeString,
@@ -45,6 +74,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 				Default:      "ALL",
 				ValidateFunc: validateAllowedStringValue([]string{"ALL", "TCP", "UDP"}),
 				ForceNew:     true,
+				Description:  "Protocol of the security policy rule. Default is `ALL`, the available values includes `TCP`,`UDP` and `ALL`.",
 			},
 			"port": {
 				Type:     schema.TypeString,
@@ -61,6 +91,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 					}
 					return
 				},
+				Description: "Target port. Available values includes `80`,`80,443`,`3306-20000`.",
 			},
 		},
 	}

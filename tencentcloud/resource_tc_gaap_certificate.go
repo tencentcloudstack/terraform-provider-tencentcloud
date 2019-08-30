@@ -1,3 +1,24 @@
+/*
+Provides a resource to create a certificate of GAAP.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_certificate" "foo" {
+  type    = 0
+  content = "test:tx2KGdo3zJg/."
+  name    = "test_certificate"
+}
+```
+
+Import
+
+GAAP certificate can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_certificate.foo cert-d5y6ei3b
+```
+*/
 package tencentcloud
 
 import (
@@ -22,44 +43,53 @@ func resourceTencentCloudGaapCertificate() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateIntegerInRange(0, 4),
+				Description:  "Type of the certificate. `0` means basic authentication; `1` means client CA certificate; `2` means server SSL certificate; `3` means realserver CA certificate; `4` means proxy SSL certificate.",
 			},
 			"content": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Content of the certificate, and URL encoding. When the certificate is basic authentication, use the `user:xxx password:xxx` format, where the password is encrypted with `htpasswd` or `openssl`; When the certificate is `CA` or `SSL`, the format is `pem`.",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
+				Description: "Name of the certificate.",
 			},
 			"key": {
-				Type:      schema.TypeString,
-				Optional:  true,
-				ForceNew:  true,
-				Sensitive: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Sensitive:   true,
+				Description: "Key of the `CA` or `SSL` certificate.",
 			},
 
 			// computed
 			"create_time": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Creation time of the certificate, use unix timestamp format.",
 			},
 			"begin_time": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Beginning time of the certificate, use unix timestamp format.",
 			},
 			"end_time": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Ending time of the certificate, use unix timestamp format.",
 			},
 			"issuer_cn": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Issuer name of the certificate.",
 			},
 			"subject_cn": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Subject name of the certificate.",
 			},
 		},
 	}

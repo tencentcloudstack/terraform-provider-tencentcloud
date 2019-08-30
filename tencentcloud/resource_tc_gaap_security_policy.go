@@ -1,3 +1,30 @@
+/*
+Provides a resource to create a security policy of GAAP proxy.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+resource "tencentcloud_gaap_security_policy" "foo" {
+  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  action   = "DROP"
+}
+```
+
+Import
+
+GAAP security policy can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_security_policy.foo pl-xxxx
+```
+*/
 package tencentcloud
 
 import (
@@ -17,20 +44,23 @@ func resourceTencentCloudGaapSecurityPolicy() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"proxy_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the GAAP proxy.",
 			},
 			"action": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"ACCEPT", "DROP"}),
 				ForceNew:     true,
+				Description:  "Default policy, the available values includes `ACCEPT` and `DROP`.",
 			},
 			"enable": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Indicates whether policy is enable, default is true.",
 			},
 		},
 	}

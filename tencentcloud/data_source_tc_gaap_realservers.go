@@ -1,3 +1,18 @@
+/*
+Use this data source to query gaap realservers.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_realserver" "foo" {
+  ip   = "1.1.1.1"
+  name = "ci-test-gaap-realserver"
+}
+data "tencentcloud_gaap_realservers" "foo" {
+  ip = "${tencentcloud_gaap_realserver.foo.ip}"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -13,58 +28,70 @@ func dataSourceTencentCloudGaapRealservers() *schema.Resource {
 		Read: dataSourceTencentCloudGaapRealserversRead,
 		Schema: map[string]*schema.Schema{
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  -1,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     -1,
+				Description: "ID of the project within the GAAP realserver to be queried, default is '-1' means all projects.",
 			},
 			"domain": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ip"},
+				Description:   "Domain of the GAAP realserver to be queried, conflict with `ip`.",
 			},
 			"ip": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"domain"},
+				Description:   "IP of the GAAP realserver to be queried, conflict with `domain`.",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the GAAP realserver to be queried, the maximum length is 30.",
 			},
 			"tags": {
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the GAAP proxy to be queried. Support up to 5, display the information as long as it matches one.",
 			},
 
 			// computed
 			"realservers": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "An information list of GAAP realserver. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the GAAP realserver.",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the GAAP realserver.",
 						},
 						"ip": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "IP of the GAAP realserver.",
 						},
 						"domain": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Domain of the GAAP realserver.",
 						},
 						"project_id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "ID of the project within the GAAP realserver.",
 						},
 						"tags": {
-							Type:     schema.TypeMap,
-							Computed: true,
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags of the GAAP realserver.",
 						},
 					},
 				},

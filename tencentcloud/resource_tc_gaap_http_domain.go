@@ -1,3 +1,28 @@
+/*
+Provides a resource to create a forward domain of layer7 listener.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+resource "tencentcloud_gaap_layer7_listener" "foo" {
+  protocol = "HTTP"
+  name     = "ci-test-gaap-l7-listener"
+  port     = 80
+  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+}
+resource "tencentcloud_gaap_http_domain" "foo" {
+  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  domain      = "www.qq.com"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -18,55 +43,66 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 		Delete: resourceTencentCloudGaapHttpDomainDelete,
 		Schema: map[string]*schema.Schema{
 			"listener_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the layer7 listener.",
 			},
 			"domain": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Forward domain of the layer7 listener.",
 			},
 			"certificate_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "default",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "default",
+				Description: "ID of the server certificate, default values is `default`.",
 			},
 			"client_certificate_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "default",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "default",
+				Description: "ID of the client certificate, default values is `default`.",
 			},
 			"basic_auth": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  false,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicates whether basic authentication is enable, default is `false`.",
 			},
 			"basic_auth_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of the basic authentication.",
 			},
 			"realserver_auth": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  false,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicates whether realserver authentication is enable, default is `false`.",
 			},
 			"realserver_certificate_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CA certificate ID of the realserver.",
 			},
 			"realserver_certificate_domain": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CA certificate domain of the realserver.",
 			},
 			"gaap_auth": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  false,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicates whether SSL certificate authentication is enable, default is `false`.",
 			},
 			"gaap_auth_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of the SSL certificate.",
 			},
 		},
 	}

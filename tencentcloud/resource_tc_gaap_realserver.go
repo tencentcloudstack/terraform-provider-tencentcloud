@@ -1,3 +1,26 @@
+/*
+Provides a resource to create a GAAP realserver.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_realserver" "foo" {
+  ip   = "1.1.1.1"
+  name = "ci-test-gaap-realserver"
+  tags = {
+    test = "test"
+  }
+}
+```
+
+Import
+
+GAAP realserver can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_realserver.foo rs-4ftghy6
+```
+*/
 package tencentcloud
 
 import (
@@ -26,27 +49,32 @@ func resourceTencentCloudGaapRealserver() *schema.Resource {
 				ValidateFunc:  validateIp,
 				ConflictsWith: []string{"domain"},
 				ForceNew:      true,
+				Description:   "IP of the GAAP realserver, conflict with `domain`.",
 			},
 			"domain": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ip"},
 				ForceNew:      true,
+				Description:   "Domain of the GAAP realserver, conflict with `ip`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 30),
+				Description:  "Name of the GAAP realserver, the maximum length is 30.",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
-				ForceNew: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				ForceNew:    true,
+				Description: "ID of the project within the GAAP realserver, '0' means is Default Project.",
 			},
 			"tags": {
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the GAAP realserver.",
 			},
 		},
 	}

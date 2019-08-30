@@ -1,3 +1,29 @@
+/*
+Provides a resource to create a GAAP proxy.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+  tags = {
+    test = "test"
+  }
+}
+```
+
+Import
+
+GAAP proxy can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_proxy.foo link-11112222
+```
+*/
 package tencentcloud
 
 import (
@@ -26,62 +52,75 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 30),
+				Description:  "Name of the GAAP proxy, the maximum length is 30.",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "ID of the project within the GAAP proxy, '0' means is Default Project.",
 			},
 			"bandwidth": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateAllowedIntValue([]int{10, 20, 50, 100, 200, 500, 1000}),
+				Description:  "Maximum bandwidth of the GAAP proxy, unit is Mbps. The available values include `10`,`20`,`50`,`100`,`200`,`500`,`1000`.",
 			},
 			"concurrent": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateAllowedIntValue([]int{2, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100}),
+				Description:  "Maximum concurrency of the GAAP proxy, unit is 10k. The available values include `2`,`5`,`10`,`20`,`30`,`40`,`50`,`60`,`70`,`80`,`90`,`100`.",
 			},
 			"access_region": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Access region of the GAAP proxy.",
 			},
 			"realserver_region": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Region of the GAAP realserver.",
 			},
 			"enable": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Indicates whether GAAP proxy is enabled, default is true.",
 			},
 			"tags": {
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the GAAP proxy.",
 			},
 
 			// computed
 			"create_time": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Creation time of the GAAP proxy.",
 			},
 			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Status of the GAAP proxy.",
 			},
 			"domain": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Access domain of the GAAP proxy.",
 			},
 			"ip": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Access IP of the GAAP proxy.",
 			},
 			"scalable": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicates whether GAAP proxy can scalable.",
 			},
 			"support_protocols": {
 				Type:     schema.TypeSet,
@@ -89,10 +128,12 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+				Description: "Supported protocols of the GAAP proxy.",
 			},
 			"forward_ip": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Forwarding IP of the GAAP proxy.",
 			},
 		},
 	}

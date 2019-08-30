@@ -1,3 +1,42 @@
+/*
+Use this data source to query gaap layer4 listeners.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+resource "tencentcloud_gaap_realserver" "foo" {
+  ip   = "1.1.1.1"
+  name = "ci-test-gaap-realserver"
+}
+resource "tencentcloud_gaap_layer4_listener" "foo" {
+  protocol        = "TCP"
+  name            = "ci-test-gaap-4-listener"
+  port            = 80
+  realserver_type = "IP"
+  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  health_check    = true
+  interval      = 5
+  connect_timeout = 2
+  realserver_bind_set {
+    id   = "${tencentcloud_gaap_realserver.foo.id}"
+    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    port = 80
+  }
+}
+data "tencentcloud_gaap_layer4_listeners" "foo" {
+  protocol    = "TCP"
+  proxy_id    = "${tencentcloud_gaap_proxy.foo.id}"
+  listener_id = "${tencentcloud_gaap_layer4_listener.foo.id}"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -16,74 +55,91 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"TCP", "UDP"}),
+				Description:  "Protocol of the layer4 listener to be queried, and the available values include `TCP` and `UDP`.",
 			},
 			"proxy_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "ID of the GAAP proxy to be queried.",
 			},
 			"listener_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of the layer4 listener to be queried.",
 			},
 			"listener_name": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the layer4 listener to be queried.",
 			},
 			"port": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validatePort,
+				Description:  "Port of the layer4 listener to be queried.",
 			},
 
 			// computed
 			"listeners": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "An information list of layer4 listeners. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"protocol": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Protocol of the layer4 listener.",
 						},
 						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the layer4 listener.",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the layer4 listener.",
 						},
 						"port": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Port of the layer4 listener.",
 						},
 						"realserver_type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Type of the realserver.",
 						},
 						"status": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Status of the layer4 listener.",
 						},
 						"scheduler": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Scheduling policy of the layer4 listener.",
 						},
 						"health_check": {
-							Type:     schema.TypeBool,
-							Computed: true,
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Indicates whether health check is enable.",
 						},
 						"connect_timeout": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Timeout of the health check response.",
 						},
 						"interval": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Interval of the health check",
 						},
 						"create_time": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Creation time of the layer4 listener.",
 						},
 					},
 				},

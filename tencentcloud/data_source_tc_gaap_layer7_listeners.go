@@ -1,3 +1,29 @@
+/*
+Use this data source to query gaap layer7 listeners.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+resource "tencentcloud_gaap_layer7_listener" "foo" {
+  protocol = "HTTP"
+  name     = "ci-test-gaap-l7-listener"
+  port     = 80
+  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+}
+data "tencentcloud_gaap_layer7_listeners" "listenerId" {
+  protocol    = "HTTP"
+  proxy_id    = "${tencentcloud_gaap_proxy.foo.id}"
+  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -16,70 +42,86 @@ func dataSourceTencentCloudGaapLayer7Listeners() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
+				Description:  "Protocol of the layer7 listener to be queried, and the available values include `HTTP` and `HTTPS`.",
 			},
 			"proxy_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "ID of the GAAP proxy to be queried.",
 			},
 			"listener_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of the layer7 listener to be queried.",
 			},
 			"listener_name": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the layer7 listener to be queried.",
 			},
 			"port": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validatePort,
+				Description:  "Port of the layer7 listener to be queried.",
 			},
 
 			// computed
 			"listeners": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "An information list of layer7 listeners. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"protocol": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Protocol of the layer7 listener.",
 						},
 						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the layer7 listener.",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the layer7 listener.",
 						},
 						"port": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Port of the layer7 listener.",
 						},
 						"status": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Status of the layer7 listener.",
 						},
 						"certificate_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Certificate ID of the layer7 listener.",
 						},
 						"client_certificate_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the client certificate.",
 						},
 						"auth_type": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Authentication type of the layer7 listener. `0` is one-way authentication and `1` is mutual authentication.",
 						},
 						"forward_protocol": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Protocol type of the forwarding.",
 						},
 						"create_time": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Creation time of the layer7 listener.",
 						},
 					},
 				},

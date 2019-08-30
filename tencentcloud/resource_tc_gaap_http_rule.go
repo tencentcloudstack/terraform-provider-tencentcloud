@@ -1,3 +1,56 @@
+/*
+Provides a resource to create a forward rule of layer7 listener.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+resource "tencentcloud_gaap_layer7_listener" "foo" {
+  protocol = "HTTP"
+  name     = "ci-test-gaap-l7-listener"
+  port     = 80
+  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+}
+resource "tencentcloud_gaap_realserver" "foo" {
+  ip   = "1.1.1.1"
+  name = "ci-test-gaap-realserver"
+}
+resource "tencentcloud_gaap_realserver" "bar" {
+  ip   = "8.8.8.8"
+  name = "ci-test-gaap-realserver"
+}
+resource "tencentcloud_gaap_http_domain" "foo" {
+  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  domain      = "www.qq.com"
+}
+resource "tencentcloud_gaap_http_rule" "foo" {
+  listener_id               = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  domain                    = "${tencentcloud_gaap_http_domain.foo.domain}"
+  path                      = "/"
+  realserver_type           = "IP"
+  health_check              = true
+  health_check_path         = "/"
+  health_check_method       = "GET"
+  health_check_status_codes = [200]
+  realservers {
+    id   = "${tencentcloud_gaap_realserver.foo.id}"
+    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    port = 80
+  }
+  realservers {
+    id   = "${tencentcloud_gaap_realserver.bar.id}"
+    ip   = "${tencentcloud_gaap_realserver.bar.ip}"
+    port = 80
+  }
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -22,14 +75,16 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"listener_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the layer7 listener.",
 			},
 			"domain": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Forward rule domain of the layer7 listener.",
 			},
 			"path": {
 				Type:     schema.TypeString,
@@ -42,34 +97,40 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 
 					return validateStringPrefix("/")(v, k)
 				},
+				Description: "Path of the forward rule. Maximum length is 80.",
 			},
 			"realserver_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"IP", "DOMAIN"}),
 				ForceNew:     true,
+				Description:  "Type of the realserver, and the available values include `IP`,`DOMAIN`.",
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "rr",
 				ValidateFunc: validateAllowedStringValue([]string{"rr", "wrr", "lc"}),
+				Description:  "Scheduling policy of the layer4 listener, default is `rr`. Available values include `rr`,`wrr` and `lc`.",
 			},
 			"health_check": {
-				Type:     schema.TypeBool,
-				Required: true,
+				Type:        schema.TypeBool,
+				Required:    true,
+				Description: "Indicates whether health check is enable.",
 			},
 			"interval": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      5,
 				ValidateFunc: validateIntegerInRange(5, 300),
+				Description:  "Interval of the health check, default is 5s.",
 			},
 			"connect_timeout": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      2,
 				ValidateFunc: validateIntegerInRange(2, 60),
+				Description:  "Timeout of the health check response, default is 2s.",
 			},
 			"health_check_path": {
 				Type:     schema.TypeString,
@@ -83,12 +144,14 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 
 					return validateStringPrefix("/")(v, k)
 				},
+				Description: "Path of health check. Maximum length is 80.",
 			},
 			"health_check_method": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      http.MethodHead,
 				ValidateFunc: validateAllowedStringValue([]string{http.MethodGet, http.MethodHead}),
+				Description:  "Method of the health check. Available values includes `GET` and `HEAD`.",
 			},
 			"health_check_status_codes": {
 				Type:     schema.TypeSet,
@@ -97,6 +160,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Set: func(v interface{}) int {
 					return v.(int)
 				},
+				Description: "Return code of confirmed normal. Available values includes `100`,`200`,`300`,`400` and `500`.",
 			},
 			"realservers": {
 				Type:     schema.TypeSet,
@@ -110,26 +174,31 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 					sb.WriteString(fmt.Sprintf("%d", m["weight"].(int)))
 					return hashcode.String(sb.String())
 				},
+				Description: "An information list of GAAP realserver. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "ID of the GAAP realserver.",
 						},
 						"ip": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "IP of the GAAP realserver.",
 						},
 						"port": {
 							Type:         schema.TypeInt,
 							Required:     true,
 							ValidateFunc: validatePort,
+							Description:  "Port of the GAAP realserver.",
 						},
 						"weight": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Default:      1,
 							ValidateFunc: validateIntegerInRange(1, 100),
+							Description:  "Scheduling weight, default is 1. The range of values is [1,100].",
 						},
 					},
 				},

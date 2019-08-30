@@ -1,3 +1,19 @@
+/*
+Use this data source to query GAAP certificate.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_certificate" "foo" {
+  type    = 0
+  content = "test:tx2KGdo3zJg/."
+  name    = "test_certificate"
+}
+data "tencentcloud_gaap_certificates" "foo" {
+  id = "${tencentcloud_gaap_certificate.foo.id}"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -12,56 +28,68 @@ func dataSourceTencentCloudGaapCertificates() *schema.Resource {
 		Read: dataSourceTencentCloudGaapCertificatesRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of the certificate to be queried.",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the certificate to be queried.",
 			},
 			"type": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateIntegerInRange(0, 4),
+				Description:  "Type of the certificate to be queried. `0` means basic authentication; `1` means client CA certificate; `2` means server SSL certificate; `3` means realserver CA certificate; `4` means proxy SSL certificate.",
 			},
 
 			// computed
 			"certificates": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "An information list of certificate. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the certificate.",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the certificate.",
 						},
 						"type": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Type of the certificate.",
 						},
 						"create_time": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Creation time of the certificate, use unix timestamp format.",
 						},
 						"begin_time": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Beginning time of the certificate, use unix timestamp format.",
 						},
 						"end_time": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Ending time of the certificate, use unix timestamp format.",
 						},
 						"issuer_cn": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Issuer name of the certificate.",
 						},
 						"subject_cn": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Subject name of the certificate.",
 						},
 					},
 				},

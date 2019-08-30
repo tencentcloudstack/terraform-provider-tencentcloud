@@ -1,3 +1,44 @@
+/*
+Provides a resource to create a layer4 listener of GAAP.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+resource "tencentcloud_gaap_realserver" "foo" {
+  ip   = "1.1.1.1"
+  name = "ci-test-gaap-realserver"
+}
+resource "tencentcloud_gaap_realserver" "bar" {
+  ip   = "119.29.29.29"
+  name = "ci-test-gaap-realserver2"
+}
+resource "tencentcloud_gaap_layer4_listener" "foo" {
+  protocol        = "TCP"
+  name            = "ci-test-gaap-4-listener"
+  port            = 80
+  realserver_type = "IP"
+  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  health_check    = true
+  realserver_bind_set {
+    id   = "${tencentcloud_gaap_realserver.foo.id}"
+    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    port = 80
+  }
+  realserver_bind_set {
+    id     = "${tencentcloud_gaap_realserver.bar.id}"
+    ip     = "${tencentcloud_gaap_realserver.bar.ip}"
+    port   = 80
+  }
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -24,51 +65,60 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"TCP", "UDP"}),
 				ForceNew:     true,
+				Description:  "Protocol of the layer4 listener, and the available values include `TCP` and `UDP`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 30),
+				Description:  "Name of the layer4 listener, the maximum length is 30.",
 			},
 			"port": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validatePort,
 				ForceNew:     true,
+				Description:  "Port of the layer4 listener.",
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "rr",
 				ValidateFunc: validateAllowedStringValue([]string{"rr", "wrr", "lc"}),
+				Description:  "Scheduling policy of the layer4 listener, default is `rr`. Available values include `rr`,`wrr` and `lc`.",
 			},
 			"realserver_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"IP", "DOMAIN"}),
 				ForceNew:     true,
+				Description:  "Type of the realserver, and the available values include `IP`,`DOMAIN`. NOTES: when the `protocol` is specified as `TCP` and the `scheduler` is specified as `wrr`, the item can only be set to `IP`.",
 			},
 			"proxy_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the GAAP proxy.",
 			},
 			"health_check": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  false,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicates whether health check is enable, default is false. NOTES: Only supports listeners of `TCP` protocol.",
 			},
 			"interval": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      5,
 				ValidateFunc: validateIntegerInRange(5, 300),
+				Description:  "Interval of the health check, default is 5s. NOTES: Only supports listeners of `TCP` protocol.",
 			},
 			"connect_timeout": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      2,
 				ValidateFunc: validateIntegerInRange(2, 60),
+				Description:  "Timeout of the health check response, default is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.",
 			},
 			"realserver_bind_set": {
 				Type:     schema.TypeSet,
@@ -82,26 +132,31 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 					sb.WriteString(fmt.Sprintf("%d", m["weight"].(int)))
 					return hashcode.String(sb.String())
 				},
+				Description: "An information list of GAAP realserver. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "ID of the GAAP realserver.",
 						},
 						"ip": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "IP of the GAAP realserver.",
 						},
 						"port": {
 							Type:         schema.TypeInt,
 							Required:     true,
 							ValidateFunc: validatePort,
+							Description:  "Port of the GAAP realserver.",
 						},
 						"weight": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Default:      1,
 							ValidateFunc: validateIntegerInRange(1, 100),
+							Description:  "Scheduling weight, default is 1. The range of values is [1,100].",
 						},
 					},
 				},
@@ -109,12 +164,14 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 
 			// computed
 			"status": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Status of the layer4 listener.",
 			},
 			"create_time": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Creation time of the layer4 listener.",
 			},
 		},
 	}

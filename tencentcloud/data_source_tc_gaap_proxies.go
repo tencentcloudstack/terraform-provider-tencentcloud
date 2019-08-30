@@ -1,3 +1,21 @@
+/*
+Use this data source to query gaap proxies.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+data "tencentcloud_gaap_proxies" "foo" {
+  ids = ["${tencentcloud_gaap_proxy.foo.id}"]
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -17,101 +35,124 @@ func dataSourceTencentCloudGaapProxies() *schema.Resource {
 				Optional:      true,
 				Elem:          &schema.Schema{Type: schema.TypeString},
 				ConflictsWith: []string{"project_id", "access_region", "realserver_region"},
+				Description:   "ID of the GAAP proxy to be queried. Conflict with `project_id`,`access_region`,`realserver_region`.",
 			},
 			"project_id": {
 				Type:          schema.TypeInt,
 				Optional:      true,
 				ConflictsWith: []string{"ids"},
+				Description:   "Project ID of the GAAP proxy to be queried. Conflict with `ids`.",
 			},
 			"access_region": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ids"},
+				Description:   "Access region of the GAAP proxy to be queried. Conflict with `ids`.",
 			},
 			"realserver_region": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ids"},
+				Description:   "Region of the GAAP realserver to be queried. Conflict with `ids`.",
 			},
 			"tags": {
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the GAAP proxy to be queried. Support up to 5, display the information as long as it matches one.",
 			},
 
 			// computed
 			"proxies": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "An information list of GAAP proxy. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the GAAP proxy.",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the GAAP proxy.",
 						},
 						"policy_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Security policy ID of the GAAP proxy.",
 						},
 						"domain": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Access domain of the GAAP proxy.",
 						},
 						"ip": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Access domain of the GAAP proxy.",
 						},
 						"bandwidth": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Maximum bandwidth of the GAAP proxy, unit is Mbps.",
 						},
 						"concurrent": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Maximum concurrency of the GAAP proxy, unit is 10k.",
 						},
 						"access_region": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Access region of the GAAP proxy.",
 						},
 						"realserver_region": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Region of the GAAP realserver.",
 						},
 						"project_id": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "ID of the project within the GAAP proxy, '0' means is Default Project.",
 						},
 						"create_time": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Creation time of the GAAP proxy.",
 						},
 						"status": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Status of the GAAP proxy.",
 						},
 						"scalable": {
-							Type:     schema.TypeBool,
-							Computed: true,
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Indicates whether GAAP proxy can scalable.",
 						},
 						"support_protocols": {
-							Type:     schema.TypeSet,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Supported protocols of the GAAP proxy.",
 						},
 						"forward_ip": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Forwarding IP of the GAAP proxy.",
 						},
 						"version": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Version of the GAAP proxy.",
 						},
 						"tags": {
-							Type:     schema.TypeMap,
-							Computed: true,
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags of the GAAP proxy.",
 						},
 					},
 				},

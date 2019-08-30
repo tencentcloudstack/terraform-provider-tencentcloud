@@ -1,3 +1,24 @@
+/*
+Provides a resource to create a layer7 listener of GAAP.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_gaap_proxy" "foo" {
+  name              = "ci-test-gaap-proxy"
+  bandwidth         = 10
+  concurrent        = 2
+  access_region     = "SouthChina"
+  realserver_region = "NorthChina"
+}
+resource "tencentcloud_gaap_layer7_listener" "foo" {
+  protocol = "HTTP"
+  name     = "ci-test-gaap-l7-listener"
+  port     = 80
+  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -21,54 +42,64 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
 				ForceNew:     true,
+				Description:  "Protocol of the layer7 listener, and the available values include `HTTP` and `HTTPS`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 30),
+				Description:  "Name of the layer7 listener, the maximum length is 30.",
 			},
 			"port": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validatePort,
 				ForceNew:     true,
+				Description:  "Port of the layer7 listener.",
 			},
 			"proxy_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the GAAP proxy.",
 			},
 			"certificate_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
+				Description: "Certificate ID of the layer7 listener. NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
 			"forward_protocol": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
 				ForceNew:     true,
+				Description:  "Protocol type of the forwarding, the available values include `HTTP` and `HTTPS`. NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
 			"auth_type": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 				ForceNew:     true,
+				Description:  "Authentication type of the layer7 listener. `0` is one-way authentication and `1` is mutual authentication. NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
 			"client_certificate_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "",
+				Description: "ID of the client certificate. Set only when `auth_type` is specified as mutual authentication.  NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
 
 			// computed
 			"status": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Status of the layer7 listener.",
 			},
 			"create_time": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Creation time of the layer7 listener.",
 			},
 		},
 	}
