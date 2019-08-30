@@ -1,4 +1,11 @@
-## 1.16.2 (Unreleased)
+## 1.16.3 (Unreleased)
+
+BUG FIXIES:
+
+* Resource: `tencentcloud_kubernetes_cluster`: cgi error retry.
+* Resource: `tencentcloud_kubernetes_scale_worker`: cgi error retry.
+
+## 1.16.2 (August 28, 2019)
 
 BUG FIXIES:
 
