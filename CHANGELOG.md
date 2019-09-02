@@ -1,4 +1,4 @@
-## 1.16.3 (Unreleased)
+## 1.17.0 (Unreleased)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_gaap_proxies`
@@ -19,6 +19,13 @@ FEATURES:
 * **New Resource**: `tencentcloud_gaap_certificate`
 * **New Resource**: `tencentcloud_gaap_security_policy`
 * **New Resource**: `tencentcloud_gaap_security_rule`
+
+## 1.16.3 (August 30, 2019)
+
+BUG FIXIES:
+
+* Resource: `tencentcloud_kubernetes_cluster`: cgi error retry.
+* Resource: `tencentcloud_kubernetes_scale_worker`: cgi error retry.
 
 ## 1.16.2 (August 28, 2019)
 
