@@ -205,7 +205,7 @@ data tencentcloud_gaap_layer7_listeners "listenerId" {
   proxy_id    = "${tencentcloud_gaap_proxy.foo.id}"
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
 }
-` + testAccGaapCertificate(2, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsListenerName = `
 resource tencentcloud_gaap_proxy "foo" {
@@ -231,7 +231,7 @@ data tencentcloud_gaap_layer7_listeners "name" {
   proxy_id      = "${tencentcloud_gaap_proxy.foo.id}"
   listener_name = "${tencentcloud_gaap_layer7_listener.foo.name}"
 }
-` + testAccGaapCertificate(2, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsPort = `
 resource tencentcloud_gaap_proxy "foo" {
@@ -257,4 +257,4 @@ data tencentcloud_gaap_layer7_listeners "port" {
   proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
   port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
 }
-` + testAccGaapCertificate(2, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")

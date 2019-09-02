@@ -331,7 +331,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type        = 0
 }
 
-` + testAccGaapCertificate(2, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
 
 var testAccGaapLayer7ListenerHttpsUpdate = `
 resource tencentcloud_gaap_proxy "foo" {
@@ -352,8 +352,8 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type        = 0
 }
 
-` + testAccGaapCertificate(2, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") + "\n" +
-	strings.Replace(testAccGaapCertificate(2, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF"), "foo", "bar", 1)
+` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") + "\n" +
+	strings.Replace(testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF"), "foo", "bar", 1)
 
 var testAccGaapLayer7ListenerHttpsTwoWayAuthentication = `
 resource tencentcloud_gaap_proxy "foo" {
@@ -375,8 +375,8 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   client_certificate_id = "${tencentcloud_gaap_certificate.bar.id}"
 }
 
-` + testAccGaapCertificate(2, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") + "\n" +
-	strings.Replace(testAccGaapCertificate(1, "<<EOF\n"+testAccGaapCertificateClientCA+"EOF", "", "<<EOF\n"+testAccGaapCertificateClientCAKey+"EOF"), "foo", "bar", 1)
+` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") + "\n" +
+	strings.Replace(testAccGaapCertificate("CLIENT", "<<EOF\n"+testAccGaapCertificateClientCA+"EOF", "", "<<EOF\n"+testAccGaapCertificateClientCAKey+"EOF"), "foo", "bar", 1)
 
 var testAccGaapLayer7ListenerHttpsForwardHttps = `
 resource tencentcloud_gaap_proxy "foo" {
@@ -397,4 +397,4 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type        = 0
 }
 
-` + testAccGaapCertificate(2, "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")

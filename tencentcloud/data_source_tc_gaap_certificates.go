@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_gaap_certificate" "foo" {
-  type    = 0
+  type    = "BASIC"
   content = "test:tx2KGdo3zJg/."
   name    = "test_certificate"
 }
@@ -18,6 +18,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -38,10 +39,10 @@ func dataSourceTencentCloudGaapCertificates() *schema.Resource {
 				Description: "Name of the certificate to be queried.",
 			},
 			"type": {
-				Type:         schema.TypeInt,
+				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateIntegerInRange(0, 4),
-				Description:  "Type of the certificate to be queried. `0` means basic authentication; `1` means client CA certificate; `2` means server SSL certificate; `3` means realserver CA certificate; `4` means proxy SSL certificate.",
+				ValidateFunc: validateAllowedStringValue([]string{"BASIC", "CLIENT", "SERVER", "REALSERVER", "PROXY"}),
+				Description:  "Type of the certificate to be queried. Available values include: `BASIC`,`CLIENT`,`SERVER`,`REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.",
 			},
 
 			// computed
@@ -62,7 +63,7 @@ func dataSourceTencentCloudGaapCertificates() *schema.Resource {
 							Description: "Name of the certificate.",
 						},
 						"type": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Type of the certificate.",
 						},
@@ -118,7 +119,22 @@ func dataSourceTencentCloudGaapCertificatesRead(d *schema.ResourceData, m interf
 		name = stringToPointer(raw.(string))
 	}
 	if raw, ok := d.GetOk("type"); ok {
-		certificateType = common.IntPtr(raw.(int))
+		switch raw.(string) {
+		case "BASIC":
+			certificateType = common.IntPtr(0)
+
+		case "CLIENT":
+			certificateType = common.IntPtr(1)
+
+		case "SERVER":
+			certificateType = common.IntPtr(2)
+
+		case "REALSERVER":
+			certificateType = common.IntPtr(3)
+
+		case "PROXY":
+			certificateType = common.IntPtr(4)
+		}
 	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -133,10 +149,31 @@ func dataSourceTencentCloudGaapCertificatesRead(d *schema.ResourceData, m interf
 	for _, certificate := range respCertificates {
 		ids = append(ids, *certificate.CertificateId)
 
+		var certificateType string
+		switch *certificate.CertificateType {
+		case 0:
+			certificateType = "BASIC"
+
+		case 1:
+			certificateType = "CLIENT"
+
+		case 2:
+			certificateType = "SERVER"
+
+		case 3:
+			certificateType = "REALSERVER"
+
+		case 4:
+			certificateType = "PROXY"
+
+		default:
+			return fmt.Errorf("unknown certificate type %d", *certificate.CertificateType)
+		}
+
 		m := map[string]interface{}{
 			"id":          *certificate.CertificateId,
 			"name":        *certificate.CertificateAlias,
-			"type":        *certificate.CertificateType,
+			"type":        certificateType,
 			"create_time": *certificate.CreateTime,
 		}
 

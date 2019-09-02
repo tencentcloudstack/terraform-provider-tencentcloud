@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_gaap_certificate" "foo" {
-  type    = 0
+  type    = "BASIC"
   content = "test:tx2KGdo3zJg/."
   name    = "test_certificate"
 }
@@ -24,6 +24,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -39,11 +40,11 @@ func resourceTencentCloudGaapCertificate() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"type": {
-				Type:         schema.TypeInt,
+				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateIntegerInRange(0, 4),
-				Description:  "Type of the certificate. `0` means basic authentication; `1` means client CA certificate; `2` means server SSL certificate; `3` means realserver CA certificate; `4` means proxy SSL certificate.",
+				ValidateFunc: validateAllowedStringValue([]string{"BASIC", "CLIENT", "SERVER", "REALSERVER", "PROXY"}),
+				Description:  "Type of the certificate. Available values include: `BASIC`,`CLIENT`,`SERVER`,`REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.",
 			},
 			"content": {
 				Type:        schema.TypeString,
@@ -100,7 +101,24 @@ func resourceTencentCloudGaapCertificateCreate(d *schema.ResourceData, m interfa
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	certificateType := d.Get("type").(int)
+	var certificateType int
+	switch d.Get("type").(string) {
+	case "BASIC":
+		certificateType = 0
+
+	case "CLIENT":
+		certificateType = 1
+
+	case "SERVER":
+		certificateType = 2
+
+	case "REALSERVER":
+		certificateType = 3
+
+	case "PROXY":
+		certificateType = 4
+	}
+
 	content := d.Get("content").(string)
 
 	name := d.Get("name").(string)
@@ -144,7 +162,25 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 	if certificate.CertificateType == nil {
 		return errors.New("certificate type is nil")
 	}
-	d.Set("type", certificate.CertificateType)
+	switch *certificate.CertificateType {
+	case 0:
+		d.Set("type", "BASIC")
+
+	case 1:
+		d.Set("type", "CLIENT")
+
+	case 2:
+		d.Set("type", "SERVER")
+
+	case 3:
+		d.Set("type", "REALSERVER")
+
+	case 4:
+		d.Set("type", "PROXY")
+
+	default:
+		return fmt.Errorf("unknown certificate type %d", *certificate.CertificateType)
+	}
 
 	if certificate.CertificateContent == nil {
 		return errors.New("certificate content is nil")
