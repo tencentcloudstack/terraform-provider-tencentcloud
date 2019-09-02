@@ -62,6 +62,7 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_route_tables
   tencentcloud_vpc_subnets
+  tencentcloud_ssl_certificates
 
 AS Resources
   tencentcloud_as_scaling_config
@@ -143,6 +144,8 @@ VPC Resources
   tencentcloud_dnat
   tencentcloud_nat_gateway
 
+SSL Resources
+  tencentcloud_ssl_certificate
 
 */
 package tencentcloud
@@ -227,6 +230,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dc_gateway_instances":        dataSourceTencentCloudDcGatewayInstances(),
 			"tencentcloud_dc_gateway_ccn_routes":       dataSourceTencentCloudDcGatewayCCNRoutes(),
 			"tencentcloud_kubernetes_clusters":         dataSourceTencentCloudKubernetesClusters(),
+			"tencentcloud_ssl_certificates":            dataSourceTencentCloudSslCertificates(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -282,6 +286,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dc_gateway_ccn_route":       resourceTencentCloudDcGatewayCcnRouteInstance(),
 			"tencentcloud_kubernetes_cluster":         resourceTencentCloudTkeCluster(),
 			"tencentcloud_kubernetes_scale_worker":    resourceTencentCloudTkeScaleWorker(),
+			"tencentcloud_ssl_certificate":            resourceTencentCloudSslCertificate(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -2,6 +2,7 @@ package connectivity
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -21,6 +22,7 @@ import (
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 )
 
 // client for all TencentCloud service
@@ -40,6 +42,7 @@ type TencentCloudClient struct {
 	tagConn     *tag.Client
 	mongodbConn *mongodb.Client
 	tkeConn     *tke.Client
+	sslCoon     *ssl.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -336,4 +339,27 @@ func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 	me.tkeConn = tkeConn
 
 	return me.tkeConn
+}
+
+func (me *TencentCloudClient) UseSslClient() *ssl.Client {
+	if me.sslCoon != nil {
+		return me.sslCoon
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = http.MethodPost
+	cpf.HttpProfile.ReqTimeout = 300
+
+	sslConn, _ := ssl.NewClient(credential, me.Region, cpf)
+	var round LogRoundTripper
+	sslConn.WithHttpTransport(&round)
+
+	me.sslCoon = sslConn
+
+	return me.sslCoon
 }
