@@ -43,11 +43,13 @@ resource "tencentcloud_gaap_http_rule" "foo" {
   health_check_path         = "/"
   health_check_method       = "GET"
   health_check_status_codes = [200]
+
   realservers {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"
     port = 80
   }
+
   realservers {
     id   = "${tencentcloud_gaap_realserver.bar.id}"
     ip   = "${tencentcloud_gaap_realserver.bar.ip}"

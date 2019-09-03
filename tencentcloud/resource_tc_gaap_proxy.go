@@ -10,6 +10,7 @@ resource "tencentcloud_gaap_proxy" "foo" {
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+
   tags = {
     test = "test"
   }
@@ -379,7 +380,7 @@ func resourceTencentCloudGaapProxyDelete(d *schema.ResourceData, m interface{}) 
 	if createTime, err := parseTime(createTimeStr); err == nil {
 		if !time.Now().After(createTime.Add(2 * time.Minute)) {
 			log.Printf("[DEBUG]%s proxy can't be deleted unless it has lived 2 minutes", logId)
-			time.Sleep(createTime.Add(2 * time.Minute).Sub(time.Now()))
+			time.Sleep(time.Until(createTime.Add(2 * time.Minute)))
 		}
 	} else {
 		log.Printf("[WARN]%s parse create time failed, delete immediately", logId)

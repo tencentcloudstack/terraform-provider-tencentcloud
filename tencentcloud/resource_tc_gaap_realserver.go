@@ -7,6 +7,7 @@ Example Usage
 resource "tencentcloud_gaap_realserver" "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
+
   tags = {
     test = "test"
   }

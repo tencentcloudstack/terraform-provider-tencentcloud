@@ -157,6 +157,7 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
   health_check    = true
   interval      = 5
   connect_timeout = 2
+
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"
@@ -181,6 +182,7 @@ resource tencentcloud_gaap_layer4_listener "bar" {
   health_check    = true
   interval      = 5
   connect_timeout = 2
+
   realserver_bind_set {
     id     = "${tencentcloud_gaap_realserver.bar.id}"
     ip     = "${tencentcloud_gaap_realserver.bar.ip}"
@@ -230,6 +232,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   realserver_type = "IP"
   proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
   health_check    = false
+
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"

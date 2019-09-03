@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"regexp"
 	"testing"
 
@@ -76,21 +77,43 @@ func TestAccDataSourceTencentCloudGaapCertificates_type(t *testing.T) {
 	})
 }
 
-var TestAccDataSourceTencentCloudGaapCertificatesBasic = testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "ci-server-ca", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") + `
+var TestAccDataSourceTencentCloudGaapCertificatesBasic = fmt.Sprintf(`
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  name    = "ci-server-ca"
+  content = %s
+  key     = %s
+}
+
 data "tencentcloud_gaap_certificates" "foo" {
   id = "${tencentcloud_gaap_certificate.foo.id}"
 }
-`
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
 
 // fuzzy search
-var TestAccDataSourceTencentCloudGaapCertificatesName = testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "test-ci-server-ca-test", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") + `
+var TestAccDataSourceTencentCloudGaapCertificatesName = fmt.Sprintf(`
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  name    = "ci-server-ca"
+  content = %s
+  key     = %s
+}
+
 data "tencentcloud_gaap_certificates" "foo" {
   name = "${tencentcloud_gaap_certificate.foo.name}"
 }
-`
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
 
-var TestAccDataSourceTencentCloudGaapCertificatesType = testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "ci-server-ca", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") + `
+var TestAccDataSourceTencentCloudGaapCertificatesType = fmt.Sprintf(
+	`
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  name    = "ci-server-ca"
+  content = %s
+  key     = %s
+}
+
 data "tencentcloud_gaap_certificates" "foo" {
   type = "${tencentcloud_gaap_certificate.foo.type}"
 }
-`
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")

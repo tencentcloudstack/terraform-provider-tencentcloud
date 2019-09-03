@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -259,13 +258,19 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 `
 
-var testAccGaapLayer7ListenerHttps = `
+var testAccGaapLayer7ListenerHttps = fmt.Sprintf(`
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+}
+
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -278,15 +283,27 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type        = 0
 }
 
-` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
 
-var testAccGaapLayer7ListenerHttpsUpdate = `
+var testAccGaapLayer7ListenerHttpsUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+}
+
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "bar" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -299,16 +316,28 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type        = 0
 }
 
-` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") + "\n" +
-	strings.Replace(testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF"), "foo", "bar", 1)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
 
-var testAccGaapLayer7ListenerHttpsTwoWayAuthentication = `
+var testAccGaapLayer7ListenerHttpsTwoWayAuthentication = fmt.Sprintf(`
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+}
+
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "bar" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -322,16 +351,22 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   client_certificate_id = "${tencentcloud_gaap_certificate.bar.id}"
 }
 
-` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") + "\n" +
-	strings.Replace(testAccGaapCertificate("CLIENT", "<<EOF\n"+testAccGaapCertificateClientCA+"EOF", "", "<<EOF\n"+testAccGaapCertificateClientCAKey+"EOF"), "foo", "bar", 1)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF")
 
-var testAccGaapLayer7ListenerHttpsForwardHttps = `
+var testAccGaapLayer7ListenerHttpsForwardHttps = fmt.Sprintf(`
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+}
+
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -344,4 +379,4 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type        = 0
 }
 
-` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")

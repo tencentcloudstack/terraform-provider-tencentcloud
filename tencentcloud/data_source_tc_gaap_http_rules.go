@@ -30,6 +30,7 @@ resource "tencentcloud_gaap_http_rule" "foo" {
   path            = "/"
   realserver_type = "IP"
   health_check    = true
+
   realservers {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"

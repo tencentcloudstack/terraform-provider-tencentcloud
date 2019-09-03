@@ -234,6 +234,7 @@ resource tencentcloud_gaap_proxy "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
   enable            = false
+
   tags = {
     "test" = "test"
   }

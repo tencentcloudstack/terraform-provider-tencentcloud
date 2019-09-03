@@ -26,6 +26,7 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
   health_check    = true
   interval      = 5
   connect_timeout = 2
+
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"

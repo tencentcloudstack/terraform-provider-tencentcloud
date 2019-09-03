@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"regexp"
 	"testing"
 
@@ -181,13 +182,19 @@ data tencentcloud_gaap_layer7_listeners "port" {
 }
 `
 
-var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsListenerId = `
+var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsListenerId = fmt.Sprintf(`
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+}
+
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -205,15 +212,21 @@ data tencentcloud_gaap_layer7_listeners "listenerId" {
   proxy_id    = "${tencentcloud_gaap_proxy.foo.id}"
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
 }
-` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
 
-var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsListenerName = `
+var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsListenerName = fmt.Sprintf(`
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+}
+
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -231,15 +244,21 @@ data tencentcloud_gaap_layer7_listeners "name" {
   proxy_id      = "${tencentcloud_gaap_proxy.foo.id}"
   listener_name = "${tencentcloud_gaap_layer7_listener.foo.name}"
 }
-` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
 
-var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsPort = `
+var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsPort = fmt.Sprintf(`
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+}
+
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -257,4 +276,4 @@ data tencentcloud_gaap_layer7_listeners "port" {
   proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
   port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
 }
-` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")

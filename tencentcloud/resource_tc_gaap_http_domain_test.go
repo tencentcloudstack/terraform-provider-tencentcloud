@@ -192,13 +192,19 @@ resource tencentcloud_gaap_http_domain "foo" {
 }
 `
 
-var testAccGaapHttpDomainHttps = `
+var testAccGaapHttpDomainHttps = fmt.Sprintf(`
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+}
+
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -216,15 +222,27 @@ resource tencentcloud_gaap_http_domain "foo" {
   domain         = "www.qq.com"
 }
 
-` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF")
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
 
-var testAccGaapHttpDomainHttpsMutualAuthentication = `
+var testAccGaapHttpDomainHttpsMutualAuthentication = fmt.Sprintf(`
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+}
+
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "bar" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -243,16 +261,57 @@ resource tencentcloud_gaap_http_domain "foo" {
   domain                = "www.qq.com"
 }
 
-` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") +
-	strings.Replace(testAccGaapCertificate("CLIENT", "<<EOF\n"+testAccGaapCertificateClientCA+"EOF", "", "<<EOF\n"+testAccGaapCertificateClientCAKey+"EOF"), "foo", "bar", 1)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF")
 
-var testAccGaapHttpDomainHttpsMutualAuthenticationUpdate = `
+var testAccGaapHttpDomainHttpsMutualAuthenticationUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
+}
+
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "bar" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "server" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "client" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "realserver" {
+  type    = "REALSERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "basic" {
+  type    = "BASIC"
+  content = %s
+}
+
+resource tencentcloud_gaap_certificate "gaap" {
+  type    = "PROXY"
+  content = %s
+  key     = %s
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -283,10 +342,11 @@ resource tencentcloud_gaap_http_domain "foo" {
   gaap_auth_id = "${tencentcloud_gaap_certificate.gaap.id}"
 }
 
-` + testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF") +
-	strings.Replace(testAccGaapCertificate("CLIENT", "<<EOF\n"+testAccGaapCertificateClientCA+"EOF", "", "<<EOF\n"+testAccGaapCertificateClientCAKey+"EOF"), "foo", "bar", 1) +
-	strings.Replace(testAccGaapCertificate("SERVER", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF"), "foo", "server", 1) +
-	strings.Replace(testAccGaapCertificate("CLIENT", "<<EOF\n"+testAccGaapCertificateClientCA+"EOF", "", "<<EOF\n"+testAccGaapCertificateClientCAKey+"EOF"), "foo", "client", 1) +
-	strings.Replace(testAccGaapCertificate("REALSERVER", "<<EOF\n"+testAccGaapCertificateClientCA+"EOF", "", "<<EOF\n"+testAccGaapCertificateClientCAKey+"EOF"), "foo", "realserver", 1) +
-	strings.Replace(testAccGaapCertificate("BASIC", "\"test:tx2KGdo3zJg/.\"", "", ""), "foo", "basic", 1) +
-	strings.Replace(testAccGaapCertificate("PROXY", "<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF"), "foo", "gaap", 1)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+	"<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+	"\"test:tx2KGdo3zJg/.\"",
+	"<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF",
+)
