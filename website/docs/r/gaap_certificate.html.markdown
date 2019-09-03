@@ -14,7 +14,7 @@ Provides a resource to create a certificate of GAAP.
 
 ```hcl
 resource "tencentcloud_gaap_certificate" "foo" {
-  type    = 0
+  type    = "BASIC"
   content = "test:tx2KGdo3zJg/."
   name    = "test_certificate"
 }
@@ -25,7 +25,7 @@ resource "tencentcloud_gaap_certificate" "foo" {
 The following arguments are supported:
 
 * `content` - (Required, ForceNew) Content of the certificate, and URL encoding. When the certificate is basic authentication, use the `user:xxx password:xxx` format, where the password is encrypted with `htpasswd` or `openssl`; When the certificate is `CA` or `SSL`, the format is `pem`.
-* `type` - (Required, ForceNew) Type of the certificate. `0` means basic authentication; `1` means client CA certificate; `2` means server SSL certificate; `3` means realserver CA certificate; `4` means proxy SSL certificate.
+* `type` - (Required, ForceNew) Type of the certificate. Available values include: `BASIC`,`CLIENT`,`SERVER`,`REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.
 * `key` - (Optional, ForceNew) Key of the `CA` or `SSL` certificate.
 * `name` - (Optional) Name of the certificate.
 

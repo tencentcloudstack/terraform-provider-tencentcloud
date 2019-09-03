@@ -14,10 +14,11 @@ Use this data source to query GAAP certificate.
 
 ```hcl
 resource "tencentcloud_gaap_certificate" "foo" {
-  type    = 0
+  type    = "BASIC"
   content = "test:tx2KGdo3zJg/."
   name    = "test_certificate"
 }
+
 data "tencentcloud_gaap_certificates" "foo" {
   id = "${tencentcloud_gaap_certificate.foo.id}"
 }
@@ -29,7 +30,7 @@ The following arguments are supported:
 
 * `id` - (Optional) ID of the certificate to be queried.
 * `name` - (Optional) Name of the certificate to be queried.
-* `type` - (Optional) Type of the certificate to be queried. `0` means basic authentication; `1` means client CA certificate; `2` means server SSL certificate; `3` means realserver CA certificate; `4` means proxy SSL certificate.
+* `type` - (Optional) Type of the certificate to be queried. Available values include: `BASIC`,`CLIENT`,`SERVER`,`REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.
 
 ## Attributes Reference
 

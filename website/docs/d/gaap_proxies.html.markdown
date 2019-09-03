@@ -20,6 +20,7 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 data "tencentcloud_gaap_proxies" "foo" {
   ids = ["${tencentcloud_gaap_proxy.foo.id}"]
 }

@@ -20,10 +20,12 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 resource "tencentcloud_gaap_security_policy" "foo" {
   proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
   action   = "ACCEPT"
 }
+
 resource "tencentcloud_gaap_security_rule" "foo" {
   policy_id = "${tencentcloud_gaap_security_policy.foo.id}"
   name      = "ci-test-gaap-s-rule"
@@ -32,6 +34,7 @@ resource "tencentcloud_gaap_security_rule" "foo" {
   protocol  = "TCP"
   port      = "80"
 }
+
 data "tencentcloud_gaap_security_rules" "protocol" {
   policy_id = "${tencentcloud_gaap_security_policy.foo.id}"
   protocol  = "${tencentcloud_gaap_security_rule.foo.protocol}"

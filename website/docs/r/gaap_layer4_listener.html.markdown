@@ -20,14 +20,17 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 resource "tencentcloud_gaap_realserver" "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
 }
+
 resource "tencentcloud_gaap_realserver" "bar" {
   ip   = "119.29.29.29"
   name = "ci-test-gaap-realserver2"
 }
+
 resource "tencentcloud_gaap_layer4_listener" "foo" {
   protocol        = "TCP"
   name            = "ci-test-gaap-4-listener"
@@ -35,11 +38,13 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
   realserver_type = "IP"
   proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
   health_check    = true
+
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"
     port = 80
   }
+
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.bar.id}"
     ip   = "${tencentcloud_gaap_realserver.bar.ip}"

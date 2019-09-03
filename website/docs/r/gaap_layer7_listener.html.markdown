@@ -20,6 +20,7 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 resource "tencentcloud_gaap_layer7_listener" "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
