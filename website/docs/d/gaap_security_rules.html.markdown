@@ -51,6 +51,7 @@ The following arguments are supported:
 * `name` - (Optional) Name of the security policy rule to be queried.
 * `port` - (Optional) Port of the security policy rule to be queried.
 * `protocol` - (Optional) Protocol of the security policy rule to be queried.
+* `result_output_file` - (Optional, ForceNew) Used to save results.
 * `rule_id` - (Optional) ID of the security policy rules to be queried.
 
 ## Attributes Reference

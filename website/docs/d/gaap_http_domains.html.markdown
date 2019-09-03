@@ -45,6 +45,7 @@ The following arguments are supported:
 
 * `domain` - (Required) Forward domain of the layer7 listener to be queried.
 * `listener_id` - (Required) ID of the layer7 listener to be queried.
+* `result_output_file` - (Optional, ForceNew) Used to save results.
 
 ## Attributes Reference
 

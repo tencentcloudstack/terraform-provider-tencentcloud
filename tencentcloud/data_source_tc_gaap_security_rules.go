@@ -38,6 +38,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"regexp"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -94,6 +95,12 @@ func dataSourceTencentCloudGaapSecurityRules() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"ALL", "TCP", "UDP"}),
 				Description:  "Protocol of the security policy rule to be queried.",
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 
 			// computed
@@ -238,6 +245,14 @@ func dataSourceTencentCloudGaapSecurityRulesRead(d *schema.ResourceData, m inter
 
 	d.Set("rules", rules)
 	d.SetId(dataResourceIdsHash(ids))
+
+	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
+		if err := writeToFile(output.(string), rules); err != nil {
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
+				logId, output.(string), err.Error())
+			return err
+		}
+	}
 
 	return nil
 }

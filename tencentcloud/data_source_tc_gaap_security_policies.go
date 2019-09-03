@@ -26,6 +26,7 @@ package tencentcloud
 
 import (
 	"context"
+	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -38,6 +39,12 @@ func dataSourceTencentCloudGaapSecurityPolices() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "ID of the security policy to be queried.",
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 
 			// computed
@@ -84,6 +91,21 @@ func dataSourceTencentCloudGaapSecurityPoliciesRead(d *schema.ResourceData, m in
 	d.Set("action", action)
 
 	d.SetId(id)
+
+	m = map[string]interface{}{
+		"id":       id,
+		"proxy_id": proxyId,
+		"status":   status,
+		"action":   action,
+	}
+
+	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
+		if err := writeToFile(output.(string), m); err != nil {
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
+				logId, output.(string), err.Error())
+			return err
+		}
+	}
 
 	return nil
 }

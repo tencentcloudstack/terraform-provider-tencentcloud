@@ -19,6 +19,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"log"
 	"net"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -54,6 +55,12 @@ func dataSourceTencentCloudGaapRealservers() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Tags of the GAAP proxy to be queried. Support up to 5, display the information as long as it matches one.",
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 
 			// computed
@@ -182,6 +189,14 @@ func dataSourceTencentCloudGaapRealserversRead(d *schema.ResourceData, m interfa
 
 	d.Set("realservers", realserverList)
 	d.SetId(dataResourceIdsHash(ids))
+
+	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
+		if err := writeToFile(output.(string), realserverList); err != nil {
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
+				logId, output.(string), err.Error())
+			return err
+		}
+	}
 
 	return nil
 }

@@ -20,6 +20,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -44,6 +45,12 @@ func dataSourceTencentCloudGaapCertificates() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"BASIC", "CLIENT", "SERVER", "REALSERVER", "PROXY"}),
 				Description:  "Type of the certificate to be queried. Available values include: `BASIC`,`CLIENT`,`SERVER`,`REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.",
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 
 			// computed
@@ -171,6 +178,14 @@ func dataSourceTencentCloudGaapCertificatesRead(d *schema.ResourceData, m interf
 
 	d.Set("certificates", certificates)
 	d.SetId(dataResourceIdsHash(ids))
+
+	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
+		if err := writeToFile(output.(string), certificates); err != nil {
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
+				logId, output.(string), err.Error())
+			return err
+		}
+	}
 
 	return nil
 }

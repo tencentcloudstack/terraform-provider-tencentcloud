@@ -35,6 +35,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -52,6 +53,12 @@ func dataSourceTencentCloudGaapHttpDomains() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "Forward domain of the layer7 listener to be queried.",
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 
 			// computed
@@ -181,6 +188,14 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 
 	d.Set("domains", domains)
 	d.SetId(dataResourceIdsHash(ids))
+
+	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
+		if err := writeToFile(output.(string), domains); err != nil {
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
+				logId, output.(string), err.Error())
+			return err
+		}
+	}
 
 	return nil
 }

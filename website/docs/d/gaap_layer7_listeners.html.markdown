@@ -44,6 +44,7 @@ The following arguments are supported:
 * `listener_id` - (Optional) ID of the layer7 listener to be queried.
 * `listener_name` - (Optional) Name of the layer7 listener to be queried.
 * `port` - (Optional) Port of the layer7 listener to be queried.
+* `result_output_file` - (Optional, ForceNew) Used to save results.
 
 ## Attributes Reference
 

@@ -46,6 +46,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -81,6 +82,12 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validatePort,
 				Description:  "Port of the layer4 listener to be queried.",
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 
 			// computed
@@ -292,6 +299,14 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 
 	d.Set("listeners", listeners)
 	d.SetId(dataResourceIdsHash(ids))
+
+	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
+		if err := writeToFile(output.(string), listeners); err != nil {
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
+				logId, output.(string), err.Error())
+			return err
+		}
+	}
 
 	return nil
 }
