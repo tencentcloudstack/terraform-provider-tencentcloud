@@ -9,6 +9,7 @@ resource "tencentcloud_gaap_certificate" "foo" {
   content = "test:tx2KGdo3zJg/."
   name    = "test_certificate"
 }
+
 data "tencentcloud_gaap_certificates" "foo" {
   id = "${tencentcloud_gaap_certificate.foo.id}"
 }
@@ -68,17 +69,17 @@ func dataSourceTencentCloudGaapCertificates() *schema.Resource {
 							Description: "Type of the certificate.",
 						},
 						"create_time": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Creation time of the certificate, use unix timestamp format.",
 						},
 						"begin_time": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Beginning time of the certificate, use unix timestamp format.",
 						},
 						"end_time": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Ending time of the certificate, use unix timestamp format.",
 						},
@@ -119,22 +120,7 @@ func dataSourceTencentCloudGaapCertificatesRead(d *schema.ResourceData, m interf
 		name = stringToPointer(raw.(string))
 	}
 	if raw, ok := d.GetOk("type"); ok {
-		switch raw.(string) {
-		case "BASIC":
-			certificateType = common.IntPtr(0)
-
-		case "CLIENT":
-			certificateType = common.IntPtr(1)
-
-		case "SERVER":
-			certificateType = common.IntPtr(2)
-
-		case "REALSERVER":
-			certificateType = common.IntPtr(3)
-
-		case "PROXY":
-			certificateType = common.IntPtr(4)
-		}
+		certificateType = common.IntPtr(gaapCertificateStringMap[raw.(string)])
 	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -149,24 +135,11 @@ func dataSourceTencentCloudGaapCertificatesRead(d *schema.ResourceData, m interf
 	for _, certificate := range respCertificates {
 		ids = append(ids, *certificate.CertificateId)
 
-		var certificateType string
-		switch *certificate.CertificateType {
-		case 0:
-			certificateType = "BASIC"
-
-		case 1:
-			certificateType = "CLIENT"
-
-		case 2:
-			certificateType = "SERVER"
-
-		case 3:
-			certificateType = "REALSERVER"
-
-		case 4:
-			certificateType = "PROXY"
-
-		default:
+		var (
+			certificateType string
+			ok              bool
+		)
+		if certificateType, ok = gaapCertificateIntMap[int(*certificate.CertificateType)]; !ok {
 			return fmt.Errorf("unknown certificate type %d", *certificate.CertificateType)
 		}
 
@@ -174,15 +147,15 @@ func dataSourceTencentCloudGaapCertificatesRead(d *schema.ResourceData, m interf
 			"id":          *certificate.CertificateId,
 			"name":        *certificate.CertificateAlias,
 			"type":        certificateType,
-			"create_time": *certificate.CreateTime,
+			"create_time": formatUnixTime(*certificate.CreateTime),
 		}
 
 		if certificate.BeginTime != nil {
-			m["begin_time"] = *certificate.BeginTime
+			m["begin_time"] = formatUnixTime(*certificate.BeginTime)
 		}
 
 		if certificate.EndTime != nil {
-			m["end_time"] = *certificate.EndTime
+			m["end_time"] = formatUnixTime(*certificate.EndTime)
 		}
 
 		if certificate.IssuerCN != nil {

@@ -11,24 +11,29 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 resource "tencentcloud_gaap_layer7_listener" "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
   proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
 }
+
 resource "tencentcloud_gaap_realserver" "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
 }
+
 resource "tencentcloud_gaap_realserver" "bar" {
   ip   = "8.8.8.8"
   name = "ci-test-gaap-realserver"
 }
+
 resource "tencentcloud_gaap_http_domain" "foo" {
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
   domain      = "www.qq.com"
 }
+
 resource "tencentcloud_gaap_http_rule" "foo" {
   listener_id               = "${tencentcloud_gaap_layer7_listener.foo.id}"
   domain                    = "${tencentcloud_gaap_http_domain.foo.domain}"
@@ -58,7 +63,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -154,12 +158,10 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Description:  "Method of the health check. Available values includes `GET` and `HEAD`.",
 			},
 			"health_check_status_codes": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Elem:     &schema.Schema{Type: schema.TypeInt},
-				Set: func(v interface{}) int {
-					return v.(int)
-				},
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeInt},
+				Set:         schema.HashInt,
 				Description: "Return code of confirmed normal. Available values includes `100`,`200`,`300`,`400` and `500`.",
 			},
 			"realservers": {
@@ -167,12 +169,8 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Required: true,
 				Set: func(v interface{}) int {
 					m := v.(map[string]interface{})
-					sb := new(strings.Builder)
-					sb.WriteString(m["id"].(string))
-					sb.WriteString(m["ip"].(string))
-					sb.WriteString(fmt.Sprintf("%d", m["port"].(int)))
-					sb.WriteString(fmt.Sprintf("%d", m["weight"].(int)))
-					return hashcode.String(sb.String())
+					return hashcode.String(fmt.Sprintf("%s-%s-%d-%d", m["id"].(string), m["ip"].(string), m["port"].(int), m["weight"].(int)))
+
 				},
 				Description: "An information list of GAAP realserver. Each element contains the following attributes:",
 				Elem: &schema.Resource{
@@ -226,18 +224,20 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 	}
 
 	if raw, ok := d.GetOk("health_check_status_codes"); ok {
-		statusCodeSet := raw.(*schema.Set).List()
-		rule.healthCheckStatusCodes = make([]int, 0, len(statusCodeSet))
-		for _, c := range statusCodeSet {
-			code := c.(int)
-			switch code {
-			case 100, 200, 300, 400, 500:
-				rule.healthCheckStatusCodes = append(rule.healthCheckStatusCodes, code)
+		statusCodeSet := raw.(*schema.Set)
 
-			default:
-				return fmt.Errorf("invalid health check status code %d", code)
-			}
+		codes := []interface{}{100, 200, 300, 400, 500}
+		defaultSet := schema.NewSet(schema.HashInt, codes)
+		diff := statusCodeSet.Difference(defaultSet)
+		if diff.Len() > 0 {
+			return fmt.Errorf("invalid health check status %v", diff.List())
 		}
+
+		rule.healthCheckStatusCodes = make([]int, 0, statusCodeSet.Len())
+		for _, code := range statusCodeSet.List() {
+			rule.healthCheckStatusCodes = append(rule.healthCheckStatusCodes, code.(int))
+		}
+
 	} else {
 		rule.healthCheckStatusCodes = []int{100, 200, 300, 400, 500}
 	}

@@ -114,37 +114,6 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "health_check", "false"),
 				),
 			},
-		},
-	})
-}
-
-func TestAccTencentCloudGaapLayer4Listener_updateRealserverSet(t *testing.T) {
-	id := new(string)
-	proxyId := new(string)
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, proxyId, "TCP"),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccGaapLayer4ListenerBasic,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "TCP"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "TCP"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-listener"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "scheduler", "rr"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_type", "IP"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "proxy_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "health_check", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "interval", "5"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "connect_timeout", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "2"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "create_time"),
-				),
-			},
 			{
 				Config: testAccGaapLayer4ListenerTcpUpdateRealserverSet,
 				Check: resource.ComposeTestCheckFunc(
@@ -487,6 +456,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   protocol        = "TCP"
   name            = "ci-test-gaap-4-listener-new"
   port            = 80
+  scheduler       = "wrr"
   realserver_type = "IP"
   proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
   health_check    = false
@@ -527,9 +497,10 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   protocol        = "TCP"
   name            = "ci-test-gaap-4-listener"
   port            = 80
+  scheduler       = "wrr"
   realserver_type = "IP"
   proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
-  health_check    = true
+  health_check    = false
 
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"

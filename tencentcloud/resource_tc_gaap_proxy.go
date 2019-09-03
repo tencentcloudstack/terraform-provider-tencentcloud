@@ -73,16 +73,18 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 				Description:  "Maximum concurrency of the GAAP proxy, unit is 10k. The available values include `2`,`5`,`10`,`20`,`30`,`40`,`50`,`60`,`70`,`80`,`90`,`100`.",
 			},
 			"access_region": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "Access region of the GAAP proxy.",
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue([]string{"NorthChina", "EastChina", "SouthChina", "SouthwestChina", "Hongkong", "SL_TAIWAN", "SoutheastAsia", "Korea", "SL_India", "SL_Australia", "Europe", "SL_UK", "SL_SouthAmerica", "NorthAmerica", "SL_MiddleUSA", "Canada", "SL_VIET", "WestIndia", "Thailand", "Virginia", "Russia", "Japan", "SL_Indonesia"}),
+				Description:  "Access region of the GAAP proxy. The available values include `NorthChina`, `EastChina`, `SouthChina`, `SouthwestChina`, `Hongkong`, `SL_TAIWAN`, `SoutheastAsia`, `Korea`, `SL_India`, `SL_Australia`, `Europe`, `SL_UK`, `SL_SouthAmerica`, `NorthAmerica`, `SL_MiddleUSA`, `Canada`, `SL_VIET`, `WestIndia`, `Thailand`, `Virginia`, `Russia`, `Japan`, `SL_Indonesia`",
 			},
 			"realserver_region": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "Region of the GAAP realserver.",
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue([]string{"NorthChina", "EastChina", "SouthChina", "SouthwestChina", "Hongkong", "SL_TAIWAN", "SoutheastAsia", "Korea", "SL_India", "SL_Australia", "Europe", "SL_UK", "SL_SouthAmerica", "NorthAmerica", "SL_MiddleUSA", "Canada", "SL_VIET", "WestIndia", "Thailand", "Virginia", "Russia", "Japan", "SL_Indonesia"}),
+				Description:  "Region of the GAAP realserver. The available values include `NorthChina`, `EastChina`, `SouthChina`, `SouthwestChina`, `Hongkong`, `SL_TAIWAN`, `SoutheastAsia`, `Korea`, `SL_India`, `SL_Australia`, `Europe`, `SL_UK`, `SL_SouthAmerica`, `NorthAmerica`, `SL_MiddleUSA`, `Canada`, `SL_VIET`, `WestIndia`, `Thailand`, `Virginia`, `Russia`, `Japan`, `SL_Indonesia`",
 			},
 			"enable": {
 				Type:        schema.TypeBool,
@@ -98,7 +100,7 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 
 			// computed
 			"create_time": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Creation time of the GAAP proxy.",
 			},
@@ -123,7 +125,7 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 				Description: "Indicates whether GAAP proxy can scalable.",
 			},
 			"support_protocols": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -160,13 +162,13 @@ func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) 
 		return err
 	}
 
+	d.SetId(id)
+
 	if !enable {
 		if err := service.DisableProxy(ctx, id); err != nil {
 			return err
 		}
 	}
-
-	d.SetId(id)
 
 	return resourceTencentCloudGaapProxyRead(d, m)
 }
@@ -248,7 +250,7 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 	if proxy.CreateTime == nil {
 		return errors.New("proxy create time is nil")
 	}
-	d.Set("create_time", proxy.CreateTime)
+	d.Set("create_time", formatUnixTime(*proxy.CreateTime))
 
 	if proxy.Domain == nil {
 		return errors.New("proxy access domain is nil")
@@ -372,12 +374,15 @@ func resourceTencentCloudGaapProxyDelete(d *schema.ResourceData, m interface{}) 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	id := d.Id()
-	createTime := d.Get("create_time").(int)
+	createTimeStr := d.Get("create_time").(string)
 
-	if time.Now().Unix()-int64(createTime) < 120 {
-		log.Printf("[DEBUG]%s proxy can't be deleted unless it has lived 2 minutes", logId)
-		sleepTime := 2*time.Minute - time.Duration(time.Now().UnixNano()-int64(createTime)*int64(time.Second))
-		time.Sleep(sleepTime)
+	if createTime, err := parseTime(createTimeStr); err == nil {
+		if !time.Now().After(createTime.Add(2 * time.Minute)) {
+			log.Printf("[DEBUG]%s proxy can't be deleted unless it has lived 2 minutes", logId)
+			time.Sleep(createTime.Add(2 * time.Minute).Sub(time.Now()))
+		}
+	} else {
+		log.Printf("[WARN]%s parse create time failed, delete immediately", logId)
 	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}

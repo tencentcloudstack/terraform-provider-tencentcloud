@@ -8,6 +8,7 @@ resource "tencentcloud_gaap_realserver" "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
 }
+
 data "tencentcloud_gaap_realservers" "foo" {
   ip = "${tencentcloud_gaap_realserver.foo.ip}"
 }
@@ -30,7 +31,6 @@ func dataSourceTencentCloudGaapRealservers() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     -1,
 				Description: "ID of the project within the GAAP realserver to be queried, default is '-1' means all projects.",
 			},
 			"domain": {
@@ -105,7 +105,10 @@ func dataSourceTencentCloudGaapRealserversRead(d *schema.ResourceData, m interfa
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	projectId := d.Get("project_id").(int)
+	projectId := -1
+	if raw, ok := d.GetOk("project_id"); ok {
+		projectId = raw.(int)
+	}
 
 	var (
 		address *string

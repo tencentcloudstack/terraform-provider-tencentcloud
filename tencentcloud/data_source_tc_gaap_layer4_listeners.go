@@ -11,10 +11,12 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 resource "tencentcloud_gaap_realserver" "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
 }
+
 resource "tencentcloud_gaap_layer4_listener" "foo" {
   protocol        = "TCP"
   name            = "ci-test-gaap-4-listener"
@@ -30,6 +32,7 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
     port = 80
   }
 }
+
 data "tencentcloud_gaap_layer4_listeners" "foo" {
   protocol    = "TCP"
   proxy_id    = "${tencentcloud_gaap_proxy.foo.id}"
@@ -137,7 +140,7 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 							Description: "Interval of the health check",
 						},
 						"create_time": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Creation time of the layer4 listener.",
 						},
@@ -229,7 +232,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 				"status":          *ls.ListenerStatus,
 				"scheduler":       *ls.Scheduler,
 				"health_check":    *ls.HealthCheck == 1,
-				"create_time":     *ls.CreateTime,
+				"create_time":     formatUnixTime(*ls.CreateTime),
 				"connect_timeout": *ls.ConnectTimeout,
 				"interval":        *ls.DelayLoop,
 			}
@@ -279,7 +282,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 				"realserver_type": *ls.RealServerType,
 				"status":          *ls.ListenerStatus,
 				"scheduler":       *ls.Scheduler,
-				"create_time":     *ls.CreateTime,
+				"create_time":     formatUnixTime(*ls.CreateTime),
 			}
 
 			listeners = append(listeners, m)

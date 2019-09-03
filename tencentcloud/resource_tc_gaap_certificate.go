@@ -68,17 +68,17 @@ func resourceTencentCloudGaapCertificate() *schema.Resource {
 
 			// computed
 			"create_time": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Creation time of the certificate, use unix timestamp format.",
 			},
 			"begin_time": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Beginning time of the certificate, use unix timestamp format.",
 			},
 			"end_time": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Ending time of the certificate, use unix timestamp format.",
 			},
@@ -101,23 +101,7 @@ func resourceTencentCloudGaapCertificateCreate(d *schema.ResourceData, m interfa
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	var certificateType int
-	switch d.Get("type").(string) {
-	case "BASIC":
-		certificateType = 0
-
-	case "CLIENT":
-		certificateType = 1
-
-	case "SERVER":
-		certificateType = 2
-
-	case "REALSERVER":
-		certificateType = 3
-
-	case "PROXY":
-		certificateType = 4
-	}
+	certificateType := gaapCertificateStringMap[d.Get("type").(string)]
 
 	content := d.Get("content").(string)
 
@@ -162,23 +146,9 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 	if certificate.CertificateType == nil {
 		return errors.New("certificate type is nil")
 	}
-	switch *certificate.CertificateType {
-	case 0:
-		d.Set("type", "BASIC")
-
-	case 1:
-		d.Set("type", "CLIENT")
-
-	case 2:
-		d.Set("type", "SERVER")
-
-	case 3:
-		d.Set("type", "REALSERVER")
-
-	case 4:
-		d.Set("type", "PROXY")
-
-	default:
+	if certType, ok := gaapCertificateIntMap[int(*certificate.CertificateType)]; ok {
+		d.Set("type", certType)
+	} else {
 		return fmt.Errorf("unknown certificate type %d", *certificate.CertificateType)
 	}
 
@@ -202,13 +172,13 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 	if certificate.CreateTime == nil {
 		return errors.New("certificate create time is nil")
 	}
-	d.Set("create_time", certificate.CreateTime)
+	d.Set("create_time", formatUnixTime(*certificate.CreateTime))
 
 	if certificate.BeginTime != nil {
-		d.Set("begin_time", certificate.BeginTime)
+		d.Set("begin_time", formatUnixTime(*certificate.BeginTime))
 	}
 	if certificate.EndTime != nil {
-		d.Set("end_time", certificate.EndTime)
+		d.Set("end_time", formatUnixTime(*certificate.EndTime))
 	}
 	if certificate.IssuerCN != nil {
 		d.Set("issuer_cn", certificate.IssuerCN)

@@ -36,3 +36,19 @@ const (
 	GAAP_HTTP_RULE_BINDING_OR_UNBINDING = 3
 	GAAP_HTTP_RULE_ADJUSTING            = 4
 )
+
+var gaapCertificateStringMap = map[string]int{
+	"BASIC":      0,
+	"CLIENT":     1,
+	"SERVER":     2,
+	"REALSERVER": 3,
+	"PROXY":      4,
+}
+
+var gaapCertificateIntMap = map[int]string{
+	0: "BASIC",
+	1: "CLIENT",
+	2: "SERVER",
+	3: "REALSERVER",
+	4: "PROXY",
+}

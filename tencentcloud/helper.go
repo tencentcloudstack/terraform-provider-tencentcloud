@@ -162,3 +162,15 @@ func int64ToPointer(n int) *int64 {
 	i64 := int64(n)
 	return &i64
 }
+
+func formatUnixTime(n uint64) string {
+	return time.Unix(int64(n), 0).UTC().Format("2006-01-02T03:04:05Z")
+}
+
+func parseTime(s string) (time.Time, error) {
+	t, err := time.ParseInLocation("2006-01-02T03:04:05Z", s, time.UTC)
+	if err != nil {
+		return time.Time{}, err
+	}
+	return t, nil
+}

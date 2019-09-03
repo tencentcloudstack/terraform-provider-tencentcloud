@@ -11,10 +11,12 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 resource "tencentcloud_gaap_security_policy" "foo" {
   proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
   action   = "ACCEPT"
 }
+
 data "tencentcloud_gaap_security_policies" "foo" {
   id = "${tencentcloud_gaap_security_policy.foo.id}"
 }
@@ -73,7 +75,7 @@ func dataSourceTencentCloudGaapSecurityPoliciesRead(d *schema.ResourceData, m in
 	}
 
 	if !exist {
-		d.SetId(id)
+		d.SetId("")
 		return nil
 	}
 

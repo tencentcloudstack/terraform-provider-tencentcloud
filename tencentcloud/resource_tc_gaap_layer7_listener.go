@@ -11,6 +11,7 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 resource "tencentcloud_gaap_layer7_listener" "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
@@ -97,7 +98,7 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Description: "Status of the layer7 listener.",
 			},
 			"create_time": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Creation time of the layer7 listener.",
 			},
@@ -186,7 +187,7 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 		authType            *int
 		clientCertificateId string
 		status              int
-		createTime          int
+		createTime          string
 	)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -232,7 +233,7 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 		if listener.CreateTime == nil {
 			return errors.New("listener create time is nil")
 		}
-		createTime = int(*listener.CreateTime)
+		createTime = formatUnixTime(*listener.CreateTime)
 
 	case "HTTPS":
 		listeners, err := service.DescribeHTTPSListeners(ctx, &proxyId, &id, nil, nil)
@@ -293,7 +294,7 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 		if listener.CreateTime == nil {
 			return errors.New("listener create time is nil")
 		}
-		createTime = int(*listener.CreateTime)
+		createTime = formatUnixTime(*listener.CreateTime)
 	}
 
 	d.Set("name", name)

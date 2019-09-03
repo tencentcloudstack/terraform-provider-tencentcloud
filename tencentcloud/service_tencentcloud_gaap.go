@@ -13,6 +13,7 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type gaapRealserverBind struct {
@@ -55,6 +56,8 @@ func (me *GaapService) CreateRealserver(ctx context.Context, address, name strin
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().AddRealServers(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -121,6 +124,8 @@ func (me *GaapService) DescribeRealservers(ctx context.Context, address, name *s
 		request.Offset = intToPointer(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := me.client.UseGaapClient().DescribeRealServers(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -151,6 +156,8 @@ func (me *GaapService) ModifyRealserverName(ctx context.Context, id, name string
 	request.RealServerName = &name
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := me.client.UseGaapClient().ModifyRealServerName(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -171,6 +178,8 @@ func (me *GaapService) DeleteRealserver(ctx context.Context, id string) error {
 	request.RealServerIds = []*string{&id}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := me.client.UseGaapClient().RemoveRealServers(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -195,6 +204,8 @@ func (me *GaapService) createCertificate(ctx context.Context, certificateType in
 	request.CertificateKey = key
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().CreateCertificate(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -225,6 +236,8 @@ func (me *GaapService) DescribeCertificateById(ctx context.Context, id string) (
 	request.CertificateId = &id
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().DescribeCertificateDetail(request)
 		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
@@ -256,6 +269,8 @@ func (me *GaapService) ModifyCertificateName(ctx context.Context, id, name strin
 	request.CertificateAlias = &name
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := me.client.UseGaapClient().ModifyCertificateAttributes(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -277,6 +292,8 @@ func (me *GaapService) DeleteCertificate(ctx context.Context, id string) error {
 	request.CertificateId = &id
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := me.client.UseGaapClient().DeleteCertificate(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -316,6 +333,8 @@ func (me *GaapService) CreateProxy(
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(createRequest.GetAction())
+
 		response, err := client.CreateProxy(createRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -340,6 +359,8 @@ func (me *GaapService) CreateProxy(
 	describeRequest.ProxyIds = []*string{&id}
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeProxies(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -385,6 +406,8 @@ func (me *GaapService) EnableProxy(ctx context.Context, id string) error {
 	enableRequest.ClientToken = stringToPointer(buildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(enableRequest.GetAction())
+
 		response, err := client.OpenProxies(enableRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -414,6 +437,8 @@ func (me *GaapService) EnableProxy(ctx context.Context, id string) error {
 	describeRequest.ProxyIds = []*string{&id}
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeProxies(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -459,6 +484,8 @@ func (me *GaapService) DisableProxy(ctx context.Context, id string) error {
 	disableRequest.ClientToken = stringToPointer(buildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(disableRequest.GetAction())
+
 		response, err := client.CloseProxies(disableRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -488,6 +515,8 @@ func (me *GaapService) DisableProxy(ctx context.Context, id string) error {
 	describeRequest.ProxyIds = []*string{&id}
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeProxies(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -571,6 +600,8 @@ func (me *GaapService) DescribeProxies(
 		request.Offset = intToPointer(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := me.client.UseGaapClient().DescribeProxies(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -602,6 +633,8 @@ func (me *GaapService) ModifyProxyName(ctx context.Context, id, name string) err
 	request.ClientToken = stringToPointer(buildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := me.client.UseGaapClient().ModifyProxiesAttribute(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -625,6 +658,8 @@ func (me *GaapService) ModifyProxyProjectId(ctx context.Context, id string, proj
 	request.ClientToken = stringToPointer(buildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := me.client.UseGaapClient().ModifyProxiesProject(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -654,6 +689,8 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 	modifyRequest.ClientToken = stringToPointer(buildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(modifyRequest.GetAction())
+
 		if _, err := client.ModifyProxyConfiguration(modifyRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), err)
@@ -669,6 +706,8 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 	describeRequest.ProxyIds = []*string{&id}
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeProxies(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -715,6 +754,8 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 	deleteRequest.ClientToken = stringToPointer(buildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(deleteRequest.GetAction())
+
 		response, err := client.DestroyProxies(deleteRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -744,6 +785,8 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 	describeRequest.ProxyIds = []*string{&id}
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeProxies(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -775,30 +818,32 @@ func (me *GaapService) CreateTCPListener(
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	createRequest := gaap.NewCreateTCPListenersRequest()
-	createRequest.ListenerName = &name
-	createRequest.Scheduler = &scheduler
-	createRequest.RealServerType = &realserverType
-	createRequest.ProxyId = &proxyId
-	createRequest.Ports = []*uint64{intToPointer(port)}
+	request := gaap.NewCreateTCPListenersRequest()
+	request.ListenerName = &name
+	request.Scheduler = &scheduler
+	request.RealServerType = &realserverType
+	request.ProxyId = &proxyId
+	request.Ports = []*uint64{intToPointer(port)}
 	if healthCheck {
-		createRequest.HealthCheck = intToPointer(1)
+		request.HealthCheck = intToPointer(1)
 	} else {
-		createRequest.HealthCheck = intToPointer(0)
+		request.HealthCheck = intToPointer(0)
 	}
-	createRequest.DelayLoop = intToPointer(interval)
-	createRequest.ConnectTimeout = intToPointer(connectTimeout)
+	request.DelayLoop = intToPointer(interval)
+	request.ConnectTimeout = intToPointer(connectTimeout)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, err := client.CreateTCPListeners(createRequest)
+		ratelimit.Check(request.GetAction())
+
+		response, err := client.CreateTCPListeners(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 
 		if len(response.Response.ListenerIds) == 0 {
-			err := fmt.Errorf("api[%s] return empty TCP listener id set", createRequest.GetAction())
+			err := fmt.Errorf("api[%s] return empty TCP listener id set", request.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -826,28 +871,30 @@ func (me *GaapService) CreateUDPListener(
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	createRequest := gaap.NewCreateUDPListenersRequest()
-	createRequest.ListenerName = &name
-	createRequest.Scheduler = &scheduler
-	createRequest.RealServerType = &realserverType
-	createRequest.ProxyId = &proxyId
-	createRequest.Ports = []*uint64{intToPointer(port)}
+	request := gaap.NewCreateUDPListenersRequest()
+	request.ListenerName = &name
+	request.Scheduler = &scheduler
+	request.RealServerType = &realserverType
+	request.ProxyId = &proxyId
+	request.Ports = []*uint64{intToPointer(port)}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, err := client.CreateUDPListeners(createRequest)
+		ratelimit.Check(request.GetAction())
+
+		response, err := client.CreateUDPListeners(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 
 		if len(response.Response.ListenerIds) == 0 {
-			err := fmt.Errorf("api[%s] return empty UDP listener id set", createRequest.GetAction())
+			err := fmt.Errorf("api[%s] return empty UDP listener id set", request.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
 		if response.Response.ListenerIds[0] == nil {
-			err := fmt.Errorf("api[%s] UDP listener id is nil", createRequest.GetAction())
+			err := fmt.Errorf("api[%s] UDP listener id is nil", request.GetAction())
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -871,11 +918,11 @@ func (me *GaapService) BindLayer4ListenerRealservers(ctx context.Context, id, pr
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	bindRequest := gaap.NewBindListenerRealServersRequest()
-	bindRequest.ListenerId = &id
-	bindRequest.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realserverBinds))
+	request := gaap.NewBindListenerRealServersRequest()
+	request.ListenerId = &id
+	request.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realserverBinds))
 	for _, bind := range realserverBinds {
-		bindRequest.RealServerBindSet = append(bindRequest.RealServerBindSet, &gaap.RealServerBindSetReq{
+		request.RealServerBindSet = append(request.RealServerBindSet, &gaap.RealServerBindSetReq{
 			RealServerId:     stringToPointer(bind.id),
 			RealServerPort:   intToPointer(bind.port),
 			RealServerIP:     stringToPointer(bind.ip),
@@ -884,9 +931,11 @@ func (me *GaapService) BindLayer4ListenerRealservers(ctx context.Context, id, pr
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if _, err := client.BindListenerRealServers(bindRequest); err != nil {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := client.BindListenerRealServers(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, bindRequest.GetAction(), bindRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 		return nil
@@ -932,6 +981,8 @@ func (me *GaapService) DescribeTCPListeners(ctx context.Context, proxyId string,
 		request.Offset = intToPointer(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := me.client.UseGaapClient().DescribeTCPListeners(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -983,6 +1034,8 @@ func (me *GaapService) DescribeUDPListeners(ctx context.Context, proxyId string,
 		request.Offset = intToPointer(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := me.client.UseGaapClient().DescribeUDPListeners(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1015,25 +1068,27 @@ func (me *GaapService) ModifyTCPListenerAttribute(
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	modifyRequest := gaap.NewModifyTCPListenerAttributeRequest()
-	modifyRequest.ProxyId = &proxyId
-	modifyRequest.ListenerId = &id
-	modifyRequest.ListenerName = name
-	modifyRequest.Scheduler = scheduler
+	request := gaap.NewModifyTCPListenerAttributeRequest()
+	request.ProxyId = &proxyId
+	request.ListenerId = &id
+	request.ListenerName = name
+	request.Scheduler = scheduler
 	if healthCheck != nil {
 		if *healthCheck {
-			modifyRequest.HealthCheck = intToPointer(1)
+			request.HealthCheck = intToPointer(1)
 		} else {
-			modifyRequest.HealthCheck = intToPointer(0)
+			request.HealthCheck = intToPointer(0)
 		}
 	}
-	modifyRequest.DelayLoop = intToPointer(interval)
-	modifyRequest.ConnectTimeout = intToPointer(connectTimeout)
+	request.DelayLoop = intToPointer(interval)
+	request.ConnectTimeout = intToPointer(connectTimeout)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if _, err := client.ModifyTCPListenerAttribute(modifyRequest); err != nil {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := client.ModifyTCPListenerAttribute(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 		return nil
@@ -1058,16 +1113,18 @@ func (me *GaapService) ModifyUDPListenerAttribute(
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
-	modifyRequest := gaap.NewModifyUDPListenerAttributeRequest()
-	modifyRequest.ProxyId = &proxyId
-	modifyRequest.ListenerId = &id
-	modifyRequest.ListenerName = name
-	modifyRequest.Scheduler = scheduler
+	request := gaap.NewModifyUDPListenerAttributeRequest()
+	request.ProxyId = &proxyId
+	request.ListenerId = &id
+	request.ListenerName = name
+	request.Scheduler = scheduler
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if _, err := client.ModifyUDPListenerAttribute(modifyRequest); err != nil {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := client.ModifyUDPListenerAttribute(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-				logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		}
 		return nil
@@ -1094,6 +1151,8 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 	deleteRequest.Force = intToPointer(0)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(deleteRequest.GetAction())
+
 		response, err := client.DeleteListeners(deleteRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1133,6 +1192,8 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 		describeRequest.ListenerId = &id
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(describeRequest.GetAction())
+
 			response, err := client.DescribeTCPListeners(describeRequest)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1158,6 +1219,8 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 		describeRequest.ListenerId = &id
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(describeRequest.GetAction())
+
 			response, err := client.DescribeUDPListeners(describeRequest)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1189,6 +1252,8 @@ func (me *GaapService) CreateSecurityPolicy(ctx context.Context, proxyId, action
 	request.DefaultAction = &action
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().CreateSecurityPolicy(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1220,6 +1285,8 @@ func (me *GaapService) EnableSecurityPolicy(ctx context.Context, proxyId, policy
 	enableRequest.ProxyId = &proxyId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(enableRequest.GetAction())
+
 		if _, err := client.OpenSecurityPolicy(enableRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, enableRequest.GetAction(), enableRequest.ToJsonString(), err)
@@ -1235,6 +1302,8 @@ func (me *GaapService) EnableSecurityPolicy(ctx context.Context, proxyId, policy
 	describeRequest.PolicyId = &policyId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeSecurityPolicyDetail(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1271,6 +1340,8 @@ func (me *GaapService) DisableSecurityPolicy(ctx context.Context, proxyId, polic
 	disableRequest.ProxyId = &proxyId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(disableRequest.GetAction())
+
 		if _, err := client.CloseSecurityPolicy(disableRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, disableRequest.GetAction(), disableRequest.ToJsonString(), err)
@@ -1286,6 +1357,8 @@ func (me *GaapService) DisableSecurityPolicy(ctx context.Context, proxyId, polic
 	describeRequest.PolicyId = &policyId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeSecurityPolicyDetail(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1321,6 +1394,8 @@ func (me *GaapService) DescribeSecurityPolicy(ctx context.Context, id string) (p
 	request.PolicyId = &id
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().DescribeSecurityPolicyDetail(request)
 		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
@@ -1374,6 +1449,8 @@ func (me *GaapService) DeleteSecurityPolicy(ctx context.Context, id string) erro
 	deleteRequest.PolicyId = &id
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(deleteRequest.GetAction())
+
 		if _, err := client.DeleteSecurityPolicy(deleteRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, deleteRequest.GetAction(), deleteRequest.ToJsonString(), err)
@@ -1389,6 +1466,8 @@ func (me *GaapService) DeleteSecurityPolicy(ctx context.Context, id string) erro
 	describeRequest.PolicyId = &id
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		_, err := client.DescribeSecurityPolicyDetail(describeRequest)
 		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
@@ -1431,6 +1510,8 @@ func (me *GaapService) CreateSecurityRule(
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().CreateSecurityRules(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1467,6 +1548,8 @@ func (me *GaapService) DescribeSecurityRule(ctx context.Context, policyId, ruleI
 	request.PolicyId = &policyId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().DescribeSecurityPolicyDetail(request)
 		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
@@ -1511,6 +1594,8 @@ func (me *GaapService) ModifySecurityRuleName(ctx context.Context, policyId, rul
 	request.AliasName = &name
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := me.client.UseGaapClient().ModifySecurityRule(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -1533,6 +1618,8 @@ func (me *GaapService) DeleteSecurityRule(ctx context.Context, policyId, ruleId 
 	request.RuleIdList = []*string{&ruleId}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := me.client.UseGaapClient().DeleteSecurityRules(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -1557,6 +1644,8 @@ func (me *GaapService) CreateHTTPListener(ctx context.Context, name, proxyId str
 	request.Port = intToPointer(port)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := client.CreateHTTPListener(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1605,6 +1694,8 @@ func (me *GaapService) CreateHTTPSListener(
 	request.AuthType = intToPointer(authType)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := client.CreateHTTPSListener(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1666,6 +1757,8 @@ func (me *GaapService) DescribeHTTPListeners(
 		request.Offset = intToPointer(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := me.client.UseGaapClient().DescribeHTTPListeners(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1721,6 +1814,8 @@ func (me *GaapService) DescribeHTTPSListeners(
 		request.Offset = intToPointer(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := me.client.UseGaapClient().DescribeHTTPSListeners(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1753,6 +1848,8 @@ func (me *GaapService) ModifyHTTPListener(ctx context.Context, id, proxyId, name
 	request.ProxyId = &proxyId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := client.ModifyHTTPListenerAttribute(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -1789,6 +1886,8 @@ func (me *GaapService) ModifyHTTPSListener(
 	request.ClientCertificateId = clientCertificateId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := client.ModifyHTTPSListenerAttribute(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -1818,6 +1917,8 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 	deleteRequest.Force = intToPointer(0)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(deleteRequest.GetAction())
+
 		response, err := client.DeleteListeners(deleteRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1857,6 +1958,8 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 		describeRequest.ListenerId = &id
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(describeRequest.GetAction())
+
 			response, err := client.DescribeHTTPListeners(describeRequest)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1882,6 +1985,8 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 		describeRequest.ListenerId = &id
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(describeRequest.GetAction())
+
 			response, err := client.DescribeHTTPSListeners(describeRequest)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1915,6 +2020,8 @@ func waitLayer4ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 		request.ListenerId = &id
 
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := client.DescribeTCPListeners(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1950,6 +2057,8 @@ func waitLayer4ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 		request.ListenerId = &id
 
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := client.DescribeUDPListeners(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -1993,6 +2102,8 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 		request.ListenerId = &id
 
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := client.DescribeHTTPListeners(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2028,6 +2139,8 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 		request.ListenerId = &id
 
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := client.DescribeHTTPSListeners(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2070,6 +2183,8 @@ func (me *GaapService) CreateHTTPDomain(ctx context.Context, listenerId, domain 
 	createRequest.Domain = &domain
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(createRequest.GetAction())
+
 		if _, err := client.CreateDomain(createRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
@@ -2085,6 +2200,8 @@ func (me *GaapService) CreateHTTPDomain(ctx context.Context, listenerId, domain 
 	describeRequest.ListenerId = &listenerId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeRules(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2126,6 +2243,8 @@ func (me *GaapService) CreateHTTPSDomain(ctx context.Context, listenerId, domain
 	createRequest.ClientCertificateId = &clientCertificateId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(createRequest.GetAction())
+
 		if _, err := client.CreateDomain(createRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
@@ -2141,6 +2260,8 @@ func (me *GaapService) CreateHTTPSDomain(ctx context.Context, listenerId, domain
 	describeRequest.ListenerId = &listenerId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeRules(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2212,6 +2333,8 @@ func (me *GaapService) SetAdvancedAuth(
 	request.GaapCertificateId = gaapAuthId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := me.client.UseGaapClient().SetAuthentication(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -2233,6 +2356,8 @@ func (me *GaapService) DescribeDomain(ctx context.Context, listenerId, domain st
 	request.ListenerId = &listenerId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().DescribeRules(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2276,6 +2401,8 @@ func (me *GaapService) ModifyDomainCertificate(
 	request.ClientCertificateId = clientCertificateId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := me.client.UseGaapClient().ModifyCertificate(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -2300,6 +2427,8 @@ func (me *GaapService) DeleteDomain(ctx context.Context, listenerId, domain stri
 	deleteRequest.Force = intToPointer(0)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(deleteRequest.GetAction())
+
 		if _, err := client.DeleteDomain(deleteRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, deleteRequest.GetAction(), deleteRequest.ToJsonString(), err)
@@ -2315,6 +2444,8 @@ func (me *GaapService) DeleteDomain(ctx context.Context, listenerId, domain stri
 	describeRequest.ListenerId = &listenerId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeRules(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2373,6 +2504,8 @@ func (me *GaapService) CreateHttpRule(ctx context.Context, httpRule gaapHttpRule
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := client.CreateRule(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2418,6 +2551,8 @@ func (me *GaapService) BindHttpRuleRealservers(ctx context.Context, listenerId, 
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := client.BindRuleRealServers(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -2444,6 +2579,8 @@ func (me *GaapService) DescribeHttpRule(ctx context.Context, listenerId, ruleId 
 	request.ListenerId = &listenerId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().DescribeRules(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2636,6 +2773,8 @@ func (me *GaapService) ModifyHTTPRuleAttribute(
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := client.ModifyRuleAttribute(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err)
@@ -2660,6 +2799,8 @@ func (me *GaapService) DeleteHttpRule(ctx context.Context, listenerId, ruleId st
 	deleteRequest.Force = intToPointer(1)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(deleteRequest.GetAction())
+
 		if _, err := client.DeleteRule(deleteRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, deleteRequest.GetAction(), deleteRequest.ToJsonString(), err)
@@ -2675,6 +2816,8 @@ func (me *GaapService) DeleteHttpRule(ctx context.Context, listenerId, ruleId st
 	describeRequest.ListenerId = &listenerId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeRules(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2714,6 +2857,8 @@ func waitHttpRuleReady(ctx context.Context, client *gaap.Client, listenerId, rul
 	request.ListenerId = &listenerId
 
 	return resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := client.DescribeRules(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2759,6 +2904,8 @@ func (me *GaapService) DescribeDomains(ctx context.Context, listenerId, domain s
 	request.ListenerId = &listenerId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().DescribeRules(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
@@ -2794,6 +2941,8 @@ func (me *GaapService) DescribeSecurityRules(ctx context.Context, policyId strin
 	request.PolicyId = &policyId
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		response, err := me.client.UseGaapClient().DescribeSecurityPolicyDetail(request)
 		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
@@ -2836,6 +2985,8 @@ func (me *GaapService) DescribeCertificates(ctx context.Context, id, name *strin
 		request.Offset = intToPointer(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := me.client.UseGaapClient().DescribeCertificates(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",

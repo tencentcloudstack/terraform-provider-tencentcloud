@@ -33,32 +33,6 @@ func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
 				),
 			},
-		},
-	})
-}
-
-func TestAccTencentCloudGaapLayer7Listener_httpUpdateName(t *testing.T) {
-	id := new(string)
-	proxyId := new(string)
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, proxyId, "HTTP"),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccGaapLayer7ListenerBasic,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, proxyId, "HTTP"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "protocol", "HTTP"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
-					resource.TestCheckNoResourceAttr("tencentcloud_gaap_layer7_listener.foo", "forward_protocol"),
-					resource.TestCheckNoResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
-				),
-			},
 			{
 				Config: testAccGaapLayer7ListenerHttpUpdateName,
 				Check: resource.ComposeTestCheckFunc(
@@ -71,33 +45,6 @@ func TestAccTencentCloudGaapLayer7Listener_httpUpdateName(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapLayer7Listener_https(t *testing.T) {
-	id := new(string)
-	proxyId := new(string)
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, proxyId, "HTTPS"),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccGaapLayer7ListenerHttps,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, proxyId, "HTTPS"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "protocol", "HTTPS"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "certificate_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "forward_protocol", "HTTP"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type", "0"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudGaapLayer7Listener_httpsUpdate(t *testing.T) {
 	id := new(string)
 	proxyId := new(string)
 

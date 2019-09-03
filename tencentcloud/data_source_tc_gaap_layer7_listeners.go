@@ -11,12 +11,14 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 resource "tencentcloud_gaap_layer7_listener" "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
   proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
 }
+
 data "tencentcloud_gaap_layer7_listeners" "listenerId" {
   protocol    = "HTTP"
   proxy_id    = "${tencentcloud_gaap_proxy.foo.id}"
@@ -119,7 +121,7 @@ func dataSourceTencentCloudGaapLayer7Listeners() *schema.Resource {
 							Description: "Protocol type of the forwarding.",
 						},
 						"create_time": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Creation time of the layer7 listener.",
 						},
@@ -193,7 +195,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 				"name":        *ls.ListenerName,
 				"port":        *ls.Port,
 				"status":      *ls.ListenerStatus,
-				"create_time": *ls.CreateTime,
+				"create_time": formatUnixTime(*ls.CreateTime),
 			})
 		}
 
@@ -243,7 +245,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 				"certificate_id":   *ls.CertificateId,
 				"auth_type":        *ls.AuthType,
 				"forward_protocol": *ls.ForwardProtocol,
-				"create_time":      *ls.CreateTime,
+				"create_time":      formatUnixTime(*ls.CreateTime),
 			}
 
 			if ls.ClientCertificateId != nil {

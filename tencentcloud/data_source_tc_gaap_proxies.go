@@ -11,6 +11,7 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 data "tencentcloud_gaap_proxies" "foo" {
   ids = ["${tencentcloud_gaap_proxy.foo.id}"]
 }
@@ -47,12 +48,14 @@ func dataSourceTencentCloudGaapProxies() *schema.Resource {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ids"},
+				ValidateFunc:  validateAllowedStringValue([]string{"NorthChina", "EastChina", "SouthChina", "SouthwestChina", "Hongkong", "SL_TAIWAN", "SoutheastAsia", "Korea", "SL_India", "SL_Australia", "Europe", "SL_UK", "SL_SouthAmerica", "NorthAmerica", "SL_MiddleUSA", "Canada", "SL_VIET", "WestIndia", "Thailand", "Virginia", "Russia", "Japan", "SL_Indonesia"}),
 				Description:   "Access region of the GAAP proxy to be queried. Conflict with `ids`.",
 			},
 			"realserver_region": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"ids"},
+				ValidateFunc:  validateAllowedStringValue([]string{"NorthChina", "EastChina", "SouthChina", "SouthwestChina", "Hongkong", "SL_TAIWAN", "SoutheastAsia", "Korea", "SL_India", "SL_Australia", "Europe", "SL_UK", "SL_SouthAmerica", "NorthAmerica", "SL_MiddleUSA", "Canada", "SL_VIET", "WestIndia", "Thailand", "Virginia", "Russia", "Japan", "SL_Indonesia"}),
 				Description:   "Region of the GAAP realserver to be queried. Conflict with `ids`.",
 			},
 			"tags": {
@@ -119,7 +122,7 @@ func dataSourceTencentCloudGaapProxies() *schema.Resource {
 							Description: "ID of the project within the GAAP proxy, '0' means is Default Project.",
 						},
 						"create_time": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Creation time of the GAAP proxy.",
 						},
@@ -134,7 +137,7 @@ func dataSourceTencentCloudGaapProxies() *schema.Resource {
 							Description: "Indicates whether GAAP proxy can scalable.",
 						},
 						"support_protocols": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Supported protocols of the GAAP proxy.",
@@ -263,7 +266,7 @@ func dataSourceTencentCloudGaapProxiesRead(d *schema.ResourceData, m interface{}
 			"access_region":     *proxy.AccessRegion,
 			"realserver_region": *proxy.RealServerRegion,
 			"project_id":        *proxy.ProjectId,
-			"create_time":       *proxy.CreateTime,
+			"create_time":       formatUnixTime(*proxy.CreateTime),
 			"status":            *proxy.Status,
 			"scalable":          *proxy.Scalarable == 1,
 			"forward_ip":        *proxy.ForwardIP,

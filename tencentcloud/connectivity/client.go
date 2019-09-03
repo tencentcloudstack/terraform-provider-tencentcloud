@@ -354,6 +354,7 @@ func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = http.MethodPost
 	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
 
 	gaapConn, _ := gaap.NewClient(credential, me.Region, cpf)
 	var round LogRoundTripper

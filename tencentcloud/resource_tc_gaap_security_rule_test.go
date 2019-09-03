@@ -33,30 +33,6 @@ func TestAccTencentCloudGaapSecurityRule_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapSecurityRule_withName(t *testing.T) {
-	id := new(string)
-	policyId := new(string)
-
-	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id, policyId),
-		Steps: []resource.TestStep{
-			{
-				Config: testAccGaapSecurityRuleWithName,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id, policyId),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "cidr_ip", "1.1.1.1"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "action", "ACCEPT"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "protocol", "TCP"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "port", "80"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "name", "ci-test-gaap-sr"),
-				),
-			},
-		},
-	})
-}
-
 func TestAccTencentCloudGaapSecurityRule_drop(t *testing.T) {
 	id := new(string)
 	policyId := new(string)
@@ -80,7 +56,7 @@ func TestAccTencentCloudGaapSecurityRule_drop(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapSecurityRule_updateName(t *testing.T) {
+func TestAccTencentCloudGaapSecurityRule_name(t *testing.T) {
 	id := new(string)
 	policyId := new(string)
 

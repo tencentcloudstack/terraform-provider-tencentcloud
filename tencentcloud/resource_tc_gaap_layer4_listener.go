@@ -11,14 +11,17 @@ resource "tencentcloud_gaap_proxy" "foo" {
   access_region     = "SouthChina"
   realserver_region = "NorthChina"
 }
+
 resource "tencentcloud_gaap_realserver" "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
 }
+
 resource "tencentcloud_gaap_realserver" "bar" {
   ip   = "119.29.29.29"
   name = "ci-test-gaap-realserver2"
 }
+
 resource "tencentcloud_gaap_layer4_listener" "foo" {
   protocol        = "TCP"
   name            = "ci-test-gaap-4-listener"
@@ -45,7 +48,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -125,12 +127,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Optional: true,
 				Set: func(v interface{}) int {
 					m := v.(map[string]interface{})
-					sb := new(strings.Builder)
-					sb.WriteString(m["id"].(string))
-					sb.WriteString(m["ip"].(string))
-					sb.WriteString(fmt.Sprintf("%d", m["port"].(int)))
-					sb.WriteString(fmt.Sprintf("%d", m["weight"].(int)))
-					return hashcode.String(sb.String())
+					return hashcode.String(fmt.Sprintf("%s-%s-%d-%d", m["id"].(string), m["ip"].(string), m["port"].(int), m["weight"].(int)))
 				},
 				Description: "An information list of GAAP realserver. Each element contains the following attributes:",
 				Elem: &schema.Resource{
@@ -169,7 +166,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Description: "Status of the layer4 listener.",
 			},
 			"create_time": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Creation time of the layer4 listener.",
 			},
@@ -277,7 +274,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		interval       *int
 		connectTimeout *int
 		status         int
-		createTime     int
+		createTime     string
 		realservers    []map[string]interface{}
 	)
 
@@ -373,7 +370,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		if listener.CreateTime == nil {
 			return errors.New("listener create time is nil")
 		}
-		createTime = int(*listener.CreateTime)
+		createTime = formatUnixTime(*listener.CreateTime)
 
 	case "UDP":
 		listeners, err := service.DescribeUDPListeners(ctx, proxyId, &id, nil, nil)
@@ -449,7 +446,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		if listener.CreateTime == nil {
 			return errors.New("listener create time is nil")
 		}
-		createTime = int(*listener.CreateTime)
+		createTime = formatUnixTime(*listener.CreateTime)
 	}
 
 	d.Set("name", name)
