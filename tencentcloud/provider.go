@@ -42,6 +42,15 @@ Data Sources
   tencentcloud_clb_attachments
   tencentcloud_clb_redirections
   tencentcloud_eip
+  tencentcloud_gaap_certificates
+  tencentcloud_gaap_http_domains
+  tencentcloud_gaap_http_rules
+  tencentcloud_gaap_layer4_listeners
+  tencentcloud_gaap_layer7_listeners
+  tencentcloud_gaap_proxies
+  tencentcloud_gaap_realservers
+  tencentcloud_gaap_security_policies
+  tencentcloud_gaap_security_rules
   tencentcloud_image
   tencentcloud_instance_types
   tencentcloud_kubernetes_clusters
@@ -62,15 +71,6 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_route_tables
   tencentcloud_vpc_subnets
-  tencentcloud_gaap_certificates
-  tencentcloud_gaap_http_domains
-  tencentcloud_gaap_http_rules
-  tencentcloud_gaap_layer4_listeners
-  tencentcloud_gaap_layer7_listeners
-  tencentcloud_gaap_proxies
-  tencentcloud_gaap_realservers
-  tencentcloud_gaap_security_policies
-  tencentcloud_gaap_security_rules
 
 AS Resources
   tencentcloud_as_scaling_config

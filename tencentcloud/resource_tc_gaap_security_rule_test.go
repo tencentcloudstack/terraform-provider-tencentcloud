@@ -208,17 +208,9 @@ func testAccCheckGaapSecurityRuleDestroy(id, policyId *string) resource.TestChec
 	}
 }
 
-const testAccGaapSecurityRuleBasic = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapSecurityRuleBasic = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "ACCEPT"
 }
 
@@ -229,19 +221,11 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
   port      = "80"
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapSecurityRuleWithName = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapSecurityRuleWithName = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "ACCEPT"
 }
 
@@ -253,19 +237,11 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
   port      = "80"
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapSecurityRuleDrop = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapSecurityRuleDrop = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "ACCEPT"
 }
 
@@ -276,19 +252,11 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
   port      = "80"
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapSecurityRuleUpdateName = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapSecurityRuleUpdateName = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "ACCEPT"
 }
 
@@ -300,19 +268,11 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
   port      = "80"
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapSecurityRuleIpSubnet = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapSecurityRuleIpSubnet = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "ACCEPT"
 }
 
@@ -323,19 +283,11 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
   port      = "80"
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapSecurityRuleAllProtocols = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapSecurityRuleAllProtocols = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "ACCEPT"
 }
 
@@ -344,19 +296,11 @@ resource tencentcloud_gaap_security_rule "foo" {
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapSecurityRuleAllPorts = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapSecurityRuleAllPorts = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "ACCEPT"
 }
 
@@ -366,4 +310,4 @@ resource tencentcloud_gaap_security_rule "foo" {
   action    = "ACCEPT"
   protocol  = "TCP"
 }
-`
+`, GAAP_PROXY_ID)
