@@ -1,6 +1,27 @@
 ## 1.17.0 (Unreleased)
 
 FEATURES:
+* **New Data Source**: `tencentcloud_gaap_proxies`
+* **New Data Source**: `tencentcloud_gaap_realservers`
+* **New Data Source**: `tencentcloud_gaap_layer4_listeners`
+* **New Data Source**: `tencentcloud_gaap_layer7_listeners`
+* **New Data Source**: `tencentcloud_gaap_http_domains`
+* **New Data Source**: `tencentcloud_gaap_http_rules`
+* **New Data Source**: `tencentcloud_gaap_security_policies`
+* **New Data Source**: `tencentcloud_gaap_security_rules`
+* **New Data Source**: `tencentcloud_gaap_certificates`
+* **New Resource**: `tencentcloud_gaap_proxy`
+* **New Resource**: `tencentcloud_gaap_realserver`
+* **New Resource**: `tencentcloud_gaap_layer4_listener`
+* **New Resource**: `tencentcloud_gaap_layer7_listener`
+* **New Resource**: `tencentcloud_gaap_http_domain`
+* **New Resource**: `tencentcloud_gaap_http_rule`
+* **New Resource**: `tencentcloud_gaap_certificate`
+* **New Resource**: `tencentcloud_gaap_security_policy`
+* **New Resource**: `tencentcloud_gaap_security_rule`
+
+
+FEATURES:
 * **New Data Source**: `tencentcloud_ssl_certificates`
 * **New Resource**: `tencentcloud_ssl_certificate`
 
