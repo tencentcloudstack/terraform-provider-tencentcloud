@@ -334,6 +334,12 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 		domain     string
 	)
 	split := strings.Split(id, "+")
+
+	if len(split) != 3 {
+		log.Printf("[CRITAL]%s id is broken", logId)
+		return resourceTencentCloudGaapHttpDomainRead(d, m)
+	}
+
 	listenerId, protocol, domain = split[0], split[1], split[2]
 
 	// when protocol is http, nothing can be updated
@@ -464,6 +470,12 @@ func resourceTencentCloudGaapHttpDomainDelete(d *schema.ResourceData, m interfac
 		domain     string
 	)
 	split := strings.Split(id, "+")
+
+	if len(split) != 3 {
+		log.Printf("[CRITAL]%s id is broken", logId)
+		return nil
+	}
+
 	listenerId, domain = split[0], split[2]
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}

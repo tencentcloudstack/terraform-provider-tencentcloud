@@ -62,15 +62,15 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_route_tables
   tencentcloud_vpc_subnets
-  tencentcloud_gaap_proxies
-  tencentcloud_gaap_realservers
-  tencentcloud_gaap_layer4_listeners
-  tencentcloud_gaap_layer7_listeners
+  tencentcloud_gaap_certificates
   tencentcloud_gaap_http_domains
   tencentcloud_gaap_http_rules
+  tencentcloud_gaap_layer4_listeners
+  tencentcloud_gaap_layer7_listeners
+  tencentcloud_gaap_proxies
+  tencentcloud_gaap_realservers
   tencentcloud_gaap_security_policies
   tencentcloud_gaap_security_rules
-  tencentcloud_gaap_certificates
 
 AS Resources
   tencentcloud_as_scaling_config
@@ -122,6 +122,17 @@ DCG Resources
   tencentcloud_dc_gateway
   tencentcloud_dc_gateway_ccn_route
 
+GAAP Resources
+  tencentcloud_gaap_proxy
+  tencentcloud_gaap_realserver
+  tencentcloud_gaap_layer4_listener
+  tencentcloud_gaap_layer7_listener
+  tencentcloud_gaap_http_domain
+  tencentcloud_gaap_http_rule
+  tencentcloud_gaap_certificate
+  tencentcloud_gaap_security_policy
+  tencentcloud_gaap_security_rule
+
 Kubernetes Resources
   tencentcloud_kubernetes_cluster
   tencentcloud_kubernetes_scale_worker
@@ -151,17 +162,6 @@ VPC Resources
   tencentcloud_route_table_entry
   tencentcloud_dnat
   tencentcloud_nat_gateway
-
-GAAP Resources
-  tencentcloud_gaap_proxy
-  tencentcloud_gaap_realserver
-  tencentcloud_gaap_layer4_listener
-  tencentcloud_gaap_layer7_listener
-  tencentcloud_gaap_http_domain
-  tencentcloud_gaap_http_rule
-  tencentcloud_gaap_certificate
-  tencentcloud_gaap_security_policy
-  tencentcloud_gaap_security_rule
 
 
 */
