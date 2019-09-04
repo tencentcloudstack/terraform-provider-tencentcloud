@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -24,21 +25,13 @@ func TestAccDataSourceTencentCloudGaapSecurityPolices_basic(t *testing.T) {
 	})
 }
 
-const TestAccDataSourceTencentCloudGaapSecurityPolicesBasic = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var TestAccDataSourceTencentCloudGaapSecurityPolicesBasic = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "ACCEPT"
 }
 
 data tencentcloud_gaap_security_policies "foo" {
   id = "${tencentcloud_gaap_security_policy.foo.id}"
 }
-`
+`, GAAP_PROXY_ID)

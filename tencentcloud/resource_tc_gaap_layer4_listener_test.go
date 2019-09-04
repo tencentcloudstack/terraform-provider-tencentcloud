@@ -310,15 +310,7 @@ func testAccCheckGaapLayer4ListenerDestroy(id, proxyId *string, protocol string)
 	}
 }
 
-const testAccGaapLayer4ListenerBasic = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapLayer4ListenerBasic = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
@@ -334,7 +326,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   name            = "ci-test-gaap-4-listener"
   port            = 80
   realserver_type = "IP"
-  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id        = "%s"
   health_check    = true
 
   realserver_bind_set {
@@ -349,17 +341,9 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapLayer4ListenerTcpDomain = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapLayer4ListenerTcpDomain = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
   domain = "qq.com"
   name   = "ci-test-gaap-realserver"
@@ -375,7 +359,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   name            = "ci-test-gaap-4-listener"
   port            = 80
   realserver_type = "DOMAIN"
-  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id        = "%s"
   health_check    = true
 
   realserver_bind_set {
@@ -390,17 +374,9 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapLayer4ListenerUpdateNameAndHealthConfigAndScheduler = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapLayer4ListenerUpdateNameAndHealthConfigAndScheduler = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
@@ -417,7 +393,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   port            = 80
   scheduler       = "wrr"
   realserver_type = "IP"
-  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id        = "%s"
   health_check    = true
   interval      = 11
   connect_timeout = 10
@@ -434,17 +410,9 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapLayer4ListenerUpdateNoHealthCheck = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapLayer4ListenerUpdateNoHealthCheck = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
@@ -461,7 +429,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   port            = 80
   scheduler       = "wrr"
   realserver_type = "IP"
-  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id        = "%s"
   health_check    = false
 
   realserver_bind_set {
@@ -476,17 +444,9 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapLayer4ListenerTcpUpdateRealserverSet = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapLayer4ListenerTcpUpdateRealserverSet = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
@@ -503,7 +463,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   port            = 80
   scheduler       = "wrr"
   realserver_type = "IP"
-  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id        = "%s"
   health_check    = false
 
   realserver_bind_set {
@@ -512,17 +472,9 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapLayer4ListenerUdp = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapLayer4ListenerUdp = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
@@ -538,7 +490,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   name            = "ci-test-gaap-4-udp-listener"
   port            = 80
   realserver_type = "IP"
-  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id        = "%s"
 
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
@@ -552,17 +504,9 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapLayer4ListenerUdpDomain = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapLayer4ListenerUdpDomain = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
   domain = "www.qq.com"
   name   = "ci-test-gaap-realserver"
@@ -578,7 +522,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   name            = "ci-test-gaap-4-udp-listener"
   port            = 80
   realserver_type = "DOMAIN"
-  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id        = "%s"
 
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
@@ -592,17 +536,9 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapLayer4ListenerUdpUpdate = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapLayer4ListenerUdpUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
@@ -618,7 +554,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   name            = "ci-test-gaap-4-udpListener-new"
   port            = 80
   realserver_type = "IP"
-  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id        = "%s"
 
   realserver_bind_set {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
@@ -632,4 +568,4 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`
+`, GAAP_PROXY_ID)

@@ -113,84 +113,52 @@ func TestAccDataSourceTencentCloudGaapLayer7Listeners_https(t *testing.T) {
 	})
 }
 
-const TestAccDataSourceTencentCloudGaapLayer7ListenersListenerId = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var TestAccDataSourceTencentCloudGaapLayer7ListenersListenerId = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 data tencentcloud_gaap_layer7_listeners "listenerId" {
   protocol    = "HTTP"
-  proxy_id    = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id    = "%s"
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
 }
-`
+`, GAAP_PROXY_ID, GAAP_PROXY_ID)
 
-const TestAccDataSourceTencentCloudGaapLayer7ListenersListenerName = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var TestAccDataSourceTencentCloudGaapLayer7ListenersListenerName = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 data tencentcloud_gaap_layer7_listeners "listenerName" {
   protocol      = "HTTP"
-  proxy_id      = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id      = "%s"
   listener_name = "${tencentcloud_gaap_layer7_listener.foo.name}"
 }
-`
+`, GAAP_PROXY_ID, GAAP_PROXY_ID)
 
-const TestAccDataSourceTencentCloudGaapLayer7ListenersPort = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var TestAccDataSourceTencentCloudGaapLayer7ListenersPort = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 data tencentcloud_gaap_layer7_listeners "port" {
   protocol = "HTTP"
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
 }
-`
+`, GAAP_PROXY_ID, GAAP_PROXY_ID)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsListenerId = fmt.Sprintf(`
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
 resource tencentcloud_gaap_certificate "foo" {
   type    = "SERVER"
   content = %s
@@ -204,25 +172,17 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   certificate_id   = "${tencentcloud_gaap_certificate.foo.id}"
   auth_type        = 0
   forward_protocol = "HTTP"
-  proxy_id         = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id         = "%s"
 }
 
 data tencentcloud_gaap_layer7_listeners "listenerId" {
   protocol    = "HTTPS"
-  proxy_id    = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id    = "%s"
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
 }
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID, GAAP_PROXY_ID)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsListenerName = fmt.Sprintf(`
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
 resource tencentcloud_gaap_certificate "foo" {
   type    = "SERVER"
   content = %s
@@ -236,25 +196,17 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   certificate_id   = "${tencentcloud_gaap_certificate.foo.id}"
   auth_type        = 0
   forward_protocol = "HTTP"
-  proxy_id         = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id         = "%s"
 }
 
 data tencentcloud_gaap_layer7_listeners "name" {
   protocol      = "HTTPS"
-  proxy_id      = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id      = "%s"
   listener_name = "${tencentcloud_gaap_layer7_listener.foo.name}"
 }
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID, GAAP_PROXY_ID)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsPort = fmt.Sprintf(`
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
 resource tencentcloud_gaap_certificate "foo" {
   type    = "SERVER"
   content = %s
@@ -268,12 +220,12 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   certificate_id   = "${tencentcloud_gaap_certificate.foo.id}"
   auth_type        = 0
   forward_protocol = "HTTP"
-  proxy_id         = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id         = "%s"
 }
 
 data tencentcloud_gaap_layer7_listeners "port" {
   protocol = "HTTPS"
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
 }
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID, GAAP_PROXY_ID)
