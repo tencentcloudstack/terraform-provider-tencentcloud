@@ -20,10 +20,10 @@ func TestAccTencentCloudSslCertificate_basic(t *testing.T) {
 		CheckDestroy: testAccCheckSslCertificateDestroy(&id),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSslCertificate("CA", testAccSslCertificateCA, "", ""),
+				Config: testAccSslCertificate("CA", testAccSslCertificateCA, "CA", ""),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSslCertificateExists("tencentcloud_ssl_certificate.foo", &id),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.foo", "name", ""),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.foo", "name", "CA"),
 					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.foo", "type", "CA"),
 					resource.TestCheckResourceAttr("tencentcloud_ssl_certificate.foo", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_ssl_certificate.foo", "cert"),

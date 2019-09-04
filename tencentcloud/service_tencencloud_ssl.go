@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type SslService struct {
@@ -29,6 +30,8 @@ func (me *SslService) CreateCertificate(ctx context.Context, certType, cert, nam
 	createRequest.Key = key
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(createRequest.GetAction())
+
 		response, err := client.UploadCert(createRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
@@ -54,6 +57,8 @@ func (me *SslService) CreateCertificate(ctx context.Context, certType, cert, nam
 	describeRequest.Id = &id
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeCertList(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
@@ -121,8 +126,12 @@ func (me *SslService) DescribeCertificates(ctx context.Context, id, name, certTy
 		request.Offset = intToPointer(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
 			response, err := me.client.UseSslClient().DescribeCertList(request)
 			if err != nil {
+				count = 0
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -152,6 +161,8 @@ func (me *SslService) DeleteCertificate(ctx context.Context, id string) error {
 	deleteRequest.Id = &id
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(deleteRequest.GetAction())
+
 		if _, err := client.DeleteCert(deleteRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 				logId, deleteRequest.GetAction(), deleteRequest.ToJsonString(), err)
@@ -168,6 +179,8 @@ func (me *SslService) DeleteCertificate(ctx context.Context, id string) error {
 	describeRequest.Id = &id
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
 		response, err := client.DescribeCertList(describeRequest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",

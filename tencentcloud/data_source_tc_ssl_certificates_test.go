@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"regexp"
 	"testing"
 
@@ -88,20 +89,38 @@ func TestAccDataSourceTencentCloudSslCertificates_id(t *testing.T) {
 	})
 }
 
-var TestAccDataSourceTencentCloudSslCertificatesBasic = testAccSslCertificate("CA", testAccSslCertificateCA, "ci-test-ssl-ca", "") + `
+var TestAccDataSourceTencentCloudSslCertificatesBasic = fmt.Sprintf(`
+resource "tencentcloud_ssl_certificate" "foo" {
+  type = "CA"
+  cert = "%s"
+  name = "ci-test-ssl-ca"
+}
+
 data "tencentcloud_ssl_certificates" "foo" {
   name = "${tencentcloud_ssl_certificate.foo.name}"
 }
-`
+`, testAccSslCertificateCA)
 
-var TestAccDataSourceTencentCloudSslCertificatesType = testAccSslCertificate("CA", testAccSslCertificateCA, "ci-test-ssl-ca", "") + `
+var TestAccDataSourceTencentCloudSslCertificatesType = fmt.Sprintf(`
+resource "tencentcloud_ssl_certificate" "foo" {
+  type = "CA"
+  cert = "%s"
+  name = "ci-test-ssl-ca"
+}
+
 data "tencentcloud_ssl_certificates" "foo" {
   type = "${tencentcloud_ssl_certificate.foo.type}"
 }
-`
+`, testAccSslCertificateCA)
 
-var TestAccDataSourceTencentCloudSslCertificatesId = testAccSslCertificate("CA", testAccSslCertificateCA, "ci-test-ssl-ca", "") + `
+var TestAccDataSourceTencentCloudSslCertificatesId = fmt.Sprintf(`
+resource "tencentcloud_ssl_certificate" "foo" {
+  type = "CA"
+  cert = "%s"
+  name = "ci-test-ssl-ca"
+}
+
 data "tencentcloud_ssl_certificates" "foo" {
   id = "${tencentcloud_ssl_certificate.foo.id}"
 }
-`
+`, testAccSslCertificateCA)
