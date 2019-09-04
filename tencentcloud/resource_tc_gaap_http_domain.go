@@ -59,13 +59,13 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 			"certificate_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
+				Default:     "default",
 				Description: "ID of the server certificate, default values is `default`.",
 			},
 			"client_certificate_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
+				Default:     "default",
 				Description: "ID of the client certificate, default values is `default`.",
 			},
 			"basic_auth": {
@@ -155,6 +155,8 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 
 	case "HTTPS":
 		var (
+			certificateId               string
+			clientCertificateId         string
 			basicAuth                   bool
 			basicAuthId                 *string
 			realserverAuth              bool
@@ -164,15 +166,8 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 			gaapCertificateId           *string
 		)
 
-		certificateId := "default"
-		if raw, ok := d.GetOk("certificate_id"); ok {
-			certificateId = raw.(string)
-		}
-
-		clientCertificateId := "default"
-		if raw, ok := d.GetOk("client_certificate_id"); ok {
-			clientCertificateId = raw.(string)
-		}
+		certificateId = d.Get("certificate_id").(string)
+		clientCertificateId = d.Get("client_certificate_id").(string)
 
 		// basic auth
 		basicAuth = d.Get("basic_auth").(bool)
