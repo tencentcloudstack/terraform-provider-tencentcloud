@@ -437,6 +437,8 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 		d.SetPartial("realservers")
 	}
 
+	d.Partial(false)
+
 	return resourceTencentCloudGaapHttpRuleRead(d, m)
 }
 
