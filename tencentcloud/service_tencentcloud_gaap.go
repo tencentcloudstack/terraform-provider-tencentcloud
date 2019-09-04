@@ -128,6 +128,8 @@ func (me *GaapService) DescribeRealservers(ctx context.Context, address, name *s
 
 			response, err := me.client.UseGaapClient().DescribeRealServers(request)
 			if err != nil {
+				count = 0
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -604,6 +606,14 @@ func (me *GaapService) DescribeProxies(
 
 			response, err := me.client.UseGaapClient().DescribeProxies(request)
 			if err != nil {
+				count = 0
+
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkError.Code == "ResourceNotFound" {
+						return nil
+					}
+				}
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -985,6 +995,8 @@ func (me *GaapService) DescribeTCPListeners(ctx context.Context, proxyId string,
 
 			response, err := me.client.UseGaapClient().DescribeTCPListeners(request)
 			if err != nil {
+				count = 0
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -1038,6 +1050,8 @@ func (me *GaapService) DescribeUDPListeners(ctx context.Context, proxyId string,
 
 			response, err := me.client.UseGaapClient().DescribeUDPListeners(request)
 			if err != nil {
+				count = 0
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -1761,6 +1775,8 @@ func (me *GaapService) DescribeHTTPListeners(
 
 			response, err := me.client.UseGaapClient().DescribeHTTPListeners(request)
 			if err != nil {
+				count = 0
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -1818,6 +1834,8 @@ func (me *GaapService) DescribeHTTPSListeners(
 
 			response, err := me.client.UseGaapClient().DescribeHTTPSListeners(request)
 			if err != nil {
+				count = 0
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -2989,6 +3007,8 @@ func (me *GaapService) DescribeCertificates(ctx context.Context, id, name *strin
 
 			response, err := me.client.UseGaapClient().DescribeCertificates(request)
 			if err != nil {
+				count = 0
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
