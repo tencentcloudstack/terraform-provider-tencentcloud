@@ -1,4 +1,6 @@
 ## 1.15.3 (Unreleased)
+FEATURES:
+* **Update Resource**: `tencentcloud_clb_redirection` add optional argument `is_auto_rewrite`
 ## 1.15.2 (August 14, 2019)
 
 ENHANCEMENTS:
