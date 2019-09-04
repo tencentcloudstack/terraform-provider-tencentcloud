@@ -62,7 +62,7 @@ The following arguments are supported:
 * `protocol` - (Required, ForceNew) Protocol of the layer4 listener, and the available values include `TCP` and `UDP`.
 * `proxy_id` - (Required, ForceNew) ID of the GAAP proxy.
 * `realserver_type` - (Required, ForceNew) Type of the realserver, and the available values include `IP`,`DOMAIN`. NOTES: when the `protocol` is specified as `TCP` and the `scheduler` is specified as `wrr`, the item can only be set to `IP`.
-* `connect_timeout` - (Optional) Timeout of the health check response, default is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.
+* `connect_timeout` - (Optional) Timeout of the health check response, should less than interval, default is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.
 * `health_check` - (Optional) Indicates whether health check is enable, default is false. NOTES: Only supports listeners of `TCP` protocol.
 * `interval` - (Optional) Interval of the health check, default is 5s. NOTES: Only supports listeners of `TCP` protocol.
 * `realserver_bind_set` - (Optional) An information list of GAAP realserver. Each element contains the following attributes:

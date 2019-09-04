@@ -382,9 +382,17 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 	}
 	var healthCheckStatusCodes []int
 	if raw, ok := d.GetOk("health_check_status_codes"); ok {
-		statusCodeSet := raw.(*schema.Set).List()
-		healthCheckStatusCodes = make([]int, 0, len(statusCodeSet))
-		for _, code := range statusCodeSet {
+		statusCodeSet := raw.(*schema.Set)
+
+		codes := []interface{}{100, 200, 300, 400, 500}
+		defaultSet := schema.NewSet(schema.HashInt, codes)
+		diff := statusCodeSet.Difference(defaultSet)
+		if diff.Len() > 0 {
+			return fmt.Errorf("invalid health check status %v", diff.List())
+		}
+
+		healthCheckStatusCodes = make([]int, 0, statusCodeSet.Len())
+		for _, code := range statusCodeSet.List() {
 			healthCheckStatusCodes = append(healthCheckStatusCodes, code.(int))
 		}
 	} else {

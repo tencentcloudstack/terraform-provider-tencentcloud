@@ -145,12 +145,9 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 							Description: "Method of the health check.",
 						},
 						"health_check_status_codes": {
-							Type:     schema.TypeSet,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeInt},
-							Set: func(v interface{}) int {
-								return v.(int)
-							},
+							Type:        schema.TypeList,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeInt},
 							Description: "Return code of confirmed normal.",
 						},
 						"realservers": {

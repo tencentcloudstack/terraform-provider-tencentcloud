@@ -903,11 +903,6 @@ func (me *GaapService) CreateUDPListener(
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
-		if response.Response.ListenerIds[0] == nil {
-			err := fmt.Errorf("api[%s] UDP listener id is nil", request.GetAction())
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
 
 		id = *response.Response.ListenerIds[0]
 		return nil

@@ -42,8 +42,8 @@ The following arguments are supported:
 * `listener_id` - (Required, ForceNew) ID of the layer7 listener.
 * `basic_auth_id` - (Optional) ID of the basic authentication.
 * `basic_auth` - (Optional) Indicates whether basic authentication is enable, default is `false`.
-* `certificate_id` - (Optional) ID of the server certificate, default values is `default`.
-* `client_certificate_id` - (Optional) ID of the client certificate, default values is `default`.
+* `certificate_id` - (Optional) ID of the server certificate, default value is `default`.
+* `client_certificate_id` - (Optional) ID of the client certificate, default value is `default`.
 * `gaap_auth_id` - (Optional) ID of the SSL certificate.
 * `gaap_auth` - (Optional) Indicates whether SSL certificate authentication is enable, default is `false`.
 * `realserver_auth` - (Optional) Indicates whether realserver authentication is enable, default is `false`.

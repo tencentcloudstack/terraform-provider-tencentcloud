@@ -122,7 +122,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Optional:     true,
 				Default:      2,
 				ValidateFunc: validateIntegerInRange(2, 60),
-				Description:  "Timeout of the health check response, default is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.",
+				Description:  "Timeout of the health check response, should less than interval, default is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.",
 			},
 			"realserver_bind_set": {
 				Type:     schema.TypeSet,

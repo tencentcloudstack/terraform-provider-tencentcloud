@@ -70,17 +70,17 @@ func resourceTencentCloudGaapCertificate() *schema.Resource {
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Creation time of the certificate, use unix timestamp format.",
+				Description: "Creation time of the certificate.",
 			},
 			"begin_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Beginning time of the certificate, use unix timestamp format.",
+				Description: "Beginning time of the certificate.",
 			},
 			"end_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Ending time of the certificate, use unix timestamp format.",
+				Description: "Ending time of the certificate.",
 			},
 			"issuer_cn": {
 				Type:        schema.TypeString,

@@ -38,9 +38,9 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `certificates` - An information list of certificate. Each element contains the following attributes:
-  * `begin_time` - Beginning time of the certificate, use unix timestamp format.
-  * `create_time` - Creation time of the certificate, use unix timestamp format.
-  * `end_time` - Ending time of the certificate, use unix timestamp format.
+  * `begin_time` - Beginning time of the certificate.
+  * `create_time` - Creation time of the certificate.
+  * `end_time` - Ending time of the certificate.
   * `id` - ID of the certificate.
   * `issuer_cn` - Issuer name of the certificate.
   * `name` - Name of the certificate.
