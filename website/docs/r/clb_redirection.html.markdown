@@ -12,6 +12,8 @@ Provides a resource to create a CLB redirection.
 
 ## Example Usage
 
+Manual Rewrite
+
 ```hcl
 resource "tencentcloud_clb_redirection" "foo" {
   clb_id             = "lb-p7olt9e5"
@@ -22,15 +24,27 @@ resource "tencentcloud_clb_redirection" "foo" {
 }
 ```
 
+Auto Rewrite
+
+```hcl
+resource "tencentcloud_clb_redirection" "foo" {
+  clb_id             = "lb-p7olt9e5"
+  target_listener_id = "lbl-asj1hzuo"
+  target_rule_id     = "loc-4xxr2cy7"
+  is_auto_rewrite    = true
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `clb_id` - (Required, ForceNew) Id of CLB instance.
-* `source_listener_id` - (Required, ForceNew) Id of source listener.
-* `source_rule_id` - (Required, ForceNew) Rule id of source listener.
 * `target_listener_id` - (Required, ForceNew) Id of source listener.
 * `target_rule_id` - (Required, ForceNew) Rule id of target listener.
+* `is_auto_rewrite` - (Optional, ForceNew) Indicates whether automatic forwarding is enable, default is false. If enabled, the source listener and location should be empty, the target listener must be https protocol and port is 443.
+* `source_listener_id` - (Optional, ForceNew) Id of source listener.
+* `source_rule_id` - (Optional, ForceNew) Rule id of source listener.
 
 
 ## Import
