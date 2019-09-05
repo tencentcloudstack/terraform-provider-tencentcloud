@@ -83,6 +83,7 @@ func TestAccDataSourceTencentCloudSslCertificates_id(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ssl_certificates.foo", "certificates.0.begin_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ssl_certificates.foo", "certificates.0.end_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ssl_certificates.foo", "certificates.0.create_time"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_certificates.foo", "subject_names.#", "0"),
 				),
 			},
 		},
