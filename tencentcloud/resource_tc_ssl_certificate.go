@@ -25,6 +25,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -204,58 +205,34 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 		return nil
 	}
 
-	if certificate.Alias == nil {
-		return errors.New("certificate name is nil")
+	if nilNames := CheckNil(certificate, map[string]string{
+		"Alias":         "name",
+		"CertType":      "type",
+		"ProjectId":     "project id",
+		"Cert":          "cert",
+		"ProductZhName": "product zh name",
+		"Domain":        "domain",
+		"Status":        "status",
+		"CertBeginTime": "begin time",
+		"CertEndTime":   "end time",
+		"InsertTime":    "create time",
+	}); len(nilNames) > 0 {
+		return fmt.Errorf("certificate %v are nil", nilNames)
 	}
+
 	d.Set("name", certificate.Alias)
-
-	if certificate.CertType == nil {
-		return errors.New("certificate type is nil")
-	}
 	d.Set("type", certificate.CertType)
-
-	if certificate.ProjectId == nil {
-		return errors.New("certificate project id is nil")
-	}
 	projectId, err := strconv.Atoi(*certificate.ProjectId)
 	if err != nil {
 		return err
 	}
 	d.Set("project_id", projectId)
-
-	if certificate.Cert == nil {
-		return errors.New("certificate cert is nil")
-	}
 	d.Set("cert", certificate.Cert)
-
-	if certificate.ProductZhName == nil {
-		return errors.New("certificate product zh name is nil")
-	}
 	d.Set("product_zh_name", certificate.ProductZhName)
-
-	if certificate.Domain == nil {
-		return errors.New("certificate domain is nil")
-	}
 	d.Set("domain", certificate.Domain)
-
-	if certificate.Status == nil {
-		return errors.New("certificate status is nil")
-	}
 	d.Set("status", certificate.Status)
-
-	if certificate.CertBeginTime == nil {
-		return errors.New("certificate begin time is nil")
-	}
 	d.Set("begin_time", certificate.CertBeginTime)
-
-	if certificate.CertEndTime == nil {
-		return errors.New("certificate end time is nil")
-	}
 	d.Set("end_time", certificate.CertEndTime)
-
-	if certificate.InsertTime == nil {
-		return errors.New("certificate create time is nil")
-	}
 	d.Set("create_time", certificate.InsertTime)
 
 	subjectAltNames := make([]string, 0, len(certificate.SubjectAltName))
