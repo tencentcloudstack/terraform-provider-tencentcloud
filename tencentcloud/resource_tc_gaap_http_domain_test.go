@@ -170,37 +170,21 @@ func testAccCheckGaapHttpDomainDestroy(id *string) resource.TestCheckFunc {
 	}
 }
 
-const testAccGaapHttpDomainBasic = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapHttpDomainBasic = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
   domain      = "www.qq.com"
 }
-`
+`, GAAP_PROXY_ID)
 
 var testAccGaapHttpDomainHttps = fmt.Sprintf(`
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
 resource tencentcloud_gaap_certificate "foo" {
   type    = "SERVER"
   content = %s
@@ -211,7 +195,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener"
   port             = 80
-  proxy_id         = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id         = "%s"
   certificate_id   = "${tencentcloud_gaap_certificate.foo.id}"
   forward_protocol = "HTTP"
   auth_type        = 0
@@ -222,17 +206,9 @@ resource tencentcloud_gaap_http_domain "foo" {
   domain         = "www.qq.com"
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID)
 
 var testAccGaapHttpDomainHttpsMutualAuthentication = fmt.Sprintf(`
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
 resource tencentcloud_gaap_certificate "foo" {
   type    = "SERVER"
   content = %s
@@ -249,7 +225,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   protocol              = "HTTPS"
   name                  = "ci-test-gaap-l7-listener"
   port                  = 80
-  proxy_id              = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id              = "%s"
   certificate_id        = "${tencentcloud_gaap_certificate.foo.id}"
   client_certificate_id = "${tencentcloud_gaap_certificate.bar.id}"
   forward_protocol      = "HTTPS"
@@ -262,17 +238,9 @@ resource tencentcloud_gaap_http_domain "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF")
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", GAAP_PROXY_ID)
 
 var testAccGaapHttpDomainHttpsMutualAuthenticationUpdate = fmt.Sprintf(`
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
 resource tencentcloud_gaap_certificate "foo" {
   type    = "SERVER"
   content = %s
@@ -318,7 +286,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   protocol              = "HTTPS"
   name                  = "ci-test-gaap-l7-listener"
   port                  = 80
-  proxy_id              = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id              = "%s"
   certificate_id        = "${tencentcloud_gaap_certificate.foo.id}"
   client_certificate_id = "${tencentcloud_gaap_certificate.bar.id}"
   forward_protocol      = "HTTPS"
@@ -349,4 +317,5 @@ resource tencentcloud_gaap_http_domain "foo" {
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"\"test:tx2KGdo3zJg/.\"",
 	"<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF",
+	GAAP_PROXY_ID,
 )

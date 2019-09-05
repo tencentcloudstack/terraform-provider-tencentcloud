@@ -799,6 +799,12 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 
 		response, err := client.DescribeProxies(describeRequest)
 		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
 			return retryError(err)

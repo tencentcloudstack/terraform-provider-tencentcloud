@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"regexp"
 	"testing"
 
@@ -29,20 +30,12 @@ func TestAccDataSourceTencentCloudGaapHttpDomains_basic(t *testing.T) {
 	})
 }
 
-const testAccGaapHttpDomainsBasic = `
-resource "tencentcloud_gaap_proxy" "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapHttpDomainsBasic = fmt.Sprintf(`
 resource "tencentcloud_gaap_layer7_listener" "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 resource "tencentcloud_gaap_http_domain" "foo" {
@@ -54,4 +47,4 @@ data "tencentcloud_gaap_http_domains" "foo" {
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
   domain      = "${tencentcloud_gaap_http_domain.foo.domain}"
 }
-`
+`, GAAP_PROXY_ID)

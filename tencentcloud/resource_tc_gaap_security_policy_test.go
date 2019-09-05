@@ -128,48 +128,24 @@ func testAccCheckGaapSecurityPolicyDestroy(id *string) resource.TestCheckFunc {
 	}
 }
 
-const testAccGaapSecurityPolicyBasic = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapSecurityPolicyBasic = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "ACCEPT"
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapSecurityPolicyDisable = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapSecurityPolicyDisable = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "ACCEPT"
   enable   = false
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapSecurityPolicyDrop = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapSecurityPolicyDrop = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
   action   = "DROP"
 }
-`
+`, GAAP_PROXY_ID)

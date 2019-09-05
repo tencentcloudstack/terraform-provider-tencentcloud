@@ -1,4 +1,5 @@
-## 1.17.0 (Unreleased)
+## 1.17.1 (Unreleased)
+## 1.17.0 (September 04, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_gaap_proxies`

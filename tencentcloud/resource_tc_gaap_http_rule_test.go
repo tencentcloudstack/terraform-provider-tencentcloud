@@ -248,20 +248,12 @@ func testAccCheckGaapHttpRuleDestroy(id, listenerId *string) resource.TestCheckF
 	}
 }
 
-const testAccGaapHttpRuleBasic = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapHttpRuleBasic = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 resource tencentcloud_gaap_realserver "foo" {
@@ -301,22 +293,14 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapHttpRuleUpdate = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapHttpRuleUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 resource tencentcloud_gaap_realserver "foo" {
@@ -358,22 +342,14 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapHttpRuleUpdateDisableHealth = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapHttpRuleUpdateDisableHealth = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 resource tencentcloud_gaap_realserver "foo" {
@@ -414,22 +390,14 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapHttpRuleHttpUpdateRealservers = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapHttpRuleHttpUpdateRealservers = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 resource tencentcloud_gaap_realserver "foo" {
@@ -463,22 +431,14 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapHttpRuleNoHealth = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapHttpRuleNoHealth = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 resource tencentcloud_gaap_realserver "foo" {
@@ -515,22 +475,14 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
 
-const testAccGaapHttpRuleDomainRealserver = `
-resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
+var testAccGaapHttpRuleDomainRealserver = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = "%s"
 }
 
 resource tencentcloud_gaap_realserver "foo" {
@@ -567,4 +519,4 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`
+`, GAAP_PROXY_ID)
