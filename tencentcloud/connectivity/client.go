@@ -380,6 +380,7 @@ func (me *TencentCloudClient) UseSslClient() *ssl.Client {
 	cpf := profile.NewClientProfile()
 	cpf.HttpProfile.ReqMethod = http.MethodPost
 	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
 
 	sslConn, _ := ssl.NewClient(credential, me.Region, cpf)
 	var round LogRoundTripper

@@ -117,14 +117,14 @@ func (me *SslService) DescribeCertificates(ctx context.Context, id, name, certTy
 	request.CertType = certType
 	request.WithCert = stringToPointer(SSL_WITH_CERT)
 
+	var offset uint64
+
+	request.Offset = &offset
 	request.Limit = intToPointer(20)
-	offset := 0
 
 	// run loop at least once
 	count := 20
 	for count == 20 {
-		request.Offset = intToPointer(offset)
-
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 
@@ -146,7 +146,7 @@ func (me *SslService) DescribeCertificates(ctx context.Context, id, name, certTy
 			return nil, err
 		}
 
-		offset += count
+		offset += uint64(count)
 	}
 
 	return
