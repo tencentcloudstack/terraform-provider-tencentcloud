@@ -1,4 +1,9 @@
 ## 1.17.1 (Unreleased)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_ssl_certificates`
+* **New Resource**: `tencentcloud_ssl_certificate`
+
 ## 1.17.0 (September 04, 2019)
 
 FEATURES:
@@ -11,7 +16,6 @@ FEATURES:
 * **New Data Source**: `tencentcloud_gaap_security_policies`
 * **New Data Source**: `tencentcloud_gaap_security_rules`
 * **New Data Source**: `tencentcloud_gaap_certificates`
-* **New Data Source**: `tencentcloud_ssl_certificates`
 * **New Resource**: `tencentcloud_gaap_proxy`
 * **New Resource**: `tencentcloud_gaap_realserver`
 * **New Resource**: `tencentcloud_gaap_layer4_listener`
@@ -21,7 +25,6 @@ FEATURES:
 * **New Resource**: `tencentcloud_gaap_certificate`
 * **New Resource**: `tencentcloud_gaap_security_policy`
 * **New Resource**: `tencentcloud_gaap_security_rule`
-* **New Resource**: `tencentcloud_ssl_certificate`
 
 ## 1.16.3 (August 30, 2019)
 
