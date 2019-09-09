@@ -153,6 +153,8 @@ Redis Resources
   tencentcloud_redis_backup_config
 
 VPC Resources
+  tencentcloud_eni
+  tencentcloud_eni_attachment
   tencentcloud_vpc
   tencentcloud_subnet
   tencentcloud_security_group
@@ -320,6 +322,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_certificate":           resourceTencentCloudGaapCertificate(),
 			"tencentcloud_gaap_security_policy":       resourceTencentCloudGaapSecurityPolicy(),
 			"tencentcloud_gaap_security_rule":         resourceTencentCloudGaapSecurityRule(),
+			"tencentcloud_eni":                        resourceTencentCloudEni(),
+			"tencentcloud_eni_attachment":             resourceTencentCloudEniAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
