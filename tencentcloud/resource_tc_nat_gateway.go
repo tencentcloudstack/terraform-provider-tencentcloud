@@ -1,17 +1,38 @@
+/*
+Provides a resource to create a NAT gateway.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_nat_gateway" "foo" {
+  name              = "test_nat_gateway"
+  vpc_id            = "vpc-4xxr2cy7"
+  bandwidth         = 100
+  max_connection    = 1000000
+  assigned_eip_set  = ["eip-da12w5re5"]
+}
+```
+
+Import
+
+NAT gateway can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_nat_gateway.foo nat-1asg3t63
+```
+*/
+
 package tencentcloud
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
+	"time"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/common"
-	vpc "github.com/zqfan/tencentcloud-sdk-go/services/vpc/unversioned"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
-
-var errEipUnassigned = errors.New("assigned_eip_set list need at least one")
 
 func resourceTencentCloudNatGateway() *schema.Resource {
 	return &schema.Resource{
@@ -22,251 +43,418 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"vpc_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the vpc.",
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
+				Description:  "Name of the nat gateway.",
 			},
 			"max_concurrent": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     1000000,
+				Description: "The upper limit of concurrent connection of nat gateway, the available values include : 1000000,3000000,10000000, Default is 1000000.",
 			},
 			"bandwidth": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     100,
+				Description: "The maximum public network output bandwidth of nat gateway (unit: Mbps), the available values include： 20,50,100,200,500,1000,2000,5000. Default is 100.",
 			},
 			"assigned_eip_set": {
 				Type:     schema.TypeSet,
-				Required: true,
+				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				MinItems: 1,
-				MaxItems: 10,
-			},
+				MinItems:    1,
+				MaxItems:    10,
+				Description: "EIP arrays bound to the gateway. The value of at least 1.",
+			}, 
 		},
 	}
 }
 
 func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_nat_gateway.create")()
 
-	args := vpc.NewCreateNatGatewayRequest()
-
-	args.VpcId = common.StringPtr(d.Get("vpc_id").(string))
-	args.NatName = common.StringPtr(d.Get("name").(string))
-	if v, ok := d.GetOk("max_concurrent"); ok {
-		args.MaxConcurrent = common.IntPtr(v.(int))
+	logId := getLogId(contextNil)
+	request := vpc.NewCreateNatGatewayRequest()
+	vpcId := d.Get("vpc_id").(string)
+	natGatewayName := d.Get("name").(string)
+	request.VpcId = stringToPointer(vpcId)
+	request.NatGatewayName = stringToPointer(natGatewayName)
+	//test default value
+	bandwidth := uint64(d.Get("bandwidth").(int))
+	request.InternetMaxBandwidthOut = &bandwidth
+	maxConcurrent := uint64(d.Get("max_concurrent").(int))
+	request.MaxConcurrentConnection = &maxConcurrent
+	if v, ok := d.GetOk("assigned_eip_set"); ok {
+		eipSet := v.(*schema.Set).List()
+		//set request public ips
+		for i := range eipSet {
+			publicIp := eipSet[i].(string)
+			request.PublicIpAddresses = append(request.PublicIpAddresses, stringToPointer(publicIp))
+		}
 	}
-	if v, ok := d.GetOk("bandwidth"); ok {
-		args.Bandwidth = common.IntPtr(v.(int))
-	}
-
-	eips := d.Get("assigned_eip_set").(*schema.Set).List()
-	if len(eips) > 0 {
-		args.AssignedEipSet = common.StringPtrs(expandStringList(eips))
-	} else {
-		return errEipUnassigned
-	}
-
-	client := meta.(*TencentCloudClient)
-	conn := client.vpcConn
-	response, err := conn.CreateNatGateway(args)
-	b, _ := json.Marshal(response)
-	log.Printf("[DEBUG] conn.CreateNatGateway response: %s", b)
-	if _, ok := err.(*common.APIError); ok {
-		return fmt.Errorf("conn.CreateNatGateway error: %v", err)
-	}
-
-	//Polling NAT gateway production status
-	if _, err := client.PollingVpcBillResult(response.BillId); err != nil {
+	
+	var response *vpc.CreateNatGatewayResponse
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateNatGateway(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create nat gateway failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
-	log.Printf("[DEBUG] conn.CreateNatGateway NatGatewayId: %s", *response.NatGatewayId)
+	if len(response.Response.NatGatewaySet) < 1 {
+		return fmt.Errorf("nat gateway id is nil")
+	}
+	d.SetId(*response.Response.NatGatewaySet[0].NatGatewayId)
+	// must wait for finishing creating nat
+	statRequest := vpc.NewDescribeNatGatewaysRequest()
+	statRequest.NatGatewayIds = []*string{response.Response.NatGatewaySet[0].NatGatewayId}
+	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGateways(statRequest)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		} else {
+			//if not, quit
+			if len(result.Response.NatGatewaySet) != 1 {
+				return resource.NonRetryableError(fmt.Errorf("creating error"))
+			}
+			//else get stat
+			nat := result.Response.NatGatewaySet[0]
+			stat := *nat.State
 
-	d.SetId(*response.NatGatewayId)
-	return nil
+			if stat == "AVAILABLE" {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("creating not ready retry"))
+		}
+	})
+	return resourceTencentCloudNatGatewayRead(d, meta)
 }
 
 func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_nat_gateway.read")()
 
-	conn := meta.(*TencentCloudClient).vpcConn
+	logId := getLogId(contextNil)
 
-	descReq := vpc.NewDescribeNatGatewayRequest()
-	descReq.NatId = common.StringPtr(d.Id())
-
-	descResp, err := conn.DescribeNatGateway(descReq)
-	b, _ := json.Marshal(descResp)
-	log.Printf("[DEBUG] conn.DescribeNatGateway response: %s", b)
-	if _, ok := err.(*common.APIError); ok {
-		return fmt.Errorf("conn.DescribeNatGateway error: %v", err)
-	}
-
-	if *descResp.TotalCount == 0 {
-		d.SetId("")
+	natGatewayId := d.Id()
+	request := vpc.NewDescribeNatGatewaysRequest()
+	request.NatGatewayIds = []*string{&natGatewayId}
+	var response *vpc.DescribeNatGatewaysResponse
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGateways(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		}
+		response = result
 		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read nat gateway failed, reason:%s\n ", logId, err.Error())
+		return err
+	}
+	if len(response.Response.NatGatewaySet) < 1 {
+		return fmt.Errorf("nat gateway id is nil")
 	}
 
-	nat := descResp.Data[0]
+	nat := response.Response.NatGatewaySet[0]
 
-	d.Set("name", *nat.NatName)
-	d.Set("max_concurrent", *nat.MaxConcurrent)
-	d.Set("bandwidth", *nat.Bandwidth)
-	d.Set("assigned_eip_set", nat.EipSet)
+	d.Set("vpc_id", *nat.VpcId)
+	d.Set("name", *nat.NatGatewayName)
+	d.Set("max_concurrent", *nat.MaxConcurrentConnection)
+	d.Set("bandwidth", *nat.InternetMaxBandwidthOut)
+	d.Set("assigned_eip_set", flattenAddressList((*nat).PublicIpAddressSet))
 	return nil
 }
 
 func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_nat_gateway.update")()
 
-	client := meta.(*TencentCloudClient)
-	conn := client.vpcConn
+	logId := getLogId(contextNil)
 
 	d.Partial(true)
-	attributeUpdate := false
-
-	updateReq := vpc.NewModifyNatGatewayRequest()
-	updateReq.VpcId = common.StringPtr(d.Get("vpc_id").(string))
-	updateReq.NatId = common.StringPtr(d.Id())
-
+	natGatewayId := d.Id()
+	request := vpc.NewModifyNatGatewayAttributeRequest()
+	request.NatGatewayId = stringToPointer(natGatewayId)
+	changed := false
 	if d.HasChange("name") {
-		d.SetPartial("name")
-		var name string
-		if v, ok := d.GetOk("name"); ok {
-			name = v.(string)
-		} else {
-			return fmt.Errorf("cann't change name to empty string")
-		}
-		updateReq.NatName = common.StringPtr(name)
-
-		attributeUpdate = true
+		request.NatGatewayName = stringToPointer(d.Get("name").(string))
+		changed = true
 	}
-
 	if d.HasChange("bandwidth") {
-		d.SetPartial("bandwidth")
-		var bandwidth int
-		if v, ok := d.GetOk("bandwidth"); ok {
-			bandwidth = v.(int)
-		} else {
-			return fmt.Errorf("cann't change bandwidth to empty string")
-		}
-		updateReq.Bandwidth = common.IntPtr(bandwidth)
-
-		attributeUpdate = true
+		bandwidth := d.Get("bandwidth").(int)
+		bandwidth64 := uint64(bandwidth)
+		request.InternetMaxBandwidthOut = &bandwidth64
+		changed = true
 	}
-
-	if attributeUpdate {
-		updateResp, err := conn.ModifyNatGateway(updateReq)
-		b, _ := json.Marshal(updateResp)
-		log.Printf("[DEBUG] conn.ModifyNatGateway response: %s", b)
-		if _, ok := err.(*common.APIError); ok {
-			return fmt.Errorf("conn.ModifyNatGateway error: %v", err)
-		}
-	}
-
-	if d.HasChange("max_concurrent") {
-		d.SetPartial("max_concurrent")
-		old_mc, new_mc := d.GetChange("max_concurrent")
-		old_max_concurrent := old_mc.(int)
-		new_max_concurrent := new_mc.(int)
-		if new_max_concurrent <= old_max_concurrent {
-			return fmt.Errorf("max_concurrent only supports upgrade")
-		}
-		upgradeReq := vpc.NewUpgradeNatGatewayRequest()
-		upgradeReq.VpcId = updateReq.VpcId
-		upgradeReq.NatId = updateReq.NatId
-		upgradeReq.MaxConcurrent = common.IntPtr(new_max_concurrent)
-
-		upgradeResp, err := conn.UpgradeNatGateway(upgradeReq)
-		b, _ := json.Marshal(upgradeResp)
-		log.Printf("[DEBUG] conn.UpgradeNatGateway response: %s", b)
-		if _, ok := err.(*common.APIError); ok {
-			return fmt.Errorf("conn.UpgradeNatGateway error: %v", err)
-		}
-
-		if _, err := client.PollingVpcBillResult(upgradeResp.BillId); err != nil {
+	if changed {
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyNatGatewayAttribute(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s modify nat gateway failed, reason:%s\n ", logId, err.Error())
 			return err
 		}
 	}
-
-	if d.HasChange("assigned_eip_set") {
-		o, n := d.GetChange("assigned_eip_set")
-		os := o.(*schema.Set)
-		ns := n.(*schema.Set)
-
-		old_eip_set := os.List()
-		new_eip_set := ns.List()
-
-		if len(old_eip_set) > 0 && len(new_eip_set) > 0 {
-
-			// Unassign old EIP
-			unassignIps := os.Difference(ns)
-			if unassignIps.Len() != 0 {
-				unbindReq := vpc.NewEipUnBindNatGatewayRequest()
-				unbindReq.VpcId = updateReq.VpcId
-				unbindReq.NatId = updateReq.NatId
-				unbindReq.AssignedEipSet = common.StringPtrs(expandStringList(unassignIps.List()))
-				unbindResp, err := conn.EipUnBindNatGateway(unbindReq)
-				b, _ := json.Marshal(unbindResp)
-				log.Printf("[DEBUG] conn.EipUnBindNatGateway response: %s", b)
-				if _, ok := err.(*common.APIError); ok {
-					return fmt.Errorf("conn.EipUnBindNatGateway error: %v", err)
-				}
-
-				if _, err := client.PollingVpcTaskResult(unbindResp.TaskId); err != nil {
-					return err
-				}
+	if d.HasChange("name") {
+		d.SetPartial("name")
+	}
+	if d.HasChange("bandwidth") {
+		d.SetPartial("bandwidth")
+	}
+	//max concurrent
+	if d.HasChange("max_concurrent") {
+		concurrentReq := vpc.NewResetNatGatewayConnectionRequest()
+		concurrentReq.NatGatewayId = stringToPointer(natGatewayId)
+		concurrent := d.Get("max_concurrent").(int)
+		concurrent64 := uint64(concurrent)
+		concurrentReq.MaxConcurrentConnection = &concurrent64
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ResetNatGatewayConnection(concurrentReq)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, concurrentReq.GetAction(), concurrentReq.ToJsonString(), e.Error())
+				return retryError(e)
 			}
-
-			// Assign new EIP
-			assignIps := ns.Difference(os)
-			if assignIps.Len() != 0 {
-				bindReq := vpc.NewEipBindNatGatewayRequest()
-				bindReq.VpcId = updateReq.VpcId
-				bindReq.NatId = updateReq.NatId
-				bindReq.AssignedEipSet = common.StringPtrs(expandStringList(assignIps.List()))
-				bindResp, err := conn.EipBindNatGateway(bindReq)
-				b, _ := json.Marshal(bindResp)
-				log.Printf("[DEBUG] conn.EipBindNatGateway response: %s", b)
-				if _, ok := err.(*common.APIError); ok {
-					return fmt.Errorf("conn.EipBindNatGateway error: %v", err)
-				}
-
-				if _, err := client.PollingVpcTaskResult(bindResp.TaskId); err != nil {
-					return err
-				}
-			}
-
-		} else {
-			return errEipUnassigned
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s modify nat gateway concurrent failed, reason:%s\n ", logId, err.Error())
+			return err
 		}
-
-		d.SetPartial("assigned_eip_set")
+		d.SetPartial("max_concurrent")
 	}
 
+	//eip
+
+	if  d.HasChange("assigned_eip_set") {		
+		eipSetLength := 0
+		if v, ok := d.GetOk("assigned_eip_set"); ok {
+			eipSet := v.(*schema.Set).List()
+			eipSetLength = len(eipSet)
+		}
+		if d.HasChange("assigned_eip_set") {
+			o, n := d.GetChange("assigned_eip_set")
+			os := o.(*schema.Set)
+			ns := n.(*schema.Set)
+			oldEipSet := os.List()
+			newEipSet := ns.List()
+			log.Printf("old eip set %v", oldEipSet)
+			log.Printf("new eip set %v", newEipSet)
+
+			//in case of no union set
+			backUpOldIp := ""
+			backUpNewIp := ""
+			//Unassign eips
+			if len(oldEipSet) > 0 {
+				unassignedRequest := vpc.NewDisassociateNatGatewayAddressRequest()
+				unassignedRequest.PublicIpAddresses = make([]*string, 0, len(oldEipSet))
+				unassignedRequest.NatGatewayId = stringToPointer(natGatewayId)
+				//set request public ips
+				for i := range oldEipSet {
+					publicIp := oldEipSet[i].(string)
+					isIn := false
+					for j := range newEipSet {
+						if publicIp == newEipSet[j] {
+							isIn = true
+						}
+					}
+					if !isIn {
+						if len(unassignedRequest.PublicIpAddresses)+1 == len(oldEipSet) {
+							backUpOldIp = publicIp
+						} else {
+							unassignedRequest.PublicIpAddresses = append(unassignedRequest.PublicIpAddresses, stringToPointer(publicIp))
+						}
+					}
+				}
+
+				if len(unassignedRequest.PublicIpAddresses) > 0 {
+					err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+						_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DisassociateNatGatewayAddress(unassignedRequest)
+						if e != nil {
+							log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+								logId, unassignedRequest.GetAction(), unassignedRequest.ToJsonString(), e.Error())
+							return retryError(e)
+						}
+						return nil
+					})
+					if err != nil {
+						log.Printf("[CRITAL]%s modify nat gateway eip failed, reason:%s\n ", logId, err.Error())
+						return err
+					}
+				}
+			}
+			time.Sleep(3 * time.Minute)
+			//Assign new EIP
+			if len(newEipSet) > 0 {
+				assignedRequest := vpc.NewAssociateNatGatewayAddressRequest()
+				assignedRequest.PublicIpAddresses = make([]*string, 0, len(newEipSet))
+				assignedRequest.NatGatewayId = stringToPointer(natGatewayId)
+				//set request public ips
+				for i := range newEipSet {
+					publicIp := newEipSet[i].(string)
+					isIn := false
+					for j := range oldEipSet {
+						if publicIp == oldEipSet[j] {
+							isIn = true
+						}
+					}
+					if !isIn {
+						if len(assignedRequest.PublicIpAddresses)+eipSetLength+1 == 10 {
+							backUpNewIp = publicIp
+						} else {
+							assignedRequest.PublicIpAddresses = append(assignedRequest.PublicIpAddresses, stringToPointer(publicIp))
+						}
+					}
+				}
+				if len(assignedRequest.PublicIpAddresses) > 0 {
+					err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+						_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
+						if e != nil {
+							log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+								logId, assignedRequest.GetAction(), assignedRequest.ToJsonString(), e.Error())
+							return retryError(e)
+						}
+						return nil
+					})
+					if err != nil {
+						log.Printf("[CRITAL]%s modify nat gateway eip failed, reason:%s\n ", logId, err.Error())
+						return err
+					}
+				}
+			}
+			time.Sleep(3 * time.Minute)
+			if backUpOldIp != "" {
+				//disassociate one old ip
+				unassignedRequest := vpc.NewDisassociateNatGatewayAddressRequest()
+				unassignedRequest.NatGatewayId = stringToPointer(natGatewayId)
+				unassignedRequest.PublicIpAddresses = []*string{&backUpOldIp}
+				err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+					_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DisassociateNatGatewayAddress(unassignedRequest)
+					if e != nil {
+						log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+							logId, unassignedRequest.GetAction(), unassignedRequest.ToJsonString(), e.Error())
+						return retryError(e)
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s modify nat gateway eip failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+			}
+			if backUpNewIp != "" {
+				//associate one new ip
+				assignedRequest := vpc.NewAssociateNatGatewayAddressRequest()
+				assignedRequest.NatGatewayId = stringToPointer(natGatewayId)
+				assignedRequest.PublicIpAddresses = []*string{&backUpNewIp}
+				err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+					_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
+					if e != nil {
+						log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+							logId, assignedRequest.GetAction(), assignedRequest.ToJsonString(), e.Error())
+						return retryError(e)
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s modify nat gateway eip failed, reason:%s\n ", logId, err.Error())
+					return err
+				}
+			}
+			d.SetPartial("assigned_eip_set")
+		}
+
+	}
 	d.Partial(false)
 
 	return nil
 }
 
 func resourceTencentCloudNatGatewayDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_nat_gateway.delete")()
 
-	client := meta.(*TencentCloudClient)
+	logId := getLogId(contextNil)
 
-	deleteReq := vpc.NewDeleteNatGatewayRequest()
-	deleteReq.VpcId = common.StringPtr(d.Get("vpc_id").(string))
-	deleteReq.NatId = common.StringPtr(d.Id())
-
-	deleteResp, err := client.vpcConn.DeleteNatGateway(deleteReq)
-	b, _ := json.Marshal(deleteResp)
-	log.Printf("[DEBUG] client.vpcConn.DeleteNatGateway response: %s", b)
-	if _, ok := err.(*common.APIError); ok {
-		return fmt.Errorf("[ERROR] client.vpcConn.DeleteNatGateway error: %v", err)
+	natGatewayId := d.Id()
+	request := vpc.NewDeleteNatGatewayRequest()
+	request.NatGatewayId = stringToPointer(natGatewayId)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DeleteNatGateway(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s delete nat gateway failed, reason:%s\n ", logId, err.Error())
+		return err
 	}
+	// must wait for finishing deleting nat
+	time.Sleep(10 * time.Second)
+	//to get the status of nat
 
-	_, err = client.PollingVpcTaskResult(deleteResp.TaskId)
-	return err
+	statRequest := vpc.NewDescribeNatGatewaysRequest()
+	statRequest.NatGatewayIds = []*string{&natGatewayId}
+	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGateways(statRequest)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		} else {
+			//if not, quit
+			if len(result.Response.NatGatewaySet) == 0 {
+				log.Printf("deleting done")
+				return nil
+			}
+			//else get stat
+			nat := result.Response.NatGatewaySet[0]
+			stat := *nat.State
+			log.Printf("????? %s", stat)
+			if stat == "FAILED" {
+				return resource.NonRetryableError(fmt.Errorf("delete nat failed"))
+			}
+			time.Sleep(3 * time.Second)
+
+			return resource.RetryableError(fmt.Errorf("deleting retry"))
+		}
+	})
+
+	return nil
+}
+
+func flattenAddressList(addresses []*vpc.NatGatewayAddress) (eips []*string) {
+	for _, address := range addresses {
+		eips = append(eips, address.PublicIpAddress)
+	}
+	return
 }
