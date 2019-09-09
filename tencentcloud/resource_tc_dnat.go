@@ -147,8 +147,6 @@ func resourceTencentCloudDnatCreate(d *schema.ResourceData, meta interface{}) er
 
 	dnatId := buildDnatId(&natForward, d.Get("vpc_id").(string), natGatewayId)
 
-	log.Printf("[DEBUG] resourceTencentCloudDnatCreate dnatId: %s", dnatId)
-
 	d.SetId(dnatId)
 	return resourceTencentCloudDnatRead(d, meta)
 }
@@ -263,7 +261,6 @@ func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) er
 
 // Build an ID for a Forward Entry, eg "tcp://VpcId:NatId@127.15.2.3:8080"
 func buildDnatId(entry *vpc.DestinationIpPortTranslationNatRule, vpcId string, natGatewayId string) (entryId string) {
-	log.Printf("[DEBUG] args=%v", entry)
 	entryId = fmt.Sprintf("%s://%s:%s@%s:%d", *entry.IpProtocol, vpcId, natGatewayId, *entry.PublicIpAddress, *entry.PublicPort)
 	log.Printf("[DEBUG] buildDnatId entryId=%s", entryId)
 	return
@@ -282,7 +279,6 @@ func parseDnatId(entryId string) (entry *vpc.DestinationIpPortTranslationNatRule
 	host, port, _ := net.SplitHostPort(u.Host)
 	entry = &vpc.DestinationIpPortTranslationNatRule{}
 	params["nat-gateway-id"] = natId
-	log.Printf("!!!%s", natId)
 	params["vpc-id"] = u.User.Username()
 	entry.IpProtocol = stringToPointer(strings.ToUpper(u.Scheme))
 	entry.PublicIpAddress = stringToPointer(host)

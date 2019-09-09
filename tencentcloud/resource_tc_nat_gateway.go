@@ -21,7 +21,6 @@ NAT gateway can be imported using the id, e.g.
 $ terraform import tencentcloud_nat_gateway.foo nat-1asg3t63
 ```
 */
-
 package tencentcloud
 
 import (
@@ -75,7 +74,7 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				MinItems:    1,
 				MaxItems:    10,
 				Description: "EIP arrays bound to the gateway. The value of at least 1.",
-			}, 
+			},
 		},
 	}
 }
@@ -102,7 +101,7 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 			request.PublicIpAddresses = append(request.PublicIpAddresses, stringToPointer(publicIp))
 		}
 	}
-	
+
 	var response *vpc.CreateNatGatewayResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateNatGateway(request)
@@ -147,6 +146,10 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 			return resource.RetryableError(fmt.Errorf("creating not ready retry"))
 		}
 	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create nat gateway failed, reason:%s\n ", logId, err.Error())
+		return err
+	}
 	return resourceTencentCloudNatGatewayRead(d, meta)
 }
 
@@ -253,7 +256,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 
 	//eip
 
-	if  d.HasChange("assigned_eip_set") {		
+	if d.HasChange("assigned_eip_set") {
 		eipSetLength := 0
 		if v, ok := d.GetOk("assigned_eip_set"); ok {
 			eipSet := v.(*schema.Set).List()
@@ -265,8 +268,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			ns := n.(*schema.Set)
 			oldEipSet := os.List()
 			newEipSet := ns.List()
-			log.Printf("old eip set %v", oldEipSet)
-			log.Printf("new eip set %v", newEipSet)
 
 			//in case of no union set
 			backUpOldIp := ""
@@ -439,7 +440,6 @@ func resourceTencentCloudNatGatewayDelete(d *schema.ResourceData, meta interface
 			//else get stat
 			nat := result.Response.NatGatewaySet[0]
 			stat := *nat.State
-			log.Printf("????? %s", stat)
 			if stat == "FAILED" {
 				return resource.NonRetryableError(fmt.Errorf("delete nat failed"))
 			}
@@ -448,7 +448,10 @@ func resourceTencentCloudNatGatewayDelete(d *schema.ResourceData, meta interface
 			return resource.RetryableError(fmt.Errorf("deleting retry"))
 		}
 	})
-
+	if err != nil {
+		log.Printf("[CRITAL]%s delete nat gateway failed, reason:%s\n ", logId, err.Error())
+		return err
+	}
 	return nil
 }
 
