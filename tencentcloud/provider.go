@@ -43,8 +43,18 @@ Data Sources
   tencentcloud_clb_attachments
   tencentcloud_clb_redirections
   tencentcloud_eip
+  tencentcloud_gaap_certificates
+  tencentcloud_gaap_http_domains
+  tencentcloud_gaap_http_rules
+  tencentcloud_gaap_layer4_listeners
+  tencentcloud_gaap_layer7_listeners
+  tencentcloud_gaap_proxies
+  tencentcloud_gaap_realservers
+  tencentcloud_gaap_security_policies
+  tencentcloud_gaap_security_rules
   tencentcloud_image
   tencentcloud_instance_types
+  tencentcloud_kubernetes_clusters
   tencentcloud_mongodb_instances
   tencentcloud_mongodb_zone_config
   tencentcloud_mysql_backup_list
@@ -113,6 +123,21 @@ DC Resources
 DCG Resources
   tencentcloud_dc_gateway
   tencentcloud_dc_gateway_ccn_route
+
+GAAP Resources
+  tencentcloud_gaap_proxy
+  tencentcloud_gaap_realserver
+  tencentcloud_gaap_layer4_listener
+  tencentcloud_gaap_layer7_listener
+  tencentcloud_gaap_http_domain
+  tencentcloud_gaap_http_rule
+  tencentcloud_gaap_certificate
+  tencentcloud_gaap_security_policy
+  tencentcloud_gaap_security_rule
+
+Kubernetes Resources
+  tencentcloud_kubernetes_cluster
+  tencentcloud_kubernetes_scale_worker
 
 MongoDB Resources
   tencentcloud_mongodb_instance
@@ -225,6 +250,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_instances":           dataSourceTencentCloudMongodbInstances(),
 			"tencentcloud_dc_gateway_instances":        dataSourceTencentCloudDcGatewayInstances(),
 			"tencentcloud_dc_gateway_ccn_routes":       dataSourceTencentCloudDcGatewayCCNRoutes(),
+			"tencentcloud_kubernetes_clusters":         dataSourceTencentCloudKubernetesClusters(),
+			"tencentcloud_gaap_proxies":                dataSourceTencentCloudGaapProxies(),
+			"tencentcloud_gaap_realservers":            dataSourceTencentCloudGaapRealservers(),
+			"tencentcloud_gaap_layer4_listeners":       dataSourceTencentCloudGaapLayer4Listeners(),
+			"tencentcloud_gaap_layer7_listeners":       dataSourceTencentCloudGaapLayer7Listeners(),
+			"tencentcloud_gaap_http_domains":           dataSourceTencentCloudGaapHttpDomains(),
+			"tencentcloud_gaap_http_rules":             dataSourceTencentCloudGaapHttpRules(),
+			"tencentcloud_gaap_security_policies":      dataSourceTencentCloudGaapSecurityPolices(),
+			"tencentcloud_gaap_security_rules":         dataSourceTencentCloudGaapSecurityRules(),
+			"tencentcloud_gaap_certificates":           dataSourceTencentCloudGaapCertificates(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -278,6 +313,17 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_sharding_instance":  resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_dc_gateway":                 resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":       resourceTencentCloudDcGatewayCcnRouteInstance(),
+			"tencentcloud_kubernetes_cluster":         resourceTencentCloudTkeCluster(),
+			"tencentcloud_kubernetes_scale_worker":    resourceTencentCloudTkeScaleWorker(),
+			"tencentcloud_gaap_proxy":                 resourceTencentCloudGaapProxy(),
+			"tencentcloud_gaap_realserver":            resourceTencentCloudGaapRealserver(),
+			"tencentcloud_gaap_layer4_listener":       resourceTencentCloudGaapLayer4Listener(),
+			"tencentcloud_gaap_layer7_listener":       resourceTencentCloudGaapLayer7Listener(),
+			"tencentcloud_gaap_http_domain":           resourceTencentCloudGaapHttpDomain(),
+			"tencentcloud_gaap_http_rule":             resourceTencentCloudGaapHttpRule(),
+			"tencentcloud_gaap_certificate":           resourceTencentCloudGaapCertificate(),
+			"tencentcloud_gaap_security_policy":       resourceTencentCloudGaapSecurityPolicy(),
+			"tencentcloud_gaap_security_rule":         resourceTencentCloudGaapSecurityRule(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -51,7 +51,7 @@ func ProCheck(namespace, action string) {
 		sleepMs := 10 + rand.Intn(30)
 		time.Sleep(time.Duration(sleepMs) * time.Microsecond)
 
-		if time.Now().Sub(old) > 5*time.Minute {
+		if time.Since(old) > 5*time.Minute {
 			log.Printf("[WARN] %s wait too long, we try to release it", key)
 			break
 		}

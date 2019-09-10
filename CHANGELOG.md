@@ -1,4 +1,5 @@
-## 1.15.3 (Unreleased)
+## 1.17.1 (Unreleased)
+
 FEATURES:
 * **Update Resource**: `tencentcloud_clb_redirection` add optional argument `is_auto_rewrite`
 * **New Data Source**: `tencentcloud_dnats`
@@ -8,6 +9,62 @@ FEATURES:
 
 DEPRECATED:
 * Data Sesource: `tencentcloud_nats` replaced by `tencentcloud_nat_gateways`.
+
+## 1.17.0 (September 04, 2019)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_gaap_proxies`
+* **New Data Source**: `tencentcloud_gaap_realservers`
+* **New Data Source**: `tencentcloud_gaap_layer4_listeners`
+* **New Data Source**: `tencentcloud_gaap_layer7_listeners`
+* **New Data Source**: `tencentcloud_gaap_http_domains`
+* **New Data Source**: `tencentcloud_gaap_http_rules`
+* **New Data Source**: `tencentcloud_gaap_security_policies`
+* **New Data Source**: `tencentcloud_gaap_security_rules`
+* **New Data Source**: `tencentcloud_gaap_certificates`
+* **New Resource**: `tencentcloud_gaap_proxy`
+* **New Resource**: `tencentcloud_gaap_realserver`
+* **New Resource**: `tencentcloud_gaap_layer4_listener`
+* **New Resource**: `tencentcloud_gaap_layer7_listener`
+* **New Resource**: `tencentcloud_gaap_http_domain`
+* **New Resource**: `tencentcloud_gaap_http_rule`
+* **New Resource**: `tencentcloud_gaap_certificate`
+* **New Resource**: `tencentcloud_gaap_security_policy`
+* **New Resource**: `tencentcloud_gaap_security_rule`
+
+## 1.16.3 (August 30, 2019)
+
+BUG FIXIES:
+
+* Resource: `tencentcloud_kubernetes_cluster`: cgi error retry.
+* Resource: `tencentcloud_kubernetes_scale_worker`: cgi error retry.
+
+## 1.16.2 (August 28, 2019)
+
+BUG FIXIES:
+
+* Resource: `tencentcloud_instance`: fixed cvm data disks missing computed.
+* Resource: `tencentcloud_mysql_backup_policy`: `backup_model` remove logical backup support. 
+* Resource: `tencentcloud_mysql_instance`: `tags` adapt to the new official api.
+
+## 1.16.1 (August 27, 2019)
+
+ENHANCEMENTS:
+* `tencentcloud_instance`: refactor logic with api3.0 .
+
+## 1.16.0 (August 20, 2019)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_kubernetes_clusters`
+* **New Resource**: `tencentcloud_kubernetes_scale_worker`
+* **New Resource**: `tencentcloud_kubernetes_cluster`
+
+
+DEPRECATED:
+* Data Source: `tencentcloud_container_clusters` replaced by `tencentcloud_kubernetes_clusters`.
+* Data Source: `tencentcloud_container_cluster_instances` replaced by `tencentcloud_kubernetes_clusters`.
+* Resource: `tencentcloud_container_cluster` replaced by `tencentcloud_kubernetes_cluster`.
+* Resource: `tencentcloud_container_cluster_instance` replaced by `tencentcloud_kubernetes_scale_worker`.
 
 ## 1.15.2 (August 14, 2019)
 

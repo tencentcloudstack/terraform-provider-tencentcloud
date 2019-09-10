@@ -16,10 +16,11 @@ const (
 
 func resourceTencentCloudContainerClusterInstance() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudContainerClusterInstancesCreate,
-		Read:   resourceTencentCloudContainerClusterInstancesRead,
-		Update: resourceTencentCloudContainerClusterInstancesUpdate,
-		Delete: resourceTencentCloudContainerClusterInstancesDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.16.0. Please use 'tencentcloud_kubernetes_scale_worker' instead.",
+		Create:             resourceTencentCloudContainerClusterInstancesCreate,
+		Read:               resourceTencentCloudContainerClusterInstancesRead,
+		Update:             resourceTencentCloudContainerClusterInstancesUpdate,
+		Delete:             resourceTencentCloudContainerClusterInstancesDelete,
 
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
