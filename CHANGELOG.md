@@ -1,4 +1,4 @@
-## 1.18.0 (Unreleased)
+## 1.18.0 (September 10, 2019)
 
 FEATURES:
 
