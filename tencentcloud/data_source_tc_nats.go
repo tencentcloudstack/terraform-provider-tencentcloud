@@ -12,7 +12,7 @@ import (
 
 func dataSourceTencentCloudNats() *schema.Resource {
 	return &schema.Resource{
-		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.17.1. Please use 'tencentcloud_nat_gateways' instead.",
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.18.0. Please use 'tencentcloud_nat_gateways' instead.",
 		Read:               dataSourceTencentCloudNatsRead,
 
 		Schema: map[string]*schema.Schema{
