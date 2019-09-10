@@ -24,12 +24,6 @@ func TestAccTencentCloudDnat_basic(t *testing.T) {
 					testAccCheckDnatExists("tencentcloud_dnat.dev_dnat", &dnatId),
 				),
 			},
-			/*{
-				Config: testAccDnatConfigUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDnatExists("tencentcloud_dnat.dev_dnat", &dnatId),
-				),
-			},*/
 		},
 	})
 }

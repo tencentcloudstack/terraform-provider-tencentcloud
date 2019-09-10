@@ -45,6 +45,9 @@ func resourceTencentCloudDnat() *schema.Resource {
 		Create: resourceTencentCloudDnatCreate,
 		Read:   resourceTencentCloudDnatRead,
 		Delete: resourceTencentCloudDnatDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"vpc_id": {

@@ -39,6 +39,9 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 		Read:   resourceTencentCloudNatGatewayRead,
 		Update: resourceTencentCloudNatGatewayUpdate,
 		Delete: resourceTencentCloudNatGatewayDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"vpc_id": {
