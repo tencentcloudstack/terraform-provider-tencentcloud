@@ -1,4 +1,9 @@
 ## 1.17.1 (Unreleased)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_ssl_certificates`
+* **New Resource**: `tencentcloud_ssl_certificate`
+
 ## 1.17.0 (September 04, 2019)
 
 FEATURES:
