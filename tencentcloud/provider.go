@@ -36,6 +36,7 @@ Data Sources
   tencentcloud_dc_gateway_ccn_routes
   tencentcloud_dc_gateway_instances
   tencentcloud_dcx_instances
+  tencentcloud_dnats
   tencentcloud_clb_instances
   tencentcloud_clb_listeners
   tencentcloud_clb_listener_rules
@@ -61,6 +62,7 @@ Data Sources
   tencentcloud_mysql_parameter_list
   tencentcloud_mysql_zone_config
   tencentcloud_nats
+  tencentcloud_nat_gateways
   tencentcloud_redis_instances
   tencentcloud_redis_zone_config
   tencentcloud_route_table
@@ -219,6 +221,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_security_group":              dataSourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_groups":             dataSourceTencentCloudSecurityGroups(),
 			"tencentcloud_nats":                        dataSourceTencentCloudNats(),
+			"tencentcloud_dnats":                       dataSourceTencentCloudDnats(),
+			"tencentcloud_nat_gateways":                dataSourceTencentCloudNatGateways(),
 			"tencentcloud_container_clusters":          dataSourceTencentCloudContainerClusters(),
 			"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),
 			"tencentcloud_mysql_backup_list":           dataSourceTencentMysqlBackupList(),

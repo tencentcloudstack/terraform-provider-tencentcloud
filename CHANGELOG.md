@@ -1,8 +1,17 @@
-## 1.17.1 (Unreleased)
+## 1.18.0 (Unreleased)
 
 FEATURES:
+
 * **New Data Source**: `tencentcloud_ssl_certificates`
+* **New Data Source**: `tencentcloud_dnats`
+* **New Data Source**: `tencentcloud_nat_gateways`
 * **New Resource**: `tencentcloud_ssl_certificate`
+* **Update Resource**: `tencentcloud_clb_redirection` add optional argument `is_auto_rewrite`
+* **Update Resource**: `tencentcloud_nat_gateway` , add more configurable items.
+* **Update Resource**: `tencentcloud_nat` , add more configurable items.
+
+DEPRECATED:
+* Data Source: `tencentcloud_nats` replaced by `tencentcloud_nat_gateways`.
 
 ## 1.17.0 (September 04, 2019)
 
