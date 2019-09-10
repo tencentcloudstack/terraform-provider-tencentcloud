@@ -94,24 +94,13 @@ func resourceTencentCloudEni() *schema.Resource {
 				ConflictsWith: []string{"ipv4_count"},
 				Elem:          eniIpInputResource(),
 				Set:           schema.HashResource(eniIpInputResource()),
+				MaxItems:      30,
 			},
 			"ipv4_count": {
 				Type:          schema.TypeInt,
 				Optional:      true,
 				ConflictsWith: []string{"ipv4s"},
-				ValidateFunc:  validateIntegerMin(1),
-			},
-			"ipv6s": {
-				Type:          schema.TypeSet,
-				Optional:      true,
-				ConflictsWith: []string{"ipv6_count"},
-				Elem:          eniIpInputResource(),
-				Set:           schema.HashResource(eniIpInputResource()),
-			},
-			"ipv6_count": {
-				Type:          schema.TypeInt,
-				Optional:      true,
-				ConflictsWith: []string{"ipv6s"},
+				ValidateFunc:  validateIntegerInRange(1, 30),
 			},
 			"tags": {
 				Type:     schema.TypeMap,
@@ -140,11 +129,6 @@ func resourceTencentCloudEni() *schema.Resource {
 				Elem:     eniIpOutputResource(),
 				Computed: true,
 			},
-			"ipv6_info": {
-				Type:     schema.TypeList,
-				Elem:     eniIpOutputResource(),
-				Computed: true,
-			},
 		},
 	}
 }
@@ -163,8 +147,6 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 		securityGroups []string
 		ipv4s          []VpcEniIP
 		ipv4Count      *int
-		ipv6s          []VpcEniIP
-		ipv6Count      *int
 	)
 
 	if raw, ok := d.GetOk("security_groups"); ok {
@@ -205,50 +187,92 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 		return errors.New("ipv4s or ipv4_count must be set")
 	}
 
-	if raw, ok := d.GetOk("ipv6s"); ok {
-		set := raw.(*schema.Set)
-		ipv6s = make([]VpcEniIP, 0, set.Len())
-
-		for _, v := range set.List() {
-			m := v.(map[string]interface{})
-
-			ipStr := m["ip"]
-			ip := net.ParseIP(ipStr.(string))
-			if ip == nil {
-				return fmt.Errorf("ip %s is invalid", ipStr)
-			}
-
-			ipv6 := VpcEniIP{
-				ip:      ip,
-				primary: m["primary"].(bool),
-			}
-
-			if desc := m["description"].(string); desc != "" {
-				ipv6.desc = stringToPointer(desc)
-			}
-
-			ipv6s = append(ipv6s, ipv6)
-		}
-	}
-
-	if raw, ok := d.GetOk("ipv6_count"); ok {
-		ipv6Count = common.IntPtr(raw.(int))
-	}
-
 	tags := getTags(d, "tags")
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	id, err := vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, ipv4Count, ipv4s)
-	if err != nil {
-		return err
-	}
+	var (
+		id  string
+		err error
+	)
 
-	d.SetId(id)
-
-	if len(ipv6s) > 0 || ipv6Count != nil {
-		if err := vpcService.AssignIpv6ToEni(ctx, id, ipv6s, ipv6Count); err != nil {
+	switch {
+	case len(ipv4s) > 0 && len(ipv4s) <= 10:
+		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, nil, ipv4s)
+		if err != nil {
 			return err
+		}
+
+		d.SetId(id)
+
+	case len(ipv4s) > 0:
+		// eni should create with primary ipv4
+		for i := 0; i < len(ipv4s); i++ {
+			if ipv4s[i].primary {
+				if i < 10 {
+					break
+				}
+				primaryIpv4 := ipv4s[i]
+				ipv4s = append(ipv4s[:i], ipv4s[i+1:]...)
+				newIpv4s := make([]VpcEniIP, len(ipv4s)+1)
+				newIpv4s[0] = primaryIpv4
+				copy(newIpv4s[1:], ipv4s)
+				ipv4s = newIpv4s
+				break
+			}
+		}
+
+		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, nil, ipv4s[:10])
+		if err != nil {
+			return err
+		}
+
+		d.SetId(id)
+
+		ipv4s = ipv4s[10:]
+		for len(ipv4s) > 10 {
+			if err = vpcService.AssignIpv4ToEni(ctx, id, ipv4s[:10], nil); err != nil {
+				return err
+			}
+			ipv4s = ipv4s[10:]
+		}
+		// assign last ipv4s
+		if len(ipv4s) > 0 {
+			if err = vpcService.AssignIpv4ToEni(ctx, id, ipv4s, nil); err != nil {
+				return err
+			}
+		}
+
+	case ipv4Count != nil && *ipv4Count <= 10:
+		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, ipv4Count, nil)
+		if err != nil {
+			return err
+		}
+
+		d.SetId(id)
+
+	case ipv4Count != nil:
+		count := *ipv4Count
+
+		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, common.IntPtr(10), nil)
+		if err != nil {
+			return err
+		}
+
+		d.SetId(id)
+
+		count -= 10
+		for count > 10 {
+			if err = vpcService.AssignIpv4ToEni(ctx, id, nil, common.IntPtr(10)); err != nil {
+				return err
+			}
+			count -= 10
+		}
+		// assign last ip
+		if count > 0 {
+			if err = vpcService.AssignIpv4ToEni(ctx, id, nil, &count); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -325,9 +349,7 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 			sgs = append(sgs, *sg)
 		}
 
-		if err := d.Set("security_groups", sgs); err != nil {
-			panic(err)
-		}
+		d.Set("security_groups", sgs)
 	}
 
 	if len(eni.PrivateIpAddressSet) == 0 {
@@ -358,25 +380,6 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 		// import mode
 		d.Set("ipv4_count", len(ipv4s))
 	}
-
-	ipv6s := make([]map[string]interface{}, 0, len(eni.Ipv6AddressSet))
-	for _, ipv6 := range eni.Ipv6AddressSet {
-		if nilFields := CheckNil(ipv6, map[string]string{
-			"Address":     "ip",
-			"Primary":     "primary",
-			"Description": "description",
-		}); len(nilFields) > 0 {
-			return fmt.Errorf("eni ipv6 %v are nil", nilFields)
-		}
-
-		ipv6s = append(ipv6s, map[string]interface{}{
-			"ip":          *ipv6.Address,
-			"primary":     *ipv6.Primary,
-			"description": *ipv6.Description,
-		})
-	}
-
-	d.Set("ipv6_info", ipv6s)
 
 	if len(eni.TagSet) > 0 {
 		tags := make(map[string]string, len(eni.TagSet))
@@ -450,17 +453,24 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 			removeSet := oldSet.Difference(newSet).List()
 			addSet := newSet.Difference(oldSet).List()
 
+			var modifyPrimaryIpv4 *VpcEniIP
+
 			removeIpv4 := make([]string, 0, len(removeSet))
 			for _, v := range removeSet {
 				m := v.(map[string]interface{})
 				if m["primary"].(bool) {
-					return errors.New("primary ip can't be removed")
+					// check if only modify primary description
+					modifyPrimaryIpv4 = &VpcEniIP{
+						ip: net.ParseIP(m["ip"].(string)),
+					}
+					continue
 				}
 
 				removeIpv4 = append(removeIpv4, m["ip"].(string))
 			}
 
 			addIpv4 := make([]VpcEniIP, 0, len(addSet))
+			newPrimaryCount := 0
 			for _, v := range addSet {
 				m := v.(map[string]interface{})
 
@@ -468,6 +478,27 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 				ip := net.ParseIP(ipStr)
 				if ip == nil {
 					return fmt.Errorf("ip %s is invalid", ipStr)
+				}
+
+				if m["primary"].(bool) {
+					if modifyPrimaryIpv4 == nil {
+						return errors.New("can't set more than one primary ipv4")
+					}
+
+					// if newPrimaryCount > 1, means new ipv4s have more than one primary ipv4,
+					// if only one, maybe just update primary ipv4 description
+					newPrimaryCount++
+					if newPrimaryCount > 1 {
+						return errors.New("can't set more than one primary ipv4")
+					}
+
+					// not just update primary ipv4 description
+					if modifyPrimaryIpv4.ip.String() != ipStr {
+						return errors.New("can't change primary ipv4")
+					}
+
+					modifyPrimaryIpv4.desc = stringToPointer(m["description"].(string))
+					continue
 				}
 
 				ipv4 := VpcEniIP{
@@ -483,13 +514,55 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 			}
 
 			if len(removeIpv4) > 0 {
-				if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
-					return err
+				if len(removeIpv4) <= 10 {
+					if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
+						return err
+					}
+				} else {
+					for len(removeIpv4) > 10 {
+						if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4[:10]); err != nil {
+							return err
+						}
+						removeIpv4 = removeIpv4[10:]
+					}
+					// unassign last ipv4
+					if len(removeIpv4) > 0 {
+						if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
+							return err
+						}
+					}
 				}
 			}
 
 			if len(addIpv4) > 0 {
-				if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4, nil); err != nil {
+				if len(addIpv4) <= 10 {
+					if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4, nil); err != nil {
+						return err
+					}
+				} else {
+					for len(addIpv4) > 10 {
+						if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4[:10], nil); err != nil {
+							return err
+						}
+						addIpv4 = addIpv4[10:]
+					}
+					// assign last ipv4
+					if len(addIpv4) > 0 {
+						if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4, nil); err != nil {
+							return err
+						}
+					}
+				}
+			}
+
+			if modifyPrimaryIpv4 != nil {
+				// if desc is nil, means remove primary ipv4 but not add same primary ipv4,
+				// that means not just update primary ipv4 description, user remove primary ipv4
+				if modifyPrimaryIpv4.desc == nil {
+					return errors.New("can't remove primary ipv4")
+				}
+
+				if err := vpcService.ModifyEniPrimaryIpv4Desc(ctx, id, modifyPrimaryIpv4.ip.String(), modifyPrimaryIpv4.desc); err != nil {
 					return err
 				}
 			}
@@ -505,13 +578,30 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 			newCount := newRaw.(int)
 
 			if newCount > oldCount {
-				if err := vpcService.AssignIpv4ToEni(ctx, id, nil, common.IntPtr(newCount-oldCount)); err != nil {
-					return err
+				count := newCount - oldCount
+
+				if count <= 10 {
+					if err := vpcService.AssignIpv4ToEni(ctx, id, nil, &count); err != nil {
+						return err
+					}
+				} else {
+					for count > 10 {
+						if err := vpcService.AssignIpv4ToEni(ctx, id, nil, common.IntPtr(10)); err != nil {
+							return err
+						}
+						count -= 10
+					}
+					// assign last ip
+					if count > 0 {
+						if err := vpcService.AssignIpv4ToEni(ctx, id, nil, &count); err != nil {
+							return err
+						}
+					}
 				}
 			} else {
 				removeCount := oldCount - newCount
 				list := d.Get("ipv4_info").([]interface{})
-				ipv4s := make([]string, 0, removeCount)
+				removeIpv4 := make([]string, 0, removeCount)
 				for _, v := range list {
 					if removeCount == 0 {
 						break
@@ -520,106 +610,31 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 					if m["primary"].(bool) {
 						continue
 					}
-					ipv4s = append(ipv4s, m["ip"].(string))
+					removeIpv4 = append(removeIpv4, m["ip"].(string))
 					removeCount--
 				}
 
-				if err := vpcService.UnAssignIpv4FromEni(ctx, id, ipv4s); err != nil {
-					return err
+				if len(removeIpv4) <= 10 {
+					if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
+						return err
+					}
+				} else {
+					for len(removeIpv4) > 10 {
+						if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4[:10]); err != nil {
+							return err
+						}
+						removeIpv4 = removeIpv4[10:]
+					}
+					// unassign last ipv4
+					if len(removeIpv4) > 0 {
+						if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
+							return err
+						}
+					}
 				}
 
 				d.SetPartial("ipv4_count")
 			}
-		}
-	}
-
-	// if ipv6 set manually
-	if _, ok := d.GetOk("ipv6s"); ok {
-		if d.HasChange("ipv6s") {
-			oldRaw, newRaw := d.GetChange("ipv6s")
-			oldSet := oldRaw.(*schema.Set)
-			newSet := newRaw.(*schema.Set)
-
-			removeSet := oldSet.Difference(newSet).List()
-			addSet := newSet.Difference(oldSet).List()
-
-			removeIpv6 := make([]string, 0, len(removeSet))
-			for _, v := range removeSet {
-				m := v.(map[string]interface{})
-				removeIpv6 = append(removeIpv6, m["ip"].(string))
-			}
-
-			addIpv6 := make([]VpcEniIP, 0, len(addSet))
-			for _, v := range addSet {
-				m := v.(map[string]interface{})
-
-				ipStr := m["ip"].(string)
-				ip := net.ParseIP(ipStr)
-				if ip == nil {
-					return fmt.Errorf("ip %s is invalid", ipStr)
-				}
-
-				ipv6 := VpcEniIP{
-					ip:      ip,
-					primary: m["primary"].(bool),
-				}
-
-				if desc, ok := m["description"]; ok {
-					ipv6.desc = stringToPointer(desc.(string))
-				}
-
-				addIpv6 = append(addIpv6, ipv6)
-			}
-
-			if err := vpcService.UnAssignIpv6FromEni(ctx, id, removeIpv6); err != nil {
-				return err
-			}
-
-			if err := vpcService.AssignIpv6ToEni(ctx, id, addIpv6, nil); err != nil {
-				return err
-			}
-
-			d.SetPartial("ipv6s")
-		}
-	}
-
-	if _, ok := d.GetOk("ipv6_count"); ok {
-		if d.HasChange("ipv6_count") {
-			oldRaw, newRaw := d.GetChange("ipv6_count")
-			oldCount := oldRaw.(int)
-			newCount := newRaw.(int)
-
-			switch {
-			case newCount > oldCount:
-				if err := vpcService.AssignIpv6ToEni(ctx, id, nil, common.IntPtr(newCount-oldCount)); err != nil {
-					return err
-				}
-
-			case newCount == 0:
-				list := d.Get("ipv6_info").([]interface{})
-				ipv6s := make([]string, 0, len(list))
-				for _, ipv6 := range list {
-					ipv6s = append(ipv6s, ipv6.(string))
-				}
-
-				if err := vpcService.UnAssignIpv6FromEni(ctx, id, ipv6s); err != nil {
-					return err
-				}
-
-			default:
-				removeCount := oldCount - newCount
-				list := d.Get("ipv6s").(*schema.Set).List()
-				ipv6s := make([]string, 0, removeCount)
-				for i := 0; i < removeCount; i++ {
-					ipv6s = append(ipv6s, list[i].(string))
-				}
-
-				if err := vpcService.UnAssignIpv6FromEni(ctx, id, ipv6s); err != nil {
-					return err
-				}
-			}
-
-			d.SetPartial("ipv6_count")
 		}
 	}
 
