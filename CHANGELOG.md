@@ -1,4 +1,14 @@
 ## 1.15.3 (Unreleased)
+FEATURES:
+* **Update Resource**: `tencentcloud_clb_redirection` add optional argument `is_auto_rewrite`
+* **New Data Source**: `tencentcloud_dnats`
+* **New Data Source**: `tencentcloud_nat_gateways`
+* **Update Resource**: `tencentcloud_nat_gateway` , add more configurable items.
+* **Update Resource**: `tencentcloud_nat` , add more configurable items.
+
+DEPRECATED:
+* Data Sesource: `tencentcloud_nats` replaced by `tencentcloud_nat_gateways`.
+
 ## 1.15.2 (August 14, 2019)
 
 ENHANCEMENTS:
