@@ -204,7 +204,7 @@ func testAccCheckEniExists(n string, id *string) resource.TestCheckFunc {
 
 		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		enis, err := service.DescribeEniById(context.TODO(), rs.Primary.ID)
+		enis, err := service.DescribeEniById(context.TODO(), []string{rs.Primary.ID})
 		if err != nil {
 			return err
 		}
@@ -229,7 +229,7 @@ func testAccCheckEniDestroy(id *string) resource.TestCheckFunc {
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := VpcService{client: client}
 
-		enis, err := service.DescribeEniById(context.TODO(), *id)
+		enis, err := service.DescribeEniById(context.TODO(), []string{*id})
 		if err != nil {
 			return err
 		}
@@ -269,6 +269,50 @@ resource "tencentcloud_eni" "foo" {
   subnet_id   = "${tencentcloud_subnet.foo.id}"
   description = "eni desc"
   ipv4_count  = 1
+}
+`
+
+const testAccEniUpdateAttr = testAccEniVpc + `
+
+resource "tencentcloud_security_group" "foo" {
+  name = "test-ci-eni-sg1"
+}
+
+resource "tencentcloud_security_group" "bar" {
+  name = "test-ci-eni-sg2"
+}
+
+resource "tencentcloud_eni" "foo" {
+  name            = "ci-test-eni-new"
+  vpc_id          = "${tencentcloud_vpc.foo.id}"
+  subnet_id       = "${tencentcloud_subnet.foo.id}"
+  description     = "eni desc new"
+  security_groups = ["${tencentcloud_security_group.foo.id}", "${tencentcloud_security_group.bar.id}"]
+  ipv4_count      = 1
+}
+`
+
+const testAccEniUpdateTags = testAccEniVpc + `
+
+resource "tencentcloud_security_group" "foo" {
+  name = "test-ci-eni-sg1"
+}
+
+resource "tencentcloud_security_group" "bar" {
+  name = "test-ci-eni-sg2"
+}
+
+resource "tencentcloud_eni" "foo" {
+  name            = "ci-test-eni-new"
+  vpc_id          = "${tencentcloud_vpc.foo.id}"
+  subnet_id       = "${tencentcloud_subnet.foo.id}"
+  description     = "eni desc new"
+  security_groups = ["${tencentcloud_security_group.foo.id}", "${tencentcloud_security_group.bar.id}"]
+  ipv4_count      = 1
+
+  tags = {
+    "test" = "test"
+  }
 }
 `
 
@@ -568,50 +612,6 @@ resource "tencentcloud_eni" "foo" {
   ipv4s {
     ip      = "10.0.0.25"
     primary = false
-  }
-}
-`
-
-const testAccEniUpdateAttr = testAccEniVpc + `
-
-resource "tencentcloud_security_group" "foo" {
-  name = "test-ci-eni-sg1"
-}
-
-resource "tencentcloud_security_group" "bar" {
-  name = "test-ci-eni-sg2"
-}
-
-resource "tencentcloud_eni" "foo" {
-  name            = "ci-test-eni-new"
-  vpc_id          = "${tencentcloud_vpc.foo.id}"
-  subnet_id       = "${tencentcloud_subnet.foo.id}"
-  description     = "eni desc new"
-  security_groups = ["${tencentcloud_security_group.foo.id}", "${tencentcloud_security_group.bar.id}"]
-  ipv4_count      = 1
-}
-`
-
-const testAccEniUpdateTags = testAccEniVpc + `
-
-resource "tencentcloud_security_group" "foo" {
-  name = "test-ci-eni-sg1"
-}
-
-resource "tencentcloud_security_group" "bar" {
-  name = "test-ci-eni-sg2"
-}
-
-resource "tencentcloud_eni" "foo" {
-  name            = "ci-test-eni-new"
-  vpc_id          = "${tencentcloud_vpc.foo.id}"
-  subnet_id       = "${tencentcloud_subnet.foo.id}"
-  description     = "eni desc new"
-  security_groups = ["${tencentcloud_security_group.foo.id}", "${tencentcloud_security_group.bar.id}"]
-  ipv4_count      = 1
-
-  tags = {
-    "test" = "test"
   }
 }
 `

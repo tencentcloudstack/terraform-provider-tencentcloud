@@ -299,7 +299,7 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	enis, err := service.DescribeEniById(ctx, id)
+	enis, err := service.DescribeEniById(ctx, []string{id})
 	if err != nil {
 		return err
 	}

@@ -1534,8 +1534,8 @@ func (me *VpcService) describeEnis(
 	return
 }
 
-func (me *VpcService) DescribeEniById(ctx context.Context, id string) (enis []*vpc.NetworkInterface, err error) {
-	return me.describeEnis(ctx, []string{id}, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+func (me *VpcService) DescribeEniById(ctx context.Context, ids []string) (enis []*vpc.NetworkInterface, err error) {
+	return me.describeEnis(ctx, ids, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 }
 
 func (me *VpcService) ModifyEniAttribute(ctx context.Context, id string, name, desc *string, sgs []string) error {
@@ -1950,6 +1950,47 @@ func (me *VpcService) DetachEniFromCvm(ctx context.Context, eniId, cvmId string)
 	return nil
 }
 
+func (me *VpcService) ModifyEniPrimaryIpv4Desc(ctx context.Context, id, ip string, desc *string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseVpcClient()
+
+	request := vpc.NewModifyPrivateIpAddressesAttributeRequest()
+	request.NetworkInterfaceId = &id
+	request.PrivateIpAddresses = []*vpc.PrivateIpAddressSpecification{
+		{
+			PrivateIpAddress: &ip,
+			Description:      desc,
+		},
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.ModifyPrivateIpAddressesAttribute(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify eni primary ipv4 description failed, reason: %v", logId, err)
+		return err
+	}
+
+	if err := waitEniReady(ctx, id, client, []string{ip}, nil); err != nil {
+		log.Printf("[CRITAL]%s modify eni primary ipv4 description failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) DescribeEniByFilters(
+	ctx context.Context,
+	vpcId, subnetId, cvmId, sgId, name, desc, ipv4 *string,
+	tags map[string]string,
+) (enis []*vpc.NetworkInterface, err error) {
+	return me.describeEnis(ctx, nil, vpcId, subnetId, nil, cvmId, sgId, name, desc, ipv4, tags)
+}
+
 func waitEniReady(ctx context.Context, id string, client *vpc.Client, wantIpv4s []string, dropIpv4s []string) error {
 	wantCheckMap := make(map[string]bool, len(wantIpv4s))
 	for _, ipv4 := range wantIpv4s {
@@ -2051,39 +2092,6 @@ func waitEniReady(ctx context.Context, id string, client *vpc.Client, wantIpv4s 
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s eni is not available failed, reason: %v", logId, err)
-		return err
-	}
-
-	return nil
-}
-
-func (me *VpcService) ModifyEniPrimaryIpv4Desc(ctx context.Context, id, ip string, desc *string) error {
-	logId := getLogId(ctx)
-	client := me.client.UseVpcClient()
-
-	request := vpc.NewModifyPrivateIpAddressesAttributeRequest()
-	request.NetworkInterfaceId = &id
-	request.PrivateIpAddresses = []*vpc.PrivateIpAddressSpecification{
-		{
-			PrivateIpAddress: &ip,
-			Description:      desc,
-		},
-	}
-
-	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if _, err := client.ModifyPrivateIpAddressesAttribute(request); err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-				logId, request.GetAction(), request.ToJsonString(), err)
-			return retryError(err)
-		}
-		return nil
-	}); err != nil {
-		log.Printf("[CRITAL]%s modify eni primary ipv4 description failed, reason: %v", logId, err)
-		return err
-	}
-
-	if err := waitEniReady(ctx, id, client, []string{ip}, nil); err != nil {
-		log.Printf("[CRITAL]%s modify eni primary ipv4 description failed, reason: %v", logId, err)
 		return err
 	}
 
