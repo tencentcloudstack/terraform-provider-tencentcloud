@@ -57,10 +57,11 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				Description:  "Name of the nat gateway.",
 			},
 			"max_concurrent": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     1000000,
-				Description: "The upper limit of concurrent connection of nat gateway, the available values include : 1000000,3000000,10000000, Default is 1000000.",
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      1000000,
+				ValidateFunc: validateAllowedIntValue([]int{1000000, 3000000, 10000000}),
+				Description:  "The upper limit of concurrent connection of nat gateway, the available values include : 1000000,3000000,10000000, Default is 1000000.",
 			},
 			"bandwidth": {
 				Type:        schema.TypeInt,
@@ -89,8 +90,8 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 	request := vpc.NewCreateNatGatewayRequest()
 	vpcId := d.Get("vpc_id").(string)
 	natGatewayName := d.Get("name").(string)
-	request.VpcId = stringToPointer(vpcId)
-	request.NatGatewayName = stringToPointer(natGatewayName)
+	request.VpcId = &vpcId
+	request.NatGatewayName = &natGatewayName
 	//test default value
 	bandwidth := uint64(d.Get("bandwidth").(int))
 	request.InternetMaxBandwidthOut = &bandwidth
@@ -101,7 +102,7 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 		//set request public ips
 		for i := range eipSet {
 			publicIp := eipSet[i].(string)
-			request.PublicIpAddresses = append(request.PublicIpAddresses, stringToPointer(publicIp))
+			request.PublicIpAddresses = append(request.PublicIpAddresses, &publicIp)
 		}
 	}
 
@@ -201,7 +202,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 	d.Partial(true)
 	natGatewayId := d.Id()
 	request := vpc.NewModifyNatGatewayAttributeRequest()
-	request.NatGatewayId = stringToPointer(natGatewayId)
+	request.NatGatewayId = &natGatewayId
 	changed := false
 	if d.HasChange("name") {
 		request.NatGatewayName = stringToPointer(d.Get("name").(string))
@@ -237,7 +238,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 	//max concurrent
 	if d.HasChange("max_concurrent") {
 		concurrentReq := vpc.NewResetNatGatewayConnectionRequest()
-		concurrentReq.NatGatewayId = stringToPointer(natGatewayId)
+		concurrentReq.NatGatewayId = &natGatewayId
 		concurrent := d.Get("max_concurrent").(int)
 		concurrent64 := uint64(concurrent)
 		concurrentReq.MaxConcurrentConnection = &concurrent64
@@ -279,7 +280,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			if len(oldEipSet) > 0 {
 				unassignedRequest := vpc.NewDisassociateNatGatewayAddressRequest()
 				unassignedRequest.PublicIpAddresses = make([]*string, 0, len(oldEipSet))
-				unassignedRequest.NatGatewayId = stringToPointer(natGatewayId)
+				unassignedRequest.NatGatewayId = &natGatewayId
 				//set request public ips
 				for i := range oldEipSet {
 					publicIp := oldEipSet[i].(string)
@@ -293,7 +294,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						if len(unassignedRequest.PublicIpAddresses)+1 == len(oldEipSet) {
 							backUpOldIp = publicIp
 						} else {
-							unassignedRequest.PublicIpAddresses = append(unassignedRequest.PublicIpAddresses, stringToPointer(publicIp))
+							unassignedRequest.PublicIpAddresses = append(unassignedRequest.PublicIpAddresses, &publicIp)
 						}
 					}
 				}
@@ -319,7 +320,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			if len(newEipSet) > 0 {
 				assignedRequest := vpc.NewAssociateNatGatewayAddressRequest()
 				assignedRequest.PublicIpAddresses = make([]*string, 0, len(newEipSet))
-				assignedRequest.NatGatewayId = stringToPointer(natGatewayId)
+				assignedRequest.NatGatewayId = &natGatewayId
 				//set request public ips
 				for i := range newEipSet {
 					publicIp := newEipSet[i].(string)
@@ -333,7 +334,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						if len(assignedRequest.PublicIpAddresses)+eipSetLength+1 == 10 {
 							backUpNewIp = publicIp
 						} else {
-							assignedRequest.PublicIpAddresses = append(assignedRequest.PublicIpAddresses, stringToPointer(publicIp))
+							assignedRequest.PublicIpAddresses = append(assignedRequest.PublicIpAddresses, &publicIp)
 						}
 					}
 				}
@@ -357,7 +358,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			if backUpOldIp != "" {
 				//disassociate one old ip
 				unassignedRequest := vpc.NewDisassociateNatGatewayAddressRequest()
-				unassignedRequest.NatGatewayId = stringToPointer(natGatewayId)
+				unassignedRequest.NatGatewayId = &natGatewayId
 				unassignedRequest.PublicIpAddresses = []*string{&backUpOldIp}
 				err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 					_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DisassociateNatGatewayAddress(unassignedRequest)
@@ -376,7 +377,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			if backUpNewIp != "" {
 				//associate one new ip
 				assignedRequest := vpc.NewAssociateNatGatewayAddressRequest()
-				assignedRequest.NatGatewayId = stringToPointer(natGatewayId)
+				assignedRequest.NatGatewayId = &natGatewayId
 				assignedRequest.PublicIpAddresses = []*string{&backUpNewIp}
 				err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 					_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
@@ -408,7 +409,7 @@ func resourceTencentCloudNatGatewayDelete(d *schema.ResourceData, meta interface
 
 	natGatewayId := d.Id()
 	request := vpc.NewDeleteNatGatewayRequest()
-	request.NatGatewayId = stringToPointer(natGatewayId)
+	request.NatGatewayId = &natGatewayId
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DeleteNatGateway(request)
 		if e != nil {

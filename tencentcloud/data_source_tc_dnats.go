@@ -12,6 +12,7 @@ data "tencentcloud_dnats" "foo"{
 	elastic_port = "80"
 	private_ip = "172.16.0.88"
 	private_port = "9001"
+	description  = "test"
 }
 ```
 */
@@ -58,6 +59,11 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateIp,
 				Description:  "Network address of the backend service.",
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Description of the nat forward.",
 			},
 			"private_port": {
 				Type:         schema.TypeString,
@@ -114,6 +120,11 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 							Computed:    true,
 							Description: "Port of intranet.",
 						},
+						"description": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Description of the nat forward.",
+						},
 					},
 				},
 			},
@@ -145,6 +156,9 @@ func dataSourceTencentCloudDnatsRead(d *schema.ResourceData, meta interface{}) e
 	if v, ok := d.GetOk("private_port"); ok {
 		params["private-port"] = v.(string)
 	}
+	if v, ok := d.GetOk("description"); ok {
+		params["description"] = v.(string)
+	}
 	request.Filters = make([]*vpc.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &vpc.Filter{
@@ -169,7 +183,7 @@ func dataSourceTencentCloudDnatsRead(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 	dnats := response.Response.NatGatewayDestinationIpPortTranslationNatRuleSet
-	ids := make([]string, len(dnats))
+	ids := make([]string, 0, len(dnats))
 	dnatList := make([]map[string]interface{}, 0, len(dnats))
 	for _, dnat := range dnats {
 		mapping := map[string]interface{}{
@@ -180,6 +194,7 @@ func dataSourceTencentCloudDnatsRead(d *schema.ResourceData, meta interface{}) e
 			"private_ip":   *dnat.PrivateIpAddress,
 			"private_port": strconv.Itoa(int(*dnat.PrivatePort)),
 			"protocol":     *dnat.IpProtocol,
+			"description":  *dnat.Description,
 		}
 		dnatList = append(dnatList, mapping)
 		var entry = &vpc.DestinationIpPortTranslationNatRule{}

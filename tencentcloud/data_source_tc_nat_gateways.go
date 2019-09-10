@@ -142,7 +142,7 @@ func dataSourceTencentCloudNatGatewaysRead(d *schema.ResourceData, meta interfac
 		log.Printf("[CRITAL]%s read nat gateway failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	ids := make([]string, len(response.Response.NatGatewaySet))
+	ids := make([]string, 0, len(response.Response.NatGatewaySet))
 	natList := make([]map[string]interface{}, 0, len(response.Response.NatGatewaySet))
 	for _, nat := range response.Response.NatGatewaySet {
 		mapping := map[string]interface{}{

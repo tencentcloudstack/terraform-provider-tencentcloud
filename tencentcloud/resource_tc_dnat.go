@@ -12,6 +12,7 @@ resource "tencentcloud_dnat" "foo" {
   elastic_port       = 80
   private_ip         = "10.0.0.1"
   private_port       = 22
+  description        = "test"
 }
 ```
 
@@ -43,6 +44,7 @@ func resourceTencentCloudDnat() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDnatCreate,
 		Read:   resourceTencentCloudDnatRead,
+		Update: resourceTencentCloudDnatUpdate,
 		Delete: resourceTencentCloudDnatDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -96,6 +98,12 @@ func resourceTencentCloudDnat() *schema.Resource {
 				ValidateFunc: validatePort,
 				Description:  "Port of intranet.",
 			},
+
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Description of the nat forward.",
+			},
 		},
 	}
 }
@@ -121,7 +129,11 @@ func resourceTencentCloudDnatCreate(d *schema.ResourceData, meta interface{}) er
 	}
 	pPort := uint64(upPort)
 	natForward.PrivatePort = &pPort
-	natForward.Description = stringToPointer("")
+	description := ""
+	if v, ok := d.GetOk("description"); ok {
+		description = v.(string)
+	}
+	natForward.Description = stringToPointer(description)
 	natGatewayId := d.Get("nat_id").(string)
 	request.NatGatewayId = stringToPointer(natGatewayId)
 
@@ -153,7 +165,7 @@ func resourceTencentCloudDnatRead(d *schema.ResourceData, meta interface{}) erro
 	logId := getLogId(contextNil)
 	_, params, e := parseDnatId(d.Id())
 	if e != nil {
-		log.Printf("[CRITAL]parse dnat id fail, reason[%s]\n", e.Error())
+		return fmt.Errorf("[CRITAL]parse dnat id fail, reason[%s]\n", e.Error())
 	}
 	request := vpc.NewDescribeNatGatewayDestinationIpPortTranslationNatRulesRequest()
 	var response *vpc.DescribeNatGatewayDestinationIpPortTranslationNatRulesResponse
@@ -192,6 +204,81 @@ func resourceTencentCloudDnatRead(d *schema.ResourceData, meta interface{}) erro
 	d.Set("elastic_port", dnat.PublicPort)
 	d.Set("private_ip", dnat.PrivateIpAddress)
 	d.Set("internal_port", dnat.PrivatePort)
+	d.Set("description", dnat.Description)
+	return nil
+}
+
+func resourceTencentCloudDnatUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dnat.update")()
+
+	logId := getLogId(contextNil)
+	//only modify description
+	if d.HasChange("description") {
+		description := ""
+		if v, ok := d.GetOk("description"); ok {
+			description = v.(string)
+		}
+		natForward, params, e := parseDnatId(d.Id())
+		if e != nil {
+			return fmt.Errorf("[CRITAL]parse dnat id fail, reason[%s]\n", e.Error())
+		}
+		//missing target port and ip
+		srequest := vpc.NewDescribeNatGatewayDestinationIpPortTranslationNatRulesRequest()
+		srequest.Filters = make([]*vpc.Filter, 0, len(params))
+		for k, v := range params {
+			filter := &vpc.Filter{
+				Name:   stringToPointer(k),
+				Values: []*string{stringToPointer(v)},
+			}
+			srequest.Filters = append(srequest.Filters, filter)
+		}
+		var sresponse *vpc.DescribeNatGatewayDestinationIpPortTranslationNatRulesResponse
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGatewayDestinationIpPortTranslationNatRules(srequest)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, srequest.GetAction(), srequest.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			sresponse = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s read dnat  failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+		if len(sresponse.Response.NatGatewayDestinationIpPortTranslationNatRuleSet) < 1 {
+			return fmt.Errorf("modify error, forwarding rule not found")
+		}
+		target := sresponse.Response.NatGatewayDestinationIpPortTranslationNatRuleSet[0]
+		natForward.PrivateIpAddress = target.PrivateIpAddress
+		natForward.PrivatePort = target.PrivatePort
+		natForward.Description = target.Description
+		request := vpc.NewModifyNatGatewayDestinationIpPortTranslationNatRuleRequest()
+		request.NatGatewayId = stringToPointer(params["nat-gateway-id"])
+		request.SourceNatRule = natForward
+		newNatForward := &vpc.DestinationIpPortTranslationNatRule{}
+		newNatForward.PublicPort = natForward.PublicPort
+		newNatForward.PublicIpAddress = natForward.PublicIpAddress
+		newNatForward.PrivatePort = natForward.PrivatePort
+		newNatForward.PrivateIpAddress = natForward.PrivateIpAddress
+		newNatForward.IpProtocol = natForward.IpProtocol
+		newNatForward.Description = stringToPointer(description)
+		request.DestinationNatRule = newNatForward
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyNatGatewayDestinationIpPortTranslationNatRule(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s delete dnat  failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+	}
 	return nil
 }
 
@@ -201,7 +288,7 @@ func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) er
 	logId := getLogId(contextNil)
 	natForward, params, e := parseDnatId(d.Id())
 	if e != nil {
-		log.Printf("[CRITAL]parse dnat id fail, reason[%s]\n", e.Error())
+		return fmt.Errorf("[CRITAL]parse dnat id fail, reason[%s]\n", e.Error())
 	}
 	//missing target port and ip
 	srequest := vpc.NewDescribeNatGatewayDestinationIpPortTranslationNatRulesRequest()

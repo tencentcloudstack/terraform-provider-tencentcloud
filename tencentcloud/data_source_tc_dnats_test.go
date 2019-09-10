@@ -16,6 +16,7 @@ func TestAccTencentCloudDnatsDataSource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dnats.multi_dnats"),
 					resource.TestCheckResourceAttr("data.tencentcloud_dnats.multi_dnats", "dnat_list.#", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_dnats.multi_dnats", "dnat_list.0.description", "test"),
 				),
 			},
 		},
@@ -81,6 +82,7 @@ data "tencentcloud_vpc_subnets" "foo" {
 	elastic_port = "80"
 	private_ip   = "${tencentcloud_instance.foo.private_ip}"
 	private_port = "9001"
+	description	 = "test"
   }
 
 data "tencentcloud_dnats" "multi_dnats" {
