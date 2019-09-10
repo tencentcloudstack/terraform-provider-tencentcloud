@@ -36,6 +36,7 @@ The following arguments are supported:
 * `private_port` - (Required, ForceNew) Port of intranet.
 * `protocol` - (Required, ForceNew) Type of the network protocol, the available values include： TCP and UDP.
 * `vpc_id` - (Required, ForceNew) ID of the vpc.
+* `description` - (Optional) Description of the nat forward.
 
 
 ## Import

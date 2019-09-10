@@ -21,6 +21,7 @@ data "tencentcloud_dnats" "foo" {
   elastic_port = "80"
   private_ip   = "172.16.0.88"
   private_port = "9001"
+  description  = "test"
 }
 ```
 
@@ -28,6 +29,7 @@ data "tencentcloud_dnats" "foo" {
 
 The following arguments are supported:
 
+* `description` - (Optional) Description of the nat forward.
 * `elastic_ip` - (Optional) Network address of the eip.
 * `elastic_port` - (Optional)  Port of the eip.
 * `nat_id` - (Optional) ID of the nat.
