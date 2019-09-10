@@ -12,7 +12,6 @@ resource "tencentcloud_dnat" "foo" {
   elastic_port       = 80
   private_ip         = "10.0.0.1"
   private_port       = 22
-  description        = "test"
 }
 ```
 
@@ -97,12 +96,6 @@ func resourceTencentCloudDnat() *schema.Resource {
 				ValidateFunc: validatePort,
 				Description:  "Port of intranet.",
 			},
-			/*
-				"description": {
-					Type:     schema.TypeString,
-					Optional: true,
-					Description: "Description of the nat forward.",
-				},*/
 		},
 	}
 }
