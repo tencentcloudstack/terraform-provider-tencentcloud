@@ -152,8 +152,6 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
-
-		d.SetPartial("tags")
 	}
 
 	return resourceTencentCloudVpcInstanceRead(d, meta)
