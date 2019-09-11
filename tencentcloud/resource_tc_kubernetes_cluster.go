@@ -128,7 +128,7 @@ import (
 	"time"
 )
 
-func TkeCvmState() map[string]*schema.Schema {
+func tkeCvmState() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_id": {
 			Type:        schema.TypeString,
@@ -153,7 +153,7 @@ func TkeCvmState() map[string]*schema.Schema {
 	}
 }
 
-func TkeSecurityInfo() map[string]*schema.Schema {
+func tkeSecurityInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"user_name": {
 			Type:        schema.TypeString,
@@ -526,13 +526,13 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Type:     schema.TypeList,
 			Computed: true,
 			Elem: &schema.Resource{
-				Schema: TkeCvmState(),
+				Schema: tkeCvmState(),
 			},
 			Description: "An information list of cvm within the 'WORKER' clusters. Each element contains the following attributes:",
 		},
 	}
 
-	for k, v := range TkeSecurityInfo() {
+	for k, v := range tkeSecurityInfo() {
 		schemaBody[k] = v
 	}
 

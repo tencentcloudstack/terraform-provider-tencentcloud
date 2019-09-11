@@ -94,12 +94,12 @@ func tkeClusterInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "An information list of cvm within the WORKER clusters. Each element contains the following attributes.",
 			Elem: &schema.Resource{
-				Schema: TkeCvmState(),
+				Schema: tkeCvmState(),
 			},
 		},
 	}
 
-	for k, v := range TkeSecurityInfo() {
+	for k, v := range tkeSecurityInfo() {
 		schemaBody[k] = v
 	}
 
