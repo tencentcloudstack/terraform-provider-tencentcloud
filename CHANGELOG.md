@@ -20,7 +20,6 @@ FEATURES:
 DEPRECATED:
 * Data Source: `tencentcloud_nats` replaced by `tencentcloud_nat_gateways`.
 
-
 ## 1.17.0 (September 04, 2019)
 
 FEATURES:
