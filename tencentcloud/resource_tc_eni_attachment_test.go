@@ -30,6 +30,11 @@ func TestAccTencentCloudEniAttachment_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_eni_attachment.foo", "instance_id"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_eni_attachment.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -50,7 +55,7 @@ func testAccCheckEniAttachmentExists(n string, eniId, cvmId *string) resource.Te
 
 		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		enis, err := service.DescribeEniById(context.TODO(), *eniId)
+		enis, err := service.DescribeEniById(context.TODO(), []string{*eniId})
 		if err != nil {
 			return err
 		}
@@ -86,7 +91,7 @@ func testAccCheckEniAttachmentDestroy(eniId *string) resource.TestCheckFunc {
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := VpcService{client: client}
 
-		enis, err := service.DescribeEniById(context.TODO(), *eniId)
+		enis, err := service.DescribeEniById(context.TODO(), []string{*eniId})
 		if err != nil {
 			return err
 		}
