@@ -1,15 +1,13 @@
 package tencentcloud
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/zqfan/tencentcloud-sdk-go/common"
-	vpc "github.com/zqfan/tencentcloud-sdk-go/services/vpc/unversioned"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
 func TestAccTencentCloudNatGateway_basic(t *testing.T) {
@@ -21,7 +19,7 @@ func TestAccTencentCloudNatGateway_basic(t *testing.T) {
 			{
 				Config: testAccNatGatewayConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_nat_gateway.my_nat"),
+					testAccCheckNatGatewayExists("tencentcloud_nat_gateway.my_nat"),
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "name", "terraform_test"),
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "max_concurrent", "3000000"),
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "bandwidth", "500"),
@@ -31,7 +29,7 @@ func TestAccTencentCloudNatGateway_basic(t *testing.T) {
 			{
 				Config: testAccNatGatewayConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_nat_gateway.my_nat"),
+					testAccCheckNatGatewayExists("tencentcloud_nat_gateway.my_nat"),
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "name", "new_name"),
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "max_concurrent", "10000000"),
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "bandwidth", "1000"),
@@ -43,82 +41,120 @@ func TestAccTencentCloudNatGateway_basic(t *testing.T) {
 }
 
 func testAccCheckNatGatewayDestroy(s *terraform.State) error {
+	logId := getLogId(contextNil)
 
-	conn := testAccProvider.Meta().(*TencentCloudClient).vpcConn
-
+	conn := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_nat_gateway" {
 			continue
 		}
-
-		descReq := vpc.NewDescribeNatGatewayRequest()
-		descReq.NatId = common.StringPtr(rs.Primary.ID)
-		descResp, err := conn.DescribeNatGateway(descReq)
-
-		b, _ := json.Marshal(descResp)
-
-		log.Printf("[DEBUG] conn.DescribeNatGateway response: %s", b)
-
-		if _, ok := err.(*common.APIError); ok {
-			return fmt.Errorf("conn.DescribeNatGateway error: %v", err)
-		} else if *descResp.TotalCount != 0 {
-			return fmt.Errorf("NAT Gateway still exists.")
+		request := vpc.NewDescribeNatGatewaysRequest()
+		request.NatGatewayIds = []*string{&rs.Primary.ID}
+		var response *vpc.DescribeNatGatewaysResponse
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, e := conn.UseVpcClient().DescribeNatGateways(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s read nat gateway failed, reason:%s\n ", logId, err.Error())
+			return err
 		}
+		if len(response.Response.NatGatewaySet) != 0 {
+			return fmt.Errorf("nat gateway id is still exists")
+		}
+
 	}
 	return nil
 }
 
-const testAccNatGatewayConfig = `
-resource "tencentcloud_vpc" "main" {
-  name       = "terraform test"
-  cidr_block = "10.6.0.0/16"
+func testAccCheckNatGatewayExists(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		logId := getLogId(contextNil)
+
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("nat gateway instance %s is not found", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("nat gateway id is not set")
+		}
+		conn := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
+		request := vpc.NewDescribeNatGatewaysRequest()
+		request.NatGatewayIds = []*string{&rs.Primary.ID}
+		var response *vpc.DescribeNatGatewaysResponse
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, e := conn.UseVpcClient().DescribeNatGateways(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s read nat gateway failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+		if len(response.Response.NatGatewaySet) != 1 {
+			return fmt.Errorf("nat gateway id is not found")
+		}
+		return nil
+	}
 }
 
+const testAccNatGatewayConfig = `
+data "tencentcloud_vpc_instances" "foo" {
+	name = "Default-VPC"
+}
+# Create EIP 
 resource "tencentcloud_eip" "eip_dev_dnat" {
   name = "terraform_test"
 }
-
 resource "tencentcloud_eip" "eip_test_dnat" {
   name = "terraform_test"
 }
-
 resource "tencentcloud_nat_gateway" "my_nat" {
-  vpc_id           = "${tencentcloud_vpc.main.id}"
+  vpc_id           = "${data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id}"
   name             = "terraform_test"
   max_concurrent   = 3000000
   bandwidth        = 500
+
   assigned_eip_set = [
-    "${tencentcloud_eip.eip_dev_dnat.public_ip}",
-    "${tencentcloud_eip.eip_test_dnat.public_ip}",
-  ]
+	  "${tencentcloud_eip.eip_dev_dnat.public_ip}",
+	  "${tencentcloud_eip.eip_test_dnat.public_ip}",
+	]
 }
 `
 const testAccNatGatewayConfigUpdate = `
-resource "tencentcloud_vpc" "main" {
-  name       = "terraform test"
-  cidr_block = "10.6.0.0/16"
+data "tencentcloud_vpc_instances" "foo" {
+	name = "Default-VPC"
 }
-
+# Create EIP 
 resource "tencentcloud_eip" "eip_dev_dnat" {
-  name = "terraform_test"
-}
-
+	name = "terraform_test"
+  }
 resource "tencentcloud_eip" "eip_test_dnat" {
-  name = "terraform_test"
+	name = "terraform_test"
 }
-
 resource "tencentcloud_eip" "new_eip" {
   name = "terraform_test"
 }
 
 resource "tencentcloud_nat_gateway" "my_nat" {
-  vpc_id           = "${tencentcloud_vpc.main.id}"
+  vpc_id           = "${data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id}"
   name             = "new_name"
   max_concurrent   = 10000000
   bandwidth        = 1000
   assigned_eip_set = [
-    "${tencentcloud_eip.eip_dev_dnat.public_ip}",
-    "${tencentcloud_eip.new_eip.public_ip}",
-  ]
+	  "${tencentcloud_eip.eip_dev_dnat.public_ip}",
+	  "${tencentcloud_eip.new_eip.public_ip}",
+	]
 }
 `

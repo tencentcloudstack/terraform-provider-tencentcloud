@@ -27,10 +27,25 @@ func TestAccTencentCloudClbRedirection_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "target_rule_id"),
 				),
 			},
+		},
+	})
+}
+
+func TestAccTencentCloudClbRedirection_auto(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbRedirectionDestroy,
+		Steps: []resource.TestStep{
 			{
-				ResourceName:      "tencentcloud_clb_redirection.redirection_basic",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: testAccClbRedirection_auto,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbRedirectionExists("tencentcloud_clb_redirection.redirection_basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "source_listener_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "source_rule_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_redirection.redirection_basic", "is_auto_rewrite", "true"),
+				),
 			},
 		},
 	})
@@ -123,5 +138,39 @@ resource "tencentcloud_clb_redirection" "redirection_basic" {
   target_listener_id = "${tencentcloud_clb_listener.listener_target.id}"
   source_rule_id     = "${tencentcloud_clb_listener_rule.rule_basic.id}"
   target_rule_id     = "${tencentcloud_clb_listener_rule.rule_target.id}"
+    is_auto_rewrite	 = false
+}
+`
+
+const testAccClbRedirection_auto = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-redirection"
+}
+
+resource "tencentcloud_clb_listener" "listener_basic" {
+  clb_id        = "${tencentcloud_clb_instance.clb_basic.id}"
+  port          = 443
+  protocol      = "HTTPS"
+  listener_name = "listener_basic"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "Whi3fkoM"
+}
+
+resource "tencentcloud_clb_listener_rule" "rule_basic" {
+  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
+  listener_id         = "${tencentcloud_clb_listener.listener_basic.id}"
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+}
+
+
+resource "tencentcloud_clb_redirection" "redirection_basic" {
+  clb_id             = "${tencentcloud_clb_instance.clb_basic.id}"
+  target_listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
+  target_rule_id     = "${tencentcloud_clb_listener_rule.rule_basic.id}"
+  is_auto_rewrite	 = true
 }
 `
