@@ -396,3 +396,19 @@ func (me *TkeService) DeleteCluster(ctx context.Context, id string) (errRet erro
 
 	return err
 }
+
+func (me *TkeService) DescribeClusterSecurity(ctx context.Context, id string) (ret *tke.DescribeClusterSecurityResponse, errRet error) {
+
+	logId := getLogId(ctx)
+	request := tke.NewDescribeClusterSecurityRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+
+	return me.client.UseTkeClient().DescribeClusterSecurity(request)
+}
