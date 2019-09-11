@@ -5,6 +5,11 @@ ENHANCEMENTS:
 * Resource:`tencentcloud_kubernetes_cluster`  support pull out authentication information for cluster access.
 * Data Source:`tencentcloud_kubernetes_clusters`  support pull out authentication information for cluster access too.
 
+DEPRECATED:
+
+* Data Source: `tencentcloud_kubernetes_clusters`:`container_runtime` not is no longer supported. 
+
+
 ## 1.18.0 (September 10, 2019)
 
 FEATURES:

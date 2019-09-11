@@ -39,6 +39,12 @@ func tkeClusterInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Operating system of the cluster.",
 		},
+		"container_runtime": {
+			Type:        schema.TypeString,
+			Deprecated:  "Reading of this property `container_runtime` is no longer supported",
+			Computed:    true,
+			Description: "Container runtime of the cluster.",
+		},
 		"cluster_deploy_type": {
 			Type:        schema.TypeString,
 			Computed:    true,

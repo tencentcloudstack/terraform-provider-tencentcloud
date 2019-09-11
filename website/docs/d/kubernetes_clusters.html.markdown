@@ -47,6 +47,7 @@ In addition to all arguments above, the following attributes are exported:
   * `cluster_node_num` - Number of nodes in the  cluster.
   * `cluster_os` - Operating system of the cluster.
   * `cluster_version` -  Version of the cluster.
+  * `container_runtime` - Container runtime of the cluster[Deprecated].
   * `domain` - Domain name for access.
   * `ignore_cluster_cidr_conflict` - Indicates whether to ignore the cluster cidr conflict error.
   * `password` - Password of account.
