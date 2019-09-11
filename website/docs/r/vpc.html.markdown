@@ -18,6 +18,10 @@ resource "tencentcloud_vpc" "foo" {
   cidr_block   = "10.0.0.0/16"
   dns_servers  = ["119.29.29.29", "8.8.8.8"]
   is_multicast = false
+
+  tags = {
+    "test" = "test"
+  }
 }
 ```
 
@@ -29,6 +33,7 @@ The following arguments are supported:
 * `name` - (Required) The name of the VPC.
 * `dns_servers` - (Optional) The DNS server list of the VPC. And you can specify 0 to 5 servers to this list.
 * `is_multicast` - (Optional) Indicates whether VPC multicast is enabled. The default value is 'true'.
+* `tags` - (Optional) Tags of the VPC.
 
 ## Attributes Reference
 
@@ -42,7 +47,7 @@ In addition to all arguments above, the following attributes are exported:
 
 Vpc instance can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_vpc.test vpc-id
 ```
 

@@ -28,6 +28,7 @@ type VpcBasicInfo struct {
 	isDefault   bool
 	dnsServers  []string
 	createTime  string
+	tags        []*vpc.Tag
 }
 
 // subnet basic information
@@ -120,7 +121,7 @@ func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 }
 
 func (me *VpcService) DescribeVpc(ctx context.Context, vpcId string) (info VpcBasicInfo, has int, errRet error) {
-	infos, err := me.DescribeVpcs(ctx, vpcId, "")
+	infos, err := me.DescribeVpcs(ctx, vpcId, "", nil)
 	if err != nil {
 		errRet = err
 		return
@@ -132,7 +133,7 @@ func (me *VpcService) DescribeVpc(ctx context.Context, vpcId string) (info VpcBa
 	return
 }
 
-func (me *VpcService) DescribeVpcs(ctx context.Context, vpcId, name string) (infos []VpcBasicInfo, errRet error) {
+func (me *VpcService) DescribeVpcs(ctx context.Context, vpcId, name string, tags map[string]string) (infos []VpcBasicInfo, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeVpcsRequest()
 	defer func() {
@@ -144,18 +145,26 @@ func (me *VpcService) DescribeVpcs(ctx context.Context, vpcId, name string) (inf
 
 	infos = make([]VpcBasicInfo, 0, 100)
 
-	var offset = 0
-	var limit = 100
-	var total = -1
-	var hasVpc = map[string]bool{}
+	var (
+		offset  = 0
+		limit   = 100
+		total   = -1
+		hasVpc  = map[string]bool{}
+		filters []*vpc.Filter
+	)
 
-	var filters []*vpc.Filter
 	if vpcId != "" {
 		filters = me.fillFilter(filters, "vpc-id", vpcId)
 	}
+
 	if name != "" {
 		filters = me.fillFilter(filters, "vpc-name", name)
 	}
+
+	for k, v := range tags {
+		filters = me.fillFilter(filters, "tag:"+k, v)
+	}
+
 	if len(filters) > 0 {
 		request.Filters = filters
 	}
@@ -188,7 +197,7 @@ getMoreData:
 	if len(response.Response.VpcSet) > 0 {
 		offset += limit
 	} else {
-		// get empty Vpcinfo,we're done
+		// get empty VpcInfo, we're done
 		return
 	}
 	for _, item := range response.Response.VpcSet {
@@ -210,6 +219,11 @@ getMoreData:
 			return
 		}
 		hasVpc[basicInfo.vpcId] = true
+
+		if len(item.TagSet) > 0 {
+			basicInfo.tags = item.TagSet
+		}
+
 		infos = append(infos, basicInfo)
 	}
 	goto getMoreData

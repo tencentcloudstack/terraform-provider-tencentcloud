@@ -33,6 +33,7 @@ The following arguments are supported:
 
 * `name` - (Optional, ForceNew) Name of the VPC to be queried.
 * `result_output_file` - (Optional, ForceNew) Used to save results.
+* `tags` - (Optional, ForceNew) Tags of the VPC to be queried.
 * `vpc_id` - (Optional, ForceNew) ID of the VPC to be queried.
 
 ## Attributes Reference
@@ -47,6 +48,7 @@ In addition to all arguments above, the following attributes are exported:
   * `is_multicast` - Indicates whether VPC multicast is enabled.
   * `name` - Name of the VPC.
   * `subnet_ids` - A ID list of subnets within this VPC.
+  * `tags` - Tags of the VPC.
   * `vpc_id` - ID of the VPC.
 
 
