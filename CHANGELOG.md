@@ -7,7 +7,7 @@ ENHANCEMENTS:
 
 DEPRECATED:
 
-* Data Source: `tencentcloud_kubernetes_clusters`:`container_runtime` not is no longer supported. 
+* Data Source: `tencentcloud_kubernetes_clusters`:`container_runtime` is no longer supported. 
 
 
 ## 1.18.0 (September 10, 2019)
