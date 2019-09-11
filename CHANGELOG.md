@@ -1,4 +1,10 @@
 ## 1.17.1 (Unreleased)
+
+ENHANCEMENTS:
+* Resource:`tencentcloud_kubernetes_cluster`  support pull out authentication information for cluster access.
+* Data Source:`tencentcloud_kubernetes_clusters`  support pull out authentication information for cluster access too.
+
+
 ## 1.17.0 (September 04, 2019)
 
 FEATURES:
