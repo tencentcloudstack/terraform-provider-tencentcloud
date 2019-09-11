@@ -948,17 +948,25 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return err
 	}
+	var emptyStrFunc = func(ptr *string) string {
+		if ptr == nil {
+			return ""
+		} else {
+			return *ptr
+		}
+	}
+
 	policies := make([]string, 0, len(securityRet.Response.SecurityPolicy))
 	for _, v := range securityRet.Response.SecurityPolicy {
 		policies = append(policies, *v)
 	}
 
-	d.Set("user_name", securityRet.Response.UserName)
-	d.Set("password", securityRet.Response.Password)
-	d.Set("certification_authority", securityRet.Response.CertificationAuthority)
-	d.Set("cluster_external_endpoint", securityRet.Response.ClusterExternalEndpoint)
-	d.Set("domain", securityRet.Response.Domain)
-	d.Set("pgw_endpoint", securityRet.Response.PgwEndpoint)
+	d.Set("user_name", emptyStrFunc(securityRet.Response.UserName))
+	d.Set("password", emptyStrFunc(securityRet.Response.Password))
+	d.Set("certification_authority", emptyStrFunc(securityRet.Response.CertificationAuthority))
+	d.Set("cluster_external_endpoint", emptyStrFunc(securityRet.Response.ClusterExternalEndpoint))
+	d.Set("domain", emptyStrFunc(securityRet.Response.Domain))
+	d.Set("pgw_endpoint", emptyStrFunc(securityRet.Response.PgwEndpoint))
 	d.Set("security_policy", policies)
 
 	return nil

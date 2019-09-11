@@ -22,6 +22,90 @@ import (
 	"log"
 )
 
+func tkeClusterInfo() map[string]*schema.Schema {
+	schemaBody := map[string]*schema.Schema{
+		"cluster_name": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Name of the cluster.",
+		},
+		"cluster_desc": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Description of the cluster",
+		},
+		"cluster_os": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Operating system of the cluster.",
+		},
+		"cluster_deploy_type": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Deployment type of the cluster.",
+		},
+		"cluster_version": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: " Version of the cluster.",
+		},
+		"cluster_ipvs": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: " Indicates whether ipvs is enabled.",
+		},
+		"vpc_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Vpc Id of the cluster.",
+		},
+		"project_id": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Project Id of the cluster.",
+		},
+		"cluster_cidr": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc.",
+		},
+		"ignore_cluster_cidr_conflict": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Indicates whether to ignore the cluster cidr conflict error.",
+		},
+		"cluster_max_pod_num": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "The maximum number of Pods per node in the cluster.",
+		},
+		"cluster_max_service_num": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "The maximum number of services in the cluster.",
+		},
+		"cluster_node_num": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Number of nodes in the  cluster.",
+		},
+		"worker_instances_list": {
+			Type:        schema.TypeList,
+			Computed:    true,
+			Description: "An information list of cvm within the WORKER clusters. Each element contains the following attributes.",
+			Elem: &schema.Resource{
+				Schema: TkeCvmState(),
+			},
+		},
+	}
+
+	for k, v := range TkeSecurityInfo() {
+		schemaBody[k] = v
+	}
+
+	return schemaBody
+}
+
 func dataSourceTencentCloudKubernetesClusters() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudKubernetesClustersRead,
@@ -49,86 +133,7 @@ func dataSourceTencentCloudKubernetesClusters() *schema.Resource {
 				Computed:    true,
 				Description: "An information  list of kubernetes clusters . Each element contains the following attributes:",
 				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"cluster_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Name of the cluster.",
-						},
-						"cluster_desc": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Description of the cluster",
-						},
-						"cluster_os": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Operating system of the cluster.",
-						},
-						"container_runtime": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Container runtime of the cluster.",
-						},
-						"cluster_deploy_type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Deployment type of the cluster.",
-						},
-						"cluster_version": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: " Version of the cluster.",
-						},
-						"cluster_ipvs": {
-							Type:        schema.TypeBool,
-							Computed:    true,
-							Description: " Indicates whether ipvs is enabled.",
-						},
-						"vpc_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Vpc Id of the cluster.",
-						},
-						"project_id": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Project Id of the cluster.",
-						},
-						"cluster_cidr": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc.",
-						},
-						"ignore_cluster_cidr_conflict": {
-							Type:        schema.TypeBool,
-							Computed:    true,
-							Description: "Indicates whether to ignore the cluster cidr conflict error.",
-						},
-						"cluster_max_pod_num": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "The maximum number of Pods per node in the cluster.",
-						},
-						"cluster_max_service_num": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "The maximum number of services in the cluster.",
-						},
-						"cluster_node_num": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Number of nodes in the  cluster.",
-						},
-						"worker_instances_list": {
-							Type:        schema.TypeList,
-							Computed:    true,
-							Description: "An information list of cvm within the WORKER clusters. Each element contains the following attributes.",
-							Elem: &schema.Resource{
-								Schema: TkeCvmState(),
-							},
-						},
-					},
+					Schema: tkeClusterInfo(),
 				},
 			},
 		},
@@ -174,6 +179,14 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 
 	list := make([]map[string]interface{}, 0, len(infos))
 
+	var emptyStrFunc = func(ptr *string) string {
+		if ptr == nil {
+			return ""
+		} else {
+			return *ptr
+		}
+	}
+
 	for _, info := range infos {
 		var infoMap = map[string]interface{}{}
 		infoMap["cluster_name"] = info.ClusterName
@@ -211,6 +224,31 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 			}
 
 			infoMap["worker_instances_list"] = workerInstancesList
+
+		}
+
+		securityRet, err := service.DescribeClusterSecurity(ctx, info.ClusterId)
+		if err != nil {
+			securityRet, err = service.DescribeClusterSecurity(ctx, info.ClusterId)
+		}
+
+		if err != nil {
+			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters DescribeClusterSecurity fail, reason:%s\n ", logId, err.Error())
+			return err
+		} else {
+
+			policies := make([]string, 0, len(securityRet.Response.SecurityPolicy))
+			for _, v := range securityRet.Response.SecurityPolicy {
+				policies = append(policies, *v)
+			}
+
+			infoMap["user_name"] = emptyStrFunc(securityRet.Response.UserName)
+			infoMap["password"] = emptyStrFunc(securityRet.Response.Password)
+			infoMap["certification_authority"] = emptyStrFunc(securityRet.Response.CertificationAuthority)
+			infoMap["cluster_external_endpoint"] = emptyStrFunc(securityRet.Response.ClusterExternalEndpoint)
+			infoMap["domain"] = emptyStrFunc(securityRet.Response.Domain)
+			infoMap["pgw_endpoint"] = emptyStrFunc(securityRet.Response.PgwEndpoint)
+			infoMap["security_policy"] = policies
 
 		}
 
