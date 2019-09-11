@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"reflect"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -35,7 +36,7 @@ var retryableErrorCode = []string{
 	// client
 	"ClientError.NetworkError",
 	"ClientError.HttpStatusCodeError",
-	// commom
+	// common
 	"FailedOperation",
 	"TradeUnknownError",
 	"RequestLimitExceeded",
@@ -143,4 +144,25 @@ func writeToFile(filePath string, data interface{}) error {
 	}
 
 	return ioutil.WriteFile(filePath, jsonStr, 0422)
+}
+
+func CheckNil(object interface{}, fields map[string]string) (nilFields []string) {
+	// if object is a pointer, get value which object points to
+	object = reflect.Indirect(reflect.ValueOf(object)).Interface()
+
+	for i := 0; i < reflect.TypeOf(object).NumField(); i++ {
+		fieldName := reflect.TypeOf(object).Field(i).Name
+
+		if realName, ok := fields[fieldName]; ok {
+			if realName == "" {
+				realName = fieldName
+			}
+
+			if reflect.ValueOf(object).Field(i).IsNil() {
+				nilFields = append(nilFields, realName)
+			}
+		}
+	}
+
+	return
 }

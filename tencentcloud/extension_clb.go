@@ -108,3 +108,8 @@ const (
 	HEALTH_APPLY_TYPE_LISTENER = "listener"
 	HEALTH_APPLY_TYPE_RULE     = "rule"
 )
+
+const (
+	AUTO_TARGET_PORT = 443
+	AUTO_SOURCE_PORT = 80
+)

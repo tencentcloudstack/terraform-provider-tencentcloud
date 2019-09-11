@@ -1,8 +1,24 @@
-## 1.17.1 (Unreleased)
+## 1.18.1 (Unreleased)
 
 ENHANCEMENTS:
+
 * Resource:`tencentcloud_kubernetes_cluster`  support pull out authentication information for cluster access.
 * Data Source:`tencentcloud_kubernetes_clusters`  support pull out authentication information for cluster access too.
+
+## 1.18.0 (September 10, 2019)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_ssl_certificates`
+* **New Data Source**: `tencentcloud_dnats`
+* **New Data Source**: `tencentcloud_nat_gateways`
+* **New Resource**: `tencentcloud_ssl_certificate`
+* **Update Resource**: `tencentcloud_clb_redirection` add optional argument `is_auto_rewrite`
+* **Update Resource**: `tencentcloud_nat_gateway` , add more configurable items.
+* **Update Resource**: `tencentcloud_nat` , add more configurable items.
+
+DEPRECATED:
+* Data Source: `tencentcloud_nats` replaced by `tencentcloud_nat_gateways`.
 
 
 ## 1.17.0 (September 04, 2019)
