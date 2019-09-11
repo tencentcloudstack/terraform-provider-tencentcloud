@@ -211,21 +211,19 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		if err != nil {
 			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters DescribeClusterInstances fail, reason:%s\n ", logId, err.Error())
 			return err
-		} else {
-
-			workerInstancesList := make([]map[string]interface{}, 0, len(workers))
-			for _, cvm := range workers {
-				tempMap := make(map[string]interface{})
-				tempMap["instance_id"] = cvm.InstanceId
-				tempMap["instance_role"] = cvm.InstanceRole
-				tempMap["instance_state"] = cvm.InstanceState
-				tempMap["failed_reason"] = cvm.FailedReason
-				workerInstancesList = append(workerInstancesList, tempMap)
-			}
-
-			infoMap["worker_instances_list"] = workerInstancesList
-
 		}
+
+		workerInstancesList := make([]map[string]interface{}, 0, len(workers))
+		for _, cvm := range workers {
+			tempMap := make(map[string]interface{})
+			tempMap["instance_id"] = cvm.InstanceId
+			tempMap["instance_role"] = cvm.InstanceRole
+			tempMap["instance_state"] = cvm.InstanceState
+			tempMap["failed_reason"] = cvm.FailedReason
+			workerInstancesList = append(workerInstancesList, tempMap)
+		}
+
+		infoMap["worker_instances_list"] = workerInstancesList
 
 		securityRet, err := service.DescribeClusterSecurity(ctx, info.ClusterId)
 		if err != nil {
@@ -235,22 +233,20 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		if err != nil {
 			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters DescribeClusterSecurity fail, reason:%s\n ", logId, err.Error())
 			return err
-		} else {
-
-			policies := make([]string, 0, len(securityRet.Response.SecurityPolicy))
-			for _, v := range securityRet.Response.SecurityPolicy {
-				policies = append(policies, *v)
-			}
-
-			infoMap["user_name"] = emptyStrFunc(securityRet.Response.UserName)
-			infoMap["password"] = emptyStrFunc(securityRet.Response.Password)
-			infoMap["certification_authority"] = emptyStrFunc(securityRet.Response.CertificationAuthority)
-			infoMap["cluster_external_endpoint"] = emptyStrFunc(securityRet.Response.ClusterExternalEndpoint)
-			infoMap["domain"] = emptyStrFunc(securityRet.Response.Domain)
-			infoMap["pgw_endpoint"] = emptyStrFunc(securityRet.Response.PgwEndpoint)
-			infoMap["security_policy"] = policies
-
 		}
+
+		policies := make([]string, 0, len(securityRet.Response.SecurityPolicy))
+		for _, v := range securityRet.Response.SecurityPolicy {
+			policies = append(policies, *v)
+		}
+
+		infoMap["user_name"] = emptyStrFunc(securityRet.Response.UserName)
+		infoMap["password"] = emptyStrFunc(securityRet.Response.Password)
+		infoMap["certification_authority"] = emptyStrFunc(securityRet.Response.CertificationAuthority)
+		infoMap["cluster_external_endpoint"] = emptyStrFunc(securityRet.Response.ClusterExternalEndpoint)
+		infoMap["domain"] = emptyStrFunc(securityRet.Response.Domain)
+		infoMap["pgw_endpoint"] = emptyStrFunc(securityRet.Response.PgwEndpoint)
+		infoMap["security_policy"] = policies
 
 		list = append(list, infoMap)
 	}
