@@ -79,6 +79,43 @@ func TestAccTencentCloudVpcV3Subnet_update(t *testing.T) {
 		},
 	})
 }
+
+func TestAccTencentCloudVpcV3Subnet_tags(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVpcSubnetDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccVpcSubnetTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVpcSubnetExists("tencentcloud_subnet.subnet"),
+
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "cidr_block", "10.0.20.0/28"),
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "name", "guagua-ci-temp-test"),
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "is_multicast", "false"),
+
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "availability_zone"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "is_default"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "available_ip_count"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "route_table_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_subnet.subnet", "create_time"),
+
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "tags.test", "test"),
+				),
+			},
+			{
+				Config: testAccVpcSubnetTagsUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_subnet.subnet", "tags.abc", "abc"),
+					resource.TestCheckNoResourceAttr("tencentcloud_subnet.subnet", "tags.test"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckVpcSubnetExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
@@ -164,5 +201,49 @@ resource "tencentcloud_subnet" "subnet" {
   cidr_block        = "10.0.20.0/28"
   is_multicast      = true
   route_table_id    = "${tencentcloud_route_table.route_table.id}"
+}
+`
+
+const testAccVpcSubnetTags = `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
+}
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = "${var.availability_zone}"
+  name              = "guagua-ci-temp-test"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+
+  tags = {
+    "test" = "test"
+  }
+}
+`
+
+const testAccVpcSubnetTagsUpdate = `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
+}
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = "${var.availability_zone}"
+  name              = "guagua-ci-temp-test"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+
+  tags = {
+    "abc" = "abc"
+  }
 }
 `

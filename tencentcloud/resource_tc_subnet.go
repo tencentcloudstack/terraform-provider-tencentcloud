@@ -5,20 +5,20 @@ Example Usage
 
 ```hcl
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
-	availability_zone="${var.availability_zone}"
-	name="guagua-ci-temp-test"
-	vpc_id="${tencentcloud_vpc.foo.id}"
-	cidr_block="10.0.20.0/28"
-	is_multicast=false
+  availability_zone = "${var.availability_zone}"
+  name              = "guagua-ci-temp-test"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
 }
 ```
 
@@ -91,6 +91,12 @@ func resourceTencentCloudVpcSubnet() *schema.Resource {
 				Computed:    true,
 				Description: "ID of a routing table to which the subnet should be associated.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the subnet.",
+			},
+
 			// Computed values
 			"is_default": {
 				Type:        schema.TypeBool,
@@ -117,15 +123,15 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		vpcId            string = ""
-		availabilityZone string = ""
-		name             string = ""
-		cidrBlock        string = ""
+		vpcId            string
+		availabilityZone string
+		name             string
+		cidrBlock        string
 		isMulticast      bool
-		routeTableId     string = ""
+		routeTableId     string
 	)
 	if temp, ok := d.GetOk("vpc_id"); ok {
 		vpcId = temp.(string)
@@ -156,7 +162,7 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 	}
 
 	if routeTableId != "" {
-		_, has, err := service.IsRouteTableInVpc(ctx, routeTableId, vpcId)
+		_, has, err := vpcService.IsRouteTableInVpc(ctx, routeTableId, vpcId)
 		if err != nil {
 			return err
 		}
@@ -167,20 +173,31 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	subnetId, err := service.CreateSubnet(ctx, vpcId, name, cidrBlock, availabilityZone)
+	subnetId, err := vpcService.CreateSubnet(ctx, vpcId, name, cidrBlock, availabilityZone)
 	if err != nil {
 		return err
 	}
 	d.SetId(subnetId)
 
-	err = service.ModifySubnetAttribute(ctx, subnetId, name, isMulticast)
+	err = vpcService.ModifySubnetAttribute(ctx, subnetId, name, isMulticast)
 	if err != nil {
 		return err
 	}
 
 	if routeTableId != "" {
-		err = service.ReplaceRouteTableAssociation(ctx, subnetId, routeTableId)
+		err = vpcService.ReplaceRouteTableAssociation(ctx, subnetId, routeTableId)
 		if err != nil {
+			return err
+		}
+	}
+
+	if tags := getTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:subnet/%s", region, subnetId)
+
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
@@ -194,14 +211,16 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	id := d.Id()
 
-	info, has, err := service.DescribeSubnet(ctx, d.Id())
+	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	info, has, err := vpcService.DescribeSubnet(ctx, id)
 	if err != nil {
 		return err
 	}
 
-	//deleted
+	// deleted
 	if has == 0 {
 		d.SetId("")
 		return nil
@@ -213,6 +232,14 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 		return errRet
 	}
 
+	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
+
+	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "subnet", region, id)
+	if err != nil {
+		return err
+	}
+
 	d.Set("vpc_id", info.vpcId)
 	d.Set("availability_zone", info.zone)
 	d.Set("name", info.name)
@@ -222,6 +249,9 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 	d.Set("is_default", info.isDefault)
 	d.Set("available_ip_count", info.availableIpCount)
 	d.Set("create_time", info.createTime)
+	if tags != nil {
+		d.Set("tags", tags)
+	}
 
 	return nil
 }
@@ -231,6 +261,8 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	id := d.Id()
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -254,7 +286,7 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 
 	d.Partial(true)
 
-	if err := service.ModifySubnetAttribute(ctx, d.Id(), name, isMulticast); err != nil {
+	if err := service.ModifySubnetAttribute(ctx, id, name, isMulticast); err != nil {
 		return err
 	}
 	d.SetPartial("name")
@@ -276,10 +308,26 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		if err := service.ReplaceRouteTableAssociation(ctx, d.Id(), routeTableId); err != nil {
+		if err := service.ReplaceRouteTableAssociation(ctx, id, routeTableId); err != nil {
 			return err
 		}
 		d.SetPartial("route_table_id")
+	}
+
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:subnet/%s", region, id)
+
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

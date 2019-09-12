@@ -2,8 +2,10 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
@@ -52,6 +54,71 @@ func (me *TagService) ModifyTags(ctx context.Context, resource string, replaceTa
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return nil
+}
+
+func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, resourceType, region, resourceId string) (tags map[string]string, err error) {
+	logId := getLogId(ctx)
+	client := me.client.UseTagClient()
+
+	request := tag.NewDescribeResourceTagsByResourceIdsRequest()
+	request.ServiceType = &serviceType
+	request.ResourcePrefix = &resourceType
+	request.ResourceRegion = &region
+	request.ResourceIds = []*string{&resourceId}
+	request.Limit = intToPointer(20)
+
+	var offset uint64
+	request.Offset = &offset
+
+	// for run loop at least once
+	count := 20
+	for count == 20 {
+		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
+			response, err := client.DescribeResourceTagsByResourceIds(request)
+			if err != nil {
+				count = 0
+
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+					logId, request.GetAction(), request.ToJsonString(), err.Error())
+				return retryError(err)
+			}
+
+			allTags := response.Response.Tags
+			count = len(allTags)
+
+			for _, t := range allTags {
+				if nilFields := CheckNil(t, map[string]string{
+					"ResourceId": "resource id",
+					"TagKey":     "tag key",
+					"TagValue":   "tag value",
+				}); len(nilFields) > 0 {
+					err := fmt.Errorf("api[%s] tag %v are nil", request.GetAction(), nilFields)
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				if *t.ResourceId != resourceId {
+					continue
+				}
+				if tags == nil {
+					tags = make(map[string]string)
+				}
+
+				tags[*t.TagKey] = *t.TagValue
+			}
+
+			return nil
+		}); err != nil {
+			log.Printf("[CRITAL]%s describe resource tag failed, reason: %v", logId, err)
+			return nil, err
+		}
+
+		offset += uint64(count)
+	}
+
+	return
 }
 
 func diffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]string, deleteTags []string) {

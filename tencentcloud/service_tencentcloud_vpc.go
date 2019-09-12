@@ -230,7 +230,7 @@ getMoreData:
 
 }
 func (me *VpcService) DescribeSubnet(ctx context.Context, subnetId string) (info VpcSubnetBasicInfo, has int, errRet error) {
-	infos, err := me.DescribeSubnets(ctx, subnetId, "", "", "")
+	infos, err := me.DescribeSubnets(ctx, subnetId, "", "", "", nil)
 	if err != nil {
 		errRet = err
 		return
@@ -242,7 +242,7 @@ func (me *VpcService) DescribeSubnet(ctx context.Context, subnetId string) (info
 	return
 }
 
-func (me *VpcService) DescribeSubnets(ctx context.Context, subnet_id, vpc_id, subnet_name, zone string) (infos []VpcSubnetBasicInfo, errRet error) {
+func (me *VpcService) DescribeSubnets(ctx context.Context, subnetId, vpcId, subnetName, zone string, tags map[string]string) (infos []VpcSubnetBasicInfo, errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeSubnetsRequest()
@@ -252,23 +252,30 @@ func (me *VpcService) DescribeSubnets(ctx context.Context, subnet_id, vpc_id, su
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	var offset = 0
-	var limit = 100
-	var total = -1
-	var hasSubnet = map[string]bool{}
 
-	var filters []*vpc.Filter
-	if subnet_id != "" {
-		filters = me.fillFilter(filters, "subnet-id", subnet_id)
+	var (
+		offset    = 0
+		limit     = 100
+		total     = -1
+		hasSubnet = map[string]bool{}
+		filters   []*vpc.Filter
+	)
+
+	if subnetId != "" {
+		filters = me.fillFilter(filters, "subnet-id", subnetId)
 	}
-	if vpc_id != "" {
-		filters = me.fillFilter(filters, "vpc-id", vpc_id)
+	if vpcId != "" {
+		filters = me.fillFilter(filters, "vpc-id", vpcId)
 	}
-	if subnet_name != "" {
-		filters = me.fillFilter(filters, "subnet-name", subnet_name)
+	if subnetName != "" {
+		filters = me.fillFilter(filters, "subnet-name", subnetName)
 	}
 	if zone != "" {
 		filters = me.fillFilter(filters, "zone", zone)
+	}
+
+	for k, v := range tags {
+		filters = me.fillFilter(filters, "tag:"+k, v)
 	}
 
 	if len(filters) > 0 {
@@ -302,7 +309,7 @@ getMoreData:
 	if len(response.Response.SubnetSet) > 0 {
 		offset += limit
 	} else {
-		// get empty subnet ,we're done
+		// get empty subnet, we're done
 		return
 	}
 	for _, item := range response.Response.SubnetSet {

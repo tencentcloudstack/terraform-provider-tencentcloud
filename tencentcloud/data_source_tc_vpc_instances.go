@@ -179,7 +179,7 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 		}
 		infoMap["tags"] = respTags
 
-		subnetInfos, err := service.DescribeSubnets(ctx, "", item.vpcId, "", "")
+		subnetInfos, err := service.DescribeSubnets(ctx, "", item.vpcId, "", "", nil)
 		if err != nil {
 			return err
 		}
