@@ -131,8 +131,8 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		vpcId = ""
-		name  = ""
+		vpcId string
+		name  string
 	)
 	if temp, ok := d.GetOk("vpc_id"); ok {
 		tempStr := temp.(string)

@@ -108,8 +108,8 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name        = ""
-		cidrBlock   = ""
+		name        string
+		cidrBlock   string
 		dnsServers  = make([]string, 0, 4)
 		isMulticast bool
 	)
