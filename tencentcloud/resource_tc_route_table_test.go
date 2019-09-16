@@ -71,7 +71,37 @@ func TestAccTencentCloudVpcV3RouteTable_update(t *testing.T) {
 			},
 		},
 	})
+}
 
+func TestAccTencentCloudVpcV3RouteTable_tags(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVpcRouteTableDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccVpcRouteTableTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVpcRouteTableExists("tencentcloud_route_table.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_route_table.foo", "name", "ci-temp-test-rt"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "subnet_ids.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "route_entry_ids.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "is_default"),
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table.foo", "create_time"),
+					resource.TestCheckResourceAttr("tencentcloud_route_table.foo", "tags.test", "test"),
+				),
+			},
+			{
+				Config: testAccVpcRouteTableTagsUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVpcRouteTableExists("tencentcloud_route_table.foo"),
+					resource.TestCheckNoResourceAttr("tencentcloud_route_table.foo", "tags.test"),
+					resource.TestCheckResourceAttr("tencentcloud_route_table.foo", "tags.new-test", "new-test"),
+				),
+			},
+		},
+	})
 }
 
 func testAccCheckVpcRouteTableExists(r string) resource.TestCheckFunc {
@@ -130,6 +160,7 @@ resource "tencentcloud_route_table" "foo" {
   name   = "ci-temp-test-rt"
 }
 `
+
 const testAccVpcRouteTableConfigUpdate = `
 resource "tencentcloud_vpc" "foo" {
   name       = "ci-temp-test"
@@ -139,5 +170,37 @@ resource "tencentcloud_vpc" "foo" {
 resource "tencentcloud_route_table" "foo" {
   vpc_id = "${tencentcloud_vpc.foo.id}"
   name   = "ci-temp-test-rt-updated"
+}
+`
+
+const testAccVpcRouteTableTags = `
+resource "tencentcloud_vpc" "foo" {
+  name       = "ci-temp-test"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_route_table" "foo" {
+  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = "ci-temp-test-rt"
+
+  tags = {
+    "test" = "test"
+  }
+}
+`
+
+const testAccVpcRouteTableTagsUpdate = `
+resource "tencentcloud_vpc" "foo" {
+  name       = "ci-temp-test"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_route_table" "foo" {
+  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = "ci-temp-test-rt"
+
+  tags = {
+    "new-test" = "new-test"
+  }
 }
 `

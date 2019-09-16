@@ -111,7 +111,7 @@ func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, res
 
 			return nil
 		}); err != nil {
-			log.Printf("[CRITAL]%s describe resource tag failed, reason: %v", logId, err)
+			log.Printf("[CRITAL]%s describe resource %s tag failed, reason: %v", logId, serviceType+":"+resourceType, err)
 			return nil, err
 		}
 

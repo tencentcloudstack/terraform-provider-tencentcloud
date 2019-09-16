@@ -5,25 +5,33 @@ Example Usage
 
 ```hcl
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua-ci-temp-test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua-ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_route_table" "route_table" {
-   vpc_id = "${tencentcloud_vpc.foo.id}"
-   name = "ci-temp-test-rt"
+  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = "ci-temp-test-rt"
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 data "tencentcloud_vpc_route_tables" "id_instances" {
-	route_table_id="${tencentcloud_route_table.route_table.id}"
+  route_table_id = "${tencentcloud_route_table.route_table.id}"
 }
 
 data "tencentcloud_vpc_route_tables" "name_instances" {
-	name="${tencentcloud_route_table.route_table.name}"
+  name = "${tencentcloud_route_table.route_table.name}"
+}
+
+data "tencentcloud_vpc_route_tables" "tags_instances" {
+  tags = "${tencentcloud_route_table.route_table.tags}"
 }
 ```
 */
@@ -54,6 +62,12 @@ func dataSourceTencentCloudVpcRouteTables() *schema.Resource {
 				Optional:    true,
 				Description: "Name of the routing table to be queried.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Tags of the routing table to be queried.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
@@ -62,9 +76,10 @@ func dataSourceTencentCloudVpcRouteTables() *schema.Resource {
 			},
 
 			// Computed values
-			"instance_list": {Type: schema.TypeList,
+			"instance_list": {
+				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "The information list of the VPC.",
+				Description: "The information list of the VPC route table.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"route_table_id": {
@@ -99,6 +114,11 @@ func dataSourceTencentCloudVpcRouteTables() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Creation time of the routing table.",
+						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags of the routing table.",
 						},
 						"route_entry_infos": {
 							Type:        schema.TypeList,
@@ -148,10 +168,12 @@ func dataSourceTencentCloudVpcRouteTablesRead(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
 
 	var (
-		routeTableId string = ""
-		name         string = ""
+		routeTableId string
+		name         string
 	)
 	if temp, ok := d.GetOk("route_table_id"); ok {
 		tempStr := temp.(string)
@@ -166,7 +188,9 @@ func dataSourceTencentCloudVpcRouteTablesRead(d *schema.ResourceData, meta inter
 		}
 	}
 
-	var infos, err = service.DescribeRouteTables(ctx, routeTableId, name, "")
+	tags := getTags(d, "tags")
+
+	var infos, err = service.DescribeRouteTables(ctx, routeTableId, name, "", tags)
 	if err != nil {
 		return err
 	}
@@ -174,7 +198,6 @@ func dataSourceTencentCloudVpcRouteTablesRead(d *schema.ResourceData, meta inter
 	var infoList = make([]map[string]interface{}, 0, len(infos))
 
 	for _, item := range infos {
-
 		routeEntryInfos := make([]map[string]string, len(item.entryInfos))
 
 		for _, v := range item.entryInfos {
@@ -188,6 +211,11 @@ func dataSourceTencentCloudVpcRouteTablesRead(d *schema.ResourceData, meta inter
 			routeEntryInfos = append(routeEntryInfos, routeEntryInfo)
 		}
 
+		respTags, err := tagService.DescribeResourceTags(ctx, "vpc", "rtb", region, item.routeTableId)
+		if err != nil {
+			return err
+		}
+
 		var infoMap = make(map[string]interface{})
 
 		infoMap["route_table_id"] = item.routeTableId
@@ -197,6 +225,7 @@ func dataSourceTencentCloudVpcRouteTablesRead(d *schema.ResourceData, meta inter
 		infoMap["subnet_ids"] = item.subnetIds
 		infoMap["route_entry_infos"] = routeEntryInfos
 		infoMap["create_time"] = item.createTime
+		infoMap["tags"] = respTags
 
 		infoList = append(infoList, infoMap)
 	}

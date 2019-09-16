@@ -498,7 +498,7 @@ func (me *VpcService) ReplaceRouteTableAssociation(ctx context.Context, subnetId
 
 func (me *VpcService) IsRouteTableInVpc(ctx context.Context, routeTableId, vpcId string) (info VpcRouteTableBasicInfo, has int, errRet error) {
 
-	infos, err := me.DescribeRouteTables(ctx, routeTableId, "", vpcId)
+	infos, err := me.DescribeRouteTables(ctx, routeTableId, "", vpcId, nil)
 	if err != nil {
 		errRet = err
 		return
@@ -513,7 +513,7 @@ func (me *VpcService) IsRouteTableInVpc(ctx context.Context, routeTableId, vpcId
 
 func (me *VpcService) DescribeRouteTable(ctx context.Context, routeTableId string) (info VpcRouteTableBasicInfo, has int, errRet error) {
 
-	infos, err := me.DescribeRouteTables(ctx, routeTableId, "", "")
+	infos, err := me.DescribeRouteTables(ctx, routeTableId, "", "", nil)
 	if err != nil {
 		errRet = err
 		return
@@ -527,7 +527,7 @@ func (me *VpcService) DescribeRouteTable(ctx context.Context, routeTableId strin
 	info = infos[0]
 	return
 }
-func (me *VpcService) DescribeRouteTables(ctx context.Context, routeTableId, routeTableName, vpcId string) (infos []VpcRouteTableBasicInfo, errRet error) {
+func (me *VpcService) DescribeRouteTables(ctx context.Context, routeTableId, routeTableName, vpcId string, tags map[string]string) (infos []VpcRouteTableBasicInfo, errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeRouteTablesRequest()
@@ -553,6 +553,9 @@ func (me *VpcService) DescribeRouteTables(ctx context.Context, routeTableId, rou
 	}
 	if routeTableName != "" {
 		filters = me.fillFilter(filters, "route-table-name", routeTableName)
+	}
+	for k, v := range tags {
+		filters = me.fillFilter(filters, "tag:"+k, v)
 	}
 	if len(filters) > 0 {
 		request.Filters = filters
@@ -585,7 +588,7 @@ getMoreData:
 	if len(response.Response.RouteTableSet) > 0 {
 		offset += limit
 	} else {
-		// get empty Vpcinfo,we're done
+		// get empty Vpcinfo, we're done
 		return
 	}
 	for _, item := range response.Response.RouteTableSet {
