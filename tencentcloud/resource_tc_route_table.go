@@ -123,7 +123,7 @@ func resourceTencentCloudVpcRouteTableCreate(d *schema.ResourceData, meta interf
 	}
 	d.SetId(routeTableId)
 
-	if tags := getTags(d, "tags"); tags != nil {
+	if tags := getTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 		region := meta.(*TencentCloudClient).apiV3Conn.Region

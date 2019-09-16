@@ -185,28 +185,25 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 		return errRet
 	}
 
+	tags := make(map[string]string, len(info.tags))
+	for _, tag := range info.tags {
+		if tag.Key == nil {
+			return fmt.Errorf("vpc %s tag key is nil", id)
+		}
+		if tag.Value == nil {
+			return fmt.Errorf("vpc %s tag value is nil", id)
+		}
+
+		tags[*tag.Key] = *tag.Value
+	}
+
 	d.Set("name", info.name)
 	d.Set("cidr_block", info.cidr)
 	d.Set("dns_servers", info.dnsServers)
 	d.Set("is_multicast", info.isMulticast)
 	d.Set("create_time", info.createTime)
 	d.Set("is_default", info.isDefault)
-
-	if len(info.tags) > 0 {
-		tags := make(map[string]string, len(info.tags))
-		for _, tag := range info.tags {
-			if tag.Key == nil {
-				return fmt.Errorf("vpc %s tag key is nil", id)
-			}
-			if tag.Value == nil {
-				return fmt.Errorf("vpc %s tag value is nil", id)
-			}
-
-			tags[*tag.Key] = *tag.Value
-		}
-
-		d.Set("tags", tags)
-	}
+	d.Set("tags", tags)
 
 	return nil
 }

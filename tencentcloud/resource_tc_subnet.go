@@ -26,7 +26,7 @@ Import
 
 Vpc subnet instance can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_subnet.test subnet_id
 ```
 */
@@ -214,6 +214,8 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 	id := d.Id()
 
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
 
 	info, has, err := vpcService.DescribeSubnet(ctx, id)
 	if err != nil {
@@ -232,9 +234,6 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 		return errRet
 	}
 
-	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	region := meta.(*TencentCloudClient).apiV3Conn.Region
-
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "subnet", region, id)
 	if err != nil {
 		return err
@@ -249,9 +248,7 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 	d.Set("is_default", info.isDefault)
 	d.Set("available_ip_count", info.availableIpCount)
 	d.Set("create_time", info.createTime)
-	if tags != nil {
-		d.Set("tags", tags)
-	}
+	d.Set("tags", tags)
 
 	return nil
 }
