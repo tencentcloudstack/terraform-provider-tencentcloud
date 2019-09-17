@@ -623,6 +623,12 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		return
 	}
 
+	if MysqlDelStates[*mysqlInfo.Status] {
+		mysqlInfo = nil
+		d.SetId("")
+		return
+	}
+
 	d.Set("instance_name", *mysqlInfo.InstanceName)
 	d.Set("pay_type", int(*mysqlInfo.PayType))
 

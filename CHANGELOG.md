@@ -9,6 +9,10 @@ DEPRECATED:
 
 * Data Source: `tencentcloud_kubernetes_clusters`:`container_runtime` is no longer supported. 
 
+BUG FIXIES:
+
+* Resource: `tencentcloud_mysql_instance`: when the mysql is abnormal state, read the basic information report error
+
 
 ## 1.18.0 (September 10, 2019)
 
