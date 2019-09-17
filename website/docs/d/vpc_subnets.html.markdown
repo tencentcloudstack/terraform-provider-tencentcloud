@@ -28,6 +28,10 @@ resource "tencentcloud_subnet" "subnet" {
   vpc_id            = "${tencentcloud_vpc.foo.id}"
   cidr_block        = "10.0.20.0/28"
   is_multicast      = false
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 data "tencentcloud_vpc_subnets" "id_instances" {
@@ -37,15 +41,20 @@ data "tencentcloud_vpc_subnets" "id_instances" {
 data "tencentcloud_vpc_subnets" "name_instances" {
   name = "${tencentcloud_subnet.subnet.name}"
 }
+
+data "tencentcloud_vpc_subnets" "tags_instances" {
+  tags = "${tencentcloud_subnet.subnet.tags}"
+}
 ```
 
 ## Argument Reference
 
 The following arguments are supported:
 
-* `name` - (Optional, ForceNew) Name of the subnet to be queried.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
-* `subnet_id` - (Optional, ForceNew) ID of the subnet to be queried.
+* `name` - (Optional) Name of the subnet to be queried.
+* `result_output_file` - (Optional) Used to save results.
+* `subnet_id` - (Optional) ID of the subnet to be queried.
+* `tags` - (Optional) Tags of the subnet to be queried.
 
 ## Attributes Reference
 
@@ -61,6 +70,7 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Name of the subnet.
   * `route_table_id` - ID of the routing table.
   * `subnet_id` - ID of the subnet.
+  * `tags` - Tags of the subnet resource.
   * `vpc_id` - ID of the VPC.
 
 
