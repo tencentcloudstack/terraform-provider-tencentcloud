@@ -5,28 +5,36 @@ Example Usage
 
 ```hcl
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name="guagua_vpc_instance_test"
-    cidr_block="10.0.0.0/16"
+  name       = "guagua_vpc_instance_test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
-	availability_zone="${var.availability_zone}"
-	name="guagua_vpc_subnet_test"
-	vpc_id="${tencentcloud_vpc.foo.id}"
-	cidr_block="10.0.20.0/28"
-	is_multicast=false
+  availability_zone = "${var.availability_zone}"
+  name              = "guagua_vpc_subnet_test"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        =  "10.0.20.0/28"
+  is_multicast      =  false
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 data "tencentcloud_vpc_subnets" "id_instances" {
-	subnet_id="${tencentcloud_subnet.subnet.id}"
+  subnet_id = "${tencentcloud_subnet.subnet.id}"
 }
 
 data "tencentcloud_vpc_subnets" "name_instances" {
-	name="${tencentcloud_subnet.subnet.name}"
+  name = "${tencentcloud_subnet.subnet.name}"
+}
+
+data "tencentcloud_vpc_subnets" "tags_instances" {
+  tags = "${tencentcloud_subnet.subnet.tags}"
 }
 ```
 */
@@ -46,19 +54,21 @@ func dataSourceTencentCloudVpcSubnets() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"subnet_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "ID of the subnet to be queried.",
 			},
 			"name": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Name of the subnet to be queried.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the subnet to be queried.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
@@ -119,6 +129,11 @@ func dataSourceTencentCloudVpcSubnets() *schema.Resource {
 							Computed:    true,
 							Description: "Creation time of the subnet resource.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags of the subnet resource.",
+						},
 					},
 				},
 			},
@@ -132,11 +147,13 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
 
 	var (
-		subnetId string = ""
-		name     string = ""
+		subnetId string
+		name     string
 	)
 	if temp, ok := d.GetOk("subnet_id"); ok {
 		tempStr := temp.(string)
@@ -151,7 +168,9 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		}
 	}
 
-	var infos, err = service.DescribeSubnets(ctx, subnetId, "", name, "")
+	tags := getTags(d, "tags")
+
+	infos, err := vpcService.DescribeSubnets(ctx, subnetId, "", name, "", tags)
 	if err != nil {
 		return err
 	}
@@ -159,6 +178,10 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 	var infoList = make([]map[string]interface{}, 0, len(infos))
 
 	for _, item := range infos {
+		respTags, err := tagService.DescribeResourceTags(ctx, "vpc", "subnet", region, item.subnetId)
+		if err != nil {
+			return err
+		}
 
 		var infoMap = make(map[string]interface{})
 
@@ -172,6 +195,7 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		infoMap["route_table_id"] = item.routeTableId
 		infoMap["available_ip_count"] = item.availableIpCount
 		infoMap["create_time"] = item.createTime
+		infoMap["tags"] = respTags
 
 		infoList = append(infoList, infoMap)
 	}

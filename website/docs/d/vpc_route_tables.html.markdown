@@ -25,6 +25,10 @@ resource "tencentcloud_vpc" "foo" {
 resource "tencentcloud_route_table" "route_table" {
   vpc_id = "${tencentcloud_vpc.foo.id}"
   name   = "ci-temp-test-rt"
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 data "tencentcloud_vpc_route_tables" "id_instances" {
@@ -34,21 +38,26 @@ data "tencentcloud_vpc_route_tables" "id_instances" {
 data "tencentcloud_vpc_route_tables" "name_instances" {
   name = "${tencentcloud_route_table.route_table.name}"
 }
+
+data "tencentcloud_vpc_route_tables" "tags_instances" {
+  tags = "${tencentcloud_route_table.route_table.tags}"
+}
 ```
 
 ## Argument Reference
 
 The following arguments are supported:
 
-* `name` - (Optional, ForceNew) Name of the routing table to be queried.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
-* `route_table_id` - (Optional, ForceNew) ID of the routing table to be queried.
+* `name` - (Optional) Name of the routing table to be queried.
+* `result_output_file` - (Optional) Used to save results.
+* `route_table_id` - (Optional) ID of the routing table to be queried.
+* `tags` - (Optional) Tags of the routing table to be queried.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `instance_list` - The information list of the VPC.
+* `instance_list` - The information list of the VPC route table.
   * `create_time` - Creation time of the routing table.
   * `is_default` - Indicates whether it is the default routing table.
   * `name` - Name of the routing table.
@@ -60,6 +69,7 @@ In addition to all arguments above, the following attributes are exported:
     * `route_entry_id` - ID of a route table entry.
   * `route_table_id` - ID of the routing table.
   * `subnet_ids` - List of subnet IDs bound to the route table.
+  * `tags` - Tags of the routing table.
   * `vpc_id` - ID of the VPC.
 
 

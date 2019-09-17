@@ -28,6 +28,7 @@ type VpcBasicInfo struct {
 	isDefault   bool
 	dnsServers  []string
 	createTime  string
+	tags        []*vpc.Tag
 }
 
 // subnet basic information
@@ -120,7 +121,7 @@ func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 }
 
 func (me *VpcService) DescribeVpc(ctx context.Context, vpcId string) (info VpcBasicInfo, has int, errRet error) {
-	infos, err := me.DescribeVpcs(ctx, vpcId, "")
+	infos, err := me.DescribeVpcs(ctx, vpcId, "", nil)
 	if err != nil {
 		errRet = err
 		return
@@ -132,7 +133,7 @@ func (me *VpcService) DescribeVpc(ctx context.Context, vpcId string) (info VpcBa
 	return
 }
 
-func (me *VpcService) DescribeVpcs(ctx context.Context, vpcId, name string) (infos []VpcBasicInfo, errRet error) {
+func (me *VpcService) DescribeVpcs(ctx context.Context, vpcId, name string, tags map[string]string) (infos []VpcBasicInfo, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeVpcsRequest()
 	defer func() {
@@ -144,18 +145,26 @@ func (me *VpcService) DescribeVpcs(ctx context.Context, vpcId, name string) (inf
 
 	infos = make([]VpcBasicInfo, 0, 100)
 
-	var offset = 0
-	var limit = 100
-	var total = -1
-	var hasVpc = map[string]bool{}
+	var (
+		offset  = 0
+		limit   = 100
+		total   = -1
+		hasVpc  = map[string]bool{}
+		filters []*vpc.Filter
+	)
 
-	var filters []*vpc.Filter
 	if vpcId != "" {
 		filters = me.fillFilter(filters, "vpc-id", vpcId)
 	}
+
 	if name != "" {
 		filters = me.fillFilter(filters, "vpc-name", name)
 	}
+
+	for k, v := range tags {
+		filters = me.fillFilter(filters, "tag:"+k, v)
+	}
+
 	if len(filters) > 0 {
 		request.Filters = filters
 	}
@@ -188,7 +197,7 @@ getMoreData:
 	if len(response.Response.VpcSet) > 0 {
 		offset += limit
 	} else {
-		// get empty Vpcinfo,we're done
+		// get empty VpcInfo, we're done
 		return
 	}
 	for _, item := range response.Response.VpcSet {
@@ -210,13 +219,18 @@ getMoreData:
 			return
 		}
 		hasVpc[basicInfo.vpcId] = true
+
+		if len(item.TagSet) > 0 {
+			basicInfo.tags = item.TagSet
+		}
+
 		infos = append(infos, basicInfo)
 	}
 	goto getMoreData
 
 }
 func (me *VpcService) DescribeSubnet(ctx context.Context, subnetId string) (info VpcSubnetBasicInfo, has int, errRet error) {
-	infos, err := me.DescribeSubnets(ctx, subnetId, "", "", "")
+	infos, err := me.DescribeSubnets(ctx, subnetId, "", "", "", nil)
 	if err != nil {
 		errRet = err
 		return
@@ -228,7 +242,7 @@ func (me *VpcService) DescribeSubnet(ctx context.Context, subnetId string) (info
 	return
 }
 
-func (me *VpcService) DescribeSubnets(ctx context.Context, subnet_id, vpc_id, subnet_name, zone string) (infos []VpcSubnetBasicInfo, errRet error) {
+func (me *VpcService) DescribeSubnets(ctx context.Context, subnetId, vpcId, subnetName, zone string, tags map[string]string) (infos []VpcSubnetBasicInfo, errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeSubnetsRequest()
@@ -238,23 +252,30 @@ func (me *VpcService) DescribeSubnets(ctx context.Context, subnet_id, vpc_id, su
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	var offset = 0
-	var limit = 100
-	var total = -1
-	var hasSubnet = map[string]bool{}
 
-	var filters []*vpc.Filter
-	if subnet_id != "" {
-		filters = me.fillFilter(filters, "subnet-id", subnet_id)
+	var (
+		offset    = 0
+		limit     = 100
+		total     = -1
+		hasSubnet = map[string]bool{}
+		filters   []*vpc.Filter
+	)
+
+	if subnetId != "" {
+		filters = me.fillFilter(filters, "subnet-id", subnetId)
 	}
-	if vpc_id != "" {
-		filters = me.fillFilter(filters, "vpc-id", vpc_id)
+	if vpcId != "" {
+		filters = me.fillFilter(filters, "vpc-id", vpcId)
 	}
-	if subnet_name != "" {
-		filters = me.fillFilter(filters, "subnet-name", subnet_name)
+	if subnetName != "" {
+		filters = me.fillFilter(filters, "subnet-name", subnetName)
 	}
 	if zone != "" {
 		filters = me.fillFilter(filters, "zone", zone)
+	}
+
+	for k, v := range tags {
+		filters = me.fillFilter(filters, "tag:"+k, v)
 	}
 
 	if len(filters) > 0 {
@@ -288,7 +309,7 @@ getMoreData:
 	if len(response.Response.SubnetSet) > 0 {
 		offset += limit
 	} else {
-		// get empty subnet ,we're done
+		// get empty subnet, we're done
 		return
 	}
 	for _, item := range response.Response.SubnetSet {
@@ -477,7 +498,7 @@ func (me *VpcService) ReplaceRouteTableAssociation(ctx context.Context, subnetId
 
 func (me *VpcService) IsRouteTableInVpc(ctx context.Context, routeTableId, vpcId string) (info VpcRouteTableBasicInfo, has int, errRet error) {
 
-	infos, err := me.DescribeRouteTables(ctx, routeTableId, "", vpcId)
+	infos, err := me.DescribeRouteTables(ctx, routeTableId, "", vpcId, nil)
 	if err != nil {
 		errRet = err
 		return
@@ -492,7 +513,7 @@ func (me *VpcService) IsRouteTableInVpc(ctx context.Context, routeTableId, vpcId
 
 func (me *VpcService) DescribeRouteTable(ctx context.Context, routeTableId string) (info VpcRouteTableBasicInfo, has int, errRet error) {
 
-	infos, err := me.DescribeRouteTables(ctx, routeTableId, "", "")
+	infos, err := me.DescribeRouteTables(ctx, routeTableId, "", "", nil)
 	if err != nil {
 		errRet = err
 		return
@@ -506,7 +527,7 @@ func (me *VpcService) DescribeRouteTable(ctx context.Context, routeTableId strin
 	info = infos[0]
 	return
 }
-func (me *VpcService) DescribeRouteTables(ctx context.Context, routeTableId, routeTableName, vpcId string) (infos []VpcRouteTableBasicInfo, errRet error) {
+func (me *VpcService) DescribeRouteTables(ctx context.Context, routeTableId, routeTableName, vpcId string, tags map[string]string) (infos []VpcRouteTableBasicInfo, errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeRouteTablesRequest()
@@ -532,6 +553,9 @@ func (me *VpcService) DescribeRouteTables(ctx context.Context, routeTableId, rou
 	}
 	if routeTableName != "" {
 		filters = me.fillFilter(filters, "route-table-name", routeTableName)
+	}
+	for k, v := range tags {
+		filters = me.fillFilter(filters, "tag:"+k, v)
 	}
 	if len(filters) > 0 {
 		request.Filters = filters
@@ -564,7 +588,7 @@ getMoreData:
 	if len(response.Response.RouteTableSet) > 0 {
 		offset += limit
 	} else {
-		// get empty Vpcinfo,we're done
+		// get empty Vpcinfo, we're done
 		return
 	}
 	for _, item := range response.Response.RouteTableSet {
