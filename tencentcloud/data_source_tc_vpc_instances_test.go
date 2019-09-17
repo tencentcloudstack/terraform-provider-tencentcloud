@@ -52,7 +52,7 @@ func TestAccDataSourceTencentCloudVpcV3Instances_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_vpc_instances.tags_instances", "instance_list.0.dns_servers.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_vpc_instances.tags_instances", "instance_list.0.subnet_ids.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_vpc_instances.tags_instances", "instance_list.0.create_time"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vpc_instances.id_instances", "instance_list.0.tags.test", "test"),
+					resource.TestCheckResourceAttr("data.tencentcloud_vpc_instances.tags_instances", "instance_list.0.tags.test", "test"),
 				),
 			},
 		},
@@ -61,7 +61,7 @@ func TestAccDataSourceTencentCloudVpcV3Instances_basic(t *testing.T) {
 
 const TestAccDataSourceTencentCloudVpcInstances = `
 resource "tencentcloud_vpc" "foo" {
-  name       ="guagua_vpc_instance_test"
+  name       = "guagua_vpc_instance_test"
   cidr_block = "10.0.0.0/16"
 
   tags = {

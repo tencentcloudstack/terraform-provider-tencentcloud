@@ -52,25 +52,21 @@ func dataSourceTencentCloudVpcRouteTables() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"route_table_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "ID of the routing table to be queried.",
 			},
 			"name": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Name of the routing table to be queried.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Tags of the routing table to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},

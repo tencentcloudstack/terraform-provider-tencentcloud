@@ -31,10 +31,10 @@ data "tencentcloud_vpc_instances" "name_instances" {
 
 The following arguments are supported:
 
-* `name` - (Optional, ForceNew) Name of the VPC to be queried.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
-* `tags` - (Optional, ForceNew) Tags of the VPC to be queried.
-* `vpc_id` - (Optional, ForceNew) ID of the VPC to be queried.
+* `name` - (Optional) Name of the VPC to be queried.
+* `result_output_file` - (Optional) Used to save results.
+* `tags` - (Optional) Tags of the VPC to be queried.
+* `vpc_id` - (Optional) ID of the VPC to be queried.
 
 ## Attributes Reference
 

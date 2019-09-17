@@ -48,10 +48,10 @@ data "tencentcloud_vpc_route_tables" "tags_instances" {
 
 The following arguments are supported:
 
-* `name` - (Optional, ForceNew) Name of the routing table to be queried.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
-* `route_table_id` - (Optional, ForceNew) ID of the routing table to be queried.
-* `tags` - (Optional, ForceNew) Tags of the routing table to be queried.
+* `name` - (Optional) Name of the routing table to be queried.
+* `result_output_file` - (Optional) Used to save results.
+* `route_table_id` - (Optional) ID of the routing table to be queried.
+* `tags` - (Optional) Tags of the routing table to be queried.
 
 ## Attributes Reference
 

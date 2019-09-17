@@ -51,10 +51,10 @@ data "tencentcloud_vpc_subnets" "tags_instances" {
 
 The following arguments are supported:
 
-* `name` - (Optional, ForceNew) Name of the subnet to be queried.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
-* `subnet_id` - (Optional, ForceNew) ID of the subnet to be queried.
-* `tags` - (Optional, ForceNew) Tags of the subnet to be queried.
+* `name` - (Optional) Name of the subnet to be queried.
+* `result_output_file` - (Optional) Used to save results.
+* `subnet_id` - (Optional) ID of the subnet to be queried.
+* `tags` - (Optional) Tags of the subnet to be queried.
 
 ## Attributes Reference
 

@@ -1,4 +1,14 @@
 ## 1.18.1 (Unreleased)
+
+FEATURES:
+
+* **Update Data Source**: `tencentcloud_vpc_instances` add optional argument `tags`
+* **Update Data Source**: `tencentcloud_vpc_subnets` add optional argument `tags`
+* **Update Data Source**: `tencentcloud_route_tables` add optional argument `tags`
+* **Update Resource**: `tencentcloud_vpc` add optional argument `tags`
+* **Update Resource**: `tencentcloud_subnet` add optional argument `tags`
+* **Update Resource**: `tencentcloud_route_table` add optional argument `tags`
+
 ## 1.18.0 (September 10, 2019)
 
 FEATURES:
