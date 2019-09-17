@@ -11,16 +11,16 @@ FEATURES:
 
 ENHANCEMENTS:
 
-* Resource:`tencentcloud_kubernetes_cluster`  support pull out authentication information for cluster access.
 * Data Source:`tencentcloud_kubernetes_clusters`  support pull out authentication information for cluster access too.
-
-DEPRECATED:
-
-* Data Source: `tencentcloud_kubernetes_clusters`:`container_runtime` is no longer supported. 
+* Resource:`tencentcloud_kubernetes_cluster`  support pull out authentication information for cluster access.
 
 BUG FIXES:
 
 * Resource: `tencentcloud_mysql_instance`: when the mysql is abnormal state, read the basic information report error
+
+DEPRECATED:
+
+* Data Source: `tencentcloud_kubernetes_clusters`:`container_runtime` is no longer supported. 
 
 
 ## 1.18.0 (September 10, 2019)
