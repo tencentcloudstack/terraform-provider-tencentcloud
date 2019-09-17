@@ -11,12 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 // VPC basic information
@@ -63,6 +63,17 @@ type VpcRouteTableBasicInfo struct {
 	subnetIds    []string
 	entryInfos   []VpcRouteEntryBasicInfo
 	createTime   string
+}
+
+type VpcSecurityGroupLiteRule struct {
+	action   string
+	cidrIp   string
+	port     string
+	protocol string
+}
+
+func (rule VpcSecurityGroupLiteRule) String() string {
+	return fmt.Sprintf("%s#%s#%s#%s", rule.action, rule.cidrIp, rule.port, rule.protocol)
 }
 
 type VpcService struct {
@@ -1191,6 +1202,165 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 	}
 
 	return sgs, nil
+}
+
+func (me *VpcService) modifyLiteRulesInSecurityGroup(ctx context.Context, sgId string, ingress, egress []VpcSecurityGroupLiteRule) error {
+	logId := getLogId(ctx)
+
+	request := vpc.NewModifySecurityGroupPoliciesRequest()
+	request.SecurityGroupId = &sgId
+	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+	for _, in := range ingress {
+		policy := &vpc.SecurityGroupPolicy{
+			Protocol:  stringToPointer(in.protocol),
+			CidrBlock: stringToPointer(in.cidrIp),
+			Action:    stringToPointer(in.action),
+		}
+
+		if in.port != "" {
+			policy.Port = stringToPointer(in.port)
+		}
+
+		request.SecurityGroupPolicySet.Ingress = append(request.SecurityGroupPolicySet.Ingress, policy)
+	}
+
+	for _, eg := range egress {
+		policy := &vpc.SecurityGroupPolicy{
+			Protocol:  stringToPointer(eg.protocol),
+			CidrBlock: stringToPointer(eg.cidrIp),
+			Action:    stringToPointer(eg.action),
+		}
+
+		if eg.port != "" {
+			policy.Port = stringToPointer(eg.port)
+		}
+
+		request.SecurityGroupPolicySet.Egress = append(request.SecurityGroupPolicySet.Egress, policy)
+	}
+
+	// delete all rules
+	if len(request.SecurityGroupPolicySet.Ingress) == 0 && len(request.SecurityGroupPolicySet.Egress) == 0 {
+		request.SecurityGroupPolicySet.Ingress = nil
+		request.SecurityGroupPolicySet.Egress = nil
+		// 0 means delete all rules
+		request.SecurityGroupPolicySet.Version = stringToPointer("0")
+	}
+
+	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := me.client.UseVpcClient().ModifySecurityGroupPolicies(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		return nil
+	})
+}
+
+func (me *VpcService) AttachLiteRulesToSecurityGroup(ctx context.Context, sgId string, ingress, egress []VpcSecurityGroupLiteRule) error {
+	logId := getLogId(ctx)
+
+	// if we want to delete a direction rules, we must delete all and then attach we want rules again
+	if len(ingress) == 0 || len(egress) == 0 {
+		if err := me.DetachAllLiteRulesFromSecurityGroup(ctx, sgId); err != nil {
+			log.Printf("[CRITAL]%s attach lite rules to security group failed, reason: %v", logId, err)
+			return err
+		}
+	}
+
+	if err := me.modifyLiteRulesInSecurityGroup(ctx, sgId, ingress, egress); err != nil {
+		log.Printf("[CRITAL]%s attach lite rules to security group failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId string) (ingress, egress []VpcSecurityGroupLiteRule, exist bool, err error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeSecurityGroupPoliciesRequest()
+	request.SecurityGroupId = &sgId
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseVpcClient().DescribeSecurityGroupPolicies(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		exist = true
+
+		policySet := response.Response.SecurityGroupPolicySet
+
+		for _, in := range policySet.Ingress {
+			if nilFields := CheckNil(in, map[string]string{
+				"Protocol":  "protocol",
+				"Port":      "port",
+				"CidrBlock": "cidr ip",
+				"Action":    "action",
+			}); len(nilFields) > 0 {
+				err := fmt.Errorf("api[%s] security group ingress %v are nil", request.GetAction(), nilFields)
+				log.Printf("[CRITAL]%s %v", logId, err)
+			}
+
+			ingress = append(ingress, VpcSecurityGroupLiteRule{
+				protocol: strings.ToUpper(*in.Protocol),
+				port:     *in.Port,
+				cidrIp:   *in.CidrBlock,
+				action:   *in.Action,
+			})
+		}
+
+		for _, eg := range policySet.Egress {
+			if nilFields := CheckNil(eg, map[string]string{
+				"Protocol":  "protocol",
+				"Port":      "port",
+				"CidrBlock": "cidr ip",
+				"Action":    "action",
+			}); len(nilFields) > 0 {
+				err := fmt.Errorf("api[%s] security group egress %v are nil", request.GetAction(), nilFields)
+				log.Printf("[CRITAL]%s %v", logId, err)
+			}
+
+			egress = append(egress, VpcSecurityGroupLiteRule{
+				protocol: strings.ToUpper(*eg.Protocol),
+				port:     *eg.Port,
+				cidrIp:   *eg.CidrBlock,
+				action:   *eg.Action,
+			})
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s describe security group policies failed, rason: %v", logId, err)
+		return nil, nil, false, err
+	}
+
+	return
+}
+
+func (me *VpcService) DetachAllLiteRulesFromSecurityGroup(ctx context.Context, sgId string) error {
+	logId := getLogId(ctx)
+
+	if err := me.modifyLiteRulesInSecurityGroup(ctx, sgId, nil, nil); err != nil {
+		log.Printf("[CRITAL]%s detach all lite rules from security group failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
 }
 
 type securityGroupRuleBasicInfo struct {
