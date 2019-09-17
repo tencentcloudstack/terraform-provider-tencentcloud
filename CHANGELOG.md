@@ -1,4 +1,4 @@
-## 1.18.1 (Unreleased)
+## 1.18.1 (September 17, 2019)
 
 FEATURES:
 
