@@ -285,7 +285,7 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRedisClient().DescribeInstances(request)
 
-	// Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
+	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 	if err != nil {
 		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
 			time.Sleep(time.Second)
@@ -337,7 +337,7 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 		return
 	}
 
-	errRet = fmt.Errorf("redis instance delivery failure,  status is %d", *info.Status)
+	errRet = fmt.Errorf("redis instance delivery failure, status is %d", *info.Status)
 	return
 }
 
@@ -356,7 +356,7 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRedisClient().DescribeInstanceDealDetail(request)
 
-	// Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
+	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 
 	if err != nil {
 		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
@@ -388,7 +388,7 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	}
 
 	if len(response.Response.DealDetails) != 1 {
-		errRet = fmt.Errorf("Redis api DescribeInstanceDealDetail  one dealId[%s]  return %d deal infos.",
+		errRet = fmt.Errorf("Redis api DescribeInstanceDealDetail one dealId[%s] return %d deal infos.",
 			dealId, len(response.Response.DealDetails))
 		return
 	}
@@ -399,7 +399,7 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	if status == REDIS_ORDER_SUCCESS_DELIVERY {
 
 		if len(dealDetail.InstanceIds) != 1 {
-			errRet = fmt.Errorf("redis one dealid give  %d  redis id", len(dealDetail.InstanceIds))
+			errRet = fmt.Errorf("redis one dealid give %d redis id", len(dealDetail.InstanceIds))
 			return
 		}
 		redisId = *dealDetail.InstanceIds[0]
