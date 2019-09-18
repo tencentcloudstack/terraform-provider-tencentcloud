@@ -163,12 +163,12 @@ VPC Resources
   tencentcloud_subnet
   tencentcloud_security_group
   tencentcloud_security_group_rule
+  tencentcloud_security_group_lite_rule
   tencentcloud_route_table
   tencentcloud_route_entry
   tencentcloud_route_table_entry
   tencentcloud_dnat
   tencentcloud_nat_gateway
-  tencentcloud_security_group_lite_rule
 
 */
 package tencentcloud

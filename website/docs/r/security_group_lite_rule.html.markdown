@@ -35,19 +35,6 @@ resource "tencentcloud_security_group_lite_rule" "foo" {
   ]
 }
 ```
-```hcl
-resource "tencentcloud_security_group" "bar" {
-  name = "ci-temp-test-sg"
-}
-
-resource "tencentcloud_security_group_lite_rule" "bar" {
-  security_group_id = "${tencentcloud_security_group.bar.id}"
-
-  ingress = [
-    "ACCEPT#192.168.1.0/24#80#TCP",
-  ]
-}
-```
 
 ## Argument Reference
 

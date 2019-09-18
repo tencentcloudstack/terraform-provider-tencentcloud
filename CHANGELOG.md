@@ -1,4 +1,4 @@
-## 1.18.2 (Unreleased)
+## 1.19.0 (Unreleased)
 
 FEATURES:
 

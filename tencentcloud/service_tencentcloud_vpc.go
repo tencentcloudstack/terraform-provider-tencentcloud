@@ -69,13 +69,18 @@ type VpcRouteTableBasicInfo struct {
 }
 
 type VpcSecurityGroupLiteRule struct {
-	action   string
-	cidrIp   string
-	port     string
-	protocol string
+	action                string
+	cidrIp                string
+	port                  string
+	protocol              string
+	nestedSecurityGroupId string // if rule is a nested security group, other attrs will be ignored
 }
 
 func (rule VpcSecurityGroupLiteRule) String() string {
+	if rule.nestedSecurityGroupId != "" {
+		return rule.nestedSecurityGroupId
+	}
+
 	return fmt.Sprintf("%s#%s#%s#%s", rule.action, rule.cidrIp, rule.port, rule.protocol)
 }
 
@@ -1327,47 +1332,51 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 			return retryError(err)
 		}
 
-		exist = true
-
 		policySet := response.Response.SecurityGroupPolicySet
 
 		for _, in := range policySet.Ingress {
 			if nilFields := CheckNil(in, map[string]string{
-				"Protocol":  "protocol",
-				"Port":      "port",
-				"CidrBlock": "cidr ip",
-				"Action":    "action",
+				"Protocol":        "protocol",
+				"Port":            "port",
+				"CidrBlock":       "cidr ip",
+				"Action":          "action",
+				"SecurityGroupId": "nested security group id",
 			}); len(nilFields) > 0 {
 				err := fmt.Errorf("api[%s] security group ingress %v are nil", request.GetAction(), nilFields)
 				log.Printf("[CRITAL]%s %v", logId, err)
 			}
 
 			ingress = append(ingress, VpcSecurityGroupLiteRule{
-				protocol: strings.ToUpper(*in.Protocol),
-				port:     *in.Port,
-				cidrIp:   *in.CidrBlock,
-				action:   *in.Action,
+				protocol:              strings.ToUpper(*in.Protocol),
+				port:                  *in.Port,
+				cidrIp:                *in.CidrBlock,
+				action:                *in.Action,
+				nestedSecurityGroupId: *in.SecurityGroupId,
 			})
 		}
 
 		for _, eg := range policySet.Egress {
 			if nilFields := CheckNil(eg, map[string]string{
-				"Protocol":  "protocol",
-				"Port":      "port",
-				"CidrBlock": "cidr ip",
-				"Action":    "action",
+				"Protocol":        "protocol",
+				"Port":            "port",
+				"CidrBlock":       "cidr ip",
+				"Action":          "action",
+				"SecurityGroupId": "nested security group id",
 			}); len(nilFields) > 0 {
 				err := fmt.Errorf("api[%s] security group egress %v are nil", request.GetAction(), nilFields)
 				log.Printf("[CRITAL]%s %v", logId, err)
 			}
 
 			egress = append(egress, VpcSecurityGroupLiteRule{
-				protocol: strings.ToUpper(*eg.Protocol),
-				port:     *eg.Port,
-				cidrIp:   *eg.CidrBlock,
-				action:   *eg.Action,
+				protocol:              strings.ToUpper(*eg.Protocol),
+				port:                  *eg.Port,
+				cidrIp:                *eg.CidrBlock,
+				action:                *eg.Action,
+				nestedSecurityGroupId: *eg.SecurityGroupId,
 			})
 		}
+
+		exist = true
 
 		return nil
 	}); err != nil {
