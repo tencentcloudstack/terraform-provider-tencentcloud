@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -1479,4 +1481,52 @@ func comparePolicyAndSecurityGroupInfo(policy *vpc.SecurityGroupPolicy, info sec
 	}
 
 	return true
+}
+
+func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
+	split := strings.Split(str, "#")
+	if len(split) != 4 {
+		err = fmt.Errorf("invalid security group rule %s", str)
+		return
+	}
+
+	liteRule.action, liteRule.cidrIp, liteRule.port, liteRule.protocol = split[0], split[1], split[2], split[3]
+
+	switch liteRule.action {
+	default:
+		err = fmt.Errorf("invalid action %s, allow action is `ACCEPT` or `DROP`", liteRule.action)
+		return
+	case "ACCEPT", "DROP":
+	}
+
+	if net.ParseIP(liteRule.cidrIp) == nil {
+		if _, _, err = net.ParseCIDR(liteRule.cidrIp); err != nil {
+			err = fmt.Errorf("invalid cidr_ip %s, allow cidr_ip format is `8.8.8.8` or `10.0.1.0/24`", liteRule.cidrIp)
+			return
+		}
+	}
+
+	if liteRule.port != "ALL" && !regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`).MatchString(liteRule.port) {
+		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53`, `80,443` or `80-90`", liteRule.port)
+		return
+	}
+
+	switch liteRule.protocol {
+	default:
+		err = fmt.Errorf("invalid protocol %s, allow protocol is `ALL`, `TCP`, `UDP` or `ICMP`", liteRule.protocol)
+		return
+
+	case "ALL", "ICMP":
+		if liteRule.port != "ALL" {
+			err = fmt.Errorf("when protocol is %s, port must be ALL", liteRule.protocol)
+			return
+		}
+
+		// when protocol is ALL or ICMP, port should be "" to avoid sdk error
+		liteRule.port = ""
+
+	case "TCP", "UDP":
+	}
+
+	return
 }

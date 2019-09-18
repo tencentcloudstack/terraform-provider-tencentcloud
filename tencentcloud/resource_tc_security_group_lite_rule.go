@@ -27,20 +27,6 @@ resource "tencentcloud_security_group_lite_rule" "foo" {
 }
 ```
 
-```hcl
-resource "tencentcloud_security_group" "bar" {
-  name = "ci-temp-test-sg"
-}
-
-resource "tencentcloud_security_group_lite_rule" "bar" {
-  security_group_id = "${tencentcloud_security_group.bar.id}"
-
-  ingress = [
-    "ACCEPT#192.168.1.0/24#80#TCP",
-  ]
-}
-```
-
 Import
 
 Security group lite rule can be imported using the id, e.g.
@@ -53,10 +39,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"net"
-	"regexp"
-	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -111,32 +93,22 @@ func resourceTencentCloudSecurityGroupLiteRuleCreate(d *schema.ResourceData, m i
 	if raw, ok := d.GetOk("ingress"); ok {
 		ingressStrs := expandStringList(raw.([]interface{}))
 		for _, ingressStr := range ingressStrs {
-			action, cidrIp, port, protocol, err := parseRule(ingressStr)
+			liteRule, err := parseRule(ingressStr)
 			if err != nil {
 				return err
 			}
-			ingress = append(ingress, VpcSecurityGroupLiteRule{
-				action:   action,
-				cidrIp:   cidrIp,
-				port:     port,
-				protocol: protocol,
-			})
+			ingress = append(ingress, liteRule)
 		}
 	}
 
 	if raw, ok := d.GetOk("egress"); ok {
 		egressStrs := expandStringList(raw.([]interface{}))
 		for _, egressStr := range egressStrs {
-			action, cidrIp, port, protocol, err := parseRule(egressStr)
+			liteRule, err := parseRule(egressStr)
 			if err != nil {
 				return err
 			}
-			egress = append(egress, VpcSecurityGroupLiteRule{
-				action:   action,
-				cidrIp:   cidrIp,
-				port:     port,
-				protocol: protocol,
-			})
+			egress = append(egress, liteRule)
 		}
 	}
 
@@ -202,32 +174,22 @@ func resourceTencentCloudSecurityGroupLiteRuleUpdate(d *schema.ResourceData, m i
 	if raw, ok := d.GetOk("ingress"); ok {
 		ingressStrs := expandStringList(raw.([]interface{}))
 		for _, ingressStr := range ingressStrs {
-			action, cidrIp, port, protocol, err := parseRule(ingressStr)
+			liteRule, err := parseRule(ingressStr)
 			if err != nil {
 				return err
 			}
-			ingress = append(ingress, VpcSecurityGroupLiteRule{
-				action:   action,
-				cidrIp:   cidrIp,
-				port:     port,
-				protocol: protocol,
-			})
+			ingress = append(ingress, liteRule)
 		}
 	}
 
 	if raw, ok := d.GetOk("egress"); ok {
 		egressStrs := expandStringList(raw.([]interface{}))
 		for _, egressStr := range egressStrs {
-			action, cidrIp, port, protocol, err := parseRule(egressStr)
+			liteRule, err := parseRule(egressStr)
 			if err != nil {
 				return err
 			}
-			egress = append(egress, VpcSecurityGroupLiteRule{
-				action:   action,
-				cidrIp:   cidrIp,
-				port:     port,
-				protocol: protocol,
-			})
+			egress = append(egress, liteRule)
 		}
 	}
 
@@ -248,52 +210,4 @@ func resourceTencentCloudSecurityGroupLiteRuleDelete(d *schema.ResourceData, m i
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	return service.DetachAllLiteRulesFromSecurityGroup(ctx, id)
-}
-
-func parseRule(str string) (action, cidrIp, port, protocol string, err error) {
-	split := strings.Split(str, "#")
-	if len(split) != 4 {
-		err = fmt.Errorf("invalid security group rule %s", str)
-		return
-	}
-
-	action, cidrIp, port, protocol = split[0], split[1], split[2], split[3]
-
-	switch action {
-	default:
-		err = fmt.Errorf("invalid action %s, allow action is `ACCEPT` or `DROP`", action)
-		return
-	case "ACCEPT", "DROP":
-	}
-
-	if net.ParseIP(cidrIp) == nil {
-		if _, _, err = net.ParseCIDR(cidrIp); err != nil {
-			err = fmt.Errorf("invalid cidr_ip %s, allow cidr_ip format is `8.8.8.8` or `10.0.1.0/24`", cidrIp)
-			return
-		}
-	}
-
-	if port != "ALL" && !regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`).MatchString(port) {
-		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53`, `80,443` or `80-90`", port)
-		return
-	}
-
-	switch protocol {
-	default:
-		err = fmt.Errorf("invalid protocol %s, allow protocol is `ALL`, `TCP`, `UDP` or `ICMP`", protocol)
-		return
-
-	case "ALL", "ICMP":
-		if port != "ALL" {
-			err = fmt.Errorf("when protocol is %s, port must be ALL", protocol)
-			return
-		}
-
-		// when protocol is ALL or ICMP, port should be "" to avoid sdk error
-		port = ""
-
-	case "TCP", "UDP":
-	}
-
-	return
 }
