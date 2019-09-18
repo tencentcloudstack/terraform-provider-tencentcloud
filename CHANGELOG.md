@@ -40,9 +40,6 @@ FEATURES:
 * **Update Resource**: `tencentcloud_nat_gateway` , add more configurable items.
 * **Update Resource**: `tencentcloud_nat` , add more configurable items.
 
-ENHANCEMENTS:
-* `tencentcloud_clb_listener_rule`: fix unclear description and errors in example.
-
 DEPRECATED:
 * Data Source: `tencentcloud_nats` replaced by `tencentcloud_nat_gateways`.
 
