@@ -6,10 +6,9 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/resource"
+	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-
-	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 )
 
 type TagService struct {
@@ -137,4 +136,13 @@ func diffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]s
 		}
 	}
 	return
+}
+
+// COS and CAS should use buildResourceNameWithUid
+func buildResourceNameWithUin(serviceType, resourceType, id, region string) string {
+	return fmt.Sprintf("qcs::%s:%s:uin/:%s/%s", serviceType, region, resourceType, id)
+}
+
+func buildResourceNameWithUid(serviceType, resourceType, id, region string) string {
+	return fmt.Sprintf("qcs::%s:%s:uid/:%s/%s", serviceType, region, resourceType, id)
 }
