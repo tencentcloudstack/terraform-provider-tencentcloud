@@ -1,4 +1,8 @@
 ## 1.18.2 (Unreleased)
+
+BUG FIXES:
+* Resource: `tencentcloud_clb_listener_rule`: fix unclear description and errors in example.
+
 ## 1.18.1 (September 17, 2019)
 
 FEATURES:
