@@ -131,6 +131,10 @@ func (me *TencentCloudClient) UseRedisClient() *redis.Client {
 	cpf.Language = "en-US"
 
 	redisConn, _ := redis.NewClient(credential, me.Region, cpf)
+
+	var round LogRoundTripper
+	redisConn.WithHttpTransport(&round)
+
 	me.redisConn = redisConn
 
 	return me.redisConn
@@ -151,6 +155,10 @@ func (me *TencentCloudClient) UseAsClient() *as.Client {
 	cpf.Language = "en-US"
 
 	asConn, _ := as.NewClient(credential, me.Region, cpf)
+
+	var round LogRoundTripper
+	asConn.WithHttpTransport(&round)
+
 	me.asConn = asConn
 
 	return me.asConn
@@ -174,7 +182,6 @@ func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	vpcConn, _ := vpc.NewClient(credential, me.Region, cpf)
 
 	var round LogRoundTripper
-
 	vpcConn.WithHttpTransport(&round)
 
 	me.vpcConn = vpcConn
@@ -197,6 +204,10 @@ func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
 	cpf.Language = "en-US"
 
 	cbsConn, _ := cbs.NewClient(credential, me.Region, cpf)
+
+	var round LogRoundTripper
+	cbsConn.WithHttpTransport(&round)
+
 	me.cbsConn = cbsConn
 
 	return me.cbsConn
