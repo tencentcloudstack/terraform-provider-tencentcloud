@@ -110,7 +110,11 @@ func testAccTencentCloudRedisInstanceDestroy(s *terraform.State) error {
 			continue
 		}
 		time.Sleep(5 * time.Second)
-		_, _, info, err := service.CheckRedisCreateOk(ctx, rs.Primary.ID)
+		has, _, info, err := service.CheckRedisCreateOk(ctx, rs.Primary.ID)
+
+		if !has {
+			return nil
+		}
 
 		if info != nil {
 			if *info.Status == REDIS_STATUS_ISOLATE || *info.Status == REDIS_STATUS_TODELETE {
