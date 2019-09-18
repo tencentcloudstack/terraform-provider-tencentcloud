@@ -1,3 +1,54 @@
+/*
+Provide a resource to create security group some lite rules quickly.
+
+-> **NOTE:** It can't be used with tencentcloud_security_group_rule.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_security_group" "foo" {
+  name = "ci-temp-test-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "foo" {
+  security_group_id = "${tencentcloud_security_group.foo.id}"
+
+  ingress = [
+    "ACCEPT#192.168.1.0/24#80#TCP",
+    "DROP#8.8.8.8#80,90#UDP",
+    "ACCEPT#0.0.0.0/0#80-90#TCP",
+  ]
+
+  egress = [
+    "ACCEPT#192.168.0.0/16#ALL#TCP",
+    "ACCEPT#10.0.0.0/8#ALL#ICMP",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+}
+```
+
+```hcl
+resource "tencentcloud_security_group" "bar" {
+  name = "ci-temp-test-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "bar" {
+  security_group_id = "${tencentcloud_security_group.bar.id}"
+
+  ingress = [
+    "ACCEPT#192.168.1.0/24#80#TCP",
+  ]
+}
+```
+
+Import
+
+Security group lite rule can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_security_group_lite_rule.foo sg-ey3wmiz1
+```
+*/
 package tencentcloud
 
 import (
@@ -22,19 +73,22 @@ func resourceTencentCloudSecurityGroupLiteRule() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"security_group_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the security group.",
 			},
 			"ingress": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Ingress rules set. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80,443`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.",
 			},
 			"egress": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Egress rules set. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80,443`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.",
 			},
 		},
 	}

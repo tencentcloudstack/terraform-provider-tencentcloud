@@ -1,4 +1,9 @@
 ## 1.18.2 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_security_group_lite_rule`
+
 ## 1.18.1 (September 17, 2019)
 
 FEATURES:
