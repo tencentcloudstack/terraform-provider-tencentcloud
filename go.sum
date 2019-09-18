@@ -444,8 +444,8 @@ github.com/stretchr/testify v1.3.0 h1:TivCn/peBQ7UY8ooIcPgZFpTNSz0Q2U6UrFlUfqbe0
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/svanharmelen/jsonapi v0.0.0-20180618144545-0c0828c3f16d/go.mod h1:BSTlc8jOjh0niykqEGVXOLXdi9o0r0kR8tCYiMvjFgw=
 github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07/go.mod h1:kDXzergiv9cbyO7IOYJZWg1U88JhDg3PB6klq9Hg2pA=
-github.com/tencentcloud/tencentcloud-sdk-go v3.0.86+incompatible h1:etDvZ1Gqg+7sWz3uF15DyEsugPlNXCvLeatZ7vJJY2U=
-github.com/tencentcloud/tencentcloud-sdk-go v3.0.86+incompatible/go.mod h1:0PfYow01SHPMhKY31xa+EFz2RStxIqj6JFAJS+IkCi4=
+github.com/tencentcloud/tencentcloud-sdk-go v3.0.87-0.20190912121957-c0615982c83b+incompatible h1:sDNLz6GOccksu6f0BQGCvIrgVNVEsEMPWlavN/OOwRc=
+github.com/tencentcloud/tencentcloud-sdk-go v3.0.87-0.20190912121957-c0615982c83b+incompatible/go.mod h1:0PfYow01SHPMhKY31xa+EFz2RStxIqj6JFAJS+IkCi4=
 github.com/terraform-providers/terraform-provider-openstack v1.15.0/go.mod h1:2aQ6n/BtChAl1y2S60vebhyJyZXBsuAI5G4+lHrT1Ew=
 github.com/terraform-providers/terraform-provider-template v1.0.0 h1:g2pyFaAJu369iAb7qGWmVwtQ15/35lRAfW91Je8wLjE=
 github.com/terraform-providers/terraform-provider-template v1.0.0/go.mod h1:/J+B8me5DCMa0rEBH5ic2aKPjhtpWNeScmxFJWxB1EU=
