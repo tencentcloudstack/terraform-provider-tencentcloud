@@ -28,6 +28,11 @@ Data Sources
   tencentcloud_cbs_storages
   tencentcloud_ccn_bandwidth_limits
   tencentcloud_ccn_instances
+  tencentcloud_clb_instances
+  tencentcloud_clb_listeners
+  tencentcloud_clb_listener_rules
+  tencentcloud_clb_attachments
+  tencentcloud_clb_redirections
   tencentcloud_container_cluster_instances
   tencentcloud_container_clusters
   tencentcloud_cos_bucket_object
@@ -36,11 +41,7 @@ Data Sources
   tencentcloud_dc_gateway_ccn_routes
   tencentcloud_dc_gateway_instances
   tencentcloud_dcx_instances
-  tencentcloud_clb_instances
-  tencentcloud_clb_listeners
-  tencentcloud_clb_listener_rules
-  tencentcloud_clb_attachments
-  tencentcloud_clb_redirections
+  tencentcloud_dnats
   tencentcloud_eip
   tencentcloud_gaap_certificates
   tencentcloud_gaap_http_domains
@@ -61,11 +62,13 @@ Data Sources
   tencentcloud_mysql_parameter_list
   tencentcloud_mysql_zone_config
   tencentcloud_nats
+  tencentcloud_nat_gateways
   tencentcloud_redis_instances
   tencentcloud_redis_zone_config
   tencentcloud_route_table
   tencentcloud_security_group
   tencentcloud_security_groups
+  tencentcloud_ssl_certificates
   tencentcloud_subnet
   tencentcloud_vpc
   tencentcloud_vpc_instances
@@ -152,6 +155,9 @@ Redis Resources
   tencentcloud_redis_instance
   tencentcloud_redis_backup_config
 
+SSL Resources
+  tencentcloud_ssl_certificate
+
 VPC Resources
   tencentcloud_eni
   tencentcloud_eni_attachment
@@ -217,6 +223,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_security_group":              dataSourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_groups":             dataSourceTencentCloudSecurityGroups(),
 			"tencentcloud_nats":                        dataSourceTencentCloudNats(),
+			"tencentcloud_dnats":                       dataSourceTencentCloudDnats(),
+			"tencentcloud_nat_gateways":                dataSourceTencentCloudNatGateways(),
 			"tencentcloud_container_clusters":          dataSourceTencentCloudContainerClusters(),
 			"tencentcloud_container_cluster_instances": dataSourceTencentCloudContainerClusterInstances(),
 			"tencentcloud_mysql_backup_list":           dataSourceTencentMysqlBackupList(),
@@ -258,6 +266,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_security_policies":      dataSourceTencentCloudGaapSecurityPolices(),
 			"tencentcloud_gaap_security_rules":         dataSourceTencentCloudGaapSecurityRules(),
 			"tencentcloud_gaap_certificates":           dataSourceTencentCloudGaapCertificates(),
+			"tencentcloud_ssl_certificates":            dataSourceTencentCloudSslCertificates(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -322,6 +331,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_certificate":           resourceTencentCloudGaapCertificate(),
 			"tencentcloud_gaap_security_policy":       resourceTencentCloudGaapSecurityPolicy(),
 			"tencentcloud_gaap_security_rule":         resourceTencentCloudGaapSecurityRule(),
+			"tencentcloud_ssl_certificate":            resourceTencentCloudSslCertificate(),
 			"tencentcloud_eni":                        resourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":             resourceTencentCloudEniAttachment(),
 		},

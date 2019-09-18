@@ -23,6 +23,7 @@ import (
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 )
 
 // client for all TencentCloud service
@@ -43,6 +44,7 @@ type TencentCloudClient struct {
 	mongodbConn *mongodb.Client
 	tkeConn     *tke.Client
 	gaapCoon    *gaap.Client
+	sslCoon     *ssl.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -129,6 +131,10 @@ func (me *TencentCloudClient) UseRedisClient() *redis.Client {
 	cpf.Language = "en-US"
 
 	redisConn, _ := redis.NewClient(credential, me.Region, cpf)
+
+	var round LogRoundTripper
+	redisConn.WithHttpTransport(&round)
+
 	me.redisConn = redisConn
 
 	return me.redisConn
@@ -149,6 +155,10 @@ func (me *TencentCloudClient) UseAsClient() *as.Client {
 	cpf.Language = "en-US"
 
 	asConn, _ := as.NewClient(credential, me.Region, cpf)
+
+	var round LogRoundTripper
+	asConn.WithHttpTransport(&round)
+
 	me.asConn = asConn
 
 	return me.asConn
@@ -172,7 +182,6 @@ func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 	vpcConn, _ := vpc.NewClient(credential, me.Region, cpf)
 
 	var round LogRoundTripper
-
 	vpcConn.WithHttpTransport(&round)
 
 	me.vpcConn = vpcConn
@@ -195,6 +204,10 @@ func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
 	cpf.Language = "en-US"
 
 	cbsConn, _ := cbs.NewClient(credential, me.Region, cpf)
+
+	var round LogRoundTripper
+	cbsConn.WithHttpTransport(&round)
+
 	me.cbsConn = cbsConn
 
 	return me.cbsConn
@@ -363,4 +376,28 @@ func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
 	me.gaapCoon = gaapConn
 
 	return me.gaapCoon
+}
+
+func (me *TencentCloudClient) UseSslClient() *ssl.Client {
+	if me.sslCoon != nil {
+		return me.sslCoon
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = http.MethodPost
+	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
+
+	sslConn, _ := ssl.NewClient(credential, me.Region, cpf)
+	var round LogRoundTripper
+	sslConn.WithHttpTransport(&round)
+
+	me.sslCoon = sslConn
+
+	return me.sslCoon
 }

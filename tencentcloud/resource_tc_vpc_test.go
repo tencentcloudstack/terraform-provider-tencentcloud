@@ -75,6 +75,39 @@ func TestAccTencentCloudVpcV3_update(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudVpcV3_tags(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVpcDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccVpcConfigWithTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVpcExists("tencentcloud_vpc.foo"),
+
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", "10.0.0.0/16"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", "ci-temp-test"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "is_multicast", "true"),
+
+					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "is_default"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "dns_servers.#"),
+
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "tags.test", "test"),
+				),
+			},
+			{
+				Config: testAccVpcConfigUpdateTags,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckNoResourceAttr("tencentcloud_vpc.foo", "tags.test"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "tags.new-test", "new-test"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckVpcExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
@@ -133,5 +166,27 @@ resource "tencentcloud_vpc" "foo" {
   cidr_block   = "10.0.0.0/16"
   dns_servers  = ["119.29.29.29", "8.8.8.8"]
   is_multicast = false
+}
+`
+
+const testAccVpcConfigWithTags = `
+resource "tencentcloud_vpc" "foo" {
+  name       = "ci-temp-test"
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    "test" = "test"
+  }
+}
+`
+
+const testAccVpcConfigUpdateTags = `
+resource "tencentcloud_vpc" "foo" {
+  name       = "ci-temp-test"
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    "new-test" = "new-test"
+  }
 }
 `

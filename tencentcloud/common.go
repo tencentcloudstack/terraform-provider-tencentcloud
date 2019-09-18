@@ -36,7 +36,7 @@ var retryableErrorCode = []string{
 	// client
 	"ClientError.NetworkError",
 	"ClientError.HttpStatusCodeError",
-	// commom
+	// common
 	"FailedOperation",
 	"TradeUnknownError",
 	"RequestLimitExceeded",

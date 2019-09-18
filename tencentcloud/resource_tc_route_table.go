@@ -5,13 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_vpc" "foo" {
-    name = "ci-temp-test"
-    cidr_block = "10.0.0.0/16"
+  name       = "ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_route_table" "foo" {
-   vpc_id = "${tencentcloud_vpc.foo.id}"
-   name = "ci-temp-test-rt"
+  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = "ci-temp-test-rt"
 }
 ```
 
@@ -19,7 +19,7 @@ Import
 
 Vpc routetable instance can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_route_table.test route_table_id
 ```
 */
@@ -58,6 +58,12 @@ func resourceTencentCloudVpcRouteTable() *schema.Resource {
 				ValidateFunc: validateStringLengthInRange(1, 60),
 				Description:  "The name of routing table.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The tags of routing table.",
+			},
+
 			// Computed values
 			"subnet_ids": {
 				Type:     schema.TypeList,
@@ -95,11 +101,11 @@ func resourceTencentCloudVpcRouteTableCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		vpcId string = ""
-		name  string = ""
+		vpcId string
+		name  string
 	)
 	if temp, ok := d.GetOk("vpc_id"); ok {
 		vpcId = temp.(string)
@@ -111,11 +117,22 @@ func resourceTencentCloudVpcRouteTableCreate(d *schema.ResourceData, meta interf
 		name = temp.(string)
 	}
 
-	routeTableId, err := service.CreateRouteTable(ctx, name, vpcId)
+	routeTableId, err := vpcService.CreateRouteTable(ctx, name, vpcId)
 	if err != nil {
 		return err
 	}
 	d.SetId(routeTableId)
+
+	if tags := getTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:rtb/%s", region, routeTableId)
+
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudVpcRouteTableRead(d, meta)
 }
@@ -126,13 +143,15 @@ func resourceTencentCloudVpcRouteTableRead(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
+	id := d.Id()
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	info, has, err := service.DescribeRouteTable(ctx, d.Id())
+	info, has, err := service.DescribeRouteTable(ctx, id)
 	if err != nil {
 		return err
 	}
-	//deleted
+	// deleted
 	if has == 0 {
 		d.SetId("")
 		return nil
@@ -145,8 +164,16 @@ func resourceTencentCloudVpcRouteTableRead(d *schema.ResourceData, meta interfac
 
 	routeEntryIds := make([]string, 0, len(info.entryInfos))
 	for _, v := range info.entryInfos {
-		tfRouteEntryId := fmt.Sprintf("%d.%s", v.routeEntryId, d.Id())
+		tfRouteEntryId := fmt.Sprintf("%d.%s", v.routeEntryId, id)
 		routeEntryIds = append(routeEntryIds, tfRouteEntryId)
+	}
+
+	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "rtb", region, id)
+	if err != nil {
+		return err
 	}
 
 	d.Set("vpc_id", info.vpcId)
@@ -155,6 +182,7 @@ func resourceTencentCloudVpcRouteTableRead(d *schema.ResourceData, meta interfac
 	d.Set("route_entry_ids", routeEntryIds)
 	d.Set("is_default", info.isDefault)
 	d.Set("create_time", info.createTime)
+	d.Set("tags", tags)
 
 	return nil
 }
@@ -165,20 +193,38 @@ func resourceTencentCloudVpcRouteTableUpdate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
+	id := d.Id()
+
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var (
-		name string = ""
-	)
+	d.Partial(true)
 
-	if temp, ok := d.GetOk("name"); ok {
-		name = temp.(string)
+	if d.HasChange("name") {
+		name := d.Get("name").(string)
+		err := service.ModifyRouteTableAttribute(ctx, id, name)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("name")
 	}
 
-	err := service.ModifyRouteTableAttribute(ctx, d.Id(), name)
-	if err != nil {
-		return err
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:rtb/%s", region, id)
+
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
 	}
+
+	d.Partial(false)
 
 	return resourceTencentCloudVpcRouteTableRead(d, meta)
 }
