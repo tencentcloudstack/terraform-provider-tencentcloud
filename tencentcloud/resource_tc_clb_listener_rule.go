@@ -15,13 +15,13 @@ resource "tencentcloud_clb_listener_rule" "foo" {
   health_check_interval_time = 5
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
-  health_check_http_code     = "http_1xx"
+  health_check_http_code     = 2
   health_check_http_path     = "Default Path"
   health_check_http_domain   = "Default Domain"
   health_check_http_method   = "GET"
   certificate_ssl_mode       = "MUTUAL"
-  certificate_id             = "mycert server ID "
-  certificate_ca_id          = "mycert ca ID"
+  certificate_id             = "VjANRdz8"
+  certificate_ca_id          = "VfqO4zkB"
   session_expire_time        = 30
   scheduler                  = "WRR"
 }
@@ -103,7 +103,7 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(1, 31),
-				Description:  "HTTP Status Code. The default is 31 and value range is 1-31. '0b0001' means the return value '1xx' is health. '0b0010' means the return value '2xx' is health. '0b0100' means the return value '3xx' is health. '0b1000' means the return value '4xx' is health. 0b10000 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values. NOTES: The 'HTTP' health check of the 'TCP' listener only supports specifying one health check status code. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.",
+				Description:  "HTTP Status Code. The default is 31 and value range is 1-31. 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values. NOTES: The 'HTTP' health check of the 'TCP' listener only supports specifying one health check status code. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.",
 			},
 			"health_check_http_path": {
 				Type:        schema.TypeString,

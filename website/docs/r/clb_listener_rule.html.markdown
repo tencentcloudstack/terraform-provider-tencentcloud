@@ -24,13 +24,13 @@ resource "tencentcloud_clb_listener_rule" "foo" {
   health_check_interval_time = 5
   health_check_health_num    = 3
   health_check_unhealth_num  = 3
-  health_check_http_code     = "http_1xx"
+  health_check_http_code     = 2
   health_check_http_path     = "Default Path"
   health_check_http_domain   = "Default Domain"
   health_check_http_method   = "GET"
   certificate_ssl_mode       = "MUTUAL"
-  certificate_id             = "mycert server ID "
-  certificate_ca_id          = "mycert ca ID"
+  certificate_id             = "VjANRdz8"
+  certificate_ca_id          = "VfqO4zkB"
   session_expire_time        = 30
   scheduler                  = "WRR"
 }
@@ -48,7 +48,7 @@ The following arguments are supported:
 * `certificate_id` - (Optional, ForceNew) Id of the server certificate. NOTES: Only supports listeners of 'HTTPS' protocol.
 * `certificate_ssl_mode` - (Optional, ForceNew) Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.
 * `health_check_health_num` - (Optional) Health threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, indicates that the forwarding is normal. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.
-* `health_check_http_code` - (Optional) HTTP Status Code. The default is 31 and value range is 1-31. '0b0001' means the return value '1xx' is health. '0b0010' means the return value '2xx' is health. '0b0100' means the return value '3xx' is health. '0b1000' means the return value '4xx' is health. 0b10000 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values. NOTES: The 'HTTP' health check of the 'TCP' listener only supports specifying one health check status code. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.
+* `health_check_http_code` - (Optional) HTTP Status Code. The default is 31 and value range is 1-31. 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values. NOTES: The 'HTTP' health check of the 'TCP' listener only supports specifying one health check status code. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.
 * `health_check_http_domain` - (Optional) Domain name of health check. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.
 * `health_check_http_method` - (Optional) Methods of health check. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol. The default is 'HEAD', the available value include 'HEAD' and 'GET'.
 * `health_check_http_path` - (Optional) Path of health check. NOTES: Only supports listeners of 'HTTP' and 'HTTPS' protocol.
