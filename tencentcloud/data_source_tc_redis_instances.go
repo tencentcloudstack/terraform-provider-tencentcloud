@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 data "tencentcloud_redis_instances" "redislab" {
-    zone                = "ap-hongkong-1"
-    search_key          = "myredis"
-    project_id          = 0
-    limit               = 20
-    result_output_file  = "/tmp/redis_instances"
+  zone               = "ap-hongkong-1"
+  search_key         = "myredis"
+  project_id         = 0
+  limit              = 20
+  result_output_file = "/tmp/redis_instances"
 }
 ```
 */
@@ -18,9 +18,8 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"strings"
-
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -31,37 +30,38 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"zone": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "ID of an available zone.",
 			},
 			"search_key": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Key words used to match the results, and the key words can be: instance ID, instance name and IP address.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
-				ForceNew:    true,
 				Optional:    true,
-				Description: "ID of the project to which  redis instance belongs.",
+				Description: "ID of the project to which redis instance belongs.",
 			},
 			"limit": {
 				Type:        schema.TypeInt,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "The number limitation of results for a query.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of redis instance.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
 
 			// Computed values
-			"instance_list": {Type: schema.TypeList,
+			"instance_list": {
+				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "A list of redis instance. Each element contains the following attributes:",
 				Elem: &schema.Resource{
@@ -126,6 +126,11 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 							Computed:    true,
 							Description: "The time when the instance is created.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags address of an instance.",
+						},
 					},
 				},
 			},
@@ -143,10 +148,10 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 	region := meta.(*TencentCloudClient).apiV3Conn.Region
 
 	var (
-		zone      string = ""
-		searchKey string = ""
-		projectId int64  = -1
-		limit     int64  = -1
+		zone      string
+		searchKey string
+		projectId int64 = -1
+		limit     int64 = -1
 	)
 
 	if temp, ok := d.GetOk("zone"); ok {
@@ -179,6 +184,8 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 		}
 	}
 
+	tags := getTags(d, "tags")
+
 	instances, err := service.DescribeInstances(ctx, zone, searchKey, projectId, limit)
 	if err != nil {
 		return err
@@ -186,7 +193,16 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 
 	var instanceList = make([]interface{}, 0, len(instances))
 
+INSTANCE_LOOP:
 	for _, instance := range instances {
+		if len(tags) > 0 {
+			// filter by tags, must match all tags
+			for k, v := range tags {
+				if instance.Tags[k] != v {
+					continue INSTANCE_LOOP
+				}
+			}
+		}
 
 		var instanceDes = make(map[string]interface{})
 
@@ -206,11 +222,13 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 		instanceDes["port"] = instance.Port
 		instanceDes["create_time"] = instance.CreateTime
 
+		instanceDes["tags"] = instance.Tags
+
 		instanceList = append(instanceList, instanceDes)
 	}
 
 	if err := d.Set("instance_list", instanceList); err != nil {
-		log.Printf("[CRITAL]%s provider set  redis instances fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set redis instances fail, reason:%s\n ", logId, err.Error())
 	}
 	d.SetId("redis_instances_list" + region)
 
