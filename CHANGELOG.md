@@ -1,4 +1,30 @@
-## 1.18.0 (Unreleased)
+## 1.18.2 (Unreleased)
+## 1.18.1 (September 17, 2019)
+
+FEATURES:
+
+* **Update Data Source**: `tencentcloud_vpc_instances` add optional argument `tags`
+* **Update Data Source**: `tencentcloud_vpc_subnets` add optional argument `tags`
+* **Update Data Source**: `tencentcloud_route_tables` add optional argument `tags`
+* **Update Resource**: `tencentcloud_vpc` add optional argument `tags`
+* **Update Resource**: `tencentcloud_subnet` add optional argument `tags`
+* **Update Resource**: `tencentcloud_route_table` add optional argument `tags`
+
+ENHANCEMENTS:
+
+* Data Source:`tencentcloud_kubernetes_clusters`  support pull out authentication information for cluster access too.
+* Resource:`tencentcloud_kubernetes_cluster`  support pull out authentication information for cluster access.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_mysql_instance`: when the mysql is abnormal state, read the basic information report error
+
+DEPRECATED:
+
+* Data Source: `tencentcloud_kubernetes_clusters`:`container_runtime` is no longer supported. 
+
+
+## 1.18.0 (September 10, 2019)
 
 FEATURES:
 

@@ -30,6 +30,7 @@ The following arguments are supported:
 
 * `name` - (Required) The name of routing table.
 * `vpc_id` - (Required, ForceNew) ID of VPC to which the route table should be associated.
+* `tags` - (Optional) The tags of routing table.
 
 ## Attributes Reference
 
@@ -45,7 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 
 Vpc routetable instance can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_route_table.test route_table_id
 ```
 

@@ -28,6 +28,11 @@ Data Sources
   tencentcloud_cbs_storages
   tencentcloud_ccn_bandwidth_limits
   tencentcloud_ccn_instances
+  tencentcloud_clb_instances
+  tencentcloud_clb_listeners
+  tencentcloud_clb_listener_rules
+  tencentcloud_clb_attachments
+  tencentcloud_clb_redirections
   tencentcloud_container_cluster_instances
   tencentcloud_container_clusters
   tencentcloud_cos_bucket_object
@@ -37,11 +42,6 @@ Data Sources
   tencentcloud_dc_gateway_instances
   tencentcloud_dcx_instances
   tencentcloud_dnats
-  tencentcloud_clb_instances
-  tencentcloud_clb_listeners
-  tencentcloud_clb_listener_rules
-  tencentcloud_clb_attachments
-  tencentcloud_clb_redirections
   tencentcloud_eip
   tencentcloud_gaap_certificates
   tencentcloud_gaap_http_domains
