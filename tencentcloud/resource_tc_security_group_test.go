@@ -63,6 +63,34 @@ func TestAccTencentCloudSecurityGroup_update(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudSecurityGroup_tags(t *testing.T) {
+	var sgId string
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckSecurityGroupDestroy(&sgId),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccSecurityGroupConfigTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityGroupExists("tencentcloud_security_group.foo", &sgId),
+					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "description", ""),
+					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "tags.test", "test"),
+				),
+			},
+			{
+				Config: testAccSecurityGroupConfigTagsUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckSecurityGroupExists("tencentcloud_security_group.foo", &sgId),
+					resource.TestCheckNoResourceAttr("tencentcloud_security_group.foo", "tags.test"),
+					resource.TestCheckResourceAttr("tencentcloud_security_group.foo", "tags.abc", "abc"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckSecurityGroupDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
@@ -125,5 +153,25 @@ const testAccSecurityGroupConfigUpdate = `
 resource "tencentcloud_security_group" "foo" {
   name        = "ci-temp-test-sg-updated"
   description = "ci-temp-test-sg-desc-updated"
+}
+`
+
+const testAccSecurityGroupConfigTags = `
+resource "tencentcloud_security_group" "foo" {
+  name = "ci-temp-test-sg"
+
+  tags = {
+    "test" = "test"
+  }
+}
+`
+
+const testAccSecurityGroupConfigTagsUpdate = `
+resource "tencentcloud_security_group" "foo" {
+  name = "ci-temp-test-sg"
+
+  tags = {
+    "abc" = "abc"
+  }
 }
 `

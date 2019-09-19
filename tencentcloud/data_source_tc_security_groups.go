@@ -45,7 +45,13 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 				Type:          schema.TypeInt,
 				Optional:      true,
 				ConflictsWith: []string{"security_group_id"},
-				Description:   "Project ID of the security group. Conflict with `security_group_id`.",
+				Description:   "Project ID of the security group to be queried. Conflict with `security_group_id`.",
+			},
+			"tags": {
+				Type:          schema.TypeMap,
+				Optional:      true,
+				ConflictsWith: []string{"security_group_id"},
+				Description:   "Tags of the security group to be queried. Conflict with `security_group_id`.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -102,6 +108,11 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Egress rules set. For items like `[action]#[cidr_ip]#[port]#[protocol]`, it means a regular rule; for items like `sg-XXXX`, it means a nested security group.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags of the security group.",
+						},
 					},
 				},
 			},
@@ -115,7 +126,9 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+	tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
+	region := m.(*TencentCloudClient).apiV3Conn.Region
 
 	var (
 		sgId           *string
@@ -143,7 +156,9 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 		idBuilder.WriteString(strconv.Itoa(*inputProjectId))
 	}
 
-	sgs, err := service.DescribeSecurityGroups(ctx, sgId, sgName, inputProjectId)
+	tags := getTags(d, "tags")
+
+	sgs, err := vpcService.DescribeSecurityGroups(ctx, sgId, sgName, inputProjectId, tags)
 	if err != nil {
 		return err
 	}
@@ -167,7 +182,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 		sgIds = append(sgIds, *sg.SecurityGroupId)
 	}
 
-	associateSet, err := service.DescribeSecurityGroupsAssociate(ctx, sgIds)
+	associateSet, err := vpcService.DescribeSecurityGroupsAssociate(ctx, sgIds)
 	if err != nil {
 		return err
 	}
@@ -191,7 +206,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 				return fmt.Errorf("securtiy group %s project id invalid: %v", *sg.SecurityGroupId, err)
 			}
 
-			respIngress, respEgress, exist, err := service.DescribeSecurityGroupPolices(ctx, *sg.SecurityGroupId)
+			respIngress, respEgress, exist, err := vpcService.DescribeSecurityGroupPolices(ctx, *sg.SecurityGroupId)
 			if err != nil {
 				return err
 			}
@@ -199,6 +214,11 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 			if !exist {
 				// when read security group all rules, it doesn't exist, maybe delete on other places, ignore it
 				continue
+			}
+
+			respTags, err := tagService.DescribeResourceTags(ctx, "cvm", "sg", region, *sg.SecurityGroupId)
+			if err != nil {
+				return err
 			}
 
 			ingress := make([]string, 0, len(respIngress))
@@ -220,6 +240,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 				"project_id":         projectId,
 				"ingress":            ingress,
 				"egress":             egress,
+				"tags":               respTags,
 			})
 		}
 	}

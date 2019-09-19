@@ -64,6 +64,11 @@ func resourceTencentCloudSecurityGroup() *schema.Resource {
 				ForceNew:    true,
 				Description: "Project ID of the security group.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the security group.",
+			},
 		},
 	}
 }
@@ -75,6 +80,8 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+	tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
+	region := m.(*TencentCloudClient).apiV3Conn.Region
 
 	name := d.Get("name").(string)
 	desc := d.Get("description").(string)
@@ -90,6 +97,14 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 	}
 
 	d.SetId(id)
+
+	if tags := getTags(d, "tags"); len(tags) > 0 {
+		resourceName := buildResourceNameWithUin("cvm", "sg", id, region)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudSecurityGroupRead(d, m)
 }
 
@@ -100,6 +115,8 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+	tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
+	region := m.(*TencentCloudClient).apiV3Conn.Region
 
 	id := d.Id()
 
@@ -120,15 +137,22 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 		return nil
 
 	case 1:
-		d.Set("name", *securityGroup.SecurityGroupName)
-		d.Set("description", *securityGroup.SecurityGroupDesc)
-
-		projectId, err := strconv.Atoi(*securityGroup.ProjectId)
-		if err != nil {
-			return fmt.Errorf("securtiy group %s project id invalid: %v", *securityGroup.SecurityGroupId, err)
-		}
-		d.Set("project_id", projectId)
 	}
+
+	d.Set("name", *securityGroup.SecurityGroupName)
+	d.Set("description", *securityGroup.SecurityGroupDesc)
+
+	projectId, err := strconv.Atoi(*securityGroup.ProjectId)
+	if err != nil {
+		return fmt.Errorf("securtiy group %s project id invalid: %v", *securityGroup.SecurityGroupId, err)
+	}
+	d.Set("project_id", projectId)
+
+	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "sg", region, id)
+	if err != nil {
+		return err
+	}
+	d.Set("tags", tags)
 
 	return nil
 }
@@ -140,30 +164,52 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+	tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
+	region := m.(*TencentCloudClient).apiV3Conn.Region
 
 	id := d.Id()
 
-	attributeUpdate := d.HasChange("name") || d.HasChange("description")
+	d.Partial(true)
+
 	var (
-		newName *string
-		newDesc *string
+		newName    *string
+		newDesc    *string
+		attrUpdate []string
 	)
 
 	if d.HasChange("name") {
-		newName = common.StringPtr(d.Get("name").(string))
+		newName = stringToPointer(d.Get("name").(string))
+		attrUpdate = append(attrUpdate, "name")
 	}
 
 	if d.HasChange("description") {
-		newDesc = common.StringPtr(d.Get("description").(string))
+		newDesc = stringToPointer(d.Get("description").(string))
+		attrUpdate = append(attrUpdate, "description")
 	}
 
-	if !attributeUpdate {
-		return nil
+	if len(attrUpdate) > 0 {
+		if err := vpcService.ModifySecurityGroup(ctx, id, newName, newDesc); err != nil {
+			return err
+		}
+
+		for _, attr := range attrUpdate {
+			d.SetPartial(attr)
+		}
 	}
 
-	if err := vpcService.ModifySecurityGroup(ctx, id, newName, newDesc); err != nil {
-		return err
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		resourceName := buildResourceNameWithUin("cvm", "sg", id, region)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
 	}
+
+	d.Partial(false)
 
 	return resourceTencentCloudSecurityGroupRead(d, m)
 }
@@ -218,12 +264,12 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
 		e := vpcService.DeleteSecurityGroup(ctx, id)
 		if e != nil {
-			return resource.RetryableError(fmt.Errorf("security group delete failed: %s", e.Error()))
+			return resource.RetryableError(fmt.Errorf("security group delete failed: %v", e))
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s security group delete failed: %s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s security group delete failed: %v", logId, err)
 		return err
 	}
 
