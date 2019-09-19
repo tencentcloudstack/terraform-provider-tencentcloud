@@ -65,14 +65,14 @@ func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, res
 	request.ResourcePrefix = &resourceType
 	request.ResourceRegion = &region
 	request.ResourceIds = []*string{&resourceId}
-	request.Limit = intToPointer(20)
+	request.Limit = intToPointer(DESCRIBE_TAGS_LIMIT)
 
 	var offset uint64
 	request.Offset = &offset
 
 	// for run loop at least once
-	count := 20
-	for count == 20 {
+	count := DESCRIBE_TAGS_LIMIT
+	for count == DESCRIBE_TAGS_LIMIT {
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 
@@ -137,9 +137,4 @@ func diffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]s
 		}
 	}
 	return
-}
-
-// COS and CAS should use uid not uin
-func buildResourceNameWithUin(serviceType, resourceType, id, region string) string {
-	return fmt.Sprintf("qcs::%s:%s:uin/:%s/%s", serviceType, region, resourceType, id)
 }

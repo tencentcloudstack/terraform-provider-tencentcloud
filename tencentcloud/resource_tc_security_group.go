@@ -79,9 +79,10 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
-	tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
-	region := m.(*TencentCloudClient).apiV3Conn.Region
+	client := m.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	name := d.Get("name").(string)
 	desc := d.Get("description").(string)
@@ -99,7 +100,7 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 	d.SetId(id)
 
 	if tags := getTags(d, "tags"); len(tags) > 0 {
-		resourceName := buildResourceNameWithUin("cvm", "sg", id, region)
+		resourceName := BuildTagResourceName("cvm", "sg", region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -114,29 +115,21 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
-	tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
-	region := m.(*TencentCloudClient).apiV3Conn.Region
+	client := m.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	id := d.Id()
 
-	securityGroup, has, err := vpcService.DescribeSecurityGroup(ctx, id)
+	securityGroup, err := vpcService.DescribeSecurityGroup(ctx, id)
 	if err != nil {
 		return err
 	}
 
-	switch has {
-	default:
-		err := fmt.Errorf("one security_group_id read get %d security_group info", has)
-		log.Printf("[CRITAL]%s %v", logId, err)
-
-		return err
-
-	case 0:
+	if securityGroup == nil {
 		d.SetId("")
 		return nil
-
-	case 1:
 	}
 
 	d.Set("name", *securityGroup.SecurityGroupName)
@@ -163,9 +156,10 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
-	tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
-	region := m.(*TencentCloudClient).apiV3Conn.Region
+	client := m.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	id := d.Id()
 
@@ -201,7 +195,7 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		resourceName := buildResourceNameWithUin("cvm", "sg", id, region)
+		resourceName := BuildTagResourceName("cvm", "sg", region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}

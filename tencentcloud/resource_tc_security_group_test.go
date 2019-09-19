@@ -96,12 +96,12 @@ func testAccCheckSecurityGroupDestroy(id *string) resource.TestCheckFunc {
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := VpcService{client: client}
 
-		_, has, err := service.DescribeSecurityGroup(context.TODO(), *id)
+		sg, err := service.DescribeSecurityGroup(context.TODO(), *id)
 		if err != nil {
 			return err
 		}
 
-		if has != 0 {
+		if sg != nil {
 			return fmt.Errorf("security group still exists")
 		}
 
@@ -122,12 +122,12 @@ func testAccCheckSecurityGroupExists(n string, id *string) resource.TestCheckFun
 
 		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		_, has, err := service.DescribeSecurityGroup(context.TODO(), rs.Primary.ID)
+		sg, err := service.DescribeSecurityGroup(context.TODO(), rs.Primary.ID)
 		if err != nil {
 			return err
 		}
 
-		if has == 0 {
+		if sg == nil {
 			return fmt.Errorf("security group not found: %s", rs.Primary.ID)
 		}
 

@@ -126,9 +126,10 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
-	tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
-	region := m.(*TencentCloudClient).apiV3Conn.Region
+	client := m.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	var (
 		sgId           *string

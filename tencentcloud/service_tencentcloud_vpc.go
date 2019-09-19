@@ -909,11 +909,10 @@ func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string
 	return
 }
 
-func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg *vpc.SecurityGroup, has int, err error) {
+func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg *vpc.SecurityGroup, err error) {
 	logId := getLogId(ctx)
 
 	request := vpc.NewDescribeSecurityGroupsRequest()
-
 	request.SecurityGroupIds = []*string{&id}
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -937,12 +936,11 @@ func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg 
 		}
 
 		sg = response.Response.SecurityGroupSet[0]
-		has = 1
 
 		return nil
 	}); err != nil {
 		log.Printf("[CRITAL]%s read security group failed, reason: %v", logId, err)
-		return nil, 0, err
+		return nil, err
 	}
 
 	return
@@ -1245,13 +1243,12 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 		}
 	}
 
-	// max limit is 50
-	request.Limit = stringToPointer("50")
+	request.Limit = stringToPointer(strconv.Itoa(DESCRIBE_SECURITY_GROUP_LIMIT))
 
 	offset := 0
-	count := 50
+	count := DESCRIBE_SECURITY_GROUP_LIMIT
 	// run loop at least once
-	for count == 50 {
+	for count == DESCRIBE_SECURITY_GROUP_LIMIT {
 		request.Offset = stringToPointer(strconv.Itoa(offset))
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
