@@ -15,6 +15,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -46,6 +47,13 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 				ConflictsWith: []string{"security_group_id"},
 				Description:   "Project ID of the security group. Conflict with `security_group_id`.",
 			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
+			},
+
+			// computed
 			"security_groups": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -81,6 +89,18 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Project ID of the security group.",
+						},
+						"ingress": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Ingress rules set. For items like `[action]#[cidr_ip]#[port]#[protocol]`, it means a regular rule; for items like `sg-XXXX`, it means a nested security group.",
+						},
+						"egress": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Egress rules set. For items like `[action]#[cidr_ip]#[port]#[protocol]`, it means a regular rule; for items like `sg-XXXX`, it means a nested security group.",
 						},
 					},
 				},
@@ -171,6 +191,26 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 				return fmt.Errorf("securtiy group %s project id invalid: %v", *sg.SecurityGroupId, err)
 			}
 
+			respIngress, respEgress, exist, err := service.DescribeSecurityGroupPolices(ctx, *sg.SecurityGroupId)
+			if err != nil {
+				return err
+			}
+
+			if !exist {
+				// when read security group all rules, it doesn't exist, maybe delete on other places, ignore it
+				continue
+			}
+
+			ingress := make([]string, 0, len(respIngress))
+			for _, in := range respIngress {
+				ingress = append(ingress, in.String())
+			}
+
+			egress := make([]string, 0, len(respEgress))
+			for _, eg := range respEgress {
+				egress = append(egress, eg.String())
+			}
+
 			sgInstances = append(sgInstances, map[string]interface{}{
 				"security_group_id":  *sg.SecurityGroupId,
 				"name":               *sg.SecurityGroupName,
@@ -178,6 +218,8 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 				"create_time":        *sg.CreatedTime,
 				"be_associate_count": count,
 				"project_id":         projectId,
+				"ingress":            ingress,
+				"egress":             egress,
 			})
 		}
 	}
@@ -188,6 +230,13 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 
 	d.Set("security_groups", sgInstances)
 	d.SetId(idBuilder.String())
+
+	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
+		if err := writeToFile(output.(string), sgInstances); err != nil {
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%v]", logId, output.(string), err)
+			return err
+		}
+	}
 
 	return nil
 }
