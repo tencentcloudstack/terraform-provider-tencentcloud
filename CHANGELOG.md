@@ -10,6 +10,7 @@ ENHANCEMENTS:
 
 BUG FIXES:
 * Resource: `tencentcloud_clb_listener_rule`: fix unclear description and errors in example.
+* Resource: `tencentcloud_instance`: fix hostname is not work.
 
 ## 1.18.1 (September 17, 2019)
 
