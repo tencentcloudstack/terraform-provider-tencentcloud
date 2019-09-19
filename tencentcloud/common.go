@@ -24,6 +24,7 @@ var contextNil context.Context = nil
 
 var logFirstTime = ""
 var logAtomicId int64 = 0
+
 // readRetryTimeout is read retry timeout
 const readRetryTimeout = 3 * time.Minute
 
