@@ -139,11 +139,7 @@ func diffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]s
 	return
 }
 
-// COS and CAS should use buildResourceNameWithUid
+// COS and CAS should use uid not uin
 func buildResourceNameWithUin(serviceType, resourceType, id, region string) string {
 	return fmt.Sprintf("qcs::%s:%s:uin/:%s/%s", serviceType, region, resourceType, id)
-}
-
-func buildResourceNameWithUid(serviceType, resourceType, id, region string) string {
-	return fmt.Sprintf("qcs::%s:%s:uid/:%s/%s", serviceType, region, resourceType, id)
 }
