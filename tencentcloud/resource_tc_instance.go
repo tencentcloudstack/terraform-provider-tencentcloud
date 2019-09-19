@@ -133,7 +133,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "The hostname of CVM.",
+				Description: "The hostname of CVM. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-).",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -370,7 +370,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOk("instance_type"); ok {
 		request.InstanceType = stringToPointer(v.(string))
 	}
-	if v, ok := d.GetOk("host_name"); ok {
+	if v, ok := d.GetOk("hostname"); ok {
 		request.HostName = stringToPointer(v.(string))
 	}
 	if v, ok := d.GetOk("instance_charge_type"); ok {

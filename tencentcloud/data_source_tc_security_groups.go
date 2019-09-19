@@ -15,6 +15,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -44,8 +45,21 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 				Type:          schema.TypeInt,
 				Optional:      true,
 				ConflictsWith: []string{"security_group_id"},
-				Description:   "Project ID of the security group. Conflict with `security_group_id`.",
+				Description:   "Project ID of the security group to be queried. Conflict with `security_group_id`.",
 			},
+			"tags": {
+				Type:          schema.TypeMap,
+				Optional:      true,
+				ConflictsWith: []string{"security_group_id"},
+				Description:   "Tags of the security group to be queried. Conflict with `security_group_id`.",
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
+			},
+
+			// computed
 			"security_groups": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -82,6 +96,23 @@ func dataSourceTencentCloudSecurityGroups() *schema.Resource {
 							Computed:    true,
 							Description: "Project ID of the security group.",
 						},
+						"ingress": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Ingress rules set. For items like `[action]#[cidr_ip]#[port]#[protocol]`, it means a regular rule; for items like `sg-XXXX`, it means a nested security group.",
+						},
+						"egress": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Egress rules set. For items like `[action]#[cidr_ip]#[port]#[protocol]`, it means a regular rule; for items like `sg-XXXX`, it means a nested security group.",
+						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags of the security group.",
+						},
 					},
 				},
 			},
@@ -95,7 +126,10 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+	client := m.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	var (
 		sgId           *string
@@ -123,7 +157,9 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 		idBuilder.WriteString(strconv.Itoa(*inputProjectId))
 	}
 
-	sgs, err := service.DescribeSecurityGroups(ctx, sgId, sgName, inputProjectId)
+	tags := getTags(d, "tags")
+
+	sgs, err := vpcService.DescribeSecurityGroups(ctx, sgId, sgName, inputProjectId, tags)
 	if err != nil {
 		return err
 	}
@@ -147,7 +183,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 		sgIds = append(sgIds, *sg.SecurityGroupId)
 	}
 
-	associateSet, err := service.DescribeSecurityGroupsAssociate(ctx, sgIds)
+	associateSet, err := vpcService.DescribeSecurityGroupsAssociate(ctx, sgIds)
 	if err != nil {
 		return err
 	}
@@ -171,6 +207,31 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 				return fmt.Errorf("securtiy group %s project id invalid: %v", *sg.SecurityGroupId, err)
 			}
 
+			respIngress, respEgress, exist, err := vpcService.DescribeSecurityGroupPolices(ctx, *sg.SecurityGroupId)
+			if err != nil {
+				return err
+			}
+
+			if !exist {
+				// when read security group all rules, it doesn't exist, maybe delete on other places, ignore it
+				continue
+			}
+
+			respTags, err := tagService.DescribeResourceTags(ctx, "cvm", "sg", region, *sg.SecurityGroupId)
+			if err != nil {
+				return err
+			}
+
+			ingress := make([]string, 0, len(respIngress))
+			for _, in := range respIngress {
+				ingress = append(ingress, in.String())
+			}
+
+			egress := make([]string, 0, len(respEgress))
+			for _, eg := range respEgress {
+				egress = append(egress, eg.String())
+			}
+
 			sgInstances = append(sgInstances, map[string]interface{}{
 				"security_group_id":  *sg.SecurityGroupId,
 				"name":               *sg.SecurityGroupName,
@@ -178,6 +239,9 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 				"create_time":        *sg.CreatedTime,
 				"be_associate_count": count,
 				"project_id":         projectId,
+				"ingress":            ingress,
+				"egress":             egress,
+				"tags":               respTags,
 			})
 		}
 	}
@@ -188,6 +252,13 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 
 	d.Set("security_groups", sgInstances)
 	d.SetId(idBuilder.String())
+
+	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
+		if err := writeToFile(output.(string), sgInstances); err != nil {
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%v]", logId, output.(string), err)
+			return err
+		}
+	}
 
 	return nil
 }

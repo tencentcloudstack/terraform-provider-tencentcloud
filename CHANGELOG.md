@@ -1,7 +1,18 @@
-## 1.18.2 (Unreleased)
+## 1.19.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_security_group_lite_rule`.
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_security_groups`: add optional argument `result_output_file` and new attributes `ingress`, `egress` for list `security_groups`.
+* Data Source: `tencentcloud_security_groups`: add optional argument `tags`.
+* Resource: `tencentcloud_security_group`: add optional argument `tags`.
 
 BUG FIXES:
 * Resource: `tencentcloud_clb_listener_rule`: fix unclear description and errors in example.
+* Resource: `tencentcloud_instance`: fix hostname is not work.
 
 ## 1.18.1 (September 17, 2019)
 
