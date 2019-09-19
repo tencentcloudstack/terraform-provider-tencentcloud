@@ -126,27 +126,27 @@ func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interf
 		instanceIdString = instanceId.(string)
 		parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
 
-		var onlineHas bool=true
+		var onlineHas bool = true
 		var retryErr error
 		if err != nil {
-			retryErr= resource.Retry(readRetryTimeout,func()* resource.RetryError {
+			retryErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
-				if e,ok:=err.(*errors.TencentCloudSDKError);ok{
-					if e.GetCode() == "InvalidParameter"{
-						onlineHas=false
+				if e, ok := err.(*errors.TencentCloudSDKError); ok {
+					if e.GetCode() == "InvalidParameter" {
+						onlineHas = false
 						return nil
 					}
 				}
-				if err !=nil{
+				if err != nil {
 					return resource.RetryableError(err)
 				}
 				return nil
 			})
 		}
-		if onlineHas==false{
+		if onlineHas == false {
 			return fmt.Errorf("api[DescribeParameters]fail, return %s", err.Error())
 		}
-		if retryErr!= nil {
+		if retryErr != nil {
 			return fmt.Errorf("api[DescribeParameters]fail, return %s", err.Error())
 		}
 
@@ -155,15 +155,15 @@ func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interf
 		parameterDetails, err = mysqlService.DescribeDefaultParameters(ctx, engineVersionString)
 		var retryErr error
 		if err != nil {
-			retryErr = resource.Retry(readRetryTimeout,func()* resource.RetryError {
+			retryErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
-				if err !=nil{
+				if err != nil {
 					return resource.RetryableError(err)
 				}
 				return nil
 			})
 		}
-		if retryErr!= nil {
+		if retryErr != nil {
 			return fmt.Errorf("api[DescribeParameters]fail, return %s", err.Error())
 		}
 
