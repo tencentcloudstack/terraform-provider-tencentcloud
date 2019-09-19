@@ -6,7 +6,9 @@ FEATURES:
 
 ENHANCEMENTS:
 
+* Data Source: `tencentcloud_security_groups`: add optional argument `tags`.
 * Data Source: `tencentcloud_security_groups`: add optional argument `result_output_file` and new attributes `ingress`, `egress` for list `security_groups`.
+* Resource: `tencentcloud_security_group`: add optional argument `tags`.
 * Resource: `tencentcloud_as_scaling_config`: internet charge type support `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 
 BUG FIXES:

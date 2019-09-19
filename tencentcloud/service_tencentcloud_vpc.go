@@ -880,48 +880,70 @@ func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string
 	request.GroupDescription = &desc
 
 	if projectId != nil {
-		request.ProjectId = common.StringPtr(strconv.Itoa(*projectId))
+		request.ProjectId = stringToPointer(strconv.Itoa(*projectId))
 	}
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().CreateSecurityGroup(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-			logId, request.GetAction(), request.ToJsonString(), err)
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseVpcClient().CreateSecurityGroup(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		if response.Response.SecurityGroup == nil || response.Response.SecurityGroup.SecurityGroupId == nil {
+			err := fmt.Errorf("api[%s] return security group id is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		id = *response.Response.SecurityGroup.SecurityGroupId
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create security group failed, reason: %v", logId, err)
 		return "", err
 	}
 
-	if response.Response.SecurityGroup == nil || response.Response.SecurityGroup.SecurityGroupId == nil {
-		return "", errors.New("response is nil")
-	}
-
-	return *response.Response.SecurityGroup.SecurityGroupId, nil
+	return
 }
 
-func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg *vpc.SecurityGroup, has int, err error) {
+func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg *vpc.SecurityGroup, err error) {
 	logId := getLogId(ctx)
 
 	request := vpc.NewDescribeSecurityGroupsRequest()
-
 	request.SecurityGroupIds = []*string{&id}
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
-	if err != nil {
-		if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-			if sdkError.Code == "ResourceNotFound" {
-				return nil, 0, nil
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceNotFound" {
+					return nil
+				}
 			}
+
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
 		}
 
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-			logId, request.GetAction(), request.ToJsonString(), err)
-		return nil, 0, err
+		if len(response.Response.SecurityGroupSet) == 0 {
+			return nil
+		}
+
+		sg = response.Response.SecurityGroupSet[0]
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read security group failed, reason: %v", logId, err)
+		return nil, err
 	}
 
-	if len(response.Response.SecurityGroupSet) == 0 {
-		return nil, 0, nil
-	}
-
-	return response.Response.SecurityGroupSet[0], len(response.Response.SecurityGroupSet), nil
+	return
 }
 
 func (me *VpcService) ModifySecurityGroup(ctx context.Context, id string, newName, newDesc *string) error {
@@ -932,11 +954,19 @@ func (me *VpcService) ModifySecurityGroup(ctx context.Context, id string, newNam
 	request.SecurityGroupId = &id
 	request.GroupName = newName
 	request.GroupDescription = newDesc
-	ratelimit.Check(request.GetAction())
-	_, err := me.client.UseVpcClient().ModifySecurityGroupAttribute(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-			logId, request.GetAction(), request.ToJsonString(), err)
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseVpcClient().ModifySecurityGroupAttribute(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify security group failed, reason: %v", logId, err)
 		return err
 	}
 
@@ -947,12 +977,20 @@ func (me *VpcService) DeleteSecurityGroup(ctx context.Context, id string) error 
 	logId := getLogId(ctx)
 
 	request := vpc.NewDeleteSecurityGroupRequest()
-
 	request.SecurityGroupId = &id
-	ratelimit.Check(request.GetAction())
-	if _, err := me.client.UseVpcClient().DeleteSecurityGroup(request); err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-			logId, request.GetAction(), request.ToJsonString(), err)
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := me.client.UseVpcClient().DeleteSecurityGroup(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete security group failed, reason: %v", logId, err)
 		return err
 	}
 
@@ -1175,7 +1213,7 @@ func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId stri
 	return nil
 }
 
-func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *string, projectId *int) (sgs []*vpc.SecurityGroup, err error) {
+func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *string, projectId *int, tags map[string]string) (sgs []*vpc.SecurityGroup, err error) {
 	logId := getLogId(ctx)
 
 	request := vpc.NewDescribeSecurityGroupsRequest()
@@ -1185,54 +1223,66 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 	} else {
 		if sgName != nil {
 			request.Filters = append(request.Filters, &vpc.Filter{
-				Name:   common.StringPtr("security-group-name"),
+				Name:   stringToPointer("security-group-name"),
 				Values: []*string{sgName},
 			})
 		}
 
 		if projectId != nil {
 			request.Filters = append(request.Filters, &vpc.Filter{
-				Name:   common.StringPtr("project-id"),
-				Values: []*string{common.StringPtr(strconv.Itoa(*projectId))},
+				Name:   stringToPointer("project-id"),
+				Values: []*string{stringToPointer(strconv.Itoa(*projectId))},
+			})
+		}
+
+		for k, v := range tags {
+			request.Filters = append(request.Filters, &vpc.Filter{
+				Name:   stringToPointer("tag:" + k),
+				Values: []*string{stringToPointer(v)},
 			})
 		}
 	}
 
-	offset := 0
-	pageSize := 50
-	sgs = make([]*vpc.SecurityGroup, 0)
+	request.Limit = stringToPointer(strconv.Itoa(DESCRIBE_SECURITY_GROUP_LIMIT))
 
-	for {
-		request.Offset = common.StringPtr(strconv.Itoa(offset))
-		request.Limit = common.StringPtr(strconv.Itoa(pageSize))
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
-		if err != nil {
-			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkError.Code == "ResourceNotFound" {
-					break
+	offset := 0
+	count := DESCRIBE_SECURITY_GROUP_LIMIT
+	// run loop at least once
+	for count == DESCRIBE_SECURITY_GROUP_LIMIT {
+		request.Offset = stringToPointer(strconv.Itoa(offset))
+
+		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
+			response, err := me.client.UseVpcClient().DescribeSecurityGroups(request)
+			if err != nil {
+				count = 0
+
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkError.Code == "ResourceNotFound" {
+						return nil
+					}
 				}
+
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+					logId, request.GetAction(), request.ToJsonString(), err)
+				return retryError(err)
 			}
 
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-				logId, request.GetAction(), request.ToJsonString(), err)
+			set := response.Response.SecurityGroupSet
+			count = len(set)
+			sgs = append(sgs, set...)
+
+			return nil
+		}); err != nil {
+			log.Printf("[CRITAL]%s read security groups failed, reason: %v", logId, err)
 			return nil, err
 		}
 
-		set := response.Response.SecurityGroupSet
-		if len(set) == 0 {
-			break
-		}
-		sgs = append(sgs, set...)
-
-		if len(set) < pageSize {
-			break
-		}
-
-		offset += pageSize
+		offset += count
 	}
 
-	return sgs, nil
+	return
 }
 
 func (me *VpcService) modifyLiteRulesInSecurityGroup(ctx context.Context, sgId string, ingress, egress []VpcSecurityGroupLiteRule) error {
