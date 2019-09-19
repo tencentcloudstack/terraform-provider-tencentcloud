@@ -15,6 +15,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform/helper/resource"
 	"log"
 	"strconv"
 
@@ -182,9 +183,24 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 	}
 
 	sellConfigures, err := mysqlService.DescribeDBZoneConfig(ctx)
+	var retryErr error
 	if err != nil {
-		return fmt.Errorf("api[DescribeBackups]fail, return %s", err.Error())
+		retryErr = resource.Retry(readRetryTimeout,func()* resource.RetryError {
+			sellConfigures, err = mysqlService.DescribeDBZoneConfig(ctx)
+			if err !=nil{
+				return resource.RetryableError(err)
+			}
+			return nil
+		})
 	}
+	if retryErr!= nil {
+		return fmt.Errorf("api[DescribeDBZoneConfig]fail, return %s", err.Error())
+	}
+
+	if err != nil {
+		return fmt.Errorf("api[DescribeDBZoneConfig]fail, return %s", err.Error())
+	}
+
 	var regionItem *cdb.RegionSellConf
 	for _, regionItem = range sellConfigures {
 		if *regionItem.Region == region {

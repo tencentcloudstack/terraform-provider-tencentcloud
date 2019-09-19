@@ -14,6 +14,8 @@ package tencentcloud
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -331,11 +333,36 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	response, err := client.UseMysqlClient().DescribeDBInstances(request)
+	var onlineHas bool=true
+	var retryErr error
 	if err != nil {
+		retryErr= resource.Retry(readRetryTimeout,func()* resource.RetryError {
+			response, err = client.UseMysqlClient().DescribeDBInstances(request)
+			if e,ok:=err.(*errors.TencentCloudSDKError);ok{
+				if e.GetCode() == "InvalidParameter"{
+					onlineHas=false
+					return nil
+				}
+			}
+			if err !=nil{
+				return resource.RetryableError(err)
+			}
+			return nil
+		})
+	}
+	if onlineHas==false{
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return fmt.Errorf("api[DescribeDBInstances]fail, return %s", err.Error())
 	}
+	if retryErr!= nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return fmt.Errorf("api[DescribeDBInstances]fail, return %s", err.Error())
+	}
+
+
+
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())

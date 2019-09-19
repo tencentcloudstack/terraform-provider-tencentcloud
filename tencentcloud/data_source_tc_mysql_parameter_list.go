@@ -16,6 +16,8 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -123,9 +125,48 @@ func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interf
 	if instanceId, ok := d.GetOk("mysql_id"); ok {
 		instanceIdString = instanceId.(string)
 		parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
+
+		var onlineHas bool=true
+		var retryErr error
+		if err != nil {
+			retryErr= resource.Retry(readRetryTimeout,func()* resource.RetryError {
+				parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
+				if e,ok:=err.(*errors.TencentCloudSDKError);ok{
+					if e.GetCode() == "InvalidParameter"{
+						onlineHas=false
+						return nil
+					}
+				}
+				if err !=nil{
+					return resource.RetryableError(err)
+				}
+				return nil
+			})
+		}
+		if onlineHas==false{
+			return fmt.Errorf("api[DescribeParameters]fail, return %s", err.Error())
+		}
+		if retryErr!= nil {
+			return fmt.Errorf("api[DescribeParameters]fail, return %s", err.Error())
+		}
+
 	} else if engineVersion, ok := d.GetOk("engine_version"); ok {
 		engineVersionString = engineVersion.(string)
 		parameterDetails, err = mysqlService.DescribeDefaultParameters(ctx, engineVersionString)
+		var retryErr error
+		if err != nil {
+			retryErr = resource.Retry(readRetryTimeout,func()* resource.RetryError {
+				parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
+				if err !=nil{
+					return resource.RetryableError(err)
+				}
+				return nil
+			})
+		}
+		if retryErr!= nil {
+			return fmt.Errorf("api[DescribeParameters]fail, return %s", err.Error())
+		}
+
 	} else {
 		return fmt.Errorf("mysql_id and engine_version cannot be empty at the same time")
 	}
