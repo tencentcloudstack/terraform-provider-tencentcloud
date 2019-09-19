@@ -17,7 +17,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -127,35 +126,24 @@ func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interf
 		parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
 
 		var onlineHas bool = true
-		var retryErr error
 		if err != nil {
-			retryErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
-				if e, ok := err.(*errors.TencentCloudSDKError); ok {
-					if e.GetCode() == "InvalidParameter" {
-						onlineHas = false
-						return nil
-					}
-				}
 				if err != nil {
 					return resource.RetryableError(err)
 				}
 				return nil
 			})
 		}
-		if onlineHas == false {
-			return fmt.Errorf("api[DescribeParameters]fail, return %s", err.Error())
-		}
-		if retryErr != nil {
+		if err != nil {
 			return fmt.Errorf("api[DescribeParameters]fail, return %s", err.Error())
 		}
 
 	} else if engineVersion, ok := d.GetOk("engine_version"); ok {
 		engineVersionString = engineVersion.(string)
 		parameterDetails, err = mysqlService.DescribeDefaultParameters(ctx, engineVersionString)
-		var retryErr error
 		if err != nil {
-			retryErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
 				if err != nil {
 					return resource.RetryableError(err)
@@ -163,7 +151,7 @@ func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interf
 				return nil
 			})
 		}
-		if retryErr != nil {
+		if err != nil {
 			return fmt.Errorf("api[DescribeParameters]fail, return %s", err.Error())
 		}
 

@@ -113,13 +113,13 @@ func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface
 
 	max_number, _ := d.Get("max_number").(int)
 	backInfoItems, err := mysqlService.DescribeBackupsByMysqlId(ctx, d.Get("mysql_id").(string), int64(max_number))
+
 	var onlineHas bool = true
-	var retryErr error
 	if err != nil {
-		retryErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			backInfoItems, err = mysqlService.DescribeBackupsByMysqlId(ctx, d.Get("mysql_id").(string), int64(max_number))
 			if e, ok := err.(*errors.TencentCloudSDKError); ok {
-				if e.GetCode() == "InvalidParameter" || e.GetCode() == "InvalidParameter.InstanceNotFound" {
+				if e.GetCode() == "InvalidParameter.InstanceNotFound" {
 					onlineHas = false
 					return nil
 				}
@@ -130,11 +130,11 @@ func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface
 			return nil
 		})
 	}
-	if onlineHas == false {
+	if err != nil {
+		if onlineHas == false {
+			d.SetId("")
+		}
 		return fmt.Errorf("api[DescribeBackups]fail,return %s", err.Error())
-	}
-	if retryErr != nil {
-		return fmt.Errorf("api[DescribeBackups]fail, return %s", err.Error())
 	}
 
 	var itemShemas []map[string]interface{}

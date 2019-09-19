@@ -183,9 +183,8 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 	}
 
 	sellConfigures, err := mysqlService.DescribeDBZoneConfig(ctx)
-	var retryErr error
 	if err != nil {
-		retryErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			sellConfigures, err = mysqlService.DescribeDBZoneConfig(ctx)
 			if err != nil {
 				return resource.RetryableError(err)
@@ -193,10 +192,6 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 			return nil
 		})
 	}
-	if retryErr != nil {
-		return fmt.Errorf("api[DescribeDBZoneConfig]fail, return %s", err.Error())
-	}
-
 	if err != nil {
 		return fmt.Errorf("api[DescribeDBZoneConfig]fail, return %s", err.Error())
 	}
