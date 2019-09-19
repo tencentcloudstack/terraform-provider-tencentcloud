@@ -125,7 +125,6 @@ func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interf
 		instanceIdString = instanceId.(string)
 		parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
 
-		var onlineHas bool = true
 		if err != nil {
 			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				parameterDetails, err = mysqlService.DescribeInstanceParameters(ctx, instanceIdString)
