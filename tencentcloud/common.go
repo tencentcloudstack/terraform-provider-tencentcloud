@@ -166,3 +166,13 @@ func CheckNil(object interface{}, fields map[string]string) (nilFields []string)
 
 	return
 }
+
+func BuildTagResourceName(serviceType, resourceType, region, id string) string {
+	switch serviceType {
+	case "cos":
+		return fmt.Sprintf("qcs::%s:%s:uid/:%s/%s", serviceType, region, resourceType, id)
+
+	default:
+		return fmt.Sprintf("qcs::%s:%s:uin/:%s/%s", serviceType, region, resourceType, id)
+	}
+}
