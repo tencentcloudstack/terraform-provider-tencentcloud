@@ -114,7 +114,7 @@ func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface
 	max_number, _ := d.Get("max_number").(int)
 	backInfoItems, err := mysqlService.DescribeBackupsByMysqlId(ctx, d.Get("mysql_id").(string), int64(max_number))
 
-	var onlineHas bool = true
+	var onlineHas = true
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			backInfoItems, err = mysqlService.DescribeBackupsByMysqlId(ctx, d.Get("mysql_id").(string), int64(max_number))
@@ -131,7 +131,7 @@ func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface
 		})
 	}
 	if err != nil {
-		if onlineHas == false {
+		if !onlineHas {
 			d.SetId("")
 		}
 		return fmt.Errorf("api[DescribeBackups]fail,return %s", err.Error())
