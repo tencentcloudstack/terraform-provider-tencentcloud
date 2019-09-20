@@ -14,6 +14,7 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"log"
 	"strings"
 
@@ -41,11 +42,18 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue(MONGODB_CLUSTER_TYPE),
 				Description:  "Type of Mongodb cluster, and available values include replica set cluster(expressed with `REPLSET`), sharding cluster(expressed with `SHARD`).",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the Mongodb instance to be queried.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Used to store results.",
 			},
+
+			// computed
 			"instance_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -137,6 +145,11 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Number of sharding.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags of the Mongodb instance.",
+						},
 					},
 				},
 			},
@@ -167,9 +180,10 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 	if v, ok := d.GetOk("instance_name_prefix"); ok {
 		namePrefix = v.(string)
 	}
-	mongodbService := MongodbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	tags := getTags(d, "tags")
+
+	mongodbService := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	mongodbs, err := mongodbService.DescribeInstancesByFilter(ctx, instanceId, clusterType)
 	if err != nil {
 		return err
@@ -177,9 +191,29 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 
 	instanceList := make([]map[string]interface{}, 0, len(mongodbs))
 	ids := make([]string, 0, len(mongodbs))
+
+instancesLoop:
 	for _, mongo := range mongodbs {
 		if namePrefix != "" && strings.HasPrefix(*mongo.InstanceName, namePrefix) {
 			continue
+		}
+
+		respTags := make(map[string]string, len(mongo.Tags))
+		for _, t := range mongo.Tags {
+			if t.TagKey == nil {
+				return errors.New("mongodb tag key is nil")
+			}
+			if t.TagValue == nil {
+				return errors.New("mongodb tag value is nil")
+			}
+
+			respTags[*t.TagKey] = *t.TagValue
+		}
+
+		for k, v := range tags {
+			if value, ok := respTags[k]; !ok || v != value {
+				continue instancesLoop
+			}
 		}
 
 		switch *mongo.MachineType {
@@ -213,6 +247,7 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 			"volume":         *mongo.Volume / 1024,
 			"machine_type":   mongo.MachineType,
 			"shard_quantity": mongo.ReplicationSetNum,
+			"tags":           respTags,
 		}
 		instanceList = append(instanceList, instance)
 		ids = append(ids, *mongo.InstanceId)

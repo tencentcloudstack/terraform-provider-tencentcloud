@@ -5,16 +5,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mongodb_instance" "mongodb" {
-  instance_name     = "mongodb"
-  memory            = 4
-  volume            = 100
-  engine_version    = "MONGO_3_WT"
-  machine_type      = "GIO"
-  available_zone    = "ap-guangzhou-2"
-  vpc_id            = "vpc-mz3efvbw"
-  subnet_id         = "subnet-lk0svi3p"
-  project_id        = 0
-  password          = "mypassword"
+  instance_name  = "mongodb"
+  memory         = 4
+  volume         = 100
+  engine_version = "MONGO_3_WT"
+  machine_type   = "GIO"
+  available_zone = "ap-guangzhou-2"
+  vpc_id         = "vpc-mz3efvbw"
+  subnet_id      = "subnet-lk0svi3p"
+  project_id     = 0
+  password       = "mypassword"
 }
 ```
 
@@ -30,6 +30,7 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -125,6 +126,11 @@ func resourceTencentCloudMongodbInstance() *schema.Resource {
 				Sensitive:   true,
 				Description: "Password of this Mongodb account.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The tags of the Mongodb.",
+			},
 
 			// Computed
 			"status": {
@@ -157,9 +163,10 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	mongodbService := MongodbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+	client := meta.(*TencentCloudClient).apiV3Conn
+	mongodbService := MongodbService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	request := mongodb.NewCreateDBInstanceHourRequest()
 	request.ReplicateSetNum = intToPointer(1)
@@ -190,7 +197,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstanceHour(request)
+	response, err := client.UseMongodbClient().CreateDBInstanceHour(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -219,7 +226,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 		return resource.NonRetryableError(e)
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s creating mongodb instance failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s creating mongodb instance failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -252,10 +259,17 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 		return resource.NonRetryableError(e)
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s creating mongodb instance failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s creating mongodb instance failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	d.SetId(instanceId)
+
+	if tags := getTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudMongodbInstanceRead(d, meta)
 }
@@ -267,9 +281,8 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := d.Id()
-	mongodbService := MongodbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	mongodbService := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	instance, err := mongodbService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
@@ -297,6 +310,19 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	d.Set("vport", instance.Vport)
 	d.Set("create_time", instance.CreateTime)
 
+	tags := make(map[string]string, len(instance.Tags))
+	for _, tag := range instance.Tags {
+		if tag.TagKey == nil {
+			return errors.New("mongodb tag key is nil")
+		}
+		if tag.TagValue == nil {
+			return errors.New("mongodb tag value is nil")
+		}
+
+		tags[*tag.TagKey] = *tag.TagValue
+	}
+	d.Set("tags", tags)
+
 	return nil
 }
 
@@ -307,9 +333,11 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := d.Id()
-	mongodbService := MongodbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	mongodbService := MongodbService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	d.Partial(true)
 
@@ -336,7 +364,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return resource.NonRetryableError(e)
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s upgrade mongodb instance failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s upgrade mongodb instance failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 
@@ -388,16 +416,28 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return resource.NonRetryableError(e)
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s setting mongodb instance password failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s setting mongodb instance password failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 
 		d.SetPartial("password")
 	}
 
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
+	}
+
 	d.Partial(false)
 
-	return nil
+	return resourceTencentCloudMongodbInstanceRead(d, meta)
 }
 
 func resourceTencentCloudMongodbInstanceDelete(d *schema.ResourceData, meta interface{}) error {

@@ -30,6 +30,7 @@ func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "vport"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance.mongodb", "create_time"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.test", "test"),
 				),
 			},
 			{
@@ -38,6 +39,8 @@ func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-update"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "memory", "8"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "volume", "200"),
+					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.test"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.abc", "abc"),
 				),
 			},
 			{
@@ -93,7 +96,7 @@ func testAccCheckMongodbInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccMongodbInstance string = `
+const testAccMongodbInstance = `
 resource "tencentcloud_mongodb_instance" "mongodb" {
   instance_name  = "tf-mongodb-test"
   memory         = 4
@@ -103,10 +106,14 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   available_zone = "ap-guangzhou-2"
   project_id     = 0
   password       = "test1234"
+
+  tags = {
+    "test" = "test"
+  }
 }
 `
 
-const testAccMongodbInstance_update string = `
+const testAccMongodbInstance_update = `
 resource "tencentcloud_mongodb_instance" "mongodb" {
   instance_name  = "tf-mongodb-update"
   memory         = 8
@@ -116,5 +123,9 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   available_zone = "ap-guangzhou-2"
   project_id     = 0
   password       = "tests1234"
+
+  tags = {
+    "abc" = "abc"
+  }
 }
 `
