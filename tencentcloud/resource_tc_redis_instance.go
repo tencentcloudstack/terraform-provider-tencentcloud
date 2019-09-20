@@ -44,7 +44,6 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 		Read:   resourceTencentCloudRedisInstanceRead,
 		Update: resourceTencentCloudRedisInstanceUpdate,
 		Delete: resourceTencentCloudRedisInstanceDelete,
-
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -162,9 +161,10 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	redisService := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	client := meta.(*TencentCloudClient).apiV3Conn
+	redisService := RedisService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	availabilityZone := d.Get("availability_zone").(string)
 	redisName := d.Get("name").(string)
@@ -225,13 +225,13 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create redis task fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create redis task fail, reason:%s\n", logId, err.Error())
 		return err
 	}
 	d.SetId(redisId)
 
 	if len(tags) > 0 {
-		resourceName := buildResourceNameWithUin("redis", "instance", redisId, region)
+		resourceName := BuildTagResourceName("redis", "instance", region, redisId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -265,7 +265,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	statusName := REDIS_STATUS[*info.Status]
 	if statusName == "" {
 		err = fmt.Errorf("redis read unkwnow status %d", *info.ZoneId)
-		log.Printf("[CRITAL]%s redis read status name error, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s redis read status name error, reason:%s\n", logId, err.Error())
 		return err
 	}
 	d.Set("status", statusName)
@@ -275,7 +275,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	zoneName := REDIS_ZONE_ID2NAME[*info.ZoneId]
 	if zoneName == "" {
 		err = fmt.Errorf("redis read unkwnow zoneid %d", *info.ZoneId)
-		log.Printf("[CRITAL]%s redis read zone name error, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s redis read zone name error, reason:%s\n", logId, err.Error())
 		return err
 	}
 	d.Set("availability_zone", zoneName)
@@ -283,7 +283,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	typeName := REDIS_NAMES[*info.Type]
 	if typeName == "" {
 		err = fmt.Errorf("redis read unkwnow type %d", *info.Type)
-		log.Printf("[CRITAL]%s redis read type name error, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s redis read type name error, reason:%s\n", logId, err.Error())
 		return err
 	}
 	d.Set("type", typeName)
@@ -332,9 +332,12 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 
 	id := d.Id()
 
-	d.Partial(true)
+	client := meta.(*TencentCloudClient).apiV3Conn
+	redisService := RedisService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
-	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	d.Partial(true)
 
 	// name\mem_size\password\project_id
 
@@ -343,7 +346,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if name == "" {
 			name = id
 		}
-		err := service.ModifyInstanceName(ctx, id, name)
+		err := redisService.ModifyInstanceName(ctx, id, name)
 		if err != nil {
 			return err
 		}
@@ -363,14 +366,14 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if newMemSize < 1 {
 			return fmt.Errorf("redis mem_size value cannot be set to less than 1")
 		}
-		redisId, err := service.UpgradeInstance(ctx, id, int64(newMemSize))
+		redisId, err := redisService.UpgradeInstance(ctx, id, int64(newMemSize))
 
 		if err != nil {
-			log.Printf("[CRITAL]%s redis update mem size error, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s redis update mem size error, reason:%s\n", logId, err.Error())
 		}
 
 		err = resource.Retry(600*time.Second, func() *resource.RetryError {
-			_, _, info, err := service.CheckRedisCreateOk(ctx, redisId)
+			_, _, info, err := redisService.CheckRedisCreateOk(ctx, redisId)
 
 			if info != nil {
 				status := REDIS_STATUS[*info.Status]
@@ -397,7 +400,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s redis update mem size fail , reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s redis update mem size fail , reason:%s\n", logId, err.Error())
 			return err
 		}
 
@@ -406,13 +409,13 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
-		taskid, err := service.ResetPassword(ctx, id, password)
+		taskId, err := redisService.ResetPassword(ctx, id, password)
 		if err != nil {
-			log.Printf("[CRITAL]%s redis change password error, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s redis change password error, reason:%s\n", logId, err.Error())
 			return err
 		}
 		err = resource.Retry(300*time.Second, func() *resource.RetryError {
-			ok, err := service.DescribeTaskInfo(ctx, id, taskid)
+			ok, err := redisService.DescribeTaskInfo(ctx, id, taskId)
 			if err != nil {
 				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
 					return resource.RetryableError(err)
@@ -428,7 +431,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s redis change password fail, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s redis change password fail, reason:%s\n", logId, err.Error())
 			return err
 		}
 		d.SetPartial("password")
@@ -436,7 +439,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 
 	if d.HasChange("project_id") {
 		projectId := d.Get("project_id").(int)
-		err := service.ModifyInstanceProjectId(ctx, id, int64(projectId))
+		err := redisService.ModifyInstanceProjectId(ctx, id, int64(projectId))
 		if err != nil {
 			return err
 		}
@@ -447,11 +450,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := buildResourceNameWithUin("redis", "instance", id, region)
-
+		resourceName := BuildTagResourceName("redis", "instance", region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -492,7 +491,7 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 		})
 
 		if errRet != nil {
-			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n ", logId, action, errRet.Error())
+			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, action, errRet.Error())
 		}
 		return errRet
 	}
@@ -500,7 +499,7 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 	action := "DestroyPostpaidInstance"
 	taskId, err := service.DestroyPostpaidInstance(ctx, d.Id())
 	if err != nil {
-		log.Printf("[CRITAL]%s redis %s fail, reason:%s\n ", logId, action, err.Error())
+		log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, action, err.Error())
 		return err
 	}
 	if err = wait(action, taskId); err != nil {
@@ -510,7 +509,7 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 	action = "CleanUpInstance"
 	taskId, err = service.CleanUpInstance(ctx, d.Id())
 	if err != nil {
-		log.Printf("[CRITAL]%s redis %s fail, reason:%s\n ", logId, action, err.Error())
+		log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, action, err.Error())
 		return err
 	}
 

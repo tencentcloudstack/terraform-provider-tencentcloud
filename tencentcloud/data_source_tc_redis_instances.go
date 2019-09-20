@@ -144,8 +144,9 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	client := meta.(*TencentCloudClient).apiV3Conn
+	service := RedisService{client: client}
+	region := client.Region
 
 	var (
 		zone      string
@@ -193,13 +194,13 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 
 	var instanceList = make([]interface{}, 0, len(instances))
 
-INSTANCE_LOOP:
+instanceLoop:
 	for _, instance := range instances {
 		if len(tags) > 0 {
 			// filter by tags, must match all tags
 			for k, v := range tags {
 				if instance.Tags[k] != v {
-					continue INSTANCE_LOOP
+					continue instanceLoop
 				}
 			}
 		}
@@ -233,7 +234,6 @@ INSTANCE_LOOP:
 	d.SetId("redis_instances_list" + region)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-
 		if err := writeToFile(output.(string), instanceList); err != nil {
 			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
 				logId, output.(string), err.Error())

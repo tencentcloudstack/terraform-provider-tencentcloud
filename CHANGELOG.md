@@ -1,4 +1,10 @@
 ## 1.20.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_redis_instances` add optional argument `tags`
+* Resource: `tencentcloud_redis_instance` add optional argument `tags`
+
 ## 1.19.0 (September 19, 2019)
 
 FEATURES:
