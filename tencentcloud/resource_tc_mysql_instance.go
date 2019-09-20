@@ -226,6 +226,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"project_id": {
 			Type:        schema.TypeInt,
 			Optional:    true,
+			Default:     0,
 			Description: "Project ID, default value is 0.",
 		},
 
