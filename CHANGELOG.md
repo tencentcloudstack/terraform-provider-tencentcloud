@@ -1,14 +1,12 @@
-## 1.20.0 (Unreleased)
-
-BUG FIXES:
-* Resource: `tencentcloud_mysql_instance`: miss argument `availability_zone` causes the instance to be recreated.
-
 ## 1.19.1 (Unreleased)
 
 ENHANCEMENTS:
 
 * Data Source: `tencentcloud_redis_instances` add optional argument `tags`
 * Resource: `tencentcloud_redis_instance` add optional argument `tags`
+
+BUG FIXES:
+* Resource: `tencentcloud_mysql_instance`: miss argument `availability_zone` causes the instance to be recreated.
 
 ## 1.19.0 (September 19, 2019)
 
