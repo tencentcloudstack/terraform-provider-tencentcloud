@@ -228,7 +228,7 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 				return resource.RetryableError(fmt.Errorf("modify account privilege   task  status is %s", taskStatus))
 			}
-			log.Println("modify account privilege task status is %s,we won't wait for it finish ,it show message:%s", taskStatus, message)
+			log.Printf("modify account privilege task status is %s,we won't wait for it finish ,it show message:%s\n", taskStatus, message)
 			return resource.NonRetryableError(err)
 		})
 
