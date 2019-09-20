@@ -185,6 +185,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Type:        schema.TypeString,
 			ForceNew:    true,
 			Optional:    true,
+			Computed:    true,
 			Description: "Indicates which availability zone will be used.",
 		},
 		"root_password": {
@@ -622,38 +623,58 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		d.SetId("")
 		return
 	}
-
 	if MysqlDelStates[*mysqlInfo.Status] {
 		mysqlInfo = nil
 		d.SetId("")
 		return
 	}
-
-	d.Set("instance_name", *mysqlInfo.InstanceName)
-	d.Set("pay_type", int(*mysqlInfo.PayType))
+	if errRet = d.Set("instance_name", *mysqlInfo.InstanceName); errRet != nil {
+		log.Printf("[CRITAL]%s provider set instance_name fail, reason:%s\n ", logId, errRet.Error())
+		return
+	}
+	if errRet = d.Set("pay_type", int(*mysqlInfo.PayType)); errRet != nil {
+		log.Printf("[CRITAL]%s provider set pay_type fail, reason:%s\n ", logId, errRet.Error())
+		return
+	}
 
 	if int(*mysqlInfo.PayType) == MysqlPayByMonth {
 		tempInt, _ := d.Get("period").(int)
 		if tempInt == 0 {
-			d.Set("period", 1)
+			if errRet = d.Set("period", 1); errRet != nil {
+				log.Printf("[CRITAL]%s provider set period fail, reason:%s\n ", logId, errRet.Error())
+				return
+			}
 		}
 	}
 
 	if *mysqlInfo.AutoRenew == MYSQL_RENEW_CLOSE {
 		*mysqlInfo.AutoRenew = MYSQL_RENEW_NOUSE
 	}
-	d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
-
-	d.Set("mem_size", *mysqlInfo.Memory)
-	d.Set("volume_size", *mysqlInfo.Volume)
-
+	if errRet = d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew)); errRet != nil {
+		log.Printf("[CRITAL]%s provider set auto_renew_flag fail, reason:%s\n ", logId, errRet.Error())
+		return
+	}
+	if errRet = d.Set("mem_size", *mysqlInfo.Memory); errRet != nil {
+		log.Printf("[CRITAL]%s provider set mem_size fail, reason:%s\n ", logId, errRet.Error())
+		return
+	}
+	if errRet = d.Set("volume_size", *mysqlInfo.Volume); errRet != nil {
+		log.Printf("[CRITAL]%s provider set volume_size fail, reason:%s\n ", logId, errRet.Error())
+		return
+	}
 	if d.Get("vpc_id").(string) != "" {
-		d.Set("vpc_id", *mysqlInfo.UniqVpcId)
+		if errRet = d.Set("vpc_id", *mysqlInfo.UniqVpcId); errRet != nil {
+			log.Printf("[CRITAL]%s provider set vpc_id fail, reason:%s\n ", logId, errRet.Error())
+			return
+		}
+	}
+	if d.Get("subnet_id").(string) != "" {
+		if errRet = d.Set("subnet_id", *mysqlInfo.UniqSubnetId); errRet != nil {
+			log.Printf("[CRITAL]%s provider set subnet_id fail, reason:%s\n ", logId, errRet.Error())
+			return
+		}
 	}
 
-	if d.Get("subnet_id").(string) != "" {
-		d.Set("subnet_id", *mysqlInfo.UniqSubnetId)
-	}
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
 		sdkErr, ok := err.(*errors.TencentCloudSDKError)
@@ -667,15 +688,20 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		errRet = err
 		return
 	}
-	d.Set("security_groups", securityGroups)
-
+	if errRet = d.Set("security_groups", securityGroups); errRet != nil {
+		log.Printf("[CRITAL]%s provider set security_groups fail, reason:%s\n ", logId, errRet.Error())
+		return
+	}
 	if master {
 		isGTIDOpen, err := mysqlService.CheckDBGTIDOpen(ctx, d.Id())
 		if err != nil {
 			errRet = err
 			return
 		}
-		d.Set("gtid", int(isGTIDOpen))
+		if errRet = d.Set("gtid", int(isGTIDOpen)); errRet != nil {
+			log.Printf("[CRITAL]%s provider set security_groups fail, reason:%s\n ", logId, errRet.Error())
+			return
+		}
 	}
 
 	tags, err := mysqlService.DescribeTagsOfInstanceId(ctx, d.Id())
@@ -685,18 +711,37 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	if err := d.Set("tags", tags); err != nil {
 		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
+		return
 	}
 
-	d.Set("intranet_ip", *mysqlInfo.Vip)
-	d.Set("intranet_port", int(*mysqlInfo.Vport))
+	if err = d.Set("intranet_ip", *mysqlInfo.Vip); err != nil {
+		log.Printf("[CRITAL]%s provider set intranet_ip fail, reason:%s\n ", logId, errRet.Error())
+		return
+	}
+	if err = d.Set("intranet_port", int(*mysqlInfo.Vport)); err != nil {
+		log.Printf("[CRITAL]%s provider set intranet_port fail, reason:%s\n ", logId, errRet.Error())
+		return
+	}
 
 	if *mysqlInfo.CdbError != 0 {
-		d.Set("locked", 1)
+		if errRet = d.Set("locked", 1); errRet != nil {
+			log.Printf("[CRITAL]%s provider set locked fail, reason:%s\n ", logId, errRet.Error())
+			return
+		}
 	} else {
-		d.Set("locked", 0)
+		if errRet = d.Set("locked", 0); errRet != nil {
+			log.Printf("[CRITAL]%s provider set locked fail, reason:%s\n ", logId, errRet.Error())
+			return
+		}
 	}
-	d.Set("status", *mysqlInfo.Status)
-	d.Set("task_status", *mysqlInfo.TaskStatus)
+	if errRet = d.Set("status", *mysqlInfo.Status); errRet != nil {
+		log.Printf("[CRITAL]%s provider set status fail, reason:%s\n ", logId, errRet.Error())
+		return
+	}
+	if errRet = d.Set("task_status", *mysqlInfo.TaskStatus); errRet != nil {
+		log.Printf("[CRITAL]%s provider set task_status fail, reason:%s\n ", logId, errRet.Error())
+		return
+	}
 	return
 }
 
@@ -706,24 +751,61 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	mysqlInfo, err := tencentMsyqlBasicInfoRead(ctx, d, meta, true)
-	if err != nil {
-		return err
-	}
-	if mysqlInfo == nil {
-		d.SetId("")
+	var mysqlInfo *cdb.InstanceInfo
+	var e error
+
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		mysqlInfo, e = tencentMsyqlBasicInfoRead(ctx, d, meta, true)
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				return resource.NonRetryableError(e)
+			}
+			return resource.RetryableError(e)
+		}
+		if mysqlInfo == nil {
+			d.SetId("")
+			return nil
+		}
+		if e = d.Set("project_id", int(*mysqlInfo.ProjectId)); e != nil {
+			log.Printf("[CRITAL]%s provider set project_id fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		if e = d.Set("engine_version", *mysqlInfo.EngineVersion); e != nil {
+			log.Printf("[CRITAL]%s provider set engine_version fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		if *mysqlInfo.WanStatus == 1 {
+			if e = d.Set("internet_service", 1); e != nil {
+				log.Printf("[CRITAL]%s provider set internet_service fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+			if e = d.Set("internet_host", *mysqlInfo.WanDomain); e != nil {
+				log.Printf("[CRITAL]%s provider set internet_host fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+			if e = d.Set("internet_port", int(*mysqlInfo.WanPort)); e != nil {
+				log.Printf("[CRITAL]%s provider set internet_port fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+		} else {
+			if e = d.Set("internet_service", 0); e != nil {
+				log.Printf("[CRITAL]%s provider set internet_service fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+			if e = d.Set("internet_host", ""); e != nil {
+				log.Printf("[CRITAL]%s provider set internet_host fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+			if e = d.Set("internet_port", 0); e != nil {
+				log.Printf("[CRITAL]%s provider set internet_port fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+		}
 		return nil
-	}
-	d.Set("project_id", int(*mysqlInfo.ProjectId))
-	d.Set("engine_version", *mysqlInfo.EngineVersion)
-	if *mysqlInfo.WanStatus == 1 {
-		d.Set("internet_service", 1)
-		d.Set("internet_host", *mysqlInfo.WanDomain)
-		d.Set("internet_port", int(*mysqlInfo.WanPort))
-	} else {
-		d.Set("internet_service", 0)
-		d.Set("internet_host", "")
-		d.Set("internet_port", 0)
+	})
+	if err != nil {
+		return fmt.Errorf("Fail to get basic info from mysql, reaseon %s", err.Error())
 	}
 
 	parametersMap, ok := d.Get("parameters").(map[string]interface{})
@@ -734,38 +816,70 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		for k := range parametersMap {
 			cares = append(cares, k)
 		}
-		caresParameters, err := mysqlService.DescribeCaresParameters(ctx, d.Id(), cares)
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			caresParameters, e := mysqlService.DescribeCaresParameters(ctx, d.Id(), cares)
+			if e != nil {
+				if mysqlService.NotFoundMysqlInstance(e) {
+					d.SetId("")
+					return resource.NonRetryableError(e)
+				}
+				return resource.RetryableError(e)
+			}
+			if e := d.Set("parameters", caresParameters); e != nil {
+				log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+			if e := d.Set("availability_zone", *mysqlInfo.Zone); e != nil {
+				log.Printf("[CRITAL]%s provider set availability_zone fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+			return nil
+		})
 		if err != nil {
-			return err
-		}
-		if err := d.Set("parameters", caresParameters); err != nil {
-			log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, err.Error())
+			return fmt.Errorf("Describe CaresParameters Fail, reason:%s", err.Error())
 		}
 	}
-
-	d.Set("availability_zone", *mysqlInfo.Zone)
-
-	backConfig, err := mysqlService.DescribeDBInstanceConfig(ctx, d.Id())
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		backConfig, e := mysqlService.DescribeDBInstanceConfig(ctx, d.Id())
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				return resource.NonRetryableError(e)
+			}
+			return resource.RetryableError(e)
+		}
+		if e = d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode)); e != nil {
+			log.Printf("[CRITAL]%s provider set slave_sync_mode fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		if e = d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode)); e != nil {
+			log.Printf("[CRITAL]%s provider set slave_deploy_mode fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
+			//if you set ,i set
+			if _, ok := d.GetOk("first_slave_zone"); ok {
+				if e = d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone); e != nil {
+					log.Printf("[CRITAL]%s provider set first_slave_zone fail, reason:%s\n ", logId, e.Error())
+					return resource.NonRetryableError(e)
+				}
+			}
+		}
+		if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
+			//if you set ,i set
+			if _, ok := d.GetOk("second_slave_zone"); ok {
+				if e = d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone); e != nil {
+					log.Printf("[CRITAL]%s provider set second_slave_zone fail, reason:%s\n ", logId, e.Error())
+					return resource.NonRetryableError(e)
+				}
+			}
+		}
+		return nil
+	})
 	if err != nil {
-		return err
+		return fmt.Errorf("Describe DBInstanceConfig Fail, reason:%s", err.Error())
 	}
-	d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
-	d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
-
-	if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
-		//if you set ,i set
-		if _, ok := d.GetOk("first_slave_zone"); ok {
-			d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
-		}
-	}
-	if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
-		//if you set ,i set
-		if _, ok := d.GetOk("second_slave_zone"); ok {
-			d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
-		}
-
-	}
-
 	return nil
 }
 

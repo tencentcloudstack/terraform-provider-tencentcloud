@@ -122,38 +122,53 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 		accountInfo *cdb.AccountInfo = nil
 	)
 
-	allAccounts, err := mysqlService.DescribeAccounts(ctx, mysqlId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		allAccounts, e := mysqlService.DescribeAccounts(ctx, mysqlId)
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				return resource.NonRetryableError(e)
+			}
+			return resource.RetryableError(e)
+		}
 
-	if err != nil {
-		if mysqlService.NotFoundMysqlInstance(err) {
+		for _, account := range allAccounts {
+			if *account.User == accountName {
+				accountInfo = account
+				break
+			}
+		}
+		if accountInfo == nil {
 			d.SetId("")
 			return nil
 		}
+
+		if *accountInfo.Notes == "" {
+			if e = d.Set("description", "--"); e != nil {
+				log.Printf("[CRITAL]%s provider set description fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+		} else {
+			if e = d.Set("description", *accountInfo.Notes); e != nil {
+				log.Printf("[CRITAL]%s provider set description fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+		}
+		if e = d.Set("mysql_id", mysqlId); e != nil {
+			log.Printf("[CRITAL]%s provider set mysql_id fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		if e = d.Set("name", *accountInfo.User); e != nil {
+			log.Printf("[CRITAL]%s provider set name fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		return nil
+	})
+	if err != nil {
 		return fmt.Errorf("Describe mysql acounts fails, reaseon %s", err.Error())
 	}
-
-	for _, account := range allAccounts {
-		if *account.User == accountName {
-			accountInfo = account
-			break
-		}
-	}
-	if accountInfo == nil {
-		d.SetId("")
-		return nil
-	}
-
-	if *accountInfo.Notes == "" {
-		d.Set("description", "--")
-	} else {
-		d.Set("description", *accountInfo.Notes)
-	}
-
-	d.Set("mysql_id", mysqlId)
-	d.Set("name", *accountInfo.User)
 	return nil
 }
-
 func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_account.update")()
 
@@ -273,7 +288,6 @@ func resourceTencentCloudMysqlAccountDelete(d *schema.ResourceData, meta interfa
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s delete mysql account  fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 

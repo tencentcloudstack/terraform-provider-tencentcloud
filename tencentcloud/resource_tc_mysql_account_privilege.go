@@ -111,50 +111,71 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 
 	//check if the account is delete
 	var accountInfo *cdb.AccountInfo = nil
-	accountInfos, err := mysqlService.DescribeAccounts(ctx, privilegeId.MysqlId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		accountInfos, e := mysqlService.DescribeAccounts(ctx, privilegeId.MysqlId)
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				return resource.NonRetryableError(e)
+			}
+			return retryError(e)
+		}
+		for _, account := range accountInfos {
+			if *account.User == privilegeId.AccountName {
+				accountInfo = account
+				break
+			}
+		}
+		return nil
+	})
 	if err != nil {
-		return err
+		if accountInfo == nil {
+			d.SetId("")
+		}
+		return fmt.Errorf("Describe mysql acounts fails, reaseon %s", err.Error())
 	}
 
-	for _, account := range accountInfos {
-		if *account.User == privilegeId.AccountName {
-			accountInfo = account
-			break
-		}
-	}
-	if accountInfo == nil {
-		d.SetId("")
-		return nil
-	}
 	dbNames := make([]string, 0, d.Get("database_names").(*schema.Set).Len())
 	for _, v := range d.Get("database_names").(*schema.Set).List() {
 		dbNames = append(dbNames, v.(string))
 	}
 
-	privileges, err := mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId,
-		privilegeId.AccountName, dbNames)
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		privileges, e := mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId,
+			privilegeId.AccountName, dbNames)
 
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				return resource.NonRetryableError(e)
+			}
+			return retryError(e)
+		}
+
+		var finalPrivileges = make([]string, 0, len(privileges))
+
+		var allowPrivileges = make(map[string]struct{})
+		for _, allowPrivilege := range MYSQL_DATABASE_PRIVILEGE {
+			allowPrivileges[allowPrivilege] = struct{}{}
+		}
+
+		for _, getPrivilege := range privileges {
+			if getPrivilege == MYSQL_DATABASE_MUST_PRIVILEGE {
+				continue
+			}
+			if _, ok := allowPrivileges[getPrivilege]; ok {
+				finalPrivileges = append(finalPrivileges, getPrivilege)
+			}
+		}
+		if e = d.Set("privileges", finalPrivileges); e != nil {
+			log.Printf("[CRITAL]%s provider set privileges fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		return nil
+	})
 	if err != nil {
-		return err
+		return fmt.Errorf("Describe mysql acounts privilege fails, reaseon %s", err.Error())
 	}
-
-	var finalPrivileges = make([]string, 0, len(privileges))
-
-	var allowPrivileges = make(map[string]struct{})
-	for _, allowPrivilege := range MYSQL_DATABASE_PRIVILEGE {
-		allowPrivileges[allowPrivilege] = struct{}{}
-	}
-
-	for _, getPrivilege := range privileges {
-		if getPrivilege == MYSQL_DATABASE_MUST_PRIVILEGE {
-			continue
-		}
-		if _, ok := allowPrivileges[getPrivilege]; ok {
-			finalPrivileges = append(finalPrivileges, getPrivilege)
-		}
-	}
-	d.Set("privileges", finalPrivileges)
-
 	return nil
 }
 
@@ -207,12 +228,12 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 				return resource.RetryableError(fmt.Errorf("modify account privilege   task  status is %s", taskStatus))
 			}
-			err = fmt.Errorf("modify account privilege  task status is %s,we won't wait for it finish ,it show message:%s", taskStatus, message)
+			log.Println("modify account privilege task status is %s,we won't wait for it finish ,it show message:%s", taskStatus, message)
 			return resource.NonRetryableError(err)
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s modify account privilege   fail, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s modify account privilege fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
 		d.SetPartial("privileges")
@@ -267,7 +288,7 @@ func resourceTencentCloudMysqlAccountPrivilegeDelete(d *schema.ResourceData, met
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s delete account privilege  fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete account privilege fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 

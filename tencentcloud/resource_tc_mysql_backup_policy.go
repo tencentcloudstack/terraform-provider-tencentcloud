@@ -18,7 +18,9 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -83,35 +85,51 @@ func resourceTencentCloudMysqlBackupPolicyRead(d *schema.ResourceData, meta inte
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	desResponse, err := mysqlService.DescribeBackupConfigByMysqlId(ctx, d.Id())
-
-	if err != nil {
-		if mysqlService.NotFoundMysqlInstance(err) {
-			d.SetId("")
-			return nil
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		desResponse, e := mysqlService.DescribeBackupConfigByMysqlId(ctx, d.Id())
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				return resource.NonRetryableError(e)
+			}
+			return retryError(e)
 		}
+		if e = d.Set("mysql_id", d.Id()); e != nil {
+			log.Printf("[CRITAL]%s provider set mysql_id fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		if e = d.Set("retention_period", int(*desResponse.Response.BackupExpireDays)); e != nil {
+			log.Printf("[CRITAL]%s provider set retention_period fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		if e = d.Set("backup_model", *desResponse.Response.BackupMethod); e != nil {
+			log.Printf("[CRITAL]%s provider set backup_model fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		var buf bytes.Buffer
+
+		if *desResponse.Response.StartTimeMin < 10 {
+			buf.WriteString("0")
+		}
+		buf.WriteString(fmt.Sprintf("%d:00-", *desResponse.Response.StartTimeMin))
+
+		if *desResponse.Response.StartTimeMax < 10 {
+			buf.WriteString("0")
+		}
+		buf.WriteString(fmt.Sprintf("%d:00", *desResponse.Response.StartTimeMax))
+		if e = d.Set("backup_time", buf.String()); e != nil {
+			log.Printf("[CRITAL]%s provider set backup_time fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		if e = d.Set("binlog_period", int(*desResponse.Response.BinlogExpireDays)); e != nil {
+			log.Printf("[CRITAL]%s provider set binlog_period fail, reason:%s\n ", logId, e.Error())
+			return resource.NonRetryableError(e)
+		}
+		return nil
+	})
+	if err != nil {
 		return fmt.Errorf("[API]Describe mysql backup policy fail,reason:%s", err.Error())
 	}
-
-	d.Set("mysql_id", d.Id())
-	d.Set("retention_period", int(*desResponse.Response.BackupExpireDays))
-	d.Set("backup_model", *desResponse.Response.BackupMethod)
-
-	var buf bytes.Buffer
-
-	if *desResponse.Response.StartTimeMin < 10 {
-		buf.WriteString("0")
-	}
-	buf.WriteString(fmt.Sprintf("%d:00-", *desResponse.Response.StartTimeMin))
-
-	if *desResponse.Response.StartTimeMax < 10 {
-		buf.WriteString("0")
-	}
-	buf.WriteString(fmt.Sprintf("%d:00", *desResponse.Response.StartTimeMax))
-
-	d.Set("backup_time", buf.String())
-	d.Set("binlog_period", int(*desResponse.Response.BinlogExpireDays))
-
 	return nil
 }
 
