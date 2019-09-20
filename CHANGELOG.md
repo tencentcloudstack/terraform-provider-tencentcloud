@@ -1,4 +1,5 @@
-## 1.19.0 (Unreleased)
+## 1.20.0 (Unreleased)
+## 1.19.0 (September 19, 2019)
 
 FEATURES:
 
@@ -6,9 +7,10 @@ FEATURES:
 
 ENHANCEMENTS:
 
-* Data Source: `tencentcloud_security_groups`: add optional argument `result_output_file` and new attributes `ingress`, `egress` for list `security_groups`.
 * Data Source: `tencentcloud_security_groups`: add optional argument `tags`.
+* Data Source: `tencentcloud_security_groups`: add optional argument `result_output_file` and new attributes `ingress`, `egress` for list `security_groups`.
 * Resource: `tencentcloud_security_group`: add optional argument `tags`.
+* Resource: `tencentcloud_as_scaling_config`: internet charge type support `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 
 BUG FIXES:
 * Resource: `tencentcloud_clb_listener_rule`: fix unclear description and errors in example.
