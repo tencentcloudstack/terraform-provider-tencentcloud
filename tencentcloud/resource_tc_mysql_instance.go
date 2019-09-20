@@ -185,6 +185,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Type:        schema.TypeString,
 			ForceNew:    true,
 			Optional:    true,
+			Computed:    true,
 			Description: "Indicates which availability zone will be used.",
 		},
 		"root_password": {
