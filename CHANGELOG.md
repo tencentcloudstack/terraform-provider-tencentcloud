@@ -1,6 +1,6 @@
 ## 1.19.1 (Unreleased)
 
-	ENHANCEMENTS:
+ENHANCEMENTS:
 
 * Data Source: `tencentcloud_mongodb_instances`: add optional argument `tags`
 * Resource: `tencentcloud_mongodb_instance`: add optional argument `tags`
