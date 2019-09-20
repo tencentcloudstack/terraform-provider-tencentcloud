@@ -1,7 +1,7 @@
 ## 1.20.0 (Unreleased)
 
 BUG FIXES:
-* Resource: `tencentcloud_mysql_instance`: default argument `availability_zone` causes the instance to be recreated.
+* Resource: `tencentcloud_mysql_instance`: miss argument `availability_zone` causes the instance to be recreated.
 
 ## 1.19.0 (September 19, 2019)
 
