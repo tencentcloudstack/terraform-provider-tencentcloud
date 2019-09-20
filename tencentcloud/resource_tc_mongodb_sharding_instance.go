@@ -304,6 +304,27 @@ func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{
 		return err
 	}
 
+	if nilFields := CheckNil(instance, map[string]string{
+		"InstanceName":      "instance name",
+		"ProjectId":         "project id",
+		"ClusterType":       "cluster type",
+		"Zone":              "available zone",
+		"VpcId":             "vpc id",
+		"SubnetId":          "subnet id",
+		"Status":            "status",
+		"Vip":               "vip",
+		"Vport":             "vport",
+		"CreateTime":        "create time",
+		"MongoVersion":      "engine version",
+		"Memory":            "memory",
+		"Volume":            "volume",
+		"MachineType":       "machine type",
+		"ReplicationSetNum": "shard quantity",
+		"SecondaryNum":      "secondary number",
+	}); len(nilFields) > 0 {
+		return fmt.Errorf("mongodb %v are nil", nilFields)
+	}
+
 	d.Set("shard_quantity", instance.ReplicationSetNum)
 	d.Set("nodes_per_shard", *instance.SecondaryNum+1)
 	d.Set("instance_name", instance.InstanceName)

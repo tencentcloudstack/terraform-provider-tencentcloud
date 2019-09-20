@@ -15,6 +15,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"strings"
 
@@ -165,7 +166,7 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 
 	instanceId := ""
 	clusterType := -1
-	namePrefix := ""
+	name := ""
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
@@ -178,7 +179,7 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 		}
 	}
 	if v, ok := d.GetOk("instance_name_prefix"); ok {
-		namePrefix = v.(string)
+		name = v.(string)
 	}
 
 	tags := getTags(d, "tags")
@@ -194,7 +195,29 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 
 instancesLoop:
 	for _, mongo := range mongodbs {
-		if namePrefix != "" && strings.HasPrefix(*mongo.InstanceName, namePrefix) {
+		if nilFields := CheckNil(mongo, map[string]string{
+			"InstanceId":        "instance id",
+			"InstanceName":      "instance name",
+			"ProjectId":         "project id",
+			"ClusterType":       "cluster type",
+			"Zone":              "available zone",
+			"VpcId":             "vpc id",
+			"SubnetId":          "subnet id",
+			"Status":            "status",
+			"Vip":               "vip",
+			"Vport":             "vport",
+			"CreateTime":        "create time",
+			"MongoVersion":      "engine version",
+			"CpuNum":            "cpu number",
+			"Memory":            "memory",
+			"Volume":            "volume",
+			"MachineType":       "machine type",
+			"ReplicationSetNum": "shard quantity",
+		}); len(nilFields) > 0 {
+			return fmt.Errorf("mongodb %v are nil", nilFields)
+		}
+
+		if !strings.Contains(*mongo.InstanceName, name) {
 			continue
 		}
 

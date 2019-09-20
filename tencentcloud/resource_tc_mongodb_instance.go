@@ -288,6 +288,24 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 		return err
 	}
 
+	if nilFields := CheckNil(instance, map[string]string{
+		"InstanceName": "instance name",
+		"ProjectId":    "project id",
+		"Zone":         "available zone",
+		"VpcId":        "vpc id",
+		"SubnetId":     "subnet id",
+		"Status":       "status",
+		"Vip":          "vip",
+		"Vport":        "vport",
+		"CreateTime":   "create time",
+		"MongoVersion": "engine version",
+		"Memory":       "memory",
+		"Volume":       "volume",
+		"MachineType":  "machine type",
+	}); len(nilFields) > 0 {
+		return fmt.Errorf("mongodb %v are nil", nilFields)
+	}
+
 	d.Set("instance_name", instance.InstanceName)
 	d.Set("memory", *instance.Memory/1024)
 	d.Set("volume", *instance.Volume/1024)
