@@ -129,7 +129,7 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 						"tags": {
 							Type:        schema.TypeMap,
 							Computed:    true,
-							Description: "Tags address of an instance.",
+							Description: "Tags of an instance.",
 						},
 					},
 				},
@@ -229,7 +229,7 @@ instanceLoop:
 	}
 
 	if err := d.Set("instance_list", instanceList); err != nil {
-		log.Printf("[CRITAL]%s provider set redis instances fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set redis instances fail, reason:%s\n", logId, err.Error())
 	}
 	d.SetId("redis_instances_list" + region)
 

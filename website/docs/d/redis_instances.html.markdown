@@ -47,7 +47,7 @@ In addition to all arguments above, the following attributes are exported:
   * `redis_id` - ID of a redis instance.
   * `status` - Current status of an instance，maybe: init, processing, online, isolate and todelete.
   * `subnet_id` - ID of the vpc subnet.
-  * `tags` - Tags address of an instance.
+  * `tags` - Tags of an instance.
   * `type` - Instance type. Available values: master_slave_redis, master_slave_ckv, cluster_ckv, cluster_redis and standalone_redis.
   * `vpc_id` - ID of the vpc with which the instance is associated.
   * `zone` - Available zone to which a redis instance belongs.
