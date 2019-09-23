@@ -646,16 +646,10 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	d.Set("mem_size", *mysqlInfo.Memory)
 	d.Set("volume_size", *mysqlInfo.Volume)
 	if d.Get("vpc_id").(string) != "" {
-		if errRet = d.Set("vpc_id", *mysqlInfo.UniqVpcId); errRet != nil {
-			log.Printf("[CRITAL]%s provider set vpc_id fail, reason:%s\n ", logId, errRet.Error())
-			return
-		}
+		errRet = d.Set("vpc_id", *mysqlInfo.UniqVpcId)
 	}
 	if d.Get("subnet_id").(string) != "" {
-		if errRet = d.Set("subnet_id", *mysqlInfo.UniqSubnetId); errRet != nil {
-			log.Printf("[CRITAL]%s provider set subnet_id fail, reason:%s\n ", logId, errRet.Error())
-			return
-		}
+		errRet = d.Set("subnet_id", *mysqlInfo.UniqSubnetId)
 	}
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
