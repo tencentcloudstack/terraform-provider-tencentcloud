@@ -10,7 +10,7 @@ description: |-
 
 Provides a mysql instance resource to create read-only database instances.
 
-~> **NOTE:** The terminate operation of read only mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** The terminate operation of read only mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
 ## Example Usage
 

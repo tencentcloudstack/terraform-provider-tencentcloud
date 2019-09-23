@@ -40,12 +40,12 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_list` - A list of redis instance. Each element contains the following attributes:
   * `create_time` - The time when the instance is created.
   * `ip` - IP address of an instance.
-  * `mem_size` - Memory size in MB
+  * `mem_size` - Memory size in MB.
   * `name` - Name of a redis instance.
   * `port` - The port used to access a redis instance.
   * `project_id` - ID of the project to which a redis instance belongs.
   * `redis_id` - ID of a redis instance.
-  * `status` - Current status of an instance，maybe: init, processing, online, isolate and todelete.
+  * `status` - Current status of an instance, maybe: init, processing, online, isolate and todelete.
   * `subnet_id` - ID of the vpc subnet.
   * `tags` - Tags of an instance.
   * `type` - Instance type. Available values: master_slave_redis, master_slave_ckv, cluster_ckv, cluster_redis and standalone_redis.

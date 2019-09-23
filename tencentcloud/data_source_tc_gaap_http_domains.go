@@ -56,7 +56,6 @@ func dataSourceTencentCloudGaapHttpDomains() *schema.Resource {
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
@@ -76,17 +75,17 @@ func dataSourceTencentCloudGaapHttpDomains() *schema.Resource {
 						"certificate_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the server certificate",
+							Description: "ID of the server certificate.",
 						},
 						"client_certificate_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the client certificate",
+							Description: "ID of the client certificate.",
 						},
 						"realserver_auth": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Indicates whether realserver authentication is enable",
+							Description: "Indicates whether realserver authentication is enable.",
 						},
 						"realserver_certificate_id": {
 							Type:        schema.TypeString,
@@ -101,7 +100,7 @@ func dataSourceTencentCloudGaapHttpDomains() *schema.Resource {
 						"basic_auth": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Indicates whether basic authentication is enable",
+							Description: "Indicates whether basic authentication is enable.",
 						},
 						"basic_auth_id": {
 							Type:        schema.TypeString,

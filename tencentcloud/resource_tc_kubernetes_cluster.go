@@ -173,7 +173,7 @@ func tkeSecurityInfo() map[string]*schema.Schema {
 		"cluster_external_endpoint": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "External network address to access",
+			Description: "External network address to access.",
 		},
 		"domain": {
 			Type:        schema.TypeString,

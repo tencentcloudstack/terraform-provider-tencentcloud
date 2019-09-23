@@ -197,7 +197,7 @@ The `data_disk` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `certification_authority` - The certificate used for access.
-* `cluster_external_endpoint` - External network address to access
+* `cluster_external_endpoint` - External network address to access.
 * `cluster_node_num` - Number of nodes in the cluster.
 * `domain` - Domain name for access.
 * `password` - Password of account.

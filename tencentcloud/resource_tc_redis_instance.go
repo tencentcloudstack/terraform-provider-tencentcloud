@@ -53,7 +53,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "The available zone ID of an instance to be created., refer to tencentcloud_redis_zone_config.list",
+				Description: "The available zone ID of an instance to be created, please refer to tencentcloud_redis_zone_config.list.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -83,12 +83,12 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Required:     true,
 				Sensitive:    true,
 				ValidateFunc: validateMysqlPassword,
-				Description:  "Password for a Redis user，which should be 8 to 16 characters.",
+				Description:  "Password for a Redis user, which should be 8 to 16 characters.",
 			},
 			"mem_size": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "The memory volume of an available instance(in MB), refer to tencentcloud_redis_zone_config.list[zone].mem_sizes",
+				Description: "The memory volume of an available instance(in MB), please refer to tencentcloud_redis_zone_config.list[zone].mem_sizes.",
 			},
 			"vpc_id": {
 				Type:         schema.TypeString,
@@ -114,7 +114,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Set: func(v interface{}) int {
 					return hashcode.String(v.(string))
 				},
-				Description: "ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either. ",
+				Description: "ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -144,12 +144,12 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Current status of an instance，maybe: init, processing, online, isolate and todelete.",
+				Description: "Current status of an instance, maybe: init, processing, online, isolate and todelete.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: " The time when the instance was created.",
+				Description: "The time when the instance was created.",
 			},
 		},
 	}

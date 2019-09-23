@@ -57,7 +57,7 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 The following arguments are supported:
 
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
-* `worker_config` - (Required, ForceNew) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users. 
+* `worker_config` - (Required, ForceNew) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.
 
 The `worker_config` object supports the following:
 

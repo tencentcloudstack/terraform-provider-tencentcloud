@@ -53,12 +53,12 @@ func tkeClusterInfo() map[string]*schema.Schema {
 		"cluster_version": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: " Version of the cluster.",
+			Description: "Version of the cluster.",
 		},
 		"cluster_ipvs": {
 			Type:        schema.TypeBool,
 			Computed:    true,
-			Description: " Indicates whether ipvs is enabled.",
+			Description: "Indicates whether ipvs is enabled.",
 		},
 		"vpc_id": {
 			Type:        schema.TypeString,
@@ -119,7 +119,7 @@ func dataSourceTencentCloudKubernetesClusters() *schema.Resource {
 			"cluster_id": {
 				Type:          schema.TypeString,
 				ConflictsWith: []string{"cluster_name"},
-				Description:   " ID of the cluster. Conflict with cluster_name, can not be set at the same time.",
+				Description:   "ID of the cluster. Conflict with cluster_name, can not be set at the same time.",
 				Optional:      true,
 			},
 			"cluster_name": {

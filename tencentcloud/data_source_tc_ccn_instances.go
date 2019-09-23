@@ -38,19 +38,16 @@ func dataSourceTencentCloudCcnInstances() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"ccn_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "ID of the CCN to be queried.",
 			},
 			"name": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Name of the CCN to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},

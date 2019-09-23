@@ -124,7 +124,7 @@ func dataSourceTencentCloudAsScalingConfigs() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "ID list of login keys",
+							Description: "ID list of login keys.",
 						},
 						"security_group_ids": {
 							Type:        schema.TypeList,

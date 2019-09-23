@@ -83,7 +83,7 @@ func genIdx(fpath string) {
 	pos := strings.Index(description, "\nResources List\n")
 	if pos != -1 {
 		resources = strings.TrimSpace(description[pos+16:])
-		description = strings.TrimSpace(description[:pos])
+		// description = strings.TrimSpace(description[:pos])
 	} else {
 		log.Printf("[SKIP!]resource list missing, skip: %s\n", fname)
 		return
@@ -219,6 +219,16 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	for k, v := range resource.Schema {
 		if v.Description == "" {
 			continue
+		} else {
+			checkDescription(k, v.Description)
+		}
+		if dtype == "data_source" && v.ForceNew {
+			log.Printf("[FAIL!]Don't set ForceNew on data source: '%s'", k)
+			os.Exit(1)
+		}
+		if v.Required && v.Optional {
+			log.Printf("[FAIL!]Don't set Required and Optional at the same time: '%s'", k)
+			os.Exit(1)
 		}
 		if v.Required {
 			opt := "Required"
@@ -286,6 +296,8 @@ func getAttributes(step int, k string, v *schema.Schema) []string {
 
 	if v.Description == "" {
 		return attributes
+	} else {
+		checkDescription(k, v.Description)
 	}
 
 	if v.Computed {
@@ -332,6 +344,8 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 
 	if v.Description == "" {
 		return subStructs
+	} else {
+		checkDescription(k, v.Description)
 	}
 
 	if v.Type == schema.TypeMap || v.Type == schema.TypeList || v.Type == schema.TypeSet {
@@ -364,6 +378,7 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 			}
 		}
 	}
+
 	return subStructs
 }
 
@@ -385,4 +400,26 @@ func formatHCL(s string) string {
 	}
 
 	return strings.TrimSpace(strings.Join(rr, "\n"))
+}
+
+// checkDescription check description format
+func checkDescription(k, s string) {
+	if s == "" {
+		return
+	}
+
+	if strings.TrimLeft(s, " ") != s {
+		log.Printf("[FAIL!]There is space on the left of description: '%s': '%s'", k, s)
+		os.Exit(1)
+	}
+
+	if strings.TrimRight(s, " ") != s {
+		log.Printf("[FAIL!]There is space on the right of description: '%s': '%s'", k, s)
+		os.Exit(1)
+	}
+
+	if s[len(s)-1] != '.' && s[len(s)-1] != ':' {
+		log.Printf("[FAIL!]There is no ending charset(.|:) on the description: '%s': '%s'", k, s)
+		os.Exit(1)
+	}
 }
