@@ -42,6 +42,7 @@ Data Sources
   tencentcloud_dc_gateway_instances
   tencentcloud_dcx_instances
   tencentcloud_dnats
+  tencentcloud_enis
   tencentcloud_eip
   tencentcloud_gaap_certificates
   tencentcloud_gaap_http_domains
@@ -267,6 +268,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_security_rules":         dataSourceTencentCloudGaapSecurityRules(),
 			"tencentcloud_gaap_certificates":           dataSourceTencentCloudGaapCertificates(),
 			"tencentcloud_ssl_certificates":            dataSourceTencentCloudSslCertificates(),
+			"tencentcloud_enis":                        dataSourceTencentCloudEnis(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

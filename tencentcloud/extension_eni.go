@@ -1,6 +1,10 @@
 package tencentcloud
 
 const (
+	ENI_DESCRIBE_LIMIT = 100
+)
+
+const (
 	ENI_STATE_PENDING   = "PENDING"
 	ENI_STATE_AVAILABLE = "AVAILABLE"
 	ENI_STATE_ATTACHING = "ATTACHING"

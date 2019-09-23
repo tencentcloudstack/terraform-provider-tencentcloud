@@ -349,6 +349,7 @@ resource "tencentcloud_eni" "foo" {
   ipv4s {
     ip      = "10.0.0.10"
     primary = true
+    description = "desc"
   }
 }
 `
@@ -364,7 +365,7 @@ resource "tencentcloud_eni" "foo" {
   ipv4s {
     ip          = "10.0.0.10"
     primary     = true
-    description = "new desc"
+    description = ""
   }
 }
 `
@@ -380,7 +381,7 @@ resource "tencentcloud_eni" "foo" {
   ipv4s {
     ip          = "10.0.0.10"
     primary     = true
-    description = "new desc"
+    description = ""
   }
 
   ipv4s {
@@ -541,7 +542,7 @@ resource "tencentcloud_eni" "foo" {
   ipv4s {
     ip          = "10.0.0.10"
     primary     = true
-    description = "new desc"
+    description = "" // set empty desc to test if SDK can set private IP desc empty or not
   }
 
   ipv4s {

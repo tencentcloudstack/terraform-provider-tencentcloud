@@ -1,3 +1,39 @@
+/*
+Provides a resource to create an ENI.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_vpc" "foo" {
+  name       = "ci-test-eni-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "foo" {
+  availability_zone = "ap-guangzhou-3"
+  name              = "ci-test-eni-subnet"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_eni" "foo" {
+  name        = "ci-test-eni"
+  vpc_id      = "${tencentcloud_vpc.foo.id}"
+  subnet_id   = "${tencentcloud_subnet.foo.id}"
+  description = "eni desc"
+  ipv4_count  = 1
+}
+```
+
+Import
+
+ENI can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_eni.foo eni-qka182br
+```
+*/
 package tencentcloud
 
 import (
@@ -15,17 +51,21 @@ func eniIpInputResource() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"ip": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Intranet IP.",
 			},
 			"primary": {
-				Type:     schema.TypeBool,
-				Required: true,
+				Type:        schema.TypeBool,
+				Required:    true,
+				Description: "Indicates whether the IP is primary.",
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      "",
+				Description:  "Description of the IP, maximum length 59.",
+				ValidateFunc: validateStringLengthInRange(0, 59),
 			},
 		},
 	}
@@ -35,16 +75,19 @@ func eniIpOutputResource() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"ip": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Intranet IP.",
 			},
 			"primary": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicates whether the IP is primary.",
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Description of the IP.",
 			},
 		},
 	}
@@ -65,28 +108,33 @@ func resourceTencentCloudEni() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(0, 60),
+				Description:  "Name of the ENI, maximum length 60.",
 			},
 			"vpc_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the vpc.",
 			},
 			"subnet_id": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "ID of the subnet within this vpc.",
 			},
 			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "",
 				ValidateFunc: validateStringLengthInRange(0, 60),
+				Description:  "Description of the ENI, maximum length 60.",
 			},
 			"security_groups": {
-				Type:     schema.TypeSet,
-				Optional: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Set:      schema.HashString,
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Set:         schema.HashString,
+				Description: "A set of security group IDs.",
 			},
 			"ipv4s": {
 				Type:          schema.TypeSet,
@@ -95,39 +143,47 @@ func resourceTencentCloudEni() *schema.Resource {
 				Elem:          eniIpInputResource(),
 				Set:           schema.HashResource(eniIpInputResource()),
 				MaxItems:      30,
+				Description:   "Applying for intranet IPv4s collection, conflict with `ipv4_count`. When there are multiple ipv4s, can only be one primary IP, and the maximum length of the array is 30. Each element contains the following attributes:",
 			},
 			"ipv4_count": {
 				Type:          schema.TypeInt,
 				Optional:      true,
 				ConflictsWith: []string{"ipv4s"},
 				ValidateFunc:  validateIntegerInRange(1, 30),
+				Description:   "The number of intranet IPv4s. When it is greater than 1, there is only one primary intranet IP. The others are auxiliary intranet IPs, which conflict with `ipv4s`.",
 			},
 			"tags": {
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the ENI.",
 			},
 
 			// computed
 			"mac": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "MAC address.",
 			},
 			"state": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "State of the ENI.",
 			},
 			"primary": {
-				Type:     schema.TypeBool,
-				Computed: true,
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicates whether the IP is primary.",
 			},
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of the ENI.",
 			},
 			"ipv4_info": {
-				Type:     schema.TypeList,
-				Elem:     eniIpOutputResource(),
-				Computed: true,
+				Type:        schema.TypeList,
+				Elem:        eniIpOutputResource(),
+				Computed:    true,
+				Description: "An information list of IPv4s. Each element contains the following attributes:",
 			},
 		},
 	}
@@ -160,8 +216,8 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 		for _, v := range set.List() {
 			m := v.(map[string]interface{})
 
-			ipStr := m["ip"]
-			ip := net.ParseIP(ipStr.(string))
+			ipStr := m["ip"].(string)
+			ip := net.ParseIP(ipStr)
 			if ip == nil {
 				return fmt.Errorf("ip %s is invalid", ipStr)
 			}
@@ -171,9 +227,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 				primary: m["primary"].(bool),
 			}
 
-			if desc := m["description"].(string); desc != "" {
-				ipv4.desc = stringToPointer(desc)
-			}
+			ipv4.desc = stringToPointer(m["description"].(string))
 
 			ipv4s = append(ipv4s, ipv4)
 		}
@@ -190,6 +244,8 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 	tags := getTags(d, "tags")
 
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+	tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
+	region := m.(*TencentCloudClient).apiV3Conn.Region
 
 	var (
 		id  string
@@ -214,10 +270,11 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 				}
 				primaryIpv4 := ipv4s[i]
 				ipv4s = append(ipv4s[:i], ipv4s[i+1:]...)
-				newIpv4s := make([]VpcEniIP, len(ipv4s)+1)
+				/*newIpv4s := make([]VpcEniIP, len(ipv4s)+1)
 				newIpv4s[0] = primaryIpv4
 				copy(newIpv4s[1:], ipv4s)
-				ipv4s = newIpv4s
+				ipv4s = newIpv4s*/
+				ipv4s = append([]VpcEniIP{primaryIpv4}, ipv4s...)
 				break
 			}
 		}
@@ -276,12 +333,8 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 		}
 	}
 
-	if tags != nil {
-		tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
-
-		region := m.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:eni/%s", region, id)
-
+	if len(tags) > 0 {
+		resourceName := BuildTagResourceName("vpc", "eni", region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -343,14 +396,11 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 	d.Set("primary", eni.Primary)
 	d.Set("create_time", eni.CreatedTime)
 
-	if len(eni.GroupSet) > 0 {
-		sgs := make([]string, 0, len(eni.GroupSet))
-		for _, sg := range eni.GroupSet {
-			sgs = append(sgs, *sg)
-		}
-
-		d.Set("security_groups", sgs)
+	sgs := make([]string, 0, len(eni.GroupSet))
+	for _, sg := range eni.GroupSet {
+		sgs = append(sgs, *sg)
 	}
+	d.Set("security_groups", sgs)
 
 	if len(eni.PrivateIpAddressSet) == 0 {
 		return errors.New("eni ipv4 is empty")
@@ -381,21 +431,18 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 		d.Set("ipv4_count", len(ipv4s))
 	}
 
-	if len(eni.TagSet) > 0 {
-		tags := make(map[string]string, len(eni.TagSet))
-		for _, tag := range eni.TagSet {
-			if tag.Key == nil {
-				return errors.New("tag key is nil")
-			}
-			if tag.Value == nil {
-				return errors.New("tag value is nil")
-			}
-
-			tags[*tag.Key] = *tag.Value
+	tags := make(map[string]string, len(eni.TagSet))
+	for _, tag := range eni.TagSet {
+		if tag.Key == nil {
+			return errors.New("tag key is nil")
+		}
+		if tag.Value == nil {
+			return errors.New("tag value is nil")
 		}
 
-		d.Set("tags", tags)
+		tags[*tag.Key] = *tag.Value
 	}
+	d.Set("tags", tags)
 
 	return nil
 }

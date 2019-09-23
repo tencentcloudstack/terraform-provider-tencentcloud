@@ -9,8 +9,6 @@ import (
 	"log"
 	"net"
 	"regexp"
-	"net"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -1753,8 +1751,8 @@ func (me *VpcService) describeEnis(
 
 	request.Offset = &offset
 
-	count := 100
-	for count == 100 {
+	count := ENI_DESCRIBE_LIMIT
+	for count == ENI_DESCRIBE_LIMIT {
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 
@@ -1830,80 +1828,22 @@ func (me *VpcService) UnAssignIpv4FromEni(ctx context.Context, id string, ipv4s 
 	logId := getLogId(ctx)
 	client := me.client.UseVpcClient()
 
-	sort.Strings(ipv4s)
-
-	unAssignRequest := vpc.NewUnassignPrivateIpAddressesRequest()
-	unAssignRequest.NetworkInterfaceId = &id
-	unAssignRequest.PrivateIpAddresses = make([]*vpc.PrivateIpAddressSpecification, 0, len(ipv4s))
+	request := vpc.NewUnassignPrivateIpAddressesRequest()
+	request.NetworkInterfaceId = &id
+	request.PrivateIpAddresses = make([]*vpc.PrivateIpAddressSpecification, 0, len(ipv4s))
 	for _, ipv4 := range ipv4s {
-		unAssignRequest.PrivateIpAddresses = append(unAssignRequest.PrivateIpAddresses, &vpc.PrivateIpAddressSpecification{
+		request.PrivateIpAddresses = append(request.PrivateIpAddresses, &vpc.PrivateIpAddressSpecification{
 			PrivateIpAddress: stringToPointer(ipv4),
 		})
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(unAssignRequest.GetAction())
+		ratelimit.Check(request.GetAction())
 
-		if _, err := client.UnassignPrivateIpAddresses(unAssignRequest); err != nil {
+		if _, err := client.UnassignPrivateIpAddresses(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-				logId, unAssignRequest.GetAction(), unAssignRequest.ToJsonString(), err)
+				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
-		}
-
-		return nil
-	}); err != nil {
-		log.Printf("[CRITAL]%s unassign ipv4 from eni failed, reason: %v", logId, err)
-		return err
-	}
-
-	describeRequest := vpc.NewDescribeNetworkInterfacesRequest()
-	describeRequest.NetworkInterfaceIds = []*string{&id}
-
-	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(describeRequest.GetAction())
-
-		response, err := client.DescribeNetworkInterfaces(describeRequest)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-				logId, unAssignRequest.GetAction(), unAssignRequest.ToJsonString(), err)
-			return retryError(err)
-		}
-
-		var eni *vpc.NetworkInterface
-
-		for _, e := range response.Response.NetworkInterfaceSet {
-			if e.NetworkInterfaceId == nil {
-				err := fmt.Errorf("api[%s] eni id is nil", describeRequest.GetAction())
-				log.Printf("[CRITAL]%s %v", logId, err)
-				return resource.NonRetryableError(err)
-			}
-
-			if *e.NetworkInterfaceId == id {
-				eni = e
-				break
-			}
-		}
-
-		if eni == nil {
-			err := fmt.Errorf("api[%s] eni not found", describeRequest.GetAction())
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
-
-		// check unassigned ipv4 exists or not
-		for _, ipv4 := range eni.PrivateIpAddressSet {
-			if ipv4.PrivateIpAddress == nil {
-				err := fmt.Errorf("api[%s] eni ipv4 ip is nil", describeRequest.GetAction())
-				log.Printf("[CRITAL]%s %v", logId, err)
-				return resource.NonRetryableError(err)
-			}
-
-			index := sort.SearchStrings(ipv4s, *ipv4.PrivateIpAddress)
-			if index < len(ipv4s) && ipv4s[index] == *ipv4.PrivateIpAddress {
-				err := errors.New("eni unassigned ipv4 still exists")
-				log.Printf("[DEBUG]%s %v", logId, err)
-				return resource.RetryableError(err)
-			}
 		}
 
 		return nil
@@ -2219,6 +2159,8 @@ func (me *VpcService) ModifyEniPrimaryIpv4Desc(ctx context.Context, id, ip strin
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
 		if _, err := client.ModifyPrivateIpAddressesAttribute(request); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 				logId, request.GetAction(), request.ToJsonString(), err)
