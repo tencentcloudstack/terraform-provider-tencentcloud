@@ -34,6 +34,7 @@ func TestAccTencentCloudMongodbInstancesDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.volume", "100"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.machine_type", "TGIO"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.shard_quantity"),
+					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.0.tags.test", "test"),
 				),
 			},
 		},
@@ -50,9 +51,15 @@ resource "tencentcloud_mongodb_instance" "mongodb_instance" {
   available_zone = "ap-guangzhou-3"
   project_id     = 0
   password       = "test1234"
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 data "tencentcloud_mongodb_instances" "mongodb_instances" {
   instance_id = "${tencentcloud_mongodb_instance.mongodb_instance.id}"
+
+  tags = "${tencentcloud_mongodb_instance.mongodb_instance.tags}"
 }
 `

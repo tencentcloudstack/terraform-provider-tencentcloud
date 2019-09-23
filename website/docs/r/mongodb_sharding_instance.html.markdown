@@ -45,6 +45,7 @@ The following arguments are supported:
 * `project_id` - (Optional) ID of the project which the instance belongs.
 * `security_groups` - (Optional) ID of the security group.
 * `subnet_id` - (Optional, ForceNew) ID of the subnet within this VPC. The vaule is required if VpcId is set.
+* `tags` - (Optional) The tags of the Mongodb.
 * `vpc_id` - (Optional, ForceNew) ID of the VPC.
 
 ## Attributes Reference

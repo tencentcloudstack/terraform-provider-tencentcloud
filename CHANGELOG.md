@@ -3,7 +3,10 @@
 ENHANCEMENTS:
 
 * Data Source: `tencentcloud_redis_instances` add optional argument `tags`
+* Data Source: `tencentcloud_mongodb_instances`: add optional argument `tags`
 * Resource: `tencentcloud_redis_instance` add optional argument `tags`
+* Resource: `tencentcloud_mongodb_instance`: add optional argument `tags`
+* Resource: `tencentcloud_mongodb_sharding_instance`: add optional argument `tags`
 
 BUG FIXES:
 * Resource: `tencentcloud_mysql_instance`: miss argument `availability_zone` causes the instance to be recreated.
