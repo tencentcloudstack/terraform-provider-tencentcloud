@@ -50,22 +50,32 @@ func (me *CvmService) DescribeInstanceByFilter(ctx context.Context, filters map[
 		request.Filters = append(request.Filters, &filter)
 	}
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCvmClient().DescribeInstances(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	var offset int64 = 0
+	var pageSize int64 = 100
+	instances = make([]*cvm.Instance, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCvmClient().DescribeInstances(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.InstanceSet) < 1 {
-		errRet = fmt.Errorf("instance id is not found")
-		return
+		if response == nil || len(response.Response.InstanceSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.InstanceSet...)
+		if len(response.Response.InstanceSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
 	}
-	instances = response.Response.InstanceSet
 	return
 }
 
@@ -232,6 +242,343 @@ func (me *CvmService) DeleteInstance(ctx context.Context, instanceId string) err
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().TerminateInstances(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *CvmService) DescribeInstanceTypes(ctx context.Context, zone string) (instanceTypes []*cvm.InstanceTypeConfig, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeInstanceTypeConfigsRequest()
+	if zone != "" {
+		request.Filters = make([]*cvm.Filter, 0, 1)
+		filter := &cvm.Filter{
+			Name:   stringToPointer("zone"),
+			Values: []*string{&zone},
+		}
+		request.Filters = append(request.Filters, filter)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DescribeInstanceTypeConfigs(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instanceTypes = response.Response.InstanceTypeConfigSet
+	return
+}
+
+func (me *CvmService) DescribeInstanceTypesByFilter(ctx context.Context, filters map[string][]string) (instanceTypes []*cvm.InstanceTypeConfig, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeInstanceTypeConfigsRequest()
+	request.Filters = make([]*cvm.Filter, 0, len(filters))
+	for k, v := range filters {
+		values := make([]*string, 0, len(v))
+		for _, value := range v {
+			values = append(values, stringToPointer(value))
+		}
+		filter := &cvm.Filter{
+			Name:   stringToPointer(k),
+			Values: values,
+		}
+		request.Filters = append(request.Filters, filter)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DescribeInstanceTypeConfigs(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instanceTypes = response.Response.InstanceTypeConfigSet
+	return
+}
+
+func (me *CvmService) DescribeKeyPairById(ctx context.Context, keyId string) (keyPair *cvm.KeyPair, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeKeyPairsRequest()
+	request.KeyIds = []*string{&keyId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DescribeKeyPairs(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.KeyPairSet) > 0 {
+		keyPair = response.Response.KeyPairSet[0]
+	}
+	return
+}
+
+func (me *CvmService) DescribeKeyPairByFilter(ctx context.Context, id, name string, projectId *int) (keyPairs []*cvm.KeyPair, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeKeyPairsRequest()
+	if id != "" {
+		request.KeyIds = []*string{&id}
+	}
+	request.Filters = make([]*cvm.Filter, 0)
+	if name != "" {
+		filter := &cvm.Filter{
+			Name:   stringToPointer("key-name"),
+			Values: []*string{&name},
+		}
+		request.Filters = append(request.Filters, filter)
+	}
+	if projectId != nil {
+		filter := &cvm.Filter{
+			Name:   stringToPointer("project-id"),
+			Values: []*string{stringToPointer(fmt.Sprintf("%d", *projectId))},
+		}
+		request.Filters = append(request.Filters, filter)
+	}
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	keyPairs = make([]*cvm.KeyPair, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCvmClient().DescribeKeyPairs(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.KeyPairSet) < 1 {
+			break
+		}
+		keyPairs = append(keyPairs, response.Response.KeyPairSet...)
+		if len(response.Response.KeyPairSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *CvmService) CreateKeyPair(ctx context.Context, keyName, publicKey string, projectId int64) (keyId string, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewImportKeyPairRequest()
+	request.KeyName = &keyName
+	request.ProjectId = &projectId
+	request.PublicKey = &publicKey
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().ImportKeyPair(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.KeyId == nil || len(*response.Response.KeyId) < 1 {
+		errRet = fmt.Errorf("key pair id is nil")
+		return
+	}
+	keyId = *response.Response.KeyId
+	return
+}
+
+func (me *CvmService) ModifyKeyPairName(ctx context.Context, keyId, keyName string) error {
+	logId := getLogId(ctx)
+	request := cvm.NewModifyKeyPairAttributeRequest()
+	request.KeyId = &keyId
+	request.KeyName = &keyName
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().ModifyKeyPairAttribute(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *CvmService) DeleteKeyPair(ctx context.Context, keyId string) error {
+	logId := getLogId(ctx)
+	request := cvm.NewDeleteKeyPairsRequest()
+	request.KeyIds = []*string{&keyId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DeleteKeyPairs(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *CvmService) UnbindKeyPair(ctx context.Context, keyId string, instanceIds []*string) error {
+	logId := getLogId(ctx)
+	request := cvm.NewDisassociateInstancesKeyPairsRequest()
+	request.KeyIds = []*string{&keyId}
+	request.InstanceIds = instanceIds
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DisassociateInstancesKeyPairs(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *CvmService) CreatePlacementGroup(ctx context.Context, placementName, placementType string) (placementId string, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewCreateDisasterRecoverGroupRequest()
+	request.Name = &placementName
+	request.Type = &placementType
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().CreateDisasterRecoverGroup(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.DisasterRecoverGroupId == nil {
+		errRet = fmt.Errorf("placement group id is nil")
+		return
+	}
+	placementId = *response.Response.DisasterRecoverGroupId
+	return
+}
+
+func (me *CvmService) DescribePlacementGroupById(ctx context.Context, placementId string) (placementGroup *cvm.DisasterRecoverGroup, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeDisasterRecoverGroupsRequest()
+	request.DisasterRecoverGroupIds = []*string{&placementId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DescribeDisasterRecoverGroups(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DisasterRecoverGroupSet) < 1 {
+		return
+	}
+	placementGroup = response.Response.DisasterRecoverGroupSet[0]
+	return
+}
+
+func (me *CvmService) DescribePlacementGroupByFilter(ctx context.Context, id, name string) (placementGroups []*cvm.DisasterRecoverGroup, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeDisasterRecoverGroupsRequest()
+	if id != "" {
+		request.DisasterRecoverGroupIds = []*string{&id}
+	}
+	if name != "" {
+		request.Name = &name
+	}
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	placementGroups = make([]*cvm.DisasterRecoverGroup, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCvmClient().DescribeDisasterRecoverGroups(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DisasterRecoverGroupSet) < 1 {
+			break
+		}
+		placementGroups = append(placementGroups, response.Response.DisasterRecoverGroupSet...)
+		if len(response.Response.DisasterRecoverGroupSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *CvmService) ModifyPlacementGroup(ctx context.Context, placementId, name string) error {
+	logId := getLogId(ctx)
+	request := cvm.NewModifyDisasterRecoverGroupAttributeRequest()
+	request.DisasterRecoverGroupId = &placementId
+	request.Name = &name
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().ModifyDisasterRecoverGroupAttribute(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *CvmService) DeletePlacementGroup(ctx context.Context, placementId string) error {
+	logId := getLogId(ctx)
+	request := cvm.NewDeleteDisasterRecoverGroupsRequest()
+	request.DisasterRecoverGroupIds = []*string{&placementId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DeleteDisasterRecoverGroups(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())

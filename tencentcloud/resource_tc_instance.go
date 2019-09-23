@@ -147,6 +147,12 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Default:     true,
 				Description: "Set instance to running or stop. Default value is true, the instance will shutdown when flag is false.",
 			},
+			"placement_group_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The id of a placement group.",
+			},
 			// payment
 			"instance_charge_type": {
 				Type:         schema.TypeString,
@@ -389,6 +395,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				request.InstanceChargePrepaid.RenewFlag = stringToPointer(renewFlag.(string))
 			}
 		}
+	}
+	if v, ok := d.GetOk("placement_group_id"); ok {
+		request.DisasterRecoverGroupIds = []*string{stringToPointer(v.(string))}
 	}
 
 	// network

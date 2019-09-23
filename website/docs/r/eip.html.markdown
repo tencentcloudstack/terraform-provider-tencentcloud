@@ -1,9 +1,9 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_eip"
-sidebar_current: "docs-tencentcloud-resource-cvm-eip-x"
+sidebar_current: "docs-tencentcloud-resource-eip"
 description: |-
-  Provides a TencentCloud EIP resource.
+  Provides an EIP resource.
 ---
 
 # tencentcloud_eip
@@ -11,8 +11,6 @@ description: |-
 Provides an EIP resource.
 
 ## Example Usage
-
-Basic Usage
 
 ```hcl
 resource "tencentcloud_eip" "foo" {
@@ -24,21 +22,21 @@ resource "tencentcloud_eip" "foo" {
 
 The following arguments are supported:
 
-* `name` - (Optional) The eip's name. 
-
+* `name` - (Optional) The name of eip.
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `id` - The EIP id, something like `eip-xxxxxxx`, use this for EIP assocication.
 * `public_ip` - The elastic ip address.
 * `status` - The EIP current status.
 
+
 ## Import
 
-EIPs can be imported using the id, e.g.
+EIP can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_eip.foo eip-nyvf60va
+$ terraform import tencentcloud_eip.foo eip-nyvf60va
 ```
+

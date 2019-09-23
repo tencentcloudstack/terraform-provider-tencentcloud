@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -8,19 +9,17 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudKeyPair_basic(t *testing.T) {
+func TestAccTencentCloudKeyPair(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
+		PreCheck:      func() { testAccPreCheck(t) },
 		IDRefreshName: "tencentcloud_key_pair.foo",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckKeyPairDestroy,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckKeyPairDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccKeyPairBasic,
+				Config: testAccKeyPairPublicKey,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_key_pair.foo"),
+					testAccCheckKeyPairExists("tencentcloud_key_pair.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_key_pair.foo", "key_name", "from_terraform"),
 				),
 			},
@@ -33,54 +32,75 @@ func TestAccTencentCloudKeyPair_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudKeyPair_pubcliKey(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
+func testAccCheckKeyPairExists(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
 
-		IDRefreshName: "tencentcloud_key_pair.foo",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckKeyPairDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccKeyPairPublicKey,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_key_pair.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_key_pair.foo", "key_name", "from_terraform_public_key"),
-				),
-			},
-		},
-	})
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("key pair %s is not found", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("key pair id is not set")
+		}
+		cvmService := CvmService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+		}
+		keyPair, err := cvmService.DescribeKeyPairById(ctx, rs.Primary.ID)
+		if err != nil {
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				keyPair, err = cvmService.DescribeKeyPairById(ctx, rs.Primary.ID)
+				if err != nil {
+					return retryError(err)
+				}
+				return nil
+			})
+		}
+		if err != nil {
+			return err
+		}
+		if keyPair == nil {
+			return fmt.Errorf("key pair is not found")
+		}
+		return nil
+	}
 }
 
 func testAccCheckKeyPairDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*TencentCloudClient).commonConn
-	var keyId string
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	cvmService := CvmService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_key_pair" {
 			continue
 		}
-		keyId = rs.Primary.ID
-	}
-	_, _, err := findKeyPairById(client, keyId)
-	if err == nil {
-		return fmt.Errorf("key pair can still be found after deleted")
-	}
-	if err.Error() == `tencentcloud_key_pair not found` {
-		return nil
-	}
-	return err
-}
 
-const testAccKeyPairBasic = `
-resource "tencentcloud_key_pair" "foo" {
-  key_name = "from_terraform"
+		keyPair, err := cvmService.DescribeKeyPairById(ctx, rs.Primary.ID)
+		if err != nil {
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				keyPair, err = cvmService.DescribeKeyPairById(ctx, rs.Primary.ID)
+				if err != nil {
+					return retryError(err)
+				}
+				return nil
+			})
+		}
+		if err != nil {
+			return err
+		}
+		if keyPair != nil {
+			return fmt.Errorf("key pair still exists: %s", rs.Primary.ID)
+		}
+	}
+	return nil
 }
-`
 
 const testAccKeyPairPublicKey = `
 resource "tencentcloud_key_pair" "foo" {
-  key_name   = "from_terraform_public_key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA7TIqdj1BfWk2GoWSwPKT2wkpDTsAGNIgu6SZI8w5/zz02kWMA78WGEv1/I1JCg8BcsagmZeZohSYwgHJXL6QuWDAL6sjGMVAhMQvXRT87apyPX5rzM1MVHlL87btvmc7gLv7OhyDwwpq3Lp62mLxLDVOOu+InTcspQ4eIkHxxuTRo6aXXnimTLezu6CrjWvYxiSkPPZYLG7hwkfcewnsBxp8Tb9i68CLPlenZZph6DUzolNMCGhWmSiqi4BZCaZ8sFrRcU19mWi9gFZYSYSVq3uYZWp4zfwhSJ0dUj592dcAr9/Fuqy7YVUT8KnfR43oyfaeWJLJ4FS8FIpriZAFEw== foo@bar"
+  key_name   = "from_terraform"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
 }
 `
