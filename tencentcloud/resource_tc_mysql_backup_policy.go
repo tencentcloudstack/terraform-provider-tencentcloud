@@ -82,14 +82,12 @@ func resourceTencentCloudMysqlBackupPolicyRead(d *schema.ResourceData, meta inte
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-	var onlineHas bool = true
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		desResponse, e := mysqlService.DescribeBackupConfigByMysqlId(ctx, d.Id())
 		if e != nil {
 			if mysqlService.NotFoundMysqlInstance(e) {
 				d.SetId("")
-				onlineHas = false
 				return nil
 			}
 			return retryError(e)
