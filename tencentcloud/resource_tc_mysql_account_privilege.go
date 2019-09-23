@@ -111,12 +111,14 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 
 	//check if the account is delete
 	var accountInfo *cdb.AccountInfo = nil
+	var onlineHas bool = true
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		accountInfos, e := mysqlService.DescribeAccounts(ctx, privilegeId.MysqlId)
 		if e != nil {
 			if mysqlService.NotFoundMysqlInstance(e) {
 				d.SetId("")
-				return resource.NonRetryableError(e)
+				onlineHas = false
+				return nil
 			}
 			return retryError(e)
 		}
@@ -126,13 +128,18 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 				break
 			}
 		}
+		if accountInfo == nil {
+			d.SetId("")
+			onlineHas = false
+			return nil
+		}
 		return nil
 	})
 	if err != nil {
-		if accountInfo == nil {
-			d.SetId("")
-		}
 		return fmt.Errorf("Describe mysql acounts fails, reaseon %s", err.Error())
+	}
+	if !onlineHas {
+		return nil
 	}
 
 	dbNames := make([]string, 0, d.Get("database_names").(*schema.Set).Len())
@@ -147,7 +154,8 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 		if e != nil {
 			if mysqlService.NotFoundMysqlInstance(e) {
 				d.SetId("")
-				return resource.NonRetryableError(e)
+				onlineHas = false
+				return nil
 			}
 			return retryError(e)
 		}
@@ -167,10 +175,7 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 				finalPrivileges = append(finalPrivileges, getPrivilege)
 			}
 		}
-		if e = d.Set("privileges", finalPrivileges); e != nil {
-			log.Printf("[CRITAL]%s provider set privileges fail, reason:%s\n ", logId, e.Error())
-			return resource.NonRetryableError(e)
-		}
+		d.Set("privileges", finalPrivileges)
 		return nil
 	})
 	if err != nil {

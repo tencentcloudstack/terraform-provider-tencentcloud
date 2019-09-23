@@ -121,17 +121,17 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 		accountName                  = items[1]
 		accountInfo *cdb.AccountInfo = nil
 	)
-
+	var onlineHas bool = true
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		allAccounts, e := mysqlService.DescribeAccounts(ctx, mysqlId)
 		if e != nil {
 			if mysqlService.NotFoundMysqlInstance(e) {
 				d.SetId("")
-				return resource.NonRetryableError(e)
+				onlineHas = false
+				return nil
 			}
-			return resource.RetryableError(e)
+			return retryError(e)
 		}
-
 		for _, account := range allAccounts {
 			if *account.User == accountName {
 				accountInfo = account
@@ -140,33 +140,24 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 		}
 		if accountInfo == nil {
 			d.SetId("")
+			onlineHas = false
 			return nil
-		}
-
-		if *accountInfo.Notes == "" {
-			if e = d.Set("description", "--"); e != nil {
-				log.Printf("[CRITAL]%s provider set description fail, reason:%s\n ", logId, e.Error())
-				return resource.NonRetryableError(e)
-			}
-		} else {
-			if e = d.Set("description", *accountInfo.Notes); e != nil {
-				log.Printf("[CRITAL]%s provider set description fail, reason:%s\n ", logId, e.Error())
-				return resource.NonRetryableError(e)
-			}
-		}
-		if e = d.Set("mysql_id", mysqlId); e != nil {
-			log.Printf("[CRITAL]%s provider set mysql_id fail, reason:%s\n ", logId, e.Error())
-			return resource.NonRetryableError(e)
-		}
-		if e = d.Set("name", *accountInfo.User); e != nil {
-			log.Printf("[CRITAL]%s provider set name fail, reason:%s\n ", logId, e.Error())
-			return resource.NonRetryableError(e)
 		}
 		return nil
 	})
 	if err != nil {
 		return fmt.Errorf("Describe mysql acounts fails, reaseon %s", err.Error())
 	}
+	if !onlineHas {
+		return nil
+	}
+	if *accountInfo.Notes == "" {
+		d.Set("description", "--")
+	} else {
+		d.Set("description", *accountInfo.Notes)
+	}
+	d.Set("mysql_id", mysqlId)
+	d.Set("name", *accountInfo.User)
 	return nil
 }
 func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interface{}) error {

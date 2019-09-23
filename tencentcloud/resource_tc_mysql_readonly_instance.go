@@ -211,23 +211,23 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	var onlineHas bool = true
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, e := tencentMsyqlBasicInfoRead(ctx, d, meta, false)
 		if e != nil {
 			if mysqlService.NotFoundMysqlInstance(e) {
 				d.SetId("")
-				return resource.NonRetryableError(e)
+				onlineHas = false
+				return nil
 			}
-			return resource.RetryableError(e)
+			return retryError(e)
 		}
 		if mysqlInfo == nil {
 			d.SetId("")
+			onlineHas = false
 			return nil
 		}
-		if e = d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId); e != nil {
-			log.Printf("[CRITAL]%s provider set master_instance_id fail, reason:%s\n ", logId, e.Error())
-			return resource.NonRetryableError(e)
-		}
+		d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
 		return nil
 	})
 	if err != nil {
