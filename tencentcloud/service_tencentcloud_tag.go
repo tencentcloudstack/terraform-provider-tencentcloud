@@ -6,20 +6,20 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform/helper/resource"
+	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-
-	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 )
 
 type TagService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *TagService) ModifyTags(ctx context.Context, resource string, replaceTags map[string]string, deleteKeys []string) error {
+func (me *TagService) ModifyTags(ctx context.Context, resourceName string, replaceTags map[string]string, deleteKeys []string) error {
 	logId := getLogId(ctx)
+
 	request := tag.NewModifyResourceTagsRequest()
-	request.Resource = &resource
+	request.Resource = &resourceName
 	if len(replaceTags) > 0 {
 		request.ReplaceTags = make([]*tag.Tag, 0, len(replaceTags))
 		for k, v := range replaceTags {
@@ -43,15 +43,24 @@ func (me *TagService) ModifyTags(ctx context.Context, resource string, replaceTa
 		}
 	}
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTagClient().ModifyResourceTags(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseTagClient().ModifyResourceTags(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify resource %s tags failed, reason: %v", logId, resourceName, err)
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return nil
 }

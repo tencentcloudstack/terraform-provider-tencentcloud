@@ -35,6 +35,7 @@ The following arguments are supported:
 * `project_id` - (Optional) Specifies which project the instance should belong to.
 * `security_groups` - (Optional, ForceNew) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either. 
 * `subnet_id` - (Optional, ForceNew) Specifies which subnet the instance should belong to.
+* `tags` - (Optional) Instance tags.
 * `type` - (Optional, ForceNew) Instance type. Available values: master_slave_redis.
 * `vpc_id` - (Optional, ForceNew) ID of the vpc with which the instance is to be associated.
 
@@ -51,7 +52,7 @@ In addition to all arguments above, the following attributes are exported:
 
 Redis instance can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_redis_instance.redislab redis-id
 ```
 
