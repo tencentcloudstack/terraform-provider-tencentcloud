@@ -19,7 +19,7 @@ resource "tencentcloud_mysql_backup_policy" "default" {
   mysql_id         = "cdb-dnqksd9f"
   retention_period = 7
   backup_model     = "physical"
-  backup_time      = "02:00–06:00"
+  backup_time      = "02:00-06:00"
 }
 ```
 

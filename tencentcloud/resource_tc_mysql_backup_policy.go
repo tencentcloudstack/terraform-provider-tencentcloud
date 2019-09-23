@@ -1,14 +1,16 @@
 /*
 Provides a mysql policy resource to create a backup policy.
 
+~> **NOTE:** This attribute `backup_model` only support 'physical' in Terraform TencentCloud provider version 1.16.2
+
 Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_backup_policy" "default" {
-  mysql_id = "cdb-dnqksd9f"
+  mysql_id         = "cdb-dnqksd9f"
   retention_period = 7
-  backup_model = "logical"
-  backup_time ="02:00–06:00"
+  backup_model     = "physical"
+  backup_time      = "02:00-06:00"
 }
 ```
 */

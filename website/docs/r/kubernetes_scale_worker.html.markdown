@@ -76,13 +76,13 @@ The `worker_config` object supports the following:
 * `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is 50.
-* `system_disk_type` - (Optional, ForceNew) Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM
+* `system_disk_type` - (Optional, ForceNew) Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.
 * `user_data` - (Optional, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
 
 The `data_disk` object supports the following:
 
 * `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
-* `disk_type` - (Optional, ForceNew) Types of disk，available values: CLOUD_PREMIUM and CLOUD_SSD.
+* `disk_type` - (Optional, ForceNew) Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
 ## Attributes Reference
@@ -91,8 +91,8 @@ In addition to all arguments above, the following attributes are exported:
 
 * `worker_instances_list` - An information list of kubernetes cluster 'WORKER' . Each element contains the following attributes:
   * `failed_reason` - Information of the cvm when it is failed.
-  * `instance_id` - ID of the cvm
-  * `instance_role` - Role of the cvm
-  * `instance_state` - State of the cvm
+  * `instance_id` - ID of the cvm.
+  * `instance_role` - Role of the cvm.
+  * `instance_state` - State of the cvm.
 
 

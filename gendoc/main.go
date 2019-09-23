@@ -225,12 +225,20 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 			if v.ForceNew {
 				opt += ", ForceNew"
 			}
+			if v.Deprecated != "" {
+				opt += ", **Deprecated**"
+				v.Description = fmt.Sprintf("%s %s", v.Deprecated, v.Description)
+			}
 			requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
 			subStruct = append(subStruct, getSubStruct(0, k, v)...)
 		} else if v.Optional {
 			opt := "Optional"
 			if v.ForceNew {
 				opt += ", ForceNew"
+			}
+			if v.Deprecated != "" {
+				opt += ", **Deprecated**"
+				v.Description = fmt.Sprintf("%s %s", v.Deprecated, v.Description)
 			}
 			optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
 			subStruct = append(subStruct, getSubStruct(0, k, v)...)
@@ -281,6 +289,9 @@ func getAttributes(step int, k string, v *schema.Schema) []string {
 	}
 
 	if v.Computed {
+		if v.Deprecated != "" {
+			v.Description = fmt.Sprintf("(**Deprecated**) %s %s", v.Deprecated, v.Description)
+		}
 		if _, ok := v.Elem.(*schema.Resource); ok {
 			listAttributes := []string{}
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {

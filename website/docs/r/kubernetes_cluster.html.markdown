@@ -163,7 +163,7 @@ The `worker_config` object supports the following:
 The `data_disk` object supports the following:
 
 * `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
-* `disk_type` - (Optional, ForceNew) Types of disk，available values: CLOUD_PREMIUM and CLOUD_SSD.
+* `disk_type` - (Optional, ForceNew) Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
 The `master_config` object supports the following:
@@ -189,7 +189,7 @@ The `master_config` object supports the following:
 The `data_disk` object supports the following:
 
 * `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
-* `disk_type` - (Optional, ForceNew) Types of disk，available values: CLOUD_PREMIUM and CLOUD_SSD.
+* `disk_type` - (Optional, ForceNew) Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
 ## Attributes Reference
