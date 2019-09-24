@@ -91,6 +91,7 @@ resource tencentcloud_gaap_http_rule "foo" {
   path            = "/"
   realserver_type = "DOMAIN"
   health_check    = false
+  forward_host    = "www.qqq.com"
 
   realservers {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
@@ -111,6 +112,7 @@ data "tencentcloud_gaap_http_domains" "foo" {
 }
 
 data tencentcloud_gaap_http_rules "foo" {
-  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
-  path        = "${tencentcloud_gaap_http_rule.foo.path}"
+  listener_id  = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  path         = "${tencentcloud_gaap_http_rule.foo.path}"
+  forward_host = "${tencentcloud_gaap_http_rule.foo.forward_host}"
 }
