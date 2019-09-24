@@ -13,6 +13,7 @@ ENHANCEMENTS:
 * Data Source: `tencentcloud_redis_instances` add optional argument `tags`.
 * Data Source: `tencentcloud_mongodb_instances` add optional argument `tags`.
 * Data Source: `tencentcloud_instance_types` add optional argument `availability_zone` and `gpu_core_count`.
+* Data Source: `tencentcloud_gaap_http_rules` add optional argument `forward_host` and attributes `forward_host` in `rules`.
 * Resource: `tencentcloud_redis_instance` add optional argument `tags`.
 * Resource: `tencentcloud_mongodb_instance` add optional argument `tags`.
 * Resource: `tencentcloud_mongodb_sharding_instance` add optional argument `tags`.
@@ -20,6 +21,7 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_eip` refactor logic with api3.0 .
 * Resource: `tencentcloud_eip_association` refactor logic with api3.0 .
 * Resource: `tencentcloud_key_pair` refactor logic with api3.0 .
+* Resource: `tencentcloud_gaap_http_rule` add optional argument `forward_host`.
 
 BUG FIXES:
 * Resource: `tencentcloud_mysql_instance`: miss argument `availability_zone` causes the instance to be recreated.

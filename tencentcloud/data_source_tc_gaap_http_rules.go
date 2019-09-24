@@ -49,6 +49,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"net"
 
@@ -74,6 +75,11 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateStringPrefix("/"),
 				Description:  "Path of the forward rule to be queried.",
+			},
+			"forward_host": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Requested host which is forwarded to the realserver by the listener to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -149,6 +155,11 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeInt},
 							Description: "Return code of confirmed normal.",
 						},
+						"forward_host": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Requested host which is forwarded to the realserver by the listener.",
+						},
 						"realservers": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -203,10 +214,11 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 	listenerId := d.Get("listener_id").(string)
 
 	var (
-		domain string
-		path   *string
-		ids    []string
-		rules  []map[string]interface{}
+		domain      string
+		path        *string
+		forwardHost *string
+		ids         []string
+		rules       []map[string]interface{}
 	)
 
 	if raw, ok := d.GetOk("domain"); ok {
@@ -214,6 +226,9 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 	}
 	if raw, ok := d.GetOk("path"); ok {
 		path = stringToPointer(raw.(string))
+	}
+	if raw, ok := d.GetOk("forward_host"); ok {
+		forwardHost = stringToPointer(raw.(string))
 	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -228,43 +243,38 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 
 	for _, domainRule := range domainRuleSets {
 		for _, rule := range domainRule.RuleSet {
-			if rule.RuleId == nil {
-				return errors.New("rule id is nil")
+			if nilFields := CheckNil(rule, map[string]string{
+				"RuleId":         "id",
+				"Path":           "path",
+				"RealServerType": "realserver type",
+				"Scheduler":      "scheduler",
+				"HealthCheck":    "health check",
+				"CheckParams":    "health check params",
+				"ForwardHost":    "forward host",
+			}); len(nilFields) > 0 {
+				return fmt.Errorf("rule %v are nil", nilFields)
 			}
-			if rule.Path == nil {
-				return errors.New("rule path is nil")
-			}
-			if rule.RealServerType == nil {
-				return errors.New("rule realserver type is nil")
-			}
-			if rule.Scheduler == nil {
-				return errors.New("rule scheduler is nil")
-			}
-			if rule.HealthCheck == nil {
-				return errors.New("rule health check is nil")
-			}
-			if rule.CheckParams == nil {
-				return errors.New("rule health check params is nil")
-			}
+
 			checkParams := rule.CheckParams
 
-			if checkParams.DelayLoop == nil {
-				return errors.New("rule health check interval is nil")
+			if nilFields := CheckNil(checkParams, map[string]string{
+				"DelayLoop":      "interval",
+				"ConnectTimeout": "connect timeout",
+				"Path":           "path",
+				"Method":         "method",
+			}); len(nilFields) > 0 {
+				return fmt.Errorf("rule health check %v are nil", nilFields)
 			}
-			if checkParams.ConnectTimeout == nil {
-				return errors.New("rule health check connect timeout is nil")
-			}
-			if checkParams.Path == nil {
-				return errors.New("rule health check path is nil")
-			}
-			if checkParams.Method == nil {
-				return errors.New("rule health check method is nil")
-			}
+
 			if len(checkParams.StatusCode) == 0 {
 				return errors.New("rule health check status codes set is empty")
 			}
 
 			if path != nil && *rule.Path != *path {
+				continue
+			}
+
+			if forwardHost != nil && *forwardHost != *rule.ForwardHost {
 				continue
 			}
 
@@ -282,6 +292,7 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 				"connect_timeout":     *checkParams.ConnectTimeout,
 				"health_check_path":   *checkParams.Path,
 				"health_check_method": *checkParams.Method,
+				"forward_host":        *rule.ForwardHost,
 			}
 			statusCodes := make([]int, 0, len(checkParams.StatusCode))
 			for _, code := range checkParams.StatusCode {
@@ -291,20 +302,14 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 
 			realservers := make([]map[string]interface{}, 0, len(rule.RealServerSet))
 			for _, rs := range rule.RealServerSet {
-				if rs.RealServerId == nil {
-					return errors.New("realserver id is nil")
-				}
-				if rs.RealServerIP == nil {
-					return errors.New("realserver ip or domain is nil")
-				}
-				if rs.RealServerPort == nil {
-					return errors.New("realserver port is nil")
-				}
-				if rs.RealServerWeight == nil {
-					return errors.New("realserver weight is nil")
-				}
-				if rs.RealServerStatus == nil {
-					return errors.New("realserver status is nil")
+				if nilFields := CheckNil(rs, map[string]string{
+					"RealServerId":     "id",
+					"RealServerIP":     "ip or domain",
+					"RealServerPort":   "port",
+					"RealServerWeight": "weight",
+					"RealServerStatus": "status",
+				}); len(nilFields) > 0 {
+					return fmt.Errorf("realserver %v are nil", nilFields)
 				}
 
 				realserver := map[string]interface{}{
@@ -334,8 +339,8 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), rules); err != nil {
-			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
-				logId, output.(string), err.Error())
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%v]",
+				logId, output.(string), err)
 			return err
 		}
 	}
