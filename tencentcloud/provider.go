@@ -54,6 +54,7 @@ Data Sources
   tencentcloud_gaap_security_policies
   tencentcloud_gaap_security_rules
   tencentcloud_image
+  tencentcloud_instances
   tencentcloud_instance_types
   tencentcloud_key_pairs
   tencentcloud_kubernetes_clusters
