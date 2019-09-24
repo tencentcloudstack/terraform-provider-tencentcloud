@@ -30,7 +30,7 @@ resource "tencentcloud_dnat" "foo" {
 The following arguments are supported:
 
 * `elastic_ip` - (Required, ForceNew) Network address of the eip.
-* `elastic_port` - (Required, ForceNew)  Port of the eip.
+* `elastic_port` - (Required, ForceNew) Port of the eip.
 * `nat_id` - (Required, ForceNew) ID of the nat.
 * `private_ip` - (Required, ForceNew) Network address of the backend service.
 * `private_port` - (Required, ForceNew) Port of intranet.

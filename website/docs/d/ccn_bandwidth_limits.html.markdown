@@ -38,14 +38,14 @@ resource "tencentcloud_ccn_bandwidth_limit" "limit1" {
 
 The following arguments are supported:
 
-* `ccn_id` - (Required, ForceNew) ID of the CCN to be queried.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
+* `ccn_id` - (Required) ID of the CCN to be queried.
+* `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `limits` - The bandwidth limits of regions
+* `limits` - The bandwidth limits of regions:
   * `bandwidth_limit` - Limitation of bandwidth.
   * `region` - Limitation of region.
 

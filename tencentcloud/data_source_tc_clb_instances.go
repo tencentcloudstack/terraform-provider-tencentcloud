@@ -38,7 +38,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_NETWORK_TYPE),
-				Description:  "Type of CLB instance, and available values include 'OPEN' and 'INTERNAL'",
+				Description:  "Type of CLB instance, and available values include 'OPEN' and 'INTERNAL'.",
 			},
 			"clb_name": {
 				Type:        schema.TypeString,
@@ -95,7 +95,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Creation time of the CLB",
+							Description: "Creation time of the CLB.",
 						},
 						"status_time": {
 							Type:        schema.TypeString,
@@ -105,12 +105,12 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the VPC",
+							Description: "Id of the VPC.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the subnet",
+							Description: "Id of the subnet.",
 						},
 						"security_groups": {
 							Type:        schema.TypeList,

@@ -1,14 +1,16 @@
 /*
 Provides a mysql policy resource to create a backup policy.
 
+~> **NOTE:** This attribute `backup_model` only support 'physical' in Terraform TencentCloud provider version 1.16.2
+
 Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_backup_policy" "default" {
-  mysql_id = "cdb-dnqksd9f"
+  mysql_id         = "cdb-dnqksd9f"
   retention_period = 7
-  backup_model = "logical"
-  backup_time ="02:00–06:00"
+  backup_model     = "physical"
+  backup_time      = "02:00-06:00"
 }
 ```
 */
@@ -48,14 +50,14 @@ func resourceTencentCloudMysqlBackupPolicy() *schema.Resource {
 				Optional:     true,
 				Default:      MYSQL_ALLOW_BACKUP_MODEL[1],
 				ValidateFunc: validateAllowedStringValue(MYSQL_ALLOW_BACKUP_MODEL),
-				Description:  "Backup method. Supported values include: 'physical' - physical backup",
+				Description:  "Backup method. Supported values include: 'physical' - physical backup.",
 			},
 			"backup_time": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      MYSQL_ALLOW_BACKUP_TIME[0],
 				ValidateFunc: validateAllowedStringValue(MYSQL_ALLOW_BACKUP_TIME),
-				Description:  `Instance backup time, in the format of "HH:mm-HH:mm". Time setting interval is four hours. Default to "02:00-06:00". The following value can be supported: 02:00\-06:00, 06:00\-10:00, 10:00\-14:00, 14:00\-18:00, 18:00\-22:00, and 22:00\-02:00.`,
+				Description:  `Instance backup time, in the format of "HH:mm-HH:mm". Time setting interval is four hours. Default to "02:00-06:00". The following value can be supported: 02:00-06:00, 06:00-10:00, 10:00-14:00, 14:00-18:00, 18:00-22:00, and 22:00-02:00.`,
 			},
 
 			// Computed values

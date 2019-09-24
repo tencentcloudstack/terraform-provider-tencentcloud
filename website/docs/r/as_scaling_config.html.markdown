@@ -60,13 +60,13 @@ The following arguments are supported:
 * `public_ip_assigned` - (Optional) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional) Volume of system disk in GB. Default is 50.
-* `system_disk_type` - (Optional) Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM
+* `system_disk_type` - (Optional) Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.
 * `user_data` - (Optional) ase64-encoded User Data text, the length limit is 16KB.
 
 The `data_disk` object supports the following:
 
 * `disk_size` - (Optional) Volume of disk in GB. Default is 0.
-* `disk_type` - (Optional) Types of disk，available values: CLOUD_PREMIUM and CLOUD_SSD.
+* `disk_type` - (Optional) Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.
 * `snapshot_id` - (Optional) Data disk snapshot ID.
 
 ## Attributes Reference

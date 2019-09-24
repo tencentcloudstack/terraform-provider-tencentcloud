@@ -59,7 +59,7 @@ The following arguments are supported:
 * `listener_id` - (Optional) ID of the layer4 listener to be queried.
 * `listener_name` - (Optional) Name of the layer4 listener to be queried.
 * `port` - (Optional) Port of the layer4 listener to be queried.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
+* `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
 
@@ -70,7 +70,7 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - Creation time of the layer4 listener.
   * `health_check` - Indicates whether health check is enable.
   * `id` - ID of the layer4 listener.
-  * `interval` - Interval of the health check
+  * `interval` - Interval of the health check.
   * `name` - Name of the layer4 listener.
   * `port` - Port of the layer4 listener.
   * `protocol` - Protocol of the layer4 listener.

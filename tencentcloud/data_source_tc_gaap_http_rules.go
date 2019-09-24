@@ -77,7 +77,6 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},

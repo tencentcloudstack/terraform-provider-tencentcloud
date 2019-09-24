@@ -171,7 +171,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 			"lifecycle_rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: " A configuration of object lifecycle management (documented below).",
+				Description: "A configuration of object lifecycle management (documented below).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"filter_prefix": {
@@ -243,7 +243,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 						"index_document": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "COS returns this index document when requests are made to the root domain or any of the subfolders. ",
+							Description: "COS returns this index document when requests are made to the root domain or any of the subfolders.",
 						},
 						"error_document": {
 							Type:        schema.TypeString,

@@ -47,7 +47,7 @@ func resourceTencentCloudDcGatewayCcnRouteInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "ID of the DCG",
+				Description: "ID of the DCG.",
 			},
 			"cidr_block": {
 				Type:         schema.TypeString,

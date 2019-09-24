@@ -85,7 +85,6 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
@@ -145,7 +144,7 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 						"interval": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Interval of the health check",
+							Description: "Interval of the health check.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
