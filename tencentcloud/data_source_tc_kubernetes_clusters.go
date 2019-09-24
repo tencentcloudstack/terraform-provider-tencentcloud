@@ -32,7 +32,7 @@ func tkeClusterInfo() map[string]*schema.Schema {
 		"cluster_desc": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "Description of the cluster",
+			Description: "Description of the cluster.",
 		},
 		"cluster_os": {
 			Type:        schema.TypeString,
@@ -41,7 +41,7 @@ func tkeClusterInfo() map[string]*schema.Schema {
 		},
 		"container_runtime": {
 			Type:        schema.TypeString,
-			Deprecated:  "Reading of this property `container_runtime` is no longer supported",
+			Deprecated:  "It has been deprecated from version 1.18.1.",
 			Computed:    true,
 			Description: "Container runtime of the cluster.",
 		},
@@ -53,12 +53,12 @@ func tkeClusterInfo() map[string]*schema.Schema {
 		"cluster_version": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: " Version of the cluster.",
+			Description: "Version of the cluster.",
 		},
 		"cluster_ipvs": {
 			Type:        schema.TypeBool,
 			Computed:    true,
-			Description: " Indicates whether ipvs is enabled.",
+			Description: "Indicates whether ipvs is enabled.",
 		},
 		"vpc_id": {
 			Type:        schema.TypeString,
@@ -119,7 +119,7 @@ func dataSourceTencentCloudKubernetesClusters() *schema.Resource {
 			"cluster_id": {
 				Type:          schema.TypeString,
 				ConflictsWith: []string{"cluster_name"},
-				Description:   " ID of the cluster. Conflict with cluster_name, can not be set at the same time.",
+				Description:   "ID of the cluster. Conflict with cluster_name, can not be set at the same time.",
 				Optional:      true,
 			},
 			"cluster_name": {

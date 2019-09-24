@@ -58,7 +58,7 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
-				Description:  "Name of the Mongodb instance",
+				Description:  "Name of the Mongodb instance.",
 			},
 			"shard_quantity": {
 				Type:         schema.TypeInt,
@@ -152,7 +152,7 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Status of the Mongodb instance, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2)",
+				Description: "Status of the Mongodb instance, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2).",
 			},
 			"vip": {
 				Type:        schema.TypeString,

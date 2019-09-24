@@ -26,7 +26,7 @@ The following arguments are supported:
 
 * `id` - (Optional) ID of the nat gateway.
 * `name` - (Optional) Name of the nat gateway.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
+* `result_output_file` - (Optional) Used to save results.
 * `vpc_id` - (Optional) ID of the vpc.
 
 ## Attributes Reference

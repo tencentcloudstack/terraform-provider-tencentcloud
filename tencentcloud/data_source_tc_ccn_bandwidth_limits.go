@@ -41,13 +41,11 @@ func dataSourceTencentCloudCcnBandwidthLimits() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"ccn_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Required:    true,
 				Description: "ID of the CCN to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
@@ -56,7 +54,7 @@ func dataSourceTencentCloudCcnBandwidthLimits() *schema.Resource {
 			"limits": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "The bandwidth limits of regions",
+				Description: "The bandwidth limits of regions:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"region": {

@@ -94,12 +94,12 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 						"mem_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Memory size in MB",
+							Description: "Memory size in MB.",
 						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Current status of an instance，maybe: init, processing, online, isolate and todelete.",
+							Description: "Current status of an instance, maybe: init, processing, online, isolate and todelete.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,

@@ -45,7 +45,7 @@ The following arguments are supported:
 
 * `domain` - (Required) Forward domain of the layer7 listener to be queried.
 * `listener_id` - (Required) ID of the layer7 listener to be queried.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
+* `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
 
@@ -53,13 +53,13 @@ In addition to all arguments above, the following attributes are exported:
 
 * `domains` - An information list of forward domain of the layer7 listeners. Each element contains the following attributes:
   * `basic_auth_id` - ID of the basic authentication.
-  * `basic_auth` - Indicates whether basic authentication is enable
-  * `certificate_id` - ID of the server certificate
-  * `client_certificate_id` - ID of the client certificate
+  * `basic_auth` - Indicates whether basic authentication is enable.
+  * `certificate_id` - ID of the server certificate.
+  * `client_certificate_id` - ID of the client certificate.
   * `domain` - Forward domain of the layer7 listener.
   * `gaap_auth_id` - ID of the SSL certificate.
   * `gaap_auth` - Indicates whether SSL certificate authentication is enable.
-  * `realserver_auth` - Indicates whether realserver authentication is enable
+  * `realserver_auth` - Indicates whether realserver authentication is enable.
   * `realserver_certificate_domain` - CA certificate domain of the realserver.
   * `realserver_certificate_id` - CA certificate ID of the realserver.
 

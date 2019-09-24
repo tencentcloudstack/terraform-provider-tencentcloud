@@ -82,7 +82,7 @@ func resourceTencentCloudDnat() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validatePort,
-				Description:  " Port of the eip.",
+				Description:  "Port of the eip.",
 			},
 			"private_ip": {
 				Type:         schema.TypeString,

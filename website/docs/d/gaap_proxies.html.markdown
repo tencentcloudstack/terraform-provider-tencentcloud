@@ -34,7 +34,7 @@ The following arguments are supported:
 * `ids` - (Optional) ID of the GAAP proxy to be queried. Conflict with `project_id`,`access_region`,`realserver_region`.
 * `project_id` - (Optional) Project ID of the GAAP proxy to be queried. Conflict with `ids`.
 * `realserver_region` - (Optional) Region of the GAAP realserver to be queried. Conflict with `ids`.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
+* `result_output_file` - (Optional) Used to save results.
 * `tags` - (Optional) Tags of the GAAP proxy to be queried. Support up to 5, display the information as long as it matches one.
 
 ## Attributes Reference

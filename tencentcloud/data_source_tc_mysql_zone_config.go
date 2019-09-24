@@ -143,14 +143,12 @@ func dataSourceTencentMysqlZoneConfig() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:         schema.TypeString,
-				ForceNew:     true,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(connectivity.MysqlSupportedRegions),
 				Description:  "Region parameter, which is used to identify the region to which the data you want to work with belongs.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to store results.",
 			},

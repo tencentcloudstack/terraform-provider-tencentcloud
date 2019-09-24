@@ -79,7 +79,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: TkeCvmCreateInfo(),
 				},
-				Description: "Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users. ",
+				Description: "Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.",
 			},
 			// Computed values
 			"worker_instances_list": {

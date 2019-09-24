@@ -42,7 +42,7 @@ resource "tencentcloud_ccn_attachment" "attachment" {
 
 The following arguments are supported:
 
-* `ccn_id` - (Required, ForceNew) ID of the CCN
+* `ccn_id` - (Required, ForceNew) ID of the CCN.
 * `instance_id` - (Required, ForceNew) ID of instance is attached.
 * `instance_region` - (Required, ForceNew) The region that the instance locates at.
 * `instance_type` - (Required, ForceNew) Type of attached instance network, and available values include VPC, DIRECTCONNECT and BMVPC.

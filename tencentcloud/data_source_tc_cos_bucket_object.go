@@ -65,7 +65,7 @@ func dataSourceTencentCloudCosBucketObject() *schema.Resource {
 			"etag": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "ETag generated for the object，which is may not equal to MD5 value.",
+				Description: "ETag generated for the object, which is may not equal to MD5 value.",
 			},
 			"last_modified": {
 				Type:        schema.TypeString,

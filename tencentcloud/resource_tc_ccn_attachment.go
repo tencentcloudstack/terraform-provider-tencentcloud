@@ -53,7 +53,7 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "ID of the CCN",
+				Description: "ID of the CCN.",
 			},
 			"instance_type": {
 				Type:         schema.TypeString,

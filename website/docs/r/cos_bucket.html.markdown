@@ -80,7 +80,7 @@ The following arguments are supported:
 * `bucket` - (Required, ForceNew) The name of a bucket to be created.
 * `acl` - (Optional) The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.
 * `cors_rules` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
-* `lifecycle_rules` - (Optional)  A configuration of object lifecycle management (documented below).
+* `lifecycle_rules` - (Optional) A configuration of object lifecycle management (documented below).
 * `website` - (Optional) A website object(documented below).
 
 The `cors_rules` object supports the following:
@@ -111,7 +111,7 @@ The `expiration` object supports the following:
 The `website` object supports the following:
 
 * `error_document` - (Optional) An absolute path to the document to return in case of a 4XX error.
-* `index_document` - (Optional) COS returns this index document when requests are made to the root domain or any of the subfolders. 
+* `index_document` - (Optional) COS returns this index document when requests are made to the root domain or any of the subfolders.
 
 
 ## Import
