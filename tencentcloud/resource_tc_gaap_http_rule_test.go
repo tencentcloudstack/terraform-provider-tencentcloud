@@ -37,6 +37,7 @@ func TestAccTencentCloudGaapHttpRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes."+strconv.Itoa(schema.HashInt(200)), "200"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "forward_host", "default"),
 				),
 			},
 		},
@@ -68,6 +69,7 @@ func TestAccTencentCloudGaapHttpRule_httpUpdate(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes."+strconv.Itoa(schema.HashInt(200)), "200"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "forward_host", "default"),
 				),
 			},
 			{
@@ -90,6 +92,13 @@ func TestAccTencentCloudGaapHttpRule_httpUpdate(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check", "false"),
+				),
+			},
+			{
+				Config: testAccGaapHttpRuleUpdateForwardHost,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "forward_host", "www.qqq.com"),
 				),
 			},
 		},
@@ -389,6 +398,56 @@ resource tencentcloud_gaap_http_rule "foo" {
     ip   = "${tencentcloud_gaap_realserver.bar.ip}"
     port = 80
   }
+}
+`, GAAP_PROXY_ID)
+
+var testAccGaapHttpRuleUpdateForwardHost = fmt.Sprintf(`
+resource tencentcloud_gaap_layer7_listener "foo" {
+  protocol = "HTTP"
+  name     = "ci-test-gaap-l7-listener"
+  port     = 80
+  proxy_id = "%s"
+}
+
+resource tencentcloud_gaap_realserver "foo" {
+  ip   = "1.1.1.1"
+  name = "ci-test-gaap-realserver"
+}
+
+resource tencentcloud_gaap_realserver "bar" {
+  ip   = "8.8.8.8"
+  name = "ci-test-gaap-realserver"
+}
+
+resource tencentcloud_gaap_http_domain "foo" {
+  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  domain      = "www.qq.com"
+}
+
+resource tencentcloud_gaap_http_rule "foo" {
+  listener_id               = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  domain                    = "${tencentcloud_gaap_http_domain.foo.domain}"
+  path                      = "/new"
+  realserver_type           = "IP"
+  health_check              = false
+  connect_timeout           = 3
+  health_check_path         = "/health"
+  health_check_method       = "HEAD"
+  health_check_status_codes = [100, 200]
+  
+  realservers {
+    id   = "${tencentcloud_gaap_realserver.foo.id}"
+    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    port = 80
+  }
+
+  realservers {
+    id   = "${tencentcloud_gaap_realserver.bar.id}"
+    ip   = "${tencentcloud_gaap_realserver.bar.ip}"
+    port = 80
+  }
+
+  forward_host = "www.qqq.com"
 }
 `, GAAP_PROXY_ID)
 

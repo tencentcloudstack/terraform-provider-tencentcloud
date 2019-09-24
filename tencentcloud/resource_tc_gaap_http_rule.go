@@ -203,6 +203,12 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 					},
 				},
 			},
+			"forward_host": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "default",
+				Description: "The default value of requested host which is forwarded to the realserver by the listener is `default`.",
+			},
 		},
 	}
 }
@@ -212,8 +218,10 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
+	listenerId := d.Get("listener_id").(string)
+
 	rule := gaapHttpRule{
-		listenerId:        d.Get("listener_id").(string),
+		listenerId:        listenerId,
 		domain:            d.Get("domain").(string),
 		path:              d.Get("path").(string),
 		realserverType:    d.Get("realserver_type").(string),
@@ -273,6 +281,12 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 
 	d.SetId(id)
 
+	if forwardHost := d.Get("forward_host").(string); forwardHost != "default" {
+		if err := service.ModifyHTTPRuleForwardHost(ctx, listenerId, id, forwardHost); err != nil {
+			return err
+		}
+	}
+
 	if err := service.BindHttpRuleRealservers(ctx, rule.listenerId, id, realservers); err != nil {
 		return err
 	}
@@ -309,6 +323,7 @@ func resourceTencentCloudGaapHttpRuleRead(d *schema.ResourceData, m interface{})
 	d.Set("connect_timeout", httpRule.connectTimeout)
 	d.Set("health_check_path", httpRule.healthCheckPath)
 	d.Set("health_check_method", httpRule.healthCheckMethod)
+	d.Set("forward_host", httpRule.forwardHost)
 
 	if _, ok := d.GetOk("health_check_status_codes"); ok || len(httpRule.healthCheckStatusCodes) != 5 {
 		d.Set("health_check_status_codes", httpRule.healthCheckStatusCodes)
@@ -428,6 +443,15 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 
 	for _, attr := range updateAttr {
 		d.SetPartial(attr)
+	}
+
+	if d.HasChange("forward_host") {
+		forwardHost := d.Get("forward_host").(string)
+		if err := service.ModifyHTTPRuleForwardHost(ctx, listenerId, id, forwardHost); err != nil {
+			return err
+		}
+
+		d.SetPartial("forward_host")
 	}
 
 	if len(realservers) > 0 {
