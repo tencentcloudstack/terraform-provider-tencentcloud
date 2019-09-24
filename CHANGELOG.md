@@ -24,6 +24,10 @@ ENHANCEMENTS:
 BUG FIXES:
 * Resource: `tencentcloud_mysql_instance`: miss argument `availability_zone` causes the instance to be recreated.
 
+DEPRECATED:
+
+* Data Source: `tencentcloud_eip` replaced by `tencentcloud_eips`.
+
 ## 1.19.0 (September 19, 2019)
 
 FEATURES:
