@@ -422,4 +422,22 @@ func checkDescription(k, s string) {
 		log.Printf("[FAIL!]There is no ending charset(.|:) on the description: '%s': '%s'", k, s)
 		os.Exit(1)
 	}
+
+	if c := ContainsChineseSymbol(s); c != "" {
+		log.Printf("[FAIL!]There is Chinese symbol: '%s' on the description: '%s': '%s'", c, k, s)
+		os.Exit(1)
+	}
+}
+
+// ContainsChineseSymbol returns the Chinese symbol if found
+func ContainsChineseSymbol(s string) string {
+	symbolChinese := "ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｓｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＳＹＺ～！＠＃￥％……＆×（）——＋｛｝｜：“”《》？·１２３４５６７８９０－＝【】＼；‘’，。、　"
+
+	for _, c := range symbolChinese {
+		if strings.Contains(s, string(c)) {
+			return string(c)
+		}
+	}
+
+	return ""
 }

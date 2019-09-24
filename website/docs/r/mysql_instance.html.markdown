@@ -65,7 +65,7 @@ The following arguments are supported:
 * `slave_sync_mode` - (Optional, ForceNew) Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
 * `subnet_id` - (Optional) Private network ID. If vpc_id is set, this value is required.
 * `tags` - (Optional) Instance tags.
-* `vpc_id` - (Optional) ID of VPC, which can be modified once every 24 hours and can’t be removed.
+* `vpc_id` - (Optional) ID of VPC, which can be modified once every 24 hours and can't be removed.
 
 ## Attributes Reference
 
