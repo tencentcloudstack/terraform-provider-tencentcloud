@@ -59,6 +59,7 @@ The following arguments are supported:
 
 * `listener_id` - (Required) ID of the layer7 listener to be queried.
 * `domain` - (Optional) Forward domain of the layer7 listener to be queried.
+* `forward_host` - (Optional) Requested host which is forwarded to the realserver by the listener to be queried.
 * `path` - (Optional) Path of the forward rule to be queried.
 * `result_output_file` - (Optional) Used to save results.
 
@@ -69,6 +70,7 @@ In addition to all arguments above, the following attributes are exported:
 * `rules` - An information list of forward rule of the layer7 listeners. Each element contains the following attributes:
   * `connect_timeout` - Timeout of the health check response.
   * `domain` - Forward domain of the layer7 listener.
+  * `forward_host` - Requested host which is forwarded to the realserver by the listener.
   * `health_check_method` - Method of the health check.
   * `health_check_path` - Path of health check.
   * `health_check_status_codes` - Return code of confirmed normal.
