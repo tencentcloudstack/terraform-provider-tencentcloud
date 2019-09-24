@@ -31,7 +31,6 @@ func (me *CvmService) DescribeInstanceById(ctx context.Context, instanceId strin
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.InstanceSet) < 1 {
-		errRet = fmt.Errorf("instance id is not found")
 		return
 	}
 	instance = response.Response.InstanceSet[0]

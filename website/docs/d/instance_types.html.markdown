@@ -33,8 +33,8 @@ The following arguments are supported:
 
 The `filter` object supports the following:
 
-* `name` - (Required) The filter name, the available values include `zone` and `instance-family`
-* `values` - (Required) The filter values
+* `name` - (Required) The filter name, the available values include `zone` and `instance-family`.
+* `values` - (Required) The filter values.
 
 ## Attributes Reference
 

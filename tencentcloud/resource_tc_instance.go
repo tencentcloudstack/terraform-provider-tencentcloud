@@ -552,7 +552,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		if errRet != nil {
 			return retryError(errRet)
 		}
-		if *instance.InstanceState == CVM_STATUS_RUNNING {
+		if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
@@ -573,7 +573,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			if errRet != nil {
 				return retryError(errRet)
 			}
-			if *instance.InstanceState == CVM_STATUS_STOPPED {
+			if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
 				return nil
 			}
 			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
@@ -601,16 +601,16 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instance, errRet = cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
-			if errRet.Error() == "instance id is not found" {
-				d.SetId("")
-				return nil
-			}
 			return retryError(errRet, "InternalError")
 		}
 		return nil
 	})
 	if err != nil {
 		return err
+	}
+	if instance == nil {
+		d.SetId("")
+		return nil
 	}
 
 	d.Set("image_id", instance.ImageId)
@@ -732,7 +732,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if errRet != nil {
 				return retryError(errRet)
 			}
-			if *instance.InstanceState == CVM_STATUS_RUNNING {
+			if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 				return nil
 			}
 			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
@@ -785,7 +785,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				if errRet != nil {
 					return retryError(errRet)
 				}
-				if *instance.InstanceState == CVM_STATUS_RUNNING {
+				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 					return nil
 				}
 				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
@@ -803,7 +803,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				if errRet != nil {
 					return retryError(errRet)
 				}
-				if *instance.InstanceState == CVM_STATUS_STOPPED {
+				if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
 					return nil
 				}
 				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
@@ -859,18 +859,15 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
-			if errRet.Error() == "instance id is not found" {
-				return nil
-			}
 			return retryError(errRet)
 		}
-		if *instance.InstanceState == CVM_STATUS_SHUTDOWN || *instance.InstanceState == CVM_STATUS_TERMINATING {
+		if instance == nil {
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 	})
 	if err != nil {
-		return nil
+		return err
 	}
 
 	return nil

@@ -60,13 +60,13 @@ func dataSourceInstanceTypes() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The filter name, the available values include `zone` and `instance-family`",
+							Description: "The filter name, the available values include `zone` and `instance-family`.",
 						},
 						"values": {
 							Type:        schema.TypeList,
 							Required:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "The filter values",
+							Description: "The filter values.",
 						},
 					},
 				},
