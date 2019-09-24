@@ -97,14 +97,14 @@ The `lifecycle_rules` object supports the following:
 * `expiration` - (Optional) Specifies a period in the object's expire (documented below).
 * `transition` - (Optional) Specifies a period in the object's transitions (documented below).
 
-The `expiration` object supports the following:
-
-* `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
-* `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
-
 The `transition` object supports the following:
 
 * `storage_class` - (Required) Specifies the storage class to which you want the object to transition. Available values include STANDARD, STANDARD_IA and ARCHIVE.
+* `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
+* `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
+
+The `expiration` object supports the following:
+
 * `date` - (Optional) Specifies the date after which you want the corresponding action to take effect.
 * `days` - (Optional) Specifies the number of days after object creation when the specific rule action takes effect.
 
