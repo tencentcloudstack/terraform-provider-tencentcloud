@@ -65,7 +65,11 @@ test-compile:
 	go test -c $(TEST) $(TESTARGS)
 
 doc:
-	cd gendoc; go run main.go template.go; cd ..
+	cd gendoc && go run main.go template.go && cd ..
+
+hooks: tools
+	find .git/hooks -type l -exec rm {} \;
+	find .githooks -type f -exec ln -sf ../../{} .git/hooks/ \;
 
 website:
 ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
@@ -85,4 +89,4 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 endif
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
-.PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile website website-lint website-test
+.PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test
