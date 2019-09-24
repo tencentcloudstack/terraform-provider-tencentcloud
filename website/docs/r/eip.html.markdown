@@ -29,7 +29,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `public_ip` - The elastic ip address.
-* `status` - The EIP current status.
+* `status` - The eip current status.
 
 
 ## Import

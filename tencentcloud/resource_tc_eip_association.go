@@ -61,7 +61,7 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 					"private_ip",
 				},
 				ValidateFunc: validateStringLengthInRange(1, 25),
-				Description:  "The instance id going to bind with the EIP. This field is conflict with `network_interface_id` and `private_ip fields`.",
+				Description:  "The instance id going to bind with the eip. This field is conflict with `network_interface_id` and `private_ip fields`.",
 			},
 			"network_interface_id": {
 				Type:         schema.TypeString,

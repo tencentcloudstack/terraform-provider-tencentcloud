@@ -92,7 +92,7 @@ func dataSourceTencentCloudPlacementGroups() *schema.Resource {
 }
 
 func dataSourceTencentCloudPlacementGroupsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_placement_groups.read")
+	defer logElapsed("data_source.tencentcloud_placement_groups.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	cvmService := CvmService{

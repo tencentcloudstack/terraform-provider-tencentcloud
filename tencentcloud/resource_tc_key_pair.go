@@ -108,16 +108,16 @@ func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) e
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		keyPair, errRet = cvmService.DescribeKeyPairById(ctx, keyId)
 		if errRet != nil {
-			if errRet.Error() == "key pair id not found" {
-				d.SetId("")
-				return nil
-			}
 			return retryError(errRet, "InternalError")
 		}
 		return nil
 	})
 	if err != nil {
 		return err
+	}
+	if keyPair == nil {
+		d.SetId("")
+		return nil
 	}
 
 	d.Set("key_name", keyPair.KeyName)
@@ -170,10 +170,6 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		keyPair, errRet = cvmService.DescribeKeyPairById(ctx, keyId)
 		if errRet != nil {
-			if errRet.Error() == "key pair id not found" {
-				keyId = ""
-				return nil
-			}
 			return retryError(errRet, "InternalError")
 		}
 		return nil
@@ -181,7 +177,8 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 	if err != nil {
 		return err
 	}
-	if keyId == "" {
+	if keyPair == nil {
+		d.SetId("")
 		return nil
 	}
 

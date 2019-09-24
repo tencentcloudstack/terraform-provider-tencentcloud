@@ -119,12 +119,12 @@ func testAccCheckEipDestroy(s *terraform.State) error {
 
 const testAccEipBasicWithName = `
 resource "tencentcloud_eip" "foo" {
-	name = "gateway_eip"
+  name = "gateway_eip"
 }
 `
 const testAccEipBasicWithNewName = `
 resource "tencentcloud_eip" "foo" {
-	name = "new_name"
+  name = "new_name"
 }
 `
 

@@ -56,7 +56,7 @@ func resourceTencentCloudEip() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The EIP current status.",
+				Description: "The eip current status.",
 			},
 		},
 	}
@@ -131,10 +131,6 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := vpcService.DescribeEipById(ctx, eipId)
 		if errRet != nil {
-			if errRet.Error() == "eip id not found" {
-				d.SetId("")
-				return nil
-			}
 			return retryError(errRet)
 		}
 		eip = instance
@@ -142,6 +138,10 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	})
 	if err != nil {
 		return err
+	}
+	if eip == nil {
+		d.SetId("")
+		return nil
 	}
 
 	d.Set("name", eip.AddressName)
@@ -184,10 +184,6 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		eip, errRet = vpcService.DescribeEipById(ctx, eipId)
 		if errRet != nil {
-			if errRet.Error() == "eip id not found" {
-				eipId = ""
-				return nil
-			}
 			return retryError(errRet, "InternalError")
 		}
 		return nil
@@ -195,7 +191,7 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	if err != nil {
 		return err
 	}
-	if eipId == "" {
+	if eip == nil {
 		return nil
 	}
 

@@ -75,7 +75,7 @@ func resourceTencentCloudPlacementGroup() *schema.Resource {
 }
 
 func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_placement_group.create")
+	defer logElapsed("resource.tencentcloud_placement_group.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -102,7 +102,7 @@ func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_placement_group.read")
+	defer logElapsed("resource.tencentcloud_placement_group.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -137,7 +137,7 @@ func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudPlacementGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_placement_group.update")
+	defer logElapsed("resource.tencentcloud_placement_group.update")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -163,7 +163,7 @@ func resourceTencentCloudPlacementGroupUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudPlacementGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_placement_group.delete")
+	defer logElapsed("resource.tencentcloud_placement_group.delete")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

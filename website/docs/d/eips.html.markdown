@@ -36,9 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `eip_id` - ID of the eip.
   * `eip_name` - Name of the eip.
   * `eip_type` - Type of the eip.
-  * `eni_id` - The eni id to bind with the EIP.
-  * `instance_id` - The instance id to bind with the EIP.
+  * `eni_id` - The eni id to bind with the eip.
+  * `instance_id` - The instance id to bind with the eip.
   * `public_ip` - The elastic ip address.
-  * `status` - The EIP current status.
+  * `status` - The eip current status.
 
 

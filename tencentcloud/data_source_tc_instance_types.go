@@ -47,14 +47,14 @@ func dataSourceInstanceTypes() *schema.Resource {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"filter"},
-				Description:   "The available zone that the CVM instance locates at.",
+				Description:   "The available zone that the CVM instance locates at. This field is conflict with `filter`.",
 			},
 			"filter": {
 				Type:          schema.TypeSet,
 				Optional:      true,
 				MaxItems:      10,
 				ConflictsWith: []string{"availability_zone"},
-				Description:   "One or more name/value pairs to filter.",
+				Description:   "One or more name/value pairs to filter. This field is conflict with `availability_zone`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {

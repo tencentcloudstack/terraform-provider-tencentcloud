@@ -24,9 +24,9 @@ data "tencentcloud_instance_types" "foo" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Optional) The available zone that the CVM instance locates at.
+* `availability_zone` - (Optional) The available zone that the CVM instance locates at. This field is conflict with `filter`.
 * `cpu_core_count` - (Optional) The number of CPU cores of the instance.
-* `filter` - (Optional) One or more name/value pairs to filter.
+* `filter` - (Optional) One or more name/value pairs to filter. This field is conflict with `availability_zone`.
 * `gpu_core_count` - (Optional) The number of GPU cores of the instance.
 * `memory_size` - (Optional) Instance memory capacity, unit in GB.
 * `result_output_file` - (Optional) Used to save results.

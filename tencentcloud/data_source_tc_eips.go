@@ -70,7 +70,7 @@ func dataSourceTencentCloudEips() *schema.Resource {
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The EIP current status.",
+							Description: "The eip current status.",
 						},
 						"public_ip": {
 							Type:        schema.TypeString,
@@ -80,12 +80,12 @@ func dataSourceTencentCloudEips() *schema.Resource {
 						"instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The instance id to bind with the EIP.",
+							Description: "The instance id to bind with the eip.",
 						},
 						"eni_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The eni id to bind with the EIP.",
+							Description: "The eni id to bind with the eip.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -100,7 +100,7 @@ func dataSourceTencentCloudEips() *schema.Resource {
 }
 
 func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_eips.read")
+	defer logElapsed("data_source.tencentcloud_eips.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	vpcService := VpcService{
@@ -112,10 +112,10 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 		filter["address-id"] = v.(string)
 	}
 	if v, ok := d.GetOk("eip_name"); ok {
-		filter["eip_name"] = v.(string)
+		filter["eip-name"] = v.(string)
 	}
 	if v, ok := d.GetOk("public_ip"); ok {
-		filter["public_ip"] = v.(string)
+		filter["public-ip"] = v.(string)
 	}
 
 	var eips []*vpc.Address
