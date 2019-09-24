@@ -14,7 +14,8 @@ var (
 
 func dataSourceTencentCloudEip() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudEipRead,
+		DeprecationMessage: "This data source has been deprecated in Terraform TencentCloud provider version 1.20.0. Please use 'tencentcloud_eips' instead.",
+		Read:               dataSourceTencentCloudEipRead,
 
 		Schema: map[string]*schema.Schema{
 			"filter": dataSourceTencentCloudFiltersSchema(),

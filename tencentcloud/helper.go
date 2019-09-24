@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"fmt"
 	"math/rand"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/hashcode"
@@ -76,11 +75,6 @@ func buildFiltersParamForSDK(filterList *schema.Set) (r []*cvm.Filter) {
 		r = append(r, filter)
 	}
 	return
-}
-
-func retryable(code string, msg string) bool {
-	msg = strings.ToLower(msg)
-	return code == "InternalError" && strings.Contains(msg, "retry")
 }
 
 // Takes the result of flatmap.Expand for an array of strings
