@@ -263,6 +263,20 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	sort.Strings(requiredArgs)
 	sort.Strings(optionalArgs)
 	sort.Strings(attributes)
+	sort.Strings(subStruct)
+
+	// remove duplicates
+	if len(subStruct) > 0 {
+		uniqSubStruct := make([]string, 0, len(subStruct))
+		var i int
+		for i = 0; i < len(subStruct)-1; i++ {
+			if subStruct[i] != subStruct[i+1] {
+				uniqSubStruct = append(uniqSubStruct, subStruct[i])
+			}
+		}
+		uniqSubStruct = append(uniqSubStruct, subStruct[i])
+		subStruct = uniqSubStruct
+	}
 
 	requiredArgs = append(requiredArgs, optionalArgs...)
 	data["arguments"] = strings.Join(requiredArgs, "\n")
@@ -348,9 +362,10 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 		checkDescription(k, v.Description)
 	}
 
+	subStruct := []string{}
 	if v.Type == schema.TypeMap || v.Type == schema.TypeList || v.Type == schema.TypeSet {
 		if _, ok := v.Elem.(*schema.Resource); ok {
-			subStructs = append(subStructs, fmt.Sprintf("\nThe `%s` object supports the following:\n", k))
+			subStruct = append(subStruct, fmt.Sprintf("\nThe `%s` object supports the following:\n", k))
 			requiredArgs := []string{}
 			optionalArgs := []string{}
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {
@@ -369,9 +384,10 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 				}
 			}
 			sort.Strings(requiredArgs)
-			subStructs = append(subStructs, requiredArgs...)
+			subStruct = append(subStruct, requiredArgs...)
 			sort.Strings(optionalArgs)
-			subStructs = append(subStructs, optionalArgs...)
+			subStruct = append(subStruct, optionalArgs...)
+			subStructs = append(subStructs, strings.Join(subStruct, "\n"))
 
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {
 				subStructs = append(subStructs, getSubStruct(step+1, kk, vv)...)
