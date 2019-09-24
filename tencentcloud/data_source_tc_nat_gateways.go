@@ -77,12 +77,12 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 						"max_concurrent": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The upper limit of concurrent connection of nat gateway, the available values include : 1000000,3000000,10000000, Default is 1000000.",
+							Description: "The upper limit of concurrent connection of nat gateway, the available values include: 1000000,3000000,10000000. Default is 1000000.",
 						},
 						"bandwidth": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The maximum public network output bandwidth of nat gateway (unit: Mbps), the available values include： 20,50,100,200,500,1000,2000,5000. Default is 100.",
+							Description: "The maximum public network output bandwidth of nat gateway (unit: Mbps), the available values include: 20,50,100,200,500,1000,2000,5000. Default is 100.",
 						},
 						"assigned_eip_set": {
 							Type:        schema.TypeList,

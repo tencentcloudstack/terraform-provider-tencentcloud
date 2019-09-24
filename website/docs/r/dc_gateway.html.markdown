@@ -33,7 +33,7 @@ The following arguments are supported:
 * `name` - (Required) Name of the DCG.
 * `network_instance_id` - (Required, ForceNew) If the 'network_type' value is 'VPC', the available value is VPC ID. But when the 'network_type' value is 'CCN', the available value is CCN instance ID.
 * `network_type` - (Required, ForceNew) Type of associated network, the available value include 'VPC' and 'CCN'.
-* `gateway_type` - (Optional, ForceNew) Type of the gateway, the available value include 'NORMAL' and 'NAT'. Default is 'NORMAL’. NOTES: CCN only supports 'NORMAL' and a vpc can create two DCGs, the one is NAT type and the other is non-NAT type.
+* `gateway_type` - (Optional, ForceNew) Type of the gateway, the available value include 'NORMAL' and 'NAT'. Default is 'NORMAL'. NOTES: CCN only supports 'NORMAL' and a vpc can create two DCGs, the one is NAT type and the other is non-NAT type.
 
 ## Attributes Reference
 

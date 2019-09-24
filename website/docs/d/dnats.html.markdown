@@ -48,7 +48,7 @@ In addition to all arguments above, the following attributes are exported:
   * `nat_id` - ID of the nat.
   * `private_ip` - Network address of the backend service.
   * `private_port` - Port of intranet.
-  * `protocol` - Type of the network protocol, the available values include： TCP and UDP.
+  * `protocol` - Type of the network protocol, the available values include: TCP and UDP.
   * `vpc_id` - ID of the vpc.
 
 

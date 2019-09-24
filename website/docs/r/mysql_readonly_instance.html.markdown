@@ -43,7 +43,7 @@ The following arguments are supported:
 * `security_groups` - (Optional) Security groups to use.
 * `subnet_id` - (Optional) Private network ID. If vpc_id is set, this value is required.
 * `tags` - (Optional) Instance tags.
-* `vpc_id` - (Optional) ID of VPC, which can be modified once every 24 hours and can’t be removed.
+* `vpc_id` - (Optional) ID of VPC, which can be modified once every 24 hours and can't be removed.
 
 ## Attributes Reference
 
