@@ -7,22 +7,16 @@ import (
 )
 
 func TestAccTencentCloudInstanceTypesDataSource_basic(t *testing.T) {
-	var currentRegion = "ap-guangzhou"
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-			testAccPreSetRegion(currentRegion)
-		},
+		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudInstanceTypesDataSourceConfigBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_instance_types.t4c8g"),
-
 					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.cpu_core_count", "4"),
 					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.memory_size", "8"),
-					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.family", "S1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.availability_zone", "ap-guangzhou-3"),
 				),
 			},
 		},
@@ -31,14 +25,7 @@ func TestAccTencentCloudInstanceTypesDataSource_basic(t *testing.T) {
 
 const testAccTencentCloudInstanceTypesDataSourceConfigBasic = `
 data "tencentcloud_instance_types" "t4c8g" {
-  filter {
-    name   = "zone"
-    values = ["ap-guangzhou-3"]
-  }
-  filter {
-    name   = "instance-family"
-    values = ["S1"]
-  }
+  availability_zone = "ap-guangzhou-3"
   cpu_core_count = 4
   memory_size    = 8
 }

@@ -1589,3 +1589,153 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 
 	return
 }
+
+/*
+EIP
+*/
+func (me *VpcService) CreateEip(ctx context.Context) (eipId string, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewAllocateAddressesRequest()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().AllocateAddresses(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AddressSet) < 1 {
+		errRet = fmt.Errorf("eip id is nil")
+		return
+	}
+	eipId = *response.Response.AddressSet[0]
+	return
+}
+
+func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *vpc.Address, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeAddressesRequest()
+	request.AddressIds = []*string{&eipId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeAddresses(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AddressSet) < 1 {
+		return
+	}
+	eip = response.Response.AddressSet[0]
+	return
+}
+
+func (me *VpcService) DescribeEipByFilter(ctx context.Context, filters map[string]string) (eips []*vpc.Address, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeAddressesRequest()
+	request.Filters = make([]*vpc.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := &vpc.Filter{
+			Name:   stringToPointer(k),
+			Values: []*string{stringToPointer(v)},
+		}
+		request.Filters = append(request.Filters, filter)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeAddresses(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	eips = response.Response.AddressSet
+	return
+}
+
+func (me *VpcService) ModifyEipName(ctx context.Context, eipId, eipName string) error {
+	logId := getLogId(ctx)
+	request := vpc.NewModifyAddressAttributeRequest()
+	request.AddressId = &eipId
+	request.AddressName = &eipName
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().ModifyAddressAttribute(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *VpcService) DeleteEip(ctx context.Context, eipId string) error {
+	logId := getLogId(ctx)
+	request := vpc.NewReleaseAddressesRequest()
+	request.AddressIds = []*string{&eipId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().ReleaseAddresses(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *VpcService) AttachEip(ctx context.Context, eipId, instanceId string) error {
+	logId := getLogId(ctx)
+	request := vpc.NewAssociateAddressRequest()
+	request.AddressId = &eipId
+	request.InstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().AssociateAddress(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
+	logId := getLogId(ctx)
+	request := vpc.NewDisassociateAddressRequest()
+	request.AddressId = &eipId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DisassociateAddress(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}

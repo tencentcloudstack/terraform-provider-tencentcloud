@@ -97,6 +97,7 @@ The following arguments are supported:
 * `internet_max_bandwidth_out` - (Optional, ForceNew) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). Value range: [0, 100], If this value is not specified, then automatically sets it to 0 Mbps.
 * `key_name` - (Optional) The key pair to use for the instance, it looks like skey-16jig7tx.
 * `password` - (Optional) Password to an instance. In order to take effect new password, the instance will be restarted after modifying the password.
+* `placement_group_id` - (Optional, ForceNew) The id of a placement group.
 * `private_ip` - (Optional) The private ip to be assigned to this instance, must be in the provided subnet and available.
 * `project_id` - (Optional) The project CVM belongs to, default to 0.
 * `running_flag` - (Optional) Set instance to running or stop. Default value is true, the instance will shutdown when flag is false.
