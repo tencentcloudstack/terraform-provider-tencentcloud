@@ -1,4 +1,10 @@
 ## 1.20.1 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_enis`
+* **New Resource**: `tencentcloud_eni`
+
 ## 1.20.0 (September 24, 2019)
 
 FEATURES:

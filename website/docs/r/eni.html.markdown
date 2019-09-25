@@ -52,7 +52,7 @@ The `ipv4s` object supports the following:
 
 * `ip` - (Required) Intranet IP.
 * `primary` - (Required) Indicates whether the IP is primary.
-* `description` - (Optional) Description of the IP, maximum length 59.
+* `description` - (Optional) Description of the IP, maximum length 25.
 
 ## Attributes Reference
 

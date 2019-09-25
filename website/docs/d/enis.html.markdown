@@ -27,7 +27,7 @@ The following arguments are supported:
 * `instance_id` - (Optional) ID of the instance which bind the ENI. Conflict with `ids`.
 * `ipv4` - (Optional) Intranet IP of the ENI. Conflict with `ids`.
 * `name` - (Optional) Name of the ENI to be queried. Conflict with `ids`.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
+* `result_output_file` - (Optional) Used to save results.
 * `security_group` - (Optional) A set of security group IDs which bind the ENI. Conflict with `ids`.
 * `subnet_id` - (Optional) ID of the subnet within this vpc to be queried. Conflict with `ids`.
 * `tags` - (Optional) Tags of the ENI. Conflict with `ids`.

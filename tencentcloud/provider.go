@@ -42,9 +42,9 @@ Data Sources
   tencentcloud_dc_gateway_instances
   tencentcloud_dcx_instances
   tencentcloud_dnats
-  tencentcloud_enis
   tencentcloud_eip
   tencentcloud_eips
+  tencentcloud_enis
   tencentcloud_gaap_certificates
   tencentcloud_gaap_http_domains
   tencentcloud_gaap_http_rules
