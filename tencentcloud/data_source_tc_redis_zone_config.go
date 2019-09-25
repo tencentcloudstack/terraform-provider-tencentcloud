@@ -29,14 +29,12 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"region": {
 				Type:         schema.TypeString,
-				ForceNew:     true,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(connectivity.MysqlSupportedRegions),
 				Description:  "Name of a region. If this value is not set, the current region getting from provider's configuration will be used.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
@@ -55,18 +53,18 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Instance type. Available values: master_slave_redis, master_slave_ckv, cluster_ckv, cluster_redis and standalone_redis. ",
+							Description: "Instance type. Available values: master_slave_redis, master_slave_ckv, cluster_ckv, cluster_redis and standalone_redis.",
 						},
 						"version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Version description of an available instance. Possible values: Redis 3.2, Redis 4.0 .",
+							Description: "Version description of an available instance. Possible values: Redis 3.2, Redis 4.0.",
 						},
 						"mem_sizes": {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeInt},
 							Computed:    true,
-							Description: "The memory volume of an available instance（in MB）.  ",
+							Description: "The memory volume of an available instance(in MB).",
 						},
 					},
 				},

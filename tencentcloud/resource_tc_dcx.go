@@ -148,7 +148,7 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: " Interconnect IP of the DC within client.",
+				Description: "Interconnect IP of the DC within client.",
 			},
 			"bandwidth": {
 				Type:        schema.TypeInt,

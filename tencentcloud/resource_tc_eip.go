@@ -1,35 +1,31 @@
+/*
+Provides an EIP resource.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_eip" "foo" {
+  name = "awesome_gateway_ip"
+}
+```
+
+Import
+
+EIP can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_eip.foo eip-nyvf60va
+```
+*/
 package tencentcloud
 
 import (
-	"errors"
-	"time"
+	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/common"
-	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
-)
-
-const (
-	tencentCloudApiEipStatusBinding      = "BINDING"
-	tencentCloudApiEipStatusBind         = "BIND"
-	tencentCloudApiEipStatusUnbind       = "UNBIND"
-	tencentCloudApiEipStatusCreateFailed = "CREATE_FAILED"
-	tencentCloudApiEipStatusBindEni      = "BIND_ENI"
-	// tencentCloudApiEipStatusCreating     = "CREATING"
-	// tencentCloudApiEipStatusOfflining    = "OFFLINING"
-	// tencentCloudApiEipStatusUnbinding    = "UNBINDING"
-)
-
-var (
-	errCreateEIPFailed   = errors.New("create eip failed")
-	errEIPStillBinding   = errors.New("eip still binding")
-	errEIPStillUnbinding = errors.New("eip still unbinding")
-	errEIPStillCreating  = errors.New("eip still creating")
-	errEIPStillDeleting  = errors.New("eip still deleting")
-	errEIPNotUnbind      = errors.New("eip should be unbind")
-	errEIPInvalidName    = errors.New("eip name is invalid")
-	// errEIPNotBind        = errors.New("eip should be bind")
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
 func resourceTencentCloudEip() *schema.Resource {
@@ -48,16 +44,19 @@ func resourceTencentCloudEip() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(1, 20),
+				Description:  "The name of eip.",
 			},
 
+			// computed
 			"public_ip": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The elastic ip address.",
 			},
-
 			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The eip current status.",
 			},
 		},
 	}
@@ -66,105 +65,172 @@ func resourceTencentCloudEip() *schema.Resource {
 func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip.create")()
 
-	cvmConn := meta.(*TencentCloudClient).cvmConn
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	vpcService := VpcService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
 
-	req := cvm.NewAllocateAddressesRequest()
-	req.AddressCount = common.IntPtr(1)
-	resp, err := cvmConn.AllocateAddresses(req)
+	eipId := ""
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		id, errRet := vpcService.CreateEip(ctx)
+		if errRet != nil {
+			return retryError(errRet)
+		}
+		eipId = id
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-	eipIds := resp.Response.AddressSet
-	if len(eipIds) == 0 {
-		return errCreateEIPFailed
-	}
-	eipId := eipIds[0]
-	err = waitForEipAvailable(cvmConn, *eipId)
+	d.SetId(eipId)
+
+	// wait for status
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		eip, errRet := vpcService.DescribeEipById(ctx, eipId)
+		if errRet != nil {
+			return retryError(errRet)
+		}
+		if *eip.AddressStatus == EIP_STATUS_CREATING {
+			return resource.RetryableError(fmt.Errorf("eip is still creating"))
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
 
 	if v, ok := d.GetOk("name"); ok {
 		name := v.(string)
-		err = setEipName(cvmConn, *eipId, name)
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			errRet := vpcService.ModifyEipName(ctx, eipId, name)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
 		if err != nil {
 			return err
 		}
 	}
 
-	d.SetId(*eipId)
 	return resourceTencentCloudEipRead(d, meta)
 }
 
 func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip.read")()
 
-	cvmConn := meta.(*TencentCloudClient).cvmConn
-	eipId := d.Id()
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	vpcService := VpcService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
 
-	eip, _, err := findEipById(cvmConn, eipId)
-	if err != nil {
-		if err == errEIPNotFound {
-			d.SetId("")
-			return nil
+	eipId := d.Id()
+	var eip *vpc.Address
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := vpcService.DescribeEipById(ctx, eipId)
+		if errRet != nil {
+			return retryError(errRet)
 		}
+		eip = instance
+		return nil
+	})
+	if err != nil {
 		return err
 	}
-
-	d.Set("public_ip", *eip.AddressIp)
-	d.Set("status", *eip.AddressStatus)
-	if eip.AddressName != nil {
-		d.Set("name", *eip.AddressName)
+	if eip == nil {
+		d.SetId("")
+		return nil
 	}
+
+	d.Set("name", eip.AddressName)
+	d.Set("public_ip", eip.AddressIp)
+	d.Set("status", eip.AddressStatus)
 	return nil
 }
 
 func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip.update")()
 
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	vpcService := VpcService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	eipId := d.Id()
 	if d.HasChange("name") {
-		eipId := d.Id()
-		cvmConn := meta.(*TencentCloudClient).cvmConn
-		v, ok := d.GetOk("name")
-		if !ok {
-			return errEIPInvalidName
-		}
-		newName := v.(string)
-		err := setEipName(cvmConn, eipId, newName)
+		name := d.Get("name").(string)
+		err := vpcService.ModifyEipName(ctx, eipId, name)
 		if err != nil {
 			return err
 		}
 	}
-
 	return resourceTencentCloudEipRead(d, meta)
 }
 
 func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip.delete")()
 
-	cvmConn := meta.(*TencentCloudClient).cvmConn
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	vpcService := VpcService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
 	eipId := d.Id()
-
-	// NOTE wait until eip is unbind
-	return resource.Retry(3*time.Minute, func() *resource.RetryError {
-		eip, _, err := findEipById(cvmConn, eipId)
-		if err != nil {
-			return resource.NonRetryableError(err)
+	var eip *vpc.Address
+	var errRet error
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		eip, errRet = vpcService.DescribeEipById(ctx, eipId)
+		if errRet != nil {
+			return retryError(errRet, "InternalError")
 		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	if eip == nil {
+		return nil
+	}
 
-		status := *eip.AddressStatus
-		if status == tencentCloudApiEipStatusUnbind {
-			req := cvm.NewReleaseAddressesRequest()
-			req.AddressIds = []*string{
-				common.StringPtr(eipId),
-			}
-			_, err = cvmConn.ReleaseAddresses(req)
-			if err != nil {
-				return resource.NonRetryableError(err)
+	if eip.InstanceId != nil {
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			errRet := vpcService.UnattachEip(ctx, eipId)
+			if errRet != nil {
+				return retryError(errRet)
 			}
 			return nil
+		})
+		if err != nil {
+			return err
 		}
+	}
 
-		return resource.RetryableError(errEIPStillDeleting)
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		errRet := vpcService.DeleteEip(ctx, eipId)
+		if err != nil {
+			return retryError(errRet)
+		}
+		return nil
 	})
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		eip, errRet := vpcService.DescribeEipById(ctx, eipId)
+		if errRet != nil {
+			return retryError(errRet)
+		}
+		if eip != nil {
+			return resource.RetryableError(fmt.Errorf("eip is still deleting"))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }

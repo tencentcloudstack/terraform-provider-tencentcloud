@@ -5,18 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
-  instance_name     = "mongodb"
-  shard_quantity    = 2
-  nodes_per_shard   = 3
-  memory            = 4
-  volume            = 100
-  engine_version    = "MONGO_3_WT"
-  machine_type      = "GIO"
-  available_zone    = "ap-guangzhou-3"
-  vpc_id            = "vpc-mz3efvbw"
-  subnet_id         = "subnet-lk0svi3p"
-  project_id        = 0
-  password          = "mypassword"
+  instance_name   = "mongodb"
+  shard_quantity  = 2
+  nodes_per_shard = 3
+  memory          = 4
+  volume          = 100
+  engine_version  = "MONGO_3_WT"
+  machine_type    = "GIO"
+  available_zone  = "ap-guangzhou-3"
+  vpc_id          = "vpc-mz3efvbw"
+  subnet_id       = "subnet-lk0svi3p"
+  project_id      = 0
+  password        = "mypassword"
 }
 ```
 
@@ -32,6 +32,7 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -57,7 +58,7 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(2, 60),
-				Description:  "Name of the Mongodb instance",
+				Description:  "Name of the Mongodb instance.",
 			},
 			"shard_quantity": {
 				Type:         schema.TypeInt,
@@ -141,12 +142,17 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 				Sensitive:   true,
 				Description: "Password of this Mongodb account.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The tags of the Mongodb.",
+			},
 
 			// Computed
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Status of the Mongodb instance, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2)",
+				Description: "Status of the Mongodb instance, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2).",
 			},
 			"vip": {
 				Type:        schema.TypeString,
@@ -173,9 +179,10 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	mongodbService := MongodbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+	client := meta.(*TencentCloudClient).apiV3Conn
+	mongodbService := MongodbService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	request := mongodb.NewCreateDBInstanceHourRequest()
 	request.ReplicateSetNum = intToPointer(d.Get("shard_quantity").(int))
@@ -206,7 +213,7 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstanceHour(request)
+	response, err := client.UseMongodbClient().CreateDBInstanceHour(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -235,7 +242,7 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 		return resource.NonRetryableError(e)
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s creating mongodb instance failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s creating mongodb instance failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -268,10 +275,17 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 		return resource.NonRetryableError(e)
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s creating mongodb instance failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s creating mongodb instance failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	d.SetId(instanceId)
+
+	if tags := getTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceMongodbShardingInstanceRead(d, meta)
 }
@@ -283,12 +297,32 @@ func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := d.Id()
-	mongodbService := MongodbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	mongodbService := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	instance, err := mongodbService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
+	}
+
+	if nilFields := CheckNil(instance, map[string]string{
+		"InstanceName":      "instance name",
+		"ProjectId":         "project id",
+		"ClusterType":       "cluster type",
+		"Zone":              "available zone",
+		"VpcId":             "vpc id",
+		"SubnetId":          "subnet id",
+		"Status":            "status",
+		"Vip":               "vip",
+		"Vport":             "vport",
+		"CreateTime":        "create time",
+		"MongoVersion":      "engine version",
+		"Memory":            "memory",
+		"Volume":            "volume",
+		"MachineType":       "machine type",
+		"ReplicationSetNum": "shard quantity",
+		"SecondaryNum":      "secondary number",
+	}); len(nilFields) > 0 {
+		return fmt.Errorf("mongodb %v are nil", nilFields)
 	}
 
 	d.Set("shard_quantity", instance.ReplicationSetNum)
@@ -315,6 +349,19 @@ func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{
 	d.Set("vport", instance.Vport)
 	d.Set("create_time", instance.CreateTime)
 
+	tags := make(map[string]string, len(instance.Tags))
+	for _, tag := range instance.Tags {
+		if tag.TagKey == nil {
+			return errors.New("mongodb tag key is nil")
+		}
+		if tag.TagValue == nil {
+			return errors.New("mongodb tag value is nil")
+		}
+
+		tags[*tag.TagKey] = *tag.TagValue
+	}
+	d.Set("tags", tags)
+
 	return nil
 }
 
@@ -325,9 +372,11 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := d.Id()
-	mongodbService := MongodbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	mongodbService := MongodbService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	d.Partial(true)
 
@@ -354,7 +403,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			return resource.NonRetryableError(e)
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s upgrade mongodb instance failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s upgrade mongodb instance failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 
@@ -406,16 +455,28 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			return resource.NonRetryableError(e)
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s setting mongodb instance password failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s setting mongodb instance password failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 
 		d.SetPartial("password")
 	}
 
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
+	}
+
 	d.Partial(false)
 
-	return nil
+	return resourceMongodbShardingInstanceRead(d, meta)
 }
 
 func resourceMongodbShardingInstanceDelete(d *schema.ResourceData, meta interface{}) error {

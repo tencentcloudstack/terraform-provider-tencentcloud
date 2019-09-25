@@ -35,6 +35,7 @@ type gaapHttpRule struct {
 	healthCheckPath        string
 	healthCheckMethod      string
 	healthCheckStatusCodes []int
+	forwardHost            string
 }
 
 type GaapService struct {
@@ -2639,26 +2640,14 @@ func (me *GaapService) DescribeHttpRule(ctx context.Context, listenerId, ruleId 
 			return resource.NonRetryableError(err)
 		}
 
-		if rule.Path == nil {
-			err := fmt.Errorf("api[%s] rule path is nil", request.GetAction())
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
-
-		if rule.RealServerType == nil {
-			err := fmt.Errorf("api[%s] rule realserver type is nil", request.GetAction())
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
-
-		if rule.Scheduler == nil {
-			err := fmt.Errorf("api[%s] rule scheduler type is nil", request.GetAction())
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
-
-		if rule.HealthCheck == nil {
-			err := fmt.Errorf("api[%s] rule health check is nil", request.GetAction())
+		if nilFields := CheckNil(rule, map[string]string{
+			"Path":           "path",
+			"RealServerType": "realserver type",
+			"Scheduler":      "scheduler type",
+			"HealthCheck":    "health check",
+			"ForwardHost":    "forward host",
+		}); len(nilFields) > 0 {
+			err := fmt.Errorf("api[%s] rule %v are nil", request.GetAction(), nilFields)
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -2670,6 +2659,7 @@ func (me *GaapService) DescribeHttpRule(ctx context.Context, listenerId, ruleId 
 			realserverType: *rule.RealServerType,
 			scheduler:      *rule.Scheduler,
 			healthCheck:    *rule.HealthCheck == 1,
+			forwardHost:    *rule.ForwardHost,
 		}
 
 		checkParams := rule.CheckParams
@@ -2680,32 +2670,20 @@ func (me *GaapService) DescribeHttpRule(ctx context.Context, listenerId, ruleId 
 			return resource.NonRetryableError(err)
 		}
 
-		if checkParams.DelayLoop == nil {
-			err := fmt.Errorf("api[%s] rule health check interval is nil", request.GetAction())
+		if nilFields := CheckNil(checkParams, map[string]string{
+			"DelayLoop":      "interval",
+			"ConnectTimeout": "connect timeout",
+			"Path":           "path",
+			"Method":         "method",
+		}); len(nilFields) > 0 {
+			err := fmt.Errorf("api[%s] rule health check %v are nil", request.GetAction(), nilFields)
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
+
 		httpRule.interval = int(*checkParams.DelayLoop)
-
-		if checkParams.ConnectTimeout == nil {
-			err := fmt.Errorf("api[%s] rule health check connect timeout is nil", request.GetAction())
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
 		httpRule.connectTimeout = int(*checkParams.ConnectTimeout)
-
-		if checkParams.Path == nil {
-			err := fmt.Errorf("api[%s] rule health check path is nil", request.GetAction())
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
 		httpRule.healthCheckPath = *checkParams.Path
-
-		if checkParams.Method == nil {
-			err := fmt.Errorf("api[%s] rule health check method is nil", request.GetAction())
-			log.Printf("[CRITAL]%s %v", logId, err)
-			return resource.NonRetryableError(err)
-		}
 		httpRule.healthCheckMethod = *checkParams.Method
 
 		if len(checkParams.StatusCode) == 0 {
@@ -2719,23 +2697,13 @@ func (me *GaapService) DescribeHttpRule(ctx context.Context, listenerId, ruleId 
 		}
 
 		for _, rs := range rule.RealServerSet {
-			if rs.RealServerId == nil {
-				err := fmt.Errorf("api[%s] realserver id is nil", request.GetAction())
-				log.Printf("[CRITAL]%s %v", logId, err)
-				return resource.NonRetryableError(err)
-			}
-			if rs.RealServerIP == nil {
-				err := fmt.Errorf("api[%s] realserver ip is nil", request.GetAction())
-				log.Printf("[CRITAL]%s %v", logId, err)
-				return resource.NonRetryableError(err)
-			}
-			if rs.RealServerPort == nil {
-				err := fmt.Errorf("api[%s] realserver port is nil", request.GetAction())
-				log.Printf("[CRITAL]%s %v", logId, err)
-				return resource.NonRetryableError(err)
-			}
-			if rs.RealServerWeight == nil {
-				err := fmt.Errorf("api[%s] realserver weight is nil", request.GetAction())
+			if nilFields := CheckNil(rs, map[string]string{
+				"RealServerId":     "id",
+				"RealServerIP":     "ip",
+				"RealServerPort":   "port",
+				"RealServerWeight": "weight",
+			}); len(nilFields) > 0 {
+				err := fmt.Errorf("api[%s] realserver %v are nil", request.GetAction(), nilFields)
 				log.Printf("[CRITAL]%s %v", logId, err)
 				return resource.NonRetryableError(err)
 			}
@@ -3064,4 +3032,36 @@ func (me *GaapService) DescribeCertificates(ctx context.Context, id, name *strin
 	}
 
 	return
+}
+
+func (me *GaapService) ModifyHTTPRuleForwardHost(ctx context.Context, listenerId, ruleId, forwardHost string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseGaapClient()
+
+	request := gaap.NewModifyRuleAttributeRequest()
+	request.ListenerId = &listenerId
+	request.RuleId = &ruleId
+	request.ForwardHost = &forwardHost
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := client.ModifyRuleAttribute(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify HTTP rule forward host failed, reason: %v", logId, err)
+		return err
+	}
+
+	if err := waitHttpRuleReady(ctx, client, listenerId, ruleId); err != nil {
+		log.Printf("[CRITAL]%s modify HTTP rule forward host failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
 }

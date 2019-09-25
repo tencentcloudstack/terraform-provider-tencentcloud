@@ -64,8 +64,8 @@ func eniIpInputResource() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "",
-				Description:  "Description of the IP, maximum length 59.",
-				ValidateFunc: validateStringLengthInRange(0, 59),
+				Description:  "Description of the IP, maximum length 25.",
+				ValidateFunc: validateStringLengthInRange(0, 25),
 			},
 		},
 	}
@@ -212,6 +212,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 	if raw, ok := d.GetOk("ipv4s"); ok {
 		set := raw.(*schema.Set)
 		ipv4s = make([]VpcEniIP, 0, set.Len())
+		var hasPrimary bool
 
 		for _, v := range set.List() {
 			m := v.(map[string]interface{})
@@ -222,14 +223,28 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 				return fmt.Errorf("ip %s is invalid", ipStr)
 			}
 
+			primary := m["primary"].(bool)
+
+			switch {
+			case !hasPrimary && primary:
+				hasPrimary = true
+
+			case hasPrimary && primary:
+				return errors.New("only can have a primary ipv4")
+			}
+
 			ipv4 := VpcEniIP{
 				ip:      ip,
-				primary: m["primary"].(bool),
+				primary: primary,
 			}
 
 			ipv4.desc = stringToPointer(m["description"].(string))
 
 			ipv4s = append(ipv4s, ipv4)
+		}
+
+		if !hasPrimary {
+			return errors.New("need a primary ipv4")
 		}
 	}
 
@@ -243,9 +258,10 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 
 	tags := getTags(d, "tags")
 
-	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
-	tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
-	region := m.(*TencentCloudClient).apiV3Conn.Region
+	client := m.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	var (
 		id  string
@@ -268,13 +284,11 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 				if i < 10 {
 					break
 				}
+
+				// move primary ip to the first
 				primaryIpv4 := ipv4s[i]
-				ipv4s = append(ipv4s[:i], ipv4s[i+1:]...)
-				/*newIpv4s := make([]VpcEniIP, len(ipv4s)+1)
-				newIpv4s[0] = primaryIpv4
-				copy(newIpv4s[1:], ipv4s)
-				ipv4s = newIpv4s*/
-				ipv4s = append([]VpcEniIP{primaryIpv4}, ipv4s...)
+				copy(ipv4s[1:], ipv4s[:i])
+				ipv4s[0] = primaryIpv4
 				break
 			}
 		}
@@ -456,7 +470,10 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 
 	d.Partial(true)
 
-	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+	client := m.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	var (
 		name        *string
@@ -491,131 +508,130 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 	}
 
 	// if ipv4 set manually
-	if _, ok := d.GetOk("ipv4s"); ok {
-		if d.HasChange("ipv4s") {
-			oldRaw, newRaw := d.GetChange("ipv4s")
-			oldSet := oldRaw.(*schema.Set)
-			newSet := newRaw.(*schema.Set)
+	if _, ok := d.GetOk("ipv4s"); ok && d.HasChange("ipv4s") {
+		oldRaw, newRaw := d.GetChange("ipv4s")
+		oldSet := oldRaw.(*schema.Set)
+		newSet := newRaw.(*schema.Set)
 
-			removeSet := oldSet.Difference(newSet).List()
-			addSet := newSet.Difference(oldSet).List()
+		if newSet.Len() == 0 {
+			return errors.New("can't remove all ipv4s")
+		}
 
-			var modifyPrimaryIpv4 *VpcEniIP
+		removeSet := oldSet.Difference(newSet).List()
+		addSet := newSet.Difference(oldSet).List()
 
-			removeIpv4 := make([]string, 0, len(removeSet))
-			for _, v := range removeSet {
-				m := v.(map[string]interface{})
-				if m["primary"].(bool) {
-					// check if only modify primary description
-					modifyPrimaryIpv4 = &VpcEniIP{
-						ip: net.ParseIP(m["ip"].(string)),
-					}
-					continue
+		var modifyPrimaryIpv4 *VpcEniIP
+
+		removeIpv4 := make([]string, 0, len(removeSet))
+		for _, v := range removeSet {
+			m := v.(map[string]interface{})
+			if m["primary"].(bool) {
+				// check if only modify primary description
+				modifyPrimaryIpv4 = &VpcEniIP{
+					ip: net.ParseIP(m["ip"].(string)),
 				}
-
-				removeIpv4 = append(removeIpv4, m["ip"].(string))
+				continue
 			}
 
-			addIpv4 := make([]VpcEniIP, 0, len(addSet))
-			newPrimaryCount := 0
-			for _, v := range addSet {
-				m := v.(map[string]interface{})
+			removeIpv4 = append(removeIpv4, m["ip"].(string))
+		}
 
-				ipStr := m["ip"].(string)
-				ip := net.ParseIP(ipStr)
-				if ip == nil {
-					return fmt.Errorf("ip %s is invalid", ipStr)
-				}
+		addIpv4 := make([]VpcEniIP, 0, len(addSet))
+		newPrimaryCount := 0
+		for _, v := range addSet {
+			m := v.(map[string]interface{})
 
-				if m["primary"].(bool) {
-					if modifyPrimaryIpv4 == nil {
-						return errors.New("can't set more than one primary ipv4")
-					}
-
-					// if newPrimaryCount > 1, means new ipv4s have more than one primary ipv4,
-					// if only one, maybe just update primary ipv4 description
-					newPrimaryCount++
-					if newPrimaryCount > 1 {
-						return errors.New("can't set more than one primary ipv4")
-					}
-
-					// not just update primary ipv4 description
-					if modifyPrimaryIpv4.ip.String() != ipStr {
-						return errors.New("can't change primary ipv4")
-					}
-
-					modifyPrimaryIpv4.desc = stringToPointer(m["description"].(string))
-					continue
-				}
-
-				ipv4 := VpcEniIP{
-					ip:      ip,
-					primary: m["primary"].(bool),
-				}
-
-				if desc := m["description"].(string); desc != "" {
-					ipv4.desc = stringToPointer(desc)
-				}
-
-				addIpv4 = append(addIpv4, ipv4)
+			ipStr := m["ip"].(string)
+			ip := net.ParseIP(ipStr)
+			if ip == nil {
+				return fmt.Errorf("ip %s is invalid", ipStr)
 			}
 
-			if len(removeIpv4) > 0 {
-				if len(removeIpv4) <= 10 {
+			if m["primary"].(bool) {
+				if modifyPrimaryIpv4 == nil {
+					return errors.New("can't set more than one primary ipv4")
+				}
+
+				// if newPrimaryCount > 1, means new ipv4s have more than one primary ipv4,
+				// if only one, maybe just update primary ipv4 description
+				newPrimaryCount++
+				if newPrimaryCount > 1 {
+					return errors.New("can't set more than one primary ipv4")
+				}
+
+				// only can update primary ipv4 description
+				if modifyPrimaryIpv4.ip.String() != ipStr {
+					return errors.New("can't change primary ipv4")
+				}
+
+				modifyPrimaryIpv4.desc = stringToPointer(m["description"].(string))
+				continue
+			}
+
+			ipv4 := VpcEniIP{
+				ip:      ip,
+				primary: m["primary"].(bool),
+				desc:    stringToPointer(m["description"].(string)),
+			}
+
+			addIpv4 = append(addIpv4, ipv4)
+		}
+
+		if modifyPrimaryIpv4 != nil {
+			// if desc is nil, means remove primary ipv4 but not add same primary ipv4,
+			// that means not just update primary ipv4 description, user remove primary ipv4
+			if modifyPrimaryIpv4.desc == nil {
+				return errors.New("can't remove primary ipv4")
+			}
+
+			if err := vpcService.ModifyEniPrimaryIpv4Desc(ctx, id, modifyPrimaryIpv4.ip.String(), modifyPrimaryIpv4.desc); err != nil {
+				return err
+			}
+		}
+
+		if len(removeIpv4) > 0 {
+			if len(removeIpv4) <= 10 {
+				if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
+					return err
+				}
+			} else {
+				for len(removeIpv4) > 10 {
+					if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4[:10]); err != nil {
+						return err
+					}
+					removeIpv4 = removeIpv4[10:]
+				}
+				// unAssign last ipv4
+				if len(removeIpv4) > 0 {
 					if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
 						return err
 					}
-				} else {
-					for len(removeIpv4) > 10 {
-						if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4[:10]); err != nil {
-							return err
-						}
-						removeIpv4 = removeIpv4[10:]
-					}
-					// unassign last ipv4
-					if len(removeIpv4) > 0 {
-						if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
-							return err
-						}
-					}
 				}
 			}
+		}
 
-			if len(addIpv4) > 0 {
-				if len(addIpv4) <= 10 {
+		if len(addIpv4) > 0 {
+			if len(addIpv4) <= 10 {
+				if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4, nil); err != nil {
+					return err
+				}
+			} else {
+				for len(addIpv4) > 10 {
+					if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4[:10], nil); err != nil {
+						return err
+					}
+					addIpv4 = addIpv4[10:]
+				}
+				// assign last ipv4
+				if len(addIpv4) > 0 {
 					if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4, nil); err != nil {
 						return err
 					}
-				} else {
-					for len(addIpv4) > 10 {
-						if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4[:10], nil); err != nil {
-							return err
-						}
-						addIpv4 = addIpv4[10:]
-					}
-					// assign last ipv4
-					if len(addIpv4) > 0 {
-						if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4, nil); err != nil {
-							return err
-						}
-					}
 				}
 			}
-
-			if modifyPrimaryIpv4 != nil {
-				// if desc is nil, means remove primary ipv4 but not add same primary ipv4,
-				// that means not just update primary ipv4 description, user remove primary ipv4
-				if modifyPrimaryIpv4.desc == nil {
-					return errors.New("can't remove primary ipv4")
-				}
-
-				if err := vpcService.ModifyEniPrimaryIpv4Desc(ctx, id, modifyPrimaryIpv4.ip.String(), modifyPrimaryIpv4.desc); err != nil {
-					return err
-				}
-			}
-
-			d.SetPartial("ipv4s")
 		}
+
+		d.SetPartial("ipv4s")
 	}
 
 	if _, ok := d.GetOk("ipv4_count"); ok {
@@ -672,7 +688,7 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 						}
 						removeIpv4 = removeIpv4[10:]
 					}
-					// unassign last ipv4
+					// unAssign last ipv4
 					if len(removeIpv4) > 0 {
 						if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
 							return err
@@ -689,10 +705,7 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
-
-		region := m.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:eni/%s", region, id)
+		resourceName := BuildTagResourceName("vpc", "eni", region, id)
 
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err

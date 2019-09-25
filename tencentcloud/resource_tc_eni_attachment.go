@@ -165,10 +165,8 @@ func resourceTencentCloudEniAttachmentRead(d *schema.ResourceData, m interface{}
 		return nil
 	}
 
-	if nilFields := CheckNil(eni, map[string]string{
-		"NetworkInterfaceId": "eni id",
-	}); len(nilFields) > 0 {
-		return fmt.Errorf("eni %v are nil", nilFields)
+	if eni.NetworkInterfaceId == nil {
+		return errors.New("eni id is nil")
 	}
 
 	if eni.Attachment == nil {

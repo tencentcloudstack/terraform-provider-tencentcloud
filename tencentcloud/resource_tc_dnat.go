@@ -68,7 +68,7 @@ func resourceTencentCloudDnat() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"TCP", "UDP"}),
-				Description:  "Type of the network protocol, the available values include： TCP and UDP.",
+				Description:  "Type of the network protocol, the available values include: TCP and UDP.",
 			},
 			"elastic_ip": {
 				Type:         schema.TypeString,
@@ -82,7 +82,7 @@ func resourceTencentCloudDnat() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validatePort,
-				Description:  " Port of the eip.",
+				Description:  "Port of the eip.",
 			},
 			"private_ip": {
 				Type:         schema.TypeString,

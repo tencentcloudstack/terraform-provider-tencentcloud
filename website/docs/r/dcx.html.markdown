@@ -64,7 +64,7 @@ The following arguments are supported:
 * `bandwidth` - (Optional, ForceNew) Bandwidth of the DC.
 * `bgp_asn` - (Optional, ForceNew) BGP ASN of the user. A required field within BGP.
 * `bgp_auth_key` - (Optional, ForceNew) BGP key of the user.
-* `customer_address` - (Optional, ForceNew)  Interconnect IP of the DC within client.
+* `customer_address` - (Optional, ForceNew) Interconnect IP of the DC within client.
 * `network_type` - (Optional, ForceNew) Type of the network, and available values include VPC, BMVPC and CCN. The default value is VPC.
 * `route_filter_prefixes` - (Optional, ForceNew) Static route, the network address of the user IDC. It can be modified after setting but cannot be deleted. AN unable field within BGP.
 * `route_type` - (Optional, ForceNew) Type of the route, and available values include BGP and STATIC. The default value is BGP.

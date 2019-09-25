@@ -68,22 +68,22 @@ func dataSourceTencentCloudDcGatewayInstances() *schema.Resource {
 						"dcg_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the DCG",
+							Description: "ID of the DCG.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the DCG",
+							Description: "Name of the DCG.",
 						},
 						"dcg_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "IP of the DCG",
+							Description: "IP of the DCG.",
 						},
 						"network_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "IP of the DCG",
+							Description: "IP of the DCG.",
 						},
 						"network_instance_id": {
 							Type:        schema.TypeString,

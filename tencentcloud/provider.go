@@ -44,6 +44,7 @@ Data Sources
   tencentcloud_dnats
   tencentcloud_enis
   tencentcloud_eip
+  tencentcloud_eips
   tencentcloud_gaap_certificates
   tencentcloud_gaap_http_domains
   tencentcloud_gaap_http_rules
@@ -54,7 +55,9 @@ Data Sources
   tencentcloud_gaap_security_policies
   tencentcloud_gaap_security_rules
   tencentcloud_image
+  tencentcloud_instances
   tencentcloud_instance_types
+  tencentcloud_key_pairs
   tencentcloud_kubernetes_clusters
   tencentcloud_mongodb_instances
   tencentcloud_mongodb_zone_config
@@ -64,6 +67,7 @@ Data Sources
   tencentcloud_mysql_zone_config
   tencentcloud_nats
   tencentcloud_nat_gateways
+  tencentcloud_placement_groups
   tencentcloud_redis_instances
   tencentcloud_redis_zone_config
   tencentcloud_route_table
@@ -118,6 +122,7 @@ CVM Resources
   tencentcloud_eip
   tencentcloud_eip_association
   tencentcloud_key_pair
+  tencentcloud_placement_group
 
 DC Resources
   tencentcloud_dcx
@@ -268,6 +273,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_security_rules":         dataSourceTencentCloudGaapSecurityRules(),
 			"tencentcloud_gaap_certificates":           dataSourceTencentCloudGaapCertificates(),
 			"tencentcloud_ssl_certificates":            dataSourceTencentCloudSslCertificates(),
+			"tencentcloud_instances":                   dataSourceTencentCloudInstances(),
+			"tencentcloud_placement_groups":            dataSourceTencentCloudPlacementGroups(),
+			"tencentcloud_eips":                        dataSourceTencentCloudEips(),
+			"tencentcloud_key_pairs":                   dataSourceTencentCloudKeyPairs(),
 			"tencentcloud_enis":                        dataSourceTencentCloudEnis(),
 		},
 
@@ -335,6 +344,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_security_rule":         resourceTencentCloudGaapSecurityRule(),
 			"tencentcloud_ssl_certificate":            resourceTencentCloudSslCertificate(),
 			"tencentcloud_security_group_lite_rule":   resourceTencentCloudSecurityGroupLiteRule(),
+			"tencentcloud_placement_group":            resourceTencentCloudPlacementGroup(),
 			"tencentcloud_eni":                        resourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":             resourceTencentCloudEniAttachment(),
 		},

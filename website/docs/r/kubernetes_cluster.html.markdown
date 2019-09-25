@@ -140,30 +140,10 @@ The following arguments are supported:
 * `project_id` - (Optional, ForceNew) Project ID, default value is 0.
 * `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.
 
-The `worker_config` object supports the following:
-
-* `instance_type` - (Required, ForceNew) Specified types of CVM instance.
-* `subnet_id` - (Required, ForceNew) Private network ID.
-* `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
-* `count` - (Optional, ForceNew) Number of cvm.
-* `data_disk` - (Optional, ForceNew) Configurations of data disk.
-* `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
-* `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
-* `instance_name` - (Optional, ForceNew) Name of the CVMs.
-* `internet_charge_type` - (Optional, ForceNew) Charge types for network traffic. Available values include TRAFFIC_POSTPAID_BY_HOUR.
-* `internet_max_bandwidth_out` - (Optional, ForceNew) Max bandwidth of Internet access in Mbps. Default is 0.
-* `key_ids` - (Optional, ForceNew) ID list of keys.
-* `password` - (Optional, ForceNew) Password to access.
-* `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
-* `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
-* `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is 50.
-* `system_disk_type` - (Optional, ForceNew) Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.
-* `user_data` - (Optional, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
-
 The `data_disk` object supports the following:
 
 * `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
-* `disk_type` - (Optional, ForceNew) Types of disk，available values: CLOUD_PREMIUM and CLOUD_SSD.
+* `disk_type` - (Optional, ForceNew) Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.
 * `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
 The `master_config` object supports the following:
@@ -186,18 +166,32 @@ The `master_config` object supports the following:
 * `system_disk_type` - (Optional, ForceNew) Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.
 * `user_data` - (Optional, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
 
-The `data_disk` object supports the following:
+The `worker_config` object supports the following:
 
-* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
-* `disk_type` - (Optional, ForceNew) Types of disk，available values: CLOUD_PREMIUM and CLOUD_SSD.
-* `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
+* `instance_type` - (Required, ForceNew) Specified types of CVM instance.
+* `subnet_id` - (Required, ForceNew) Private network ID.
+* `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
+* `count` - (Optional, ForceNew) Number of cvm.
+* `data_disk` - (Optional, ForceNew) Configurations of data disk.
+* `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
+* `enhanced_security_service` - (Optional, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
+* `instance_name` - (Optional, ForceNew) Name of the CVMs.
+* `internet_charge_type` - (Optional, ForceNew) Charge types for network traffic. Available values include TRAFFIC_POSTPAID_BY_HOUR.
+* `internet_max_bandwidth_out` - (Optional, ForceNew) Max bandwidth of Internet access in Mbps. Default is 0.
+* `key_ids` - (Optional, ForceNew) ID list of keys.
+* `password` - (Optional, ForceNew) Password to access.
+* `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
+* `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
+* `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is 50.
+* `system_disk_type` - (Optional, ForceNew) Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.
+* `user_data` - (Optional, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `certification_authority` - The certificate used for access.
-* `cluster_external_endpoint` - External network address to access
+* `cluster_external_endpoint` - External network address to access.
 * `cluster_node_num` - Number of nodes in the cluster.
 * `domain` - Domain name for access.
 * `password` - Password of account.

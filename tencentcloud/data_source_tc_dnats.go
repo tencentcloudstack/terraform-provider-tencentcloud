@@ -52,7 +52,7 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validatePort,
-				Description:  " Port of the eip.",
+				Description:  "Port of the eip.",
 			},
 			"private_ip": {
 				Type:         schema.TypeString,
@@ -73,7 +73,6 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
@@ -98,7 +97,7 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 						"protocol": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of the network protocol, the available values include： TCP and UDP.",
+							Description: "Type of the network protocol, the available values include: TCP and UDP.",
 						},
 						"elastic_ip": {
 							Type:        schema.TypeString,
@@ -108,7 +107,7 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 						"elastic_port": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: " Port of the eip.",
+							Description: "Port of the eip.",
 						},
 						"private_ip": {
 							Type:        schema.TypeString,

@@ -36,7 +36,7 @@ data "tencentcloud_gaap_security_policies" "foo" {
 The following arguments are supported:
 
 * `id` - (Required) ID of the security policy to be queried.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
+* `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
 

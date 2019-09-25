@@ -6,11 +6,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type RedisService struct {
@@ -30,10 +29,10 @@ type TencentCloudRedisDetail struct {
 	Ip         string
 	Port       int64
 	CreateTime string
+	Tags       map[string]string
 }
 
 func (me *RedisService) DescribeRedisZoneConfig(ctx context.Context) (sellConfigures []*redis.RegionConf, errRet error) {
-
 	logId := getLogId(ctx)
 	request := redis.NewDescribeProductInfoRequest()
 	defer func() {
@@ -84,9 +83,11 @@ func (me *RedisService) DescribeInstances(ctx context.Context, zoneName, searchK
 		}
 	}()
 
-	var limit, offset uint64 = 2, 0
-	var leftNumber int64 = 0
-	var leftNumberInit bool = false
+	var (
+		limit, offset  uint64 = 2, 0
+		leftNumber     int64
+		leftNumberInit bool
+	)
 
 	request.Limit = &limit
 	request.Offset = &offset
@@ -141,6 +142,19 @@ needMoreItems:
 		instance.RedisId = *item.InstanceId
 		instance.SubnetId = *item.UniqSubnetId
 		instance.VpcId = *item.UniqVpcId
+
+		instance.Tags = make(map[string]string, len(item.InstanceTags))
+		for _, tag := range item.InstanceTags {
+			if tag.TagKey == nil {
+				return nil, fmt.Errorf("[CRITAL]%s api[%s] redis instance tag key is nil", logId, request.GetAction())
+			}
+			if tag.TagValue == nil {
+				return nil, fmt.Errorf("[CRITAL]%s api[%s] redis instance tag value is nil", logId, request.GetAction())
+			}
+
+			instance.Tags[*tag.TagKey] = *tag.TagValue
+		}
+
 		instances = append(instances, instance)
 
 		if needLimit > 0 && int64(len(instances)) >= needLimit {
@@ -168,8 +182,8 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 		}
 	}()
 
-	//zone
-	var intZoneId uint64 = 0
+	// zone
+	var intZoneId uint64
 
 	for id, name := range REDIS_ZONE_ID2NAME {
 		if zoneName == name {
@@ -183,8 +197,8 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	}
 	request.ZoneId = &intZoneId
 
-	//type
-	var intTypeId uint64 = 0
+	// type
+	var intTypeId uint64
 	for id, name := range REDIS_NAMES {
 		if typeId == name {
 			intTypeId = uint64(id)
@@ -197,7 +211,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	}
 	request.TypeId = &intTypeId
 
-	//vpc
+	// vpc
 	if (vpcId == "" && subnetId != "") || (vpcId != "" && subnetId == "") {
 		errRet = fmt.Errorf("redis need vpcId and subnetId both set or none")
 		return
@@ -217,9 +231,9 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	}
 
 	var (
-		vport              = uint64(port)
-		umemSize           = uint64(memSize)
-		billingMode int64  = 0
+		vport       = uint64(port)
+		umemSize    = uint64(memSize)
+		billingMode int64
 		goodsNum    uint64 = 1
 		period      uint64 = 1
 	)
@@ -271,7 +285,7 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRedisClient().DescribeInstances(request)
 
-	//Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
+	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 	if err != nil {
 		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
 			time.Sleep(time.Second)
@@ -323,12 +337,11 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 		return
 	}
 
-	errRet = fmt.Errorf("redis instance delivery failure,  status is %d", *info.Status)
+	errRet = fmt.Errorf("redis instance delivery failure, status is %d", *info.Status)
 	return
 }
 
 func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId string) (done bool, redisId string, errRet error) {
-
 	logId := getLogId(ctx)
 	request := redis.NewDescribeInstanceDealDetailRequest()
 
@@ -343,7 +356,7 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRedisClient().DescribeInstanceDealDetail(request)
 
-	//Post https://cdb.tencentcloudapi.com/:  always get "Gateway Time-out"
+	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 
 	if err != nil {
 		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
@@ -375,7 +388,7 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	}
 
 	if len(response.Response.DealDetails) != 1 {
-		errRet = fmt.Errorf("Redis api DescribeInstanceDealDetail  one dealId[%s]  return %d deal infos.",
+		errRet = fmt.Errorf("Redis api DescribeInstanceDealDetail one dealId[%s] return %d deal infos.",
 			dealId, len(response.Response.DealDetails))
 		return
 	}
@@ -386,7 +399,7 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	if status == REDIS_ORDER_SUCCESS_DELIVERY {
 
 		if len(dealDetail.InstanceIds) != 1 {
-			errRet = fmt.Errorf("redis one dealid give  %d  redis id", len(dealDetail.InstanceIds))
+			errRet = fmt.Errorf("redis one dealid give %d redis id", len(dealDetail.InstanceIds))
 			return
 		}
 		redisId = *dealDetail.InstanceIds[0]
@@ -450,7 +463,6 @@ func (me *RedisService) ModifyInstanceProjectId(ctx context.Context, redisId str
 }
 
 func (me *RedisService) DescribeInstanceSecurityGroup(ctx context.Context, redisId string) (sg []string, errRet error) {
-
 	logId := getLogId(ctx)
 	request := redis.NewDescribeInstanceSecurityGroupRequest()
 	request.InstanceIds = []*string{&redisId}
@@ -562,7 +574,6 @@ func (me *RedisService) UpgradeInstance(ctx context.Context, redisId string, new
 }
 
 func (me *RedisService) DescribeTaskInfo(ctx context.Context, redisId string, taskId int64) (ok bool, errRet error) {
-
 	logId := getLogId(ctx)
 	var uintTaskId = uint64(taskId)
 	request := redis.NewDescribeTaskInfoRequest()
@@ -593,7 +604,6 @@ func (me *RedisService) DescribeTaskInfo(ctx context.Context, redisId string, ta
 }
 
 func (me *RedisService) ResetPassword(ctx context.Context, redisId string, newPassword string) (taskId int64, errRet error) {
-
 	logId := getLogId(ctx)
 
 	request := redis.NewResetPasswordRequest()

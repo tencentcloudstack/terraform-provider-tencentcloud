@@ -31,7 +31,7 @@ The following arguments are supported:
 * `ip` - (Optional) IP of the GAAP realserver to be queried, conflict with `domain`.
 * `name` - (Optional) Name of the GAAP realserver to be queried, the maximum length is 30.
 * `project_id` - (Optional) ID of the project within the GAAP realserver to be queried, default is '-1' means all projects.
-* `result_output_file` - (Optional, ForceNew) Used to save results.
+* `result_output_file` - (Optional) Used to save results.
 * `tags` - (Optional) Tags of the GAAP proxy to be queried. Support up to 5, display the information as long as it matches one.
 
 ## Attributes Reference

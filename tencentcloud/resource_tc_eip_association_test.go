@@ -1,9 +1,9 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
@@ -11,15 +11,14 @@ import (
 
 func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckEipAssociationDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEipAssociationWithInstance,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_eip_association.foo"),
+					testAccCheckEipAssociationExists("tencentcloud_eip_association.foo"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eip.my_eip", "public_ip"),
 					resource.TestCheckResourceAttr("tencentcloud_eip.my_eip", "name", "tf_auto_test"),
 					resource.TestCheckResourceAttr("tencentcloud_eip.my_eip", "status", "UNBIND"),
@@ -34,6 +33,7 @@ func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
 	})
 }
 
+/*
 func TestAccTencentCloudEipAssociationWithNetworkInterface(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() { testAccPreCheck(t) },
@@ -44,7 +44,7 @@ func TestAccTencentCloudEipAssociationWithNetworkInterface(t *testing.T) {
 			{
 				Config: testAccEipAssociationWithNetworkInterface,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_eip_association.foo"),
+					testAccCheckEipAssociationExists("tencentcloud_eip_association.foo"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eip.my_eip", "public_ip"),
 					resource.TestCheckResourceAttr("tencentcloud_eip.my_eip", "name", "tf_auto_test"),
 					resource.TestCheckResourceAttr("tencentcloud_eip.my_eip", "status", "UNBIND"),
@@ -58,57 +58,77 @@ func TestAccTencentCloudEipAssociationWithNetworkInterface(t *testing.T) {
 		},
 	})
 }
+*/
 
 func testAccCheckEipAssociationDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*TencentCloudClient).commonConn
-	cvmConn := testAccProvider.Meta().(*TencentCloudClient).cvmConn
-
-	var assId string
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	vpcService := VpcService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_eip_association" {
 			continue
 		}
-		assId = rs.Primary.ID
-	}
 
-	association, err := parseAssociationId(assId)
-	if err != nil {
-		return err
-	}
-	eipId := association.eipId
-
-	// make sure eip is deleted
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
-		_, _, err := findEipById(cvmConn, eipId)
-		if err == nil {
-			err = fmt.Errorf("eip can still be found after deleted")
-			return resource.RetryableError(err)
+		associationId, err := parseEipAssociationId(rs.Primary.ID)
+		eip, err := vpcService.DescribeEipById(ctx, associationId.EipId)
+		if err != nil {
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				eip, err = vpcService.DescribeEipById(ctx, associationId.EipId)
+				if err != nil {
+					return retryError(err)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
 		}
-		if err == errEIPNotFound {
+		if eip == nil {
 			return nil
 		}
-		return resource.RetryableError(errEIPStillDeleting)
-	})
-	if err != nil {
-		return err
+		if eip.InstanceId != nil && *eip.InstanceId == associationId.InstanceId {
+			return fmt.Errorf("eip association still exists: %s", rs.Primary.ID)
+		}
 	}
+	return nil
+}
 
-	// make sure instance is deleted
-	instanceId := association.instanceId
-	if len(instanceId) > 0 {
-		instanceIds := []string{instanceId}
+func testAccCheckEipAssociationExists(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
 
-		_, err = waitInstanceReachTargetStatus(client, instanceIds, "STOPPED")
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("eip association %s is not found", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("eip association id is not set")
+		}
+		vpcService := VpcService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+		}
+		associationId, err := parseEipAssociationId(rs.Primary.ID)
+		eip, err := vpcService.DescribeEipById(ctx, associationId.EipId)
 		if err != nil {
-			if err.Error() == instanceNotFoundErrorMsg(instanceIds) {
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				eip, err = vpcService.DescribeEipById(ctx, associationId.EipId)
+				if err != nil {
+					return retryError(err)
+				}
 				return nil
+			})
+			if err != nil {
+				return err
 			}
-			return err
+		}
+		if eip == nil || eip.InstanceId == nil || *eip.InstanceId != associationId.InstanceId {
+			return fmt.Errorf("eip %s is not found", associationId.EipId)
 		}
 		return nil
 	}
-
-	return nil
 }
 
 const testAccEipAssociationWithInstance = `
@@ -149,6 +169,7 @@ resource "tencentcloud_eip_association" "foo" {
 }
 `
 
+/*
 // TODO remove hard code and make network_interface_id as a resource
 const testAccEipAssociationWithNetworkInterface = `
 resource "tencentcloud_eip" "my_eip" {
@@ -161,3 +182,4 @@ resource "tencentcloud_eip_association" "foo" {
   private_ip = "10.0.1.6"
 }
 `
+*/

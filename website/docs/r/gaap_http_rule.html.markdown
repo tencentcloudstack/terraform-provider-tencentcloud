@@ -78,6 +78,7 @@ The following arguments are supported:
 * `realserver_type` - (Required, ForceNew) Type of the realserver, and the available values include `IP`,`DOMAIN`.
 * `realservers` - (Required) An information list of GAAP realserver. Each element contains the following attributes:
 * `connect_timeout` - (Optional) Timeout of the health check response, default is 2s.
+* `forward_host` - (Optional) The default value of requested host which is forwarded to the realserver by the listener is `default`.
 * `health_check_method` - (Optional) Method of the health check. Available values includes `GET` and `HEAD`.
 * `health_check_path` - (Optional) Path of health check. Maximum length is 80.
 * `health_check_status_codes` - (Optional) Return code of confirmed normal. Available values includes `100`,`200`,`300`,`400` and `500`.

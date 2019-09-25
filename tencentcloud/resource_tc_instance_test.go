@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
 )
 
@@ -79,26 +78,6 @@ func TestAccTencentCloudInstance_basic(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "hostname", "password", "allocate_public_ip"},
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_prepaid(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck:      func() { testAccPreCheck(t) },
-		IDRefreshName: "tencentcloud_instance.foo",
-		Providers:     testAccProviders,
-		CheckDestroy:  testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccInstanceConfigWithSmallInstanceType,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_type", "CLOUD_PREMIUM"),
-				),
 			},
 		},
 	})
@@ -409,60 +388,87 @@ func TestAccTencentCloudInstance_withTags(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstance_withPlacementGroup(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccInstanceConfigWithPlacementGroup,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet("tencentcloud_instance.foo", "placement_group_id"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
+
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("Not found: %s", n)
+			return fmt.Errorf("cvm instance %s is not found", n)
 		}
-
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("No ID is set")
+			return fmt.Errorf("cvm instance id is not set")
 		}
 
-		provider := testAccProvider
-		// Ignore if Meta is empty, this can happen for validation providers
-		if provider.Meta() == nil {
-			return fmt.Errorf("Provider Meta is nil")
+		cvmService := CvmService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-
-		client := provider.Meta().(*TencentCloudClient).commonConn
-		instanceIds := []string{
-			rs.Primary.ID,
+		instance, err := cvmService.DescribeInstanceById(ctx, rs.Primary.ID)
+		if err != nil {
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				instance, err = cvmService.DescribeInstanceById(ctx, rs.Primary.ID)
+				if err != nil {
+					return retryError(err)
+				}
+				return nil
+			})
 		}
-		_, err := waitInstanceReachTargetStatus(client, instanceIds, "RUNNING")
 		if err != nil {
 			return err
+		}
+		if instance == nil {
+			return fmt.Errorf("cvm instance id is not found")
 		}
 		return nil
 	}
 }
 
 func testAccCheckInstanceDestroy(s *terraform.State) error {
-	return testAccCheckInstanceDestroyWithProvider(s, testAccProvider)
-}
-
-func testAccCheckInstanceDestroyWithProvider(s *terraform.State, provider *schema.Provider) error {
-	client := provider.Meta().(*TencentCloudClient).commonConn
-
-	var instanceIds []string
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	cvmService := CvmService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_instance" {
 			continue
 		}
-		instanceId := rs.Primary.ID
-		instanceIds = append(instanceIds, instanceId)
-	}
 
-	// NOTE,
-	// for prepaid instances, STOPPED means terminated process is done
-	// for postpaid instances, not found is expected
-	_, err := waitInstanceReachTargetStatus(client, instanceIds, "STOPPED")
-	if err != nil {
-		if err.Error() == instanceNotFoundErrorMsg(instanceIds) {
-			return nil
+		instance, err := cvmService.DescribeInstanceById(ctx, rs.Primary.ID)
+		if err != nil {
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				instance, err = cvmService.DescribeInstanceById(ctx, rs.Primary.ID)
+				if err != nil {
+					return retryError(err)
+				}
+				return nil
+			})
 		}
-		return err
+		if err != nil {
+			return err
+		}
+		if instance != nil {
+			return fmt.Errorf("cvm instance still exists: %s", rs.Primary.ID)
+		}
 	}
 	return nil
 }
@@ -489,6 +495,7 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 
 resource "tencentcloud_key_pair" "my_key" {
   key_name = "%s"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
 }
 
 resource "tencentcloud_instance" "login" {
@@ -945,5 +952,38 @@ resource "tencentcloud_instance" "foo" {
   tags = {
     "hello" = "hello"
   }
+}
+`
+
+const testAccInstanceConfigWithPlacementGroup = `
+data "tencentcloud_image" "my_favorate_image" {
+  os_name = "centos"
+  filter {
+    name   = "image-type"
+    values = ["PUBLIC_IMAGE"]
+  }
+}
+
+data "tencentcloud_instance_types" "my_favorate_instance_types" {
+  filter {
+    name   = "instance-family"
+    values = ["S2"]
+  }
+  cpu_core_count = 1
+  memory_size    = 2
+}
+
+resource "tencentcloud_placement_group" "placement" {
+  name = "terraform_automation_placement"
+  type = "HOST"
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name      = "terraform_automation_with_placement"
+  availability_zone  = "ap-guangzhou-3"
+  image_id           = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  instance_type      = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  system_disk_type   = "CLOUD_PREMIUM"
+  placement_group_id = "${tencentcloud_placement_group.placement.id}"
 }
 `

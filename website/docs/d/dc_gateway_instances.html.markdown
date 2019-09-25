@@ -51,12 +51,12 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_list` - Information list of the DCG.
   * `cnn_route_type` - Type of CCN route, the available value include 'BGP' and 'STATIC'.
   * `create_time` - Creation time of resource.
-  * `dcg_id` - ID of the DCG
-  * `dcg_ip` - IP of the DCG
+  * `dcg_id` - ID of the DCG.
+  * `dcg_ip` - IP of the DCG.
   * `enable_bgp` - Indicates whether the BGP is enabled.
   * `gateway_type` - Type of the gateway, the available value include 'NORMAL' and 'NAT'. Default is 'NORMAL'.
-  * `name` - Name of the DCG
+  * `name` - Name of the DCG.
   * `network_instance_id` - Type of associated network, the available value include 'VPC' and 'CCN'.
-  * `network_type` - IP of the DCG
+  * `network_type` - IP of the DCG.
 
 

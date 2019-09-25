@@ -43,8 +43,8 @@ type TencentCloudClient struct {
 	tagConn     *tag.Client
 	mongodbConn *mongodb.Client
 	tkeConn     *tke.Client
-	gaapCoon    *gaap.Client
-	sslCoon     *ssl.Client
+	gaapConn    *gaap.Client
+	sslConn     *ssl.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -355,8 +355,8 @@ func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 }
 
 func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
-	if me.gaapCoon != nil {
-		return me.gaapCoon
+	if me.gaapConn != nil {
+		return me.gaapConn
 	}
 
 	credential := common.NewCredential(
@@ -373,14 +373,14 @@ func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
 	var round LogRoundTripper
 	gaapConn.WithHttpTransport(&round)
 
-	me.gaapCoon = gaapConn
+	me.gaapConn = gaapConn
 
-	return me.gaapCoon
+	return me.gaapConn
 }
 
 func (me *TencentCloudClient) UseSslClient() *ssl.Client {
-	if me.sslCoon != nil {
-		return me.sslCoon
+	if me.sslConn != nil {
+		return me.sslConn
 	}
 
 	credential := common.NewCredential(
@@ -397,7 +397,7 @@ func (me *TencentCloudClient) UseSslClient() *ssl.Client {
 	var round LogRoundTripper
 	sslConn.WithHttpTransport(&round)
 
-	me.sslCoon = sslConn
+	me.sslConn = sslConn
 
-	return me.sslCoon
+	return me.sslConn
 }

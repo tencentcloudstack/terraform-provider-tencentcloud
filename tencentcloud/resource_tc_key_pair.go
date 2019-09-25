@@ -1,19 +1,39 @@
+/*
+Provides a key pair resource.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_key_pair" "foo" {
+  key_name   = "terraform_test"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
+}
+```
+
+Import
+
+Key pair can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_key_pair.foo skey-17634f05
+```
+*/
 package tencentcloud
 
 import (
-	"encoding/json"
-	"fmt"
-	"log"
-	"time"
+	"context"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
 func resourceTencentCloudKeyPair() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudKeyPairCreate,
 		Read:   resourceTencentCloudKeyPairRead,
+		Update: resourceTencentCloudKeyPairUpdate,
 		Delete: resourceTencentCloudKeyPairDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -22,20 +42,22 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"key_name": {
 				Type:         schema.TypeString,
-				ForceNew:     true,
 				Required:     true,
 				ValidateFunc: validateKeyPairName,
+				Description:  "The key pair's name. It is the only in one TencentCloud account.",
 			},
 			"public_key": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				StateFunc: func(v interface{}) string {
-					if key, ok := v.(string); ok {
-						return key
-					}
-					return ""
-				},
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "You can import an existing public key and using TencentCloud key pair to manage it.",
+			},
+			"project_id": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				ForceNew:    true,
+				Description: "Specifys to which project the key pair belongs.",
 			},
 		},
 	}
@@ -44,85 +66,29 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_key_pair.create")()
 
-	client := meta.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Version":   "2017-03-12",
-		"ProjectId": "0", // TODO only support default projectId in v1.0
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	cvmService := CvmService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
 	keyName := d.Get("key_name").(string)
+	publicKey := d.Get("public_key").(string)
+	projectId := d.Get("project_id").(int)
 
-	if publicKey, ok := d.GetOk("public_key"); ok {
-		params["Action"] = "ImportKeyPair"
-		params["KeyName"] = keyName
-		params["PublicKey"] = publicKey.(string)
-
-		response, err := client.SendRequest("cvm", params)
+	keyId := ""
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		id, err := cvmService.CreateKeyPair(ctx, keyName, publicKey, int64(projectId))
 		if err != nil {
-			return err
+			return retryError(err)
 		}
-		var jsonresp struct {
-			Response struct {
-				Error struct {
-					Code    string `json:"Code"`
-					Message string `json:"Message"`
-				}
-				KeyId     string `json:"KeyId"`
-				RequestId string
-			}
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.Response.Error.Code != "" {
-			return fmt.Errorf(
-				"tencentcloud_instance got error, code:%v, message:%v",
-				jsonresp.Response.Error.Code,
-				jsonresp.Response.Error.Message,
-			)
-		}
-		id := jsonresp.Response.KeyId
-		d.SetId(id)
-
-	} else {
-		params["Action"] = "CreateKeyPair"
-		params["KeyName"] = keyName
-		response, err := client.SendRequest("cvm", params)
-		if err != nil {
-			return err
-		}
-		var jsonresp struct {
-			Response struct {
-				Error struct {
-					Code    string `json:"Code"`
-					Message string `json:"Message"`
-				}
-				KeyPair struct {
-					KeyId      string `json:"KeyId"`
-					KeyName    string `json:"KeyName"`
-					ProjectId  int    `json:"ProjectId"`
-					PublicKey  string `json:"PublicKey"`
-					PrivateKey string `json:"PrivateKey"`
-				} `json:"KeyPair"`
-				RequestId string
-			}
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.Response.Error.Code != "" {
-			return fmt.Errorf(
-				"tencentcloud_instance got error, code:%v, message:%v",
-				jsonresp.Response.Error.Code,
-				jsonresp.Response.Error.Message,
-			)
-		}
-
-		id := jsonresp.Response.KeyPair.KeyId
-		d.SetId(id)
+		keyId = id
+		return nil
+	})
+	if err != nil {
+		return err
 	}
+	d.SetId(keyId)
 
 	return resourceTencentCloudKeyPairRead(d, meta)
 }
@@ -130,86 +96,115 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_key_pair.read")()
 
-	id := d.Id()
-	client := meta.(*TencentCloudClient).commonConn
-	keyName, _, err := findKeyPairById(client, id)
-	if err != nil {
-		if err == errKeyPairNotFound {
-			d.SetId("")
-			return nil
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	keyId := d.Id()
+	cvmService := CvmService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	var keyPair *cvm.KeyPair
+	var errRet error
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		keyPair, errRet = cvmService.DescribeKeyPairById(ctx, keyId)
+		if errRet != nil {
+			return retryError(errRet, "InternalError")
 		}
+		return nil
+	})
+	if err != nil {
 		return err
+	}
+	if keyPair == nil {
+		d.SetId("")
+		return nil
 	}
 
-	if err := d.Set("key_name", keyName); err != nil {
-		return err
+	d.Set("key_name", keyPair.KeyName)
+	d.Set("project_id", keyPair.ProjectId)
+	if keyPair.PublicKey != nil {
+		publicKey := *keyPair.PublicKey
+		split := strings.Split(publicKey, " ")
+		publicKey = strings.Join(split[0:len(split)-1], " ")
+		d.Set("public_key", publicKey)
 	}
+
 	return nil
+}
+
+func resourceTencentCloudKeyPairUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_key_pair.update")()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	keyId := d.Id()
+	cvmService := CvmService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	if d.HasChange("key_name") {
+		keyName := d.Get("key_name").(string)
+		err := cvmService.ModifyKeyPairName(ctx, keyId, keyName)
+		if err != nil {
+			return err
+		}
+	}
+
+	return resourceTencentCloudKeyPairRead(d, meta)
 }
 
 func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_key_pair.delete")()
 
-	id := d.Id()
-	log.Printf("[DEBUG] tencentcloud_key_pair - deleting key pair:% v", id)
-	params := map[string]string{
-		"Version":  "2017-03-12",
-		"Action":   "DeleteKeyPairs",
-		"KeyIds.0": id,
-	}
-	client := meta.(*TencentCloudClient).commonConn
-	return resource.Retry(3*time.Minute, func() *resource.RetryError {
-		_, bindedInstanceIds, err := findKeyPairById(client, id)
-		if err != nil && err != errKeyPairNotFound {
-			return resource.NonRetryableError(err)
-		}
-		if len(bindedInstanceIds) > 0 {
-			var stillUnbinedInstanceIds []string
-			for _, insId := range bindedInstanceIds {
-				if err := unbindKeyPiar(client, insId, id); err != nil {
-					stillUnbinedInstanceIds = append(stillUnbinedInstanceIds, insId)
-				}
-			}
-			if len(stillUnbinedInstanceIds) > 0 {
-				s := fmt.Sprintf(
-					"key pair: %v need to unbind with instanceIds: %v",
-					id,
-					stillUnbinedInstanceIds,
-				)
-				log.Printf("[DEBUG] %v", s)
-				err = fmt.Errorf(s)
-				return resource.RetryableError(err)
-			}
-		}
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-		response, err := client.SendRequest("cvm", params)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		var jsonresp struct {
-			Response struct {
-				Error struct {
-					Code    string `json:"Code"`
-					Message string `json:"Message"`
-				}
-				RequestId string
-			}
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if retryable(jsonresp.Response.Error.Code, jsonresp.Response.Error.Message) {
-			return resource.RetryableError(fmt.Errorf(jsonresp.Response.Error.Message))
-		}
-		if jsonresp.Response.Error.Code != "" {
-			err = fmt.Errorf(
-				"tencentcloud_key_pair got error, code:%v, message:%v",
-				jsonresp.Response.Error.Code,
-				jsonresp.Response.Error.Message,
-			)
-			return resource.NonRetryableError(err)
+	keyId := d.Id()
+	cvmService := CvmService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	var keyPair *cvm.KeyPair
+	var errRet error
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		keyPair, errRet = cvmService.DescribeKeyPairById(ctx, keyId)
+		if errRet != nil {
+			return retryError(errRet, "InternalError")
 		}
 		return nil
 	})
+	if err != nil {
+		return err
+	}
+	if keyPair == nil {
+		d.SetId("")
+		return nil
+	}
+
+	if len(keyPair.AssociatedInstanceIds) > 0 {
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			errRet := cvmService.UnbindKeyPair(ctx, keyId, keyPair.AssociatedInstanceIds)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		errRet := cvmService.DeleteKeyPair(ctx, keyId)
+		if errRet != nil {
+			return retryError(errRet)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

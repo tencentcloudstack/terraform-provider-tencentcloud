@@ -32,6 +32,15 @@ func TestAccTencentCloudMongodbShardingInstance(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "vip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "vport"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "create_time"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.test", "test"),
+				),
+			},
+			{
+				Config: testAccMongodbShardingInstanceUpdateTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb"),
+					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.test"),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.abc", "abc"),
 				),
 			},
 			{
@@ -64,7 +73,7 @@ func testAccCheckMongodbShardingInstanceDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccMongodbShardingInstance string = `
+const testAccMongodbShardingInstance = `
 resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   instance_name   = "tf-mongodb-sharding"
   shard_quantity  = 2
@@ -76,5 +85,28 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   available_zone  = "ap-guangzhou-3"
   project_id      = 0
   password        = "test1234"
+
+  tags = {
+    "test" = "test"
+  }
+}
+`
+
+const testAccMongodbShardingInstanceUpdateTags = `
+resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
+  instance_name   = "tf-mongodb-sharding"
+  shard_quantity  = 2
+  nodes_per_shard = 3
+  memory          = 4
+  volume          = 100
+  engine_version  = "MONGO_36_WT"
+  machine_type    = "TGIO"
+  available_zone  = "ap-guangzhou-3"
+  project_id      = 0
+  password        = "test1234"
+
+  tags = {
+    "abc" = "abc"
+  }
 }
 `
