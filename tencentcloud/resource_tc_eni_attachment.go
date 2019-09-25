@@ -165,10 +165,6 @@ func resourceTencentCloudEniAttachmentRead(d *schema.ResourceData, m interface{}
 		return nil
 	}
 
-	if eni.NetworkInterfaceId == nil {
-		return errors.New("eni id is nil")
-	}
-
 	if eni.Attachment == nil {
 		d.SetId("")
 		return nil

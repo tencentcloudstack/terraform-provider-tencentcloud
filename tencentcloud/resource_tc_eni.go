@@ -286,29 +286,22 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 				}
 
 				// move primary ip to the first
-				primaryIpv4 := ipv4s[i]
-				copy(ipv4s[1:], ipv4s[:i])
-				ipv4s[0] = primaryIpv4
+				ipv4s[0], ipv4s[i] = ipv4s[i], ipv4s[0]
 				break
 			}
 		}
 
-		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, nil, ipv4s[:10])
+		ipv4ss := chunkEniIP(ipv4s)
+		withPrimaryIpv4s := ipv4ss[0]
+
+		id, err = vpcService.CreateEni(ctx, name, vpcId, subnetId, desc, securityGroups, nil, withPrimaryIpv4s)
 		if err != nil {
 			return err
 		}
 
 		d.SetId(id)
 
-		ipv4s = ipv4s[10:]
-		for len(ipv4s) > 10 {
-			if err = vpcService.AssignIpv4ToEni(ctx, id, ipv4s[:10], nil); err != nil {
-				return err
-			}
-			ipv4s = ipv4s[10:]
-		}
-		// assign last ipv4s
-		if len(ipv4s) > 0 {
+		for _, ipv4s := range ipv4ss[1:] {
 			if err = vpcService.AssignIpv4ToEni(ctx, id, ipv4s, nil); err != nil {
 				return err
 			}
@@ -595,15 +588,8 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 					return err
 				}
 			} else {
-				for len(removeIpv4) > 10 {
-					if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4[:10]); err != nil {
-						return err
-					}
-					removeIpv4 = removeIpv4[10:]
-				}
-				// unAssign last ipv4
-				if len(removeIpv4) > 0 {
-					if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
+				for _, remove := range chunkRemoveIpv4(removeIpv4) {
+					if err := vpcService.UnAssignIpv4FromEni(ctx, id, remove); err != nil {
 						return err
 					}
 				}
@@ -616,15 +602,8 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 					return err
 				}
 			} else {
-				for len(addIpv4) > 10 {
-					if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4[:10], nil); err != nil {
-						return err
-					}
-					addIpv4 = addIpv4[10:]
-				}
-				// assign last ipv4
-				if len(addIpv4) > 0 {
-					if err := vpcService.AssignIpv4ToEni(ctx, id, addIpv4, nil); err != nil {
+				for _, add := range chunkEniIP(addIpv4) {
+					if err := vpcService.AssignIpv4ToEni(ctx, id, add, nil); err != nil {
 						return err
 					}
 				}
@@ -682,15 +661,8 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 						return err
 					}
 				} else {
-					for len(removeIpv4) > 10 {
-						if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4[:10]); err != nil {
-							return err
-						}
-						removeIpv4 = removeIpv4[10:]
-					}
-					// unAssign last ipv4
-					if len(removeIpv4) > 0 {
-						if err := vpcService.UnAssignIpv4FromEni(ctx, id, removeIpv4); err != nil {
+					for _, remove := range chunkRemoveIpv4(removeIpv4) {
+						if err := vpcService.UnAssignIpv4FromEni(ctx, id, remove); err != nil {
 							return err
 						}
 					}
@@ -729,4 +701,22 @@ func resourceTencentCloudEniDelete(d *schema.ResourceData, m interface{}) error 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	return service.DeleteEni(ctx, id)
+}
+
+func chunkEniIP(ipv4s []VpcEniIP) [][]VpcEniIP {
+	if len(ipv4s) <= 10 {
+		return [][]VpcEniIP{ipv4s}
+	}
+
+	first := ipv4s[:10]
+	return append([][]VpcEniIP{first}, chunkEniIP(ipv4s[10:])...)
+}
+
+func chunkRemoveIpv4(ss []string) [][]string {
+	if len(ss) <= 10 {
+		return [][]string{ss}
+	}
+
+	s := ss[:10]
+	return append([][]string{s}, chunkRemoveIpv4(ss[10:])...)
 }
