@@ -1,4 +1,10 @@
 ## 1.20.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_as_scaling_groups` add optional argument `tags` and attribute `tags` for `scaling_group_list`.
+* Resource: `tencentcloud_as_scaling_group` add optional argument `tags`.
+
 ## 1.20.0 (September 24, 2019)
 
 FEATURES:

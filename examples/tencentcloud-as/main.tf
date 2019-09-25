@@ -48,6 +48,10 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   desired_capacity     = "${var.desired_capacity}"
   termination_policies = ["NEWEST_INSTANCE"]
   retry_policy         = "INCREMENTAL_INTERVALS"
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 resource "tencentcloud_as_scaling_policy" "scaling_policy" {
@@ -90,4 +94,8 @@ resource "tencentcloud_as_notification" "notification" {
   scaling_group_id            = "${tencentcloud_as_scaling_group.scaling_group.id}"
   notification_types          = ["SCALE_OUT_FAILED"]
   notification_user_group_ids = ["76955"]
+}
+
+data "tencentcloud_as_scaling_groups" "scaling_groups_tags" {
+  tags = "${tencentcloud_as_scaling_group.scaling_group.tags}"
 }
