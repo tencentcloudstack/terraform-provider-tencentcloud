@@ -44,7 +44,7 @@ The following arguments are supported:
 * `bucket` - (Required, ForceNew) The name of a bucket to use.
 * `key` - (Required, ForceNew) The name of the object once it is in the bucket.
 * `acl` - (Optional) The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.
-* `cache_control` - (Optional) Specifies caching behavior along the request/reply chain.For further details，RFC2616 can be referred.
+* `cache_control` - (Optional) Specifies caching behavior along the request/reply chain. For further details, RFC2616 can be referred.
 * `content_disposition` - (Optional) Specifies presentational information for the object.
 * `content_encoding` - (Optional) Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
 * `content_type` - (Optional) A standard MIME type describing the format of the object data.

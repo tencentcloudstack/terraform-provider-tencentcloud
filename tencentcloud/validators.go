@@ -262,3 +262,25 @@ func validateAsScheduleTimestamp(v interface{}, k string) (ws []string, errors [
 	}
 	return
 }
+
+func validateStringPrefix(prefix string) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(string)
+		if !strings.HasPrefix(value, prefix) {
+			errors = append(errors, fmt.Errorf("%s doesn't have preifx %s", k, prefix))
+		}
+		return
+	}
+}
+
+func validateCidrIp(v interface{}, k string) (ws []string, errs []error) {
+	if _, err := validateIp(v, k); len(err) == 0 {
+		return
+	}
+
+	if _, err := validateCIDRNetworkAddress(v, k); len(err) != 0 {
+		errs = append(errs, fmt.Errorf("%s %v is not valid IP address or valid CIDR IP address",
+			k, v))
+	}
+	return
+}

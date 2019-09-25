@@ -93,6 +93,31 @@ func (c *Client) CreateCluster(request *CreateClusterRequest) (response *CreateC
     return
 }
 
+func NewCreateClusterAsGroupRequest() (request *CreateClusterAsGroupRequest) {
+    request = &CreateClusterAsGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "CreateClusterAsGroup")
+    return
+}
+
+func NewCreateClusterAsGroupResponse() (response *CreateClusterAsGroupResponse) {
+    response = &CreateClusterAsGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 为已经存在的集群创建伸缩组
+func (c *Client) CreateClusterAsGroup(request *CreateClusterAsGroupRequest) (response *CreateClusterAsGroupResponse, err error) {
+    if request == nil {
+        request = NewCreateClusterAsGroupRequest()
+    }
+    response = NewCreateClusterAsGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateClusterInstancesRequest() (request *CreateClusterInstancesRequest) {
     request = &CreateClusterInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -114,6 +139,56 @@ func (c *Client) CreateClusterInstances(request *CreateClusterInstancesRequest) 
         request = NewCreateClusterInstancesRequest()
     }
     response = NewCreateClusterInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateClusterRouteRequest() (request *CreateClusterRouteRequest) {
+    request = &CreateClusterRouteRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "CreateClusterRoute")
+    return
+}
+
+func NewCreateClusterRouteResponse() (response *CreateClusterRouteResponse) {
+    response = &CreateClusterRouteResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建集群路由
+func (c *Client) CreateClusterRoute(request *CreateClusterRouteRequest) (response *CreateClusterRouteResponse, err error) {
+    if request == nil {
+        request = NewCreateClusterRouteRequest()
+    }
+    response = NewCreateClusterRouteResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateClusterRouteTableRequest() (request *CreateClusterRouteTableRequest) {
+    request = &CreateClusterRouteTableRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "CreateClusterRouteTable")
+    return
+}
+
+func NewCreateClusterRouteTableResponse() (response *CreateClusterRouteTableResponse) {
+    response = &CreateClusterRouteTableResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建集群路由表
+func (c *Client) CreateClusterRouteTable(request *CreateClusterRouteTableRequest) (response *CreateClusterRouteTableResponse, err error) {
+    if request == nil {
+        request = NewCreateClusterRouteTableRequest()
+    }
+    response = NewCreateClusterRouteTableResponse()
     err = c.Send(request, response)
     return
 }
@@ -143,6 +218,31 @@ func (c *Client) DeleteCluster(request *DeleteClusterRequest) (response *DeleteC
     return
 }
 
+func NewDeleteClusterAsGroupsRequest() (request *DeleteClusterAsGroupsRequest) {
+    request = &DeleteClusterAsGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DeleteClusterAsGroups")
+    return
+}
+
+func NewDeleteClusterAsGroupsResponse() (response *DeleteClusterAsGroupsResponse) {
+    response = &DeleteClusterAsGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除集群伸缩组
+func (c *Client) DeleteClusterAsGroups(request *DeleteClusterAsGroupsRequest) (response *DeleteClusterAsGroupsResponse, err error) {
+    if request == nil {
+        request = NewDeleteClusterAsGroupsRequest()
+    }
+    response = NewDeleteClusterAsGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteClusterInstancesRequest() (request *DeleteClusterInstancesRequest) {
     request = &DeleteClusterInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -168,6 +268,56 @@ func (c *Client) DeleteClusterInstances(request *DeleteClusterInstancesRequest) 
     return
 }
 
+func NewDeleteClusterRouteRequest() (request *DeleteClusterRouteRequest) {
+    request = &DeleteClusterRouteRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DeleteClusterRoute")
+    return
+}
+
+func NewDeleteClusterRouteResponse() (response *DeleteClusterRouteResponse) {
+    response = &DeleteClusterRouteResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除集群路由
+func (c *Client) DeleteClusterRoute(request *DeleteClusterRouteRequest) (response *DeleteClusterRouteResponse, err error) {
+    if request == nil {
+        request = NewDeleteClusterRouteRequest()
+    }
+    response = NewDeleteClusterRouteResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteClusterRouteTableRequest() (request *DeleteClusterRouteTableRequest) {
+    request = &DeleteClusterRouteTableRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DeleteClusterRouteTable")
+    return
+}
+
+func NewDeleteClusterRouteTableResponse() (response *DeleteClusterRouteTableResponse) {
+    response = &DeleteClusterRouteTableResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除集群路由表
+func (c *Client) DeleteClusterRouteTable(request *DeleteClusterRouteTableRequest) (response *DeleteClusterRouteTableResponse, err error) {
+    if request == nil {
+        request = NewDeleteClusterRouteTableRequest()
+    }
+    response = NewDeleteClusterRouteTableResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClusterInstancesRequest() (request *DescribeClusterInstancesRequest) {
     request = &DescribeClusterInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -189,6 +339,56 @@ func (c *Client) DescribeClusterInstances(request *DescribeClusterInstancesReque
         request = NewDescribeClusterInstancesRequest()
     }
     response = NewDescribeClusterInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterRouteTablesRequest() (request *DescribeClusterRouteTablesRequest) {
+    request = &DescribeClusterRouteTablesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeClusterRouteTables")
+    return
+}
+
+func NewDescribeClusterRouteTablesResponse() (response *DescribeClusterRouteTablesResponse) {
+    response = &DescribeClusterRouteTablesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询集群路由表
+func (c *Client) DescribeClusterRouteTables(request *DescribeClusterRouteTablesRequest) (response *DescribeClusterRouteTablesResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterRouteTablesRequest()
+    }
+    response = NewDescribeClusterRouteTablesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterRoutesRequest() (request *DescribeClusterRoutesRequest) {
+    request = &DescribeClusterRoutesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeClusterRoutes")
+    return
+}
+
+func NewDescribeClusterRoutesResponse() (response *DescribeClusterRoutesResponse) {
+    response = &DescribeClusterRoutesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询集群路由
+func (c *Client) DescribeClusterRoutes(request *DescribeClusterRoutesRequest) (response *DescribeClusterRoutesResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterRoutesRequest()
+    }
+    response = NewDescribeClusterRoutesResponse()
     err = c.Send(request, response)
     return
 }
@@ -264,6 +464,31 @@ func (c *Client) DescribeExistedInstances(request *DescribeExistedInstancesReque
         request = NewDescribeExistedInstancesRequest()
     }
     response = NewDescribeExistedInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRouteTableConflictsRequest() (request *DescribeRouteTableConflictsRequest) {
+    request = &DescribeRouteTableConflictsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeRouteTableConflicts")
+    return
+}
+
+func NewDescribeRouteTableConflictsResponse() (response *DescribeRouteTableConflictsResponse) {
+    response = &DescribeRouteTableConflictsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询路由表冲突列表
+func (c *Client) DescribeRouteTableConflicts(request *DescribeRouteTableConflictsRequest) (response *DescribeRouteTableConflictsResponse, err error) {
+    if request == nil {
+        request = NewDescribeRouteTableConflictsRequest()
+    }
+    response = NewDescribeRouteTableConflictsResponse()
     err = c.Send(request, response)
     return
 }

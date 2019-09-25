@@ -1,7 +1,7 @@
 /*
 Provides a mysql instance resource to create master database instances.
 
-~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
 Example Usage
 
@@ -102,7 +102,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
-			Description:  "ID of VPC, which can be modified once every 24 hours and can’t be removed.",
+			Description:  "ID of VPC, which can be modified once every 24 hours and can't be removed.",
 		},
 		"subnet_id": {
 			Type:         schema.TypeString,
@@ -142,7 +142,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"status": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.",
+			Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
 		},
 		"task_status": {
 			Type:        schema.TypeInt,
@@ -185,6 +185,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 			Type:        schema.TypeString,
 			ForceNew:    true,
 			Optional:    true,
+			Computed:    true,
 			Description: "Indicates which availability zone will be used.",
 		},
 		"root_password": {
@@ -225,6 +226,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"project_id": {
 			Type:        schema.TypeInt,
 			Optional:    true,
+			Default:     0,
 			Description: "Project ID, default value is 0.",
 		},
 
@@ -622,7 +624,11 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		d.SetId("")
 		return
 	}
-
+	if MysqlDelStates[*mysqlInfo.Status] {
+		mysqlInfo = nil
+		d.SetId("")
+		return
+	}
 	d.Set("instance_name", *mysqlInfo.InstanceName)
 	d.Set("pay_type", int(*mysqlInfo.PayType))
 
@@ -637,17 +643,15 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		*mysqlInfo.AutoRenew = MYSQL_RENEW_NOUSE
 	}
 	d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
-
 	d.Set("mem_size", *mysqlInfo.Memory)
 	d.Set("volume_size", *mysqlInfo.Volume)
-
 	if d.Get("vpc_id").(string) != "" {
-		d.Set("vpc_id", *mysqlInfo.UniqVpcId)
+		errRet = d.Set("vpc_id", *mysqlInfo.UniqVpcId)
+	}
+	if d.Get("subnet_id").(string) != "" {
+		errRet = d.Set("subnet_id", *mysqlInfo.UniqSubnetId)
 	}
 
-	if d.Get("subnet_id").(string) != "" {
-		d.Set("subnet_id", *mysqlInfo.UniqSubnetId)
-	}
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
 		sdkErr, ok := err.(*errors.TencentCloudSDKError)
@@ -662,7 +666,6 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		return
 	}
 	d.Set("security_groups", securityGroups)
-
 	if master {
 		isGTIDOpen, err := mysqlService.CheckDBGTIDOpen(ctx, d.Id())
 		if err != nil {
@@ -671,7 +674,6 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		}
 		d.Set("gtid", int(isGTIDOpen))
 	}
-
 	tags, err := mysqlService.DescribeTagsOfInstanceId(ctx, d.Id())
 	if err != nil {
 		errRet = err
@@ -679,6 +681,7 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	if err := d.Set("tags", tags); err != nil {
 		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
+		return
 	}
 
 	d.Set("intranet_ip", *mysqlInfo.Vip)
@@ -700,26 +703,43 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	mysqlInfo, err := tencentMsyqlBasicInfoRead(ctx, d, meta, true)
+	var mysqlInfo *cdb.InstanceInfo
+	var e error
+	var onlineHas bool = true
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		mysqlInfo, e = tencentMsyqlBasicInfoRead(ctx, d, meta, true)
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				onlineHas = false
+				return nil
+			}
+			return retryError(e)
+		}
+		if mysqlInfo == nil {
+			d.SetId("")
+			onlineHas = false
+			return nil
+		}
+		d.Set("project_id", int(*mysqlInfo.ProjectId))
+		d.Set("engine_version", *mysqlInfo.EngineVersion)
+		if *mysqlInfo.WanStatus == 1 {
+			d.Set("internet_service", 1)
+			d.Set("internet_host", *mysqlInfo.WanDomain)
+			d.Set("internet_port", int(*mysqlInfo.WanPort))
+		} else {
+			d.Set("internet_service", 0)
+			d.Set("internet_host", "")
+			d.Set("internet_port", 0)
+		}
+		return nil
+	})
 	if err != nil {
-		return err
+		return fmt.Errorf("Fail to get basic info from mysql, reaseon %s", err.Error())
 	}
-	if mysqlInfo == nil {
-		d.SetId("")
+	if !onlineHas {
 		return nil
 	}
-	d.Set("project_id", int(*mysqlInfo.ProjectId))
-	d.Set("engine_version", *mysqlInfo.EngineVersion)
-	if *mysqlInfo.WanStatus == 1 {
-		d.Set("internet_service", 1)
-		d.Set("internet_host", *mysqlInfo.WanDomain)
-		d.Set("internet_port", int(*mysqlInfo.WanPort))
-	} else {
-		d.Set("internet_service", 0)
-		d.Set("internet_host", "")
-		d.Set("internet_port", 0)
-	}
-
 	parametersMap, ok := d.Get("parameters").(map[string]interface{})
 	if !ok {
 		log.Printf("[INFO] %v  config error,parameters is not map[string]interface{}\n", logId)
@@ -728,38 +748,60 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		for k := range parametersMap {
 			cares = append(cares, k)
 		}
-		caresParameters, err := mysqlService.DescribeCaresParameters(ctx, d.Id(), cares)
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			caresParameters, e := mysqlService.DescribeCaresParameters(ctx, d.Id(), cares)
+			if e != nil {
+				if mysqlService.NotFoundMysqlInstance(e) {
+					d.SetId("")
+					onlineHas = false
+					return nil
+				}
+				return retryError(e)
+			}
+			if e := d.Set("parameters", caresParameters); e != nil {
+				log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, e.Error())
+				return resource.NonRetryableError(e)
+			}
+			d.Set("availability_zone", *mysqlInfo.Zone)
+			return nil
+		})
 		if err != nil {
-			return err
+			return fmt.Errorf("Describe CaresParameters Fail, reason:%s", err.Error())
 		}
-		if err := d.Set("parameters", caresParameters); err != nil {
-			log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, err.Error())
+		if !onlineHas {
+			return nil
 		}
 	}
-
-	d.Set("availability_zone", *mysqlInfo.Zone)
-
-	backConfig, err := mysqlService.DescribeDBInstanceConfig(ctx, d.Id())
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		backConfig, e := mysqlService.DescribeDBInstanceConfig(ctx, d.Id())
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				onlineHas = false
+				return nil
+			}
+			return retryError(e)
+		}
+		d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
+		d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
+		if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
+			//if you set ,i set
+			if _, ok := d.GetOk("first_slave_zone"); ok {
+				d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
+			}
+		}
+		if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
+			//if you set ,i set
+			if _, ok := d.GetOk("second_slave_zone"); ok {
+				d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
+			}
+		}
+		return nil
+	})
 	if err != nil {
-		return err
+		return fmt.Errorf("Describe DBInstanceConfig Fail, reason:%s", err.Error())
 	}
-	d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
-	d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
-
-	if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
-		//if you set ,i set
-		if _, ok := d.GetOk("first_slave_zone"); ok {
-			d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
-		}
-	}
-	if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
-		//if you set ,i set
-		if _, ok := d.GetOk("second_slave_zone"); ok {
-			d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
-		}
-
-	}
-
 	return nil
 }
 

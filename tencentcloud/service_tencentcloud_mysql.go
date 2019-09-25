@@ -866,24 +866,41 @@ func (me *MysqlService) DescribeTagsOfInstanceId(ctx context.Context, mysqlId st
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
+	var (
+		limit  int64 = 10
+		offset int64 = 0
+	)
+	request.Limit = &limit
+
+again:
+	if request.Offset == nil {
+		request.Offset = &offset
+	} else {
+		offset = offset + limit
+	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().DescribeTagsOfInstanceIds(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-
 	if len(response.Response.Rows) == 0 {
 		return
 	}
 	if len(response.Response.Rows) > 1 {
 		errRet = fmt.Errorf("One mysql id got %d tags info rows", len(response.Response.Rows))
 	}
-
+	if len(response.Response.Rows[0].Tags) == 0 {
+		return
+	}
 	for _, tag := range response.Response.Rows[0].Tags {
+		if _, has := tags[*tag.TagKey]; has {
+			return
+		}
 		tags[*tag.TagKey] = *tag.TagValue
 	}
-	return
+
+	goto again
 }
 
 func (me *MysqlService) DescribeDBInstanceConfig(ctx context.Context, mysqlId string) (backupConfig *cdb.DescribeDBInstanceConfigResponse,

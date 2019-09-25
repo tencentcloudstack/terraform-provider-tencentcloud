@@ -1,7 +1,7 @@
 /*
 Provides a mysql instance resource to create read-only database instances.
 
-~> **NOTE:** The terminate operation of read only mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** The terminate operation of read only mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
 Example Usage
 
@@ -27,13 +27,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
@@ -210,17 +210,26 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-
-	mysqlInfo, err := tencentMsyqlBasicInfoRead(ctx, d, meta, false)
-	if err != nil {
-		return err
-	}
-	if mysqlInfo == nil {
-		d.SetId("")
+	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		mysqlInfo, e := tencentMsyqlBasicInfoRead(ctx, d, meta, false)
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				return nil
+			}
+			return retryError(e)
+		}
+		if mysqlInfo == nil {
+			d.SetId("")
+			return nil
+		}
+		d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
 		return nil
+	})
+	if err != nil {
+		return fmt.Errorf("Fail to get basic info from mysql, reaseon %s", err.Error())
 	}
-	d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
-
 	return nil
 }
 

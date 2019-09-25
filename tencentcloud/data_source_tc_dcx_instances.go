@@ -32,19 +32,16 @@ func dataSourceTencentCloudDcxInstances() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"dcx_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "ID of the dedicated tunnels to be queried.",
 			},
 			"name": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Name of the dedicated tunnels to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to save results.",
 			},

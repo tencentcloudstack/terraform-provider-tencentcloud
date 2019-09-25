@@ -243,19 +243,17 @@ type CreateImageRequest struct {
 	// 镜像描述
 	ImageDescription *string `json:"ImageDescription,omitempty" name:"ImageDescription"`
 
-	// 软关机失败时是否执行强制关机以制作镜像
+	// 是否执行强制关机以制作镜像。
+	// 取值范围：<br><li>TRUE：表示关机之后制作镜像<br><li>FALSE：表示开机状态制作镜像<br><br>默认取值：FALSE。<br><br>开机状态制作镜像，可能导致部分数据未备份，影响数据安全。
 	ForcePoweroff *string `json:"ForcePoweroff,omitempty" name:"ForcePoweroff"`
 
 	// 创建Windows镜像时是否启用Sysprep
 	Sysprep *string `json:"Sysprep,omitempty" name:"Sysprep"`
 
-	// 实例处于运行中时，是否允许关机执行制作镜像任务。
-	Reboot *string `json:"Reboot,omitempty" name:"Reboot"`
-
 	// 实例需要制作镜像的数据盘Id
 	DataDiskIds []*string `json:"DataDiskIds,omitempty" name:"DataDiskIds" list`
 
-	// 需要制作镜像的快照Id,必须包含一个系统盘快照
+	// 需要制作镜像的快照ID,必须包含一个系统盘快照
 	SnapshotIds []*string `json:"SnapshotIds,omitempty" name:"SnapshotIds" list`
 
 	// 检测请求的合法性，但不会对操作的资源产生任何影响
@@ -688,13 +686,6 @@ type DescribeImagesRequest struct {
 	//     PUBLIC_IMAGE: 公共镜像 (腾讯云官方镜像)
 	//     MARKET_IMAGE: 服务市场 (服务市场提供的镜像) 
 	//    SHARED_IMAGE: 共享镜像(其他账户共享给本帐户的镜像) 。</li>
-	// <li> image-state - String - 是否必填： 否 - （过滤条件）按照镜像状态进行过滤。取值范围：
-	//     CREATING: 创建中
-	//     NORMAL: 正常
-	//     USING: 使用中
-	//     SYNCING: 同步中
-	//     IMPORTING: 导入中
-	//     DELETING: 删除中。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters" list`
 
 	// 偏移量，默认为0。关于Offset详见[API简介](/document/api/213/568#.E8.BE.93.E5.85.A5.E5.8F.82.E6.95.B0.E4.B8.8E.E8.BF.94.E5.9B.9E.E5.8F.82.E6.95.B0.E9.87.8A.E4.B9.89)。
@@ -2072,6 +2063,9 @@ type Instance struct {
 	// 实例的关机计费模式。
 	// 取值范围：<br><li>KEEP_CHARGING：关机继续收费<br><li>STOP_CHARGING：关机停止收费<li>NOT_APPLICABLE：实例处于非关机状态或者不适用关机停止计费的条件<br>
 	StopChargingMode *string `json:"StopChargingMode,omitempty" name:"StopChargingMode"`
+
+	// 实例全局唯一ID
+	Uuid *string `json:"Uuid,omitempty" name:"Uuid"`
 }
 
 type InstanceChargePrepaid struct {
@@ -2189,10 +2183,10 @@ type InternetAccessible struct {
 	// 公网出带宽上限，单位：Mbps。默认值：0Mbps。不同机型带宽上限范围不一致，具体限制详见[购买网络带宽](/document/product/213/509)。
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitempty" name:"InternetMaxBandwidthOut"`
 
-	// 是否分配公网IP。取值范围：<br><li>TRUE：表示分配公网IP<br><li>FALSE：表示不分配公网IP<br><br>当公网带宽大于0Mbps时，可自由选择开通与否，默认开通公网IP；当公网带宽为0，则不允许分配公网IP。
+	// 是否分配公网IP。取值范围：<br><li>TRUE：表示分配公网IP<br><li>FALSE：表示不分配公网IP<br><br>当公网带宽大于0Mbps时，可自由选择开通与否，默认开通公网IP；当公网带宽为0，则不允许分配公网IP。该参数仅在RunInstances接口中作为入参使用。
 	PublicIpAssigned *bool `json:"PublicIpAssigned,omitempty" name:"PublicIpAssigned"`
 
-	// 带宽包ID。可通过[`DescribeBandwidthPackages`](https://cloud.tencent.com/document/api/215/19209)接口返回值中的`BandwidthPackageId`获取。
+	// 带宽包ID。可通过[`DescribeBandwidthPackages`](https://cloud.tencent.com/document/api/215/19209)接口返回值中的`BandwidthPackageId`获取。该参数仅在RunInstances接口中作为入参使用。
 	BandwidthPackageId *string `json:"BandwidthPackageId,omitempty" name:"BandwidthPackageId"`
 }
 
@@ -3151,6 +3145,13 @@ type RunInstancesRequest struct {
 
 	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅[Windows](https://cloud.tencent.com/document/product/213/17526)和[Linux](https://cloud.tencent.com/document/product/213/17525)启动时运行命令。
 	UserData *string `json:"UserData,omitempty" name:"UserData"`
+
+	// 是否只预检此次请求。
+	// true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制和云服务器库存。
+	// 如果检查不通过，则返回对应错误码；
+	// 如果检查通过，则返回RequestId.
+	// false（默认）：发送正常请求，通过检查后直接创建实例
+	DryRun *bool `json:"DryRun,omitempty" name:"DryRun"`
 }
 
 func (r *RunInstancesRequest) ToJsonString() string {

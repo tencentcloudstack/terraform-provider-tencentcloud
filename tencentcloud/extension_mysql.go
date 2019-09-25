@@ -48,6 +48,13 @@ var MYSQL_ROLE_MAP = map[int64]string{
 	3: "dr",
 }
 
+var MysqlDelStates = map[int64]bool{
+	MYSQL_STATUS_ISOLATING:  true,
+	MYSQL_STATUS_ISOLATED:   true,
+	MYSQL_STATUS_ISOLATED_1: true,
+	MYSQL_STATUS_ISOLATED_2: true,
+}
+
 //mysql available period value
 var MYSQL_AVAILABLE_PERIOD = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}
 

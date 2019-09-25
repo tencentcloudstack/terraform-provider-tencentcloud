@@ -10,14 +10,16 @@ description: |-
 
 Provides a mysql policy resource to create a backup policy.
 
+~> **NOTE:** This attribute `backup_model` only support 'physical' in Terraform TencentCloud provider version 1.16.2
+
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_backup_policy" "default" {
   mysql_id         = "cdb-dnqksd9f"
   retention_period = 7
-  backup_model     = "logical"
-  backup_time      = "02:00–06:00"
+  backup_model     = "physical"
+  backup_time      = "02:00-06:00"
 }
 ```
 
@@ -26,8 +28,8 @@ resource "tencentcloud_mysql_backup_policy" "default" {
 The following arguments are supported:
 
 * `mysql_id` - (Required, ForceNew) Instance ID to which policies will be applied.
-* `backup_model` - (Optional) Backup method. Supported values include: physical - physical backup, and logical - logical backup.
-* `backup_time` - (Optional) Instance backup time, in the format of "HH:mm-HH:mm". Time setting interval is four hours. Default to "02:00-06:00". The following value can be supported: 02:00\-06:00, 06:00\-10:00, 10:00\-14:00, 14:00\-18:00, 18:00\-22:00, and 22:00\-02:00.
+* `backup_model` - (Optional) Backup method. Supported values include: 'physical' - physical backup.
+* `backup_time` - (Optional) Instance backup time, in the format of "HH:mm-HH:mm". Time setting interval is four hours. Default to "02:00-06:00". The following value can be supported: 02:00-06:00, 06:00-10:00, 10:00-14:00, 14:00-18:00, 18:00-22:00, and 22:00-02:00.
 * `retention_period` - (Optional) Instance backup retention days. Valid values: [7-730]. And default value is 7.
 
 ## Attributes Reference

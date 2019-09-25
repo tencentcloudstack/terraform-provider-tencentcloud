@@ -10,6 +10,8 @@ description: |-
 
 The EIP data source fetch proper EIP from user's EIP pool.
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_eips.
+
 ## Example Usage
 
 ```hcl

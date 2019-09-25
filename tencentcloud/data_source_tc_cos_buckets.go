@@ -28,7 +28,7 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 			"bucket_prefix": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "A prefix string to filter results by bucket name",
+				Description: "A prefix string to filter results by bucket name.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

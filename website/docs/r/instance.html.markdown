@@ -87,7 +87,7 @@ The following arguments are supported:
 * `data_disks` - (Optional) Settings for data disk.
 * `disable_monitor_service` - (Optional) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed.
 * `disable_security_service` - (Optional) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed.
-* `hostname` - (Optional, ForceNew) The hostname of CVM.
+* `hostname` - (Optional, ForceNew) The hostname of CVM. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-).
 * `instance_charge_type_prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.
 * `instance_charge_type_prepaid_renew_flag` - (Optional) When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR` and `SPOTPAID`, The default is `POSTPAID_BY_HOUR`.
@@ -97,6 +97,7 @@ The following arguments are supported:
 * `internet_max_bandwidth_out` - (Optional, ForceNew) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). Value range: [0, 100], If this value is not specified, then automatically sets it to 0 Mbps.
 * `key_name` - (Optional) The key pair to use for the instance, it looks like skey-16jig7tx.
 * `password` - (Optional) Password to an instance. In order to take effect new password, the instance will be restarted after modifying the password.
+* `placement_group_id` - (Optional, ForceNew) The id of a placement group.
 * `private_ip` - (Optional) The private ip to be assigned to this instance, must be in the provided subnet and available.
 * `project_id` - (Optional) The project CVM belongs to, default to 0.
 * `running_flag` - (Optional) Set instance to running or stop. Default value is true, the instance will shutdown when flag is false.

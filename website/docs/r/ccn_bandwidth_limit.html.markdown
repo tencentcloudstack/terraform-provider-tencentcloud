@@ -34,7 +34,7 @@ resource "tencentcloud_ccn_bandwidth_limit" "limit1" {
 
 The following arguments are supported:
 
-* `ccn_id` - (Required, ForceNew) ID of the CCN
+* `ccn_id` - (Required, ForceNew) ID of the CCN.
 * `region` - (Required, ForceNew) Limitation of region.
 * `bandwidth_limit` - (Optional) Limitation of bandwidth.
 

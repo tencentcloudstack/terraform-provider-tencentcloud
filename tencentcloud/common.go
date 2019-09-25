@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/user"
+	"reflect"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -22,7 +23,7 @@ const FILED_SP = "#"
 var contextNil context.Context = nil
 
 var logFirstTime = ""
-var logAtomaticId int64 = 0
+var logAtomicId int64 = 0
 
 // readRetryTimeout is read retry timeout
 const readRetryTimeout = 3 * time.Minute
@@ -35,7 +36,7 @@ var retryableErrorCode = []string{
 	// client
 	"ClientError.NetworkError",
 	"ClientError.HttpStatusCodeError",
-	// commom
+	// common
 	"FailedOperation",
 	"TradeUnknownError",
 	"RequestLimitExceeded",
@@ -50,7 +51,7 @@ func init() {
 	logFirstTime = fmt.Sprintf("%d", time.Now().UnixNano()/int64(time.Millisecond))
 }
 
-// getLogId get logid  for trace, return a new logid if ctx is nil
+// getLogId get logId for trace, return a new logId if ctx is nil
 func getLogId(ctx context.Context) string {
 	if ctx != nil {
 		logId, ok := ctx.Value("logId").(string)
@@ -59,7 +60,7 @@ func getLogId(ctx context.Context) string {
 		}
 	}
 
-	return fmt.Sprintf("%s-%d", logFirstTime, atomic.AddInt64(&logAtomaticId, 1))
+	return fmt.Sprintf("%s-%d", logFirstTime, atomic.AddInt64(&logAtomicId, 1))
 }
 
 // logElapsed log func elapsed time, using in defer
@@ -143,4 +144,35 @@ func writeToFile(filePath string, data interface{}) error {
 	}
 
 	return ioutil.WriteFile(filePath, jsonStr, 0422)
+}
+
+func CheckNil(object interface{}, fields map[string]string) (nilFields []string) {
+	// if object is a pointer, get value which object points to
+	object = reflect.Indirect(reflect.ValueOf(object)).Interface()
+
+	for i := 0; i < reflect.TypeOf(object).NumField(); i++ {
+		fieldName := reflect.TypeOf(object).Field(i).Name
+
+		if realName, ok := fields[fieldName]; ok {
+			if realName == "" {
+				realName = fieldName
+			}
+
+			if reflect.ValueOf(object).Field(i).IsNil() {
+				nilFields = append(nilFields, realName)
+			}
+		}
+	}
+
+	return
+}
+
+func BuildTagResourceName(serviceType, resourceType, region, id string) string {
+	switch serviceType {
+	case "cos":
+		return fmt.Sprintf("qcs::%s:%s:uid/:%s/%s", serviceType, region, resourceType, id)
+
+	default:
+		return fmt.Sprintf("qcs::%s:%s:uin/:%s/%s", serviceType, region, resourceType, id)
+	}
 }

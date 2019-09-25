@@ -3,9 +3,8 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"time"
-
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
@@ -21,7 +20,6 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 				Config: testAccRedisInstanceBasic(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_instance_test"),
-
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_instance.redis_instance_test", "ip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_instance.redis_instance_test", "create_time"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "port", "6379"),
@@ -30,6 +28,21 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "name", "terrform_test"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "status", "online"),
+				),
+			},
+			{
+				Config: testAccRedisInstanceTags(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_instance_test"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "tags.test", "test"),
+				),
+			},
+			{
+				Config: testAccRedisInstanceTagsUpdate(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_instance_test"),
+					resource.TestCheckNoResourceAttr("tencentcloud_redis_instance.redis_instance_test", "tags.test"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "tags.abc", "abc"),
 				),
 			},
 			{
@@ -97,7 +110,11 @@ func testAccTencentCloudRedisInstanceDestroy(s *terraform.State) error {
 			continue
 		}
 		time.Sleep(5 * time.Second)
-		_, _, info, err := service.CheckRedisCreateOk(ctx, rs.Primary.ID)
+		has, _, info, err := service.CheckRedisCreateOk(ctx, rs.Primary.ID)
+
+		if !has {
+			return nil
+		}
 
 		if info != nil {
 			if *info.Status == REDIS_STATUS_ISOLATE || *info.Status == REDIS_STATUS_TODELETE {
@@ -124,6 +141,38 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
 }`
 }
 
+func testAccRedisInstanceTags() string {
+	return `
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone = "ap-guangzhou-3"
+  type              = "master_slave_redis"
+  password          = "test12345789"
+  mem_size          = 8192
+  name              = "terrform_test"
+  port              = 6379
+
+  tags = {
+    "test" = "test"
+  }
+}`
+}
+
+func testAccRedisInstanceTagsUpdate() string {
+	return `
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone = "ap-guangzhou-3"
+  type              = "master_slave_redis"
+  password          = "test12345789"
+  mem_size          = 8192
+  name              = "terrform_test"
+  port              = 6379
+
+  tags = {
+    "abc" = "abc"
+  }
+}`
+}
+
 func testAccRedisInstanceUpdateName() string {
 	return `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
@@ -133,8 +182,13 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   mem_size          = 8192
   name              = "terrform_test_update"
   port              = 6379
+
+  tags = {
+    "abc" = "abc"
+  }
 }`
 }
+
 func testAccRedisInstanceUpdateMemsizeAndPassword() string {
 	return `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
@@ -144,5 +198,9 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   mem_size          = 12288
   name              = "terrform_test_update"
   port              = 6379
+
+  tags = {
+    "abc" = "abc"
+  }
 }`
 }

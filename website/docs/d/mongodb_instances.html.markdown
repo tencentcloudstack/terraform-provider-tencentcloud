@@ -27,6 +27,7 @@ The following arguments are supported:
 * `instance_id` - (Optional) ID of the Mongodb instance to be queried.
 * `instance_name_prefix` - (Optional) Name prefix of the Mongodb instance.
 * `result_output_file` - (Optional) Used to store results.
+* `tags` - (Optional) Tags of the Mongodb instance to be queried.
 
 ## Attributes Reference
 
@@ -44,8 +45,9 @@ In addition to all arguments above, the following attributes are exported:
   * `memory` - Memory size.
   * `project_id` - ID of the project which the instance belongs.
   * `shard_quantity` - Number of sharding.
-  * `status` - Status of the Mongodb, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2)
+  * `status` - Status of the Mongodb, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2).
   * `subnet_id` - ID of the subnet.
+  * `tags` - Tags of the Mongodb instance.
   * `vip` - IP of the Mongodb instance.
   * `volume` - Disk size.
   * `vpc_id` - ID of the VPC.

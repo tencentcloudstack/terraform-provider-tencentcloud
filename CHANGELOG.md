@@ -1,4 +1,130 @@
-## 1.16.2 (Unreleased)
+## 1.20.1 (Unreleased)
+## 1.20.0 (September 24, 2019)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_eips`
+* **New Data Source**: `tencentcloud_instances`
+* **New Data Source**: `tencentcloud_key_pairs`
+* **New Data Source**: `tencentcloud_placement_groups`
+* **New Resource**: `tencentcloud_placement_group`
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_redis_instances` add optional argument `tags`.
+* Data Source: `tencentcloud_mongodb_instances` add optional argument `tags`.
+* Data Source: `tencentcloud_instance_types` add optional argument `availability_zone` and `gpu_core_count`.
+* Data Source: `tencentcloud_gaap_http_rules` add optional argument `forward_host` and attributes `forward_host` in `rules`.
+* Resource: `tencentcloud_redis_instance` add optional argument `tags`.
+* Resource: `tencentcloud_mongodb_instance` add optional argument `tags`.
+* Resource: `tencentcloud_mongodb_sharding_instance` add optional argument `tags`.
+* Resource: `tencentcloud_instance` add optional argument `placement_group_id`.
+* Resource: `tencentcloud_eip` refactor logic with api3.0 .
+* Resource: `tencentcloud_eip_association` refactor logic with api3.0 .
+* Resource: `tencentcloud_key_pair` refactor logic with api3.0 .
+* Resource: `tencentcloud_gaap_http_rule` add optional argument `forward_host`.
+
+BUG FIXES:
+* Resource: `tencentcloud_mysql_instance`: miss argument `availability_zone` causes the instance to be recreated.
+
+DEPRECATED:
+
+* Data Source: `tencentcloud_eip` replaced by `tencentcloud_eips`.
+
+## 1.19.0 (September 19, 2019)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_security_group_lite_rule`.
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_security_groups`: add optional argument `tags`.
+* Data Source: `tencentcloud_security_groups`: add optional argument `result_output_file` and new attributes `ingress`, `egress` for list `security_groups`.
+* Resource: `tencentcloud_security_group`: add optional argument `tags`.
+* Resource: `tencentcloud_as_scaling_config`: internet charge type support `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+
+BUG FIXES:
+* Resource: `tencentcloud_clb_listener_rule`: fix unclear description and errors in example.
+* Resource: `tencentcloud_instance`: fix hostname is not work.
+
+## 1.18.1 (September 17, 2019)
+
+FEATURES:
+
+* **Update Data Source**: `tencentcloud_vpc_instances` add optional argument `tags`
+* **Update Data Source**: `tencentcloud_vpc_subnets` add optional argument `tags`
+* **Update Data Source**: `tencentcloud_route_tables` add optional argument `tags`
+* **Update Resource**: `tencentcloud_vpc` add optional argument `tags`
+* **Update Resource**: `tencentcloud_subnet` add optional argument `tags`
+* **Update Resource**: `tencentcloud_route_table` add optional argument `tags`
+
+ENHANCEMENTS:
+
+* Data Source:`tencentcloud_kubernetes_clusters`  support pull out authentication information for cluster access too.
+* Resource:`tencentcloud_kubernetes_cluster`  support pull out authentication information for cluster access.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_mysql_instance`: when the mysql is abnormal state, read the basic information report error
+
+DEPRECATED:
+
+* Data Source: `tencentcloud_kubernetes_clusters`:`container_runtime` is no longer supported. 
+
+
+## 1.18.0 (September 10, 2019)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_ssl_certificates`
+* **New Data Source**: `tencentcloud_dnats`
+* **New Data Source**: `tencentcloud_nat_gateways`
+* **New Resource**: `tencentcloud_ssl_certificate`
+* **Update Resource**: `tencentcloud_clb_redirection` add optional argument `is_auto_rewrite`
+* **Update Resource**: `tencentcloud_nat_gateway` , add more configurable items.
+* **Update Resource**: `tencentcloud_nat` , add more configurable items.
+
+DEPRECATED:
+* Data Source: `tencentcloud_nats` replaced by `tencentcloud_nat_gateways`.
+
+## 1.17.0 (September 04, 2019)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_gaap_proxies`
+* **New Data Source**: `tencentcloud_gaap_realservers`
+* **New Data Source**: `tencentcloud_gaap_layer4_listeners`
+* **New Data Source**: `tencentcloud_gaap_layer7_listeners`
+* **New Data Source**: `tencentcloud_gaap_http_domains`
+* **New Data Source**: `tencentcloud_gaap_http_rules`
+* **New Data Source**: `tencentcloud_gaap_security_policies`
+* **New Data Source**: `tencentcloud_gaap_security_rules`
+* **New Data Source**: `tencentcloud_gaap_certificates`
+* **New Resource**: `tencentcloud_gaap_proxy`
+* **New Resource**: `tencentcloud_gaap_realserver`
+* **New Resource**: `tencentcloud_gaap_layer4_listener`
+* **New Resource**: `tencentcloud_gaap_layer7_listener`
+* **New Resource**: `tencentcloud_gaap_http_domain`
+* **New Resource**: `tencentcloud_gaap_http_rule`
+* **New Resource**: `tencentcloud_gaap_certificate`
+* **New Resource**: `tencentcloud_gaap_security_policy`
+* **New Resource**: `tencentcloud_gaap_security_rule`
+
+## 1.16.3 (August 30, 2019)
+
+BUG FIXIES:
+
+* Resource: `tencentcloud_kubernetes_cluster`: cgi error retry.
+* Resource: `tencentcloud_kubernetes_scale_worker`: cgi error retry.
+
+## 1.16.2 (August 28, 2019)
+
+BUG FIXIES:
+
+* Resource: `tencentcloud_instance`: fixed cvm data disks missing computed.
+* Resource: `tencentcloud_mysql_backup_policy`: `backup_model` remove logical backup support. 
+* Resource: `tencentcloud_mysql_instance`: `tags` adapt to the new official api.
+
 ## 1.16.1 (August 27, 2019)
 
 ENHANCEMENTS:

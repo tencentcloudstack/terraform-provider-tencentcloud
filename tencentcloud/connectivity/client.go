@@ -16,11 +16,13 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 )
 
 // TencentCloudClient is client for all TencentCloud service
@@ -40,6 +42,8 @@ type TencentCloudClient struct {
 	tagConn     *tag.Client
 	mongodbConn *mongodb.Client
 	tkeConn     *tke.Client
+	gaapCoon    *gaap.Client
+	sslCoon     *ssl.Client
 }
 
 // NewTencentCloudClient returns a new TencentCloudClient
@@ -235,4 +239,30 @@ func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 	me.tkeConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tkeConn
+}
+
+// UseGaapClient returns gaap client for service
+func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
+	if me.gaapCoon != nil {
+		return me.gaapCoon
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.gaapCoon, _ = gaap.NewClient(me.Credential, me.Region, cpf)
+	me.gaapCoon.WithHttpTransport(&LogRoundTripper{})
+
+	return me.gaapCoon
+}
+
+// UseSslClient returns ssl client for service
+func (me *TencentCloudClient) UseSslClient() *ssl.Client {
+	if me.sslCoon != nil {
+		return me.sslCoon
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.sslCoon, _ = ssl.NewClient(me.Credential, me.Region, cpf)
+	me.sslCoon.WithHttpTransport(&LogRoundTripper{})
+
+	return me.sslCoon
 }

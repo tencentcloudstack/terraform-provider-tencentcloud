@@ -7,6 +7,10 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   available_zone = "${var.availability_zone}"
   project_id     = 0
   password       = "test1234"
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 resource "tencentcloud_mongodb_sharding_instance" "mongodb_sharding" {
@@ -20,8 +24,16 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_sharding" {
   available_zone  = "${var.availability_zone}"
   project_id      = 0
   password        = "test1234"
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 data "tencentcloud_mongodb_instances" "mongodb_instances" {
   instance_id = "${tencentcloud_mongodb_instance.mongodb.id}"
+
+  tags = {
+    "test" = "test"
+  }
 }

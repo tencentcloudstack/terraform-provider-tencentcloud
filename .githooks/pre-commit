@@ -1,0 +1,37 @@
+#!/bin/sh
+
+make fmtcheck
+if [ $? -ne 0 ]; then
+    printf "COMMIT FAILED\n"
+    exit 1
+fi
+
+make lint
+if [ $? -ne 0 ]; then
+    printf "COMMIT FAILED\n"
+    exit 1
+fi
+
+printf "==> Generating docs for tencentcloud provider...\n"
+doc=`make doc 2>&1`
+if [ $? -ne 0 ]; then
+    echo "$doc"| tail -n 4|head -n 2
+    printf "COMMIT FAILED\n"
+    exit 1
+fi
+
+make website-lint
+if [ $? -ne 0 ]; then
+    printf "COMMIT FAILED\n"
+    exit 1
+fi
+
+diff=`git diff --name-only website/docs/`
+if [ "$diff" != "" ]; then
+    printf "There are docs updated when checking, 'git add' it first.\n"
+    printf "COMMIT FAILED\n"
+    exit 1
+fi
+
+printf "COMMIT READY\n"
+exit 0

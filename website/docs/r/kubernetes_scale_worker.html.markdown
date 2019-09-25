@@ -57,7 +57,13 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 The following arguments are supported:
 
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
-* `worker_config` - (Required, ForceNew) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users. 
+* `worker_config` - (Required, ForceNew) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.
+
+The `data_disk` object supports the following:
+
+* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
+* `disk_type` - (Optional, ForceNew) Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.
+* `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
 The `worker_config` object supports the following:
 
@@ -78,12 +84,6 @@ The `worker_config` object supports the following:
 * `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is 50.
 * `system_disk_type` - (Optional, ForceNew) Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.
 * `user_data` - (Optional, ForceNew) ase64-encoded User Data text, the length limit is 16KB.
-
-The `data_disk` object supports the following:
-
-* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
-* `disk_type` - (Optional, ForceNew) Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.
-* `snapshot_id` - (Optional, ForceNew) Data disk snapshot ID.
 
 ## Attributes Reference
 

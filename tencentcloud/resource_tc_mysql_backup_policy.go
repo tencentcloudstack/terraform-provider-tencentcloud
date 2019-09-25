@@ -1,14 +1,16 @@
 /*
 Provides a mysql policy resource to create a backup policy.
 
+~> **NOTE:** This attribute `backup_model` only support 'physical' in Terraform TencentCloud provider version 1.16.2
+
 Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_backup_policy" "default" {
-  mysql_id = "cdb-dnqksd9f"
+  mysql_id         = "cdb-dnqksd9f"
   retention_period = 7
-  backup_model = "logical"
-  backup_time ="02:00–06:00"
+  backup_model     = "physical"
+  backup_time      = "02:00-06:00"
 }
 ```
 */
@@ -19,6 +21,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -46,16 +49,16 @@ func resourceTencentCloudMysqlBackupPolicy() *schema.Resource {
 			"backup_model": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      MYSQL_ALLOW_BACKUP_MODEL[0],
+				Default:      MYSQL_ALLOW_BACKUP_MODEL[1],
 				ValidateFunc: validateAllowedStringValue(MYSQL_ALLOW_BACKUP_MODEL),
-				Description:  "Backup method. Supported values include: physical - physical backup, and logical - logical backup.",
+				Description:  "Backup method. Supported values include: 'physical' - physical backup.",
 			},
 			"backup_time": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      MYSQL_ALLOW_BACKUP_TIME[0],
 				ValidateFunc: validateAllowedStringValue(MYSQL_ALLOW_BACKUP_TIME),
-				Description:  `Instance backup time, in the format of "HH:mm-HH:mm". Time setting interval is four hours. Default to "02:00-06:00". The following value can be supported: 02:00\-06:00, 06:00\-10:00, 10:00\-14:00, 14:00\-18:00, 18:00\-22:00, and 22:00\-02:00.`,
+				Description:  `Instance backup time, in the format of "HH:mm-HH:mm". Time setting interval is four hours. Default to "02:00-06:00". The following value can be supported: 02:00-06:00, 06:00-10:00, 10:00-14:00, 14:00-18:00, 18:00-22:00, and 22:00-02:00.`,
 			},
 
 			// Computed values
@@ -81,37 +84,37 @@ func resourceTencentCloudMysqlBackupPolicyRead(d *schema.ResourceData, meta inte
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	desResponse, err := mysqlService.DescribeBackupConfigByMysqlId(ctx, d.Id())
-
-	if err != nil {
-		if mysqlService.NotFoundMysqlInstance(err) {
-			d.SetId("")
-			return nil
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		desResponse, e := mysqlService.DescribeBackupConfigByMysqlId(ctx, d.Id())
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				return nil
+			}
+			return retryError(e)
 		}
+		d.Set("mysql_id", d.Id())
+		d.Set("retention_period", int(*desResponse.Response.BackupExpireDays))
+		d.Set("backup_model", *desResponse.Response.BackupMethod)
+		var buf bytes.Buffer
+
+		if *desResponse.Response.StartTimeMin < 10 {
+			buf.WriteString("0")
+		}
+		buf.WriteString(fmt.Sprintf("%d:00-", *desResponse.Response.StartTimeMin))
+
+		if *desResponse.Response.StartTimeMax < 10 {
+			buf.WriteString("0")
+		}
+		buf.WriteString(fmt.Sprintf("%d:00", *desResponse.Response.StartTimeMax))
+		d.Set("backup_time", buf.String())
+		d.Set("binlog_period", int(*desResponse.Response.BinlogExpireDays))
+		return nil
+	})
+	if err != nil {
 		return fmt.Errorf("[API]Describe mysql backup policy fail,reason:%s", err.Error())
 	}
-
-	d.Set("mysql_id", d.Id())
-	d.Set("retention_period", int(*desResponse.Response.BackupExpireDays))
-	d.Set("backup_model", *desResponse.Response.BackupMethod)
-
-	var buf bytes.Buffer
-
-	if *desResponse.Response.StartTimeMin < 10 {
-		buf.WriteString("0")
-	}
-	buf.WriteString(fmt.Sprintf("%d:00-", *desResponse.Response.StartTimeMin))
-
-	if *desResponse.Response.StartTimeMax < 10 {
-		buf.WriteString("0")
-	}
-	buf.WriteString(fmt.Sprintf("%d:00", *desResponse.Response.StartTimeMax))
-
-	d.Set("backup_time", buf.String())
-	d.Set("binlog_period", int(*desResponse.Response.BinlogExpireDays))
-
 	return nil
 }
 
@@ -133,6 +136,9 @@ func resourceTencentCloudMysqlBackupPolicyUpdate(d *schema.ResourceData, meta in
 	)
 
 	if d.HasChange("retention_period") || d.HasChange("backup_model") || d.HasChange("backup_time") {
+		if backupModel != "physical" {
+			return fmt.Errorf("`backup_model` only support 'physical'")
+		}
 		isUpdate = true
 	}
 
@@ -156,7 +162,7 @@ func resourceTencentCloudMysqlBackupPolicyDelete(d *schema.ResourceData, meta in
 
 	var (
 		retentionPeriod int64 = 7
-		backupModel           = MYSQL_ALLOW_BACKUP_MODEL[0]
+		backupModel           = MYSQL_ALLOW_BACKUP_MODEL[1]
 		backupTime            = MYSQL_ALLOW_BACKUP_TIME[0]
 	)
 	err := mysqlService.ModifyBackupConfigByMysqlId(ctx, d.Id(), retentionPeriod, backupModel, backupTime)

@@ -1,45 +1,24 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_nat_gateway"
-sidebar_current: "docs-tencentcloud-resource-vpc-nat-gateway"
+sidebar_current: "docs-tencentcloud-resource-nat_gateway"
 description: |-
-  Provides a resource to create a VPC NAT Gateway.
+  Provides a resource to create a NAT gateway.
 ---
 
 # tencentcloud_nat_gateway
 
-Provides a resource to create a VPC NAT Gateway.
+Provides a resource to create a NAT gateway.
 
 ## Example Usage
 
-Basic usage:
-
 ```hcl
-resource "tencentcloud_vpc" "main" {
-  name       = "terraform test"
-  cidr_block = "10.6.0.0/16"
-}
-
-# Create EIP
-resource "tencentcloud_eip" "eip_dev_dnat" {
-  name = "terraform_test"
-}
-
-resource "tencentcloud_eip" "eip_test_dnat" {
-  name = "terraform_test"
-}
-
-# Create NAT Gateway
-resource "tencentcloud_nat_gateway" "my_nat" {
-  vpc_id         = "${tencentcloud_vpc.main.id}"
-  name           = "terraform test"
-  max_concurrent = 3000000
-  bandwidth      = 500
-
-  assigned_eip_set = [
-    "${tencentcloud_eip.eip_dev_dnat.public_ip}",
-    "${tencentcloud_eip.eip_test_dnat.public_ip}",
-  ]
+resource "tencentcloud_nat_gateway" "foo" {
+  name             = "test_nat_gateway"
+  vpc_id           = "vpc-4xxr2cy7"
+  bandwidth        = 100
+  max_connection   = 1000000
+  assigned_eip_set = ["eip-da12w5re5"]
 }
 ```
 
@@ -47,18 +26,18 @@ resource "tencentcloud_nat_gateway" "my_nat" {
 
 The following arguments are supported:
 
-* `name` - (Required) The name for the NAT Gateway.
-* `vpc_id` - (Required, Forces new resource) The VPC ID.
-* `max_concurrent` - (Required) The upper limit of concurrent connection of NAT gateway, for example: 1000000, 3000000, 10000000. To learn more, please refer to [Virtual Private Cloud Gateway Description](https://intl.cloud.tencent.com/doc/product/215/1682).
-* `bandwidth` - (Required) The maximum public network output bandwidth of the gateway (unit: Mbps), for example: 10, 20, 50, 100, 200, 500, 1000, 2000, 5000. For more information, please refer to [Virtual Private Cloud Gateway Description](https://intl.cloud.tencent.com/doc/product/215/1682).
-* `assigned_eip_set` - (Required) Elastic IP arrays bound to the gateway, For more information on elastic IP, please refer to [Elastic IP](eip.html).
+* `name` - (Required) Name of the nat gateway.
+* `vpc_id` - (Required, ForceNew) ID of the vpc.
+* `assigned_eip_set` - (Optional) EIP arrays bound to the gateway. The value of at least 1.
+* `bandwidth` - (Optional) The maximum public network output bandwidth of nat gateway (unit: Mbps), the available values include: 20,50,100,200,500,1000,2000,5000. Default is 100.
+* `max_concurrent` - (Optional) The upper limit of concurrent connection of nat gateway, the available values include: 1000000,3000000,10000000. Default is 1000000.
 
-## Attributes Reference
 
-The following attributes are exported:
+## Import
 
-* `id` - The ID of the NAT Gateway.
-* `name` - The name of the NAT Gateway.
-* `max_concurrent` - The upper limit of concurrent connection of NAT gateway.
-* `bandwidth` - The maximum public network output bandwidth of the gateway (unit: Mbps).
-* `assigned_eip_set` - Elastic IP arrays bound to the gateway
+NAT gateway can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_nat_gateway.foo nat-1asg3t63
+```
+

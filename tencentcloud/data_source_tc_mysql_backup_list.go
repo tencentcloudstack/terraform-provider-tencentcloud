@@ -29,13 +29,11 @@ func dataSourceTencentMysqlBackupList() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"mysql_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Required:    true,
 				Description: "Instance ID, such as cdb-c1nl9rpv. It is identical to the instance ID displayed in the database console page.",
 			},
 			"max_number": {
 				Type:         schema.TypeInt,
-				ForceNew:     true,
 				Optional:     true,
 				Default:      10,
 				ValidateFunc: validateIntegerInRange(1, 10000),
@@ -43,7 +41,6 @@ func dataSourceTencentMysqlBackupList() *schema.Resource {
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Optional:    true,
 				Description: "Used to store results.",
 			},

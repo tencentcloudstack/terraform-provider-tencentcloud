@@ -41,6 +41,7 @@ The following arguments are supported:
 * `project_id` - (Optional) ID of the project which the instance belongs.
 * `security_groups` - (Optional) ID of the security group.
 * `subnet_id` - (Optional, ForceNew) ID of the subnet within this VPC. The vaule is required if VpcId is set.
+* `tags` - (Optional) The tags of the Mongodb.
 * `vpc_id` - (Optional, ForceNew) ID of the VPC.
 
 ## Attributes Reference
@@ -48,7 +49,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `create_time` - Creation time of the Mongodb instance.
-* `status` - Status of the Mongodb instance, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2)
+* `status` - Status of the Mongodb instance, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2).
 * `vip` - IP of the Mongodb instance.
 * `vport` - IP port of the Mongodb instance.
 

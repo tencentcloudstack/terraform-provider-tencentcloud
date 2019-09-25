@@ -42,7 +42,7 @@ resource "tencentcloud_dc_gateway_ccn_route" "route2" {
 The following arguments are supported:
 
 * `cidr_block` - (Required, ForceNew) A network address segment of IDC.
-* `dcg_id` - (Required, ForceNew) ID of the DCG
+* `dcg_id` - (Required, ForceNew) ID of the DCG.
 
 ## Attributes Reference
 

@@ -10,7 +10,7 @@ description: |-
 
 Provides a mysql instance resource to create master database instances.
 
-~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately，maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
 ## Example Usage
 
@@ -65,7 +65,7 @@ The following arguments are supported:
 * `slave_sync_mode` - (Optional, ForceNew) Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
 * `subnet_id` - (Optional) Private network ID. If vpc_id is set, this value is required.
 * `tags` - (Optional) Instance tags.
-* `vpc_id` - (Optional) ID of VPC, which can be modified once every 24 hours and can’t be removed.
+* `vpc_id` - (Optional) ID of VPC, which can be modified once every 24 hours and can't be removed.
 
 ## Attributes Reference
 
@@ -76,7 +76,7 @@ In addition to all arguments above, the following attributes are exported:
 * `internet_port` - Access port for public access.
 * `intranet_ip` - instance intranet IP.
 * `locked` - Indicates whether the instance is locked. 0 - No; 1 - Yes.
-* `status` - Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.
+* `status` - Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
 
 

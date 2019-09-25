@@ -1,0 +1,56 @@
+package tencentcloud
+
+const GAAP_PROXY_ID = "link-9ck3lzq7"
+
+// all gaap proxy status https://cloud.tencent.com/document/api/608/37023#ProxyInfo
+const (
+	GAAP_PROXY_CREATING   = "CREATING"
+	GAAP_PROXY_RUNNING    = "RUNNING"
+	GAAP_PROXY_DESTROYING = "DESTROYING"
+	GAAP_PROXY_OPENING    = "OPENING"
+	GAAP_PROXY_CLOSING    = "CLOSING"
+	GAAP_PROXY_CLOSED     = "CLOSED"
+	GAAP_PROXY_ADJUSTING  = "ADJUSTING"
+	GAAP_PROXY_ISOLATING  = "ISOLATING"
+	GAAP_PROXY_ISOLATED   = "ISOLATED"
+	GAAP_PROXY_UNKNOWN    = "UNKNOWN"
+)
+
+const (
+	GAAP_LISTENER_RUNNING              = 0
+	GAAP_LISTENER_CREATING             = 1
+	GAAP_LISTENER_DESTROYING           = 2
+	GAAP_LISTENER_REALSERVER_ADJUSTING = 3
+	GAAP_LISTENER_ADJUSTING            = 4
+)
+
+const (
+	GAAP_SECURITY_POLICY_BOUND     = "BOUND"
+	GAAP_SECURITY_POLICY_UNBIND    = "UNBIND"
+	GAAP_SECURITY_POLICY_BINDING   = "BINDING"
+	GAAP_SECURITY_POLICY_UNBINDING = "UNBINDING"
+)
+
+const (
+	GAAP_HTTP_RULE_RUNNING              = 0
+	GAAP_HTTP_RULE_CREATING             = 1
+	GAAP_HTTP_RULE_DESTROYING           = 2
+	GAAP_HTTP_RULE_BINDING_OR_UNBINDING = 3
+	GAAP_HTTP_RULE_ADJUSTING            = 4
+)
+
+var gaapCertificateStringMap = map[string]int{
+	"BASIC":      0,
+	"CLIENT":     1,
+	"SERVER":     2,
+	"REALSERVER": 3,
+	"PROXY":      4,
+}
+
+var gaapCertificateIntMap = map[int]string{
+	0: "BASIC",
+	1: "CLIENT",
+	2: "SERVER",
+	3: "REALSERVER",
+	4: "PROXY",
+}

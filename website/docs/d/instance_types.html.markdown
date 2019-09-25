@@ -1,41 +1,51 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_instance_types"
-sidebar_current: "docs-tencentcloud-datasource-instance-types"
+sidebar_current: "docs-tencentcloud-datasource-instance_types"
 description: |-
-  Provides a list of instance types available to the user.
+  Use this data source to query instances type.
 ---
 
 # tencentcloud_instance_types
 
-The Instance Types data source list the cvm_instance_types of TencentCloud.
+Use this data source to query instances type.
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_instance_types" "lowest_cost_config" {
-  filter {
-    name   = "instance-family"
-    values = ["S1"]
-  }
-
-  cpu_core_count = 1
-  memory_size    = 1
+data "tencentcloud_instance_types" "foo" {
+  availability_zone = "ap-guangzhou-2"
+  cpu_core_count    = 2
+  memory_size       = 4
 }
 ```
 
 ## Argument Reference
 
-* `filter` - (Optional) One or more name/value pairs to filter off of. There are several valid keys:  `zone`,`instance-family`. For a full reference, check out [DescribeInstanceTypeConfigs in the TencentCloud API reference](https://intl.cloud.tencent.com/document/api/213/9391).
- * `cpu_core_count` - (Optional) Limit search to specific cpu core count.
- * `memory_size` -  (Optional) Limit search to specific memory size.
+The following arguments are supported:
+
+* `availability_zone` - (Optional) The available zone that the CVM instance locates at. This field is conflict with `filter`.
+* `cpu_core_count` - (Optional) The number of CPU cores of the instance.
+* `filter` - (Optional) One or more name/value pairs to filter. This field is conflict with `availability_zone`.
+* `gpu_core_count` - (Optional) The number of GPU cores of the instance.
+* `memory_size` - (Optional) Instance memory capacity, unit in GB.
+* `result_output_file` - (Optional) Used to save results.
+
+The `filter` object supports the following:
+
+* `name` - (Required) The filter name, the available values include `zone` and `instance-family`.
+* `values` - (Required) The filter values.
 
 ## Attributes Reference
 
-The following attributes are exported
+In addition to all arguments above, the following attributes are exported:
 
- * `availability_zone` - Indicate the availability zone for this instance type.
- * `instance_type` - TencentCloud instance type of the cvm instance.
- * `cpu_core_count` - Number of CPU cores.
- * `memory_size` - Size of memory, measured in GB.
- * `family` - The instance type family.
+* `instance_types` - An information list of cvm instance. Each element contains the following attributes:
+  * `availability_zone` - The available zone that the CVM instance locates at.
+  * `cpu_core_count` - The number of CPU cores of the instance.
+  * `family` - Type series of the instance.
+  * `gpu_core_count` - The number of GPU cores of the instance.
+  * `instance_type` - Type of the instance.
+  * `memory_size` - Instance memory capacity, unit in GB.
+
+

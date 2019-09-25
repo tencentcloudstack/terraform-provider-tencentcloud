@@ -27,7 +27,8 @@ const (
 )
 
 var (
-	hclMatch = regexp.MustCompile("(?si)([^`]+)?```(hcl)?(.*?)```")
+	hclMatch  = regexp.MustCompile("(?si)([^`]+)?```(hcl)?(.*?)```")
+	bigSymbol = regexp.MustCompile("([\u007F-\uffff])")
 )
 
 func main() {
@@ -83,7 +84,7 @@ func genIdx(fpath string) {
 	pos := strings.Index(description, "\nResources List\n")
 	if pos != -1 {
 		resources = strings.TrimSpace(description[pos+16:])
-		description = strings.TrimSpace(description[:pos])
+		// description = strings.TrimSpace(description[:pos])
 	} else {
 		log.Printf("[SKIP!]resource list missing, skip: %s\n", fname)
 		return
@@ -219,11 +220,25 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	for k, v := range resource.Schema {
 		if v.Description == "" {
 			continue
+		} else {
+			checkDescription(k, v.Description)
+		}
+		if dtype == "data_source" && v.ForceNew {
+			log.Printf("[FAIL!]Don't set ForceNew on data source: '%s'", k)
+			os.Exit(1)
+		}
+		if v.Required && v.Optional {
+			log.Printf("[FAIL!]Don't set Required and Optional at the same time: '%s'", k)
+			os.Exit(1)
 		}
 		if v.Required {
 			opt := "Required"
 			if v.ForceNew {
 				opt += ", ForceNew"
+			}
+			if v.Deprecated != "" {
+				opt += ", **Deprecated**"
+				v.Description = fmt.Sprintf("%s %s", v.Deprecated, v.Description)
 			}
 			requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
 			subStruct = append(subStruct, getSubStruct(0, k, v)...)
@@ -231,6 +246,10 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 			opt := "Optional"
 			if v.ForceNew {
 				opt += ", ForceNew"
+			}
+			if v.Deprecated != "" {
+				opt += ", **Deprecated**"
+				v.Description = fmt.Sprintf("%s %s", v.Deprecated, v.Description)
 			}
 			optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
 			subStruct = append(subStruct, getSubStruct(0, k, v)...)
@@ -245,6 +264,20 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	sort.Strings(requiredArgs)
 	sort.Strings(optionalArgs)
 	sort.Strings(attributes)
+	sort.Strings(subStruct)
+
+	// remove duplicates
+	if len(subStruct) > 0 {
+		uniqSubStruct := make([]string, 0, len(subStruct))
+		var i int
+		for i = 0; i < len(subStruct)-1; i++ {
+			if subStruct[i] != subStruct[i+1] {
+				uniqSubStruct = append(uniqSubStruct, subStruct[i])
+			}
+		}
+		uniqSubStruct = append(uniqSubStruct, subStruct[i])
+		subStruct = uniqSubStruct
+	}
 
 	requiredArgs = append(requiredArgs, optionalArgs...)
 	data["arguments"] = strings.Join(requiredArgs, "\n")
@@ -278,9 +311,14 @@ func getAttributes(step int, k string, v *schema.Schema) []string {
 
 	if v.Description == "" {
 		return attributes
+	} else {
+		checkDescription(k, v.Description)
 	}
 
 	if v.Computed {
+		if v.Deprecated != "" {
+			v.Description = fmt.Sprintf("(**Deprecated**) %s %s", v.Deprecated, v.Description)
+		}
 		if _, ok := v.Elem.(*schema.Resource); ok {
 			listAttributes := []string{}
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {
@@ -321,11 +359,14 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 
 	if v.Description == "" {
 		return subStructs
+	} else {
+		checkDescription(k, v.Description)
 	}
 
+	subStruct := []string{}
 	if v.Type == schema.TypeMap || v.Type == schema.TypeList || v.Type == schema.TypeSet {
 		if _, ok := v.Elem.(*schema.Resource); ok {
-			subStructs = append(subStructs, fmt.Sprintf("\nThe `%s` object supports the following:\n", k))
+			subStruct = append(subStruct, fmt.Sprintf("\nThe `%s` object supports the following:\n", k))
 			requiredArgs := []string{}
 			optionalArgs := []string{}
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {
@@ -344,15 +385,17 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 				}
 			}
 			sort.Strings(requiredArgs)
-			subStructs = append(subStructs, requiredArgs...)
+			subStruct = append(subStruct, requiredArgs...)
 			sort.Strings(optionalArgs)
-			subStructs = append(subStructs, optionalArgs...)
+			subStruct = append(subStruct, optionalArgs...)
+			subStructs = append(subStructs, strings.Join(subStruct, "\n"))
 
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {
 				subStructs = append(subStructs, getSubStruct(step+1, kk, vv)...)
 			}
 		}
 	}
+
 	return subStructs
 }
 
@@ -374,4 +417,41 @@ func formatHCL(s string) string {
 	}
 
 	return strings.TrimSpace(strings.Join(rr, "\n"))
+}
+
+// checkDescription check description format
+func checkDescription(k, s string) {
+	if s == "" {
+		return
+	}
+
+	if strings.TrimLeft(s, " ") != s {
+		log.Printf("[FAIL!]There is space on the left of description: '%s': '%s'", k, s)
+		os.Exit(1)
+	}
+
+	if strings.TrimRight(s, " ") != s {
+		log.Printf("[FAIL!]There is space on the right of description: '%s': '%s'", k, s)
+		os.Exit(1)
+	}
+
+	if s[len(s)-1] != '.' && s[len(s)-1] != ':' {
+		log.Printf("[FAIL!]There is no ending charset(.|:) on the description: '%s': '%s'", k, s)
+		os.Exit(1)
+	}
+
+	if c := ContainsBigSymbol(s); c != "" {
+		log.Printf("[FAIL!]There is unexcepted symbol: '%s' on the description: '%s': '%s'", c, k, s)
+		os.Exit(1)
+	}
+}
+
+// ContainsBigSymbol returns the Big symbol if found
+func ContainsBigSymbol(s string) string {
+	m := bigSymbol.FindStringSubmatch(s)
+	if len(m) > 0 {
+		return m[0]
+	}
+
+	return ""
 }

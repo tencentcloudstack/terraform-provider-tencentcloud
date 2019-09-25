@@ -41,6 +41,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, ForceNew) ID of the VPC to be associated.
 * `is_multicast` - (Optional) Indicates whether multicast is enabled. The default value is 'true'.
 * `route_table_id` - (Optional) ID of a routing table to which the subnet should be associated.
+* `tags` - (Optional) Tags of the subnet.
 
 ## Attributes Reference
 
@@ -55,7 +56,7 @@ In addition to all arguments above, the following attributes are exported:
 
 Vpc subnet instance can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_subnet.test subnet_id
 ```
 

@@ -128,7 +128,7 @@ import (
 	"time"
 )
 
-func TkeCvmState() map[string]*schema.Schema {
+func tkeCvmState() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_id": {
 			Type:        schema.TypeString,
@@ -149,6 +149,47 @@ func TkeCvmState() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "Information of the cvm when it is failed.",
+		},
+	}
+}
+
+func tkeSecurityInfo() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"user_name": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "User name of account.",
+		},
+		"password": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Password of account.",
+		},
+		"certification_authority": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "The certificate used for access.",
+		},
+		"cluster_external_endpoint": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "External network address to access.",
+		},
+		"domain": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Domain name for access.",
+		},
+		"pgw_endpoint": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "The Intranet address used for access.",
+		},
+		"security_policy": {
+			Type:        schema.TypeList,
+			Computed:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "Access policy.",
 		},
 	}
 }
@@ -313,187 +354,195 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 }
 
 func resourceTencentCloudTkeCluster() *schema.Resource {
+
+	schemaBody := map[string]*schema.Schema{
+		"cluster_name": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Name of the cluster.",
+		},
+		"cluster_desc": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Description of the cluster.",
+		},
+		"cluster_os": {
+			Type:         schema.TypeString,
+			ForceNew:     true,
+			Optional:     true,
+			Default:      TKE_CLUSTER_OS_UBUNTU,
+			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS),
+			Description:  "Operating system of the cluster, the available values include: 'centos7.2x86_64' and 'ubuntu16.04.1 LTSx86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.",
+		},
+		"container_runtime": {
+			Type:         schema.TypeString,
+			ForceNew:     true,
+			Optional:     true,
+			Default:      TKE_RUNTIME_DOCKER,
+			ValidateFunc: validateAllowedStringValue(TKE_RUNTIMES),
+			Description:  "Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.",
+		},
+		"cluster_deploy_type": {
+			Type:         schema.TypeString,
+			ForceNew:     true,
+			Optional:     true,
+			Default:      TKE_DEPLOY_TYPE_MANAGED,
+			ValidateFunc: validateAllowedStringValue(TKE_DEPLOY_TYPES),
+			Description:  "Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER', Default is 'MANAGED_CLUSTER'.",
+		},
+		"cluster_version": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     "1.10.5",
+			Description: "Version of the cluster, Default is '1.10.5'.",
+		},
+		"cluster_ipvs": {
+			Type:        schema.TypeBool,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     true,
+			Description: "Indicates whether ipvs is enabled. Default is true.",
+		},
+		"vpc_id": {
+			Type:         schema.TypeString,
+			ForceNew:     true,
+			Required:     true,
+			ValidateFunc: validateStringLengthInRange(4, 100),
+			Description:  "Vpc Id of the cluster.",
+		},
+		"project_id": {
+			Type:        schema.TypeInt,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Project ID, default value is 0.",
+		},
+		"cluster_cidr": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Required:    true,
+			Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
+			ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+				value := v.(string)
+				_, ipnet, err := net.ParseCIDR(value)
+				if err != nil {
+					errors = append(errors, fmt.Errorf("%q must contain a valid CIDR, got error parsing: %s", k, err))
+					return
+				}
+				if ipnet == nil || value != ipnet.String() {
+					errors = append(errors, fmt.Errorf("%q must contain a valid network CIDR, expected %q, got %q", k, ipnet, value))
+					return
+				}
+				if !strings.Contains(value, "/") {
+					errors = append(errors, fmt.Errorf("%q must be a network segment", k))
+					return
+				}
+				if !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
+					errors = append(errors, fmt.Errorf("%q must in  10.  |  192.168. |  172.[16-31]", k))
+					return
+				}
+
+				if strings.HasPrefix(value, "172.") {
+					nextNo := strings.Split(value, ".")[1]
+					no, _ := strconv.ParseInt(nextNo, 10, 64)
+					if no < 16 || no > 31 {
+						errors = append(errors, fmt.Errorf("%q must in  10.  |  192.168. |  172.[16-31]", k))
+						return
+					}
+				}
+				return
+			},
+		},
+		"ignore_cluster_cidr_conflict": {
+			Type:        schema.TypeBool,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     false,
+			Description: "Indicates whether to ignore the cluster cidr conflict error. Default is false.",
+		},
+		"cluster_max_pod_num": {
+			Type:     schema.TypeInt,
+			ForceNew: true,
+			Optional: true,
+			Default:  256,
+			ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+				value := v.(int)
+				if value%16 != 0 {
+					errors = append(errors, fmt.Errorf(
+						"%q  has to be a multiple of 16 ", k))
+				}
+				if value < 32 {
+					errors = append(errors, fmt.Errorf(
+						"%q cannot be lower than %d: %d", k, 32, value))
+				}
+				return
+			},
+			Description: "The maximum number of Pods per node in the cluster. Default is 256. Must be a multiple of 16 and large than 32.",
+		},
+		"cluster_max_service_num": {
+			Type:     schema.TypeInt,
+			ForceNew: true,
+			Optional: true,
+			Default:  256,
+			ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+				value := v.(int)
+				if value%16 != 0 {
+					errors = append(errors, fmt.Errorf(
+						"%q  has to be a multiple of 16 ", k))
+				}
+				return
+			},
+			Description: "The maximum number of services in the cluster. Default is 256. Must be a multiple of 16.",
+		},
+		"master_config": {
+			Type:     schema.TypeList,
+			ForceNew: true,
+			Optional: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: TkeCvmCreateInfo(),
+			},
+			Description: "Deploy the machine configuration information of the 'MASTER_ETCD' service, and create <=7 units for common users.",
+		},
+		"worker_config": {
+			Type:     schema.TypeList,
+			ForceNew: true,
+			MaxItems: 1,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: TkeCvmCreateInfo(),
+			},
+			Description: "Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.",
+		},
+		// Computed values
+		"cluster_node_num": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Number of nodes in the cluster.",
+		},
+		"worker_instances_list": {
+			Type:     schema.TypeList,
+			Computed: true,
+			Elem: &schema.Resource{
+				Schema: tkeCvmState(),
+			},
+			Description: "An information list of cvm within the 'WORKER' clusters. Each element contains the following attributes:",
+		},
+	}
+
+	for k, v := range tkeSecurityInfo() {
+		schemaBody[k] = v
+	}
+
 	return &schema.Resource{
 		Create: resourceTencentCloudTkeClusterCreate,
 		Read:   resourceTencentCloudTkeClusterRead,
 		Delete: resourceTencentCloudTkeClusterDelete,
-		Schema: map[string]*schema.Schema{
-			"cluster_name": {
-				Type:        schema.TypeString,
-				ForceNew:    true,
-				Optional:    true,
-				Description: "Name of the cluster.",
-			},
-			"cluster_desc": {
-				Type:        schema.TypeString,
-				ForceNew:    true,
-				Optional:    true,
-				Description: "Description of the cluster.",
-			},
-			"cluster_os": {
-				Type:         schema.TypeString,
-				ForceNew:     true,
-				Optional:     true,
-				Default:      TKE_CLUSTER_OS_UBUNTU,
-				ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS),
-				Description:  "Operating system of the cluster, the available values include: 'centos7.2x86_64' and 'ubuntu16.04.1 LTSx86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.",
-			},
-			"container_runtime": {
-				Type:         schema.TypeString,
-				ForceNew:     true,
-				Optional:     true,
-				Default:      TKE_RUNTIME_DOCKER,
-				ValidateFunc: validateAllowedStringValue(TKE_RUNTIMES),
-				Description:  "Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.",
-			},
-			"cluster_deploy_type": {
-				Type:         schema.TypeString,
-				ForceNew:     true,
-				Optional:     true,
-				Default:      TKE_DEPLOY_TYPE_MANAGED,
-				ValidateFunc: validateAllowedStringValue(TKE_DEPLOY_TYPES),
-				Description:  "Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER', Default is 'MANAGED_CLUSTER'.",
-			},
-			"cluster_version": {
-				Type:        schema.TypeString,
-				ForceNew:    true,
-				Optional:    true,
-				Default:     "1.10.5",
-				Description: "Version of the cluster, Default is '1.10.5'.",
-			},
-			"cluster_ipvs": {
-				Type:        schema.TypeBool,
-				ForceNew:    true,
-				Optional:    true,
-				Default:     true,
-				Description: "Indicates whether ipvs is enabled. Default is true.",
-			},
-			"vpc_id": {
-				Type:         schema.TypeString,
-				ForceNew:     true,
-				Required:     true,
-				ValidateFunc: validateStringLengthInRange(4, 100),
-				Description:  "Vpc Id of the cluster.",
-			},
-			"project_id": {
-				Type:        schema.TypeInt,
-				ForceNew:    true,
-				Optional:    true,
-				Description: "Project ID, default value is 0.",
-			},
-			"cluster_cidr": {
-				Type:        schema.TypeString,
-				ForceNew:    true,
-				Required:    true,
-				Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := v.(string)
-					_, ipnet, err := net.ParseCIDR(value)
-					if err != nil {
-						errors = append(errors, fmt.Errorf("%q must contain a valid CIDR, got error parsing: %s", k, err))
-						return
-					}
-					if ipnet == nil || value != ipnet.String() {
-						errors = append(errors, fmt.Errorf("%q must contain a valid network CIDR, expected %q, got %q", k, ipnet, value))
-						return
-					}
-					if !strings.Contains(value, "/") {
-						errors = append(errors, fmt.Errorf("%q must be a network segment", k))
-						return
-					}
-					if !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
-						errors = append(errors, fmt.Errorf("%q must in  10.  |  192.168. |  172.[16-31]", k))
-						return
-					}
-
-					if strings.HasPrefix(value, "172.") {
-						nextNo := strings.Split(value, ".")[1]
-						no, _ := strconv.ParseInt(nextNo, 10, 64)
-						if no < 16 || no > 31 {
-							errors = append(errors, fmt.Errorf("%q must in  10.  |  192.168. |  172.[16-31]", k))
-							return
-						}
-					}
-					return
-				},
-			},
-			"ignore_cluster_cidr_conflict": {
-				Type:        schema.TypeBool,
-				ForceNew:    true,
-				Optional:    true,
-				Default:     false,
-				Description: "Indicates whether to ignore the cluster cidr conflict error. Default is false.",
-			},
-			"cluster_max_pod_num": {
-				Type:     schema.TypeInt,
-				ForceNew: true,
-				Optional: true,
-				Default:  256,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := v.(int)
-					if value%16 != 0 {
-						errors = append(errors, fmt.Errorf(
-							"%q  has to be a multiple of 16 ", k))
-					}
-					if value < 32 {
-						errors = append(errors, fmt.Errorf(
-							"%q cannot be lower than %d: %d", k, 32, value))
-					}
-					return
-				},
-				Description: "The maximum number of Pods per node in the cluster. Default is 256. Must be a multiple of 16 and large than 32.",
-			},
-			"cluster_max_service_num": {
-				Type:     schema.TypeInt,
-				ForceNew: true,
-				Optional: true,
-				Default:  256,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := v.(int)
-					if value%16 != 0 {
-						errors = append(errors, fmt.Errorf(
-							"%q  has to be a multiple of 16 ", k))
-					}
-					return
-				},
-				Description: "The maximum number of services in the cluster. Default is 256. Must be a multiple of 16.",
-			},
-			"master_config": {
-				Type:     schema.TypeList,
-				ForceNew: true,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: TkeCvmCreateInfo(),
-				},
-				Description: "Deploy the machine configuration information of the 'MASTER_ETCD' service, and create <=7 units for common users.",
-			},
-			"worker_config": {
-				Type:     schema.TypeList,
-				ForceNew: true,
-				MaxItems: 1,
-				Optional: true,
-				Elem: &schema.Resource{
-					Schema: TkeCvmCreateInfo(),
-				},
-				Description: "Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.",
-			},
-			// Computed values
-			"cluster_node_num": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Number of nodes in the cluster.",
-			},
-			"worker_instances_list": {
-				Type:     schema.TypeList,
-				Computed: true,
-				Elem: &schema.Resource{
-					Schema: TkeCvmState(),
-				},
-				Description: "An information list of cvm within the 'WORKER' clusters. Each element contains the following attributes:",
-			},
-		},
+		Schema: schemaBody,
 	}
+
 }
 
 func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
@@ -788,25 +837,14 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 			}
 
 			if err != nil {
-				return retryError(err)
+				return resource.RetryableError(err)
 			}
 			return nil
 		})
 	}
 
 	if err != nil {
-		log.Printf("[CRITAL]%s resource.kubernetes_cluster DescribeClusterInstances fail , %s", logId, err.Error())
 
-		deleteErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err := service.DeleteCluster(ctx, d.Id())
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-		if deleteErr != nil {
-			log.Printf("[CRITAL]%s resource.kubernetes_cluster create to delete error , %s", logId, deleteErr.Error())
-		}
 		return err
 	}
 
@@ -869,9 +907,8 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 					return nil
 				}
 			}
-
 			if err != nil {
-				return retryError(err)
+				return resource.RetryableError(err)
 			}
 			return nil
 		})
@@ -890,7 +927,49 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		workerInstancesList = append(workerInstancesList, tempMap)
 	}
 
-	return d.Set("worker_instances_list", workerInstancesList)
+	d.Set("worker_instances_list", workerInstancesList)
+
+	securityRet, err := service.DescribeClusterSecurity(ctx, d.Id())
+
+	if err != nil {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			securityRet, err = service.DescribeClusterSecurity(ctx, d.Id())
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InternalError.ClusterNotFound" {
+					return nil
+				}
+			}
+			if err != nil {
+				return resource.RetryableError(err)
+			}
+			return nil
+		})
+	}
+	if err != nil {
+		return err
+	}
+	var emptyStrFunc = func(ptr *string) string {
+		if ptr == nil {
+			return ""
+		} else {
+			return *ptr
+		}
+	}
+
+	policies := make([]string, 0, len(securityRet.Response.SecurityPolicy))
+	for _, v := range securityRet.Response.SecurityPolicy {
+		policies = append(policies, *v)
+	}
+
+	d.Set("user_name", emptyStrFunc(securityRet.Response.UserName))
+	d.Set("password", emptyStrFunc(securityRet.Response.Password))
+	d.Set("certification_authority", emptyStrFunc(securityRet.Response.CertificationAuthority))
+	d.Set("cluster_external_endpoint", emptyStrFunc(securityRet.Response.ClusterExternalEndpoint))
+	d.Set("domain", emptyStrFunc(securityRet.Response.Domain))
+	d.Set("pgw_endpoint", emptyStrFunc(securityRet.Response.PgwEndpoint))
+	d.Set("security_policy", policies)
+
+	return nil
 }
 
 func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface{}) error {

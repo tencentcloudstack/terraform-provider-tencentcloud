@@ -2,13 +2,15 @@ package tencentcloud
 
 import (
 	"bytes"
+	"crypto/md5"
+	"encoding/base64"
 	"fmt"
-
-	"strings"
+	"math/rand"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
-	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
+	"github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
 )
 
 // Generates a hash for the set hash function used by the IDs
@@ -57,7 +59,7 @@ func buildFiltersParam(params map[string]string, filterList *schema.Set, maxFilt
 	return nil
 }
 
-// Transform filter condition to TecentCloud Go SDK's param
+// Transform filter condition to TencentCloud Go SDK's param
 func buildFiltersParamForSDK(filterList *schema.Set) (r []*cvm.Filter) {
 	for _, v := range filterList.List() {
 		m := v.(map[string]interface{})
@@ -73,11 +75,6 @@ func buildFiltersParamForSDK(filterList *schema.Set) (r []*cvm.Filter) {
 		r = append(r, filter)
 	}
 	return
-}
-
-func retryable(code string, msg string) bool {
-	msg = strings.ToLower(msg)
-	return code == "InternalError" && strings.Contains(msg, "retry")
 }
 
 // Takes the result of flatmap.Expand for an array of strings
@@ -129,4 +126,45 @@ func uint64Pt(i uint64) *uint64 {
 
 func int64Pt(i int64) *int64 {
 	return &i
+}
+
+func getTags(d *schema.ResourceData, k string) map[string]string {
+	var tags map[string]string
+	if raw, ok := d.GetOk(k); ok {
+		rawTags := raw.(map[string]interface{})
+		tags = make(map[string]string, len(rawTags))
+		for k, v := range rawTags {
+			tags[k] = v.(string)
+		}
+	}
+	return tags
+}
+
+func buildToken() string {
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	buf := make([]byte, 16)
+	r.Read(buf)
+	sum := md5.Sum(buf)
+	return base64.StdEncoding.EncodeToString(sum[:])
+}
+
+func boolToPointer(b bool) *bool {
+	return &b
+}
+
+func int64ToPointer(n int) *int64 {
+	i64 := int64(n)
+	return &i64
+}
+
+func formatUnixTime(n uint64) string {
+	return time.Unix(int64(n), 0).UTC().Format("2006-01-02T03:04:05Z")
+}
+
+func parseTime(s string) (time.Time, error) {
+	t, err := time.ParseInLocation("2006-01-02T03:04:05Z", s, time.UTC)
+	if err != nil {
+		return time.Time{}, err
+	}
+	return t, nil
 }

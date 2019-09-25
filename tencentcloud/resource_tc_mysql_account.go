@@ -121,39 +121,45 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 		accountName                  = items[1]
 		accountInfo *cdb.AccountInfo = nil
 	)
-
-	allAccounts, err := mysqlService.DescribeAccounts(ctx, mysqlId)
-
-	if err != nil {
-		if mysqlService.NotFoundMysqlInstance(err) {
+	var onlineHas bool = true
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		allAccounts, e := mysqlService.DescribeAccounts(ctx, mysqlId)
+		if e != nil {
+			if mysqlService.NotFoundMysqlInstance(e) {
+				d.SetId("")
+				onlineHas = false
+				return nil
+			}
+			return retryError(e)
+		}
+		for _, account := range allAccounts {
+			if *account.User == accountName {
+				accountInfo = account
+				break
+			}
+		}
+		if accountInfo == nil {
 			d.SetId("")
+			onlineHas = false
 			return nil
 		}
+		return nil
+	})
+	if err != nil {
 		return fmt.Errorf("Describe mysql acounts fails, reaseon %s", err.Error())
 	}
-
-	for _, account := range allAccounts {
-		if *account.User == accountName {
-			accountInfo = account
-			break
-		}
-	}
-	if accountInfo == nil {
-		d.SetId("")
+	if !onlineHas {
 		return nil
 	}
-
 	if *accountInfo.Notes == "" {
 		d.Set("description", "--")
 	} else {
 		d.Set("description", *accountInfo.Notes)
 	}
-
 	d.Set("mysql_id", mysqlId)
 	d.Set("name", *accountInfo.User)
 	return nil
 }
-
 func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_account.update")()
 
@@ -273,7 +279,6 @@ func resourceTencentCloudMysqlAccountDelete(d *schema.ResourceData, meta interfa
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s delete mysql account  fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
