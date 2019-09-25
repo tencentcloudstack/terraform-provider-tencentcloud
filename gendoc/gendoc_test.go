@@ -79,3 +79,20 @@ resource "tencentcloud_cos_bucket" "mycos" {
 		t.Error("format hcl failed")
 	}
 }
+
+func TestContainsBigSymbol(t *testing.T) {
+	cases := "中国人繁體字ａｂｃＡＢＣ～！＠＃￥％…＆（）—＋｛｝｜：“”《》？１２３４５６７８９０－＝【】＼；‘’，。、　"
+	for _, c := range cases {
+		if ContainsBigSymbol(string(c)) == "" {
+			t.Log(c)
+			t.Errorf("Expected %s to be Chinese symbol", string(c))
+		}
+	}
+
+	cases = "abcABC~!@#$%^&*()_+{}|:\"<>?`1234567890-=[]\\;',./ \t\r\n"
+	for _, c := range cases {
+		if ContainsBigSymbol(string(c)) != "" {
+			t.Errorf("Expected %s not to be Chinese symbol", string(c))
+		}
+	}
+}

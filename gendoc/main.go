@@ -27,7 +27,8 @@ const (
 )
 
 var (
-	hclMatch = regexp.MustCompile("(?si)([^`]+)?```(hcl)?(.*?)```")
+	hclMatch  = regexp.MustCompile("(?si)([^`]+)?```(hcl)?(.*?)```")
+	bigSymbol = regexp.MustCompile("([\u007F-\uffff])")
 )
 
 func main() {
@@ -439,20 +440,17 @@ func checkDescription(k, s string) {
 		os.Exit(1)
 	}
 
-	if c := ContainsChineseSymbol(s); c != "" {
-		log.Printf("[FAIL!]There is Chinese symbol: '%s' on the description: '%s': '%s'", c, k, s)
+	if c := ContainsBigSymbol(s); c != "" {
+		log.Printf("[FAIL!]There is unexcepted symbol: '%s' on the description: '%s': '%s'", c, k, s)
 		os.Exit(1)
 	}
 }
 
-// ContainsChineseSymbol returns the Chinese symbol if found
-func ContainsChineseSymbol(s string) string {
-	symbolChinese := "ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｓｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＳＹＺ～！＠＃￥％……＆×（）——＋｛｝｜：“”《》？·１２３４５６７８９０－＝【】＼；‘’，。、　"
-
-	for _, c := range symbolChinese {
-		if strings.Contains(s, string(c)) {
-			return string(c)
-		}
+// ContainsBigSymbol returns the Big symbol if found
+func ContainsBigSymbol(s string) string {
+	m := bigSymbol.FindStringSubmatch(s)
+	if len(m) > 0 {
+		return m[0]
 	}
 
 	return ""
