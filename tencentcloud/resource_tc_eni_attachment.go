@@ -72,13 +72,11 @@ package tencentcloud
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
 func resourceTencentCloudEniAttachment() *schema.Resource {
@@ -148,30 +146,16 @@ func resourceTencentCloudEniAttachmentRead(d *schema.ResourceData, m interface{}
 		return err
 	}
 
-	var eni *vpc.NetworkInterface
-	for _, e := range enis {
-		if e.NetworkInterfaceId == nil {
-			return errors.New("eni id is nil")
-		}
-
-		if *e.NetworkInterfaceId == eniId {
-			eni = e
-			break
-		}
-	}
-
-	if eni == nil {
+	if len(enis) < 1 {
 		d.SetId("")
 		return nil
 	}
+
+	eni := enis[0]
 
 	if eni.Attachment == nil {
 		d.SetId("")
 		return nil
-	}
-
-	if eni.Attachment.InstanceId == nil {
-		return errors.New("eni attach instance id is nil")
 	}
 
 	d.Set("eni_id", eni.NetworkInterfaceId)

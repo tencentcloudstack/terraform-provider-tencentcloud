@@ -13,8 +13,6 @@ package tencentcloud
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -250,34 +248,12 @@ func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error
 	eniIds := make([]string, 0, len(respEnis))
 
 	for _, eni := range respEnis {
-		if nilFields := CheckNil(eni, map[string]string{
-			"NetworkInterfaceId":          "id",
-			"NetworkInterfaceName":        "name",
-			"NetworkInterfaceDescription": "description",
-			"VpcId":                       "vpc id",
-			"SubnetId":                    "subnet id",
-			"MacAddress":                  "mac address",
-			"State":                       "state",
-			"CreatedTime":                 "create time",
-			"Primary":                     "primary",
-		}); len(nilFields) > 0 {
-			return fmt.Errorf("eni %v are nil", nilFields)
-		}
-
 		ipv4s := make([]map[string]interface{}, 0, len(eni.PrivateIpAddressSet))
 		for _, ipv4 := range eni.PrivateIpAddressSet {
-			if nilFields := CheckNil(ipv4, map[string]string{
-				"PrivateIpAddress": "ip",
-				"Primary":          "primary",
-				"Description":      "description",
-			}); len(nilFields) > 0 {
-				return fmt.Errorf("eni ipv4 %v are nil", nilFields)
-			}
-
 			ipv4s = append(ipv4s, map[string]interface{}{
-				"ip":          *ipv4.PrivateIpAddress,
-				"primary":     *ipv4.Primary,
-				"description": *eni.NetworkInterfaceDescription,
+				"ip":          ipv4.PrivateIpAddress,
+				"primary":     ipv4.Primary,
+				"description": eni.NetworkInterfaceDescription,
 			})
 		}
 
@@ -288,38 +264,28 @@ func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error
 
 		respTags := make(map[string]string, len(eni.TagSet))
 		for _, tag := range eni.TagSet {
-			if tag.Key == nil {
-				return errors.New("eni tag key is nil")
-			}
-			if tag.Value == nil {
-				return errors.New("eni tag value is nil")
-			}
-
 			respTags[*tag.Key] = *tag.Value
 		}
 
 		eniIds = append(eniIds, *eni.NetworkInterfaceId)
 
 		m := map[string]interface{}{
-			"id":              *eni.NetworkInterfaceId,
-			"name":            *eni.NetworkInterfaceName,
-			"description":     *eni.NetworkInterfaceDescription,
-			"vpc_id":          *eni.VpcId,
-			"subnet_id":       *eni.SubnetId,
-			"primary":         *eni.Primary,
-			"mac":             *eni.MacAddress,
-			"state":           *eni.State,
-			"create_time":     *eni.CreatedTime,
+			"id":              eni.NetworkInterfaceId,
+			"name":            eni.NetworkInterfaceName,
+			"description":     eni.NetworkInterfaceDescription,
+			"vpc_id":          eni.VpcId,
+			"subnet_id":       eni.SubnetId,
+			"primary":         eni.Primary,
+			"mac":             eni.MacAddress,
+			"state":           eni.State,
+			"create_time":     eni.CreatedTime,
 			"ipv4s":           ipv4s,
 			"security_groups": sgs,
 			"tags":            respTags,
 		}
 
 		if eni.Attachment != nil {
-			if eni.Attachment.InstanceId == nil {
-				return errors.New("eni attach instance id is nil")
-			}
-			m["instance_id"] = *eni.Attachment.InstanceId
+			m["instance_id"] = eni.Attachment.InstanceId
 		}
 
 		enis = append(enis, m)

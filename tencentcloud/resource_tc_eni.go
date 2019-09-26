@@ -44,32 +44,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
-
-func eniIpInputResource() *schema.Resource {
-	return &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"ip": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Intranet IP.",
-			},
-			"primary": {
-				Type:        schema.TypeBool,
-				Required:    true,
-				Description: "Indicates whether the IP is primary.",
-			},
-			"description": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      "",
-				Description:  "Description of the IP, maximum length 25.",
-				ValidateFunc: validateStringLengthInRange(0, 25),
-			},
-		},
-	}
-}
 
 func eniIpOutputResource() *schema.Resource {
 	return &schema.Resource{
@@ -140,10 +115,29 @@ func resourceTencentCloudEni() *schema.Resource {
 				Type:          schema.TypeSet,
 				Optional:      true,
 				ConflictsWith: []string{"ipv4_count"},
-				Elem:          eniIpInputResource(),
-				Set:           schema.HashResource(eniIpInputResource()),
-				MaxItems:      30,
-				Description:   "Applying for intranet IPv4s collection, conflict with `ipv4_count`. When there are multiple ipv4s, can only be one primary IP, and the maximum length of the array is 30. Each element contains the following attributes:",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ip": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Intranet IP.",
+						},
+						"primary": {
+							Type:        schema.TypeBool,
+							Required:    true,
+							Description: "Indicates whether the IP is primary.",
+						},
+						"description": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      "",
+							Description:  "Description of the IP, maximum length 25.",
+							ValidateFunc: validateStringLengthInRange(0, 25),
+						},
+					},
+				},
+				MaxItems:    30,
+				Description: "Applying for intranet IPv4s collection, conflict with `ipv4_count`. When there are multiple ipv4s, can only be one primary IP, and the maximum length of the array is 30. Each element contains the following attributes:",
 			},
 			"ipv4_count": {
 				Type:          schema.TypeInt,
@@ -364,35 +358,12 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	var eni *vpc.NetworkInterface
-	for _, e := range enis {
-		if e.NetworkInterfaceId == nil {
-			return errors.New("eni id is nil")
-		}
-
-		if *e.NetworkInterfaceId == id {
-			eni = e
-			break
-		}
-	}
-
-	if eni == nil {
+	if len(enis) < 1 {
 		d.SetId("")
 		return nil
 	}
 
-	if nilFields := CheckNil(eni, map[string]string{
-		"NetworkInterfaceName":        "name",
-		"NetworkInterfaceDescription": "description",
-		"VpcId":                       "vpc id",
-		"SubnetId":                    "subnet id",
-		"MacAddress":                  "mac address",
-		"State":                       "state",
-		"CreatedTime":                 "create time",
-		"Primary":                     "primary",
-	}); len(nilFields) > 0 {
-		return fmt.Errorf("eni %v are nil", nilFields)
-	}
+	eni := enis[0]
 
 	d.Set("name", eni.NetworkInterfaceName)
 	d.Set("vpc_id", eni.VpcId)
@@ -409,24 +380,12 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 	}
 	d.Set("security_groups", sgs)
 
-	if len(eni.PrivateIpAddressSet) == 0 {
-		return errors.New("eni ipv4 is empty")
-	}
-
 	ipv4s := make([]map[string]interface{}, 0, len(eni.PrivateIpAddressSet))
 	for _, ipv4 := range eni.PrivateIpAddressSet {
-		if nilFields := CheckNil(ipv4, map[string]string{
-			"PrivateIpAddress": "ip",
-			"Primary":          "primary",
-			"Description":      "description",
-		}); len(nilFields) > 0 {
-			return fmt.Errorf("eni ipv4 %v are nil", nilFields)
-		}
-
 		ipv4s = append(ipv4s, map[string]interface{}{
-			"ip":          *ipv4.PrivateIpAddress,
-			"primary":     *ipv4.Primary,
-			"description": *ipv4.Description,
+			"ip":          ipv4.PrivateIpAddress,
+			"primary":     ipv4.Primary,
+			"description": ipv4.Description,
 		})
 	}
 	d.Set("ipv4_info", ipv4s)
@@ -440,13 +399,6 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 
 	tags := make(map[string]string, len(eni.TagSet))
 	for _, tag := range eni.TagSet {
-		if tag.Key == nil {
-			return errors.New("tag key is nil")
-		}
-		if tag.Value == nil {
-			return errors.New("tag value is nil")
-		}
-
 		tags[*tag.Key] = *tag.Value
 	}
 	d.Set("tags", tags)
