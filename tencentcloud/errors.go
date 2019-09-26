@@ -13,7 +13,4 @@ const (
 
 	//vpc
 	VPCNotFound = "ResourceNotFound"
-
-	//redis
-	RedisInstanceNotFound = "ResourceNotFound.InstanceNotExists"
 )
