@@ -264,7 +264,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 
 	statusName := REDIS_STATUS[*info.Status]
 	if statusName == "" {
-		err = fmt.Errorf("redis read unkwnow status %d", *info.ZoneId)
+		err = fmt.Errorf("redis read unkwnow status %d", *info.Status)
 		log.Printf("[CRITAL]%s redis read status name error, reason:%s\n", logId, err.Error())
 		return err
 	}
