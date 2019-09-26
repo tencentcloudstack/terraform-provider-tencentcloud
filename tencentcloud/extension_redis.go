@@ -98,3 +98,6 @@ const (
 	REDIS_TASK_FAILED    = "failed"
 	REDIS_TASK_ERROR     = "error"
 )
+
+//sdk redis not found error
+const RedisInstanceNotFound = "ResourceNotFound.InstanceNotExists"
