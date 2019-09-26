@@ -36,6 +36,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 )
 
 func resourceTencentCloudRedisInstance() *schema.Resource {
@@ -247,18 +248,35 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	has, _, info, err := service.CheckRedisCreateOk(ctx, d.Id())
-	if info != nil {
-		if *info.Status == REDIS_STATUS_ISOLATE || *info.Status == REDIS_STATUS_TODELETE {
+	var onlineHas bool = true
+	var (
+		has  bool
+		info *redis.InstanceSet
+		e    error
+	)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		has, _, info, e = service.CheckRedisCreateOk(ctx, d.Id())
+		if info != nil {
+			if *info.Status == REDIS_STATUS_ISOLATE || *info.Status == REDIS_STATUS_TODELETE {
+				d.SetId("")
+				onlineHas = false
+				return nil
+			}
+		}
+		if e != nil {
+			return resource.NonRetryableError(e)
+		}
+		if !has {
 			d.SetId("")
+			onlineHas = false
 			return nil
 		}
-	}
+		return nil
+	})
 	if err != nil {
-		return err
+		return fmt.Errorf("Fail to get info from redis, reaseon %s", err.Error())
 	}
-	if !has {
-		d.SetId("")
+	if !onlineHas {
 		return nil
 	}
 

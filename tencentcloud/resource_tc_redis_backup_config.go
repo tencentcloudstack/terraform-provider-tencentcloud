@@ -25,7 +25,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudRedisBackupConfig() *schema.Resource {
@@ -86,16 +88,25 @@ func resourceTencentCloudRedisBackupConfigRead(d *schema.ResourceData, meta inte
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	backupPeriods, backupTime, err := service.DescribeAutoBackupConfig(ctx, d.Id())
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		backupPeriods, backupTime, e := service.DescribeAutoBackupConfig(ctx, d.Id())
+		if e != nil {
+			if sdkErr, ok := e.(*errors.TencentCloudSDKError); ok {
+				if sdkErr.Code == RedisInstanceNotFound {
+					d.SetId("")
+					return nil
+				}
+			}
+			return retryError(e)
+		}
+		d.Set("backup_time", backupTime)
+		d.Set("redis_id", d.Id())
+		d.Set("backup_period", backupPeriods)
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	d.Set("backup_time", backupTime)
-	d.Set("redis_id", d.Id())
-	d.Set("backup_period", backupPeriods)
-
 	return nil
 }
 
