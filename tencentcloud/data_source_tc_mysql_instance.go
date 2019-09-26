@@ -39,7 +39,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1, 4, 5}),
-				Description:  "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.",
+				Description:  "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
 			},
 			"security_group_id": {
 				Type:        schema.TypeString,
@@ -67,7 +67,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Description:  "Initialization mark. Available values: 0 - Uninitialized; 1 – Initialized.",
+				Description:  "Initialization mark. Available values: 0 - Uninitialized; 1 - Initialized.",
 			},
 			"with_dr": {
 				Type:         schema.TypeInt,
@@ -131,12 +131,12 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"init_flag": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Initialization mark. Available values: 0 - Uninitialized; 1 – Initialized.",
+							Description: "Initialization mark. Available values: 0 - Uninitialized; 1 - Initialized.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.",
+							Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
 						},
 						"zone": {
 							Type:        schema.TypeString,

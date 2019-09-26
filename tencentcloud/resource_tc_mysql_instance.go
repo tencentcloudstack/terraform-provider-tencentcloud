@@ -142,7 +142,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"status": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 – Isolated.",
+			Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
 		},
 		"task_status": {
 			Type:        schema.TypeInt,
