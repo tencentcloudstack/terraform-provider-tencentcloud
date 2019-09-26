@@ -1,4 +1,10 @@
 ## 1.20.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_availability_zones` refactor logic with api3.0 .
+* Resource: `tencentcloud_eip` add optional argument `type`, `anycast_zone`, `internet_service_provider`, etc.
+
 ## 1.20.0 (September 24, 2019)
 
 FEATURES:
