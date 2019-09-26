@@ -1593,29 +1593,6 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 /*
 EIP
 */
-func (me *VpcService) CreateEip(ctx context.Context) (eipId string, errRet error) {
-	logId := getLogId(ctx)
-	request := vpc.NewAllocateAddressesRequest()
-
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().AllocateAddresses(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.AddressSet) < 1 {
-		errRet = fmt.Errorf("eip id is nil")
-		return
-	}
-	eipId = *response.Response.AddressSet[0]
-	return
-}
-
 func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *vpc.Address, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeAddressesRequest()

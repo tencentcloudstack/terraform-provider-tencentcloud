@@ -50,6 +50,60 @@ func TestAccTencentCloudEip_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudEip_anycast(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckEipDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccEipAnycast,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEipExists("tencentcloud_eip.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "name", "eip_anycast"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "type", "AnycastEIP"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudEip_provider(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckEipDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccEipProvider,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEipExists("tencentcloud_eip.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "name", "eip_provider"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "type", "EIP"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudEip_bandwidth(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckEipDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccEipBandwidth,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEipExists("tencentcloud_eip.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "name", "eip_bandwidth"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "type", "EIP"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckEipExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
@@ -131,4 +185,28 @@ resource "tencentcloud_eip" "foo" {
 const testAccEipBasicWithoutName = `
 resource "tencentcloud_eip" "bar" {
 }
+`
+
+const testAccEipAnycast = `
+resource "tencentcloud_eip" "foo" {
+  name = "eip_anycast"
+  type = "AnycastEIP"
+  anycast_zone = "ANYCAST_ZONE_GLOBAL"
+  applicable_for_clb = false
+}
+`
+
+const testAccEipProvider = `
+resource "tencentcloud_eip" "foo" {
+  name = "eip_provider"
+  internet_service_provider = "CMCC"
+}
+`
+
+const testAccEipBandwidth = `
+resource "tencentcloud_eip" "foo" {
+	name = "eip_bandwidth"
+	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
+	internet_max_bandwidth_out = 2
+  }
 `
