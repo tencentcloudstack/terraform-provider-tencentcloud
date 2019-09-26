@@ -3,13 +3,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type AsService struct {
@@ -129,7 +129,11 @@ func (me *AsService) DescribeAutoScalingGroupById(ctx context.Context, scalingGr
 	return
 }
 
-func (me *AsService) DescribeAutoScalingGroupByFilter(ctx context.Context, scalingGroupId, configurationId, scalingGroupName string) (scalingGroups []*as.AutoScalingGroup, errRet error) {
+func (me *AsService) DescribeAutoScalingGroupByFilter(
+	ctx context.Context,
+	scalingGroupId, configurationId, scalingGroupName string,
+	tags map[string]string,
+) (scalingGroups []*as.AutoScalingGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := as.NewDescribeAutoScalingGroupsRequest()
 	request.Filters = make([]*as.Filter, 0)
@@ -153,6 +157,12 @@ func (me *AsService) DescribeAutoScalingGroupByFilter(ctx context.Context, scali
 			Values: []*string{&scalingGroupName},
 		}
 		request.Filters = append(request.Filters, filter)
+	}
+	for k, v := range tags {
+		request.Filters = append(request.Filters, &as.Filter{
+			Name:   stringToPointer("tag:" + k),
+			Values: []*string{stringToPointer(v)},
+		})
 	}
 
 	offset := 0

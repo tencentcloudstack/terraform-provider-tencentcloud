@@ -55,6 +55,7 @@ The following arguments are supported:
 * `project_id` - (Optional) Specifys to which project the scaling group belongs.
 * `retry_policy` - (Optional) Available values for retry policies include IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.
 * `subnet_ids` - (Optional) ID list of subnet, and for VPC it is required.
+* `tags` - (Optional) Tags of a scaling group.
 * `termination_policies` - (Optional) Available values for termination policies include OLDEST_INSTANCE and NEWEST_INSTANCE.
 * `zones` - (Optional) List of available zones, for Basic network it is required.
 
@@ -82,7 +83,7 @@ In addition to all arguments above, the following attributes are exported:
 
 AutoScaling Groups can be imported using the id, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_as_scaling_group.scaling_group asg-n32ymck2
 ```
 

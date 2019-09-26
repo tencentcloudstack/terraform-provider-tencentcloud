@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -35,6 +36,17 @@ func TestAccTencentCloudAsScalingGroupsDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups_name", "scaling_group_list.0.subnet_ids.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_name", "scaling_group_list.0.status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_name", "scaling_group_list.0.create_time"),
+
+					resource.TestMatchResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups_tags", "scaling_group_list.#", regexp.MustCompile(`^[1-9]\d*$`)),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_tags", "scaling_group_list.0.scaling_group_name"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_tags", "scaling_group_list.0.configuration_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_tags", "scaling_group_list.0.max_size"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_tags", "scaling_group_list.0.min_size"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_tags", "scaling_group_list.0.vpc_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_tags", "scaling_group_list.0.subnet_ids.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_tags", "scaling_group_list.0.status"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_as_scaling_groups.scaling_groups_tags", "scaling_group_list.0.create_time"),
+					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_groups.scaling_groups_tags", "scaling_group_list.0.tags.test", "test"),
 				),
 			},
 		},
@@ -72,7 +84,7 @@ func TestAccTencentCloudAsScalingGroupsDataSource_full(t *testing.T) {
 	})
 }
 
-//todo
+// todo
 func testAccAsScalingGroupsDataSource_basic() string {
 	return `
 resource "tencentcloud_vpc" "vpc" {
@@ -100,6 +112,10 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   min_size           = 0
   vpc_id             = "${tencentcloud_vpc.vpc.id}"
   subnet_ids         = ["${tencentcloud_subnet.subnet.id}"]
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 data "tencentcloud_as_scaling_groups" "scaling_groups" {
@@ -108,6 +124,10 @@ data "tencentcloud_as_scaling_groups" "scaling_groups" {
 
 data "tencentcloud_as_scaling_groups" "scaling_groups_name" {
   scaling_group_name = "${tencentcloud_as_scaling_group.scaling_group.scaling_group_name}"
+}
+
+data "tencentcloud_as_scaling_groups" "scaling_groups_tags" {
+  tags = "${tencentcloud_as_scaling_group.scaling_group.tags}"
 }
 `
 }
