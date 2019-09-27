@@ -46,6 +46,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 )
@@ -369,29 +370,37 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	config, err := asService.DescribeLaunchConfigurationById(ctx, configurationId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		config, e := asService.DescribeLaunchConfigurationById(ctx, configurationId)
+		if e != nil {
+			if e.Error() == "configuration id is not found" {
+				d.SetId("")
+				return nil
+			}
+			return retryError(e)
+		}
+		d.Set("configuration_name", *config.LaunchConfigurationName)
+		d.Set("status", *config.LaunchConfigurationStatus)
+		d.Set("image_id", *config.ImageId)
+		d.Set("project_id", *config.ProjectId)
+		d.Set("instance_types", flattenStringList(config.InstanceTypes))
+		d.Set("system_disk_type", *config.SystemDisk.DiskType)
+		d.Set("system_disk_size", *config.SystemDisk.DiskSize)
+		d.Set("data_disk", flattenDataDiskMappings(config.DataDisks))
+		d.Set("internet_charge_type", *config.InternetAccessible.InternetChargeType)
+		d.Set("internet_max_bandwidth_out", *config.InternetAccessible.InternetMaxBandwidthOut)
+		d.Set("public_ip_assigned", *config.InternetAccessible.PublicIpAssigned)
+		d.Set("login_settings.key_ids", flattenStringList(config.LoginSettings.KeyIds))
+		d.Set("security_group_ids", flattenStringList(config.SecurityGroupIds))
+		d.Set("enhanced_security_service", *config.EnhancedService.SecurityService.Enabled)
+		d.Set("enhanced_monitor_service", *config.EnhancedService.MonitorService.Enabled)
+		d.Set("user_data", pointerToString(config.UserData))
+		d.Set("instance_tags", flattenInstanceTagsMapping(config.InstanceTags))
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	d.Set("configuration_name", *config.LaunchConfigurationName)
-	d.Set("status", *config.LaunchConfigurationStatus)
-	d.Set("image_id", *config.ImageId)
-	d.Set("project_id", *config.ProjectId)
-	d.Set("instance_types", flattenStringList(config.InstanceTypes))
-	d.Set("system_disk_type", *config.SystemDisk.DiskType)
-	d.Set("system_disk_size", *config.SystemDisk.DiskSize)
-	d.Set("data_disk", flattenDataDiskMappings(config.DataDisks))
-	d.Set("internet_charge_type", *config.InternetAccessible.InternetChargeType)
-	d.Set("internet_max_bandwidth_out", *config.InternetAccessible.InternetMaxBandwidthOut)
-	d.Set("public_ip_assigned", *config.InternetAccessible.PublicIpAssigned)
-	d.Set("login_settings.key_ids", flattenStringList(config.LoginSettings.KeyIds))
-	d.Set("security_group_ids", flattenStringList(config.SecurityGroupIds))
-	d.Set("enhanced_security_service", *config.EnhancedService.SecurityService.Enabled)
-	d.Set("enhanced_monitor_service", *config.EnhancedService.MonitorService.Enabled)
-	d.Set("user_data", pointerToString(config.UserData))
-	d.Set("instance_tags", flattenInstanceTagsMapping(config.InstanceTags))
-
 	return nil
 }
 

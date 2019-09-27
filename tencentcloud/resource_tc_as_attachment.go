@@ -15,6 +15,7 @@ package tencentcloud
 import (
 	"context"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -73,12 +74,17 @@ func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	instanceIds, err := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instanceIds, e := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
+		if e != nil {
+			return retryError(e)
+		}
+		d.Set("instance_ids", instanceIds)
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-	d.Set("instance_ids", instanceIds)
-
 	return nil
 }
 
@@ -126,15 +132,30 @@ func resourceTencentCloudAsAttachmentDelete(d *schema.ResourceData, meta interfa
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	instanceIds, err := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
+	var (
+		instanceIds []string
+		e           error
+	)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instanceIds, e = asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
 
-	err = asService.DetachInstances(ctx, scalingGroupId, instanceIds)
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		e = asService.DetachInstances(ctx, scalingGroupId, instanceIds)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
 	return nil
 }

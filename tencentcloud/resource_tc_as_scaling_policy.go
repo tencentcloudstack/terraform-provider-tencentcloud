@@ -26,6 +26,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 )
@@ -171,29 +172,36 @@ func resourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta interf
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	scalingPolicy, err := asService.DescribeScalingPolicyById(ctx, scalingPolicyId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		scalingPolicy, e := asService.DescribeScalingPolicyById(ctx, scalingPolicyId)
+		if e != nil {
+			if e.Error() == "scaling policy id is not found" {
+				d.SetId("")
+				return nil
+			}
+			return retryError(e)
+		}
+		d.Set("scaling_group_id", *scalingPolicy.AutoScalingGroupId)
+		d.Set("policy_name", *scalingPolicy.ScalingPolicyName)
+		d.Set("adjustment_type", *scalingPolicy.AdjustmentType)
+		d.Set("adjustment_value", *scalingPolicy.AdjustmentValue)
+		d.Set("comparison_operator", *scalingPolicy.MetricAlarm.ComparisonOperator)
+		d.Set("metric_name", *scalingPolicy.MetricAlarm.MetricName)
+		d.Set("threshold", *scalingPolicy.MetricAlarm.Threshold)
+		d.Set("period", *scalingPolicy.MetricAlarm.Period)
+		d.Set("continuous_time", *scalingPolicy.MetricAlarm.ContinuousTime)
+		d.Set("statistic", *scalingPolicy.MetricAlarm.Statistic)
+		d.Set("cooldown", *scalingPolicy.Cooldown)
+		if scalingPolicy.NotificationUserGroupIds != nil {
+			d.Set("notification_user_group_ids", flattenStringList(scalingPolicy.NotificationUserGroupIds))
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	d.Set("scaling_group_id", *scalingPolicy.AutoScalingGroupId)
-	d.Set("policy_name", *scalingPolicy.ScalingPolicyName)
-	d.Set("adjustment_type", *scalingPolicy.AdjustmentType)
-	d.Set("adjustment_value", *scalingPolicy.AdjustmentValue)
-	d.Set("comparison_operator", *scalingPolicy.MetricAlarm.ComparisonOperator)
-	d.Set("metric_name", *scalingPolicy.MetricAlarm.MetricName)
-	d.Set("threshold", *scalingPolicy.MetricAlarm.Threshold)
-	d.Set("period", *scalingPolicy.MetricAlarm.Period)
-	d.Set("continuous_time", *scalingPolicy.MetricAlarm.ContinuousTime)
-	d.Set("statistic", *scalingPolicy.MetricAlarm.Statistic)
-	d.Set("cooldown", *scalingPolicy.Cooldown)
-	if scalingPolicy.NotificationUserGroupIds != nil {
-		d.Set("notification_user_group_ids", flattenStringList(scalingPolicy.NotificationUserGroupIds))
-	}
-
 	return nil
 }
-
 func resourceTencentCloudAsScalingPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_policy.update")()
 

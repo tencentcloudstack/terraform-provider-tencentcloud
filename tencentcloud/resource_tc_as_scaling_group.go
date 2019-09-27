@@ -322,50 +322,58 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	scalingGroup, err := asService.DescribeAutoScalingGroupById(ctx, scalingGroupId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		scalingGroup, e := asService.DescribeAutoScalingGroupById(ctx, scalingGroupId)
+		if e != nil {
+			if e.Error() == "configuration id is not found" {
+				d.SetId("")
+				return nil
+			}
+			return retryError(e)
+		}
+		d.Set("scaling_group_name", *scalingGroup.AutoScalingGroupName)
+		d.Set("configuration_id", *scalingGroup.LaunchConfigurationId)
+		d.Set("status", *scalingGroup.AutoScalingGroupStatus)
+		d.Set("instance_count", *scalingGroup.InstanceCount)
+		d.Set("max_size", *scalingGroup.MaxSize)
+		d.Set("min_size", *scalingGroup.MinSize)
+		d.Set("vpc_id", *scalingGroup.VpcId)
+		d.Set("project_id", *scalingGroup.ProjectId)
+		d.Set("subnet_ids", flattenStringList(scalingGroup.SubnetIdSet))
+		d.Set("zones", flattenStringList(scalingGroup.ZoneSet))
+		d.Set("default_cooldown", *scalingGroup.DefaultCooldown)
+		d.Set("desired_capacity", *scalingGroup.DesiredCapacity)
+		d.Set("load_balancer_ids", flattenStringList(scalingGroup.LoadBalancerIdSet))
+		d.Set("termination_policies", flattenStringList(scalingGroup.TerminationPolicySet))
+		d.Set("retry_policy", *scalingGroup.RetryPolicy)
+		d.Set("create_time", *scalingGroup.CreatedTime)
+
+		if scalingGroup.ForwardLoadBalancerSet != nil && len(scalingGroup.ForwardLoadBalancerSet) > 0 {
+			forwardLoadBalancers := make([]map[string]interface{}, 0, len(scalingGroup.ForwardLoadBalancerSet))
+			for _, v := range scalingGroup.ForwardLoadBalancerSet {
+				targetAttributes := make([]map[string]interface{}, 0, len(v.TargetAttributes))
+				for _, vv := range v.TargetAttributes {
+					targetAttribute := map[string]interface{}{
+						"port":   *vv.Port,
+						"weight": *vv.Weight,
+					}
+					targetAttributes = append(targetAttributes, targetAttribute)
+				}
+				forwardLoadBalancer := map[string]interface{}{
+					"load_balancer_id":  *v.LoadBalancerId,
+					"listener_id":       *v.ListenerId,
+					"target_attributes": targetAttributes,
+					"rule_id":           *v.LocationId,
+				}
+				forwardLoadBalancers = append(forwardLoadBalancers, forwardLoadBalancer)
+			}
+			d.Set("forward_balancer_ids", forwardLoadBalancers)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	d.Set("scaling_group_name", *scalingGroup.AutoScalingGroupName)
-	d.Set("configuration_id", *scalingGroup.LaunchConfigurationId)
-	d.Set("status", *scalingGroup.AutoScalingGroupStatus)
-	d.Set("instance_count", *scalingGroup.InstanceCount)
-	d.Set("max_size", *scalingGroup.MaxSize)
-	d.Set("min_size", *scalingGroup.MinSize)
-	d.Set("vpc_id", *scalingGroup.VpcId)
-	d.Set("project_id", *scalingGroup.ProjectId)
-	d.Set("subnet_ids", flattenStringList(scalingGroup.SubnetIdSet))
-	d.Set("zones", flattenStringList(scalingGroup.ZoneSet))
-	d.Set("default_cooldown", *scalingGroup.DefaultCooldown)
-	d.Set("desired_capacity", *scalingGroup.DesiredCapacity)
-	d.Set("load_balancer_ids", flattenStringList(scalingGroup.LoadBalancerIdSet))
-	d.Set("termination_policies", flattenStringList(scalingGroup.TerminationPolicySet))
-	d.Set("retry_policy", *scalingGroup.RetryPolicy)
-	d.Set("create_time", *scalingGroup.CreatedTime)
-
-	if scalingGroup.ForwardLoadBalancerSet != nil && len(scalingGroup.ForwardLoadBalancerSet) > 0 {
-		forwardLoadBalancers := make([]map[string]interface{}, 0, len(scalingGroup.ForwardLoadBalancerSet))
-		for _, v := range scalingGroup.ForwardLoadBalancerSet {
-			targetAttributes := make([]map[string]interface{}, 0, len(v.TargetAttributes))
-			for _, vv := range v.TargetAttributes {
-				targetAttribute := map[string]interface{}{
-					"port":   *vv.Port,
-					"weight": *vv.Weight,
-				}
-				targetAttributes = append(targetAttributes, targetAttribute)
-			}
-			forwardLoadBalancer := map[string]interface{}{
-				"load_balancer_id":  *v.LoadBalancerId,
-				"listener_id":       *v.ListenerId,
-				"target_attributes": targetAttributes,
-				"rule_id":           *v.LocationId,
-			}
-			forwardLoadBalancers = append(forwardLoadBalancers, forwardLoadBalancer)
-		}
-		d.Set("forward_balancer_ids", forwardLoadBalancers)
-	}
-
 	return nil
 }
 
