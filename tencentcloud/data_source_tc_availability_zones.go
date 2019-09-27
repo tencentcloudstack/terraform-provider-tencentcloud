@@ -84,7 +84,7 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 	}
 
 	var name string
-	var includeUnavailable = true
+	var includeUnavailable = false
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
@@ -108,24 +108,21 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 	zoneList := make([]map[string]interface{}, 0, len(zones))
 	ids := make([]string, 0, len(zones))
 	for _, zone := range zones {
-		flag := true
 		if name != "" && name != *zone.Zone {
-			flag = false
+			continue
 		}
 		if !includeUnavailable && *zone.ZoneState == ZONE_STATE_UNAVAILABLE {
-			flag = false
+			continue
 		}
 
-		if flag {
-			mapping := map[string]interface{}{
-				"id":          zone.ZoneId,
-				"name":        zone.Zone,
-				"description": zone.ZoneName,
-				"state":       zone.ZoneState,
-			}
-			zoneList = append(zoneList, mapping)
-			ids = append(ids, *zone.ZoneId)
+		mapping := map[string]interface{}{
+			"id":          zone.ZoneId,
+			"name":        zone.Zone,
+			"description": zone.ZoneName,
+			"state":       zone.ZoneState,
 		}
+		zoneList = append(zoneList, mapping)
+		ids = append(ids, *zone.ZoneId)
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
