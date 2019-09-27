@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_as_notification" "as_notification" {
   scaling_group_id              = "sg-12af45"
-  notification_type             = ["SCALE_OUT_FAILED", "SCALE_IN_SUCCESSFUL", "SCALE_IN_FAILED", "REPLACE_UNHEALTHY_INSTANCE_FAILED"]
+  notification_types             = ["SCALE_OUT_FAILED", "SCALE_IN_SUCCESSFUL", "SCALE_IN_FAILED", "REPLACE_UNHEALTHY_INSTANCE_FAILED"]
   notification_user_group_ids   = ["76955"]
 }
 ```
@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 )
@@ -102,15 +103,24 @@ func resourceTencentCloudAsNotificationRead(d *schema.ResourceData, meta interfa
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	notification, err := asService.DescribeNotificationById(ctx, notificationId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		notification, e := asService.DescribeNotificationById(ctx, notificationId)
+		if e != nil {
+			if e.Error() == "notification id is not found" {
+				d.SetId("")
+				return nil
+			}
+			return retryError(e)
+		}
+
+		d.Set("scaling_group_id", *notification.AutoScalingGroupId)
+		d.Set("notification_type", flattenStringList(notification.NotificationTypes))
+		d.Set("notification_user_group_ids", flattenStringList(notification.NotificationUserGroupIds))
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	d.Set("scaling_group_id", *notification.AutoScalingGroupId)
-	d.Set("notification_type", flattenStringList(notification.NotificationTypes))
-	d.Set("notification_user_group_ids", flattenStringList(notification.NotificationUserGroupIds))
-
 	return nil
 }
 
