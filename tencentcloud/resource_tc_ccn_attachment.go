@@ -153,30 +153,38 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
 	)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, has, e := service.DescribeCcn(ctx, ccnId)
+		if e != nil {
+			return retryError(e)
+		}
 
-	_, has, err := service.DescribeCcn(ctx, ccnId)
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	if has == 0 {
-		d.SetId("")
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e := service.DescribeCcnAttachedInstance(ctx, ccnId, instanceRegion, instanceType, instanceId)
+		if e != nil {
+			return retryError(e)
+		}
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+		d.Set("state", strings.ToUpper(info.state))
+		d.Set("attached_time", info.attachedTime)
+		d.Set("cidr_block", info.cidrBlock)
 		return nil
-	}
-
-	info, has, err := service.DescribeCcnAttachedInstance(ctx, ccnId, instanceRegion, instanceType, instanceId)
+	})
 	if err != nil {
 		return err
 	}
-	if has == 0 {
-		d.SetId("")
-		return nil
-	}
-
-	d.Set("state", strings.ToUpper(info.state))
-	d.Set("attached_time", info.attachedTime)
-	d.Set("cidr_block", info.cidrBlock)
-
 	return nil
 }
 
@@ -194,15 +202,19 @@ func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interf
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
 	)
-
-	_, has, err := service.DescribeCcn(ctx, ccnId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, has, e := service.DescribeCcn(ctx, ccnId)
+		if e != nil {
+			return retryError(e)
+		}
+		if has == 0 {
+			return nil
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-	if has == 0 {
-		return nil
-	}
-
 	if err := service.DetachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId); err != nil {
 		return err
 	}

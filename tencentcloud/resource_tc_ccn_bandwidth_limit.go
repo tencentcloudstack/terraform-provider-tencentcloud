@@ -27,6 +27,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -134,22 +135,32 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 		ccnId  = d.Get("ccn_id").(string)
 		region = d.Get("region").(string)
 	)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, has, e := service.DescribeCcn(ctx, ccnId)
+		if e != nil {
+			return retryError(e)
+		}
 
-	_, has, err := service.DescribeCcn(ctx, ccnId)
-	if err != nil {
-		return err
-	}
-
-	if has == 0 {
-		d.SetId("")
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
 		return nil
-	}
-
-	bandwidth, err := service.DescribeCcnRegionBandwidthLimit(ctx, ccnId, region)
+	})
 	if err != nil {
 		return err
 	}
-	d.Set("bandwidth_limit", bandwidth)
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		bandwidth, e := service.DescribeCcnRegionBandwidthLimit(ctx, ccnId, region)
+		if e != nil {
+			return retryError(e)
+		}
+		d.Set("bandwidth_limit", bandwidth)
+		return nil
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
