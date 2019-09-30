@@ -34,7 +34,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
@@ -183,38 +182,25 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 	id := d.Id()
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
-	var (
-		proxies   []*gaap.ProxyInfo
-		e         error
-		proxy     *gaap.ProxyInfo
-		onlineHas bool = true
-	)
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		proxies, e = service.DescribeProxies(ctx, []string{id}, nil, nil, nil, nil)
-		if e != nil {
-			return retryError(e)
-		}
-		for _, p := range proxies {
-			if p.ProxyId == nil {
-				return resource.NonRetryableError(errors.New("proxy id is nil"))
-			}
-			if *p.ProxyId == id {
-				proxy = p
-				break
-			}
-		}
 
-		if proxy == nil {
-			d.SetId("")
-			onlineHas = false
-			return nil
-		}
-		return nil
-	})
+	proxies, err := service.DescribeProxies(ctx, []string{id}, nil, nil, nil, nil)
 	if err != nil {
 		return err
 	}
-	if !onlineHas {
+
+	var proxy *gaap.ProxyInfo
+	for _, p := range proxies {
+		if p.ProxyId == nil {
+			return errors.New("proxy id is nil")
+		}
+		if *p.ProxyId == id {
+			proxy = p
+			break
+		}
+	}
+
+	if proxy == nil {
+		d.SetId("")
 		return nil
 	}
 

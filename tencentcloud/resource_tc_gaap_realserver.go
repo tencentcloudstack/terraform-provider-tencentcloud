@@ -30,7 +30,6 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 )
@@ -131,39 +130,26 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 	id := d.Id()
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
-	var (
-		realservers []*gaap.BindRealServerInfo
-		e           error
-		onlineHas   bool = true
-		realserver  *gaap.BindRealServerInfo
-	)
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		realservers, e = service.DescribeRealservers(ctx, nil, nil, nil, -1)
-		if e != nil {
-			return retryError(e)
-		}
-		for _, rs := range realservers {
-			if rs.RealServerId == nil {
-				return resource.NonRetryableError(errors.New("realserver id is nil"))
-			}
 
-			if *rs.RealServerId == id {
-				realserver = rs
-				break
-			}
-		}
-
-		if realserver == nil {
-			d.SetId("")
-			onlineHas = false
-			return nil
-		}
-		return nil
-	})
+	realservers, err := service.DescribeRealservers(ctx, nil, nil, nil, -1)
 	if err != nil {
 		return err
 	}
-	if !onlineHas {
+
+	var realserver *gaap.BindRealServerInfo
+	for _, rs := range realservers {
+		if rs.RealServerId == nil {
+			return errors.New("realserver id is nil")
+		}
+
+		if *rs.RealServerId == id {
+			realserver = rs
+			break
+		}
+	}
+
+	if realserver == nil {
+		d.SetId("")
 		return nil
 	}
 

@@ -33,7 +33,6 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -137,47 +136,42 @@ func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interfac
 	policyId := d.Get("policy_id").(string)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		rule, e := service.DescribeSecurityRule(ctx, policyId, id)
-		if e != nil {
-			return retryError(e)
-		}
 
-		if rule == nil {
-			d.SetId("")
-			return nil
-		}
-
-		if rule.SourceCidr == nil {
-			return resource.NonRetryableError(errors.New("security rule cidr IP is nil"))
-		}
-		d.Set("cidr_ip", rule.SourceCidr)
-
-		if rule.Action == nil {
-			return resource.NonRetryableError(errors.New("security rule action is nil"))
-		}
-		d.Set("action", rule.Action)
-
-		if rule.AliasName == nil {
-			return resource.NonRetryableError(errors.New("security rule name is nil"))
-		}
-		d.Set("name", rule.AliasName)
-
-		if rule.Protocol == nil {
-			return resource.NonRetryableError(errors.New("security rule protocol is nil"))
-		}
-		d.Set("protocol", rule.Protocol)
-
-		if rule.DestPortRange == nil {
-			return resource.NonRetryableError(errors.New("security rule port is nil"))
-		}
-		d.Set("port", rule.DestPortRange)
-		return nil
-	})
-
+	rule, err := service.DescribeSecurityRule(ctx, policyId, id)
 	if err != nil {
 		return err
 	}
+
+	if rule == nil {
+		d.SetId("")
+		return nil
+	}
+
+	if rule.SourceCidr == nil {
+		return errors.New("security rule cidr IP is nil")
+	}
+	d.Set("cidr_ip", rule.SourceCidr)
+
+	if rule.Action == nil {
+		return errors.New("security rule action is nil")
+	}
+	d.Set("action", rule.Action)
+
+	if rule.AliasName == nil {
+		return errors.New("security rule name is nil")
+	}
+	d.Set("name", rule.AliasName)
+
+	if rule.Protocol == nil {
+		return errors.New("security rule protocol is nil")
+	}
+	d.Set("protocol", rule.Protocol)
+
+	if rule.DestPortRange == nil {
+		return errors.New("security rule port is nil")
+	}
+	d.Set("port", rule.DestPortRange)
+
 	return nil
 }
 
