@@ -31,6 +31,7 @@ package tencentcloud
 import (
 	"context"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -102,21 +103,25 @@ func resourceTencentCloudGaapSecurityPolicyRead(d *schema.ResourceData, m interf
 	id := d.Id()
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		proxyId, status, action, exist, e := service.DescribeSecurityPolicy(ctx, id)
+		if e != nil {
+			return resource.NonRetryableError(e)
+		}
 
-	proxyId, status, action, exist, err := service.DescribeSecurityPolicy(ctx, id)
+		if !exist {
+			d.SetId("")
+			return nil
+		}
+
+		d.Set("proxy_id", proxyId)
+		d.Set("action", action)
+		d.Set("enable", status == GAAP_SECURITY_POLICY_BOUND)
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	if !exist {
-		d.SetId("")
-		return nil
-	}
-
-	d.Set("proxy_id", proxyId)
-	d.Set("action", action)
-	d.Set("enable", status == GAAP_SECURITY_POLICY_BOUND)
-
 	return nil
 }
 
