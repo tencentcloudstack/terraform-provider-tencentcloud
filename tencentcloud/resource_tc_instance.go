@@ -549,7 +549,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
-			return retryError(errRet)
+			return retryError(errRet, "InternalError")
 		}
 		if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 			return nil
@@ -570,7 +570,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
-				return retryError(errRet)
+				return retryError(errRet, "InternalError")
 			}
 			if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
 				return nil
@@ -729,7 +729,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
-				return retryError(errRet)
+				return retryError(errRet, "InternalError")
 			}
 			if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 				return nil
@@ -782,7 +782,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 				if errRet != nil {
-					return retryError(errRet)
+					return retryError(errRet, "InternalError")
 				}
 				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 					return nil
@@ -800,7 +800,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 				if errRet != nil {
-					return retryError(errRet)
+					return retryError(errRet, "InternalError")
 				}
 				if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
 					return nil
@@ -858,7 +858,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
-			return retryError(errRet)
+			return retryError(errRet, "InternalError")
 		}
 		if instance == nil {
 			return nil

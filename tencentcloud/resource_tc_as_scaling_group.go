@@ -44,6 +44,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -222,6 +223,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_as_scaling_group.create")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 	request := as.NewCreateAutoScalingGroupRequest()
 
 	request.AutoScalingGroupName = stringToPointer(d.Get("scaling_group_name").(string))
@@ -334,8 +336,25 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	}); err != nil {
 		return err
 	}
-
 	d.SetId(id)
+
+	// wait for status
+	asService := AsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+		scalingGroup, errRet := asService.DescribeAutoScalingGroupById(ctx, id)
+		if errRet != nil {
+			return retryError(errRet, "InternalError")
+		}
+		if scalingGroup != nil && *scalingGroup.InActivityStatus == SCALING_GROUP_NOT_IN_ACTIVITY_STATUS {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("scaling group status is %s, retry...", *scalingGroup.InActivityStatus))
+	})
+	if err != nil {
+		return err
+	}
 
 	return resourceTencentCloudAsScalingGroupRead(d, meta)
 }
