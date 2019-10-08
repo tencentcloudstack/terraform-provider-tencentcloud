@@ -34,7 +34,6 @@ package tencentcloud
 
 import (
 	"context"
-	"errors"
 	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -143,27 +142,27 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 	domains := make([]map[string]interface{}, 0, len(domainRules))
 	for _, dr := range domainRules {
 		if dr.CertificateId == nil {
-			return errors.New("domain certificate id is nil")
+			dr.CertificateId = stringToPointer("default")
 		}
 		if dr.ClientCertificateId == nil {
-			return errors.New("domain client certificate id is nil")
+			dr.ClientCertificateId = stringToPointer("default")
 		}
 		if dr.RealServerAuth == nil {
-			return errors.New("domain realserver auth is nil")
+			dr.RealServerAuth = int64ToPointer(0)
 		}
 		if dr.BasicAuth == nil {
-			return errors.New("domain basic auth is nil")
+			dr.BasicAuth = int64ToPointer(0)
 		}
 		if dr.GaapAuth == nil {
-			return errors.New("domain gaap auth is nil")
+			dr.GaapAuth = int64ToPointer(0)
 		}
 
 		ids = append(ids, *dr.Domain)
 
 		m := map[string]interface{}{
-			"domain":                *dr.Domain,
-			"certificate_id":        *dr.CertificateId,
-			"client_certificate_id": *dr.ClientCertificateId,
+			"domain":                dr.Domain,
+			"certificate_id":        dr.CertificateId,
+			"client_certificate_id": dr.ClientCertificateId,
 			"realserver_auth":       *dr.RealServerAuth == 1,
 			"basic_auth":            *dr.BasicAuth == 1,
 			"gaap_auth":             *dr.GaapAuth == 1,
