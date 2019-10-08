@@ -44,6 +44,7 @@ Data Sources
   tencentcloud_dnats
   tencentcloud_eip
   tencentcloud_eips
+  tencentcloud_enis
   tencentcloud_gaap_certificates
   tencentcloud_gaap_http_domains
   tencentcloud_gaap_http_rules
@@ -164,6 +165,8 @@ SSL Resources
   tencentcloud_ssl_certificate
 
 VPC Resources
+  tencentcloud_eni
+  tencentcloud_eni_attachment
   tencentcloud_vpc
   tencentcloud_subnet
   tencentcloud_security_group
@@ -274,6 +277,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_placement_groups":            dataSourceTencentCloudPlacementGroups(),
 			"tencentcloud_eips":                        dataSourceTencentCloudEips(),
 			"tencentcloud_key_pairs":                   dataSourceTencentCloudKeyPairs(),
+			"tencentcloud_enis":                        dataSourceTencentCloudEnis(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -341,6 +345,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_certificate":            resourceTencentCloudSslCertificate(),
 			"tencentcloud_security_group_lite_rule":   resourceTencentCloudSecurityGroupLiteRule(),
 			"tencentcloud_placement_group":            resourceTencentCloudPlacementGroup(),
+			"tencentcloud_eni":                        resourceTencentCloudEni(),
+			"tencentcloud_eni_attachment":             resourceTencentCloudEniAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
