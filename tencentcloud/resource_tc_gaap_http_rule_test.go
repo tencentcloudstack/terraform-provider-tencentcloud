@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"context"
 	"errors"
 	"fmt"
@@ -338,7 +338,7 @@ resource tencentcloud_gaap_http_rule "foo" {
   health_check_path         = "/health"
   health_check_method       = "HEAD"
   health_check_status_codes = [100, 200]
-  
+
   realservers {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"
@@ -386,7 +386,7 @@ resource tencentcloud_gaap_http_rule "foo" {
   health_check_path         = "/health"
   health_check_method       = "HEAD"
   health_check_status_codes = [100, 200]
-  
+
   realservers {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"
@@ -434,7 +434,7 @@ resource tencentcloud_gaap_http_rule "foo" {
   health_check_path         = "/health"
   health_check_method       = "HEAD"
   health_check_status_codes = [100, 200]
-  
+
   realservers {
     id   = "${tencentcloud_gaap_realserver.foo.id}"
     ip   = "${tencentcloud_gaap_realserver.foo.ip}"
@@ -579,3 +579,4 @@ resource tencentcloud_gaap_http_rule "foo" {
   }
 }
 `, GAAP_PROXY_ID)
+*/

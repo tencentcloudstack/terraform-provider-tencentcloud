@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"fmt"
 	"testing"
 
@@ -147,3 +147,4 @@ data tencentcloud_gaap_http_rules "foo" {
   forward_host = "${tencentcloud_gaap_http_rule.foo.forward_host}"
 }
 `
+*/

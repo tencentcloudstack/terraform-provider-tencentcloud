@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"fmt"
 	"regexp"
 	"testing"
@@ -229,3 +229,4 @@ data tencentcloud_gaap_layer7_listeners "port" {
   port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
 }
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID, GAAP_PROXY_ID)
+*/

@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"fmt"
 	"regexp"
 	"testing"
@@ -48,3 +48,4 @@ data "tencentcloud_gaap_http_domains" "foo" {
   domain      = "${tencentcloud_gaap_http_domain.foo.domain}"
 }
 `, GAAP_PROXY_ID)
+*/

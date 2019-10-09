@@ -1,4 +1,9 @@
 ## 1.20.2 (Unreleased)
+
+ENHANCEMENTS:
+
+* Disable all gaap unit test unless resource `tencentcloud_gaap_certificate` and data source `tencentcloud_gaap_certificates`
+
 ## 1.20.1 (October 08, 2019)
 
 ENHANCEMENTS:

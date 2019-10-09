@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"fmt"
 	"regexp"
 	"testing"
@@ -262,3 +262,4 @@ data tencentcloud_gaap_security_rules "protocol" {
   protocol  = "${tencentcloud_gaap_security_rule.foo.protocol}"
 }
 `, GAAP_PROXY_ID)
+*/

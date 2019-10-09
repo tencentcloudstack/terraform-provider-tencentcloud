@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"context"
 	"errors"
 	"fmt"
@@ -149,3 +149,4 @@ resource tencentcloud_gaap_security_policy "foo" {
   action   = "DROP"
 }
 `, GAAP_PROXY_ID)
+*/

@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"regexp"
 	"testing"
 
@@ -98,3 +98,4 @@ data tencentcloud_gaap_realservers "foo" {
   name = "${tencentcloud_gaap_realserver.foo.name}"
 }
 `
+*/

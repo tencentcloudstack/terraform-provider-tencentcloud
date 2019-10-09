@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"context"
 	"errors"
 	"fmt"
@@ -319,3 +319,4 @@ resource tencentcloud_gaap_http_domain "foo" {
 	"<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF",
 	GAAP_PROXY_ID,
 )
+*/

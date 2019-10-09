@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"context"
 	"errors"
 	"fmt"
@@ -240,3 +240,4 @@ resource tencentcloud_gaap_proxy "foo" {
   }
 }
 `
+*/

@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"context"
 	"errors"
 	"fmt"
@@ -311,3 +311,4 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
 }
 `, GAAP_PROXY_ID)
+*/

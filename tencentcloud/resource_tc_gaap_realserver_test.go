@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"context"
 	"errors"
 	"fmt"
@@ -217,3 +217,4 @@ resource tencentcloud_gaap_realserver "foo" {
   }
 }
 `
+*/

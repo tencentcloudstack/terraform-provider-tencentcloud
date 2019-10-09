@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"regexp"
 	"testing"
 
@@ -164,3 +164,4 @@ data tencentcloud_gaap_proxies "realserver" {
   realserver_region = "${tencentcloud_gaap_proxy.foo.realserver_region}"
 }
 `
+*/

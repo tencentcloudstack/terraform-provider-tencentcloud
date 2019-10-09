@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"fmt"
 	"regexp"
 	"testing"
@@ -252,3 +252,4 @@ data tencentcloud_gaap_layer4_listeners "port" {
   port     = "${tencentcloud_gaap_layer4_listener.foo.port}"
 }
 `, GAAP_PROXY_ID)
+*/

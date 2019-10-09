@@ -1,6 +1,6 @@
 package tencentcloud
 
-import (
+/*import (
 	"context"
 	"errors"
 	"fmt"
@@ -332,3 +332,4 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID)
+*/
