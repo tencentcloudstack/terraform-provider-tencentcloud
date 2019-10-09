@@ -159,13 +159,13 @@ func resourceTencentCloudAsLifecycleHookRead(d *schema.ResourceData, meta interf
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		lifecycleHook, e := asService.DescribeLifecycleHookById(ctx, lifecycleHookId)
+		lifecycleHook, has, e := asService.DescribeLifecycleHookById(ctx, lifecycleHookId)
 		if e != nil {
-			if e.Error() == "lifecycle hook id is not found" {
-				d.SetId("")
-				return nil
-			}
 			return retryError(e)
+		}
+		if has == 0 {
+			d.SetId("")
+			return nil
 		}
 		d.Set("scaling_group_id", *lifecycleHook.AutoScalingGroupId)
 		d.Set("lifecycle_hook_name", *lifecycleHook.LifecycleHookName)

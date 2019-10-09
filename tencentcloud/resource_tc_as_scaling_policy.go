@@ -173,13 +173,13 @@ func resourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta interf
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		scalingPolicy, e := asService.DescribeScalingPolicyById(ctx, scalingPolicyId)
+		scalingPolicy, has, e := asService.DescribeScalingPolicyById(ctx, scalingPolicyId)
 		if e != nil {
-			if e.Error() == "scaling policy id is not found" {
-				d.SetId("")
-				return nil
-			}
 			return retryError(e)
+		}
+		if has == 0 {
+			d.SetId("")
+			return nil
 		}
 		d.Set("scaling_group_id", *scalingPolicy.AutoScalingGroupId)
 		d.Set("policy_name", *scalingPolicy.ScalingPolicyName)

@@ -353,16 +353,24 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 
 	var (
 		scalingGroup *as.AutoScalingGroup
-		err          error
+		e            error
+		has          int
 	)
-	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		scalingGroup, err = asService.DescribeAutoScalingGroupById(ctx, scalingGroupId)
-		if err != nil {
-			return retryError(err)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		scalingGroup, has, e = asService.DescribeAutoScalingGroupById(ctx, scalingGroupId)
+		if e != nil {
+			return retryError(e)
+		}
+		if has == 0 {
+			d.SetId("")
 		}
 		return nil
-	}); err != nil {
+	})
+	if err != nil {
 		return err
+	}
+	if has == 0 {
+		return nil
 	}
 
 	d.Set("scaling_group_name", scalingGroup.AutoScalingGroupName)
@@ -608,9 +616,12 @@ func resourceTencentCloudAsScalingGroupDelete(d *schema.ResourceData, meta inter
 
 	// We need read the scaling group in order to check if there are instances.
 	// If so, we need to remove those first.
-	scalingGroup, err := asService.DescribeAutoScalingGroupById(ctx, scalingGroupId)
+	scalingGroup, has, err := asService.DescribeAutoScalingGroupById(ctx, scalingGroupId)
 	if err != nil {
 		return err
+	}
+	if has == 0 {
+		return nil
 	}
 	if *scalingGroup.InstanceCount > 0 || *scalingGroup.DesiredCapacity > 0 {
 		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

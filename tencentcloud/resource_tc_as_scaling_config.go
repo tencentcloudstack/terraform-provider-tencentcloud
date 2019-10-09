@@ -12,7 +12,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 	system_disk_type = "CLOUD_PREMIUM"
 	system_disk_size = "50"
 
-	data_disk = {
+	data_disk {
 		disk_type = "CLOUD_PREMIUM"
 		disk_size = 50
 	}
@@ -371,13 +371,13 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		config, e := asService.DescribeLaunchConfigurationById(ctx, configurationId)
+		config, has, e := asService.DescribeLaunchConfigurationById(ctx, configurationId)
 		if e != nil {
-			if e.Error() == "configuration id is not found" {
-				d.SetId("")
-				return nil
-			}
 			return retryError(e)
+		}
+		if has == 0 {
+			d.SetId("")
+			return nil
 		}
 		d.Set("configuration_name", *config.LaunchConfigurationName)
 		d.Set("status", *config.LaunchConfigurationStatus)

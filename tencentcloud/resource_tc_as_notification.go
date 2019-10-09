@@ -104,15 +104,14 @@ func resourceTencentCloudAsNotificationRead(d *schema.ResourceData, meta interfa
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		notification, e := asService.DescribeNotificationById(ctx, notificationId)
+		notification, has, e := asService.DescribeNotificationById(ctx, notificationId)
 		if e != nil {
-			if e.Error() == "notification id is not found" {
-				d.SetId("")
-				return nil
-			}
 			return retryError(e)
 		}
-
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
 		d.Set("scaling_group_id", *notification.AutoScalingGroupId)
 		d.Set("notification_type", flattenStringList(notification.NotificationTypes))
 		d.Set("notification_user_group_ids", flattenStringList(notification.NotificationUserGroupIds))
