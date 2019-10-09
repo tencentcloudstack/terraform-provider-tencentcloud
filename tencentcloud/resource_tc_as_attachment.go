@@ -147,13 +147,7 @@ func resourceTencentCloudAsAttachmentDelete(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		e = asService.DetachInstances(ctx, scalingGroupId, instanceIds)
-		if e != nil {
-			return retryError(e)
-		}
-		return nil
-	})
+	err = asService.DetachInstances(ctx, scalingGroupId, instanceIds)
 	if err != nil {
 		return err
 	}
