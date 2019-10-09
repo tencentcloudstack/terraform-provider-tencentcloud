@@ -343,7 +343,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
-		scalingGroup, errRet := asService.DescribeAutoScalingGroupById(ctx, id)
+		scalingGroup, _, errRet := asService.DescribeAutoScalingGroupById(ctx, id)
 		if errRet != nil {
 			return retryError(errRet, "InternalError")
 		}
