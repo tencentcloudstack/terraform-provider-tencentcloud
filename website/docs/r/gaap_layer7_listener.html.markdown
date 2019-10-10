@@ -50,3 +50,11 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the layer7 listener.
 
 
+## Import
+
+GAAP layer7 listener can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_layer7_listener.foo listener-11112222
+```
+

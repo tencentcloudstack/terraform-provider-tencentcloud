@@ -144,7 +144,10 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	protocol := d.Get("protocol").(string)
-	proxyId := d.Get("proxy_id").(string)
+	var proxyId *string
+	if raw, ok := d.GetOk("proxy_id"); ok {
+		proxyId = stringToPointer(raw.(string))
+	}
 
 	var (
 		listenerId *string
@@ -168,7 +171,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 
 	switch protocol {
 	case "HTTP":
-		httpListeners, err := service.DescribeHTTPListeners(ctx, &proxyId, listenerId, name, port)
+		httpListeners, err := service.DescribeHTTPListeners(ctx, proxyId, listenerId, name, port)
 		if err != nil {
 			return err
 		}
@@ -206,7 +209,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 		}
 
 	case "HTTPS":
-		httpsListeners, err := service.DescribeHTTPSListeners(ctx, &proxyId, listenerId, name, port)
+		httpsListeners, err := service.DescribeHTTPSListeners(ctx, proxyId, listenerId, name, port)
 		if err != nil {
 			return err
 		}
