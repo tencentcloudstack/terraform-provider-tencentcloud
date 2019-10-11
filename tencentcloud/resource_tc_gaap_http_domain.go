@@ -29,6 +29,8 @@ Import
 
 GAAP http domain can be imported using the id, e.g.
 
+-> **NOTE:** The format of tencentcloud_gaap_http_domain id is `[listener-id]+[protocol]+[domain]`.
+
 ```
   $ terraform import tencentcloud_gaap_http_domain.foo listener-11112222+HTTP+www.qq.com
 ```
