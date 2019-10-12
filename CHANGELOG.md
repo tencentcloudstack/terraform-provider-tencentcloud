@@ -1,4 +1,9 @@
 ## 1.20.2 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_http_domain` fix sometimes can't enable realserver auth
+
 ## 1.20.1 (October 08, 2019)
 
 ENHANCEMENTS:

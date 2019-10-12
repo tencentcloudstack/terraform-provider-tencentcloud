@@ -421,6 +421,20 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	if d.HasChange("realserver_auth") {
 		updateAdvancedAttr = append(updateAdvancedAttr, "realserver_auth")
 		realserverAuth = boolToPointer(d.Get("realserver_auth").(bool))
+
+		if *realserverAuth {
+			if _, ok := d.GetOk("realserver_certificate_id"); !ok {
+				return errors.New("when enable realserver auth, realserver_certificate_id must be set")
+			}
+
+			if _, ok := d.GetOk("realserver_certificate_domain"); !ok {
+				return errors.New("when enable realserver auth, realserver_certificate_domain must be set")
+			}
+
+			// if enable realserver auth, must send realserverCertificateId and realserverCertificateDomain
+			realserverCertificateId = stringToPointer(d.Get("realserver_certificate_id").(string))
+			realserverCertificateDomain = stringToPointer(d.Get("realserver_certificate_domain").(string))
+		}
 	}
 	if d.HasChange("realserver_certificate_id") {
 		updateAdvancedAttr = append(updateAdvancedAttr, "realserver_certificate_id")
