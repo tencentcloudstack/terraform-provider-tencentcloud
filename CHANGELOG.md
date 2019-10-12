@@ -1,4 +1,11 @@
-## 1.20.2 (Unreleased)
+## 1.30.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_reserved_instance_configs`
+* **New Data Source**: `tencentcloud_reserved_instances`
+* **New Resource**: `tencentcloud_reserved_instance`
+
 ## 1.20.1 (October 08, 2019)
 
 ENHANCEMENTS:
