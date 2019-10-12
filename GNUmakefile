@@ -49,7 +49,7 @@ lint:
 		-S016 \
 		-S017 \
 		-S019 \
-		./$(PKG_NAME)
+		./$(PKG_NAME) --timeout=30m
 
 tools:
 	GO111MODULE=on go install github.com/bflad/tfproviderlint/cmd/tfproviderlint
