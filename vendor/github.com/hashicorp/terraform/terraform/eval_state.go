@@ -63,6 +63,8 @@ func (n *EvalReadState) Eval(ctx EvalContext) (interface{}, error) {
 	}
 
 	obj, err := src.Decode(schema.ImpliedType())
+
+	fmt.Printf("obj.Status  eval_state 111111111%+v ",obj.Value.GoString())
 	if err != nil {
 		return nil, err
 	}
@@ -132,6 +134,10 @@ func (n *EvalReadStateDeposed) Eval(ctx EvalContext) (interface{}, error) {
 	}
 
 	obj, err := src.Decode(schema.ImpliedType())
+	
+	fmt.Printf("obj.Status  eval_statedddddddd11111 %+v ",obj.Value.GoString())
+	
+	
 	if err != nil {
 		return nil, err
 	}

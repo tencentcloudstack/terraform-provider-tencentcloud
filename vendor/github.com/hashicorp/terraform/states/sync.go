@@ -2,6 +2,7 @@ package states
 
 import (
 	"log"
+
 	"sync"
 
 	"github.com/hashicorp/terraform/addrs"
@@ -472,6 +473,7 @@ func (s *SyncState) RemovePlannedResourceInstanceObjects() {
 				if is.Current != nil && is.Current.Status == ObjectPlanned {
 					// Setting the current instance to nil removes it from the
 					// state altogether if there are not also deposed instances.
+
 					ms.SetResourceInstanceCurrent(instAddr, nil, rs.ProviderConfig)
 				}
 
@@ -479,6 +481,7 @@ func (s *SyncState) RemovePlannedResourceInstanceObjects() {
 					// Deposed objects should never be "planned", but we'll
 					// do this anyway for the sake of completeness.
 					if obj.Status == ObjectPlanned {
+
 						ms.ForgetResourceInstanceDeposed(instAddr, dk)
 					}
 				}

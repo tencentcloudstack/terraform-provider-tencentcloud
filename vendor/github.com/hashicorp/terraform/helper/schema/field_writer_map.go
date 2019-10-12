@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync"
 
+
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -353,5 +354,11 @@ func (w *MapFieldWriter) setSet(
 	}
 
 	w.result[k+".#"] = strconv.Itoa(value.(*Set).Len())
+
+	if addr[0]=="ipv4s"{
+
+		_=fmt.Printf
+		//fmt.Printf("set   %+v\n",  w.result)
+	}
 	return nil
 }

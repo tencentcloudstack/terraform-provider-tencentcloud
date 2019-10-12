@@ -92,7 +92,15 @@ func UpgradeResourceState(addr addrs.AbsResourceInstance, provider providers.Int
 		return nil, diags
 	}
 
+	if src!=nil{
+		fmt.Printf("gggggggggggggggggggggggggggggg%+v %+v\n",src.AttrsFlat,string(src.AttrsJSON))
+	}
+
+
 	new, err := src.CompleteUpgrade(newValue, currentSchema.ImpliedType(), uint64(currentVersion))
+	if new!=nil {
+		fmt.Printf("ggggggggggggggggggggggggggggggkkkkkkkkkkkkk%+v %+v\n", new.AttrsFlat, string(new.AttrsJSON))
+	}
 	if err != nil {
 		// We already checked for type conformance above, so getting into this
 		// codepath should be rare and is probably a bug somewhere under CompleteUpgrade.

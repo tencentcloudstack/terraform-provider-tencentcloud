@@ -29,6 +29,8 @@ func testStepConfig(
 }
 
 func testStep(opts terraform.ContextOpts, state *terraform.State, step TestStep) (*terraform.State, error) {
+	
+
 	if !step.Destroy {
 		if err := testStepTaint(state, step); err != nil {
 			return state, err
@@ -66,7 +68,11 @@ func testStep(opts terraform.ContextOpts, state *terraform.State, step TestStep)
 	newState, stepDiags := ctx.Refresh()
 	// shim the state first so the test can check the state on errors
 
+	fmt.Printf("ooooooooooooooooooooooo%+v\n",state)
 	state, err = shimNewState(newState, step.providers)
+	fmt.Printf("mmmmmmmmmmmmmmmmmmmmmmm%+v\n",state)
+
+
 	if err != nil {
 		return nil, err
 	}
@@ -91,8 +97,12 @@ func testStep(opts terraform.ContextOpts, state *terraform.State, step TestStep)
 
 		// Apply the diff, creating real resources.
 		newState, stepDiags = ctx.Apply()
+	
 		// shim the state first so the test can check the state on errors
+
+
 		state, err = shimNewState(newState, step.providers)
+		fmt.Printf("PlanOnly shimNewState1 %+v\n",state)
 		if err != nil {
 			return nil, err
 		}
@@ -137,6 +147,7 @@ func testStep(opts terraform.ContextOpts, state *terraform.State, step TestStep)
 		}
 
 		state, err = shimNewState(newState, step.providers)
+		fmt.Printf("shimNewStateshimNewStateshimNewState22222222222222222%+v\n",state)
 		if err != nil {
 			return nil, err
 		}

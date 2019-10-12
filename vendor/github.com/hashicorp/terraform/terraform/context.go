@@ -442,10 +442,12 @@ func (c *Context) Apply() (*states.State, tfdiags.Diagnostics) {
 
 	// Copy our own state
 	c.state = c.state.DeepCopy()
+	
 
 	// Build the graph.
 	graph, diags := c.Graph(GraphTypeApply, nil)
 	if diags.HasErrors() {
+		fmt.Printf("%+v",diags.Err())
 		return nil, diags
 	}
 
@@ -594,6 +596,7 @@ func (c *Context) Refresh() (*states.State, tfdiags.Diagnostics) {
 	if walkDiags.HasErrors() {
 		return nil, diags
 	}
+	fmt.Printf("ErrWithWarnings==============%+v\n",diags.ErrWithWarnings())
 
 	// During our walk we will have created planned object placeholders in
 	// state for resource instances that are in configuration but not yet
@@ -915,7 +918,9 @@ func ShimLegacyState(legacy *State) (*states.State, error) {
 		return nil, nil
 	}
 	var buf bytes.Buffer
+
 	err := WriteState(legacy, &buf)
+
 	if err != nil {
 		return nil, err
 	}

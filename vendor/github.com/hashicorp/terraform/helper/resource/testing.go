@@ -539,7 +539,9 @@ func Test(t TestT, c TestCase) {
 				// step.ImportState, to provide config for the import.
 				state, err = testStepImportState(opts, state, step)
 			} else {
+			
 				state, err = testStepConfig(opts, state, step)
+				
 			}
 		}
 
