@@ -28,7 +28,7 @@ fmtcheck:
 
 lint:
 	@echo "==> Checking source code against linters..."
-	@GOGC=30 golangci-lint run ./$(PKG_NAME)
+	@GOGC=30 GOPACKAGESPRINTGOLISTERRORS=1 golangci-lint run ./$(PKG_NAME)
 	@tfproviderlint \
 		-c 1 \
 		-AT001 \
