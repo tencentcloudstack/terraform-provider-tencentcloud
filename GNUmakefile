@@ -28,7 +28,7 @@ fmtcheck:
 
 lint:
 	@echo "==> Checking source code against linters..."
-	@GOGC=30 GOPACKAGESPRINTGOLISTERRORS=1 golangci-lint run ./$(PKG_NAME)
+	@GOGC=30 GOPACKAGESPRINTGOLISTERRORS=1 golangci-lint run ./$(PKG_NAME)  --timeout=30m
 	@tfproviderlint \
 		-c 1 \
 		-AT001 \
@@ -49,7 +49,7 @@ lint:
 		-S016 \
 		-S017 \
 		-S019 \
-		./$(PKG_NAME) --timeout=30m
+		./$(PKG_NAME)
 
 tools:
 	GO111MODULE=on go install github.com/bflad/tfproviderlint/cmd/tfproviderlint
