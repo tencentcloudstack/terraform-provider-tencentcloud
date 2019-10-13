@@ -85,28 +85,22 @@ func (me *CamService) DescribeRolesByFilter(ctx context.Context, params map[stri
 		}
 
 		for _, role := range response.Response.List {
-			filterFlag := true
 			if params["role_id"] != nil {
 				if *role.RoleId != params["role_id"] {
-					filterFlag = false
 					continue
 				}
 			}
 			if params["name"] != nil {
 				if *role.RoleName != params["name"] {
-					filterFlag = false
 					continue
 				}
 			}
 			if params["description"] != nil {
 				if *role.Description != params["description"] {
-					filterFlag = false
 					continue
 				}
 			}
-			if filterFlag {
-				roles = append(roles, role)
-			}
+			roles = append(roles, role)
 		}
 		if len(response.Response.List) < PAGE_ITEM {
 			break
@@ -217,28 +211,22 @@ func (me *CamService) DescribeRolePolicyAttachmentsByFilter(ctx context.Context,
 			break
 		}
 		for _, policy := range response.Response.List {
-			filterFlag := true
 			if params["policy_id"] != nil {
 				if *policy.PolicyId != params["policy_id"] {
-					filterFlag = false
 					continue
 				}
 			}
 			if params["policy_type"] != nil {
 				if *policy.PolicyType != params["policy_type"] {
-					filterFlag = false
 					continue
 				}
 			}
 			if params["create_mode"] != nil {
 				if int(*policy.CreateMode) != params["create_mode"] {
-					filterFlag = false
 					continue
 				}
 			}
-			if filterFlag{
-				policyOfRoles = append(policyOfRoles, policy)
-			}
+			policyOfRoles = append(policyOfRoles, policy)
 		}
 		if len(response.Response.List) < PAGE_ITEM {
 			break
@@ -353,28 +341,22 @@ func (me *CamService) DescribeUserPolicyAttachmentsByFilter(ctx context.Context,
 			break
 		}
 		for _, policy := range response.Response.List {
-			filterFlag := true
 			if params["policy_id"] != nil {
 				if *policy.PolicyId != params["policy_id"] {
-					filterFlag = false
 					continue
 				}
 			}
 			if params["policy_type"] != nil {
 				if *policy.PolicyType != params["policy_type"] {
-					filterFlag = false
 					continue
 				}
 			}
 			if params["create_mode"] != nil {
 				if int(*policy.CreateMode) != params["create_mode"] {
-					filterFlag = false
 					continue
 				}
 			}
-			if filterFlag{
-				policyResults = append(policyResults, policy)
-			}
+			policyResults = append(policyResults, policy)
 		}
 		if len(response.Response.List) < PAGE_ITEM {
 			break
@@ -388,6 +370,9 @@ func (me *CamService) AddUserPolicyAttachment(ctx context.Context, userId string
 	logId := getLogId(ctx)
 
 	user, err := me.DescribeUserById(ctx, userId)
+	if err != nil {
+		return err
+	}
 	uin := user.Response.Uin
 	policyIdInt, _ := strconv.Atoi(policyId)
 	policyIdInt64 := uint64(policyIdInt)
@@ -413,6 +398,9 @@ func (me *CamService) DeleteUserPolicyAttachmentById(ctx context.Context, userPo
 		return e
 	}
 	user, err := me.DescribeUserById(ctx, userId)
+	if err != nil {
+		return err
+	}
 	uin := user.Response.Uin
 
 	request := cam.NewDetachUserPolicyRequest()
@@ -507,28 +495,22 @@ func (me *CamService) DescribeGroupPolicyAttachmentsByFilter(ctx context.Context
 		}
 
 		for _, policy := range response.Response.List {
-			filterFlag := true
 			if params["policy_id"] != nil {
 				if *policy.PolicyId != params["policy_id"] {
-					filterFlag = false
 					continue
 				}
 			}
 			if params["policy_type"] != nil {
 				if *policy.PolicyType != params["policy_type"] {
-					filterFlag = false
 					continue
 				}
 			}
 			if params["create_mode"] != nil {
 				if int(*policy.CreateMode) != params["create_mode"] {
-					filterFlag = false
 					continue
 				}
 			}
-			if filterFlag{
-				policyResults = append(policyResults, policy)
-			}
+			policyResults = append(policyResults, policy)
 		}
 		if len(response.Response.List) < PAGE_ITEM {
 			break
@@ -792,7 +774,7 @@ func (me *CamService) DescribeUsersByFilter(ctx context.Context, params map[stri
 				filterFlag = false
 			}
 		}
-		if filterFlag{
+		if filterFlag {
 			result = append(result, user)
 		}
 	}

@@ -147,7 +147,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	if v, ok := d.GetOk("console_login"); ok {
 		loginBool := v.(bool)
 		loginInt := uint64(1)
-		if !loginBool{
+		if !loginBool {
 			loginInt = uint64(0)
 		}
 		request.ConsoleLogin = &loginInt
@@ -155,7 +155,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	if v, ok := d.GetOk("need_reset_password"); ok {
 		resetBool := v.(bool)
 		resetInt := uint64(1)
-		if !resetBool{
+		if !resetBool {
 			resetInt = uint64(0)
 		}
 		request.NeedResetPassword = &resetInt
