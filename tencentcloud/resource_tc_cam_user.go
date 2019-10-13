@@ -262,7 +262,7 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 	if d.HasChange("console_login") {
 		consoleLogin := d.Get("console_login").(bool)
 		consoleLogin64 := uint64(0)
-		if consoleLogin == true {
+		if consoleLogin {
 			consoleLogin64 = uint64(1)
 		}
 		request.ConsoleLogin = &consoleLogin64
@@ -272,7 +272,7 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 	if d.HasChange("need_reset_password") {
 		resetBool := d.Get("need_reset_password").(bool)
 		resetBool64 := uint64(0)
-		if resetBool == true {
+		if resetBool {
 			resetBool64 = uint64(1)
 		}
 		request.NeedResetPassword = &resetBool64
