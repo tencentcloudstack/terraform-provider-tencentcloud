@@ -1,4 +1,18 @@
-## 1.20.1 (Unreleased)
+## 1.20.2 (Unreleased)
+## 1.20.1 (October 08, 2019)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_availability_zones` refactor logic with api3.0 .
+* Data Source: `tencentcloud_as_scaling_groups` add optional argument `tags` and attribute `tags` for `scaling_group_list`.
+* Resource: `tencentcloud_eip` add optional argument `type`, `anycast_zone`, `internet_service_provider`, etc.
+* Resource: `tencentcloud_as_scaling_group` add optional argument `tags`.
+
+BUG FIXES:
+
+* Data Source: `tencentcloud_gaap_http_domains` set response `certificate_id`, `client_certificate_id`, `realserver_auth`, `basic_auth` and `gaap_auth` default value when they are nil.
+* Resource: `tencentcloud_gaap_http_domain` set response `certificate_id`, `client_certificate_id`, `realserver_auth`, `basic_auth` and `gaap_auth` default value when they are nil.
+
 ## 1.20.0 (September 24, 2019)
 
 FEATURES:

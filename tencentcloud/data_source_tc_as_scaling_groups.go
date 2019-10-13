@@ -40,11 +40,18 @@ func dataSourceTencentCloudAsScalingGroups() *schema.Resource {
 				Optional:    true,
 				Description: "A scaling group name used to query.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags used to query.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
+
+			// computed
 			"scaling_group_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -183,6 +190,11 @@ func dataSourceTencentCloudAsScalingGroups() *schema.Resource {
 							Computed:    true,
 							Description: "The time when the AS group was created.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags of the scaling group.",
+						},
 					},
 				},
 			},
@@ -213,30 +225,38 @@ func dataSourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta inter
 		scalingGroupName = v.(string)
 	}
 
-	scalingGroups, err := asService.DescribeAutoScalingGroupByFilter(ctx, scalingGroupId, configurationId, scalingGroupName)
+	tags := getTags(d, "tags")
+
+	scalingGroups, err := asService.DescribeAutoScalingGroupByFilter(ctx, scalingGroupId, configurationId, scalingGroupName, tags)
 	if err != nil {
 		return err
 	}
 
 	scalingGroupList := make([]map[string]interface{}, 0, len(scalingGroups))
 	for _, scalingGroup := range scalingGroups {
+		tags := make(map[string]string, len(scalingGroup.Tags))
+		for _, tag := range scalingGroup.Tags {
+			tags[*tag.Key] = *tag.Value
+		}
+
 		mapping := map[string]interface{}{
-			"scaling_group_id":     *scalingGroup.AutoScalingGroupId,
-			"scaling_group_name":   *scalingGroup.AutoScalingGroupName,
-			"configuration_id":     *scalingGroup.LaunchConfigurationId,
-			"status":               *scalingGroup.AutoScalingGroupStatus,
-			"instance_count":       *scalingGroup.InstanceCount,
-			"max_size":             *scalingGroup.MaxSize,
-			"min_size":             *scalingGroup.MinSize,
-			"vpc_id":               *scalingGroup.VpcId,
+			"scaling_group_id":     scalingGroup.AutoScalingGroupId,
+			"scaling_group_name":   scalingGroup.AutoScalingGroupName,
+			"configuration_id":     scalingGroup.LaunchConfigurationId,
+			"status":               scalingGroup.AutoScalingGroupStatus,
+			"instance_count":       scalingGroup.InstanceCount,
+			"max_size":             scalingGroup.MaxSize,
+			"min_size":             scalingGroup.MinSize,
+			"vpc_id":               scalingGroup.VpcId,
 			"subnet_ids":           flattenStringList(scalingGroup.SubnetIdSet),
 			"zones":                flattenStringList(scalingGroup.ZoneSet),
-			"default_cooldown":     *scalingGroup.DefaultCooldown,
-			"desired_capacity":     *scalingGroup.DesiredCapacity,
+			"default_cooldown":     scalingGroup.DefaultCooldown,
+			"desired_capacity":     scalingGroup.DesiredCapacity,
 			"load_balancer_ids":    flattenStringList(scalingGroup.LoadBalancerIdSet),
 			"termination_policies": flattenStringList(scalingGroup.TerminationPolicySet),
-			"retry_policy":         *scalingGroup.RetryPolicy,
-			"create_time":          *scalingGroup.CreatedTime,
+			"retry_policy":         scalingGroup.RetryPolicy,
+			"create_time":          scalingGroup.CreatedTime,
+			"tags":                 tags,
 		}
 		if scalingGroup.ForwardLoadBalancerSet != nil && len(scalingGroup.ForwardLoadBalancerSet) > 0 {
 			forwardLoadBalancers := make([]map[string]interface{}, 0, len(scalingGroup.ForwardLoadBalancerSet))
@@ -244,16 +264,16 @@ func dataSourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta inter
 				targetAttributes := make([]map[string]interface{}, 0, len(v.TargetAttributes))
 				for _, vv := range v.TargetAttributes {
 					targetAttribute := map[string]interface{}{
-						"port":   *vv.Port,
-						"weight": *vv.Weight,
+						"port":   vv.Port,
+						"weight": vv.Weight,
 					}
 					targetAttributes = append(targetAttributes, targetAttribute)
 				}
 				forwardLoadBalancer := map[string]interface{}{
-					"load_balancer_id":  *v.LoadBalancerId,
-					"listener_id":       *v.ListenerId,
+					"load_balancer_id":  v.LoadBalancerId,
+					"listener_id":       v.ListenerId,
 					"target_attributes": targetAttributes,
-					"location_id":       *v.LocationId,
+					"location_id":       v.LocationId,
 				}
 				forwardLoadBalancers = append(forwardLoadBalancers, forwardLoadBalancer)
 			}

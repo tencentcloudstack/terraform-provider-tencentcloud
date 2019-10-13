@@ -26,12 +26,12 @@ func testSweepAsScalingGroups(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(TencentCloudClient)
+	client := sharedClient.(*TencentCloudClient)
 
 	asService := AsService{
 		client: client.apiV3Conn,
 	}
-	scalingGroups, err := asService.DescribeAutoScalingGroupByFilter(ctx, "", "", "")
+	scalingGroups, err := asService.DescribeAutoScalingGroupByFilter(ctx, "", "", "", nil)
 	if err != nil {
 		return fmt.Errorf("list scaling group error: %s", err.Error())
 	}
@@ -104,6 +104,7 @@ func TestAccTencentCloudAsScalingGroup_full(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_as_scaling_group.scaling_group", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_as_scaling_group.scaling_group", "instance_count"),
 					resource.TestCheckResourceAttrSet("tencentcloud_as_scaling_group.scaling_group", "create_time"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "tags.test", "test"),
 				),
 			},
 			{
@@ -117,6 +118,8 @@ func TestAccTencentCloudAsScalingGroup_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "termination_policies.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "termination_policies.0", "OLDEST_INSTANCE"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "retry_policy", "IMMEDIATE_RETRY"),
+					resource.TestCheckNoResourceAttr("tencentcloud_as_scaling_group.scaling_group", "tags.test"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "tags.abc", "abc"),
 				),
 			},
 		},
@@ -227,6 +230,10 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   desired_capacity     = 1
   termination_policies = ["NEWEST_INSTANCE"]
   retry_policy         = "INCREMENTAL_INTERVALS"
+
+  tags = {
+    "test" = "test"
+  }
 }
 `
 }
@@ -263,6 +270,10 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   desired_capacity     = 0
   termination_policies = ["OLDEST_INSTANCE"]
   retry_policy         = "IMMEDIATE_RETRY"
+
+  tags = {
+    "abc" = "abc"
+  }
 }
 `
 }

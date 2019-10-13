@@ -15,7 +15,7 @@ Provides a resource for an AS (Auto scaling) notification.
 ```hcl
 resource "tencentcloud_as_notification" "as_notification" {
   scaling_group_id            = "sg-12af45"
-  notification_type           = ["SCALE_OUT_FAILED", "SCALE_IN_SUCCESSFUL", "SCALE_IN_FAILED", "REPLACE_UNHEALTHY_INSTANCE_FAILED"]
+  notification_types          = ["SCALE_OUT_FAILED", "SCALE_IN_SUCCESSFUL", "SCALE_IN_FAILED", "REPLACE_UNHEALTHY_INSTANCE_FAILED"]
   notification_user_group_ids = ["76955"]
 }
 ```

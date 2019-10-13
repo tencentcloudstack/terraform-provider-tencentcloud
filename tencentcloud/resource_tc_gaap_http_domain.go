@@ -280,17 +280,17 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	}
 
 	if httpDomain.CertificateId == nil {
-		return errors.New("domain certificate id is nil")
+		httpDomain.CertificateId = stringToPointer("default")
 	}
 	d.Set("certificate_id", httpDomain.CertificateId)
 
 	if httpDomain.ClientCertificateId == nil {
-		return errors.New("domain client certificate id is nil")
+		httpDomain.ClientCertificateId = stringToPointer("default")
 	}
 	d.Set("client_certificate_id", httpDomain.ClientCertificateId)
 
 	if httpDomain.BasicAuth == nil {
-		return errors.New("domain basic auth is nil")
+		httpDomain.BasicAuth = int64ToPointer(0)
 	}
 	d.Set("basic_auth", *httpDomain.BasicAuth == 1)
 
@@ -299,7 +299,7 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	}
 
 	if httpDomain.RealServerAuth == nil {
-		return errors.New("domain realserver auth is nil")
+		httpDomain.RealServerAuth = int64ToPointer(0)
 	}
 	d.Set("realserver_auth", *httpDomain.RealServerAuth == 1)
 
@@ -311,7 +311,7 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	}
 
 	if httpDomain.GaapAuth == nil {
-		return errors.New("domain gaap auth is nil")
+		httpDomain.GaapAuth = int64ToPointer(0)
 	}
 	d.Set("gaap_auth", *httpDomain.GaapAuth == 1)
 

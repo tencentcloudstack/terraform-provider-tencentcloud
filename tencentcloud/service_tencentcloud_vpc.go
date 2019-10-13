@@ -76,6 +76,12 @@ type VpcSecurityGroupLiteRule struct {
 	nestedSecurityGroupId string // if rule is a nested security group, other attrs will be ignored
 }
 
+type VpcEniIP struct {
+	ip      net.IP
+	primary bool
+	desc    *string
+}
+
 func (rule VpcSecurityGroupLiteRule) String() string {
 	if rule.nestedSecurityGroupId != "" {
 		return rule.nestedSecurityGroupId
@@ -1593,29 +1599,6 @@ func parseRule(str string) (liteRule VpcSecurityGroupLiteRule, err error) {
 /*
 EIP
 */
-func (me *VpcService) CreateEip(ctx context.Context) (eipId string, errRet error) {
-	logId := getLogId(ctx)
-	request := vpc.NewAllocateAddressesRequest()
-
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().AllocateAddresses(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.AddressSet) < 1 {
-		errRet = fmt.Errorf("eip id is nil")
-		return
-	}
-	eipId = *response.Response.AddressSet[0]
-	return
-}
-
 func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *vpc.Address, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeAddressesRequest()
@@ -1736,6 +1719,751 @@ func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *VpcService) CreateEni(
+	ctx context.Context,
+	name, vpcId, subnetId, desc string,
+	securityGroups []string,
+	ipv4Count *int,
+	ipv4s []VpcEniIP,
+) (id string, err error) {
+	logId := getLogId(ctx)
+	client := me.client.UseVpcClient()
+
+	createRequest := vpc.NewCreateNetworkInterfaceRequest()
+	createRequest.NetworkInterfaceName = &name
+	createRequest.VpcId = &vpcId
+	createRequest.SubnetId = &subnetId
+	createRequest.NetworkInterfaceDescription = &desc
+
+	if len(securityGroups) > 0 {
+		createRequest.SecurityGroupIds = common.StringPtrs(securityGroups)
+	}
+
+	if ipv4Count != nil {
+		// create will assign a primary ip, secondary ip count is *ipv4Count-1
+		createRequest.SecondaryPrivateIpAddressCount = intToPointer(*ipv4Count - 1)
+	}
+
+	var wantIpv4 []string
+
+	for _, ipv4 := range ipv4s {
+		wantIpv4 = append(wantIpv4, ipv4.ip.String())
+		createRequest.PrivateIpAddresses = append(createRequest.PrivateIpAddresses, &vpc.PrivateIpAddressSpecification{
+			PrivateIpAddress: stringToPointer(ipv4.ip.String()),
+			Primary:          boolToPointer(ipv4.primary),
+			Description:      ipv4.desc,
+		})
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(createRequest.GetAction())
+
+		response, err := client.CreateNetworkInterface(createRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, createRequest.GetAction(), createRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		eni := response.Response.NetworkInterface
+
+		if eni == nil {
+			err := fmt.Errorf("api[%s] eni is nil", createRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if eni.NetworkInterfaceId == nil {
+			err := fmt.Errorf("api[%s] eni id is nil", createRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		ipv4Set := eni.PrivateIpAddressSet
+
+		if len(wantIpv4) > 0 {
+			checkMap := make(map[string]bool, len(wantIpv4))
+			for _, ipv4 := range wantIpv4 {
+				checkMap[ipv4] = false
+			}
+
+			for _, ipv4 := range ipv4Set {
+				if ipv4.PrivateIpAddress == nil {
+					err := fmt.Errorf("api[%s] eni ipv4 ip is nil", createRequest.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				checkMap[*ipv4.PrivateIpAddress] = true
+			}
+
+			for ipv4, checked := range checkMap {
+				if !checked {
+					err := fmt.Errorf("api[%s] doesn't assign %s ip", createRequest.GetAction(), ipv4)
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+			}
+		} else {
+			if len(ipv4Set) != *ipv4Count {
+				err := fmt.Errorf("api[%s] doesn't assign enough ip", createRequest.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			wantIpv4 = make([]string, 0, *ipv4Count)
+			for _, ipv4 := range ipv4Set {
+				if ipv4.PrivateIpAddress == nil {
+					err := fmt.Errorf("api[%s] eni ipv4 ip is nil", createRequest.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				wantIpv4 = append(wantIpv4, *ipv4.PrivateIpAddress)
+			}
+		}
+
+		id = *eni.NetworkInterfaceId
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create eni failed, reason: %v", logId, err)
+		return "", err
+	}
+
+	if err := waitEniReady(ctx, id, client, wantIpv4, nil); err != nil {
+		log.Printf("[CRITAL]%s create eni failed, reason: %v", logId, err)
+		return "", err
+	}
+
+	return
+}
+
+func (me *VpcService) describeEnis(
+	ctx context.Context,
+	ids []string,
+	vpcId, subnetId, id, cvmId, sgId, name, desc, ipv4 *string,
+	tags map[string]string,
+) (enis []*vpc.NetworkInterface, err error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeNetworkInterfacesRequest()
+
+	if len(ids) > 0 {
+		request.NetworkInterfaceIds = common.StringPtrs(ids)
+	}
+
+	if vpcId != nil {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   stringToPointer("vpc-id"),
+			Values: []*string{vpcId},
+		})
+	}
+
+	if subnetId != nil {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   stringToPointer("subnet-id"),
+			Values: []*string{subnetId},
+		})
+	}
+
+	if id != nil {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   stringToPointer("network-interface-id"),
+			Values: []*string{id},
+		})
+	}
+
+	if cvmId != nil {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   stringToPointer("attachment.instance-id"),
+			Values: []*string{cvmId},
+		})
+	}
+
+	if sgId != nil {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   stringToPointer("groups.security-group-id"),
+			Values: []*string{sgId},
+		})
+	}
+
+	if name != nil {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   stringToPointer("network-interface-name"),
+			Values: []*string{name},
+		})
+	}
+
+	if desc != nil {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   stringToPointer("network-interface-description"),
+			Values: []*string{desc},
+		})
+	}
+
+	if ipv4 != nil {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   stringToPointer("address-ip"),
+			Values: []*string{ipv4},
+		})
+	}
+
+	for k, v := range tags {
+		request.Filters = append(request.Filters, &vpc.Filter{
+			Name:   stringToPointer("tag:" + k),
+			Values: []*string{stringToPointer(v)},
+		})
+	}
+
+	var offset uint64
+	request.Offset = &offset
+	request.Limit = intToPointer(ENI_DESCRIBE_LIMIT)
+
+	count := ENI_DESCRIBE_LIMIT
+	for count == ENI_DESCRIBE_LIMIT {
+		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
+			response, err := me.client.UseVpcClient().DescribeNetworkInterfaces(request)
+			if err != nil {
+				count = 0
+
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkError.Code == "ResourceNotFound" {
+						return nil
+					}
+				}
+
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+					logId, request.GetAction(), request.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			eniSet := response.Response.NetworkInterfaceSet
+			count = len(eniSet)
+			enis = append(enis, eniSet...)
+
+			return nil
+		}); err != nil {
+			log.Printf("[CRITAL]%s read eni list failed, reason: %v", logId, err)
+			return nil, err
+		}
+
+		offset += uint64(count)
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeEniById(ctx context.Context, ids []string) (enis []*vpc.NetworkInterface, err error) {
+	return me.describeEnis(ctx, ids, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+}
+
+func (me *VpcService) ModifyEniAttribute(ctx context.Context, id string, name, desc *string, sgs []string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseVpcClient()
+
+	request := vpc.NewModifyNetworkInterfaceAttributeRequest()
+	request.NetworkInterfaceId = &id
+	request.NetworkInterfaceName = name
+	request.NetworkInterfaceDescription = desc
+	request.SecurityGroupIds = common.StringPtrs(sgs)
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := client.ModifyNetworkInterfaceAttribute(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify eni attribute failed, reason: %v", logId, err)
+		return err
+	}
+
+	if err := waitEniReady(ctx, id, client, nil, nil); err != nil {
+		log.Printf("[CRITAL]%s modify eni attribute failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) UnAssignIpv4FromEni(ctx context.Context, id string, ipv4s []string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseVpcClient()
+
+	request := vpc.NewUnassignPrivateIpAddressesRequest()
+	request.NetworkInterfaceId = &id
+	request.PrivateIpAddresses = make([]*vpc.PrivateIpAddressSpecification, 0, len(ipv4s))
+	for _, ipv4 := range ipv4s {
+		request.PrivateIpAddresses = append(request.PrivateIpAddresses, &vpc.PrivateIpAddressSpecification{
+			PrivateIpAddress: stringToPointer(ipv4),
+		})
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := client.UnassignPrivateIpAddresses(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s unassign ipv4 from eni failed, reason: %v", logId, err)
+		return err
+	}
+
+	if err := waitEniReady(ctx, id, client, nil, ipv4s); err != nil {
+		log.Printf("[CRITAL]%s unassign ipv4 from eni failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) AssignIpv4ToEni(ctx context.Context, id string, ipv4s []VpcEniIP, ipv4Count *int) error {
+	logId := getLogId(ctx)
+	client := me.client.UseVpcClient()
+
+	request := vpc.NewAssignPrivateIpAddressesRequest()
+	request.NetworkInterfaceId = &id
+
+	if ipv4Count != nil {
+		request.SecondaryPrivateIpAddressCount = intToPointer(*ipv4Count)
+	}
+
+	var wantIpv4 []string
+
+	if len(ipv4s) > 0 {
+		request.PrivateIpAddresses = make([]*vpc.PrivateIpAddressSpecification, 0, len(ipv4s))
+		wantIpv4 = make([]string, 0, len(ipv4s))
+
+		for _, ipv4 := range ipv4s {
+			wantIpv4 = append(wantIpv4, ipv4.ip.String())
+			request.PrivateIpAddresses = append(request.PrivateIpAddresses, &vpc.PrivateIpAddressSpecification{
+				PrivateIpAddress: stringToPointer(ipv4.ip.String()),
+				Primary:          boolToPointer(ipv4.primary),
+				Description:      ipv4.desc,
+			})
+		}
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, err := client.AssignPrivateIpAddresses(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		ipv4Set := response.Response.PrivateIpAddressSet
+
+		if len(wantIpv4) > 0 {
+			checkMap := make(map[string]bool, len(wantIpv4))
+			for _, ipv4 := range wantIpv4 {
+				checkMap[ipv4] = false
+			}
+
+			for _, ipv4 := range ipv4Set {
+				if ipv4.PrivateIpAddress == nil {
+					err := fmt.Errorf("api[%s] eni ipv4 ip is nil", request.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				checkMap[*ipv4.PrivateIpAddress] = true
+			}
+
+			for ipv4, checked := range checkMap {
+				if !checked {
+					err := fmt.Errorf("api[%s] doesn't assign %s ip", request.GetAction(), ipv4)
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+			}
+		} else {
+			if len(ipv4Set) != *ipv4Count {
+				err := fmt.Errorf("api[%s] doesn't assign enough ip", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			wantIpv4 = make([]string, 0, *ipv4Count)
+			for _, ipv4 := range ipv4Set {
+				if ipv4.PrivateIpAddress == nil {
+					err := fmt.Errorf("api[%s] eni ipv4 ip is nil", request.GetAction())
+					log.Printf("[CRITAL]%s %v", logId, err)
+					return resource.NonRetryableError(err)
+				}
+
+				wantIpv4 = append(wantIpv4, *ipv4.PrivateIpAddress)
+			}
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s assign ipv4 to eni failed, reason: %v", logId, err)
+		return err
+	}
+
+	if err := waitEniReady(ctx, id, client, wantIpv4, nil); err != nil {
+		log.Printf("[CRITAL]%s assign ipv4 to eni failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) DeleteEni(ctx context.Context, id string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseVpcClient()
+
+	deleteRequest := vpc.NewDeleteNetworkInterfaceRequest()
+	deleteRequest.NetworkInterfaceId = &id
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(deleteRequest.GetAction())
+
+		if _, err := client.DeleteNetworkInterface(deleteRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, deleteRequest.GetAction(), deleteRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete eni failed, reason: %v", logId, err)
+		return err
+	}
+
+	describeRequest := vpc.NewDescribeNetworkInterfacesRequest()
+	describeRequest.NetworkInterfaceIds = []*string{&id}
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
+		response, err := client.DescribeNetworkInterfaces(describeRequest)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		for _, eni := range response.Response.NetworkInterfaceSet {
+			if eni.NetworkInterfaceId == nil {
+				err := fmt.Errorf("api[%s] eni id is nil", describeRequest.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			if *eni.NetworkInterfaceId == id {
+				err := errors.New("eni still exists")
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.RetryableError(err)
+			}
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete eni failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) AttachEniToCvm(ctx context.Context, eniId, cvmId string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseVpcClient()
+
+	attachRequest := vpc.NewAttachNetworkInterfaceRequest()
+	attachRequest.NetworkInterfaceId = &eniId
+	attachRequest.InstanceId = &cvmId
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(attachRequest.GetAction())
+
+		if _, err := client.AttachNetworkInterface(attachRequest); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, attachRequest.GetAction(), attachRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s attach eni to instance failed, reason: %v", logId, err)
+		return err
+	}
+
+	describeRequest := vpc.NewDescribeNetworkInterfacesRequest()
+	describeRequest.NetworkInterfaceIds = []*string{&eniId}
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+
+		response, err := client.DescribeNetworkInterfaces(describeRequest)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		var eni *vpc.NetworkInterface
+		for _, e := range response.Response.NetworkInterfaceSet {
+			if e.NetworkInterfaceId == nil {
+				err := fmt.Errorf("api[%s] eni id is nil", describeRequest.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			if *e.NetworkInterfaceId == eniId {
+				eni = e
+				break
+			}
+		}
+
+		if eni == nil {
+			err := fmt.Errorf("api[%s] eni not found", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if eni.Attachment == nil {
+			err := fmt.Errorf("api[%s] eni attachment is not ready", describeRequest.GetAction())
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		if eni.Attachment.InstanceId == nil {
+			err := fmt.Errorf("api[%s] eni attach instance id is nil", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if *eni.Attachment.InstanceId != cvmId {
+			err := fmt.Errorf("api[%s] eni attach instance id is not right", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if eni.State == nil {
+			err := fmt.Errorf("api[%s] eni state is nil", describeRequest.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if *eni.State != ENI_STATE_AVAILABLE {
+			err := errors.New("eni is not ready")
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s attach eni to instance failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) DetachEniFromCvm(ctx context.Context, eniId, cvmId string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseVpcClient()
+
+	request := vpc.NewDetachNetworkInterfaceRequest()
+	request.NetworkInterfaceId = &eniId
+	request.InstanceId = &cvmId
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := client.DetachNetworkInterface(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s detach eni from instance failed, reason: %v", logId, err)
+		return err
+	}
+
+	if err := waitEniReady(ctx, eniId, client, nil, nil); err != nil {
+		log.Printf("[CRITAL]%s detach eni from instance failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) ModifyEniPrimaryIpv4Desc(ctx context.Context, id, ip string, desc *string) error {
+	logId := getLogId(ctx)
+	client := me.client.UseVpcClient()
+
+	request := vpc.NewModifyPrivateIpAddressesAttributeRequest()
+	request.NetworkInterfaceId = &id
+	request.PrivateIpAddresses = []*vpc.PrivateIpAddressSpecification{
+		{
+			PrivateIpAddress: &ip,
+			Description:      desc,
+		},
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := client.ModifyPrivateIpAddressesAttribute(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify eni primary ipv4 description failed, reason: %v", logId, err)
+		return err
+	}
+
+	if err := waitEniReady(ctx, id, client, []string{ip}, nil); err != nil {
+		log.Printf("[CRITAL]%s modify eni primary ipv4 description failed, reason: %v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func (me *VpcService) DescribeEniByFilters(
+	ctx context.Context,
+	vpcId, subnetId, cvmId, sgId, name, desc, ipv4 *string,
+	tags map[string]string,
+) (enis []*vpc.NetworkInterface, err error) {
+	return me.describeEnis(ctx, nil, vpcId, subnetId, nil, cvmId, sgId, name, desc, ipv4, tags)
+}
+
+func waitEniReady(ctx context.Context, id string, client *vpc.Client, wantIpv4s []string, dropIpv4s []string) error {
+	logId := getLogId(ctx)
+
+	wantCheckMap := make(map[string]bool, len(wantIpv4s))
+	for _, ipv4 := range wantIpv4s {
+		wantCheckMap[ipv4] = false
+	}
+
+	dropCheckMap := make(map[string]struct{}, len(dropIpv4s))
+	for _, ipv4 := range dropIpv4s {
+		dropCheckMap[ipv4] = struct{}{}
+	}
+
+	request := vpc.NewDescribeNetworkInterfacesRequest()
+	request.NetworkInterfaceIds = []*string{stringToPointer(id)}
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, err := client.DescribeNetworkInterfaces(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		var eni *vpc.NetworkInterface
+		for _, networkInterface := range response.Response.NetworkInterfaceSet {
+			if networkInterface.NetworkInterfaceId == nil {
+				err := fmt.Errorf("api[%s] eni id is nil", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			if *networkInterface.NetworkInterfaceId == id {
+				eni = networkInterface
+				break
+			}
+		}
+
+		if eni == nil {
+			err := fmt.Errorf("api[%s] eni not exist", request.GetAction())
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		if eni.State == nil {
+			err := fmt.Errorf("api[%s] eni state is nil", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+		}
+
+		if *eni.State != ENI_STATE_AVAILABLE {
+			err := errors.New("eni is not available")
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.RetryableError(err)
+		}
+
+		for _, ipv4 := range eni.PrivateIpAddressSet {
+			if ipv4.PrivateIpAddress == nil {
+				err := fmt.Errorf("api[%s] eni ipv4 ip is nil", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			// check drop
+			if _, ok := dropCheckMap[*ipv4.PrivateIpAddress]; ok {
+				err := fmt.Errorf("api[%s] drop ip %s still exists", request.GetAction(), *ipv4.PrivateIpAddress)
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.RetryableError(err)
+			}
+
+			// check want
+			if _, ok := wantCheckMap[*ipv4.PrivateIpAddress]; ok {
+				wantCheckMap[*ipv4.PrivateIpAddress] = true
+			}
+
+			if ipv4.State == nil {
+				err := fmt.Errorf("api[%s] eni ipv4 state is nil", request.GetAction())
+				log.Printf("[CRITAL]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+			}
+
+			if *ipv4.State != ENI_IP_AVAILABLE {
+				err := errors.New("eni ipv4 is not available")
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.RetryableError(err)
+			}
+		}
+
+		for ipv4, checked := range wantCheckMap {
+			if !checked {
+				err := fmt.Errorf("api[%s] ipv4 %s is no ready", request.GetAction(), ipv4)
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.RetryableError(err)
+			}
+		}
+
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s eni is not available failed, reason: %v", logId, err)
+		return err
+	}
 
 	return nil
 }

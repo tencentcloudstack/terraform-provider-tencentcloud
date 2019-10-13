@@ -94,7 +94,7 @@ The following arguments are supported:
 * `instance_name` - (Optional) The name of the CVM. The max length of instance_name is 60, and default value is `Terrafrom-CVM-Instance`.
 * `instance_type` - (Optional, ForceNew) The type of instance to start.
 * `internet_charge_type` - (Optional, ForceNew) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. The default is `TRAFFIC_POSTPAID_BY_HOUR`.
-* `internet_max_bandwidth_out` - (Optional, ForceNew) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). Value range: [0, 100], If this value is not specified, then automatically sets it to 0 Mbps.
+* `internet_max_bandwidth_out` - (Optional, ForceNew) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). If this value is not specified, then automatically sets it to 0 Mbps.
 * `key_name` - (Optional) The key pair to use for the instance, it looks like skey-16jig7tx.
 * `password` - (Optional) Password to an instance. In order to take effect new password, the instance will be restarted after modifying the password.
 * `placement_group_id` - (Optional, ForceNew) The id of a placement group.

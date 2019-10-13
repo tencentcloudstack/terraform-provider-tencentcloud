@@ -34,7 +34,7 @@ Import
 
 AutoScaling Groups can be imported using the id, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_as_scaling_group.scaling_group asg-n32ymck2
 ```
 */
@@ -44,12 +44,13 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
-
 	"github.com/hashicorp/terraform/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func resourceTencentCloudAsScalingGroup() *schema.Resource {
@@ -193,6 +194,11 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue([]string{SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 					SCALING_GROUP_RETRY_POLICY_INCREMENTAL_INTERVALS}),
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of a scaling group.",
+			},
 
 			// computed value
 			"status": {
@@ -217,6 +223,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_as_scaling_group.create")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 	request := as.NewCreateAutoScalingGroupRequest()
 
 	request.AutoScalingGroupName = stringToPointer(d.Get("scaling_group_name").(string))
@@ -295,19 +302,59 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().CreateAutoScalingGroup(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
-	} else {
+	if tags := getTags(d, "tags"); len(tags) > 0 {
+		for k, v := range tags {
+			request.Tags = append(request.Tags, &as.Tag{
+				Key:   stringToPointer(k),
+				Value: stringToPointer(v),
+			})
+		}
+	}
+
+	var id string
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().CreateAutoScalingGroup(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return retryError(err)
+		}
+
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response.Response.AutoScalingGroupId == nil {
+			err = fmt.Errorf("Auto scaling group id is nil")
+			return resource.NonRetryableError(err)
+		}
+
+		id = *response.Response.AutoScalingGroupId
+
+		return nil
+	}); err != nil {
+		return err
 	}
-	if response.Response.AutoScalingGroupId == nil {
-		return fmt.Errorf("Auto scaling group id is nil")
+	d.SetId(id)
+
+	// wait for status
+	asService := AsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	d.SetId(*response.Response.AutoScalingGroupId)
+	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+		scalingGroup, errRet := asService.DescribeAutoScalingGroupById(ctx, id)
+		if errRet != nil {
+			return retryError(errRet, "InternalError")
+		}
+		if scalingGroup != nil && *scalingGroup.InActivityStatus == SCALING_GROUP_NOT_IN_ACTIVITY_STATUS {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("scaling group status is %s, retry...", *scalingGroup.InActivityStatus))
+	})
+	if err != nil {
+		return err
+	}
 
 	return resourceTencentCloudAsScalingGroupRead(d, meta)
 }
@@ -322,27 +369,37 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	scalingGroup, err := asService.DescribeAutoScalingGroupById(ctx, scalingGroupId)
-	if err != nil {
+
+	var (
+		scalingGroup *as.AutoScalingGroup
+		err          error
+	)
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		scalingGroup, err = asService.DescribeAutoScalingGroupById(ctx, scalingGroupId)
+		if err != nil {
+			return retryError(err)
+		}
+		return nil
+	}); err != nil {
 		return err
 	}
 
-	d.Set("scaling_group_name", *scalingGroup.AutoScalingGroupName)
-	d.Set("configuration_id", *scalingGroup.LaunchConfigurationId)
-	d.Set("status", *scalingGroup.AutoScalingGroupStatus)
-	d.Set("instance_count", *scalingGroup.InstanceCount)
-	d.Set("max_size", *scalingGroup.MaxSize)
-	d.Set("min_size", *scalingGroup.MinSize)
-	d.Set("vpc_id", *scalingGroup.VpcId)
-	d.Set("project_id", *scalingGroup.ProjectId)
+	d.Set("scaling_group_name", scalingGroup.AutoScalingGroupName)
+	d.Set("configuration_id", scalingGroup.LaunchConfigurationId)
+	d.Set("status", scalingGroup.AutoScalingGroupStatus)
+	d.Set("instance_count", scalingGroup.InstanceCount)
+	d.Set("max_size", scalingGroup.MaxSize)
+	d.Set("min_size", scalingGroup.MinSize)
+	d.Set("vpc_id", scalingGroup.VpcId)
+	d.Set("project_id", scalingGroup.ProjectId)
 	d.Set("subnet_ids", flattenStringList(scalingGroup.SubnetIdSet))
 	d.Set("zones", flattenStringList(scalingGroup.ZoneSet))
-	d.Set("default_cooldown", *scalingGroup.DefaultCooldown)
-	d.Set("desired_capacity", *scalingGroup.DesiredCapacity)
+	d.Set("default_cooldown", scalingGroup.DefaultCooldown)
+	d.Set("desired_capacity", scalingGroup.DesiredCapacity)
 	d.Set("load_balancer_ids", flattenStringList(scalingGroup.LoadBalancerIdSet))
 	d.Set("termination_policies", flattenStringList(scalingGroup.TerminationPolicySet))
-	d.Set("retry_policy", *scalingGroup.RetryPolicy)
-	d.Set("create_time", *scalingGroup.CreatedTime)
+	d.Set("retry_policy", scalingGroup.RetryPolicy)
+	d.Set("create_time", scalingGroup.CreatedTime)
 
 	if scalingGroup.ForwardLoadBalancerSet != nil && len(scalingGroup.ForwardLoadBalancerSet) > 0 {
 		forwardLoadBalancers := make([]map[string]interface{}, 0, len(scalingGroup.ForwardLoadBalancerSet))
@@ -366,6 +423,12 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 		d.Set("forward_balancer_ids", forwardLoadBalancers)
 	}
 
+	tags := make(map[string]string, len(scalingGroup.Tags))
+	for _, tag := range scalingGroup.Tags {
+		tags[*tag.Key] = *tag.Value
+	}
+	d.Set("tags", tags)
+
 	return nil
 }
 
@@ -373,35 +436,54 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_as_scaling_group.update")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
 
 	request := as.NewModifyAutoScalingGroupRequest()
 	scalingGroupId := d.Id()
+
+	d.Partial(true)
+
+	var updateAttrs []string
+
 	request.AutoScalingGroupId = &scalingGroupId
 	if d.HasChange("scaling_group_name") {
+		updateAttrs = append(updateAttrs, "scaling_group_name")
 		request.AutoScalingGroupName = stringToPointer(d.Get("scaling_group_name").(string))
 	}
 	if d.HasChange("max_size") {
+		updateAttrs = append(updateAttrs, "max_size")
 		request.MaxSize = intToPointer(d.Get("max_size").(int))
 	}
 	if d.HasChange("min_size") {
+		updateAttrs = append(updateAttrs, "max_size")
 		request.MinSize = intToPointer(d.Get("min_size").(int))
 	}
 	if d.HasChange("vpc_id") {
+		updateAttrs = append(updateAttrs, "vpc_id")
 		request.VpcId = stringToPointer(d.Get("vpc_id").(string))
 	}
 	if d.HasChange("project_id") {
+		updateAttrs = append(updateAttrs, "project_id")
 		request.ProjectId = intToPointer(d.Get("project_id").(int))
 	}
 	if d.HasChange("default_cooldown") {
+		updateAttrs = append(updateAttrs, "default_cooldown")
 		request.DefaultCooldown = intToPointer(d.Get("default_cooldown").(int))
 	}
 	if d.HasChange("desired_capacity") {
+		updateAttrs = append(updateAttrs, "desired_capacity")
 		request.DesiredCapacity = intToPointer(d.Get("desired_capacity").(int))
 	}
 	if d.HasChange("retry_policy") {
+		updateAttrs = append(updateAttrs, "retry_policy")
 		request.RetryPolicy = stringToPointer(d.Get("retry_policy").(string))
 	}
 	if d.HasChange("subnet_ids") {
+		updateAttrs = append(updateAttrs, "subnet_ids")
 		subnetIds := d.Get("subnet_ids").([]interface{})
 		request.SubnetIds = make([]*string, 0, len(subnetIds))
 		for i := range subnetIds {
@@ -410,6 +492,7 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 	if d.HasChange("zones") {
+		updateAttrs = append(updateAttrs, "zones")
 		zones := d.Get("zones").([]interface{})
 		request.Zones = make([]*string, 0, len(zones))
 		for i := range zones {
@@ -418,6 +501,7 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 	if d.HasChange("termination_policies") {
+		updateAttrs = append(updateAttrs, "termination_policies")
 		terminationPolicies := d.Get("termination_policies").([]interface{})
 		request.TerminationPolicies = make([]*string, 0, len(terminationPolicies))
 		for i := range terminationPolicies {
@@ -426,20 +510,34 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().ModifyAutoScalingGroup(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, err := client.UseAsClient().ModifyAutoScalingGroup(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return retryError(err)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		return nil
+	}); err != nil {
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	balancerChanged := false
+	for _, attr := range updateAttrs {
+		d.SetPartial(attr)
+	}
+	updateAttrs = updateAttrs[:0]
+
 	balancerRequest := as.NewModifyLoadBalancersRequest()
 	balancerRequest.AutoScalingGroupId = &scalingGroupId
 	if d.HasChange("load_balancer_ids") {
-		balancerChanged = true
+		updateAttrs = append(updateAttrs, "load_balancer_ids")
+
 		loadBalancerIds := d.Get("load_balancer_ids").([]interface{})
 		balancerRequest.LoadBalancerIds = make([]*string, 0, len(loadBalancerIds))
 		for i := range loadBalancerIds {
@@ -449,7 +547,8 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	}
 
 	if d.HasChange("forward_balancer_ids") {
-		balancerChanged = true
+		updateAttrs = append(updateAttrs, "forward_balancer_ids")
+
 		forwardBalancers := d.Get("forward_balancer_ids").([]interface{})
 		balancerRequest.ForwardLoadBalancers = make([]*as.ForwardLoadBalancer, 0, len(forwardBalancers))
 		for _, v := range forwardBalancers {
@@ -474,18 +573,45 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if balancerChanged {
-		balancerResponse, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().ModifyLoadBalancers(balancerRequest)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, balancerRequest.GetAction(), balancerRequest.ToJsonString(), err.Error())
+	if len(updateAttrs) > 0 {
+		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(balancerRequest.GetAction())
+
+			balancerResponse, err := client.UseAsClient().ModifyLoadBalancers(balancerRequest)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, balancerRequest.GetAction(), balancerRequest.ToJsonString(), err.Error())
+				return retryError(err)
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, balancerRequest.GetAction(), balancerRequest.ToJsonString(), balancerResponse.ToJsonString())
+
+			return nil
+		}); err != nil {
 			return err
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, balancerRequest.GetAction(), balancerRequest.ToJsonString(), balancerResponse.ToJsonString())
+
+		for _, attr := range updateAttrs {
+			d.SetPartial(attr)
+		}
 	}
 
-	return nil
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+		resourceName := BuildTagResourceName("as", "auto-scaling-group", region, scalingGroupId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
+	}
+
+	d.Partial(false)
+
+	return resourceTencentCloudAsScalingGroupRead(d, meta)
 }
 
 func resourceTencentCloudAsScalingGroupDelete(d *schema.ResourceData, meta interface{}) error {
@@ -506,15 +632,16 @@ func resourceTencentCloudAsScalingGroupDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 	if *scalingGroup.InstanceCount > 0 || *scalingGroup.DesiredCapacity > 0 {
-		err := asService.ClearScalingGroupInstance(ctx, scalingGroupId)
-		if err != nil {
+		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			return retryError(asService.ClearScalingGroupInstance(ctx, scalingGroupId))
+		}); err != nil {
 			return err
 		}
 	}
 
 	err = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
 		if errRet := asService.DeleteScalingGroup(ctx, scalingGroupId); errRet != nil {
-			if sdkErr, ok := errRet.(*errors.TencentCloudSDKError); ok {
+			if sdkErr, ok := errRet.(*sdkErrors.TencentCloudSDKError); ok {
 				if sdkErr.Code == AsScalingGroupNotFound {
 					return nil
 				} else if sdkErr.Code == AsScalingGroupInProgress || sdkErr.Code == AsScalingGroupInstanceInGroup {
