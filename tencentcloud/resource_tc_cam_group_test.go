@@ -54,7 +54,7 @@ func testAccCheckCamGroupDestroy(s *terraform.State) error {
 
 		_, err := camService.DescribeGroupById(ctx, rs.Primary.ID)
 		if err == nil {
-			return fmt.Errorf("cam group still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("CAM group still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -67,10 +67,10 @@ func testAccCheckCamGroupExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("cam group %s is not found", n)
+			return fmt.Errorf("CAM group %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("cam group id is not set")
+			return fmt.Errorf("CAM group id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -85,14 +85,14 @@ func testAccCheckCamGroupExists(n string) resource.TestCheckFunc {
 
 const testAccCamGroup_basic = `
 resource "tencentcloud_cam_group" "group_basic" {
-	name   = "cam-group-test1"
-	remark = "test"
+  name   = "cam-group-test1"
+  remark = "test"
 }
 `
 
 const testAccCamGroup_update = `
 resource "tencentcloud_cam_group" "group_basic" {
-	name   = "cam-group-test2"
-	remark = "test-update"
+  name   = "cam-group-test2"
+  remark = "test-update"
 }
 `

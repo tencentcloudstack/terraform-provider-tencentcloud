@@ -44,12 +44,12 @@ func resourceTencentCloudCamGroup() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Name of cam group.",
+				Description: "Name of CAM group.",
 			},
 			"remark": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Description of the cam group.",
+				Description: "Description of the CAM group.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -86,11 +86,11 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cam group failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CAM group failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if response.Response.GroupId == nil {
-		return fmt.Errorf("cam group id is nil")
+		return fmt.Errorf("CAM group id is nil")
 	}
 	d.SetId(strconv.Itoa(int(*response.Response.GroupId)))
 
@@ -104,7 +104,10 @@ func resourceTencentCloudCamGroupRead(d *schema.ResourceData, meta interface{}) 
 
 	groupId := d.Id()
 	request := cam.NewGetGroupRequest()
-	groupIdInt, _ := strconv.Atoi(groupId)
+	groupIdInt, e := strconv.Atoi(groupId)
+	if e != nil {
+		return e
+	}
 	groupIdInt64 := uint64(groupIdInt)
 	request.GroupId = &groupIdInt64
 	var instance *cam.GetGroupResponse
@@ -117,7 +120,7 @@ func resourceTencentCloudCamGroupRead(d *schema.ResourceData, meta interface{}) 
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam group failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM group failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -135,7 +138,10 @@ func resourceTencentCloudCamGroupUpdate(d *schema.ResourceData, meta interface{}
 	logId := getLogId(contextNil)
 
 	groupId := d.Id()
-	groupIdInt, _ := strconv.Atoi(groupId)
+	groupIdInt, e := strconv.Atoi(groupId)
+	if e != nil {
+		return e
+	}
 	groupIdInt64 := uint64(groupIdInt)
 	request := cam.NewUpdateGroupRequest()
 	request.GroupId = &groupIdInt64
@@ -166,12 +172,12 @@ func resourceTencentCloudCamGroupUpdate(d *schema.ResourceData, meta interface{}
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s update cam group description failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s update CAM group description failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
 
-	return nil
+	return resourceTencentCloudCamGroupRead(d, meta)
 }
 
 func resourceTencentCloudCamGroupDelete(d *schema.ResourceData, meta interface{}) error {
@@ -180,7 +186,10 @@ func resourceTencentCloudCamGroupDelete(d *schema.ResourceData, meta interface{}
 	logId := getLogId(contextNil)
 
 	groupId := d.Id()
-	groupIdInt, _ := strconv.Atoi(groupId)
+	groupIdInt, e := strconv.Atoi(groupId)
+	if e != nil {
+		return e
+	}
 	groupIdInt64 := uint64(groupIdInt)
 	request := cam.NewDeleteGroupRequest()
 	request.GroupId = &groupIdInt64
@@ -193,7 +202,7 @@ func resourceTencentCloudCamGroupDelete(d *schema.ResourceData, meta interface{}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cam group failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CAM group failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 

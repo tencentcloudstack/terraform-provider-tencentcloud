@@ -155,29 +155,29 @@ func testAccCheckCamUserExists(n string) resource.TestCheckFunc {
 
 const testAccCamUser_basic = `
 resource "tencentcloud_cam_user" "user_basic" {
-	name                = "cam-user-test0"
-	remark              = "test"
-	console_login       = true
-	use_api             = true
-	need_reset_password = true
-	password            = "Gail@1234"
-	phone_num           = "13631555963"
-	country_code        = "86"
-	email               = "1234@qq.com"
+  name                = "cam-user-test0"
+  remark              = "test"
+  console_login       = true
+  use_api             = true
+  need_reset_password = true
+  password            = "Gail@1234"
+  phone_num           = "13631555963"
+  country_code        = "86"
+  email               = "1234@qq.com"
 }
 `
 
 const testAccCamUser_update = `
 resource "tencentcloud_cam_user" "user_basic" {
-	name                = "cam-user-test0"
-	remark              = "test1235"
-	console_login       = true
-	use_api             = true
-	need_reset_password = true
-	password            = "Gail@12346"
-	phone_num           = "13670093505"
-	country_code        = "72"
-	email               = "141515@qq.com"
+  name                = "cam-user-test0"
+  remark              = "test1235"
+  console_login       = true
+  use_api             = true
+  need_reset_password = true
+  password            = "Gail@12346"
+  phone_num           = "13670093505"
+  country_code        = "72"
+  email               = "141515@qq.com"
 }
 `
 const testAccCamUser_nilPassword = `
@@ -193,14 +193,14 @@ resource "tencentcloud_cam_user" "user_nil_password" {
 }
 `
 const testAccCamUser_withoutKey = `
-resource "tencentcloud_cam_user" "user_nil_password" {
-	name                = "cam-user-testnil"
-	remark              = "test"
-	console_login       = true
-	use_api             = true
-	need_reset_password = true
-	phone_num           = "13631555963"
-	country_code        = "86"
-	email               = "141515@qq.com"
+resource "tencentcloud_cam_user" "user_without_key" {
+  name                = "cam-user-testkey""
+  remark              = "test"
+  console_login       = false
+  use_api             = false
+  need_reset_password = true
+  phone_num           = "13631555963"
+  country_code        = "86"
+  email               = "141515@qq.com"
 }
 `

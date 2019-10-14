@@ -44,7 +44,7 @@ func resourceTencentCloudCamRolePolicyAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the attached cam role.",
+				Description: "Id of the attached CAM role.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -104,7 +104,7 @@ func resourceTencentCloudCamRolePolicyAttachmentCreate(d *schema.ResourceData, m
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cam role policy attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CAM role policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -134,7 +134,7 @@ func resourceTencentCloudCamRolePolicyAttachmentRead(d *schema.ResourceData, met
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam role policy attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM role policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	roleId, policyId, e := camService.decodeCamPolicyAttachmentId(rolePolicyAttachmentId)
@@ -170,7 +170,7 @@ func resourceTencentCloudCamRolePolicyAttachmentDelete(d *schema.ResourceData, m
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cam role policy attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CAM role policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 

@@ -53,7 +53,7 @@ func (me *CamService) DescribeRoleById(ctx context.Context, roleId string) (camI
 	}
 
 	if len(result) == 0 {
-		return nil, fmt.Errorf("cam role id is not found")
+		return nil, fmt.Errorf("CAM role id is not found")
 	}
 	camInstance = result[0]
 	return
@@ -134,7 +134,11 @@ func (me *CamService) decodeCamPolicyAttachmentId(id string) (instanceId string,
 		return instanceId, policyId64, fmt.Errorf(" id is not exist!!! %s", id)
 	}
 	instanceId = items[0]
-	policyId, _ := strconv.Atoi(items[1])
+	policyId, e := strconv.Atoi(items[1])
+	if e != nil {
+		errRet = e
+		return
+	}
 	policyId64 = uint64(policyId)
 	return
 }
@@ -179,7 +183,7 @@ func (me *CamService) DescribeRolePolicyAttachmentById(ctx context.Context, role
 	}
 
 	if len(result) == 0 {
-		return nil, fmt.Errorf("cam role policy attachment id is not found")
+		return nil, fmt.Errorf("CAM role policy attachment id is not found")
 	}
 	policyOfRole = result[0]
 	return
@@ -304,7 +308,7 @@ func (me *CamService) DescribeUserPolicyAttachmentById(ctx context.Context, user
 	}
 
 	if len(result) == 0 {
-		return nil, fmt.Errorf("cam user policy attachment id is not found")
+		return nil, fmt.Errorf("CAM user policy attachment id is not found")
 	}
 	policyResults = result[0]
 	return
@@ -374,7 +378,10 @@ func (me *CamService) AddUserPolicyAttachment(ctx context.Context, userId string
 		return err
 	}
 	uin := user.Response.Uin
-	policyIdInt, _ := strconv.Atoi(policyId)
+	policyIdInt, e := strconv.Atoi(policyId)
+	if e != nil {
+		return e
+	}
 	policyIdInt64 := uint64(policyIdInt)
 	request := cam.NewAttachUserPolicyRequest()
 	request.AttachUin = uin
@@ -422,9 +429,14 @@ func (me *CamService) DescribeGroupPolicyAttachmentById(ctx context.Context, gro
 	logId := getLogId(ctx)
 	groupId, policyId, e := me.decodeCamPolicyAttachmentId(groupPolicyAttachmentId)
 	if e != nil {
-		return nil, e
+		errRet = e
+		return
 	}
-	groupIdInt, _ := strconv.Atoi(groupId)
+	groupIdInt, ee := strconv.Atoi(groupId)
+	if ee != nil {
+		errRet = ee
+		return
+	}
 	groupIdInt64 := uint64(groupIdInt)
 	request := cam.NewListAttachedGroupPoliciesRequest()
 	pageStart := uint64(1)
@@ -460,7 +472,7 @@ func (me *CamService) DescribeGroupPolicyAttachmentById(ctx context.Context, gro
 	}
 
 	if len(result) == 0 {
-		return nil, fmt.Errorf("cam group policy attachment id is not found")
+		return nil, fmt.Errorf("CAM group policy attachment id is not found")
 	}
 	policyResults = result[0]
 	return
@@ -469,7 +481,11 @@ func (me *CamService) DescribeGroupPolicyAttachmentById(ctx context.Context, gro
 func (me *CamService) DescribeGroupPolicyAttachmentsByFilter(ctx context.Context, params map[string]interface{}) (policyResults []*cam.AttachPolicyInfo, errRet error) {
 	logId := getLogId(ctx)
 	groupId := params["group_id"].(string)
-	groupIdInt, _ := strconv.Atoi(groupId)
+	groupIdInt, e := strconv.Atoi(groupId)
+	if e != nil {
+		errRet = e
+		return
+	}
 	groupIdInt64 := uint64(groupIdInt)
 	request := cam.NewListAttachedGroupPoliciesRequest()
 	pageStart := uint64(1)
@@ -523,9 +539,15 @@ func (me *CamService) DescribeGroupPolicyAttachmentsByFilter(ctx context.Context
 func (me *CamService) AddGroupPolicyAttachment(ctx context.Context, groupId string, policyId string) error {
 	logId := getLogId(ctx)
 
-	groupIdInt, _ := strconv.Atoi(groupId)
+	groupIdInt, e := strconv.Atoi(groupId)
+	if e != nil {
+		return e
+	}
 	groupIdInt64 := uint64(groupIdInt)
-	policyIdInt, _ := strconv.Atoi(policyId)
+	policyIdInt, ee := strconv.Atoi(policyId)
+	if ee != nil {
+		return ee
+	}
 	policyIdInt64 := uint64(policyIdInt)
 
 	request := cam.NewAttachGroupPolicyRequest()
@@ -549,7 +571,10 @@ func (me *CamService) DeleteGroupPolicyAttachmentById(ctx context.Context, group
 	if e != nil {
 		return e
 	}
-	groupIdInt, _ := strconv.Atoi(groupId)
+	groupIdInt, ee := strconv.Atoi(groupId)
+	if ee != nil {
+		return ee
+	}
 	groupIdInt64 := uint64(groupIdInt)
 
 	request := cam.NewDetachGroupPolicyRequest()
@@ -570,13 +595,17 @@ func (me *CamService) DeleteGroupPolicyAttachmentById(ctx context.Context, group
 func (me *CamService) DescribePolicyById(ctx context.Context, policyId string) (result *cam.GetPolicyResponse, errRet error) {
 	logId := getLogId(ctx)
 	request := cam.NewGetPolicyRequest()
-	policyIdInt, _ := strconv.Atoi(policyId)
+	policyIdInt, e := strconv.Atoi(policyId)
+	if e != nil {
+		errRet = e
+		return
+	}
 	policyIdInt64 := uint64(policyIdInt)
 	request.PolicyId = &policyIdInt64
 	result, err := me.client.UseCamClient().GetPolicy(request)
 
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam role failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
 		return nil, err
 	} else {
 		if result == nil {
@@ -630,7 +659,7 @@ func (me *CamService) DescribePoliciesByFilter(ctx context.Context, params map[s
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseCamClient().ListPolicies(request)
 		if err != nil {
-			log.Printf("[CRITAL]%s read cam role failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
 			errRet = err
 			return
 		}
@@ -785,7 +814,11 @@ func (me *CamService) DescribeUsersByFilter(ctx context.Context, params map[stri
 func (me *CamService) DescribeGroupById(ctx context.Context, groupId string) (camInstance *cam.GetGroupResponse, errRet error) {
 	logId := getLogId(ctx)
 	request := cam.NewGetGroupRequest()
-	groupIdInt, _ := strconv.Atoi(groupId)
+	groupIdInt, e := strconv.Atoi(groupId)
+	if e != nil {
+		errRet = e
+		return
+	}
 	groupIdInt64 := uint64(groupIdInt)
 	request.GroupId = &groupIdInt64
 	ratelimit.Check(request.GetAction())
@@ -852,7 +885,11 @@ func (me *CamService) DescribeGroupsByFilter(ctx context.Context, params map[str
 
 func (me *CamService) DescribeGroupMembershipById(ctx context.Context, groupId string) (members []*string, errRet error) {
 	logId := getLogId(ctx)
-	groupIdInt, _ := strconv.Atoi(groupId)
+	groupIdInt, e := strconv.Atoi(groupId)
+	if e != nil {
+		errRet = e
+		return
+	}
 	groupIdInt64 := uint64(groupIdInt)
 	pageStart := uint64(1)
 	rp := uint64(PAGE_ITEM)
@@ -864,7 +901,7 @@ func (me *CamService) DescribeGroupMembershipById(ctx context.Context, groupId s
 		request.Rp = &rp
 		response, err := me.client.UseCamClient().ListUsersForGroup(request)
 		if err != nil {
-			log.Printf("[CRITAL]%s read cam group membership failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s read CAM group membership failed, reason:%s\n", logId, err.Error())
 			errRet = err
 			return
 		}
@@ -891,7 +928,7 @@ func (me *CamService) DescribeSAMLProviderById(ctx context.Context, providerName
 	result, err := me.client.UseCamClient().GetSAMLProvider(request)
 
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam SAML provider failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read cam SAML provider failed, reason:%s\n", logId, err.Error())
 		return nil, err
 	} else {
 		if result == nil {
@@ -927,7 +964,7 @@ func (me *CamService) DescribeSAMLProvidersByFilter(ctx context.Context, params 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCamClient().ListSAMLProviders(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam SAML provider failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read cam SAML provider failed, reason:%s\n", logId, err.Error())
 		errRet = err
 		return
 	}

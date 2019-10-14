@@ -100,7 +100,7 @@ func dataSourceTencentCloudCamSAMLProvidersRead(d *schema.ResourceData, meta int
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read CAM groups failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM groups failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	providerList := make([]map[string]interface{}, 0, len(providers))
@@ -118,7 +118,7 @@ func dataSourceTencentCloudCamSAMLProvidersRead(d *schema.ResourceData, meta int
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("provider_list", providerList); e != nil {
-		log.Printf("[CRITAL]%s provider set provider list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set provider list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

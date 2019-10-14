@@ -53,7 +53,7 @@ func testAccCheckCamRoleDestroy(s *terraform.State) error {
 
 		_, err := camService.DescribeRoleById(ctx, rs.Primary.ID)
 		if err == nil {
-			return fmt.Errorf("cam role still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("CAM role still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -66,10 +66,10 @@ func testAccCheckCamRoleExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("cam role %s is not found", n)
+			return fmt.Errorf("CAM role %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("cam role id is not set")
+			return fmt.Errorf("CAM role id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -84,17 +84,17 @@ func testAccCheckCamRoleExists(n string) resource.TestCheckFunc {
 
 const testAccCamRole_basic = `
 resource "tencentcloud_cam_role" "role_basic" {
-	name          = "cam-role-test1"
-	document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}}]}"
-	description   = "test"
-	console_login = true
+  name          = "cam-role-test1"
+  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}}]}"
+  description   = "test"
+  console_login = true
 }
 `
 
 const testAccCamRole_update = `
 resource "tencentcloud_cam_role" "role_basic" {
-	name          = "cam-role-test1"
-	document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}},{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}}]}"
-	console_login = false
+  name          = "cam-role-test1"
+  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}},{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}}]}"
+  console_login = false
 }
 `

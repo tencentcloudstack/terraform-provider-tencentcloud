@@ -124,11 +124,11 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cam role failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CAM role failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if response.Response.RoleId == nil {
-		return fmt.Errorf("cam role id is nil")
+		return fmt.Errorf("CAM role id is nil")
 	}
 	d.SetId(*response.Response.RoleId)
 
@@ -155,7 +155,7 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam role failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -210,7 +210,7 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s update cam role description failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s update CAM role description failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 		d.SetPartial("description")
@@ -220,7 +220,7 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 		o, n := d.GetChange("document")
 		flag, err := diffJson(o.(string), n.(string))
 		if err != nil {
-			log.Printf("[CRITAL]%s update cam role document failed, reason:%s\n", logId, err.Error())
+			log.Printf("[CRITAL]%s update CAM role document failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 		if flag {
@@ -249,7 +249,7 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 				return nil
 			})
 			if err != nil {
-				log.Printf("[CRITAL]%s update cam role document failed, reason:%s\n ", logId, err.Error())
+				log.Printf("[CRITAL]%s update CAM role document failed, reason:%s\n", logId, err.Error())
 				return err
 			}
 			d.SetPartial("document")
@@ -258,7 +258,7 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 
 	d.Partial(false)
 
-	return nil
+	return resourceTencentCloudCamRoleRead(d, meta)
 }
 
 func resourceTencentCloudCamRoleDelete(d *schema.ResourceData, meta interface{}) error {
@@ -280,7 +280,7 @@ func resourceTencentCloudCamRoleDelete(d *schema.ResourceData, meta interface{})
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cam role failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CAM role failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 

@@ -131,7 +131,7 @@ func dataSourceTencentCloudCamGroupPolicyAttachmentsRead(d *schema.ResourceData,
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read clb instances failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM group policy attachments failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	policyOfGroupList := make([]map[string]interface{}, 0, len(policyOfGroups))
@@ -151,7 +151,7 @@ func dataSourceTencentCloudCamGroupPolicyAttachmentsRead(d *schema.ResourceData,
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("group_policy_attachment_list", policyOfGroupList); e != nil {
-		log.Printf("[CRITAL]%s provider set group polilcy attachment list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set group polilcy attachment list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

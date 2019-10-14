@@ -44,17 +44,17 @@ func resourceTencentCloudCamSAMLProvider() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Name of cam SAML provider.",
+				Description: "Name of CAM SAML provider.",
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The description of the cam SAML provider.",
+				Description: "The description of the CAM SAML provider.",
 			},
 			"meta_data": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The meta data document of the cam SAML provider.",
+				Description: "The meta data document of the CAM SAML provider.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -103,11 +103,11 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cam SAML provider failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CAM SAML provider failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if response.Response.ProviderArn == nil {
-		return fmt.Errorf("cam SAML provider id is nil")
+		return fmt.Errorf("CAM SAML provider id is nil")
 	}
 	d.SetId(d.Get("name").(string))
 	d.Set("provider_arn", *response.Response.ProviderArn)
@@ -133,7 +133,7 @@ func resourceTencentCloudCamSAMLProviderRead(d *schema.ResourceData, meta interf
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam SAML provider failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM SAML provider failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -182,12 +182,12 @@ func resourceTencentCloudCamSAMLProviderUpdate(d *schema.ResourceData, meta inte
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s update cam SAML_provider description failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s update CAM SAML_provider description failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
 
-	return nil
+	return resourceTencentCloudCamSAMLProviderRead(d, meta)
 }
 
 func resourceTencentCloudCamSAMLProviderDelete(d *schema.ResourceData, meta interface{}) error {
@@ -207,7 +207,7 @@ func resourceTencentCloudCamSAMLProviderDelete(d *schema.ResourceData, meta inte
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cam SAML provider failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CAM SAML provider failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 

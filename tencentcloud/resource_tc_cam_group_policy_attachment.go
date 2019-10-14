@@ -44,7 +44,7 @@ func resourceTencentCloudCamGroupPolicyAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "I of the attached cam group.",
+				Description: "Id of the attached CAM group.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -55,7 +55,7 @@ func resourceTencentCloudCamGroupPolicyAttachment() *schema.Resource {
 			"create_mode": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Mode of Creation of the CAM group policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways. ",
+				Description: "Mode of Creation of the CAM group policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
 			},
 			"policy_type": {
 				Type:        schema.TypeBool,
@@ -96,7 +96,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentCreate(d *schema.ResourceData, 
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cam group policy attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CAM group policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -126,7 +126,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentRead(d *schema.ResourceData, me
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam group policy attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM group policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	//split id
@@ -140,7 +140,8 @@ func resourceTencentCloudCamGroupPolicyAttachmentRead(d *schema.ResourceData, me
 	d.Set("create_time", *instance.AddTime)
 	d.Set("create_mode", int(*instance.CreateMode))
 	d.Set("policy_type", *instance.PolicyType)
-	return nil
+
+	return resourceTencentCloudCamGroupPolicyAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudCamGroupPolicyAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
@@ -163,7 +164,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentDelete(d *schema.ResourceData, 
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cam group policy attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CAM group policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 

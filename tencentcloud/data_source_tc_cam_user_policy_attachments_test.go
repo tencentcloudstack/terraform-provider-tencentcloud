@@ -29,29 +29,29 @@ func TestAccTencentCloudCamUserPolicyAttachmentsDataSource_basic(t *testing.T) {
 
 const testAccCamUserPolicyAttachmentsDataSource_basic = `
 resource "tencentcloud_cam_user" "user" {
-	name                = "cam-user-testt"
-	remark              = "test"
-	console_login       = true
-	use_api             = true
-	need_reset_password = true
-	password            = "Gail@1234"
-	phone_num           = "13631555963"
-	country_code        = "86"
-	email               = "1234@qq.com"
+  name                = "cam-user-testt"
+  remark              = "test"
+  console_login       = true
+  use_api             = true
+  need_reset_password = true
+  password            = "Gail@1234"
+  phone_num           = "13631555963"
+  country_code        = "86"
+  email               = "1234@qq.com"
 }
 
 resource "tencentcloud_cam_policy" "policy" {
-	name        = "cam-policy-test"
-	document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
-	description = "test"
+  name        = "cam-policy-test7"
+  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
+  description = "test"
 }
 
 resource "tencentcloud_cam_user_policy_attachment" "user_policy_attachment" {
-	user_id   = "${tencentcloud_cam_user.user.id}"
-	policy_id = "${tencentcloud_cam_policy.policy.id}"
+  user_id   = "${tencentcloud_cam_user.user.id}"
+  policy_id = "${tencentcloud_cam_policy.policy.id}"
 }
   
 data "tencentcloud_cam_user_policy_attachments" "user_policy_attachments" {
-	user_id = "${tencentcloud_cam_user_policy_attachment.user_policy_attachment.user_id}"
+  user_id = "${tencentcloud_cam_user_policy_attachment.user_policy_attachment.user_id}"
 }
 `

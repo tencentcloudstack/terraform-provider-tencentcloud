@@ -146,7 +146,7 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read CAM groups failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM policies failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	policyList := make([]map[string]interface{}, 0, len(policies))
@@ -167,7 +167,7 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("policy_list", policyList); e != nil {
-		log.Printf("[CRITAL]%s provider set policy list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set policy list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

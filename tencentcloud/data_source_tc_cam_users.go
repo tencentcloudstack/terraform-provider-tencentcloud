@@ -180,7 +180,7 @@ func dataSourceTencentCloudCamUsersRead(d *schema.ResourceData, meta interface{}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read CAM users failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM users failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	userList := make([]map[string]interface{}, 0, len(users))
@@ -206,7 +206,7 @@ func dataSourceTencentCloudCamUsersRead(d *schema.ResourceData, meta interface{}
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("user_list", userList); e != nil {
-		log.Printf("[CRITAL]%s provider set CAM user list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set CAM user list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

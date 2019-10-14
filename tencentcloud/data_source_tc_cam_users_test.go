@@ -33,18 +33,18 @@ func TestAccTencentCloudCamUsersDataSource_basic(t *testing.T) {
 
 const testAccCamUsersDataSource_basic = `
 resource "tencentcloud_cam_user" "user" {
-	name                = "cam-user-tests"
-	remark              = "test"
-	console_login       = true
-	use_api             = true
-	need_reset_password = true
-	password            = "Gail@1234"
-	phone_num           = "13631555963"
-	country_code        = "86"
-	email               = "1234@qq.com"
+  name                = "cam-user-tests"
+  remark              = "test"
+  console_login       = true
+  use_api             = true
+  need_reset_password = true
+  password            = "Gail@1234"
+  phone_num           = "13631555963"
+  country_code        = "86"
+  email               = "1234@qq.com"
 }
   
 data "tencentcloud_cam_users" "users" {
-	name = "${tencentcloud_cam_user.user.id}"
+  name = "${tencentcloud_cam_user.user.id}"
 }
 `

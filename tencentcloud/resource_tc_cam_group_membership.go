@@ -45,7 +45,7 @@ func resourceTencentCloudCamGroupMembership() *schema.Resource {
 			"group_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of cam group.",
+				Description: "Id of CAM group.",
 			},
 			"user_ids": {
 				Type:     schema.TypeSet,
@@ -53,7 +53,7 @@ func resourceTencentCloudCamGroupMembership() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "Id set of the cam group members.",
+				Description: "Id set of the CAM group members.",
 			},
 		},
 	}
@@ -68,7 +68,7 @@ func resourceTencentCloudCamGroupMembershipCreate(d *schema.ResourceData, meta i
 	members := d.Get("user_ids").(*schema.Set).List()
 	err := addUsersToGroup(members, groupId, meta)
 	if err != nil {
-		log.Printf("[CRITAL]%s create cam group membership failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CAM group membership failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	d.SetId(groupId)
@@ -95,7 +95,7 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam role failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -121,20 +121,20 @@ func resourceTencentCloudCamGroupMembershipUpdate(d *schema.ResourceData, meta i
 		if len(remove) > 0 {
 			oErr := removeUsersFromGroup(remove, groupId, meta)
 			if oErr != nil {
-				log.Printf("[CRITAL]%s update cam group membership failed, reason:%s\n ", logId, oErr.Error())
+				log.Printf("[CRITAL]%s update CAM group membership failed, reason:%s\n", logId, oErr.Error())
 				return oErr
 			}
 		}
 		if len(add) > 0 {
 			nErr := addUsersToGroup(add, groupId, meta)
 			if nErr != nil {
-				log.Printf("[CRITAL]%s update cam group membership failed, reason:%s\n ", logId, nErr.Error())
+				log.Printf("[CRITAL]%s update CAM group membership failed, reason:%s\n", logId, nErr.Error())
 				return nErr
 			}
 		}
 	}
 
-	return nil
+	return resourceTencentCloudCamGroupMembershipRead(d, meta)
 }
 
 func resourceTencentCloudCamGroupMembershipDelete(d *schema.ResourceData, meta interface{}) error {
@@ -145,7 +145,7 @@ func resourceTencentCloudCamGroupMembershipDelete(d *schema.ResourceData, meta i
 	members := d.Get("user_ids").(*schema.Set).List()
 	err := removeUsersFromGroup(members, groupId, meta)
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cam group failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CAM group failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -187,7 +187,10 @@ func addUsersToGroup(members []interface{}, groupId string, meta interface{}) er
 			return e
 		}
 		info.Uid = uId
-		groupIdInt, _ := strconv.Atoi(groupId)
+		groupIdInt, ee := strconv.Atoi(groupId)
+		if ee != nil {
+			return ee
+		}
 		groupIdInt64 := uint64(groupIdInt)
 		info.GroupId = &groupIdInt64
 		request.Info = append(request.Info, &info)
@@ -205,7 +208,7 @@ func addUsersToGroup(members []interface{}, groupId string, meta interface{}) er
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cam group membership failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CAM group membership failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	return nil
@@ -232,7 +235,10 @@ func removeUsersFromGroup(members []interface{}, groupId string, meta interface{
 			}
 		}
 		info.Uid = uId
-		groupIdInt, _ := strconv.Atoi(groupId)
+		groupIdInt, eee := strconv.Atoi(groupId)
+		if eee != nil {
+			return eee
+		}
 		groupIdInt64 := uint64(groupIdInt)
 		info.GroupId = &groupIdInt64
 		request.Info = append(request.Info, &info)
@@ -254,7 +260,7 @@ func removeUsersFromGroup(members []interface{}, groupId string, meta interface{
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cam group membership failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CAM group membership failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	return nil

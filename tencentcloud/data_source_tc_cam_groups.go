@@ -106,7 +106,7 @@ func dataSourceTencentCloudCamGroupsRead(d *schema.ResourceData, meta interface{
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read CAM groups failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM groups failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	groupList := make([]map[string]interface{}, 0, len(groups))
@@ -123,7 +123,7 @@ func dataSourceTencentCloudCamGroupsRead(d *schema.ResourceData, meta interface{
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("group_list", groupList); e != nil {
-		log.Printf("[CRITAL]%s provider set group list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set group list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

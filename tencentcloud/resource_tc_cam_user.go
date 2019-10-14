@@ -189,11 +189,11 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create user failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create user failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if response.Response.Uid == nil {
-		return fmt.Errorf("cam user id is nil")
+		return fmt.Errorf("CAM user id is nil")
 	}
 
 	d.SetId(*response.Response.Name)
@@ -223,7 +223,7 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam user failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM user failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -307,7 +307,7 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s update cam user description failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s update CAM user description failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
@@ -336,7 +336,7 @@ func resourceTencentCloudCamUserDelete(d *schema.ResourceData, meta interface{})
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cam user failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CAM user failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 

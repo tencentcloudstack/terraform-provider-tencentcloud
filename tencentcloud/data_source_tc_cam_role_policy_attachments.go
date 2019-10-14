@@ -131,7 +131,7 @@ func dataSourceTencentCloudCamRolePolicyAttachmentsRead(d *schema.ResourceData, 
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read CAM role policy attachments failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM role policy attachments failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	policyOfRoleList := make([]map[string]interface{}, 0, len(policyOfRoles))
@@ -151,7 +151,7 @@ func dataSourceTencentCloudCamRolePolicyAttachmentsRead(d *schema.ResourceData, 
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("role_policy_attachment_list", policyOfRoleList); e != nil {
-		log.Printf("[CRITAL]%s provider set role polilcy attachment list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set role polilcy attachment list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

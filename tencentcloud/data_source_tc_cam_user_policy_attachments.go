@@ -131,7 +131,7 @@ func dataSourceTencentCloudCamUserPolicyAttachmentsRead(d *schema.ResourceData, 
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read CAM user policy attachments failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM user policy attachments failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	policyOfUserList := make([]map[string]interface{}, 0, len(policyOfUsers))
@@ -151,7 +151,7 @@ func dataSourceTencentCloudCamUserPolicyAttachmentsRead(d *schema.ResourceData, 
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("user_policy_attachment_list", policyOfUserList); e != nil {
-		log.Printf("[CRITAL]%s provider set CAM user polilcy attachment list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set CAM user polilcy attachment list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

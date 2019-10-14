@@ -26,7 +26,6 @@ import (
 	"log"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -116,11 +115,11 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cam policy failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CAM policy failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if response.Response.PolicyId == nil {
-		return fmt.Errorf("cam policy id is nil")
+		return fmt.Errorf("CAM policy id is nil")
 	}
 	d.SetId(strconv.Itoa(int(*response.Response.PolicyId)))
 
@@ -134,7 +133,10 @@ func resourceTencentCloudCamPolicyRead(d *schema.ResourceData, meta interface{})
 
 	policyId := d.Id()
 	request := cam.NewGetPolicyRequest()
-	policyIdInt, _ := strconv.Atoi(policyId)
+	policyIdInt, e := strconv.Atoi(policyId)
+	if e != nil {
+		return e
+	}
 	policyIdInt64 := uint64(policyIdInt)
 	request.PolicyId = &policyIdInt64
 	var instance *cam.GetPolicyResponse
@@ -147,7 +149,7 @@ func resourceTencentCloudCamPolicyRead(d *schema.ResourceData, meta interface{})
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam policy failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM policy failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -169,7 +171,10 @@ func resourceTencentCloudCamPolicyUpdate(d *schema.ResourceData, meta interface{
 	logId := getLogId(contextNil)
 
 	policyId := d.Id()
-	policyIdInt, _ := strconv.Atoi(policyId)
+	policyIdInt, e := strconv.Atoi(policyId)
+	if e != nil {
+		return e
+	}
 	policyIdInt64 := uint64(policyIdInt)
 	request := cam.NewUpdatePolicyRequest()
 	request.PolicyId = &policyIdInt64
@@ -189,7 +194,7 @@ func resourceTencentCloudCamPolicyUpdate(d *schema.ResourceData, meta interface{
 		o, n := d.GetChange("document")
 		flag, err := diffJson(o.(string), n.(string))
 		if err != nil {
-			log.Printf("[CRITAL]%s update cam policy document failed, reason:%s\n", logId, err.Error())
+			log.Printf("[CRITAL]%s update CAM policy document failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 		if flag {
@@ -220,12 +225,12 @@ func resourceTencentCloudCamPolicyUpdate(d *schema.ResourceData, meta interface{
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s update cam policy description failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s update CAM policy description failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
 
-	return nil
+	return resourceTencentCloudCamPolicyRead(d, meta)
 }
 
 func resourceTencentCloudCamPolicyDelete(d *schema.ResourceData, meta interface{}) error {
@@ -234,7 +239,10 @@ func resourceTencentCloudCamPolicyDelete(d *schema.ResourceData, meta interface{
 	logId := getLogId(contextNil)
 
 	policyId := d.Id()
-	policyIdInt, _ := strconv.Atoi(policyId)
+	policyIdInt, e := strconv.Atoi(policyId)
+	if e != nil {
+		return e
+	}
 	policyIdInt64 := uint64(policyIdInt)
 	request := cam.NewDeletePolicyRequest()
 	request.PolicyId = []*uint64{&policyIdInt64}
@@ -247,9 +255,8 @@ func resourceTencentCloudCamPolicyDelete(d *schema.ResourceData, meta interface{
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cam policy failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CAM policy failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	time.Sleep(readRetryTimeout)
 	return nil
 }

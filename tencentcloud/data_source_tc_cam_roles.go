@@ -125,7 +125,7 @@ func dataSourceTencentCloudCamRolesRead(d *schema.ResourceData, meta interface{}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read CAM roles failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM roles failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	roleList := make([]map[string]interface{}, 0, len(roles))
@@ -150,7 +150,7 @@ func dataSourceTencentCloudCamRolesRead(d *schema.ResourceData, meta interface{}
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("role_list", roleList); e != nil {
-		log.Printf("[CRITAL]%s provider set CAM role list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set CAM role list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

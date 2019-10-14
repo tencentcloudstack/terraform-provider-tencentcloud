@@ -32,13 +32,13 @@ func TestAccTencentCloudCamRolesDataSource_basic(t *testing.T) {
 
 const testAccCamRolesDataSource_basic = `
 resource "tencentcloud_cam_role" "role" {
-	name          = "cam-role-test11"
-	document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}}]}"
-	description   = "test"
-	console_login = true
+  name          = "cam-role-test11"
+  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/100009461222:uin/100009461222\"]}}]}"
+  description   = "test"
+  console_login = true
 }
   
 data "tencentcloud_cam_roles" "roles" {
-	role_id = "${tencentcloud_cam_role.role.id}"
+  role_id = "${tencentcloud_cam_role.role.id}"
 }
 `

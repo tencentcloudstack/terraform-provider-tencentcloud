@@ -19,7 +19,7 @@ func TestAccTencentCloudCamPolicy_basic(t *testing.T) {
 				Config: testAccCamPolicy_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamPolicyExists("tencentcloud_cam_policy.policy_basic"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_basic", "name", "cam-policy-test"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_basic", "name", "cam-policy-test4"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_policy.policy_basic", "document"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_basic", "description", "test"),
 				),
@@ -54,7 +54,7 @@ func testAccCheckCamPolicyDestroy(s *terraform.State) error {
 
 		_, err := camService.DescribePolicyById(ctx, rs.Primary.ID)
 		if err == nil {
-			return fmt.Errorf("cam policy still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("CAM policy still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -67,10 +67,10 @@ func testAccCheckCamPolicyExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("cam policy %s is not found", n)
+			return fmt.Errorf("CAM policy %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("cam policy id is not set")
+			return fmt.Errorf("CAM policy id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -85,15 +85,15 @@ func testAccCheckCamPolicyExists(n string) resource.TestCheckFunc {
 
 const testAccCamPolicy_basic = `
 resource "tencentcloud_cam_policy" "policy_basic" {
-	name        = "cam-policy-test"
-	document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
+  name        = "cam-policy-test4"
+  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
 	description = "test"
 }
 `
 
 const testAccCamPolicy_update = `
 resource "tencentcloud_cam_policy" "policy_basic" {
-	name     = "cam-policy-test2"
-	document = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]},{\"action\":[\"name/cos:PutObject\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
+  name     = "cam-policy-test2"
+  document = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]},{\"action\":[\"name/cos:PutObject\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
 }
 `

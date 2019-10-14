@@ -55,7 +55,7 @@ func resourceTencentCloudCamUserPolicyAttachment() *schema.Resource {
 			"create_mode": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Mode of Creation of the CAM user policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways. ",
+				Description: "Mode of Creation of the CAM user policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
 			},
 			"policy_type": {
 				Type:        schema.TypeString,

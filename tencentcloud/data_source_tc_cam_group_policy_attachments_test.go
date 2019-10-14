@@ -29,22 +29,22 @@ func TestAccTencentCloudCamGroupPolicyAttachmentsDataSource_basic(t *testing.T) 
 
 const testAccCamGroupPolicyAttachmentsDataSource_basic = `
 resource "tencentcloud_cam_group" "group" {
-	name   = "cam-group-test"
-	remark = "test"
+  name   = "cam-group-policy-test"
+  remark = "test"
 }
 
 resource "tencentcloud_cam_policy" "policy" {
-	name        = "cam-policy-test"
-	document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
-	description = "test"
+  name        = "cam-policy-test8"
+  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
+  description = "test"
 }
 
 resource "tencentcloud_cam_group_policy_attachment" "group_policy_attachment" {
-	group_id  = "${tencentcloud_cam_group.group.id}"
-	policy_id = "${tencentcloud_cam_policy.policy.id}"
+  group_id  = "${tencentcloud_cam_group.group.id}"
+  policy_id = "${tencentcloud_cam_policy.policy.id}"
 }
   
 data "tencentcloud_cam_group_policy_attachments" "group_policy_attachments" {
-	group_id = "${tencentcloud_cam_group_policy_attachment.group_policy_attachment.group_id}"
-  }
+  group_id = "${tencentcloud_cam_group_policy_attachment.group_policy_attachment.group_id}"
+}
 `
