@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 )
@@ -157,33 +158,41 @@ func resourceTencentCloudAsLifecycleHookRead(d *schema.ResourceData, meta interf
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	lifecycleHook, err := asService.DescribeLifecycleHookById(ctx, lifecycleHookId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		lifecycleHook, has, e := asService.DescribeLifecycleHookById(ctx, lifecycleHookId)
+		if e != nil {
+			return retryError(e)
+		}
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+		d.Set("scaling_group_id", *lifecycleHook.AutoScalingGroupId)
+		d.Set("lifecycle_hook_name", *lifecycleHook.LifecycleHookName)
+		d.Set("lifecycle_transition", *lifecycleHook.LifecycleTransition)
+		if lifecycleHook.DefaultResult != nil {
+			d.Set("default_result", *lifecycleHook.DefaultResult)
+		}
+		if lifecycleHook.HeartbeatTimeout != nil {
+			d.Set("heartbeat_timeout", *lifecycleHook.HeartbeatTimeout)
+		}
+		if lifecycleHook.NotificationMetadata != nil {
+			d.Set("notification_metadata", *lifecycleHook.NotificationMetadata)
+		}
+		if lifecycleHook.NotificationTarget != nil {
+			d.Set("notification_target_type", *lifecycleHook.NotificationTarget.TargetType)
+			if lifecycleHook.NotificationTarget.QueueName != nil {
+				d.Set("notification_queue_name", *lifecycleHook.NotificationTarget.QueueName)
+			}
+			if lifecycleHook.NotificationTarget.TopicName != nil {
+				d.Set("notification_topic_name", *lifecycleHook.NotificationTarget.TopicName)
+			}
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	d.Set("scaling_group_id", *lifecycleHook.AutoScalingGroupId)
-	d.Set("lifecycle_hook_name", *lifecycleHook.LifecycleHookName)
-	d.Set("lifecycle_transition", *lifecycleHook.LifecycleTransition)
-	if lifecycleHook.DefaultResult != nil {
-		d.Set("default_result", *lifecycleHook.DefaultResult)
-	}
-	if lifecycleHook.HeartbeatTimeout != nil {
-		d.Set("heartbeat_timeout", *lifecycleHook.HeartbeatTimeout)
-	}
-	if lifecycleHook.NotificationMetadata != nil {
-		d.Set("notification_metadata", *lifecycleHook.NotificationMetadata)
-	}
-	if lifecycleHook.NotificationTarget != nil {
-		d.Set("notification_target_type", *lifecycleHook.NotificationTarget.TargetType)
-		if lifecycleHook.NotificationTarget.QueueName != nil {
-			d.Set("notification_queue_name", *lifecycleHook.NotificationTarget.QueueName)
-		}
-		if lifecycleHook.NotificationTarget.TopicName != nil {
-			d.Set("notification_topic_name", *lifecycleHook.NotificationTarget.TopicName)
-		}
-	}
-
 	return nil
 }
 

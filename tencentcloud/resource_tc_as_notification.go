@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 )
@@ -102,15 +103,23 @@ func resourceTencentCloudAsNotificationRead(d *schema.ResourceData, meta interfa
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	notification, err := asService.DescribeNotificationById(ctx, notificationId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		notification, has, e := asService.DescribeNotificationById(ctx, notificationId)
+		if e != nil {
+			return retryError(e)
+		}
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+		d.Set("scaling_group_id", *notification.AutoScalingGroupId)
+		d.Set("notification_type", flattenStringList(notification.NotificationTypes))
+		d.Set("notification_user_group_ids", flattenStringList(notification.NotificationUserGroupIds))
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	d.Set("scaling_group_id", *notification.AutoScalingGroupId)
-	d.Set("notification_type", flattenStringList(notification.NotificationTypes))
-	d.Set("notification_user_group_ids", flattenStringList(notification.NotificationUserGroupIds))
-
 	return nil
 }
 
