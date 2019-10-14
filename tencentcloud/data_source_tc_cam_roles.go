@@ -96,7 +96,7 @@ func dataSourceTencentCloudCamRoles() *schema.Resource {
 }
 
 func dataSourceTencentCloudCamRolesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ca,_roles.read")()
+	defer logElapsed("data_source.tencentcloud_cam_roles.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
