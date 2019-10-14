@@ -12,17 +12,16 @@ import (
 
 func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
 	id := new(string)
-	proxyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, proxyId, "HTTP"),
+		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTP"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapLayer7ListenerBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, proxyId, "HTTP"),
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "protocol", "HTTP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
@@ -35,9 +34,17 @@ func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
 			{
 				Config: testAccGaapLayer7ListenerHttpUpdateName,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, proxyId, "HTTP"),
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener-new"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"proxy_id",
+				},
 			},
 		},
 	})
@@ -45,17 +52,16 @@ func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
 
 func TestAccTencentCloudGaapLayer7Listener_https(t *testing.T) {
 	id := new(string)
-	proxyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, proxyId, "HTTPS"),
+		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTPS"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapLayer7ListenerHttps,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, proxyId, "HTTPS"),
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTPS"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "protocol", "HTTPS"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
@@ -69,10 +75,18 @@ func TestAccTencentCloudGaapLayer7Listener_https(t *testing.T) {
 			{
 				Config: testAccGaapLayer7ListenerHttpsUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, proxyId, "HTTPS"),
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTPS"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener-new"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "certificate_id"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"proxy_id",
+				},
 			},
 		},
 	})
@@ -80,17 +94,16 @@ func TestAccTencentCloudGaapLayer7Listener_https(t *testing.T) {
 
 func TestAccTencentCloudGaapLayer7Listener_httpsTwoWayAuthentication(t *testing.T) {
 	id := new(string)
-	proxyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, proxyId, "HTTPS"),
+		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTPS"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapLayer7ListenerHttpsTwoWayAuthentication,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, proxyId, "HTTPS"),
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTPS"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "protocol", "HTTPS"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
@@ -108,17 +121,16 @@ func TestAccTencentCloudGaapLayer7Listener_httpsTwoWayAuthentication(t *testing.
 
 func TestAccTencentCloudGaapLayer7Listener_httpsForwardHttps(t *testing.T) {
 	id := new(string)
-	proxyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, proxyId, "HTTPS"),
+		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTPS"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapLayer7ListenerHttpsForwardHttps,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, proxyId, "HTTPS"),
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTPS"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "protocol", "HTTPS"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
@@ -133,7 +145,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsForwardHttps(t *testing.T) {
 	})
 }
 
-func testAccCheckGaapLayer7ListenerExists(n string, id, proxyId *string, protocol string) resource.TestCheckFunc {
+func testAccCheckGaapLayer7ListenerExists(n string, id *string, protocol string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -144,16 +156,11 @@ func testAccCheckGaapLayer7ListenerExists(n string, id, proxyId *string, protoco
 			return errors.New("no listener ID is set")
 		}
 
-		attrProxyId := rs.Primary.Attributes["proxy_id"]
-		if attrProxyId == "" {
-			return errors.New("no proxy ID is set")
-		}
-
 		service := GaapService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		switch protocol {
 		case "HTTP":
-			listeners, err := service.DescribeHTTPListeners(context.TODO(), &attrProxyId, &rs.Primary.ID, nil, nil)
+			listeners, err := service.DescribeHTTPListeners(context.TODO(), nil, &rs.Primary.ID, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -164,13 +171,12 @@ func testAccCheckGaapLayer7ListenerExists(n string, id, proxyId *string, protoco
 				}
 				if rs.Primary.ID == *l.ListenerId {
 					*id = *l.ListenerId
-					*proxyId = attrProxyId
 					break
 				}
 			}
 
 		case "HTTPS":
-			listeners, err := service.DescribeHTTPSListeners(context.TODO(), &attrProxyId, &rs.Primary.ID, nil, nil)
+			listeners, err := service.DescribeHTTPSListeners(context.TODO(), nil, &rs.Primary.ID, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -181,7 +187,6 @@ func testAccCheckGaapLayer7ListenerExists(n string, id, proxyId *string, protoco
 				}
 				if rs.Primary.ID == *l.ListenerId {
 					*id = *l.ListenerId
-					*proxyId = attrProxyId
 					break
 				}
 			}
@@ -195,14 +200,14 @@ func testAccCheckGaapLayer7ListenerExists(n string, id, proxyId *string, protoco
 	}
 }
 
-func testAccCheckGaapLayer7ListenerDestroy(id, proxyId *string, protocol string) resource.TestCheckFunc {
+func testAccCheckGaapLayer7ListenerDestroy(id *string, protocol string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := GaapService{client: client}
 
 		switch protocol {
 		case "HTTP":
-			listeners, err := service.DescribeHTTPListeners(context.TODO(), proxyId, id, nil, nil)
+			listeners, err := service.DescribeHTTPListeners(context.TODO(), nil, id, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -211,7 +216,7 @@ func testAccCheckGaapLayer7ListenerDestroy(id, proxyId *string, protocol string)
 			}
 
 		case "HTTPS":
-			listeners, err := service.DescribeHTTPSListeners(context.TODO(), proxyId, id, nil, nil)
+			listeners, err := service.DescribeHTTPSListeners(context.TODO(), nil, id, nil, nil)
 			if err != nil {
 				return err
 			}

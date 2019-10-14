@@ -103,7 +103,7 @@ func testAccCheckAsScalingConfigExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("auto scaling configuration id is not set")
 		}
 		asService := AsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		_, err := asService.DescribeLaunchConfigurationById(ctx, rs.Primary.ID)
+		_, _, err := asService.DescribeLaunchConfigurationById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -123,7 +123,7 @@ func testAccCheckAsScalingConfigDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := asService.DescribeLaunchConfigurationById(ctx, rs.Primary.ID)
+		_, _, err := asService.DescribeLaunchConfigurationById(ctx, rs.Primary.ID)
 		if err == nil {
 			return fmt.Errorf("auto scaling configuration still exists: %s", rs.Primary.ID)
 		}
