@@ -306,7 +306,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_role_policy_attachments":  dataSourceTencentCloudCamRolePolicyAttachments(),
 			"tencentcloud_cam_user_policy_attachments":  dataSourceTencentCloudCamUserPolicyAttachments(),
 			"tencentcloud_cam_group_policy_attachments": dataSourceTencentCloudCamGroupPolicyAttachments(),
-			"tencentcloud_cam_SAML_providers": dataSourceTencentCloudCamSAMLProviders(),
+			"tencentcloud_cam_SAML_providers":           dataSourceTencentCloudCamSAMLProviders(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -384,7 +384,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_group_policy_attachment": resourceTencentCloudCamGroupPolicyAttachment(),
 			"tencentcloud_cam_group":                   resourceTencentCloudCamGroup(),
 			"tencentcloud_cam_group_membership":        resourceTencentCloudCamGroupMembership(),
-			"tencentcloud_cam_SAML_provider": resourceTencentCloudCamSAMLProvider(),
+			"tencentcloud_cam_SAML_provider":           resourceTencentCloudCamSAMLProvider(),
 		},
 
 		ConfigureFunc: providerConfigure,
