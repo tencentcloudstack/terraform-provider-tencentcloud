@@ -26,7 +26,7 @@ func testSweepAsScalingGroups(region string) error {
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(TencentCloudClient)
+	client := sharedClient.(*TencentCloudClient)
 
 	asService := AsService{
 		client: client.apiV3Conn,
@@ -139,7 +139,7 @@ func testAccCheckAsScalingGroupExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("auto scaling group id is not set")
 		}
 		asService := AsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		_, err := asService.DescribeAutoScalingGroupById(ctx, rs.Primary.ID)
+		_, _, err := asService.DescribeAutoScalingGroupById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -159,7 +159,7 @@ func testAccCheckAsScalingGroupDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := asService.DescribeAutoScalingGroupById(ctx, rs.Primary.ID)
+		_, _, err := asService.DescribeAutoScalingGroupById(ctx, rs.Primary.ID)
 		if err == nil {
 			return fmt.Errorf("auto scaling group still exists: %s", rs.Primary.ID)
 		}

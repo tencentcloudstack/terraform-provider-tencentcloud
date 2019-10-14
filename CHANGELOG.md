@@ -1,5 +1,10 @@
 ## 1.20.2 (Unreleased)
 
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_gaap_http_domain` support import
+* Resource: `tencentcloud_gaap_layer7_listener` support import
+
 BUG FIXES:
 
 * Resource: `tencentcloud_gaap_http_domain` fix sometimes can't enable realserver auth
