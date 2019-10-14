@@ -85,13 +85,13 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	var members *[]*string
+	var members []*string
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeGroupMembershipById(ctx, groupId)
 		if e != nil {
 			return retryError(e)
 		}
-		members = &result
+		members = result
 		return nil
 	})
 	if err != nil {
@@ -100,7 +100,7 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 	}
 
 	d.Set("group_id", groupId)
-	d.Set("user_ids", flattenStringList(*members))
+	d.Set("user_ids", members)
 
 	return nil
 }

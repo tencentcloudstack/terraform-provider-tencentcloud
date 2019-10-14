@@ -146,7 +146,7 @@ func dataSourceTencentCloudCamGroupPolicyAttachmentsRead(d *schema.ResourceData,
 			"policy_name": *policy.PolicyName,
 		}
 		policyOfGroupList = append(policyOfGroupList, mapping)
-		ids = append(ids, groupId+"#"+string(int(*policy.PolicyId)))
+		ids = append(ids, groupId+"#"+strconv.Itoa(int(*policy.PolicyId)))
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
