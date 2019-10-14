@@ -1,4 +1,10 @@
 ## 1.20.2 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_gaap_http_domain` support import
+* Resource: `tencentcloud_gaap_layer7_listener` support import
+
 ## 1.20.1 (October 08, 2019)
 
 ENHANCEMENTS:
