@@ -32,6 +32,7 @@ Data Sources
   tencentcloud_cam_groups
   tencentcloud_cam_group_policy_attachments
   tencentcloud_cam_group_memberships
+  tencentcloud_cam_SAML_providers
   tencentcloud_cbs_snapshots
   tencentcloud_cbs_storages
   tencentcloud_ccn_bandwidth_limits
@@ -106,6 +107,7 @@ CAM Resources
   tencentcloud_cam_group
   tencentcloud_cam_group_policy_attachment
   tencentcloud_cam_group_membership
+  tencentcloud_cam_SAML_provider
 
 CBS Resources
   tencentcloud_cbs_storage
@@ -304,6 +306,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_role_policy_attachments":  dataSourceTencentCloudCamRolePolicyAttachments(),
 			"tencentcloud_cam_user_policy_attachments":  dataSourceTencentCloudCamUserPolicyAttachments(),
 			"tencentcloud_cam_group_policy_attachments": dataSourceTencentCloudCamGroupPolicyAttachments(),
+			"tencentcloud_cam_SAML_providers": dataSourceTencentCloudCamSAMLProviders(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -381,6 +384,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_group_policy_attachment": resourceTencentCloudCamGroupPolicyAttachment(),
 			"tencentcloud_cam_group":                   resourceTencentCloudCamGroup(),
 			"tencentcloud_cam_group_membership":        resourceTencentCloudCamGroupMembership(),
+			"tencentcloud_cam_SAML_provider": resourceTencentCloudCamSAMLProvider(),
 		},
 
 		ConfigureFunc: providerConfigure,
