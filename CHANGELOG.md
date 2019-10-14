@@ -1,4 +1,26 @@
 ## 1.20.2 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_cam_users`
+* **New Data Source**: `tencentcloud_cam_groups`
+* **New Data Source**: `tencentcloud_cam_policies`
+* **New Data Source**: `tencentcloud_cam_roles`
+* **New Data Source**: `tencentcloud_cam_user_policy_attachments`
+* **New Data Source**: `tencentcloud_cam_group_policy_attachments`
+* **New Data Source**: `tencentcloud_cam_role_policy_attachments`
+* **New Data Source**: `tencentcloud_cam_group_memberships`
+* **New Data Source**: `tencentcloud_cam_SAML_providers`
+* **New Resource**: `tencentcloud_cam_user`
+* **New Resource**: `tencentcloud_cam_group`
+* **New Resource**: `tencentcloud_cam_role`
+* **New Resource**: `tencentcloud_cam_policy`
+* **New Resource**: `tencentcloud_cam_user_policy_attachment`
+* **New Resource**: `tencentcloud_cam_group_policy_attachment`
+* **New Resource**: `tencentcloud_cam_role_policy_attachment`
+* **New Resource**: `tencentcloud_cam_group_membership`
+* **New Resource**: `tencentcloud_cam_SAML_provider`
+
 ## 1.20.1 (October 08, 2019)
 
 ENHANCEMENTS:
