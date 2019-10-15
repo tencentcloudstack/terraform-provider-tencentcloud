@@ -140,8 +140,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentRead(d *schema.ResourceData, me
 	d.Set("create_time", *instance.AddTime)
 	d.Set("create_mode", int(*instance.CreateMode))
 	d.Set("policy_type", *instance.PolicyType)
-
-	return resourceTencentCloudCamGroupPolicyAttachmentRead(d, meta)
+	return nil
 }
 
 func resourceTencentCloudCamGroupPolicyAttachmentDelete(d *schema.ResourceData, meta interface{}) error {

@@ -47,7 +47,7 @@ resource "tencentcloud_cam_group_policy_attachment" "example" {
   policy_id = "${tencentcloud_cam_policy.example.id}"
 }
 
-resource "tencentcloud_cam_SAML_provider" "example" {
+resource "tencentcloud_cam_saml_provider" "example" {
   name        = "example"
   meta_data   = "${var.meta_data}"
   description = "test"
@@ -85,6 +85,6 @@ data "tencentcloud_cam_group_policy_attachments" "group_policy_attachments" {
   group_id = "${tencentcloud_cam_group_policy_attachment.example.group_id}"
 }
 
-data "tencentcloud_cam_SAML_providers" "SAML_providers" {
-  name = "${tencentcloud_cam_SAML_provider.example.id}"
+data "tencentcloud_cam_saml_providers" "saml_providers" {
+  name = "${tencentcloud_cam_saml_provider.example.id}"
 }

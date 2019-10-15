@@ -124,7 +124,7 @@ func testAccCheckCamUserDestroy(s *terraform.State) error {
 
 		_, err := camService.DescribeUserById(ctx, rs.Primary.ID)
 		if err == nil {
-			return fmt.Errorf("cam user still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("CAM user still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -137,10 +137,10 @@ func testAccCheckCamUserExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("cam user %s is not found", n)
+			return fmt.Errorf("CAM user %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("cam user id is not set")
+			return fmt.Errorf("CAM user id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -182,19 +182,19 @@ resource "tencentcloud_cam_user" "user_basic" {
 `
 const testAccCamUser_nilPassword = `
 resource "tencentcloud_cam_user" "user_nil_password" {
-  name = "cam-user-testnil"
-  remark = "test"
-  console_login = true
-  use_api = true
-  need_reset_password = true 
-  phone_num = "13631555963"
-  country_code = "86"
-  email        = "141515@qq.com"
+	name                = "cam-user-testnil"
+	remark              = "test"
+	console_login       = true
+	use_api             = true
+	need_reset_password = true
+	phone_num           = "13631555963"
+	country_code        = "86"
+	email               = "141515@qq.com"
 }
 `
 const testAccCamUser_withoutKey = `
 resource "tencentcloud_cam_user" "user_without_key" {
-  name                = "cam-user-testkey""
+  name                = "cam-user-testkey"
   remark              = "test"
   console_login       = false
   use_api             = false

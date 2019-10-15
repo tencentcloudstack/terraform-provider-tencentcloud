@@ -77,12 +77,12 @@ func testAccCheckCamGroupPolicyAttachmentExists(n string) resource.TestCheckFunc
 
 const testAccCamGroupPolicyAttachment_basic = `
 resource "tencentcloud_cam_group" "group" {
-  name   = "cam-group-test"
+  name   = "cam-group-test2"
   remark = "test"
 }
   
 resource "tencentcloud_cam_policy" "policy" {
-  name        = "cam-policy-test1"
+  name        = "cam-policy-test9"
   document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
 	description = "test"
 }
