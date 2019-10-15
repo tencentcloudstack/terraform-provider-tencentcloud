@@ -10,7 +10,9 @@ FEATURES:
 * **New Data Source**: `tencentcloud_cam_group_policy_attachments`
 * **New Data Source**: `tencentcloud_cam_role_policy_attachments`
 * **New Data Source**: `tencentcloud_cam_group_memberships`
-* **New Data Source**: `tencentcloud_cam_SAML_providers`
+* **New Data Source**: `tencentcloud_cam_saml_providers`
+* **New Data Source**: `tencentcloud_reserved_instance_configs`
+* **New Data Source**: `tencentcloud_reserved_instances`
 * **New Resource**: `tencentcloud_cam_user`
 * **New Resource**: `tencentcloud_cam_group`
 * **New Resource**: `tencentcloud_cam_role`
@@ -19,9 +21,7 @@ FEATURES:
 * **New Resource**: `tencentcloud_cam_group_policy_attachment`
 * **New Resource**: `tencentcloud_cam_role_policy_attachment`
 * **New Resource**: `tencentcloud_cam_group_membership`
-* **New Resource**: `tencentcloud_cam_SAML_provider`
-* **New Data Source**: `tencentcloud_reserved_instance_configs`
-* **New Data Source**: `tencentcloud_reserved_instances`
+* **New Resource**: `tencentcloud_cam_saml_provider`
 * **New Resource**: `tencentcloud_reserved_instance`
 
 ENHANCEMENTS:
