@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -43,6 +44,7 @@ type TencentCloudClient struct {
 	tagConn     *tag.Client
 	mongodbConn *mongodb.Client
 	tkeConn     *tke.Client
+	camConn     *cam.Client
 	gaapCoon    *gaap.Client
 	sslCoon     *ssl.Client
 }
@@ -400,4 +402,28 @@ func (me *TencentCloudClient) UseSslClient() *ssl.Client {
 	me.sslCoon = sslConn
 
 	return me.sslCoon
+}
+
+func (me *TencentCloudClient) UseCamClient() *cam.Client {
+	if me.camConn != nil {
+		return me.camConn
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
+
+	camConn, _ := cam.NewClient(credential, me.Region, cpf)
+	var round LogRoundTripper
+
+	camConn.WithHttpTransport(&round)
+	me.camConn = camConn
+
+	return me.camConn
 }
