@@ -158,7 +158,7 @@ func dataSourceTencentCloudCamUsersRead(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOk("email"); ok {
 		params["email"] = v.(string)
 	}
-	if v, ok := d.GetOk("console_login"); ok {
+	if v, ok := d.GetOkExists("console_login"); ok {
 		consoleLogin := v.(bool)
 		if consoleLogin {
 			params["console_login"] = 1

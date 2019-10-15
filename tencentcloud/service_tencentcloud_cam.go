@@ -131,7 +131,7 @@ func (me *CamService) DeleteRoleById(ctx context.Context, roleId string) error {
 func (me *CamService) decodeCamPolicyAttachmentId(id string) (instanceId string, policyId64 uint64, errRet error) {
 	items := strings.Split(id, "#")
 	if len(items) != 2 {
-		return instanceId, policyId64, fmt.Errorf(" id is not exist!!! %s", id)
+		return instanceId, policyId64, fmt.Errorf(" id is not exist %s", id)
 	}
 	instanceId = items[0]
 	policyId, e := strconv.Atoi(items[1])
@@ -470,7 +470,6 @@ func (me *CamService) DescribeGroupPolicyAttachmentById(ctx context.Context, gro
 		}
 		pageStart += 1
 	}
-
 	if len(result) == 0 {
 		return nil, fmt.Errorf("CAM group policy attachment id is not found")
 	}
@@ -734,78 +733,75 @@ func (me *CamService) DescribeUsersByFilter(ctx context.Context, params map[stri
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	for _, user := range response.Response.Data {
-		filterFlag := true
 		if params["name"] != nil {
 			if params["name"].(string) != *user.Name {
-				filterFlag = false
+				continue
 			}
 		}
 		if params["remark"] != nil {
 			if user.Remark != nil {
-				if params["name"].(string) != *user.Remark {
-					filterFlag = false
+				if params["remark"].(string) != *user.Remark {
+					continue
 				}
 			} else {
-				filterFlag = false
+				continue
 			}
 		}
 		if params["phone_num"] != nil {
 			if user.PhoneNum != nil {
 				if params["phone_num"].(string) != *user.PhoneNum {
-					filterFlag = false
+					continue
 				}
 			} else {
-				filterFlag = false
+				continue
 			}
 		}
 		if params["country_code"] != nil {
 			if user.PhoneNum != nil {
 				if params["country_code"].(string) != *user.PhoneNum {
-					filterFlag = false
+					continue
 				}
 			} else {
-				filterFlag = false
+				continue
 			}
 		}
 		if params["email"] != nil {
 			if user.PhoneNum != nil {
 				if params["email"].(string) != *user.PhoneNum {
-					filterFlag = false
+					continue
 				}
 			} else {
-				filterFlag = false
+				continue
 			}
 		}
 		if params["uin"] != nil {
 			if user.Uin != nil {
 				if params["uin"].(int) != int(*user.Uin) {
-					filterFlag = false
+					continue
 				}
 			} else {
-				filterFlag = false
+				continue
 			}
 		}
 		if params["uid"] != nil {
 			if user.Uid != nil {
 				if params["uid"].(int) != int(*user.Uid) {
-					filterFlag = false
+					continue
 				}
 			} else {
-				filterFlag = false
+				continue
 			}
 		}
 		if params["console_login"] != nil {
 			if user.ConsoleLogin != nil {
-				if !(params["console_login"].(bool) && int(*user.ConsoleLogin) != 0) || (params["console_login"].(bool) && int(*user.ConsoleLogin) != 1) {
-					filterFlag = false
+				if params["console_login"].(int) != int(*user.ConsoleLogin) {
+					continue
 				}
 			} else {
-				filterFlag = false
+				continue
 			}
 		}
-		if filterFlag {
-			result = append(result, user)
-		}
+		result = append(result, user)
 	}
 
 	return
