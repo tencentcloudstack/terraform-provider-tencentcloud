@@ -136,7 +136,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	if v, ok := d.GetOk("remark"); ok {
 		request.Remark = stringToPointer(v.(string))
 	}
-	if v, ok := d.GetOk("use_api"); ok {
+	if v, ok := d.GetOkExists("use_api"); ok {
 		apiBool := v.(bool)
 		apiInt := uint64(1)
 		if !apiBool {
@@ -144,7 +144,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		}
 		request.UseApi = &apiInt
 	}
-	if v, ok := d.GetOk("console_login"); ok {
+	if v, ok := d.GetOkExists("console_login"); ok {
 		loginBool := v.(bool)
 		loginInt := uint64(1)
 		if !loginBool {
@@ -152,7 +152,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		}
 		request.ConsoleLogin = &loginInt
 	}
-	if v, ok := d.GetOk("need_reset_password"); ok {
+	if v, ok := d.GetOkExists("need_reset_password"); ok {
 		resetBool := v.(bool)
 		resetInt := uint64(1)
 		if !resetBool {
@@ -310,9 +310,6 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 			log.Printf("[CRITAL]%s update CAM user description failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-	}
-	for _, attr := range updateAttrs {
-		d.SetPartial(attr)
 	}
 
 	return nil

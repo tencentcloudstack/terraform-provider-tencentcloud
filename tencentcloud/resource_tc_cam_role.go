@@ -100,7 +100,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 	if v, ok := d.GetOk("description"); ok {
 		request.Description = stringToPointer(v.(string))
 	}
-	if v, ok := d.GetOk("console_login"); ok {
+	if v, ok := d.GetOkExists("console_login"); ok {
 		loginBool := v.(bool)
 		loginInt := uint64(1)
 		if !loginBool {
