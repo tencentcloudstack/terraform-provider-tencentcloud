@@ -70,6 +70,8 @@ Data Sources
   tencentcloud_placement_groups
   tencentcloud_redis_instances
   tencentcloud_redis_zone_config
+  tencentcloud_reserved_instance_configs
+  tencentcloud_reserved_instances
   tencentcloud_route_table
   tencentcloud_security_group
   tencentcloud_security_groups
@@ -123,6 +125,7 @@ CVM Resources
   tencentcloud_eip_association
   tencentcloud_key_pair
   tencentcloud_placement_group
+  tencentcloud_reserved_instance
 
 DC Resources
   tencentcloud_dcx
@@ -278,6 +281,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_eips":                        dataSourceTencentCloudEips(),
 			"tencentcloud_key_pairs":                   dataSourceTencentCloudKeyPairs(),
 			"tencentcloud_enis":                        dataSourceTencentCloudEnis(),
+			"tencentcloud_reserved_instance_configs":   dataSourceTencentCloudReservedInstanceConfigs(),
+			"tencentcloud_reserved_instances":          dataSourceTencentCloudReservedInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -347,6 +352,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_placement_group":            resourceTencentCloudPlacementGroup(),
 			"tencentcloud_eni":                        resourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":             resourceTencentCloudEniAttachment(),
+			"tencentcloud_reserved_instance":          resourceTencentCloudReservedInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
