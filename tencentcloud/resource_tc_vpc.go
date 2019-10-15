@@ -166,45 +166,50 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	id := d.Id()
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e := service.DescribeVpc(ctx, id)
+		if e != nil {
+			return retryError(e)
+		}
 
-	info, has, err := service.DescribeVpc(ctx, id)
+		// deleted
+		if has == 0 {
+			log.Printf("[WARN]%s %s\n", logId, "vpc has been delete")
+			d.SetId("")
+			return nil
+		}
+
+		if has != 1 {
+			errRet := fmt.Errorf("one vpc_id read get %d vpc info", has)
+			log.Printf("[CRITAL]%s %s\n", logId, errRet.Error())
+			return resource.NonRetryableError(errRet)
+		}
+
+		tags := make(map[string]string, len(info.tags))
+		for _, tag := range info.tags {
+			if tag.Key == nil {
+				return resource.NonRetryableError(fmt.Errorf("vpc %s tag key is nil", id))
+			}
+			if tag.Value == nil {
+				return resource.NonRetryableError(fmt.Errorf("vpc %s tag value is nil", id))
+			}
+
+			tags[*tag.Key] = *tag.Value
+		}
+
+		d.Set("name", info.name)
+		d.Set("cidr_block", info.cidr)
+		d.Set("dns_servers", info.dnsServers)
+		d.Set("is_multicast", info.isMulticast)
+		d.Set("create_time", info.createTime)
+		d.Set("is_default", info.isDefault)
+		d.Set("tags", tags)
+
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	// deleted
-	if has == 0 {
-		log.Printf("[WARN]%s %s\n", logId, "vpc has been delete")
-		d.SetId("")
-		return nil
-	}
-
-	if has != 1 {
-		errRet := fmt.Errorf("one vpc_id read get %d vpc info", has)
-		log.Printf("[CRITAL]%s %s\n", logId, errRet.Error())
-		return errRet
-	}
-
-	tags := make(map[string]string, len(info.tags))
-	for _, tag := range info.tags {
-		if tag.Key == nil {
-			return fmt.Errorf("vpc %s tag key is nil", id)
-		}
-		if tag.Value == nil {
-			return fmt.Errorf("vpc %s tag value is nil", id)
-		}
-
-		tags[*tag.Key] = *tag.Value
-	}
-
-	d.Set("name", info.name)
-	d.Set("cidr_block", info.cidr)
-	d.Set("dns_servers", info.dnsServers)
-	d.Set("is_multicast", info.isMulticast)
-	d.Set("create_time", info.createTime)
-	d.Set("is_default", info.isDefault)
-	d.Set("tags", tags)
-
 	return nil
 }
 

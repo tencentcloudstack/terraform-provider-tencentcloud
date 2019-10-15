@@ -114,24 +114,29 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e := service.DescribeCcn(ctx, d.Id())
+		if e != nil {
+			return retryError(e)
+		}
 
-	info, has, err := service.DescribeCcn(ctx, d.Id())
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+
+		d.Set("name", info.name)
+		d.Set("description", info.description)
+		d.Set("qos", strings.ToUpper(info.qos))
+		d.Set("state", strings.ToUpper(info.state))
+		d.Set("instance_count", info.instanceCount)
+		d.Set("create_time", info.createTime)
+
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	if has == 0 {
-		d.SetId("")
-		return nil
-	}
-
-	d.Set("name", info.name)
-	d.Set("description", info.description)
-	d.Set("qos", strings.ToUpper(info.qos))
-	d.Set("state", strings.ToUpper(info.state))
-	d.Set("instance_count", info.instanceCount)
-	d.Set("create_time", info.createTime)
-
 	return nil
 }
 
@@ -178,14 +183,21 @@ func resourceTencentCloudCcnDelete(d *schema.ResourceData, meta interface{}) err
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	_, has, err := service.DescribeCcn(ctx, d.Id())
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, has, e := service.DescribeCcn(ctx, d.Id())
+		if e != nil {
+			return retryError(e)
+		}
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-	if has == 0 {
-		return nil
-	}
+
 	if err = service.DeleteCcn(ctx, d.Id()); err != nil {
 		return err
 	}

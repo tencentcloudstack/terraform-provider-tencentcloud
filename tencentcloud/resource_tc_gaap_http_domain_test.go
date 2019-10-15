@@ -37,6 +37,11 @@ func TestAccTencentCloudGaapHttpDomain_basic(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_http_domain.foo", "gaap_auth_id"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_gaap_http_domain.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -65,6 +70,11 @@ func TestAccTencentCloudGaapHttpDomain_https(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "gaap_auth", "false"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_http_domain.foo", "gaap_auth_id"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_gaap_http_domain.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

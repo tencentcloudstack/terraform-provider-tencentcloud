@@ -20,6 +20,19 @@ FEATURES:
 * **New Resource**: `tencentcloud_cam_role_policy_attachment`
 * **New Resource**: `tencentcloud_cam_group_membership`
 * **New Resource**: `tencentcloud_cam_SAML_provider`
+* **New Data Source**: `tencentcloud_reserved_instance_configs`
+* **New Data Source**: `tencentcloud_reserved_instances`
+* **New Resource**: `tencentcloud_reserved_instance`
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_gaap_http_domain` support import
+* Resource: `tencentcloud_gaap_layer7_listener` support import
+
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_http_domain` fix sometimes can't enable realserver auth
+
 
 ## 1.20.1 (October 08, 2019)
 

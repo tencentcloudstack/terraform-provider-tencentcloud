@@ -32,7 +32,7 @@ Data Sources
   tencentcloud_cam_groups
   tencentcloud_cam_group_policy_attachments
   tencentcloud_cam_group_memberships
-  tencentcloud_cam_SAML_providers
+  tencentcloud_cam_saml_providers
   tencentcloud_cbs_snapshots
   tencentcloud_cbs_storages
   tencentcloud_ccn_bandwidth_limits
@@ -79,6 +79,8 @@ Data Sources
   tencentcloud_placement_groups
   tencentcloud_redis_instances
   tencentcloud_redis_zone_config
+  tencentcloud_reserved_instance_configs
+  tencentcloud_reserved_instances
   tencentcloud_route_table
   tencentcloud_security_group
   tencentcloud_security_groups
@@ -107,7 +109,7 @@ CAM Resources
   tencentcloud_cam_group
   tencentcloud_cam_group_policy_attachment
   tencentcloud_cam_group_membership
-  tencentcloud_cam_SAML_provider
+  tencentcloud_cam_saml_provider
 
 CBS Resources
   tencentcloud_cbs_storage
@@ -143,6 +145,7 @@ CVM Resources
   tencentcloud_eip_association
   tencentcloud_key_pair
   tencentcloud_placement_group
+  tencentcloud_reserved_instance
 
 DC Resources
   tencentcloud_dcx
@@ -306,7 +309,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_role_policy_attachments":  dataSourceTencentCloudCamRolePolicyAttachments(),
 			"tencentcloud_cam_user_policy_attachments":  dataSourceTencentCloudCamUserPolicyAttachments(),
 			"tencentcloud_cam_group_policy_attachments": dataSourceTencentCloudCamGroupPolicyAttachments(),
-			"tencentcloud_cam_SAML_providers":           dataSourceTencentCloudCamSAMLProviders(),
+			"tencentcloud_cam_saml_providers":           dataSourceTencentCloudCamSAMLProviders(),
+			"tencentcloud_reserved_instance_configs":    dataSourceTencentCloudReservedInstanceConfigs(),
+			"tencentcloud_reserved_instances":           dataSourceTencentCloudReservedInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -384,7 +389,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_group_policy_attachment": resourceTencentCloudCamGroupPolicyAttachment(),
 			"tencentcloud_cam_group":                   resourceTencentCloudCamGroup(),
 			"tencentcloud_cam_group_membership":        resourceTencentCloudCamGroupMembership(),
-			"tencentcloud_cam_SAML_provider":           resourceTencentCloudCamSAMLProvider(),
+			"tencentcloud_cam_saml_provider":           resourceTencentCloudCamSAMLProvider(),
+			"tencentcloud_reserved_instance":           resourceTencentCloudReservedInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

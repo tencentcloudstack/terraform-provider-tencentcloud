@@ -19,6 +19,14 @@ resource "tencentcloud_gaap_layer7_listener" "foo" {
   proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
 }
 ```
+
+Import
+
+GAAP layer7 listener can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_layer7_listener.foo listener-11112222
+```
 */
 package tencentcloud
 
@@ -37,6 +45,10 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 		Read:   resourceTencentCloudGaapLayer7ListenerRead,
 		Update: resourceTencentCloudGaapLayer7ListenerUpdate,
 		Delete: resourceTencentCloudGaapLayer7ListenerDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"protocol": {
 				Type:         schema.TypeString,
@@ -177,7 +189,6 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	id := d.Id()
-	proxyId := d.Get("proxy_id").(string)
 	protocol := d.Get("protocol").(string)
 	var (
 		name                string
@@ -192,110 +203,142 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	switch protocol {
-	case "HTTP":
-		listeners, err := service.DescribeHTTPListeners(ctx, &proxyId, &id, nil, nil)
-		if err != nil {
-			return err
-		}
-
-		var listener *gaap.HTTPListener
-		for _, l := range listeners {
-			if l.ListenerId == nil {
-				return errors.New("listener id is nil")
+LOOP:
+	for {
+		switch protocol {
+		case "HTTP":
+			listeners, err := service.DescribeHTTPListeners(ctx, nil, &id, nil, nil)
+			if err != nil {
+				return err
 			}
-			if *l.ListenerId == id {
-				listener = l
-				break
-			}
-		}
 
-		if listener == nil {
+			var listener *gaap.HTTPListener
+			for _, l := range listeners {
+				if l.ListenerId == nil {
+					return errors.New("listener id is nil")
+				}
+				if *l.ListenerId == id {
+					listener = l
+					break
+				}
+			}
+
+			if listener == nil {
+				d.SetId("")
+				return nil
+			}
+
+			if listener.ListenerName == nil {
+				return errors.New("listener name is nil")
+			}
+			name = *listener.ListenerName
+
+			if listener.Port == nil {
+				return errors.New("listener port is nil")
+			}
+			port = int(*listener.Port)
+
+			if listener.ListenerStatus == nil {
+				return errors.New("listener status is nil")
+			}
+			status = int(*listener.ListenerStatus)
+
+			if listener.CreateTime == nil {
+				return errors.New("listener create time is nil")
+			}
+			createTime = formatUnixTime(*listener.CreateTime)
+
+			break LOOP
+
+		case "HTTPS":
+			listeners, err := service.DescribeHTTPSListeners(ctx, nil, &id, nil, nil)
+			if err != nil {
+				return err
+			}
+
+			var listener *gaap.HTTPSListener
+			for _, l := range listeners {
+				if l.ListenerId == nil {
+					return errors.New("listener id is nil")
+				}
+				if *l.ListenerId == id {
+					listener = l
+					break
+				}
+			}
+
+			if listener == nil {
+				d.SetId("")
+				return nil
+			}
+
+			if listener.ListenerName == nil {
+				return errors.New("listener name is nil")
+			}
+			name = *listener.ListenerName
+
+			if listener.Port == nil {
+				return errors.New("listener port is nil")
+			}
+			port = int(*listener.Port)
+
+			if listener.CertificateId == nil {
+				return errors.New("listener certificate id is nil")
+			}
+			certificateId = *listener.CertificateId
+
+			if listener.ForwardProtocol == nil {
+				return errors.New("listener forward protocol is nil")
+			}
+			forwardProtocol = listener.ForwardProtocol
+
+			if listener.AuthType == nil {
+				return errors.New("listener auth type is nil")
+			}
+			authType = common.IntPtr(int(*listener.AuthType))
+
+			if listener.ClientCertificateId != nil {
+				clientCertificateId = *listener.ClientCertificateId
+			}
+
+			if listener.ListenerStatus == nil {
+				return errors.New("listener status is nil")
+			}
+			status = int(*listener.ListenerStatus)
+
+			if listener.CreateTime == nil {
+				return errors.New("listener create time is nil")
+			}
+			createTime = formatUnixTime(*listener.CreateTime)
+
+			break LOOP
+
+		case "":
+			// import mode, need check protocol
+			httpListeners, err := service.DescribeHTTPListeners(ctx, nil, &id, nil, nil)
+			if err != nil {
+				return err
+			}
+			if len(httpListeners) > 0 {
+				protocol = "HTTP"
+				continue
+			}
+
+			httpsListeners, err := service.DescribeHTTPSListeners(ctx, nil, &id, nil, nil)
+			if err != nil {
+				return err
+			}
+			if len(httpsListeners) > 0 {
+				protocol = "HTTPS"
+				continue
+			}
+
+			// layer7 listener is not found
 			d.SetId("")
 			return nil
 		}
-
-		if listener.ListenerName == nil {
-			return errors.New("listener name is nil")
-		}
-		name = *listener.ListenerName
-
-		if listener.Port == nil {
-			return errors.New("listener port is nil")
-		}
-		port = int(*listener.Port)
-
-		if listener.ListenerStatus == nil {
-			return errors.New("listener status is nil")
-		}
-		status = int(*listener.ListenerStatus)
-
-		if listener.CreateTime == nil {
-			return errors.New("listener create time is nil")
-		}
-		createTime = formatUnixTime(*listener.CreateTime)
-
-	case "HTTPS":
-		listeners, err := service.DescribeHTTPSListeners(ctx, &proxyId, &id, nil, nil)
-		if err != nil {
-			return err
-		}
-
-		var listener *gaap.HTTPSListener
-		for _, l := range listeners {
-			if l.ListenerId == nil {
-				return errors.New("listener id is nil")
-			}
-			if *l.ListenerId == id {
-				listener = l
-				break
-			}
-		}
-
-		if listener == nil {
-			d.SetId("")
-			return nil
-		}
-
-		if listener.ListenerName == nil {
-			return errors.New("listener name is nil")
-		}
-		name = *listener.ListenerName
-
-		if listener.Port == nil {
-			return errors.New("listener port is nil")
-		}
-		port = int(*listener.Port)
-
-		if listener.CertificateId == nil {
-			return errors.New("listener certificate id is nil")
-		}
-		certificateId = *listener.CertificateId
-
-		if listener.ForwardProtocol == nil {
-			return errors.New("listener forward protocol is nil")
-		}
-		forwardProtocol = listener.ForwardProtocol
-
-		if listener.AuthType == nil {
-			return errors.New("listener auth type is nil")
-		}
-		authType = common.IntPtr(int(*listener.AuthType))
-
-		if listener.ClientCertificateId != nil {
-			clientCertificateId = *listener.ClientCertificateId
-		}
-
-		if listener.ListenerStatus == nil {
-			return errors.New("listener status is nil")
-		}
-		status = int(*listener.ListenerStatus)
-
-		if listener.CreateTime == nil {
-			return errors.New("listener create time is nil")
-		}
-		createTime = formatUnixTime(*listener.CreateTime)
 	}
+	d.Set("protocol", protocol)
 
 	d.Set("name", name)
 	d.Set("port", port)

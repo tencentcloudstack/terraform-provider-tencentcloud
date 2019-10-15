@@ -30,6 +30,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"strings"
 )
@@ -146,25 +147,29 @@ func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{})
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e := service.DescribeDirectConnectGateway(ctx, d.Id())
+		if e != nil {
+			return retryError(e)
+		}
 
-	info, has, err := service.DescribeDirectConnectGateway(ctx, d.Id())
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+
+		d.Set("name", info.name)
+		d.Set("network_type", info.networkType)
+		d.Set("network_instance_id", info.networkInstanceId)
+		d.Set("gateway_type", info.gatewayType)
+		d.Set("cnn_route_type", info.cnnRouteType)
+		d.Set("enable_bgp", info.enableBGP)
+		d.Set("create_time", info.createTime)
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	if has == 0 {
-		d.SetId("")
-		return nil
-	}
-
-	d.Set("name", info.name)
-	d.Set("network_type", info.networkType)
-	d.Set("network_instance_id", info.networkInstanceId)
-	d.Set("gateway_type", info.gatewayType)
-	d.Set("cnn_route_type", info.cnnRouteType)
-	d.Set("enable_bgp", info.enableBGP)
-	d.Set("create_time", info.createTime)
-
 	return nil
 }
 
@@ -190,14 +195,19 @@ func resourceTencentCloudDcGatewayDelete(d *schema.ResourceData, meta interface{
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	_, has, err := service.DescribeDirectConnectGateway(ctx, d.Id())
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, has, e := service.DescribeDirectConnectGateway(ctx, d.Id())
+		if e != nil {
+			return retryError(e)
+		}
+
+		if has == 0 {
+			return nil
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	if has == 0 {
-		return nil
-	}
-
 	return service.DeleteDirectConnectGateway(ctx, d.Id())
 }

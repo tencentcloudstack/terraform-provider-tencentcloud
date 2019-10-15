@@ -145,23 +145,35 @@ func resourceTencentCloudVpcRouteTableRead(d *schema.ResourceData, meta interfac
 
 	id := d.Id()
 
+	var (
+		info VpcRouteTableBasicInfo
+		has  int
+		e    error
+	)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	info, has, err := service.DescribeRouteTable(ctx, id)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e = service.DescribeRouteTable(ctx, id)
+		if e != nil {
+			return retryError(e)
+		}
+		// deleted
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+		if has != 1 {
+			errRet := fmt.Errorf("one route_table_id read get %d route_table info", has)
+			log.Printf("[CRITAL]%s %s", logId, errRet.Error())
+			return resource.NonRetryableError(errRet)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-	// deleted
 	if has == 0 {
-		d.SetId("")
 		return nil
 	}
-	if has != 1 {
-		errRet := fmt.Errorf("one route_table_id read get %d route_table info", has)
-		log.Printf("[CRITAL]%s %s", logId, errRet.Error())
-		return errRet
-	}
-
 	routeEntryIds := make([]string, 0, len(info.entryInfos))
 	for _, v := range info.entryInfos {
 		tfRouteEntryId := fmt.Sprintf("%d.%s", v.routeEntryId, id)
