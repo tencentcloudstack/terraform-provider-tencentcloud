@@ -31,6 +31,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `membership_list` - A list of CAM group membership. Each element contains the following attributes:
   * `group_id` - Id of CAM group.
-  * `user_ids` - Id set of the cam group members.
+  * `user_ids` - Id set of the CAM group members.
 
 

@@ -93,7 +93,7 @@ func resourceTencentCloudCamUser() *schema.Resource {
 			"country_code": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Country code of the phone num, like '86'",
+				Description: "Country code of the phone num, like '86'.",
 			},
 			"email": {
 				Type:        schema.TypeString,
@@ -120,7 +120,7 @@ func resourceTencentCloudCamUser() *schema.Resource {
 			"uid": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Id of the CAM user",
+				Description: "Id of the CAM user.",
 			},
 		},
 	}
