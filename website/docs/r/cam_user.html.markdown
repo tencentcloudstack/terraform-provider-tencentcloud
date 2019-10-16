@@ -31,7 +31,7 @@ The following arguments are supported:
 
 * `name` - (Required, ForceNew) Name of CAM user.
 * `console_login` - (Optional) Indicade whether the CAM user can login or not.
-* `country_code` - (Optional) Country code of the phone num, like '86'
+* `country_code` - (Optional) Country code of the phone num, like '86'.
 * `email` - (Optional) Email of the CAM user.
 * `need_reset_password` - (Optional) Indicate whether the CAM user will reset the password the next time he/her logs in.
 * `password` - (Optional) The password of the CAM user. The password should be set with 8 characters or more and contains uppercase small letters, numbers, and special characters. Only valid when console_login set true. If not set and the value of console_login is true, a random password is automatically generated.
@@ -45,7 +45,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `secret_id` - Secret Id of the CAM user.
 * `secret_key` - Secret key of the CAM user.
-* `uid` - Id of the CAM user
+* `uid` - Id of the CAM user.
 * `uin` - Uin of the CAM User.
 
 
