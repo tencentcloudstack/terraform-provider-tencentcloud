@@ -23,8 +23,8 @@ resource "tencentcloud_cam_group_membership" "foo" {
 
 The following arguments are supported:
 
-* `group_id` - (Required) Id of cam group.
-* `user_ids` - (Required) Id set of the cam group members.
+* `group_id` - (Required) Id of CAM group.
+* `user_ids` - (Required) Id set of the CAM group members.
 
 
 ## Import

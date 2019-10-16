@@ -30,7 +30,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `create_mode` - Mode of Creation of the CAM user policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways. 
+* `create_mode` - Mode of Creation of the CAM user policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.
 * `create_time` - Create time of the CAM user policy attachment.
 * `policy_name` - Name of the policy.
 * `policy_type` - Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.
