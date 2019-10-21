@@ -1,7 +1,8 @@
-dist: trusty
+dist: xenial
 sudo: required
 services:
-- docker
+  - docker
+
 language: go
 go:
   - "1.11.x"
@@ -10,27 +11,22 @@ go:
   - tip
 
 install:
-# This script is used by the Travis build to install a cookie for
-# go.googlesource.com so rate limits are higher when using `go get` to fetch
-# packages that live there.
-# See: https://github.com/golang/go/issues/12933
-- bash scripts/gogetcookie.sh
-- make tools
+  - make tools
 
 script:
-- make lint
-- make test
-- make website-lint
-- make website-test
+  - make lint
+  - make test
+  - make website-lint
+  - make website-test
 
 branches:
   only:
-  - master
+    - master
 
 matrix:
   fast_finish: true
   allow_failures:
-  - go: tip
+    - go: tip
 
 env:
-  - GOFLAGS=-mod=vendor GO111MODULE=on
+  global: GOFLAGS=-mod=vendor
