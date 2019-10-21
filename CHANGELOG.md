@@ -1,4 +1,13 @@
-## 1.22.0 (Unreleased)
+## 1.21.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Updated golang to version 1.13.x
+
+BUG FIXES:
+
+* Fixed docs of CAM
+
 ## 1.21.0 (October 15, 2019)
 
 FEATURES:
@@ -33,7 +42,6 @@ ENHANCEMENTS:
 BUG FIXES:
 
 * Resource: `tencentcloud_gaap_http_domain` fix sometimes can't enable realserver auth
-
 
 ## 1.20.1 (October 08, 2019)
 
@@ -122,7 +130,6 @@ DEPRECATED:
 
 * Data Source: `tencentcloud_kubernetes_clusters`:`container_runtime` is no longer supported. 
 
-
 ## 1.18.0 (September 10, 2019)
 
 FEATURES:
@@ -186,7 +193,6 @@ FEATURES:
 * **New Data Source**: `tencentcloud_kubernetes_clusters`
 * **New Resource**: `tencentcloud_kubernetes_scale_worker`
 * **New Resource**: `tencentcloud_kubernetes_cluster`
-
 
 DEPRECATED:
 * Data Source: `tencentcloud_container_clusters` replaced by `tencentcloud_kubernetes_clusters`.
@@ -406,7 +412,6 @@ FEATURES:
 ENHANCEMENTS:
 
 * resource/tencentcloud_instance: Add `user_data_raw` argument ([#4](https://github.com/terraform-providers/terraform-provider-scaffolding/issues/4))
-
 
 ## 1.2.2 (September 28, 2018)
 
