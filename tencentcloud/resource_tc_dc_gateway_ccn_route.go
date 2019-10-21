@@ -33,6 +33,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"strings"
 )
@@ -109,20 +110,25 @@ func resourceTencentCloudDcGatewayCcnRouteRead(d *schema.ResourceData, meta inte
 	}
 
 	dcgId, routeId := items[0], items[1]
-	info, has, err := service.DescribeDirectConnectGatewayCcnRoute(ctx, dcgId, routeId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e := service.DescribeDirectConnectGatewayCcnRoute(ctx, dcgId, routeId)
+		if e != nil {
+			return retryError(e)
+		}
+
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+
+		d.Set("dcg_id", info.dcgId)
+		d.Set("cidr_block", info.cidrBlock)
+		d.Set("as_path", info.asPaths)
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	if has == 0 {
-		d.SetId("")
-		return nil
-	}
-
-	d.Set("dcg_id", info.dcgId)
-	d.Set("cidr_block", info.cidrBlock)
-	d.Set("as_path", info.asPaths)
-
 	return nil
 }
 

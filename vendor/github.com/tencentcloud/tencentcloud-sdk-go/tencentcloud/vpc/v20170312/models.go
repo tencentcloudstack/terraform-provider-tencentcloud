@@ -264,7 +264,7 @@ type AllocateAddressesRequest struct {
 	AddressType *string `json:"AddressType,omitempty" name:"AddressType"`
 
 	// Anycast发布域。
-	// <ul style="margin:0"><li>已开通Anycast公网加速白名单的用户，可选值：<ul><li>ANYCAST_ZONE_GLOBAL：全球发布域（需要额外开通Anycast全球加速白名单）</li><li>ANYCAST_ZONE_OVERSEAS：海外发布域</li></ul>默认值：ANYCAST_ZONE_OVERSEAS。</li></ul>
+	// <ul style="margin:0"><li>已开通Anycast公网加速白名单的用户，可选值：<ul><li>ANYCAST_ZONE_GLOBAL：全球发布域（需要额外开通Anycast全球加速白名单）</li><li>ANYCAST_ZONE_OVERSEAS：境外发布域</li></ul>默认值：ANYCAST_ZONE_OVERSEAS。</li></ul>
 	AnycastZone *string `json:"AnycastZone,omitempty" name:"AnycastZone"`
 
 	// AnycastEIP是否用于绑定负载均衡。
@@ -288,6 +288,9 @@ type AllocateAddressesResponse struct {
 
 		// 申请到的 EIP 的唯一 ID 列表。
 		AddressSet []*string `json:"AddressSet,omitempty" name:"AddressSet" list`
+
+		// 异步任务TaskId。可以使用[DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)接口查询任务状态。
+		TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -510,6 +513,9 @@ func (r *AssociateAddressRequest) FromJsonString(s string) error {
 type AssociateAddressResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
+
+		// 异步任务TaskId。可以使用[DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)接口查询任务状态。
+		TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1002,6 +1008,12 @@ type CreateCcnRequest struct {
 
 	// CCN服务质量，'PT'：白金，'AU'：金，'AG'：银，默认为‘AU’。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
+
+	// 计费模式，PREPAID：表示预付费，即包年包月，POSTPAID：表示后付费，即按量计费。默认：POSTPAID。
+	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
+
+	// 限速类型，OUTER_REGION_LIMIT表示地域出口限速，INTER_REGION_LIMIT为地域间限速，默认为OUTER_REGION_LIMIT
+	BandwidthLimitType *string `json:"BandwidthLimitType,omitempty" name:"BandwidthLimitType"`
 }
 
 func (r *CreateCcnRequest) ToJsonString() string {
@@ -4923,6 +4935,9 @@ type DirectConnectGateway struct {
 
 	// 是否启用BGP。
 	EnableBGP *bool `json:"EnableBGP,omitempty" name:"EnableBGP"`
+
+	// 开启和关闭BGP的community属性。
+	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitempty" name:"EnableBGPCommunity"`
 }
 
 type DirectConnectGatewayCcnRoute struct {
@@ -5033,6 +5048,9 @@ func (r *DisassociateAddressRequest) FromJsonString(s string) error {
 type DisassociateAddressResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
+
+		// 异步任务TaskId。可以使用[DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)接口查询任务状态。
+		TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -5927,6 +5945,9 @@ func (r *ModifyAddressesBandwidthRequest) FromJsonString(s string) error {
 type ModifyAddressesBandwidthResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
+
+		// 异步任务TaskId。可以使用[DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)接口查询任务状态。
+		TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -7083,6 +7104,9 @@ type ReleaseAddressesResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
+		// 异步任务TaskId。可以使用[DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271)接口查询任务状态。
+		TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
+
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 	} `json:"Response"`
@@ -7718,6 +7742,9 @@ type SecurityGroupPolicy struct {
 
 	// 安全组规则描述。
 	PolicyDescription *string `json:"PolicyDescription,omitempty" name:"PolicyDescription"`
+
+	// 安全组最近修改时间。
+	ModifyTime *string `json:"ModifyTime,omitempty" name:"ModifyTime"`
 }
 
 type SecurityGroupPolicySet struct {

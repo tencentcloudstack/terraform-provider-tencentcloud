@@ -155,34 +155,38 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 	if len(items) != 2 {
 		return fmt.Errorf("entry id be destroyed, we can not get route table id")
 	}
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e := service.DescribeRouteTable(ctx, items[1])
+		if e != nil {
+			return retryError(e)
+		}
 
-	info, has, err := service.DescribeRouteTable(ctx, items[1])
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+
+		if has != 1 {
+			e = fmt.Errorf("one routeTable id get %d routeTable infos", has)
+			return resource.NonRetryableError(e)
+		}
+
+		for _, v := range info.entryInfos {
+			if fmt.Sprintf("%d", v.routeEntryId) == items[0] {
+				d.Set("description", v.description)
+				d.Set("route_table_id", v.routeEntryId)
+				d.Set("destination_cidr_block", v.destinationCidr)
+				d.Set("next_type", v.nextType)
+				d.Set("next_hub", v.nextBub)
+				return nil
+			}
+		}
+		d.SetId("")
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	if has == 0 {
-		d.SetId("")
-		return nil
-	}
-
-	if has != 1 {
-		err = fmt.Errorf("one routeTable id get %d routeTable infos", has)
-		return err
-	}
-	for _, v := range info.entryInfos {
-		if fmt.Sprintf("%d", v.routeEntryId) == items[0] {
-			d.Set("description", v.description)
-			d.Set("route_table_id", v.routeEntryId)
-			d.Set("destination_cidr_block", v.destinationCidr)
-			d.Set("next_type", v.nextType)
-			d.Set("next_hub", v.nextBub)
-			return nil
-		}
-	}
-
-	d.SetId("")
-
 	return nil
 }
 

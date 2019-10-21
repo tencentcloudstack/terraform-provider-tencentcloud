@@ -129,6 +129,7 @@ const (
 	SCALING_GROUP_ACTIVITY_STATUS_CANCELLED            = "CANCELLED"
 )
 
+const AsScheduleNotFound = "ResourceNotFound.ScheduledActionNotFound"
 const (
 	SCALING_GROUP_IN_ACTIVITY_STATUS     = "IN_ACTIVITY"
 	SCALING_GROUP_NOT_IN_ACTIVITY_STATUS = "NOT_IN_ACTIVITY"

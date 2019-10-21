@@ -50,6 +50,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/terraform/helper/hashcode"
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"strings"
 )
@@ -262,52 +263,57 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 	var (
 		dcxId = d.Id()
 	)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		item, has, e := service.DescribeDirectConnectTunnel(ctx, dcxId)
+		if e != nil {
+			return retryError(e)
+		}
 
-	item, has, err := service.DescribeDirectConnectTunnel(ctx, dcxId)
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+
+		d.Set("dc_id", service.strPt2str(item.DirectConnectId))
+		d.Set("name", *item.DirectConnectTunnelName)
+		d.Set("network_type", strings.ToUpper(service.strPt2str(item.NetworkType)))
+		d.Set("network_region", service.strPt2str(item.NetworkRegion))
+		d.Set("vpc_id", service.strPt2str(item.VpcId))
+		d.Set("bandwidth", service.int64Pt2int64(item.Bandwidth))
+
+		var routeType = strings.ToUpper(service.strPt2str(item.RouteType))
+		d.Set("route_type", routeType)
+
+		if routeType == DC_ROUTE_TYPE_BGP {
+			if item.BgpPeer == nil {
+				d.Set("bgp_asn", 0)
+				d.Set("bgp_auth_key", "")
+			} else {
+				d.Set("bgp_asn", service.int64Pt2int64(item.BgpPeer.Asn))
+				d.Set("bgp_auth_key", service.strPt2str(item.BgpPeer.AuthKey))
+			}
+		} else {
+			var routeFilterPrefixes = make([]string, 0, len(item.RouteFilterPrefixes))
+			for _, v := range item.RouteFilterPrefixes {
+				if v.Cidr != nil {
+					routeFilterPrefixes = append(routeFilterPrefixes, *v.Cidr)
+				}
+			}
+			d.Set("route_filter_prefixes", routeFilterPrefixes)
+		}
+
+		d.Set("vlan", service.int64Pt2int64(item.Vlan))
+		d.Set("tencent_address", service.strPt2str(item.TencentAddress))
+		d.Set("customer_address", service.strPt2str(item.CustomerAddress))
+		d.Set("dcg_id", service.strPt2str(item.DirectConnectGatewayId))
+
+		d.Set("state", strings.ToUpper(service.strPt2str(item.State)))
+		d.Set("create_time", service.strPt2str(item.CreatedTime))
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	if has == 0 {
-		d.SetId("")
-	}
-
-	d.Set("dc_id", service.strPt2str(item.DirectConnectId))
-	d.Set("name", *item.DirectConnectTunnelName)
-	d.Set("network_type", strings.ToUpper(service.strPt2str(item.NetworkType)))
-	d.Set("network_region", service.strPt2str(item.NetworkRegion))
-	d.Set("vpc_id", service.strPt2str(item.VpcId))
-	d.Set("bandwidth", service.int64Pt2int64(item.Bandwidth))
-
-	var routeType = strings.ToUpper(service.strPt2str(item.RouteType))
-	d.Set("route_type", routeType)
-
-	if routeType == DC_ROUTE_TYPE_BGP {
-		if item.BgpPeer == nil {
-			d.Set("bgp_asn", 0)
-			d.Set("bgp_auth_key", "")
-		} else {
-			d.Set("bgp_asn", service.int64Pt2int64(item.BgpPeer.Asn))
-			d.Set("bgp_auth_key", service.strPt2str(item.BgpPeer.AuthKey))
-		}
-	} else {
-		var routeFilterPrefixes = make([]string, 0, len(item.RouteFilterPrefixes))
-		for _, v := range item.RouteFilterPrefixes {
-			if v.Cidr != nil {
-				routeFilterPrefixes = append(routeFilterPrefixes, *v.Cidr)
-			}
-		}
-		d.Set("route_filter_prefixes", routeFilterPrefixes)
-	}
-
-	d.Set("vlan", service.int64Pt2int64(item.Vlan))
-	d.Set("tencent_address", service.strPt2str(item.TencentAddress))
-	d.Set("customer_address", service.strPt2str(item.CustomerAddress))
-	d.Set("dcg_id", service.strPt2str(item.DirectConnectGatewayId))
-
-	d.Set("state", strings.ToUpper(service.strPt2str(item.State)))
-	d.Set("create_time", service.strPt2str(item.CreatedTime))
-
 	return nil
 }
 
