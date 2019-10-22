@@ -3,11 +3,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"log"
-	"strings"
 )
 
 type ClusterBasicSetting struct {
@@ -19,6 +20,7 @@ type ClusterBasicSetting struct {
 	VpcId              string
 	ProjectId          int64
 	ClusterNodeNum     int64
+	Tags               map[string]string
 }
 
 type ClusterAdvancedSettings struct {
@@ -95,7 +97,7 @@ getMoreData:
 	if len(response.Response.InstanceSet) > 0 {
 		offset += limit
 	} else {
-		//get empty set,we're done
+		// get empty set,we're done
 		return
 	}
 
@@ -185,6 +187,14 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 		clusterInfo.MaxNodePodNum = int64(*cluster.ClusterNetworkSettings.MaxNodePodNum)
 		clusterInfo.DeployType = strings.ToUpper(*cluster.ClusterType)
 		clusterInfo.Ipvs = *cluster.ClusterNetworkSettings.Ipvs
+
+		if len(cluster.TagSpecification) > 0 {
+			clusterInfo.Tags = make(map[string]string)
+			for _, tag := range cluster.TagSpecification[0].Tags {
+				clusterInfo.Tags[*tag.Key] = *tag.Value
+			}
+		}
+
 		clusterInfos = append(clusterInfos, clusterInfo)
 	}
 	return
@@ -193,7 +203,8 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 	clusterInfo ClusterInfo,
 	has bool,
-	errRet error) {
+	errRet error,
+) {
 
 	logId := getLogId(ctx)
 	request := tke.NewDescribeClustersRequest()
@@ -239,6 +250,13 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 	clusterInfo.DeployType = strings.ToUpper(*cluster.ClusterType)
 	clusterInfo.Ipvs = *cluster.ClusterNetworkSettings.Ipvs
 
+	if len(cluster.TagSpecification) > 0 {
+		clusterInfo.Tags = make(map[string]string)
+		for _, tag := range cluster.TagSpecification[0].Tags {
+			clusterInfo.Tags[*tag.Key] = *tag.Value
+		}
+	}
+
 	return
 }
 
@@ -246,8 +264,9 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	basic ClusterBasicSetting,
 	advanced ClusterAdvancedSettings,
 	cvms RunInstancesForNode,
-	cidrSetting ClusterCidrSettings) (id string, errRet error) {
-
+	cidrSetting ClusterCidrSettings,
+	tags map[string]string,
+) (id string, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewCreateClusterRequest()
 
@@ -265,6 +284,18 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterBasicSettings.VpcId = &basic.VpcId
 	request.ClusterBasicSettings.ClusterDescription = &basic.ClusterDescription
 	request.ClusterBasicSettings.ClusterName = &basic.ClusterName
+	for k, v := range tags {
+		if len(request.ClusterBasicSettings.TagSpecification) == 0 {
+			request.ClusterBasicSettings.TagSpecification = []*tke.TagSpecification{{
+				ResourceType: stringToPointer("cluster"),
+			}}
+		}
+
+		request.ClusterBasicSettings.TagSpecification[0].Tags = append(request.ClusterBasicSettings.TagSpecification[0].Tags, &tke.Tag{
+			Key:   stringToPointer(k),
+			Value: stringToPointer(v),
+		})
+	}
 
 	request.ClusterAdvancedSettings = &tke.ClusterAdvancedSettings{}
 	request.ClusterAdvancedSettings.IPVS = &advanced.Ipvs

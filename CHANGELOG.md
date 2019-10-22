@@ -4,6 +4,9 @@ ENHANCEMENTS:
 
 * Updated golang to version 1.13.x
 
+* Resource: `tencentcloud_kubernetes_cluster` add optional argument `tags`.
+* Data Source: `tencentcloud_kubernetes_clusters` add optional argument `tags`.
+
 BUG FIXES:
 
 * Fixed docs of CAM
