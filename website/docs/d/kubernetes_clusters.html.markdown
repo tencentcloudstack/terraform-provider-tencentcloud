@@ -35,7 +35,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `list` - An information  list of kubernetes clusters . Each element contains the following attributes:
+* `list` - An information list of kubernetes clusters. Each element contains the following attributes:
   * `certification_authority` - The certificate used for access.
   * `cluster_cidr` - A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc.
   * `cluster_deploy_type` - Deployment type of the cluster.

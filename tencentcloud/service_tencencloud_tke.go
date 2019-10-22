@@ -97,7 +97,7 @@ getMoreData:
 	if len(response.Response.InstanceSet) > 0 {
 		offset += limit
 	} else {
-		// get empty set,we're done
+		// get empty set, we're done
 		return
 	}
 
@@ -136,7 +136,7 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 	}()
 
 	if id != "" && name != "" {
-		errRet = fmt.Errorf("cluster_id ,cluster_name only one can be set one")
+		errRet = fmt.Errorf("cluster_id, cluster_name only one can be set one")
 		return
 	}
 
@@ -383,7 +383,7 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context, id string, run
 }
 
 /*
-	if cluster is creating , return error:TencentCloudSDKError] Code=InternalError.ClusterState
+	if cluster is creating, return error:TencentCloudSDKError] Code=InternalError.ClusterState
 */
 func (me *TkeService) DeleteClusterInstances(ctx context.Context, id string, instanceIds []string) (errRet error) {
 	logId := getLogId(ctx)

@@ -20,7 +20,7 @@ variable "default_instance_type" {
   default = "SA1.LARGE8"
 }
 
-#examples for MANAGED_CLUSTER  cluster
+#examples for MANAGED_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = "${var.vpc}"
   cluster_cidr            = "10.1.0.0/16"
@@ -54,7 +54,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_deploy_type = "MANAGED_CLUSTER"
 }
 
-#examples for INDEPENDENT_CLUSTER  cluster
+#examples for INDEPENDENT_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
   vpc_id                  = "${var.vpc}"
   cluster_cidr            = "10.1.0.0/16"
@@ -226,7 +226,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 				value := strings.ToUpper(v.(string))
 				if !strings.Contains(value, "LARGE") {
 					errors = append(errors, fmt.Errorf(
-						"%q  has to be `LARGE` type", k))
+						"%q has to be `LARGE` type", k))
 				}
 				return
 			},
@@ -440,7 +440,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					return
 				}
 				if !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
-					errors = append(errors, fmt.Errorf("%q must in  10.  |  192.168. |  172.[16-31]", k))
+					errors = append(errors, fmt.Errorf("%q must in 10. | 192.168. | 172.[16-31]", k))
 					return
 				}
 
@@ -448,7 +448,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					nextNo := strings.Split(value, ".")[1]
 					no, _ := strconv.ParseInt(nextNo, 10, 64)
 					if no < 16 || no > 31 {
-						errors = append(errors, fmt.Errorf("%q must in  10.  |  192.168. |  172.[16-31]", k))
+						errors = append(errors, fmt.Errorf("%q must in 10. | 192.168. | 172.[16-31]", k))
 						return
 					}
 				}
@@ -798,7 +798,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 			masterCount += count
 		}
 		if masterCount < 3 {
-			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(master_config) should  >=3 ")
+			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(master_config) should >=3")
 		}
 	} else {
 		if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {

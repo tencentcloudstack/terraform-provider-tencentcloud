@@ -130,8 +130,7 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 }
 
 func testAccTkeCluster(key, value string) string {
-	return fmt.Sprintf(
-		`
+	return fmt.Sprintf(`
 	variable "availability_zone" {
 	  default = "ap-guangzhou-3"
 	}

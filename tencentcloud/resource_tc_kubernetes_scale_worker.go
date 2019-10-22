@@ -87,7 +87,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: tkeCvmState(),
 				},
-				Description: "An information list of kubernetes cluster 'WORKER' . Each element contains the following attributes:",
+				Description: "An information list of kubernetes cluster 'WORKER'. Each element contains the following attributes:",
 			},
 		},
 	}
@@ -125,7 +125,7 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 	}
 
 	if !has {
-		return fmt.Errorf("cluster [%s]  is not exist.", clusterId)
+		return fmt.Errorf("cluster [%s] is not exist.", clusterId)
 	}
 
 	if workers, ok := d.GetOk("worker_config"); ok {
