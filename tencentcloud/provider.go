@@ -82,6 +82,9 @@ Data Sources
   tencentcloud_reserved_instance_configs
   tencentcloud_reserved_instances
   tencentcloud_route_table
+  tencentcloud_scf_functions
+  tencentcloud_scf_logs
+  tencentcloud_scf_namespaces
   tencentcloud_security_group
   tencentcloud_security_groups
   tencentcloud_ssl_certificates
@@ -183,6 +186,10 @@ MySQL Resources
 Redis Resources
   tencentcloud_redis_instance
   tencentcloud_redis_backup_config
+
+SCF Resources
+  tencentcloud_scf_function
+  tencentcloud_scf_namespace
 
 SSL Resources
   tencentcloud_ssl_certificate
@@ -312,6 +319,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_saml_providers":           dataSourceTencentCloudCamSAMLProviders(),
 			"tencentcloud_reserved_instance_configs":    dataSourceTencentCloudReservedInstanceConfigs(),
 			"tencentcloud_reserved_instances":           dataSourceTencentCloudReservedInstances(),
+			"tencentcloud_scf_functions":                dataSourceTencentCloudScfFunctions(),
+			"tencentcloud_scf_namespaces":               dataSourceTencentCloudScfNamespaces(),
+			"tencentcloud_scf_logs":                     dataSourceTencentCloudScfLogs(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -391,6 +401,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_group_membership":        resourceTencentCloudCamGroupMembership(),
 			"tencentcloud_cam_saml_provider":           resourceTencentCloudCamSAMLProvider(),
 			"tencentcloud_reserved_instance":           resourceTencentCloudReservedInstance(),
+			"tencentcloud_scf_function":                resourceTencentCloudScfFunction(),
+			"tencentcloud_scf_namespace":               resourceTencentCloudScfNamespace(),
 		},
 
 		ConfigureFunc: providerConfigure,

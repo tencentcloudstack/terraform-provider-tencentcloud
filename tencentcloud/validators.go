@@ -26,7 +26,7 @@ func validateNameRegex(v interface{}, k string) (ws []string, errors []error) {
 func validateNotEmpty(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) == 0 {
-		errors = append(errors, fmt.Errorf("should not use empty string"))
+		errors = append(errors, fmt.Errorf("%s should not use empty string", k))
 	}
 	return
 }
@@ -35,7 +35,7 @@ func validateInstanceType(v interface{}, k string) (ws []string, errors []error)
 	value := v.(string)
 	words := strings.Split(value, ".")
 	if len(words) <= 1 {
-		errors = append(errors, fmt.Errorf("invalid instance_type: %v, should be like S1.SMALL1", value))
+		errors = append(errors, fmt.Errorf("%s invalid instance_type: %v, should be like S1.SMALL1", k, value))
 		return
 	}
 	return
@@ -110,12 +110,12 @@ func validateStringLengthInRange(min, max int) schema.SchemaValidateFunc {
 func validateKeyPairName(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 25 || len(value) == 0 {
-		errors = append(errors, fmt.Errorf("invalid key pair: %v, size too long or too short", value))
+		errors = append(errors, fmt.Errorf("%s invalid key pair: %v, size too long or too short", k, value))
 	}
 
 	pattern := `^[a-zA-Z0-9_]+$`
 	if match, _ := regexp.Match(pattern, []byte(value)); !match {
-		errors = append(errors, fmt.Errorf("invalid key pair: %v, wrong format", value))
+		errors = append(errors, fmt.Errorf("%s invalid key pair: %v, wrong format", k, value))
 	}
 	return
 }
@@ -165,7 +165,7 @@ func validatePort(v interface{}, k string) (ws []string, errors []error) {
 func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 64 || len(value) < 8 {
-		errors = append(errors, fmt.Errorf("invalid password, len(password) must between 8 and 64,%s", value))
+		errors = append(errors, fmt.Errorf("%s invalid password, len(password) must between 8 and 64,%s", k, value))
 	}
 	var match = make(map[string]bool)
 	if strings.ContainsAny(value, "_+-&=!@#$%^*()") {
@@ -185,7 +185,7 @@ func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error
 		}
 	}
 	if len(match) < 2 {
-		errors = append(errors, fmt.Errorf("invalid password, contains at least letters, Numbers, and characters(_+-&=!@#$%%^*()),%s", value))
+		errors = append(errors, fmt.Errorf("%s invalid password, contains at least letters, Numbers, and characters(_+-&=!@#$%%^*()),%s", k, value))
 	}
 	return
 }
@@ -204,12 +204,12 @@ func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
 func validateCosBucketName(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 40 || len(value) < 0 {
-		errors = append(errors, fmt.Errorf("invalid bucket name: %v, size too long or too short", value))
+		errors = append(errors, fmt.Errorf("%s invalid bucket name: %v, size too long or too short", k, value))
 	}
 
 	pattern := `^[a-z0-9-]+$`
 	if match, _ := regexp.Match(pattern, []byte(value)); !match {
-		errors = append(errors, fmt.Errorf("invalid bucket name: %v, wrong format: only support lowercase letters, numbers and -", value))
+		errors = append(errors, fmt.Errorf("%s invalid bucket name: %v, wrong format: only support lowercase letters, numbers and -", k, value))
 	}
 	return
 }
@@ -228,7 +228,7 @@ func validateCosBucketLifecycleTimestamp(v interface{}, k string) (ws []string, 
 func validateAsConfigPassword(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 16 || len(value) < 8 {
-		errors = append(errors, fmt.Errorf("invalid password, len(password) must between 8 and 16,%s", value))
+		errors = append(errors, fmt.Errorf("%s invalid password, len(password) must between 8 and 16,%s", k, value))
 	}
 	var match = make(map[string]bool)
 	if strings.ContainsAny(value, "()~!@#$%^&*-+={}[]:;',.?/") {
@@ -248,7 +248,7 @@ func validateAsConfigPassword(v interface{}, k string) (ws []string, errors []er
 		}
 	}
 	if len(match) < 2 {
-		errors = append(errors, fmt.Errorf("invalid password, contains at least letters, Numbers, and characters(_+-&=!@#$%%^*()),%s", value))
+		errors = append(errors, fmt.Errorf("%s invalid password, contains at least letters, Numbers, and characters(_+-&=!@#$%%^*()),%s", k, value))
 	}
 	return
 }
@@ -263,12 +263,30 @@ func validateAsScheduleTimestamp(v interface{}, k string) (ws []string, errors [
 	return
 }
 
-func validateStringPrefix(prefix string) schema.SchemaValidateFunc {
+// check if string has given prefix, if no one prefix matches, errors will have error
+func validateStringPrefix(prefix ...string) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)
-		if !strings.HasPrefix(value, prefix) {
-			errors = append(errors, fmt.Errorf("%s doesn't have preifx %s", k, prefix))
+		for _, p := range prefix {
+			if strings.HasPrefix(value, p) {
+				return
+			}
 		}
+		errors = append(errors, fmt.Errorf("%s doesn't have preifx %v", k, prefix))
+		return
+	}
+}
+
+// check if string has given suffix, if no one suffix matches, errors will have error
+func validateStringSuffix(suffix ...string) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (ws []string, errors []error) {
+		value := v.(string)
+		for _, s := range suffix {
+			if strings.HasSuffix(value, s) {
+				return
+			}
+		}
+		errors = append(errors, fmt.Errorf("%s doesn't have preifx %v", k, suffix))
 		return
 	}
 }
