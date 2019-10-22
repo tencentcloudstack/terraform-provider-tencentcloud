@@ -48,7 +48,7 @@ func TestAccDataSourceTencentCloudTkeTags(t *testing.T) {
 }
 
 const testAccDataSourceTencentCloudTkeStr = `
-data "tencentcloud_kubernetes_clusters"  "name" {
+data "tencentcloud_kubernetes_clusters" "name" {
   #examples have been created to serve other resources
   cluster_name = "terraform"
 
@@ -59,7 +59,7 @@ data "tencentcloud_kubernetes_clusters"  "name" {
 `
 
 const testAccDataSourceTencentCloudTkeTags = `
-data "tencentcloud_kubernetes_clusters"  "tags" {
+data "tencentcloud_kubernetes_clusters" "tags" {
   #examples have been created to serve other resources
   tags = {
     "test" = "test"

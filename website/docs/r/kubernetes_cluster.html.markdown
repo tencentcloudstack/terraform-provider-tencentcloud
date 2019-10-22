@@ -29,7 +29,7 @@ variable "default_instance_type" {
   default = "SA1.LARGE8"
 }
 
-#examples for MANAGED_CLUSTER  cluster
+#examples for MANAGED_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = "${var.vpc}"
   cluster_cidr            = "10.1.0.0/16"
@@ -63,7 +63,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_deploy_type = "MANAGED_CLUSTER"
 }
 
-#examples for INDEPENDENT_CLUSTER  cluster
+#examples for INDEPENDENT_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
   vpc_id                  = "${var.vpc}"
   cluster_cidr            = "10.1.0.0/16"
