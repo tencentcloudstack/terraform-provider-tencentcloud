@@ -29,6 +29,7 @@ The following arguments are supported:
 * `cluster_id` - (Optional) ID of the cluster. Conflict with cluster_name, can not be set at the same time.
 * `cluster_name` - (Optional) Name of the cluster. Conflict with cluster_id, can not be set at the same time.
 * `result_output_file` - (Optional) Used to save results.
+* `tags` - (Optional) Tags of the cluster.
 
 ## Attributes Reference
 
@@ -44,7 +45,7 @@ In addition to all arguments above, the following attributes are exported:
   * `cluster_max_pod_num` - The maximum number of Pods per node in the cluster.
   * `cluster_max_service_num` - The maximum number of services in the cluster.
   * `cluster_name` - Name of the cluster.
-  * `cluster_node_num` - Number of nodes in the  cluster.
+  * `cluster_node_num` - Number of nodes in the cluster.
   * `cluster_os` - Operating system of the cluster.
   * `cluster_version` - Version of the cluster.
   * `container_runtime` - (**Deprecated**) It has been deprecated from version 1.18.1. Container runtime of the cluster.
@@ -54,6 +55,7 @@ In addition to all arguments above, the following attributes are exported:
   * `pgw_endpoint` - The Intranet address used for access.
   * `project_id` - Project Id of the cluster.
   * `security_policy` - Access policy.
+  * `tags` - Tags of the cluster.
   * `user_name` - User name of account.
   * `vpc_id` - Vpc Id of the cluster.
   * `worker_instances_list` - An information list of cvm within the WORKER clusters. Each element contains the following attributes.
