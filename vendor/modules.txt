@@ -457,7 +457,7 @@ github.com/zclconf/go-cty/cty/msgpack
 github.com/zclconf/go-cty/cty/set
 # github.com/zclconf/go-cty-yaml v0.1.0
 github.com/zclconf/go-cty-yaml
-# github.com/zqfan/tencentcloud-sdk-go v0.0.0-0.20181105105106-4c76f78ff2e6
+# github.com/zqfan/tencentcloud-sdk-go v0.0.0-20181105105106-4c76f78ff2e6
 github.com/zqfan/tencentcloud-sdk-go/client
 github.com/zqfan/tencentcloud-sdk-go/common
 github.com/zqfan/tencentcloud-sdk-go/services/cbs/unversioned
