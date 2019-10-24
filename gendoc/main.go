@@ -63,9 +63,11 @@ func genIdx(fpath string) {
 		Resources    [][]string
 	}
 
-	resources := ""
-	dataSources := []Index{}
-	sources := []Index{}
+	var (
+		resources   string
+		dataSources []Index
+		sources     []Index
+	)
 
 	fname := "provider.go"
 	log.Printf("[START]get description from file: %s\n", fname)
@@ -212,10 +214,21 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 		data["description_short"] = description
 	}
 
-	requiredArgs := []string{}
-	optionalArgs := []string{}
-	attributes := []string{}
-	subStruct := []string{}
+	var (
+		requiredArgs []string
+		optionalArgs []string
+		attributes   []string
+		subStruct    []string
+	)
+
+	if _, ok := resource.Schema["result_output_file"]; dtype == "data_source" && !ok {
+		if resource.DeprecationMessage != "" {
+			log.Printf("[SKIP!]result_output_file missing, skip: %s", fname)
+		} else {
+			log.Printf("[FAIL!]result_output_file missing, %s", fname)
+			os.Exit(1)
+		}
+	}
 
 	for k, v := range resource.Schema {
 		if v.Description == "" {
@@ -306,7 +319,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 
 // getAttributes get attributes from schema
 func getAttributes(step int, k string, v *schema.Schema) []string {
-	attributes := []string{}
+	var attributes []string
 	ident := strings.Repeat(" ", step*2)
 
 	if v.Description == "" {
@@ -320,14 +333,14 @@ func getAttributes(step int, k string, v *schema.Schema) []string {
 			v.Description = fmt.Sprintf("(**Deprecated**) %s %s", v.Deprecated, v.Description)
 		}
 		if _, ok := v.Elem.(*schema.Resource); ok {
-			listAttributes := []string{}
+			var listAttributes []string
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {
 				attrs := getAttributes(step+1, kk, vv)
 				if len(attrs) > 0 {
 					listAttributes = append(listAttributes, attrs...)
 				}
 			}
-			slistAttributes := ""
+			var slistAttributes string
 			sort.Strings(listAttributes)
 			if len(listAttributes) > 0 {
 				slistAttributes = "\n" + strings.Join(listAttributes, "\n")
@@ -355,7 +368,7 @@ func getFileDescription(fname string) (string, error) {
 
 // getSubStruct get sub structure from go file
 func getSubStruct(step int, k string, v *schema.Schema) []string {
-	subStructs := []string{}
+	var subStructs []string
 
 	if v.Description == "" {
 		return subStructs
@@ -363,12 +376,14 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 		checkDescription(k, v.Description)
 	}
 
-	subStruct := []string{}
+	var subStruct []string
 	if v.Type == schema.TypeMap || v.Type == schema.TypeList || v.Type == schema.TypeSet {
 		if _, ok := v.Elem.(*schema.Resource); ok {
 			subStruct = append(subStruct, fmt.Sprintf("\nThe `%s` object supports the following:\n", k))
-			requiredArgs := []string{}
-			optionalArgs := []string{}
+			var (
+				requiredArgs []string
+				optionalArgs []string
+			)
 			for kk, vv := range v.Elem.(*schema.Resource).Schema {
 				if vv.Required {
 					opt := "Required"
@@ -401,7 +416,7 @@ func getSubStruct(step int, k string, v *schema.Schema) []string {
 
 // formatHCL format HLC code
 func formatHCL(s string) string {
-	rr := []string{}
+	var rr []string
 
 	s = strings.TrimSpace(s)
 	m := hclMatch.FindAllStringSubmatch(s, -1)
