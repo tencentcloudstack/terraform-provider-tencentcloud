@@ -184,12 +184,11 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Description:  "Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. The default is `TRAFFIC_POSTPAID_BY_HOUR`.",
 			},
 			"internet_max_bandwidth_out": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      0,
-				ForceNew:     true,
-				ValidateFunc: validateIntegerInRange(0, 100),
-				Description:  "Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). Value range: [0, 100], If this value is not specified, then automatically sets it to 0 Mbps.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				ForceNew:    true,
+				Description: "Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). If this value is not specified, then automatically sets it to 0 Mbps.",
 			},
 			"allocate_public_ip": {
 				Type:        schema.TypeBool,
@@ -550,7 +549,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
-			return retryError(errRet)
+			return retryError(errRet, "InternalError")
 		}
 		if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 			return nil
@@ -571,7 +570,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
-				return retryError(errRet)
+				return retryError(errRet, "InternalError")
 			}
 			if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
 				return nil
@@ -730,7 +729,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
-				return retryError(errRet)
+				return retryError(errRet, "InternalError")
 			}
 			if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 				return nil
@@ -783,7 +782,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 				if errRet != nil {
-					return retryError(errRet)
+					return retryError(errRet, "InternalError")
 				}
 				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 					return nil
@@ -801,7 +800,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 				if errRet != nil {
-					return retryError(errRet)
+					return retryError(errRet, "InternalError")
 				}
 				if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
 					return nil
@@ -859,7 +858,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
-			return retryError(errRet)
+			return retryError(errRet, "InternalError")
 		}
 		if instance == nil {
 			return nil

@@ -82,6 +82,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -287,6 +288,17 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	bucket := d.Id()
 	cosService := CosService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	err := cosService.HeadBucket(ctx, bucket)
+	if err != nil {
+		if awsError, ok := err.(awserr.RequestFailure); ok && awsError.StatusCode() == 404 {
+			log.Printf("[WARN]%s bucket (%s) not found, error code (404)", logId, bucket)
+			d.SetId("")
+			return nil
+		} else {
+			return err
+		}
 	}
 
 	// set bucket in the import case

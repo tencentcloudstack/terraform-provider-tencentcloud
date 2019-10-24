@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -42,6 +43,7 @@ type TencentCloudClient struct {
 	tagConn     *tag.Client
 	mongodbConn *mongodb.Client
 	tkeConn     *tke.Client
+	camConn     *cam.Client
 	gaapCoon    *gaap.Client
 	sslCoon     *ssl.Client
 }
@@ -265,4 +267,17 @@ func (me *TencentCloudClient) UseSslClient() *ssl.Client {
 	me.sslCoon.WithHttpTransport(&LogRoundTripper{})
 
 	return me.sslCoon
+}
+
+// UseCamClient returns cam client for service
+func (me *TencentCloudClient) UseCamClient() *cam.Client {
+	if me.camConn != nil {
+		return me.camConn
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.camConn, _ = cam.NewClient(me.Credential, me.Region, cpf)
+	me.camConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.camConn
 }

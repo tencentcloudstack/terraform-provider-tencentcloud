@@ -236,47 +236,51 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	ruleId := d.Id()
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		sgId, policyType, policy, e := service.DescribeSecurityGroupPolicy(ctx, ruleId)
+		if e != nil {
+			return retryError(e)
+		}
 
-	sgId, policyType, policy, err := service.DescribeSecurityGroupPolicy(ctx, ruleId)
+		if policy == nil {
+			d.SetId("")
+			return nil
+		}
+
+		d.Set("security_group_id", sgId)
+
+		d.Set("type", policyType)
+
+		if policy.CidrBlock != nil && *policy.CidrBlock != "" {
+			d.Set("cidr_ip", *policy.CidrBlock)
+		}
+
+		if policy.SecurityGroupId != nil && *policy.SecurityGroupId != "" {
+			d.Set("source_sgid", *policy.SecurityGroupId)
+		}
+
+		if policy.Protocol != nil {
+			inputProtocol := d.Get("ip_protocol").(string)
+			if inputProtocol == "" {
+				inputProtocol = "ALL"
+			}
+			d.Set("ip_protocol", inputProtocol)
+		}
+
+		if policy.Port != nil {
+			d.Set("port_range", *policy.Port)
+		}
+
+		d.Set("policy", d.Get("policy").(string))
+
+		if policy.PolicyDescription != nil {
+			d.Set("description", *policy.PolicyDescription)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	if policy == nil {
-		d.SetId("")
-		return nil
-	}
-
-	d.Set("security_group_id", sgId)
-
-	d.Set("type", policyType)
-
-	if policy.CidrBlock != nil && *policy.CidrBlock != "" {
-		d.Set("cidr_ip", *policy.CidrBlock)
-	}
-
-	if policy.SecurityGroupId != nil && *policy.SecurityGroupId != "" {
-		d.Set("source_sgid", *policy.SecurityGroupId)
-	}
-
-	if policy.Protocol != nil {
-		inputProtocol := d.Get("ip_protocol").(string)
-		if inputProtocol == "" {
-			inputProtocol = "ALL"
-		}
-		d.Set("ip_protocol", inputProtocol)
-	}
-
-	if policy.Port != nil {
-		d.Set("port_range", *policy.Port)
-	}
-
-	d.Set("policy", d.Get("policy").(string))
-
-	if policy.PolicyDescription != nil {
-		d.Set("description", *policy.PolicyDescription)
-	}
-
 	return nil
 }
 

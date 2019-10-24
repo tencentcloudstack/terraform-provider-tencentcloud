@@ -3,20 +3,20 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type AsService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *AsService) DescribeLaunchConfigurationById(ctx context.Context, configurationId string) (config *as.LaunchConfiguration, errRet error) {
+func (me *AsService) DescribeLaunchConfigurationById(ctx context.Context, configurationId string) (config *as.LaunchConfiguration, has int, errRet error) {
 	logId := getLogId(ctx)
 	request := as.NewDescribeLaunchConfigurationsRequest()
 	request.LaunchConfigurationIds = []*string{&configurationId}
@@ -28,13 +28,12 @@ func (me *AsService) DescribeLaunchConfigurationById(ctx context.Context, config
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.LaunchConfigurationSet) < 1 {
-		errRet = fmt.Errorf("configuration id is not found")
+	has = len(response.Response.LaunchConfigurationSet)
+	if has < 1 {
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	config = response.Response.LaunchConfigurationSet[0]
 	return
 }
@@ -106,7 +105,7 @@ func (me *AsService) DeleteLaunchConfiguration(ctx context.Context, configuratio
 	return nil
 }
 
-func (me *AsService) DescribeAutoScalingGroupById(ctx context.Context, scalingGroupId string) (scalingGroup *as.AutoScalingGroup, errRet error) {
+func (me *AsService) DescribeAutoScalingGroupById(ctx context.Context, scalingGroupId string) (scalingGroup *as.AutoScalingGroup, has int, errRet error) {
 	logId := getLogId(ctx)
 	request := as.NewDescribeAutoScalingGroupsRequest()
 	request.AutoScalingGroupIds = []*string{&scalingGroupId}
@@ -118,18 +117,21 @@ func (me *AsService) DescribeAutoScalingGroupById(ctx context.Context, scalingGr
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.AutoScalingGroupSet) < 1 {
-		errRet = fmt.Errorf("configuration id is not found")
+	has = len(response.Response.AutoScalingGroupSet)
+	if has < 1 {
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	scalingGroup = response.Response.AutoScalingGroupSet[0]
 	return
 }
 
-func (me *AsService) DescribeAutoScalingGroupByFilter(ctx context.Context, scalingGroupId, configurationId, scalingGroupName string) (scalingGroups []*as.AutoScalingGroup, errRet error) {
+func (me *AsService) DescribeAutoScalingGroupByFilter(
+	ctx context.Context,
+	scalingGroupId, configurationId, scalingGroupName string,
+	tags map[string]string,
+) (scalingGroups []*as.AutoScalingGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := as.NewDescribeAutoScalingGroupsRequest()
 	request.Filters = make([]*as.Filter, 0)
@@ -153,6 +155,12 @@ func (me *AsService) DescribeAutoScalingGroupByFilter(ctx context.Context, scali
 			Values: []*string{&scalingGroupName},
 		}
 		request.Filters = append(request.Filters, filter)
+	}
+	for k, v := range tags {
+		request.Filters = append(request.Filters, &as.Filter{
+			Name:   stringToPointer("tag:" + k),
+			Values: []*string{stringToPointer(v)},
+		})
 	}
 
 	offset := 0
@@ -352,7 +360,7 @@ func (me *AsService) DescribeAutoScalingAttachment(ctx context.Context, scalingG
 	return
 }
 
-func (me *AsService) DescribeScalingPolicyById(ctx context.Context, scalingPolicyId string) (scalingPolicy *as.ScalingPolicy, errRet error) {
+func (me *AsService) DescribeScalingPolicyById(ctx context.Context, scalingPolicyId string) (scalingPolicy *as.ScalingPolicy, has int, errRet error) {
 	logId := getLogId(ctx)
 	request := as.NewDescribeScalingPoliciesRequest()
 	request.AutoScalingPolicyIds = []*string{&scalingPolicyId}
@@ -364,13 +372,12 @@ func (me *AsService) DescribeScalingPolicyById(ctx context.Context, scalingPolic
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.ScalingPolicySet) < 1 {
-		errRet = fmt.Errorf("scaling policy id is not found")
+	has = len(response.Response.ScalingPolicySet)
+	if has < 1 {
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	scalingPolicy = response.Response.ScalingPolicySet[0]
 	return
 }
@@ -488,7 +495,7 @@ func (me *AsService) DeleteScheduledAction(ctx context.Context, scheduledActonId
 	return nil
 }
 
-func (me *AsService) DescribeLifecycleHookById(ctx context.Context, lifecycleHookId string) (lifecycleHook *as.LifecycleHook, errRet error) {
+func (me *AsService) DescribeLifecycleHookById(ctx context.Context, lifecycleHookId string) (lifecycleHook *as.LifecycleHook, has int, errRet error) {
 	logId := getLogId(ctx)
 	request := as.NewDescribeLifecycleHooksRequest()
 	request.LifecycleHookIds = []*string{&lifecycleHookId}
@@ -500,13 +507,12 @@ func (me *AsService) DescribeLifecycleHookById(ctx context.Context, lifecycleHoo
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.LifecycleHookSet) < 1 {
-		errRet = fmt.Errorf("lifecycle hook id is not found")
+	has = len(response.Response.LifecycleHookSet)
+	if has < 1 {
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	lifecycleHook = response.Response.LifecycleHookSet[0]
 	return
 }
@@ -527,7 +533,7 @@ func (me *AsService) DeleteLifecycleHook(ctx context.Context, lifecycleHookId st
 	return nil
 }
 
-func (me *AsService) DescribeNotificationById(ctx context.Context, notificationId string) (notification *as.AutoScalingNotification, errRet error) {
+func (me *AsService) DescribeNotificationById(ctx context.Context, notificationId string) (notification *as.AutoScalingNotification, has int, errRet error) {
 	logId := getLogId(ctx)
 	request := as.NewDescribeNotificationConfigurationsRequest()
 	request.AutoScalingNotificationIds = []*string{&notificationId}
@@ -539,13 +545,12 @@ func (me *AsService) DescribeNotificationById(ctx context.Context, notificationI
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.AutoScalingNotificationSet) < 1 {
-		errRet = fmt.Errorf("notification id is not found")
+	has = len(response.Response.AutoScalingNotificationSet)
+	if has < 1 {
 		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	notification = response.Response.AutoScalingNotificationSet[0]
 	return
 }

@@ -482,6 +482,9 @@ type CreateDBInstanceHourRequest struct {
 
 	// 实例标签信息。
 	ResourceTags []*TagInfo `json:"ResourceTags,omitempty" name:"ResourceTags" list`
+
+	// 置放群组 ID。
+	DeployGroupId *string `json:"DeployGroupId,omitempty" name:"DeployGroupId"`
 }
 
 func (r *CreateDBInstanceHourRequest) ToJsonString() string {
@@ -591,6 +594,9 @@ type CreateDBInstanceRequest struct {
 
 	// 实例标签信息。
 	ResourceTags []*TagInfo `json:"ResourceTags,omitempty" name:"ResourceTags" list`
+
+	// 置放群组 ID。
+	DeployGroupId *string `json:"DeployGroupId,omitempty" name:"DeployGroupId"`
 }
 
 func (r *CreateDBInstanceRequest) ToJsonString() string {
@@ -2771,6 +2777,7 @@ type InstanceInfo struct {
 	InitFlag *int64 `json:"InitFlag,omitempty" name:"InitFlag"`
 
 	// 只读vip信息。单独开通只读实例访问的只读实例才有该字段
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	RoVipInfo *RoVipInfo `json:"RoVipInfo,omitempty" name:"RoVipInfo"`
 
 	// 内存容量，单位为MB
@@ -2783,6 +2790,7 @@ type InstanceInfo struct {
 	VpcId *int64 `json:"VpcId,omitempty" name:"VpcId"`
 
 	// 备机信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaveInfo *SlaveInfo `json:"SlaveInfo,omitempty" name:"SlaveInfo"`
 
 	// 实例ID
@@ -2798,6 +2806,7 @@ type InstanceInfo struct {
 	ProtectMode *int64 `json:"ProtectMode,omitempty" name:"ProtectMode"`
 
 	// 只读组详细信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	RoGroups []*RoGroup `json:"RoGroups,omitempty" name:"RoGroups" list`
 
 	// 子网ID，例如：2333
@@ -2822,6 +2831,7 @@ type InstanceInfo struct {
 	TaskStatus *int64 `json:"TaskStatus,omitempty" name:"TaskStatus"`
 
 	// 主实例详细信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	MasterInfo *MasterInfo `json:"MasterInfo,omitempty" name:"MasterInfo"`
 
 	// 实例类型，可能的返回值：“HA”-高可用版；“BASIC”-基础版
@@ -2834,6 +2844,7 @@ type InstanceInfo struct {
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
 	// 灾备实例详细信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DrInfo []*DrInfo `json:"DrInfo,omitempty" name:"DrInfo" list`
 
 	// 外网域名
@@ -3093,7 +3104,7 @@ type ModifyAccountPrivilegesRequest struct {
 	// 数据库的账号，包括用户名和域名。
 	Accounts []*Account `json:"Accounts,omitempty" name:"Accounts" list`
 
-	// 全局权限。其中，GlobalPrivileges 中权限的可选值为："SELECT","INSERT","UPDATE","DELETE","CREATE",	"DROP","REFERENCES","INDEX","ALTER","SHOW DATABASES","CREATE TEMPORARY TABLES","LOCK TABLES","EXECUTE","CREATE VIEW","SHOW VIEW","CREATE ROUTINE","ALTER ROUTINE","EVENT","TRIGGER"。
+	// 全局权限。其中，GlobalPrivileges 中权限的可选值为："SELECT","INSERT","UPDATE","DELETE","CREATE", "PROCESS", "DROP","REFERENCES","INDEX","ALTER","SHOW DATABASES","CREATE TEMPORARY TABLES","LOCK TABLES","EXECUTE","CREATE VIEW","SHOW VIEW","CREATE ROUTINE","ALTER ROUTINE","EVENT","TRIGGER"。
 	GlobalPrivileges []*string `json:"GlobalPrivileges,omitempty" name:"GlobalPrivileges" list`
 
 	// 数据库的权限。Privileges 权限的可选值为："SELECT","INSERT","UPDATE","DELETE","CREATE",	"DROP","REFERENCES","INDEX","ALTER","CREATE TEMPORARY TABLES","LOCK TABLES","EXECUTE","CREATE VIEW","SHOW VIEW","CREATE ROUTINE","ALTER ROUTINE","EVENT","TRIGGER"。
@@ -3182,10 +3193,10 @@ type ModifyBackupConfigRequest struct {
 	// 备份文件的保留时间，单位为天。最小值为7天，最大值为732天。
 	ExpireDays *int64 `json:"ExpireDays,omitempty" name:"ExpireDays"`
 
-	// 备份时间范围，格式为：02:00-06:00，起点和终点时间目前限制为整点，目前可以选择的范围为： 02:00-06:00，06：00-10：00，10:00-14:00，14:00-18:00，18:00-22:00，22:00-02:00。
+	// 备份时间范围，格式为：02:00-06:00，起点和终点时间目前限制为整点，目前可以选择的范围为： 00:00-12:00，02:00-06:00，06：00-10：00，10:00-14:00，14:00-18:00，18:00-22:00，22:00-02:00。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 目标备份方法，可选的值：logical - 逻辑冷备，physical - 物理冷备；默认备份方法为 逻辑冷备。
+	// 自动备份方式，仅支持：physical - 物理冷备
 	BackupMethod *string `json:"BackupMethod,omitempty" name:"BackupMethod"`
 
 	// binlog的保留时间，单位为天。最小值为7天，最大值为732天。该值的设置不能大于备份文件的保留时间。
@@ -4120,6 +4131,7 @@ type SlaveInfo struct {
 	First *SlaveInstanceInfo `json:"First,omitempty" name:"First"`
 
 	// 第二备机信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Second *SlaveInstanceInfo `json:"Second,omitempty" name:"Second"`
 }
 
