@@ -459,12 +459,6 @@ github.com/zclconf/go-cty/cty/set
 github.com/zclconf/go-cty-yaml
 # github.com/zqfan/tencentcloud-sdk-go v0.0.0-20181105105106-4c76f78ff2e6
 github.com/zqfan/tencentcloud-sdk-go/client
-github.com/zqfan/tencentcloud-sdk-go/common
-github.com/zqfan/tencentcloud-sdk-go/services/cbs/unversioned
-github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned
-github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312
-github.com/zqfan/tencentcloud-sdk-go/services/lb/unversioned
-github.com/zqfan/tencentcloud-sdk-go/services/vpc/unversioned
 # go.opencensus.io v0.18.0
 go.opencensus.io
 go.opencensus.io/exemplar
