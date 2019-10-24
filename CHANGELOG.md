@@ -1,4 +1,9 @@
 ## 1.21.2 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_realserver` add ip/domain exists check
+
 ## 1.21.1 (October 23, 2019)
 
 ENHANCEMENTS:
