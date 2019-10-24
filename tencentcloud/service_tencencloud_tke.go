@@ -3,11 +3,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"log"
-	"strings"
 )
 
 type ClusterBasicSetting struct {
@@ -19,6 +20,7 @@ type ClusterBasicSetting struct {
 	VpcId              string
 	ProjectId          int64
 	ClusterNodeNum     int64
+	ClusterStatus      string
 }
 
 type ClusterAdvancedSettings struct {
@@ -29,6 +31,13 @@ type ClusterAdvancedSettings struct {
 type RunInstancesForNode struct {
 	Master []string
 	Work   []string
+}
+
+type InstanceAdvancedSettings struct {
+	MountTarget     string
+	DockerGraphPath string
+	UserScript      string
+	Unschedulable   int64
 }
 
 type ClusterCidrSettings struct {
@@ -173,6 +182,7 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 		clusterInfo.ClusterVersion = *cluster.ClusterVersion
 		clusterInfo.ClusterDescription = *cluster.ClusterDescription
 		clusterInfo.ClusterName = *cluster.ClusterName
+		clusterInfo.ClusterStatus = *cluster.ClusterStatus
 
 		clusterInfo.ProjectId = int64(*cluster.ProjectId)
 		clusterInfo.VpcId = *cluster.ClusterNetworkSettings.VpcId
@@ -226,6 +236,7 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 	clusterInfo.ClusterVersion = *cluster.ClusterVersion
 	clusterInfo.ClusterDescription = *cluster.ClusterDescription
 	clusterInfo.ClusterName = *cluster.ClusterName
+	clusterInfo.ClusterStatus = *cluster.ClusterStatus
 
 	clusterInfo.ProjectId = int64(*cluster.ProjectId)
 	clusterInfo.VpcId = *cluster.ClusterNetworkSettings.VpcId
@@ -246,6 +257,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	basic ClusterBasicSetting,
 	advanced ClusterAdvancedSettings,
 	cvms RunInstancesForNode,
+	iAdvanced InstanceAdvancedSettings,
 	cidrSetting ClusterCidrSettings) (id string, errRet error) {
 
 	logId := getLogId(ctx)
@@ -269,6 +281,12 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterAdvancedSettings = &tke.ClusterAdvancedSettings{}
 	request.ClusterAdvancedSettings.IPVS = &advanced.Ipvs
 	request.ClusterAdvancedSettings.ContainerRuntime = &advanced.ContainerRuntime
+
+	request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
+	request.InstanceAdvancedSettings.MountTarget = &iAdvanced.MountTarget
+	request.InstanceAdvancedSettings.DockerGraphPath = &iAdvanced.DockerGraphPath
+	request.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
+	request.InstanceAdvancedSettings.Unschedulable = &iAdvanced.Unschedulable
 
 	request.RunInstancesForNode = []*tke.RunInstancesForNode{}
 
@@ -317,7 +335,9 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	return
 }
 
-func (me *TkeService) CreateClusterInstances(ctx context.Context, id string, runInstancePara string) (instanceIds []string, errRet error) {
+func (me *TkeService) CreateClusterInstances(ctx context.Context,
+	id string, runInstancePara string,
+	iAdvanced InstanceAdvancedSettings) (instanceIds []string, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewCreateClusterInstancesRequest()
 
@@ -329,6 +349,12 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context, id string, run
 	}()
 	request.ClusterId = &id
 	request.RunInstancePara = &runInstancePara
+
+	request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
+	request.InstanceAdvancedSettings.MountTarget = &iAdvanced.MountTarget
+	request.InstanceAdvancedSettings.DockerGraphPath = &iAdvanced.DockerGraphPath
+	request.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
+	request.InstanceAdvancedSettings.Unschedulable = &iAdvanced.Unschedulable
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().CreateClusterInstances(request)

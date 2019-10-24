@@ -1,11 +1,12 @@
 package tencentcloud
 
 import (
+	"context"
 	"errors"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/common"
-	cvm "github.com/zqfan/tencentcloud-sdk-go/services/cvm/v20170312"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
 var (
@@ -51,28 +52,37 @@ func dataSourceTencentCloudEip() *schema.Resource {
 func dataSourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_eip.read")()
 
-	cvmConn := meta.(*TencentCloudClient).cvmConn
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	req := cvm.NewDescribeAddressesRequest()
-	req.Filters = []*cvm.Filter{}
-
-	filters, filtersOk := d.GetOk("filter")
-	if filtersOk {
-		filterList := filters.(*schema.Set)
-		req.Filters = buildFiltersParamForSDK(filterList)
+	vpcService := VpcService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	req.Limit = common.IntPtr(100)
-	resp, err := cvmConn.DescribeAddresses(req)
+
+	filter := make(map[string][]string)
+	filters, ok := d.GetOk("filter")
+	if ok {
+		for _, v := range filters.(*schema.Set).List() {
+			vv := v.(map[string]interface{})
+			name := vv["name"].(string)
+			filter[name] = []string{}
+			for _, vvv := range vv["values"].([]interface{}) {
+				filter[name] = append(filter[name], vvv.(string))
+			}
+		}
+	}
+
+	var eips []*vpc.Address
+	var errRet error
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		eips, errRet = vpcService.DescribeEipByFilter(ctx, filter)
+		if errRet != nil {
+			return retryError(errRet, "InternalError")
+		}
+		return nil
+	})
 	if err != nil {
 		return err
-	}
-	if *resp.Response.TotalCount == 0 {
-		return errEIPNotFound
-	}
-
-	eips := resp.Response.AddressSet
-	if len(eips) == 0 {
-		return errEIPNotFound
 	}
 
 	includeArrears := false
@@ -84,7 +94,11 @@ func dataSourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) err
 		includeBlocked = v.(bool)
 	}
 
-	var filteredEips []*cvm.Address
+	if len(eips) == 0 {
+		return errEIPNotFound
+	}
+
+	var filteredEips []*vpc.Address
 	for _, eip := range eips {
 		if *eip.IsArrears && !includeArrears {
 			continue
@@ -94,14 +108,15 @@ func dataSourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) err
 		}
 		filteredEips = append(filteredEips, eip)
 	}
+
 	if len(filteredEips) == 0 {
 		return errEIPNotFound
 	}
 
 	eip := filteredEips[0]
-
 	d.SetId(*eip.AddressId)
 	d.Set("public_ip", *eip.AddressIp)
 	d.Set("status", *eip.AddressStatus)
+
 	return nil
 }

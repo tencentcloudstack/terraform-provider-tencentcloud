@@ -1,13 +1,11 @@
 package tencentcloud
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/common"
-	vpc "github.com/zqfan/tencentcloud-sdk-go/services/vpc/unversioned"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
 func dataSourceTencentCloudNats() *schema.Resource {
@@ -89,80 +87,91 @@ func dataSourceTencentCloudNats() *schema.Resource {
 }
 
 func dataSourceTencentCloudNatsRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_nats.read")()
 
-	conn := meta.(*TencentCloudClient).vpcConn
-	args := vpc.NewDescribeNatGatewayRequest()
-	args.Offset = common.IntPtr(0)
-	args.Limit = common.IntPtr(50)
+	logId := getLogId(contextNil)
+	request := vpc.NewDescribeNatGatewaysRequest()
+	request.Offset = uint64Pt(0)
+	request.Limit = uint64Pt(100)
 
+	params := make(map[string]string)
 	if v, ok := d.GetOk("id"); ok {
-		args.NatId = common.StringPtr(v.(string))
-	}
-	if v, ok := d.GetOk("vpc_id"); ok {
-		args.VpcId = common.StringPtr(v.(string))
+		params["nat-gateway-id"] = v.(string)
 	}
 	if v, ok := d.GetOk("name"); ok {
-		args.NatName = common.StringPtr(v.(string))
+		params["nat-gateway-name"] = v.(string)
+	}
+	if v, ok := d.GetOk("vpc_id"); ok {
+		params["vpc-id"] = v.(string)
 	}
 
-	response, err := conn.DescribeNatGateway(args)
+	request.Filters = make([]*vpc.Filter, 0, len(params))
+	for k, v := range params {
+		filter := &vpc.Filter{
+			Name:   stringToPointer(k),
+			Values: []*string{stringToPointer(v)},
+		}
+		request.Filters = append(request.Filters, filter)
+	}
 
-	b, _ := json.Marshal(response)
-	log.Printf("[DEBUG] conn.DescribeNatGateway response: %s", b)
-	if _, ok := err.(*common.APIError); ok {
-		return fmt.Errorf("conn.DescribeNatGateway error: %v", err)
-	} else if err != nil {
+	var response *vpc.DescribeNatGatewaysResponse
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGateways(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read nat gateway failed, reason:%s\n ", logId, err.Error())
 		return err
-	} else if response == nil || len(response.Data) == 0 {
-		return fmt.Errorf("no matching NAT gateway found: %v", args)
 	}
 
-	var s []map[string]interface{}
-	var ids []string
+	ids := make([]string, 0, len(response.Response.NatGatewaySet))
+	natList := make([]map[string]interface{}, 0, len(response.Response.NatGatewaySet))
+	for _, nat := range response.Response.NatGatewaySet {
+		networkState := 0
+		switch *nat.NetworkState {
+		case "AVAILABLE":
+			networkState = 0
+		case "UNAVAILABLE":
+			networkState = 1
+		case "INSUFFICIENT":
+			networkState = 2
+		}
 
-	for _, nat := range response.Data {
-
-		if state, ok := d.GetOk("state"); ok && *nat.State != state.(int) {
+		if state, ok := d.GetOk("state"); ok && networkState != state.(int) {
 			continue
 		}
-		if max_concurrent, ok := d.GetOk("max_concurrent"); ok && *nat.MaxConcurrent != max_concurrent.(int) {
+		if max_concurrent, ok := d.GetOk("max_concurrent"); ok && *nat.MaxConcurrentConnection != uint64(max_concurrent.(int)) {
 			continue
 		}
-		if bandwidth, ok := d.GetOk("bandwidth"); ok && *nat.Bandwidth != bandwidth.(int) {
+		if bandwidth, ok := d.GetOk("bandwidth"); ok && *nat.InternetMaxBandwidthOut != uint64(bandwidth.(int)) {
 			continue
 		}
 
 		mapping := map[string]interface{}{
-			"id":             *nat.NatId,
-			"vpc_id":         *nat.UnVpcId,
-			"name":           *nat.NatName,
-			"state":          *nat.State,
-			"max_concurrent": *nat.MaxConcurrent,
-			"bandwidth":      *nat.Bandwidth,
-			"create_time":    *nat.CreateTime,
+			"id":               *nat.NatGatewayId,
+			"vpc_id":           *nat.VpcId,
+			"name":             *nat.NatGatewayName,
+			"max_concurrent":   *nat.MaxConcurrentConnection,
+			"bandwidth":        *nat.InternetMaxBandwidthOut,
+			"state":            networkState,
+			"assigned_eip_set": flattenAddressList((*nat).PublicIpAddressSet),
+			"create_time":      *nat.CreatedTime,
 		}
-
-		var eips []string
-		if len(nat.EipSet) > 0 {
-			for _, eip := range nat.EipSet {
-				eips = append(eips, *eip)
-			}
-		}
-		mapping["assigned_eip_set"] = eips
-
-		log.Printf("[DEBUG] tencentcloud_nat - adding nat: %v", mapping)
-		s = append(s, mapping)
-		ids = append(ids, *nat.NatId)
-	}
-
-	if len(ids) < 1 {
-		return fmt.Errorf("Your query returned no results. Please change your search criteria and try again.")
+		natList = append(natList, mapping)
+		ids = append(ids, *nat.NatGatewayId)
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
-
-	if err := d.Set("nats", s); err != nil {
-		return err
+	if e := d.Set("nats", natList); e != nil {
+		log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, e.Error())
+		return e
 	}
+
 	return nil
 }

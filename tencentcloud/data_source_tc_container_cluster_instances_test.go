@@ -7,6 +7,7 @@ import (
 )
 
 func TestAccTencentCloudDataSourceContainerClusterInstances(t *testing.T) {
+	key := "data.tencentcloud_container_cluster_instances.foo_instance"
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -14,7 +15,9 @@ func TestAccTencentCloudDataSourceContainerClusterInstances(t *testing.T) {
 			{
 				Config: testAccTencentCloudDataSourceContainerClusterInstancesConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_container_cluster_instances.foo_instance"),
+					testAccCheckTencentCloudDataSourceID(key),
+					resource.TestCheckResourceAttrSet(key, "total_count"),
+					resource.TestCheckResourceAttrSet(key, "nodes.#"),
 				),
 			},
 		},
@@ -26,6 +29,6 @@ data "tencentcloud_container_clusters" "foo" {
 }
 
 data "tencentcloud_container_cluster_instances" "foo_instance" {
-    cluster_id = "${data.tencentcloud_container_clusters.foo.clusters.0.cluster_id}"
+	cluster_id = "${data.tencentcloud_container_clusters.foo.clusters.0.cluster_id}"
 }
 `

@@ -128,3 +128,9 @@ const (
 	SCALING_GROUP_ACTIVITY_STATUS_FAILED               = "FAILED"
 	SCALING_GROUP_ACTIVITY_STATUS_CANCELLED            = "CANCELLED"
 )
+
+const (
+	AsScalingGroupInProgress      = "ResourceInUse.ActivityInProgress"
+	AsScalingGroupInstanceInGroup = "ResourceInUse.InstanceInGroup"
+	AsScalingGroupNotFound        = "ResourceNotFound.AutoScalingGroupNotFound"
+)

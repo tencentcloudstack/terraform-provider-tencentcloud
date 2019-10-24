@@ -13,6 +13,14 @@ func TestAccTencentCloudImagesDataSource_filter(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
+				Config: testAccTencentCloudImagesDataSourceConfigBase,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.public_image"),
+					resource.TestMatchResourceAttr("data.tencentcloud_image.public_image", "image_id", regexp.MustCompile("^img-")),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_image.public_image", "image_name"),
+				),
+			},
+			{
 				Config: testAccTencentCloudImagesDataSourceConfigFilter,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.public_image"),
@@ -34,25 +42,14 @@ func TestAccTencentCloudImagesDataSource_filter(t *testing.T) {
 					resource.TestMatchResourceAttr("data.tencentcloud_image.public_image", "image_id", regexp.MustCompile("^img-")),
 				),
 			},
-			//// NOTE this test case is dependent in the account which already created some private images
-			//{
-			//	Config: testAccTencentCloudImagesDataSourceConfigFilterWithPrivateImage,
-			//	Check: resource.ComposeTestCheckFunc(
-			//		testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.private_image"),
-			//		resource.TestMatchResourceAttr("data.tencentcloud_image.private_image", "image_id", regexp.MustCompile("^img-")),
-			//	),
-			//},
-			//// NOTE this test case is dependent in the account which already created some private images
-			//{
-			//	Config: testAccTencentCloudImagesDataSourceConfigFilterWithShareImageAndOsName,
-			//	Check: resource.ComposeTestCheckFunc(
-			//		testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.private_image"),
-			//		resource.TestMatchResourceAttr("data.tencentcloud_image.private_image", "image_id", regexp.MustCompile("^img-")),
-			//	),
-			//},
 		},
 	})
 }
+
+const testAccTencentCloudImagesDataSourceConfigBase = `
+data "tencentcloud_image" "public_image" {
+}
+`
 
 const testAccTencentCloudImagesDataSourceConfigFilter = `
 data "tencentcloud_image" "public_image" {
@@ -65,7 +62,7 @@ data "tencentcloud_image" "public_image" {
 
 const testAccTencentCloudImagesDataSourceConfigFilterWithOsName = `
 data "tencentcloud_image" "public_image" {
-  os_name = "CentOS 7.5 64位"
+  os_name = "CentOS 7.5"
   filter {
     name   = "image-type"
     values = ["PUBLIC_IMAGE"]
@@ -82,25 +79,3 @@ data "tencentcloud_image" "public_image" {
   }
 }
 `
-
-/*
-const testAccTencentCloudImagesDataSourceConfigFilterWithPrivateImage = `
-data "tencentcloud_image" "private_image" {
-  image_name_regex = "^batch-tensorflow"
-  filter {
-    name   = "image-type"
-    values = ["PRIVATE_IMAGE"]
-  }
-}
-`
-
-const testAccTencentCloudImagesDataSourceConfigFilterWithShareImageAndOsName = `
-data "tencentcloud_image" "private_image" {
-  os_name = "ubuntu"
-  filter {
-    name   = "image-type"
-    values = ["SHARED_IMAGE"]
-  }
-}
-`
-*/

@@ -1,30 +1,19 @@
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
 	"errors"
-	"fmt"
-	"log"
 	"regexp"
 	"sort"
+	"strings"
 	"time"
 
-	"strings"
-
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
-const (
-	tencentCloudApiDescribeImagesParaLimitMaxFiltersNumber       = 10
-	tencentCloudApiDescribeImagesParaLimitMaxFilterValuessNumber = 5
-)
-
-type imageSorter []struct {
-	ImageId     string `json:"ImageId"`
-	OsName      string `json:"OsName"`
-	ImageName   string `json:"ImageName"`
-	CreatedTime string `json:"CreatedTime"`
-}
+type imageSorter []*cvm.Image
 
 func (a imageSorter) Len() int {
 	return len(a)
@@ -35,8 +24,13 @@ func (a imageSorter) Swap(i, j int) {
 }
 
 func (a imageSorter) Less(i, j int) bool {
-	itime, _ := time.Parse(time.RFC3339, a[i].CreatedTime)
-	jtime, _ := time.Parse(time.RFC3339, a[j].CreatedTime)
+	if a[i].CreatedTime == nil || a[j].CreatedTime == nil {
+		return false
+	}
+
+	itime, _ := time.Parse(time.RFC3339, *a[i].CreatedTime)
+	jtime, _ := time.Parse(time.RFC3339, *a[j].CreatedTime)
+
 	return itime.Unix() < jtime.Unix()
 }
 
@@ -47,35 +41,27 @@ func sortImages(images imageSorter) imageSorter {
 	return sortedImages
 }
 
+// Returns the most recent image out of a slice of images.
+func mostRecentImages(images imageSorter) imageSorter {
+	return sortImages(images)
+}
+
 func dataSourceTencentCloudSourceImages() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudImagesRead,
 
 		Schema: map[string]*schema.Schema{
+			"filter": dataSourceTencentCloudFiltersSchema(),
 			"image_name_regex": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				ValidateFunc: validateNameRegex,
 			},
-
 			"os_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				ValidateFunc: validateNotEmpty,
 			},
-
-			//"most_recent": {
-			//	Type:     schema.TypeBool,
-			//	Optional: true,
-			//	Default:  false,
-			//	ForceNew: true,
-			//},
-
-			"filter": dataSourceTencentCloudFiltersSchema(),
-
-			// Computed values.
 			"image_id": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -91,141 +77,91 @@ func dataSourceTencentCloudSourceImages() *schema.Resource {
 func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_image.read")()
 
-	client := meta.(*TencentCloudClient).commonConn
-	filters, filtersOk := d.GetOk("filter")
-	imageNameRegex, nameRegexOk := d.GetOk("image_name_regex")
-	osName, osNameOk := d.GetOk("os_name")
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	if !nameRegexOk && !filtersOk && !osNameOk {
-		return fmt.Errorf("One of image_name_regex, os_name, filter must be assigned")
-	}
-	imageNameRegexStr := imageNameRegex.(string)
-	osNameStr := osName.(string)
-
-	params := map[string]string{
-		"Version": "2017-03-12",
-		"Action":  "DescribeImages",
-		"Limit":   "100",
+	cvmService := CvmService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	if filtersOk {
-		filterList := filters.(*schema.Set)
-		err := buildFiltersParam(
-			params,
-			filterList,
-			tencentCloudApiDescribeImagesParaLimitMaxFiltersNumber,
-			tencentCloudApiDescribeImagesParaLimitMaxFilterValuessNumber,
-		)
-		if err != nil {
-			return err
-		}
-
-	}
-
-	log.Printf("[DEBUG] tencentcloud_image - param: %v", params)
-	response, err := client.SendRequest("image", params)
-	if err != nil {
-		return err
-	}
-
-	var jsonresp struct {
-		Response struct {
-			Error struct {
-				Code    string `json:"Code"`
-				Message string `json:"Message"`
-			}
-			ImageSet []struct {
-				ImageId     string `json:"ImageId"`
-				OsName      string `json:"OsName"`
-				ImageName   string `json:"ImageName"`
-				CreatedTime string `json:"CreatedTime"`
+	filter := make(map[string][]string)
+	filters, ok := d.GetOk("filter")
+	if ok {
+		for _, v := range filters.(*schema.Set).List() {
+			vv := v.(map[string]interface{})
+			name := vv["name"].(string)
+			filter[name] = []string{}
+			for _, vvv := range vv["values"].([]interface{}) {
+				filter[name] = append(filter[name], vvv.(string))
 			}
 		}
 	}
 
-	err = json.Unmarshal([]byte(response), &jsonresp)
+	var images []*cvm.Image
+	var errRet error
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		images, errRet = cvmService.DescribeImagesByFilter(ctx, filter)
+		if errRet != nil {
+			return retryError(errRet, "InternalError")
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-	if jsonresp.Response.Error.Code != "" {
-		return fmt.Errorf(
-			"tencentcloud_image got error, code:%v, message:%v",
-			jsonresp.Response.Error.Code,
-			jsonresp.Response.Error.Message,
-		)
-	}
 
-	var (
-		resultImageId string
-		regImageName  = regexp.MustCompile(imageNameRegexStr)
-	)
-	imageList := jsonresp.Response.ImageSet
-	if len(imageList) == 0 {
+	if len(images) == 0 {
 		return errors.New("No image found")
 	}
 
-	// Dont expose most_recent as a outlet for the sake of eaiser usage, let's sort by recent by default
-	//recent := d.Get("most_recent").(bool)
-	recent := true
-	if recent && len(imageList) > 1 {
-		imageList = mostRecentImages(imageList)
+	var osName string
+	if v, ok := d.GetOk("os_name"); ok {
+		osName = v.(string)
 	}
 
-	for _, image := range imageList {
-		imageId := image.ImageId
-		imageName := image.ImageName
-		osName := image.OsName
-		log.Printf(
-			"[DEBUG] tencentcloud_image - Images found imageId: %v, osName:% v, imageName: %v, imageNameRegexStr: %v",
-			imageId,
-			osName,
-			imageName,
-			imageNameRegexStr,
-		)
-
-		// osName full match is in the highest priority
-		if osNameOk {
-			if strings.Contains(strings.ToLower(osName), strings.ToLower(osNameStr)) {
-				resultImageId = imageId
-				d.Set("image_name", imageName)
-				break
-			} else {
-				continue
-			}
-		}
-
-		if nameRegexOk {
-			if regImageName.MatchString(imageName) {
-				resultImageId = imageId
-				d.Set("image_name", imageName)
-				break
-			} else {
-				continue
-			}
-		}
-
-		if filtersOk {
-			resultImageId = imageId
-			d.Set("image_name", imageName)
-			break
-		}
+	var regImageName string
+	var imageNameRegex *regexp.Regexp
+	if v, ok := d.GetOk("image_name_regex"); ok {
+		regImageName = v.(string)
+		imageNameRegex = regexp.MustCompile(regImageName)
 	}
 
-	if nameRegexOk && resultImageId == "" {
-		err = errors.New("osName not matched")
-		return err
+	var resultImageId string
+	images = mostRecentImages(images)
+	for _, image := range images {
+		if osName != "" {
+			if strings.Contains(strings.ToLower(*image.OsName), strings.ToLower(osName)) {
+				resultImageId = *image.ImageId
+				d.Set("image_name", *image.ImageName)
+				break
+			}
+			continue
+		}
+
+		if regImageName != "" {
+			if imageNameRegex.MatchString(*image.ImageName) {
+				resultImageId = *image.ImageId
+				d.Set("image_name", *image.ImageName)
+				break
+			}
+			continue
+		}
+
+		resultImageId = *image.ImageId
+		d.Set("image_name", *image.ImageName)
+		break
+	}
+
+	if resultImageId == "" {
+		return errors.New("No image found")
 	}
 
 	id := dataResourceIdHash(resultImageId)
 	d.SetId(id)
-	log.Printf("[DEBUG] tencentcloud_image - imageId: %#v", resultImageId)
+
 	if err := d.Set("image_id", resultImageId); err != nil {
 		return err
 	}
-	return nil
-}
 
-// Returns the most recent image out of a slice of images.
-func mostRecentImages(images imageSorter) imageSorter {
-	return sortImages(images)
+	return nil
 }

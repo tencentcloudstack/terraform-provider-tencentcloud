@@ -107,15 +107,15 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	filter := make(map[string]string)
+	filter := make(map[string][]string)
 	if v, ok := d.GetOk("eip_id"); ok {
-		filter["address-id"] = v.(string)
+		filter["address-id"] = []string{v.(string)}
 	}
 	if v, ok := d.GetOk("eip_name"); ok {
-		filter["eip-name"] = v.(string)
+		filter["eip-name"] = []string{v.(string)}
 	}
 	if v, ok := d.GetOk("public_ip"); ok {
-		filter["public-ip"] = v.(string)
+		filter["public-ip"] = []string{v.(string)}
 	}
 
 	var eips []*vpc.Address

@@ -1,14 +1,12 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/zqfan/tencentcloud-sdk-go/common"
-	ccs "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned"
 )
 
 func TestAccTencentCloudContainerCluster_basic(t *testing.T) {
@@ -46,23 +44,33 @@ func checkContainerClusterInstancesAllNormal(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("Container cluster ID is not set")
 		}
-
-		conn := testAccProvider.Meta().(*TencentCloudClient).ccsConn
-		req := ccs.NewDescribeClusterRequest()
-		req.ClusterIds = []*string{&rs.Primary.ID}
-		// For now, cluster instance will be reinstalled, hence it needs to wait more time
-		err := resource.Retry(20*time.Minute, func() *resource.RetryError {
-			resp, err := conn.DescribeCluster(req)
-			if err != nil {
-				if _, ok := err.(*common.APIError); ok {
-					return resource.NonRetryableError(err)
-				}
-				return resource.RetryableError(err)
+		ctx := context.TODO()
+		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		var master []InstanceInfo
+		var worker []InstanceInfo
+		err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+			var e error
+			master, worker, e = service.DescribeClusterInstances(ctx, rs.Primary.ID)
+			if e != nil {
+				return retryError(e)
 			}
-			if *resp.Data.Clusters[0].NodeStatus == "AllNormal" {
+			allRunning := true
+			for _, n := range master {
+				if n.InstanceState != "running" {
+					allRunning = false
+					break
+				}
+			}
+			for _, n := range worker {
+				if n.InstanceState != "running" {
+					allRunning = false
+					break
+				}
+			}
+			if allRunning {
 				return nil
 			}
-			return resource.RetryableError(fmt.Errorf("Cluster node status is %s", *resp.Data.Clusters[0].NodeStatus))
+			return resource.RetryableError(fmt.Errorf("No all state is running"))
 		})
 		return err
 	}
@@ -86,11 +94,8 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
   memory_size    = 2
 }
 
-
 resource "tencentcloud_container_cluster" "foo" {
   cluster_name      = "terraform-acc-test"
-  cpu               = 1
-  mem               = 1
   os_name           = "ubuntu16.04.1 LTSx86_64"
   bandwidth         = 1
   bandwidth_type    = "PayByHour"
@@ -99,7 +104,7 @@ resource "tencentcloud_container_cluster" "foo" {
   is_vpc_gateway    = 0
   storage_size      = 0
   root_size         = 50
-  goods_num         = 1
+  goods_num         = 2
   password          = "Admin12345678"
   vpc_id            = "${var.my_vpc}"
   cluster_cidr      = "10.0.0.0/19"
@@ -111,6 +116,6 @@ resource "tencentcloud_container_cluster" "foo" {
   mount_target      = ""
   docker_graph_path = ""
   instance_name     = "terraform-container-acc-test-vm"
-  cluster_version   = "1.7.8"
+  cluster_version   = "1.14.3"
 }
 `

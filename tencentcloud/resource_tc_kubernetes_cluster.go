@@ -731,6 +731,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	var basic ClusterBasicSetting
 	var advanced ClusterAdvancedSettings
 	var cvms RunInstancesForNode
+	var iAdvanced InstanceAdvancedSettings
 	var cidrSet ClusterCidrSettings
 	cvms.Master = []string{}
 	cvms.Work = []string{}
@@ -815,7 +816,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-	id, err := service.CreateCluster(ctx, basic, advanced, cvms, cidrSet)
+	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet)
 
 	if err != nil {
 		return err

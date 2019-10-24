@@ -589,10 +589,73 @@ func (me *CvmService) DeletePlacementGroup(ctx context.Context, placementId stri
 	return nil
 }
 
+func (me *CvmService) DescribeZones(ctx context.Context) (zones []*cvm.ZoneInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeZonesRequest()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DescribeZones(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	zones = response.Response.ZoneSet
+	return
+}
+
 func flattenCvmTagsMapping(tags []*cvm.Tag) (mapping map[string]string) {
 	mapping = make(map[string]string)
 	for _, tag := range tags {
 		mapping[*tag.Key] = *tag.Value
+	}
+	return
+}
+
+func (me *CvmService) DescribeImagesByFilter(ctx context.Context, filters map[string][]string) (images []*cvm.Image, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeImagesRequest()
+	request.Filters = make([]*cvm.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := cvm.Filter{
+			Name:   stringToPointer(k),
+			Values: []*string{},
+		}
+		for _, vv := range v {
+			filter.Values = append(filter.Values, stringToPointer(vv))
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	images = make([]*cvm.Image, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCvmClient().DescribeImages(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ImageSet) < 1 {
+			break
+		}
+		images = append(images, response.Response.ImageSet...)
+		if len(response.Response.ImageSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
 	}
 	return
 }

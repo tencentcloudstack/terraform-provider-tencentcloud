@@ -1,17 +1,15 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
-	"time"
+	"log"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/common"
-	ccs "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned"
-)
-
-const (
-	INSTANCE_NOT_FOUND_CODE = -1
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
 func resourceTencentCloudContainerClusterInstance() *schema.Resource {
@@ -28,12 +26,14 @@ func resourceTencentCloudContainerClusterInstance() *schema.Resource {
 				Required: true,
 			},
 			"cpu": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:       schema.TypeInt,
+				Optional:   true,
+				Deprecated: "It has been deprecated from version 1.16.0. Set 'instance_type' instead.",
 			},
 			"mem": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:       schema.TypeInt,
+				Optional:   true,
+				Deprecated: "It has been deprecated from version 1.16.0. Set 'instance_type' instead.",
 			},
 			"bandwidth": {
 				Type:     schema.TypeInt,
@@ -107,15 +107,18 @@ func resourceTencentCloudContainerClusterInstance() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"unschedulable": {
-				Type:     schema.TypeInt,
-				Optional: true,
-			},
 			"user_script": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			// Computed values
+			"unschedulable": {
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
+			"instance_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"abnormal_reason": {
 				Type:     schema.TypeString,
 				Computed: true,
@@ -140,57 +143,78 @@ func resourceTencentCloudContainerClusterInstance() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m interface{}) error {
-	instanceId := d.Id()
-	client := m.(*TencentCloudClient).ccsConn
-	describeClusterInstancesReq := ccs.NewDescribeClusterInstancesRequest()
+func resourceTencentCloudContainerClusterInstancesUpdate(d *schema.ResourceData, m interface{}) error {
+	defer logElapsed("resource.tencentcloud_container_cluster_instance.update")()
 
-	if clusterId, ok := d.GetOkExists("cluster_id"); ok {
-		describeClusterInstancesReq.ClusterId = common.StringPtr(clusterId.(string))
-	} else {
-		return fmt.Errorf("data_source_tencent_cloud_container_cluster_instances read action needs param cluster_id")
-	}
+	return fmt.Errorf("the container cluster instance resource doesn't support update")
+}
 
-	response, err := client.DescribeClusterInstances(describeClusterInstancesReq)
+func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_container_cluster_instance.read")()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var workers []InstanceInfo
+	clusterId := d.Get("cluster_id").(string)
+
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		var e error
+		_, workers, e = service.DescribeClusterInstances(ctx, clusterId)
+		if e, ok := e.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				d.SetId("")
+				return nil
+			}
+		}
+		if e != nil {
+			return resource.RetryableError(e)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
 
-	if response.Code == nil {
-		return fmt.Errorf("data_source_tencent_cloud_container_cluster_instances got error, no code response")
-	}
-
-	if *response.Code != 0 {
-		return fmt.Errorf("data_source_tencent_cloud_container_cluster_instances got error, code %v , message %v", *response.Code, *response.CodeDesc)
-	}
-
 	found := false
-	for _, node := range response.Data.Nodes {
-		if *node.InstanceId == instanceId {
+	for _, v := range workers {
+		if v.InstanceId == d.Id() {
 			found = true
+			d.Set("instance_id", v.InstanceId)
+			d.Set("abnormal_reason", v.FailedReason)
+			d.Set("wan_ip", "")
+			d.Set("lan_ip", "")
+			d.Set("is_normal", true)
+			if v.InstanceState == "failed" {
+				d.Set("is_normal", false)
+			}
 
-			if node.AbnormalReason != nil {
-				d.Set("abnormal_reason", *node.AbnormalReason)
+			describeInstancesreq := cvm.NewDescribeInstancesRequest()
+			describeInstancesreq.InstanceIds = []*string{common.StringPtr(v.InstanceId)}
+			var describeInstancesResponse *cvm.DescribeInstancesResponse
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().DescribeInstances(describeInstancesreq)
+				if e != nil {
+					log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+						logId, describeInstancesreq.GetAction(), describeInstancesreq.ToJsonString(), e.Error())
+					return retryError(e)
+				}
+				describeInstancesResponse = result
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s DescribeInstances failed, reason:%s\n ", logId, err.Error())
+				return err
 			}
-			// ccs API does no longer respect cpu & mem as what they specified, but redefines them as available cpu & mem
-			// the units of these two attributes have been changed to milli-cpu and MB
-			// if node.CPU != nil {
-			// 	d.Set("cpu", *node.CPU)
-			// }
-			// if node.Mem != nil {
-			// 	d.Set("mem", *node.Mem)
-			// }
-			if node.InstanceId != nil {
-				d.Set("instance_id", *node.InstanceId)
-			}
-			if node.IsNormal != nil {
-				d.Set("is_normal", *node.IsNormal)
-			}
-			if node.WanIp != nil {
-				d.Set("wan_ip", *node.WanIp)
-			}
-			if node.LanIp != nil {
-				d.Set("lan_ip", *node.LanIp)
+
+			if len(describeInstancesResponse.Response.InstanceSet) > 0 {
+				if len(describeInstancesResponse.Response.InstanceSet[0].PublicIpAddresses) > 0 {
+					d.Set("wan_ip", *describeInstancesResponse.Response.InstanceSet[0].PublicIpAddresses[0])
+				}
+				if len(describeInstancesResponse.Response.InstanceSet[0].PrivateIpAddresses) > 0 {
+					d.Set("lan_ip", *describeInstancesResponse.Response.InstanceSet[0].PrivateIpAddresses[0])
+				}
 			}
 		}
 	}
@@ -202,272 +226,272 @@ func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m
 	return nil
 }
 
-func resourceTencentCloudContainerClusterInstancesUpdate(d *schema.ResourceData, m interface{}) error {
-	return fmt.Errorf("the container cluster instances resource doesn't support update")
-}
+func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_container_cluster_instance.create")()
 
-// CreateClusterNode one node per time
-func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).ccsConn
-
-	createInstanceReq := ccs.NewAddClusterInstancesRequest()
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	cvmService := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	clusterId := d.Get("cluster_id").(string)
-	createInstanceReq.ClusterId = &clusterId
-	createInstanceReq.GoodsNum = common.IntPtr(1)
-	if cpuRaw, ok := d.GetOkExists("cpu"); ok {
-		cpu := cpuRaw.(int)
-		if cpu > 0 {
-			createInstanceReq.CPU = common.IntPtr(cpu)
+	runInstancesPara := cvm.NewRunInstancesRequest()
+
+	var place cvm.Placement
+	if v, ok := d.GetOkExists("zone_id"); ok {
+		var zones []*cvm.ZoneInfo
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			var e error
+			zones, e = cvmService.DescribeZones(ctx)
+			if e != nil {
+				return retryError(e, "InternalError")
+			}
+			return nil
+		})
+		if err != nil {
+			return err
 		}
-	}
-
-	if memRaw, ok := d.GetOkExists("mem"); ok {
-		mem := memRaw.(int)
-		if mem > 0 {
-			createInstanceReq.Mem = common.IntPtr(mem)
+		zone := ""
+		for _, z := range zones {
+			if *z.ZoneId == v.(string) {
+				zone = *z.Zone
+				break
+			}
 		}
+		place.Zone = stringToPointer(zone)
 	}
+	runInstancesPara.Placement = &place
+	runInstancesPara.InstanceCount = common.Int64Ptr(1)
 
-	if bandwidthRaw, ok := d.GetOkExists("bandwidth"); ok {
-		bandwidth := bandwidthRaw.(int)
-		createInstanceReq.Bandwidth = common.IntPtr(bandwidth)
-	}
+	var iAdvanced InstanceAdvancedSettings
+	var cvms RunInstancesForNode
 
-	if bandwidthTypeRaw, ok := d.GetOkExists("bandwidth_type"); ok {
-		bandwidthType := bandwidthTypeRaw.(string)
-		if len(bandwidthType) > 0 {
-			createInstanceReq.BandwidthType = common.StringPtr(bandwidthType)
-		}
-	}
-
-	if wanIpRaw, ok := d.GetOkExists("require_wan_ip"); ok {
-		wanIp := wanIpRaw.(int)
-		createInstanceReq.WanIp = common.IntPtr(wanIp)
-	}
-
-	if subnetIdRaw, ok := d.GetOkExists("subnet_id"); ok {
-		subnetId := subnetIdRaw.(string)
-		if len(subnetId) > 0 {
-			createInstanceReq.SubnetId = common.StringPtr(subnetId)
-		}
-	}
-
-	if isVpcGatewayRaw, ok := d.GetOkExists("is_vpc_gateway"); ok {
-		isVpcGateway := isVpcGatewayRaw.(int)
-		createInstanceReq.IsVpcGateway = common.IntPtr(isVpcGateway)
-	}
-
-	if storageSizeRaw, ok := d.GetOkExists("storage_size"); ok {
-		storageSize := storageSizeRaw.(int)
-		createInstanceReq.StorageSize = common.IntPtr(storageSize)
-	}
-
-	if storageTypeRaw, ok := d.GetOkExists("storage_type"); ok {
-		storageType := storageTypeRaw.(string)
-		if len(storageType) > 0 {
-			createInstanceReq.StorageType = common.StringPtr(storageType)
-		}
-	}
-
-	if rootSizeRaw, ok := d.GetOkExists("root_size"); ok {
-		rootSize := rootSizeRaw.(int)
-		createInstanceReq.RootSize = common.IntPtr(rootSize)
-	}
-
-	if rootTypeRaw, ok := d.GetOkExists("root_type"); ok {
-		rootType := rootTypeRaw.(string)
-		if len(rootType) > 0 {
-			createInstanceReq.RootType = common.StringPtr(rootType)
-		}
-	}
-
-	if passwordRaw, ok := d.GetOkExists("password"); ok {
-		password := passwordRaw.(string)
-		createInstanceReq.Password = common.StringPtr(password)
-	}
-
-	if keyIdRaw, ok := d.GetOkExists("key_id"); ok {
-		keyId := keyIdRaw.(string)
-		if len(keyId) > 0 {
-			createInstanceReq.KeyId = common.StringPtr(keyId)
-		}
-	}
-
-	if cvmTypeRaw, ok := d.GetOkExists("cvm_type"); ok {
-		cvmType := cvmTypeRaw.(string)
-		if len(cvmType) > 0 {
-			createInstanceReq.CvmType = common.StringPtr(cvmType)
-		}
-	}
-
-	if periodRaw, ok := d.GetOkExists("period"); ok {
-		period := periodRaw.(int)
-		createInstanceReq.Period = common.IntPtr(period)
-	}
-
-	if zoneIdRaw, ok := d.GetOkExists("zone_id"); ok {
-		zoneId := zoneIdRaw.(string)
-		if len(zoneId) > 0 {
-			createInstanceReq.ZoneId = common.StringPtr(zoneId)
+	if v, ok := d.GetOkExists("vpc_id"); ok {
+		if len(v.(string)) > 0 {
+			vpcId := v.(string)
+			subnetId := ""
+			asVpcGateway := false
+			if subnetIdRaw, ok := d.GetOkExists("subnet_id"); ok {
+				subnetId = subnetIdRaw.(string)
+			}
+			if isVpcGatewayRaw, ok := d.GetOkExists("is_vpc_gateway"); ok {
+				if isVpcGatewayRaw.(int) == 1 {
+					asVpcGateway = true
+				}
+			}
+			runInstancesPara.VirtualPrivateCloud = &cvm.VirtualPrivateCloud{
+				VpcId:        common.StringPtr(vpcId),
+				SubnetId:     common.StringPtr(subnetId),
+				AsVpcGateway: common.BoolPtr(asVpcGateway),
+			}
 		}
 	}
 
 	if instanceTypeRaw, ok := d.GetOkExists("instance_type"); ok {
-		instanceType := instanceTypeRaw.(string)
-		if len(instanceType) > 0 {
-			createInstanceReq.InstanceType = common.StringPtr(instanceType)
+		if len(instanceTypeRaw.(string)) > 0 {
+			runInstancesPara.InstanceType = common.StringPtr(instanceTypeRaw.(string))
 		}
 	}
 
-	if sgIdRaw, ok := d.GetOkExists("sg_id"); ok {
-		sgId := sgIdRaw.(string)
-		if len(sgId) > 0 {
-			createInstanceReq.SgId = common.StringPtr(sgId)
+	if v, ok := d.GetOkExists("require_wan_ip"); ok {
+		publicIpAssigned := false
+		internetMaxBandwidthOut := int64(0)
+		internetChargeType := ""
+		if v.(int) == 1 {
+			publicIpAssigned = true
+			if v, ok := d.GetOkExists("bandwidth"); ok {
+				internetMaxBandwidthOut = int64(v.(int))
+			}
+			if v, ok := d.GetOkExists("bandwidth_type"); ok {
+				bandwidthTypes := map[string]string{
+					"PayByMonth":   "BANDWIDTH_PREPAID",
+					"PayByTraffic": "TRAFFIC_POSTPAID_BY_HOUR",
+					"PayByHour":    "TRAFFIC_POSTPAID_BY_HOUR",
+				}
+				if v, ok := bandwidthTypes[v.(string)]; ok {
+					internetChargeType = v
+				}
+			}
+		}
+		runInstancesPara.InternetAccessible = &cvm.InternetAccessible{
+			PublicIpAssigned:        common.BoolPtr(publicIpAssigned),
+			InternetMaxBandwidthOut: common.Int64Ptr(internetMaxBandwidthOut),
+			InternetChargeType:      common.StringPtr(internetChargeType),
 		}
 	}
 
-	if mountTargetRaw, ok := d.GetOkExists("mount_target"); ok {
-		mountTarget := mountTargetRaw.(string)
-		if len(mountTarget) > 0 {
-			createInstanceReq.MountTarget = common.StringPtr(mountTarget)
+	if v, ok := d.GetOkExists("user_script"); ok {
+		runInstancesPara.UserData = common.StringPtr(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("sg_id"); ok {
+		runInstancesPara.SecurityGroupIds = []*string{common.StringPtr(v.(string))}
+	}
+
+	if v, ok := d.GetOkExists("password"); ok {
+		runInstancesPara.LoginSettings = &cvm.LoginSettings{
+			Password: common.StringPtr(v.(string)),
 		}
 	}
 
-	if dockerGraphPathRaw, ok := d.GetOkExists("docker_graph_path"); ok {
-		dockerGraphPath := dockerGraphPathRaw.(string)
-		if len(dockerGraphPath) > 0 {
-			createInstanceReq.DockerGraphPath = common.StringPtr(dockerGraphPath)
+	if v, ok := d.GetOkExists("key_id"); ok {
+		runInstancesPara.LoginSettings = &cvm.LoginSettings{
+			KeyIds: []*string{common.StringPtr(v.(string))},
 		}
 	}
 
-	if unschedulableRaw, ok := d.GetOkExists("unschedulable"); ok {
-		unschedulable := unschedulableRaw.(int)
-		createInstanceReq.Unschedulable = common.IntPtr(unschedulable)
+	runInstancesPara.SystemDisk = &cvm.SystemDisk{}
+	if v, ok := d.GetOkExists("root_size"); ok {
+		runInstancesPara.SystemDisk.DiskSize = common.Int64Ptr(int64(v.(int)))
 	}
 
-	if userScriptRaw, ok := d.GetOkExists("user_script"); ok {
-		userScript := userScriptRaw.(string)
-		if len(userScript) > 0 {
-			createInstanceReq.UserScript = common.StringPtr(userScript)
+	if v, ok := d.GetOkExists("root_type"); ok {
+		runInstancesPara.SystemDisk.DiskType = common.StringPtr(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("storage_size"); ok {
+		if v.(int) > 0 {
+			dataDisk := &cvm.DataDisk{
+				DiskSize: common.Int64Ptr(int64(v.(int))),
+				DiskType: common.StringPtr("CLOUD_PREMIUM"),
+			}
+			if v, ok := d.GetOkExists("storage_type"); ok {
+				if len(v.(string)) > 0 {
+					dataDisk.DiskType = common.StringPtr(v.(string))
+				}
+			}
+			runInstancesPara.DataDisks = []*cvm.DataDisk{dataDisk}
 		}
 	}
 
-	response, err := client.AddClusterInstances(createInstanceReq)
+	if v, ok := d.GetOkExists("cvm_type"); ok {
+		cvmTypes := map[string]string{
+			"PayByHour":  "POSTPAID_BY_HOUR",
+			"PayByMonth": "PREPAID",
+		}
+		if vv, ok := cvmTypes[v.(string)]; ok {
+			runInstancesPara.InstanceChargeType = common.StringPtr(vv)
+		}
+	}
+
+	if v, ok := d.GetOkExists("period"); ok {
+		runInstancesPara.InstanceChargePrepaid = &cvm.InstanceChargePrepaid{
+			Period: common.Int64Ptr(int64(v.(int))),
+		}
+	}
+
+	if v, ok := d.GetOkExists("instance_name"); ok {
+		runInstancesPara.InstanceName = common.StringPtr(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("mount_target"); ok {
+		iAdvanced.MountTarget = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("docker_graph_path"); ok {
+		iAdvanced.DockerGraphPath = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("user_script"); ok {
+		iAdvanced.UserScript = v.(string)
+	}
+
+	if v, ok := d.GetOkExists("unschedulable"); ok {
+		iAdvanced.Unschedulable = int64(v.(int))
+	}
+
+	runInstancesParas := runInstancesPara.ToJsonString()
+	cvms.Work = []string{runInstancesParas}
+
+	instanceIds, err := service.CreateClusterInstances(ctx, clusterId, cvms.Work[0], iAdvanced)
 	if err != nil {
 		return err
 	}
 
-	if response.Code == nil {
-		return fmt.Errorf("tencentcloud_container_cluster get code error")
+	if len(instanceIds) != 1 {
+		return fmt.Errorf("no instance return")
 	}
 
-	if *response.Code != 0 {
-		return fmt.Errorf(
-			"tencentcloud_container_cluster create error, code:%d, message:%v",
-			*response.Code,
-			*response.CodeDesc,
-		)
-	}
-
-	if len(response.Data.InstanceIds) == 0 {
-		return fmt.Errorf("tencentcloud_container_cluster no clusterInstanceId id returned")
-	}
-
-	nodeId := response.Data.InstanceIds[0]
-	d.SetId(*nodeId)
-
-	if err := waitClusterInstanceRunning(client, clusterId, *nodeId); err != nil {
-		return fmt.Errorf("Cluster Instance %s is abnormal, create fail", *nodeId)
-	}
-
-	return resourceTencentCloudContainerClusterInstancesRead(d, m)
-}
-
-func waitClusterInstanceRunning(conn *ccs.Client, clusterId, nodeId string) error {
-	req := ccs.NewDescribeClusterInstancesRequest()
-	req.ClusterId = &clusterId
-	err := resource.Retry(15*time.Minute, func() *resource.RetryError {
-		resp, err := conn.DescribeClusterInstances(req)
-		if err != nil {
-			if _, ok := err.(*common.APIError); ok {
-				return resource.NonRetryableError(err)
-			}
-			return resource.RetryableError(err)
-		}
-		for _, node := range resp.Data.Nodes {
-			if *node.InstanceId != nodeId {
-				continue
-			}
-			if *node.IsNormal == 0 {
-				return resource.NonRetryableError(fmt.Errorf("Instance status = 0"))
-			}
-			if *node.IsNormal == 1 {
+	err = resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+		_, workers, e := service.DescribeClusterInstances(ctx, clusterId)
+		if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+			if ee.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}
-			return resource.RetryableError(fmt.Errorf("Instance status = %d", *node.IsNormal))
 		}
-		// not found
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		for _, v := range workers {
+			if v.InstanceId != instanceIds[0] {
+				continue
+			}
+			if v.InstanceState != "running" {
+				return resource.RetryableError(fmt.Errorf("instance state not ready"))
+			}
+		}
 		return nil
 	})
-	return err
+	if err != nil {
+		return err
+	}
+
+	d.SetId(instanceIds[0])
+
+	return resourceTencentCloudContainerClusterInstancesRead(d, meta)
 }
 
-func resourceTencentCloudContainerClusterInstancesDelete(d *schema.ResourceData, m interface{}) error {
-	nodeId := d.Id()
+func resourceTencentCloudContainerClusterInstancesDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_container_cluster_instance.delete")()
 
-	deleteClusterNodeReq := ccs.NewDeleteClusterInstancesRequest()
-	client := m.(*TencentCloudClient).ccsConn
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	describeClusterInstancesReq := ccs.NewDescribeClusterInstancesRequest()
-	describeClusterInstancesReq.ClusterId = common.StringPtr(d.Get("cluster_id").(string))
-	describeClusterInstancesRsp, err := client.DescribeClusterInstances(describeClusterInstancesReq)
+	var workers []InstanceInfo
+	clusterId := d.Get("cluster_id").(string)
+
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		var e error
+		_, workers, e = service.DescribeClusterInstances(ctx, clusterId)
+		if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+			if ee.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+		if e != nil {
+			return resource.RetryableError(e)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-	// node no longer exists
-	if len(describeClusterInstancesRsp.Data.Nodes) == 0 {
-		return nil
-	}
 
-	nodeFound := false
-	for _, instance := range describeClusterInstancesRsp.Data.Nodes {
-		if *instance.InstanceId == nodeId {
-			nodeFound = true
-			break
+	found := false
+	var node InstanceInfo
+	for _, v := range workers {
+		if v.InstanceId == d.Id() {
+			found = true
+			node = v
 		}
 	}
-
-	// node no longer exists
-	if !nodeFound {
+	if !found {
 		return nil
 	}
 
-	deleteClusterNodeReq.ClusterId = common.StringPtr(d.Get("cluster_id").(string))
-	deleteClusterNodeReq.InstanceIds = common.StringPtrs([]string{nodeId})
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := service.DeleteClusterInstances(ctx, clusterId, []string{node.InstanceId})
+		if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+			if ee.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+		if err != nil {
+			return retryError(err)
+		}
+		return nil
+	})
 
-	if nodeDeleteModeRaw, ok := d.GetOkExists("node_delete_mode"); ok {
-		nodeDeleteMode := nodeDeleteModeRaw.(string)
-		deleteClusterNodeReq.NodeDeleteMode = &nodeDeleteMode
-	}
-
-	response, err := client.DeleteClusterInstances(deleteClusterNodeReq)
-
-	if err != nil {
-		return err
-	}
-
-	if response.Code == nil {
-		return fmt.Errorf("tencentcloud_container_cluster_instances get code error")
-	}
-
-	if *response.Code != 0 {
-		return fmt.Errorf(
-			"tencentcloud_container_cluster_instances delete error, code:%d, message:%v",
-			*response.Code,
-			*response.CodeDesc,
-		)
-	}
-
-	return nil
+	return err
 }

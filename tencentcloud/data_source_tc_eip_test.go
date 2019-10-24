@@ -8,8 +8,9 @@ import (
 
 func TestAccTencentCloudEipDataSource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckEipDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudEipDataSourceConfig_basic,
@@ -34,7 +35,7 @@ func TestAccTencentCloudEipDataSource(t *testing.T) {
 
 const testAccTencentCloudEipDataSourceConfig_basic = `
 resource "tencentcloud_eip" "my_eip" {
-  name = "tf-ci-test"
+	name = "tf-ci-test"
 }
 
 data "tencentcloud_eip" "my_eip" {
@@ -43,13 +44,13 @@ data "tencentcloud_eip" "my_eip" {
 
 const testAccTencentCloudEipDataSourceConfig_filter = `
 resource "tencentcloud_eip" "my_eip" {
-  name = "tf-ci-test"
+	name = "tf-ci-test"
 }
 
 data "tencentcloud_eip" "my_eip" {
-  filter {
-    name   = "address-status"
-    values = ["UNBIND"]
-  }
+	filter {
+		name   = "address-status"
+		values = ["UNBIND"]
+	}
 }
 `

@@ -1639,14 +1639,17 @@ func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *v
 	return
 }
 
-func (me *VpcService) DescribeEipByFilter(ctx context.Context, filters map[string]string) (eips []*vpc.Address, errRet error) {
+func (me *VpcService) DescribeEipByFilter(ctx context.Context, filters map[string][]string) (eips []*vpc.Address, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeAddressesRequest()
 	request.Filters = make([]*vpc.Filter, 0, len(filters))
 	for k, v := range filters {
 		filter := &vpc.Filter{
 			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Values: []*string{},
+		}
+		for _, vv := range v {
+			filter.Values = append(filter.Values, stringToPointer(vv))
 		}
 		request.Filters = append(request.Filters, filter)
 	}

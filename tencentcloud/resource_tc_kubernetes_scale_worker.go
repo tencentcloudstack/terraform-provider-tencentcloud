@@ -100,6 +100,7 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	var cvms RunInstancesForNode
+	var iAdvanced InstanceAdvancedSettings
 
 	cvms.Work = []string{}
 
@@ -146,14 +147,12 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 			"so len(cvms.Work) should be 1")
 	}
 
-	instanceIds, err := service.CreateClusterInstances(ctx, clusterId, cvms.Work[0])
-
+	instanceIds, err := service.CreateClusterInstances(ctx, clusterId, cvms.Work[0], iAdvanced)
 	if err != nil {
 		return err
 	}
 
 	workerInstancesList := make([]map[string]interface{}, 0, len(instanceIds))
-
 	for _, v := range instanceIds {
 		if v == "" {
 			return fmt.Errorf("CreateClusterInstances return one instanceId is empty")

@@ -35,3 +35,7 @@ const (
 	EIP_STATUS_OFFLINING = "OFFLINING"
 	EIP_STATUS_BIND_ENI  = "BIND_ENI"
 )
+
+const (
+	VPCNotFound = "ResourceNotFound"
+)
