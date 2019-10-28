@@ -386,14 +386,14 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 					return nil
 				}
 
-				if e.GetCode() =="InternalError.Param" &&
-					strings.Contains(e.GetMessage(),`PARAM_ERROR[some instances []is not in right state`){
+				if e.GetCode() == "InternalError.Param" &&
+					strings.Contains(e.GetMessage(), `PARAM_ERROR[some instances []is not in right state`) {
 					return nil
 				}
 			}
 
 			if err != nil {
-				return retryError(err,"InternalError")
+				return retryError(err, "InternalError")
 			}
 			return nil
 		})
