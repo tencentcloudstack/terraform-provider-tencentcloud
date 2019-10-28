@@ -979,11 +979,40 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		err := service.DeleteCluster(ctx, d.Id())
+
+		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
+				return nil
+			}
+		}
+
 		if err != nil {
-			return retryError(err)
+			return retryError(err, "InternalError")
 		}
 		return nil
 	})
+
+	if err!=nil{
+		return  err
+	}
+	_, _, err = service.DescribeClusterInstances(ctx, d.Id())
+
+	if err != nil {
+		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+			_, _, err = service.DescribeClusterInstances(ctx, d.Id())
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InternalError.ClusterNotFound" {
+					return nil
+				}
+			}
+			if err != nil {
+				return retryError(err, "InternalError")
+			}
+			return nil
+		})
+	}
+	return err
+
 }
