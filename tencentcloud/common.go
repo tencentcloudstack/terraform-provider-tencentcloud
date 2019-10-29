@@ -15,7 +15,8 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/likexian/gokit/assert"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/pkg/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 const FILED_SP = "#"
@@ -73,26 +74,30 @@ func logElapsed(mark ...string) func() {
 
 // retryError returns retry error
 func retryError(err error, additionRetryableError ...string) *resource.RetryError {
-	if isExpectError(err, retryableErrorCode) {
-		log.Printf("[CRITAL] Retryable defined error: %v", err)
-		return resource.RetryableError(err)
-	}
-
-	if len(additionRetryableError) > 0 {
-		if isExpectError(err, additionRetryableError) {
-			log.Printf("[CRITAL] Retryable addition error: %v", err)
+	switch realErr := errors.Cause(err).(type) {
+	case *sdkErrors.TencentCloudSDKError:
+		if isExpectError(realErr, retryableErrorCode) {
+			log.Printf("[CRITAL] Retryable defined error: %v", err)
 			return resource.RetryableError(err)
 		}
+
+		if len(additionRetryableError) > 0 {
+			if isExpectError(realErr, additionRetryableError) {
+				log.Printf("[CRITAL] Retryable addition error: %v", err)
+				return resource.RetryableError(err)
+			}
+		}
+
+	default:
 	}
 
 	log.Printf("[CRITAL] NonRetryable error: %v", err)
-
 	return resource.NonRetryableError(err)
 }
 
 // isExpectError returns whether error is expect error
 func isExpectError(err error, expectError []string) bool {
-	e, ok := err.(*errors.TencentCloudSDKError)
+	e, ok := err.(*sdkErrors.TencentCloudSDKError)
 	if !ok {
 		return false
 	}

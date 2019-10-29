@@ -1,4 +1,13 @@
-## 1.21.2 (Unreleased)
+## 1.22.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_scf_functions`
+* **New Data Source**: `tencentcloud_scf_namespaces`
+* **New Data Source**: `tencentcloud_scf_logs`
+
+* **New Resource**: `tencentcloud_scf_function`
+* **New Resource**: `tencentcloud_scf_namespace`
 
 BUG FIXES:
 
