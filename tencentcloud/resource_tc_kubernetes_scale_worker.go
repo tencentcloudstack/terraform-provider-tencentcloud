@@ -377,17 +377,22 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 
 	err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
 	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
 			err = service.DeleteClusterInstances(ctx, clusterId, needDeletes)
 
 			if e, ok := err.(*errors.TencentCloudSDKError); ok {
 				if e.GetCode() == "InternalError.ClusterNotFound" {
 					return nil
 				}
+
+				if e.GetCode() == "InternalError.Param" &&
+					strings.Contains(e.GetMessage(), `PARAM_ERROR[some instances []is not in right state`) {
+					return nil
+				}
 			}
 
 			if err != nil {
-				return retryError(err)
+				return retryError(err, "InternalError")
 			}
 			return nil
 		})
