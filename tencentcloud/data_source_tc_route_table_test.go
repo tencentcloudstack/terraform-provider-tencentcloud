@@ -15,7 +15,7 @@ func TestAccDataSourceTencentCloudRouteTable_basic(t *testing.T) {
 				Config: testAccDataSourceTencentCloudRouteTableConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_route_table.foo"),
-					resource.TestCheckResourceAttr("data.tencentcloud_route_table.foo", "name", "ci-temp-test-rt"),
+					resource.TestCheckResourceAttr("data.tencentcloud_route_table.foo", "name", "tf-ci-test"),
 				),
 			},
 		},
@@ -24,20 +24,20 @@ func TestAccDataSourceTencentCloudRouteTable_basic(t *testing.T) {
 
 const testAccDataSourceTencentCloudRouteTableConfig = `
 variable "availability_zone" {
-	default = "ap-guangzhou-3"
+  default = "ap-guangzhou-3"
 }
 
 resource "tencentcloud_vpc" "foo" {
-    name       = "guagua-ci-temp-test"
-    cidr_block = "10.0.0.0/16"
+  name       = "tf-ci-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_route_table" "route_table" {
-   vpc_id = "${tencentcloud_vpc.foo.id}"
-   name   = "ci-temp-test-rt"
+  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = "tf-ci-test"
 }
 
 data "tencentcloud_route_table" "foo" {
-	route_table_id = "${tencentcloud_route_table.route_table.id}"
+  route_table_id = "${tencentcloud_route_table.route_table.id}"
 }
 `

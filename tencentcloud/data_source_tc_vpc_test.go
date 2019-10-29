@@ -15,7 +15,7 @@ func TestAccDataSourceTencentCloudVpc_basic(t *testing.T) {
 				Config: TestAccDataSourceTencentCloudVpcConfig_id,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpc.id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vpc.id", "name", "guagua_vpc_instance_test"),
+					resource.TestCheckResourceAttr("data.tencentcloud_vpc.id", "name", "tf-ci-test"),
 				),
 			},
 		},
@@ -24,11 +24,11 @@ func TestAccDataSourceTencentCloudVpc_basic(t *testing.T) {
 
 const TestAccDataSourceTencentCloudVpcConfig_id = `
 resource "tencentcloud_vpc" "foo" {
-    name       = "guagua_vpc_instance_test"
-    cidr_block = "10.0.0.0/16"
+  name       = "tf-ci-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 data "tencentcloud_vpc" "id" {
-	id = "${tencentcloud_vpc.foo.id}"
+  id = "${tencentcloud_vpc.foo.id}"
 }
 `

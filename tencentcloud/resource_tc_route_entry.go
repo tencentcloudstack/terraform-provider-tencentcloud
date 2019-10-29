@@ -1,17 +1,16 @@
 package tencentcloud
 
 import (
-	"encoding/json"
-	"errors"
+	"context"
 	"fmt"
-	"log"
-	"strconv"
 	"strings"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-var nextTypes = map[string]int{
+var routeTypeApiMap = map[string]int{
 	"public_gateway":     0,
 	"vpn_gateway":        1,
 	"dc_gateway":         3,
@@ -19,6 +18,16 @@ var nextTypes = map[string]int{
 	"sslvpn_gateway":     7,
 	"nat_gateway":        8,
 	"instance":           9,
+}
+
+var routeTypeNewMap = map[string]string{
+	"public_gateway":     "CVM",
+	"vpn_gateway":        "VPN",
+	"dc_gateway":         "DIRECTCONNECT",
+	"peering_connection": "PEERCONNECTION",
+	"sslvpn_gateway":     "SSLVPN",
+	"nat_gateway":        "NAT",
+	"instance":           "NORMAL_CVM",
 }
 
 func resourceTencentCloudRouteEntry() *schema.Resource {
@@ -51,13 +60,13 @@ func resourceTencentCloudRouteEntry() *schema.Resource {
 				ForceNew: true,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
-					_, ok := nextTypes[value]
+					_, ok := routeTypeNewMap[value]
 					if !ok {
 						var nextHubDesc []string
-						for vgwKey := range nextTypes {
+						for vgwKey := range routeTypeNewMap {
 							nextHubDesc = append(nextHubDesc, vgwKey)
 						}
-						errors = append(errors, fmt.Errorf("%s Only 1 of %s is allowed", k, strings.Join(nextHubDesc, ",")))
+						errors = append(errors, fmt.Errorf("%s Only one of %s is allowed", k, strings.Join(nextHubDesc, ",")))
 					}
 					return
 				},
@@ -71,170 +80,179 @@ func resourceTencentCloudRouteEntry() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudRouteEntryCreate(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	next_type := d.Get("next_type").(string)
-	params := map[string]string{
-		"Action":                          "CreateRoute",
-		"vpcId":                           d.Get("vpc_id").(string),
-		"routeTableId":                    d.Get("route_table_id").(string),
-		"routeSet.0.destinationCidrBlock": d.Get("cidr_block").(string),
-		"routeSet.0.nextType":             strconv.Itoa(nextTypes[next_type]),
-		"routeSet.0.nextHub":              d.Get("next_hub").(string),
+func resourceTencentCloudRouteEntryCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_route_entry.create")()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	vpcId := d.Get("vpc_id").(string)
+	routeTableId := d.Get("route_table_id").(string)
+	destinationCidrBlock := d.Get("cidr_block").(string)
+	nextType := d.Get("next_type").(string)
+	nextHub := d.Get("next_hub").(string)
+
+	if nextType == GATE_WAY_TYPE_EIP && nextHub != "0" {
+		return fmt.Errorf("if next_type is %s, next_hub can only be \"0\" ", GATE_WAY_TYPE_EIP)
 	}
 
-	log.Printf("[DEBUG] resource_tc_route_entry create params:%v", params)
+	if _, ok := routeTypeNewMap[nextType]; !ok {
+		return fmt.Errorf("The value of next_type is invalid")
+	}
 
-	response, err := client.SendRequest("vpc", params)
+	_, err := service.CreateRoutes(ctx, routeTableId, destinationCidrBlock, routeTypeNewMap[nextType], nextHub, "")
 	if err != nil {
-		log.Printf("[ERROR] resource_tc_route_entry create client.SendRequest error:%v", err)
 		return err
 	}
-	var jsonresp struct {
-		Code     int    `json:"code"`
-		Message  string `json:"message"`
-		CodeDesc string `json:"codeDesc"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		log.Printf("[ERROR] resource_tc_route_entry create json.Unmarshal error:%v", err)
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("resource_tc_route_entry create error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-	}
+
 	route := map[string]string{
-		"vpcId":                params["vpcId"],
-		"routeTableId":         params["routeTableId"],
-		"destinationCidrBlock": params["routeSet.0.destinationCidrBlock"],
-		"nextType":             params["routeSet.0.nextType"],
-		"nextHub":              params["routeSet.0.nextHub"],
+		"vpcId":                vpcId,
+		"routeTableId":         routeTableId,
+		"destinationCidrBlock": destinationCidrBlock,
+		"nextType":             fmt.Sprintf("%d", routeTypeApiMap[nextType]),
+		"nextHub":              nextHub,
 	}
 	uniqRouteEntryId, ok := routeIdEncode(route)
 	if !ok {
-		return errors.New("resource_tc_route_entry create error, Build route entry id fail")
+		return fmt.Errorf("Failed to encode route entry")
 	}
-	log.Printf("[DEBUG] uniqRouteEntryId=%s", uniqRouteEntryId)
+
 	d.SetId(uniqRouteEntryId)
-	return nil
+
+	return resourceTencentCloudRouteEntryRead(d, meta)
 }
 
-func resourceTencentCloudRouteEntryRead(d *schema.ResourceData, m interface{}) error {
-	log.Printf("[DEBUG] resource_tc_route_entry read id:%v", d.Id())
-	client := m.(*TencentCloudClient).commonConn
-	_route, ok := routeIdDecode(d.Id())
+func resourceTencentCloudRouteEntryRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_route_entry.read")()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	route, ok := routeIdDecode(d.Id())
 	if !ok {
-		return fmt.Errorf("resource_tc_route_entry read error, id decode faild! id:%v", d.Id())
+		return fmt.Errorf("tencentcloud_route_entry read error, id decode faild, id:%v", d.Id())
 	}
 
-	_route["Action"] = "DescribeRoutes"
-
-	log.Printf("[DEBUG] resource_tc_route_entry read params:%v", _route)
-
-	response, err := client.SendRequest("vpc", _route)
-	if err != nil {
-		log.Printf("[ERROR] resource_tc_route_entry read json.Unmarshal error:%v", err)
-		return err
-	}
-	var jsonresp struct {
-		Code     int    `json:"code"`
-		Message  string `json:"message"`
-		CodeDesc string `json:"codeDesc"`
-		Data     struct {
-			TotalNum int `json:"totalNum"`
-			Data     []struct {
-				DestinationCidrBlock string `json:"destinationCidrBlock"`
-				NextType             int    `json:"nextType"`
-				UnNextHub            string `json:"unNextHub"`
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e := service.DescribeRouteTable(ctx, route["routeTableId"])
+		if e != nil {
+			return retryError(e)
+		}
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+		if has != 1 {
+			e = fmt.Errorf("one routeTable id get %d routeTable infos", has)
+			return resource.NonRetryableError(e)
+		}
+		for _, v := range info.entryInfos {
+			var nextType string
+			var nextTypeId string
+			for kk, vv := range routeTypeNewMap {
+				if vv == v.nextType {
+					nextType = kk
+				}
+			}
+			if _, ok := routeTypeApiMap[nextType]; ok {
+				nextTypeId = fmt.Sprintf("%d", routeTypeApiMap[nextType])
+			}
+			if v.destinationCidr == route["destinationCidrBlock"] &&
+				nextTypeId == route["nextType"] &&
+				v.nextBub == route["nextHub"] &&
+				v.description == route["description"] {
+				d.Set("vpc_id", route["vpcId"])
+				d.Set("route_table_id", route["routeTableId"])
+				d.Set("cidr_block", route["destinationCidrBlock"])
+				d.Set("next_type", nextType)
+				d.Set("next_hub", route["nextHub"])
+				return nil
 			}
 		}
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
+
+		d.SetId("")
+		return nil
+	})
 	if err != nil {
-		log.Printf("[DEBUG] resource_tc_route_entry read json.Unmarshal error:%v", err)
 		return err
 	}
 
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("resource_tc_route_entry read error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-	} else if jsonresp.Data.TotalNum <= 0 || len(jsonresp.Data.Data) <= 0 {
-		d.SetId("")
-		return nil
-	}
-
-	nextType := -1
-	for _, r := range jsonresp.Data.Data {
-		if strings.ToUpper(r.UnNextHub) == "LOCAL" {
-			continue
-		}
-		nextType = r.NextType
-	}
-	if nextType == -1 {
-		d.SetId("")
-		return nil
-	}
-
-	uniqNextType := ""
-	for vgwKey, vgwType := range nextTypes {
-		if vgwType == nextType {
-			uniqNextType = vgwKey
-			break
-		}
-	}
-	if uniqNextType == "" {
-		return errors.New("[ERROR] nextType is null")
-	}
-
-	d.Set("vpc_id", _route["vpcId"])
-	d.Set("route_table_id", _route["routeTableId"])
-	d.Set("cidr_block", _route["destinationCidrBlock"])
-	d.Set("next_type", uniqNextType)
-	d.Set("next_hub", _route["nextHub"])
 	return nil
 }
 
-func resourceTencentCloudRouteEntryDelete(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	routes, ok := routeIdDecode(d.Id())
+func resourceTencentCloudRouteEntryDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_route_entry.delete")()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	route, ok := routeIdDecode(d.Id())
 	if !ok {
-		return fmt.Errorf("resource_tc_route_entry delete error, id decode faild! id:%v", d.Id())
-	}
-	params := map[string]string{
-		"Action":                          "DeleteRoute",
-		"vpcId":                           routes["vpcId"],
-		"routeTableId":                    routes["routeTableId"],
-		"routeSet.0.destinationCidrBlock": routes["destinationCidrBlock"],
-		"routeSet.0.nextType":             routes["nextType"],
-		"routeSet.0.nextHub":              routes["nextHub"],
+		return fmt.Errorf("tencentcloud_route_entry read error, id decode faild, id:%v", d.Id())
 	}
 
-	log.Printf("[DEBUG] resource_tc_route_entry delete params:%v", params)
+	var routeEntryId int64
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e := service.DescribeRouteTable(ctx, route["routeTableId"])
+		if e != nil {
+			return retryError(e)
+		}
 
-	response, err := client.SendRequest("vpc", params)
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+
+		if has != 1 {
+			e = fmt.Errorf("one routeTable id get %d routeTable infos", has)
+			return resource.NonRetryableError(e)
+		}
+
+		for _, v := range info.entryInfos {
+			var nextType string
+			var nextTypeId string
+			for kk, vv := range routeTypeNewMap {
+				if vv == v.nextType {
+					nextType = kk
+				}
+			}
+			if _, ok := routeTypeApiMap[nextType]; ok {
+				nextTypeId = fmt.Sprintf("%d", routeTypeApiMap[nextType])
+			}
+			if v.destinationCidr == route["destinationCidrBlock"] &&
+				nextTypeId == route["nextType"] &&
+				v.nextBub == route["nextHub"] &&
+				v.description == route["description"] {
+				routeEntryId = v.routeEntryId
+				return nil
+			}
+		}
+
+		d.SetId("")
+		return nil
+	})
 	if err != nil {
-		log.Printf("[ERROR] resource_tc_route_entry delete client.SendRequest error:%v", err)
 		return err
 	}
-	var jsonresp struct {
-		Code     int    `json:"code"`
-		Message  string `json:"message"`
-		CodeDesc string `json:"codeDesc"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		log.Printf("[ERROR] resource_tc_route_entry delete json.Unmarshal error:%v", err)
-		return err
-	}
 
-	//jsonresp.Code == 28004 ==> Route table does not exist
-	if jsonresp.Code != 0 && jsonresp.Code != 28004 {
-		log.Printf("[DEBUG] resource_tc_route_entry delete error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-		return errors.New(jsonresp.Message)
-	}
-	return nil
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if err := service.DeleteRoutes(ctx, route["routeTableId"], uint64(routeEntryId)); err != nil {
+			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+				if sdkErr.Code == VPCNotFound {
+					return nil
+				}
+			}
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+
+	return err
 }
 
-// Build an ID for a route
 func routeIdEncode(route map[string]string) (routeId string, ok bool) {
 	vpcId, ok0 := route["vpcId"]
 	rtbId, ok1 := route["routeTableId"]
@@ -247,7 +265,6 @@ func routeIdEncode(route map[string]string) (routeId string, ok bool) {
 	return "", false
 }
 
-//Decompose a Route Id
 func routeIdDecode(routeId string) (route map[string]string, ok bool) {
 	route = map[string]string{}
 	routeArray := strings.Split(routeId, "::")
@@ -259,7 +276,5 @@ func routeIdDecode(routeId string) (route map[string]string, ok bool) {
 	route["destinationCidrBlock"] = routeArray[2]
 	route["nextType"] = routeArray[3]
 	route["nextHub"] = routeArray[4]
-	log.Printf("[DEBUG] routeIdDecode routeId:%v", routeId)
-	log.Printf("[DEBUG] routeIdDecode result route:%v", route)
 	return route, true
 }

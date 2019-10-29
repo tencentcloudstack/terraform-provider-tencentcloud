@@ -20,7 +20,7 @@ github.com/apparentlymart/go-textseg/textseg
 github.com/armon/go-radix
 # github.com/athom/goset v0.0.0-20151103071336-f07be69aa101
 github.com/athom/goset
-# github.com/aws/aws-sdk-go v1.25.18
+# github.com/aws/aws-sdk-go v1.25.21
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/awserr
 github.com/aws/aws-sdk-go/aws/awsutil
@@ -470,8 +470,6 @@ github.com/zclconf/go-cty/cty/msgpack
 github.com/zclconf/go-cty/cty/set
 # github.com/zclconf/go-cty-yaml v1.0.1
 github.com/zclconf/go-cty-yaml
-# github.com/zqfan/tencentcloud-sdk-go v0.1.2
-github.com/zqfan/tencentcloud-sdk-go/client
 # go.opencensus.io v0.22.0
 go.opencensus.io
 go.opencensus.io/internal

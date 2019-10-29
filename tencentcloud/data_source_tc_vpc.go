@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -40,60 +39,45 @@ func dataSourceTencentCloudVpc() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudVpcRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action": "DescribeVpcEx",
-		"offset": "0",
-		"limit":  "100",
+func dataSourceTencentCloudVpcRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_vpc.read")()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var (
+		vpcId string
+		name  string
+	)
+	if temp, ok := d.GetOk("id"); ok {
+		tempStr := temp.(string)
+		if tempStr != "" {
+			vpcId = tempStr
+		}
 	}
-	if cid, ok := d.GetOk("id"); ok {
-		params["vpcId"] = cid.(string)
-	}
-	if name, ok := d.GetOk("name"); ok && name != "" {
-		params["vpcName"] = name.(string)
+	if temp, ok := d.GetOk("name"); ok {
+		tempStr := temp.(string)
+		if tempStr != "" {
+			name = tempStr
+		}
 	}
 
-	log.Printf("[DEBUG] Reading TencentCloud VPC: %s", params)
-	response, err := client.SendRequest("vpc", params)
+	var vpcInfos, err = service.DescribeVpcs(ctx, vpcId, name, map[string]string{})
 	if err != nil {
 		return err
 	}
 
-	var jsonresp struct {
-		Code       int    `json:"code"`
-		Message    string `json:"message"`
-		TotalCount int    `json:"totalCount"`
-		Data       []struct {
-			UnVpcId     string `json:"unVpcId"`
-			VpcName     string `json:"vpcName"`
-			CidrBlock   string `json:"cidrBlock"`
-			IsDefault   bool   `json:"isDefault"`
-			IsMulticast bool   `json:"isMulticast"`
-		} `json:"data"`
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("resource_tc_vpc got error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-	} else if jsonresp.TotalCount == 0 {
-		log.Printf("[DEBUG] VPC Not Found, params=%s", params)
-		return nil
+	if len(vpcInfos) == 0 {
+		return fmt.Errorf("vpc id=%s, name=%s not found", vpcId, name)
 	}
 
-	if len(jsonresp.Data) == 0 {
-		return fmt.Errorf("no matching VPC found")
-	} else if len(jsonresp.Data) > 1 {
-		return fmt.Errorf("multiple VPCs matched; use additional constraints to reduce matches to a single VPC")
-	}
+	vpc := vpcInfos[0]
+	d.SetId(vpc.vpcId)
+	d.Set("name", vpc.name)
+	d.Set("cidr_block", vpc.cidr)
+	d.Set("is_default", vpc.isDefault)
+	d.Set("is_multicast", vpc.isMulticast)
 
-	vpc := jsonresp.Data[0]
-	d.SetId(vpc.UnVpcId)
-	d.Set("name", vpc.VpcName)
-	d.Set("cidr_block", vpc.CidrBlock)
-	d.Set("is_default", vpc.IsDefault)
-	d.Set("is_multicast", vpc.IsMulticast)
 	return nil
 }
