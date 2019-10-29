@@ -4,7 +4,6 @@ Provide a resource to increase instance to cluster
 Example Usage
 
 ```hcl
-
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -16,7 +15,6 @@ variable "subnet" {
 variable "scale_instance_type" {
   default = "S2.LARGE16"
 }
-
 
 resource tencentcloud_kubernetes_scale_worker test_scale {
   cluster_id = "cls-godovr32"
@@ -51,11 +49,12 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	"log"
-	"strings"
 )
 
 func resourceTencentCloudTkeScaleWorker() *schema.Resource {
@@ -88,7 +87,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: tkeCvmState(),
 				},
-				Description: "An information list of kubernetes cluster 'WORKER' . Each element contains the following attributes:",
+				Description: "An information list of kubernetes cluster 'WORKER'. Each element contains the following attributes:",
 			},
 		},
 	}
@@ -126,7 +125,7 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 	}
 
 	if !has {
-		return fmt.Errorf("cluster [%s]  is not exist.", clusterId)
+		return fmt.Errorf("cluster [%s] is not exist.", clusterId)
 	}
 
 	if workers, ok := d.GetOk("worker_config"); ok {
@@ -214,7 +213,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return nil
 	}
-	//The cluster has been deleted
+	// The cluster has been deleted
 	if !has {
 		d.SetId("")
 		return nil
@@ -279,7 +278,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		newWorkerInstancesList = append(newWorkerInstancesList, tempMap)
 	}
 
-	//The machines I generated was deleted by others.
+	// The machines I generated was deleted by others.
 	if len(newWorkerInstancesList) == 0 {
 		d.SetId("")
 		return nil
@@ -315,7 +314,7 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 	if err != nil {
 		return nil
 	}
-	//The cluster has been deleted
+	// The cluster has been deleted
 	if !has {
 		return nil
 	}
@@ -371,7 +370,7 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 			needDeletes = append(needDeletes, cvm.InstanceId)
 		}
 	}
-	//The machines I generated was deleted by others.
+	// The machines I generated was deleted by others.
 	if len(needDeletes) == 0 {
 		return nil
 	}

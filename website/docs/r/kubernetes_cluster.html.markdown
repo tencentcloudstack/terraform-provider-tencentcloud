@@ -29,7 +29,7 @@ variable "default_instance_type" {
   default = "SA1.LARGE8"
 }
 
-#examples for MANAGED_CLUSTER  cluster
+#examples for MANAGED_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = "${var.vpc}"
   cluster_cidr            = "10.1.0.0/16"
@@ -63,7 +63,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_deploy_type = "MANAGED_CLUSTER"
 }
 
-#examples for INDEPENDENT_CLUSTER  cluster
+#examples for INDEPENDENT_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
   vpc_id                  = "${var.vpc}"
   cluster_cidr            = "10.1.0.0/16"
@@ -138,6 +138,7 @@ The following arguments are supported:
 * `ignore_cluster_cidr_conflict` - (Optional, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
 * `master_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'MASTER_ETCD' service, and create <=7 units for common users.
 * `project_id` - (Optional, ForceNew) Project ID, default value is 0.
+* `tags` - (Optional) The tags of the cluster.
 * `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.
 
 The `data_disk` object supports the following:

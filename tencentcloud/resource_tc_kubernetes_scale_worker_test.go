@@ -3,9 +3,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 	"testing"
+
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
@@ -73,10 +74,10 @@ func testAccCheckTkeScaleWorkerDestroy(s *terraform.State) error {
 
 		for _, worker := range workers {
 			if worker.InstanceId == instanceId {
-				return fmt.Errorf("cvm %s  found in DescribeClusterInstances", instanceId)
+				return fmt.Errorf("cvm %s found in DescribeClusterInstances", instanceId)
 			}
 		}
-		log.Printf("[DEBUG]instance %s delelte  ok", instanceId)
+		log.Printf("[DEBUG]instance %s delelte ok", instanceId)
 
 	}
 	return nil
@@ -124,11 +125,11 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 
 		for _, worker := range workers {
 			if worker.InstanceId == instanceId {
-				log.Printf("[DEBUG]instance %s create  ok", instanceId)
+				log.Printf("[DEBUG]instance %s create ok", instanceId)
 				return nil
 			}
 		}
-		return fmt.Errorf("cvm %s  not found in DescribeClusterInstances", instanceId)
+		return fmt.Errorf("cvm %s not found in DescribeClusterInstances", instanceId)
 	}
 }
 
@@ -210,6 +211,4 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
     password                  = "AABBccdd1122"
   }
 }
-
-
 `

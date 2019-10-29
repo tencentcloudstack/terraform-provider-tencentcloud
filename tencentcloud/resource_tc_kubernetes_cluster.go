@@ -20,7 +20,7 @@ variable "default_instance_type" {
   default = "SA1.LARGE8"
 }
 
-#examples for MANAGED_CLUSTER  cluster
+#examples for MANAGED_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = "${var.vpc}"
   cluster_cidr            = "10.1.0.0/16"
@@ -54,7 +54,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_deploy_type = "MANAGED_CLUSTER"
 }
 
-#examples for INDEPENDENT_CLUSTER  cluster
+#examples for INDEPENDENT_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
   vpc_id                  = "${var.vpc}"
   cluster_cidr            = "10.1.0.0/16"
@@ -116,16 +116,17 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"log"
 	"math"
 	"net"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
 func tkeCvmState() map[string]*schema.Schema {
@@ -225,7 +226,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 				value := strings.ToUpper(v.(string))
 				if !strings.Contains(value, "LARGE") {
 					errors = append(errors, fmt.Errorf(
-						"%q  has to be `LARGE` type", k))
+						"%q has to be `LARGE` type", k))
 				}
 				return
 			},
@@ -354,7 +355,6 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 }
 
 func resourceTencentCloudTkeCluster() *schema.Resource {
-
 	schemaBody := map[string]*schema.Schema{
 		"cluster_name": {
 			Type:        schema.TypeString,
@@ -440,7 +440,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					return
 				}
 				if !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
-					errors = append(errors, fmt.Errorf("%q must in  10.  |  192.168. |  172.[16-31]", k))
+					errors = append(errors, fmt.Errorf("%q must in 10. | 192.168. | 172.[16-31]", k))
 					return
 				}
 
@@ -448,7 +448,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					nextNo := strings.Split(value, ".")[1]
 					no, _ := strconv.ParseInt(nextNo, 10, 64)
 					if no < 16 || no > 31 {
-						errors = append(errors, fmt.Errorf("%q must in  10.  |  192.168. |  172.[16-31]", k))
+						errors = append(errors, fmt.Errorf("%q must in 10. | 192.168. | 172.[16-31]", k))
 						return
 					}
 				}
@@ -516,6 +516,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			},
 			Description: "Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.",
 		},
+		"tags": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "The tags of the cluster.",
+		},
+
 		// Computed values
 		"cluster_node_num": {
 			Type:        schema.TypeInt,
@@ -539,10 +545,10 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTkeClusterCreate,
 		Read:   resourceTencentCloudTkeClusterRead,
+		Update: resourceTencentCloudTkeClusterUpdate,
 		Delete: resourceTencentCloudTkeClusterDelete,
 		Schema: schemaBody,
 	}
-
 }
 
 func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
@@ -792,7 +798,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 			masterCount += count
 		}
 		if masterCount < 3 {
-			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(master_config) should  >=3 ")
+			return fmt.Errorf("if `cluster_deploy_type` is `TKE_DEPLOY_TYPE_INDEPENDENT` len(master_config) should >=3")
 		}
 	} else {
 		if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
@@ -814,8 +820,10 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	tags := getTags(d, "tags")
+
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-	id, err := service.CreateCluster(ctx, basic, advanced, cvms, cidrSet)
+	id, err := service.CreateCluster(ctx, basic, advanced, cvms, cidrSet, tags)
 
 	if err != nil {
 		return err
@@ -826,7 +834,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	_, _, err = service.DescribeClusterInstances(ctx, d.Id())
 
 	if err != nil {
-		//create often cost more than 20 Minutes.
+		// create often cost more than 20 Minutes.
 		err = resource.Retry(30*time.Minute, func() *resource.RetryError {
 			_, _, err = service.DescribeClusterInstances(ctx, d.Id())
 
@@ -856,7 +864,6 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}) error {
-
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster.read")()
 
 	logId := getLogId(contextNil)
@@ -896,6 +903,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	d.Set("cluster_max_pod_num", info.MaxClusterServiceNum)
 	d.Set("cluster_max_service_num", info.MaxClusterServiceNum)
 	d.Set("cluster_node_num", info.ClusterNodeNum)
+	d.Set("tags", info.Tags)
 
 	_, workers, err := service.DescribeClusterInstances(ctx, d.Id())
 	if err != nil {
@@ -968,6 +976,32 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	d.Set("domain", emptyStrFunc(securityRet.Response.Domain))
 	d.Set("pgw_endpoint", emptyStrFunc(securityRet.Response.PgwEndpoint))
 	d.Set("security_policy", policies)
+
+	return nil
+}
+
+func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_kubernetes_cluster.update")()
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	id := d.Id()
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	service := TagService{client: client}
+	region := client.Region
+
+	oldTags, newTags := d.GetChange("tags")
+	replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+
+	resourceName := BuildTagResourceName("ccs", "cluster", region, id)
+	if err := service.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+		return err
+	}
+
+	if err := resourceTencentCloudTkeClusterRead(d, meta); err != nil {
+		log.Printf("[WARN]%s resource.kubernetes_cluster.read after update fail , %s", logId, err.Error())
+	}
 
 	return nil
 }
