@@ -313,7 +313,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional:     true,
 			Sensitive:    true,
 			ValidateFunc: validateAsConfigPassword,
-			Description:  "Password to access.",
+			Description:  "Password to access, should be set if `key_ids` not set.",
 		},
 		"key_ids": {
 			MaxItems:    1,
@@ -321,7 +321,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:    true,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "ID list of keys.",
+			Description: "ID list of keys ,should be set if `password` not set.",
 		},
 		"security_group_ids": {
 			Type:        schema.TypeList,
