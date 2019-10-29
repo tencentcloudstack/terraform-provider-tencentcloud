@@ -174,7 +174,7 @@ func TestAccTencentCloudScfFunction_cos(t *testing.T) {
 	path := f.Name()
 	// for unit test run on windows
 	if runtime.GOOS == "windows" {
-		path = strings.ReplaceAll(path, "\\", "\\\\")
+		path = strings.Replace(path, "\\", "\\\\", -1)
 	}
 
 	resource.Test(t, resource.TestCase{

@@ -581,7 +581,7 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 			*trigger.TriggerDesc = data.Cron
 
 		case SCF_TRIGGER_TYPE_COS:
-			*trigger.TriggerName = strings.ReplaceAll(*trigger.TriggerName, SCF_TRIGGER_COS_NAME_SUFFIX, "")
+			*trigger.TriggerName = strings.Replace(*trigger.TriggerName, SCF_TRIGGER_COS_NAME_SUFFIX, "", -1)
 		}
 
 		triggers = append(triggers, map[string]interface{}{
