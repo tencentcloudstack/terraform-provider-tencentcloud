@@ -321,7 +321,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:    true,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "ID list of keys ,should be set if `password` not set.",
+			Description: "ID list of keys, should be set if `password` not set.",
 		},
 		"security_group_ids": {
 			Type:        schema.TypeList,
