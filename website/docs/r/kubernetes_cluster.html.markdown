@@ -158,8 +158,8 @@ The `master_config` object supports the following:
 * `instance_name` - (Optional, ForceNew) Name of the CVMs.
 * `internet_charge_type` - (Optional, ForceNew) Charge types for network traffic. Available values include TRAFFIC_POSTPAID_BY_HOUR.
 * `internet_max_bandwidth_out` - (Optional, ForceNew) Max bandwidth of Internet access in Mbps. Default is 0.
-* `key_ids` - (Optional, ForceNew) ID list of keys.
-* `password` - (Optional, ForceNew) Password to access.
+* `key_ids` - (Optional, ForceNew) ID list of keys ,should be set if `password`not set.
+* `password` - (Optional, ForceNew) Password to access, should be set if `key_ids`not set.
 * `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is 50.
@@ -178,8 +178,8 @@ The `worker_config` object supports the following:
 * `instance_name` - (Optional, ForceNew) Name of the CVMs.
 * `internet_charge_type` - (Optional, ForceNew) Charge types for network traffic. Available values include TRAFFIC_POSTPAID_BY_HOUR.
 * `internet_max_bandwidth_out` - (Optional, ForceNew) Max bandwidth of Internet access in Mbps. Default is 0.
-* `key_ids` - (Optional, ForceNew) ID list of keys.
-* `password` - (Optional, ForceNew) Password to access.
+* `key_ids` - (Optional, ForceNew) ID list of keys ,should be set if `password`not set.
+* `password` - (Optional, ForceNew) Password to access, should be set if `key_ids`not set.
 * `public_ip_assigned` - (Optional, ForceNew) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional, ForceNew) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional, ForceNew) Volume of system disk in GB. Default is 50.
