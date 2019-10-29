@@ -314,7 +314,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Optional:     true,
 			Sensitive:    true,
 			ValidateFunc: validateAsConfigPassword,
-			Description:  "Password to access.",
+			Description:  "Password to access, should be set if `key_ids` not set.",
 		},
 		"key_ids": {
 			MaxItems:    1,
@@ -322,7 +322,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:    true,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "ID list of keys.",
+			Description: "ID list of keys, should be set if `password` not set.",
 		},
 		"security_group_ids": {
 			Type:        schema.TypeList,
@@ -659,7 +659,10 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		if request.LoginSettings == nil {
 			request.LoginSettings = &cvm.LoginSettings{}
 		}
-		request.LoginSettings.Password = stringToPointer(v.(string))
+
+		if v.(string) != "" {
+			request.LoginSettings.Password = stringToPointer(v.(string))
+		}
 	}
 
 	if v, ok := dMap["instance_name"]; ok {
@@ -671,11 +674,24 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 			request.LoginSettings = &cvm.LoginSettings{}
 		}
 		keyIds := v.([]interface{})
-		request.LoginSettings.KeyIds = make([]*string, 0, len(keyIds))
-		for i := range keyIds {
-			keyId := keyIds[i].(string)
-			request.LoginSettings.KeyIds = append(request.LoginSettings.KeyIds, &keyId)
+
+		if len(keyIds) != 0 {
+			request.LoginSettings.KeyIds = make([]*string, 0, len(keyIds))
+			for i := range keyIds {
+				keyId := keyIds[i].(string)
+				request.LoginSettings.KeyIds = append(request.LoginSettings.KeyIds, &keyId)
+			}
 		}
+	}
+
+	if request.LoginSettings.Password == nil && request.LoginSettings.KeyIds == nil {
+		errRet = fmt.Errorf("Parameters cvm.`key_ids` and cluster.`password` should be set one")
+		return
+	}
+
+	if request.LoginSettings.Password != nil && request.LoginSettings.KeyIds != nil {
+		errRet = fmt.Errorf("Parameters cvm.`key_ids` and cluster.`password` can only be supported one")
+		return
 	}
 
 	if v, ok := dMap["security_group_ids"]; ok {
