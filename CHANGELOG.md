@@ -9,6 +9,8 @@ FEATURES:
 * **New Resource**: `tencentcloud_scf_function`
 * **New Resource**: `tencentcloud_scf_namespace`
 
+## 1.21.2 (October 29, 2019)
+
 BUG FIXES:
 
 * Resource: `tencentcloud_gaap_realserver` add ip/domain exists check
