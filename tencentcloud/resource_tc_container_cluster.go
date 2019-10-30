@@ -448,7 +448,7 @@ func resourceTencentCloudContainerClusterCreate(d *schema.ResourceData, meta int
 	runInstancesParas := runInstancesPara.ToJsonString()
 	cvms.Work = []string{runInstancesParas}
 
-	id, err := service.CreateCluster(ctx, basic, cAdvanced, cvms, iAdvanced, cidrSet)
+	id, err := service.CreateCluster(ctx, basic, cAdvanced, cvms, iAdvanced, cidrSet, map[string]string{})
 	if err != nil {
 		return err
 	}

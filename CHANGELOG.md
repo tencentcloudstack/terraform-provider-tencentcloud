@@ -1,4 +1,13 @@
-## 1.21.2 (Unreleased)
+## 1.21.3 (Unreleased)
+## 1.21.2 (October 29, 2019)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_realserver` add ip/domain exists check
+* Resource: `tencentcloud_kubernetes_cluster` add error handling logic and optional argument `tags`.
+* Resource: `tencentcloud_kubernetes_scale_worker` add error handling logic.
+* Data Source: `tencentcloud_kubernetes_clusters` add optional argument `tags`.
+
 ## 1.21.1 (October 23, 2019)
 
 ENHANCEMENTS:

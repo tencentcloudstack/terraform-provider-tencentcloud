@@ -4,12 +4,12 @@ Use this data source to query detailed information of kubernetes clusters.
 Example Usage
 
 ```hcl
-data "tencentcloud_kubernetes_clusters"  "name" {
-    cluster_name ="terraform"
+data "tencentcloud_kubernetes_clusters" "name" {
+  cluster_name ="terraform"
 }
 
-data "tencentcloud_kubernetes_clusters"  "id" {
-    cluster_id ="cls-godovr32"
+data "tencentcloud_kubernetes_clusters" "id" {
+  cluster_id ="cls-godovr32"
 }
 ```
 */
@@ -17,9 +17,10 @@ package tencentcloud
 
 import (
 	"context"
+	"log"
+
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"log"
 )
 
 func tkeClusterInfo() map[string]*schema.Schema {
@@ -93,7 +94,7 @@ func tkeClusterInfo() map[string]*schema.Schema {
 		"cluster_node_num": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Number of nodes in the  cluster.",
+			Description: "Number of nodes in the cluster.",
 		},
 		"worker_instances_list": {
 			Type:        schema.TypeList,
@@ -102,6 +103,11 @@ func tkeClusterInfo() map[string]*schema.Schema {
 			Elem: &schema.Resource{
 				Schema: tkeCvmState(),
 			},
+		},
+		"tags": {
+			Type:        schema.TypeMap,
+			Computed:    true,
+			Description: "Tags of the cluster.",
 		},
 	}
 
@@ -128,12 +134,17 @@ func dataSourceTencentCloudKubernetesClusters() *schema.Resource {
 				Optional:      true,
 				Description:   "Name of the cluster. Conflict with cluster_id, can not be set at the same time.",
 			},
-
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the cluster.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
+
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -156,8 +167,10 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	id := ""
-	name := ""
+	var (
+		id   string
+		name string
+	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
 		id = v.(string)
@@ -167,8 +180,9 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		name = v.(string)
 	}
 
-	infos, err := service.DescribeClusters(ctx, id, name)
+	tags := getTags(d, "tags")
 
+	infos, err := service.DescribeClusters(ctx, id, name)
 	if err != nil && id == "" {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			infos, err = service.DescribeClusters(ctx, id, name)
@@ -193,7 +207,16 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		}
 	}
 
+LOOP:
 	for _, info := range infos {
+		if len(tags) > 0 {
+			for k, v := range tags {
+				if info.Tags[k] != v {
+					continue LOOP
+				}
+			}
+		}
+
 		var infoMap = map[string]interface{}{}
 		infoMap["cluster_name"] = info.ClusterName
 		infoMap["cluster_desc"] = info.ClusterDescription
@@ -208,6 +231,7 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		infoMap["cluster_max_pod_num"] = info.MaxClusterServiceNum
 		infoMap["cluster_max_service_num"] = info.MaxClusterServiceNum
 		infoMap["cluster_node_num"] = info.ClusterNodeNum
+		infoMap["tags"] = info.Tags
 
 		_, workers, err := service.DescribeClusterInstances(ctx, info.ClusterId)
 		if err != nil {

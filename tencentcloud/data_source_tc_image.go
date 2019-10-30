@@ -101,6 +101,11 @@ func dataSourceTencentCloudSourceImages() *schema.Resource {
 				ValidateFunc: validateNotEmpty,
 				Description:  "A string to apply with fuzzy match to the os_name atrribute on the image list returned by TencentCloud. **NOTE**: when os_name is provided, highest priority is applied in this field instead of `image_name_regex`.",
 			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
+			},
 			"image_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -197,11 +202,16 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 		return errors.New("No image found")
 	}
 
-	id := dataResourceIdHash(resultImageId)
-	d.SetId(id)
-
+	d.SetId(dataResourceIdHash(resultImageId))
 	if err := d.Set("image_id", resultImageId); err != nil {
 		return err
+	}
+
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if err = writeToFile(output.(string), resultImageId); err != nil {
+			return err
+		}
 	}
 
 	return nil

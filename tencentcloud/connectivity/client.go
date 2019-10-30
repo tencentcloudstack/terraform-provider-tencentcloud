@@ -44,8 +44,8 @@ type TencentCloudClient struct {
 	mongodbConn *mongodb.Client
 	tkeConn     *tke.Client
 	camConn     *cam.Client
-	gaapCoon    *gaap.Client
-	sslCoon     *ssl.Client
+	gaapConn    *gaap.Client
+	sslConn     *ssl.Client
 }
 
 // NewTencentCloudClient returns a new TencentCloudClient
@@ -245,28 +245,28 @@ func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 
 // UseGaapClient returns gaap client for service
 func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
-	if me.gaapCoon != nil {
-		return me.gaapCoon
+	if me.gaapConn != nil {
+		return me.gaapConn
 	}
 
 	cpf := newTencentCloudClientProfile(300)
-	me.gaapCoon, _ = gaap.NewClient(me.Credential, me.Region, cpf)
-	me.gaapCoon.WithHttpTransport(&LogRoundTripper{})
+	me.gaapConn, _ = gaap.NewClient(me.Credential, me.Region, cpf)
+	me.gaapConn.WithHttpTransport(&LogRoundTripper{})
 
-	return me.gaapCoon
+	return me.gaapConn
 }
 
 // UseSslClient returns ssl client for service
 func (me *TencentCloudClient) UseSslClient() *ssl.Client {
-	if me.sslCoon != nil {
-		return me.sslCoon
+	if me.sslConn != nil {
+		return me.sslConn
 	}
 
 	cpf := newTencentCloudClientProfile(300)
-	me.sslCoon, _ = ssl.NewClient(me.Credential, me.Region, cpf)
-	me.sslCoon.WithHttpTransport(&LogRoundTripper{})
+	me.sslConn, _ = ssl.NewClient(me.Credential, me.Region, cpf)
+	me.sslConn.WithHttpTransport(&LogRoundTripper{})
 
-	return me.sslCoon
+	return me.sslConn
 }
 
 // UseCamClient returns cam client for service
