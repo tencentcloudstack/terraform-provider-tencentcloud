@@ -1,3 +1,32 @@
+/*
+Provides a TencentCloud Container Cluster Instance resource.
+
+~> **NOTE:** It has been deprecated and replaced by  tencentcloud_kubernetes_scale_worker.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_container_cluster_instance" "bar_instance" {
+  cpu               = 1
+  mem               = 1
+  bandwidth         = 1
+  bandwidth_type    = "PayByHour"
+  require_wan_ip    = 1
+  is_vpc_gateway    = 0
+  storage_size      = 10
+  root_size         = 50
+  password          = "Admin12345678"
+  cvm_type          = "PayByMonth"
+  period            = 1
+  zone_id           = 100004
+  instance_type     = "CVM.S2"
+  mount_target      = "/data"
+  docker_graph_path = ""
+  subnet_id         = "subnet-abcdedf"
+  cluster_id        = "cls-abcdef"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -22,122 +51,151 @@ func resourceTencentCloudContainerClusterInstance() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The id of the cluster.",
 			},
 			"cpu": {
-				Type:       schema.TypeInt,
-				Optional:   true,
-				Deprecated: "It has been deprecated from version 1.16.0. Set 'instance_type' instead.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Deprecated:  "It has been deprecated from version 1.16.0. Set 'instance_type' instead.",
+				Description: "The cpu of the node.",
 			},
 			"mem": {
-				Type:       schema.TypeInt,
-				Optional:   true,
-				Deprecated: "It has been deprecated from version 1.16.0. Set 'instance_type' instead.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Deprecated:  "It has been deprecated from version 1.16.0. Set 'instance_type' instead.",
+				Description: "The memory of the node.",
 			},
 			"bandwidth": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "The network bandwidth of the node.",
 			},
 			"bandwidth_type": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The network type of the node.",
 			},
 			"require_wan_ip": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Indicate whether wan ip is needed.",
 			},
 			"subnet_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The subnet id which the node stays in.",
 			},
 			"is_vpc_gateway": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "Describe whether the node enable the gateway capability.",
 			},
 			"storage_size": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "The size of the data volumn.",
 			},
 			"storage_type": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The type of the data volumn. see more from CVM.",
 			},
 			"root_size": {
-				Type:     schema.TypeInt,
-				Required: true,
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "The size of the root volumn.",
 			},
 			"root_type": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The type of the root volumn. see more from CVM.",
 			},
 			"password": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The password of each node.",
 			},
 			"key_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The key_id of each node(if using key pair to access).",
 			},
 			"cvm_type": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The type of node needed by cvm.",
 			},
 			"period": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "The puchase duration of the node needed by cvm.",
 			},
 			"zone_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The zone which the node stays in.",
 			},
 			"instance_type": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The instance type of the node needed by cvm.",
 			},
 			"sg_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The security group id.",
 			},
 			"mount_target": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The path which volumn is going to be mounted.",
 			},
 			"docker_graph_path": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The docker graph path is going to mounted.",
 			},
 			"user_script": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "User defined script in a base64-format. The script runs after the kubernetes component is ready on node. see more from CCS api documents.",
 			},
 			"unschedulable": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Determine whether the node will be schedulable. 0 is the default meaning node will be schedulable. 1 for unschedulable.",
 			},
 			"instance_name": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The name ot node.",
 			},
 			"abnormal_reason": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Describe the reason when node is in abnormal state(if it was).",
 			},
 			"instance_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "An id identify the node, provided by cvm.",
 			},
 			"is_normal": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Describe whether the node is normal.",
 			},
 			"wan_ip": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Describe the wan ip of the node.",
 			},
 			"lan_ip": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Describe the lan ip of the node.",
 			},
 		},
 	}

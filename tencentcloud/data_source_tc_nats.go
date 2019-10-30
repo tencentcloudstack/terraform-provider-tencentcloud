@@ -1,3 +1,30 @@
+/*
+The NATs data source lists a number of NATs resource information owned by an TencentCloud account.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_nat_gateways.
+
+Example Usage
+
+```hcl
+# Query the NAT gateway by ID
+data "tencentcloud_nats" "anat" {
+  id = "nat-k6ualnp2"
+}
+
+# Query the list of normal NAT gateways
+data "tencentcloud_nats" "nat_state" {
+  state = 0
+}
+
+# Multi conditional query NAT gateway list
+data "tencentcloud_nats" "multi_nat" {
+  name           = "terraform test"
+  vpc_id         = "vpc-ezij4ltv"
+  max_concurrent = 3000000
+  bandwidth      = 500
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -15,69 +42,82 @@ func dataSourceTencentCloudNats() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The ID for NAT Gateway.",
 			},
 			"vpc_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The VPC ID for NAT Gateway.",
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
+				Description:  "The name for NAT Gateway.",
 			},
 			"state": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "NAT gateway status, 0: Running, 1: Unavailable, 2: Be in arrears and out of service.",
 			},
 			"max_concurrent": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "The upper limit of concurrent connection of NAT gateway, for example: 1000000, 3000000, 10000000.",
 			},
 			"bandwidth": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "The maximum public network output bandwidth of the gateway (unit: Mbps), for example: 10, 20, 50, 100, 200, 500, 1000, 2000, 5000.",
 			},
-
-			// Computed values
 			"nats": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Information list of the dedicated tunnels.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The ID for NAT Gateway.",
 						},
 						"vpc_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The VPC ID for NAT Gateway.",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The name for NAT Gateway.",
 						},
 						"state": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "NAT gateway status, 0: Running, 1: Unavailable, 2: Be in arrears and out of service.",
 						},
 						"max_concurrent": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The upper limit of concurrent connection of NAT gateway, for example: 1000000, 3000000, 10000000.",
 						},
 						"bandwidth": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The maximum public network output bandwidth of the gateway (unit: Mbps), for example: 10, 20, 50, 100, 200, 500, 1000, 2000, 5000.",
 						},
 						"assigned_eip_set": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:        schema.TypeList,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Elastic IP arrays bound to the gateway.",
 						},
 						"create_time": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The create time of the NAT gateway.",
 						},
 					},
 				},

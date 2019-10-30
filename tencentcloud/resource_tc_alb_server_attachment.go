@@ -1,3 +1,33 @@
+/*
+Provides an tencentcloud application load balancer servers attachment as a resource, to attach and detach instances from load balancer.
+
+~> **NOTE:** It has been deprecated and replaced by `tencentcloud_clb_attachment`.
+
+~> **NOTE:** Currently only support existing `loadbalancer_id` `listener_id` `location_id` and Application layer 7 load balancer
+
+Example Usage
+
+```hcl
+resource "tencentcloud_alb_server_attachment" "service1" {
+  loadbalancer_id = "lb-qk1dqox5"
+  listener_id     = "lbl-ghoke4tl"
+  location_id     = "loc-i858qv1l"
+
+  backends = [
+    {
+      instance_id = "ins-4j30i5pe"
+      port        = 80
+      weight      = 50
+    },
+    {
+      instance_id = "ins-4j30i5pe"
+      port        = 8080
+      weight      = 50
+    },
+  ]
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -21,49 +51,57 @@ func resourceTencentCloudAlbServerAttachment() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"loadbalancer_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "loadbalancer ID.",
 			},
 			"listener_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Required: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Required:    true,
+				Description: "listener ID.",
 			},
 			"location_id": {
-				Type:     schema.TypeString,
-				ForceNew: true,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Computed:    true,
+				Description: "location ID, only support for layer 7 loadbalancer.",
 			},
 			"backends": {
-				Type:     schema.TypeSet,
-				Required: true,
-				MinItems: 1,
-				MaxItems: 100,
+				Type:        schema.TypeSet,
+				Required:    true,
+				MinItems:    1,
+				MaxItems:    100,
+				Description: "list of backend server.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "A list backend instance ID (CVM instance ID).",
 						},
 						"port": {
 							Type:         schema.TypeInt,
 							Required:     true,
 							ValidateFunc: validateIntegerInRange(0, 65535),
+							Description:  "The port used by the backend server. Valid value range: [1-65535].",
 						},
 						"weight": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Computed:     true,
 							ValidateFunc: validateIntegerInRange(0, 100),
+							Description:  "Weight of the backend server. Valid value range: [0-100]. Default to 10.",
 						},
 					},
 				},
 			},
 			"protocol_type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The protocol type, http or tcp.",
 			},
 		},
 	}

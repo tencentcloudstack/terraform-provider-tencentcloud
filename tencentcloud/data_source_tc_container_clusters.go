@@ -1,3 +1,17 @@
+/*
+Get container clusters in the current region.
+
+Use this data source to get container clusters in the current region. By default every clusters in current region will be returned.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_kubernetes_clusters.
+
+Example Usage
+
+```hcl
+data "tencentcloud_container_clusters" "foo" {
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -17,69 +31,85 @@ func dataSourceTencentCloudContainerClusters() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "An id identify the cluster, like `cls-xxxxxx`.",
 			},
 			"limit": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "An int variable describe how many cluster in return at most.",
 			},
 			"total_count": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Number of clusters.",
 			},
 			"clusters": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "An information list of kubernetes clusters.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cluster_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "An id identify the cluster, like `cls-xxxxxx`.",
 						},
 						"cluster_name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name the cluster.",
 						},
 						"security_certification_authority": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the certificate string needed for using kubectl to access to kubernetes.",
 						},
 						"security_cluster_external_endpoint": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the address needed for using kubectl to access to kubernetes.",
 						},
 						"security_username": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the username needed for using kubectl to access to kubernetes.",
 						},
 						"security_password": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the password needed for using kubectl to access to kubernetes.",
 						},
 						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The description of the cluster.",
 						},
 						"kubernetes_version": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the running kubernetes version on the cluster.",
 						},
 						"nodes_num": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe how many cluster instances in the cluster.",
 						},
 						"nodes_status": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the current status of the instances in the cluster.",
 						},
 						"total_cpu": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe the total cpu of each instance in the cluster.",
 						},
 						"total_mem": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe the total memory of each instance in the cluster.",
 						},
 					},
 				},

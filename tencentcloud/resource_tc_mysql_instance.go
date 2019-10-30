@@ -64,23 +64,22 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
 			Default:      MysqlPayByUse,
-			Description:  "",
+			Description:  "Pay type of instance, 0: prepay, 1: postpay. Now only supported postpay.",
 		},
 		"period": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			Default:      1,
 			ValidateFunc: validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
-			Description:  "",
+			Description:  "Period of instance, works for prepay instance.",
 		},
 		"auto_renew_flag": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
-			Description:  "",
+			Description:  "Auto renew flag, works for prepay instance.",
 		},
-
 		"intranet_port": {
 			Type:         schema.TypeInt,
 			Optional:     true,

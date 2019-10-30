@@ -1,3 +1,28 @@
+/*
+Provides details about a specific Route Table.
+
+This resource can prove useful when a module accepts a Subnet id as an input variable and needs to, for example, add a route in the Route Table.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_vpc_route_tables.
+
+Example Usage
+
+```hcl
+variable "route_table_id" {}
+
+data "tencentcloud_route_table" "selected" {
+  route_table_id = "${var.route_table_id}"
+}
+
+resource "tencentcloud_route_entry" "rtb_entry_instance" {
+  vpc_id         = "{data.tencentcloud_route_table.selected.vpc_id}"
+  route_table_id = "${var.route_table_id}"
+  cidr_block     = "10.4.8.0/24"
+  next_type      = "instance"
+  next_hub       = "10.16.1.7"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -15,8 +40,9 @@ func dataSourceTencentCloudRouteTable() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"route_table_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The Route Table ID.",
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -28,42 +54,51 @@ func dataSourceTencentCloudRouteTable() *schema.Resource {
 					}
 					return
 				},
+				Description: "The Route Table name.",
 			},
 			"vpc_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The VPC ID.",
 			},
 			"subnet_num": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Number of associated subnets.",
 			},
 			"routes": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "The information list of the VPC route table.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cidr_block": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The RouteEntry's target network segment.",
 						},
 						"next_type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The `next_hub` type.",
 						},
 						"next_hub": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The RouteEntry's next hub.",
 						},
 						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The RouteEntry's description.",
 						},
 					},
 				},
 			},
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of routing table.",
 			},
 		},
 	}

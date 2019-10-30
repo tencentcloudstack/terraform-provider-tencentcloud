@@ -50,7 +50,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Description:  "",
+				Description:  "Pay type of instance, 0: prepay, 1: postpay. Now only supported postpay.",
 			},
 			"instance_name": {
 				Type:        schema.TypeString,
@@ -146,7 +146,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"auto_renew_flag": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "",
+							Description: "Auto renew flag, works for prepay instance.",
 						},
 						"engine_version": {
 							Type:        schema.TypeString,
@@ -221,7 +221,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"pay_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "",
+							Description: "Pay type of instance, 0: prepay, 1: postpay. Now only supported postpay.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -231,12 +231,12 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"dead_line_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "",
+							Description: "Expire date of instance, works for prepay instance.",
 						},
 						"master_instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "",
+							Description: "Indicates the master instance ID of recovery instances.",
 						},
 						"ro_instance_ids": {
 							Type:        schema.TypeList,

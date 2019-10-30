@@ -75,7 +75,8 @@ The `target_attribute` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `instance_count` - The time when the AS group was created.
+* `create_time` - The time when the AS group was created.
+* `instance_count` - Instance number of a scaling group.
 * `status` - Current status of a scaling group.
 
 

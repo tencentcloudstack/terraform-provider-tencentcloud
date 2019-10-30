@@ -1,22 +1,20 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vpc"
-sidebar_current: "docs-tencentcloud-datasource-vpc-x"
+sidebar_current: "docs-tencentcloud-datasource-vpc"
 description: |-
   Provides details about a specific VPC.
 ---
 
 # tencentcloud_vpc
 
-`tencentcloud_vpc` provides details about a specific VPC.
+Provides details about a specific VPC.
 
 This resource can prove useful when a module accepts a vpc id as an input variable and needs to, for example, determine the CIDR block of that VPC.
 
 ~> **NOTE:** It has been deprecated and replaced by tencentcloud_vpc_instances.
 
 ## Example Usage
-
-The following example shows how one might accept a VPC id as a variable and use this data source to obtain the data necessary to create a subnet within it.
 
 ```hcl
 variable "vpc_id" {}
@@ -38,14 +36,14 @@ resource "tencentcloud_subnet" "main" {
 The following arguments are supported:
 
 * `id` - (Optional) The id of the specific VPC to retrieve.
-* `name` - (Optional) VPC name. Fuzzy search is supported, as defined by [the underlying TencentCloud API](https://intl.cloud.tencent.com/document/product/215/1372).
+* `name` - (Optional) The name of the specific VPC to retrieve.
 
 ## Attributes Reference
 
-All of the argument attributes except `filter` blocks are also exported as result attributes. This data source will complete the data by populating any fields that are not included in the configuration with the data for the selected VPC.
-
-The following attribute is additionally exported:
+In addition to all arguments above, the following attributes are exported:
 
 * `cidr_block` - The CIDR block of the VPC.
-* `is_default` Whether or not the default VPC.
-* `is_multicast` Whether or not the VPC has Multicast support.
+* `is_default` - Whether or not the default VPC.
+* `is_multicast` - Whether or not the VPC has Multicast support.
+
+

@@ -146,7 +146,7 @@ func genIdx(fpath string) {
 	fd, err := os.OpenFile(fname, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		log.Printf("[FAIL!]open file %s failed: %s", fname, err)
-		return
+		os.Exit(1)
 	}
 
 	defer fd.Close()
@@ -154,13 +154,13 @@ func genIdx(fpath string) {
 	err = t.Execute(fd, data)
 	if err != nil {
 		log.Printf("[FAIL!]write file %s failed: %s", fname, err)
-		return
+		os.Exit(1)
 	}
 
 	log.Printf("[SUCC.]write doc to file success: %s", fname)
 }
 
-// genDoc generating doc for resource
+// genDoc generating doc for data source and resource
 func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	data := map[string]string{
 		"name":              name,
@@ -179,14 +179,14 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 
 	description, err := getFileDescription(fmt.Sprintf("%s/%s", fpath, fname))
 	if err != nil {
-		log.Printf("[SKIP!]get description failed, skip: %s", err)
-		return
+		log.Printf("[FAIL!]get description failed: %s", err)
+		os.Exit(1)
 	}
 
 	description = strings.TrimSpace(description)
 	if description == "" {
-		log.Printf("[SKIP!]description empty, skip: %s\n", fname)
-		return
+		log.Printf("[FAIL!]description empty: %s\n", fname)
+		os.Exit(1)
 	}
 
 	importPos := strings.Index(description, "\nImport\n")
@@ -200,8 +200,8 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 		data["example"] = formatHCL(description[pos+15:])
 		description = strings.TrimSpace(description[:pos])
 	} else {
-		log.Printf("[SKIP!]example usage missing, skip: %s\n", fname)
-		return
+		log.Printf("[FAIL!]example usage missing: %s\n", fname)
+		os.Exit(1)
 	}
 
 	data["description"] = description
@@ -219,7 +219,8 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 
 	for k, v := range resource.Schema {
 		if v.Description == "" {
-			continue
+			log.Printf("[FAIL!]description for '%s' is missing: %s\n", k, fname)
+			os.Exit(1)
 		} else {
 			checkDescription(k, v.Description)
 		}
@@ -290,7 +291,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	fd, err := os.OpenFile(fname, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		log.Printf("[FAIL!]open file %s failed: %s", fname, err)
-		return
+		os.Exit(1)
 	}
 
 	defer fd.Close()
@@ -298,7 +299,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	err = t.Execute(fd, data)
 	if err != nil {
 		log.Printf("[FAIL!]write file %s failed: %s", fname, err)
-		return
+		os.Exit(1)
 	}
 
 	log.Printf("[SUCC.]write doc to file success: %s", fname)

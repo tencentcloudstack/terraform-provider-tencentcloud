@@ -1,7 +1,7 @@
 ---
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_route_entry"
-sidebar_current: "docs-tencentcloud-resource-vpc-route-entry"
+sidebar_current: "docs-tencentcloud-resource-route_entry"
 description: |-
   Provides a resource to create a routing entry in a VPC routing table.
 ---
@@ -12,10 +12,7 @@ Provides a resource to create a routing entry in a VPC routing table.
 
 ~> **NOTE:** It has been deprecated and replaced by tencentcloud_route_table_entry.
 
-
 ## Example Usage
-
-Basic usage:
 
 ```hcl
 resource "tencentcloud_vpc" "main" {
@@ -49,17 +46,10 @@ resource "tencentcloud_route_entry" "rtb_entry_instance" {
 
 The following arguments are supported:
 
-* `vpc_id` - (Required, Forces new resource) The VPC ID.
-* `route_table_id` - (Required, Forces new resource) The ID of the route table.
-* `cidr_block` - (Required, Forces new resource) The RouteEntry's target network segment.
-* `next_type` - (Required, Forces new resource) The next hop type. Available value is `public_gateway`、`vpn_gateway`、`sslvpn_gateway`、`dc_gateway`、`peering_connection`、`nat_gateway` and `instance`. `instance` points to CVM Instance.
-* `next_hub` - (Required, Forces new resource) The route entry's next hub. CVM instance ID or VPC router interface ID.
+* `cidr_block` - (Required, ForceNew) The RouteEntry's target network segment.
+* `next_hub` - (Required, ForceNew) The route entry's next hub. CVM instance ID or VPC router interface ID.
+* `next_type` - (Required, ForceNew) The next hop type. Available value is `public_gateway`,`vpn_gateway`,`sslvpn_gateway`,`dc_gateway`,`peering_connection`,`nat_gateway` and `instance`. `instance` points to CVM Instance.
+* `route_table_id` - (Required, ForceNew) The ID of the route table.
+* `vpc_id` - (Required, ForceNew) The VPC ID.
 
-## Attributes Reference
 
-The following attributes are exported:
-
-* `route_table_id` - The ID of the route table.
-* `cidr_block` - The RouteEntry's target network segment.
-* `next_type` - The next hub type.
-* `next_hub` - The route entry's next hub.

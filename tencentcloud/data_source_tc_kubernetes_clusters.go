@@ -137,7 +137,7 @@ func dataSourceTencentCloudKubernetesClusters() *schema.Resource {
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "An information  list of kubernetes clusters . Each element contains the following attributes:",
+				Description: "An information list of kubernetes clusters. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: tkeClusterInfo(),
 				},

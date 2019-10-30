@@ -1,3 +1,18 @@
+/*
+Get all instances of the specific cluster.
+
+Use this data source to get all instances in a specific cluster.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_kubernetes_clusters.
+
+Example Usage
+
+```hcl
+data "tencentcloud_container_cluster_instances" "foo_instance" {
+  cluster_id = "cls-abcdefg"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -17,49 +32,60 @@ func dataSourceTencentCloudContainerClusterInstances() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "An id identify the cluster, like cls-xxxxxx.",
 			},
 			"limit": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "An int variable describe how many instances in return at most.",
 			},
 			"total_count": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Number of instances.",
 			},
 			"nodes": {
-				Computed: true,
-				Type:     schema.TypeList,
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "An information list of kubernetes instances.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"abnormal_reason": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the reason when node is in abnormal state(if it was).",
 						},
 						"cpu": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe the cpu of the node.",
 						},
 						"mem": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe the memory of the node.",
 						},
 						"instance_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "An id identify the node, provided by cvm.",
 						},
 						"is_normal": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe whether the node is normal.",
 						},
 						"wan_ip": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the wan ip of the node.",
 						},
 						"lan_ip": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the lan ip of the node.",
 						},
 					},
 				},

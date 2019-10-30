@@ -1,3 +1,21 @@
+/*
+Provides an available EIP for the user.
+
+The EIP data source fetch proper EIP from user's EIP pool.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_eips.
+
+Example Usage
+
+```hcl
+data "tencentcloud_eip" "my_eip" {
+  filter {
+    name   = "address-status"
+    values = ["UNBIND"]
+  }
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -19,31 +37,50 @@ func dataSourceTencentCloudEip() *schema.Resource {
 		Read:               dataSourceTencentCloudEipRead,
 
 		Schema: map[string]*schema.Schema{
-			"filter": dataSourceTencentCloudFiltersSchema(),
-
+			"filter": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "One or more name/value pairs to filter.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Key of the filter, valid keys: `address-id`,`address-name`,`address-ip`.",
+						},
+						"values": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Value of the filter.",
+						},
+					},
+				},
+			},
 			"include_arrears": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether the IP is arrears.",
 			},
-
 			"include_blocked": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether the IP is blocked.",
 			},
-
 			"id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "An EIP id indicate the uniqueness of a certain EIP,  which can be used for instance binding or network interface binding.",
 			},
-
 			"public_ip": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "An public IP address for the EIP.",
 			},
-
 			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The status of the EIP, there are several status like `BIND`, `UNBIND`, and `BIND_ENI`.",
 			},
 		},
 	}

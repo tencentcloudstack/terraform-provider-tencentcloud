@@ -1,3 +1,19 @@
+/*
+Provides a Load Balancer resource.
+
+~> **NOTE:** It has been deprecated and replaced by `tencentcloud_clb_instance`.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_lb" "classic" {
+  type       = "OPEN"
+  forward    = "APPLICATION"
+  name       = "tf-test-classic"
+  project_id = 0
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -37,6 +53,7 @@ func resourceTencentCloudLB() *schema.Resource {
 					}
 					return
 				},
+				Description: "The network type of the LB, valid choices: 'OPEN', 'INTERNAL'.",
 			},
 			"forward": {
 				Type:     schema.TypeString,
@@ -50,27 +67,32 @@ func resourceTencentCloudLB() *schema.Resource {
 					}
 					return
 				},
+				Description: "The type of the LB, valid choices: 'CLASSIC', 'APPLICATION'.",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The name of the LB.",
 			},
 			"vpc_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "The VPC ID of the LB, unspecified or 0 stands for CVM basic network.",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "The project id of the LB, unspecified or 0 stands for default project.",
 			},
 			"status": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The status of the LB.",
 			},
 		},
 	}

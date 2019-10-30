@@ -209,11 +209,12 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 			"instance_count": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "The time when the AS group was created.",
+				Description: "Instance number of a scaling group.",
 			},
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The time when the AS group was created.",
 			},
 		},
 	}

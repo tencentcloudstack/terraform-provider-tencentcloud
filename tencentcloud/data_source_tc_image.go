@@ -1,3 +1,21 @@
+/*
+Provides an available image for the user.
+
+The Images data source fetch proper image, which could be one of the private images of the user and images of system resources provided by TencentCloud, as well as other public images and those available on the image market.
+
+Example Usage
+
+```hcl
+data "tencentcloud_image" "my_favorate_image" {
+  os_name = "centos"
+
+  filter {
+    name   = "image-type"
+    values = ["PUBLIC_IMAGE"]
+  }
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -51,24 +69,47 @@ func dataSourceTencentCloudSourceImages() *schema.Resource {
 		Read: dataSourceTencentCloudImagesRead,
 
 		Schema: map[string]*schema.Schema{
-			"filter": dataSourceTencentCloudFiltersSchema(),
+			"filter": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "One or more name/value pairs to filter.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Key of the filter, valid keys: `image-id`, `image-type`, `image-name`.",
+						},
+						"values": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Values of the filter.",
+						},
+					},
+				},
+			},
 			"image_name_regex": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateNameRegex,
+				Description:  "A regex string to apply to the image list returned by TencentCloud. **NOTE**: it is not wildcard, should look like `image_name_regex = \"^CentOS\\s+6\\.8\\s+64\\w*\"`.",
 			},
 			"os_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateNotEmpty,
+				Description:  "A string to apply with fuzzy match to the os_name atrribute on the image list returned by TencentCloud. **NOTE**: when os_name is provided, highest priority is applied in this field instead of `image_name_regex`.",
 			},
 			"image_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "An image id indicate the uniqueness of a certain image,  which can be used for instance creation or resetting.",
 			},
 			"image_name": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Name of this image.",
 			},
 		},
 	}
