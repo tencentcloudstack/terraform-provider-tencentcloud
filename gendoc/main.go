@@ -32,7 +32,7 @@ var (
 )
 
 func main() {
-	provider := cloud.Provider()
+	provider := cloud.Provider().(*schema.Provider)
 	vProvider := runtime.FuncForPC(reflect.ValueOf(cloud.Provider).Pointer())
 
 	fname, _ := vProvider.FileLine(0)

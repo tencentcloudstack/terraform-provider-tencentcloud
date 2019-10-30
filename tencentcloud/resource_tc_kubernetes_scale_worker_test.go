@@ -139,11 +139,11 @@ variable "availability_zone" {
 }
 
 variable "vpc" {
-  default = "` + DefaultVpcId + `"
+  default = "` + defaultVpcId + `"
 }
 
 variable "subnet" {
-  default = "` + DefaultSubnetId + `"
+  default = "` + defaultSubnetId + `"
 }
 
 variable "default_instance_type" {

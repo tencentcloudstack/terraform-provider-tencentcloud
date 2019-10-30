@@ -23,7 +23,7 @@ func TestAccTencentCloudMysqlParameterListDataSource(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMysqlParameterListDataSourceConfig(MysqlInstanceCommonTestCase),
+				Config: testAccMysqlParameterListDataSourceConfig(mysqlInstanceCommonTestCase),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_parameter_list.mysql", "parameter_list.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_parameter_list.mysql", "parameter_list.0.parameter_name"),

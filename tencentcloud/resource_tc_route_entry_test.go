@@ -9,21 +9,21 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudRouteEntry_basic(t *testing.T) {
+func TestAccTencentCloudVpcV2RouteEntryBasic(t *testing.T) {
 	var reId string
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccPreSetRegion("ap-guangzhou")
 		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckRouteEntryDestroy(&reId),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRouteEntryConfig,
+				Config: testAccVpcRouteEntryV2Config,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRouteEntryExists("tencentcloud_route_entry.instance", &reId),
-					resource.TestCheckResourceAttr("tencentcloud_route_entry.instance", "next_type", "instance"),
+					testAccCheckRouteEntryExists("tencentcloud_route_entry.foo", &reId),
+					resource.TestCheckResourceAttr("tencentcloud_route_entry.foo", "cidr_block", "10.0.0.0/24"),
+					resource.TestCheckResourceAttr("tencentcloud_route_entry.foo", "next_type", "instance"),
 				),
 			},
 		},
@@ -140,33 +140,19 @@ func testAccCheckRouteEntryExists(n string, id *string) resource.TestCheckFunc {
 	}
 }
 
-const testAccRouteEntryConfig = `
+const testAccVpcRouteEntryV2Config = defaultVpcVariable + `
 data "tencentcloud_image" "foo" {
+  os_name = "centos"
+
   filter {
     name   = "image-type"
     values = ["PUBLIC_IMAGE"]
   }
 }
 
-resource "tencentcloud_vpc" "foo" {
-  name       = "ci-temp-test"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "foo" {
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  name              = "terraform test subnet"
-  cidr_block        = "10.0.12.0/24"
-  availability_zone = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_route_table" "foo" {
-  vpc_id = "${tencentcloud_vpc.foo.id}"
-  name   = "ci-temp-test-rt"
-}
-
 resource "tencentcloud_instance" "foo" {
-  availability_zone = "ap-guangzhou-3"
+  instance_name  	= "${var.instance_name}"
+  availability_zone = "${var.availability_zone}"
   image_id          = "${data.tencentcloud_image.foo.image_id}"
   vpc_id            = "${tencentcloud_vpc.foo.id}"
   subnet_id         = "${tencentcloud_subnet.foo.id}"
@@ -174,11 +160,30 @@ resource "tencentcloud_instance" "foo" {
   system_disk_type  = "CLOUD_SSD"
 }
 
-resource "tencentcloud_route_entry" "instance" {
-  vpc_id         = "${tencentcloud_vpc.foo.id}"
-  route_table_id = "${tencentcloud_route_table.foo.id}"
-  cidr_block     = "10.4.4.0/24"
-  next_type      = "instance"
-  next_hub       = "${tencentcloud_instance.foo.private_ip}"
+resource "tencentcloud_vpc" "foo" {
+  name       = "${var.instance_name}"
+  cidr_block = "${var.vpc_cidr}"
+}
+
+resource "tencentcloud_route_table" "foo" {
+  name   = "${var.instance_name}"
+  vpc_id = "${tencentcloud_vpc.foo.id}"
+}
+
+resource "tencentcloud_subnet" "foo" {
+  name              = "${var.instance_name}"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  availability_zone = "${var.availability_zone}"
+  cidr_block        = "${var.subnet_cidr}"
+  is_multicast      = false
+  route_table_id    = "${tencentcloud_route_table.foo.id}"
+}
+
+resource "tencentcloud_route_entry" "foo" {
+  vpc_id        	= "${tencentcloud_vpc.foo.id}"
+  route_table_id 	= "${tencentcloud_route_table.foo.id}"
+  cidr_block 		= "10.0.0.0/24"
+  next_type 		= "instance"
+  next_hub  		= "${tencentcloud_instance.foo.private_ip}"
 }
 `

@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudVpcV3RouteEntry_basic(t *testing.T) {
+func TestAccTencentCloudVpcV3RouteEntryBasic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -23,11 +23,12 @@ func TestAccTencentCloudVpcV3RouteEntry_basic(t *testing.T) {
 			{
 				Config: testAccVpcRouteEntryConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckVpcRouteEntryExists("tencentcloud_route_table_entry.instance"),
-					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.instance", "next_type", "EIP"),
-					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.instance", "description", "ci-test-route-table-entry"),
-					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.instance", "destination_cidr_block", "10.4.4.0/24"),
-					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.instance", "next_hub", "0"),
+					testAccCheckVpcRouteEntryExists("tencentcloud_route_table_entry.foo"),
+
+					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.foo", "next_type", "EIP"),
+					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.foo", "description", defaultInsName),
+					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.foo", "destination_cidr_block", "10.0.0.0/24"),
+					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.foo", "next_hub", "0"),
 				),
 			},
 		},
@@ -47,19 +48,17 @@ func testAccCheckVpcRouteEntryExists(r string) resource.TestCheckFunc {
 		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		items := strings.Split(rs.Primary.ID, ".")
-
 		if len(items) != 2 {
 			return fmt.Errorf("exist test, entry id [%s] is destroyed, we can not get route table id", rs.Primary.ID)
 		}
-		routeTableId := items[1]
 
+		routeTableId := items[1]
 		entryId, err := strconv.ParseUint(items[0], 10, 64)
 		if err != nil {
 			return err
 		}
 
 		info, has, err := service.DescribeRouteTable(ctx, routeTableId)
-
 		if err != nil {
 			return err
 		}
@@ -89,21 +88,21 @@ func testAccCheckVpcRouteEntryDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_route_table_entry" {
 			continue
 		}
-		time.Sleep(5 * time.Second)
-		items := strings.Split(rs.Primary.ID, ".")
 
+		time.Sleep(5 * time.Second)
+
+		items := strings.Split(rs.Primary.ID, ".")
 		if len(items) != 2 {
 			return fmt.Errorf("destroy test,entry id be destroyed[%s], we can not get route table id", rs.Primary.ID)
 		}
-		routeTableId := items[1]
 
+		routeTableId := items[1]
 		entryId, err := strconv.ParseUint(items[0], 10, 64)
 		if err != nil {
 			return err
 		}
 
 		info, has, err := service.DescribeRouteTable(ctx, routeTableId)
-
 		if err != nil {
 			return err
 		}
@@ -116,41 +115,39 @@ func testAccCheckVpcRouteEntryDestroy(s *terraform.State) error {
 		}
 		for _, v := range info.entryInfos {
 			if v.routeEntryId == int64(entryId) {
-				return fmt.Errorf("route table entry not delete")
+				return fmt.Errorf("route table entry still exists")
 			}
 		}
 	}
+
 	return nil
 }
 
-const testAccVpcRouteEntryConfig = `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
+const testAccVpcRouteEntryConfig = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "ci-temp-test"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "foo" {
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  name              = "terraform test subnet"
-  cidr_block        = "10.0.12.0/24"
-  availability_zone = "${var.availability_zone}"
-  route_table_id    = "${tencentcloud_route_table.foo.id}"
+  name       = "${var.instance_name}"
+  cidr_block = "${var.vpc_cidr}"
 }
 
 resource "tencentcloud_route_table" "foo" {
+  name   = "${var.instance_name}"
   vpc_id = "${tencentcloud_vpc.foo.id}"
-  name   = "ci-temp-test-rt"
 }
 
-resource "tencentcloud_route_table_entry" "instance" {
+resource "tencentcloud_subnet" "foo" {
+  name              = "${var.instance_name}"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  availability_zone = "${var.availability_zone}"
+  cidr_block        = "${var.subnet_cidr}"
+  is_multicast      = false
+  route_table_id    = "${tencentcloud_route_table.foo.id}"
+}
+
+resource "tencentcloud_route_table_entry" "foo" {
   route_table_id         = "${tencentcloud_route_table.foo.id}"
-  destination_cidr_block = "10.4.4.0/24"
+  destination_cidr_block = "10.0.0.0/24"
   next_type              = "EIP"
   next_hub               = "0"
-  description            = "ci-test-route-table-entry"
+  description            = "${var.instance_name}"
 }
 `

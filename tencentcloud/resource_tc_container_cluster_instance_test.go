@@ -30,11 +30,11 @@ func testAccCheckContainerClusterInstanceDestroy(s *terraform.State) error {
 
 const testAccTencentCloudContainerClusterInstanceConfig_basic = `
 variable "my_vpc" {
-  default = "` + DefaultVpcId + `"
+  default = "` + defaultVpcId + `"
 }
 
 variable "my_subnet" {
-  default = "` + DefaultSubnetId + `"
+  default = "` + defaultSubnetId + `"
 }
 
 data "tencentcloud_instance_types" "my_favorate_instance_types" {

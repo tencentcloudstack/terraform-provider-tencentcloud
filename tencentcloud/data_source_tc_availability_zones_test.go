@@ -7,11 +7,9 @@ import (
 )
 
 func TestAccTencentCloudAvailabilityZonesDataSource_basic(t *testing.T) {
-	var currentRegion = "ap-guangzhou"
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccPreSetRegion(currentRegion)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -45,9 +43,9 @@ data "tencentcloud_availability_zones" "all" {
 }
 `
 
-const testAccTencentCloudAvailabilityZonesDataSourceConfigFilterWithName = `
+const testAccTencentCloudAvailabilityZonesDataSourceConfigFilterWithName = defaultVpcVariable + `
 data "tencentcloud_availability_zones" "filter" {
-  name = "ap-guangzhou-3"
+  name = "${var.availability_zone}"
 }
 `
 

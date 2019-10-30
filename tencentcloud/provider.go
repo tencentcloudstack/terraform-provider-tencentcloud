@@ -208,6 +208,7 @@ import (
 	"os"
 
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/terraform"
 )
 
 const (
@@ -217,7 +218,7 @@ const (
 	PROVIDER_REGION         = "TENCENTCLOUD_REGION"
 )
 
-func Provider() *schema.Provider {
+func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"secret_id": {

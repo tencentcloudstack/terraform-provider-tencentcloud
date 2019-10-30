@@ -11,8 +11,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudVpcV3_basic(t *testing.T) {
-
+func TestAccTencentCloudVpcV3Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -22,8 +21,9 @@ func TestAccTencentCloudVpcV3_basic(t *testing.T) {
 				Config: testAccVpcConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcExists("tencentcloud_vpc.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", "10.0.0.0/16"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", "ci-temp-test"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", defaultVpcCidr),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", defaultInsName),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "is_multicast", "true"),
 				),
 			},
 			{
@@ -35,8 +35,7 @@ func TestAccTencentCloudVpcV3_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudVpcV3_update(t *testing.T) {
-
+func TestAccTencentCloudVpcV3Update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -46,9 +45,8 @@ func TestAccTencentCloudVpcV3_update(t *testing.T) {
 				Config: testAccVpcConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcExists("tencentcloud_vpc.foo"),
-
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", "10.0.0.0/16"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", "ci-temp-test"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", defaultVpcCidr),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", defaultInsName),
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "is_multicast", "true"),
 
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "is_default"),
@@ -59,23 +57,24 @@ func TestAccTencentCloudVpcV3_update(t *testing.T) {
 			{
 				Config: testAccVpcConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
-
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", "10.0.0.0/16"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", "ci-temp-test-updated"),
+					testAccCheckVpcExists("tencentcloud_vpc.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", defaultVpcCidrLess),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", defaultInsNameUpdate),
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "is_multicast", "false"),
 
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "is_default"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "dns_servers.#"),
+
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", fmt.Sprintf("%s.%d", "dns_servers", hashcode.String("119.29.29.29")), "119.29.29.29"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", fmt.Sprintf("%s.%d", "dns_servers", hashcode.String("8.8.8.8")), "8.8.8.8"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", fmt.Sprintf("%s.%d", "dns_servers", hashcode.String("182.254.116.116")), "182.254.116.116"),
 				),
 			},
 		},
 	})
 }
 
-func TestAccTencentCloudVpcV3_tags(t *testing.T) {
+func TestAccTencentCloudVpcV3WithTags(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -85,9 +84,8 @@ func TestAccTencentCloudVpcV3_tags(t *testing.T) {
 				Config: testAccVpcConfigWithTags,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcExists("tencentcloud_vpc.foo"),
-
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", "10.0.0.0/16"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", "ci-temp-test"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", defaultVpcCidr),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", defaultInsName),
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "is_multicast", "true"),
 
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "is_default"),
@@ -95,13 +93,19 @@ func TestAccTencentCloudVpcV3_tags(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "dns_servers.#"),
 
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "tags.test", "test"),
+					resource.TestCheckNoResourceAttr("tencentcloud_vpc.foo", "tags.abc"),
 				),
 			},
 			{
-				Config: testAccVpcConfigUpdateTags,
+				Config: testAccVpcConfigWithTagsUpdate,
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVpcExists("tencentcloud_vpc.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", defaultVpcCidr),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", defaultInsName),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "is_multicast", "true"),
+
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "tags.abc", "abc"),
 					resource.TestCheckNoResourceAttr("tencentcloud_vpc.foo", "tags.test"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "tags.new-test", "new-test"),
 				),
 			},
 		},
@@ -127,7 +131,7 @@ func testAccCheckVpcExists(r string) resource.TestCheckFunc {
 			return nil
 		}
 
-		return fmt.Errorf("vpc not exists.")
+		return fmt.Errorf("vpc %s not exists", rs.Primary.ID)
 	}
 }
 
@@ -148,31 +152,32 @@ func testAccCheckVpcDestroy(s *terraform.State) error {
 		if has == 0 {
 			return nil
 		}
-		return fmt.Errorf("vpc not delete ok")
+		return fmt.Errorf("vpc %s still exists", rs.Primary.ID)
 	}
+
 	return nil
 }
 
-const testAccVpcConfig = `
+const testAccVpcConfig = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "ci-temp-test"
-  cidr_block = "10.0.0.0/16"
+  name       = "${var.instance_name}"
+  cidr_block = "${var.vpc_cidr}"
 }
 `
 
-const testAccVpcConfigUpdate = `
+const testAccVpcConfigUpdate = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name         = "ci-temp-test-updated"
-  cidr_block   = "10.0.0.0/16"
-  dns_servers  = ["119.29.29.29", "8.8.8.8"]
+  name       = "${var.instance_name_update}"
+  cidr_block = "${var.vpc_cidr_less}"
+  dns_servers  = ["119.29.29.29", "182.254.116.116"]
   is_multicast = false
 }
 `
 
-const testAccVpcConfigWithTags = `
+const testAccVpcConfigWithTags = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "ci-temp-test"
-  cidr_block = "10.0.0.0/16"
+  name       = "${var.instance_name}"
+  cidr_block = "${var.vpc_cidr}"
 
   tags = {
     "test" = "test"
@@ -180,13 +185,13 @@ resource "tencentcloud_vpc" "foo" {
 }
 `
 
-const testAccVpcConfigUpdateTags = `
+const testAccVpcConfigWithTagsUpdate = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "ci-temp-test"
-  cidr_block = "10.0.0.0/16"
+  name       = "${var.instance_name}"
+  cidr_block = "${var.vpc_cidr}"
 
   tags = {
-    "new-test" = "new-test"
+    "abc" = "abc"
   }
 }
 `
