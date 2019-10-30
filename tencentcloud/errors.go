@@ -13,4 +13,7 @@ const (
 
 	//vpc
 	VPCNotFound = "ResourceNotFound"
+
+	// cfs
+	CfsInvalidPgroup = "InvalidParameterValue.InvalidPgroup"
 )
