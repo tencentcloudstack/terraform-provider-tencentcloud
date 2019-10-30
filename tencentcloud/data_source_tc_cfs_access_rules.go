@@ -29,12 +29,12 @@ func dataSourceTencentCloudCfsAccessRules() *schema.Resource {
 			"access_group_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "A Specified access group ID used to query.",
+				Description: "A specified access group ID used to query.",
 			},
 			"access_rule_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "A Specified access rule ID used to query.",
+				Description: "A specified access rule ID used to query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

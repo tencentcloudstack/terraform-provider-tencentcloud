@@ -23,8 +23,8 @@ data "tencentcloud_cfs_access_rules" "access_rules" {
 
 The following arguments are supported:
 
-* `access_group_id` - (Required) A Specified access group ID used to query.
-* `access_rule_id` - (Optional) A Specified access rule ID used to query.
+* `access_group_id` - (Required) A specified access group ID used to query.
+* `access_rule_id` - (Optional) A specified access rule ID used to query.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference

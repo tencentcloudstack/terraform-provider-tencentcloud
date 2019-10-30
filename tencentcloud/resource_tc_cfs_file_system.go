@@ -156,7 +156,7 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 			return retryError(errRet, "InternalError")
 		}
 		if len(fileSystems) < 1 {
-			return resource.NonRetryableError(fmt.Errorf("file system %s not exist", fsId))
+			return resource.RetryableError(fmt.Errorf("file system %s not exist", fsId))
 		}
 		if *fileSystems[0].LifeCycleState == CFS_FILE_SYSTEM_STATUS_CREATING {
 			return resource.RetryableError(fmt.Errorf("file system status is %s, retry...", *fileSystems[0].LifeCycleState))
