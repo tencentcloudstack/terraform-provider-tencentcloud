@@ -1,4 +1,13 @@
-## 1.21.3 (Unreleased)
+## 1.22.0 (Unreleased)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_cfs_file_systems`
+* **New Data Source**: `tencentcloud_cfs_access_groups`
+* **New Data Source**: `tencentcloud_cfs_access_rules`
+* **New Resource**: `tencentcloud_cfs_file_system`
+* **New Resource**: `tencentcloud_cfs_access_group`
+* **New Resource**: `tencentcloud_cfs_access_rule`
+
 ## 1.21.2 (October 29, 2019)
 
 BUG FIXES:

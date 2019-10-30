@@ -37,6 +37,9 @@ Data Sources
   tencentcloud_cbs_storages
   tencentcloud_ccn_bandwidth_limits
   tencentcloud_ccn_instances
+  tencentcloud_cfs_file_systems
+  tencentcloud_cfs_access_groups
+  tencentcloud_cfs_access_rules
   tencentcloud_clb_instances
   tencentcloud_clb_listeners
   tencentcloud_clb_listener_rules
@@ -121,6 +124,11 @@ CCN Resources
   tencentcloud_ccn
   tencentcloud_ccn_attachment
   tencentcloud_ccn_bandwidth_limit
+
+CFS Resources
+  tencentcloud_cfs_file_system
+  tencentcloud_cfs_access_group
+  tencentcloud_cfs_access_rule
 
 Container Cluster Resources
   tencentcloud_container_cluster
@@ -312,6 +320,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_saml_providers":           dataSourceTencentCloudCamSAMLProviders(),
 			"tencentcloud_reserved_instance_configs":    dataSourceTencentCloudReservedInstanceConfigs(),
 			"tencentcloud_reserved_instances":           dataSourceTencentCloudReservedInstances(),
+			"tencentcloud_cfs_file_systems":             dataSourceTencentCloudCfsFileSystems(),
+			"tencentcloud_cfs_access_groups":            dataSourceTencentCloudCfsAccessGroups(),
+			"tencentcloud_cfs_access_rules":             dataSourceTencentCloudCfsAccessRules(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -391,6 +402,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_group_membership":        resourceTencentCloudCamGroupMembership(),
 			"tencentcloud_cam_saml_provider":           resourceTencentCloudCamSAMLProvider(),
 			"tencentcloud_reserved_instance":           resourceTencentCloudReservedInstance(),
+			"tencentcloud_cfs_file_system":             resourceTencentCloudCfsFileSystem(),
+			"tencentcloud_cfs_access_group":            resourceTencentCloudCfsAccessGroup(),
+			"tencentcloud_cfs_access_rule":             resourceTencentCloudCfsAccessRule(),
 		},
 
 		ConfigureFunc: providerConfigure,
