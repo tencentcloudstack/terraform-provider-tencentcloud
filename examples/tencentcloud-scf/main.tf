@@ -27,6 +27,18 @@ resource "tencentcloud_scf_namespace" "foo" {
   description = "test1"
 }
 
+resource "tencentcloud_vpc" "test_vpc" {
+  name       = "Used for testing subnets"
+  cidr_block = "10.1.0.0/16"
+}
+
+resource "tencentcloud_subnet" "test_subnet" {
+  vpc_id            = "${tencentcloud_vpc.test_vpc.id}"
+  name              = "terraform test subnet"
+  cidr_block        = "10.1.1.0/24"
+  availability_zone = "${var.availability_zone}"
+}
+
 resource "tencentcloud_scf_function" "foo" {
   name        = "ci-test-function"
   description = "test"
@@ -34,6 +46,8 @@ resource "tencentcloud_scf_function" "foo" {
   runtime     = "Python3.6"
   namespace   = "${tencentcloud_scf_namespace.foo.id}"
   role        = "${tencentcloud_cam_role.foo.id}"
+  vpc_id      = "${tencentcloud_vpc.test_vpc.id}"
+  subnet_id   = "${tencentcloud_subnet.test_subnet.id}"
 
   cos_bucket_name   = "${tencentcloud_cos_bucket.foo.id}"
   cos_object_name   = "${tencentcloud_cos_bucket_object.myobject.key}"
@@ -48,7 +62,7 @@ resource "tencentcloud_scf_function" "foo" {
   triggers {
     name         = "${tencentcloud_cos_bucket.bar.id}"
     type         = "cos"
-    trigger_desc = "{\"event\":\"cos:ObjectCreated:Put\",\"filter\":{\"Prefix\":\"\",\"Suffix\":\"\"}}"
+    trigger_desc = "${var.trigger_desc}"
   }
 
   tags = {
