@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"go/parser"
 	"go/token"
-	"log"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -14,6 +13,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/fatih/color"
 	"github.com/hashicorp/hcl2/hclwrite"
 	"github.com/hashicorp/terraform/helper/schema"
 	cloud "github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud"
@@ -37,7 +37,7 @@ func main() {
 
 	fname, _ := vProvider.FileLine(0)
 	fpath := filepath.Dir(fname)
-	log.Printf("generating doc from: %s\n", fpath)
+	Message("generating doc from: %s\n", fpath)
 
 	// document for DataSources
 	for k, v := range provider.DataSourcesMap {
@@ -68,16 +68,16 @@ func genIdx(fpath string) {
 	sources := []Index{}
 
 	fname := "provider.go"
-	log.Printf("[START]get description from file: %s\n", fname)
+	Message("[START]get description from file: %s\n", fname)
 	description, err := getFileDescription(fmt.Sprintf("%s/%s", fpath, fname))
 	if err != nil {
-		log.Printf("[SKIP!]get description failed, skip: %s", err)
+		Message("[SKIP!]get description failed, skip: %s", err)
 		return
 	}
 
 	description = strings.TrimSpace(description)
 	if description == "" {
-		log.Printf("[SKIP!]description empty, skip: %s\n", fname)
+		Message("[SKIP!]description empty, skip: %s\n", fname)
 		return
 	}
 
@@ -86,7 +86,7 @@ func genIdx(fpath string) {
 		resources = strings.TrimSpace(description[pos+16:])
 		// description = strings.TrimSpace(description[:pos])
 	} else {
-		log.Printf("[SKIP!]resource list missing, skip: %s\n", fname)
+		Message("[SKIP!]resource list missing, skip: %s\n", fname)
 		return
 	}
 
@@ -98,7 +98,7 @@ func genIdx(fpath string) {
 		}
 		if strings.HasPrefix(v, "  ") {
 			if index.Name == "" {
-				log.Printf("[FAIL!]no resource name found: %s", v)
+				Message("[FAIL!]no resource name found: %s", v)
 				return
 			}
 			index.Resources = append(index.Resources, []string{vv, vv[len(cloudMark)+1:]})
@@ -145,7 +145,7 @@ func genIdx(fpath string) {
 	fname = fmt.Sprintf("%s/../%s.erb", docRoot, cloudMark)
 	fd, err := os.OpenFile(fname, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
-		log.Printf("[FAIL!]open file %s failed: %s", fname, err)
+		Message("[FAIL!]open file %s failed: %s", fname, err)
 		os.Exit(1)
 	}
 
@@ -153,11 +153,11 @@ func genIdx(fpath string) {
 	t := template.Must(template.New("t").Parse(idxTPL))
 	err = t.Execute(fd, data)
 	if err != nil {
-		log.Printf("[FAIL!]write file %s failed: %s", fname, err)
+		Message("[FAIL!]write file %s failed: %s", fname, err)
 		os.Exit(1)
 	}
 
-	log.Printf("[SUCC.]write doc to file success: %s", fname)
+	Message("[SUCC.]write doc to file success: %s", fname)
 }
 
 // genDoc generating doc for data source and resource
@@ -175,17 +175,17 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	}
 
 	fname := fmt.Sprintf("%s_%s_%s.go", dtype, cloudMarkShort, data["resource"])
-	log.Printf("[START]get description from file: %s\n", fname)
+	Message("[START]get description from file: %s\n", fname)
 
 	description, err := getFileDescription(fmt.Sprintf("%s/%s", fpath, fname))
 	if err != nil {
-		log.Printf("[FAIL!]get description failed: %s", err)
+		Message("[FAIL!]get description failed: %s", err)
 		os.Exit(1)
 	}
 
 	description = strings.TrimSpace(description)
 	if description == "" {
-		log.Printf("[FAIL!]description empty: %s\n", fname)
+		Message("[FAIL!]description empty: %s\n", fname)
 		os.Exit(1)
 	}
 
@@ -200,7 +200,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 		data["example"] = formatHCL(description[pos+15:])
 		description = strings.TrimSpace(description[:pos])
 	} else {
-		log.Printf("[FAIL!]example usage missing: %s\n", fname)
+		Message("[FAIL!]example usage missing: %s\n", fname)
 		os.Exit(1)
 	}
 
@@ -219,17 +219,17 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 
 	for k, v := range resource.Schema {
 		if v.Description == "" {
-			log.Printf("[FAIL!]description for '%s' is missing: %s\n", k, fname)
+			Message("[FAIL!]description for '%s' is missing: %s\n", k, fname)
 			os.Exit(1)
 		} else {
 			checkDescription(k, v.Description)
 		}
 		if dtype == "data_source" && v.ForceNew {
-			log.Printf("[FAIL!]Don't set ForceNew on data source: '%s'", k)
+			Message("[FAIL!]Don't set ForceNew on data source: '%s'", k)
 			os.Exit(1)
 		}
 		if v.Required && v.Optional {
-			log.Printf("[FAIL!]Don't set Required and Optional at the same time: '%s'", k)
+			Message("[FAIL!]Don't set Required and Optional at the same time: '%s'", k)
 			os.Exit(1)
 		}
 		if v.Required {
@@ -290,7 +290,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	fname = fmt.Sprintf("%s/%s/%s.html.markdown", docRoot, dtype[0:1], data["resource"])
 	fd, err := os.OpenFile(fname, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
-		log.Printf("[FAIL!]open file %s failed: %s", fname, err)
+		Message("[FAIL!]open file %s failed: %s", fname, err)
 		os.Exit(1)
 	}
 
@@ -298,11 +298,11 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	t := template.Must(template.New("t").Parse(docTPL))
 	err = t.Execute(fd, data)
 	if err != nil {
-		log.Printf("[FAIL!]write file %s failed: %s", fname, err)
+		Message("[FAIL!]write file %s failed: %s", fname, err)
 		os.Exit(1)
 	}
 
-	log.Printf("[SUCC.]write doc to file success: %s", fname)
+	Message("[SUCC.]write doc to file success: %s", fname)
 }
 
 // getAttributes get attributes from schema
@@ -427,22 +427,22 @@ func checkDescription(k, s string) {
 	}
 
 	if strings.TrimLeft(s, " ") != s {
-		log.Printf("[FAIL!]There is space on the left of description: '%s': '%s'", k, s)
+		Message("[FAIL!]There is space on the left of description: '%s': '%s'", k, s)
 		os.Exit(1)
 	}
 
 	if strings.TrimRight(s, " ") != s {
-		log.Printf("[FAIL!]There is space on the right of description: '%s': '%s'", k, s)
+		Message("[FAIL!]There is space on the right of description: '%s': '%s'", k, s)
 		os.Exit(1)
 	}
 
 	if s[len(s)-1] != '.' && s[len(s)-1] != ':' {
-		log.Printf("[FAIL!]There is no ending charset(.|:) on the description: '%s': '%s'", k, s)
+		Message("[FAIL!]There is no ending charset(.|:) on the description: '%s': '%s'", k, s)
 		os.Exit(1)
 	}
 
 	if c := ContainsBigSymbol(s); c != "" {
-		log.Printf("[FAIL!]There is unexcepted symbol: '%s' on the description: '%s': '%s'", c, k, s)
+		Message("[FAIL!]There is unexcepted symbol: '%s' on the description: '%s': '%s'", c, k, s)
 		os.Exit(1)
 	}
 }
@@ -455,4 +455,17 @@ func ContainsBigSymbol(s string) string {
 	}
 
 	return ""
+}
+
+// Message print color message
+func Message(msg string, v ...interface{}) {
+	if strings.Contains(msg, "FAIL") {
+		color.Red(fmt.Sprintf(msg, v...))
+	} else if strings.Contains(msg, "SUCC") {
+		color.Green(fmt.Sprintf(msg, v...))
+	} else if strings.Contains(msg, "SKIP") {
+		color.Yellow(fmt.Sprintf(msg, v...))
+	} else {
+		color.White(fmt.Sprintf(msg, v...))
+	}
 }
