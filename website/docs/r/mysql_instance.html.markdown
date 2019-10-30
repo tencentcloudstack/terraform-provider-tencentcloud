@@ -52,15 +52,15 @@ The following arguments are supported:
 * `mem_size` - (Required) Memory size (in MB).
 * `root_password` - (Required) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
 * `volume_size` - (Required) Disk size (in GB).
-* `auto_renew_flag` - (Optional) Auto renew flag, works for prepay instance.
+* `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepay instance.
 * `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
 * `engine_version` - (Optional, ForceNew) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7, and default is 5.7.
 * `first_slave_zone` - (Optional, ForceNew) Zone information about first slave instance.
 * `internet_service` - (Optional) Indicates whether to enable the access to an instance from public network: 0 - No, 1 - Yes.
 * `intranet_port` - (Optional) Public access port, rang form 1024 to 65535 and default value is 3306.
 * `parameters` - (Optional) List of parameters to use.
-* `pay_type` - (Optional, ForceNew) Pay type of instance, 0: prepay, 1: postpay. Now only supported postpay.
-* `period` - (Optional) Period of instance, works for prepay instance.
+* `pay_type` - (Optional, ForceNew) Pay type of instance, 0: prepay, 1: postpay. NOTES: Only supported prepay instance.
+* `period` - (Optional) Period of instance. NOTES: Only supported prepay instance.
 * `project_id` - (Optional) Project ID, default value is 0.
 * `second_slave_zone` - (Optional, ForceNew) Zone information about second slave instance.
 * `security_groups` - (Optional) Security groups to use.

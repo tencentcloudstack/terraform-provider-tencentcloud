@@ -32,7 +32,7 @@ The following arguments are supported:
 * `domain` - (Optional) Domain name of the forwarding rule to be queried.
 * `result_output_file` - (Optional) Used to save results.
 * `rule_id` - (Optional) Id of the forwarding rule to be queried.
-* `scheduler` - (Optional) Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.
+* `scheduler` - (Optional) Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR', 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.
 * `url` - (Optional) Url of the forwarding rule to be queried.
 
 ## Attributes Reference

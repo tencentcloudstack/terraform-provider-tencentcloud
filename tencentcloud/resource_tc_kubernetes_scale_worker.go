@@ -88,7 +88,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: tkeCvmState(),
 				},
-				Description: "An information list of kubernetes cluster 'WORKER' . Each element contains the following attributes:",
+				Description: "An information list of kubernetes cluster 'WORKER'. Each element contains the following attributes:",
 			},
 		},
 	}

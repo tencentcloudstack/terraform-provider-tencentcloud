@@ -59,7 +59,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR' , 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.",
+				Description:  "Scheduling method of the forwarding rule of thr CLB listener, and available values include 'WRR', 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

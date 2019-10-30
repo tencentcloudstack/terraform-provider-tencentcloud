@@ -36,7 +36,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `listener_list` - A list of listeners of cloud load balancers. Each element contains the following attributes:
-  * `certificate_ca_id` - Id of the client certificate. It must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of 'HTTPS' and 'TCP_SSL' protocol .
+  * `certificate_ca_id` - Id of the client certificate. It must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of 'HTTPS' and 'TCP_SSL' protocol.
   * `certificate_id` - Id of the server certificate. It must be set when protocol is 'HTTPS' or 'TCP_SSL'. NOTES: only supported by listeners of 'HTTPS' and 'TCP_SSL' protocol and must be set when it is available.
   * `certificate_ssl_mode` - Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol and must be set when it is available.
   * `clb_id` - Id of the CLB.
