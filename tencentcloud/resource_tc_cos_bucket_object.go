@@ -92,6 +92,7 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 			"cache_control": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Specifies caching behavior along the request/reply chain. For further details, RFC2616 can be referred.",
 			},
 			"content_disposition": {

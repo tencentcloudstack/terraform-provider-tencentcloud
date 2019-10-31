@@ -22,6 +22,7 @@ import (
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -49,6 +50,7 @@ type TencentCloudClient struct {
 	gaapConn    *gaap.Client
 	sslConn     *ssl.Client
 	cfsConn     *cfs.Client
+	scfConn     *scf.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -450,4 +452,27 @@ func (me *TencentCloudClient) UseCfsClient() *cfs.Client {
 	me.cfsConn = cfsConn
 
 	return me.cfsConn
+}
+
+func (me *TencentCloudClient) UseScfClient() *scf.Client {
+	if me.scfConn != nil {
+		return me.scfConn
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = http.MethodPost
+	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
+
+	scfConn, _ := scf.NewClient(credential, me.Region, cpf)
+	scfConn.WithHttpTransport(new(LogRoundTripper))
+
+	me.scfConn = scfConn
+
+	return me.scfConn
 }
