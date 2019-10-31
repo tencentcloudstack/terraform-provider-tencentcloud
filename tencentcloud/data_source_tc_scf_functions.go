@@ -261,7 +261,7 @@ func dataSourceTencentCloudScfFunctions() *schema.Resource {
 }
 
 func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{}) error {
-	defer logElapsed("data_source.tencentcloud_scf_functions.read")
+	defer logElapsed("data_source.tencentcloud_scf_functions.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
