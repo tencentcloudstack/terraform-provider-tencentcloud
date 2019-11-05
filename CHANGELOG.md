@@ -8,7 +8,6 @@ FEATURES:
 * **New Data Source**: `tencentcloud_scf_functions`
 * **New Data Source**: `tencentcloud_scf_namespaces`
 * **New Data Source**: `tencentcloud_scf_logs`
-
 * **New Resource**: `tencentcloud_cfs_file_system`
 * **New Resource**: `tencentcloud_cfs_access_group`
 * **New Resource**: `tencentcloud_cfs_access_rule`
