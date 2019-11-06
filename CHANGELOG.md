@@ -32,7 +32,7 @@ ENHANCEMENTS:
 BUG FIXES:
 
 * Resource: `tencentcloud_gaap_http_domain` fix sometimes can't enable realserver auth
-
+* Resource: `tencentcloud_cam_role_policy_attachment` fix error in exmaple of the website 
 
 ## 1.20.1 (October 08, 2019)
 
