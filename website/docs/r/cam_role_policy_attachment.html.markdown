@@ -14,7 +14,7 @@ Provides a resource to create a CAM role policy attachment.
 
 ```hcl
 resource "tencentcloud_cam_role_attachment" "foo" {
-  group_id  = "4611686018427922725"
+  role_id   = "4611686018427922725"
   policy_id = "26800353"
 }
 ```
@@ -41,6 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 CAM role policy attachment can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cam_role_attachment.foo 4611686018427922725#26800353
+$ terraform import tencentcloud_cam_role_policy_attachment.foo 4611686018427922725#26800353
 ```
 
