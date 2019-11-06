@@ -13,7 +13,7 @@ Provides a resource to create a CAM role policy attachment.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cam_role_attachment" "foo" {
+resource "tencentcloud_cam_role_policy_attachment" "foo" {
   role_id   = "4611686018427922725"
   policy_id = "26800353"
 }
