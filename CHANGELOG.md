@@ -1,4 +1,43 @@
-## 1.21.0 (Unreleased)
+## 1.22.1 (Unreleased)
+BUG FIXES:
+* Fixed docs of CAM
+
+## 1.22.0 (November 05, 2019)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_cfs_file_systems`
+* **New Data Source**: `tencentcloud_cfs_access_groups`
+* **New Data Source**: `tencentcloud_cfs_access_rules`
+* **New Data Source**: `tencentcloud_scf_functions`
+* **New Data Source**: `tencentcloud_scf_namespaces`
+* **New Data Source**: `tencentcloud_scf_logs`
+* **New Resource**: `tencentcloud_cfs_file_system`
+* **New Resource**: `tencentcloud_cfs_access_group`
+* **New Resource**: `tencentcloud_cfs_access_rule`
+* **New Resource**: `tencentcloud_scf_function`
+* **New Resource**: `tencentcloud_scf_namespace`
+
+## 1.21.2 (October 29, 2019)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_realserver` add ip/domain exists check
+* Resource: `tencentcloud_kubernetes_cluster` add error handling logic and optional argument `tags`.
+* Resource: `tencentcloud_kubernetes_scale_worker` add error handling logic.
+* Data Source: `tencentcloud_kubernetes_clusters` add optional argument `tags`.
+
+## 1.21.1 (October 23, 2019)
+
+ENHANCEMENTS:
+
+* Updated golang to version 1.13.x
+
+BUG FIXES:
+
+* Fixed docs of CAM
+
+## 1.21.0 (October 15, 2019)
 
 FEATURES:
 
@@ -10,7 +49,9 @@ FEATURES:
 * **New Data Source**: `tencentcloud_cam_group_policy_attachments`
 * **New Data Source**: `tencentcloud_cam_role_policy_attachments`
 * **New Data Source**: `tencentcloud_cam_group_memberships`
-* **New Data Source**: `tencentcloud_cam_SAML_providers`
+* **New Data Source**: `tencentcloud_cam_saml_providers`
+* **New Data Source**: `tencentcloud_reserved_instance_configs`
+* **New Data Source**: `tencentcloud_reserved_instances`
 * **New Resource**: `tencentcloud_cam_user`
 * **New Resource**: `tencentcloud_cam_group`
 * **New Resource**: `tencentcloud_cam_role`
@@ -19,9 +60,7 @@ FEATURES:
 * **New Resource**: `tencentcloud_cam_group_policy_attachment`
 * **New Resource**: `tencentcloud_cam_role_policy_attachment`
 * **New Resource**: `tencentcloud_cam_group_membership`
-* **New Resource**: `tencentcloud_cam_SAML_provider`
-* **New Data Source**: `tencentcloud_reserved_instance_configs`
-* **New Data Source**: `tencentcloud_reserved_instances`
+* **New Resource**: `tencentcloud_cam_saml_provider`
 * **New Resource**: `tencentcloud_reserved_instance`
 
 ENHANCEMENTS:
@@ -32,7 +71,7 @@ ENHANCEMENTS:
 BUG FIXES:
 
 * Resource: `tencentcloud_gaap_http_domain` fix sometimes can't enable realserver auth
-* Resource: `tencentcloud_cam_role_policy_attachment` fix error in exmaple of the website 
+
 
 ## 1.20.1 (October 08, 2019)
 
@@ -121,7 +160,6 @@ DEPRECATED:
 
 * Data Source: `tencentcloud_kubernetes_clusters`:`container_runtime` is no longer supported. 
 
-
 ## 1.18.0 (September 10, 2019)
 
 FEATURES:
@@ -185,7 +223,6 @@ FEATURES:
 * **New Data Source**: `tencentcloud_kubernetes_clusters`
 * **New Resource**: `tencentcloud_kubernetes_scale_worker`
 * **New Resource**: `tencentcloud_kubernetes_cluster`
-
 
 DEPRECATED:
 * Data Source: `tencentcloud_container_clusters` replaced by `tencentcloud_kubernetes_clusters`.
@@ -405,7 +442,6 @@ FEATURES:
 ENHANCEMENTS:
 
 * resource/tencentcloud_instance: Add `user_data_raw` argument ([#4](https://github.com/terraform-providers/terraform-provider-scaffolding/issues/4))
-
 
 ## 1.2.2 (September 28, 2018)
 

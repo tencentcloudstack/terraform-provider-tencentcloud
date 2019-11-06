@@ -13,6 +13,7 @@ import (
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -21,6 +22,7 @@ import (
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -45,8 +47,10 @@ type TencentCloudClient struct {
 	mongodbConn *mongodb.Client
 	tkeConn     *tke.Client
 	camConn     *cam.Client
-	gaapCoon    *gaap.Client
-	sslCoon     *ssl.Client
+	gaapConn    *gaap.Client
+	sslConn     *ssl.Client
+	cfsConn     *cfs.Client
+	scfConn     *scf.Client
 }
 
 func NewTencentCloudClient(secretId, secretKey, region string) *TencentCloudClient {
@@ -357,8 +361,8 @@ func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 }
 
 func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
-	if me.gaapCoon != nil {
-		return me.gaapCoon
+	if me.gaapConn != nil {
+		return me.gaapConn
 	}
 
 	credential := common.NewCredential(
@@ -375,14 +379,14 @@ func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
 	var round LogRoundTripper
 	gaapConn.WithHttpTransport(&round)
 
-	me.gaapCoon = gaapConn
+	me.gaapConn = gaapConn
 
-	return me.gaapCoon
+	return me.gaapConn
 }
 
 func (me *TencentCloudClient) UseSslClient() *ssl.Client {
-	if me.sslCoon != nil {
-		return me.sslCoon
+	if me.sslConn != nil {
+		return me.sslConn
 	}
 
 	credential := common.NewCredential(
@@ -399,9 +403,9 @@ func (me *TencentCloudClient) UseSslClient() *ssl.Client {
 	var round LogRoundTripper
 	sslConn.WithHttpTransport(&round)
 
-	me.sslCoon = sslConn
+	me.sslConn = sslConn
 
-	return me.sslCoon
+	return me.sslConn
 }
 
 func (me *TencentCloudClient) UseCamClient() *cam.Client {
@@ -426,4 +430,49 @@ func (me *TencentCloudClient) UseCamClient() *cam.Client {
 	me.camConn = camConn
 
 	return me.camConn
+}
+
+func (me *TencentCloudClient) UseCfsClient() *cfs.Client {
+	if me.cfsConn != nil {
+		return me.cfsConn
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = "POST"
+	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
+
+	cfsConn, _ := cfs.NewClient(credential, me.Region, cpf)
+	var round LogRoundTripper
+	cfsConn.WithHttpTransport(&round)
+	me.cfsConn = cfsConn
+
+	return me.cfsConn
+}
+
+func (me *TencentCloudClient) UseScfClient() *scf.Client {
+	if me.scfConn != nil {
+		return me.scfConn
+	}
+
+	credential := common.NewCredential(
+		me.SecretId,
+		me.SecretKey,
+	)
+
+	cpf := profile.NewClientProfile()
+	cpf.HttpProfile.ReqMethod = http.MethodPost
+	cpf.HttpProfile.ReqTimeout = 300
+	cpf.Language = "en-US"
+
+	scfConn, _ := scf.NewClient(credential, me.Region, cpf)
+	scfConn.WithHttpTransport(new(LogRoundTripper))
+
+	me.scfConn = scfConn
+
+	return me.scfConn
 }

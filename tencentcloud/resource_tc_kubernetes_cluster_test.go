@@ -20,7 +20,7 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTkeCluster,
+				Config: testAccTkeCluster("test", "test"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "172.31.0.0/16"),
@@ -33,6 +33,15 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "certification_authority"),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "user_name"),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "password"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "tags.test", "test"),
+				),
+			},
+			{
+				Config: testAccTkeCluster("abc", "abc"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeExists(testTkeClusterResourceKey),
+					resource.TestCheckNoResourceAttr(testTkeClusterResourceKey, "tags.test"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "tags.abc", "abc"),
 				),
 			},
 		},
@@ -120,60 +129,64 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTkeCluster string = `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
+func testAccTkeCluster(key, value string) string {
+	return fmt.Sprintf(`
+	variable "availability_zone" {
+	  default = "ap-guangzhou-3"
+	}
+	
+	variable "cluster_cidr" {
+	  default = "172.31.0.0/16"
+	}
+	
+	variable "vpc" {
+	  default = "%s"
+	}
+	
+	variable "subnet" {
+	  default = "%s"
+	}
+	
+	variable "default_instance_type" {
+	  default = "SA1.LARGE8"
+	}
+	
+	resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+	  vpc_id                  = "${var.vpc}"
+	  cluster_cidr            = "${var.cluster_cidr}"
+	  cluster_max_pod_num     = 32
+	  cluster_name            = "test"
+	  cluster_desc            = "test cluster desc"
+	  cluster_max_service_num = 32
+	
+	  worker_config {
+	    count                      = 1
+	    availability_zone          = "${var.availability_zone}"
+	    instance_type              = "${var.default_instance_type}"
+	    system_disk_type           = "CLOUD_SSD"
+	    system_disk_size           = 60
+	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	    internet_max_bandwidth_out = 100
+	    public_ip_assigned         = true
+	    subnet_id                  = "${var.subnet}"
+	
+	    data_disk {
+	      disk_type = "CLOUD_PREMIUM"
+	      disk_size = 50
+	    }
+	
+	    enhanced_security_service = false
+	    enhanced_monitor_service  = false
+	    user_data                 = "dGVzdA=="
+	    password                  = "ZZXXccvv1212"
+	  }
+	
+	  cluster_deploy_type = "MANAGED_CLUSTER"
+	
+	  tags = {
+	    "%s" = "%s"
+	  }
+	}
+`, DefaultVpcId, DefaultSubnetId, key, value,
+	)
 }
-
-variable "cluster_cidr" {
-  default = "172.31.0.0/16"
-}
-
-variable "vpc" {
-  default = "` + DefaultVpcId + `"
-}
-
-variable "subnet" {
-  default = "` + DefaultSubnetId + `"
-}
-
-variable "default_instance_type" {
-  default = "SA1.LARGE8"
-}
-
-
-
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = "${var.vpc}"
-  cluster_cidr            = "${var.cluster_cidr}"
-  cluster_max_pod_num     = 32
-  cluster_name            = "test"
-  cluster_desc            = "test cluster desc"
-  cluster_max_service_num = 32
-
-  worker_config {
-    count                      = 1
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.default_instance_type}"
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = "${var.subnet}"
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
-
-  cluster_deploy_type = "MANAGED_CLUSTER"
-}
-
-`
