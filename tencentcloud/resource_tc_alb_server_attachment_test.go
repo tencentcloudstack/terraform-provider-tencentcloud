@@ -11,53 +11,49 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudAlbServerAttachment_tcp(t *testing.T) {
-	t.Parallel()
-
+func TestAccTencentCloudAlbServerAttachmentTcp(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckAlbServerAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAlbServerAttachment_tcp,
+				Config: testAccTencentCloudAlbServerAttachmentTcp,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAlbServerAttachmentExists("tencentcloud_alb_server_attachment.attachment_tcp"),
-					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.attachment_tcp", "loadbalancer_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.attachment_tcp", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.attachment_tcp", "protocol_type", "TCP"),
-					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.attachment_tcp", "backends.#", "1"),
+					testAccCheckAlbServerAttachmentExists("tencentcloud_alb_server_attachment.foo"),
+					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.foo", "loadbalancer_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.foo", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.foo", "protocol_type", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.foo", "backends.#", "1"),
 				),
 			}, {
-				Config: testAccAlbServerAttachment_tcp_update,
+				Config: testAccTencentCloudAlbServerAttachmentTcpUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAlbServerAttachmentExists("tencentcloud_alb_server_attachment.attachment_tcp"),
-					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.attachment_tcp", "loadbalancer_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.attachment_tcp", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.attachment_tcp", "protocol_type", "TCP"),
-					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.attachment_tcp", "backends.#", "1"),
+					testAccCheckAlbServerAttachmentExists("tencentcloud_alb_server_attachment.foo"),
+					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.foo", "loadbalancer_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.foo", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.foo", "protocol_type", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.foo", "backends.#", "1"),
 				),
 			},
 		},
 	})
 }
 
-func TestAccTencentCloudAlbServerAttachment_http(t *testing.T) {
-	t.Parallel()
-
+func TestAccTencentCloudAlbServerAttachmentHttp(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckAlbServerAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAlbServerAttachment_http,
+				Config: testAccTencentCloudAlbServerAttachmentHttp,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAlbServerAttachmentExists("tencentcloud_alb_server_attachment.attachment_http"),
-					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.attachment_http", "loadbalancer_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.attachment_http", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.attachment_http", "protocol_type", "HTTP"),
-					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.attachment_http", "backends.#", "1"),
+					testAccCheckAlbServerAttachmentExists("tencentcloud_alb_server_attachment.foo"),
+					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.foo", "loadbalancer_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_alb_server_attachment.foo", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.foo", "protocol_type", "HTTP"),
+					resource.TestCheckResourceAttr("tencentcloud_alb_server_attachment.foo", "backends.#", "1"),
 				),
 			},
 		},
@@ -88,6 +84,7 @@ func testAccCheckAlbServerAttachmentDestroy(s *terraform.State) error {
 			return fmt.Errorf("clb ServerAttachment still exists: %s", rs.Primary.ID)
 		}
 	}
+
 	return nil
 }
 
@@ -121,61 +118,16 @@ func testAccCheckAlbServerAttachmentExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccAlbServerAttachment_tcp = `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_vpc" "foo" {
-  name       = "example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "foo" {
-  name              = "example"
-  availability_zone = "${var.availability_zone}"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  cidr_block        = "10.0.0.0/24"
-  is_multicast      = false
-}
-
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-resource "tencentcloud_instance" "foo" {
-  instance_name              = "example"
-  availability_zone          = "${var.availability_zone}"
-  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type           = "CLOUD_PREMIUM"
-  internet_max_bandwidth_out = 0
-  vpc_id                     = "${tencentcloud_vpc.foo.id}"
-  subnet_id                  = "${tencentcloud_subnet.foo.id}"
-}
-
-resource "tencentcloud_clb_instance" "clb_basic" {
+const testAccTencentCloudAlbServerAttachmentTcp = instanceCommonTestCase + `
+resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-attachment-tcp"
-  vpc_id       = "${tencentcloud_vpc.foo.id}"
+  clb_name     = "${var.instance_name}"
+  vpc_id       = "${var.vpc_id}"
 }
 
-resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_name              = "listener_tcp"
+resource "tencentcloud_clb_listener" "foo" {
+  clb_id                     = "${tencentcloud_clb_instance.foo.id}"
+  listener_name              = "${var.instance_name}"
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -187,73 +139,28 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   scheduler                  = "WRR"
 }
 
-resource "tencentcloud_alb_server_attachment" "attachment_tcp" {
-  loadbalancer_id      = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
+resource "tencentcloud_alb_server_attachment" "foo" {
+  loadbalancer_id = "${tencentcloud_clb_instance.foo.id}"
+  listener_id     = "${tencentcloud_clb_listener.foo.id}"
 
   backends {
-    instance_id = "${tencentcloud_instance.foo.id}"
+    instance_id = "${tencentcloud_instance.default.id}"
     port        = 23
     weight      = 10
   }
 }
 `
 
-const testAccAlbServerAttachment_tcp_update = `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_vpc" "foo" {
-  name       = "example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "foo" {
-  name              = "example"
-  availability_zone = "${var.availability_zone}"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  cidr_block        = "10.0.0.0/24"
-  is_multicast      = false
-}
-
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-resource "tencentcloud_instance" "foo" {
-  instance_name              = "example"
-  availability_zone          = "${var.availability_zone}"
-  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type           = "CLOUD_PREMIUM"
-  internet_max_bandwidth_out = 0
-  vpc_id                     = "${tencentcloud_vpc.foo.id}"
-  subnet_id                  = "${tencentcloud_subnet.foo.id}"
-}
-
-resource "tencentcloud_clb_instance" "clb_basic" {
+const testAccTencentCloudAlbServerAttachmentTcpUpdate = instanceCommonTestCase + `
+resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-attachment-tcp"
-  vpc_id       = "${tencentcloud_vpc.foo.id}"
+  clb_name     = "${var.instance_name}"
+  vpc_id       = "${var.vpc_id}"
 }
 
-resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_name              = "listener_tcp"
+resource "tencentcloud_clb_listener" "foo" {
+  clb_id                     = "${tencentcloud_clb_instance.foo.id}"
+  listener_name              = "${var.instance_name}"
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -265,93 +172,48 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   scheduler                  = "WRR"
 }
 
-resource "tencentcloud_alb_server_attachment" "attachment_tcp" {
-  loadbalancer_id      = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id          = "${tencentcloud_clb_listener.listener_basic.id}"
+resource "tencentcloud_alb_server_attachment" "foo" {
+  loadbalancer_id = "${tencentcloud_clb_instance.foo.id}"
+  listener_id     = "${tencentcloud_clb_listener.foo.id}"
 
   backends {
-    instance_id = "${tencentcloud_instance.foo.id}"
+    instance_id = "${tencentcloud_instance.default.id}"
     port        = 80
     weight      = 30
   }
 }
 `
 
-const testAccAlbServerAttachment_http = `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_vpc" "foo" {
-  name       = "example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "foo" {
-  name              = "example"
-  availability_zone = "${var.availability_zone}"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  cidr_block        = "10.0.0.0/24"
-  is_multicast      = false
-}
-
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-resource "tencentcloud_instance" "foo" {
-  instance_name              = "example"
-  availability_zone          = "${var.availability_zone}"
-  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type           = "CLOUD_PREMIUM"
-  internet_max_bandwidth_out = 0
-  vpc_id                     = "${tencentcloud_vpc.foo.id}"
-  subnet_id                  = "${tencentcloud_subnet.foo.id}"
-}
-
-resource "tencentcloud_clb_instance" "clb_basic" {
+const testAccTencentCloudAlbServerAttachmentHttp = instanceCommonTestCase + `
+resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-attachment-http"
-  vpc_id       = "${tencentcloud_vpc.foo.id}"
+  clb_name     = "${var.instance_name}"
+  vpc_id       = "${var.vpc_id}"
 }
 
-resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_name        = "listener_https"
+resource "tencentcloud_clb_listener" "foo" {
+  clb_id               = "${tencentcloud_clb_instance.foo.id}"
+  listener_name        = "${var.instance_name}"
   port                 = 77
   protocol             = "HTTP"
 }
 
-resource "tencentcloud_clb_listener_rule" "rule_basic" {
-  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id         = "${tencentcloud_clb_listener.listener_basic.id}"
+resource "tencentcloud_clb_listener_rule" "foo" {
+  clb_id              = "${tencentcloud_clb_instance.foo.id}"
+  listener_id         = "${tencentcloud_clb_listener.foo.id}"
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
   scheduler           = "WRR"
 }
 
-resource "tencentcloud_alb_server_attachment" "attachment_http" {
-  loadbalancer_id      = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id          = "${tencentcloud_clb_listener.listener_basic.id}"
-  location_id          = "${tencentcloud_clb_listener_rule.rule_basic.id}"
+resource "tencentcloud_alb_server_attachment" "foo" {
+  loadbalancer_id      = "${tencentcloud_clb_instance.foo.id}"
+  listener_id          = "${tencentcloud_clb_listener.foo.id}"
+  location_id          = "${tencentcloud_clb_listener_rule.foo.id}"
 
   backends {
-    instance_id = "${tencentcloud_instance.foo.id}"
+    instance_id = "${tencentcloud_instance.default.id}"
     port        = 88
     weight      = 20
   }

@@ -66,6 +66,45 @@ variable "subnet_cidr_less" {
 }
 `
 
+const defaultInstanceVariable = defaultVpcVariable + `
+data "tencentcloud_availability_zones" "default" {
+}
+
+data "tencentcloud_images" "default" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "centos"
+}
+
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "instance-family"
+    values = ["S1"]
+  }
+
+  cpu_core_count = 1
+  memory_size    = 1
+}
+`
+
+const instanceCommonTestCase = defaultInstanceVariable + `
+resource "tencentcloud_instance" "default" {
+  instance_name              = "${var.instance_name}"
+  availability_zone          = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id                   = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type              = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  system_disk_type           = "CLOUD_PREMIUM"
+  system_disk_size           = 50
+  allocate_public_ip         = true
+  internet_max_bandwidth_out = 10
+  vpc_id                     = "${var.vpc_id}"
+  subnet_id                  = "${var.subnet_id}"
+
+  tags = {
+    test = "default"
+  }
+}
+`
+
 const mysqlInstanceCommonTestCase = defaultVpcVariable + `
 resource "tencentcloud_mysql_instance" "default" {
   mem_size = 1000

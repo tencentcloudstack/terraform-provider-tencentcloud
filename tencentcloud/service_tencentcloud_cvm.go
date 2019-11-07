@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sort"
+	"time"
 
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -723,8 +725,37 @@ func flattenCvmTagsMapping(tags []*cvm.Tag) (mapping map[string]string) {
 	return
 }
 
+type cvmImages []*cvm.Image
+
+func (a cvmImages) Len() int {
+	return len(a)
+}
+
+func (a cvmImages) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}
+
+func (a cvmImages) Less(i, j int) bool {
+	if a[i].CreatedTime == nil || a[j].CreatedTime == nil {
+		return false
+	}
+
+	itime, _ := time.Parse(time.RFC3339, *a[i].CreatedTime)
+	jtime, _ := time.Parse(time.RFC3339, *a[j].CreatedTime)
+
+	return itime.Unix() < jtime.Unix()
+}
+
+// Sort images by creation date, in descending order.
+func sortImages(images cvmImages) cvmImages {
+	sortedImages := images
+	sort.Sort(sort.Reverse(sortedImages))
+	return sortedImages
+}
+
 func (me *CvmService) DescribeImagesByFilter(ctx context.Context, filters map[string][]string) (images []*cvm.Image, errRet error) {
 	logId := getLogId(ctx)
+
 	request := cvm.NewDescribeImagesRequest()
 	request.Filters = make([]*cvm.Filter, 0, len(filters))
 	for k, v := range filters {
@@ -764,5 +795,6 @@ func (me *CvmService) DescribeImagesByFilter(ctx context.Context, filters map[st
 		}
 		offset += pageSize
 	}
+
 	return
 }

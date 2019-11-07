@@ -1,10 +1,6 @@
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
+data "tencentcloud_images" "my_favorate_image" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "centos"
 }
 
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
@@ -22,17 +18,15 @@ data "tencentcloud_availability_zones" "my_favorate_zones" {}
 resource "tencentcloud_instance" "my_instance" {
   instance_name     = "terraform_automation_test_kuruk"
   availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  image_id          = "${data.tencentcloud_images.my_favorate_image.images.0.image_id}"
   instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
 
-  system_disk_type = "CLOUD_BASIC"
+  system_disk_type = "CLOUD_PREMIUM"
 
-  data_disks = [
-    {
-      data_disk_type = "CLOUD_BASIC"
-      data_disk_size = 70
-    },
-  ]
+  data_disks {
+    data_disk_type = "CLOUD_PREMIUM"
+    data_disk_size = 70
+  }
 
   disable_security_service = true
   disable_monitor_service  = true

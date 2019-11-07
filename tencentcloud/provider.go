@@ -51,8 +51,8 @@ Data Sources
   tencentcloud_dc_gateway_instances
   tencentcloud_dcx_instances
   tencentcloud_dnats
-  tencentcloud_eip
   tencentcloud_eips
+  tencentcloud_eip
   tencentcloud_enis
   tencentcloud_gaap_certificates
   tencentcloud_gaap_http_domains
@@ -63,6 +63,7 @@ Data Sources
   tencentcloud_gaap_realservers
   tencentcloud_gaap_security_policies
   tencentcloud_gaap_security_rules
+  tencentcloud_images
   tencentcloud_image
   tencentcloud_instances
   tencentcloud_instance_types
@@ -253,7 +254,8 @@ func Provider() terraform.ResourceProvider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"tencentcloud_availability_zones":           dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_eip":                          dataSourceTencentCloudEip(),
-			"tencentcloud_image":                        dataSourceTencentCloudSourceImages(),
+			"tencentcloud_image":                        dataSourceTencentCloudImage(),
+			"tencentcloud_images":                       dataSourceTencentCloudImages(),
 			"tencentcloud_instance_types":               dataSourceInstanceTypes(),
 			"tencentcloud_vpc":                          dataSourceTencentCloudVpc(),
 			"tencentcloud_subnet":                       dataSourceTencentCloudSubnet(),

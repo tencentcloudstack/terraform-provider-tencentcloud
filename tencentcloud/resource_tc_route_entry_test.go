@@ -23,7 +23,7 @@ func TestAccTencentCloudVpcV2RouteEntryBasic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRouteEntryExists("tencentcloud_route_entry.foo", &reId),
 					resource.TestCheckResourceAttr("tencentcloud_route_entry.foo", "cidr_block", "10.0.0.0/24"),
-					resource.TestCheckResourceAttr("tencentcloud_route_entry.foo", "next_type", "instance"),
+					resource.TestCheckResourceAttr("tencentcloud_route_entry.foo", "next_type", "eip"),
 				),
 			},
 		},
@@ -141,25 +141,6 @@ func testAccCheckRouteEntryExists(n string, id *string) resource.TestCheckFunc {
 }
 
 const testAccVpcRouteEntryV2Config = defaultVpcVariable + `
-data "tencentcloud_image" "foo" {
-  os_name = "centos"
-
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-resource "tencentcloud_instance" "foo" {
-  instance_name  	= "${var.instance_name}"
-  availability_zone = "${var.availability_zone}"
-  image_id          = "${data.tencentcloud_image.foo.image_id}"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  subnet_id         = "${tencentcloud_subnet.foo.id}"
-  instance_type     = "S2.SMALL2"
-  system_disk_type  = "CLOUD_SSD"
-}
-
 resource "tencentcloud_vpc" "foo" {
   name       = "${var.instance_name}"
   cidr_block = "${var.vpc_cidr}"
@@ -183,7 +164,7 @@ resource "tencentcloud_route_entry" "foo" {
   vpc_id        	= "${tencentcloud_vpc.foo.id}"
   route_table_id 	= "${tencentcloud_route_table.foo.id}"
   cidr_block 		= "10.0.0.0/24"
-  next_type 		= "instance"
-  next_hub  		= "${tencentcloud_instance.foo.private_ip}"
+  next_type 		= "eip"
+  next_hub  		= "0"
 }
 `

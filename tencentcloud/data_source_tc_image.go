@@ -3,6 +3,8 @@ Provides an available image for the user.
 
 The Images data source fetch proper image, which could be one of the private images of the user and images of system resources provided by TencentCloud, as well as other public images and those available on the image market.
 
+~> **NOTE:** This data source will be deprecated, please use `tencentcloud_images` instead.
+
 Example Usage
 
 ```hcl
@@ -22,51 +24,16 @@ import (
 	"context"
 	"errors"
 	"regexp"
-	"sort"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
-type imageSorter []*cvm.Image
-
-func (a imageSorter) Len() int {
-	return len(a)
-}
-
-func (a imageSorter) Swap(i, j int) {
-	a[i], a[j] = a[j], a[i]
-}
-
-func (a imageSorter) Less(i, j int) bool {
-	if a[i].CreatedTime == nil || a[j].CreatedTime == nil {
-		return false
-	}
-
-	itime, _ := time.Parse(time.RFC3339, *a[i].CreatedTime)
-	jtime, _ := time.Parse(time.RFC3339, *a[j].CreatedTime)
-
-	return itime.Unix() < jtime.Unix()
-}
-
-// Sort images by creation date, in descending order.
-func sortImages(images imageSorter) imageSorter {
-	sortedImages := images
-	sort.Sort(sort.Reverse(sortedImages))
-	return sortedImages
-}
-
-// Returns the most recent image out of a slice of images.
-func mostRecentImages(images imageSorter) imageSorter {
-	return sortImages(images)
-}
-
-func dataSourceTencentCloudSourceImages() *schema.Resource {
+func dataSourceTencentCloudImage() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudImagesRead,
+		Read: dataSourceTencentCloudImageRead,
 
 		Schema: map[string]*schema.Schema{
 			"filter": {
@@ -120,7 +87,7 @@ func dataSourceTencentCloudSourceImages() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_image.read")()
 
 	logId := getLogId(contextNil)
@@ -173,7 +140,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	var resultImageId string
-	images = mostRecentImages(images)
+	images = sortImages(images)
 	for _, image := range images {
 		if osName != "" {
 			if strings.Contains(strings.ToLower(*image.OsName), strings.ToLower(osName)) {

@@ -53,6 +53,7 @@ var routeTypeApiMap = map[string]int{
 	"sslvpn_gateway":     7,
 	"nat_gateway":        8,
 	"instance":           9,
+	"eip":                10,
 }
 
 var routeTypeNewMap = map[string]string{
@@ -63,6 +64,7 @@ var routeTypeNewMap = map[string]string{
 	"sslvpn_gateway":     "SSLVPN",
 	"nat_gateway":        "NAT",
 	"instance":           "NORMAL_CVM",
+	"eip":                "EIP",
 }
 
 func resourceTencentCloudRouteEntry() *schema.Resource {
