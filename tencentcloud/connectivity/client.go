@@ -12,6 +12,7 @@ import (
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -20,6 +21,7 @@ import (
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -46,6 +48,8 @@ type TencentCloudClient struct {
 	camConn     *cam.Client
 	gaapConn    *gaap.Client
 	sslConn     *ssl.Client
+	cfsConn     *cfs.Client
+	scfConn     *scf.Client
 }
 
 // NewTencentCloudClient returns a new TencentCloudClient
@@ -280,4 +284,30 @@ func (me *TencentCloudClient) UseCamClient() *cam.Client {
 	me.camConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.camConn
+}
+
+// UseCfsClient returns cfs client for service
+func (me *TencentCloudClient) UseCfsClient() *cfs.Client {
+	if me.cfsConn != nil {
+		return me.cfsConn
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.cfsConn, _ = cfs.NewClient(me.Credential, me.Region, cpf)
+	me.cfsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cfsConn
+}
+
+// UseScfClient returns scf client for service
+func (me *TencentCloudClient) UseScfClient() *scf.Client {
+	if me.scfConn != nil {
+		return me.scfConn
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.scfConn, _ = scf.NewClient(me.Credential, me.Region, cpf)
+	me.scfConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.scfConn
 }

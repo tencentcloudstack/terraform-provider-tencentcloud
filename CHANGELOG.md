@@ -1,4 +1,23 @@
-## 1.21.3 (Unreleased)
+## 1.22.1 (Unreleased)
+BUG FIXES:
+* Fixed docs of CAM
+
+## 1.22.0 (November 05, 2019)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_cfs_file_systems`
+* **New Data Source**: `tencentcloud_cfs_access_groups`
+* **New Data Source**: `tencentcloud_cfs_access_rules`
+* **New Data Source**: `tencentcloud_scf_functions`
+* **New Data Source**: `tencentcloud_scf_namespaces`
+* **New Data Source**: `tencentcloud_scf_logs`
+* **New Resource**: `tencentcloud_cfs_file_system`
+* **New Resource**: `tencentcloud_cfs_access_group`
+* **New Resource**: `tencentcloud_cfs_access_rule`
+* **New Resource**: `tencentcloud_scf_function`
+* **New Resource**: `tencentcloud_scf_namespace`
+
 ## 1.21.2 (October 29, 2019)
 
 BUG FIXES:
@@ -52,6 +71,7 @@ ENHANCEMENTS:
 BUG FIXES:
 
 * Resource: `tencentcloud_gaap_http_domain` fix sometimes can't enable realserver auth
+
 
 ## 1.20.1 (October 08, 2019)
 

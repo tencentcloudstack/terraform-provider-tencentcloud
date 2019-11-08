@@ -13,6 +13,7 @@ require (
 	github.com/hashicorp/terraform v0.12.12
 	github.com/likexian/gokit v0.20.16
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/pkg/errors v0.8.1
 	github.com/tencentcloud/tencentcloud-sdk-go v3.0.94+incompatible
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	labix.org/v2/mgo v0.0.0-20140701140051-000000000287 // indirect

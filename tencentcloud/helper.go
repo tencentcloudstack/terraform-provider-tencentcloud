@@ -2,14 +2,14 @@ package tencentcloud
 
 import (
 	"bytes"
-	"crypto/md5"
+	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"math/rand"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/pkg/errors"
 )
 
 // Generates a hash for the set hash function used by the IDs
@@ -79,12 +79,14 @@ func int64Pt(i int64) *int64 {
 	return &i
 }
 
+func integerToPointer(i int) *int {
+	return &i
+}
+
 func getTags(d *schema.ResourceData, k string) map[string]string {
-	var tags map[string]string
+	tags := make(map[string]string)
 	if raw, ok := d.GetOk(k); ok {
-		rawTags := raw.(map[string]interface{})
-		tags = make(map[string]string, len(rawTags))
-		for k, v := range rawTags {
+		for k, v := range raw.(map[string]interface{}) {
 			tags[k] = v.(string)
 		}
 	}
@@ -92,11 +94,9 @@ func getTags(d *schema.ResourceData, k string) map[string]string {
 }
 
 func buildToken() string {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	buf := make([]byte, 16)
-	r.Read(buf)
-	sum := md5.Sum(buf)
-	return base64.StdEncoding.EncodeToString(sum[:])
+	_, _ = rand.Read(buf)
+	return base64.StdEncoding.EncodeToString(buf)
 }
 
 func boolToPointer(b bool) *bool {
@@ -113,9 +113,53 @@ func formatUnixTime(n uint64) string {
 }
 
 func parseTime(s string) (time.Time, error) {
-	t, err := time.ParseInLocation("2006-01-02T03:04:05Z", s, time.UTC)
-	if err != nil {
-		return time.Time{}, err
+	return time.ParseInLocation("2006-01-02T03:04:05Z", s, time.UTC)
+}
+
+// compose all schema.SchemaValidateFunc to a schema.SchemaValidateFunc,
+// like resource.ComposeTestCheckFunc, so that we can reuse exist schema.SchemaValidateFunc
+// and reduce custom schema.SchemaValidateFunc codes size.
+func composeValidateFunc(fns ...schema.SchemaValidateFunc) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (wssRet []string, errsRet []error) {
+		for _, fn := range fns {
+			wss, errs := fn(v, k)
+			if len(errs) > 0 {
+				errsRet = append(errsRet, errs...)
+				return
+			}
+			wssRet = append(wssRet, wss...)
+		}
+
+		return
 	}
-	return t, nil
+}
+
+// checkIfSetTogether will check all args, they should be all nil or not nil.
+//
+// Such as vpc_id and subnet_id should set together, or don't set them.
+func checkIfSetTogether(d *schema.ResourceData, args ...string) error {
+	var notNil bool
+
+	for _, arg := range args {
+		if _, ok := d.GetOk(arg); ok {
+			notNil = true
+			continue
+		}
+		if notNil {
+			return errors.Errorf("%v must be set together", args)
+		}
+	}
+
+	return nil
+}
+
+func validateTime(layout string) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (wss []string, errs []error) {
+		timeStr := v.(string)
+		if _, err := time.Parse(layout, timeStr); err != nil {
+			errs = append(errs, errors.Errorf("%s time format is invalid", k))
+		}
+
+		return
+	}
 }
