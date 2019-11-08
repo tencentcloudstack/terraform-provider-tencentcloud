@@ -98,10 +98,6 @@ resource "tencentcloud_instance" "default" {
   internet_max_bandwidth_out = 10
   vpc_id                     = "${var.vpc_id}"
   subnet_id                  = "${var.subnet_id}"
-
-  tags = {
-    test = "default"
-  }
 }
 `
 
