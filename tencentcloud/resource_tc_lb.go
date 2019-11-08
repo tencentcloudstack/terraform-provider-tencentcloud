@@ -43,31 +43,19 @@ func resourceTencentCloudLB() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"type": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := v.(string)
-					if value != lbNetworkTypeOpen && value != lbNetworkTypeInternal {
-						errors = append(errors, fmt.Errorf("Invalid value %s for '%s', choices: OPEN, INTERNAL", value, k))
-					}
-					return
-				},
-				Description: "The network type of the LB, valid choices: 'OPEN', 'INTERNAL'.",
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue([]string{lbNetworkTypeOpen, lbNetworkTypeInternal}),
+				Description:  "The network type of the LB, valid choices: 'OPEN', 'INTERNAL'.",
 			},
 			"forward": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := v.(string)
-					if value != lbForwardTypeClassic && value != lbForwardTypeApplication {
-						errors = append(errors, fmt.Errorf("Invalid value %s for '%s', choices: CLASSIC, APPLICATION", value, k))
-					}
-					return
-				},
-				Description: "The type of the LB, valid choices: 'CLASSIC', 'APPLICATION'.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue([]string{lbForwardTypeClassic, lbForwardTypeApplication}),
+				Description:  "The type of the LB, valid choices: 'CLASSIC', 'APPLICATION'.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -111,7 +99,7 @@ func resourceTencentCloudLBCreate(d *schema.ResourceData, meta interface{}) erro
 	request.LoadBalancerType = stringToPointer(networkType)
 
 	if v, ok := d.GetOk("forward"); ok {
-		if v == "CLASSIC" {
+		if v == lbForwardTypeClassic {
 			request.Forward = int64ToPointer(0)
 		} else {
 			request.Forward = int64ToPointer(1)
@@ -251,6 +239,7 @@ func resourceTencentCloudLBUpdate(d *schema.ResourceData, meta interface{}) erro
 	}
 
 	d.SetPartial("name")
+	d.Partial(false)
 
 	return resourceTencentCloudLBRead(d, meta)
 }
