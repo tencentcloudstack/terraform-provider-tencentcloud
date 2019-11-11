@@ -152,7 +152,7 @@ func dataSourceTencentCloudVpnGateways() *schema.Resource {
 						"tags": {
 							Type:        schema.TypeMap,
 							Optional:    true,
-							Description: "A list of tags used to associate diffrent resources.",
+							Description: "A list of tags used to associate different resources.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,

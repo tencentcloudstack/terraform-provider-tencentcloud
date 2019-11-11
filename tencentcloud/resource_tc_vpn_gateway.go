@@ -191,7 +191,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 				if *result.Response.VpnGatewaySet[0].State == VPN_STATE_AVAILABLE {
 					return nil
 				} else {
-					return resource.RetryableError(fmt.Errorf("State is not availabe: %s, wait for state to be AVAILABLE.", *result.Response.VpnGatewaySet[0].State))
+					return resource.RetryableError(fmt.Errorf("State is not available: %s, wait for state to be AVAILABLE.", *result.Response.VpnGatewaySet[0].State))
 				}
 			}
 		}

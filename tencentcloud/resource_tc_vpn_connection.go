@@ -450,10 +450,9 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 				if *result.Response.VpnConnectionSet[0].State == VPN_STATE_AVAILABLE {
 					return nil
 				} else {
-					return resource.RetryableError(fmt.Errorf("State is not availabe: %s, wait for state to be AVAILABLE.", *result.Response.VpnConnectionSet[0].State))
+					return resource.RetryableError(fmt.Errorf("State is not available: %s, wait for state to be AVAILABLE.", *result.Response.VpnConnectionSet[0].State))
 				}
 			}
-			return nil
 		}
 	})
 	if err != nil {
@@ -610,17 +609,17 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 		changeFlag = true
 	}
 	ikeChangeKeySet := map[string]bool{
-		"ike_proto_encry_algorithm":   false,
-		"ike_proto_authen_algorithem": false,
-		"ike_exchange_mode":           false,
-		"ike_local_identity":          false,
-		"ike_remote_identity":         false,
-		"ike_local_address":           false,
-		"ike_local_fqdn_name":         false,
-		"ike_remote_address":          false,
-		"ike_remote_fqdn_name":        false,
-		"ike_sa_lifetime_seconds":     false,
-		"ike_dh_group_name":           false,
+		"ike_proto_encry_algorithm":  false,
+		"ike_proto_authen_algorithm": false,
+		"ike_exchange_mode":          false,
+		"ike_local_identity":         false,
+		"ike_remote_identity":        false,
+		"ike_local_address":          false,
+		"ike_local_fqdn_name":        false,
+		"ike_remote_address":         false,
+		"ike_remote_fqdn_name":       false,
+		"ike_sa_lifetime_seconds":    false,
+		"ike_dh_group_name":          false,
 	}
 	ikeChangeFlag := false
 	for key := range ikeChangeKeySet {
