@@ -28,6 +28,7 @@ The following arguments are supported:
 * `result_output_file` - (Optional) Used to save results.
 * `scaling_group_id` - (Optional) A specified scaling group ID used to query.
 * `scaling_group_name` - (Optional) A scaling group name used to query.
+* `tags` - (Optional) Tags used to query.
 
 ## Attributes Reference
 
@@ -55,6 +56,7 @@ In addition to all arguments above, the following attributes are exported:
   * `scaling_group_name` - Auto scaling group name.
   * `status` - Current status of a scaling group.
   * `subnet_ids` - A list of subnet IDs.
+  * `tags` - Tags of the scaling group.
   * `termination_policies` - A policy used to select a CVM instance to be terminated from the scaling group.
   * `vpc_id` - ID of the vpc with which the instance is associated.
   * `zones` - A list of available zones.

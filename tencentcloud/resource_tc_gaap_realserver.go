@@ -112,6 +112,14 @@ func resourceTencentCloudGaapRealserverCreate(d *schema.ResourceData, m interfac
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
+	realservers, err := service.DescribeRealservers(ctx, &address, nil, nil, -1)
+	if err != nil {
+		return err
+	}
+	if len(realservers) > 0 {
+		return fmt.Errorf("the realserver with ip/domain %s already exists", address)
+	}
+
 	id, err := service.CreateRealserver(ctx, address, name, projectId, tags)
 	if err != nil {
 		return err

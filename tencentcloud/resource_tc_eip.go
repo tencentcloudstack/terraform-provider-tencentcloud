@@ -22,10 +22,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func resourceTencentCloudEip() *schema.Resource {
@@ -45,6 +47,48 @@ func resourceTencentCloudEip() *schema.Resource {
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(1, 20),
 				Description:  "The name of eip.",
+			},
+			"type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      EIP_TYPE_EIP,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue(EIP_TYPE),
+				Description:  "The type of eip, and available values include `EIP` and `AnycastEIP`. Default is `EIP`.",
+			},
+			"anycast_zone": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue(EIP_ANYCAST_ZONE),
+				Description:  "The zone of anycast, and available values include `ANYCAST_ZONE_GLOBAL` and `ANYCAST_ZONE_OVERSEAS`.",
+			},
+			"applicable_for_clb": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Indicates whether the anycast eip can be associated to a CLB.",
+			},
+			"internet_service_provider": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue(EIP_INTERNET_PROVIDER),
+				Description:  "Internet service provider of eip, and available values include `BGP`, `CMCC`, `CTCC` and `CUCC`.",
+			},
+			"internet_charge_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue(CVM_INTERNET_CHARGE_TYPE),
+				Description:  "The charge type of eip, and available values include `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR` and `TRAFFIC_POSTPAID_BY_HOUR`.",
+			},
+			"internet_max_bandwidth_out": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateIntegerInRange(1, 1000),
+				Description:  "The bandwidth limit of eip, unit is Mbps, and the range is 1-1000.",
 			},
 
 			// computed
@@ -71,13 +115,43 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
+	request := vpc.NewAllocateAddressesRequest()
+	if v, ok := d.GetOk("type"); ok {
+		request.AddressType = stringToPointer(v.(string))
+	}
+	if v, ok := d.GetOk("anycast_zone"); ok {
+		request.AnycastZone = stringToPointer(v.(string))
+	}
+	if v, ok := d.GetOkExists("applicable_for_clb"); ok {
+		applicable := v.(bool)
+		request.ApplicableForCLB = &applicable
+	}
+	if v, ok := d.GetOk("internet_service_provider"); ok {
+		request.InternetServiceProvider = stringToPointer(v.(string))
+	}
+	if v, ok := d.GetOk("internet_charge_type"); ok {
+		request.InternetChargeType = stringToPointer(v.(string))
+	}
+	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
+		request.InternetMaxBandwidthOut = int64ToPointer(v.(int))
+	}
+
 	eipId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		id, errRet := vpcService.CreateEip(ctx)
-		if errRet != nil {
-			return retryError(errRet)
+		ratelimit.Check(request.GetAction())
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AllocateAddresses(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return retryError(err)
 		}
-		eipId = id
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if len(response.Response.AddressSet) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("eip id is nil"))
+		}
+		eipId = *response.Response.AddressSet[0]
 		return nil
 	})
 	if err != nil {
@@ -145,6 +219,7 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	}
 
 	d.Set("name", eip.AddressName)
+	d.Set("type", eip.AddressType)
 	d.Set("public_ip", eip.AddressIp)
 	d.Set("status", eip.AddressStatus)
 	return nil

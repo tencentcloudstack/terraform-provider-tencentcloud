@@ -24,6 +24,16 @@ resource "tencentcloud_gaap_http_domain" "foo" {
   domain      = "www.qq.com"
 }
 ```
+
+Import
+
+GAAP http domain can be imported using the id, e.g.
+
+-> **NOTE:** The format of tencentcloud_gaap_http_domain id is `[listener-id]+[protocol]+[domain]`.
+
+```
+  $ terraform import tencentcloud_gaap_http_domain.foo listener-11112222+HTTP+www.qq.com
+```
 */
 package tencentcloud
 
@@ -43,6 +53,10 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 		Read:   resourceTencentCloudGaapHttpDomainRead,
 		Update: resourceTencentCloudGaapHttpDomainUpdate,
 		Delete: resourceTencentCloudGaapHttpDomainDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -236,7 +250,6 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	id := d.Id()
 	var (
 		listenerId string
-		protocol   string
 		domain     string
 	)
 	split := strings.Split(id, "+")
@@ -247,7 +260,7 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 		return nil
 	}
 
-	listenerId, protocol, domain = split[0], split[1], split[2]
+	listenerId, _, domain = split[0], split[1], split[2]
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -262,35 +275,20 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	}
 
 	d.Set("domain", httpDomain.Domain)
-
-	if protocol == "HTTP" {
-		return nil
-	}
-
-	listeners, err := service.DescribeHTTPSListeners(ctx, nil, &listenerId, nil, nil)
-	if err != nil {
-		return err
-	}
-
-	// if listener doesn't exist, domain won't exist
-	if len(listeners) == 0 {
-		log.Printf("[DEBUG]%s domain listener doesn't exist", logId)
-		d.SetId("")
-		return nil
-	}
+	d.Set("listener_id", listenerId)
 
 	if httpDomain.CertificateId == nil {
-		return errors.New("domain certificate id is nil")
+		httpDomain.CertificateId = stringToPointer("default")
 	}
 	d.Set("certificate_id", httpDomain.CertificateId)
 
 	if httpDomain.ClientCertificateId == nil {
-		return errors.New("domain client certificate id is nil")
+		httpDomain.ClientCertificateId = stringToPointer("default")
 	}
 	d.Set("client_certificate_id", httpDomain.ClientCertificateId)
 
 	if httpDomain.BasicAuth == nil {
-		return errors.New("domain basic auth is nil")
+		httpDomain.BasicAuth = int64ToPointer(0)
 	}
 	d.Set("basic_auth", *httpDomain.BasicAuth == 1)
 
@@ -299,7 +297,7 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	}
 
 	if httpDomain.RealServerAuth == nil {
-		return errors.New("domain realserver auth is nil")
+		httpDomain.RealServerAuth = int64ToPointer(0)
 	}
 	d.Set("realserver_auth", *httpDomain.RealServerAuth == 1)
 
@@ -311,7 +309,7 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	}
 
 	if httpDomain.GaapAuth == nil {
-		return errors.New("domain gaap auth is nil")
+		httpDomain.GaapAuth = int64ToPointer(0)
 	}
 	d.Set("gaap_auth", *httpDomain.GaapAuth == 1)
 
@@ -421,6 +419,20 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	if d.HasChange("realserver_auth") {
 		updateAdvancedAttr = append(updateAdvancedAttr, "realserver_auth")
 		realserverAuth = boolToPointer(d.Get("realserver_auth").(bool))
+
+		if *realserverAuth {
+			if _, ok := d.GetOk("realserver_certificate_id"); !ok {
+				return errors.New("when enable realserver auth, realserver_certificate_id must be set")
+			}
+
+			if _, ok := d.GetOk("realserver_certificate_domain"); !ok {
+				return errors.New("when enable realserver auth, realserver_certificate_domain must be set")
+			}
+
+			// if enable realserver auth, must send realserverCertificateId and realserverCertificateDomain
+			realserverCertificateId = stringToPointer(d.Get("realserver_certificate_id").(string))
+			realserverCertificateDomain = stringToPointer(d.Get("realserver_certificate_domain").(string))
+		}
 	}
 	if d.HasChange("realserver_certificate_id") {
 		updateAdvancedAttr = append(updateAdvancedAttr, "realserver_certificate_id")

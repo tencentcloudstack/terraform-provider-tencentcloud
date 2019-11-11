@@ -30,6 +30,10 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 
   cluster_deploy_type = "MANAGED_CLUSTER"
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 #examples for INDEPENDENT_CLUSTER  cluster

@@ -23,8 +23,10 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudAsSchedule() *schema.Resource {
@@ -137,25 +139,36 @@ func resourceTencentCloudAsScheduleRead(d *schema.ResourceData, meta interface{}
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	scheduledAction, err := asService.DescribeScheduledActionById(ctx, scheduledActionId)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		scheduledAction, e := asService.DescribeScheduledActionById(ctx, scheduledActionId)
+		if e != nil {
+			if sdkErr, ok := e.(*errors.TencentCloudSDKError); ok {
+				if sdkErr.Code == AsScheduleNotFound {
+					d.SetId("")
+					return nil
+				}
+			}
+			return retryError(e)
+		}
+
+		d.Set("scaling_group_id", *scheduledAction.AutoScalingGroupId)
+		d.Set("schedule_action_name", *scheduledAction.ScheduledActionName)
+		d.Set("max_size", *scheduledAction.MaxSize)
+		d.Set("min_size", *scheduledAction.MinSize)
+		d.Set("desired_capacity", *scheduledAction.DesiredCapacity)
+		d.Set("start_time", *scheduledAction.StartTime)
+
+		if scheduledAction.EndTime != nil {
+			d.Set("end_time", *scheduledAction.EndTime)
+		}
+		if scheduledAction.Recurrence != nil {
+			d.Set("recurrence", *scheduledAction.Recurrence)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	d.Set("scaling_group_id", *scheduledAction.AutoScalingGroupId)
-	d.Set("schedule_action_name", *scheduledAction.ScheduledActionName)
-	d.Set("max_size", *scheduledAction.MaxSize)
-	d.Set("min_size", *scheduledAction.MinSize)
-	d.Set("desired_capacity", *scheduledAction.DesiredCapacity)
-	d.Set("start_time", *scheduledAction.StartTime)
-
-	if scheduledAction.EndTime != nil {
-		d.Set("end_time", *scheduledAction.EndTime)
-	}
-	if scheduledAction.Recurrence != nil {
-		d.Set("recurrence", *scheduledAction.Recurrence)
-	}
-
 	return nil
 }
 

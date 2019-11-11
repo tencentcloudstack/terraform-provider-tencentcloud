@@ -216,24 +216,36 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	var (
+		info VpcSubnetBasicInfo
+		has  int
+		e    error
+	)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e = vpcService.DescribeSubnet(ctx, id)
+		if e != nil {
+			return retryError(e)
+		}
 
-	info, has, err := vpcService.DescribeSubnet(ctx, id)
+		// deleted
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+
+		if has != 1 {
+			errRet := fmt.Errorf("one subnet_id read get %d subnet info", has)
+			log.Printf("[CRITAL]%s %s", logId, errRet.Error())
+			return resource.NonRetryableError(errRet)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
-
-	// deleted
 	if has == 0 {
-		d.SetId("")
 		return nil
 	}
-
-	if has != 1 {
-		errRet := fmt.Errorf("one subnet_id read get %d subnet info", has)
-		log.Printf("[CRITAL]%s %s", logId, errRet.Error())
-		return errRet
-	}
-
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "subnet", region, id)
 	if err != nil {
 		return err

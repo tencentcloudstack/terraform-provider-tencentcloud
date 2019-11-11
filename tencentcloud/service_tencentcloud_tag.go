@@ -2,10 +2,9 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/pkg/errors"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -16,8 +15,6 @@ type TagService struct {
 }
 
 func (me *TagService) ModifyTags(ctx context.Context, resourceName string, replaceTags map[string]string, deleteKeys []string) error {
-	logId := getLogId(ctx)
-
 	request := tag.NewModifyResourceTagsRequest()
 	request.Resource = &resourceName
 	if len(replaceTags) > 0 {
@@ -43,32 +40,18 @@ func (me *TagService) ModifyTags(ctx context.Context, resourceName string, repla
 		}
 	}
 
-	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 
-		response, err := me.client.UseTagClient().ModifyResourceTags(request)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-				logId, request.GetAction(), request.ToJsonString(), err)
-			return retryError(err)
+		if _, err := me.client.UseTagClient().ModifyResourceTags(request); err != nil {
+			return retryError(errors.WithStack(err))
 		}
 
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 		return nil
-	}); err != nil {
-		log.Printf("[CRITAL]%s modify resource %s tags failed, reason: %v", logId, resourceName, err)
-		return err
-	}
-
-	return nil
+	})
 }
 
 func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, resourceType, region, resourceId string) (tags map[string]string, err error) {
-	logId := getLogId(ctx)
-	client := me.client.UseTagClient()
-
 	request := tag.NewDescribeResourceTagsByResourceIdsRequest()
 	request.ServiceType = &serviceType
 	request.ResourcePrefix = &resourceType
@@ -85,29 +68,17 @@ func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, res
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 
-			response, err := client.DescribeResourceTagsByResourceIds(request)
+			response, err := me.client.UseTagClient().DescribeResourceTagsByResourceIds(request)
 			if err != nil {
 				count = 0
 
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
-					logId, request.GetAction(), request.ToJsonString(), err.Error())
-				return retryError(err)
+				return retryError(errors.WithStack(err))
 			}
 
 			allTags := response.Response.Tags
 			count = len(allTags)
 
 			for _, t := range allTags {
-				if nilFields := CheckNil(t, map[string]string{
-					"ResourceId": "resource id",
-					"TagKey":     "tag key",
-					"TagValue":   "tag value",
-				}); len(nilFields) > 0 {
-					err := fmt.Errorf("api[%s] tag %v are nil", request.GetAction(), nilFields)
-					log.Printf("[CRITAL]%s %v", logId, err)
-					return resource.NonRetryableError(err)
-				}
-
 				if *t.ResourceId != resourceId {
 					continue
 				}
@@ -120,7 +91,6 @@ func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, res
 
 			return nil
 		}); err != nil {
-			log.Printf("[CRITAL]%s describe resource %s tag failed, reason: %v", logId, serviceType+":"+resourceType, err)
 			return nil, err
 		}
 

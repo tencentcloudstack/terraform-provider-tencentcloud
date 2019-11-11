@@ -589,6 +589,132 @@ func (me *CvmService) DeletePlacementGroup(ctx context.Context, placementId stri
 	return nil
 }
 
+func (me *CvmService) DescribeZones(ctx context.Context) (zones []*cvm.ZoneInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeZonesRequest()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DescribeZones(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	zones = response.Response.ZoneSet
+	return
+}
+
+func (me *CvmService) CreateReservedInstance(ctx context.Context, configId string, count int64) (instanceId string, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewPurchaseReservedInstancesOfferingRequest()
+	request.ReservedInstancesOfferingId = &configId
+	request.InstanceCount = &count
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().PurchaseReservedInstancesOffering(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.ReservedInstanceId == nil {
+		errRet = fmt.Errorf("reserved instance id is nil")
+		return
+	}
+	instanceId = *response.Response.ReservedInstanceId
+	return
+}
+
+func (me *CvmService) DescribeReservedInstanceByFilter(ctx context.Context, filters map[string]string) (instances []*cvm.ReservedInstances, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeReservedInstancesRequest()
+	request.Filters = make([]*cvm.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := cvm.Filter{
+			Name:   stringToPointer(k),
+			Values: []*string{stringToPointer(v)},
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	instances = make([]*cvm.ReservedInstances, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCvmClient().DescribeReservedInstances(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ReservedInstancesSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.ReservedInstancesSet...)
+		if len(response.Response.ReservedInstancesSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *CvmService) DescribeReservedInstanceConfigs(ctx context.Context, filters map[string]string) (configs []*cvm.ReservedInstancesOffering, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeReservedInstancesOfferingsRequest()
+	request.Filters = make([]*cvm.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := cvm.Filter{
+			Name:   stringToPointer(k),
+			Values: []*string{stringToPointer(v)},
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	configs = make([]*cvm.ReservedInstancesOffering, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCvmClient().DescribeReservedInstancesOfferings(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ReservedInstancesOfferingsSet) < 1 {
+			break
+		}
+		configs = append(configs, response.Response.ReservedInstancesOfferingsSet...)
+		if len(response.Response.ReservedInstancesOfferingsSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
 func flattenCvmTagsMapping(tags []*cvm.Tag) (mapping map[string]string) {
 	mapping = make(map[string]string)
 	for _, tag := range tags {
