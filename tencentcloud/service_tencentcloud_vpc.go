@@ -1739,3 +1739,14 @@ func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
 
 	return nil
 }
+
+func flattenVpnSPDList(spd []*vpc.SecurityPolicyDatabase) (mapping []*map[string]interface{}) {
+	mapping = make([]*map[string]interface{}, 0, len(spd))
+	for _, spg := range spd {
+		item := make(map[string]interface{})
+		item["local_cidr_block"] = spg.LocalCidrBlock
+		item["remote_cidr_block"] = spg.RemoteCidrBlock
+		mapping = append(mapping, &item)
+	}
+	return
+}

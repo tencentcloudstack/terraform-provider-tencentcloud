@@ -78,6 +78,8 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_route_tables
   tencentcloud_vpc_subnets
+  tencentcloud_vpn_customer_gateways
+  tencentcloud_vpn_gateways
 
 AS Resources
   tencentcloud_as_scaling_config
@@ -174,7 +176,8 @@ VPC Resources
   tencentcloud_route_table_entry
   tencentcloud_dnat
   tencentcloud_nat_gateway
-
+  tencentcloud_vpn_customer_gateway
+  tencentcloud_vpn_gateway
 */
 package tencentcloud
 
@@ -274,6 +277,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_placement_groups":            dataSourceTencentCloudPlacementGroups(),
 			"tencentcloud_eips":                        dataSourceTencentCloudEips(),
 			"tencentcloud_key_pairs":                   dataSourceTencentCloudKeyPairs(),
+			"tencentcloud_vpn_customer_gateways":       dataSourceTencentCloudVpnCustomerGateways(),
+			"tencentcloud_vpn_gateways":                dataSourceTencentCloudVpnGateways(),
+			"tencentcloud_vpn_connections":             dataSourceTencentCloudVpnConnections(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -341,6 +347,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_certificate":            resourceTencentCloudSslCertificate(),
 			"tencentcloud_security_group_lite_rule":   resourceTencentCloudSecurityGroupLiteRule(),
 			"tencentcloud_placement_group":            resourceTencentCloudPlacementGroup(),
+			"tencentcloud_vpn_customer_gateway":       resourceTencentCloudVpnCustomerGateway(),
+			"tencentcloud_vpn_gateway":                resourceTencentCloudVpnGateway(),
+			"tencentcloud_vpn_connection":             resourceTencentCloudVpnConnection(),
 		},
 
 		ConfigureFunc: providerConfigure,
