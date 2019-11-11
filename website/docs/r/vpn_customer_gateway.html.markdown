@@ -43,6 +43,6 @@ In addition to all arguments above, the following attributes are exported:
 VPN customer gateway can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_vpn_customer_gateway.foo nat-1asg3t63
+$ terraform import tencentcloud_vpn_customer_gateway.foo cgw-xfqag
 ```
 

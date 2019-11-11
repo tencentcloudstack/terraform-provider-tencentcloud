@@ -107,7 +107,7 @@ func testAccCheckVpnConnectionDestroy(s *terraform.State) error {
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n", logId, err.Error())
 			ee, ok := err.(*errors.TencentCloudSDKError)
 			if !ok {
 				return err
@@ -153,7 +153,7 @@ func testAccCheckVpnConnectionExists(n string) resource.TestCheckFunc {
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 		if len(response.Response.VpnConnectionSet) != 1 {

@@ -370,7 +370,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -422,7 +422,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
@@ -456,7 +456,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		}
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -493,14 +493,14 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 			return retryError(e)
 		}
 		if len(result.Response.VpnConnectionSet) > 0 && *result.Response.VpnConnectionSet[0].State != VPN_STATE_AVAILABLE {
-			return resource.RetryableError(fmt.Errorf("state is not AVAILABLE, wait ..."))
+			return resource.RetryableError(fmt.Errorf("state is not `AVAILABLE`, wait ..."))
 		} else {
 			response = result
 			return nil
 		}
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if len(response.Response.VpnConnectionSet) < 1 {
@@ -710,7 +710,7 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s modify VPN connection failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s modify VPN connection failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
@@ -772,7 +772,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 		if e != nil {
 			if ee, ok := e.(*errors.TencentCloudSDKError); ok {
 				if ee.GetCode() == "UnsupportedOperation.InvalidState" {
-					return resource.RetryableError(fmt.Errorf("state is not ready, wait to be AVAILABLE."))
+					return resource.RetryableError(fmt.Errorf("state is not ready, wait to be `AVAILABLE`."))
 				}
 			}
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -782,7 +782,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete VPN connection failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete VPN connection failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	//to get the status of vpn connection
@@ -795,7 +795,6 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 		} else {
 			//if not, quit
 			if len(result.Response.VpnConnectionSet) == 0 {
-				log.Printf("deleting done")
 				return nil
 			}
 			//else consider delete fail
@@ -803,7 +802,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 		}
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete VPN connection failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete VPN connection failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	return nil

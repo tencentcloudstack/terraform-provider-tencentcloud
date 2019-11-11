@@ -309,7 +309,7 @@ func dataSourceTencentCloudVpnConnectionsRead(d *schema.ResourceData, meta inter
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n", logId, err.Error())
 			return err
 		} else {
 			result = append(result, response.Response.VpnConnectionSet...)
@@ -371,7 +371,7 @@ func dataSourceTencentCloudVpnConnectionsRead(d *schema.ResourceData, meta inter
 	}
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("connection_list", connectionList); e != nil {
-		log.Printf("[CRITAL]%s provider set connection list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set connection list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

@@ -19,7 +19,7 @@ Import
 VPN customer gateway can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_vpn_customer_gateway.foo nat-1asg3t63
+$ terraform import tencentcloud_vpn_customer_gateway.foo cgw-xfqag
 ```
 */
 package tencentcloud
@@ -95,7 +95,7 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create VPN customer gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create VPN customer gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -124,7 +124,7 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 		}
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create VPN customer gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create VPN customer gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -164,7 +164,7 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read VPN customer gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read VPN customer gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if len(response.Response.CustomerGatewaySet) < 1 {
@@ -211,7 +211,7 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s modify VPN customer gateway failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s modify VPN customer gateway failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
@@ -278,7 +278,7 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 		}
 	})
 	if tErr != nil {
-		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n ", logId, tErr.Error())
+		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n", logId, tErr.Error())
 		return tErr
 	}
 
@@ -294,7 +294,7 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete VPN customer gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete VPN customer gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	//to get the status of customer gateway
@@ -319,7 +319,6 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 		} else {
 			//if not, quit
 			if len(result.Response.CustomerGatewaySet) == 0 {
-				log.Printf("deleting done")
 				return nil
 			}
 			//else consider delete fail
@@ -327,7 +326,7 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 		}
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete VPN customer gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete VPN customer gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	return nil

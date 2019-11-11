@@ -34,12 +34,12 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of the nat gateway.",
+				Description: "Name of the NAT gateway.",
 			},
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the nat gateway.",
+				Description: "ID of the NAT gateway.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -51,13 +51,13 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 			"nats": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Information list of the dedicated tunnels.",
+				Description: "Information list of the dedicated nats.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the nat gateway.",
+							Description: "ID of the NAT gateway.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
@@ -67,22 +67,22 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the nat gateway.",
+							Description: "Name of the NAT gateway.",
 						},
 						"state": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "State of the nat gateway.",
+							Description: "State of the NAT gateway.",
 						},
 						"max_concurrent": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The upper limit of concurrent connection of nat gateway, the available values include: 1000000,3000000,10000000. Default is 1000000.",
+							Description: "The upper limit of concurrent connection of NAT gateway, the available values include: 1000000,3000000,10000000. Default is 1000000.",
 						},
 						"bandwidth": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The maximum public network output bandwidth of nat gateway (unit: Mbps), the available values include: 20,50,100,200,500,1000,2000,5000. Default is 100.",
+							Description: "The maximum public network output bandwidth of NAT gateway (unit: Mbps), the available values include: 20,50,100,200,500,1000,2000,5000. Default is 100.",
 						},
 						"assigned_eip_set": {
 							Type:        schema.TypeList,
@@ -93,7 +93,7 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the nat gateway.",
+							Description: "Create time of the NAT gateway.",
 						},
 					},
 				},
@@ -126,24 +126,38 @@ func dataSourceTencentCloudNatGatewaysRead(d *schema.ResourceData, meta interfac
 		}
 		request.Filters = append(request.Filters, filter)
 	}
-	var response *vpc.DescribeNatGatewaysResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGateways(request)
-		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+	offset := uint64(0)
+	request.Offset = &offset
+	result := make([]*vpc.NatGateway, 0)
+	limit := uint64(DEFAULT_LIMIT)
+	for {
+		var response *vpc.DescribeNatGatewaysResponse
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGateways(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s read NAT gateway failed, reason:%s\n ", logId, err.Error())
+			return err
+		} else {
+			result = append(result, response.Response.NatGatewaySet...)
+			if len(response.Response.NatGatewaySet) < DEFAULT_LIMIT {
+				break
+			} else {
+				offset = offset + limit
+				request.Offset = &offset
+			}
 		}
-		response = result
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read nat gateway failed, reason:%s\n ", logId, err.Error())
-		return err
 	}
-	ids := make([]string, 0, len(response.Response.NatGatewaySet))
-	natList := make([]map[string]interface{}, 0, len(response.Response.NatGatewaySet))
-	for _, nat := range response.Response.NatGatewaySet {
+	ids := make([]string, 0, len(result))
+	natList := make([]map[string]interface{}, 0, len(result))
+	for _, nat := range result {
 		mapping := map[string]interface{}{
 			"id":               *nat.NatGatewayId,
 			"vpc_id":           *nat.VpcId,
@@ -159,7 +173,7 @@ func dataSourceTencentCloudNatGatewaysRead(d *schema.ResourceData, meta interfac
 	}
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("nats", natList); e != nil {
-		log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set NAT list fail, reason:%s\n ", logId, e.Error())
 		return e
 	}
 

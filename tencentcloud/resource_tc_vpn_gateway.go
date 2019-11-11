@@ -386,7 +386,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 		}
 	})
 	if tErr != nil {
-		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n ", logId, tErr.Error())
+		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n", logId, tErr.Error())
 		return tErr
 	}
 
@@ -403,7 +403,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete VPN gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete VPN gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	//to get the status of gateway
@@ -428,7 +428,6 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 		} else {
 			//if not, quit
 			if len(result.Response.VpnGatewaySet) == 0 {
-				log.Printf("deleting done")
 				return nil
 			}
 			//else consider delete fail
@@ -436,7 +435,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 		}
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete VPN gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete VPN gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	return nil

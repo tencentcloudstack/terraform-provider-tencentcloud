@@ -147,7 +147,7 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read VPN customer gateway failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s read VPN customer gateway failed, reason:%s\n", logId, err.Error())
 			return err
 		} else {
 			result = append(result, response.Response.CustomerGatewaySet...)
@@ -185,7 +185,7 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 	}
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("gateway_list", gatewayList); e != nil {
-		log.Printf("[CRITAL]%s provider set gateway list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set gateway list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 
