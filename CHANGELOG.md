@@ -1,4 +1,4 @@
-## 1.22.1 (Unreleased)
+## 1.23.0 (Unreleased)
 
 FEATURES:
 
@@ -21,9 +21,6 @@ FEATURES:
 * **New Data Source**: `tencentcloud_cfs_access_rules`
 * **New Data Source**: `tencentcloud_scf_functions`
 * **New Data Source**: `tencentcloud_scf_namespaces`
-* **New Data Source**: `tencentcloud_vpn_gateways`
-* **New Data Source**: `tencentcloud_customer_gateways`
-* **New Data Source**: `tencentcloud_vpn_connections`
 * **New Data Source**: `tencentcloud_scf_logs`
 * **New Resource**: `tencentcloud_cfs_file_system`
 * **New Resource**: `tencentcloud_cfs_access_group`

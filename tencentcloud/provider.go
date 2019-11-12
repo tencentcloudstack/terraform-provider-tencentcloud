@@ -218,6 +218,8 @@ VPC Resources
   tencentcloud_route_table_entry
   tencentcloud_dnat
   tencentcloud_nat_gateway
+
+VPN Resources
   tencentcloud_vpn_customer_gateway
   tencentcloud_vpn_gateway
   tencentcloud_vpn_connection

@@ -64,6 +64,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 			"bandwidth": {
 				Type:         schema.TypeInt,
 				Optional:     true,
+				Default:      5,
 				ValidateFunc: validateAllowedIntValue([]int{5, 10, 20, 50, 100}),
 				Description:  "The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100. Default is 5.",
 			},
