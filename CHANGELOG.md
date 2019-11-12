@@ -1,4 +1,10 @@
 ## 1.22.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_eip` add optional argument `tags`.
+* Data Source: `tencentcloud_eips` add optional argument `tags`.
+
 BUG FIXES:
 * Fixed docs of CAM
 
