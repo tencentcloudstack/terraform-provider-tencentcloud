@@ -1,4 +1,14 @@
 ## 1.22.1 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_vpn_gateways`
+* **New Data Source**: `tencentcloud_customer_gateways`
+* **New Data Source**: `tencentcloud_vpn_connections`
+* **New Resource**: `tencentcloud_vpn_gateway`
+* **New Resource**: `tencentcloud_customer_gateway`
+* **New Resource**: `tencentcloud_vpn_connection`
+
 BUG FIXES:
 * Fixed docs of CAM
 
@@ -20,9 +30,7 @@ FEATURES:
 * **New Resource**: `tencentcloud_cfs_access_rule`
 * **New Resource**: `tencentcloud_scf_function`
 * **New Resource**: `tencentcloud_scf_namespace`
-* **New Resource**: `tencentcloud_vpn_gateway`
-* **New Resource**: `tencentcloud_customer_gateway`
-* **New Resource**: `tencentcloud_vpn_connection`
+
 
 ## 1.21.2 (October 29, 2019)
 

@@ -100,7 +100,6 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 	}
 
 	if response.Response.CustomerGateway == nil {
-		d.SetId("")
 		return fmt.Errorf("VPN customer gateway id is nil")
 	}
 	customerGatewayId := *response.Response.CustomerGateway.CustomerGatewayId
@@ -133,7 +132,7 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:cgw/%s", region, customerGatewayId)
+		resourceName := BuildTagResourceName("vpc", "cgw", region, customerGatewayId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -168,7 +167,8 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 		return err
 	}
 	if len(response.Response.CustomerGatewaySet) < 1 {
-		return fmt.Errorf("VPN customer gateway id is nil")
+		d.SetId("")
+		return nil
 	}
 
 	gateway := response.Response.CustomerGatewaySet[0]
@@ -214,8 +214,6 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 			log.Printf("[CRITAL]%s modify VPN customer gateway failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-	}
-	if d.HasChange("name") {
 		d.SetPartial("name")
 	}
 
@@ -227,7 +225,7 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:cgw/%s", region, customerGatewayId)
+		resourceName := BuildTagResourceName("vpc", "cgw", region, customerGatewayId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
@@ -246,7 +244,7 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 
 	customerGatewayId := d.Id()
 
-	//check the customer gateway is not related with any tunnels
+	//check the customer gateway is not related with any tunnel
 	tRequest := vpc.NewDescribeVpnConnectionsRequest()
 	tRequest.Filters = make([]*vpc.Filter, 0, 1)
 	params := make(map[string]string)
@@ -278,7 +276,7 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 		}
 	})
 	if tErr != nil {
-		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n", logId, tErr.Error())
+		log.Printf("[CRITAL]%s describe VPN connection failed, reason:%s\n", logId, tErr.Error())
 		return tErr
 	}
 

@@ -132,7 +132,7 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 	offset := uint64(0)
 	request.Offset = &offset
 	result := make([]*vpc.CustomerGateway, 0)
-	limit := uint64(DEFAULT_LIMIT)
+	limit := uint64(VPN_DESCRIBE_LIMIT)
 	for {
 		var response *vpc.DescribeCustomerGatewaysResponse
 		//add for cycle and add this to nat too
@@ -151,7 +151,7 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 			return err
 		} else {
 			result = append(result, response.Response.CustomerGatewaySet...)
-			if len(response.Response.CustomerGatewaySet) < 100 {
+			if len(response.Response.CustomerGatewaySet) < VPN_DESCRIBE_LIMIT {
 				break
 			} else {
 				offset = offset + limit
@@ -167,7 +167,7 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 		if err != nil {
 			return err
 		}
-		if tags != nil {
+		if len(tags) > 0 {
 			if !reflect.DeepEqual(respTags, tags) {
 				continue
 			}

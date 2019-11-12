@@ -145,13 +145,12 @@ func dataSourceTencentCloudVpnGateways() *schema.Resource {
 						},
 						"zone": {
 							Type:        schema.TypeString,
-							Required:    true,
-							ForceNew:    true,
+							Computed:    true,
 							Description: "Zone of the VPN gateway.",
 						},
 						"tags": {
 							Type:        schema.TypeMap,
-							Optional:    true,
+							Computed:    true,
 							Description: "A list of tags used to associate different resources.",
 						},
 						"create_time": {
@@ -207,7 +206,7 @@ func dataSourceTencentCloudVpnGatewaysRead(d *schema.ResourceData, meta interfac
 	offset := uint64(0)
 	request.Offset = &offset
 	result := make([]*vpc.VpnGateway, 0)
-	limit := uint64(DEFAULT_LIMIT)
+	limit := uint64(VPN_DESCRIBE_LIMIT)
 	for {
 		var response *vpc.DescribeVpnGatewaysResponse
 		//add for cycle and add this to nat too
@@ -226,7 +225,7 @@ func dataSourceTencentCloudVpnGatewaysRead(d *schema.ResourceData, meta interfac
 			return err
 		} else {
 			result = append(result, response.Response.VpnGatewaySet...)
-			if len(response.Response.VpnGatewaySet) < 100 {
+			if len(response.Response.VpnGatewaySet) < VPN_DESCRIBE_LIMIT {
 				break
 			} else {
 				offset = offset + limit
@@ -242,7 +241,7 @@ func dataSourceTencentCloudVpnGatewaysRead(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
-		if tags != nil {
+		if len(tags) > 0 {
 			if !reflect.DeepEqual(respTags, tags) {
 				continue
 			}

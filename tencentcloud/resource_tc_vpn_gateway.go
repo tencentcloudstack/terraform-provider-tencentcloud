@@ -168,7 +168,6 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	}
 
 	if response.Response.VpnGateway == nil {
-		d.SetId("")
 		return fmt.Errorf("VPN gateway id is nil")
 	}
 	gatewayId := *response.Response.VpnGateway.VpnGatewayId
@@ -206,7 +205,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:vpngw/%s", region, gatewayId)
+		resourceName := BuildTagResourceName("vpc", "vpngw", region, gatewayId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -241,7 +240,8 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 	if len(response.Response.VpnGatewaySet) < 1 {
-		return fmt.Errorf("VPN gateway id is nil")
+		d.SetId("")
+		return nil
 	}
 
 	gateway := response.Response.VpnGatewaySet[0]
@@ -331,7 +331,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:vpngw/%s", region, gatewayId)
+		resourceName := BuildTagResourceName("vpc", "vpngw", region, gatewayId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
@@ -350,7 +350,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 
 	gatewayId := d.Id()
 
-	//check the vpn gateway is not related with any tunnels
+	//check the vpn gateway is not related with any tunnel
 	tRequest := vpc.NewDescribeVpnConnectionsRequest()
 	tRequest.Filters = make([]*vpc.Filter, 0, 2)
 	params := make(map[string]string)
@@ -386,7 +386,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 		}
 	})
 	if tErr != nil {
-		log.Printf("[CRITAL]%s create VPN connection failed, reason:%s\n", logId, tErr.Error())
+		log.Printf("[CRITAL]%s describe VPN connection failed, reason:%s\n", logId, tErr.Error())
 		return tErr
 	}
 

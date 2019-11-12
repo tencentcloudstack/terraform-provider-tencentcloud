@@ -2,6 +2,7 @@
 resource "tencentcloud_vpn_customer_gateway" "example" {
   name              = "example"
   public_ip_address = "3.3.3.3"
+  
   tags = {
     test = "example"
   }
@@ -21,6 +22,7 @@ resource "tencentcloud_vpn_gateway" "example" {
     test = "test"
   }
 }
+
 resource "tencentcloud_vpn_connection" "example" {
   name                       = "example"
   vpc_id                     = "${data.tencentcloud_vpc_instances.example.instance_list.0.vpc_id}"

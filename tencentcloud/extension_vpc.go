@@ -12,7 +12,6 @@ const GATE_WAY_TYPE_NAT = "NAT"
 const GATE_WAY_TYPE_NORMAL_CVM = "NORMAL_CVM"
 const GATE_WAY_TYPE_EIP = "EIP"
 const GATE_WAY_TYPE_CCN = "CCN"
-const DEFAULT_LIMIT = 100
 
 var ALL_GATE_WAY_TYPES = []string{GATE_WAY_TYPE_CVM,
 	GATE_WAY_TYPE_VPN,
@@ -87,8 +86,20 @@ const (
 )
 
 /*
+NAT
+*/
+
+const (
+	NAT_DESCRIBE_LIMIT = 100
+)
+
+/*
 VPN
 */
+
+const (
+	VPN_DESCRIBE_LIMIT = 100
+)
 
 const (
 	VPN_STATE_PENDING   = "PENDING"

@@ -375,7 +375,6 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	}
 
 	if response.Response.VpnConnection == nil {
-		d.SetId("")
 		return fmt.Errorf("VPN connection id is nil")
 	}
 
@@ -428,7 +427,6 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	}
 
 	if vpnConnectionId == "" {
-		d.SetId("")
 		return fmt.Errorf("VPN connection id is nil")
 	}
 
@@ -465,7 +463,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:vpnx/%s", region, vpnConnectionId)
+		resourceName := BuildTagResourceName("vpc", "vpnx", region, vpnConnectionId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -492,19 +490,17 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(e)
 		}
-		if len(result.Response.VpnConnectionSet) > 0 && *result.Response.VpnConnectionSet[0].State != VPN_STATE_AVAILABLE {
-			return resource.RetryableError(fmt.Errorf("state is not `AVAILABLE`, wait ..."))
-		} else {
-			response = result
-			return nil
-		}
+
+		response = result
+		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if len(response.Response.VpnConnectionSet) < 1 {
-		return fmt.Errorf("VPN connection id is nil")
+		d.SetId("")
+		return nil
 	}
 
 	connection := response.Response.VpnConnectionSet[0]
@@ -744,7 +740,7 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:vpnx/%s", region, connectionId)
+		resourceName := BuildTagResourceName("vpc", "vpnx", region, connectionId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
@@ -791,14 +787,26 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(statRequest)
 		if e != nil {
-			return nil
+			ee, ok := e.(*errors.TencentCloudSDKError)
+			if !ok {
+				return retryError(e)
+			}
+			if ee.Code == VPCNotFound {
+				log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return nil
+			} else {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
 		} else {
 			//if not, quit
 			if len(result.Response.VpnConnectionSet) == 0 {
 				return nil
 			}
 			//else consider delete fail
-			return resource.RetryableError(fmt.Errorf("deleting retry"))
+			return resource.RetryableError(fmt.Errorf("describe retry"))
 		}
 	})
 	if err != nil {
