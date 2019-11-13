@@ -2,13 +2,13 @@
 
 FEATURES:
 
+* **New Data Source**: `tencentcloud_images`
 * **New Data Source**: `tencentcloud_vpn_gateways`
 * **New Data Source**: `tencentcloud_customer_gateways`
 * **New Data Source**: `tencentcloud_vpn_connections`
 * **New Resource**: `tencentcloud_vpn_gateway`
 * **New Resource**: `tencentcloud_customer_gateway`
 * **New Resource**: `tencentcloud_vpn_connection`
-* **New Data Source**: `tencentcloud_images`
 * **Provider TencentCloud**: add `security_token` argument
 
 ENHANCEMENTS:
