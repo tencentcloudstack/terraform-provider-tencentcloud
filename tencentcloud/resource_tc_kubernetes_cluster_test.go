@@ -187,6 +187,6 @@ func testAccTkeCluster(key, value string) string {
 	    "%s" = "%s"
 	  }
 	}
-`, DefaultVpcId, DefaultSubnetId, key, value,
+`, defaultVpcId, defaultSubnetId, key, value,
 	)
 }

@@ -1,7 +1,7 @@
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 	"testing"
 
@@ -9,22 +9,21 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudRouteEntry_basic(t *testing.T) {
+func TestAccTencentCloudVpcV2RouteEntryBasic(t *testing.T) {
 	var reId string
-
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
-			testAccPreSetRegion("ap-guangzhou")
 		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckRouteEntryDestroy(&reId),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRouteEntryConfig,
+				Config: testAccVpcRouteEntryV2Config,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckRouteEntryExists("tencentcloud_route_entry.instance", &reId),
-					resource.TestCheckResourceAttr("tencentcloud_route_entry.instance", "next_type", "instance"),
+					testAccCheckRouteEntryExists("tencentcloud_route_entry.foo", &reId),
+					resource.TestCheckResourceAttr("tencentcloud_route_entry.foo", "cidr_block", "10.0.0.0/24"),
+					resource.TestCheckResourceAttr("tencentcloud_route_entry.foo", "next_type", "eip"),
 				),
 			},
 		},
@@ -33,29 +32,49 @@ func TestAccTencentCloudRouteEntry_basic(t *testing.T) {
 
 func testAccCheckRouteEntryDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		conn := testAccProvider.Meta().(*TencentCloudClient).commonConn
-		params, _ := routeIdDecode(*id)
-		params["Action"] = "DescribeRoutes"
-		response, err := conn.SendRequest("vpc", params)
-		if err != nil {
-			return err
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
+		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+
+		route, ok := routeIdDecode(*id)
+		if !ok {
+			return fmt.Errorf("tencentcloud_route_entry read error, id decode faild, id:%v", id)
 		}
-		var jsonresp struct {
-			Code     int    `json:"code"`
-			Message  string `json:"message"`
-			CodeDesc string `json:"codeDesc"`
-			Data     struct {
-				TotalNum int `json:"totalNum"`
-			} `json:"data"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.Data.TotalNum != 1 {
-			return fmt.Errorf("Route entry still exists: %s", *id)
-		}
-		return nil
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			info, has, e := service.DescribeRouteTable(ctx, route["routeTableId"])
+			if e != nil {
+				return retryError(e)
+			}
+			if has == 0 {
+				return nil
+			}
+			if has != 1 {
+				e = fmt.Errorf("one routeTable id get %d routeTable infos", has)
+				return resource.NonRetryableError(e)
+			}
+			for _, v := range info.entryInfos {
+				var nextType string
+				var nextTypeId string
+				for kk, vv := range routeTypeNewMap {
+					if vv == v.nextType {
+						nextType = kk
+					}
+				}
+				if _, ok := routeTypeApiMap[nextType]; ok {
+					nextTypeId = fmt.Sprintf("%d", routeTypeApiMap[nextType])
+				}
+				if v.destinationCidr == route["destinationCidrBlock"] &&
+					nextTypeId == route["nextType"] &&
+					v.nextBub == route["nextHub"] &&
+					v.description == route["description"] {
+					return resource.NonRetryableError(fmt.Errorf("Route entry still exists: %s", *id))
+				}
+			}
+
+			return nil
+		})
+		return err
 	}
 }
 
@@ -70,27 +89,50 @@ func testAccCheckRouteEntryExists(n string, id *string) resource.TestCheckFunc {
 			return fmt.Errorf("No route entry ID is set")
 		}
 
-		conn := testAccProvider.Meta().(*TencentCloudClient).commonConn
-		params, _ := routeIdDecode(rs.Primary.ID)
-		params["Action"] = "DescribeRoutes"
-		response, err := conn.SendRequest("vpc", params)
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), "logId", logId)
+		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+
+		route, ok := routeIdDecode(rs.Primary.ID)
+		if !ok {
+			return fmt.Errorf("tencentcloud_route_entry read error, id decode faild, id:%v", rs.Primary.ID)
+		}
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			info, has, e := service.DescribeRouteTable(ctx, route["routeTableId"])
+			if e != nil {
+				return retryError(e)
+			}
+			if has == 0 {
+				return resource.NonRetryableError(fmt.Errorf("Route entry not found: %s", rs.Primary.ID))
+			}
+			if has != 1 {
+				e = fmt.Errorf("one routeTable id get %d routeTable infos", has)
+				return resource.NonRetryableError(e)
+			}
+			for _, v := range info.entryInfos {
+				var nextType string
+				var nextTypeId string
+				for kk, vv := range routeTypeNewMap {
+					if vv == v.nextType {
+						nextType = kk
+					}
+				}
+				if _, ok := routeTypeApiMap[nextType]; ok {
+					nextTypeId = fmt.Sprintf("%d", routeTypeApiMap[nextType])
+				}
+				if v.destinationCidr == route["destinationCidrBlock"] &&
+					nextTypeId == route["nextType"] &&
+					v.nextBub == route["nextHub"] &&
+					v.description == route["description"] {
+					return nil
+				}
+			}
+
+			return resource.NonRetryableError(fmt.Errorf("Route entry not found: %s", rs.Primary.ID))
+		})
 		if err != nil {
 			return err
-		}
-		var jsonresp struct {
-			Code     int    `json:"code"`
-			Message  string `json:"message"`
-			CodeDesc string `json:"codeDesc"`
-			Data     struct {
-				TotalNum int `json:"totalNum"`
-			} `json:"data"`
-		}
-		err = json.Unmarshal([]byte(response), &jsonresp)
-		if err != nil {
-			return err
-		}
-		if jsonresp.Data.TotalNum != 2 {
-			return fmt.Errorf("Route entry not found: %s", rs.Primary.ID)
 		}
 
 		*id = rs.Primary.ID
@@ -98,45 +140,31 @@ func testAccCheckRouteEntryExists(n string, id *string) resource.TestCheckFunc {
 	}
 }
 
-const testAccRouteEntryConfig = `
-data "tencentcloud_image" "foo" {
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
+const testAccVpcRouteEntryV2Config = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-    name = "ci-temp-test"
-    cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "foo" {
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  name              = "terraform test subnet"
-  cidr_block        = "10.0.12.0/24"
-  availability_zone = "ap-guangzhou-3"
+  name       = "${var.instance_name}"
+  cidr_block = "${var.vpc_cidr}"
 }
 
 resource "tencentcloud_route_table" "foo" {
-    vpc_id = "${tencentcloud_vpc.foo.id}"
-    name = "ci-temp-test-rt"
-}
-
-resource "tencentcloud_instance" "foo" {
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "${data.tencentcloud_image.foo.image_id}"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  subnet_id         = "${tencentcloud_subnet.foo.id}"
-  instance_type     = "S2.SMALL2"
-  system_disk_type  = "CLOUD_SSD"
-}
-
-resource "tencentcloud_route_entry" "instance" {
+  name   = "${var.instance_name}"
   vpc_id = "${tencentcloud_vpc.foo.id}"
-  route_table_id = "${tencentcloud_route_table.foo.id}"
-  cidr_block     = "10.4.4.0/24"
-  next_type      = "instance"
-  next_hub       = "${tencentcloud_instance.foo.private_ip}"
+}
+
+resource "tencentcloud_subnet" "foo" {
+  name              = "${var.instance_name}"
+  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  availability_zone = "${var.availability_zone}"
+  cidr_block        = "${var.subnet_cidr}"
+  is_multicast      = false
+  route_table_id    = "${tencentcloud_route_table.foo.id}"
+}
+
+resource "tencentcloud_route_entry" "foo" {
+  vpc_id        	= "${tencentcloud_vpc.foo.id}"
+  route_table_id 	= "${tencentcloud_route_table.foo.id}"
+  cidr_block 		= "10.0.0.0/24"
+  next_type 		= "eip"
+  next_hub  		= "0"
 }
 `

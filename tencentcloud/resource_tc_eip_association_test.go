@@ -10,55 +10,52 @@ import (
 )
 
 func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
+	id := "tencentcloud_eip_association.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckEipAssociationDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccEipAssociationWithInstance,
+				Config: testAccTencentCloudEipAssociationWithInstance,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEipAssociationExists("tencentcloud_eip_association.foo"),
-					resource.TestCheckResourceAttrSet("tencentcloud_eip.my_eip", "public_ip"),
-					resource.TestCheckResourceAttr("tencentcloud_eip.my_eip", "name", "tf_auto_test"),
-					resource.TestCheckResourceAttr("tencentcloud_eip.my_eip", "status", "UNBIND"),
-
-					resource.TestCheckResourceAttrSet("tencentcloud_eip_association.foo", "eip_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_eip_association.foo", "instance_id"),
-					resource.TestCheckNoResourceAttr("tencentcloud_eip_association.foo", "network_interface_id"),
-					resource.TestCheckNoResourceAttr("tencentcloud_eip_association.foo", "private_ip"),
+					testAccCheckEipAssociationExists(id),
+					resource.TestCheckResourceAttrSet(id, "eip_id"),
+					resource.TestCheckResourceAttrSet(id, "instance_id"),
+					resource.TestCheckNoResourceAttr(id, "network_interface_id"),
+					resource.TestCheckNoResourceAttr(id, "private_ip"),
+					resource.TestCheckResourceAttrSet("tencentcloud_eip.foo", "public_ip"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "name", defaultInsName),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "status", "UNBIND"),
 				),
 			},
 		},
 	})
 }
 
-/*
 func TestAccTencentCloudEipAssociationWithNetworkInterface(t *testing.T) {
+	id := "tencentcloud_eip_association.foo"
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckEipAssociationDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccEipAssociationWithNetworkInterface,
+				Config: testAccTencentCloudEipAssociationWithNetworkInterface,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEipAssociationExists("tencentcloud_eip_association.foo"),
-					resource.TestCheckResourceAttrSet("tencentcloud_eip.my_eip", "public_ip"),
-					resource.TestCheckResourceAttr("tencentcloud_eip.my_eip", "name", "tf_auto_test"),
-					resource.TestCheckResourceAttr("tencentcloud_eip.my_eip", "status", "UNBIND"),
-
-					resource.TestCheckResourceAttrSet("tencentcloud_eip_association.foo", "eip_id"),
-					resource.TestCheckNoResourceAttr("tencentcloud_eip_association.foo", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_eip_association.foo", "network_interface_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_eip_association.foo", "private_ip"),
+					testAccCheckEipAssociationExists(id),
+					resource.TestCheckResourceAttrSet(id, "eip_id"),
+					resource.TestCheckResourceAttrSet(id, "network_interface_id"),
+					resource.TestCheckResourceAttrSet(id, "private_ip"),
+					resource.TestCheckNoResourceAttr(id, "instance_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_eip.foo", "public_ip"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "name", defaultInsName),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "status", "UNBIND"),
 				),
 			},
 		},
 	})
 }
-*/
 
 func testAccCheckEipAssociationDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
@@ -124,62 +121,48 @@ func testAccCheckEipAssociationExists(n string) resource.TestCheckFunc {
 				return err
 			}
 		}
-		if eip == nil || eip.InstanceId == nil || *eip.InstanceId != associationId.InstanceId {
+		if eip == nil || (eip.InstanceId != nil && *eip.InstanceId != associationId.InstanceId) {
 			return fmt.Errorf("eip %s is not found", associationId.EipId)
 		}
 		return nil
 	}
 }
 
-const testAccEipAssociationWithInstance = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
+const testAccTencentCloudEipAssociationWithInstance = defaultInstanceVariable + `
+resource "tencentcloud_eip" "foo" {
+  name = "${var.instance_name}"
 }
 
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-resource "tencentcloud_instance" "my_instance" {
-  instance_name     = "terraform_automation_test_kuruk"
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type  = "CLOUD_SSD"
-}
-
-resource "tencentcloud_eip" "my_eip" {
-  name = "tf_auto_test"
+resource "tencentcloud_instance" "foo" {
+  instance_name      = "${var.instance_name}"
+  availability_zone  = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id           = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type      = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  system_disk_type   = "CLOUD_PREMIUM"
 }
 
 resource "tencentcloud_eip_association" "foo" {
-  eip_id      = "${tencentcloud_eip.my_eip.id}"
-  instance_id = "${tencentcloud_instance.my_instance.id}"
+  eip_id      = "${tencentcloud_eip.foo.id}"
+  instance_id = "${tencentcloud_instance.foo.id}"
 }
 `
 
-/*
-// TODO remove hard code and make network_interface_id as a resource
-const testAccEipAssociationWithNetworkInterface = `
-resource "tencentcloud_eip" "my_eip" {
-  name = "tf_auto_test"
+const testAccTencentCloudEipAssociationWithNetworkInterface = defaultVpcVariable + `
+resource "tencentcloud_eip" "foo" {
+  name = "${var.instance_name}"
+}
+
+resource "tencentcloud_eni" "foo" {
+  name        = "${var.instance_name}"
+  vpc_id      = "${var.vpc_id}"
+  subnet_id   = "${var.subnet_id}"
+  description = "${var.instance_name}"
+  ipv4_count  = 1
 }
 
 resource "tencentcloud_eip_association" "foo" {
-  eip_id      = "${tencentcloud_eip.my_eip.id}"
-  network_interface_id = "eni-auqmq7hp"
-  private_ip = "10.0.1.6"
+  eip_id               = "${tencentcloud_eip.foo.id}"
+  network_interface_id = "${tencentcloud_eni.foo.id}"
+  private_ip           = "${tencentcloud_eni.foo.ipv4_info.0.ip}"
 }
 `
-*/

@@ -73,6 +73,12 @@ func TestAccTencentCloudRedisInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "status", "online"),
 				),
 			},
+			{
+				ResourceName:            "tencentcloud_redis_instance.redis_instance_test",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"password"},
+			},
 		},
 	})
 }

@@ -25,28 +25,29 @@ resource "tencentcloud_eni" "foo" {
   ipv4_count  = 1
 }
 
-data "tencentcloud_image" "my_favorite_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
+data "tencentcloud_images" "my_favorate_image" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "centos"
 }
 
-data "tencentcloud_instance_types" "my_favorite_instance_types" {
+data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S2"]
+    values = ["S3"]
   }
+
   cpu_core_count = 1
   memory_size    = 1
 }
 
+data "tencentcloud_availability_zones" "my_favorate_zones" {
+}
+
 resource "tencentcloud_instance" "foo" {
   instance_name            = "ci-test-eni-attach"
-  availability_zone        = "ap-guangzhou-3"
-  image_id                 = "${data.tencentcloud_image.my_favorite_image.image_id}"
-  instance_type            = "${data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type}"
+  availability_zone        = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
+  image_id                 = "${data.tencentcloud_images.my_favorate_image.images.0.image_id}"
+  instance_type            = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   system_disk_type         = "CLOUD_PREMIUM"
   disable_security_service = true
   disable_monitor_service  = true

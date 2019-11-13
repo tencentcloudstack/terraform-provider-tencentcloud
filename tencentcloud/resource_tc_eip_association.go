@@ -1,5 +1,5 @@
 /*
-Provides an eip resource associated with other resource like CVM or ENI.
+Provides an eip resource associated with other resource like CVM, ENI and CLB.
 
 ~> **NOTE:** Please DO NOT define `allocate_public_ip` in `tencentcloud_instance` resource when using `tencentcloud_eip_association`.
 
@@ -61,7 +61,7 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 					"private_ip",
 				},
 				ValidateFunc: validateStringLengthInRange(1, 25),
-				Description:  "The instance id going to bind with the eip. This field is conflict with `network_interface_id` and `private_ip fields`.",
+				Description:  "The CVM or CLB instance id going to bind with the eip. This field is conflict with `network_interface_id` and `private_ip fields`.",
 			},
 			"network_interface_id": {
 				Type:         schema.TypeString,
@@ -193,7 +193,7 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 			if eip == nil {
 				return resource.NonRetryableError(fmt.Errorf("eip is not found"))
 			}
-			if *eip.AddressStatus == EIP_STATUS_BIND {
+			if *eip.AddressStatus == EIP_STATUS_BIND_ENI {
 				return nil
 			}
 			return resource.RetryableError(fmt.Errorf("wait for binding success: %s", *eip.AddressStatus))

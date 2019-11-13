@@ -10,6 +10,8 @@ import (
 )
 
 func TestAccTencentCloudCbsStorage_basic(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -35,6 +37,8 @@ func TestAccTencentCloudCbsStorage_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudCbsStorage_full(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

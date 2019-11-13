@@ -36,8 +36,8 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	appendMessage := []byte(fmt.Sprintf(
 		",(host %+v,action:%+v,region:%+v)",
 		request.Header["Host"],
-		request.Header["X-TC-Action"],
-		request.Header["X-TC-Region"],
+		request.Header["X-Tc-Action"],
+		request.Header["X-Tc-Region"],
 	))
 
 	inBytes = append(inBytes, appendMessage...)

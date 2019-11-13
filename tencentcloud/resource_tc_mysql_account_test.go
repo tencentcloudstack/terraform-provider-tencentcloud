@@ -18,7 +18,7 @@ func TestAccTencentCloudMysqlAccountResource(t *testing.T) {
 		CheckDestroy: testAccCheckMysqlAccountDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMysqlAccount(MysqlInstanceCommonTestCase),
+				Config: testAccMysqlAccount(mysqlInstanceCommonTestCase),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlAccountExists("tencentcloud_mysql_account.mysql_account"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account.mysql_account", "mysql_id"),

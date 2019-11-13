@@ -10,6 +10,8 @@ import (
 )
 
 func TestAccTencentCloudCbsStorageAttachment(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -18,9 +20,9 @@ func TestAccTencentCloudCbsStorageAttachment(t *testing.T) {
 			{
 				Config: testAccCbsStorageAttachmentConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCbsStorageAttachmentExists("tencentcloud_cbs_storage_attachment.my_attachment"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cbs_storage_attachment.my_attachment", "storage_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cbs_storage_attachment.my_attachment", "instance_id"),
+					testAccCheckCbsStorageAttachmentExists("tencentcloud_cbs_storage_attachment.foo"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cbs_storage_attachment.foo", "storage_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cbs_storage_attachment.foo", "instance_id"),
 				),
 			},
 		},
@@ -80,32 +82,16 @@ func testAccCheckCbsStorageAttachmentExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCbsStorageAttachmentConfig = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-resource "tencentcloud_cbs_storage" "my_storage" {
-  availability_zone = "ap-guangzhou-3"
+const testAccCbsStorageAttachmentConfig = instanceCommonTestCase + `
+resource "tencentcloud_cbs_storage" "foo" {
+  availability_zone = "${var.availability_zone}"
   storage_size      = 100
   storage_type      = "CLOUD_PREMIUM"
-  storage_name      = "tf-test-storage"
+  storage_name      = "${var.instance_name}"
 }
 
-resource "tencentcloud_instance" "my_instance" {
-  instance_name 	= "tf-test-instance"
-  availability_zone = "ap-guangzhou-3"
-  image_id      	= "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type 	= "S3.SMALL1"
-  system_disk_type  = "CLOUD_PREMIUM"
-}
-
-resource "tencentcloud_cbs_storage_attachment" "my_attachment" {
-  storage_id  = "${tencentcloud_cbs_storage.my_storage.id}"
-  instance_id = "${tencentcloud_instance.my_instance.id}"
+resource "tencentcloud_cbs_storage_attachment" "foo" {
+  storage_id  = "${tencentcloud_cbs_storage.foo.id}"
+  instance_id = "${tencentcloud_instance.default.id}"
 }
 `

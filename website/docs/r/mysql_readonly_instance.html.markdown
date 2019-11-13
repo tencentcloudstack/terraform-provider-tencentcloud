@@ -39,7 +39,10 @@ The following arguments are supported:
 * `master_instance_id` - (Required, ForceNew) Indicates the master instance ID of recovery instances.
 * `mem_size` - (Required) Memory size (in MB).
 * `volume_size` - (Required) Disk size (in GB).
+* `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepay instance.
 * `intranet_port` - (Optional) Public access port, rang form 1024 to 65535 and default value is 3306.
+* `pay_type` - (Optional, ForceNew) Pay type of instance, 0: prepay, 1: postpay. NOTES: Only supported prepay instance.
+* `period` - (Optional) Period of instance. NOTES: Only supported prepay instance.
 * `security_groups` - (Optional) Security groups to use.
 * `subnet_id` - (Optional) Private network ID. If vpc_id is set, this value is required.
 * `tags` - (Optional) Instance tags.

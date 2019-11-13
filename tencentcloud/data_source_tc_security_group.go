@@ -14,14 +14,11 @@ data "tencentcloud_security_group" "sglab" {
 package tencentcloud
 
 import (
-	"encoding/json"
-	"errors"
+	"context"
 	"fmt"
-	"log"
-	"reflect"
-	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 )
 
 func dataSourceTencentCloudSecurityGroup() *schema.Resource {
@@ -30,23 +27,22 @@ func dataSourceTencentCloudSecurityGroup() *schema.Resource {
 		Read:               dataSourceTencentCloudSecurityGroupRead,
 		Schema: map[string]*schema.Schema{
 			"security_group_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "ID of the security group to be queried.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"name"},
+				Description:   "ID of the security group to be queried. Conflict with `name`.",
 			},
 			"name": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ValidateFunc: validateStringLengthInRange(2, 60),
-				Description:  "Name of the security group to be queried.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ValidateFunc:  validateStringLengthInRange(1, 60),
+				ConflictsWith: []string{"security_group_id"},
+				Description:   "Name of the security group to be queried. Conflict with `security_group_id`.",
 			},
 			"description": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ValidateFunc: validateStringLengthInRange(2, 100),
-				Description:  "Description of the security group.",
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Description of the security group.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -59,73 +55,58 @@ func dataSourceTencentCloudSecurityGroup() *schema.Resource {
 				Description: "Number of security group binding resources.",
 			},
 			"project_id": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Project ID of the security group.",
 			},
 		},
 	}
 }
 
-func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action": "DescribeSecurityGroupEx",
-		"sgId":   d.Get("security_group_id").(string),
+func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_security_group.read")()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+
+	var (
+		sgId   *string
+		sgName *string
+	)
+
+	if raw, ok := d.GetOk("security_group_id"); ok {
+		sgId = common.StringPtr(raw.(string))
 	}
 
-	log.Printf("[DEBUG] resource_tc_security_group read params:%v", params)
+	if raw, ok := d.GetOk("name"); ok {
+		sgName = common.StringPtr(raw.(string))
+	}
 
-	response, err := client.SendRequest("dfw", params)
+	sgs, err := vpcService.DescribeSecurityGroups(ctx, sgId, sgName, nil, map[string]string{})
 	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group read client.SendRequest error:%v", err)
 		return err
 	}
 
-	var jsonresp struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-		Data    struct {
-			TotalNum int `json:"totalNum"`
-			Detail   []struct {
-				SgId             string      `json:"sgId"`
-				SgName           string      `json:"sgName"`
-				SgRemark         string      `json:"sgRemark"`
-				BeAssociateCount int         `json:"beAssociateCount"`
-				CreateTime       string      `json:"createTime"`
-				ProjectId        interface{} `json:"projectId"`
-			}
-		}
+	if len(sgs) == 0 {
+		return fmt.Errorf("security group security_group_id=%s, name=%s not found", *sgId, *sgName)
 	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
+
+	sg := sgs[0]
+	in, out, _, err := vpcService.DescribeSecurityGroupPolices(ctx, *sg.SecurityGroupId)
 	if err != nil {
-		log.Printf("[ERROR] resource_tc_security_group read json.Unmarshal error:%v", err)
 		return err
 	}
-	if jsonresp.Code != 0 {
-		log.Printf("[ERROR] resource_tc_security_group read error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
-		return errors.New(jsonresp.Message)
-	} else if jsonresp.Data.TotalNum <= 0 || len(jsonresp.Data.Detail) <= 0 {
-		return errors.New("Security group not found")
-	}
 
-	sg := jsonresp.Data.Detail[0]
+	d.SetId(*sg.SecurityGroupId)
+	d.Set("security_group_id", sg.SecurityGroupId)
+	d.Set("name", sg.SecurityGroupName)
+	d.Set("description", sg.SecurityGroupDesc)
+	d.Set("create_time", sg.CreatedTime)
+	d.Set("be_associate_count", len(in)+len(out))
+	d.Set("project_id", sg.ProjectId)
 
-	d.SetId(sg.SgId)
-	d.Set("security_group_id", sg.SgId)
-	d.Set("name", sg.SgName)
-	d.Set("description", sg.SgRemark)
-	d.Set("create_time", sg.CreateTime)
-	d.Set("be_associate_count", sg.BeAssociateCount)
-
-	if "string" == reflect.TypeOf(sg.ProjectId).String() {
-		if intVal, err := strconv.ParseInt(sg.ProjectId.(string), 10, 64); err != nil {
-			return fmt.Errorf("create security_group project ParseInt  error ,%s", err.Error())
-		} else {
-			d.Set("project_id", int(intVal))
-		}
-
-	} else {
-		d.Set("project_id", sg.ProjectId.(int))
-	}
 	return nil
 }

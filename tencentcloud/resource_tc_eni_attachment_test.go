@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform/terraform"
 )
 
-func TestAccTencentCloudEniAttachment_basic(t *testing.T) {
+func TestAccTencentCloudEniAttachmentBasic(t *testing.T) {
 	var (
 		eniId string
 		cvmId string
@@ -104,63 +104,17 @@ func testAccCheckEniAttachmentDestroy(eniId *string) resource.TestCheckFunc {
 	}
 }
 
-const testAccEniAttachmentBasic = `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_vpc" "foo" {
-  name       = "ci-test-eni-vpc"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "foo" {
-  availability_zone = "${var.availability_zone}"
-  name              = "ci-test-eni-subnet"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  cidr_block        = "10.0.20.0/28"
-  is_multicast      = false
-}
-
+const testAccEniAttachmentBasic = instanceCommonTestCase + `
 resource "tencentcloud_eni" "foo" {
-  name        = "ci-test-eni"
-  vpc_id      = "${tencentcloud_vpc.foo.id}"
-  subnet_id   = "${tencentcloud_subnet.foo.id}"
-  description = "eni desc"
+  name        = "${var.instance_name}"
+  vpc_id      = "${var.vpc_id}"
+  subnet_id   = "${var.subnet_id}"
+  description = "${var.instance_name}"
   ipv4_count  = 1
-}
-
-data "tencentcloud_image" "my_favorite_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorite_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 1
-}
-
-resource "tencentcloud_instance" "foo" {
-  instance_name            = "ci-test-eni-attach"
-  availability_zone        = "ap-guangzhou-3"
-  image_id                 = "${data.tencentcloud_image.my_favorite_image.image_id}"
-  instance_type            = "${data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type}"
-  system_disk_type         = "CLOUD_PREMIUM"
-  disable_security_service = true
-  disable_monitor_service  = true
-  vpc_id                   = "${tencentcloud_vpc.foo.id}"
-  subnet_id                = "${tencentcloud_subnet.foo.id}"
 }
 
 resource "tencentcloud_eni_attachment" "foo" {
   eni_id      = "${tencentcloud_eni.foo.id}"
-  instance_id = "${tencentcloud_instance.foo.id}"
+  instance_id = "${tencentcloud_instance.default.id}"
 }
 `

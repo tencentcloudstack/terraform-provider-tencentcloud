@@ -34,6 +34,25 @@ func TestAccTencentCloudEip_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccEipBasicWithTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEipExists("tencentcloud_eip.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "status", "UNBIND"),
+					resource.TestCheckResourceAttrSet("tencentcloud_eip.foo", "public_ip"),
+				),
+			},
+			{
+				Config: testAccEipBasicWithNewTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEipExists("tencentcloud_eip.foo"),
+					resource.TestCheckNoResourceAttr("tencentcloud_eip.foo", "tags.test"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "tags.abc", "abc"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "status", "UNBIND"),
+					resource.TestCheckResourceAttrSet("tencentcloud_eip.foo", "public_ip"),
+				),
+			},
+			{
 				Config: testAccEipBasicWithoutName,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEipExists("tencentcloud_eip.bar"),
@@ -179,6 +198,26 @@ resource "tencentcloud_eip" "foo" {
 const testAccEipBasicWithNewName = `
 resource "tencentcloud_eip" "foo" {
   name = "new_name"
+}
+`
+
+const testAccEipBasicWithTags = `
+resource "tencentcloud_eip" "foo" {
+  name = "new_name"
+
+  tags = {
+    "test" = "test"
+  }
+}
+`
+
+const testAccEipBasicWithNewTags = `
+resource "tencentcloud_eip" "foo" {
+  name = "new_name"
+
+  tags = {
+    "abc" = "abc"
+  }
 }
 `
 

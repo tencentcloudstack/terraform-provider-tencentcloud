@@ -7,13 +7,13 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 )
 
-func TestAccTencentCloudImagesDataSource_filter(t *testing.T) {
+func TestAccTencentCloudDataSourceImageBase(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudImagesDataSourceConfigFilter,
+				Config: testAccTencentCloudDataSourceImageBase,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.public_image"),
 					resource.TestMatchResourceAttr("data.tencentcloud_image.public_image", "image_id", regexp.MustCompile("^img-")),
@@ -21,40 +21,39 @@ func TestAccTencentCloudImagesDataSource_filter(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTencentCloudImagesDataSourceConfigFilterWithOsName,
+				Config: testAccTencentCloudDataSourceImageBaseWithFilter,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.public_image"),
 					resource.TestMatchResourceAttr("data.tencentcloud_image.public_image", "image_id", regexp.MustCompile("^img-")),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_image.public_image", "image_name"),
 				),
 			},
 			{
-				Config: testAccTencentCloudImagesDataSourceConfigFilterWithImageNameRegex,
+				Config: testAccTencentCloudDataSourceImageBaseWithOsName,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.public_image"),
 					resource.TestMatchResourceAttr("data.tencentcloud_image.public_image", "image_id", regexp.MustCompile("^img-")),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_image.public_image", "image_name"),
 				),
 			},
-			//// NOTE this test case is dependent in the account which already created some private images
-			//{
-			//	Config: testAccTencentCloudImagesDataSourceConfigFilterWithPrivateImage,
-			//	Check: resource.ComposeTestCheckFunc(
-			//		testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.private_image"),
-			//		resource.TestMatchResourceAttr("data.tencentcloud_image.private_image", "image_id", regexp.MustCompile("^img-")),
-			//	),
-			//},
-			//// NOTE this test case is dependent in the account which already created some private images
-			//{
-			//	Config: testAccTencentCloudImagesDataSourceConfigFilterWithShareImageAndOsName,
-			//	Check: resource.ComposeTestCheckFunc(
-			//		testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.private_image"),
-			//		resource.TestMatchResourceAttr("data.tencentcloud_image.private_image", "image_id", regexp.MustCompile("^img-")),
-			//	),
-			//},
+			{
+				Config: testAccTencentCloudDataSourceImageBaseWithImageNameRegex,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_image.public_image"),
+					resource.TestMatchResourceAttr("data.tencentcloud_image.public_image", "image_id", regexp.MustCompile("^img-")),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_image.public_image", "image_name"),
+				),
+			},
 		},
 	})
 }
 
-const testAccTencentCloudImagesDataSourceConfigFilter = `
+const testAccTencentCloudDataSourceImageBase = `
+data "tencentcloud_image" "public_image" {
+}
+`
+
+const testAccTencentCloudDataSourceImageBaseWithFilter = `
 data "tencentcloud_image" "public_image" {
   filter {
     name   = "image-type"
@@ -63,9 +62,10 @@ data "tencentcloud_image" "public_image" {
 }
 `
 
-const testAccTencentCloudImagesDataSourceConfigFilterWithOsName = `
+const testAccTencentCloudDataSourceImageBaseWithOsName = `
 data "tencentcloud_image" "public_image" {
-  os_name = "CentOS 7.5 64位"
+  os_name = "CentOS 7.5"
+
   filter {
     name   = "image-type"
     values = ["PUBLIC_IMAGE"]
@@ -73,34 +73,13 @@ data "tencentcloud_image" "public_image" {
 }
 `
 
-const testAccTencentCloudImagesDataSourceConfigFilterWithImageNameRegex = `
+const testAccTencentCloudDataSourceImageBaseWithImageNameRegex = `
 data "tencentcloud_image" "public_image" {
   image_name_regex = "^CentOS\\s+7\\.5\\s+64\\w*"
+
   filter {
     name   = "image-type"
     values = ["PUBLIC_IMAGE"]
   }
 }
 `
-
-/*
-const testAccTencentCloudImagesDataSourceConfigFilterWithPrivateImage = `
-data "tencentcloud_image" "private_image" {
-  image_name_regex = "^batch-tensorflow"
-  filter {
-    name   = "image-type"
-    values = ["PRIVATE_IMAGE"]
-  }
-}
-`
-
-const testAccTencentCloudImagesDataSourceConfigFilterWithShareImageAndOsName = `
-data "tencentcloud_image" "private_image" {
-  os_name = "ubuntu"
-  filter {
-    name   = "image-type"
-    values = ["SHARED_IMAGE"]
-  }
-}
-`
-*/

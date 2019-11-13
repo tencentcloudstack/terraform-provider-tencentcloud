@@ -1622,14 +1622,17 @@ func (me *VpcService) DescribeEipById(ctx context.Context, eipId string) (eip *v
 	return
 }
 
-func (me *VpcService) DescribeEipByFilter(ctx context.Context, filters map[string]string) (eips []*vpc.Address, errRet error) {
+func (me *VpcService) DescribeEipByFilter(ctx context.Context, filters map[string][]string) (eips []*vpc.Address, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeAddressesRequest()
 	request.Filters = make([]*vpc.Filter, 0, len(filters))
 	for k, v := range filters {
 		filter := &vpc.Filter{
 			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Values: []*string{},
+		}
+		for _, vv := range v {
+			filter.Values = append(filter.Values, stringToPointer(vv))
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -2466,4 +2469,15 @@ func waitEniReady(ctx context.Context, id string, client *vpc.Client, wantIpv4s 
 	}
 
 	return nil
+}
+
+func flattenVpnSPDList(spd []*vpc.SecurityPolicyDatabase) (mapping []*map[string]interface{}) {
+	mapping = make([]*map[string]interface{}, 0, len(spd))
+	for _, spg := range spd {
+		item := make(map[string]interface{})
+		item["local_cidr_block"] = spg.LocalCidrBlock
+		item["remote_cidr_block"] = spg.RemoteCidrBlock
+		mapping = append(mapping, &item)
+	}
+	return
 }
