@@ -41,8 +41,8 @@ resource "tencentcloud_clb_listener" "HTTPS_listener" {
   port                       = "80"
   protocol                   = "HTTPS"
   certificate_ssl_mode       = "MUTUAL"
-  certificate_id             = "VjAYq9xc"
-  certificate_ca_id          = "VfqcL1ME"
+  certificate_id             = "VjANRdz8"
+  certificate_ca_id          = "VfqO4zkB"
   sni_switch                 = true
 }
 ```
@@ -56,8 +56,8 @@ resource "tencentcloud_clb_listener" "TCPSSL_listener" {
   port                       = "80"
   protocol                   = "TCP_SSL"
   certificate_ssl_mode       = "MUTUAL"
-  certificate_id             = "VjAYq9xc"
-  certificate_ca_id          = "VfqcL1ME"
+  certificate_id             = "VjANRdz8"
+  certificate_ca_id          = "VfqO4zkB"
   health_check_switch        = true
   health_check_time_out      = 2
   health_check_interval_time = 5

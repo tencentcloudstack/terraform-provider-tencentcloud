@@ -498,7 +498,8 @@ resource "tencentcloud_scf_function" "foo" {
 }
 `
 
-var testAccScfFunctionUpdate = fmt.Sprintf(`
+var testAccScfFunctionUpdate = fmt.Sprintf(
+	defaultVpcVariable+`
 resource "tencentcloud_scf_function" "foo" {
   name        = "ci-test-function"
   handler     = "second.do_it"
@@ -511,8 +512,8 @@ resource "tencentcloud_scf_function" "foo" {
   }
 
   runtime   = "Python2.7"
-  vpc_id    = "%s"
-  subnet_id = "%s"
+  vpc_id    = "${var.vpc_id}"
+  subnet_id = "${var.subnet_id}"
   l5_enable = true
 
   tags = {
@@ -521,7 +522,7 @@ resource "tencentcloud_scf_function" "foo" {
 
   zip_file = "%s"
 }
-`, DefaultVpcId, DefaultSubnetId, "%s")
+`, "%s")
 
 func testAccScfFunctionCosCode(codeSource string) string {
 	return fmt.Sprintf(`

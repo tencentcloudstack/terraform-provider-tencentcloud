@@ -20,7 +20,7 @@ func TestAccTencentCloudMysqlAccountPrivilege(t *testing.T) {
 		CheckDestroy: testAccMysqlAccountPrivilegeDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMysqlAccountPrivilege(MysqlInstanceCommonTestCase),
+				Config: testAccMysqlAccountPrivilege(mysqlInstanceCommonTestCase),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccMysqlAccountPrivilegeExists("tencentcloud_mysql_account_privilege.mysql_account_privilege"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account_privilege.mysql_account_privilege", "mysql_id"),
@@ -35,7 +35,7 @@ func TestAccTencentCloudMysqlAccountPrivilege(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMysqlAccountPrivilegeUpdate(MysqlInstanceCommonTestCase),
+				Config: testAccMysqlAccountPrivilegeUpdate(mysqlInstanceCommonTestCase),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccMysqlAccountPrivilegeExists("tencentcloud_mysql_account_privilege.mysql_account_privilege"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account_privilege.mysql_account_privilege", "mysql_id"),

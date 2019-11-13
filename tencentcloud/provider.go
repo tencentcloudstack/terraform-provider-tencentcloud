@@ -1,10 +1,10 @@
 /*
-The TencentCloud provider is used to interact with many resources supported by TencentCloud. The provider needs to be configured with the proper credentials before it can be used.
-
-The TencentCloud provider is used to interact with the many resources supported by [TencentCloud](https://intl.cloud.tencent.com).
+The TencentCloud provider is used to interact with many resources supported by [TencentCloud](https://intl.cloud.tencent.com).
 The provider needs to be configured with the proper credentials before it can be used.
 
-Use the navigation to the left to read about the available resources.
+Use the navigation on the left to read about the available resources.
+
+-> **Note:** From version 1.9.0 (June 18, 2019), the provider start to support Terraform 0.12.x.
 
 Example Usage
 
@@ -54,8 +54,8 @@ Data Sources
   tencentcloud_dc_gateway_instances
   tencentcloud_dcx_instances
   tencentcloud_dnats
-  tencentcloud_eip
   tencentcloud_eips
+  tencentcloud_eip
   tencentcloud_enis
   tencentcloud_gaap_certificates
   tencentcloud_gaap_http_domains
@@ -66,6 +66,7 @@ Data Sources
   tencentcloud_gaap_realservers
   tencentcloud_gaap_security_policies
   tencentcloud_gaap_security_rules
+  tencentcloud_images
   tencentcloud_image
   tencentcloud_instances
   tencentcloud_instance_types
@@ -230,35 +231,44 @@ import (
 	"os"
 
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/terraform"
 )
 
 const (
-	PROVIDER_SECRET_ID  = "TENCENTCLOUD_SECRET_ID"
-	PROVIDER_SECRET_KEY = "TENCENTCLOUD_SECRET_KEY"
-	PROVIDER_REGION     = "TENCENTCLOUD_REGION"
+	PROVIDER_SECRET_ID      = "TENCENTCLOUD_SECRET_ID"
+	PROVIDER_SECRET_KEY     = "TENCENTCLOUD_SECRET_KEY"
+	PROVIDER_SECURITY_TOKEN = "TENCENTCLOUD_SECURITY_TOKEN"
+	PROVIDER_REGION         = "TENCENTCLOUD_REGION"
 )
 
-func Provider() *schema.Provider {
+func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"secret_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_ID, nil),
-				Description: "Secret ID of Tencent Cloud",
+				Description: "This is the TencentCloud access key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.",
 			},
 			"secret_key": {
 				Type:        schema.TypeString,
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, nil),
-				Description: "Secret key of Tencent Cloud",
+				Description: "This is the TencentCloud secret key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.",
+				Sensitive:   true,
+			},
+			"security_token": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECURITY_TOKEN, nil),
+				Description: "TencentCloud Security Token of temporary access credentials. It can be sourced from the `TENCENTCLOUD_SECURITY_TOKEN` environment variable. Notice: for supported products, please refer to: [temporary key supported products](https://intl.cloud.tencent.com/document/product/598/10588).",
 				Sensitive:   true,
 			},
 			"region": {
 				Type:         schema.TypeString,
 				Required:     true,
 				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_REGION, nil),
-				Description:  "Region of Tencent Cloud",
+				Description:  "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
 				InputDefault: "ap-guangzhou",
 			},
 		},
@@ -266,7 +276,8 @@ func Provider() *schema.Provider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"tencentcloud_availability_zones":           dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_eip":                          dataSourceTencentCloudEip(),
-			"tencentcloud_image":                        dataSourceTencentCloudSourceImages(),
+			"tencentcloud_image":                        dataSourceTencentCloudImage(),
+			"tencentcloud_images":                       dataSourceTencentCloudImages(),
 			"tencentcloud_instance_types":               dataSourceInstanceTypes(),
 			"tencentcloud_vpc":                          dataSourceTencentCloudVpc(),
 			"tencentcloud_subnet":                       dataSourceTencentCloudSubnet(),
@@ -445,14 +456,19 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if !ok {
 		secretKey = os.Getenv(PROVIDER_SECRET_KEY)
 	}
+	securityToken, ok := d.GetOk("security_token")
+	if !ok {
+		securityToken = os.Getenv(PROVIDER_SECURITY_TOKEN)
+	}
 	region, ok := d.GetOk("region")
 	if !ok {
 		region = os.Getenv(PROVIDER_REGION)
 	}
 	config := Config{
-		SecretId:  secretId.(string),
-		SecretKey: secretKey.(string),
-		Region:    region.(string),
+		SecretId:      secretId.(string),
+		SecretKey:     secretKey.(string),
+		SecurityToken: securityToken.(string),
+		Region:        region.(string),
 	}
 	return config.Client()
 }

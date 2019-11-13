@@ -19,7 +19,7 @@ func TestAccTencentCloudMysqlBackupPolicy(t *testing.T) {
 		CheckDestroy: testAccTencentCloudMysqlBackupPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMysqlBackupPolicy(MysqlInstanceCommonTestCase),
+				Config: testAccMysqlBackupPolicy(mysqlInstanceCommonTestCase),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudMysqlBackupPolicyExists("tencentcloud_mysql_backup_policy.mysql_backup_policy"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "mysql_id"),
@@ -29,7 +29,7 @@ func TestAccTencentCloudMysqlBackupPolicy(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMysqlBackupPolicyUpdate(MysqlInstanceCommonTestCase),
+				Config: testAccMysqlBackupPolicyUpdate(mysqlInstanceCommonTestCase),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudMysqlBackupPolicyExists("tencentcloud_mysql_backup_policy.mysql_backup_policy"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "mysql_id"),

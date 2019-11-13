@@ -1,13 +1,12 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	lb "github.com/zqfan/tencentcloud-sdk-go/services/lb/unversioned"
 )
 
 func TestAccTencentCloudLB_basic(t *testing.T) {
@@ -17,11 +16,25 @@ func TestAccTencentCloudLB_basic(t *testing.T) {
 		CheckDestroy: testAccCheckLBDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccLBConfig,
+				Config: testAccLbBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("tencentcloud_lb.classic"),
 					resource.TestCheckResourceAttr("tencentcloud_lb.classic", "name", "tf-ci-test"),
+					resource.TestCheckResourceAttr("tencentcloud_lb.classic", "type", "OPEN"),
+					resource.TestCheckResourceAttrSet("tencentcloud_lb.classic", "forward"),
 					resource.TestCheckResourceAttrSet("tencentcloud_lb.classic", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_lb.classic", "project_id"),
+				),
+			},
+			{
+				Config: testAccLbBasicUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("tencentcloud_lb.classic"),
+					resource.TestCheckResourceAttr("tencentcloud_lb.classic", "name", "tf-ci-test-update"),
+					resource.TestCheckResourceAttr("tencentcloud_lb.classic", "type", "OPEN"),
+					resource.TestCheckResourceAttrSet("tencentcloud_lb.classic", "forward"),
+					resource.TestCheckResourceAttrSet("tencentcloud_lb.classic", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_lb.classic", "project_id"),
 				),
 			},
 		},
@@ -29,33 +42,37 @@ func TestAccTencentCloudLB_basic(t *testing.T) {
 }
 
 func testAccCheckLBDestroy(s *terraform.State) error {
-	client := testAccProvider.Meta().(*TencentCloudClient).lbConn
-	var lbid string
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	clbService := ClbService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_lb" {
 			continue
 		}
-		lbid = rs.Primary.ID
-	}
 
-	return resource.Retry(5*time.Minute, func() *resource.RetryError {
-		req := lb.NewDescribeLoadBalancersRequest()
-		req.LoadBalancerIds = []*string{&lbid}
-		resp, err := client.DescribeLoadBalancers(req)
-		if err != nil {
-			return resource.RetryableError(err)
+		_, err := clbService.DescribeLoadBalancerById(ctx, rs.Primary.ID)
+		if err == nil {
+			return fmt.Errorf("clb instance still exists: %s", rs.Primary.ID)
 		}
-		if *resp.TotalCount != 0 {
-			return resource.RetryableError(fmt.Errorf("lb can still be found after deleted"))
-		}
-		return nil
-	})
+	}
+	return nil
 }
 
-const testAccLBConfig = `
+const testAccLbBasic = `
 resource "tencentcloud_lb" "classic" {
   type    = "OPEN"
   forward = "APPLICATION"
   name    = "tf-ci-test"
+}
+`
+
+const testAccLbBasicUpdate = `
+resource "tencentcloud_lb" "classic" {
+  type    = "OPEN"
+  forward = "APPLICATION"
+  name    = "tf-ci-test-update"
 }
 `

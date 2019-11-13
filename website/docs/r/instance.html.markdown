@@ -17,13 +17,9 @@ Provides a CVM instance resource.
 ## Example Usage
 
 ```hcl
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
+data "tencentcloud_images" "my_favorate_image" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "centos"
 }
 
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
@@ -36,7 +32,8 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
   memory_size    = 1
 }
 
-data "tencentcloud_availability_zones" "my_favorate_zones" {}
+data "tencentcloud_availability_zones" "my_favorate_zones" {
+}
 
 // Create VPC resource
 resource "tencentcloud_vpc" "app" {
@@ -55,7 +52,7 @@ resource "tencentcloud_subnet" "app" {
 resource "tencentcloud_instance" "my_awesome_app" {
   instance_name              = "awesome_app"
   availability_zone          = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  image_id                   = "${data.tencentcloud_images.my_favorate_image.images.0.image_id}"
   instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   system_disk_type           = "CLOUD_PREMIUM"
   system_disk_size           = 50
@@ -113,7 +110,7 @@ The following arguments are supported:
 
 The `data_disks` object supports the following:
 
-* `data_disk_size` - (Required) Size of the system disk. Value range: [50, 16000], and unit is GB.
+* `data_disk_size` - (Required) Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
 * `data_disk_type` - (Required) Type of the data disk. Valid values are `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
 * `data_disk_id` - (Optional) Data disk snapshot ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
 * `delete_with_instance` - (Optional) Decides whether the disk is deleted with instance(only applied to cloud disk), default to true.

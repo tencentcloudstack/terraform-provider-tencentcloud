@@ -43,7 +43,7 @@ func dataSourceTencentCloudCamPolicies() *schema.Resource {
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The description of the CAM policy .",
+				Description: "The description of the CAM policy.",
 			},
 			"type": {
 				Type:         schema.TypeInt,

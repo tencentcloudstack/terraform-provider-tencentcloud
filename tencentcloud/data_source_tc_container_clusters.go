@@ -1,12 +1,27 @@
+/*
+Get container clusters in the current region.
+
+Use this data source to get container clusters in the current region. By default every clusters in current region will be returned.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_kubernetes_clusters.
+
+Example Usage
+
+```hcl
+data "tencentcloud_container_clusters" "foo" {
+}
+```
+*/
 package tencentcloud
 
 import (
-	"fmt"
-	"time"
+	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/common"
-	ccs "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 )
 
 func dataSourceTencentCloudContainerClusters() *schema.Resource {
@@ -16,65 +31,85 @@ func dataSourceTencentCloudContainerClusters() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "An id identify the cluster, like `cls-xxxxxx`.",
 			},
 			"limit": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "An int variable describe how many cluster in return at most.",
 			},
 			"total_count": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Number of clusters.",
 			},
 			"clusters": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "An information list of kubernetes clusters.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cluster_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "An id identify the cluster, like `cls-xxxxxx`.",
+						},
+						"cluster_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name the cluster.",
 						},
 						"security_certification_authority": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the certificate string needed for using kubectl to access to kubernetes.",
 						},
 						"security_cluster_external_endpoint": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the address needed for using kubectl to access to kubernetes.",
 						},
 						"security_username": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the username needed for using kubectl to access to kubernetes.",
 						},
 						"security_password": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the password needed for using kubectl to access to kubernetes.",
 						},
 						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The description of the cluster.",
 						},
 						"kubernetes_version": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the running kubernetes version on the cluster.",
 						},
 						"nodes_num": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe how many cluster instances in the cluster.",
 						},
 						"nodes_status": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the current status of the instances in the cluster.",
 						},
 						"total_cpu": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe the total cpu of each instance in the cluster.",
 						},
 						"total_mem": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe the total memory of each instance in the cluster.",
 						},
 					},
 				},
@@ -83,107 +118,127 @@ func dataSourceTencentCloudContainerClusters() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudContainerClustersRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).ccsConn
-	describeClustersReq := ccs.NewDescribeClusterRequest()
+func dataSourceTencentCloudContainerClustersRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_container_clusters.read")()
+
+	logId := getLogId(contextNil)
+
+	request := tke.NewDescribeClustersRequest()
 	if clusterId, ok := d.GetOkExists("cluster_id"); ok {
-		describeClustersReq.ClusterIds = []*string{common.StringPtr(clusterId.(string))}
-	}
-	if limit, ok := d.GetOkExists("limit"); ok {
-		describeClustersReq.Limit = common.IntPtr(limit.(int))
+		request.ClusterIds = []*string{common.StringPtr(clusterId.(string))}
 	}
 
-	response, err := client.DescribeCluster(describeClustersReq)
+	if limit, ok := d.GetOkExists("limit"); ok {
+		request.Limit = common.Int64Ptr(limit.(int64))
+	}
+
+	var response *tke.DescribeClustersResponse
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().DescribeClusters(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s DescribeClusters failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
-	if response.Code == nil {
-		return fmt.Errorf("data_source_tencent_cloud_container_clusters got error, no code response")
-	}
+	ids := make([]string, 0, *response.Response.TotalCount)
+	clustersList := make([]map[string]interface{}, 0, *response.Response.TotalCount)
+	for _, cluster := range response.Response.Clusters {
+		ids = append(ids, *cluster.ClusterId)
 
-	if *response.Code != 0 {
-		return fmt.Errorf("data_source_tencent_cloud_container_clusters got error, code %v , message %v", *response.Code, *response.CodeDesc)
-	}
-
-	id := fmt.Sprintf("%d", time.Now().Unix())
-
-	clustersList := make([]map[string]interface{}, 0)
-	for _, cluster := range response.Data.Clusters {
 		clusterInfo := make(map[string]interface{}, 1)
-		//basic info
-		if cluster.ClusterId != nil {
-			clusterInfo["cluster_id"] = *cluster.ClusterId
-		}
-		if cluster.Description != nil {
-			clusterInfo["description"] = *cluster.Description
-		}
+		clusterInfo["cluster_id"] = *cluster.ClusterId
+		clusterInfo["cluster_name"] = *cluster.ClusterName
+		clusterInfo["description"] = *cluster.ClusterDescription
+		clusterInfo["kubernetes_version"] = *cluster.ClusterVersion
+		clusterInfo["nodes_num"] = *cluster.ClusterNodeNum
+		clusterInfo["nodes_status"] = *cluster.ClusterStatus
+		clusterInfo["total_cpu"] = int64(0)
+		clusterInfo["total_mem"] = int64(0)
 
-		if cluster.K8sVersion != nil {
-			clusterInfo["kubernetes_version"] = *cluster.K8sVersion
-		}
-
-		if cluster.NodeNum != nil {
-			clusterInfo["nodes_num"] = *cluster.NodeNum
-		}
-
-		if cluster.NodeStatus != nil {
-			clusterInfo["nodes_status"] = *cluster.NodeStatus
-		}
-
-		if cluster.TotalCPU != nil {
-			clusterInfo["total_cpu"] = *cluster.TotalCPU
-		}
-
-		if cluster.TotalMem != nil {
-			clusterInfo["total_mem"] = *cluster.TotalMem
-		}
-
-		//security info
-
-		describeClusterSecurityInfoReq := ccs.NewDescribeClusterSecurityInfoRequest()
-		describeClusterSecurityInfoReq.ClusterId = cluster.ClusterId
-
-		securityResponse, err := client.DescribeClusterSecurityInfo(describeClusterSecurityInfoReq)
-
+		describeClusterInstancesreq := tke.NewDescribeClusterInstancesRequest()
+		describeClusterInstancesreq.ClusterId = cluster.ClusterId
+		describeClusterInstancesreq.Limit = common.Int64Ptr(100)
+		var describeClusterInstancesResponse *tke.DescribeClusterInstancesResponse
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().DescribeClusterInstances(describeClusterInstancesreq)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, describeClusterInstancesreq.GetAction(), describeClusterInstancesreq.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			describeClusterInstancesResponse = result
+			return nil
+		})
 		if err != nil {
 			continue
 		}
 
-		if securityResponse.Code == nil {
-			continue
+		instanceIds := []*string{}
+		for _, v := range describeClusterInstancesResponse.Response.InstanceSet {
+			instanceIds = append(instanceIds, v.InstanceId)
 		}
 
-		if *securityResponse.Code != 0 {
-			continue
+		if len(instanceIds) > 0 {
+			describeInstancesreq := cvm.NewDescribeInstancesRequest()
+			describeInstancesreq.InstanceIds = instanceIds
+			var describeInstancesResponse *cvm.DescribeInstancesResponse
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().DescribeInstances(describeInstancesreq)
+				if e != nil {
+					log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+						logId, describeInstancesreq.GetAction(), describeInstancesreq.ToJsonString(), e.Error())
+					return retryError(e)
+				}
+				describeInstancesResponse = result
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s DescribeInstances failed, reason:%s\n ", logId, err.Error())
+				return err
+			}
+
+			for _, v := range describeInstancesResponse.Response.InstanceSet {
+				clusterInfo["total_cpu"] = clusterInfo["total_cpu"].(int64) + *v.CPU
+				clusterInfo["total_mem"] = clusterInfo["total_mem"].(int64) + *v.Memory
+			}
 		}
 
-		if securityResponse.Data.CertificationAuthority != nil {
-			clusterInfo["security_certification_authority"] = *securityResponse.Data.CertificationAuthority
+		describeClusterSecurityreq := tke.NewDescribeClusterSecurityRequest()
+		describeClusterSecurityreq.ClusterId = cluster.ClusterId
+		var securityResponse *tke.DescribeClusterSecurityResponse
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().DescribeClusterSecurity(describeClusterSecurityreq)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, describeClusterSecurityreq.GetAction(), describeClusterSecurityreq.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			securityResponse = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s DescribeClusterSecurity failed, reason:%s\n ", logId, err.Error())
+			return err
 		}
 
-		if securityResponse.Data.ClusterExternalEndpoint != nil {
-			clusterInfo["security_cluster_external_endpoint"] = *securityResponse.Data.ClusterExternalEndpoint
-		}
-
-		if securityResponse.Data.Password != nil {
-			clusterInfo["security_password"] = *securityResponse.Data.Password
-		}
-
-		if securityResponse.Data.UserName != nil {
-			clusterInfo["security_username"] = *securityResponse.Data.UserName
-		}
-
+		clusterInfo["security_certification_authority"] = *securityResponse.Response.CertificationAuthority
+		clusterInfo["security_cluster_external_endpoint"] = *securityResponse.Response.ClusterExternalEndpoint
+		clusterInfo["security_username"] = *securityResponse.Response.UserName
+		clusterInfo["security_password"] = *securityResponse.Response.Password
 		clustersList = append(clustersList, clusterInfo)
+	}
 
-	}
+	d.SetId(dataResourceIdsHash(ids))
 	d.Set("clusters", clustersList)
-	d.SetId(id)
-	if response.Data.TotalCount != nil {
-		d.Set("total_count", *response.Data.TotalCount)
-	} else {
-		d.Set("total_count", 0)
-	}
+	d.Set("total_count", *response.Response.TotalCount)
 
 	return nil
 }

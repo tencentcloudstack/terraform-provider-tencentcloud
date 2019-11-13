@@ -1,10 +1,8 @@
 data "tencentcloud_availability_zones" "my_favorate_zones" {}
 
-data "tencentcloud_image" "my_favorate_image" {
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
+data "tencentcloud_images" "my_favorate_image" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "centos"
 }
 
 # Create VPC and Subnet
@@ -45,16 +43,17 @@ resource "tencentcloud_nat_gateway" "my_nat" {
 # Create CVM
 resource "tencentcloud_instance" "foo" {
   availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
+  image_id          = "${data.tencentcloud_images.my_favorate_image.images.0.image_id}"
   vpc_id            = "${tencentcloud_vpc.main.id}"
   subnet_id         = "${tencentcloud_subnet.main_subnet.id}"
+  system_disk_type  = "CLOUD_PREMIUM"
 }
 
 # Add DNAT Entry
 resource "tencentcloud_dnat" "dev_dnat" {
   vpc_id       = "${tencentcloud_nat_gateway.my_nat.vpc_id}"
   nat_id       = "${tencentcloud_nat_gateway.my_nat.id}"
-  protocol     = "tcp"
+  protocol     = "TCP"
   elastic_ip   = "${tencentcloud_eip.eip_dev_dnat.public_ip}"
   elastic_port = "80"
   private_ip   = "${tencentcloud_instance.foo.private_ip}"
@@ -64,7 +63,7 @@ resource "tencentcloud_dnat" "dev_dnat" {
 resource "tencentcloud_dnat" "test_dnat" {
   vpc_id       = "${tencentcloud_nat_gateway.my_nat.vpc_id}"
   nat_id       = "${tencentcloud_nat_gateway.my_nat.id}"
-  protocol     = "udp"
+  protocol     = "UDP"
   elastic_ip   = "${tencentcloud_eip.eip_test_dnat.public_ip}"
   elastic_port = "8080"
   private_ip   = "${tencentcloud_instance.foo.private_ip}"

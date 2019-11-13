@@ -16,6 +16,8 @@ import (
 )
 
 func TestAccTencentCloudCosBucketObject_source(t *testing.T) {
+	t.Parallel()
+
 	tmpFile, err := ioutil.TempFile("", "tf-test-cos-object")
 	if err != nil {
 		t.Fatal(err)
@@ -50,6 +52,8 @@ func TestAccTencentCloudCosBucketObject_source(t *testing.T) {
 }
 
 func TestAccTencentCloudCosBucketObject_content(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -68,6 +72,8 @@ func TestAccTencentCloudCosBucketObject_content(t *testing.T) {
 }
 
 func TestAccTencentCloudCosBucketObject_storageClass(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -85,6 +91,8 @@ func TestAccTencentCloudCosBucketObject_storageClass(t *testing.T) {
 }
 
 func TestAccTencentCloudCosBucketObject_acl(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

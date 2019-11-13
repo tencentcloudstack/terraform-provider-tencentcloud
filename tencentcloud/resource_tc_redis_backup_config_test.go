@@ -38,6 +38,11 @@ func TestAccTencentCloudRedisBackupConfig(t *testing.T) {
 					//resource.TestCheckResourceAttr("tencentcloud_redis_backup_config.redis_backup_config", "backup_period.3286956037", "Saturday"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_redis_backup_config.redis_backup_config",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

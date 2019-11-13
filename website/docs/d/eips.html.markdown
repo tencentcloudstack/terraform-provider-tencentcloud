@@ -26,6 +26,7 @@ The following arguments are supported:
 * `eip_name` - (Optional) Name of the eip to be queried.
 * `public_ip` - (Optional) The elastic ip address.
 * `result_output_file` - (Optional) Used to save results.
+* `tags` - (Optional) The tags of eip.
 
 ## Attributes Reference
 
@@ -40,5 +41,6 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_id` - The instance id to bind with the eip.
   * `public_ip` - The elastic ip address.
   * `status` - The eip current status.
+  * `tags` - Tags of the eip.
 
 

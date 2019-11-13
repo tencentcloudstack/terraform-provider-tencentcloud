@@ -1,14 +1,14 @@
 ---
 layout: "tencentcloud"
-page_title: "tencentcloud: tencentcloud_alb_server_attachment"
-sidebar_current: "docs-tencentcloud-resource-lb-server-attachment"
+page_title: "TencentCloud: tencentcloud_alb_server_attachment"
+sidebar_current: "docs-tencentcloud-resource-alb_server_attachment"
 description: |-
   Provides an tencentcloud application load balancer servers attachment as a resource, to attach and detach instances from load balancer.
 ---
 
 # tencentcloud_alb_server_attachment
 
-Provides Load Balancer server attachment resource.
+Provides an tencentcloud application load balancer servers attachment as a resource, to attach and detach instances from load balancer.
 
 ~> **NOTE:** It has been deprecated and replaced by `tencentcloud_clb_attachment`.
 
@@ -41,14 +41,12 @@ resource "tencentcloud_alb_server_attachment" "service1" {
 
 The following arguments are supported:
 
-* `loadbalancer_id` - (Required, Forces new resource) loadbalancer ID.
-* `listener_id` - (Required, Forces new resource) listener ID.
-* `location_id` - (Optional) location ID only support for layer 7 loadbalancer
-* `backends` - (Required) list of backend server. Valid value range [1-100].
+* `backends` - (Required) list of backend server.
+* `listener_id` - (Required, ForceNew) listener ID.
+* `loadbalancer_id` - (Required, ForceNew) loadbalancer ID.
+* `location_id` - (Optional, ForceNew) location ID, only support for layer 7 loadbalancer.
 
-### Block backends
-
-The backends mapping supports the following:
+The `backends` object supports the following:
 
 * `instance_id` - (Required) A list backend instance ID (CVM instance ID).
 * `port` - (Required) The port used by the backend server. Valid value range: [1-65535].
@@ -56,9 +54,8 @@ The backends mapping supports the following:
 
 ## Attributes Reference
 
-The following attributes are exported:
+In addition to all arguments above, the following attributes are exported:
 
-* `loadbalancer_id` - loadbalancer ID.
-* `listener_id` - listener ID.
-* `location_id` - location ID (only support for layer 7 loadbalancer)
-* `protocol_type` - http or tcp
+* `protocol_type` - The protocol type, http or tcp.
+
+

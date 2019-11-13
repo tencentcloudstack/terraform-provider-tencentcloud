@@ -33,7 +33,7 @@ The following arguments are supported:
 
 * `availability_zone` - (Required, ForceNew) The available zone that the CBS instance locates at.
 * `storage_name` - (Required) Name of CBS. The maximum length can not exceed 60 bytes.
-* `storage_size` - (Required) Volume of CBS.
+* `storage_size` - (Required) Volume of CBS, and unit is GB. If storage type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
 * `storage_type` - (Required, ForceNew) Type of CBS medium, and available values include CLOUD_BASIC, CLOUD_PREMIUM and CLOUD_SSD.
 * `encrypt` - (Optional, ForceNew) Indicates whether CBS is encrypted.
 * `period` - (Optional) The purchased usage period of CBS, and value range [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].
