@@ -97,6 +97,9 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_route_tables
   tencentcloud_vpc_subnets
+  tencentcloud_vpn_customer_gateways
+  tencentcloud_vpn_gateways
+  tencentcloud_vpn_connections
 
 AS Resources
   tencentcloud_as_scaling_config
@@ -217,6 +220,10 @@ VPC Resources
   tencentcloud_dnat
   tencentcloud_nat_gateway
 
+VPN Resources
+  tencentcloud_vpn_customer_gateway
+  tencentcloud_vpn_gateway
+  tencentcloud_vpn_connection
 */
 package tencentcloud
 
@@ -344,6 +351,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_scf_functions":                dataSourceTencentCloudScfFunctions(),
 			"tencentcloud_scf_namespaces":               dataSourceTencentCloudScfNamespaces(),
 			"tencentcloud_scf_logs":                     dataSourceTencentCloudScfLogs(),
+			"tencentcloud_vpn_customer_gateways":        dataSourceTencentCloudVpnCustomerGateways(),
+			"tencentcloud_vpn_gateways":                 dataSourceTencentCloudVpnGateways(),
+			"tencentcloud_vpn_connections":              dataSourceTencentCloudVpnConnections(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -428,6 +438,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_access_rule":             resourceTencentCloudCfsAccessRule(),
 			"tencentcloud_scf_function":                resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_namespace":               resourceTencentCloudScfNamespace(),
+			"tencentcloud_vpn_customer_gateway":        resourceTencentCloudVpnCustomerGateway(),
+			"tencentcloud_vpn_gateway":                 resourceTencentCloudVpnGateway(),
+			"tencentcloud_vpn_connection":              resourceTencentCloudVpnConnection(),
 		},
 
 		ConfigureFunc: providerConfigure,
