@@ -68,7 +68,7 @@ The following arguments are supported:
 * `ike_version` - (Optional) Version of the IKE operation specification. Default value is `IKEV1`.
 * `ipsec_encrypt_algorithm` - (Optional) Encrypt algorithm of the IPSEC operation specification, valid values are `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.
 * `ipsec_integrity_algorithm` - (Optional) Integrity algorithm of the IPSEC operation specification, valid values are `SHA1`, `MD5`. Default value is `MD5`.
-* `ipsec_pfs_dh_group` - (Optional) PFS DH group , valid values are `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`, `NULL`. Default value is `NULL`.
+* `ipsec_pfs_dh_group` - (Optional) PFS DH group, valid values are `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`, `NULL`. Default value is `NULL`.
 * `ipsec_sa_lifetime_seconds` - (Optional) SA lifetime of the IPSEC operation specification, unit is `second`. The value ranges from 180 to 604800. Default value is 3600 seconds.
 * `ipsec_sa_lifetime_traffic` - (Optional) SA lifetime of the IPSEC operation specification, unit is `KB`. The value ranges from 2560 to 4294967295. Default value is 1843200.
 * `tags` - (Optional) A list of tags used to associate different resources.
