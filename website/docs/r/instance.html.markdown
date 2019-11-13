@@ -113,7 +113,7 @@ The following arguments are supported:
 
 The `data_disks` object supports the following:
 
-* `data_disk_size` - (Required) Size of the system disk. Value range: [50, 16000], and unit is GB.
+* `data_disk_size` - (Required) Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
 * `data_disk_type` - (Required) Type of the data disk. Valid values are `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
 * `data_disk_id` - (Optional) Data disk snapshot ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
 * `delete_with_instance` - (Optional) Decides whether the disk is deleted with instance(only applied to cloud disk), default to true.
