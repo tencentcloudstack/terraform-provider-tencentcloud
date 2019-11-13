@@ -40,6 +40,11 @@ func dataSourceTencentCloudEips() *schema.Resource {
 				Optional:    true,
 				Description: "The elastic ip address.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The tags of eip.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -92,6 +97,11 @@ func dataSourceTencentCloudEips() *schema.Resource {
 							Computed:    true,
 							Description: "Creation time of the eip.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "Tags of the eip.",
+						},
 					},
 				},
 			},
@@ -103,9 +113,11 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 	defer logElapsed("data_source.tencentcloud_eips.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-	vpcService := VpcService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	filter := make(map[string]string)
 	if v, ok := d.GetOk("eip_id"); ok {
@@ -117,6 +129,8 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 	if v, ok := d.GetOk("public_ip"); ok {
 		filter["public-ip"] = v.(string)
 	}
+
+	tags := getTags(d, "tags")
 
 	var eips []*vpc.Address
 	var errRet error
@@ -133,7 +147,21 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 
 	eipList := make([]map[string]interface{}, 0, len(eips))
 	ids := make([]string, 0, len(eips))
+
+EIP_LOOP:
 	for _, eip := range eips {
+		respTags, err := tagService.DescribeResourceTags(ctx, VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, *eip.AddressId)
+		if err != nil {
+			log.Printf("[CRITAL]%s describe eip tags failed: %+v", logId, err)
+			return err
+		}
+
+		for k, v := range tags {
+			if respTags[k] != v {
+				continue EIP_LOOP
+			}
+		}
+
 		mapping := map[string]interface{}{
 			"eip_id":      eip.AddressId,
 			"eip_name":    eip.AddressName,
@@ -143,7 +171,9 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 			"instance_id": eip.InstanceId,
 			"eni_id":      eip.NetworkInterfaceId,
 			"create_time": eip.CreatedTime,
+			"tags":        respTags,
 		}
+
 		eipList = append(eipList, mapping)
 		ids = append(ids, *eip.AddressId)
 	}

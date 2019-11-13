@@ -15,7 +15,7 @@ func TestAccTencentCloudEipsDataSource(t *testing.T) {
 			{
 				Config: testAccEipsDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckEipExists("tencentcloud_eip.eip"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_eips.data_eips"),
 					resource.TestCheckResourceAttr("data.tencentcloud_eips.data_eips", "eip_list.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_eips.data_eips", "eip_list.0.eip_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_eips.data_eips", "eip_list.0.eip_name", "tf-test-eip"),
@@ -23,6 +23,9 @@ func TestAccTencentCloudEipsDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_eips.data_eips", "eip_list.0.status"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_eips.data_eips", "eip_list.0.public_ip"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_eips.data_eips", "eip_list.0.create_time"),
+
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_eips.tags"),
+					resource.TestCheckResourceAttr("data.tencentcloud_eips.tags", "eip_list.0.tags.test", "test"),
 				),
 			},
 		},
@@ -31,10 +34,18 @@ func TestAccTencentCloudEipsDataSource(t *testing.T) {
 
 const testAccEipsDataSource = `
 resource "tencentcloud_eip" "eip" {
-	name = "tf-test-eip"
+  name = "tf-test-eip"
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 data "tencentcloud_eips" "data_eips" {
-	eip_id = "${tencentcloud_eip.eip.id}"
+  eip_id = "${tencentcloud_eip.eip.id}"
+}
+
+data "tencentcloud_eips" "tags" {
+  tags = "${tencentcloud_eip.eip.tags}"
 }
 `

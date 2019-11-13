@@ -28,6 +28,7 @@ The following arguments are supported:
 * `internet_max_bandwidth_out` - (Optional, ForceNew) The bandwidth limit of eip, unit is Mbps, and the range is 1-1000.
 * `internet_service_provider` - (Optional, ForceNew) Internet service provider of eip, and available values include `BGP`, `CMCC`, `CTCC` and `CUCC`.
 * `name` - (Optional) The name of eip.
+* `tags` - (Optional) The tags of eip.
 * `type` - (Optional, ForceNew) The type of eip, and available values include `EIP` and `AnycastEIP`. Default is `EIP`.
 
 ## Attributes Reference
