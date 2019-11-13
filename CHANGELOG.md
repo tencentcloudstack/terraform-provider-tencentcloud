@@ -8,6 +8,8 @@ FEATURES:
 ENHANCEMENTS:
 
 * All api calls now using api3.0
+* Resource: `tencentcloud_eip` add optional argument `tags`.
+* Data Source: `tencentcloud_eips` add optional argument `tags`.
 
 BUG FIXES:
 

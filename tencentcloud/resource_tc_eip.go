@@ -90,6 +90,11 @@ func resourceTencentCloudEip() *schema.Resource {
 				ValidateFunc: validateIntegerInRange(1, 1000),
 				Description:  "The bandwidth limit of eip, unit is Mbps, and the range is 1-1000.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The tags of eip.",
+			},
 
 			// computed
 			"public_ip": {
@@ -111,9 +116,11 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-	vpcService := VpcService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	request := vpc.NewAllocateAddressesRequest()
 	if v, ok := d.GetOk("type"); ok {
@@ -139,7 +146,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	eipId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AllocateAddresses(request)
+		response, err := client.UseVpcClient().AllocateAddresses(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -188,6 +195,14 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 
+	if tags := getTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName(VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, eipId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			log.Printf("[CRITAL]%s set eip tags failed: %+v", logId, err)
+			return err
+		}
+	}
+
 	return resourceTencentCloudEipRead(d, meta)
 }
 
@@ -196,9 +211,11 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-	vpcService := VpcService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	eipId := d.Id()
 	var eip *vpc.Address
@@ -218,10 +235,17 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 		return nil
 	}
 
+	tags, err := tagService.DescribeResourceTags(ctx, VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, eipId)
+	if err != nil {
+		log.Printf("[CRITAL]%s describe eip tags failed: %+v", logId, err)
+		return err
+	}
+
 	d.Set("name", eip.AddressName)
 	d.Set("type", eip.AddressType)
 	d.Set("public_ip", eip.AddressIp)
 	d.Set("status", eip.AddressStatus)
+	d.Set("tags", tags)
 	return nil
 }
 
@@ -230,18 +254,38 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
-	vpcService := VpcService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	client := meta.(*TencentCloudClient).apiV3Conn
+	vpcService := VpcService{client: client}
+	tagService := TagService{client: client}
+	region := client.Region
 
 	eipId := d.Id()
+
+	d.Partial(true)
+
 	if d.HasChange("name") {
 		name := d.Get("name").(string)
 		err := vpcService.ModifyEipName(ctx, eipId, name)
 		if err != nil {
 			return err
 		}
+
+		d.SetPartial("name")
 	}
+
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName(VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, eipId)
+
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			log.Printf("[CRITAL]%s update eip tags failed: %+v", logId, err)
+			return err
+		}
+		d.SetPartial("tags")
+	}
+
 	return resourceTencentCloudEipRead(d, meta)
 }
 

@@ -61,7 +61,7 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerInRange(10, 16000),
-				Description:  "Volume of CBS.",
+				Description:  "Volume of CBS, and unit is GB. If storage type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].",
 			},
 			"period": {
 				Type:         schema.TypeInt,

@@ -260,8 +260,8 @@ func resourceTencentCloudInstance() *schema.Resource {
 						"data_disk_size": {
 							Type:         schema.TypeInt,
 							Required:     true,
-							ValidateFunc: validateIntegerInRange(50, 16000),
-							Description:  "Size of the system disk. Value range: [50, 16000], and unit is GB.",
+							ValidateFunc: validateIntegerInRange(10, 16000),
+							Description:  "Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].",
 						},
 						"data_disk_id": {
 							Type:        schema.TypeString,
