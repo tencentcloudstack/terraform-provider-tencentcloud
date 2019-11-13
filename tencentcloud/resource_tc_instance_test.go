@@ -31,6 +31,7 @@ func testSweepCvmInstance(region string) error {
 	cvmService := CvmService{
 		client: client.apiV3Conn,
 	}
+
 	instances, err := cvmService.DescribeInstanceByFilter(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("get instance list error: %s", err.Error())
@@ -39,7 +40,7 @@ func testSweepCvmInstance(region string) error {
 	for _, v := range instances {
 		instanceId := *v.InstanceId
 		instanceName := *v.InstanceName
-		if !strings.HasPrefix(instanceName, "terraform_automation_") {
+		if !strings.HasPrefix(instanceName, defaultInsName) {
 			continue
 		}
 
@@ -47,34 +48,34 @@ func testSweepCvmInstance(region string) error {
 			log.Printf("[ERROR] sweep instance %s error: %s", instanceId, err.Error())
 		}
 	}
+
 	return nil
 }
 
-func TestAccTencentCloudInstance_basic(t *testing.T) {
+func TestAccTencentCloudInstanceBasic(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.foo",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInstanceConfigWithSmallInstanceType,
+				Config: testAccTencentCloudInstanceBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "system_disk_type", "CLOUD_PREMIUM"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.0.data_disk_size", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.1.data_disk_type", "CLOUD_PREMIUM"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "data_disks.1.data_disk_size", "100"),
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "private_ip"),
+					resource.TestCheckResourceAttrSet(id, "vpc_id"),
+					resource.TestCheckResourceAttrSet(id, "subnet_id"),
+					resource.TestCheckResourceAttrSet(id, "project_id"),
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_instance.foo",
+				ResourceName:            id,
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "hostname", "password", "allocate_public_ip"},
@@ -83,323 +84,310 @@ func TestAccTencentCloudInstance_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstance_sg(t *testing.T) {
+func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.sg",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInstanceConfigWithSecurityGroup(`["${tencentcloud_security_group.my_sg1.id}"]`),
+				Config: testAccTencentCloudInstanceWithDataDisk,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.sg"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.sg"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.sg", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet("tencentcloud_security_group.my_sg1", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.sg", "security_groups.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sg_rule_1", "type", "ingress"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sg_rule_1", "port_range", "80,8080"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sg_rule_2", "type", "ingress"),
-					resource.TestCheckResourceAttr("tencentcloud_security_group_rule.sg_rule_2", "port_range", "3000"),
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr(id, "system_disk_size", "50"),
+					resource.TestCheckResourceAttr(id, "system_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_size", "100"),
+					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_size", "100"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstanceWithNetwork(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceWithNetwork("false"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckNoResourceAttr(id, "public_ip"),
 				),
 			},
 			{
-				Config: testAccInstanceConfigWithSecurityGroup(`[
-					"${tencentcloud_security_group.my_sg1.id}",
-					"${tencentcloud_security_group.my_sg2.id}"
+				Config: testAccTencentCloudInstanceWithNetwork("true"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "public_ip"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstanceWithPrivateIP(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceWithPrivateIP,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstanceWithKeyPair(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceWithKeyPair("tf_acc_test_key1"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "key_name"),
+				),
+			},
+			{
+				Config: testAccTencentCloudInstanceWithKeyPair("tf_acc_test_key2"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "key_name"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstanceWithPassword(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceWithPassword("TF_test_123"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "password"),
+				),
+			},
+			{
+				Config: testAccTencentCloudInstanceWithPassword("TF_test_123456"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "password"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstanceWithName(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceWithName(defaultInsName),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr(id, "instance_name", defaultInsName),
+				),
+			},
+			{
+				Config: testAccTencentCloudInstanceWithName(defaultInsNameUpdate),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr(id, "instance_name", defaultInsNameUpdate),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstanceWithHostname(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceWithHostname,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr(id, "hostname", defaultInsName),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstanceWithSecurityGroup(t *testing.T) {
+	t.Parallel()
+
+	instanceId := "tencentcloud_instance.foo"
+	securitygroupId := "tencentcloud_security_group.foo"
+	securitygroupRuleFooId := "tencentcloud_security_group_rule.foo"
+	securitygroupRuleBarId := "tencentcloud_security_group_rule.bar"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: instanceId,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceWithSecurityGroup(`["${tencentcloud_security_group.foo.id}"]`),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(instanceId),
+					testAccCheckTencentCloudInstanceExists(instanceId),
+					resource.TestCheckResourceAttr(instanceId, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr(instanceId, "security_groups.#", "1"),
+					resource.TestCheckResourceAttrSet(securitygroupId, "id"),
+					resource.TestCheckResourceAttr(securitygroupRuleFooId, "type", "ingress"),
+					resource.TestCheckResourceAttr(securitygroupRuleFooId, "port_range", "80,8080"),
+					resource.TestCheckResourceAttr(securitygroupRuleBarId, "type", "ingress"),
+					resource.TestCheckResourceAttr(securitygroupRuleBarId, "port_range", "3000"),
+				),
+			},
+			{
+				Config: testAccTencentCloudInstanceWithSecurityGroup(`[
+					"${tencentcloud_security_group.foo.id}",
+					"${tencentcloud_security_group.bar.id}"
 				]`),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.sg"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.sg"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.sg", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet("tencentcloud_security_group.my_sg2", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.sg", "security_groups.#", "2"),
+					testAccCheckTencentCloudDataSourceID(instanceId),
+					testAccCheckTencentCloudInstanceExists(instanceId),
+					resource.TestCheckResourceAttr(instanceId, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr(instanceId, "security_groups.#", "2"),
+					resource.TestCheckResourceAttrSet(securitygroupId, "id"),
+					resource.TestCheckResourceAttr(securitygroupRuleFooId, "type", "ingress"),
+					resource.TestCheckResourceAttr(securitygroupRuleFooId, "port_range", "80,8080"),
+					resource.TestCheckResourceAttr(securitygroupRuleBarId, "type", "ingress"),
+					resource.TestCheckResourceAttr(securitygroupRuleBarId, "port_range", "3000"),
 				),
 			},
 		},
 	})
 }
 
-func TestAccTencentCloudInstance_network(t *testing.T) {
+func TestAccTencentCloudInstanceWithTags(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.network",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccInstanceConfigWithInternet,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.network"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.network"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.network", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.network", "public_ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.network", "private_ip"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_network_no_public_ip(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.network",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccInstanceConfigWithInternetNoPublicIP,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.network"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.network"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.network", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.network", "private_ip"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_vpc(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.vpc_ins",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccInstanceConfigWithVPC,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.vpc_ins"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.vpc_ins"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.vpc_ins", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.vpc_ins", "private_ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.vpc_ins", "vpc_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.vpc_ins", "subnet_id"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_keypair(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.login",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccInstanceConfigWithKeyPair("tf_acc_test_key1"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.login"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.login"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.login", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.login", "key_name"),
-				),
-			},
-			{
-				Config: testAccInstanceConfigWithKeyPair("tf_acc_test_key2"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.login"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.login"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.login", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.login", "key_name"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_nameChanged(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.hello",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccInstanceConfigWithInstanceNameChanged("terraform_automation_test_1"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.hello"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.hello"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "instance_name", "terraform_automation_test_1"),
-				),
-			},
-			{
-				Config: testAccInstanceConfigWithInstanceNameChanged("terraform_automation_test_2"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.hello"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.hello"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.hello", "instance_name", "terraform_automation_test_2"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_passwordChanged(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.login",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				//Config: testAccInstanceConfigWithPassword,
-				Config: testAccInstanceConfigWithPasswordChanged("TF_test_123"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.login"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.login"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.login", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.login", "password"),
-				),
-			},
-			{
-				Config: testAccInstanceConfigWithPasswordChanged("TF_test_123456"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.login"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.login"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.login", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.login", "password"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_hostname(t *testing.T) {
-	id := "tencentcloud_instance.hostname"
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
+		PreCheck:      func() { testAccPreCheck(t) },
 		IDRefreshName: id,
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInstanceConfigWithHostname,
+				Config: testAccTencentCloudInstanceWithTags(`{
+					"hello" = "world"
+					"happy" = "hour"
+				}`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet(id, "private_ip"),
-					resource.TestCheckResourceAttrSet(id, "hostname"),
+					resource.TestCheckResourceAttr(id, "tags.hello", "world"),
+					resource.TestCheckResourceAttr(id, "tags.happy", "hour"),
 				),
 			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_projectId(t *testing.T) {
-	id := "tencentcloud_instance.project_id"
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: id,
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
 			{
-				Config: testAccInstanceConfigWithProjectId,
+				Config: testAccTencentCloudInstanceWithTags(`{
+					"hello" = "hello"
+				}`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet(id, "private_ip"),
-					resource.TestCheckResourceAttrSet(id, "project_id"),
+					resource.TestCheckResourceAttr(id, "tags.hello", "hello"),
+					resource.TestCheckNoResourceAttr(id, "tags.happy"),
 				),
 			},
 		},
 	})
 }
 
-func TestAccTencentCloudInstance_WithPrivateIP(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
+func TestAccTencentCloudInstanceWithPlacementGroup(t *testing.T) {
+	t.Parallel()
 
-		IDRefreshName: "tencentcloud_instance.foo",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccInstanceConfigWithInstanceWithPrivateIP("aaa"),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_withTags(t *testing.T) {
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() { testAccPreCheck(t) },
-
-		IDRefreshName: "tencentcloud_instance.foo",
-
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckInstanceDestroy,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccInstanceConfigWithTags,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "tags.hello", "world"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "tags.happy", "hour"),
-				),
-			},
-			{
-				Config: testAccInstanceConfigWithTagsUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("tencentcloud_instance.foo"),
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "tags.hello", "hello"),
-					resource.TestCheckNoResourceAttr("tencentcloud_instance.foo", "tags.happy"),
-				),
-			},
-		},
-	})
-}
-
-func TestAccTencentCloudInstance_withPlacementGroup(t *testing.T) {
+	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccInstanceConfigWithPlacementGroup,
+				Config: testAccTencentCloudInstanceWithPlacementGroup,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudInstanceExists("tencentcloud_instance.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_instance.foo", "instance_status", "RUNNING"),
-					resource.TestCheckResourceAttrSet("tencentcloud_instance.foo", "placement_group_id"),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttrSet(id, "placement_group_id"),
 				),
 			},
 		},
@@ -473,99 +461,25 @@ func testAccCheckInstanceDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccInstanceConfigWithKeyPair(keyname string) string {
-	return fmt.Sprintf(
-		`
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 1
-}
-
-resource "tencentcloud_key_pair" "my_key" {
-  key_name = "%s"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
-}
-
-resource "tencentcloud_instance" "login" {
-  instance_name     = "terraform_automation_test_kuruk"
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  key_name          = "${tencentcloud_key_pair.my_key.id}"
-  system_disk_type  = "CLOUD_PREMIUM"
-}
-`,
-		keyname,
-	)
-}
-
-func testAccInstanceConfigWithInstanceNameChanged(name string) string {
-	return fmt.Sprintf(
-		`
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 1
-}
-
-resource "tencentcloud_instance" "hello" {
-  instance_name     = "%s"
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type  = "CLOUD_PREMIUM"
-}
-`,
-		name,
-	)
-}
-
-const testAccInstanceConfigWithSmallInstanceType = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
+const testAccTencentCloudInstanceBasic = defaultInstanceVariable + `
 resource "tencentcloud_instance" "foo" {
-  instance_name     = "terraform_automation_test_kuruk"
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  instance_name     = "${var.instance_name}"
+  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  vpc_id            = "${var.vpc_id}"
+  subnet_id         = "${var.subnet_id}"
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+}
+`
+
+const testAccTencentCloudInstanceWithDataDisk = defaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "${var.instance_name}"
+  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
 
   system_disk_type = "CLOUD_PREMIUM"
   data_disks {
@@ -573,243 +487,123 @@ resource "tencentcloud_instance" "foo" {
     data_disk_size       = 100
     delete_with_instance = true
   }
+
   data_disks {
     data_disk_type       = "CLOUD_PREMIUM"
     data_disk_size       = 100
     delete_with_instance = true
   }
+
   disable_security_service = true
   disable_monitor_service  = true
 }
 `
 
-const testAccInstanceConfigWithInternet = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 1
-}
-
-resource "tencentcloud_instance" "network" {
-  instance_name              = "terraform_automation_test_kuruk"
-  availability_zone          = "ap-guangzhou-3"
-  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-  internet_max_bandwidth_out = 1
-  allocate_public_ip         = true
-  system_disk_type           = "CLOUD_PREMIUM"
-}
-`
-
-const testAccInstanceConfigWithInternetNoPublicIP = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 1
-}
-
-resource "tencentcloud_instance" "network" {
-  instance_name              = "terraform_automation_test_kuruk"
-  availability_zone          = "ap-guangzhou-3"
-  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-  internet_max_bandwidth_out = 1
-  allocate_public_ip         = false
-  system_disk_type           = "CLOUD_PREMIUM"
-}
-`
-
-func testAccInstanceConfigWithPasswordChanged(pwd string) string {
+func testAccTencentCloudInstanceWithNetwork(hasPublicIp string) string {
 	return fmt.Sprintf(
-		`
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
+		defaultInstanceVariable+`
+resource "tencentcloud_instance" "foo" {
+  instance_name              = "${var.instance_name}"
+  availability_zone          = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id                   = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type              = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 1
+  allocate_public_ip         = %s
+  system_disk_type           = "CLOUD_PREMIUM"
+}
+`,
+		hasPublicIp,
+	)
 }
 
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 1
+const testAccTencentCloudInstanceWithPrivateIP = defaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "${var.instance_name}"
+  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  system_disk_type  = "CLOUD_PREMIUM"
+  vpc_id            = "${var.vpc_id}"
+  subnet_id         = "${var.subnet_id}"
+  private_ip        = "172.16.0.130"
+}
+`
+
+func testAccTencentCloudInstanceWithKeyPair(keyName string) string {
+	return fmt.Sprintf(
+		defaultInstanceVariable+`
+resource "tencentcloud_key_pair" "foo" {
+  key_name = "%s"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
 }
 
-resource "tencentcloud_instance" "login" {
-  instance_name              = "terraform_automation_test_kuruk"
-  availability_zone          = "ap-guangzhou-3"
-  image_id                   = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type              = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "${var.instance_name}"
+  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  key_name          = "${tencentcloud_key_pair.foo.id}"
+  system_disk_type  = "CLOUD_PREMIUM"
+}
+`,
+		keyName,
+	)
+}
+
+func testAccTencentCloudInstanceWithPassword(password string) string {
+	return fmt.Sprintf(
+		defaultInstanceVariable+`
+resource "tencentcloud_instance" "foo" {
+  instance_name              = "${var.instance_name}"
+  availability_zone          = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id                   = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type              = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
   internet_max_bandwidth_out = 1
   password                   = "%s"
   system_disk_type           = "CLOUD_PREMIUM"
 }
 `,
-		pwd,
+		password,
 	)
 }
 
-const testAccInstanceConfigWithVPC = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-resource "tencentcloud_vpc" "my_vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_vpc_test"
-}
-
-resource "tencentcloud_subnet" "my_subnet" {
-  vpc_id            = "${tencentcloud_vpc.my_vpc.id}"
-  availability_zone = "ap-guangzhou-3"
-  name              = "tf_test_subnet"
-  cidr_block        = "10.0.2.0/24"
-}
-
-resource "tencentcloud_instance" "vpc_ins" {
-  instance_name     = "terraform_automation_test_kuruk_vpc"
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  vpc_id            = "${tencentcloud_vpc.my_vpc.id}"
-  subnet_id         = "${tencentcloud_subnet.my_subnet.id}"
+func testAccTencentCloudInstanceWithName(instanceName string) string {
+	return fmt.Sprintf(
+		defaultInstanceVariable+`
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "%s"
+  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
   system_disk_type  = "CLOUD_PREMIUM"
 }
-`
-
-const testAccInstanceConfigWithHostname = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
+`,
+		instanceName,
+	)
 }
 
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-data "tencentcloud_availability_zones" "my_favorate_zones" {
-  name = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_instance" "hostname" {
-  instance_name     = "terraform_automation_test_kuruk"
-  availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  hostname          = "testing"
-
+const testAccTencentCloudInstanceWithHostname = defaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "${var.instance_name}"
+  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  hostname          = "${var.instance_name}"
   system_disk_type = "CLOUD_PREMIUM"
 }
 `
 
-const testAccInstanceConfigWithProjectId = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
+func testAccTencentCloudInstanceWithSecurityGroup(ids string) string {
+	return fmt.Sprintf(
+		defaultInstanceVariable+`
+resource "tencentcloud_security_group" "foo" {
+  name        = "${var.instance_name}"
+  description = "${var.instance_name}"
 }
 
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-data "tencentcloud_availability_zones" "my_favorate_zones" {
-  name = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_instance" "project_id" {
-  instance_name     = "terraform_automation_test_kuruk"
-  availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  project_id        = 0
-
-  system_disk_type = "CLOUD_PREMIUM"
-}
-`
-
-func testAccInstanceConfigWithSecurityGroup(rule string) string {
-	return fmt.Sprintf(`
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-resource "tencentcloud_security_group" "my_sg1" {
-  name        = "tf_test_sg_name"
-  description = "tf_test_sg_desc"
-}
-
-resource "tencentcloud_security_group_rule" "sg_rule_1" {
-  security_group_id = "${tencentcloud_security_group.my_sg1.id}"
+resource "tencentcloud_security_group_rule" "foo" {
+  security_group_id = "${tencentcloud_security_group.foo.id}"
   type              = "ingress"
   cidr_ip           = "0.0.0.0/0"
   ip_protocol       = "tcp"
@@ -817,13 +611,13 @@ resource "tencentcloud_security_group_rule" "sg_rule_1" {
   policy            = "accept"
 }
 
-resource "tencentcloud_security_group" "my_sg2" {
-  name        = "tf_test_sg_name"
-  description = "tf_test_sg_desc"
+resource "tencentcloud_security_group" "bar" {
+  name        = "${var.instance_name}"
+  description = "${var.instance_name}"
 }
 
-resource "tencentcloud_security_group_rule" "sg_rule_2" {
-  security_group_id = "${tencentcloud_security_group.my_sg2.id}"
+resource "tencentcloud_security_group_rule" "bar" {
+  security_group_id = "${tencentcloud_security_group.bar.id}"
   type              = "ingress"
   cidr_ip           = "0.0.0.0/0"
   ip_protocol       = "tcp"
@@ -831,159 +625,49 @@ resource "tencentcloud_security_group_rule" "sg_rule_2" {
   policy            = "accept"
 }
 
-resource "tencentcloud_instance" "sg" {
-  instance_name     = "terraform_automation_test_kuruk_sg"
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type  = "CLOUD_PREMIUM"
-
+resource "tencentcloud_instance" "foo" {
+  instance_name              = "${var.instance_name}"
+  availability_zone          = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id                   = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type              = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  system_disk_type           = "CLOUD_PREMIUM"
   internet_max_bandwidth_out = 1
   security_groups            = %s
 }
 `,
-		rule,
+		ids,
 	)
 }
 
-func testAccInstanceConfigWithInstanceWithPrivateIP(name string) string {
+func testAccTencentCloudInstanceWithTags(tags string) string {
 	return fmt.Sprintf(
-		`
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-resource "tencentcloud_vpc" "my_vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_vpc_test"
-}
-
-resource "tencentcloud_subnet" "my_subnet" {
-  vpc_id            = "${tencentcloud_vpc.my_vpc.id}"
-  availability_zone = "ap-guangzhou-3"
-  name              = "tf_test_subnet"
-  cidr_block        = "10.0.2.0/24"
-}
-
+		defaultInstanceVariable+`
 resource "tencentcloud_instance" "foo" {
-  instance_name     = "terraform_automation_private_ip"
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  instance_name     = "${var.instance_name}"
+  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
   system_disk_type  = "CLOUD_PREMIUM"
-  vpc_id            = "${tencentcloud_vpc.my_vpc.id}"
-  subnet_id         = "${tencentcloud_subnet.my_subnet.id}"
-  private_ip        = "10.0.2.2"
-  hostname          = "%s"
+
+  tags = %s
 }
 `,
-		name,
+		tags,
 	)
 }
 
-const testAccInstanceConfigWithTags = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-resource "tencentcloud_instance" "foo" {
-  instance_name     = "terraform_automation_with_tags"
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type  = "CLOUD_PREMIUM"
-  tags = {
-    "hello" = "world"
-    "happy" = "hour"
-  }
-}
-`
-
-const testAccInstanceConfigWithTagsUpdate = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-resource "tencentcloud_instance" "foo" {
-  instance_name     = "terraform_automation_with_tags"
-  availability_zone = "ap-guangzhou-3"
-  image_id          = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  system_disk_type  = "CLOUD_PREMIUM"
-  tags = {
-    "hello" = "hello"
-  }
-}
-`
-
-const testAccInstanceConfigWithPlacementGroup = `
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
-
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S2"]
-  }
-  cpu_core_count = 1
-  memory_size    = 2
-}
-
-resource "tencentcloud_placement_group" "placement" {
-  name = "terraform_automation_placement"
+const testAccTencentCloudInstanceWithPlacementGroup = defaultInstanceVariable + `
+resource "tencentcloud_placement_group" "foo" {
+  name = "${var.instance_name}"
   type = "HOST"
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name      = "terraform_automation_with_placement"
-  availability_zone  = "ap-guangzhou-3"
-  image_id           = "${data.tencentcloud_image.my_favorate_image.image_id}"
-  instance_type      = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  instance_name      = "${var.instance_name}"
+  availability_zone  = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id           = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type      = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
   system_disk_type   = "CLOUD_PREMIUM"
-  placement_group_id = "${tencentcloud_placement_group.placement.id}"
+  placement_group_id = "${tencentcloud_placement_group.foo.id}"
 }
 `

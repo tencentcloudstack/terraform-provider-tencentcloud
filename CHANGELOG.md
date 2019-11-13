@@ -1,11 +1,18 @@
-## 1.22.1 (Unreleased)
+## 1.23.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_images`
+* **Provider TencentCloud**: add `security_token` argument
 
 ENHANCEMENTS:
 
+* All api calls now using api3.0
 * Resource: `tencentcloud_eip` add optional argument `tags`.
 * Data Source: `tencentcloud_eips` add optional argument `tags`.
 
 BUG FIXES:
+
 * Fixed docs of CAM
 
 ## 1.22.0 (November 05, 2019)

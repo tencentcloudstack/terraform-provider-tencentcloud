@@ -10,6 +10,8 @@ import (
 )
 
 func TestAccTencentCloudClbListenerRule_basic(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -32,6 +34,8 @@ func TestAccTencentCloudClbListenerRule_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -138,7 +142,7 @@ func testAccCheckClbListenerRuleExists(n string) resource.TestCheckFunc {
 const testAccClbListenerRule_basic = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-rule-basic"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
@@ -161,7 +165,7 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
 const testAccClbListenerRule_full = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic1"
+  clb_name     = "tf-clb-rule-full"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
@@ -196,7 +200,7 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
 const testAccClbListenerRule_update = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic1"
+  clb_name     = "tf-clb-rule-full"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {

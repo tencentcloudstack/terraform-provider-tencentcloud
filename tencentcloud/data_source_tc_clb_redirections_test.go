@@ -7,6 +7,8 @@ import (
 )
 
 func TestAccTencentCloudClbRedirectionsDataSource(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -31,7 +33,7 @@ func TestAccTencentCloudClbRedirectionsDataSource(t *testing.T) {
 const testAccClbRedirectionsDataSource = `
 resource "tencentcloud_clb_instance" "clb" {
   network_type = "OPEN"
-  clb_name     = "tf-clb-basic"
+  clb_name     = "tf-clb-redirections"
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {

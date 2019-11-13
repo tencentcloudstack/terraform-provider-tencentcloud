@@ -47,13 +47,9 @@ resource "tencentcloud_eni" "foo" {
   }
 }
 
-data "tencentcloud_image" "my_favorite_image" {
-  os_name = "centos"
-
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
+data "tencentcloud_images" "my_favorate_image" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "centos"
 }
 
 data "tencentcloud_instance_types" "my_favorite_instance_types" {
@@ -69,7 +65,7 @@ data "tencentcloud_instance_types" "my_favorite_instance_types" {
 resource "tencentcloud_instance" "foo" {
   instance_name            = "ci-test-eni-attach"
   availability_zone        = "ap-guangzhou-3"
-  image_id                 = "${data.tencentcloud_image.my_favorite_image.image_id}"
+  image_id                 = "${data.tencentcloud_images.my_favorate_image.images.0.image_id}"
   instance_type            = "${data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type}"
   system_disk_type         = "CLOUD_PREMIUM"
   disable_security_service = true

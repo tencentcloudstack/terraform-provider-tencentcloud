@@ -119,15 +119,15 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 	tagService := TagService{client: client}
 	region := client.Region
 
-	filter := make(map[string]string)
+	filter := make(map[string][]string)
 	if v, ok := d.GetOk("eip_id"); ok {
-		filter["address-id"] = v.(string)
+		filter["address-id"] = []string{v.(string)}
 	}
 	if v, ok := d.GetOk("eip_name"); ok {
-		filter["eip-name"] = v.(string)
+		filter["eip-name"] = []string{v.(string)}
 	}
 	if v, ok := d.GetOk("public_ip"); ok {
-		filter["public-ip"] = v.(string)
+		filter["public-ip"] = []string{v.(string)}
 	}
 
 	tags := getTags(d, "tags")

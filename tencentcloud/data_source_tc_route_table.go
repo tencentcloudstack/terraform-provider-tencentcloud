@@ -1,9 +1,33 @@
+/*
+Provides details about a specific Route Table.
+
+This resource can prove useful when a module accepts a Subnet id as an input variable and needs to, for example, add a route in the Route Table.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_vpc_route_tables.
+
+Example Usage
+
+```hcl
+variable "route_table_id" {}
+
+data "tencentcloud_route_table" "selected" {
+  route_table_id = "${var.route_table_id}"
+}
+
+resource "tencentcloud_route_entry" "rtb_entry_instance" {
+  vpc_id         = "{data.tencentcloud_route_table.selected.vpc_id}"
+  route_table_id = "${var.route_table_id}"
+  cidr_block     = "10.4.8.0/24"
+  next_type      = "instance"
+  next_hub       = "10.16.1.7"
+}
+```
+*/
 package tencentcloud
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -16,12 +40,9 @@ func dataSourceTencentCloudRouteTable() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"route_table_id": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"vpc_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The Route Table ID.",
 			},
 			"name": {
 				Type:     schema.TypeString,
@@ -33,122 +54,118 @@ func dataSourceTencentCloudRouteTable() *schema.Resource {
 					}
 					return
 				},
+				Description: "The Route Table name.",
+			},
+			"vpc_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The VPC ID.",
 			},
 			"subnet_num": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Number of associated subnets.",
 			},
 			"routes": {
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "The information list of the VPC route table.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cidr_block": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The RouteEntry's target network segment.",
 						},
 						"next_type": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The `next_hub` type.",
 						},
 						"next_hub": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The RouteEntry's next hub.",
 						},
 						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The RouteEntry's description.",
 						},
 					},
 				},
 			},
 			"create_time": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Creation time of routing table.",
 			},
 		},
 	}
 }
 
-func dataSourceTencentCloudRouteTableRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	params := map[string]string{
-		"Action":       "DescribeRouteTable",
-		"routeTableId": d.Get("route_table_id").(string),
-	}
-	if _, ok := d.GetOk("name"); ok {
-		params["routeTableName"] = d.Get("name").(string)
-	}
+func dataSourceTencentCloudRouteTableRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_route_table.read")()
 
-	log.Printf("[DEBUG] data_source_tc_route_table read params:%v", params)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	response, err := client.SendRequest("vpc", params)
-	if err != nil {
-		log.Printf("[DEBUG] data_source_tc_route_table read client.SendRequest error:%v", err)
-		return err
-	}
-
-	var jsonresp struct {
-		Code       int    `json:"code"`
-		Message    string `json:"message"`
-		CodeDesc   string `json:"codeDesc"`
-		TotalCount int    `json:"totalCount"`
-		Data       []struct {
-			UnVpcId              string `json:"UnVpcId"`
-			UnRouteTableId       string `json:"unRouteTableId"`
-			RouteTableName       string `json:"routeTableName"`
-			RouteTableCreateTime string `json:"routeTableCreateTime"`
-			SubnetNum            int    `json:"subnetNum"`
-			RouteTableSet        []struct {
-				DestinationCidrBlock string `json:"destinationCidrBlock"`
-				NextType             int    `json:"nextType"`
-				UnNextHub            string `json:"unNextHub"`
-				Description          string `json:"description"`
-			} `json:"routeSet"`
+	var (
+		routeTableId string
+		name         string
+	)
+	if temp, ok := d.GetOk("route_table_id"); ok {
+		tempStr := temp.(string)
+		if tempStr != "" {
+			routeTableId = tempStr
 		}
 	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
+	if temp, ok := d.GetOk("name"); ok {
+		tempStr := temp.(string)
+		if tempStr != "" {
+			name = tempStr
+		}
+	}
+
+	var infos, err = service.DescribeRouteTables(ctx, routeTableId, name, "", map[string]string{})
 	if err != nil {
-		log.Printf("[DEBUG] data_source_tc_route_table read json.Unmarshal error:%v", err)
 		return err
 	}
-	if jsonresp.Code != 0 {
-		return fmt.Errorf("data_source_tc_route_table read error, code:%v, message:%v, CodeDesc:%v", jsonresp.Code, jsonresp.Message, jsonresp.CodeDesc)
-	} else if jsonresp.TotalCount <= 0 || len(jsonresp.Data) <= 0 {
-		return fmt.Errorf("Your query returned no results. Please change your search criteria and try again.")
+
+	if len(infos) == 0 {
+		return fmt.Errorf("route table route_table_id=%s, name=%s not found", routeTableId, name)
 	}
 
-	rt := jsonresp.Data[0]
+	routetable := infos[0]
+	d.SetId(routetable.routeTableId)
+	d.Set("route_table_id", routetable.routeTableId)
+	d.Set("vpc_id", routetable.vpcId)
+	d.Set("name", routetable.name)
+	d.Set("subnet_num", len(routetable.entryInfos))
+	d.Set("create_time", routetable.createTime)
 
-	log.Printf("[DEBUG] data_source_tc_route_table read result route_table_id:%v", rt.UnRouteTableId)
-
-	d.SetId(rt.UnRouteTableId)
-	d.Set("route_table_id", rt.UnRouteTableId)
-	d.Set("vpc_id", rt.UnVpcId)
-	d.Set("name", rt.RouteTableName)
-	d.Set("subnet_num", rt.SubnetNum)
-	d.Set("create_time", rt.RouteTableCreateTime)
-
-	routes := make([]map[string]interface{}, 0, len(rt.RouteTableSet))
-	for _, r := range rt.RouteTableSet {
-		if strings.ToUpper(r.UnNextHub) == "LOCAL" {
+	routes := make([]map[string]interface{}, 0, len(routetable.entryInfos))
+	for _, r := range routetable.entryInfos {
+		if strings.ToUpper(r.nextBub) == "LOCAL" {
 			continue
 		}
 		m := make(map[string]interface{})
-		for vgwKey, vgwType := range nextTypes {
-			if vgwType == r.NextType {
-				m["next_type"] = vgwKey
+		nextType := ""
+		for k, v := range routeTypeNewMap {
+			if v == r.nextType {
+				nextType = k
 				break
 			}
 		}
-		m["next_hub"] = r.UnNextHub
-		m["cidr_block"] = r.DestinationCidrBlock
-		m["description"] = r.Description
+		m["next_type"] = nextType
+		m["next_hub"] = r.nextBub
+		m["cidr_block"] = r.destinationCidr
+		m["description"] = r.description
 		routes = append(routes, m)
 	}
 
 	if err := d.Set("routes", routes); err != nil {
-		log.Printf("[DEBUG] data_source_tc_route_table read d.Set routes error:%v", err)
 		return err
 	}
 

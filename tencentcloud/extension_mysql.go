@@ -72,3 +72,9 @@ var (
 	MysqlPayByMonth = 0
 	MysqlPayByUse   = 1
 )
+
+const (
+	MysqlInstanceIdNotFound  = "InvalidParameter.InstanceNotFound"
+	MysqlInstanceIdNotFound2 = "InvalidParameter"
+	MysqlInstanceIdNotFound3 = "InternalError.DatabaseAccessError"
+)

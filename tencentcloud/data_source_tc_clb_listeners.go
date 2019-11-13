@@ -124,7 +124,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"certificate_ca_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the client certificate. It must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of 'HTTPS' and 'TCP_SSL' protocol .",
+							Description: "Id of the client certificate. It must be set when SSLMode is 'mutual'. NOTES: only supported by listeners of 'HTTPS' and 'TCP_SSL' protocol.",
 						},
 						"session_expire_time": {
 							Type:        schema.TypeInt,

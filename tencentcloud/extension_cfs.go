@@ -33,3 +33,5 @@ var CFS_USER_PERMISSION = []string{
 	CFS_USER_PERMISSION_ROOT_SQUASH,
 	CFS_USER_PERMISSION_NO_ROOT_SQUASH,
 }
+
+const CfsInvalidPgroup = "InvalidParameterValue.InvalidPgroup"

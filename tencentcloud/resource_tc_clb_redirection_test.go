@@ -154,7 +154,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   protocol      = "HTTPS"
   listener_name = "listener_basic"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "Whi3fkoM"
+  certificate_id       = "VjANRdz8"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {

@@ -9,6 +9,8 @@ import (
 )
 
 func TestAccTencentCloudCosBucketDataSource_basic(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -28,6 +30,8 @@ func TestAccTencentCloudCosBucketDataSource_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudCosBucketDataSource_full(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

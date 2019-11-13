@@ -1,11 +1,41 @@
+/*
+Provides details about a specific VPC subnet.
+
+This resource can prove useful when a module accepts a subnet id as an input variable and needs to, for example, determine the id of the VPC that the subnet belongs to.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_vpc_subnets.
+
+Example Usage
+
+```hcl
+variable "subnet_id" {}
+variable "vpc_id" {}
+
+data "tencentcloud_subnet" "selected" {
+  vpc_id    = "${var.vpc_id}"
+  subnet_id = "${var.subnet_id}"
+}
+
+resource "tencentcloud_security_group" "default" {
+  name        = "test subnet data"
+  description = "test subnet data description"
+}
+
+resource "tencentcloud_security_group_rule" "subnet" {
+  security_group_id = "${tencentcloud_security_group.default.id}"
+  type              = "ingress"
+  cidr_ip           = "${data.tencentcloud_subnet.selected.cidr_block}"
+  ip_protocol       = "tcp"
+  port_range        = "80,8080"
+  policy            = "accept"
+}
+```
+*/
 package tencentcloud
 
 import (
-	"encoding/json"
-	"errors"
+	"context"
 	"fmt"
-	"log"
-	"strconv"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -17,134 +47,64 @@ func dataSourceTencentCloudSubnet() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"vpc_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The VPC ID.",
 			},
 			"subnet_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The ID of the Subnet.",
 			},
 			"cidr_block": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The CIDR block of the Subnet.",
 			},
 			"availability_zone": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The AZ for the subnet.",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The name for the Subnet.",
 			},
 			"route_table_id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The Route Table ID.",
 			},
 		},
 	}
 }
 
-func dataSourceTencentCloudSubnetRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).commonConn
-	subnetParams := map[string]string{
-		"Action":   "DescribeSubnet",
-		"vpcId":    d.Get("vpc_id").(string),
-		"subnetId": d.Get("subnet_id").(string),
-	}
-	response, err := client.SendRequest("vpc", subnetParams)
+func dataSourceTencentCloudSubnetRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_subnet.read")()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	vpcId := d.Get("vpc_id").(string)
+	subnetId := d.Get("subnet_id").(string)
+
+	infos, err := vpcService.DescribeSubnets(ctx, subnetId, vpcId, "", "", map[string]string{})
 	if err != nil {
 		return err
 	}
 
-	var jsonresp struct {
-		Code             int    `json:"code"`
-		Message          string `json:"message"`
-		CodeDesc         string `json:"codeDesc"`
-		SubnetName       string `json:"subnetName"`
-		CidrBlock        string `json:"cidrBlock"`
-		RouteTableId     string `json:"routeTableId"`
-		ZoneId           int    `json:"zoneId"`
-		AvailabilityZone string
-	}
-	err = json.Unmarshal([]byte(response), &jsonresp)
-	if err != nil {
-		return err
-	}
-	if jsonresp.CodeDesc == "InvalidSubnet.NotFound" {
-		return fmt.Errorf("Subnet Not Found")
-	} else if jsonresp.ZoneId == 0 {
-		return fmt.Errorf("data_source_tc_subnet got error, ZoneId is empty")
-	} else if jsonresp.Code != 0 {
-		return fmt.Errorf("data_source_tc_subnet got error, code:%v, message:%v", jsonresp.Code, jsonresp.Message)
+	if len(infos) == 0 {
+		return fmt.Errorf("subnet vpc_id=%s, subnet_id=%s not found", vpcId, subnetId)
 	}
 
-	subnet := jsonresp
-	subnetZoneId := strconv.Itoa(subnet.ZoneId)
+	subnet := infos[0]
+	d.SetId(subnet.subnetId)
+	d.Set("cidr_block", subnet.cidr)
+	d.Set("name", subnet.name)
+	d.Set("route_table_id", subnet.routeTableId)
+	d.Set("availability_zone", subnet.zone)
 
-	//[zone] transform [availability_zone], eg: 100002 --> ap-guangzhou-2
-	params := map[string]string{
-		"Version": "2017-03-12",
-		"Action":  "DescribeZones",
-	}
-	response, err = client.SendRequest("cvm", params)
-	if err != nil {
-		return err
-	}
-
-	type Zone struct {
-		Zone      string `json:"Zone"`
-		ZoneName  string `json:"ZoneName"`
-		ZoneId    string `json:"ZoneId"`
-		ZoneState string `json:"ZoneState"`
-	}
-	var ZoneJsonresp struct {
-		Response struct {
-			Error struct {
-				Code    string `json:"Code"`
-				Message string `json:"Message"`
-			}
-			RequestId string `json:"RequestId"`
-			ZoneSet   []Zone
-		}
-	}
-	err = json.Unmarshal([]byte(response), &ZoneJsonresp)
-	if err != nil {
-		return err
-	}
-	if ZoneJsonresp.Response.Error.Code != "" {
-		return fmt.Errorf(
-			"tencentcloud_availability_zones got error, code:%v, message:%v",
-			ZoneJsonresp.Response.Error.Code,
-			ZoneJsonresp.Response.Error.Message,
-		)
-	}
-
-	if len(ZoneJsonresp.Response.ZoneSet) == 0 {
-		return errors.New("No avalability zones found")
-	}
-
-	for _, zone := range ZoneJsonresp.Response.ZoneSet {
-		log.Printf(
-			"[DEBUG] tencentcloud_availability_zones - Zone found id: %v, name:% v, description: %v, state: %v",
-			zone.ZoneId,
-			zone.Zone,
-			zone.ZoneName,
-			zone.ZoneState,
-		)
-
-		if zone.ZoneId == subnetZoneId {
-			subnet.AvailabilityZone = zone.Zone
-		}
-	}
-
-	if subnet.AvailabilityZone == "" {
-		return errors.New("No avalability zones found")
-	}
-
-	d.SetId(subnetParams["subnetId"])
-	d.Set("cidr_block", subnet.CidrBlock)
-	d.Set("name", subnet.SubnetName)
-	d.Set("route_table_id", subnet.RouteTableId)
-	d.Set("availability_zone", subnet.AvailabilityZone)
 	return nil
 }

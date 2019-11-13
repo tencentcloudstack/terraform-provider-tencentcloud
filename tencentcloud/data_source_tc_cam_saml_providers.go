@@ -33,7 +33,7 @@ func dataSourceTencentCloudCamSAMLProviders() *schema.Resource {
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The description of the CAM SAML provider .",
+				Description: "The description of the CAM SAML provider.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

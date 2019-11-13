@@ -1,12 +1,28 @@
+/*
+Get all instances of the specific cluster.
+
+Use this data source to get all instances in a specific cluster.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_kubernetes_clusters.
+
+Example Usage
+
+```hcl
+data "tencentcloud_container_cluster_instances" "foo_instance" {
+  cluster_id = "cls-abcdefg"
+}
+```
+*/
 package tencentcloud
 
 import (
-	"fmt"
-	"time"
+	"log"
 
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/zqfan/tencentcloud-sdk-go/common"
-	ccs "github.com/zqfan/tencentcloud-sdk-go/services/ccs/unversioned"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 )
 
 func dataSourceTencentCloudContainerClusterInstances() *schema.Resource {
@@ -16,50 +32,60 @@ func dataSourceTencentCloudContainerClusterInstances() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "An id identify the cluster, like cls-xxxxxx.",
 			},
 			"limit": {
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "An int variable describe how many instances in return at most.",
 			},
-			// Computed values
 			"total_count": {
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Number of instances.",
 			},
 			"nodes": {
-				Computed: true,
-				Type:     schema.TypeList,
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "An information list of kubernetes instances.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"abnormal_reason": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the reason when node is in abnormal state(if it was).",
 						},
 						"cpu": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe the cpu of the node.",
 						},
 						"mem": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe the memory of the node.",
 						},
 						"instance_id": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "An id identify the node, provided by cvm.",
 						},
 						"is_normal": {
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Describe whether the node is normal.",
 						},
 						"wan_ip": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the wan ip of the node.",
 						},
 						"lan_ip": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe the lan ip of the node.",
 						},
 					},
 				},
@@ -68,66 +94,89 @@ func dataSourceTencentCloudContainerClusterInstances() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m interface{}) error {
-	client := m.(*TencentCloudClient).ccsConn
-	describeClusterInstancesReq := ccs.NewDescribeClusterInstancesRequest()
+func dataSourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_container_cluster_instances.read")()
 
+	logId := getLogId(contextNil)
+
+	request := tke.NewDescribeClusterInstancesRequest()
 	if clusterId, ok := d.GetOkExists("cluster_id"); ok {
-		describeClusterInstancesReq.ClusterId = common.StringPtr(clusterId.(string))
+		request.ClusterId = common.StringPtr(clusterId.(string))
 	}
 
 	if limit, ok := d.GetOkExists("limit"); ok {
-		describeClusterInstancesReq.Limit = common.IntPtr(limit.(int))
+		request.Limit = common.Int64Ptr(limit.(int64))
 	}
 
-	response, err := client.DescribeClusterInstances(describeClusterInstancesReq)
+	var response *tke.DescribeClusterInstancesResponse
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().DescribeClusterInstances(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s DescribeClusterInstances failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
-	if response.Code == nil {
-		return fmt.Errorf("data_source_tencent_cloud_container_cluster_instances got error, no code response")
-	}
+	nodes := make([]map[string]interface{}, 0, *response.Response.TotalCount)
+	ids := make([]string, 0, *response.Response.TotalCount)
+	for _, node := range response.Response.InstanceSet {
+		ids = append(ids, *node.InstanceId)
 
-	if *response.Code != 0 {
-		return fmt.Errorf("data_source_tencent_cloud_container_cluster_instances got error, code %v , message %v", *response.Code, *response.CodeDesc)
-	}
-
-	id := fmt.Sprintf("%d", time.Now().Unix())
-	nodes := make([]map[string]interface{}, 0)
-	for _, node := range response.Data.Nodes {
 		nodeInfo := make(map[string]interface{})
-		if node.AbnormalReason != nil {
-			nodeInfo["abnormal_reason"] = *node.AbnormalReason
+		nodeInfo["instance_id"] = *node.InstanceId
+		nodeInfo["abnormal_reason"] = *node.FailedReason
+		nodeInfo["wan_ip"] = ""
+		nodeInfo["lan_ip"] = ""
+		nodeInfo["cpu"] = 0
+		nodeInfo["mem"] = 0
+		if *node.InstanceState == "failed" {
+			nodeInfo["is_normal"] = 0
+		} else {
+			nodeInfo["is_normal"] = 1
 		}
-		if node.CPU != nil {
-			nodeInfo["cpu"] = *node.CPU
+
+		describeInstancesreq := cvm.NewDescribeInstancesRequest()
+		describeInstancesreq.InstanceIds = []*string{node.InstanceId}
+		var describeInstancesResponse *cvm.DescribeInstancesResponse
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().DescribeInstances(describeInstancesreq)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, describeInstancesreq.GetAction(), describeInstancesreq.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			describeInstancesResponse = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s DescribeInstances failed, reason:%s\n ", logId, err.Error())
+			return err
 		}
-		if node.Mem != nil {
-			nodeInfo["mem"] = *node.Mem
+
+		if len(describeInstancesResponse.Response.InstanceSet) > 0 {
+			nodeInfo["cpu"] = *describeInstancesResponse.Response.InstanceSet[0].CPU
+			nodeInfo["mem"] = *describeInstancesResponse.Response.InstanceSet[0].Memory
+			if len(describeInstancesResponse.Response.InstanceSet[0].PublicIpAddresses) > 0 {
+				nodeInfo["wan_ip"] = *describeInstancesResponse.Response.InstanceSet[0].PublicIpAddresses[0]
+			}
+			if len(describeInstancesResponse.Response.InstanceSet[0].PrivateIpAddresses) > 0 {
+				nodeInfo["lan_ip"] = *describeInstancesResponse.Response.InstanceSet[0].PrivateIpAddresses[0]
+			}
 		}
-		if node.InstanceId != nil {
-			nodeInfo["instance_id"] = *node.InstanceId
-		}
-		if node.IsNormal != nil {
-			nodeInfo["is_normal"] = *node.IsNormal
-		}
-		if node.WanIp != nil {
-			nodeInfo["wan_ip"] = *node.WanIp
-		}
-		if node.LanIp != nil {
-			nodeInfo["lan_ip"] = *node.LanIp
-		}
+
 		nodes = append(nodes, nodeInfo)
 	}
 
+	d.SetId(dataResourceIdsHash(ids))
 	d.Set("nodes", nodes)
-	d.SetId(id)
-	if response.Data.TotalCount != nil {
-		d.Set("total_count", *response.Data.TotalCount)
-	} else {
-		d.Set("total_count", 0)
-	}
+	d.Set("total_count", *response.Response.TotalCount)
 
 	return nil
 }

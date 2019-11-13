@@ -29,27 +29,32 @@ resource "tencentcloud_vpc" "main" {
   name       = "terraform_test_nats"
   cidr_block = "10.6.0.0/16"
 }
+
 resource "tencentcloud_eip" "eip_dev_dnat" {
   name = "terraform_test"
 }
+
 resource "tencentcloud_eip" "eip_test_dnat" {
   name = "terraform_test"
 }
 
 resource "tencentcloud_nat_gateway" "dev_nat" {
-  vpc_id           = "${tencentcloud_vpc.main.id}"
-  name             = "terraform_test_nats"
-  max_concurrent   = 3000000
-  bandwidth        = 500
+  vpc_id         = "${tencentcloud_vpc.main.id}"
+  name           = "terraform_test_nats"
+  max_concurrent = 3000000
+  bandwidth      = 500
+
   assigned_eip_set = [
     "${tencentcloud_eip.eip_dev_dnat.public_ip}",
   ]
 }
+
 resource "tencentcloud_nat_gateway" "test_nat" {
-  vpc_id           = "${tencentcloud_vpc.main.id}"
-  name             = "terraform_test_nats"
-  max_concurrent   = 3000000
-  bandwidth        = 500
+  vpc_id         = "${tencentcloud_vpc.main.id}"
+  name           = "terraform_test_nats"
+  max_concurrent = 3000000
+  bandwidth      = 500
+
   assigned_eip_set = [
     "${tencentcloud_eip.eip_test_dnat.public_ip}",
   ]

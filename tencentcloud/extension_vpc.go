@@ -88,3 +88,7 @@ const (
 	ENI_IP_DETACHING = "DETACHING"
 	ENI_IP_DELETING  = "DELETING"
 )
+
+const (
+	VPCNotFound = "ResourceNotFound"
+)

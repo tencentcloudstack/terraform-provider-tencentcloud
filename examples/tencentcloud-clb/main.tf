@@ -67,7 +67,7 @@ resource "tencentcloud_clb_listener" "listener_https" {
   port                 = 443
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VfqcL1ME"
+  certificate_id       = "VfqO4zkB"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_https" {
