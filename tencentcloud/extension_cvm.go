@@ -31,6 +31,8 @@ const (
 
 	ZONE_STATE_AVAILABLE   = "AVAILABLE"
 	ZONE_STATE_UNAVAILABLE = "UNAVAILABLE"
+
+	CVM_NOT_FOUND_ERROR = "InvalidInstanceId.NotFound"
 )
 
 var CVM_CHARGE_TYPE = []string{
