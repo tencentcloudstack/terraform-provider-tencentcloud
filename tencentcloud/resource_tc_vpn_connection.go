@@ -228,8 +228,8 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      1843200,
-				ValidateFunc: validateIntegerInRange(2560, 4294967295),
-				Description:  "SA lifetime of the IPSEC operation specification, unit is `KB`. The value ranges from 2560 to 4294967295. Default value is 1843200.",
+				ValidateFunc: validateIntegerMin(2560),
+				Description:  "SA lifetime of the IPSEC operation specification, unit is `KB`. The value should not be less then 2560. Default value is 1843200.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
