@@ -204,7 +204,7 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		errRet := cvmService.DeleteKeyPair(ctx, keyId)
 		if errRet != nil {
-			return retryError(errRet)
+			return retryError(errRet, "InvalidKeyPair")
 		}
 		return nil
 	})
