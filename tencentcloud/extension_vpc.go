@@ -268,4 +268,3 @@ var VPN_IPSEC_ENCRY_ALGORITHM = []string{
 const (
 	VPCNotFound = "ResourceNotFound"
 )
-

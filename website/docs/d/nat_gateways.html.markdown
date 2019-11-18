@@ -24,8 +24,8 @@ data "tencentcloud_nat_gateways" "foo" {
 
 The following arguments are supported:
 
-* `id` - (Optional) ID of the nat gateway.
-* `name` - (Optional) Name of the nat gateway.
+* `id` - (Optional) ID of the NAT gateway.
+* `name` - (Optional) Name of the NAT gateway.
 * `result_output_file` - (Optional) Used to save results.
 * `vpc_id` - (Optional) ID of the vpc.
 
@@ -33,14 +33,14 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `nats` - Information list of the dedicated tunnels.
+* `nats` - Information list of the dedicated nats.
   * `assigned_eip_set` - EIP arrays bound to the gateway. The value of at least 1.
-  * `bandwidth` - The maximum public network output bandwidth of nat gateway (unit: Mbps), the available values include: 20,50,100,200,500,1000,2000,5000. Default is 100.
-  * `create_time` - Create time of the nat gateway.
-  * `id` - ID of the nat gateway.
-  * `max_concurrent` - The upper limit of concurrent connection of nat gateway, the available values include: 1000000,3000000,10000000. Default is 1000000.
-  * `name` - Name of the nat gateway.
-  * `state` - State of the nat gateway.
+  * `bandwidth` - The maximum public network output bandwidth of NAT gateway (unit: Mbps), the available values include: 20,50,100,200,500,1000,2000,5000. Default is 100.
+  * `create_time` - Create time of the NAT gateway.
+  * `id` - ID of the NAT gateway.
+  * `max_concurrent` - The upper limit of concurrent connection of NAT gateway, the available values include: 1000000,3000000,10000000. Default is 1000000.
+  * `name` - Name of the NAT gateway.
+  * `state` - State of the NAT gateway.
   * `vpc_id` - ID of the vpc.
 
 

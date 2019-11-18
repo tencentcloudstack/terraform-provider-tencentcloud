@@ -1,14 +1,15 @@
-## 1.23.0 (Unreleased)
+## 1.24.0 (Unreleased)
+## 1.23.0 (November 14, 2019)
 
 FEATURES:
 
+* **New Data Source**: `tencentcloud_images`
 * **New Data Source**: `tencentcloud_vpn_gateways`
 * **New Data Source**: `tencentcloud_customer_gateways`
 * **New Data Source**: `tencentcloud_vpn_connections`
 * **New Resource**: `tencentcloud_vpn_gateway`
 * **New Resource**: `tencentcloud_customer_gateway`
 * **New Resource**: `tencentcloud_vpn_connection`
-* **New Data Source**: `tencentcloud_images`
 * **Provider TencentCloud**: add `security_token` argument
 
 ENHANCEMENTS:

@@ -222,14 +222,14 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Optional:     true,
 				Default:      "NULL",
 				ValidateFunc: validateAllowedStringValue(VPN_IPSEC_PFS_DH_GROUP_NAME),
-				Description:  "PFS DH group , valid values are `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`, `NULL`. Default value is `NULL`.",
+				Description:  "PFS DH group, valid values are `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`, `NULL`. Default value is `NULL`.",
 			},
 			"ipsec_sa_lifetime_traffic": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      1843200,
-				ValidateFunc: validateIntegerInRange(2560, 4294967295),
-				Description:  "SA lifetime of the IPSEC operation specification, unit is `KB`. The value ranges from 2560 to 4294967295. Default value is 1843200.",
+				ValidateFunc: validateIntegerMin(2560),
+				Description:  "SA lifetime of the IPSEC operation specification, unit is `KB`. The value should not be less then 2560. Default value is 1843200.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
