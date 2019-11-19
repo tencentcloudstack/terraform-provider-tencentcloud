@@ -1,4 +1,21 @@
-## 1.23.0 (Unreleased)
+## 1.24.0 (Unreleased)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_ha_vips`
+* **New Data Source**: `tencentcloud_ha_vip_eip_attachments`
+* **New Resource**: `tencentcloud_ha_vip`
+* **New Resource**: `tencentcloud_ha_vip_eip_attachment`
+
+ENHANCEMENTS:
+* Resource: `tencentcloud_kubernetes_cluster` cluster_os add new support: `centos7.6x86_64` and `ubuntu18.04.1 LTSx86_64` 
+* Resource: `tencentcloud_nat_gateway` add computed argument `created_time`.
+
+BUG FIXES:
+* Fixed docs issues of CAM, DNAT and NAT_GATEWAY
+* Fixed query issue that paged-query was not supported in data source `tencentcloud_dnats`
+* Fixed query issue that filter `address_ip` was set incorrectly in data source `tencentcloud_eips`
+
+## 1.23.0 (November 14, 2019)
 
 FEATURES:
 
