@@ -220,7 +220,7 @@ LOOP:
 		var infoMap = map[string]interface{}{}
 		infoMap["cluster_name"] = info.ClusterName
 		infoMap["cluster_desc"] = info.ClusterDescription
-		infoMap["cluster_os"] = info.ClusterOs
+		infoMap["cluster_os"] = tkeToShowClusterOs(info.ClusterOs)
 		infoMap["cluster_deploy_type"] = info.DeployType
 		infoMap["cluster_version"] = info.ClusterVersion
 		infoMap["cluster_ipvs"] = info.Ipvs

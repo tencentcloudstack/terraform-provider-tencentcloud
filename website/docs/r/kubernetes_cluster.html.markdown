@@ -132,7 +132,7 @@ The following arguments are supported:
 * `cluster_max_pod_num` - (Optional, ForceNew) The maximum number of Pods per node in the cluster. Default is 256. Must be a multiple of 16 and large than 32.
 * `cluster_max_service_num` - (Optional, ForceNew) The maximum number of services in the cluster. Default is 256. Must be a multiple of 16.
 * `cluster_name` - (Optional, ForceNew) Name of the cluster.
-* `cluster_os` - (Optional, ForceNew) Operating system of the cluster, the available values include: 'centos7.2x86_64' and 'ubuntu16.04.1 LTSx86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.
+* `cluster_os` - (Optional, ForceNew) Operating system of the cluster, the available values include: 'centos7.2x86_64','centos7.6x86_64','ubuntu16.04.1 LTSx86_64','ubuntu18.04.1 LTSx86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.
 * `cluster_version` - (Optional, ForceNew) Version of the cluster, Default is '1.10.5'.
 * `container_runtime` - (Optional, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.
 * `ignore_cluster_cidr_conflict` - (Optional, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.

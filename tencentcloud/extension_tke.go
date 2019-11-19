@@ -2,10 +2,27 @@ package tencentcloud
 
 const (
 	TKE_CLUSTER_OS_CENTOS72 = "centos7.2x86_64"
-	TKE_CLUSTER_OS_UBUNTU   = "ubuntu16.04.1 LTSx86_64"
+	TKE_CLUSTER_OS_CENTOS76 = "centos7.6x86_64"
+	TKE_CLUSTER_OS_UBUNTU16 = "ubuntu16.04.1 LTSx86_64"
+	TKE_CLUSTER_OS_UBUNTU18 = "ubuntu18.04.1 LTSx86_64"
 )
 
-var TKE_CLUSTER_OS = []string{TKE_CLUSTER_OS_CENTOS72, TKE_CLUSTER_OS_UBUNTU}
+var TKE_CLUSTER_OS = []string{TKE_CLUSTER_OS_CENTOS72, TKE_CLUSTER_OS_CENTOS76, TKE_CLUSTER_OS_UBUNTU16, TKE_CLUSTER_OS_UBUNTU18}
+
+var tkeClusterOsMap = map[string]string{TKE_CLUSTER_OS_CENTOS72: TKE_CLUSTER_OS_CENTOS72,
+	TKE_CLUSTER_OS_CENTOS76: "centos7.6.0_x64",
+	TKE_CLUSTER_OS_UBUNTU16: TKE_CLUSTER_OS_UBUNTU16,
+	TKE_CLUSTER_OS_UBUNTU18: "ubuntu18.04.1x86_64",
+}
+
+func tkeToShowClusterOs(apiOs string) string {
+	for showName, apiName := range tkeClusterOsMap {
+		if apiName == apiOs {
+			return showName
+		}
+	}
+	return "unknown"
+}
 
 const (
 	TKE_DEPLOY_TYPE_MANAGED     = "MANAGED_CLUSTER"
