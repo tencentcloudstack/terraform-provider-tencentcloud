@@ -33,7 +33,7 @@ The following arguments are supported:
 * `elastic_port` - (Required, ForceNew) Port of the EIP.
 * `nat_id` - (Required, ForceNew) Id of the NAT.
 * `private_ip` - (Required, ForceNew) Network address of the backend service.
-* `private_port` - (Required, ForceNew) Port of internet.
+* `private_port` - (Required, ForceNew) Port of intranet.
 * `protocol` - (Required, ForceNew) Type of the network protocol, the available values are: `TCP` and `UDP`.
 * `vpc_id` - (Required, ForceNew) Id of the VPC.
 * `description` - (Optional) Description of the NAT forward.

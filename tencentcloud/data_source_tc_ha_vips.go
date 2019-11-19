@@ -16,10 +16,12 @@ data "tencentcloud_ha_vips" "havips" {
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/pkg/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
-	"log"
 )
 
 func dataSourceTencentCloudHaVips() *schema.Resource {
@@ -164,15 +166,13 @@ func dataSourceTencentCloudHaVipsRead(d *schema.ResourceData, meta interface{}) 
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeHaVips(request)
 			if e != nil {
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return retryError(errors.WithStack(e))
 			}
 			response = result
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read HA VIP failed, reason:%s\n", logId, err.Error())
+			log.Printf("[CRITAL]%s read HA VIP failed, reason:%+v", logId, err)
 			return err
 		} else {
 			result = append(result, response.Response.HaVipSet...)

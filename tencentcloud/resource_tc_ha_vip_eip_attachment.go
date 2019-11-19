@@ -23,13 +23,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
 	"log"
 	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/pkg/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
@@ -138,14 +138,12 @@ func haVipAssociateEip(meta interface{}, havipId string, eip string) error {
 	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().HaVipAssociateAddressIp(bindRequest)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, bindRequest.GetAction(), bindRequest.ToJsonString(), e.Error())
 			return retryError(errors.WithStack(e))
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create HA VIP EIP attachment failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s create HA VIP EIP attachment failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -154,13 +152,8 @@ func haVipAssociateEip(meta interface{}, havipId string, eip string) error {
 	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeHaVips(statRequest)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, statRequest.GetAction(), statRequest.ToJsonString(), e.Error())
-			//when associated eip is in deleting process, delete ha vip may return unsupported operation error
-			return retryError(errors.WithStack(e), "UnsupportedOperation")
-
+			return retryError(errors.WithStack(e), VPCUnsupportedOperation)
 		} else {
-			//if not, quit
 			if len(result.Response.HaVipSet) > 0 {
 				if *result.Response.HaVipSet[0].AddressIp == "" {
 					return resource.RetryableError(fmt.Errorf("Not binded yet, retry describing"))
@@ -168,12 +161,11 @@ func haVipAssociateEip(meta interface{}, havipId string, eip string) error {
 					return nil
 				}
 			}
-			//else consider delete fail
 			return resource.NonRetryableError(fmt.Errorf("describe error"))
 		}
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s describe HA VIP failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s describe HA VIP failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -188,14 +180,12 @@ func haVipDisassociateEip(meta interface{}, havipId string, eip string) error {
 	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().HaVipDisassociateAddressIp(bindRequest)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, bindRequest.GetAction(), bindRequest.ToJsonString(), e.Error())
 			return retryError(errors.WithStack(e))
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create HA VIP attachment failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s create HA VIP attachment failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -204,10 +194,8 @@ func haVipDisassociateEip(meta interface{}, havipId string, eip string) error {
 	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeHaVips(statRequest)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, statRequest.GetAction(), statRequest.ToJsonString(), e.Error())
 			//when associated eip is in deleting process, delete ha vip may return unsupported operation error
-			return retryError(errors.WithStack(e), "UnsupportedOperation")
+			return retryError(errors.WithStack(e), VPCUnsupportedOperation)
 
 		} else {
 			//if not, quit
@@ -218,12 +206,11 @@ func haVipDisassociateEip(meta interface{}, havipId string, eip string) error {
 					return nil
 				}
 			}
-			//else consider delete fail
 			return resource.NonRetryableError(fmt.Errorf("describe error"))
 		}
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s describe HA VIP failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s describe HA VIP failed, reason:%+v", logId, err)
 		return err
 	}
 

@@ -96,7 +96,7 @@ func resourceTencentCloudDnat() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validatePort,
-				Description:  "Port of internet.",
+				Description:  "Port of intranet.",
 			},
 			"description": {
 				Type:        schema.TypeString,

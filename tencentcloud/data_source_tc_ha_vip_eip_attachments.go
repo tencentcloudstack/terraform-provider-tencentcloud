@@ -13,11 +13,11 @@ data "tencentcloud_ha_vip_eip_attachments" "foo" {
 package tencentcloud
 
 import (
-	"github.com/pkg/errors"
 	"log"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/pkg/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
@@ -81,19 +81,14 @@ func dataSourceTencentCloudHaVipEipAttachmentsRead(d *schema.ResourceData, meta 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeHaVips(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(errors.WithStack(e))
 		}
 		response = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read HA VIP failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s read HA VIP failed, reason:%+v", logId, err)
 		return err
-	}
-	if len(response.Response.HaVipSet) < 1 {
-		return nil
 	}
 
 	haVipEipAttachmentList := make([]map[string]interface{}, 0, len(response.Response.HaVipSet))
