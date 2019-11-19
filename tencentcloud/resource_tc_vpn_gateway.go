@@ -181,7 +181,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
+				logId, statRequest.GetAction(), statRequest.ToJsonString(), e.Error())
 			return retryError(e)
 		} else {
 			//if not, quit

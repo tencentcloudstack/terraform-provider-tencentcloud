@@ -4,7 +4,7 @@ Use this data source to query detailed information of VPN customer gateways.
 Example Usage
 
 ```hcl
-data "tencentcloud_nat_gateways" "foo" {
+data "tencentcloud_customer_gateways" "foo" {
   name              = "main"
   id                = "cgw-xfqag"
   public_ip_address = "1.1.1.1"
@@ -99,7 +99,7 @@ func dataSourceTencentCloudVpnCustomerGateways() *schema.Resource {
 }
 
 func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_nat_gateways.read")()
+	defer logElapsed("data_source.tencentcloud_customer_gateways.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -135,7 +135,6 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 	limit := uint64(VPN_DESCRIBE_LIMIT)
 	for {
 		var response *vpc.DescribeCustomerGatewaysResponse
-		//add for cycle and add this to nat too
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeCustomerGateways(request)
 			if e != nil {

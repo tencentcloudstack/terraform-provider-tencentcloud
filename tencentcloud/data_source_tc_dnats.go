@@ -35,24 +35,24 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the vpc.",
+				Description: "Id of the VPC.",
 			},
 			"nat_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the nat.",
+				Description: "Id of the NAT.",
 			},
 			"elastic_ip": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateIp,
-				Description:  "Network address of the eip.",
+				Description:  "Network address of the EIP.",
 			},
 			"elastic_port": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validatePort,
-				Description:  "Port of the eip.",
+				Description:  "Port of the EIP.",
 			},
 			"private_ip": {
 				Type:         schema.TypeString,
@@ -63,7 +63,7 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Description of the nat forward.",
+				Description: "Description of the NAT forward.",
 			},
 			"private_port": {
 				Type:         schema.TypeString,
@@ -81,33 +81,33 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 			"dnat_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Information list of the dnats.",
+				Description: "Information list of the DNATs.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the vpc.",
+							Description: "Id of the VPC.",
 						},
 						"nat_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the nat.",
+							Description: "Id of the NAT.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of the network protocol, the available values include: TCP and UDP.",
+							Description: "Type of the network protocol, the available values include: `TCP` and `UDP`.",
 						},
 						"elastic_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Network address of the eip.",
+							Description: "Network address of the EIP.",
 						},
 						"elastic_port": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Port of the eip.",
+							Description: "Port of the EIP.",
 						},
 						"private_ip": {
 							Type:        schema.TypeString,
@@ -122,7 +122,7 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Description of the nat forward.",
+							Description: "Description of the NAT forward.",
 						},
 					},
 				},
@@ -167,24 +167,38 @@ func dataSourceTencentCloudDnatsRead(d *schema.ResourceData, meta interface{}) e
 		request.Filters = append(request.Filters, filter)
 	}
 	var response *vpc.DescribeNatGatewayDestinationIpPortTranslationNatRulesResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGatewayDestinationIpPortTranslationNatRules(request)
-		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+
+	offset := uint64(0)
+	request.Offset = &offset
+	result := make([]*vpc.NatGatewayDestinationIpPortTranslationNatRule, 0)
+	limit := uint64(NAT_DESCRIBE_LIMIT)
+	for {
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGatewayDestinationIpPortTranslationNatRules(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s read DNAT failed, reason:%s\n", logId, err.Error())
+			return err
+		} else {
+			result = append(result, response.Response.NatGatewayDestinationIpPortTranslationNatRuleSet...)
+			if len(response.Response.NatGatewayDestinationIpPortTranslationNatRuleSet) < NAT_DESCRIBE_LIMIT {
+				break
+			} else {
+				offset = offset + limit
+				request.Offset = &offset
+			}
 		}
-		response = result
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read dnat  failed, reason:%s\n ", logId, err.Error())
-		return err
 	}
-	dnats := response.Response.NatGatewayDestinationIpPortTranslationNatRuleSet
-	ids := make([]string, 0, len(dnats))
-	dnatList := make([]map[string]interface{}, 0, len(dnats))
-	for _, dnat := range dnats {
+	ids := make([]string, 0, len(result))
+	dnatList := make([]map[string]interface{}, 0, len(result))
+	for _, dnat := range result {
 		mapping := map[string]interface{}{
 			"nat_id":       *dnat.NatGatewayId,
 			"vpc_id":       *dnat.VpcId,
@@ -204,7 +218,7 @@ func dataSourceTencentCloudDnatsRead(d *schema.ResourceData, meta interface{}) e
 	}
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("dnat_list", dnatList); e != nil {
-		log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set DNAT list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

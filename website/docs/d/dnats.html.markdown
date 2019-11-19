@@ -29,26 +29,26 @@ data "tencentcloud_dnats" "foo" {
 
 The following arguments are supported:
 
-* `description` - (Optional) Description of the nat forward.
-* `elastic_ip` - (Optional) Network address of the eip.
-* `elastic_port` - (Optional) Port of the eip.
-* `nat_id` - (Optional) ID of the nat.
+* `description` - (Optional) Description of the NAT forward.
+* `elastic_ip` - (Optional) Network address of the EIP.
+* `elastic_port` - (Optional) Port of the EIP.
+* `nat_id` - (Optional) Id of the NAT.
 * `private_ip` - (Optional) Network address of the backend service.
 * `private_port` - (Optional) Port of intranet.
 * `result_output_file` - (Optional) Used to save results.
-* `vpc_id` - (Optional) ID of the vpc.
+* `vpc_id` - (Optional) Id of the VPC.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `dnat_list` - Information list of the dnats.
-  * `elastic_ip` - Network address of the eip.
-  * `elastic_port` - Port of the eip.
-  * `nat_id` - ID of the nat.
+* `dnat_list` - Information list of the DNATs.
+  * `elastic_ip` - Network address of the EIP.
+  * `elastic_port` - Port of the EIP.
+  * `nat_id` - Id of the NAT.
   * `private_ip` - Network address of the backend service.
   * `private_port` - Port of intranet.
-  * `protocol` - Type of the network protocol, the available values include: TCP and UDP.
-  * `vpc_id` - ID of the vpc.
+  * `protocol` - Type of the network protocol, the available values include: `TCP` and `UDP`.
+  * `vpc_id` - Id of the VPC.
 
 

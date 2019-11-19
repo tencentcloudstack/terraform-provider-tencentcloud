@@ -29,7 +29,7 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the vpc.",
+				Description: "Id of the VPC.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -39,7 +39,7 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the NAT gateway.",
+				Description: "Id of the NAT gateway.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -51,18 +51,18 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 			"nats": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Information list of the dedicated nats.",
+				Description: "Information list of the dedicated NATs.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the NAT gateway.",
+							Description: "Id of the NAT gateway.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the vpc.",
+							Description: "Id of the VPC.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -143,7 +143,7 @@ func dataSourceTencentCloudNatGatewaysRead(d *schema.ResourceData, meta interfac
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read NAT gateway failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s read NAT gateway failed, reason:%s\n", logId, err.Error())
 			return err
 		} else {
 			result = append(result, response.Response.NatGatewaySet...)
@@ -173,7 +173,7 @@ func dataSourceTencentCloudNatGatewaysRead(d *schema.ResourceData, meta interfac
 	}
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("nats", natList); e != nil {
-		log.Printf("[CRITAL]%s provider set NAT list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set NAT list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 
