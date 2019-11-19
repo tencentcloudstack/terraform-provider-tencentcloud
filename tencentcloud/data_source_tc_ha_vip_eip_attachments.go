@@ -109,7 +109,7 @@ func dataSourceTencentCloudHaVipEipAttachmentsRead(d *schema.ResourceData, meta 
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("ha_vip_eip_attachment_list", haVipEipAttachmentList); e != nil {
-		log.Printf("[CRITAL]%s provider set HA VIP EIP attachment list fail, reason:%s\n", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set HA VIP EIP attachment list fail, reason:%s\n", logId, e)
 		return e
 	}
 

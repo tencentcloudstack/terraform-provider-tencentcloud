@@ -235,7 +235,7 @@ func resourceTencentCloudHaVipDelete(d *schema.ResourceData, meta interface{}) e
 			}
 			if ee.Code == VPCNotFound {
 				log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
-					logId, statRequest.GetAction(), statRequest.ToJsonString(), e.Error())
+					logId, statRequest.GetAction(), statRequest.ToJsonString(), e)
 				return nil
 			} else {
 				//when associated eip is in deleting process, delete ha vip may return unsupported operation error

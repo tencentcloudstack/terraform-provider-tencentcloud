@@ -210,7 +210,7 @@ func dataSourceTencentCloudHaVipsRead(d *schema.ResourceData, meta interface{}) 
 	}
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("ha_vip_list", haVipList); e != nil {
-		log.Printf("[CRITAL]%s provider set haVip list fail, reason:%s\n", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set haVip list fail, reason:%s\n", logId, e)
 		return e
 	}
 

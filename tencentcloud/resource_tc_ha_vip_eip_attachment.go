@@ -99,7 +99,7 @@ func resourceTencentCloudHaVipEipAttachmentRead(d *schema.ResourceData, meta int
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read HA VIP EIP attachment failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s read HA VIP EIP attachment failed, reason:%s\n", logId, err)
 		return err
 	}
 

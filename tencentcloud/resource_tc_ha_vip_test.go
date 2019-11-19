@@ -7,7 +7,8 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
-	errors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/pkg/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
@@ -81,26 +82,24 @@ func testAccCheckHaVipDestroy(s *terraform.State) error {
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			result, e := conn.UseVpcClient().DescribeHaVips(request)
 			if e != nil {
-				ee, ok := e.(*errors.TencentCloudSDKError)
+				ee, ok := e.(*sdkErrors.TencentCloudSDKError)
 				if !ok {
-					return retryError(e)
+					return retryError(errors.WithStack(e))
 				}
 				if ee.Code == VPCNotFound {
 					log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
-						logId, request.GetAction(), request.ToJsonString(), e.Error())
+						logId, request.GetAction(), request.ToJsonString(), e)
 					return resource.NonRetryableError(e)
 				} else {
-					log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-						logId, request.GetAction(), request.ToJsonString(), e.Error())
-					return retryError(e)
+					return retryError(errors.WithStack(e))
 				}
 			}
 			response = result
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read HA VIP failed, reason:%s\n", logId, err.Error())
-			ee, ok := err.(*errors.TencentCloudSDKError)
+			log.Printf("[CRITAL]%s read HA VIP failed, reason:%+v", logId, err)
+			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
 			if !ok {
 				return err
 			}
@@ -136,15 +135,13 @@ func testAccCheckHaVipExists(n string) resource.TestCheckFunc {
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			result, e := conn.UseVpcClient().DescribeHaVips(request)
 			if e != nil {
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
+				return retryError(errors.WithStack(e))
 			}
 			response = result
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read HA VIP failed, reason:%s\n", logId, err.Error())
+			log.Printf("[CRITAL]%s read HA VIP failed, reason:%s\n", logId, err)
 			return err
 		}
 		if len(response.Response.HaVipSet) != 1 {
