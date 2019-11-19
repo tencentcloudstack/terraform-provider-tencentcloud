@@ -26,6 +26,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
@@ -186,6 +187,11 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := cvmService.UnbindKeyPair(ctx, keyId, keyPair.AssociatedInstanceIds)
 			if errRet != nil {
+				if sdkErr, ok := errRet.(*errors.TencentCloudSDKError); ok {
+					if sdkErr.Code == CVM_NOT_FOUND_ERROR {
+						return nil
+					}
+				}
 				return retryError(errRet)
 			}
 			return nil
@@ -198,7 +204,7 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		errRet := cvmService.DeleteKeyPair(ctx, keyId)
 		if errRet != nil {
-			return retryError(errRet)
+			return retryError(errRet, "InvalidKeyPair")
 		}
 		return nil
 	})

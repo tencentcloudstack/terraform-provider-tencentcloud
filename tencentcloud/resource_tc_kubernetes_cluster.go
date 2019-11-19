@@ -372,9 +372,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Type:         schema.TypeString,
 			ForceNew:     true,
 			Optional:     true,
-			Default:      TKE_CLUSTER_OS_UBUNTU,
+			Default:      TKE_CLUSTER_OS_UBUNTU16,
 			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS),
-			Description:  "Operating system of the cluster, the available values include: 'centos7.2x86_64' and 'ubuntu16.04.1 LTSx86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.",
+			Description:  "Operating system of the cluster, the available values include: 'centos7.2x86_64','centos7.6x86_64','ubuntu16.04.1 LTSx86_64','ubuntu18.04.1 LTSx86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.",
 		},
 		"container_runtime": {
 			Type:         schema.TypeString,
@@ -766,7 +766,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 
 	basic.ProjectId = int64(d.Get("project_id").(int))
-	basic.ClusterOs = d.Get("cluster_os").(string)
+	basic.ClusterOs = tkeClusterOsMap[d.Get("cluster_os").(string)]
 	basic.ClusterVersion = d.Get("cluster_version").(string)
 	if v, ok := d.GetOk("cluster_name"); ok {
 		basic.ClusterName = v.(string)
@@ -909,7 +909,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 
 	d.Set("cluster_name", info.ClusterName)
 	d.Set("cluster_desc", info.ClusterDescription)
-	d.Set("cluster_os", info.ClusterOs)
+	d.Set("cluster_os", tkeToShowClusterOs(info.ClusterOs))
 	d.Set("cluster_deploy_type", info.DeployType)
 	d.Set("cluster_version", info.ClusterVersion)
 	d.Set("cluster_ipvs", info.Ipvs)
