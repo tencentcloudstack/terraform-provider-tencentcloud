@@ -192,7 +192,6 @@ func dataSourceTencentCloudDnatsRead(d *schema.ResourceData, meta interface{}) e
 				break
 			} else {
 				offset = offset + limit
-				request.Offset = &offset
 			}
 		}
 	}

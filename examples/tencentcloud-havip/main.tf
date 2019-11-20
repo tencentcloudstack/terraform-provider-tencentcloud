@@ -1,14 +1,17 @@
 # Create VPC and Subnet
-data "tencentcloud_vpc_instances" "example" {
-  name = "guagua-ci-temp-test"
+resource "tencentcloud_vpc" "example" {
+  name       = "example"
+  cidr_block = "10.0.0.0/16"
 }
-data "tencentcloud_vpc_subnets" "example" {
-  name = "guagua-ci-temp-test"
+
+resource "tencentcloud_subnet" "example" {
+  name              = "example"
+  availability_zone = "${var.availability_zone}"
+  vpc_id            = "${tencentcloud_vpc.example.id}"
+  cidr_block        = "10.0.0.0/24"
+  is_multicast      = false
 }
-#Create EIP
-resource "tencentcloud_eip" "example" {
-  name = "example"
-}
+
 resource "tencentcloud_ha_vip" "example" {
   name      = "example"
   vpc_id    = "${data.tencentcloud_vpc_instances.example.instance_list.0.vpc_id}"

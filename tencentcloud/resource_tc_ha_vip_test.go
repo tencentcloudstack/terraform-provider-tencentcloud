@@ -151,47 +151,26 @@ func testAccCheckHaVipExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccHaVipConfig = `
-# Create VPC and Subnet
-data "tencentcloud_vpc_instances" "foo" {
-  name = "Default-VPC"
-}
-data "tencentcloud_vpc_subnets" "subnet" {
-  name              = "Default-Subnet-Terraform-勿删"
-}
+const testAccHaVipConfig = defaultVpcVariable + `
 resource "tencentcloud_ha_vip" "havip" {
   name      = "terraform_test"
-  vpc_id    = "${data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id}"
-  subnet_id = "${data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id}"
+  vpc_id    = "${var.vpc_id}"
+  subnet_id = "${var.subnet_id}"
 }
 `
-const testAccHaVipConfigUpdate = `
-# Create VPC and Subnet
-data "tencentcloud_vpc_instances" "foo" {
-  name = "Default-VPC"
-}
-data "tencentcloud_vpc_subnets" "subnet" {
-  name              = "Default-Subnet-Terraform-勿删"
-}
+const testAccHaVipConfigUpdate = defaultVpcVariable + `
 resource "tencentcloud_ha_vip" "havip" {
   name      = "terraform_update"
-  vpc_id    = "${data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id}"
-  subnet_id = "${data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id}"
+  vpc_id    = "${var.vpc_id}"
+  subnet_id = "${var.subnet_id}"
 }
 `
 
-const testAccHaVipConfigAssigned = `
-# Create VPC and Subnet
-data "tencentcloud_vpc_instances" "foo" {
-  name = "Default-VPC"
-}
-data "tencentcloud_vpc_subnets" "subnet" {
-  name              = "Default-Subnet-Terraform-勿删"
-}
+const testAccHaVipConfigAssigned = defaultVpcVariable + `
 resource "tencentcloud_ha_vip" "havip" {
   name      = "terraform_test"
-  vpc_id    = "${data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id}"
-  subnet_id = "${data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id}"
-  vip       = "172.16.16.255"
+  vpc_id    = "${var.vpc_id}"
+  subnet_id = "${var.subnet_id}"
+  vip       = "172.16.0.255"
 }
 `

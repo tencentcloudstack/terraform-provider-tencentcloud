@@ -28,18 +28,11 @@ func TestAccTencentCloudHaVipsDataSource(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudHaVipsDataSourceConfig_basic = `
-# Create VPC and Subnet
-data "tencentcloud_vpc_instances" "foo" {
-  name = "Default-VPC"
-}
-data "tencentcloud_vpc_subnets" "subnet" {
-  name              = "Default-Subnet-Terraform-勿删"
-}
+const testAccTencentCloudHaVipsDataSourceConfig_basic = defaultVpcVariable + `
 resource "tencentcloud_ha_vip" "havip" {
   name      = "terraform_test"
-  vpc_id    = "${data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id}"
-  subnet_id = "${data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id}"
+  vpc_id    = "${var.vpc_id}"
+  subnet_id = "${var.subnet_id}"
 }
 
 data "tencentcloud_ha_vips" "havips" {

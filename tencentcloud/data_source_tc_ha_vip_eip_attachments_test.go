@@ -24,22 +24,15 @@ func TestAccTencentCloudHaVipEipAttachmentsDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccHaVipEipAttachmentsDataSource_basic = `
-# Create VPC and Subnet
-data "tencentcloud_vpc_instances" "foo" {
-  name = "Default-VPC"
-}
-data "tencentcloud_vpc_subnets" "subnet" {
-  name = "Default-Subnet-Terraform-勿删"
-}
+const testAccHaVipEipAttachmentsDataSource_basic = defaultVpcVariable + `
 #Create EIP
 resource "tencentcloud_eip" "eip" {
   name = "havip_eip"
 }
 resource "tencentcloud_ha_vip" "havip" {
   name       = "terraform_test"
-  vpc_id     = "${data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id}"
-  subnet_id  = "${data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id}"
+  vpc_id     = "${var.vpc_id}"
+  subnet_id  = "${var.subnet_id}"
 }
 resource "tencentcloud_ha_vip_eip_attachment" "ha_vip_eip_attachment" {
   havip_id   = "${tencentcloud_ha_vip.havip.id}"

@@ -228,7 +228,6 @@ func dataSourceTencentCloudVpnGatewaysRead(d *schema.ResourceData, meta interfac
 				break
 			} else {
 				offset = offset + limit
-				request.Offset = &offset
 			}
 		}
 	}

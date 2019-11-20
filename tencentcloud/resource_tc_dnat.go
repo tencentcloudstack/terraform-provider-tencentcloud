@@ -283,7 +283,7 @@ func resourceTencentCloudDnatUpdate(d *schema.ResourceData, meta interface{}) er
 }
 
 func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_DNAT.delete")()
+	defer logElapsed("resource.tencentcloud_dnat.delete")()
 
 	logId := getLogId(contextNil)
 	natForward, params, e := parseDnatId(d.Id())

@@ -70,10 +70,7 @@ func dataSourceTencentCloudHaVipEipAttachmentsRead(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 
 	haVipId := d.Get("havip_id").(string)
-	eip := ""
-	if v, ok := d.GetOk("address_ip"); ok {
-		eip = v.(string)
-	}
+	eip := d.Get("address_ip").(string)
 
 	request := vpc.NewDescribeHaVipsRequest()
 	request.HaVipIds = []*string{&haVipId}

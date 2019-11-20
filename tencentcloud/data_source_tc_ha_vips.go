@@ -180,7 +180,6 @@ func dataSourceTencentCloudHaVipsRead(d *schema.ResourceData, meta interface{}) 
 				break
 			} else {
 				offset = offset + limit
-				request.Offset = &offset
 			}
 		}
 	}
