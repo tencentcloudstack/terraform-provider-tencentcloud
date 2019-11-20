@@ -133,6 +133,7 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 	request.Offset = &offset
 	result := make([]*vpc.CustomerGateway, 0)
 	limit := uint64(VPN_DESCRIBE_LIMIT)
+	request.Limit = &limit
 	for {
 		var response *vpc.DescribeCustomerGatewaysResponse
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {

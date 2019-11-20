@@ -130,6 +130,7 @@ func dataSourceTencentCloudNatGatewaysRead(d *schema.ResourceData, meta interfac
 	request.Offset = &offset
 	result := make([]*vpc.NatGateway, 0)
 	limit := uint64(NAT_DESCRIBE_LIMIT)
+	request.Limit = &limit
 	for {
 		var response *vpc.DescribeNatGatewaysResponse
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {

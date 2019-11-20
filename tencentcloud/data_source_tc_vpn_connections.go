@@ -296,6 +296,7 @@ func dataSourceTencentCloudVpnConnectionsRead(d *schema.ResourceData, meta inter
 	request.Offset = &offset
 	result := make([]*vpc.VpnConnection, 0)
 	limit := uint64(VPN_DESCRIBE_LIMIT)
+	request.Limit = &limit
 	for {
 		var response *vpc.DescribeVpnConnectionsResponse
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {

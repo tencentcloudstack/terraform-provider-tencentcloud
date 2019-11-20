@@ -172,6 +172,7 @@ func dataSourceTencentCloudDnatsRead(d *schema.ResourceData, meta interface{}) e
 	request.Offset = &offset
 	result := make([]*vpc.NatGatewayDestinationIpPortTranslationNatRule, 0)
 	limit := uint64(NAT_DESCRIBE_LIMIT)
+	request.Limit = &limit
 	for {
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGatewayDestinationIpPortTranslationNatRules(request)

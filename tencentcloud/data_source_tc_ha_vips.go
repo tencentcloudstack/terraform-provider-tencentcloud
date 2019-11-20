@@ -161,6 +161,7 @@ func dataSourceTencentCloudHaVipsRead(d *schema.ResourceData, meta interface{}) 
 	request.Offset = &offset
 	result := make([]*vpc.HaVip, 0)
 	limit := uint64(HAVIP_DESCRIBE_LIMIT)
+	request.Limit = &limit
 	for {
 		var response *vpc.DescribeHaVipsResponse
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
