@@ -55,34 +55,34 @@ func resourceTencentCloudDnat() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "ID of the vpc.",
+				Description: "Id of the VPC.",
 			},
 			"nat_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "ID of the nat.",
+				Description: "Id of the NAT.",
 			},
 			"protocol": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"TCP", "UDP"}),
-				Description:  "Type of the network protocol, the available values include: TCP and UDP.",
+				Description:  "Type of the network protocol, the available values are: `TCP` and `UDP`.",
 			},
 			"elastic_ip": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateIp,
-				Description:  "Network address of the eip.",
+				Description:  "Network address of the EIP.",
 			},
 			"elastic_port": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validatePort,
-				Description:  "Port of the eip.",
+				Description:  "Port of the EIP.",
 			},
 			"private_ip": {
 				Type:         schema.TypeString,
@@ -98,11 +98,10 @@ func resourceTencentCloudDnat() *schema.Resource {
 				ValidateFunc: validatePort,
 				Description:  "Port of intranet.",
 			},
-
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Description of the nat forward.",
+				Description: "Description of the NAT forward.",
 			},
 		},
 	}
@@ -149,7 +148,7 @@ func resourceTencentCloudDnatCreate(d *schema.ResourceData, meta interface{}) er
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create nat forward failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create NAT forward failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -165,7 +164,7 @@ func resourceTencentCloudDnatRead(d *schema.ResourceData, meta interface{}) erro
 	logId := getLogId(contextNil)
 	_, params, e := parseDnatId(d.Id())
 	if e != nil {
-		return fmt.Errorf("[CRITAL]parse dnat id fail, reason[%s]\n", e.Error())
+		return fmt.Errorf("[CRITAL]parse DNAT id fail, reason[%s]\n", e.Error())
 	}
 	request := vpc.NewDescribeNatGatewayDestinationIpPortTranslationNatRulesRequest()
 	var response *vpc.DescribeNatGatewayDestinationIpPortTranslationNatRulesResponse
@@ -188,11 +187,12 @@ func resourceTencentCloudDnatRead(d *schema.ResourceData, meta interface{}) erro
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read dnat  failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read DNAT failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if len(response.Response.NatGatewayDestinationIpPortTranslationNatRuleSet) < 1 {
-		return fmt.Errorf("dnat id is nil")
+		d.SetId("")
+		return nil
 	}
 
 	dnat := response.Response.NatGatewayDestinationIpPortTranslationNatRuleSet[0]
@@ -220,7 +220,7 @@ func resourceTencentCloudDnatUpdate(d *schema.ResourceData, meta interface{}) er
 		}
 		natForward, params, e := parseDnatId(d.Id())
 		if e != nil {
-			return fmt.Errorf("[CRITAL]parse dnat id fail, reason[%s]\n", e.Error())
+			return fmt.Errorf("[CRITAL]parse DNAT id fail, reason[%s]\n", e.Error())
 		}
 		//missing target port and ip
 		srequest := vpc.NewDescribeNatGatewayDestinationIpPortTranslationNatRulesRequest()
@@ -244,7 +244,7 @@ func resourceTencentCloudDnatUpdate(d *schema.ResourceData, meta interface{}) er
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read dnat  failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s read DNAT failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 		if len(sresponse.Response.NatGatewayDestinationIpPortTranslationNatRuleSet) < 1 {
@@ -275,7 +275,7 @@ func resourceTencentCloudDnatUpdate(d *schema.ResourceData, meta interface{}) er
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s delete dnat  failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s delete DNAT failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
@@ -288,7 +288,7 @@ func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) er
 	logId := getLogId(contextNil)
 	natForward, params, e := parseDnatId(d.Id())
 	if e != nil {
-		return fmt.Errorf("[CRITAL]parse dnat id fail, reason[%s]\n", e.Error())
+		return fmt.Errorf("[CRITAL]parse DNAT id fail, reason[%s]\n", e.Error())
 	}
 	//missing target port and ip
 	srequest := vpc.NewDescribeNatGatewayDestinationIpPortTranslationNatRulesRequest()
@@ -312,7 +312,7 @@ func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) er
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read dnat  failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read DNAT failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if len(sresponse.Response.NatGatewayDestinationIpPortTranslationNatRuleSet) < 1 {
@@ -335,21 +335,21 @@ func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) er
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete dnat  failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete DNAT failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
 	return nil
 }
 
-// Build an ID for a Forward Entry, eg "tcp://VpcId:NatId@127.15.2.3:8080"
+// Build an id for a Forward Entry, eg "tcp://VpcId:NatId@127.15.2.3:8080"
 func buildDnatId(entry *vpc.DestinationIpPortTranslationNatRule, vpcId string, natGatewayId string) (entryId string) {
 	entryId = fmt.Sprintf("%s://%s:%s@%s:%d", *entry.IpProtocol, vpcId, natGatewayId, *entry.PublicIpAddress, *entry.PublicPort)
 	log.Printf("[DEBUG] buildDnatId entryId=%s", entryId)
 	return
 }
 
-//Parse Forward Entry ID
+//Parse Forward Entry id
 func parseDnatId(entryId string) (entry *vpc.DestinationIpPortTranslationNatRule, params map[string]string, err error) {
 	log.Printf("[DEBUG] parseDnatId entryId: %s", entryId)
 	params = make(map[string]string)

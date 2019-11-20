@@ -96,7 +96,7 @@ func dataSourceTencentCloudVpnGateways() *schema.Resource {
 						"bandwidth": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The maximum public network output bandwidth of nat gateway (unit: Mbps), the available values include: 5,10,20,50,100. Default is 5.",
+							Description: "The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100. Default is 5.",
 						},
 						"public_ip_address": {
 							Type:        schema.TypeString,
@@ -207,9 +207,9 @@ func dataSourceTencentCloudVpnGatewaysRead(d *schema.ResourceData, meta interfac
 	request.Offset = &offset
 	result := make([]*vpc.VpnGateway, 0)
 	limit := uint64(VPN_DESCRIBE_LIMIT)
+	request.Limit = &limit
 	for {
 		var response *vpc.DescribeVpnGatewaysResponse
-		//add for cycle and add this to nat too
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(request)
 			if e != nil {
@@ -229,7 +229,6 @@ func dataSourceTencentCloudVpnGatewaysRead(d *schema.ResourceData, meta interfac
 				break
 			} else {
 				offset = offset + limit
-				request.Offset = &offset
 			}
 		}
 	}

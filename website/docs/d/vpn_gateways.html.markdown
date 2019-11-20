@@ -42,7 +42,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `gateway_list` - Information list of the dedicated gateways.
-  * `bandwidth` - The maximum public network output bandwidth of nat gateway (unit: Mbps), the available values include: 5,10,20,50,100. Default is 5.
+  * `bandwidth` - The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100. Default is 5.
   * `charge_type` - Charge Type of the VPN gateway, valid values are `PREPAID`, `POSTPAID_BY_HOUR` and default is `POSTPAID_BY_HOUR`.
   * `create_time` - Create time of the VPN gateway.
   * `expired_time` - Expired time of the VPN gateway when charge type is `PREPAID`.

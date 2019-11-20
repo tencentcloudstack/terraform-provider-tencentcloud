@@ -41,6 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 CAM user policy attachment can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cam_user_attachment.foo cam-test#26800353
+$ terraform import tencentcloud_cam_user_policy_attachment.foo cam-test#26800353
 ```
 

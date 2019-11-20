@@ -40,14 +40,14 @@ func testAccCheckDnatExists(n string, id *string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("dnat instance %s is not found", n)
+			return fmt.Errorf("DNAT instance %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("dnat id is not set")
+			return fmt.Errorf("DNAT id is not set")
 		}
 		_, params, e := parseDnatId(rs.Primary.ID)
 		if e != nil {
-			return fmt.Errorf("[CRITAL]parse dnat id fail, reason[%s]\n", e.Error())
+			return fmt.Errorf("[CRITAL]parse DNAT id fail, reason[%s]\n", e.Error())
 		}
 		conn := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		request := vpc.NewDescribeNatGatewayDestinationIpPortTranslationNatRulesRequest()
@@ -71,11 +71,11 @@ func testAccCheckDnatExists(n string, id *string) resource.TestCheckFunc {
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read nat gateway failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s read DNAT failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 		if len(response.Response.NatGatewayDestinationIpPortTranslationNatRuleSet) != 1 {
-			return fmt.Errorf("dnat is not exists")
+			return fmt.Errorf("DNAT is not exists")
 		}
 		return nil
 	}
@@ -90,7 +90,7 @@ func testAccCheckDnatDestroy(s *terraform.State) error {
 		}
 		_, params, e := parseDnatId(rs.Primary.ID)
 		if e != nil {
-			log.Printf("[CRITAL]parse dnat id fail, reason[%s]\n", e.Error())
+			log.Printf("[CRITAL]parse DNAT id fail, reason[%s]\n", e.Error())
 		}
 		conn := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		request := vpc.NewDescribeNatGatewayDestinationIpPortTranslationNatRulesRequest()
@@ -114,11 +114,11 @@ func testAccCheckDnatDestroy(s *terraform.State) error {
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s read nat gateway failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s read DNAT failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 		if len(response.Response.NatGatewayDestinationIpPortTranslationNatRuleSet) != 0 {
-			return fmt.Errorf("dnat is still exists")
+			return fmt.Errorf("DNAT is still exists")
 		}
 	}
 	return nil

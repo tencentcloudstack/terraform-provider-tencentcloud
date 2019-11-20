@@ -124,7 +124,7 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 		filter["address-id"] = []string{v.(string)}
 	}
 	if v, ok := d.GetOk("eip_name"); ok {
-		filter["eip-name"] = []string{v.(string)}
+		filter["address-name"] = []string{v.(string)}
 	}
 	if v, ok := d.GetOk("public_ip"); ok {
 		filter["public-ip"] = []string{v.(string)}

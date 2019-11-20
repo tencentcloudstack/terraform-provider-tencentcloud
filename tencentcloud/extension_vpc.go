@@ -95,6 +95,11 @@ NAT
 
 const (
 	NAT_DESCRIBE_LIMIT = 100
+	NAT_EIP_MAX_LIMIT  = 10
+)
+
+const (
+	NAT_FAILED_STATE = "FAILED"
 )
 
 /*
@@ -107,7 +112,7 @@ const (
 
 const (
 	VPN_STATE_PENDING   = "PENDING"
-	VPN_STATE_DELETING  = "UDP"
+	VPN_STATE_DELETING  = "DELETING"
 	VPN_STATE_AVAILABLE = "AVAILABLE"
 )
 
@@ -265,6 +270,18 @@ var VPN_IPSEC_ENCRY_ALGORITHM = []string{
 	VPN_IPSEC_ENCRY_ALGORITHM_NULL,
 }
 
+/*
+HAVIP
+*/
+
 const (
-	VPCNotFound = "ResourceNotFound"
+	HAVIP_DESCRIBE_LIMIT = 100
+)
+
+/*
+COMMON
+*/
+const (
+	VPCNotFound             = "ResourceNotFound"
+	VPCUnsupportedOperation = "UnsupportedOperation"
 )
