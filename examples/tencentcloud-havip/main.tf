@@ -14,8 +14,8 @@ resource "tencentcloud_subnet" "example" {
 
 resource "tencentcloud_ha_vip" "example" {
   name      = "example"
-  vpc_id    = "${data.tencentcloud_vpc_instances.example.instance_list.0.vpc_id}"
-  subnet_id = "${data.tencentcloud_vpc_subnets.example.instance_list.0.subnet_id}"
+  vpc_id    = "${tencentcloud_vpc.example.id}"
+  subnet_id = "${tencentcloud_subnet.example.id}"
   vip       = "10.0.20.5"
 
 }
