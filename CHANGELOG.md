@@ -1,4 +1,8 @@
 ## 1.24.0 (Unreleased)
+
+ENHANCEMENTS:
+* Resource: `tencentcloud_kubernetes_cluster` cluster_os add new support: `centos7.6x86_64` and `ubuntu18.04.1 LTSx86_64` 
+
 ## 1.23.0 (November 14, 2019)
 
 FEATURES:
