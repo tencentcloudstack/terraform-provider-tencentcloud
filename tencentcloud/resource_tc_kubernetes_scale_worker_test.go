@@ -30,6 +30,9 @@ func TestAccTencentCloudTkeScaleWorkerResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.#", "1"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_id"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_role"),
+					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_charge_type", CVM_CHARGE_TYPE_PREPAID),
+					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_charge_type_prepaid_period", "6"),
+					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_charge_type_prepaid_renew_flag", CVM_PREPAID_RENEW_FLAG_NOTIFY_NOTIFY_AND_AUTO_RENEW),
 				),
 			},
 		},
@@ -190,25 +193,28 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
   cluster_id = "${tencentcloud_kubernetes_cluster.managed_cluster.id}"
 
   worker_config {
-    count                      = 1
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.scale_instance_type}"
-    subnet_id                  = "${var.subnet}"
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 50
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
+    count                      				= 1
+    availability_zone          				= "${var.availability_zone}"
+    instance_type              				= "${var.scale_instance_type}"
+	instance_charge_type	   				= "PREPAID"
+	instance_charge_type_prepaid_period 	= 6
+	instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_AUTO_RENEW"
+    subnet_id                  				= "${var.subnet}"
+    system_disk_type           				= "CLOUD_SSD"
+    system_disk_size           				= 50
+    internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out 				= 100
+    public_ip_assigned         				= true
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
     }
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "AABBccdd1122"
+    enhanced_security_service 				= false
+    enhanced_monitor_service  				= false
+    user_data                 				= "dGVzdA=="
+    password                  				= "AABBccdd1122"
   }
 }
 `
