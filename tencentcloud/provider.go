@@ -66,6 +66,8 @@ Data Sources
   tencentcloud_gaap_realservers
   tencentcloud_gaap_security_policies
   tencentcloud_gaap_security_rules
+  tencentcloud_ha_vips
+  tencentcloud_ha_vip_eip_attachments
   tencentcloud_images
   tencentcloud_image
   tencentcloud_instances
@@ -219,6 +221,8 @@ VPC Resources
   tencentcloud_route_table_entry
   tencentcloud_dnat
   tencentcloud_nat_gateway
+  tencentcloud_ha_vip
+  tencentcloud_ha_vip_eip_attachment
 
 VPN Resources
   tencentcloud_vpn_customer_gateway
@@ -354,6 +358,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpn_customer_gateways":        dataSourceTencentCloudVpnCustomerGateways(),
 			"tencentcloud_vpn_gateways":                 dataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_connections":              dataSourceTencentCloudVpnConnections(),
+			"tencentcloud_ha_vips":                      dataSourceTencentCloudHaVips(),
+			"tencentcloud_ha_vip_eip_attachments":       dataSourceTencentCloudHaVipEipAttachments(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -441,6 +447,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpn_customer_gateway":        resourceTencentCloudVpnCustomerGateway(),
 			"tencentcloud_vpn_gateway":                 resourceTencentCloudVpnGateway(),
 			"tencentcloud_vpn_connection":              resourceTencentCloudVpnConnection(),
+			"tencentcloud_ha_vip":                      resourceTencentCloudHaVip(),
+			"tencentcloud_ha_vip_eip_attachment":       resourceTencentCloudHaVipEipAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,

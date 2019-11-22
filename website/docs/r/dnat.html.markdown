@@ -29,14 +29,14 @@ resource "tencentcloud_dnat" "foo" {
 
 The following arguments are supported:
 
-* `elastic_ip` - (Required, ForceNew) Network address of the eip.
-* `elastic_port` - (Required, ForceNew) Port of the eip.
-* `nat_id` - (Required, ForceNew) ID of the nat.
+* `elastic_ip` - (Required, ForceNew) Network address of the EIP.
+* `elastic_port` - (Required, ForceNew) Port of the EIP.
+* `nat_id` - (Required, ForceNew) Id of the NAT.
 * `private_ip` - (Required, ForceNew) Network address of the backend service.
 * `private_port` - (Required, ForceNew) Port of intranet.
-* `protocol` - (Required, ForceNew) Type of the network protocol, the available values include: TCP and UDP.
-* `vpc_id` - (Required, ForceNew) ID of the vpc.
-* `description` - (Optional) Description of the nat forward.
+* `protocol` - (Required, ForceNew) Type of the network protocol, the available values are: `TCP` and `UDP`.
+* `vpc_id` - (Required, ForceNew) Id of the VPC.
+* `description` - (Optional) Description of the NAT forward.
 
 
 ## Import

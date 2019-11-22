@@ -54,20 +54,20 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "Name of the nat gateway.",
+				Description:  "Name of the NAT gateway.",
 			},
 			"max_concurrent": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      1000000,
 				ValidateFunc: validateAllowedIntValue([]int{1000000, 3000000, 10000000}),
-				Description:  "The upper limit of concurrent connection of nat gateway, the available values include: 1000000,3000000,10000000. Default is 1000000.",
+				Description:  "The upper limit of concurrent connection of NAT gateway, the available values include: 1000000,3000000,10000000. Default is 1000000.",
 			},
 			"bandwidth": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     100,
-				Description: "The maximum public network output bandwidth of nat gateway (unit: Mbps), the available values include: 20,50,100,200,500,1000,2000,5000. Default is 100.",
+				Description: "The maximum public network output bandwidth of NAT gateway (unit: Mbps), the available values include: 20,50,100,200,500,1000,2000,5000. Default is 100.",
 			},
 			"assigned_eip_set": {
 				Type:     schema.TypeSet,
@@ -77,7 +77,12 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				},
 				MinItems:    1,
 				MaxItems:    10,
-				Description: "EIP arrays bound to the gateway. The value of at least 1.",
+				Description: "EIP set bound to the gateway. The value of at least 1 and at most 10.",
+			},
+			"created_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Create time of the NAT gateway.",
 			},
 		},
 	}
@@ -118,15 +123,15 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create nat gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create NAT gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
 	if len(response.Response.NatGatewaySet) < 1 {
-		return fmt.Errorf("nat gateway id is nil")
+		return fmt.Errorf("NAT gateway ID is nil")
 	}
 	d.SetId(*response.Response.NatGatewaySet[0].NatGatewayId)
-	// must wait for finishing creating nat
+	// must wait for finishing creating NAT
 	statRequest := vpc.NewDescribeNatGatewaysRequest()
 	statRequest.NatGatewayIds = []*string{response.Response.NatGatewaySet[0].NatGatewayId}
 	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
@@ -151,7 +156,7 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 		}
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create nat gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create NAT gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	return resourceTencentCloudNatGatewayRead(d, meta)
@@ -177,11 +182,12 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read nat gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read NAT gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	if len(response.Response.NatGatewaySet) < 1 {
-		return fmt.Errorf("nat gateway id is nil")
+		d.SetId("")
+		return nil
 	}
 
 	nat := response.Response.NatGatewaySet[0]
@@ -190,6 +196,7 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	d.Set("name", *nat.NatGatewayName)
 	d.Set("max_concurrent", *nat.MaxConcurrentConnection)
 	d.Set("bandwidth", *nat.InternetMaxBandwidthOut)
+	d.Set("create_time", *nat.CreatedTime)
 	d.Set("assigned_eip_set", flattenAddressList((*nat).PublicIpAddressSet))
 	return nil
 }
@@ -225,7 +232,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s modify nat gateway failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s modify NAT gateway failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
@@ -252,7 +259,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s modify nat gateway concurrent failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s modify NAT gateway concurrent failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 		d.SetPartial("max_concurrent")
@@ -310,7 +317,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						return nil
 					})
 					if err != nil {
-						log.Printf("[CRITAL]%s modify nat gateway eip failed, reason:%s\n ", logId, err.Error())
+						log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 						return err
 					}
 				}
@@ -331,7 +338,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						}
 					}
 					if !isIn {
-						if len(assignedRequest.PublicIpAddresses)+eipSetLength+1 == 10 {
+						if len(assignedRequest.PublicIpAddresses)+eipSetLength+1 == NAT_EIP_MAX_LIMIT {
 							backUpNewIp = publicIp
 						} else {
 							assignedRequest.PublicIpAddresses = append(assignedRequest.PublicIpAddresses, &publicIp)
@@ -349,7 +356,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						return nil
 					})
 					if err != nil {
-						log.Printf("[CRITAL]%s modify nat gateway eip failed, reason:%s\n ", logId, err.Error())
+						log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 						return err
 					}
 				}
@@ -370,7 +377,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					return nil
 				})
 				if err != nil {
-					log.Printf("[CRITAL]%s modify nat gateway eip failed, reason:%s\n ", logId, err.Error())
+					log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 					return err
 				}
 			}
@@ -389,7 +396,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					return nil
 				})
 				if err != nil {
-					log.Printf("[CRITAL]%s modify nat gateway eip failed, reason:%s\n ", logId, err.Error())
+					log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 					return err
 				}
 			}
@@ -420,12 +427,12 @@ func resourceTencentCloudNatGatewayDelete(d *schema.ResourceData, meta interface
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete nat gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete NAT gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	// must wait for finishing deleting nat
+	// must wait for finishing deleting NAT
 	time.Sleep(10 * time.Second)
-	//to get the status of nat
+	//to get the status of NAT
 
 	statRequest := vpc.NewDescribeNatGatewaysRequest()
 	statRequest.NatGatewayIds = []*string{&natGatewayId}
@@ -444,8 +451,8 @@ func resourceTencentCloudNatGatewayDelete(d *schema.ResourceData, meta interface
 			//else get stat
 			nat := result.Response.NatGatewaySet[0]
 			stat := *nat.State
-			if stat == "FAILED" {
-				return resource.NonRetryableError(fmt.Errorf("delete nat failed"))
+			if stat == NAT_FAILED_STATE {
+				return resource.NonRetryableError(fmt.Errorf("delete NAT failed"))
 			}
 			time.Sleep(3 * time.Second)
 
@@ -453,7 +460,7 @@ func resourceTencentCloudNatGatewayDelete(d *schema.ResourceData, meta interface
 		}
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete nat gateway failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete NAT gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 	return nil
