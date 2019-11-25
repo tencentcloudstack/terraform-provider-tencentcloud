@@ -9,7 +9,7 @@ resource "tencentcloud_nat_gateway" "foo" {
   vpc_id            = "vpc-4xxr2cy7"
   bandwidth         = 100
   max_connection    = 1000000
-  assigned_eip_set  = ["eip-da12w5re5"]
+  assigned_eip_set  = ["1.1.1.1"]
 }
 ```
 
