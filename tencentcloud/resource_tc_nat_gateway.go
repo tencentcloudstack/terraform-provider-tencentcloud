@@ -74,6 +74,7 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
+					ValidateFunc: validateIp,
 				},
 				MinItems:    1,
 				MaxItems:    10,
