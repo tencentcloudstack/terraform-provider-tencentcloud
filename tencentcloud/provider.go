@@ -24,38 +24,38 @@ Data Sources
   tencentcloud_as_scaling_groups
   tencentcloud_as_scaling_policies
   tencentcloud_availability_zones
-  tencentcloud_cam_roles
-  tencentcloud_cam_role_policy_attachments
-  tencentcloud_cam_policies
-  tencentcloud_cam_users
-  tencentcloud_cam_user_policy_attachments
-  tencentcloud_cam_groups
-  tencentcloud_cam_group_policy_attachments
   tencentcloud_cam_group_memberships
+  tencentcloud_cam_group_policy_attachments
+  tencentcloud_cam_groups
+  tencentcloud_cam_policies
+  tencentcloud_cam_role_policy_attachments
+  tencentcloud_cam_roles
   tencentcloud_cam_saml_providers
+  tencentcloud_cam_user_policy_attachments
+  tencentcloud_cam_users
   tencentcloud_cbs_snapshots
   tencentcloud_cbs_storages
   tencentcloud_ccn_bandwidth_limits
   tencentcloud_ccn_instances
-  tencentcloud_cfs_file_systems
   tencentcloud_cfs_access_groups
   tencentcloud_cfs_access_rules
-  tencentcloud_clb_instances
-  tencentcloud_clb_listeners
-  tencentcloud_clb_listener_rules
+  tencentcloud_cfs_file_systems
   tencentcloud_clb_attachments
+  tencentcloud_clb_instances
+  tencentcloud_clb_listener_rules
+  tencentcloud_clb_listeners
   tencentcloud_clb_redirections
   tencentcloud_container_cluster_instances
   tencentcloud_container_clusters
   tencentcloud_cos_bucket_object
   tencentcloud_cos_buckets
-  tencentcloud_dc_instances
   tencentcloud_dc_gateway_ccn_routes
   tencentcloud_dc_gateway_instances
+  tencentcloud_dc_instances
   tencentcloud_dcx_instances
   tencentcloud_dnats
-  tencentcloud_eips
   tencentcloud_eip
+  tencentcloud_eips
   tencentcloud_enis
   tencentcloud_gaap_certificates
   tencentcloud_gaap_http_domains
@@ -66,12 +66,12 @@ Data Sources
   tencentcloud_gaap_realservers
   tencentcloud_gaap_security_policies
   tencentcloud_gaap_security_rules
-  tencentcloud_ha_vips
   tencentcloud_ha_vip_eip_attachments
-  tencentcloud_images
+  tencentcloud_ha_vips
   tencentcloud_image
-  tencentcloud_instances
+  tencentcloud_images
   tencentcloud_instance_types
+  tencentcloud_instances
   tencentcloud_key_pairs
   tencentcloud_kubernetes_clusters
   tencentcloud_mongodb_instances
@@ -80,8 +80,8 @@ Data Sources
   tencentcloud_mysql_instance
   tencentcloud_mysql_parameter_list
   tencentcloud_mysql_zone_config
-  tencentcloud_nats
   tencentcloud_nat_gateways
+  tencentcloud_nats
   tencentcloud_placement_groups
   tencentcloud_redis_instances
   tencentcloud_redis_zone_config
@@ -99,9 +99,9 @@ Data Sources
   tencentcloud_vpc_instances
   tencentcloud_vpc_route_tables
   tencentcloud_vpc_subnets
+  tencentcloud_vpn_connections
   tencentcloud_vpn_customer_gateways
   tencentcloud_vpn_gateways
-  tencentcloud_vpn_connections
 
 AS Resources
   tencentcloud_as_scaling_config
