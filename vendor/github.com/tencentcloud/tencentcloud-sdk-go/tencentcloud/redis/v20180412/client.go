@@ -268,6 +268,31 @@ func (c *Client) DescribeInstanceBackups(request *DescribeInstanceBackupsRequest
     return
 }
 
+func NewDescribeInstanceDTSInfoRequest() (request *DescribeInstanceDTSInfoRequest) {
+    request = &DescribeInstanceDTSInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeInstanceDTSInfo")
+    return
+}
+
+func NewDescribeInstanceDTSInfoResponse() (response *DescribeInstanceDTSInfoResponse) {
+    response = &DescribeInstanceDTSInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询实例DTS信息
+func (c *Client) DescribeInstanceDTSInfo(request *DescribeInstanceDTSInfoRequest) (response *DescribeInstanceDTSInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceDTSInfoRequest()
+    }
+    response = NewDescribeInstanceDTSInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInstanceDealDetailRequest() (request *DescribeInstanceDealDetailRequest) {
     request = &DescribeInstanceDealDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -718,6 +743,31 @@ func (c *Client) DescribeTaskInfo(request *DescribeTaskInfoRequest) (response *D
     return
 }
 
+func NewDescribeTaskListRequest() (request *DescribeTaskListRequest) {
+    request = &DescribeTaskListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeTaskList")
+    return
+}
+
+func NewDescribeTaskListResponse() (response *DescribeTaskListResponse) {
+    response = &DescribeTaskListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询任务列表信息
+func (c *Client) DescribeTaskList(request *DescribeTaskListRequest) (response *DescribeTaskListResponse, err error) {
+    if request == nil {
+        request = NewDescribeTaskListRequest()
+    }
+    response = NewDescribeTaskListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDestroyPostpaidInstanceRequest() (request *DestroyPostpaidInstanceRequest) {
     request = &DestroyPostpaidInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1064,6 +1114,31 @@ func (c *Client) RestoreInstance(request *RestoreInstanceRequest) (response *Res
         request = NewRestoreInstanceRequest()
     }
     response = NewRestoreInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStartupInstanceRequest() (request *StartupInstanceRequest) {
+    request = &StartupInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("redis", APIVersion, "StartupInstance")
+    return
+}
+
+func NewStartupInstanceResponse() (response *StartupInstanceResponse) {
+    response = &StartupInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 实例解隔离
+func (c *Client) StartupInstance(request *StartupInstanceRequest) (response *StartupInstanceResponse, err error) {
+    if request == nil {
+        request = NewStartupInstanceRequest()
+    }
+    response = NewStartupInstanceResponse()
     err = c.Send(request, response)
     return
 }
