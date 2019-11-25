@@ -4,6 +4,9 @@ ENHANCEMENTS:
 
 * Resource: `tencentcloud_kubernetes_cluster` add support for `PREPAID` instance type. Thanks to @woodylic ([#204](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/204)).
 
+BUG FIXES:
+* Fixed docs issues of NAT_GATEWAY
+
 ## 1.24.0 (November 20, 2019)
 
 FEATURES:

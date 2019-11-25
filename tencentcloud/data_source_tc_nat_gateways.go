@@ -88,7 +88,7 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "EIP arrays bound to the gateway. The value of at least 1.",
+							Description: "EIP IP address set bound to the gateway. The value of at least 1.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,

@@ -9,7 +9,7 @@ resource "tencentcloud_nat_gateway" "foo" {
   vpc_id            = "vpc-4xxr2cy7"
   bandwidth         = 100
   max_connection    = 1000000
-  assigned_eip_set  = ["eip-da12w5re5"]
+  assigned_eip_set  = ["1.1.1.1"]
 }
 ```
 
@@ -73,11 +73,12 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Schema{
-					Type: schema.TypeString,
+					Type:         schema.TypeString,
+					ValidateFunc: validateIp,
 				},
 				MinItems:    1,
 				MaxItems:    10,
-				Description: "EIP set bound to the gateway. The value of at least 1 and at most 10.",
+				Description: "EIP IP address set bound to the gateway. The value of at least 1 and at most 10.",
 			},
 			"created_time": {
 				Type:        schema.TypeString,

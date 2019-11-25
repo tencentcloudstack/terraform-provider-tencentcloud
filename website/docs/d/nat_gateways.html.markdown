@@ -34,7 +34,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `nats` - Information list of the dedicated NATs.
-  * `assigned_eip_set` - EIP arrays bound to the gateway. The value of at least 1.
+  * `assigned_eip_set` - EIP IP address set bound to the gateway. The value of at least 1.
   * `bandwidth` - The maximum public network output bandwidth of NAT gateway (unit: Mbps), the available values include: 20,50,100,200,500,1000,2000,5000. Default is 100.
   * `create_time` - Create time of the NAT gateway.
   * `id` - Id of the NAT gateway.
