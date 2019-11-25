@@ -92,6 +92,40 @@ func TestAccTencentCloudCosBucket_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCosBucket_tags(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCosBucketDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCosBucket_tags(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_tags"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_tags", "tags.test", "test"),
+				),
+			},
+			{
+				Config: testAccCosBucket_tagsReplace(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_tags"),
+					resource.TestCheckNoResourceAttr("tencentcloud_cos_bucket.bucket_tags", "tags.test"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_tags", "tags.abc", "abc"),
+				),
+			},
+			{
+				Config: testAccCosBucket_tagsDelete(appid),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_tags"),
+					resource.TestCheckNoResourceAttr("tencentcloud_cos_bucket.bucket_tags", "tags.abc"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudCosBucket_cors(t *testing.T) {
 	t.Parallel()
 
@@ -282,6 +316,41 @@ func testAccCosBucket_basicUpdate(appid string) string {
 resource "tencentcloud_cos_bucket" "bucket_basic" {
 	bucket = "tf-bucket-basic-%s"
 	acl    = "private"
+}
+`, appid)
+}
+
+func testAccCosBucket_tags(appid string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "bucket_tags" {
+  bucket = "tf-bucket-tags-%s"
+  acl    = "public-read"
+
+  tags = {
+    "test" = "test"
+  }
+}
+`, appid)
+}
+
+func testAccCosBucket_tagsReplace(appid string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "bucket_tags" {
+  bucket = "tf-bucket-tags-%s"
+  acl    = "public-read"
+
+  tags = {
+    "abc" = "abc"
+  }
+}
+`, appid)
+}
+
+func testAccCosBucket_tagsDelete(appid string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_cos_bucket" "bucket_tags" {
+  bucket = "tf-bucket-tags-%s"
+  acl    = "public-read"
 }
 `, appid)
 }
