@@ -9,6 +9,7 @@ FEATURES:
 ENHANCEMENTS:
 * Resource: `tencentcloud_kubernetes_cluster` cluster_os add new support: `centos7.6x86_64` and `ubuntu18.04.1 LTSx86_64` 
 * Resource: `tencentcloud_nat_gateway` add computed argument `created_time`.
+* Resource: `tencentcloud_vpn_gateway` add argument `prepaid_renew_flag` and `prepaid_period` to support prepaid VPN gateway instance creation.
 
 BUG FIXES:
 * Fixed docs issues of CAM, DNAT and NAT_GATEWAY
