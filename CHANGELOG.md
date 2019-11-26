@@ -7,7 +7,7 @@ ENHANCEMENTS:
 * Data Source: `tencentcloud_cos_buckets` add optional argument tags
 
 BUG FIXES:
-* Fixed docs issues of NAT_GATEWAY
+* Fixed docs issues of `tencentcloud_nat_gateway`
 
 ## 1.24.0 (November 20, 2019)
 
