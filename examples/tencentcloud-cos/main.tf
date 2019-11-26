@@ -32,6 +32,10 @@ resource "tencentcloud_cos_bucket" "bucket" {
     index_document = "index.html"
     error_document = "error.html"
   }
+
+  tags = {
+    "test" = "test"
+  }
 }
 
 resource "tencentcloud_cos_bucket_object" "object" {
@@ -48,4 +52,5 @@ data "tencentcloud_cos_bucket_object" "data_object" {
 
 data "tencentcloud_cos_buckets" "data_bucket" {
   bucket_prefix = "${tencentcloud_cos_bucket.bucket.id}"
+  tags          = "${tencentcloud_cos_bucket.bucket.tags}"
 }
