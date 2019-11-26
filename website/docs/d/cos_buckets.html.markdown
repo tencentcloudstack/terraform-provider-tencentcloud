@@ -25,7 +25,7 @@ The following arguments are supported:
 
 * `bucket_prefix` - (Optional) A prefix string to filter results by bucket name.
 * `result_output_file` - (Optional) Used to save results.
-* `tags` - (Optional) Tags to filter results by bucket name.
+* `tags` - (Optional) Tags to filter bucket.
 
 ## Attributes Reference
 

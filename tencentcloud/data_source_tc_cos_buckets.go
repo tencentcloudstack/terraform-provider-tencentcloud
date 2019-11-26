@@ -33,7 +33,7 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				Description: "Tags to filter results by bucket name.",
+				Description: "Tags to filter bucket.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
