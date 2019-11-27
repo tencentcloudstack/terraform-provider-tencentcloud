@@ -25,6 +25,7 @@ The following arguments are supported:
 
 * `bucket_prefix` - (Optional) A prefix string to filter results by bucket name.
 * `result_output_file` - (Optional) Used to save results.
+* `tags` - (Optional) Tags to filter bucket.
 
 ## Attributes Reference
 
@@ -47,6 +48,7 @@ In addition to all arguments above, the following attributes are exported:
       * `date` - Specifies the date after which you want the corresponding action to take effect.
       * `days` - Specifies the number of days after object creation when the specific rule action takes effect.
       * `storage_class` - Specifies the storage class to which you want the object to transition. Available values include STANDARD, STANDARD_IA and ARCHIVE.
+  * `tags` - The tags of a bucket.
   * `website` - A list of one element containing configuration parameters used when the bucket is used as a website.
     * `error_document` - An absolute path to the document to return in case of a 4XX error.
     * `index_document` - COS returns this index document when requests are made to the root domain or any of the subfolders.

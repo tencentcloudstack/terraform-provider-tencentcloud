@@ -30,11 +30,18 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 				Optional:    true,
 				Description: "A prefix string to filter results by bucket name.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags to filter bucket.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Used to save results.",
 			},
+
+			// computed
 			"bucket_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -160,6 +167,11 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 								},
 							},
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "The tags of a bucket.",
+						},
 					},
 				},
 			},
@@ -173,16 +185,19 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	cosService := CosService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
+
 	buckets, err := cosService.ListBuckets(ctx)
 	if err != nil {
 		return err
 	}
 
 	prefix := d.Get("bucket_prefix").(string)
+	tags := getTags(d, "tags")
+
 	bucketList := make([]map[string]interface{}, 0, len(buckets))
+
+LOOP:
 	for _, v := range buckets {
 		bucket := make(map[string]interface{})
 		if prefix != "" && !strings.HasPrefix(*v.Name, prefix) {
@@ -205,6 +220,19 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 			return err
 		}
 		bucket["website"] = website
+
+		respTags, err := cosService.GetBucketTags(ctx, *v.Name)
+		if err != nil {
+			return err
+		}
+
+		for k, v := range tags {
+			if respTags[k] != v {
+				continue LOOP
+			}
+		}
+
+		bucket["tags"] = respTags
 
 		bucketList = append(bucketList, bucket)
 	}

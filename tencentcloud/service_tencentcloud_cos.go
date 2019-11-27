@@ -3,16 +3,14 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
-
-	"github.com/hashicorp/terraform/helper/schema"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
-
+	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type CosService struct {
@@ -182,6 +180,7 @@ func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRul
 			return
 		}
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "get bucket cors", request.String(), response.String())
 
@@ -223,6 +222,7 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 			return
 		}
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "get bucket lifecycle", request.String(), response.String())
 
@@ -294,6 +294,7 @@ func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket s
 			return
 		}
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "get bucket lifecycle", request.String(), response.String())
 
@@ -364,6 +365,7 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (webs
 			return
 		}
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "get bucket website", request.String(), response.String())
 
@@ -420,4 +422,82 @@ func (me *CosService) ListObjects(ctx context.Context, bucket string) (objects [
 
 	objects = response.Contents
 	return
+}
+
+// SetBucketTags if len(tags) == 0, only delete tags
+func (me *CosService) SetBucketTags(ctx context.Context, bucket string, tags map[string]string) error {
+	logId := getLogId(ctx)
+
+	deleteReq := &s3.DeleteBucketTaggingInput{Bucket: aws.String(bucket)}
+
+	ratelimit.Check("DeleteBucketTagging")
+
+	deleteResp, err := me.client.UseCosClient().DeleteBucketTagging(deleteReq)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+			logId, "delete olg tags", deleteReq.String(), err)
+		return err
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, "delete olg tags", deleteReq.String(), deleteResp.String())
+
+	if len(tags) == 0 {
+		return nil
+	}
+
+	putReq := &s3.PutBucketTaggingInput{
+		Bucket:  aws.String(bucket),
+		Tagging: new(s3.Tagging),
+	}
+
+	for k, v := range tags {
+		putReq.Tagging.TagSet = append(putReq.Tagging.TagSet, &s3.Tag{
+			Key:   aws.String(k),
+			Value: aws.String(v),
+		})
+	}
+
+	ratelimit.Check("PutBucketTagging")
+
+	resp, err := me.client.UseCosClient().PutBucketTagging(putReq)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, "put new tags", deleteReq.String(), err)
+		return err
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, "put new tags", putReq.String(), resp.String())
+
+	return nil
+}
+
+func (me *CosService) GetBucketTags(ctx context.Context, bucket string) (map[string]string, error) {
+	logId := getLogId(ctx)
+
+	req := &s3.GetBucketTaggingInput{Bucket: aws.String(bucket)}
+
+	ratelimit.Check("GetBucketTagging")
+
+	resp, err := me.client.UseCosClient().GetBucketTagging(req)
+	if err != nil {
+		if awsErr, ok := err.(awserr.Error); !ok || awsErr.Code() != "404" {
+			return nil, nil
+		}
+
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, "get tags", req.String(), err)
+		return nil, err
+	}
+
+	tags := make(map[string]string, len(resp.TagSet))
+	for _, t := range resp.TagSet {
+		tags[*t.Key] = *t.Value
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, "get tags", req.String(), resp.String())
+
+	return tags, nil
 }

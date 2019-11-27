@@ -1,11 +1,14 @@
-## 1.24.1 (Unreleased)
+## 1.24.2 (Unreleased)
+## 1.24.1 (November 26, 2019)
 
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_kubernetes_cluster` add support for `PREPAID` instance type. Thanks to @woodylic ([#204](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/204)).
+* Resource: `tencentcloud_cos_bucket` add optional argument tags
+* Data Source: `tencentcloud_cos_buckets` add optional argument tags
 
 BUG FIXES:
-* Fixed docs issues of NAT_GATEWAY
+* Fixed docs issues of `tencentcloud_nat_gateway`
 
 ## 1.24.0 (November 20, 2019)
 
