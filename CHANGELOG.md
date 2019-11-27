@@ -5,6 +5,7 @@ ENHANCEMENTS:
 
 * Resource: `tencentcloud_kubernetes_cluster` add support for `PREPAID` instance type. Thanks to @woodylic ([#204](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/204)).
 * Resource: `tencentcloud_cos_bucket` add optional argument tags
+* Resource: `tencentcloud_vpn_gateway` add argument `prepaid_renew_flag` and `prepaid_period` to support prepaid VPN gateway instance creation.
 * Data Source: `tencentcloud_cos_buckets` add optional argument tags
 
 BUG FIXES:
@@ -23,7 +24,6 @@ ENHANCEMENTS:
 
 * Resource: `tencentcloud_kubernetes_cluster` cluster_os add new support: `centos7.6x86_64` and `ubuntu18.04.1 LTSx86_64` 
 * Resource: `tencentcloud_nat_gateway` add computed argument `created_time`.
-* Resource: `tencentcloud_vpn_gateway` add argument `prepaid_renew_flag` and `prepaid_period` to support prepaid VPN gateway instance creation.
 
 BUG FIXES:
 

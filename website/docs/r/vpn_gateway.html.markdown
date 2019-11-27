@@ -55,7 +55,7 @@ The following arguments are supported:
 * `zone` - (Required, ForceNew) Zone of the VPN gateway.
 * `bandwidth` - (Optional) The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100. Default is 5. When charge type is `PREPAID`, bandwidth degradation operation is unsupported.
 * `charge_type` - (Optional) Charge Type of the VPN gateway, valid values are `PREPAID`, `POSTPAID_BY_HOUR` and default is `POSTPAID_BY_HOUR`.
-* `prepaid_period` - (Optional) Period of instance to be prepaid. Valid values are 1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36 and unit is month.Caution: when this para is and renew_flag is valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.
+* `prepaid_period` - (Optional) Period of instance to be prepaid. Valid values are 1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36 and unit is month. Caution: when this para is and renew_flag is valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.
 * `prepaid_renew_flag` - (Optional) Flag indicates whether to renew or not, valid values are `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`. This para can only be set to take effect in create operation.
 * `tags` - (Optional) A list of tags used to associate different resources.
 

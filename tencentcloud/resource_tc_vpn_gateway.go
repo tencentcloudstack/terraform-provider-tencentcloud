@@ -113,7 +113,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Optional:     true,
 				Default:      1,
 				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36}),
-				Description:  "Period of instance to be prepaid. Valid values are 1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36 and unit is month.Caution: when this para is and renew_flag is valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.",
+				Description:  "Period of instance to be prepaid. Valid values are 1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36 and unit is month. Caution: when this para is and renew_flag is valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.",
 			},
 			"charge_type": {
 				Type:        schema.TypeString,
