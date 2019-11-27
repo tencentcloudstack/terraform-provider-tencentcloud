@@ -345,7 +345,7 @@ github.com/kisielk/gotool
 github.com/kisielk/gotool/internal/load
 # github.com/konsorten/go-windows-terminal-sequences v1.0.1
 github.com/konsorten/go-windows-terminal-sequences
-# github.com/likexian/gokit v0.20.16
+# github.com/likexian/gokit v0.21.11
 github.com/likexian/gokit/assert
 # github.com/magiconair/properties v1.8.0
 github.com/magiconair/properties
@@ -421,7 +421,7 @@ github.com/stretchr/objx
 # github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/mock
-# github.com/tencentcloud/tencentcloud-sdk-go v3.0.102+incompatible
+# github.com/tencentcloud/tencentcloud-sdk-go v3.0.104+incompatible
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312

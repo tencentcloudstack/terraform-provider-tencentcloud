@@ -254,6 +254,11 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 					},
 				},
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The tags of a bucket.",
+			},
 		},
 	}
 }
@@ -267,15 +272,21 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 	bucket := d.Get("bucket").(string)
 	acl := d.Get("acl").(string)
 
-	cosService := CosService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
+
 	err := cosService.PutBucket(ctx, bucket, acl)
 	if err != nil {
 		return err
 	}
 
 	d.SetId(bucket)
+
+	if tags := getTags(d, "tags"); len(tags) > 0 {
+		if err := cosService.SetBucketTags(ctx, bucket, tags); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudCosBucketUpdate(d, meta)
 }
 
@@ -286,9 +297,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	bucket := d.Id()
-	cosService := CosService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	err := cosService.HeadBucket(ctx, bucket)
 	if err != nil {
@@ -312,7 +321,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return err
 	}
 	if err = d.Set("cors_rules", corsRules); err != nil {
-		return fmt.Errorf("setting cors_rules error: %s", err.Error())
+		return fmt.Errorf("setting cors_rules error: %v", err)
 	}
 
 	// read the lifecycle
@@ -321,7 +330,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return err
 	}
 	if err = d.Set("lifecycle_rules", lifecycleRules); err != nil {
-		return fmt.Errorf("setting lifecycle_rules error: %s", err.Error())
+		return fmt.Errorf("setting lifecycle_rules error: %v", err)
 	}
 
 	// read the website
@@ -330,8 +339,16 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return err
 	}
 	if err = d.Set("website", website); err != nil {
-		return fmt.Errorf("setting website error: %s", err.Error())
+		return fmt.Errorf("setting website error: %v", err)
 	}
+
+	// read the tags
+	tags, err := cosService.GetBucketTags(ctx, bucket)
+	if err != nil {
+		return fmt.Errorf("get tags failed: %v", err)
+	}
+
+	d.Set("tags", tags)
 
 	return nil
 }
@@ -378,10 +395,21 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		d.SetPartial("website")
 	}
 
+	if d.HasChange("tags") {
+		bucket := d.Id()
+
+		cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
+		if err := cosService.SetBucketTags(ctx, bucket, getTags(d, "tags")); err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
+	}
+
 	d.Partial(false)
 
 	// wait for update cache
-	// if not, the data may be outdate.
+	// if not, the data may be outdated.
 	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCosBucketRead(d, meta)

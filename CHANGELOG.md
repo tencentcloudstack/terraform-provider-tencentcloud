@@ -1,17 +1,32 @@
-## 1.24.0 (Unreleased)
+## 1.24.2 (Unreleased)
+## 1.24.1 (November 26, 2019)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_cluster` add support for `PREPAID` instance type. Thanks to @woodylic ([#204](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/204)).
+* Resource: `tencentcloud_cos_bucket` add optional argument tags
+* Data Source: `tencentcloud_cos_buckets` add optional argument tags
+
+BUG FIXES:
+* Fixed docs issues of `tencentcloud_nat_gateway`
+
+## 1.24.0 (November 20, 2019)
 
 FEATURES:
+
 * **New Data Source**: `tencentcloud_ha_vips`
 * **New Data Source**: `tencentcloud_ha_vip_eip_attachments`
 * **New Resource**: `tencentcloud_ha_vip`
 * **New Resource**: `tencentcloud_ha_vip_eip_attachment`
 
 ENHANCEMENTS:
+
 * Resource: `tencentcloud_kubernetes_cluster` cluster_os add new support: `centos7.6x86_64` and `ubuntu18.04.1 LTSx86_64` 
 * Resource: `tencentcloud_nat_gateway` add computed argument `created_time`.
 * Resource: `tencentcloud_vpn_gateway` add argument `prepaid_renew_flag` and `prepaid_period` to support prepaid VPN gateway instance creation.
 
 BUG FIXES:
+
 * Fixed docs issues of CAM, DNAT and NAT_GATEWAY
 * Fixed query issue that paged-query was not supported in data source `tencentcloud_dnats`
 * Fixed query issue that filter `address_ip` was set incorrectly in data source `tencentcloud_eips`
@@ -54,7 +69,6 @@ FEATURES:
 * **New Resource**: `tencentcloud_cfs_access_rule`
 * **New Resource**: `tencentcloud_scf_function`
 * **New Resource**: `tencentcloud_scf_namespace`
-
 
 ## 1.21.2 (October 29, 2019)
 
@@ -109,7 +123,6 @@ ENHANCEMENTS:
 BUG FIXES:
 
 * Resource: `tencentcloud_gaap_http_domain` fix sometimes can't enable realserver auth
-
 
 ## 1.20.1 (October 08, 2019)
 

@@ -81,6 +81,7 @@ The following arguments are supported:
 * `acl` - (Optional) The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.
 * `cors_rules` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
 * `lifecycle_rules` - (Optional) A configuration of object lifecycle management (documented below).
+* `tags` - (Optional) The tags of a bucket.
 * `website` - (Optional) A website object(documented below).
 
 The `cors_rules` object supports the following:

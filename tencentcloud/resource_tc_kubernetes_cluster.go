@@ -231,6 +231,31 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 				return
 			},
 		},
+		// payment
+		"instance_charge_type": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ForceNew:     true,
+			Default:      CVM_CHARGE_TYPE_POSTPAID,
+			ValidateFunc: validateAllowedStringValue(TKE_INSTANCE_CHARGE_TYPE),
+			Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`, The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.",
+		},
+		"instance_charge_type_prepaid_period": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ForceNew:     true,
+			Default:      1,
+			ValidateFunc: validateAllowedIntValue(CVM_PREPAID_PERIOD),
+			Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.",
+		},
+		"instance_charge_type_prepaid_renew_flag": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ForceNew:     true,
+			Default:      CVM_PREPAID_RENEW_FLAG_NOTIFY_AND_MANUAL_RENEW,
+			ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
+			Description:  "When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
+		},
 		"subnet_id": {
 			Type:         schema.TypeString,
 			ForceNew:     true,
@@ -726,10 +751,24 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 	if v, ok := dMap["user_data"]; ok {
 		request.UserData = stringToPointer(v.(string))
 	}
-
-	chargeType := INSTANCE_CHARGE_TYPE_POSTPAID
-	request.InstanceChargeType = &chargeType
-
+	if v, ok := dMap["instance_charge_type"]; ok {
+		instanceChargeType := v.(string)
+		request.InstanceChargeType = &instanceChargeType
+		if instanceChargeType == CVM_CHARGE_TYPE_PREPAID {
+			request.InstanceChargePrepaid = &cvm.InstanceChargePrepaid{}
+			if period, ok := dMap["instance_charge_type_prepaid_period"]; ok {
+				periodInt64 := int64(period.(int))
+				request.InstanceChargePrepaid.Period = &periodInt64
+			} else {
+				errRet = fmt.Errorf("instance charge type prepaid period can not be empty when charge type is %s",
+					instanceChargeType)
+				return
+			}
+			if renewFlag, ok := dMap["instance_charge_type_prepaid_renew_flag"]; ok {
+				request.InstanceChargePrepaid.RenewFlag = stringToPointer(renewFlag.(string))
+			}
+		}
+	}
 	if v, ok := dMap["count"]; ok {
 		count = int64(v.(int))
 	} else {
