@@ -113,7 +113,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Optional:     true,
 				Default:      1,
 				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36}),
-				Description:  "Period of instance to be prepaid. Valid values are 1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36 and unit is month. Caution: when this para is and renew_flag is valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.",
+				Description:  "Period of instance to be prepaid. Valid values are 1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36 and unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.",
 			},
 			"charge_type": {
 				Type:        schema.TypeString,
@@ -313,6 +313,11 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	d.Partial(true)
 	gatewayId := d.Id()
 
+	//renew
+	if d.HasChange("prepaid_period") || d.HasChange("prepaid_renew_flag") {
+		return fmt.Errorf("Do not support renew operation in update operation. Please renew the instance on controller web page.")
+	}
+
 	if d.HasChange("name") || d.HasChange("charge_type") {
 		//check that the charge type change is valid
 		//only pre-paid --> post-paid is valid
@@ -385,11 +390,6 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 		d.SetPartial("tags")
-	}
-
-	//renew
-	if d.HasChange("prepaid_period") || d.HasChange("prepaid_renew_flag") {
-		return fmt.Errorf("Do not support renew operation in update operation. Please renew the instance on controller web page.")
 	}
 
 	d.Partial(false)
