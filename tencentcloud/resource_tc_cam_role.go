@@ -36,11 +36,11 @@ $ terraform import tencentcloud_cam_role.foo 4611686018427733635
 package tencentcloud
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"log"
+	"reflect"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -68,18 +68,18 @@ func resourceTencentCloudCamRole() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					newBuffer := bytes.NewBufferString("")
-					var newCompact string
-					err := json.Compact(newBuffer, []byte(new))
+					var oldJson interface{}
+					err := json.Unmarshal([]byte(old), &oldJson)
 					if err != nil {
-						newCompact = new
-					} else {
-						newCompact = newBuffer.String()
+						return old == new
 					}
-					if newCompact == old {
-						return true
+					var newJson interface{}
+					err = json.Unmarshal([]byte(new), &newJson)
+					if err != nil {
+						return old == new
 					}
-					return false
+					flag := reflect.DeepEqual(oldJson, newJson)
+					return flag
 				},
 				Description: "Document of the CAM role. The syntax refers to https://intl.cloud.tencent.com/document/product/598/10604. There are some notes when using this para in terraform: 1. The elements in json claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when appears, it must be replaced with the uin it stands for.",
 			},
