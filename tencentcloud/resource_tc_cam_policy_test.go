@@ -27,7 +27,7 @@ func TestAccTencentCloudCamPolicy_basic(t *testing.T) {
 				Config: testAccCamPolicy_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamPolicyExists("tencentcloud_cam_policy.policy_basic"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_basic", "name", "cam-policy-test2"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy.policy_basic", "name", "cam-policy-test4"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_policy.policy_basic", "document"),
 				),
 			},
@@ -86,14 +86,15 @@ func testAccCheckCamPolicyExists(n string) resource.TestCheckFunc {
 const testAccCamPolicy_basic = `
 resource "tencentcloud_cam_policy" "policy_basic" {
   name        = "cam-policy-test4"
-  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
-	description = "test"
+  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"cos:*\"],\"resource\":[\"*\"],\"effect\":\"allow\"},{\"effect\":\"allow\",\"action\":[\"monitor:*\",\"cam:ListUsersForGroup\",\"cam:ListGroups\",\"cam:GetGroup\"],\"resource\":[\"*\"]}]}"
+  description = "test"
 }
 `
 
 const testAccCamPolicy_update = `
 resource "tencentcloud_cam_policy" "policy_basic" {
-  name     = "cam-policy-test2"
-  document = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]},{\"action\":[\"name/cos:PutObject\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
+  name     = "cam-policy-test4"
+  document = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"cos:*\"],\"resource\":[\"*\"],\"effect\":\"allow\"},{\"effect\":\"allow\",\"action\":[\"cam:ListUsersForGroup\",\"cam:ListGroups\",\"cam:GetGroup\"],\"resource\":[\"*\"]}]}"
+  description = "test2"
 }
 `

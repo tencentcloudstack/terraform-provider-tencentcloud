@@ -22,6 +22,8 @@ $ terraform import tencentcloud_cam_policy.foo 26655801
 package tencentcloud
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -50,8 +52,22 @@ func resourceTencentCloudCamPolicy() *schema.Resource {
 				Description: "Name of CAM policy.",
 			},
 			"document": {
-				Type:        schema.TypeString,
-				Required:    true,
+				Type:     schema.TypeString,
+				Required: true,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					newBuffer := bytes.NewBufferString("")
+					var newCompact string
+					err := json.Compact(newBuffer, []byte(new))
+					if err != nil {
+						newCompact = new
+					} else {
+						newCompact = newBuffer.String()
+					}
+					if newCompact == old {
+						return true
+					}
+					return false
+				},
 				Description: "Document of the CAM policy. The syntax refers to https://intl.cloud.tencent.com/document/product/598/10604. There are some notes when using this para in terraform: 1. The elements in JSON claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when it appears, it must be replaced with the uin it stands for.",
 			},
 			"description": {
@@ -197,7 +213,7 @@ func resourceTencentCloudCamPolicyUpdate(d *schema.ResourceData, meta interface{
 			log.Printf("[CRITAL]%s update CAM policy document failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		if flag {
+		if !flag {
 			document := d.Get("document").(string)
 			camService := CamService{
 				client: meta.(*TencentCloudClient).apiV3Conn,
