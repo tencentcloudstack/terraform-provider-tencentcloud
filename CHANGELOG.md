@@ -1,4 +1,9 @@
 ## 1.24.2 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource `tencentcloud_instance` support `SPOTPAID` instance. Thanks to @LipingMao ([#209](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/209)).
+
 ## 1.24.1 (November 26, 2019)
 
 ENHANCEMENTS:
