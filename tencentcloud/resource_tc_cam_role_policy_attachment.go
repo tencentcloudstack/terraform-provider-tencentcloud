@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_role_policy_attachment" "foo" {
-  role_id   = "4611686018427922725"
-  policy_id = "26800353"
+  role_id   = "${tencentcloud_cam_role.foo.id}"
+  policy_id = "${tencentcloud_cam_policy.foo.id}"
 }
 ```
 
