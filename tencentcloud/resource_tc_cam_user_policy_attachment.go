@@ -44,7 +44,7 @@ func resourceTencentCloudCamUserPolicyAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the attached cam user.",
+				Description: "Id of the attached CAM user.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -55,7 +55,7 @@ func resourceTencentCloudCamUserPolicyAttachment() *schema.Resource {
 			"create_mode": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Mode of Creation of the CAM user policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
+				Description: "Mode of Creation of the CAM user policy attachment. 1 means the CAM policy attachment is created by production, and the others indicate syntax strategy ways.",
 			},
 			"policy_type": {
 				Type:        schema.TypeString,
@@ -96,7 +96,7 @@ func resourceTencentCloudCamUserPolicyAttachmentCreate(d *schema.ResourceData, m
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cam user policy attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CAM user policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -126,9 +126,15 @@ func resourceTencentCloudCamUserPolicyAttachmentRead(d *schema.ResourceData, met
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam user policy attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM user policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
+	if instance == nil {
+		d.SetId("")
+		return nil
+	}
+
 	//split id
 	userId, policyId, e := camService.decodeCamPolicyAttachmentId(userPolicyAttachmentId)
 	if e != nil {
@@ -163,7 +169,7 @@ func resourceTencentCloudCamUserPolicyAttachmentDelete(d *schema.ResourceData, m
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cam user policy attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CAM user policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
 

@@ -89,6 +89,7 @@ func resourceTencentCloudCamUser() *schema.Resource {
 			"phone_num": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Default:     "86",
 				Description: "Phone num of the CAM user.",
 			},
 			"country_code": {
@@ -226,6 +227,11 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 	if err != nil {
 		log.Printf("[CRITAL]%s read CAM user failed, reason:%s\n", logId, err.Error())
 		return err
+	}
+
+	if instance == nil || instance.Response == nil || instance.Response.Uid == nil {
+		d.SetId("")
+		return nil
 	}
 
 	d.Set("name", userId)

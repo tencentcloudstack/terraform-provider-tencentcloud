@@ -24,7 +24,7 @@ func TestAccTencentCloudCamUser_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_basic", "console_login", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_basic", "need_reset_password", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_basic", "use_api", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_basic", "phone_num", "13631555963"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_basic", "phone_num", "12345678910"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_basic", "country_code", "86"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_basic", "password", "Gail@1234"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_basic", "email", "1234@qq.com"),
@@ -76,7 +76,7 @@ func TestAccTencentCloudCamUser_nilPassword(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_nil_password", "console_login", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_nil_password", "need_reset_password", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_nil_password", "use_api", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_nil_password", "phone_num", "13631555963"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_nil_password", "phone_num", "12345678910"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_nil_password", "country_code", "86"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_user.user_nil_password", "uin"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_user.user_nil_password", "uid"),
@@ -101,7 +101,7 @@ func TestAccTencentCloudCamUser_withoutKey(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_without_key", "console_login", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_without_key", "need_reset_password", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_without_key", "use_api", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_without_key", "phone_num", "13631555963"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_without_key", "phone_num", "12345678910"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_user.user_without_key", "country_code", "86"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_user.user_without_key", "uin"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_user.user_without_key", "uid"),
@@ -161,7 +161,7 @@ resource "tencentcloud_cam_user" "user_basic" {
   use_api             = true
   need_reset_password = true
   password            = "Gail@1234"
-  phone_num           = "13631555963"
+  phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
 }
@@ -187,7 +187,7 @@ resource "tencentcloud_cam_user" "user_nil_password" {
 	console_login       = true
 	use_api             = true
 	need_reset_password = true
-	phone_num           = "13631555963"
+	phone_num           = "12345678910"
 	country_code        = "86"
 	email               = "141515@qq.com"
 }
@@ -199,7 +199,7 @@ resource "tencentcloud_cam_user" "user_without_key" {
   console_login       = false
   use_api             = false
   need_reset_password = true
-  phone_num           = "13631555963"
+  phone_num           = "12345678910"
   country_code        = "86"
   email               = "141515@qq.com"
 }

@@ -3,6 +3,10 @@
 ENHANCEMENTS:
 
 * Resource `tencentcloud_instance` support `SPOTPAID` instance. Thanks to @LipingMao ([#209](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/209)).
+* Resource: `tencentcloud_vpn_gateway` add argument `prepaid_renew_flag` and `prepaid_period` to support prepaid VPN gateway instance creation.
+
+BUG FIXES:
+* Fixed bugs that update operations on CAM POLICY do not work.
 
 ## 1.24.1 (November 26, 2019)
 

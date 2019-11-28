@@ -109,6 +109,7 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 	if response.Response.ProviderArn == nil {
 		return fmt.Errorf("CAM SAML provider id is nil")
 	}
+
 	d.SetId(d.Get("name").(string))
 	d.Set("provider_arn", *response.Response.ProviderArn)
 
@@ -135,6 +136,11 @@ func resourceTencentCloudCamSAMLProviderRead(d *schema.ResourceData, meta interf
 	if err != nil {
 		log.Printf("[CRITAL]%s read CAM SAML provider failed, reason:%s\n", logId, err.Error())
 		return err
+	}
+
+	if instance == nil || instance.Response == nil || instance.Response.Name == nil {
+		d.SetId("")
+		return nil
 	}
 
 	d.Set("name", *instance.Response.Name)

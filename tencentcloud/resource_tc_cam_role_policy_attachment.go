@@ -55,7 +55,7 @@ func resourceTencentCloudCamRolePolicyAttachment() *schema.Resource {
 			"create_mode": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Mode of Creation of the CAM role policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
+				Description: "Mode of Creation of the CAM role policy attachment. 1 means the CAM policy attachment is created by production, and the others indicate syntax strategy ways.",
 			},
 			"policy_type": {
 				Type:        schema.TypeBool,
@@ -137,6 +137,12 @@ func resourceTencentCloudCamRolePolicyAttachmentRead(d *schema.ResourceData, met
 		log.Printf("[CRITAL]%s read CAM role policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
+	if instance == nil {
+		d.SetId("")
+		return nil
+	}
+
 	roleId, policyId, e := camService.decodeCamPolicyAttachmentId(rolePolicyAttachmentId)
 	if e != nil {
 		return e

@@ -99,6 +99,11 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 		return err
 	}
 
+	if len(members) == 0 {
+		d.SetId("")
+		return nil
+	}
+
 	d.Set("group_id", groupId)
 	d.Set("user_ids", members)
 

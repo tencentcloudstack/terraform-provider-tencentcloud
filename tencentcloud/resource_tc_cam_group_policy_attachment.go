@@ -129,6 +129,12 @@ func resourceTencentCloudCamGroupPolicyAttachmentRead(d *schema.ResourceData, me
 		log.Printf("[CRITAL]%s read CAM group policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
+	if instance == nil {
+		d.SetId("")
+		return nil
+	}
+
 	//split id
 	groupId, policyId, e := camService.decodeCamPolicyAttachmentId(groupPolicyAttachmentId)
 	if e != nil {
