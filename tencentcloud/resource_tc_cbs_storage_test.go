@@ -85,8 +85,11 @@ func testAccCheckCbsStorageDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := cbsService.DescribeDiskById(ctx, rs.Primary.ID)
-		if err == nil {
+		storage, err := cbsService.DescribeDiskById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if storage != nil {
 			return fmt.Errorf("cbs storage still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -108,9 +111,12 @@ func testAccCheckStorageExists(n string) resource.TestCheckFunc {
 		cbsService := CbsService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := cbsService.DescribeDiskById(ctx, rs.Primary.ID)
+		storage, err := cbsService.DescribeDiskById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if storage == nil {
+			return fmt.Errorf("cbs storage is not exist")
 		}
 		return nil
 	}

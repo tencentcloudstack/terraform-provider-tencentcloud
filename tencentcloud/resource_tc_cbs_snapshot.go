@@ -27,6 +27,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
 
 func resourceTencentCloudCbsSnapshot() *schema.Resource {
@@ -114,6 +115,9 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return retryError(e)
 		}
+		if snapshot == nil {
+			return resource.RetryableError(fmt.Errorf("cbs snapshot is nil"))
+		}
 		if *snapshot.SnapshotState == CBS_SNAPSHOT_STATUS_CREATING {
 			return resource.RetryableError(fmt.Errorf("cbs snapshot status is still %s", *snapshot.SnapshotState))
 		}
@@ -141,23 +145,30 @@ func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
+	var snapshot *cbs.Snapshot
+	var e error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		snapshot, e := cbsService.DescribeSnapshotById(ctx, snapshotId)
+		snapshot, e = cbsService.DescribeSnapshotById(ctx, snapshotId)
 		if e != nil {
 			return retryError(e)
 		}
-		d.Set("disk_type", snapshot.DiskUsage)
-		d.Set("percent", snapshot.Percent)
-		d.Set("storage_size", snapshot.DiskSize)
-		d.Set("storage_id", snapshot.DiskId)
-		d.Set("snapshot_name", snapshot.SnapshotName)
-		d.Set("snapshot_status", snapshot.SnapshotState)
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read cbs snapshot failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	if snapshot == nil {
+		d.SetId("")
+		return nil
+	}
+
+	d.Set("disk_type", snapshot.DiskUsage)
+	d.Set("percent", snapshot.Percent)
+	d.Set("storage_size", snapshot.DiskSize)
+	d.Set("storage_id", snapshot.DiskId)
+	d.Set("snapshot_name", snapshot.SnapshotName)
+	d.Set("snapshot_status", snapshot.SnapshotState)
 
 	return nil
 }

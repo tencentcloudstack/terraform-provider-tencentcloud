@@ -21,6 +21,7 @@ resource "tencentcloud_cam_user" "foo" {
   need_reset_password = true
   password            = "Gail@1234"
   phone_num           = "12345678910"
+  email               = "hello@test.com"
   country_code        = "86"
 }
 ```

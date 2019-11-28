@@ -135,23 +135,30 @@ func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta inte
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
+	var policy *cbs.AutoSnapshotPolicy
+	var e error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		policy, e := cbsService.DescribeSnapshotPolicyById(ctx, policyId)
+		policy, e = cbsService.DescribeSnapshotPolicyById(ctx, policyId)
 		if e != nil {
 			return retryError(e)
 		}
-		d.Set("snapshot_policy_name", policy.AutoSnapshotPolicyName)
-		if len(policy.Policy) > 0 {
-			d.Set("repeat_weekdays", flattenIntList(policy.Policy[0].DayOfWeek))
-			d.Set("repeat_hours", flattenIntList(policy.Policy[0].Hour))
-		}
-		d.Set("retention_days", policy.RetentionDays)
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read cbs snapshot policy failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	if policy == nil {
+		d.SetId("")
+		return nil
+	}
+
+	d.Set("snapshot_policy_name", policy.AutoSnapshotPolicyName)
+	if len(policy.Policy) > 0 {
+		d.Set("repeat_weekdays", flattenIntList(policy.Policy[0].DayOfWeek))
+		d.Set("repeat_hours", flattenIntList(policy.Policy[0].Hour))
+	}
+	d.Set("retention_days", policy.RetentionDays)
 
 	return nil
 }
