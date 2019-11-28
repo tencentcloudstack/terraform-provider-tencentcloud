@@ -6,7 +6,20 @@ Example Usage
 ```hcl
 resource "tencentcloud_cam_role" "foo" {
   name          = "cam-role-test"
-  document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":\"name/sts:AssumeRole\",\"effect\":\"allow\",\"principal\":{\"qcs\":\"qcs::cam::uin/3374997817:uin/3374997817\"}}]}"
+  document      = <<EOF
+{
+  "version": "2.0",
+  "statement": [
+    {
+      "action": ["name/sts:AssumeRole"],
+      "effect": "allow",
+      "principal": {
+        "qcs": ["qcs::cam::uin/3374997817:uin/3374997817"]
+      }
+    }
+  ]
+}
+EOF
   description   = "test"
   console_login = true
 }

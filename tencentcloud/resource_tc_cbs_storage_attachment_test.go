@@ -42,7 +42,7 @@ func testAccCheckCsbStorageAttachmentDestroy(s *terraform.State) error {
 		}
 
 		storage, err := cbsService.DescribeDiskById(ctx, rs.Primary.ID)
-		if err.Error() == "disk id is not found" {
+		if storage == nil {
 			continue
 		}
 		if err != nil {
@@ -75,7 +75,7 @@ func testAccCheckCbsStorageAttachmentExists(n string) resource.TestCheckFunc {
 		if err != nil {
 			return err
 		}
-		if *storage.Attached == false {
+		if storage == nil || *storage.Attached == false {
 			return fmt.Errorf("cbs storage attchment not exists")
 		}
 		return nil

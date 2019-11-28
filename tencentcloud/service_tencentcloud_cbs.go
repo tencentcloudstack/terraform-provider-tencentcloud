@@ -2,12 +2,11 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type CbsService struct {
@@ -29,11 +28,9 @@ func (me *CbsService) DescribeDiskById(ctx context.Context, diskId string) (disk
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.DiskSet) < 1 {
-		errRet = fmt.Errorf("disk id is not found")
-		return
+	if len(response.Response.DiskSet) > 0 {
+		disk = response.Response.DiskSet[0]
 	}
-	disk = response.Response.DiskSet[0]
 	return
 }
 
@@ -222,11 +219,9 @@ func (me *CbsService) DescribeSnapshotById(ctx context.Context, snapshotId strin
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.SnapshotSet) < 1 {
-		errRet = fmt.Errorf("snapshot id %s is not found", snapshotId)
-		return
+	if len(response.Response.SnapshotSet) > 0 {
+		snapshot = response.Response.SnapshotSet[0]
 	}
-	snapshot = response.Response.SnapshotSet[0]
 	return
 }
 
@@ -320,11 +315,9 @@ func (me *CbsService) DescribeSnapshotPolicyById(ctx context.Context, policyId s
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.AutoSnapshotPolicySet) < 1 {
-		errRet = fmt.Errorf("snapshot policy id %s is not found", policyId)
-		return
+	if len(response.Response.AutoSnapshotPolicySet) > 0 {
+		policy = response.Response.AutoSnapshotPolicySet[0]
 	}
-	policy = response.Response.AutoSnapshotPolicySet[0]
 	return
 }
 
