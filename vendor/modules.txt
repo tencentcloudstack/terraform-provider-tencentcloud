@@ -18,8 +18,6 @@ github.com/apparentlymart/go-cidr/cidr
 github.com/apparentlymart/go-textseg/textseg
 # github.com/armon/go-radix v1.0.0
 github.com/armon/go-radix
-# github.com/athom/goset v0.0.0-20151103071336-f07be69aa101
-github.com/athom/goset
 # github.com/aws/aws-sdk-go v1.25.21
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/awserr

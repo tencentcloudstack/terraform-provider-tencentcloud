@@ -109,13 +109,13 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		snapshot, e := cbsService.DescribeSnapshotById(ctx, snapshotId)
 		if e != nil {
 			return retryError(e)
 		}
 		if *snapshot.SnapshotState == CBS_SNAPSHOT_STATUS_CREATING {
-			return resource.RetryableError(fmt.Errorf("cbs snapshot status is %s", *snapshot.SnapshotState))
+			return resource.RetryableError(fmt.Errorf("cbs snapshot status is still %s", *snapshot.SnapshotState))
 		}
 		if *snapshot.SnapshotState == CBS_SNAPSHOT_STATUS_NORMAL {
 			return nil
