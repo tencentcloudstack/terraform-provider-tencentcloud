@@ -394,6 +394,28 @@ func TestAccTencentCloudInstanceWithPlacementGroup(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstanceWithSpotpaid(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceWithSpotpaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
@@ -590,7 +612,7 @@ resource "tencentcloud_instance" "foo" {
   image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
   instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
   hostname          = "${var.instance_name}"
-  system_disk_type = "CLOUD_PREMIUM"
+  system_disk_type  = "CLOUD_PREMIUM"
 }
 `
 
@@ -669,5 +691,19 @@ resource "tencentcloud_instance" "foo" {
   instance_type      = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
   system_disk_type   = "CLOUD_PREMIUM"
   placement_group_id = "${tencentcloud_placement_group.foo.id}"
+}
+`
+
+const testAccTencentCloudInstanceWithSpotpaid = defaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name        = "${var.instance_name}"
+  availability_zone    = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id             = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type        = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  hostname             = "${var.instance_name}"
+  system_disk_type     = "CLOUD_PREMIUM"
+  instance_charge_type = "SPOTPAID"
+  spot_instance_type   = "ONE-TIME"
+  spot_max_price       = "0.5"
 }
 `

@@ -8,13 +8,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/athom/goset"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/likexian/gokit/assert"
 )
 
 func validateNameRegex(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
-
 	if _, err := regexp.Compile(value); err != nil {
 		errors = append(errors, fmt.Errorf(
 			"%q contains an invalid regular expression: %s",
@@ -121,14 +120,13 @@ func validateKeyPairName(v interface{}, k string) (ws []string, errors []error) 
 }
 
 func validateAllowedStringValueIgnoreCase(ss []string) schema.SchemaValidateFunc {
-
 	var upperStrs = make([]string, len(ss))
 	for index, value := range ss {
 		upperStrs[index] = strings.ToUpper(value)
 	}
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)
-		if !goset.IsIncluded(upperStrs, strings.ToUpper(value)) {
+		if !assert.IsContains(upperStrs, strings.ToUpper(value)) {
 			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ss, value))
 		}
 		return
@@ -138,7 +136,7 @@ func validateAllowedStringValueIgnoreCase(ss []string) schema.SchemaValidateFunc
 func validateAllowedStringValue(ss []string) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)
-		if !goset.IsIncluded(ss, value) {
+		if !assert.IsContains(ss, value) {
 			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ss, value))
 		}
 		return
@@ -193,8 +191,8 @@ func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error
 func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(int)
-		if !goset.IsIncluded(ints, value) {
-			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ints, value))
+		if !assert.IsContains(ints, value) {
+			errors = append(errors, fmt.Errorf("%q must contain a valid int value in array %#v, got %d", k, ints, value))
 		}
 		return
 	}
@@ -299,6 +297,15 @@ func validateCidrIp(v interface{}, k string) (ws []string, errs []error) {
 	if _, err := validateCIDRNetworkAddress(v, k); len(err) != 0 {
 		errs = append(errs, fmt.Errorf("%s %v is not valid IP address or valid CIDR IP address",
 			k, v))
+	}
+	return
+}
+
+func validateStringNumber(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	_, err := strconv.ParseFloat(value, 64)
+	if err != nil {
+		errors = append(errors, fmt.Errorf("%q is not a number", value))
 	}
 	return
 }

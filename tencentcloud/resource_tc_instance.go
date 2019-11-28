@@ -80,6 +80,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -157,7 +158,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      CVM_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: validateAllowedStringValue(CVM_CHARGE_TYPE),
-				Description:  "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR` and `SPOTPAID`, The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance may not allow to delete before expired.",
+				Description:  "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR` and `SPOTPAID`, The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.",
 			},
 			"instance_charge_type_prepaid_period": {
 				Type:         schema.TypeInt,
@@ -170,6 +171,19 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
 				Description:  "When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
+			},
+			"spot_instance_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateAllowedStringValue(CVM_SPOT_INSTANCE_TYPE),
+				Description:  "Type of spot instance, only support `ONE-TIME` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.",
+			},
+			"spot_max_price": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateStringNumber,
+				Description:  "Max price of spot instance, is the format of decimal string, for example \"0.50\". Note: it only works when instance_charge_type is set to `SPOTPAID`.",
 			},
 			// network
 			"internet_charge_type": {
@@ -389,6 +403,21 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			}
 			if renewFlag, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
 				request.InstanceChargePrepaid.RenewFlag = stringToPointer(renewFlag.(string))
+			}
+		}
+		if instanceChargeType == CVM_CHARGE_TYPE_SPOTPAID {
+			request.InstanceMarketOptions = &cvm.InstanceMarketOptionsRequest{}
+			request.InstanceMarketOptions.MarketType = stringToPointer(CVM_MARKET_TYPE_SPOT)
+			request.InstanceMarketOptions.SpotOptions = &cvm.SpotMarketOptions{}
+			if v, ok := d.GetOk("spot_instance_type"); ok {
+				request.InstanceMarketOptions.SpotOptions.SpotInstanceType = stringToPointer(strings.ToLower(v.(string)))
+			} else {
+				return fmt.Errorf("spot_instance_type can not be empty when instance_charge_type is %s", instanceChargeType)
+			}
+			if v, ok := d.GetOk("spot_max_price"); ok {
+				request.InstanceMarketOptions.SpotOptions.MaxPrice = stringToPointer(v.(string))
+			} else {
+				return fmt.Errorf("spot_max_price can not be empty when instance_charge_type is %s", instanceChargeType)
 			}
 		}
 	}
