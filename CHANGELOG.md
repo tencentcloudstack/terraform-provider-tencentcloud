@@ -1,4 +1,8 @@
 ## 1.24.2 (Unreleased)
+
+BUG FIXES:
+* Fixed bugs that update operations on CAM POLICY do not work.
+ 
 ## 1.24.1 (November 26, 2019)
 
 ENHANCEMENTS:
