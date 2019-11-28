@@ -192,28 +192,33 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
+	var storage *cbs.Disk
+	var e error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		storage, e := cbsService.DescribeDiskById(ctx, storageId)
+		storage, e = cbsService.DescribeDiskById(ctx, storageId)
 		if e != nil {
 			return retryError(e)
 		}
-
-		d.Set("storage_type", storage.DiskType)
-		d.Set("storage_size", storage.DiskSize)
-		d.Set("availability_zone", storage.Placement.Zone)
-		d.Set("storage_name", storage.DiskName)
-		d.Set("project_id", storage.Placement.ProjectId)
-		d.Set("encrypt", storage.Encrypt)
-		d.Set("tags", flattenCbsTagsMapping(storage.Tags))
-		d.Set("storage_status", storage.DiskState)
-		d.Set("attached", storage.Attached)
-
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read cbs failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	if storage == nil {
+		d.SetId("")
+		return nil
+	}
+
+	d.Set("storage_type", storage.DiskType)
+	d.Set("storage_size", storage.DiskSize)
+	d.Set("availability_zone", storage.Placement.Zone)
+	d.Set("storage_name", storage.DiskName)
+	d.Set("project_id", storage.Placement.ProjectId)
+	d.Set("encrypt", storage.Encrypt)
+	d.Set("tags", flattenCbsTagsMapping(storage.Tags))
+	d.Set("storage_status", storage.DiskState)
+	d.Set("attached", storage.Attached)
 
 	return nil
 }
@@ -289,7 +294,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			if e != nil {
 				return retryError(e)
 			}
-			if *storage.DiskState == CBS_STORAGE_STATUS_EXPANDING {
+			if storage != nil && *storage.DiskState == CBS_STORAGE_STATUS_EXPANDING {
 				return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
 			}
 			return nil
@@ -321,7 +326,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			if e != nil {
 				return retryError(e)
 			}
-			if *storage.DiskState == CBS_STORAGE_STATUS_ROLLBACKING {
+			if storage != nil && *storage.DiskState == CBS_STORAGE_STATUS_ROLLBACKING {
 				return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
 			}
 			return nil
