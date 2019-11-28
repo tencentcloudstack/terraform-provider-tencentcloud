@@ -109,7 +109,11 @@ func dataSourceTencentCloudCamUserPolicyAttachmentsRead(d *schema.ResourceData, 
 	userId := d.Get("user_id").(string)
 	params["user_id"] = userId
 	if v, ok := d.GetOk("policy_id"); ok {
-		params["policy_id"] = uint64(v.(int))
+		policyId, err := strconv.Atoi(v.(string))
+		if err != nil {
+			return err
+		}
+		params["policy_id"] = uint64(policyId)
 	}
 	if v, ok := d.GetOk("policy_type"); ok {
 		params["policy_type"] = v.(string)
