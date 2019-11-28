@@ -69,16 +69,16 @@ func resourceTencentCloudCamPolicy() *schema.Resource {
 			"document": {
 				Type:     schema.TypeString,
 				Required: true,
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+				DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
 					var oldJson interface{}
-					err := json.Unmarshal([]byte(old), &oldJson)
+					err := json.Unmarshal([]byte(olds), &oldJson)
 					if err != nil {
-						return old == new
+						return olds == news
 					}
 					var newJson interface{}
-					err = json.Unmarshal([]byte(new), &newJson)
+					err = json.Unmarshal([]byte(news), &newJson)
 					if err != nil {
-						return old == new
+						return olds == news
 					}
 					flag := reflect.DeepEqual(oldJson, newJson)
 					return flag
