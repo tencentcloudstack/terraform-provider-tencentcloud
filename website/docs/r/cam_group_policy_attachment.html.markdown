@@ -13,7 +13,7 @@ Provides a resource to create a CAM group policy attachment.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cam_group_attachment" "foo" {
+resource "tencentcloud_cam_group_policy_attachment" "foo" {
   group_id  = "12515263"
   policy_id = "26800353"
 }
@@ -41,6 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 CAM group policy attachment can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cam_group_attachment.foo 12515263#26800353
+$ terraform import tencentcloud_cam_group_policy_attachment.foo 12515263#26800353
 ```
 

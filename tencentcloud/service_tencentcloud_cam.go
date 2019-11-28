@@ -1025,20 +1025,3 @@ func (me *CamService) PolicyDocumentForceCheck(document string) error {
 	}
 	return nil
 }
-
-func diffJson(old string, new string) (flag bool, errRet error) {
-	var oldJson interface{}
-	err := json.Unmarshal([]byte(old), &oldJson)
-	if err != nil {
-		errRet = err
-		return
-	}
-	var newJson interface{}
-	err = json.Unmarshal([]byte(new), &newJson)
-	if err != nil {
-		errRet = err
-		return
-	}
-	flag = reflect.DeepEqual(oldJson, newJson)
-	return
-}

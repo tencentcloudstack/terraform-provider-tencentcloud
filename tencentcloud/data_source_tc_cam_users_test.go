@@ -20,7 +20,7 @@ func TestAccTencentCloudCamUsersDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.remark", "test"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.name", "cam-user-tests"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.console_login", "true"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.phone_num", "13631555963"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.phone_num", "12345678910"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.country_code", "86"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.email", "1234@qq.com"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_users.users", "user_list.0.uin"),
@@ -39,7 +39,7 @@ resource "tencentcloud_cam_user" "user" {
   use_api             = true
   need_reset_password = true
   password            = "Gail@1234"
-  phone_num           = "13631555963"
+  phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
 }

@@ -95,7 +95,7 @@ resource "tencentcloud_cam_user" "foo" {
   use_api             = true
   need_reset_password = true
   password            = "Gail@1234"
-  phone_num           = "13631555963"
+  phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
 }
@@ -119,7 +119,7 @@ resource "tencentcloud_cam_user" "user_basic" {
   use_api             = true
   need_reset_password = true
   password            = "Gail@1234"
-  phone_num           = "13631555963"
+  phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
 }

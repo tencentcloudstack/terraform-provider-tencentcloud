@@ -94,7 +94,7 @@ func dataSourceTencentCloudCamGroupMembershipsRead(d *schema.ResourceData, meta 
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("membership_list", groupList); e != nil {
-		log.Printf("[CRITAL]%s provider set membershiplist fail, reason:%s\n", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set membership list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
 

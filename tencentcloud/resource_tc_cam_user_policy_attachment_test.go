@@ -46,7 +46,7 @@ func testAccCheckCamUserPolicyAttachmentDestroy(s *terraform.State) error {
 
 		_, err := camService.DescribeUserPolicyAttachmentById(ctx, rs.Primary.ID)
 		if err == nil {
-			return fmt.Errorf("cam user policy attachment still exists: %s", rs.Primary.ID)
+			return fmt.Errorf("CAM user policy attachment still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -59,10 +59,10 @@ func testAccCheckCamUserPolicyAttachmentExists(n string) resource.TestCheckFunc 
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("cam user policy attachment %s is not found", n)
+			return fmt.Errorf("CAM user policy attachment %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("cam user policy attachment id is not set")
+			return fmt.Errorf("CAM user policy attachment id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -78,13 +78,13 @@ func testAccCheckCamUserPolicyAttachmentExists(n string) resource.TestCheckFunc 
 //need to add policy resource definition
 const testAccCamUserPolicyAttachment_basic = `
 resource "tencentcloud_cam_user" "user" {
-  name                = "cam-user-testt"
+  name                = "cam-user-testtt"
   remark              = "test"
   console_login       = true
   use_api             = true
   need_reset_password = true
   password            = "Gail@1234"
-  phone_num           = "13631555963"
+  phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
 }

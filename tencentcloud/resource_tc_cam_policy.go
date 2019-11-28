@@ -22,10 +22,10 @@ $ terraform import tencentcloud_cam_policy.foo 26655801
 package tencentcloud
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -55,18 +55,18 @@ func resourceTencentCloudCamPolicy() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					newBuffer := bytes.NewBufferString("")
-					var newCompact string
-					err := json.Compact(newBuffer, []byte(new))
+					var oldJson interface{}
+					err := json.Unmarshal([]byte(old), &oldJson)
 					if err != nil {
-						newCompact = new
-					} else {
-						newCompact = newBuffer.String()
+						return old == new
 					}
-					if newCompact == old {
-						return true
+					var newJson interface{}
+					err = json.Unmarshal([]byte(new), &newJson)
+					if err != nil {
+						return old == new
 					}
-					return false
+					flag := reflect.DeepEqual(oldJson, newJson)
+					return flag
 				},
 				Description: "Document of the CAM policy. The syntax refers to https://intl.cloud.tencent.com/document/product/598/10604. There are some notes when using this para in terraform: 1. The elements in JSON claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when it appears, it must be replaced with the uin it stands for.",
 			},
@@ -169,6 +169,11 @@ func resourceTencentCloudCamPolicyRead(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
+	if instance == nil || instance.Response == nil || instance.Response.PolicyName == nil {
+		d.SetId("")
+		return nil
+	}
+
 	d.Set("name", *instance.Response.PolicyName)
 	//document with special change rule, the `\\/` must be replaced with `/`
 	d.Set("document", strings.Replace(*instance.Response.PolicyDocument, "\\/", "/", -1))
@@ -207,24 +212,17 @@ func resourceTencentCloudCamPolicyUpdate(d *schema.ResourceData, meta interface{
 	}
 
 	if d.HasChange("document") {
-		o, n := d.GetChange("document")
-		flag, err := diffJson(o.(string), n.(string))
-		if err != nil {
-			log.Printf("[CRITAL]%s update CAM policy document failed, reason:%s\n", logId, err.Error())
-			return err
+		document := d.Get("document").(string)
+		camService := CamService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
-		if !flag {
-			document := d.Get("document").(string)
-			camService := CamService{
-				client: meta.(*TencentCloudClient).apiV3Conn,
-			}
-			documentErr := camService.PolicyDocumentForceCheck(document)
-			if documentErr != nil {
-				return documentErr
-			}
-			request.PolicyDocument = &document
-			changeFlag = true
+		documentErr := camService.PolicyDocumentForceCheck(document)
+		if documentErr != nil {
+			return documentErr
 		}
+		request.PolicyDocument = &document
+		changeFlag = true
+
 	}
 	if changeFlag {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

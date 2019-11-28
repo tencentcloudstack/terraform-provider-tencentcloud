@@ -414,9 +414,9 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 		if e != nil {
 			return retryError(e)
 		} else {
-			//if not, quit
+			//if deleted, quit
 			if len(result.Response.VpnGatewaySet) == 0 {
-				return resource.NonRetryableError(fmt.Errorf("Describe Error"))
+				return nil
 			}
 			if result.Response.VpnGatewaySet[0].ExpiredTime != nil {
 				expiredTime := *result.Response.VpnGatewaySet[0].ExpiredTime

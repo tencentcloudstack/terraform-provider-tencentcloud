@@ -23,7 +23,9 @@ $ terraform import tencentcloud_cam_role.foo 4611686018427733635
 package tencentcloud
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -50,8 +52,22 @@ func resourceTencentCloudCamRole() *schema.Resource {
 				Description: "Name of CAM role.",
 			},
 			"document": {
-				Type:        schema.TypeString,
-				Required:    true,
+				Type:     schema.TypeString,
+				Required: true,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					newBuffer := bytes.NewBufferString("")
+					var newCompact string
+					err := json.Compact(newBuffer, []byte(new))
+					if err != nil {
+						newCompact = new
+					} else {
+						newCompact = newBuffer.String()
+					}
+					if newCompact == old {
+						return true
+					}
+					return false
+				},
 				Description: "Document of the CAM role. The syntax refers to https://intl.cloud.tencent.com/document/product/598/10604. There are some notes when using this para in terraform: 1. The elements in json claimed supporting two types as `string` and `array` only support type `array`; 2. Terraform does not support the `root` syntax, when appears, it must be replaced with the uin it stands for.",
 			},
 			"description": {
@@ -159,6 +175,11 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 
+	if instance == nil {
+		d.SetId("")
+		return nil
+	}
+
 	d.Set("name", instance.RoleName)
 	d.Set("document", instance.PolicyDocument)
 	d.Set("create_time", instance.AddTime)
@@ -217,43 +238,37 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 	}
 	document := ""
 	if d.HasChange("document") {
-		o, n := d.GetChange("document")
-		flag, err := diffJson(o.(string), n.(string))
+
+		document = d.Get("document").(string)
+		camService := CamService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		documentErr := camService.PolicyDocumentForceCheck(document)
+		if documentErr != nil {
+			return documentErr
+		}
+		mDocRequest := cam.NewUpdateAssumeRolePolicyRequest()
+		mDocRequest.PolicyDocument = &document
+		mDocRequest.RoleId = &roleId
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			response, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().UpdateAssumeRolePolicy(mDocRequest)
+
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, mDocRequest.GetAction(), mDocRequest.ToJsonString(), e.Error())
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, mDocRequest.GetAction(), mDocRequest.ToJsonString(), response.ToJsonString())
+			}
+			return nil
+		})
 		if err != nil {
 			log.Printf("[CRITAL]%s update CAM role document failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		if flag {
-			document = d.Get("document").(string)
-			camService := CamService{
-				client: meta.(*TencentCloudClient).apiV3Conn,
-			}
-			documentErr := camService.PolicyDocumentForceCheck(document)
-			if documentErr != nil {
-				return documentErr
-			}
-			mDocRequest := cam.NewUpdateAssumeRolePolicyRequest()
-			mDocRequest.PolicyDocument = &document
-			mDocRequest.RoleId = &roleId
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				response, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().UpdateAssumeRolePolicy(mDocRequest)
+		d.SetPartial("document")
 
-				if e != nil {
-					log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-						logId, mDocRequest.GetAction(), mDocRequest.ToJsonString(), e.Error())
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-						logId, mDocRequest.GetAction(), mDocRequest.ToJsonString(), response.ToJsonString())
-				}
-				return nil
-			})
-			if err != nil {
-				log.Printf("[CRITAL]%s update CAM role document failed, reason:%s\n", logId, err.Error())
-				return err
-			}
-			d.SetPartial("document")
-		}
 	}
 
 	d.Partial(false)
