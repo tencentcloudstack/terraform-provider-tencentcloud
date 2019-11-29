@@ -1,4 +1,4 @@
-## 1.24.2 (Unreleased)
+## 1.25.0 (Unreleased)
 
 ENHANCEMENTS:
 
@@ -7,6 +7,7 @@ ENHANCEMENTS:
 
 BUG FIXES:
 * Fixed bugs that update operations on `tencentcloud_cam_policy` do not work.
+* Fixed bugs that filters on `tencentcloud_cam_users` do not work.
 
 ## 1.24.1 (November 26, 2019)
 
