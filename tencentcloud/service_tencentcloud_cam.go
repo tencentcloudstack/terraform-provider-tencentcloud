@@ -680,7 +680,6 @@ func (me *CamService) DescribePoliciesByFilter(ctx context.Context, params map[s
 			}
 			if description != "" {
 				if *policy.Description != description {
-					log.Printf("!!!!test %s %s", *policy.Description, description)
 					continue
 				}
 			}
