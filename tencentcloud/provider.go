@@ -414,6 +414,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dc_gateway":                  resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":        resourceTencentCloudDcGatewayCcnRouteInstance(),
 			"tencentcloud_kubernetes_cluster":          resourceTencentCloudTkeCluster(),
+			"tencentcloud_kubernetes_as_scaling_group":  ResourceTencentCloudKubernetesAsScalingGroup(),
 			"tencentcloud_kubernetes_scale_worker":     resourceTencentCloudTkeScaleWorker(),
 			"tencentcloud_gaap_proxy":                  resourceTencentCloudGaapProxy(),
 			"tencentcloud_gaap_realserver":             resourceTencentCloudGaapRealserver(),
