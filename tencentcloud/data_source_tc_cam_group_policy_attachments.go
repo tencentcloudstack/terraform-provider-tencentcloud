@@ -49,7 +49,7 @@ func dataSourceTencentCloudCamGroupPolicyAttachments() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CAM_POLICY_CREATE_STRATEGY),
-				Description:  "Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.",
+				Description:  "Type of the policy strategy. Valid values are 'User', 'QCS', '', 'User' means customer strategy and 'QCS' means preset strategy.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -80,7 +80,7 @@ func dataSourceTencentCloudCamGroupPolicyAttachments() *schema.Resource {
 						"policy_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of the policy strategy. 'Group' means customer strategy and 'QCS' means preset strategy.",
+							Description: "Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
