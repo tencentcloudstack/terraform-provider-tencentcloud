@@ -153,7 +153,7 @@ func dataSourceTencentCloudCamUsersRead(d *schema.ResourceData, meta interface{}
 		params["phone_num"] = v.(string)
 	}
 	if v, ok := d.GetOk("country_code"); ok {
-		params["countryCode"] = v.(string)
+		params["country_code"] = v.(string)
 	}
 	if v, ok := d.GetOk("email"); ok {
 		params["email"] = v.(string)

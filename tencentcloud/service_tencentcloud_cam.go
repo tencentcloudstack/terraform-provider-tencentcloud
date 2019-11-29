@@ -680,6 +680,7 @@ func (me *CamService) DescribePoliciesByFilter(ctx context.Context, params map[s
 			}
 			if description != "" {
 				if *policy.Description != description {
+					log.Printf("!!!!test %s %s", *policy.Description, description)
 					continue
 				}
 			}
@@ -757,8 +758,8 @@ func (me *CamService) DescribeUsersByFilter(ctx context.Context, params map[stri
 			}
 		}
 		if params["country_code"] != nil {
-			if user.PhoneNum != nil {
-				if params["country_code"].(string) != *user.PhoneNum {
+			if user.CountryCode != nil {
+				if params["country_code"].(string) != *user.CountryCode {
 					continue
 				}
 			} else {
@@ -766,8 +767,8 @@ func (me *CamService) DescribeUsersByFilter(ctx context.Context, params map[stri
 			}
 		}
 		if params["email"] != nil {
-			if user.PhoneNum != nil {
-				if params["email"].(string) != *user.PhoneNum {
+			if user.Email != nil {
+				if params["email"].(string) != *user.Email {
 					continue
 				}
 			} else {
@@ -865,9 +866,10 @@ func (me *CamService) DescribeGroupsByFilter(ctx context.Context, params map[str
 				}
 			}
 			if params["remark"] != nil {
-				if group.Remark != nil && *group.Remark != params["remark"].(string) {
+				if group.Remark == nil || (group.Remark != nil && *group.Remark != params["remark"].(string)) {
 					continue
 				}
+				log.Printf("in")
 			}
 			groups = append(groups, group)
 		}
@@ -960,7 +962,7 @@ func (me *CamService) DescribeSAMLProvidersByFilter(ctx context.Context, params 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCamClient().ListSAMLProviders(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam SAML provider failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM SAML provider failed, reason:%s\n", logId, err.Error())
 		errRet = err
 		return
 	}
