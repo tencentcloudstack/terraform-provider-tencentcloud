@@ -9,6 +9,10 @@ BUG FIXES:
 * Fixed bugs that update operations on `tencentcloud_cam_policy` do not work.
 * Fixed bugs that filters on `tencentcloud_cam_users` do not work.
 
+DEPRECATED:
+ * Data Source: `tencentcloud_cam_user_policy_attachments`:`policy_type` is no longer supported.
+ * Data Source: `tencentcloud_cam_group_policy_attachments`:`policy_type` is no longer supported.
+
 ## 1.24.1 (November 26, 2019)
 
 ENHANCEMENTS:
