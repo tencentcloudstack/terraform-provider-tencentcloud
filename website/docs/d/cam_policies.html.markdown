@@ -13,12 +13,15 @@ Use this data source to query detailed information of CAM policies
 ## Example Usage
 
 ```hcl
+# query by policy_id
 data "tencentcloud_cam_policies" "foo" {
-  policy_id   = "26655801"
-  name        = "cam-policy-test"
-  type        = 1
-  create_mode = 1
-  description = "test"
+  policy_id = "${tencentcloud_cam_policy.foo.id}"
+}
+
+# query by policy_id and name
+data "tencentcloud_cam_policies" "bar" {
+  policy_id = "${tencentcloud_cam_policy.foo.id}"
+  name      = "tf-auto-test"
 }
 ```
 
