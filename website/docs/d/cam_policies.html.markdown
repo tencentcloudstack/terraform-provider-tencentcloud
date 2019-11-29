@@ -29,10 +29,10 @@ data "tencentcloud_cam_policies" "bar" {
 
 The following arguments are supported:
 
-* `policy_id` - (Required) Id of CAM policy to be queried to be queried.
 * `create_mode` - (Optional) Mode of creation of policy strategy. 1 means policy was created with console, and 2 means it was created by strategies.
 * `description` - (Optional) The description of the CAM policy.
 * `name` - (Optional) Name of the CAM policy to be queried.
+* `policy_id` - (Optional) Id of CAM policy to be queried.
 * `result_output_file` - (Optional) Used to save results.
 * `type` - (Optional) Type of the policy strategy. 1 means customer strategy and 2 means preset strategy.
 

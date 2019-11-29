@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cam_group_memberships"
 sidebar_current: "docs-tencentcloud-datasource-cam_group_memberships"
 description: |-
-  Use this data source to query detailed information of CAM groups
+  Use this data source to query detailed information of CAM group memberships
 ---
 
 # tencentcloud_cam_group_memberships
 
-Use this data source to query detailed information of CAM groups
+Use this data source to query detailed information of CAM group memberships
 
 ## Example Usage
 

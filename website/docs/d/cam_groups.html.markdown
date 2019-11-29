@@ -30,7 +30,7 @@ The following arguments are supported:
 
 * `group_id` - (Optional) Id of CAM group to be queried.
 * `name` - (Optional) Name of the CAM group to be queried.
-* `remark` - (Optional) Description of the cam group.
+* `remark` - (Optional) Description of the cam group to be queried.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
