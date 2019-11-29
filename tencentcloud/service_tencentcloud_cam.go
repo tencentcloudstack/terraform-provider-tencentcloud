@@ -86,17 +86,17 @@ func (me *CamService) DescribeRolesByFilter(ctx context.Context, params map[stri
 
 		for _, role := range response.Response.List {
 			if params["role_id"] != nil {
-				if *role.RoleId != params["role_id"] {
+				if *role.RoleId != params["role_id"].(string) {
 					continue
 				}
 			}
 			if params["name"] != nil {
-				if *role.RoleName != params["name"] {
+				if *role.RoleName != params["name"].(string) {
 					continue
 				}
 			}
 			if params["description"] != nil {
-				if *role.Description != params["description"] {
+				if *role.Description != params["description"].(string) {
 					continue
 				}
 			}
@@ -216,17 +216,17 @@ func (me *CamService) DescribeRolePolicyAttachmentsByFilter(ctx context.Context,
 		}
 		for _, policy := range response.Response.List {
 			if params["policy_id"] != nil {
-				if *policy.PolicyId != params["policy_id"] {
+				if *policy.PolicyId != params["policy_id"].(uint64) {
 					continue
 				}
 			}
 			if params["policy_type"] != nil {
-				if *policy.PolicyType != params["policy_type"] {
+				if *policy.PolicyType != params["policy_type"].(string) {
 					continue
 				}
 			}
 			if params["create_mode"] != nil {
-				if int(*policy.CreateMode) != params["create_mode"] {
+				if int(*policy.CreateMode) != params["create_mode"].(int) {
 					continue
 				}
 			}
@@ -346,17 +346,17 @@ func (me *CamService) DescribeUserPolicyAttachmentsByFilter(ctx context.Context,
 		}
 		for _, policy := range response.Response.List {
 			if params["policy_id"] != nil {
-				if *policy.PolicyId != params["policy_id"] {
+				if *policy.PolicyId != params["policy_id"].(uint64) {
 					continue
 				}
 			}
 			if params["policy_type"] != nil {
-				if *policy.PolicyType != params["policy_type"] {
+				if *policy.PolicyType != params["policy_type"].(string) {
 					continue
 				}
 			}
 			if params["create_mode"] != nil {
-				if int(*policy.CreateMode) != params["create_mode"] {
+				if int(*policy.CreateMode) != params["create_mode"].(int) {
 					continue
 				}
 			}
@@ -511,17 +511,17 @@ func (me *CamService) DescribeGroupPolicyAttachmentsByFilter(ctx context.Context
 
 		for _, policy := range response.Response.List {
 			if params["policy_id"] != nil {
-				if *policy.PolicyId != params["policy_id"] {
+				if *policy.PolicyId != params["policy_id"].(uint64) {
 					continue
 				}
 			}
 			if params["policy_type"] != nil {
-				if *policy.PolicyType != params["policy_type"] {
+				if *policy.PolicyType != params["policy_type"].(string) {
 					continue
 				}
 			}
 			if params["create_mode"] != nil {
-				if int(*policy.CreateMode) != params["create_mode"] {
+				if int(*policy.CreateMode) != params["create_mode"].(int) {
 					continue
 				}
 			}
