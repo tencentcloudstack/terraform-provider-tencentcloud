@@ -11,7 +11,8 @@ resource "tencentcloud_cam_user" "foo" {
   use_api             = true
   need_reset_password = true
   password            = "Gail@1234"
-  phone_num           = "13631555963"
+  phone_num           = "12345678910"
+  email               = "hello@test.com"
   country_code        = "86"
 }
 ```
@@ -93,6 +94,7 @@ func resourceTencentCloudCamUser() *schema.Resource {
 			"country_code": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Default:     "86",
 				Description: "Country code of the phone num, like '86'.",
 			},
 			"email": {
@@ -225,6 +227,11 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 	if err != nil {
 		log.Printf("[CRITAL]%s read CAM user failed, reason:%s\n", logId, err.Error())
 		return err
+	}
+
+	if instance == nil || instance.Response == nil || instance.Response.Uid == nil {
+		d.SetId("")
+		return nil
 	}
 
 	d.Set("name", userId)

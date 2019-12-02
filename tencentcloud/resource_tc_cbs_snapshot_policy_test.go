@@ -63,8 +63,11 @@ func testAccCheckCbsSnapshotPolicyDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := cbsService.DescribeSnapshotPolicyById(ctx, rs.Primary.ID)
-		if err == nil {
+		policy, err := cbsService.DescribeSnapshotPolicyById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if policy != nil {
 			return fmt.Errorf("cbs snapshot policy still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -86,9 +89,12 @@ func testAccCheckSnapshotPolicyExists(n string) resource.TestCheckFunc {
 		cbsService := CbsService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := cbsService.DescribeSnapshotPolicyById(ctx, rs.Primary.ID)
+		policy, err := cbsService.DescribeSnapshotPolicyById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if policy == nil {
+			return fmt.Errorf("cbs snapshot policy is not exist")
 		}
 		return nil
 	}

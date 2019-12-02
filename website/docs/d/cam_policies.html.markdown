@@ -13,12 +13,15 @@ Use this data source to query detailed information of CAM policies
 ## Example Usage
 
 ```hcl
+# query by policy_id
 data "tencentcloud_cam_policies" "foo" {
-  policy_id   = "26655801"
-  name        = "cam-policy-test"
-  type        = 1
-  create_mode = 1
-  description = "test"
+  policy_id = "${tencentcloud_cam_policy.foo.id}"
+}
+
+# query by policy_id and name
+data "tencentcloud_cam_policies" "bar" {
+  policy_id = "${tencentcloud_cam_policy.foo.id}"
+  name      = "tf-auto-test"
 }
 ```
 
@@ -26,10 +29,10 @@ data "tencentcloud_cam_policies" "foo" {
 
 The following arguments are supported:
 
-* `policy_id` - (Required) Id of CAM policy to be queried to be queried.
 * `create_mode` - (Optional) Mode of creation of policy strategy. 1 means policy was created with console, and 2 means it was created by strategies.
 * `description` - (Optional) The description of the CAM policy.
 * `name` - (Optional) Name of the CAM policy to be queried.
+* `policy_id` - (Optional) Id of CAM policy to be queried.
 * `result_output_file` - (Optional) Used to save results.
 * `type` - (Optional) Type of the policy strategy. 1 means customer strategy and 2 means preset strategy.
 

@@ -4,11 +4,15 @@ Use this data source to query detailed information of CAM role policy attachment
 Example Usage
 
 ```hcl
+# query by role_id
 data "tencentcloud_cam_role_policy_attachments" "foo" {
-  role_id     = "4611686018427922725"
-  policy_id   = "26800353"
-  policy_type = "QCS"
-  create_mode = 1
+  role_id   = "${tencentcloud_cam_role.foo.id}"
+}
+
+# query by role_id and policy_id
+data "tencentcloud_cam_role_policy_attachments" "bar" {
+  role_id   = "${tencentcloud_cam_role.foo.id}"
+  policy_id = "${tencentcloud_cam_policy.foo.id}"
 }
 ```
 */
@@ -49,7 +53,7 @@ func dataSourceTencentCloudCamRolePolicyAttachments() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CAM_POLICY_CREATE_STRATEGY),
-				Description:  "Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.",
+				Description:  "Type of the policy strategy. Valid values are 'User', 'QCS', '', 'User' means customer strategy and 'QCS' means preset strategy.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -109,7 +113,11 @@ func dataSourceTencentCloudCamRolePolicyAttachmentsRead(d *schema.ResourceData, 
 	roleId := d.Get("role_id").(string)
 	params["role_id"] = roleId
 	if v, ok := d.GetOk("policy_id"); ok {
-		params["policy_id"] = uint64(v.(int))
+		policyId, err := strconv.Atoi(v.(string))
+		if err != nil {
+			return err
+		}
+		params["policy_id"] = uint64(policyId)
 	}
 	if v, ok := d.GetOk("policy_type"); ok {
 		params["policy_type"] = v.(string)

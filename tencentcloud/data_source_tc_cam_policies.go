@@ -4,12 +4,15 @@ Use this data source to query detailed information of CAM policies
 Example Usage
 
 ```hcl
+# query by policy_id
 data "tencentcloud_cam_policies" "foo" {
-  policy_id   = "26655801"
-  name        = "cam-policy-test"
-  type        = 1
-  create_mode = 1
-  description = "test"
+  policy_id   = "${tencentcloud_cam_policy.foo.id}"
+}
+
+# query by policy_id and name
+data "tencentcloud_cam_policies" "bar" {
+  policy_id   = "${tencentcloud_cam_policy.foo.id}"
+  name        = "tf-auto-test"
 }
 ```
 */
@@ -37,8 +40,8 @@ func dataSourceTencentCloudCamPolicies() *schema.Resource {
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Id of CAM policy to be queried to be queried.",
+				Optional:    true,
+				Description: "Id of CAM policy to be queried.",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -155,11 +158,13 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 		mapping := map[string]interface{}{
 			"name":         *policy.PolicyName,
 			"attachments":  int(*policy.Attachments),
-			"description":  *policy.Description,
 			"create_time":  *policy.AddTime,
 			"service_type": *policy.ServiceType,
 			"create_mode":  int(*policy.CreateMode),
 			"type":         int(*policy.Type),
+		}
+		if policy.Description != nil {
+			mapping["description"] = *policy.Description
 		}
 		policyList = append(policyList, mapping)
 		ids = append(ids, strconv.Itoa(int(*policy.PolicyId)))

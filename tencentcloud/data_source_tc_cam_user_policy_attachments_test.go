@@ -29,13 +29,13 @@ func TestAccTencentCloudCamUserPolicyAttachmentsDataSource_basic(t *testing.T) {
 
 const testAccCamUserPolicyAttachmentsDataSource_basic = `
 resource "tencentcloud_cam_user" "user" {
-  name                = "cam-user-testt"
+  name                = "cam-user-testdata"
   remark              = "test"
   console_login       = true
   use_api             = true
   need_reset_password = true
   password            = "Gail@1234"
-  phone_num           = "13631555963"
+  phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
 }

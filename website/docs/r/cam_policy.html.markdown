@@ -15,7 +15,22 @@ Provides a resource to create a CAM policy.
 ```hcl
 resource "tencentcloud_cam_policy" "foo" {
   name        = "cam-policy-test"
-  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"resource\":[\"*\"]}]}"
+  document    = <<EOF
+{
+  "version": "2.0",
+  "statement": [
+    {
+      "action": [
+        "name/sts:AssumeRole"
+      ],
+      "effect": "allow",
+      "resource": [
+        "*"
+      ]
+    }
+  ]
+}
+EOF
   description = "test"
 }
 ```

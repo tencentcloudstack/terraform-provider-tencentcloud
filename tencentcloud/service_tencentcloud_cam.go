@@ -86,17 +86,17 @@ func (me *CamService) DescribeRolesByFilter(ctx context.Context, params map[stri
 
 		for _, role := range response.Response.List {
 			if params["role_id"] != nil {
-				if *role.RoleId != params["role_id"] {
+				if *role.RoleId != params["role_id"].(string) {
 					continue
 				}
 			}
 			if params["name"] != nil {
-				if *role.RoleName != params["name"] {
+				if *role.RoleName != params["name"].(string) {
 					continue
 				}
 			}
 			if params["description"] != nil {
-				if *role.Description != params["description"] {
+				if *role.Description != params["description"].(string) {
 					continue
 				}
 			}
@@ -216,17 +216,17 @@ func (me *CamService) DescribeRolePolicyAttachmentsByFilter(ctx context.Context,
 		}
 		for _, policy := range response.Response.List {
 			if params["policy_id"] != nil {
-				if *policy.PolicyId != params["policy_id"] {
+				if *policy.PolicyId != params["policy_id"].(uint64) {
 					continue
 				}
 			}
 			if params["policy_type"] != nil {
-				if *policy.PolicyType != params["policy_type"] {
+				if *policy.PolicyType != params["policy_type"].(string) {
 					continue
 				}
 			}
 			if params["create_mode"] != nil {
-				if int(*policy.CreateMode) != params["create_mode"] {
+				if int(*policy.CreateMode) != params["create_mode"].(int) {
 					continue
 				}
 			}
@@ -346,17 +346,17 @@ func (me *CamService) DescribeUserPolicyAttachmentsByFilter(ctx context.Context,
 		}
 		for _, policy := range response.Response.List {
 			if params["policy_id"] != nil {
-				if *policy.PolicyId != params["policy_id"] {
+				if *policy.PolicyId != params["policy_id"].(uint64) {
 					continue
 				}
 			}
 			if params["policy_type"] != nil {
-				if *policy.PolicyType != params["policy_type"] {
+				if *policy.PolicyType != params["policy_type"].(string) {
 					continue
 				}
 			}
 			if params["create_mode"] != nil {
-				if int(*policy.CreateMode) != params["create_mode"] {
+				if int(*policy.CreateMode) != params["create_mode"].(int) {
 					continue
 				}
 			}
@@ -511,17 +511,17 @@ func (me *CamService) DescribeGroupPolicyAttachmentsByFilter(ctx context.Context
 
 		for _, policy := range response.Response.List {
 			if params["policy_id"] != nil {
-				if *policy.PolicyId != params["policy_id"] {
+				if *policy.PolicyId != params["policy_id"].(uint64) {
 					continue
 				}
 			}
 			if params["policy_type"] != nil {
-				if *policy.PolicyType != params["policy_type"] {
+				if *policy.PolicyType != params["policy_type"].(string) {
 					continue
 				}
 			}
 			if params["create_mode"] != nil {
-				if int(*policy.CreateMode) != params["create_mode"] {
+				if int(*policy.CreateMode) != params["create_mode"].(int) {
 					continue
 				}
 			}
@@ -757,8 +757,8 @@ func (me *CamService) DescribeUsersByFilter(ctx context.Context, params map[stri
 			}
 		}
 		if params["country_code"] != nil {
-			if user.PhoneNum != nil {
-				if params["country_code"].(string) != *user.PhoneNum {
+			if user.CountryCode != nil {
+				if params["country_code"].(string) != *user.CountryCode {
 					continue
 				}
 			} else {
@@ -766,8 +766,8 @@ func (me *CamService) DescribeUsersByFilter(ctx context.Context, params map[stri
 			}
 		}
 		if params["email"] != nil {
-			if user.PhoneNum != nil {
-				if params["email"].(string) != *user.PhoneNum {
+			if user.Email != nil {
+				if params["email"].(string) != *user.Email {
 					continue
 				}
 			} else {
@@ -865,9 +865,10 @@ func (me *CamService) DescribeGroupsByFilter(ctx context.Context, params map[str
 				}
 			}
 			if params["remark"] != nil {
-				if group.Remark != nil && *group.Remark != params["remark"].(string) {
+				if group.Remark == nil || (group.Remark != nil && *group.Remark != params["remark"].(string)) {
 					continue
 				}
+				log.Printf("in")
 			}
 			groups = append(groups, group)
 		}
@@ -960,7 +961,7 @@ func (me *CamService) DescribeSAMLProvidersByFilter(ctx context.Context, params 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCamClient().ListSAMLProviders(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s read cam SAML provider failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM SAML provider failed, reason:%s\n", logId, err.Error())
 		errRet = err
 		return
 	}
@@ -1024,21 +1025,4 @@ func (me *CamService) PolicyDocumentForceCheck(document string) error {
 		}
 	}
 	return nil
-}
-
-func diffJson(old string, new string) (flag bool, errRet error) {
-	var oldJson interface{}
-	err := json.Unmarshal([]byte(old), &oldJson)
-	if err != nil {
-		errRet = err
-		return
-	}
-	var newJson interface{}
-	err = json.Unmarshal([]byte(new), &newJson)
-	if err != nil {
-		errRet = err
-		return
-	}
-	flag = reflect.DeepEqual(oldJson, newJson)
-	return
 }

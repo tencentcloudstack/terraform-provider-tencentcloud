@@ -52,8 +52,11 @@ func testAccCheckCbsSnapshotDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := cbsService.DescribeSnapshotById(ctx, rs.Primary.ID)
-		if err == nil {
+		snapshot, err := cbsService.DescribeSnapshotById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if snapshot != nil {
 			return fmt.Errorf("cbs snapshot still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -75,9 +78,12 @@ func testAccCheckSnapshotExists(n string) resource.TestCheckFunc {
 		cbsService := CbsService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := cbsService.DescribeSnapshotById(ctx, rs.Primary.ID)
+		snapshot, err := cbsService.DescribeSnapshotById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if snapshot == nil {
+			return fmt.Errorf("cbs snapshot is not exist")
 		}
 		return nil
 	}

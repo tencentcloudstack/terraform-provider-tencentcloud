@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_group_membership" "foo" {
-  group_id = "12515263"
-  user_ids = ["cam-test","cam-test2"]
+  group_id = "${tencentcloud_cam_group.foo.id}"
+  user_ids = ["${tencentcloud_cam_user.foo.id}","${tencentcloud_cam_user.bar.id}"]
 }
 ```
 
@@ -97,6 +97,11 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 	if err != nil {
 		log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
 		return err
+	}
+
+	if len(members) == 0 {
+		d.SetId("")
+		return nil
 	}
 
 	d.Set("group_id", groupId)

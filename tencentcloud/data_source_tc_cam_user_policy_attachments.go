@@ -4,11 +4,15 @@ Use this data source to query detailed information of CAM user policy attachment
 Example Usage
 
 ```hcl
+# query by user_id
 data "tencentcloud_cam_user_policy_attachments" "foo" {
-  user_id     = "cam-test"
-  policy_id   = "215153266"
-  policy_type = "QCS"
-  create_mode = 1
+  user_id   = "${tencentcloud_cam_user.foo.id}"
+}
+
+# query by user_id and policy_id
+data "tencentcloud_cam_user_policy_attachments" "bar" {
+  user_id   = "${tencentcloud_cam_user.foo.id}"
+  policy_id = "${tencentcloud_cam_policy.foo.id}"
 }
 ```
 */
@@ -109,7 +113,11 @@ func dataSourceTencentCloudCamUserPolicyAttachmentsRead(d *schema.ResourceData, 
 	userId := d.Get("user_id").(string)
 	params["user_id"] = userId
 	if v, ok := d.GetOk("policy_id"); ok {
-		params["policy_id"] = uint64(v.(int))
+		policyId, err := strconv.Atoi(v.(string))
+		if err != nil {
+			return err
+		}
+		params["policy_id"] = uint64(policyId)
 	}
 	if v, ok := d.GetOk("policy_type"); ok {
 		params["policy_type"] = v.(string)
