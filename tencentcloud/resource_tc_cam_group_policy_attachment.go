@@ -58,7 +58,7 @@ func resourceTencentCloudCamGroupPolicyAttachment() *schema.Resource {
 				Description: "Mode of Creation of the CAM group policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
 			},
 			"policy_type": {
-				Type:        schema.TypeBool,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Type of the policy strategy. 'Group' means customer strategy and 'QCS' means preset strategy.",
 			},
