@@ -82,7 +82,7 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 			"auto_scaling_group": {
 				Type:     schema.TypeList,
 				Required: true,
-				ForceNew:    true,
+				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: kubernetesAsScalingGroupPara(),
@@ -92,7 +92,7 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 			"auto_scaling_config": {
 				Type:     schema.TypeList,
 				Required: true,
-				ForceNew:    true,
+				ForceNew: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: kubernetesAsScalingConfigPara(),
@@ -250,7 +250,7 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 		"scaling_group_name": {
 			Type:         schema.TypeString,
 			Required:     true,
-			ForceNew:    true,
+			ForceNew:     true,
 			ValidateFunc: validateStringLengthInRange(1, 55),
 			Description:  "Name of a scaling group.",
 		},
@@ -258,14 +258,14 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 		"max_size": {
 			Type:         schema.TypeInt,
 			Required:     true,
-			ForceNew:    true,
+			ForceNew:     true,
 			ValidateFunc: validateIntegerInRange(0, 2000),
 			Description:  "Maximum number of CVM instances (0~2000).",
 		},
 		"min_size": {
 			Type:         schema.TypeInt,
 			Required:     true,
-			ForceNew:    true,
+			ForceNew:     true,
 			ValidateFunc: validateIntegerInRange(0, 2000),
 			Description:  "Minimum number of CVM instances (0~2000).",
 		},
@@ -313,7 +313,7 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 		"load_balancer_ids": {
 			Type:          schema.TypeList,
 			Optional:      true,
-			ForceNew:    true,
+			ForceNew:      true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
 			ConflictsWith: []string{"auto_scaling_group.forward_balancer_ids"},
 			Description:   "ID list of traditional load balancers.",
@@ -321,7 +321,7 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 		"forward_balancer_ids": {
 			Type:          schema.TypeList,
 			Optional:      true,
-			ForceNew:    true,
+			ForceNew:      true,
 			ConflictsWith: []string{"auto_scaling_group.load_balancer_ids"},
 			Description:   "List of application load balancers, which can't be specified with load_balancer_ids together.",
 			Elem: &schema.Resource{
@@ -404,21 +404,9 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 
 func kubernetesAsScalingGroupParaSerial(dMap map[string]interface{}, meta interface{}) (string, error) {
 	var (
-		result   string
-		errRet   error
-		requires = []string{
-			"scaling_group_name",
-			"max_size",
-			"min_size",
-			"vpc_id",
-		}
+		result string
+		errRet error
 	)
-
-	for _, require := range requires {
-		if _, ok := dMap[require]; !ok {
-			return "", fmt.Errorf("miss require param %s", require)
-		}
-	}
 
 	request := as.NewCreateAutoScalingGroupRequest()
 	request.AutoScalingGroupName = stringToPointer(dMap["scaling_group_name"].(string))
@@ -524,18 +512,9 @@ func kubernetesAsScalingGroupParaSerial(dMap map[string]interface{}, meta interf
 
 func kubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta interface{}) (string, error) {
 	var (
-		result   string
-		errRet   error
-		requires = []string{
-			"configuration_name",
-		}
+		result string
+		errRet error
 	)
-
-	for _, require := range requires {
-		if _, ok := dMap[require]; !ok {
-			return "", fmt.Errorf("miss require param %s", require)
-		}
-	}
 
 	request := as.NewCreateLaunchConfigurationRequest()
 
@@ -699,7 +678,7 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 		asService = AsService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
-		number       int
+		number int
 	)
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
