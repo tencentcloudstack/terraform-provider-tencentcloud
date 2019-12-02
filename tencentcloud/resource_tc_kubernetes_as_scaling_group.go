@@ -816,6 +816,10 @@ func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interfa
 		return nil
 	})
 
+	if err != nil {
+		return err
+	}
+
 	if hasDelete {
 		return nil
 	}

@@ -63,7 +63,6 @@ func testAccCheckTkeAsDestroy(s *terraform.State) error {
 		return fmt.Errorf("tke as group %s still exist", asGroupId)
 	}
 
-	return nil
 }
 
 func testAccCheckTkeAsExists(s *terraform.State) error {
