@@ -24,6 +24,7 @@ import (
 	"context"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -58,7 +59,7 @@ func resourceTencentCloudCamRolePolicyAttachment() *schema.Resource {
 				Description: "Mode of Creation of the CAM role policy attachment. 1 means the CAM policy attachment is created by production, and the others indicate syntax strategy ways.",
 			},
 			"policy_type": {
-				Type:        schema.TypeBool,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.",
 			},
@@ -109,6 +110,7 @@ func resourceTencentCloudCamRolePolicyAttachmentCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(roleId + "#" + strconv.Itoa(policyId))
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamRolePolicyAttachmentRead(d, meta)
 }
@@ -153,6 +155,7 @@ func resourceTencentCloudCamRolePolicyAttachmentRead(d *schema.ResourceData, met
 	d.Set("create_time", *instance.AddTime)
 	d.Set("create_mode", int(*instance.CreateMode))
 	d.Set("policy_type", *instance.PolicyType)
+
 	return nil
 }
 

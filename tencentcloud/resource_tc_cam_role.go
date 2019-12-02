@@ -41,6 +41,7 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -160,6 +161,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("CAM role id is nil")
 	}
 	d.SetId(*response.Response.RoleId)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamRoleRead(d, meta)
 }

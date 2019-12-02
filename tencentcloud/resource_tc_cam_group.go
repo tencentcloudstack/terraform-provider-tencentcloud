@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -93,6 +94,7 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("CAM group id is nil")
 	}
 	d.SetId(strconv.Itoa(int(*response.Response.GroupId)))
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamGroupRead(d, meta)
 }
