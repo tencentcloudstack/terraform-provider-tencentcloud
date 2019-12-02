@@ -45,6 +45,7 @@ func resourceTencentCloudCamSAMLProvider() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Name of CAM SAML provider.",
 			},
 			"description": {
