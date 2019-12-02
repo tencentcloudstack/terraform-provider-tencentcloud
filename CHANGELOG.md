@@ -1,7 +1,7 @@
 ## 1.25.0 (Unreleased)
 
 FEATURES:
-* **New Data Source**: `tencentcloud_kubernetes_as_scaling_group`.[#202](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/202)
+* **New Resource**: `tencentcloud_kubernetes_as_scaling_group`.[#202](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/202)
 
 ENHANCEMENTS:
 
@@ -15,7 +15,6 @@ BUG FIXES:
 DEPRECATED:
  * Data Source: `tencentcloud_cam_user_policy_attachments`:`policy_type` is no longer supported.
  * Data Source: `tencentcloud_cam_group_policy_attachments`:`policy_type` is no longer supported.
-
 
 ## 1.24.1 (November 26, 2019)
 
