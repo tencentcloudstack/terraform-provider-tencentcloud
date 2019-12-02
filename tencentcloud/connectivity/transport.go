@@ -2,6 +2,7 @@ package connectivity
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -18,7 +19,7 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 
 	var inBytes, outBytes []byte
 
-	var start = time.Now().UnixNano()
+	var start = time.Now()
 
 	defer func() { me.log(inBytes, outBytes, errRet, start) }()
 
@@ -28,15 +29,16 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	}
 
 	request.Header.Set("X-TC-RequestClient", ReqClient)
-
-	inBytes, errRet = ioutil.ReadAll(bodyReader)
+	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header["X-TC-Action"]))
+	requestBody, errRet := ioutil.ReadAll(bodyReader)
 	if errRet != nil {
 		return
 	}
+	inBytes = append(inBytes, requestBody...)
+
 	appendMessage := []byte(fmt.Sprintf(
-		",(host %+v,action:%+v,region:%+v)",
+		", (host %+v, region:%+v)",
 		request.Header["Host"],
-		request.Header["X-TC-Action"],
 		request.Header["X-TC-Region"],
 	))
 
@@ -54,7 +56,7 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	return
 }
 
-func (me *LogRoundTripper) log(in []byte, out []byte, err error, start int64) {
+func (me *LogRoundTripper) log(in []byte, out []byte, err error, start time.Time) {
 	var buf bytes.Buffer
 	buf.WriteString("######")
 	tag := "[DEBUG]"
@@ -63,20 +65,23 @@ func (me *LogRoundTripper) log(in []byte, out []byte, err error, start int64) {
 	}
 	buf.WriteString(tag)
 	if len(in) > 0 {
-		buf.WriteString("tencentcloud-sdk-go request:")
+		buf.WriteString("tencentcloud-sdk-go: ")
 		buf.Write(in)
 	}
 	if len(out) > 0 {
 		buf.WriteString("; response:")
-		out := bytes.Replace(out,
-			[]byte("\n"),
-			[]byte(""),
-			-1)
-		out = bytes.Replace(out,
-			[]byte(" "),
-			[]byte(""),
-			-1)
-		buf.Write(out)
+		err := json.Compact(&buf, out)
+		if err != nil {
+			out := bytes.Replace(out,
+				[]byte("\n"),
+				[]byte(""),
+				-1)
+			out = bytes.Replace(out,
+				[]byte(" "),
+				[]byte(""),
+				-1)
+			buf.Write(out)
+		}
 	}
 
 	if err != nil {
@@ -84,7 +89,7 @@ func (me *LogRoundTripper) log(in []byte, out []byte, err error, start int64) {
 		buf.WriteString(err.Error())
 	}
 
-	costFormat := fmt.Sprintf(",cost %.3f seconds", float32(time.Now().UnixNano()-start)/float32(time.Second))
+	costFormat := fmt.Sprintf(",cost %s", time.Since(start).String())
 	buf.WriteString(costFormat)
 
 	log.Println(buf.String())
