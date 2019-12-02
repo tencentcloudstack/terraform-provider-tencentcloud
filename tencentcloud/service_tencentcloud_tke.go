@@ -470,8 +470,7 @@ func (me *TkeService) DescribeClusterSecurity(ctx context.Context, id string) (r
 	return me.client.UseTkeClient().DescribeClusterSecurity(request)
 }
 
-
-func (me *TkeService)CreateClusterAsGroup(ctx context.Context, id,groupPara,configPara string) (asGroupId string,errRet error) {
+func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string) (asGroupId string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := tke.NewCreateClusterAsGroupRequest()
@@ -492,7 +491,7 @@ func (me *TkeService)CreateClusterAsGroup(ctx context.Context, id,groupPara,conf
 		return
 	}
 
-	if response == nil || response.Response == nil  || response.Response.AutoScalingGroupId ==nil{
+	if response == nil || response.Response == nil || response.Response.AutoScalingGroupId == nil {
 		errRet = fmt.Errorf("CreateClusterAsGroup return nil response")
 		return
 	}
@@ -501,7 +500,7 @@ func (me *TkeService)CreateClusterAsGroup(ctx context.Context, id,groupPara,conf
 	return
 }
 
-func (me *TkeService)DeleteClusterAsGroups(ctx context.Context, id,asGroupId string)(errRet error)  {
+func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId string) (errRet error) {
 
 	logId := getLogId(ctx)
 	request := tke.NewDeleteClusterAsGroupsRequest()
@@ -512,7 +511,7 @@ func (me *TkeService)DeleteClusterAsGroups(ctx context.Context, id,asGroupId str
 		}
 	}()
 	request.ClusterId = &id
-	request.AutoScalingGroupIds =[]*string{&asGroupId}
+	request.AutoScalingGroupIds = []*string{&asGroupId}
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTkeClient().DeleteClusterAsGroups(request)
@@ -521,4 +520,3 @@ func (me *TkeService)DeleteClusterAsGroups(ctx context.Context, id,asGroupId str
 	}
 	return
 }
-
