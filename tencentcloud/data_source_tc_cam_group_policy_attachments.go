@@ -84,7 +84,7 @@ func dataSourceTencentCloudCamGroupPolicyAttachments() *schema.Resource {
 						"policy_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of the policy strategy. 'Group' means customer strategy and 'QCS' means preset strategy.",
+							Description: "Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,

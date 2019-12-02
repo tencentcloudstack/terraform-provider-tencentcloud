@@ -40,8 +40,8 @@ func dataSourceTencentCloudCamPolicies() *schema.Resource {
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Id of CAM policy to be queried to be queried.",
+				Optional:    true,
+				Description: "Id of CAM policy to be queried.",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -158,11 +158,13 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 		mapping := map[string]interface{}{
 			"name":         *policy.PolicyName,
 			"attachments":  int(*policy.Attachments),
-			"description":  *policy.Description,
 			"create_time":  *policy.AddTime,
 			"service_type": *policy.ServiceType,
 			"create_mode":  int(*policy.CreateMode),
 			"type":         int(*policy.Type),
+		}
+		if policy.Description != nil {
+			mapping["description"] = *policy.Description
 		}
 		policyList = append(policyList, mapping)
 		ids = append(ids, strconv.Itoa(int(*policy.PolicyId)))
