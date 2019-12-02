@@ -26,7 +26,7 @@ The following arguments are supported:
 
 * `description` - (Required) The description of the CAM SAML provider.
 * `meta_data` - (Required) The meta data document of the CAM SAML provider.
-* `name` - (Required) Name of CAM SAML provider.
+* `name` - (Required, ForceNew) Name of CAM SAML provider.
 
 ## Attributes Reference
 
