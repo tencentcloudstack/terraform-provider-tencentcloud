@@ -110,7 +110,7 @@ func resourceTencentCloudCamRolePolicyAttachmentCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(roleId + "#" + strconv.Itoa(policyId))
-	time.Sleep(3)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamRolePolicyAttachmentRead(d, meta)
 }
@@ -129,7 +129,7 @@ func resourceTencentCloudCamRolePolicyAttachmentRead(d *schema.ResourceData, met
 	var instance *cam.AttachedPolicyOfRole
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeRolePolicyAttachmentById(ctx, rolePolicyAttachmentId)
-		if e != nil || result == nil {
+		if e != nil {
 			return retryError(e)
 		}
 		instance = result

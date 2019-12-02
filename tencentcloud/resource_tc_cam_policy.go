@@ -154,7 +154,7 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("CAM policy id is nil")
 	}
 	d.SetId(strconv.Itoa(int(*response.Response.PolicyId)))
-	time.Sleep(3)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamPolicyRead(d, meta)
 }
@@ -175,7 +175,7 @@ func resourceTencentCloudCamPolicyRead(d *schema.ResourceData, meta interface{})
 	var instance *cam.GetPolicyResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().GetPolicy(request)
-		if e != nil || result.Response.PolicyDocument == nil {
+		if e != nil {
 			return retryError(e)
 		}
 		instance = result

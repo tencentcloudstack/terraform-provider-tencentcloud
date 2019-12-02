@@ -102,7 +102,7 @@ func resourceTencentCloudCamUserPolicyAttachmentCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(userId + "#" + policyId)
-	time.Sleep(3)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamUserPolicyAttachmentRead(d, meta)
 }
@@ -121,7 +121,7 @@ func resourceTencentCloudCamUserPolicyAttachmentRead(d *schema.ResourceData, met
 	var instance *cam.AttachPolicyInfo
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeUserPolicyAttachmentById(ctx, userPolicyAttachmentId)
-		if e != nil || result == nil {
+		if e != nil {
 			return retryError(e)
 		}
 		instance = result

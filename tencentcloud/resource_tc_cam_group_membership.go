@@ -73,7 +73,7 @@ func resourceTencentCloudCamGroupMembershipCreate(d *schema.ResourceData, meta i
 		return err
 	}
 	d.SetId(groupId)
-	time.Sleep(3)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamGroupMembershipRead(d, meta)
 }

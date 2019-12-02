@@ -161,7 +161,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("CAM role id is nil")
 	}
 	d.SetId(*response.Response.RoleId)
-	time.Sleep(3)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamRoleRead(d, meta)
 }
@@ -179,7 +179,7 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 	var instance *cam.RoleInfo
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeRoleById(ctx, roleId)
-		if e != nil || result == nil {
+		if e != nil {
 			return retryError(e)
 		}
 		instance = result

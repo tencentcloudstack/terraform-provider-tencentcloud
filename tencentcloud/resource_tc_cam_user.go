@@ -203,7 +203,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	d.Set("secret_key", *response.Response.SecretKey)
 	d.Set("password", *response.Response.Password)
 	d.Set("secret_id", *response.Response.SecretId)
-	time.Sleep(3)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamUserRead(d, meta)
 }
@@ -221,7 +221,7 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 	var instance *cam.GetUserResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeUserById(ctx, userId)
-		if e != nil || result.Response.Uid == nil {
+		if e != nil {
 			return retryError(e)
 		}
 		instance = result

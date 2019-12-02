@@ -94,7 +94,7 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("CAM group id is nil")
 	}
 	d.SetId(strconv.Itoa(int(*response.Response.GroupId)))
-	time.Sleep(3)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamGroupRead(d, meta)
 }
@@ -115,7 +115,7 @@ func resourceTencentCloudCamGroupRead(d *schema.ResourceData, meta interface{}) 
 	var instance *cam.GetGroupResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().GetGroup(request)
-		if e != nil || result.Response.GroupId == nil {
+		if e != nil {
 			return retryError(e)
 		}
 		instance = result
