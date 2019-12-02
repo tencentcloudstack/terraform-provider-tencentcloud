@@ -24,6 +24,7 @@ package tencentcloud
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -112,6 +113,7 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 
 	d.SetId(d.Get("name").(string))
 	d.Set("provider_arn", *response.Response.ProviderArn)
+	time.Sleep(3)
 
 	return resourceTencentCloudCamSAMLProviderRead(d, meta)
 }
@@ -127,7 +129,7 @@ func resourceTencentCloudCamSAMLProviderRead(d *schema.ResourceData, meta interf
 	var instance *cam.GetSAMLProviderResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().GetSAMLProvider(request)
-		if e != nil {
+		if e != nil || result.Response.SAMLMetadata == nil {
 			return retryError(e)
 		}
 		instance = result

@@ -24,6 +24,7 @@ import (
 	"context"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -101,6 +102,7 @@ func resourceTencentCloudCamUserPolicyAttachmentCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(userId + "#" + policyId)
+	time.Sleep(3)
 
 	return resourceTencentCloudCamUserPolicyAttachmentRead(d, meta)
 }
@@ -119,7 +121,7 @@ func resourceTencentCloudCamUserPolicyAttachmentRead(d *schema.ResourceData, met
 	var instance *cam.AttachPolicyInfo
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeUserPolicyAttachmentById(ctx, userPolicyAttachmentId)
-		if e != nil {
+		if e != nil || result == nil {
 			return retryError(e)
 		}
 		instance = result

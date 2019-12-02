@@ -24,6 +24,7 @@ import (
 	"context"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -72,6 +73,7 @@ func resourceTencentCloudCamGroupMembershipCreate(d *schema.ResourceData, meta i
 		return err
 	}
 	d.SetId(groupId)
+	time.Sleep(3)
 
 	return resourceTencentCloudCamGroupMembershipRead(d, meta)
 }
