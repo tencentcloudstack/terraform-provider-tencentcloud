@@ -55,7 +55,6 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
 }
 ```
 */
-
 package tencentcloud
 
 import (
@@ -72,10 +71,6 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceKubernetesAsScalingGroupCreate,
 		Read:   resourceKubernetesAsScalingGroupRead,
-		Update: func(d *schema.ResourceData, meta interface{}) error {
-			d.Partial(true)
-			return fmt.Errorf("resource tencentcloud_kubernetes_as_scaling_group not support update")
-		},
 		Delete: resourceKubernetesAsScalingGroupDelete,
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
@@ -87,50 +82,324 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 			"auto_scaling_group": {
 				Type:     schema.TypeList,
 				Required: true,
+				ForceNew:    true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: kubernetesAsScalingGroupPara(),
 				},
-				Description: "Auto scaling group parameters",
+				Description: "Auto scaling group parameters:",
 			},
 			"auto_scaling_config": {
 				Type:     schema.TypeList,
 				Required: true,
+				ForceNew:    true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: kubernetesAsScalingConfigPara(),
 				},
-				Description: "Auto scaling config parameters",
+				Description: "Auto scaling config parameters:",
 			},
 		},
 	}
 }
 
-func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
-	removes := map[string]bool{
-		"status":           true,
-		"instance_count":   true,
-		"create_time":      true,
-		"configuration_id": true,
-	}
-
-	asGroupSchema := resourceTencentCloudAsScalingGroup().Schema
-	needSchema := make(map[string]*schema.Schema, len(asGroupSchema)-len(removes))
-	for name, schemaDef := range asGroupSchema {
-		if removes[name] {
-			continue
-		}
-		var newSchema = *schemaDef
-		if len(newSchema.ConflictsWith) != 0 {
-			newSchema.ConflictsWith = make([]string, len(newSchema.ConflictsWith))
-			for index, cft := range schemaDef.ConflictsWith {
-				newSchema.ConflictsWith[index] = "auto_scaling_group." + cft
-			}
-		}
-		needSchema[name] = &newSchema
+func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
+	needSchema := map[string]*schema.Schema{
+		"configuration_name": {
+			Type:         schema.TypeString,
+			Required:     true,
+			ForceNew:     true,
+			ValidateFunc: validateStringLengthInRange(1, 60),
+			Description:  "Name of a launch configuration.",
+		},
+		"project_id": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     0,
+			Description: "Specifys to which project the configuration belongs.",
+		},
+		"instance_type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "Specified types of CVM instance.",
+		},
+		"system_disk_type": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ForceNew:     true,
+			Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
+			ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
+			Description:  "Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.",
+		},
+		"system_disk_size": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ForceNew:     true,
+			Default:      50,
+			ValidateFunc: validateIntegerInRange(50, 500),
+			Description:  "Volume of system disk in GB. Default is 50.",
+		},
+		"data_disk": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			ForceNew:    true,
+			MaxItems:    11,
+			Description: "Configurations of data disk.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"disk_type": {
+						Type:         schema.TypeString,
+						Optional:     true,
+						ForceNew:     true,
+						Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
+						ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
+						Description:  "Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.",
+					},
+					"disk_size": {
+						Type:        schema.TypeInt,
+						Optional:    true,
+						ForceNew:    true,
+						Default:     0,
+						Description: "Volume of disk in GB. Default is 0.",
+					},
+					"snapshot_id": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Data disk snapshot ID.",
+					},
+				},
+			},
+		},
+		"internet_charge_type": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ForceNew:     true,
+			Default:      INTERNET_CHARGE_TYPE_TRAFFIC_POSTPAID_BY_HOUR,
+			ValidateFunc: validateAllowedStringValue(INTERNET_CHARGE_ALLOW_TYPE),
+			Description:  "Charge types for network traffic. Available values include `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
+		},
+		"internet_max_bandwidth_out": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ForceNew:     true,
+			Default:      0,
+			ValidateFunc: validateIntegerInRange(0, 100),
+			Description:  "Max bandwidth of Internet access in Mbps. Default is 0.",
+		},
+		"public_ip_assigned": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Specify whether to assign an Internet IP address.",
+		},
+		"password": {
+			Type:          schema.TypeString,
+			Optional:      true,
+			Sensitive:     true,
+			ForceNew:      true,
+			ValidateFunc:  validateAsConfigPassword,
+			ConflictsWith: []string{"auto_scaling_config.key_ids"},
+			Description:   "Password to access.",
+		},
+		"key_ids": {
+			Type:          schema.TypeList,
+			Optional:      true,
+			ForceNew:      true,
+			Elem:          &schema.Schema{Type: schema.TypeString},
+			ConflictsWith: []string{"auto_scaling_config.password"},
+			Description:   "ID list of keys.",
+		},
+		"security_group_ids": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			ForceNew:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "Security groups to which a CVM instance belongs.",
+		},
+		"enhanced_security_service": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     true,
+			ForceNew:    true,
+			Description: "To specify whether to enable cloud security service. Default is TRUE.",
+		},
+		"enhanced_monitor_service": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     true,
+			ForceNew:    true,
+			Description: "To specify whether to enable cloud monitor service. Default is TRUE.",
+		},
+		"instance_tags": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "A list of tags used to associate different resources.",
+		},
 	}
 
 	return needSchema
+}
+
+func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
+
+	asGroupSchema := map[string]*schema.Schema{
+		"scaling_group_name": {
+			Type:         schema.TypeString,
+			Required:     true,
+			ForceNew:    true,
+			ValidateFunc: validateStringLengthInRange(1, 55),
+			Description:  "Name of a scaling group.",
+		},
+
+		"max_size": {
+			Type:         schema.TypeInt,
+			Required:     true,
+			ForceNew:    true,
+			ValidateFunc: validateIntegerInRange(0, 2000),
+			Description:  "Maximum number of CVM instances (0~2000).",
+		},
+		"min_size": {
+			Type:         schema.TypeInt,
+			Required:     true,
+			ForceNew:    true,
+			ValidateFunc: validateIntegerInRange(0, 2000),
+			Description:  "Minimum number of CVM instances (0~2000).",
+		},
+		"vpc_id": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "ID of VPC network.",
+		},
+		"project_id": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     0,
+			Description: "Specifys to which project the scaling group belongs.",
+		},
+		"subnet_ids": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			ForceNew:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "ID list of subnet, and for VPC it is required.",
+		},
+		"zones": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			ForceNew:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "List of available zones, for Basic network it is required.",
+		},
+		"default_cooldown": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     300,
+			Description: "Default cooldown time in second, and default value is 300.",
+		},
+		"desired_capacity": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			ForceNew:    true,
+			Description: "Desired volume of CVM instances, which is between max_size and min_size.",
+		},
+		"load_balancer_ids": {
+			Type:          schema.TypeList,
+			Optional:      true,
+			ForceNew:    true,
+			Elem:          &schema.Schema{Type: schema.TypeString},
+			ConflictsWith: []string{"auto_scaling_group.forward_balancer_ids"},
+			Description:   "ID list of traditional load balancers.",
+		},
+		"forward_balancer_ids": {
+			Type:          schema.TypeList,
+			Optional:      true,
+			ForceNew:    true,
+			ConflictsWith: []string{"auto_scaling_group.load_balancer_ids"},
+			Description:   "List of application load balancers, which can't be specified with load_balancer_ids together.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"load_balancer_id": {
+						Type:        schema.TypeString,
+						Required:    true,
+						ForceNew:    true,
+						Description: "ID of available load balancers.",
+					},
+					"listener_id": {
+						Type:        schema.TypeString,
+						Required:    true,
+						ForceNew:    true,
+						Description: "Listener ID for application load balancers.",
+					},
+					"rule_id": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "ID of forwarding rules.",
+					},
+					"target_attribute": {
+						Type:        schema.TypeList,
+						Required:    true,
+						ForceNew:    true,
+						Description: "Attribute list of target rules.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"port": {
+									Type:        schema.TypeInt,
+									Required:    true,
+									ForceNew:    true,
+									Description: "Port number.",
+								},
+								"weight": {
+									Type:        schema.TypeInt,
+									Required:    true,
+									ForceNew:    true,
+									Description: "Weight.",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"termination_policies": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			ForceNew:    true,
+			MaxItems:    1,
+			Description: "Available values for termination policies include OLDEST_INSTANCE and NEWEST_INSTANCE.",
+			Elem: &schema.Schema{
+				Type:    schema.TypeString,
+				Default: SCALING_GROUP_TERMINATION_POLICY_OLDEST_INSTANCE,
+				ValidateFunc: validateAllowedStringValue([]string{SCALING_GROUP_TERMINATION_POLICY_OLDEST_INSTANCE,
+					SCALING_GROUP_TERMINATION_POLICY_NEWEST_INSTANCE}),
+			},
+		},
+		"retry_policy": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Available values for retry policies include IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.",
+			Default:     SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
+			ValidateFunc: validateAllowedStringValue([]string{SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
+				SCALING_GROUP_RETRY_POLICY_INCREMENTAL_INTERVALS}),
+		},
+		"tags": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Tags of a scaling group.",
+		},
+	}
+
+	return asGroupSchema
 }
 
 func kubernetesAsScalingGroupParaSerial(dMap map[string]interface{}, meta interface{}) (string, error) {
@@ -251,44 +520,6 @@ func kubernetesAsScalingGroupParaSerial(dMap map[string]interface{}, meta interf
 	result = request.ToJsonString()
 
 	return result, errRet
-}
-
-func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
-
-	removes := map[string]bool{
-		"image_id":         true,
-		"keep_image_login": true,
-		"user_data":        true,
-		"status":           true,
-		"create_time":      true,
-		"instance_types":   true,
-	}
-	asConfigSchema := resourceTencentCloudAsScalingConfig().Schema
-	needSchema := make(map[string]*schema.Schema, len(asConfigSchema)-len(removes))
-
-	for name, schemaDef := range asConfigSchema {
-		if removes[name] {
-			continue
-		}
-		var newSchema = *schemaDef
-		if len(newSchema.ConflictsWith) != 0 {
-			newSchema.ConflictsWith = make([]string, len(newSchema.ConflictsWith))
-			for index, cft := range schemaDef.ConflictsWith {
-				newSchema.ConflictsWith[index] = "auto_scaling_config." + cft
-			}
-		}
-		needSchema[name] = &newSchema
-	}
-
-	needSchema["key_ids"].ConflictsWith = []string{"auto_scaling_config.password"}
-	needSchema["password"].ConflictsWith = []string{"auto_scaling_config.key_ids"}
-	needSchema["instance_type"] = &schema.Schema{
-		Type:        schema.TypeString,
-		Required:    true,
-		Description: "Specified types of CVM instance.",
-	}
-
-	return needSchema
 }
 
 func kubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta interface{}) (string, error) {
@@ -444,10 +675,10 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 	clusterId := items[0]
 	asGroupId := items[1]
 
-	info, has, err := service.DescribeCluster(ctx, clusterId)
+	_, has, err := service.DescribeCluster(ctx, clusterId)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			info, has, err = service.DescribeCluster(ctx, clusterId)
+			_, has, err = service.DescribeCluster(ctx, clusterId)
 			if err != nil {
 				return retryError(err)
 			}
@@ -468,12 +699,11 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 		asService = AsService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
-		scalingGroup *as.AutoScalingGroup
 		number       int
 	)
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		scalingGroup, number, err = asService.DescribeAutoScalingGroupById(ctx, asGroupId)
+		_, number, err = asService.DescribeAutoScalingGroupById(ctx, asGroupId)
 		if err != nil {
 			return retryError(err)
 		}
