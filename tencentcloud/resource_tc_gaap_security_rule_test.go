@@ -12,22 +12,26 @@ import (
 
 func TestAccTencentCloudGaapSecurityRule_basic(t *testing.T) {
 	id := new(string)
-	policyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id, policyId),
+		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapSecurityRuleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id, policyId),
+					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "cidr_ip", "1.1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "action", "ACCEPT"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "port", "80"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_gaap_security_rule.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -35,17 +39,16 @@ func TestAccTencentCloudGaapSecurityRule_basic(t *testing.T) {
 
 func TestAccTencentCloudGaapSecurityRule_drop(t *testing.T) {
 	id := new(string)
-	policyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id, policyId),
+		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapSecurityRuleDrop,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id, policyId),
+					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "cidr_ip", "1.1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "action", "DROP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "protocol", "TCP"),
@@ -58,17 +61,16 @@ func TestAccTencentCloudGaapSecurityRule_drop(t *testing.T) {
 
 func TestAccTencentCloudGaapSecurityRule_name(t *testing.T) {
 	id := new(string)
-	policyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id, policyId),
+		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapSecurityRuleWithName,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id, policyId),
+					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "cidr_ip", "1.1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "action", "ACCEPT"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "protocol", "TCP"),
@@ -79,7 +81,7 @@ func TestAccTencentCloudGaapSecurityRule_name(t *testing.T) {
 			{
 				Config: testAccGaapSecurityRuleUpdateName,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id, policyId),
+					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "name", "ci-test-gaap-sr-new"),
 				),
 			},
@@ -89,17 +91,16 @@ func TestAccTencentCloudGaapSecurityRule_name(t *testing.T) {
 
 func TestAccTencentCloudGaapSecurityRule_ipSubnet(t *testing.T) {
 	id := new(string)
-	policyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id, policyId),
+		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapSecurityRuleIpSubnet,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id, policyId),
+					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "cidr_ip", "192.168.1.0/24"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "action", "ACCEPT"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "protocol", "TCP"),
@@ -112,17 +113,16 @@ func TestAccTencentCloudGaapSecurityRule_ipSubnet(t *testing.T) {
 
 func TestAccTencentCloudGaapSecurityRule_allProtocols(t *testing.T) {
 	id := new(string)
-	policyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id, policyId),
+		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapSecurityRuleAllProtocols,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id, policyId),
+					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "cidr_ip", "1.1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "action", "ACCEPT"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "protocol", "ALL"),
@@ -135,17 +135,16 @@ func TestAccTencentCloudGaapSecurityRule_allProtocols(t *testing.T) {
 
 func TestAccTencentCloudGaapSecurityRule_AllPorts(t *testing.T) {
 	id := new(string)
-	policyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id, policyId),
+		CheckDestroy: testAccCheckGaapSecurityRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapSecurityRuleAllPorts,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id, policyId),
+					testAccCheckGaapSecurityRuleExists("tencentcloud_gaap_security_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "cidr_ip", "1.1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "action", "ACCEPT"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_security_rule.foo", "protocol", "TCP"),
@@ -156,7 +155,7 @@ func TestAccTencentCloudGaapSecurityRule_AllPorts(t *testing.T) {
 	})
 }
 
-func testAccCheckGaapSecurityRuleExists(n string, id, policyId *string) resource.TestCheckFunc {
+func testAccCheckGaapSecurityRuleExists(n string, id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -167,14 +166,9 @@ func testAccCheckGaapSecurityRuleExists(n string, id, policyId *string) resource
 			return errors.New("no security rule ID is set")
 		}
 
-		attrPolicyId := rs.Primary.Attributes["policy_id"]
-		if attrPolicyId == "" {
-			return errors.New("no policy ID is set")
-		}
-
 		service := GaapService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		rule, err := service.DescribeSecurityRule(context.TODO(), attrPolicyId, rs.Primary.ID)
+		rule, err := service.DescribeSecurityRule(context.TODO(), rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -183,19 +177,18 @@ func testAccCheckGaapSecurityRuleExists(n string, id, policyId *string) resource
 			return errors.New("no security rule not exist")
 		}
 
-		*policyId = attrPolicyId
 		*id = rs.Primary.ID
 
 		return nil
 	}
 }
 
-func testAccCheckGaapSecurityRuleDestroy(id, policyId *string) resource.TestCheckFunc {
+func testAccCheckGaapSecurityRuleDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := GaapService{client: client}
 
-		rule, err := service.DescribeSecurityRule(context.TODO(), *policyId, *id)
+		rule, err := service.DescribeSecurityRule(context.TODO(), *id)
 		if err != nil {
 			return err
 		}

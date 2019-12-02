@@ -64,7 +64,7 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 			},
 			"proxy_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "ID of the GAAP proxy to be queried.",
 			},
 			"listener_id": {
@@ -164,15 +164,19 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	protocol := d.Get("protocol").(string)
-	proxyId := d.Get("proxy_id").(string)
 
 	var (
+		proxyId    *string
 		listenerId *string
 		name       *string
 		port       *int
 		ids        []string
 		listeners  []map[string]interface{}
 	)
+
+	if raw, ok := d.GetOk("proxy_id"); ok {
+		proxyId = stringToPointer(raw.(string))
+	}
 
 	if raw, ok := d.GetOk("listener_id"); ok {
 		listenerId = stringToPointer(raw.(string))
