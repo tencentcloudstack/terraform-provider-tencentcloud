@@ -39,7 +39,7 @@ type resourceTencentCloudMysqlAccountPrivilegeId struct {
 func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
 
 	return &schema.Resource{
-		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.25.1. Please use 'tencentcloud_mysql_privilege' instead.",
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.26.0. Please use 'tencentcloud_mysql_privilege' instead.",
 		Create:             resourceTencentCloudMysqlAccountPrivilegeCreate,
 		Read:               resourceTencentCloudMysqlAccountPrivilegeRead,
 		Update:             resourceTencentCloudMysqlAccountPrivilegeUpdate,
