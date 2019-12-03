@@ -25,7 +25,7 @@ func validateNameRegex(v interface{}, k string) (ws []string, errors []error) {
 func validateNotEmpty(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) == 0 {
-		errors = append(errors, fmt.Errorf("%s should not use empty string", k))
+		errors = append(errors, fmt.Errorf("%s must not use empty string: %s", k, value))
 	}
 	return
 }
@@ -34,7 +34,7 @@ func validateInstanceType(v interface{}, k string) (ws []string, errors []error)
 	value := v.(string)
 	words := strings.Split(value, ".")
 	if len(words) <= 1 {
-		errors = append(errors, fmt.Errorf("%s invalid instance_type: %v, should be like S1.SMALL1", k, value))
+		errors = append(errors, fmt.Errorf("the format of %s is invalid: %s, it should be like S1.SMALL1", k, value))
 		return
 	}
 	return
@@ -59,7 +59,7 @@ func validateIp(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	ip := net.ParseIP(value)
 	if ip == nil {
-		errors = append(errors, fmt.Errorf("%q must contain a valid IP", k))
+		errors = append(errors, fmt.Errorf("%q must contain a valid IP: %s", k, value))
 	}
 	return
 }
@@ -109,12 +109,12 @@ func validateStringLengthInRange(min, max int) schema.SchemaValidateFunc {
 func validateKeyPairName(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 25 || len(value) == 0 {
-		errors = append(errors, fmt.Errorf("%s invalid key pair: %v, size too long or too short", k, value))
+		errors = append(errors, fmt.Errorf("the length of %s must be 1-25: %s", k, value))
 	}
 
 	pattern := `^[a-zA-Z0-9_]+$`
 	if match, _ := regexp.Match(pattern, []byte(value)); !match {
-		errors = append(errors, fmt.Errorf("%s invalid key pair: %v, wrong format", k, value))
+		errors = append(errors, fmt.Errorf("%s only support letters, numbers and \"_\": %s", k, value))
 	}
 	return
 }
@@ -127,7 +127,7 @@ func validateAllowedStringValueIgnoreCase(ss []string) schema.SchemaValidateFunc
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)
 		if !assert.IsContains(upperStrs, strings.ToUpper(value)) {
-			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ss, value))
+			errors = append(errors, fmt.Errorf("%q must contain a valid string value must in array %#v, got %q", k, ss, value))
 		}
 		return
 	}
@@ -137,7 +137,7 @@ func validateAllowedStringValue(ss []string) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)
 		if !assert.IsContains(ss, value) {
-			errors = append(errors, fmt.Errorf("%q must contain a valid string value should in array %#v, got %q", k, ss, value))
+			errors = append(errors, fmt.Errorf("%q must contain a valid string value must in array %#v, got %q", k, ss, value))
 		}
 		return
 	}
@@ -163,7 +163,8 @@ func validatePort(v interface{}, k string) (ws []string, errors []error) {
 func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 64 || len(value) < 8 {
-		errors = append(errors, fmt.Errorf("%s invalid password, len(password) must between 8 and 64,%s", k, value))
+		// errors = append(errors, fmt.Errorf("%s invalid password, len(password) must between 8 and 64,%s", k, value))
+		errors = append(errors, fmt.Errorf("the length of %s must be 8-64: %s", k, value))
 	}
 	var match = make(map[string]bool)
 	if strings.ContainsAny(value, "_+-&=!@#$%^*()") {
@@ -183,7 +184,7 @@ func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error
 		}
 	}
 	if len(match) < 2 {
-		errors = append(errors, fmt.Errorf("%s invalid password, contains at least letters, Numbers, and characters(_+-&=!@#$%%^*()),%s", k, value))
+		errors = append(errors, fmt.Errorf("the format of %s is invalid: %s, it must contain at least letters, Numbers, and characters(_+-&=!@#$%%^*())", k, value))
 	}
 	return
 }
@@ -202,12 +203,12 @@ func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
 func validateCosBucketName(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 40 || len(value) < 0 {
-		errors = append(errors, fmt.Errorf("%s invalid bucket name: %v, size too long or too short", k, value))
+		errors = append(errors, fmt.Errorf("the length of %s must be 1-40: %s", k, value))
 	}
 
 	pattern := `^[a-z0-9-]+$`
 	if match, _ := regexp.Match(pattern, []byte(value)); !match {
-		errors = append(errors, fmt.Errorf("%s invalid bucket name: %v, wrong format: only support lowercase letters, numbers and -", k, value))
+		errors = append(errors, fmt.Errorf("%s only support lowercase letters, numbers and \"-\": %s", k, value))
 	}
 	return
 }
@@ -217,7 +218,7 @@ func validateCosBucketLifecycleTimestamp(v interface{}, k string) (ws []string, 
 	_, err := time.Parse(time.RFC3339, fmt.Sprintf("%sT00:00:00Z", value))
 	if err != nil {
 		errors = append(errors, fmt.Errorf(
-			"%q cannot be parsed as RFC3339 Timestamp Format", value))
+			"%s cannot be parsed as RFC3339 Timestamp Format: %s", k, value))
 	}
 
 	return
@@ -226,7 +227,7 @@ func validateCosBucketLifecycleTimestamp(v interface{}, k string) (ws []string, 
 func validateAsConfigPassword(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 16 || len(value) < 8 {
-		errors = append(errors, fmt.Errorf("%s invalid password, len(password) must between 8 and 16,%s", k, value))
+		errors = append(errors, fmt.Errorf("the length of %s must be 8-16: %s", k, value))
 	}
 	var match = make(map[string]bool)
 	if strings.ContainsAny(value, "()~!@#$%^&*-+={}[]:;',.?/") {
@@ -246,7 +247,7 @@ func validateAsConfigPassword(v interface{}, k string) (ws []string, errors []er
 		}
 	}
 	if len(match) < 2 {
-		errors = append(errors, fmt.Errorf("%s invalid password, contains at least letters, Numbers, and characters(_+-&=!@#$%%^*()),%s", k, value))
+		errors = append(errors, fmt.Errorf("%s is invalid, it must contains at least letters, numbers, and characters(_+-&=!@#$%%^*()): %s", k, value))
 	}
 	return
 }
@@ -256,7 +257,7 @@ func validateAsScheduleTimestamp(v interface{}, k string) (ws []string, errors [
 	_, err := time.Parse(time.RFC3339, value)
 	if err != nil {
 		errors = append(errors, fmt.Errorf(
-			"%q cannot be parsed as RFC3339 Timestamp Format", value))
+			"%s cannot be parsed as RFC3339 Timestamp Format: %s", k, value))
 	}
 	return
 }
@@ -284,7 +285,7 @@ func validateStringSuffix(suffix ...string) schema.SchemaValidateFunc {
 				return
 			}
 		}
-		errors = append(errors, fmt.Errorf("%s doesn't have preifx %v", k, suffix))
+		errors = append(errors, fmt.Errorf("%s doesn't have suffix %v", k, suffix))
 		return
 	}
 }
@@ -295,7 +296,7 @@ func validateCidrIp(v interface{}, k string) (ws []string, errs []error) {
 	}
 
 	if _, err := validateCIDRNetworkAddress(v, k); len(err) != 0 {
-		errs = append(errs, fmt.Errorf("%s %v is not valid IP address or valid CIDR IP address",
+		errs = append(errs, fmt.Errorf("%s must be a valid IP address or a valid CIDR IP address: %s",
 			k, v))
 	}
 	return
@@ -305,7 +306,7 @@ func validateStringNumber(v interface{}, k string) (ws []string, errors []error)
 	value := v.(string)
 	_, err := strconv.ParseFloat(value, 64)
 	if err != nil {
-		errors = append(errors, fmt.Errorf("%q is not a number", value))
+		errors = append(errors, fmt.Errorf("%s must be a number: %s", k, value))
 	}
 	return
 }
