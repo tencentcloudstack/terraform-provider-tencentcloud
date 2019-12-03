@@ -1,4 +1,10 @@
 ## 1.25.1 (Unreleased)
+
+BUG FIXES:
+* Data Source: `tencentcloud_nat_gateways`: the type of `state` is incorrect.
+* Resource: `tencentcloud_kubernetes_cluster`: the value of `cluster_max_pod_num` is incorrect.
+* Optimized error message of validators.
+
 ## 1.25.0 (December 02, 2019)
 
 ENHANCEMENTS:
