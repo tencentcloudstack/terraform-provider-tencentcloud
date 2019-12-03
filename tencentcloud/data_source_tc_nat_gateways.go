@@ -70,7 +70,7 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 							Description: "Name of the NAT gateway.",
 						},
 						"state": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "State of the NAT gateway.",
 						},
