@@ -1,6 +1,8 @@
 /*
 Provides a mysql account privilege resource to grant different access privilege to different database. A database can be granted by multiple account.
 
+~> **NOTE:** It has been deprecated and replaced by  tencentcloud_mysql_privilege.
+
 Example Usage
 
 ```hcl
@@ -17,6 +19,7 @@ package tencentcloud
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -36,6 +39,7 @@ type resourceTencentCloudMysqlAccountPrivilegeId struct {
 func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
 
 	return &schema.Resource{
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.25.1. Please use 'tencentcloud_mysql_privilege' instead.",
 		Create: resourceTencentCloudMysqlAccountPrivilegeCreate,
 		Read:   resourceTencentCloudMysqlAccountPrivilegeRead,
 		Update: resourceTencentCloudMysqlAccountPrivilegeUpdate,
@@ -233,7 +237,10 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
 				return resource.RetryableError(fmt.Errorf("modify account privilege   task  status is %s", taskStatus))
 			}
-			log.Printf("modify account privilege task status is %s,we won't wait for it finish ,it show message:%s\n", taskStatus, message)
+			if taskStatus == MYSQL_TASK_STATUS_FAILED || taskStatus == MYSQL_TASK_STATUS_REMOVED {
+				return resource.NonRetryableError(errors.New("sdk ModifyAccountPrivileges task running fail," + message))
+			}
+			err = fmt.Errorf("modify account privilege task status is %s,we won't wait for it finish ,it show message:%s\n", taskStatus, message)
 			return resource.NonRetryableError(err)
 		})
 

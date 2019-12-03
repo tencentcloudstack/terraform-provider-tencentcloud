@@ -10,6 +10,8 @@ description: |-
 
 Provides a mysql account privilege resource to grant different access privilege to different database. A database can be granted by multiple account.
 
+~> **NOTE:** It has been deprecated and replaced by  tencentcloud_mysql_privilege.
+
 ## Example Usage
 
 ```hcl
