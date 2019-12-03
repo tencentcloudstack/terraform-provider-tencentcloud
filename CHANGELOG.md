@@ -1,4 +1,4 @@
-## 1.25.1 (Unreleased)
+## 1.25.1 (December 03, 2019)
 
 ENHANCEMENTS:
 * Optimized error message of validators.
