@@ -24,7 +24,7 @@ func validateNameRegex(v interface{}, k string) (ws []string, errors []error) {
 
 func validateNotEmpty(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
-	if len(value) == 0 {
+	if value == "" {
 		errors = append(errors, fmt.Errorf("%s must not use empty string: %s", k, value))
 	}
 	return
@@ -32,8 +32,7 @@ func validateNotEmpty(v interface{}, k string) (ws []string, errors []error) {
 
 func validateInstanceType(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
-	words := strings.Split(value, ".")
-	if len(words) <= 1 {
+	if strings.Contains(value, ".") {
 		errors = append(errors, fmt.Errorf("the format of %s is invalid: %s, it should be like S1.SMALL1", k, value))
 		return
 	}
