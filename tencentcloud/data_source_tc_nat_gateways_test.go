@@ -14,10 +14,10 @@ func TestAccTencentCloudNatGatewaysDataSource(t *testing.T) {
 			{
 				Config: testAccTencentCloudNatGatewaysDataSourceConfig_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_nats.multi_nat"),
-					resource.TestCheckResourceAttr("data.tencentcloud_nats.multi_nat", "nats.#", "2"),
-					resource.TestCheckResourceAttr("data.tencentcloud_nats.multi_nat", "nats.0.name", "terraform_test_nats"),
-					resource.TestCheckResourceAttr("data.tencentcloud_nats.multi_nat", "nats.1.bandwidth", "500"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_nat_gateways.multi_nat"),
+					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateways.multi_nat", "nats.#", "2"),
+					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateways.multi_nat", "nats.0.name", "terraform_test_nats"),
+					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateways.multi_nat", "nats.1.bandwidth", "500"),
 				),
 			},
 		},
@@ -55,7 +55,7 @@ resource "tencentcloud_nat_gateway" "test_nat" {
   ]
 }
 
-data "tencentcloud_nats" "multi_nat" {
+data "tencentcloud_nat_gateways" "multi_nat" {
   name           = "${tencentcloud_nat_gateway.dev_nat.name}"
   vpc_id         = "${tencentcloud_vpc.main.id}"
 }
