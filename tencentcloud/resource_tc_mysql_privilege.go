@@ -72,7 +72,6 @@ import (
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 	"strings"
-	"time"
 )
 
 type resourceTencentCloudMysqlPrivilegeId struct {
@@ -355,7 +354,7 @@ func (me *resourceTencentCloudMysqlPrivilegeId) update(ctx context.Context, d *s
 	asyncRequestId := *response.Response.AsyncRequestId
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 		if err != nil {
 			return retryError(err)
@@ -457,8 +456,8 @@ func resourceTencentCloudMysqlPrivilegeRead(d *schema.ResourceData, meta interfa
 	request.Host = stringToPointer(MYSQL_DEFAULT_ACCOUNT_HOST)
 
 	var response *cdb.DescribeAccountPrivilegesResponse
-	ratelimit.Check(request.GetAction())
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
 		if err != nil {
 			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkerr.GetCode() == "InvalidParameter" &&
