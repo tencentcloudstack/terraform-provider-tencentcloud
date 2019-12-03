@@ -1,4 +1,12 @@
-## 1.25.1 (Unreleased)
+## 1.26.0 (Unreleased)
+FEATURES:
+
+* **New Data Source**: `tencentcloud_mysql_privilege`
+ 
+DEPRECATED:
+* Resource: `tencentcloud_mysql_account_privilege` replaced by `tencentcloud_mysql_privilege`.
+
+
 ## 1.25.0 (December 02, 2019)
 
 ENHANCEMENTS:
