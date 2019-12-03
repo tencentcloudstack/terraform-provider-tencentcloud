@@ -106,6 +106,11 @@ func testAccMysqlPrivilegeDestroy(s *terraform.State) error {
 
 	mysqlService := MysqlService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	instance, err := mysqlService.DescribeDBInstanceById(contextNil, privilegeId.MysqlId)
+
+	if err != nil {
+		return err
+	}
+
 	if instance == nil {
 		return nil
 	}
