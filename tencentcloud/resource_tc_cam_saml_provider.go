@@ -24,6 +24,7 @@ package tencentcloud
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -44,6 +45,7 @@ func resourceTencentCloudCamSAMLProvider() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Name of CAM SAML provider.",
 			},
 			"description": {
@@ -112,6 +114,7 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 
 	d.SetId(d.Get("name").(string))
 	d.Set("provider_arn", *response.Response.ProviderArn)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamSAMLProviderRead(d, meta)
 }

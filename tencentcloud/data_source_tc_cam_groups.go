@@ -4,10 +4,14 @@ Use this data source to query detailed information of CAM groups
 Example Usage
 
 ```hcl
+# query by group_id
 data "tencentcloud_cam_groups" "foo" {
-  group_id = "12515263"
-  name     = "cam-role-test"
-  remark   = "test"
+  group_id = "${tencentcloud_cam_group.foo.id}"
+}
+
+# query by name
+data "tencentcloud_cam_groups" "bar" {
+  name   = "cam-group-test"
 }
 ```
 */
@@ -41,7 +45,7 @@ func dataSourceTencentCloudCamGroups() *schema.Resource {
 			"remark": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Description of the cam group.",
+				Description: "Description of the cam group to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -114,8 +118,10 @@ func dataSourceTencentCloudCamGroupsRead(d *schema.ResourceData, meta interface{
 	for _, group := range groups {
 		mapping := map[string]interface{}{
 			"name":        *group.GroupName,
-			"remark":      *group.Remark,
 			"create_time": *group.CreateTime,
+		}
+		if group.Remark != nil {
+			mapping["remark"] = *group.Remark
 		}
 		groupList = append(groupList, mapping)
 		ids = append(ids, strconv.Itoa(int(*group.GroupId)))

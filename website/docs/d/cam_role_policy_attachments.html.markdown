@@ -13,11 +13,15 @@ Use this data source to query detailed information of CAM role policy attachment
 ## Example Usage
 
 ```hcl
+# query by role_id
 data "tencentcloud_cam_role_policy_attachments" "foo" {
-  role_id     = "4611686018427922725"
-  policy_id   = "26800353"
-  policy_type = "QCS"
-  create_mode = 1
+  role_id = "${tencentcloud_cam_role.foo.id}"
+}
+
+# query by role_id and policy_id
+data "tencentcloud_cam_role_policy_attachments" "bar" {
+  role_id   = "${tencentcloud_cam_role.foo.id}"
+  policy_id = "${tencentcloud_cam_policy.foo.id}"
 }
 ```
 
@@ -28,7 +32,7 @@ The following arguments are supported:
 * `role_id` - (Required) Id of the attached CAM role to be queried.
 * `create_mode` - (Optional) Mode of Creation of the CAM user policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.
 * `policy_id` - (Optional) Id of CAM policy to be queried.
-* `policy_type` - (Optional) Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.
+* `policy_type` - (Optional) Type of the policy strategy. Valid values are 'User', 'QCS', '', 'User' means customer strategy and 'QCS' means preset strategy.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference

@@ -4,11 +4,15 @@ Use this data source to query detailed information of CAM group policy attachmen
 Example Usage
 
 ```hcl
+# query by group_id
 data "tencentcloud_cam_group_policy_attachments" "foo" {
-  group_id    = "12515263"
-  policy_id   = "215153266"
-  policy_type = "QCS"
-  create_mode = 1
+  group_id  = "${tencentcloud_cam_group.foo.id}"
+}
+
+# query by group_id and policy_id
+data "tencentcloud_cam_group_policy_attachments" "bar" {
+  group_id  = "${tencentcloud_cam_group.foo.id}"
+  policy_id = "${tencentcloud_cam_policy.foo.id}"
 }
 ```
 */
@@ -80,7 +84,7 @@ func dataSourceTencentCloudCamGroupPolicyAttachments() *schema.Resource {
 						"policy_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of the policy strategy. 'Group' means customer strategy and 'QCS' means preset strategy.",
+							Description: "Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,

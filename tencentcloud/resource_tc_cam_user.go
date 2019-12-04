@@ -31,6 +31,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -89,12 +90,12 @@ func resourceTencentCloudCamUser() *schema.Resource {
 			"phone_num": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     "86",
 				Description: "Phone num of the CAM user.",
 			},
 			"country_code": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Default:     "86",
 				Description: "Country code of the phone num, like '86'.",
 			},
 			"email": {
@@ -202,6 +203,8 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	d.Set("secret_key", *response.Response.SecretKey)
 	d.Set("password", *response.Response.Password)
 	d.Set("secret_id", *response.Response.SecretId)
+	time.Sleep(3 * time.Second)
+
 	return resourceTencentCloudCamUserRead(d, meta)
 }
 
