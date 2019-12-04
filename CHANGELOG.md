@@ -1,4 +1,24 @@
-## 1.25.3 (Unreleased)
+## 1.26.0 (Unreleased)
+
+FEATURES:
+
+* Resource: `tencentcloud_gaap_layer4_listener` support import
+* Resource: `tencentcloud_gaap_http_rule` support import
+* Resource: `tencentcloud_gaap_security_rule` support import
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_gaap_http_domain` add new optional argument `poly_client_certificate_ids`
+* Resource: `tencentcloud_gaap_layer7_listener` add new optional argument `poly_client_certificate_ids`
+* Data Source: `tencentcloud_gaap_http_domains` add new output argument `poly_client_certificate_ids`
+* Data Source: `tencentcloud_gaap_layer7_listeners` add new output argument `poly_client_certificate_ids`
+
+DEPRECATED:
+* Data Source: `tencentcloud_gaap_http_domains`: output argument `client_certificate_id` is no longer supported.
+* Data Source: `tencentcloud_gaap_layer7_listeners`: output argument `client_certificate_id` is no longer supported.
+* Resource: `tencentcloud_gaap_http_domain`: optional argument `client_certificate_id` is no longer supported.
+* Resource: `tencentcloud_gaap_layer7_listener`: optional argument `client_certificate_id` is no longer supported.
+
 ## 1.25.2 (December 04, 2019)
 
 BUG FIXES:

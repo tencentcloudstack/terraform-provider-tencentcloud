@@ -1683,7 +1683,8 @@ func (me *GaapService) CreateHTTPListener(ctx context.Context, name, proxyId str
 
 func (me *GaapService) CreateHTTPSListener(
 	ctx context.Context,
-	name, certificateId, clientCertificateId, forwardProtocol, proxyId string,
+	name, certificateId, forwardProtocol, proxyId string,
+	polyClientCertificateIds []string,
 	port, authType int,
 ) (id string, err error) {
 	logId := getLogId(ctx)
@@ -1692,13 +1693,11 @@ func (me *GaapService) CreateHTTPSListener(
 	request := gaap.NewCreateHTTPSListenerRequest()
 	request.ProxyId = &proxyId
 	request.CertificateId = &certificateId
-	if clientCertificateId != "" {
-		request.ClientCertificateId = &clientCertificateId
-	}
 	request.ForwardProtocol = &forwardProtocol
 	request.ListenerName = &name
 	request.Port = intToPointer(port)
 	request.AuthType = intToPointer(authType)
+	request.PolyClientCertificateIds = stringsToPointer(polyClientCertificateIds)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1883,7 +1882,8 @@ func (me *GaapService) ModifyHTTPListener(ctx context.Context, id, proxyId, name
 func (me *GaapService) ModifyHTTPSListener(
 	ctx context.Context,
 	proxyId, id string,
-	name, forwardProtocol, certificateId, clientCertificateId *string,
+	name, forwardProtocol, certificateId *string,
+	polyClientCertificateIds []string,
 ) error {
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
@@ -1894,7 +1894,7 @@ func (me *GaapService) ModifyHTTPSListener(
 	request.ListenerName = name
 	request.ForwardProtocol = forwardProtocol
 	request.CertificateId = certificateId
-	request.ClientCertificateId = clientCertificateId
+	request.PolyClientCertificateIds = stringsToPointer(polyClientCertificateIds)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -2241,7 +2241,11 @@ func (me *GaapService) CreateHTTPDomain(ctx context.Context, listenerId, domain 
 	return nil
 }
 
-func (me *GaapService) CreateHTTPSDomain(ctx context.Context, listenerId, domain, certificateId, clientCertificateId string) error {
+func (me *GaapService) CreateHTTPSDomain(
+	ctx context.Context,
+	listenerId, domain, certificateId string,
+	polyClientCertificateIds []string,
+) error {
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
 
@@ -2249,7 +2253,10 @@ func (me *GaapService) CreateHTTPSDomain(ctx context.Context, listenerId, domain
 	createRequest.ListenerId = &listenerId
 	createRequest.Domain = &domain
 	createRequest.CertificateId = &certificateId
-	createRequest.ClientCertificateId = &clientCertificateId
+
+	for _, polyId := range polyClientCertificateIds {
+		createRequest.PolyClientCertificateIds = append(createRequest.PolyClientCertificateIds, stringToPointer(polyId))
+	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(createRequest.GetAction())
@@ -2399,7 +2406,7 @@ func (me *GaapService) DescribeDomain(ctx context.Context, listenerId, domain st
 func (me *GaapService) ModifyDomainCertificate(
 	ctx context.Context,
 	listenerId, domain, certificateId string,
-	clientCertificateId *string,
+	polyClientCertificateIds []string,
 ) error {
 	logId := getLogId(ctx)
 
@@ -2407,7 +2414,10 @@ func (me *GaapService) ModifyDomainCertificate(
 	request.ListenerId = &listenerId
 	request.Domain = &domain
 	request.CertificateId = &certificateId
-	request.ClientCertificateId = clientCertificateId
+
+	for _, polyId := range polyClientCertificateIds {
+		request.PolyClientCertificateIds = append(request.PolyClientCertificateIds, stringToPointer(polyId))
+	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

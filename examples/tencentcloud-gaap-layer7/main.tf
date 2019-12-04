@@ -48,14 +48,14 @@ resource tencentcloud_gaap_certificate "gaap" {
 }
 
 resource tencentcloud_gaap_layer7_listener "foo" {
-  protocol              = "HTTPS"
-  name                  = "ci-test-gaap-l7-listener"
-  port                  = 80
-  proxy_id              = "${tencentcloud_gaap_proxy.foo.id}"
-  certificate_id        = "${tencentcloud_gaap_certificate.foo.id}"
-  client_certificate_id = "${tencentcloud_gaap_certificate.bar.id}"
-  forward_protocol      = "HTTPS"
-  auth_type             = 1
+  protocol                    = "HTTPS"
+  name                        = "ci-test-gaap-l7-listener"
+  port                        = 80
+  proxy_id                    = "${tencentcloud_gaap_proxy.foo.id}"
+  certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
+  poly_client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
+  forward_protocol            = "HTTPS"
+  auth_type                   = 1
 }
 
 resource tencentcloud_gaap_realserver "foo" {
@@ -69,10 +69,10 @@ resource tencentcloud_gaap_realserver "bar" {
 }
 
 resource tencentcloud_gaap_http_domain "foo" {
-  listener_id           = "${tencentcloud_gaap_layer7_listener.foo.id}"
-  domain                = "www.qq.com"
-  certificate_id        = "${tencentcloud_gaap_certificate.server.id}"
-  client_certificate_id = "${tencentcloud_gaap_certificate.client.id}"
+  listener_id                 = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  domain                      = "www.qq.com"
+  certificate_id              = "${tencentcloud_gaap_certificate.server.id}"
+  poly_client_certificate_ids = ["${tencentcloud_gaap_certificate.client.id}"]
 
   realserver_auth               = true
   realserver_certificate_id     = "${tencentcloud_gaap_certificate.realserver.id}"

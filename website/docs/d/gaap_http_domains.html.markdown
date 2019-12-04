@@ -55,10 +55,11 @@ In addition to all arguments above, the following attributes are exported:
   * `basic_auth_id` - ID of the basic authentication.
   * `basic_auth` - Indicates whether basic authentication is enable.
   * `certificate_id` - ID of the server certificate.
-  * `client_certificate_id` - ID of the client certificate.
+  * `client_certificate_id` - (**Deprecated**) It has been deprecated from version 1.26.0. Use `poly_client_certificate_ids` instead. ID of the client certificate.
   * `domain` - Forward domain of the layer7 listener.
   * `gaap_auth_id` - ID of the SSL certificate.
   * `gaap_auth` - Indicates whether SSL certificate authentication is enable.
+  * `poly_client_certificate_ids` - ID list of the client certificate.
   * `realserver_auth` - Indicates whether realserver authentication is enable.
   * `realserver_certificate_domain` - CA certificate domain of the realserver.
   * `realserver_certificate_id` - CA certificate ID of the realserver.

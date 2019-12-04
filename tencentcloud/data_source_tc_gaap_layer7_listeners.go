@@ -112,9 +112,16 @@ func dataSourceTencentCloudGaapLayer7Listeners() *schema.Resource {
 							Description: "Certificate ID of the layer7 listener.",
 						},
 						"client_certificate_id": {
+							Deprecated:  "It has been deprecated from version 1.26.0. Use `poly_client_certificate_ids` instead.",
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "ID of the client certificate.",
+						},
+						"poly_client_certificate_ids": {
+							Type:        schema.TypeList,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Computed:    true,
+							Description: "ID list of the client certificate.",
 						},
 						"auth_type": {
 							Type:        schema.TypeInt,
@@ -245,20 +252,30 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 
 			ids = append(ids, *ls.ListenerId)
 
-			m := map[string]interface{}{
-				"protocol":         "HTTPS",
-				"id":               *ls.ListenerId,
-				"name":             *ls.ListenerName,
-				"port":             *ls.Port,
-				"status":           *ls.ListenerStatus,
-				"certificate_id":   *ls.CertificateId,
-				"auth_type":        *ls.AuthType,
-				"forward_protocol": *ls.ForwardProtocol,
-				"create_time":      formatUnixTime(*ls.CreateTime),
+			var (
+				clientCertificateId      *string
+				polyClientCertificateIds []*string
+			)
+
+			if *ls.AuthType == 1 {
+				clientCertificateId = ls.PolyClientCertificateAliasInfo[0].CertificateId
+				for _, poly := range ls.PolyClientCertificateAliasInfo {
+					polyClientCertificateIds = append(polyClientCertificateIds, poly.CertificateId)
+				}
 			}
 
-			if ls.ClientCertificateId != nil {
-				m["client_certificate_id"] = *ls.ClientCertificateId
+			m := map[string]interface{}{
+				"protocol":                    "HTTPS",
+				"id":                          ls.ListenerId,
+				"name":                        ls.ListenerName,
+				"port":                        ls.Port,
+				"status":                      ls.ListenerStatus,
+				"certificate_id":              ls.CertificateId,
+				"auth_type":                   ls.AuthType,
+				"forward_protocol":            ls.ForwardProtocol,
+				"create_time":                 formatUnixTime(*ls.CreateTime),
+				"client_certificate_id":       clientCertificateId,
+				"poly_client_certificate_ids": polyClientCertificateIds,
 			}
 
 			listeners = append(listeners, m)
@@ -270,8 +287,8 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), listeners); err != nil {
-			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
-				logId, output.(string), err.Error())
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%v]",
+				logId, output.(string), err)
 			return err
 		}
 	}

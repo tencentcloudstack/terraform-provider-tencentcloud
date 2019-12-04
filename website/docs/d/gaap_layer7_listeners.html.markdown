@@ -53,11 +53,12 @@ In addition to all arguments above, the following attributes are exported:
 * `listeners` - An information list of layer7 listeners. Each element contains the following attributes:
   * `auth_type` - Authentication type of the layer7 listener. `0` is one-way authentication and `1` is mutual authentication.
   * `certificate_id` - Certificate ID of the layer7 listener.
-  * `client_certificate_id` - ID of the client certificate.
+  * `client_certificate_id` - (**Deprecated**) It has been deprecated from version 1.26.0. Use `poly_client_certificate_ids` instead. ID of the client certificate.
   * `create_time` - Creation time of the layer7 listener.
   * `forward_protocol` - Protocol type of the forwarding.
   * `id` - ID of the layer7 listener.
   * `name` - Name of the layer7 listener.
+  * `poly_client_certificate_ids` - ID list of the client certificate.
   * `port` - Port of the layer7 listener.
   * `protocol` - Protocol of the layer7 listener.
   * `status` - Status of the layer7 listener.
