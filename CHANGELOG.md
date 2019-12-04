@@ -1,4 +1,4 @@
-## 1.25.2 (Unreleased)
+## 1.25.2 (December 04, 2019)
 
 BUG FIXES:
 * Fixed bug that the validator of cvm instance type is incorrect.
