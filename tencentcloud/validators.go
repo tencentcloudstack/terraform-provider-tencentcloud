@@ -32,7 +32,7 @@ func validateNotEmpty(v interface{}, k string) (ws []string, errors []error) {
 
 func validateInstanceType(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
-	if strings.Contains(value, ".") {
+	if !strings.Contains(value, ".") {
 		errors = append(errors, fmt.Errorf("the format of %s is invalid: %s, it should be like S1.SMALL1", k, value))
 		return
 	}
