@@ -43,6 +43,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -153,6 +154,7 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("CAM policy id is nil")
 	}
 	d.SetId(strconv.Itoa(int(*response.Response.PolicyId)))
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamPolicyRead(d, meta)
 }

@@ -72,7 +72,7 @@ func resourceTencentCloudCbsStorageAttachmentCreate(d *schema.ResourceData, meta
 
 	d.SetId(storageId)
 
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		storage, e := cbsService.DescribeDiskById(ctx, storageId)
 		if e != nil {
 			return retryError(e)

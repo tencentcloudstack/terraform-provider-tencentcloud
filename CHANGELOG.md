@@ -1,4 +1,19 @@
-## 1.25.0 (Unreleased)
+## 1.25.3 (Unreleased)
+## 1.25.2 (December 04, 2019)
+
+BUG FIXES:
+* Fixed bug that the validator of cvm instance type is incorrect.
+
+## 1.25.1 (December 03, 2019)
+
+ENHANCEMENTS:
+* Optimized error message of validators.
+
+BUG FIXES:
+* Fixed bug that the type of `state` is incorrect in data source `tencentcloud_nat_gateways`([#226](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/226)).
+* Fixed bug that the value of `cluster_max_pod_num` is incorrect in resource `tencentcloud_kubernetes_cluster`([#228](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/228)).
+
+## 1.25.0 (December 02, 2019)
 
 FEATURES:
 * **New Resource**: `tencentcloud_kubernetes_as_scaling_group`.[#202](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/202)

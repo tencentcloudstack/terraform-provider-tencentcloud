@@ -24,6 +24,7 @@ import (
 	"context"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -101,6 +102,7 @@ func resourceTencentCloudCamUserPolicyAttachmentCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(userId + "#" + policyId)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamUserPolicyAttachmentRead(d, meta)
 }

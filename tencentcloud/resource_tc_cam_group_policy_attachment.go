@@ -24,6 +24,7 @@ import (
 	"context"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -58,7 +59,7 @@ func resourceTencentCloudCamGroupPolicyAttachment() *schema.Resource {
 				Description: "Mode of Creation of the CAM group policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
 			},
 			"policy_type": {
-				Type:        schema.TypeBool,
+				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Type of the policy strategy. 'Group' means customer strategy and 'QCS' means preset strategy.",
 			},
@@ -101,6 +102,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentCreate(d *schema.ResourceData, 
 	}
 
 	d.SetId(groupId + "#" + policyId)
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamGroupPolicyAttachmentRead(d, meta)
 }

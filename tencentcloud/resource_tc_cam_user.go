@@ -31,6 +31,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -202,6 +203,8 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	d.Set("secret_key", *response.Response.SecretKey)
 	d.Set("password", *response.Response.Password)
 	d.Set("secret_id", *response.Response.SecretId)
+	time.Sleep(3 * time.Second)
+
 	return resourceTencentCloudCamUserRead(d, meta)
 }
 
