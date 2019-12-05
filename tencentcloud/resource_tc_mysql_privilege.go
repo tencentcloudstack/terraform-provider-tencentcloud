@@ -140,7 +140,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 			"database": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "Database privileges list:",
+				Description: "Database privileges list.",
 				Set:         resourceTencentCloudMysqlPrivilegeHash,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -164,7 +164,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 			"table": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "Table privileges list:",
+				Description: "Table privileges list.",
 				Set:         resourceTencentCloudMysqlPrivilegeHash,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -193,7 +193,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 			"column": {
 				Type:        schema.TypeSet,
 				Optional:    true,
-				Description: "Column privileges list:",
+				Description: "Column privileges list.",
 				Set:         resourceTencentCloudMysqlPrivilegeHash,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
