@@ -88,7 +88,7 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: kubernetesAsScalingGroupPara(),
 				},
-				Description: "Auto scaling group parameters:",
+				Description: "Auto scaling group parameters.",
 			},
 			"auto_scaling_config": {
 				Type:     schema.TypeList,
@@ -98,7 +98,7 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: kubernetesAsScalingConfigPara(),
 				},
-				Description: "Auto scaling config parameters:",
+				Description: "Auto scaling config parameters.",
 			},
 		},
 	}

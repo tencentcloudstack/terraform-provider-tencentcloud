@@ -66,8 +66,8 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
 
 The following arguments are supported:
 
-* `auto_scaling_config` - (Required, ForceNew) Auto scaling config parameters:
-* `auto_scaling_group` - (Required, ForceNew) Auto scaling group parameters:
+* `auto_scaling_config` - (Required, ForceNew) Auto scaling config parameters.
+* `auto_scaling_group` - (Required, ForceNew) Auto scaling group parameters.
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
 
 The `auto_scaling_config` object supports the following:
