@@ -63,6 +63,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -70,8 +73,6 @@ import (
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"log"
-	"strings"
 )
 
 type resourceTencentCloudMysqlPrivilegeId struct {
