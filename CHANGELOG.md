@@ -1,4 +1,8 @@
-## 1.25.3 (Unreleased)
+## 1.26.0 (Unreleased)
+
+FEATURES:
+* **New Resource**: `tencentcloud_kubernetes_as_scaling_group`.[#202](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/202)
+
 ## 1.25.2 (December 04, 2019)
 
 BUG FIXES:

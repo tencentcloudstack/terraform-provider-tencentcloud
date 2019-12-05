@@ -697,6 +697,8 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
+	d.Partial(true)
+
 	unsupportedUpdateFields := []string{
 		"instance_charge_type_prepaid_period",
 		"instance_charge_type_prepaid_renew_flag",
@@ -711,8 +713,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return fmt.Errorf("tencentcloud_cvm_instance update on %s is not support yet", field)
 		}
 	}
-
-	d.Partial(true)
 
 	if d.HasChange("instance_name") {
 		err := cvmService.ModifyInstanceName(ctx, instanceId, d.Get("instance_name").(string))

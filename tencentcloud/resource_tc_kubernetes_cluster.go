@@ -709,12 +709,12 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		}
 	}
 
-	if request.LoginSettings.Password == nil && request.LoginSettings.KeyIds == nil {
+	if request.LoginSettings.Password == nil && len(request.LoginSettings.KeyIds) == 0 {
 		errRet = fmt.Errorf("Parameters cvm.`key_ids` and cluster.`password` should be set one")
 		return
 	}
 
-	if request.LoginSettings.Password != nil && request.LoginSettings.KeyIds != nil {
+	if request.LoginSettings.Password != nil && len(request.LoginSettings.KeyIds) != 0 {
 		errRet = fmt.Errorf("Parameters cvm.`key_ids` and cluster.`password` can only be supported one")
 		return
 	}
