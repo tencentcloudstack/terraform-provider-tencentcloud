@@ -96,14 +96,14 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Description:  "Authentication type of the layer7 listener. `0` is one-way authentication and `1` is mutual authentication. NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
 			"client_certificate_id": {
-				Deprecated:    "It has been deprecated from version 1.26.0. Set `poly_client_certificate_ids` instead.",
+				Deprecated:    "It has been deprecated from version 1.26.0. Set `client_certificate_ids` instead.",
 				Type:          schema.TypeString,
 				Optional:      true,
 				Computed:      true,
-				ConflictsWith: []string{"poly_client_certificate_ids"},
+				ConflictsWith: []string{"client_certificate_ids"},
 				Description:   "ID of the client certificate. Set only when `auth_type` is specified as mutual authentication.  NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
-			"poly_client_certificate_ids": {
+			"client_certificate_ids": {
 				Type:          schema.TypeSet,
 				Optional:      true,
 				Computed:      true,
@@ -177,7 +177,7 @@ func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m inte
 		if raw, ok := d.GetOk("client_certificate_id"); ok {
 			polyClientCertificateIds = append(polyClientCertificateIds, raw.(string))
 		}
-		if raw, ok := d.GetOk("poly_client_certificate_ids"); ok {
+		if raw, ok := d.GetOk("client_certificate_ids"); ok {
 			set := raw.(*schema.Set)
 			polyClientCertificateIds = make([]string, 0, set.Len())
 			for _, polyId := range set.List() {
@@ -186,7 +186,7 @@ func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m inte
 		}
 
 		if authType == 1 && len(polyClientCertificateIds) == 0 {
-			return errors.New("when protocol is HTTPS and auth type is 1, poly_client_certificate_ids can't be empty")
+			return errors.New("when protocol is HTTPS and auth type is 1, client_certificate_ids can't be empty")
 		}
 
 		id, err = service.CreateHTTPSListener(
@@ -340,7 +340,7 @@ LOOP:
 	d.Set("forward_protocol", forwardProtocol)
 	d.Set("auth_type", authType)
 	d.Set("client_certificate_id", clientCertificateId)
-	d.Set("poly_client_certificate_ids", polyClientCertificateIds)
+	d.Set("client_certificate_ids", polyClientCertificateIds)
 	d.Set("status", status)
 	d.Set("create_time", createTime)
 
@@ -391,8 +391,8 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 			}
 		}
 
-		if d.HasChange("poly_client_certificate_ids") {
-			if raw, ok := d.GetOk("poly_client_certificate_ids"); ok {
+		if d.HasChange("client_certificate_ids") {
+			if raw, ok := d.GetOk("client_certificate_ids"); ok {
 				set := raw.(*schema.Set)
 				polyClientCertificateIds = make([]string, 0, set.Len())
 

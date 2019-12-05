@@ -77,14 +77,14 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 				Description: "ID of the server certificate, default value is `default`.",
 			},
 			"client_certificate_id": {
-				Deprecated:    "It has been deprecated from version 1.26.0. Set `poly_client_certificate_ids` instead.",
+				Deprecated:    "It has been deprecated from version 1.26.0. Set `client_certificate_ids` instead.",
 				Type:          schema.TypeString,
 				Optional:      true,
 				Computed:      true,
-				ConflictsWith: []string{"poly_client_certificate_ids"},
+				ConflictsWith: []string{"client_certificate_ids"},
 				Description:   "ID of the client certificate, default value is `default`.",
 			},
-			"poly_client_certificate_ids": {
+			"client_certificate_ids": {
 				Type:          schema.TypeSet,
 				Elem:          &schema.Schema{Type: schema.TypeString},
 				Optional:      true,
@@ -192,13 +192,13 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 
 		certificateId := d.Get("certificate_id").(string)
 
-		if raw, ok := d.GetOk("poly_client_certificate_ids"); ok {
+		if raw, ok := d.GetOk("client_certificate_ids"); ok {
 			set := raw.(*schema.Set)
 			polyClientCertificateIds = make([]string, 0, set.Len())
 			for _, polyIdRaw := range set.List() {
 				polyId := polyIdRaw.(string)
 				if polyId == "default" {
-					return errors.New("poly_client_certificate_ids can't have `default`")
+					return errors.New("client_certificate_ids can't have `default`")
 				}
 
 				polyClientCertificateIds = append(polyClientCertificateIds, polyId)
@@ -319,7 +319,7 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	}
 
 	d.Set("client_certificate_id", polyClientCertificateIds[0])
-	d.Set("poly_client_certificate_ids", polyClientCertificateIds)
+	d.Set("client_certificate_ids", polyClientCertificateIds)
 
 	if httpDomain.BasicAuth == nil {
 		httpDomain.BasicAuth = int64ToPointer(0)
@@ -400,7 +400,7 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 
 	d.Partial(true)
 
-	if d.HasChange("certificate_id") || d.HasChange("client_certificate_id") || d.HasChange("poly_client_certificate_ids") {
+	if d.HasChange("certificate_id") || d.HasChange("client_certificate_id") || d.HasChange("client_certificate_ids") {
 		certificateId := d.Get("certificate_id").(string)
 
 		var polyClientCertificateIds []string
@@ -413,8 +413,8 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 			}
 		}
 
-		if d.HasChange("poly_client_certificate_ids") {
-			if raw, ok := d.GetOk("poly_client_certificate_ids"); ok {
+		if d.HasChange("client_certificate_ids") {
+			if raw, ok := d.GetOk("client_certificate_ids"); ok {
 				set := raw.(*schema.Set)
 				polyClientCertificateIds = make([]string, 0, set.Len())
 				for _, polyIdRaw := range set.List() {
@@ -438,8 +438,8 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 		if d.HasChange("client_certificate_id") {
 			d.SetPartial("client_certificate_id")
 		}
-		if d.HasChange("poly_client_certificate_ids") {
-			d.SetPartial("poly_client_certificate_ids")
+		if d.HasChange("client_certificate_ids") {
+			d.SetPartial("client_certificate_ids")
 		}
 	}
 

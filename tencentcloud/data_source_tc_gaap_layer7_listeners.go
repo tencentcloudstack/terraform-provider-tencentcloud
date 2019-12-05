@@ -112,12 +112,12 @@ func dataSourceTencentCloudGaapLayer7Listeners() *schema.Resource {
 							Description: "Certificate ID of the layer7 listener.",
 						},
 						"client_certificate_id": {
-							Deprecated:  "It has been deprecated from version 1.26.0. Use `poly_client_certificate_ids` instead.",
+							Deprecated:  "It has been deprecated from version 1.26.0. Use `client_certificate_ids` instead.",
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "ID of the client certificate.",
 						},
-						"poly_client_certificate_ids": {
+						"client_certificate_ids": {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Computed:    true,
@@ -270,17 +270,17 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 			}
 
 			m := map[string]interface{}{
-				"protocol":                    "HTTPS",
-				"id":                          ls.ListenerId,
-				"name":                        ls.ListenerName,
-				"port":                        ls.Port,
-				"status":                      ls.ListenerStatus,
-				"certificate_id":              ls.CertificateId,
-				"auth_type":                   ls.AuthType,
-				"forward_protocol":            ls.ForwardProtocol,
-				"create_time":                 formatUnixTime(*ls.CreateTime),
-				"client_certificate_id":       clientCertificateId,
-				"poly_client_certificate_ids": polyClientCertificateIds,
+				"protocol":               "HTTPS",
+				"id":                     ls.ListenerId,
+				"name":                   ls.ListenerName,
+				"port":                   ls.Port,
+				"status":                 ls.ListenerStatus,
+				"certificate_id":         ls.CertificateId,
+				"auth_type":              ls.AuthType,
+				"forward_protocol":       ls.ForwardProtocol,
+				"create_time":            formatUnixTime(*ls.CreateTime),
+				"client_certificate_id":  clientCertificateId,
+				"client_certificate_ids": polyClientCertificateIds,
 			}
 
 			listeners = append(listeners, m)

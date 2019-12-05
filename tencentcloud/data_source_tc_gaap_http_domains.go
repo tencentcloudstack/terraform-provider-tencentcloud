@@ -77,12 +77,12 @@ func dataSourceTencentCloudGaapHttpDomains() *schema.Resource {
 							Description: "ID of the server certificate.",
 						},
 						"client_certificate_id": {
-							Deprecated:  "It has been deprecated from version 1.26.0. Use `poly_client_certificate_ids` instead.",
+							Deprecated:  "It has been deprecated from version 1.26.0. Use `client_certificate_ids` instead.",
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "ID of the client certificate.",
 						},
-						"poly_client_certificate_ids": {
+						"client_certificate_ids": {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Computed:    true,
@@ -177,13 +177,13 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 		}
 
 		m := map[string]interface{}{
-			"domain":                      dr.Domain,
-			"certificate_id":              dr.CertificateId,
-			"client_certificate_id":       clientCertificateId,
-			"poly_client_certificate_ids": polyClientCertificateIds,
-			"realserver_auth":             *dr.RealServerAuth == 1,
-			"basic_auth":                  *dr.BasicAuth == 1,
-			"gaap_auth":                   *dr.GaapAuth == 1,
+			"domain":                 dr.Domain,
+			"certificate_id":         dr.CertificateId,
+			"client_certificate_id":  clientCertificateId,
+			"client_certificate_ids": polyClientCertificateIds,
+			"realserver_auth":        *dr.RealServerAuth == 1,
+			"basic_auth":             *dr.BasicAuth == 1,
+			"gaap_auth":              *dr.GaapAuth == 1,
 		}
 
 		if dr.RealServerCertificateId != nil {

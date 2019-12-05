@@ -8,10 +8,10 @@ FEATURES:
 
 ENHANCEMENTS:
 
-* Resource: `tencentcloud_gaap_http_domain` add new optional argument `poly_client_certificate_ids`
-* Resource: `tencentcloud_gaap_layer7_listener` add new optional argument `poly_client_certificate_ids`
-* Data Source: `tencentcloud_gaap_http_domains` add new output argument `poly_client_certificate_ids`
-* Data Source: `tencentcloud_gaap_layer7_listeners` add new output argument `poly_client_certificate_ids`
+* Resource: `tencentcloud_gaap_http_domain` add new optional argument `client_certificate_ids`
+* Resource: `tencentcloud_gaap_layer7_listener` add new optional argument `client_certificate_ids`
+* Data Source: `tencentcloud_gaap_http_domains` add new output argument `client_certificate_ids`
+* Data Source: `tencentcloud_gaap_layer7_listeners` add new output argument `client_certificate_ids`
 
 DEPRECATED:
 * Data Source: `tencentcloud_gaap_http_domains`: output argument `client_certificate_id` is no longer supported.

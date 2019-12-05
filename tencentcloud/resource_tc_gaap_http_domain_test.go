@@ -28,7 +28,7 @@ func TestAccTencentCloudGaapHttpDomain_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_id", "default"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "poly_client_certificate_ids.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "false"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_id"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_domain"),
@@ -141,7 +141,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsPolyClientCertificateIds(t *testing.
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_id", regexp.MustCompile("cert-.")),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "poly_client_certificate_ids.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "false"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_id"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_domain"),
@@ -156,7 +156,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsPolyClientCertificateIds(t *testing.
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_id", regexp.MustCompile("cert-.")),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "poly_client_certificate_ids.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "2"),
 				),
 			},
 		},
@@ -179,7 +179,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsCCIdToPolyIds(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "www.qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_id", regexp.MustCompile("cert-.")),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "poly_client_certificate_ids.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_auth", "false"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_id"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_http_domain.foo", "realserver_certificate_domain"),
@@ -195,7 +195,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsCCIdToPolyIds(t *testing.T) {
 					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "certificate_id", "default"),
 					resource.TestMatchResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_id", regexp.MustCompile("cert-.")),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "poly_client_certificate_ids.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "client_certificate_ids.#", "1"),
 				),
 			},
 		},
@@ -433,7 +433,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   port                        = 80
   proxy_id                    = "%s"
   certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
-  poly_client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
+  client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
   forward_protocol            = "HTTPS"
   auth_type                   = 1
 }
@@ -441,7 +441,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id                 = "${tencentcloud_gaap_layer7_listener.foo.id}"
   domain                      = "www.qq.com"
-  poly_client_certificate_ids = ["${tencentcloud_gaap_certificate.client1.id}"]
+  client_certificate_ids = ["${tencentcloud_gaap_certificate.client1.id}"]
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
@@ -480,7 +480,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   port                        = 80
   proxy_id                    = "%s"
   certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
-  poly_client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
+  client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
   forward_protocol            = "HTTPS"
   auth_type                   = 1
 }
@@ -488,7 +488,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id                 = "${tencentcloud_gaap_layer7_listener.foo.id}"
   domain                      = "www.qq.com"
-  poly_client_certificate_ids = ["${tencentcloud_gaap_certificate.client2.id}", "${tencentcloud_gaap_certificate.client3.id}"]
+  client_certificate_ids = ["${tencentcloud_gaap_certificate.client2.id}", "${tencentcloud_gaap_certificate.client3.id}"]
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
@@ -522,7 +522,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   port                        = 80
   proxy_id                    = "%s"
   certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
-  poly_client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
+  client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
   forward_protocol            = "HTTPS"
   auth_type                   = 1
 }
@@ -563,7 +563,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   port                        = 80
   proxy_id                    = "%s"
   certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
-  poly_client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
+  client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
   forward_protocol            = "HTTPS"
   auth_type                   = 1
 }
@@ -571,7 +571,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id                = "${tencentcloud_gaap_layer7_listener.foo.id}"
   domain                     = "www.qq.com"
- poly_client_certificate_ids = ["${tencentcloud_gaap_certificate.client1.id}"]
+ client_certificate_ids = ["${tencentcloud_gaap_certificate.client1.id}"]
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
