@@ -301,7 +301,7 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -350,7 +350,7 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleUpdateDisableHealth = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -398,7 +398,7 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleUpdateForwardHost = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -448,7 +448,7 @@ resource tencentcloud_gaap_http_rule "foo" {
 
   forward_host = "www.qqq.com"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleHttpUpdateRealservers = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -489,7 +489,7 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleNoHealth = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -533,7 +533,7 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleDomainRealserver = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -577,4 +577,4 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)

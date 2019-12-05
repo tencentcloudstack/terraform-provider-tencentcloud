@@ -270,7 +270,7 @@ resource tencentcloud_gaap_http_domain "foo" {
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
   domain      = "www.qq.com"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpDomainHttps = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -294,7 +294,7 @@ resource tencentcloud_gaap_http_domain "foo" {
   domain         = "www.qq.com"
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapHttpDomainHttpsMutualAuthentication = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -326,7 +326,7 @@ resource tencentcloud_gaap_http_domain "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", GAAP_PROXY_ID)
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapHttpDomainHttpsMutualAuthenticationUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -405,7 +405,7 @@ resource tencentcloud_gaap_http_domain "foo" {
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"\"test:tx2KGdo3zJg/.\"",
 	"<<EOF\n"+testAccGaapCertificateServerCert+"EOF", "<<EOF\n"+testAccGaapCertificateServerKey+"EOF",
-	GAAP_PROXY_ID,
+	defaultGaapProxyId,
 )
 
 var testAccGaapHttpDomainHttpsPolyClientCertificateIds = fmt.Sprintf(`
@@ -447,7 +447,7 @@ resource tencentcloud_gaap_http_domain "foo" {
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	GAAP_PROXY_ID)
+	defaultGaapProxyId)
 
 var testAccGaapHttpDomainHttpsPolyClientCertificateIdsUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -495,7 +495,7 @@ resource tencentcloud_gaap_http_domain "foo" {
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	GAAP_PROXY_ID)
+	defaultGaapProxyId)
 
 var testAccGaapHttpDomainHttpsCcId = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -536,7 +536,7 @@ resource tencentcloud_gaap_http_domain "foo" {
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	GAAP_PROXY_ID)
+	defaultGaapProxyId)
 
 var testAccGaapHttpDomainHttpsPolyIds = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -577,4 +577,4 @@ resource tencentcloud_gaap_http_domain "foo" {
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	GAAP_PROXY_ID)
+	defaultGaapProxyId)

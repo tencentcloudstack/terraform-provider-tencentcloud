@@ -1,8 +1,6 @@
 package tencentcloud
 
 const (
-	GAAP_PROXY_ID = "link-9ck3lzq7"
-
 	// all gaap proxy status https://cloud.tencent.com/document/api/608/37023#ProxyInfo
 	GAAP_PROXY_CREATING   = "CREATING"
 	GAAP_PROXY_RUNNING    = "RUNNING"

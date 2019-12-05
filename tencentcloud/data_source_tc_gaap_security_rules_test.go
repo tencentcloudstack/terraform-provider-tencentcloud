@@ -135,7 +135,7 @@ resource tencentcloud_gaap_security_rule "foo" {
 data tencentcloud_gaap_security_rules "foo" {
   policy_id = "${tencentcloud_gaap_security_rule.foo.policy_id}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesRuleId = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -156,7 +156,7 @@ data tencentcloud_gaap_security_rules "ruleId" {
   policy_id = "${tencentcloud_gaap_security_policy.foo.id}"
   rule_id   = "${tencentcloud_gaap_security_rule.foo.id}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesAction = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -177,7 +177,7 @@ data tencentcloud_gaap_security_rules "action" {
   policy_id = "${tencentcloud_gaap_security_rule.foo.policy_id}"
   action    = "ACCEPT"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesCidrIp = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -198,7 +198,7 @@ data tencentcloud_gaap_security_rules "cidrIp" {
   policy_id = "${tencentcloud_gaap_security_policy.foo.id}"
   cidr_ip   = "${tencentcloud_gaap_security_rule.foo.cidr_ip}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesName = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -219,7 +219,7 @@ data tencentcloud_gaap_security_rules "name" {
   policy_id = "${tencentcloud_gaap_security_policy.foo.id}"
   name      = "${tencentcloud_gaap_security_rule.foo.name}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesPort = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -240,7 +240,7 @@ data tencentcloud_gaap_security_rules "port" {
   policy_id = "${tencentcloud_gaap_security_policy.foo.id}"
   port      = "${tencentcloud_gaap_security_rule.foo.port}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapSecurityRulesProtocol = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -261,4 +261,4 @@ data tencentcloud_gaap_security_rules "protocol" {
   policy_id = "${tencentcloud_gaap_security_policy.foo.id}"
   protocol  = "${tencentcloud_gaap_security_rule.foo.protocol}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)

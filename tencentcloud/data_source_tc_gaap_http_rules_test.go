@@ -122,7 +122,7 @@ resource tencentcloud_gaap_http_rule "foo" {
 
   forward_host = "www.qqq.com"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapHttpRulesDomain = gaapHttpRulesResources + `
 

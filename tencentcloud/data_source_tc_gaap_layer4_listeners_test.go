@@ -154,7 +154,7 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var gaapLayer4Listener2 = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "bar" {
@@ -178,7 +178,7 @@ resource tencentcloud_gaap_layer4_listener "bar" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer4ListenersBasic = gaapLayer4Listener + `
 
@@ -195,7 +195,7 @@ data tencentcloud_gaap_layer4_listeners "name" {
   proxy_id      = "%s"
   listener_name = "${tencentcloud_gaap_layer4_listener.foo.name}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer4ListenersPort = gaapLayer4Listener + gaapLayer4Listener2 + fmt.Sprintf(`
 
@@ -204,7 +204,7 @@ data tencentcloud_gaap_layer4_listeners "port" {
   proxy_id = "%s"
   port     = "${tencentcloud_gaap_layer4_listener.foo.port}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer4ListenersUDP = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -232,7 +232,7 @@ data tencentcloud_gaap_layer4_listeners "foo" {
   proxy_id    = "%s"
   listener_id = "${tencentcloud_gaap_layer4_listener.foo.id}"
 }
-`, GAAP_PROXY_ID, GAAP_PROXY_ID)
+`, defaultGaapProxyId, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer4ListenersUDPName = TestAccDataSourceTencentCloudGaapLayer4ListenersUDP + fmt.Sprintf(`
 
@@ -241,7 +241,7 @@ data tencentcloud_gaap_layer4_listeners "name" {
   proxy_id      = "%s"
   listener_name = "${tencentcloud_gaap_layer4_listener.foo.name}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer4ListenersUDPPort = TestAccDataSourceTencentCloudGaapLayer4ListenersUDP + fmt.Sprintf(`
 
@@ -250,4 +250,4 @@ data tencentcloud_gaap_layer4_listeners "port" {
   proxy_id = "%s"
   port     = "${tencentcloud_gaap_layer4_listener.foo.port}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)

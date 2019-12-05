@@ -318,7 +318,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   port     = 80
   proxy_id = "%s"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpUpdateName = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -327,7 +327,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   port     = 80
   proxy_id = "%s"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttps = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -346,7 +346,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type        = 0
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpsUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -372,7 +372,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID)
+	"<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpsTwoWayAuthentication = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -399,7 +399,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", GAAP_PROXY_ID)
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpsForwardHttps = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -418,7 +418,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type        = 0
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpsPolyClientCertificateIds = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -445,7 +445,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", GAAP_PROXY_ID)
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpsPolyClientCertificateIdsUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -480,7 +480,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
 	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
-	GAAP_PROXY_ID)
+	defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpsCcToPolyOld = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -507,7 +507,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", GAAP_PROXY_ID)
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpsCcToPolyNew = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -534,4 +534,4 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", GAAP_PROXY_ID)
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId)

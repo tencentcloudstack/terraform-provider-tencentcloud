@@ -214,7 +214,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
   port      = "80"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapSecurityRuleWithName = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -230,7 +230,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
   port      = "80"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapSecurityRuleDrop = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -245,7 +245,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
   port      = "80"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapSecurityRuleUpdateName = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -261,7 +261,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
   port      = "80"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapSecurityRuleIpSubnet = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -276,7 +276,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   protocol  = "TCP"
   port      = "80"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapSecurityRuleAllProtocols = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -289,7 +289,7 @@ resource tencentcloud_gaap_security_rule "foo" {
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapSecurityRuleAllPorts = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -303,4 +303,4 @@ resource tencentcloud_gaap_security_rule "foo" {
   action    = "ACCEPT"
   protocol  = "TCP"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)

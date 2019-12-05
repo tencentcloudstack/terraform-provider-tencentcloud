@@ -22,9 +22,11 @@ const defaultSubnetCidrLess = "172.16.0.0/22"
 const defaultInsName = "tf-ci-test"
 const defaultInsNameUpdate = "tf-ci-test-update"
 
+const defaultGaapProxyId = "link-9ck3lzq7"
+
 /*
 ---------------------------------------------------
-The folling are common test case used as templates.
+The following are common test case used as templates.
 ---------------------------------------------------
 */
 

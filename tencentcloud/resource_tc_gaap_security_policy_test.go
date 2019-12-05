@@ -133,7 +133,7 @@ resource tencentcloud_gaap_security_policy "foo" {
   proxy_id = "%s"
   action   = "ACCEPT"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapSecurityPolicyDisable = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
@@ -141,11 +141,11 @@ resource tencentcloud_gaap_security_policy "foo" {
   action   = "ACCEPT"
   enable   = false
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapSecurityPolicyDrop = fmt.Sprintf(`
 resource tencentcloud_gaap_security_policy "foo" {
   proxy_id = "%s"
   action   = "DROP"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)

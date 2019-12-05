@@ -342,7 +342,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerTcpDomain = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -375,7 +375,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerUpdateNameAndHealthConfigAndScheduler = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -411,7 +411,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerUpdateNoHealthCheck = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -445,7 +445,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerTcpUpdateRealserverSet = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -473,7 +473,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerUdp = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -505,7 +505,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerUdpDomain = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -537,7 +537,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerUdpUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -569,4 +569,4 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
