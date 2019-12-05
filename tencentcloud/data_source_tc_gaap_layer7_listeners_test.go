@@ -123,10 +123,9 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 data tencentcloud_gaap_layer7_listeners "listenerId" {
   protocol    = "HTTP"
-  proxy_id    = "%s"
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
 }
-`, GAAP_PROXY_ID, GAAP_PROXY_ID)
+`, GAAP_PROXY_ID)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersListenerName = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {

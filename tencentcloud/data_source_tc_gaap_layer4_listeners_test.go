@@ -180,14 +180,13 @@ resource tencentcloud_gaap_layer4_listener "bar" {
 }
 `, GAAP_PROXY_ID)
 
-var TestAccDataSourceTencentCloudGaapLayer4ListenersBasic = gaapLayer4Listener + fmt.Sprintf(`
+var TestAccDataSourceTencentCloudGaapLayer4ListenersBasic = gaapLayer4Listener + `
 
 data tencentcloud_gaap_layer4_listeners "foo" {
   protocol    = "TCP"
-  proxy_id    = "%s"
   listener_id = "${tencentcloud_gaap_layer4_listener.foo.id}"
 }
-`, GAAP_PROXY_ID)
+`
 
 var TestAccDataSourceTencentCloudGaapLayer4ListenersListenerName = gaapLayer4Listener + gaapLayer4Listener2 + fmt.Sprintf(`
 
