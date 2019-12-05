@@ -20,7 +20,7 @@ ENHANCEMENTS:
 BUG FIXES:
 * Fixed bug that the type of `state` is incorrect in data source `tencentcloud_nat_gateways`([#226](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/226)).
 * Fixed bug that the value of `cluster_max_pod_num` is incorrect in resource `tencentcloud_kubernetes_cluster`([#228](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/228)).
->>>>>>> upstream/master
+
 
 ## 1.25.0 (December 02, 2019)
 
