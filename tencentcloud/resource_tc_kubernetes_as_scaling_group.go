@@ -60,11 +60,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	"strings"
 )
 
 func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
