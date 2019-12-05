@@ -469,3 +469,54 @@ func (me *TkeService) DescribeClusterSecurity(ctx context.Context, id string) (r
 
 	return me.client.UseTkeClient().DescribeClusterSecurity(request)
 }
+
+func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string) (asGroupId string, errRet error) {
+
+	logId := getLogId(ctx)
+	request := tke.NewCreateClusterAsGroupRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.AutoScalingGroupPara = &groupPara
+	request.LaunchConfigurePara = &configPara
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().CreateClusterAsGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.AutoScalingGroupId == nil {
+		errRet = fmt.Errorf("CreateClusterAsGroup return nil response")
+		return
+	}
+
+	asGroupId = *response.Response.AutoScalingGroupId
+	return
+}
+
+func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId string) (errRet error) {
+
+	logId := getLogId(ctx)
+	request := tke.NewDeleteClusterAsGroupsRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.AutoScalingGroupIds = []*string{&asGroupId}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().DeleteClusterAsGroups(request)
+	if err != nil {
+		errRet = err
+	}
+	return
+}

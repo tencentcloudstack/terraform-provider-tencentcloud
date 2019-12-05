@@ -1,6 +1,7 @@
 ## 1.26.0 (Unreleased)
 
 FEATURES:
+* **New Resource**: `tencentcloud_kubernetes_as_scaling_group`.[#202](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/202)
 
 * Resource: `tencentcloud_gaap_layer4_listener` support import
 * Resource: `tencentcloud_gaap_http_rule` support import
