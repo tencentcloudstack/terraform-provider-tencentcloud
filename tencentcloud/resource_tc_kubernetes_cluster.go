@@ -709,12 +709,12 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		}
 	}
 
-	if request.LoginSettings.Password == nil && request.LoginSettings.KeyIds == nil {
+	if request.LoginSettings.Password == nil && len(request.LoginSettings.KeyIds) == 0 {
 		errRet = fmt.Errorf("Parameters cvm.`key_ids` and cluster.`password` should be set one")
 		return
 	}
 
-	if request.LoginSettings.Password != nil && request.LoginSettings.KeyIds != nil {
+	if request.LoginSettings.Password != nil && len(request.LoginSettings.KeyIds) != 0 {
 		errRet = fmt.Errorf("Parameters cvm.`key_ids` and cluster.`password` can only be supported one")
 		return
 	}
@@ -956,7 +956,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	d.Set("project_id", info.ProjectId)
 	d.Set("cluster_cidr", info.ClusterCidr)
 	d.Set("ignore_cluster_cidr_conflict", info.IgnoreClusterCidrConflict)
-	d.Set("cluster_max_pod_num", info.MaxClusterServiceNum)
+	d.Set("cluster_max_pod_num", info.MaxNodePodNum)
 	d.Set("cluster_max_service_num", info.MaxClusterServiceNum)
 	d.Set("cluster_node_num", info.ClusterNodeNum)
 	d.Set("tags", info.Tags)
