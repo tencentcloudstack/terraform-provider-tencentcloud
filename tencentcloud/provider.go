@@ -195,6 +195,7 @@ MySQL Resources
   tencentcloud_mysql_instance
   tencentcloud_mysql_readonly_instance
   tencentcloud_mysql_account
+  tencentcloud_mysql_privilege
   tencentcloud_mysql_account_privilege
   tencentcloud_mysql_backup_policy
 
@@ -393,6 +394,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mysql_backup_policy":         resourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":               resourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":     resourceTencentCloudMysqlAccountPrivilege(),
+			"tencentcloud_mysql_privilege":             resourceTencentCloudMysqlPrivilege(),
 			"tencentcloud_mysql_instance":              resourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_readonly_instance":     resourceTencentCloudMysqlReadonlyInstance(),
 			"tencentcloud_cos_bucket":                  resourceTencentCloudCosBucket(),

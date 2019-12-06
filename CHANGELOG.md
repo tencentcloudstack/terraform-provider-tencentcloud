@@ -1,14 +1,14 @@
 ## 1.26.0 (Unreleased)
 
 FEATURES:
+* **New Resource**: `tencentcloud_mysql_privilege`
 * **New Resource**: `tencentcloud_kubernetes_as_scaling_group`.[#202](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/202)
+
+ENHANCEMENTS:
 
 * Resource: `tencentcloud_gaap_layer4_listener` support import
 * Resource: `tencentcloud_gaap_http_rule` support import
 * Resource: `tencentcloud_gaap_security_rule` support import
-
-ENHANCEMENTS:
-
 * Resource: `tencentcloud_gaap_http_domain` add new optional argument `client_certificate_ids`
 * Resource: `tencentcloud_gaap_layer7_listener` add new optional argument `client_certificate_ids`
 * Data Source: `tencentcloud_gaap_http_domains` add new output argument `client_certificate_ids`
@@ -19,6 +19,7 @@ DEPRECATED:
 * Data Source: `tencentcloud_gaap_layer7_listeners`: output argument `client_certificate_id` is no longer supported.
 * Resource: `tencentcloud_gaap_http_domain`: optional argument `client_certificate_id` is no longer supported.
 * Resource: `tencentcloud_gaap_layer7_listener`: optional argument `client_certificate_id` is no longer supported.
+* Resource: `tencentcloud_mysql_account_privilege` replaced by `tencentcloud_mysql_privilege`.
 
 ## 1.25.2 (December 04, 2019)
 
@@ -33,6 +34,7 @@ ENHANCEMENTS:
 BUG FIXES:
 * Fixed bug that the type of `state` is incorrect in data source `tencentcloud_nat_gateways`([#226](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/226)).
 * Fixed bug that the value of `cluster_max_pod_num` is incorrect in resource `tencentcloud_kubernetes_cluster`([#228](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/228)).
+
 
 ## 1.25.0 (December 02, 2019)
 
