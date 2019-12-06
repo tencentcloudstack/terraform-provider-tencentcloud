@@ -42,7 +42,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_PROTOCOL),
-				Description:  "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.",
+				Description:  "Type of protocol within the listener, and available values are 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.",
 			},
 			"port": {
 				Type:         schema.TypeInt,
@@ -109,7 +109,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"health_check_unhealth_num": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Unhealth threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+							Description: "Unhealthy threshold of health check, and the default is 3. If a success result is returned for the health check three consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"certificate_ssl_mode": {
 							Type:        schema.TypeString,
@@ -134,7 +134,7 @@ func dataSourceTencentCloudClbListeners() *schema.Resource {
 						"scheduler": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+							Description: "Scheduling method of the CLB listener, and available values are 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of 'HTTP' and 'HTTPS' protocol additionally supports the 'IP HASH' method. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"sni_switch": {
 							Type:        schema.TypeBool,
@@ -181,7 +181,7 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read clb listeners failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CLB listeners failed, reason:%+v", logId, err)
 		return err
 	}
 	listenerList := make([]map[string]interface{}, 0, len(listeners))
@@ -229,7 +229,7 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("listener_list", listenerList); e != nil {
-		log.Printf("[CRITAL]%s provider set clb listener list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set CLB listener list fail, reason:%+v", logId, e)
 		return e
 	}
 

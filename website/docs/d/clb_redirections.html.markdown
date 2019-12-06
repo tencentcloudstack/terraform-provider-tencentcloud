@@ -38,7 +38,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `redirection_list` - A list of cloud load redirection configurations. Each element contains the following attributes:
+* `redirection_list` - A list of cloud load balancer redirection configurations. Each element contains the following attributes:
   * `clb_id` - Id of the CLB.
   * `source_listener_id` - Id of source listener.
   * `source_rule_id` - Rule id of source listener.

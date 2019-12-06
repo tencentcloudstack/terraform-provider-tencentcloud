@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
 	"github.com/hashicorp/terraform/helper/resource"
@@ -26,16 +27,14 @@ func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeLoadBalancers(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.LoadBalancerSet) < 1 {
-		errRet = fmt.Errorf("loadBalancer id is not found")
 		return
 	}
 	clbInstance = response.Response.LoadBalancerSet[0]
@@ -50,7 +49,6 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 		if k == "clb_id" {
 			request.LoadBalancerIds = []*string{stringToPointer(v.(string))}
 		}
-
 		if k == "network_type" {
 			request.LoadBalancerType = stringToPointer(v.(string))
 		}
@@ -61,11 +59,10 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 			projectId := int64(v.(int))
 			request.ProjectId = &projectId
 		}
-
 	}
 
 	offset := int64(0)
-	pageSize := int64(100)
+	pageSize := int64(CLB_PAGE_LIMIT)
 	clbs = make([]*clb.LoadBalancer, 0)
 	for {
 		request.Offset = &(offset)
@@ -73,9 +70,8 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseClbClient().DescribeLoadBalancers(request)
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
 			errRet = err
+			errRet = errors.WithStack(errRet)
 			return
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -103,9 +99,7 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteLoadBalancer(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
+		return errors.WithStack(err)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -126,16 +120,14 @@ func (me *ClbService) DescribeListenerById(ctx context.Context, listenerId strin
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
 		return
 	}
 	clbListener = response.Response.Listeners[0]
@@ -165,16 +157,14 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 			port := int64(v.(int))
 			request.Port = &port
 		}
-
 	}
 
 	listeners = make([]*clb.Listener, 0)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -193,9 +183,7 @@ func (me *ClbService) DeleteListenerById(ctx context.Context, clbId string, list
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteListener(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
+		return errors.WithStack(err)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -240,7 +228,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 	//get listener first
 	request := clb.NewDescribeListenersRequest()
 	if listenerId == "" || clbId == "" {
-		errRet = fmt.Errorf("Listener id and clb id can not be null")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id and CLB id can not be null")
 		return
 	}
 	request.LoadBalancerId = stringToPointer(clbId)
@@ -248,15 +236,15 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id %s is not found", listenerId)
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -282,7 +270,6 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 				continue
 			}
 		}
-
 		rules = append(rules, rule)
 	}
 
@@ -297,30 +284,31 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id %s is not found", listenerId)
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
 	var ruleOutput clb.RuleOutput
-	find_flag := false
+	findFlag := false
 	for _, rule := range clbListener.Rules {
 		if *rule.Domain == domain && *rule.Url == url {
 			ruleOutput = *rule
-			find_flag = true
+			findFlag = true
 			break
 		}
 	}
-	if !find_flag {
-		errRet = fmt.Errorf("rule not found!")
+	if !findFlag {
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: rule not found!")
+		errRet = errors.WithStack(errRet)
 		return
 	} else {
 		clbRule = &ruleOutput
@@ -337,9 +325,7 @@ func (me *ClbService) DeleteRuleById(ctx context.Context, clbId string, listener
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteRule(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
+		return errors.WithStack(err)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -359,16 +345,16 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id %s is not found", listenerId)
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -384,16 +370,16 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	aResponse, aErr := me.client.UseClbClient().DescribeTargets(aRequest)
 
 	if aErr != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, aRequest.GetAction(), aRequest.ToJsonString(), aErr.Error())
 		errRet = aErr
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, aRequest.GetAction(), aRequest.ToJsonString(), aResponse.ToJsonString())
 
 	if len(aResponse.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id %s is not found", listenerId)
+		errRet = errors.WithStack(errRet)
 		return
 	} else {
 		clbAttachment = aResponse.Response.Listeners[0]
@@ -420,7 +406,8 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	//get listener first
 	request := clb.NewDescribeListenersRequest()
 	if listenerId == "" || clbId == "" {
-		errRet = fmt.Errorf("Listener id and clb id can not be null")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id and clb id can not be null")
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	request.LoadBalancerId = stringToPointer(clbId)
@@ -431,12 +418,14 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id %s is not found", listenerId)
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -452,16 +441,14 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	aResponse, aErr := me.client.UseClbClient().DescribeTargets(aRequest)
 
 	if aErr != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, aRequest.GetAction(), aRequest.ToJsonString(), aErr.Error())
 		errRet = aErr
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, aRequest.GetAction(), aRequest.ToJsonString(), aResponse.ToJsonString())
 
 	if len(aResponse.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
 		return
 	} else {
 		clbAttachments = append(clbAttachments, aResponse.Response.Listeners[0])
@@ -485,9 +472,7 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeregisterTargets(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
+		return errors.WithStack(err)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -503,7 +488,8 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	logId := getLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
-		errRet = fmt.Errorf("rewriteInfo id is not exist!%s", rewriteId)
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	sourceLocId := items[0]
@@ -519,16 +505,14 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeRewrite(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.RewriteSet) < 1 {
-		errRet = fmt.Errorf("redirection id %s is not found", rewriteId)
 		return
 	}
 
@@ -541,11 +525,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 			result["target_listener_id"] = targetListenerId
 			result["clb_id"] = clbId
 			rewriteInfo = &result
-		} else {
-			errRet = fmt.Errorf("redirection id %s is not found", rewriteId)
 		}
-	} else {
-		errRet = fmt.Errorf("redirection id %s is not found", rewriteId)
 	}
 
 	return
@@ -582,9 +562,8 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeRewrite(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
+		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -616,8 +595,9 @@ func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId strin
 	logId := getLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
-		return fmt.Errorf("rewriteInfo id is not exist!!! %s", rewriteId)
-
+		errRet := fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
+		errRet = errors.WithStack(errRet)
+		return errRet
 	}
 	sourceLocId := items[0]
 	targetLocId := items[1]
@@ -636,9 +616,7 @@ func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId strin
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteRewrite(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
+		return errors.WithStack(err)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -654,7 +632,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	var healthCheck clb.HealthCheck
 	healthSetFlag = false
 	healthCheckPara = &healthCheck
-	if v, ok := d.GetOk("health_check_switch"); ok {
+	if v, ok := d.GetOkExists("health_check_switch"); ok {
 		healthSetFlag = true
 		vv := v.(bool)
 		vvv := int64(0)
@@ -690,6 +668,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health_check_http_code can only be set with protocol HTTP/HTTPS.")
+			errRet = errors.WithStack(errRet)
 			return
 		} else {
 			healthSetFlag = true
@@ -702,6 +681,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health_check_http_path can only be set with protocol HTTP/HTTPS")
+			errRet = errors.WithStack(errRet)
 			return
 		} else {
 			healthSetFlag = true
@@ -713,6 +693,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health_check_http_domain can only be set with protocol HTTP/HTTPS")
+			errRet = errors.WithStack(errRet)
 			return
 		} else {
 			healthSetFlag = true
@@ -724,6 +705,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health_check_http_method can only be set with protocol HTTP/HTTPS")
+			errRet = errors.WithStack(errRet)
 			return
 		} else {
 			healthSetFlag = true
@@ -736,6 +718,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		if !(((protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) && applyType == HEALTH_APPLY_TYPE_LISTENER) || ((protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) && applyType == HEALTH_APPLY_TYPE_RULE)) {
 			healthSetFlag = false
 			errRet = fmt.Errorf("health para can only be set with TCP/UDP/TCP_SSL listener or rule of HTTP/HTTPS listener")
+			errRet = errors.WithStack(errRet)
 			return
 		}
 		healthCheckPara = &healthCheck
@@ -772,12 +755,14 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData) (cer
 	if certificateSetFlag && certificateId == "" {
 		certificateSetFlag = false
 		errRet = fmt.Errorf("certificatedId is null")
+		errRet = errors.WithStack(errRet)
 		return
 	}
 
 	if certificateSetFlag && certificateSSLMode == CERT_SSL_MODE_MUT && certificateCaId == "" {
 		certificateSetFlag = false
-		errRet = fmt.Errorf("Certificate_ca_key is null and the ssl mode is 'MUTUAL' ")
+		errRet = fmt.Errorf("certificate_ca_key is null and the ssl mode is 'MUTUAL' ")
+		errRet = errors.WithStack(errRet)
 		return
 	}
 
@@ -791,10 +776,10 @@ func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
 		taskResponse, e := meta.DescribeTaskStatus(taskQueryRequest)
 		if e != nil {
-			return resource.NonRetryableError(e)
+			return resource.NonRetryableError(errors.WithStack(e))
 		}
 		if *taskResponse.Response.Status == int64(CLB_TASK_EXPANDING) {
-			return resource.RetryableError(fmt.Errorf("clb task status is %d, requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId))
+			return resource.RetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d, requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
 		}
 		return nil
 	})

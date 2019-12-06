@@ -96,7 +96,7 @@ func TestAccTencentCloudClbInstance_internal(t *testing.T) {
 				Config: testAccClbInstance_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbInstanceExists("tencentcloud_clb_instance.clb_internal"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "clb_name", "tf-clb-update"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "clb_name", "tf-clb-update-internal"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "network_type", "INTERNAL"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_internal", "vpc_id"),
@@ -124,9 +124,9 @@ func testAccCheckClbInstanceDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := clbService.DescribeLoadBalancerById(ctx, rs.Primary.ID)
-		if err == nil {
-			return fmt.Errorf("clb instance still exists: %s", rs.Primary.ID)
+		instance, err := clbService.DescribeLoadBalancerById(ctx, rs.Primary.ID)
+		if instance != nil && err == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Destroy] check: CLB instance still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -139,10 +139,10 @@ func testAccCheckClbInstanceExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("clb instance %s is not found", n)
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Exists] check: CLB instance %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("clb instance id is not set")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Exists] check: CLB instance id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -238,7 +238,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_clb_instance" "clb_internal" {
   network_type = "INTERNAL"
-  clb_name     = "tf-clb-update"
+  clb_name     = "tf-clb-update-internal"
   vpc_id       = "${tencentcloud_vpc.foo.id}"
   subnet_id    = "${tencentcloud_subnet.subnet.id}"
   project_id   = 0

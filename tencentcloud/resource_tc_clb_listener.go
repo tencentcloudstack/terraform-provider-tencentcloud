@@ -76,6 +76,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
@@ -112,7 +113,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_PROTOCOL),
-				Description:  "Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.",
+				Description:  "Type of protocol within the listener, and available values are 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.",
 			},
 			"health_check_switch": {
 				Type:        schema.TypeBool,
@@ -146,13 +147,13 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(2, 10),
-				Description:  "Unhealth threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+				Description:  "Unhealthy threshold of health check, and the default is 3. If a success result is returned for the health check 3 consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 			},
 			"certificate_ssl_mode": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol and must be set when it is available.",
+				Description:  "Type of certificate, and available values are 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' and 'TCP_SSL' protocol and must be set when it is available.",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,
@@ -175,7 +176,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Default:      CLB_LISTENER_SCHEDULER_WRR,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the CLB listener, and available values include 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of HTTP and 'HTTPS' protocol additionally supports the 'IP Hash' method. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+				Description:  "Scheduling method of the CLB listener, and available values are 'WRR' and 'LEAST_CONN'. The default is 'WRR'. NOTES: The listener of HTTP and 'HTTPS' protocol additionally supports the 'IP Hash' method. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 			},
 			"sni_switch": {
 				Type:        schema.TypeBool,
@@ -226,13 +227,13 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		request.Certificate = certificateInput
 	} else {
 		if protocol == CLB_LISTENER_PROTOCOL_HTTPS || protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
-			return fmt.Errorf("certificated need to be set when protocol is HTTPS/TCPSSL")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: certificated need to be set when protocol is HTTPS/TCPSSL")
 		}
 	}
 	scheduler := ""
 	if v, ok := d.GetOk("scheduler"); ok {
 		if v == CLB_LISTENER_SCHEDULER_IP_HASH {
-			return fmt.Errorf("Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS")
 		}
 		scheduler = v.(string)
 		request.Scheduler = stringToPointer(scheduler)
@@ -240,17 +241,17 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("session_expire_time"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP) {
-			return fmt.Errorf("session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS")
 		}
 		if scheduler != CLB_LISTENER_SCHEDULER_WRR && scheduler != "" {
-			return fmt.Errorf("session_expire_time can only be set when scheduler is WRR ")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: session_expire_time can only be set when scheduler is WRR ")
 		}
 		vv := int64(v.(int))
 		request.SessionExpireTime = &vv
 	}
-	if v, ok := d.GetOk("sni_switch"); ok {
+	if v, ok := d.GetOkExists("sni_switch"); ok {
 		if protocol != CLB_LISTENER_PROTOCOL_HTTPS {
-			return fmt.Errorf("sni_switch can only be set with protocol HTTPS ")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: sni_switch can only be set with protocol HTTPS ")
 		} else {
 			vv := v.(bool)
 			vvv := int64(0)
@@ -264,28 +265,25 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateListener(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			requestId := *result.Response.RequestId
-
 			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
-				return resource.NonRetryableError(retryErr)
+				return resource.NonRetryableError(errors.WithStack(retryErr))
 			}
 		}
 		response = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create clb listener failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CLB listener failed, reason:%+v", logId, err)
 		return err
 	}
 	if len(response.Response.ListenerIds) < 1 {
-		return fmt.Errorf("listener id is wrong")
+		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: Response error, listener id is null")
 	}
 	listenerId := *response.Response.ListenerIds[0]
 	d.SetId(listenerId)
@@ -312,9 +310,15 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read clb listener failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CLB listener failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+
+	if instance == nil {
+		d.SetId("")
+		return nil
+	}
+
 	d.Set("clb_id", clbId)
 	d.Set("listener_name", instance.ListenerName)
 	d.Set("port", instance.Port)
@@ -377,10 +381,10 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		scheduler = d.Get("scheduler").(string)
 		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) {
-			return fmt.Errorf("Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener %s][Update] check: Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS", listenerId)
 		}
 		if scheduler == CLB_LISTENER_SCHEDULER_IP_HASH {
-			return fmt.Errorf("Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener %s][Update] check: Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS", listenerId)
 		}
 		request.Scheduler = stringToPointer(scheduler)
 	}
@@ -389,14 +393,13 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		sessionExpireTime = d.Get("session_expire_time").(int)
 		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP) {
-			return fmt.Errorf("session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener %s][Update] check: session_expire_time can only be set with protocol TCP/UDP or rule of listener HTTP/HTTPS", listenerId)
 		}
 		if scheduler != CLB_LISTENER_SCHEDULER_WRR && scheduler != "" {
-			return fmt.Errorf("session_expire_time can only be set when scheduler is WRR")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener %s][Update] check: session_expire_time can only be set when scheduler is WRR", listenerId)
 		}
 		sessionExpireTime64 := int64(sessionExpireTime)
 		request.SessionExpireTime = &sessionExpireTime64
-
 	}
 
 	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol, HEALTH_APPLY_TYPE_LISTENER)
@@ -420,10 +423,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	if changed {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyListener(request)
-
 			if e != nil {
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), e.Error())
 				return retryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -431,13 +431,13 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 				requestId := *response.Response.RequestId
 				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 				if retryErr != nil {
-					return resource.NonRetryableError(retryErr)
+					return resource.NonRetryableError(errors.WithStack(retryErr))
 				}
 			}
 			return nil
 		})
 		if err != nil {
-			log.Printf("[CRITAL]%s update clb listener failed, reason:%s\n ", logId, err.Error())
+			log.Printf("[CRITAL]%s update CLB listener failed, reason:%+v", logId, err)
 			return err
 		}
 	}
@@ -461,13 +461,12 @@ func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interfac
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteListenerById(ctx, clbId, listenerId)
 		if e != nil {
-			log.Printf("[CRITAL]%s reason[%s]\n", logId, e.Error())
 			return retryError(e)
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete clb listener failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s delete CLB listener failed, reason:%+v", logId, err)
 		return err
 	}
 

@@ -50,7 +50,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 			"attachment_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of cloud load redirection configurations. Each element contains the following attributes:",
+				Description: "A list of cloud load balancer attachment configurations. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"clb_id": {
@@ -61,7 +61,7 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 						"listener_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the CLB listener.",
+							Description: "Id of the CLB listener.",
 						},
 						"protocol_type": {
 							Type:        schema.TypeString,
@@ -136,7 +136,7 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read clb attachments failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CLB attachments failed, reason:%+v", logId, err)
 		return err
 	}
 	attachmentList := make([]map[string]interface{}, 0, len(attachments))
@@ -167,7 +167,7 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("attachment_list", attachmentList); e != nil {
-		log.Printf("[CRITAL]%s provider set attachment list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set attachment list fail, reason:%+v", logId, e)
 		return e
 	}
 

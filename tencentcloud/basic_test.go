@@ -22,6 +22,9 @@ const defaultSubnetCidrLess = "172.16.0.0/22"
 const defaultInsName = "tf-ci-test"
 const defaultInsNameUpdate = "tf-ci-test-update"
 
+const defaultSshCertificate = "VjANRdz8"
+const defaultSshCertificateB = "VfqO4zkB"
+
 const defaultGaapProxyId = "link-9ck3lzq7"
 
 /*

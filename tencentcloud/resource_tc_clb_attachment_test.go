@@ -47,7 +47,7 @@ func TestAccTencentCloudClbServerAttachment_http(t *testing.T) {
 		CheckDestroy: testAccCheckClbServerAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClbServerAttachment_http,
+				Config: fmt.Sprintf(testAccClbServerAttachment_http, defaultSshCertificate),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.foo"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.foo", "clb_id"),
@@ -79,14 +79,14 @@ func testAccCheckClbServerAttachmentDestroy(s *terraform.State) error {
 		time.Sleep(5 * time.Second)
 		items := strings.Split(rs.Primary.ID, "#")
 		if len(items) != 3 {
-			return fmt.Errorf("id of resource.tencentcloud_clb_attachment is wrong")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Destroy] check: id %s of resource.tencentcloud_clb_attachment is not match loc-xxx#lbl-xxx#lb-xxx", rs.Primary.ID)
 		}
 		locationId := items[0]
 		listenerId := items[1]
 		clbId := items[2]
-		_, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
-		if err == nil {
-			return fmt.Errorf("clb ServerAttachment still exists: %s", rs.Primary.ID)
+		instance, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+		if instance != nil && err == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Destroy] check: CLB Attachment still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -99,17 +99,17 @@ func testAccCheckClbServerAttachmentExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("clb ServerAttachment %s is not found", n)
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Exists] check: CLB Attachment %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("clb ServerAttachment id is not set")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Exists] check: CLB Attachment id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
 		items := strings.Split(rs.Primary.ID, "#")
 		if len(items) != 3 {
-			return fmt.Errorf("id of resource.tencentcloud_clb_attachment is wrong")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Exists] check: id %s of resource.tencentcloud_clb_attachment is not match loc-xxx#lbl-xxx#lb-xxx", rs.Primary.ID)
 		}
 		locationId := items[0]
 		listenerId := items[1]
@@ -201,7 +201,7 @@ resource "tencentcloud_clb_listener" "foo" {
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VjANRdz8"
+  certificate_id       = "%s"
 }
 
 resource "tencentcloud_clb_listener_rule" "foo" {

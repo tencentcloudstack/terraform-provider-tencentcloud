@@ -42,7 +42,7 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 		CheckDestroy: testAccCheckClbListenerRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClbListenerRule_full,
+				Config: fmt.Sprintf(testAccClbListenerRule_full, defaultSshCertificate, defaultSshCertificateB),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_full"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_full", "clb_id"),
@@ -60,10 +60,10 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_domain", "abc.com"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_ssl_mode", "UNIDIRECTIONAL"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", "VfqO4zkB"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", defaultSshCertificateB),
 				),
 			}, {
-				Config: testAccClbListenerRule_update,
+				Config: fmt.Sprintf(testAccClbListenerRule_update, defaultSshCertificate, defaultSshCertificateB),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_full"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_full", "clb_id"),
@@ -81,7 +81,7 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_domain", "abcd.com"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "health_check_http_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_ssl_mode", "UNIDIRECTIONAL"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", "VfqO4zkB"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", defaultSshCertificateB),
 				),
 			},
 		},
@@ -104,9 +104,9 @@ func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
 		clbId := rs.Primary.Attributes["clb_id"]
 		//this function is not supported by api, need to be travelled
 		filter := map[string]string{"rule_id": locationId, "listener_id": listenerId, "clb_id": clbId}
-		_, err := clbService.DescribeRulesByFilter(ctx, filter)
-		if err == nil {
-			return fmt.Errorf("clb listener rule still exists: %s", rs.Primary.ID)
+		rules, err := clbService.DescribeRulesByFilter(ctx, filter)
+		if len(rules) > 0 && err == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener rule][Destroy] check: CLB listener rule still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -119,10 +119,10 @@ func testAccCheckClbListenerRuleExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("clb listener rule %s is not found", n)
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener rule][Exists] check: CLB listener rule %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("clb listener rule id is not set")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener rule][Exists] check: CLB listener rule id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -174,7 +174,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VjANRdz8"
+  certificate_id       = "%s"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_full" {
@@ -193,7 +193,7 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
   health_check_http_code     = "31"
   health_check_http_method   = "GET"
   certificate_ssl_mode       = "UNIDIRECTIONAL"
-  certificate_id             = "VfqO4zkB"
+  certificate_id             = "%s"
 }
 `
 
@@ -209,7 +209,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VjANRdz8"
+  certificate_id       = "%s"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_full" {
@@ -228,6 +228,6 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
   health_check_http_code     = "1"
   health_check_http_method   = "HEAD"
   certificate_ssl_mode       = "UNIDIRECTIONAL"
-  certificate_id             = "VfqO4zkB"
+  certificate_id             = "%s"
 }
 `

@@ -35,6 +35,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
@@ -52,19 +53,19 @@ func resourceTencentCloudClbServerAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of the clb.",
+				Description: "Id of the CLB.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Id of the clb listener.",
+				Description: "Id of the CLB listener.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
-				Description: "Id of the clb listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.",
+				Description: "Id of the CLB listener rule. Only supports listeners of 'HTTPS' and 'HTTP' protocol.",
 			},
 			"protocol_type": {
 				Type:        schema.TypeString,
@@ -132,22 +133,20 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 		requestId := ""
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			requestId = *result.Response.RequestId
 			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
-				return resource.NonRetryableError(retryErr)
+				return resource.NonRetryableError(errors.WithStack(retryErr))
 			}
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create clb attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create CLB attachment failed, reason:%+v", logId, err)
 		return err
 	}
 	id := fmt.Sprintf("%s#%v#%v", locationId, d.Get("listener_id"), d.Get("clb_id"))
@@ -169,7 +168,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_attachment listener is wrong")
+		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Delete] check: id %s of resource.tencentcloud_clb_attachment is not match loc-xxx#lbl-xxx#lb-xxx", attachmentId)
 	}
 
 	locationId := items[0]
@@ -181,16 +180,14 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	}
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, d.Get("targets").(*schema.Set).List())
-
 		if e != nil {
-
 			return retryError(e)
 		}
 
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s reason[%s]\n", logId, err.Error())
+		log.Printf("[CRITAL]%s reason[%+v]", logId, err)
 		return err
 	}
 	return nil
@@ -203,7 +200,7 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 	attachmentId := d.Id()
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
-		return fmt.Errorf("id of resource.tencentcloud_clb_attachment is wrong")
+		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Remove] check: id %s of resource.tencentcloud_clb_attachment is not match loc-xxx#lbl-xxx#lb-xxx", attachmentId)
 	}
 	locationId := items[0]
 	listenerId := items[1]
@@ -223,8 +220,6 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 		requestId := ""
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().DeregisterTargets(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -232,13 +227,13 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 			requestId = *response.Response.RequestId
 			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
-				return resource.NonRetryableError(retryErr)
+				return resource.NonRetryableError(errors.WithStack(retryErr))
 			}
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s remove clb attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s remove CLB attachment failed, reason:%+v", logId, err)
 		return err
 	}
 	return nil
@@ -270,8 +265,6 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 		requestId := ""
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -279,13 +272,13 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 			requestId = *response.Response.RequestId
 			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
 			if retryErr != nil {
-				return resource.NonRetryableError(retryErr)
+				return resource.NonRetryableError(errors.WithStack(retryErr))
 			}
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s add clb attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s add CLB attachment failed, reason:%+v", logId, err)
 		return err
 	}
 	return nil
@@ -345,7 +338,7 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read clb attachment failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CLB attachment failed, reason:%+v", logId, err)
 		return err
 	}
 	d.Set("clb_id", clbId)
