@@ -35,7 +35,6 @@ import (
 	"errors"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 )
 
@@ -97,10 +96,21 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Description:  "Authentication type of the layer7 listener. `0` is one-way authentication and `1` is mutual authentication. NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
 			"client_certificate_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "",
-				Description: "ID of the client certificate. Set only when `auth_type` is specified as mutual authentication.  NOTES: Only supports listeners of `HTTPS` protocol.",
+				Deprecated:    "It has been deprecated from version 1.26.0. Set `client_certificate_ids` instead.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"client_certificate_ids"},
+				Description:   "ID of the client certificate. Set only when `auth_type` is specified as mutual authentication.  NOTES: Only supports listeners of `HTTPS` protocol.",
+			},
+			"client_certificate_ids": {
+				Type:          schema.TypeSet,
+				Optional:      true,
+				Computed:      true,
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				Set:           schema.HashString,
+				ConflictsWith: []string{"client_certificate_id"},
+				Description:   "ID list of the client certificate.  Set only when `auth_type` is specified as mutual authentication.  NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
 
 			// computed
@@ -162,15 +172,26 @@ func resourceTencentCloudGaapLayer7ListenerCreate(d *schema.ResourceData, m inte
 			return errors.New("when protocol is HTTPS, auth_type is required")
 		}
 
-		clientCertificateId := d.Get("client_certificate_id").(string)
+		var polyClientCertificateIds []string
 
-		if authType == 1 && clientCertificateId == "" {
-			return errors.New("when protocol is HTTPS and auth type is 1, client_certificate_id can't be empty")
+		if raw, ok := d.GetOk("client_certificate_id"); ok {
+			polyClientCertificateIds = append(polyClientCertificateIds, raw.(string))
+		}
+		if raw, ok := d.GetOk("client_certificate_ids"); ok {
+			set := raw.(*schema.Set)
+			polyClientCertificateIds = make([]string, 0, set.Len())
+			for _, polyId := range set.List() {
+				polyClientCertificateIds = append(polyClientCertificateIds, polyId.(string))
+			}
+		}
+
+		if authType == 1 && len(polyClientCertificateIds) == 0 {
+			return errors.New("when protocol is HTTPS and auth type is 1, client_certificate_ids can't be empty")
 		}
 
 		id, err = service.CreateHTTPSListener(
 			ctx,
-			name, certificateId, clientCertificateId, forwardProtocol, proxyId, port, authType,
+			name, certificateId, forwardProtocol, proxyId, polyClientCertificateIds, port, authType,
 		)
 	}
 
@@ -191,14 +212,15 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 	id := d.Id()
 	protocol := d.Get("protocol").(string)
 	var (
-		name                string
-		port                int
-		certificateId       string
-		forwardProtocol     *string
-		authType            *int
-		clientCertificateId string
-		status              int
-		createTime          string
+		name                     *string
+		port                     *uint64
+		certificateId            *string
+		forwardProtocol          *string
+		authType                 *int64
+		clientCertificateId      *string
+		status                   *uint64
+		createTime               string
+		polyClientCertificateIds []*string
 	)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -206,6 +228,30 @@ func resourceTencentCloudGaapLayer7ListenerRead(d *schema.ResourceData, m interf
 LOOP:
 	for {
 		switch protocol {
+		case "":
+			// import mode, need check protocol
+			httpListeners, err := service.DescribeHTTPListeners(ctx, nil, &id, nil, nil)
+			if err != nil {
+				return err
+			}
+			if len(httpListeners) > 0 {
+				protocol = "HTTP"
+				continue
+			}
+
+			httpsListeners, err := service.DescribeHTTPSListeners(ctx, nil, &id, nil, nil)
+			if err != nil {
+				return err
+			}
+			if len(httpsListeners) > 0 {
+				protocol = "HTTPS"
+				continue
+			}
+
+			// layer7 listener is not found
+			d.SetId("")
+			return nil
+
 		case "HTTP":
 			listeners, err := service.DescribeHTTPListeners(ctx, nil, &id, nil, nil)
 			if err != nil {
@@ -228,20 +274,9 @@ LOOP:
 				return nil
 			}
 
-			if listener.ListenerName == nil {
-				return errors.New("listener name is nil")
-			}
-			name = *listener.ListenerName
-
-			if listener.Port == nil {
-				return errors.New("listener port is nil")
-			}
-			port = int(*listener.Port)
-
-			if listener.ListenerStatus == nil {
-				return errors.New("listener status is nil")
-			}
-			status = int(*listener.ListenerStatus)
+			name = listener.ListenerName
+			port = listener.Port
+			status = listener.ListenerStatus
 
 			if listener.CreateTime == nil {
 				return errors.New("listener create time is nil")
@@ -272,39 +307,22 @@ LOOP:
 				return nil
 			}
 
-			if listener.ListenerName == nil {
-				return errors.New("listener name is nil")
-			}
-			name = *listener.ListenerName
-
-			if listener.Port == nil {
-				return errors.New("listener port is nil")
-			}
-			port = int(*listener.Port)
-
-			if listener.CertificateId == nil {
-				return errors.New("listener certificate id is nil")
-			}
-			certificateId = *listener.CertificateId
-
-			if listener.ForwardProtocol == nil {
-				return errors.New("listener forward protocol is nil")
-			}
+			name = listener.ListenerName
+			port = listener.Port
+			certificateId = listener.CertificateId
 			forwardProtocol = listener.ForwardProtocol
+			authType = listener.AuthType
 
-			if listener.AuthType == nil {
-				return errors.New("listener auth type is nil")
+			// mutual authentication
+			if *authType == 1 {
+				clientCertificateId = listener.PolyClientCertificateAliasInfo[0].CertificateId
+				polyClientCertificateIds = make([]*string, 0, len(listener.PolyClientCertificateAliasInfo))
+				for _, polyCc := range listener.PolyClientCertificateAliasInfo {
+					polyClientCertificateIds = append(polyClientCertificateIds, polyCc.CertificateId)
+				}
 			}
-			authType = common.IntPtr(int(*listener.AuthType))
 
-			if listener.ClientCertificateId != nil {
-				clientCertificateId = *listener.ClientCertificateId
-			}
-
-			if listener.ListenerStatus == nil {
-				return errors.New("listener status is nil")
-			}
-			status = int(*listener.ListenerStatus)
+			status = listener.ListenerStatus
 
 			if listener.CreateTime == nil {
 				return errors.New("listener create time is nil")
@@ -312,44 +330,17 @@ LOOP:
 			createTime = formatUnixTime(*listener.CreateTime)
 
 			break LOOP
-
-		case "":
-			// import mode, need check protocol
-			httpListeners, err := service.DescribeHTTPListeners(ctx, nil, &id, nil, nil)
-			if err != nil {
-				return err
-			}
-			if len(httpListeners) > 0 {
-				protocol = "HTTP"
-				continue
-			}
-
-			httpsListeners, err := service.DescribeHTTPSListeners(ctx, nil, &id, nil, nil)
-			if err != nil {
-				return err
-			}
-			if len(httpsListeners) > 0 {
-				protocol = "HTTPS"
-				continue
-			}
-
-			// layer7 listener is not found
-			d.SetId("")
-			return nil
 		}
 	}
-	d.Set("protocol", protocol)
 
+	d.Set("protocol", protocol)
 	d.Set("name", name)
 	d.Set("port", port)
 	d.Set("certificate_id", certificateId)
-	if forwardProtocol != nil {
-		d.Set("forward_protocol", forwardProtocol)
-	}
-	if authType != nil {
-		d.Set("auth_type", authType)
-	}
+	d.Set("forward_protocol", forwardProtocol)
+	d.Set("auth_type", authType)
 	d.Set("client_certificate_id", clientCertificateId)
+	d.Set("client_certificate_ids", polyClientCertificateIds)
 	d.Set("status", status)
 	d.Set("create_time", createTime)
 
@@ -378,10 +369,10 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 
 	case "HTTPS":
 		var (
-			name                *string
-			certificateId       *string
-			forwardProtocol     *string
-			clientCertificateId *string
+			name                     *string
+			certificateId            *string
+			forwardProtocol          *string
+			polyClientCertificateIds []string
 		)
 
 		if d.HasChange("name") {
@@ -393,11 +384,25 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 		if d.HasChange("forward_protocol") {
 			forwardProtocol = stringToPointer(d.Get("forward_protocol").(string))
 		}
+
 		if d.HasChange("client_certificate_id") {
-			clientCertificateId = stringToPointer(d.Get("client_certificate_id").(string))
+			if raw, ok := d.GetOk("client_certificate_id"); ok {
+				polyClientCertificateIds = append(polyClientCertificateIds, raw.(string))
+			}
 		}
 
-		if err := service.ModifyHTTPSListener(ctx, proxyId, id, name, forwardProtocol, certificateId, clientCertificateId); err != nil {
+		if d.HasChange("client_certificate_ids") {
+			if raw, ok := d.GetOk("client_certificate_ids"); ok {
+				set := raw.(*schema.Set)
+				polyClientCertificateIds = make([]string, 0, set.Len())
+
+				for _, polyId := range set.List() {
+					polyClientCertificateIds = append(polyClientCertificateIds, polyId.(string))
+				}
+			}
+		}
+
+		if err := service.ModifyHTTPSListener(ctx, proxyId, id, name, forwardProtocol, certificateId, polyClientCertificateIds); err != nil {
 			return err
 		}
 	}

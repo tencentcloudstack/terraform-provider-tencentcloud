@@ -24,6 +24,14 @@ resource "tencentcloud_gaap_security_rule" "foo" {
   protocol  = "TCP"
 }
 ```
+
+Import
+
+GAAP security rule can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_security_rule.foo sr-xxxxxxxx
+```
 */
 package tencentcloud
 
@@ -42,6 +50,10 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 		Read:   resourceTencentCloudGaapSecurityRuleRead,
 		Update: resourceTencentCloudGaapSecurityRuleUpdate,
 		Delete: resourceTencentCloudGaapSecurityRuleDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -133,11 +145,10 @@ func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interfac
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	id := d.Id()
-	policyId := d.Get("policy_id").(string)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	rule, err := service.DescribeSecurityRule(ctx, policyId, id)
+	rule, err := service.DescribeSecurityRule(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -147,29 +158,11 @@ func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interfac
 		return nil
 	}
 
-	if rule.SourceCidr == nil {
-		return errors.New("security rule cidr IP is nil")
-	}
+	d.Set("policy_id", rule.PolicyId)
 	d.Set("cidr_ip", rule.SourceCidr)
-
-	if rule.Action == nil {
-		return errors.New("security rule action is nil")
-	}
 	d.Set("action", rule.Action)
-
-	if rule.AliasName == nil {
-		return errors.New("security rule name is nil")
-	}
 	d.Set("name", rule.AliasName)
-
-	if rule.Protocol == nil {
-		return errors.New("security rule protocol is nil")
-	}
 	d.Set("protocol", rule.Protocol)
-
-	if rule.DestPortRange == nil {
-		return errors.New("security rule port is nil")
-	}
 	d.Set("port", rule.DestPortRange)
 
 	return nil

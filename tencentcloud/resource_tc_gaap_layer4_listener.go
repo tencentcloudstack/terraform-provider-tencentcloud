@@ -43,6 +43,14 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
   }
 }
 ```
+
+Import
+
+GAAP layer4 listener can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_layer4_listener.foo listener-11112222
+```
 */
 package tencentcloud
 
@@ -53,8 +61,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 )
 
 func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
@@ -63,6 +69,10 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 		Read:   resourceTencentCloudGaapLayer4ListenerRead,
 		Update: resourceTencentCloudGaapLayer4ListenerUpdate,
 		Delete: resourceTencentCloudGaapLayer4ListenerDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"protocol": {
 				Type:         schema.TypeString,
@@ -247,7 +257,6 @@ func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m inte
 		}
 	}
 
-	// set id first so that can destroy listener if bind realservers failed
 	d.SetId(id)
 
 	if len(realservers) > 0 {
@@ -265,208 +274,118 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	id := d.Id()
-	protocol := d.Get("protocol").(string)
-	proxyId := d.Get("proxy_id").(string)
+
 	var (
-		name           string
-		port           int
-		scheduler      string
-		realServerType string
+		protocol       string
+		name           *string
+		port           *uint64
+		scheduler      *string
+		realServerType *string
 		healthCheck    *bool
-		interval       *int
-		connectTimeout *int
-		status         int
+		interval       *uint64
+		connectTimeout *uint64
+		status         *uint64
 		createTime     string
 		realservers    []map[string]interface{}
 	)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	switch protocol {
-	case "TCP":
-		listeners, err := service.DescribeTCPListeners(ctx, proxyId, &id, nil, nil)
-		if err != nil {
-			return err
-		}
+	tcpListeners, err := service.DescribeTCPListeners(ctx, nil, &id, nil, nil)
+	if err != nil {
+		return err
+	}
 
-		var listener *gaap.TCPListener
-		for _, l := range listeners {
-			if l.ListenerId == nil {
-				return errors.New("listener id is nil")
-			}
-			if *l.ListenerId == id {
-				listener = l
-				break
-			}
-		}
-		if listener == nil {
-			d.SetId("")
-			return nil
-		}
+	udpListeners, err := service.DescribeUDPListeners(ctx, nil, &id, nil, nil)
+	if err != nil {
+		return err
+	}
 
-		if listener.ListenerName == nil {
-			return errors.New("listener name is nil")
-		}
-		name = *listener.ListenerName
+	switch {
+	case len(tcpListeners) > 0:
+		protocol = "TCP"
 
-		if listener.Port == nil {
-			return errors.New("listener port is nil")
-		}
-		port = int(*listener.Port)
+		listener := tcpListeners[0]
 
-		if listener.Scheduler == nil {
-			return errors.New("listener scheduler is nil")
-		}
-		scheduler = *listener.Scheduler
-
-		if listener.RealServerType == nil {
-			return errors.New("listener realserver type is nil")
-		}
-		realServerType = *listener.RealServerType
+		name = listener.ListenerName
+		port = listener.Port
+		scheduler = listener.Scheduler
+		realServerType = listener.RealServerType
 
 		if listener.HealthCheck == nil {
 			return errors.New("listener health check is nil")
 		}
 		healthCheck = boolToPointer(*listener.HealthCheck == 1)
 
-		if listener.DelayLoop == nil {
-			return errors.New("listener interval is nil")
-		}
-		interval = common.IntPtr(int(*listener.DelayLoop))
-
-		if listener.ConnectTimeout == nil {
-			return errors.New("listener connect timeout is nil")
-		}
-		connectTimeout = common.IntPtr(int(*listener.ConnectTimeout))
+		interval = listener.DelayLoop
+		connectTimeout = listener.ConnectTimeout
 
 		if len(listener.RealServerSet) > 0 {
 			realservers = make([]map[string]interface{}, 0, len(listener.RealServerSet))
 			for _, rs := range listener.RealServerSet {
-				if rs.RealServerId == nil {
-					return errors.New("realserver id is nil")
-				}
-				if rs.RealServerIP == nil {
-					return errors.New("realserver IP is nil")
-				}
-				if rs.RealServerPort == nil {
-					return errors.New("realserver port is nil")
-				}
-				if rs.RealServerWeight == nil {
-					return errors.New("realserver weight is nil")
-				}
-
 				realservers = append(realservers, map[string]interface{}{
-					"id":     *rs.RealServerId,
-					"ip":     *rs.RealServerIP,
-					"port":   *rs.RealServerPort,
-					"weight": *rs.RealServerWeight,
+					"id":     rs.RealServerId,
+					"ip":     rs.RealServerIP,
+					"port":   rs.RealServerPort,
+					"weight": rs.RealServerWeight,
 				})
 			}
 		}
 
-		if listener.ListenerStatus == nil {
-			return errors.New("listener status is nil")
-		}
-		status = int(*listener.ListenerStatus)
+		status = listener.ListenerStatus
 
 		if listener.CreateTime == nil {
 			return errors.New("listener create time is nil")
 		}
 		createTime = formatUnixTime(*listener.CreateTime)
 
-	case "UDP":
-		listeners, err := service.DescribeUDPListeners(ctx, proxyId, &id, nil, nil)
-		if err != nil {
-			return err
-		}
+	case len(udpListeners) > 0:
+		protocol = "UDP"
 
-		var listener *gaap.UDPListener
-		for _, l := range listeners {
-			if l.ListenerId == nil {
-				return errors.New("listener id is nil")
-			}
-			if *l.ListenerId == id {
-				listener = l
-				break
-			}
-		}
-		if listener == nil {
-			d.SetId("")
-			return nil
-		}
+		listener := udpListeners[0]
 
-		if listener.ListenerName == nil {
-			return errors.New("listener name is nil")
-		}
-		name = *listener.ListenerName
+		name = listener.ListenerName
+		port = listener.Port
+		scheduler = listener.Scheduler
+		realServerType = listener.RealServerType
 
-		if listener.Port == nil {
-			return errors.New("listener port is nil")
-		}
-		port = int(*listener.Port)
-
-		if listener.Scheduler == nil {
-			return errors.New("listener scheduler is nil")
-		}
-		scheduler = *listener.Scheduler
-
-		if listener.RealServerType == nil {
-			return errors.New("listener realserver type is nil")
-		}
-		realServerType = *listener.RealServerType
+		healthCheck = boolToPointer(false)
+		connectTimeout = intToPointer(2)
+		interval = intToPointer(5)
 
 		if len(listener.RealServerSet) > 0 {
 			realservers = make([]map[string]interface{}, 0, len(listener.RealServerSet))
 			for _, rs := range listener.RealServerSet {
-				if rs.RealServerId == nil {
-					return errors.New("realserver id is nil")
-				}
-				if rs.RealServerIP == nil {
-					return errors.New("realserver IP is nil")
-				}
-				if rs.RealServerPort == nil {
-					return errors.New("realserver port is nil")
-				}
-				if rs.RealServerWeight == nil {
-					return errors.New("realserver weight is nil")
-				}
-
 				realservers = append(realservers, map[string]interface{}{
-					"id":     *rs.RealServerId,
-					"ip":     *rs.RealServerIP,
-					"port":   *rs.RealServerPort,
-					"weight": *rs.RealServerWeight,
+					"id":     rs.RealServerId,
+					"ip":     rs.RealServerIP,
+					"port":   rs.RealServerPort,
+					"weight": rs.RealServerWeight,
 				})
 			}
 		}
 
-		if listener.ListenerStatus == nil {
-			return errors.New("listener status is nil")
-		}
-		status = int(*listener.ListenerStatus)
+		status = listener.ListenerStatus
 
 		if listener.CreateTime == nil {
 			return errors.New("listener create time is nil")
 		}
 		createTime = formatUnixTime(*listener.CreateTime)
+
+	default:
+		d.SetId("")
+		return nil
 	}
 
+	d.Set("protocol", protocol)
 	d.Set("name", name)
 	d.Set("port", port)
 	d.Set("scheduler", scheduler)
 	d.Set("realserver_type", realServerType)
-	if healthCheck != nil {
-		d.Set("health_check", healthCheck)
-	}
-	if interval != nil {
-		d.Set("interval", interval)
-	}
-	if connectTimeout != nil {
-		d.Set("connect_timeout", connectTimeout)
-	}
-	if len(realservers) > 0 {
-		d.Set("realserver_bind_set", realservers)
-	}
+	d.Set("health_check", healthCheck)
+	d.Set("interval", interval)
+	d.Set("connect_timeout", connectTimeout)
+	d.Set("realserver_bind_set", realservers)
 	d.Set("status", status)
 	d.Set("create_time", createTime)
 

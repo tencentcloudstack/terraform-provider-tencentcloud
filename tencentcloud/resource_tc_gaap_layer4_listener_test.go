@@ -12,17 +12,16 @@ import (
 
 func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
 	id := new(string)
-	proxyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, proxyId, "TCP"),
+		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "TCP"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapLayer4ListenerBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "TCP"),
+					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
@@ -36,23 +35,28 @@ func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "create_time"),
 				),
 			},
+			{
+				ResourceName:            "tencentcloud_gaap_layer4_listener.foo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"proxy_id"},
+			},
 		},
 	})
 }
 
 func TestAccTencentCloudGaapLayer4Listener_TcpDomain(t *testing.T) {
 	id := new(string)
-	proxyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, proxyId, "TCP"),
+		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "TCP"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapLayer4ListenerTcpDomain,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "TCP"),
+					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
@@ -72,17 +76,16 @@ func TestAccTencentCloudGaapLayer4Listener_TcpDomain(t *testing.T) {
 
 func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 	id := new(string)
-	proxyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, proxyId, "TCP"),
+		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "TCP"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapLayer4ListenerBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "TCP"),
+					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
@@ -100,7 +103,7 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 			{
 				Config: testAccGaapLayer4ListenerUpdateNameAndHealthConfigAndScheduler,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "TCP"),
+					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-listener-new"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "scheduler", "wrr"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "interval", "11"),
@@ -110,14 +113,14 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 			{
 				Config: testAccGaapLayer4ListenerUpdateNoHealthCheck,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "TCP"),
+					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "health_check", "false"),
 				),
 			},
 			{
 				Config: testAccGaapLayer4ListenerTcpUpdateRealserverSet,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "TCP"),
+					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "realserver_bind_set.#", "1"),
 				),
 			},
@@ -127,17 +130,16 @@ func TestAccTencentCloudGaapLayer4Listener_update(t *testing.T) {
 
 func TestAccTencentCloudGaapLayer4Listener_udp(t *testing.T) {
 	id := new(string)
-	proxyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, proxyId, "UDP"),
+		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "UDP"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapLayer4ListenerUdp,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "UDP"),
+					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-udp-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
@@ -150,23 +152,30 @@ func TestAccTencentCloudGaapLayer4Listener_udp(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer4_listener.foo", "create_time"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_gaap_layer4_listener.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"proxy_id",
+				},
+			},
 		},
 	})
 }
 
 func TestAccTencentCloudGaapLayer4Listener_udpDomain(t *testing.T) {
 	id := new(string)
-	proxyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, proxyId, "UDP"),
+		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "UDP"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapLayer4ListenerUdpDomain,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "UDP"),
+					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-udp-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
@@ -185,17 +194,16 @@ func TestAccTencentCloudGaapLayer4Listener_udpDomain(t *testing.T) {
 
 func TestAccTencentCloudGaapLayer4Listener_udpUpdate(t *testing.T) {
 	id := new(string)
-	proxyId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, proxyId, "UDP"),
+		CheckDestroy: testAccCheckGaapLayer4ListenerDestroy(id, "UDP"),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapLayer4ListenerUdp,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "UDP"),
+					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "protocol", "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-udp-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "port", "80"),
@@ -211,7 +219,7 @@ func TestAccTencentCloudGaapLayer4Listener_udpUpdate(t *testing.T) {
 			{
 				Config: testAccGaapLayer4ListenerUdpUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, proxyId, "UDP"),
+					testAccCheckGaapLayer4ListenerExists("tencentcloud_gaap_layer4_listener.foo", id, "UDP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer4_listener.foo", "name", "ci-test-gaap-4-udpListener-new"),
 				),
 			},
@@ -219,7 +227,7 @@ func TestAccTencentCloudGaapLayer4Listener_udpUpdate(t *testing.T) {
 	})
 }
 
-func testAccCheckGaapLayer4ListenerExists(n string, id, proxyId *string, protocol string) resource.TestCheckFunc {
+func testAccCheckGaapLayer4ListenerExists(n string, id *string, protocol string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -230,16 +238,11 @@ func testAccCheckGaapLayer4ListenerExists(n string, id, proxyId *string, protoco
 			return errors.New("no listener ID is set")
 		}
 
-		attrProxyId := rs.Primary.Attributes["proxy_id"]
-		if attrProxyId == "" {
-			return errors.New("no proxy ID is set")
-		}
-
 		service := GaapService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		switch protocol {
 		case "TCP":
-			listeners, err := service.DescribeTCPListeners(context.TODO(), attrProxyId, &rs.Primary.ID, nil, nil)
+			listeners, err := service.DescribeTCPListeners(context.TODO(), nil, &rs.Primary.ID, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -250,13 +253,12 @@ func testAccCheckGaapLayer4ListenerExists(n string, id, proxyId *string, protoco
 				}
 				if rs.Primary.ID == *l.ListenerId {
 					*id = *l.ListenerId
-					*proxyId = attrProxyId
 					break
 				}
 			}
 
 		case "UDP":
-			listeners, err := service.DescribeUDPListeners(context.TODO(), attrProxyId, &rs.Primary.ID, nil, nil)
+			listeners, err := service.DescribeUDPListeners(context.TODO(), nil, &rs.Primary.ID, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -267,7 +269,6 @@ func testAccCheckGaapLayer4ListenerExists(n string, id, proxyId *string, protoco
 				}
 				if rs.Primary.ID == *l.ListenerId {
 					*id = *l.ListenerId
-					*proxyId = attrProxyId
 					break
 				}
 			}
@@ -281,14 +282,14 @@ func testAccCheckGaapLayer4ListenerExists(n string, id, proxyId *string, protoco
 	}
 }
 
-func testAccCheckGaapLayer4ListenerDestroy(id, proxyId *string, protocol string) resource.TestCheckFunc {
+func testAccCheckGaapLayer4ListenerDestroy(id *string, protocol string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := GaapService{client: client}
 
 		switch protocol {
 		case "TCP":
-			listeners, err := service.DescribeTCPListeners(context.TODO(), *proxyId, id, nil, nil)
+			listeners, err := service.DescribeTCPListeners(context.TODO(), nil, id, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -297,7 +298,7 @@ func testAccCheckGaapLayer4ListenerDestroy(id, proxyId *string, protocol string)
 			}
 
 		case "UDP":
-			listeners, err := service.DescribeUDPListeners(context.TODO(), *proxyId, id, nil, nil)
+			listeners, err := service.DescribeUDPListeners(context.TODO(), nil, id, nil, nil)
 			if err != nil {
 				return err
 			}
@@ -341,7 +342,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerTcpDomain = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -374,7 +375,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerUpdateNameAndHealthConfigAndScheduler = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -410,7 +411,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerUpdateNoHealthCheck = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -444,7 +445,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerTcpUpdateRealserverSet = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -472,7 +473,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerUdp = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -504,7 +505,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerUdpDomain = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -536,7 +537,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer4ListenerUdpUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_realserver "foo" {
@@ -568,4 +569,4 @@ resource tencentcloud_gaap_layer4_listener "foo" {
     port   = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)

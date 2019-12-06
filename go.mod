@@ -13,6 +13,6 @@ require (
 	github.com/likexian/gokit v0.21.11
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pkg/errors v0.8.1
-	github.com/tencentcloud/tencentcloud-sdk-go v3.0.104+incompatible
+	github.com/tencentcloud/tencentcloud-sdk-go v3.0.107+incompatible
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 )

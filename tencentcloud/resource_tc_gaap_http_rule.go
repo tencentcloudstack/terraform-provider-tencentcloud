@@ -57,6 +57,14 @@ resource "tencentcloud_gaap_http_rule" "foo" {
   }
 }
 ```
+
+Import
+
+GAAP http rule can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_http_rule.foo rule-3bsuu01r
+```
 */
 package tencentcloud
 
@@ -68,6 +76,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
+	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 )
 
 func resourceTencentCloudGaapHttpRule() *schema.Resource {
@@ -164,6 +173,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 				Set:         schema.HashInt,
+				Computed:    true,
 				Description: "Return code of confirmed normal. Available values includes `100`,`200`,`300`,`400` and `500`.",
 			},
 			"realservers": {
@@ -231,6 +241,7 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 		connectTimeout:    d.Get("connect_timeout").(int),
 		healthCheckPath:   d.Get("health_check_path").(string),
 		healthCheckMethod: d.Get("health_check_method").(string),
+		forwardHost:       d.Get("forward_host").(string),
 	}
 
 	if raw, ok := d.GetOk("health_check_status_codes"); ok {
@@ -281,12 +292,6 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 
 	d.SetId(id)
 
-	if forwardHost := d.Get("forward_host").(string); forwardHost != "default" {
-		if err := service.ModifyHTTPRuleForwardHost(ctx, listenerId, id, forwardHost); err != nil {
-			return err
-		}
-	}
-
 	if err := service.BindHttpRuleRealservers(ctx, rule.listenerId, id, realservers); err != nil {
 		return err
 	}
@@ -300,42 +305,48 @@ func resourceTencentCloudGaapHttpRuleRead(d *schema.ResourceData, m interface{})
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	id := d.Id()
-	listenerId := d.Get("listener_id").(string)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	httpRule, realservers, err := service.DescribeHttpRule(ctx, listenerId, id)
+	rule, err := service.DescribeHttpRule(ctx, id)
 	if err != nil {
 		return err
 	}
 
-	if httpRule == nil {
+	if rule == nil {
 		d.SetId("")
 		return nil
 	}
 
-	d.Set("domain", httpRule.domain)
-	d.Set("path", httpRule.path)
-	d.Set("realserver_type", httpRule.realserverType)
-	d.Set("scheduler", httpRule.scheduler)
-	d.Set("health_check", httpRule.healthCheck)
-	d.Set("interval", httpRule.interval)
-	d.Set("connect_timeout", httpRule.connectTimeout)
-	d.Set("health_check_path", httpRule.healthCheckPath)
-	d.Set("health_check_method", httpRule.healthCheckMethod)
-	d.Set("forward_host", httpRule.forwardHost)
+	d.Set("listener_id", rule.ListenerId)
+	d.Set("domain", rule.Domain)
+	d.Set("path", rule.Path)
+	d.Set("realserver_type", rule.RealServerType)
+	d.Set("scheduler", rule.Scheduler)
 
-	if _, ok := d.GetOk("health_check_status_codes"); ok || len(httpRule.healthCheckStatusCodes) != 5 {
-		d.Set("health_check_status_codes", httpRule.healthCheckStatusCodes)
+	if rule.HealthCheck == nil {
+		rule.HealthCheck = intToPointer(0)
+	}
+	d.Set("health_check", *rule.HealthCheck == 1)
+
+	if rule.CheckParams == nil {
+		rule.CheckParams = new(gaap.RuleCheckParams)
 	}
 
-	realserverSet := make([]map[string]interface{}, 0, len(realservers))
-	for _, rs := range realservers {
+	d.Set("interval", rule.CheckParams.DelayLoop)
+	d.Set("connect_timeout", rule.CheckParams.ConnectTimeout)
+	d.Set("health_check_path", rule.CheckParams.Path)
+	d.Set("health_check_method", rule.CheckParams.Method)
+	d.Set("forward_host", rule.ForwardHost)
+	d.Set("health_check_status_codes", rule.CheckParams.StatusCode)
+
+	realserverSet := make([]map[string]interface{}, 0, len(rule.RealServerSet))
+	for _, rs := range rule.RealServerSet {
 		realserverSet = append(realserverSet, map[string]interface{}{
-			"id":     rs.id,
-			"ip":     rs.ip,
-			"port":   rs.port,
-			"weight": rs.weight,
+			"id":     rs.RealServerId,
+			"ip":     rs.RealServerIP,
+			"port":   rs.RealServerPort,
+			"weight": rs.RealServerWeight,
 		})
 	}
 	d.Set("realservers", realserverSet)

@@ -93,3 +93,11 @@ The `realservers` object supports the following:
 * `weight` - (Optional) Scheduling weight, default is 1. The range of values is [1,100].
 
 
+## Import
+
+GAAP http rule can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_http_rule.foo rule-3bsuu01r
+```
+

@@ -25,8 +25,7 @@ func TestAccTencentCloudGaapLayer7Listener_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "protocol", "HTTP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
-					resource.TestCheckNoResourceAttr("tencentcloud_gaap_layer7_listener.foo", "forward_protocol"),
-					resource.TestCheckNoResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
 				),
@@ -66,6 +65,7 @@ func TestAccTencentCloudGaapLayer7Listener_https(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "certificate_id"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "forward_protocol", "HTTP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
@@ -111,6 +111,7 @@ func TestAccTencentCloudGaapLayer7Listener_httpsTwoWayAuthentication(t *testing.
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "forward_protocol", "HTTP"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "client_certificate_id"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
 				),
@@ -135,10 +136,91 @@ func TestAccTencentCloudGaapLayer7Listener_httpsForwardHttps(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "certificate_id"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "forward_protocol", "HTTPS"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudGaapLayer7Listener_httpsPolyClientCertificateIds(t *testing.T) {
+	id := new(string)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTPS"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccGaapLayer7ListenerHttpsPolyClientCertificateIds,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "protocol", "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "certificate_id"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "forward_protocol", "HTTP"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "client_certificate_id"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
+				),
+			},
+			{
+				Config: testAccGaapLayer7ListenerHttpsPolyClientCertificateIdsUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTPS"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "client_certificate_id"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "2"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_gaap_layer7_listener.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"proxy_id",
+				},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudGaapLayer7Listener_httpsCcToPoly(t *testing.T) {
+	id := new(string)
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckGaapLayer7ListenerDestroy(id, "HTTPS"),
+		Steps: []resource.TestStep{
+			{
+				Config: testAccGaapLayer7ListenerHttpsCcToPolyOld,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "protocol", "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "name", "ci-test-gaap-l7-listener"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "port", "80"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "certificate_id"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "forward_protocol", "HTTP"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "auth_type", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "client_certificate_id"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "create_time"),
+				),
+			},
+			{
+				Config: testAccGaapLayer7ListenerHttpsCcToPolyNew,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapLayer7ListenerExists("tencentcloud_gaap_layer7_listener.foo", id, "HTTPS"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_layer7_listener.foo", "client_certificate_id"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_layer7_listener.foo", "client_certificate_ids.#", "1"),
 				),
 			},
 		},
@@ -236,7 +318,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   port     = 80
   proxy_id = "%s"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpUpdateName = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -245,7 +327,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   port     = 80
   proxy_id = "%s"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttps = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -264,7 +346,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type        = 0
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpsUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -290,7 +372,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID)
+	"<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpsTwoWayAuthentication = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -317,7 +399,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
-	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", GAAP_PROXY_ID)
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId)
 
 var testAccGaapLayer7ListenerHttpsForwardHttps = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -336,4 +418,120 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type        = 0
 }
 
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId)
+
+var testAccGaapLayer7ListenerHttpsPolyClientCertificateIds = fmt.Sprintf(`
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "bar" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_layer7_listener "foo" {
+  protocol                    = "HTTPS"
+  name                        = "ci-test-gaap-l7-listener"
+  port                        = 80
+  proxy_id                    = "%s"
+  certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
+  forward_protocol            = "HTTP"
+  auth_type                   = 1
+  client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
+}
+
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId)
+
+var testAccGaapLayer7ListenerHttpsPolyClientCertificateIdsUpdate = fmt.Sprintf(`
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "client1" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "client2" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_layer7_listener "foo" {
+  protocol                    = "HTTPS"
+  name                        = "ci-test-gaap-l7-listener"
+  port                        = 80
+  proxy_id                    = "%s"
+  certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
+  forward_protocol            = "HTTP"
+  auth_type                   = 1
+  client_certificate_ids = ["${tencentcloud_gaap_certificate.client1.id}", "${tencentcloud_gaap_certificate.client2.id}"]
+}
+
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF",
+	defaultGaapProxyId)
+
+var testAccGaapLayer7ListenerHttpsCcToPolyOld = fmt.Sprintf(`
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "bar" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_layer7_listener "foo" {
+  protocol              = "HTTPS"
+  name                  = "ci-test-gaap-l7-listener"
+  port                  = 80
+  proxy_id              = "%s"
+  certificate_id        = "${tencentcloud_gaap_certificate.foo.id}"
+  forward_protocol      = "HTTP"
+  auth_type             = 1
+  client_certificate_id = "${tencentcloud_gaap_certificate.bar.id}"
+}
+
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId)
+
+var testAccGaapLayer7ListenerHttpsCcToPolyNew = fmt.Sprintf(`
+resource tencentcloud_gaap_certificate "foo" {
+  type    = "SERVER"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_certificate "bar" {
+  type    = "CLIENT"
+  content = %s
+  key     = %s
+}
+
+resource tencentcloud_gaap_layer7_listener "foo" {
+  protocol                    = "HTTPS"
+  name                        = "ci-test-gaap-l7-listener"
+  port                        = 80
+  proxy_id                    = "%s"
+  certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
+  forward_protocol            = "HTTP"
+  auth_type                   = 1
+  client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
+}
+
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
+	"<<EOF"+testAccGaapCertificateClientCA+"EOF", "<<EOF"+testAccGaapCertificateClientCAKey+"EOF", defaultGaapProxyId)
