@@ -33,9 +33,9 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `attachment_list` - A list of cloud load redirection configurations. Each element contains the following attributes:
+* `attachment_list` - A list of cloud load balancer attachment configurations. Each element contains the following attributes:
   * `clb_id` - Id of the CLB.
-  * `listener_id` - ID of the CLB listener.
+  * `listener_id` - Id of the CLB listener.
   * `protocol_type` - Type of protocol within the listener, and available values include 'TCP', 'UDP', 'HTTP', 'HTTPS' and 'TCP_SSL'.NOTES: TCP_SSL is testing internally, please apply if you need to use.
   * `rule_id` - Id of the CLB listener rule.
   * `targets` - Information of the backends to be attached.

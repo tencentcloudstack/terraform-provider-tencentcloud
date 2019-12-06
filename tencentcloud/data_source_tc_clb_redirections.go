@@ -22,6 +22,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/pkg/errors"
 )
 
 func dataSourceTencentCloudClbRedirections() *schema.Resource {
@@ -62,7 +63,7 @@ func dataSourceTencentCloudClbRedirections() *schema.Resource {
 			"redirection_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of cloud load redirection configurations. Each element contains the following attributes:",
+				Description: "A list of cloud load balancer redirection configurations. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"clb_id": {
@@ -121,13 +122,13 @@ func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta inte
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		results, e := clbService.DescribeRedirectionsByFilter(ctx, params)
 		if e != nil {
-			return retryError(e)
+			return retryError(errors.WithStack(e))
 		}
 		redirections = results
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read clb redirections failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CLB redirections failed, reason:%+v", logId, err)
 		return err
 	}
 	redirectionList := make([]map[string]interface{}, 0, len(redirections))
@@ -147,7 +148,7 @@ func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta inte
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("redirection_list", redirectionList); e != nil {
-		log.Printf("[CRITAL]%s provider set redirection list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set CLB redirection list fail, reason:%+v", logId, e)
 		return e
 	}
 

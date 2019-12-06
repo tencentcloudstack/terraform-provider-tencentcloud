@@ -21,6 +21,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
@@ -116,7 +117,7 @@ func dataSourceTencentCloudClbInstances() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Id of the security groups.",
+							Description: "Id set of the security groups.",
 						},
 						"target_region_info_region": {
 							Type:        schema.TypeString,
@@ -167,13 +168,13 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		results, e := clbService.DescribeLoadBalancerByFilter(ctx, params)
 		if e != nil {
-			return retryError(e)
+			return retryError(errors.WithStack(e))
 		}
 		clbs = results
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read clb instances failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CLB instances failed, reason:%+v", logId, err)
 		return err
 	}
 	clbList := make([]map[string]interface{}, 0, len(clbs))
@@ -207,7 +208,7 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("clb_list", clbList); e != nil {
-		log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set CLB list fail, reason:%+v", logId, e)
 		return e
 	}
 

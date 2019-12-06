@@ -97,7 +97,7 @@ func TestAccTencentCloudClbListener_https(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "listener_name", "listener_https"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "port", "77"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_ssl_mode", "UNIDIRECTIONAL"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VjANRdz8"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VfqO4zkB"),
 				),
 			},
 			{
@@ -109,7 +109,7 @@ func TestAccTencentCloudClbListener_https(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "listener_name", "listener_https_update"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "port", "33"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_ssl_mode", "UNIDIRECTIONAL"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VfqO4zkB"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_https", "certificate_id", "VjANRdz8"),
 				),
 			},
 		},
@@ -179,9 +179,9 @@ func testAccCheckClbListenerDestroy(s *terraform.State) error {
 		}
 		time.Sleep(5 * time.Second)
 		clbId := rs.Primary.Attributes["clb_id"]
-		_, err := clbService.DescribeListenerById(ctx, rs.Primary.ID, clbId)
-		if err == nil {
-			return fmt.Errorf("clb listener still exists: %s", rs.Primary.ID)
+		instance, err := clbService.DescribeListenerById(ctx, rs.Primary.ID, clbId)
+		if instance != nil && err == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Destroy] check: CLB listener still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -194,10 +194,10 @@ func testAccCheckClbListenerExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("clb listener %s is not found", n)
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Exists] check: CLB listener %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("clb listener id is not set")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Exists] check: CLB listener id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -246,7 +246,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
   session_expire_time        = 30
   scheduler                  = "WRR"
   certificate_ssl_mode       = "UNIDIRECTIONAL"
-  certificate_id             = "VjANRdz8"
+  certificate_id             = "VfqO4zkB"
 }
 `
 
@@ -325,7 +325,7 @@ resource "tencentcloud_clb_listener" "listener_https" {
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VjANRdz8"
+  certificate_id       = "VfqO4zkB"
   sni_switch           = true
 }
 `
@@ -342,7 +342,7 @@ resource "tencentcloud_clb_listener" "listener_https" {
   port                 = 33
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VfqO4zkB"
+  certificate_id       = "VjANRdz8"
   sni_switch           = true
 }
 `

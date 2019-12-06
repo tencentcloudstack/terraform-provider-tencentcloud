@@ -104,9 +104,9 @@ func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
 		clbId := rs.Primary.Attributes["clb_id"]
 		//this function is not supported by api, need to be travelled
 		filter := map[string]string{"rule_id": locationId, "listener_id": listenerId, "clb_id": clbId}
-		_, err := clbService.DescribeRulesByFilter(ctx, filter)
-		if err == nil {
-			return fmt.Errorf("clb listener rule still exists: %s", rs.Primary.ID)
+		rules, err := clbService.DescribeRulesByFilter(ctx, filter)
+		if len(rules) > 0 && err == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener rule][Destroy] check: CLB listener rule still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -119,10 +119,10 @@ func testAccCheckClbListenerRuleExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("clb listener rule %s is not found", n)
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener rule][Exists] check: CLB listener rule %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("clb listener rule id is not set")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener rule][Exists] check: CLB listener rule id is not set")
 		}
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,

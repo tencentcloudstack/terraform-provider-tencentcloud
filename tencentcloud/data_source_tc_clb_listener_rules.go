@@ -22,6 +22,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
@@ -204,17 +205,16 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		results, e := clbService.DescribeRulesByFilter(ctx, params)
 		if e != nil {
-			return retryError(e)
+			return retryError(errors.WithStack(e))
 		}
 		rules = results
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read clb listener rules failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read CLB listener rules failed, reason:%+v", logId, err)
 		return err
 	}
 	ruleList := make([]map[string]interface{}, 0, len(rules))
-	log.Printf("the length %d", len(rules))
 	ids := make([]string, 0, len(rules))
 	for _, rule := range rules {
 		mapping := map[string]interface{}{
@@ -227,11 +227,11 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 			"scheduler":           *rule.Scheduler,
 		}
 		if rule.HealthCheck != nil {
-			health_check_switch := false
+			healthCheckSwitch := false
 			if *rule.HealthCheck.HealthSwitch == int64(1) {
-				health_check_switch = true
+				healthCheckSwitch = true
 			}
-			mapping["health_check_switch"] = health_check_switch
+			mapping["health_check_switch"] = healthCheckSwitch
 			mapping["health_check_interval_time"] = *rule.HealthCheck.IntervalTime
 			mapping["health_check_health_num"] = *rule.HealthCheck.HealthNum
 			mapping["health_check_unhealth_num"] = *rule.HealthCheck.UnHealthNum
@@ -251,7 +251,7 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 
 	d.SetId(dataResourceIdsHash(ids))
 	if e := d.Set("rule_list", ruleList); e != nil {
-		log.Printf("[CRITAL]%s provider set clb listener rule list fail, reason:%s\n ", logId, e.Error())
+		log.Printf("[CRITAL]%s provider set CLB listener rule list fail, reason:%+v", logId, e)
 		return e
 	}
 

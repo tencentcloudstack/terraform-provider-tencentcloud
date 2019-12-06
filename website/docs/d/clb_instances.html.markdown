@@ -43,7 +43,7 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - Creation time of the CLB.
   * `network_type` - Types of CLB.
   * `project_id` - Id of the project.
-  * `security_groups` - Id of the security groups.
+  * `security_groups` - Id set of the security groups.
   * `status_time` - Latest state transition time of CLB.
   * `status` - The status of CLB.
   * `subnet_id` - Id of the subnet.

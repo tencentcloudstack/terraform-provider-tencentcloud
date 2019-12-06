@@ -35,7 +35,6 @@ func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.LoadBalancerSet) < 1 {
-		errRet = fmt.Errorf("loadBalancer id is not found")
 		return
 	}
 	clbInstance = response.Response.LoadBalancerSet[0]
@@ -135,7 +134,6 @@ func (me *ClbService) DescribeListenerById(ctx context.Context, listenerId strin
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
 		return
 	}
 	clbListener = response.Response.Listeners[0]
@@ -240,7 +238,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 	//get listener first
 	request := clb.NewDescribeListenersRequest()
 	if listenerId == "" || clbId == "" {
-		errRet = fmt.Errorf("Listener id and clb id can not be null")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id and CLB id can not be null")
 		return
 	}
 	request.LoadBalancerId = stringToPointer(clbId)
@@ -256,7 +254,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id %s is not found", listenerId)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -306,7 +304,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id %s is not found", listenerId)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -320,7 +318,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 		}
 	}
 	if !find_flag {
-		errRet = fmt.Errorf("rule not found!")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: rule not found!")
 		return
 	} else {
 		clbRule = &ruleOutput
@@ -368,7 +366,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id %s is not found", listenerId)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -393,7 +391,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 		logId, aRequest.GetAction(), aRequest.ToJsonString(), aResponse.ToJsonString())
 
 	if len(aResponse.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id %s is not found", listenerId)
 		return
 	} else {
 		clbAttachment = aResponse.Response.Listeners[0]
@@ -420,7 +418,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	//get listener first
 	request := clb.NewDescribeListenersRequest()
 	if listenerId == "" || clbId == "" {
-		errRet = fmt.Errorf("Listener id and clb id can not be null")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id and clb id can not be null")
 		return
 	}
 	request.LoadBalancerId = stringToPointer(clbId)
@@ -436,7 +434,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id %s is not found", listenerId)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -461,7 +459,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 		logId, aRequest.GetAction(), aRequest.ToJsonString(), aResponse.ToJsonString())
 
 	if len(aResponse.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("Listener id is not found")
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id %s is not found", listenerId)
 		return
 	} else {
 		clbAttachments = append(clbAttachments, aResponse.Response.Listeners[0])
@@ -503,7 +501,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	logId := getLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
-		errRet = fmt.Errorf("rewriteInfo id is not exist!%s", rewriteId)
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
 		return
 	}
 	sourceLocId := items[0]
@@ -528,7 +526,6 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.RewriteSet) < 1 {
-		errRet = fmt.Errorf("redirection id %s is not found", rewriteId)
 		return
 	}
 
@@ -541,11 +538,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 			result["target_listener_id"] = targetListenerId
 			result["clb_id"] = clbId
 			rewriteInfo = &result
-		} else {
-			errRet = fmt.Errorf("redirection id %s is not found", rewriteId)
 		}
-	} else {
-		errRet = fmt.Errorf("redirection id %s is not found", rewriteId)
 	}
 
 	return
@@ -616,7 +609,7 @@ func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId strin
 	logId := getLogId(ctx)
 	items := strings.Split(rewriteId, "#")
 	if len(items) != 5 {
-		return fmt.Errorf("rewriteInfo id is not exist!!! %s", rewriteId)
+		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
 
 	}
 	sourceLocId := items[0]
@@ -654,7 +647,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 	var healthCheck clb.HealthCheck
 	healthSetFlag = false
 	healthCheckPara = &healthCheck
-	if v, ok := d.GetOk("health_check_switch"); ok {
+	if v, ok := d.GetOkExists("health_check_switch"); ok {
 		healthSetFlag = true
 		vv := v.(bool)
 		vvv := int64(0)
@@ -777,7 +770,7 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData) (cer
 
 	if certificateSetFlag && certificateSSLMode == CERT_SSL_MODE_MUT && certificateCaId == "" {
 		certificateSetFlag = false
-		errRet = fmt.Errorf("Certificate_ca_key is null and the ssl mode is 'MUTUAL' ")
+		errRet = fmt.Errorf("certificate_ca_key is null and the ssl mode is 'MUTUAL' ")
 		return
 	}
 
@@ -794,7 +787,7 @@ func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 			return resource.NonRetryableError(e)
 		}
 		if *taskResponse.Response.Status == int64(CLB_TASK_EXPANDING) {
-			return resource.RetryableError(fmt.Errorf("clb task status is %d, requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId))
+			return resource.RetryableError(fmt.Errorf("CLB task status is %d, requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId))
 		}
 		return nil
 	})
