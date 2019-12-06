@@ -133,7 +133,7 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 		requestId := ""
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -181,7 +181,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, d.Get("targets").(*schema.Set).List())
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 
 		return nil
@@ -220,7 +220,7 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 		requestId := ""
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().DeregisterTargets(request)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -265,7 +265,7 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 		requestId := ""
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -332,7 +332,7 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 		instance = result
 		return nil

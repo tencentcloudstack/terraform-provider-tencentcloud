@@ -179,7 +179,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instance, e := clbService.DescribeListenerById(ctx, listenerId, clbId)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 		protocol = *(instance.Protocol)
 		return nil
@@ -248,7 +248,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		requestId := ""
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateRule(request)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -301,7 +301,7 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		results, e := clbService.DescribeRulesByFilter(ctx, filter)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 		instances = results
 		return nil
@@ -431,7 +431,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyRule(request)
 			if e != nil {
-				return retryError(errors.WithStack(e))
+				return retryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -469,7 +469,7 @@ func resourceTencentCloudClbListenerRuleDelete(d *schema.ResourceData, meta inte
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteRuleById(ctx, clbId, listenerId, locationId)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 		return nil
 	})

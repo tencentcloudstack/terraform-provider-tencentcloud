@@ -265,7 +265,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateListener(request)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -304,7 +304,7 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := clbService.DescribeListenerById(ctx, d.Id(), clbId)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 		instance = result
 		return nil
@@ -424,7 +424,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyListener(request)
 			if e != nil {
-				return retryError(errors.WithStack(e))
+				return retryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -461,7 +461,7 @@ func resourceTencentCloudClbListenerDelete(d *schema.ResourceData, meta interfac
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteListenerById(ctx, clbId, listenerId)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 		return nil
 	})

@@ -22,7 +22,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/pkg/errors"
 )
 
 func dataSourceTencentCloudClbRedirections() *schema.Resource {
@@ -122,7 +121,7 @@ func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta inte
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		results, e := clbService.DescribeRedirectionsByFilter(ctx, params)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 		redirections = results
 		return nil

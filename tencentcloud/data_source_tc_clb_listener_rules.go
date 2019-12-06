@@ -22,7 +22,6 @@ import (
 
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
@@ -205,7 +204,7 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		results, e := clbService.DescribeRulesByFilter(ctx, params)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 		rules = results
 		return nil

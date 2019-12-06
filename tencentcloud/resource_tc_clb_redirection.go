@@ -143,7 +143,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			instance, e := clbService.DescribeListenerById(ctx, targetListenerId, clbId)
 			if e != nil {
-				return retryError(errors.WithStack(e))
+				return retryError(e)
 			}
 			protocol = *(instance.Protocol)
 			port = int(*(instance.Port))
@@ -188,7 +188,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().AutoRewrite(request)
 			if e != nil {
-				return retryError(errors.WithStack(e))
+				return retryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -213,7 +213,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			results, e := clbService.DescribeListenersByFilter(ctx, params)
 			if e != nil {
-				return retryError(errors.WithStack(e))
+				return retryError(e)
 			}
 			listeners = results
 			return nil
@@ -235,7 +235,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			results, e := clbService.DescribeRulesByFilter(ctx, rparams)
 			if e != nil {
-				return retryError(errors.WithStack(e))
+				return retryError(e)
 			}
 			rules = results
 			return nil
@@ -264,7 +264,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ManualRewrite(request)
 			if e != nil {
-				return retryError(errors.WithStack(e))
+				return retryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -307,7 +307,7 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := clbService.DescribeRedirectionById(ctx, rewriteId)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 		instance = result
 		return nil
@@ -347,7 +347,7 @@ func resourceTencentCloudClbRedirectionDelete(d *schema.ResourceData, meta inter
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteRedirectionById(ctx, clbId)
 		if e != nil {
-			return retryError(errors.WithStack(e))
+			return retryError(e)
 		}
 		return nil
 	})

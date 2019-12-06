@@ -47,7 +47,7 @@ func TestAccTencentCloudClbServerAttachment_http(t *testing.T) {
 		CheckDestroy: testAccCheckClbServerAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClbServerAttachment_http,
+				Config: fmt.Sprintf(testAccClbServerAttachment_http, defaultSshCertificate),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.foo"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.foo", "clb_id"),
@@ -201,7 +201,7 @@ resource "tencentcloud_clb_listener" "foo" {
   port                 = 77
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VjANRdz8"
+  certificate_id       = "%s"
 }
 
 resource "tencentcloud_clb_listener_rule" "foo" {

@@ -38,7 +38,7 @@ func TestAccTencentCloudClbRedirection_auto(t *testing.T) {
 		CheckDestroy: testAccCheckClbRedirectionDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClbRedirection_auto,
+				Config: fmt.Sprintf(testAccClbRedirection_auto, defaultSshCertificate),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbRedirectionExists("tencentcloud_clb_redirection.redirection_basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_redirection.redirection_basic", "clb_id"),
@@ -154,7 +154,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   protocol      = "HTTPS"
   listener_name = "listener_basic"
   certificate_ssl_mode = "UNIDIRECTIONAL"
-  certificate_id       = "VjANRdz8"
+  certificate_id       = "%s"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {

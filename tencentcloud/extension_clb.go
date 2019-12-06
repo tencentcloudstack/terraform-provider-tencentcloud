@@ -113,3 +113,7 @@ const (
 	AUTO_TARGET_PORT = 443
 	AUTO_SOURCE_PORT = 80
 )
+
+const (
+	CLB_PAGE_LIMIT = 100
+)
