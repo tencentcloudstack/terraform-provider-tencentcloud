@@ -96,7 +96,7 @@ func TestAccTencentCloudClbInstance_internal(t *testing.T) {
 				Config: testAccClbInstance_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbInstanceExists("tencentcloud_clb_instance.clb_internal"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "clb_name", "tf-clb-update"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "clb_name", "tf-clb-update-internal"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "network_type", "INTERNAL"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_internal", "vpc_id"),
@@ -238,7 +238,7 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_clb_instance" "clb_internal" {
   network_type = "INTERNAL"
-  clb_name     = "tf-clb-update"
+  clb_name     = "tf-clb-update-internal"
   vpc_id       = "${tencentcloud_vpc.foo.id}"
   subnet_id    = "${tencentcloud_subnet.subnet.id}"
   project_id   = 0
