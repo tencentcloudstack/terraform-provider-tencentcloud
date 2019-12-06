@@ -46,3 +46,11 @@ The following arguments are supported:
 * `protocol` - (Optional, ForceNew) Protocol of the security policy rule. Default is `ALL`, the available values includes `TCP`,`UDP` and `ALL`.
 
 
+## Import
+
+GAAP security rule can be imported using the id, e.g.
+
+```
+  $ terraform import tencentcloud_gaap_security_rule.foo sr-xxxxxxxx
+```
+

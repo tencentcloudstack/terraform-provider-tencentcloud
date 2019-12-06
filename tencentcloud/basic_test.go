@@ -25,9 +25,12 @@ const defaultInsNameUpdate = "tf-ci-test-update"
 const defaultSshCertificate = "VjANRdz8"
 const defaultSshCertificateB = "VfqO4zkB"
 
+const defaultGaapProxyId = "link-9ck3lzq7"
+
+
 /*
 ---------------------------------------------------
-The folling are common test case used as templates.
+The following are common test case used as templates.
 ---------------------------------------------------
 */
 

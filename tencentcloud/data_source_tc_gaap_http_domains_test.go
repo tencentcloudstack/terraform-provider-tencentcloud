@@ -47,4 +47,4 @@ data "tencentcloud_gaap_http_domains" "foo" {
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
   domain      = "${tencentcloud_gaap_http_domain.foo.domain}"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)

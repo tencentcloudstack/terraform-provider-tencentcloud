@@ -185,6 +185,7 @@ GAAP Resources
 Kubernetes Resources
   tencentcloud_kubernetes_cluster
   tencentcloud_kubernetes_scale_worker
+  tencentcloud_kubernetes_as_scaling_group
 
 MongoDB Resources
   tencentcloud_mongodb_instance
@@ -194,6 +195,7 @@ MySQL Resources
   tencentcloud_mysql_instance
   tencentcloud_mysql_readonly_instance
   tencentcloud_mysql_account
+  tencentcloud_mysql_privilege
   tencentcloud_mysql_account_privilege
   tencentcloud_mysql_backup_policy
 
@@ -392,6 +394,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mysql_backup_policy":         resourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":               resourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":     resourceTencentCloudMysqlAccountPrivilege(),
+			"tencentcloud_mysql_privilege":             resourceTencentCloudMysqlPrivilege(),
 			"tencentcloud_mysql_instance":              resourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_readonly_instance":     resourceTencentCloudMysqlReadonlyInstance(),
 			"tencentcloud_cos_bucket":                  resourceTencentCloudCosBucket(),
@@ -414,6 +417,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dc_gateway":                  resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":        resourceTencentCloudDcGatewayCcnRouteInstance(),
 			"tencentcloud_kubernetes_cluster":          resourceTencentCloudTkeCluster(),
+			"tencentcloud_kubernetes_as_scaling_group": ResourceTencentCloudKubernetesAsScalingGroup(),
 			"tencentcloud_kubernetes_scale_worker":     resourceTencentCloudTkeScaleWorker(),
 			"tencentcloud_gaap_proxy":                  resourceTencentCloudGaapProxy(),
 			"tencentcloud_gaap_realserver":             resourceTencentCloudGaapRealserver(),

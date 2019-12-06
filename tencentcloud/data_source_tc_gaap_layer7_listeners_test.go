@@ -123,10 +123,9 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 data tencentcloud_gaap_layer7_listeners "listenerId" {
   protocol    = "HTTP"
-  proxy_id    = "%s"
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
 }
-`, GAAP_PROXY_ID, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersListenerName = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -141,7 +140,7 @@ data tencentcloud_gaap_layer7_listeners "listenerName" {
   proxy_id      = "%s"
   listener_name = "${tencentcloud_gaap_layer7_listener.foo.name}"
 }
-`, GAAP_PROXY_ID, GAAP_PROXY_ID)
+`, defaultGaapProxyId, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersPort = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -156,7 +155,7 @@ data tencentcloud_gaap_layer7_listeners "port" {
   proxy_id = "%s"
   port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
 }
-`, GAAP_PROXY_ID, GAAP_PROXY_ID)
+`, defaultGaapProxyId, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsListenerId = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -180,7 +179,7 @@ data tencentcloud_gaap_layer7_listeners "listenerId" {
   proxy_id    = "%s"
   listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
 }
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID, GAAP_PROXY_ID)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsListenerName = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -204,7 +203,7 @@ data tencentcloud_gaap_layer7_listeners "name" {
   proxy_id      = "%s"
   listener_name = "${tencentcloud_gaap_layer7_listener.foo.name}"
 }
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID, GAAP_PROXY_ID)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId, defaultGaapProxyId)
 
 var TestAccDataSourceTencentCloudGaapLayer7ListenersHttpsPort = fmt.Sprintf(`
 resource tencentcloud_gaap_certificate "foo" {
@@ -228,4 +227,4 @@ data tencentcloud_gaap_layer7_listeners "port" {
   proxy_id = "%s"
   port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
 }
-`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", GAAP_PROXY_ID, GAAP_PROXY_ID)
+`, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId, defaultGaapProxyId)

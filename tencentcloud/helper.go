@@ -108,6 +108,19 @@ func int64ToPointer(n int) *int64 {
 	return &i64
 }
 
+func stringsToPointer(strs []string) []*string {
+	if len(strs) == 0 {
+		return nil
+	}
+
+	sp := make([]*string, 0, len(strs))
+	for _, s := range strs {
+		sp = append(sp, stringToPointer(s))
+	}
+
+	return sp
+}
+
 func formatUnixTime(n uint64) string {
 	return time.Unix(int64(n), 0).UTC().Format("2006-01-02T03:04:05Z")
 }

@@ -55,10 +55,10 @@ data "tencentcloud_gaap_layer4_listeners" "foo" {
 The following arguments are supported:
 
 * `protocol` - (Required) Protocol of the layer4 listener to be queried, and the available values include `TCP` and `UDP`.
-* `proxy_id` - (Required) ID of the GAAP proxy to be queried.
 * `listener_id` - (Optional) ID of the layer4 listener to be queried.
 * `listener_name` - (Optional) Name of the layer4 listener to be queried.
 * `port` - (Optional) Port of the layer4 listener to be queried.
+* `proxy_id` - (Optional) ID of the GAAP proxy to be queried.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference

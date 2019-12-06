@@ -14,17 +14,16 @@ import (
 
 func TestAccTencentCloudGaapHttpRule_basic(t *testing.T) {
 	id := new(string)
-	listenerId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id, listenerId),
+		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapHttpRuleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
+					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "domain", "www.qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "scheduler", "rr"),
@@ -40,23 +39,27 @@ func TestAccTencentCloudGaapHttpRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "forward_host", "default"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_gaap_http_rule.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
 
 func TestAccTencentCloudGaapHttpRule_httpUpdate(t *testing.T) {
 	id := new(string)
-	listenerId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id, listenerId),
+		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapHttpRuleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
+					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "domain", "www.qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "scheduler", "rr"),
@@ -75,7 +78,7 @@ func TestAccTencentCloudGaapHttpRule_httpUpdate(t *testing.T) {
 			{
 				Config: testAccGaapHttpRuleUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
+					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "path", "/new"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "scheduler", "wrr"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "interval", "5"),
@@ -90,14 +93,14 @@ func TestAccTencentCloudGaapHttpRule_httpUpdate(t *testing.T) {
 			{
 				Config: testAccGaapHttpRuleUpdateDisableHealth,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
+					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check", "false"),
 				),
 			},
 			{
 				Config: testAccGaapHttpRuleUpdateForwardHost,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
+					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "forward_host", "www.qqq.com"),
 				),
 			},
@@ -107,17 +110,16 @@ func TestAccTencentCloudGaapHttpRule_httpUpdate(t *testing.T) {
 
 func TestAccTencentCloudGaapHttpRule_httpUpdateRealservers(t *testing.T) {
 	id := new(string)
-	listenerId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id, listenerId),
+		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapHttpRuleBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
+					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "domain", "www.qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "scheduler", "rr"),
@@ -135,7 +137,7 @@ func TestAccTencentCloudGaapHttpRule_httpUpdateRealservers(t *testing.T) {
 			{
 				Config: testAccGaapHttpRuleHttpUpdateRealservers,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
+					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "1"),
 				),
 			},
@@ -145,17 +147,16 @@ func TestAccTencentCloudGaapHttpRule_httpUpdateRealservers(t *testing.T) {
 
 func TestAccTencentCloudGaapHttpRule_noHealth(t *testing.T) {
 	id := new(string)
-	listenerId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id, listenerId),
+		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapHttpRuleNoHealth,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
+					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "domain", "www.qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "scheduler", "rr"),
@@ -165,7 +166,7 @@ func TestAccTencentCloudGaapHttpRule_noHealth(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "connect_timeout", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_method", "HEAD"),
-					resource.TestCheckNoResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "2"),
 				),
 			},
@@ -175,17 +176,16 @@ func TestAccTencentCloudGaapHttpRule_noHealth(t *testing.T) {
 
 func TestAccTencentCloudGaapHttpRule_domainRealserver(t *testing.T) {
 	id := new(string)
-	listenerId := new(string)
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id, listenerId),
+		CheckDestroy: testAccCheckGaapHttpRuleDestroy(id),
 		Steps: []resource.TestStep{
 			{
 				Config: testAccGaapHttpRuleDomainRealserver,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id, listenerId),
+					testAccCheckGaapHttpRuleExists("tencentcloud_gaap_http_rule.foo", id),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "domain", "www.qq.com"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "path", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "scheduler", "rr"),
@@ -193,15 +193,20 @@ func TestAccTencentCloudGaapHttpRule_domainRealserver(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "interval", "5"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "connect_timeout", "2"),
-					resource.TestCheckNoResourceAttr("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_gaap_http_rule.foo", "health_check_status_codes.#"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_http_rule.foo", "realservers.#", "2"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_gaap_http_rule.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-func testAccCheckGaapHttpRuleExists(n string, id, listenerId *string) resource.TestCheckFunc {
+func testAccCheckGaapHttpRuleExists(n string, id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -212,14 +217,9 @@ func testAccCheckGaapHttpRuleExists(n string, id, listenerId *string) resource.T
 			return errors.New("no http rule id is set")
 		}
 
-		attrListenerId := rs.Primary.Attributes["listener_id"]
-		if attrListenerId == "" {
-			return errors.New("no listener id is set")
-		}
-
 		service := GaapService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		rule, _, err := service.DescribeHttpRule(context.TODO(), attrListenerId, rs.Primary.ID)
+		rule, err := service.DescribeHttpRule(context.TODO(), rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -228,14 +228,13 @@ func testAccCheckGaapHttpRuleExists(n string, id, listenerId *string) resource.T
 			return errors.New("rule not exist")
 		}
 
-		*listenerId = rule.listenerId
 		*id = rs.Primary.ID
 
 		return nil
 	}
 }
 
-func testAccCheckGaapHttpRuleDestroy(id, listenerId *string) resource.TestCheckFunc {
+func testAccCheckGaapHttpRuleDestroy(id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := GaapService{client: client}
@@ -244,7 +243,7 @@ func testAccCheckGaapHttpRuleDestroy(id, listenerId *string) resource.TestCheckF
 			return errors.New("http rule id is nil")
 		}
 
-		rule, _, err := service.DescribeHttpRule(context.TODO(), *listenerId, *id)
+		rule, err := service.DescribeHttpRule(context.TODO(), *id)
 		if err != nil {
 			return err
 		}
@@ -302,7 +301,7 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleUpdate = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -351,7 +350,7 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleUpdateDisableHealth = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -399,7 +398,7 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleUpdateForwardHost = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -449,7 +448,7 @@ resource tencentcloud_gaap_http_rule "foo" {
 
   forward_host = "www.qqq.com"
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleHttpUpdateRealservers = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -490,7 +489,7 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleNoHealth = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -534,7 +533,7 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)
 
 var testAccGaapHttpRuleDomainRealserver = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
@@ -578,4 +577,4 @@ resource tencentcloud_gaap_http_rule "foo" {
     port = 80
   }
 }
-`, GAAP_PROXY_ID)
+`, defaultGaapProxyId)

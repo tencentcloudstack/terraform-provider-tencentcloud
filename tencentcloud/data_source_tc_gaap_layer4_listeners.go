@@ -64,7 +64,7 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 			},
 			"proxy_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "ID of the GAAP proxy to be queried.",
 			},
 			"listener_id": {
@@ -164,9 +164,9 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	protocol := d.Get("protocol").(string)
-	proxyId := d.Get("proxy_id").(string)
 
 	var (
+		proxyId    *string
 		listenerId *string
 		name       *string
 		port       *int
@@ -174,9 +174,17 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 		listeners  []map[string]interface{}
 	)
 
+	if raw, ok := d.GetOk("proxy_id"); ok {
+		proxyId = stringToPointer(raw.(string))
+	}
 	if raw, ok := d.GetOk("listener_id"); ok {
 		listenerId = stringToPointer(raw.(string))
 	}
+
+	if proxyId == nil && listenerId == nil {
+		return errors.New("proxy_id or listener_id must be set")
+	}
+
 	if raw, ok := d.GetOk("listener_name"); ok {
 		name = stringToPointer(raw.(string))
 	}
@@ -197,51 +205,24 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 		listeners = make([]map[string]interface{}, 0, len(tcpListeners))
 
 		for _, ls := range tcpListeners {
-			if ls.ListenerId == nil {
-				return errors.New("listener id is nil")
-			}
-			if ls.ListenerName == nil {
-				return errors.New("listener name is nil")
-			}
-			if ls.Port == nil {
-				return errors.New("listener port is nil")
-			}
-			if ls.RealServerType == nil {
-				return errors.New("listener realserver type is nil")
-			}
-			if ls.ListenerStatus == nil {
-				return errors.New("listener realserver type is nil")
-			}
-			if ls.Scheduler == nil {
-				return errors.New("listener scheduler is nil")
-			}
 			if ls.HealthCheck == nil {
-				return errors.New("listener health check is nil")
-			}
-			if ls.CreateTime == nil {
-				return errors.New("listener create time is nil")
-			}
-			if ls.ConnectTimeout == nil {
-				return errors.New("listener connect timeout is nil")
-			}
-			if ls.DelayLoop == nil {
-				return errors.New("listener interval is nil")
+				ls.HealthCheck = intToPointer(0)
 			}
 
 			ids = append(ids, *ls.ListenerId)
 
 			m := map[string]interface{}{
 				"protocol":        "TCP",
-				"id":              *ls.ListenerId,
-				"name":            *ls.ListenerName,
-				"port":            *ls.Port,
-				"realserver_type": *ls.RealServerType,
-				"status":          *ls.ListenerStatus,
-				"scheduler":       *ls.Scheduler,
+				"id":              ls.ListenerId,
+				"name":            ls.ListenerName,
+				"port":            ls.Port,
+				"realserver_type": ls.RealServerType,
+				"status":          ls.ListenerStatus,
+				"scheduler":       ls.Scheduler,
 				"health_check":    *ls.HealthCheck == 1,
 				"create_time":     formatUnixTime(*ls.CreateTime),
-				"connect_timeout": *ls.ConnectTimeout,
-				"interval":        *ls.DelayLoop,
+				"connect_timeout": ls.ConnectTimeout,
+				"interval":        ls.DelayLoop,
 			}
 
 			listeners = append(listeners, m)
@@ -257,38 +238,16 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 		listeners = make([]map[string]interface{}, 0, len(udpListeners))
 
 		for _, ls := range udpListeners {
-			if ls.ListenerId == nil {
-				return errors.New("listener id is nil")
-			}
-			if ls.ListenerName == nil {
-				return errors.New("listener name is nil")
-			}
-			if ls.Port == nil {
-				return errors.New("listener port is nil")
-			}
-			if ls.RealServerType == nil {
-				return errors.New("listener realserver type is nil")
-			}
-			if ls.ListenerStatus == nil {
-				return errors.New("listener realserver type is nil")
-			}
-			if ls.Scheduler == nil {
-				return errors.New("listener scheduler is nil")
-			}
-			if ls.CreateTime == nil {
-				return errors.New("listener create time is nil")
-			}
-
 			ids = append(ids, *ls.ListenerId)
 
 			m := map[string]interface{}{
 				"protocol":        "UDP",
-				"id":              *ls.ListenerId,
-				"name":            *ls.ListenerName,
-				"port":            *ls.Port,
-				"realserver_type": *ls.RealServerType,
-				"status":          *ls.ListenerStatus,
-				"scheduler":       *ls.Scheduler,
+				"id":              ls.ListenerId,
+				"name":            ls.ListenerName,
+				"port":            ls.Port,
+				"realserver_type": ls.RealServerType,
+				"status":          ls.ListenerStatus,
+				"scheduler":       ls.Scheduler,
 				"create_time":     formatUnixTime(*ls.CreateTime),
 			}
 
@@ -301,8 +260,8 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), listeners); err != nil {
-			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
-				logId, output.(string), err.Error())
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%v]",
+				logId, output.(string), err)
 			return err
 		}
 	}
