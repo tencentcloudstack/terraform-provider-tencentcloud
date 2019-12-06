@@ -27,7 +27,6 @@ const defaultSshCertificateB = "VfqO4zkB"
 
 const defaultGaapProxyId = "link-9ck3lzq7"
 
-
 /*
 ---------------------------------------------------
 The following are common test case used as templates.
