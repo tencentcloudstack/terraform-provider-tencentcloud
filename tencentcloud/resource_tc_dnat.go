@@ -61,7 +61,7 @@ func resourceTencentCloudDnat() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the NAT.",
+				Description: "Id of the NAT gateway.",
 			},
 			"protocol": {
 				Type:         schema.TypeString,

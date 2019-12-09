@@ -13,7 +13,7 @@ Provides a snapshot policy resource.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud-cbs_snapshot_policy" "snapshot_policy" {
+resource "tencentcloud_cbs_snapshot_policy" "snapshot_policy" {
   snapshot_policy_name = "mysnapshotpolicyname"
   repeat_weekdays      = [1, 4]
   repeat_hours         = [1]
