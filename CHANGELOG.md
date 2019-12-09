@@ -1,4 +1,4 @@
-## 1.26.0 (Unreleased)
+## 1.26.0 (December 09, 2019)
 
 FEATURES:
 
