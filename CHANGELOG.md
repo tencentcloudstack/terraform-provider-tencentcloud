@@ -1,8 +1,9 @@
 ## 1.26.0 (Unreleased)
 
 FEATURES:
-* **New Resource**: `tencentcloud_mysql_privilege`.
-* **New Resource**: `tencentcloud_kubernetes_as_scaling_group`.[#202](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/202)
+
+* **New Resource**: `tencentcloud_mysql_privilege`([#223](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/223)).
+* **New Resource**: `tencentcloud_kubernetes_as_scaling_group`([#202](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/202)).
 
 ENHANCEMENTS:
 
@@ -15,14 +16,16 @@ ENHANCEMENTS:
 * Data Source: `tencentcloud_gaap_layer7_listeners` add new output argument `client_certificate_ids`.
 
 DEPRECATED:
-* Data Source: `tencentcloud_gaap_http_domains`: output argument `client_certificate_id` is no longer supported.
-* Data Source: `tencentcloud_gaap_layer7_listeners`: output argument `client_certificate_id` is no longer supported.
+
 * Resource: `tencentcloud_gaap_http_domain`: optional argument `client_certificate_id` is no longer supported.
 * Resource: `tencentcloud_gaap_layer7_listener`: optional argument `client_certificate_id` is no longer supported.
 * Resource: `tencentcloud_mysql_account_privilege` replaced by `tencentcloud_mysql_privilege`.
+* Data Source: `tencentcloud_gaap_http_domains`: output argument `client_certificate_id` is no longer supported.
+* Data Source: `tencentcloud_gaap_layer7_listeners`: output argument `client_certificate_id` is no longer supported.
 
 BUG FIXES:
-* Fix bug that resource `tencentcloud_clb_listener` 's unchangeable `health_check_switch`.
+
+* Fix bug that resource `tencentcloud_clb_listener` 's unchangeable `health_check_switch`([#235](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/235)).
 * Fix bug that resource `tencentcloud_clb_instance` read nil and report error.
 * Fix example errors of resource `tencentcloud_cbs_snapshot_policy` and data source `tencentcloud_dnats`.
 
