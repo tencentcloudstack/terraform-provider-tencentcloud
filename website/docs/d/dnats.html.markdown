@@ -13,15 +13,19 @@ Use this data source to query detailed information of DNATs.
 ## Example Usage
 
 ```hcl
+# query by nat gateway id
 data "tencentcloud_dnats" "foo" {
-  name         = "main"
-  vpc_id       = "vpc-xfqag"
-  nat_id       = "nat-xfaq1"
-  elastic_ip   = "123.207.115.136"
-  elastic_port = "80"
-  private_ip   = "172.16.0.88"
-  private_port = "9001"
-  description  = "test"
+  nat_id = "nat-xfaq1"
+}
+
+# query by vpc id
+data "tencentcloud_dnats" "foo" {
+  vpc_id = "vpc-xfqag"
+}
+
+# query by elastic ip
+data "tencentcloud_dnats" "foo" {
+  elastic_ip = "123.207.115.136"
 }
 ```
 
@@ -32,7 +36,7 @@ The following arguments are supported:
 * `description` - (Optional) Description of the NAT forward.
 * `elastic_ip` - (Optional) Network address of the EIP.
 * `elastic_port` - (Optional) Port of the EIP.
-* `nat_id` - (Optional) Id of the NAT.
+* `nat_id` - (Optional) Id of the NAT gateway.
 * `private_ip` - (Optional) Network address of the backend service.
 * `private_port` - (Optional) Port of intranet.
 * `result_output_file` - (Optional) Used to save results.

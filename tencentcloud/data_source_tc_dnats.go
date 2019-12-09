@@ -4,15 +4,19 @@ Use this data source to query detailed information of DNATs.
 Example Usage
 
 ```hcl
+# query by nat gateway id
 data "tencentcloud_dnats" "foo"{
-	name = "main"
-	vpc_id = "vpc-xfqag"
 	nat_id = "nat-xfaq1"
+}
+
+# query by vpc id
+data "tencentcloud_dnats" "foo"{
+	vpc_id = "vpc-xfqag"
+}
+
+# query by elastic ip
+data "tencentcloud_dnats" "foo"{
 	elastic_ip = "123.207.115.136"
-	elastic_port = "80"
-	private_ip = "172.16.0.88"
-	private_port = "9001"
-	description  = "test"
 }
 ```
 */
@@ -40,7 +44,7 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 			"nat_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the NAT.",
+				Description: "Id of the NAT gateway.",
 			},
 			"elastic_ip": {
 				Type:         schema.TypeString,
