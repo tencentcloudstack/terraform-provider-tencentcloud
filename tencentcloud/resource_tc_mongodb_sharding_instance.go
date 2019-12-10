@@ -77,14 +77,14 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 			"memory": {
 				Type:         schema.TypeInt,
 				Required:     true,
-				ValidateFunc: validateIntegerMin(4),
-				Description:  "Memory size.",
+				ValidateFunc: validateIntegerMin(2),
+				Description:  "Memory size. The minimum value is 2, and unit is GB.",
 			},
 			"volume": {
 				Type:         schema.TypeInt,
 				Required:     true,
-				ValidateFunc: validateIntegerMin(100),
-				Description:  "Disk size.",
+				ValidateFunc: validateIntegerMin(25),
+				Description:  "Disk size. The minimum value is 25, and unit is GB.",
 			},
 			"engine_version": {
 				Type:         schema.TypeString,

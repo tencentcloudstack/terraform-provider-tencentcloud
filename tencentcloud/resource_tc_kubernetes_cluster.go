@@ -222,14 +222,6 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:    true,
 			Required:    true,
 			Description: "Specified types of CVM instance.",
-			ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-				value := strings.ToUpper(v.(string))
-				if !strings.Contains(value, "LARGE") {
-					errors = append(errors, fmt.Errorf(
-						"%q has to be `LARGE` type", k))
-				}
-				return
-			},
 		},
 		// payment
 		"instance_charge_type": {

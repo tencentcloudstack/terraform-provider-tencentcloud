@@ -1,4 +1,15 @@
 ## 1.26.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mongodb_instance` support more instance type([#241](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/241)).
+* Resource: `tencentcloud_kubernetes_cluster` support more instance type([#237](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/237)).
+
+BUG FIXES:
+
+* Fix bug that resource `tencentcloud_instance` delete error when instance launch failed.
+* Fix bug that the type of `cluster_type` is wrong in data source `tencentcloud_mongodb_instances`([#242](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/242)).
+
 ## 1.26.0 (December 09, 2019)
 
 FEATURES:

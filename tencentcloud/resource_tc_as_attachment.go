@@ -74,17 +74,23 @@ func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	var instanceIds []string
+	var e error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		instanceIds, e := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
+		instanceIds, e = asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
 		if e != nil {
 			return retryError(e)
 		}
-		d.Set("instance_ids", instanceIds)
 		return nil
 	})
 	if err != nil {
 		return err
 	}
+	if len(instanceIds) < 1 {
+		d.SetId("")
+		return nil
+	}
+	d.Set("instance_ids", instanceIds)
 	return nil
 }
 
@@ -145,6 +151,9 @@ func resourceTencentCloudAsAttachmentDelete(d *schema.ResourceData, meta interfa
 	})
 	if err != nil {
 		return err
+	}
+	if len(instanceIds) < 1 {
+		return nil
 	}
 
 	err = asService.DetachInstances(ctx, scalingGroupId, instanceIds)
