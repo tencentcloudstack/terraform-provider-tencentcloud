@@ -22,7 +22,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceTencentCloudGaapRealservers() *schema.Resource {
