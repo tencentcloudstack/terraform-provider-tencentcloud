@@ -37,11 +37,11 @@ The following arguments are supported:
 * `engine_version` - (Required, ForceNew) Version of the Mongodb, and available values include MONGO_3_WT, MONGO_3_ROCKS and MONGO_36_WT.
 * `instance_name` - (Required) Name of the Mongodb instance.
 * `machine_type` - (Required, ForceNew) Type of Mongodb instance, and available values include GIO and TGIO.
-* `memory` - (Required) Memory size.
+* `memory` - (Required) Memory size. The minimum value is 2, and unit is GB.
 * `nodes_per_shard` - (Required, ForceNew) Number of nodes per shard, at least 3(one master and two slaves).
 * `password` - (Required) Password of this Mongodb account.
 * `shard_quantity` - (Required, ForceNew) Number of sharding.
-* `volume` - (Required) Disk size.
+* `volume` - (Required) Disk size. The minimum value is 25, and unit is GB.
 * `project_id` - (Optional) ID of the project which the instance belongs.
 * `security_groups` - (Optional) ID of the security group.
 * `subnet_id` - (Optional, ForceNew) ID of the subnet within this VPC. The vaule is required if VpcId is set.

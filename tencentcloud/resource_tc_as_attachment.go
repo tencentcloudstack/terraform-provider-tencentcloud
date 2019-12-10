@@ -74,17 +74,23 @@ func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+	var instanceIds []string
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		instanceIds, e := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
-		if e != nil {
-			return retryError(e)
+		result, errRet := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
+		if errRet != nil {
+			return retryError(errRet)
 		}
-		d.Set("instance_ids", instanceIds)
+		instanceIds = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
+	if len(instanceIds) < 1 {
+		d.SetId("")
+		return nil
+	}
+	d.Set("instance_ids", instanceIds)
 	return nil
 }
 
@@ -132,19 +138,20 @@ func resourceTencentCloudAsAttachmentDelete(d *schema.ResourceData, meta interfa
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	var (
-		instanceIds []string
-		e           error
-	)
+	var instanceIds []string
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		instanceIds, e = asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
-		if e != nil {
-			return retryError(e)
+		result, errRet := asService.DescribeAutoScalingAttachment(ctx, scalingGroupId)
+		if errRet != nil {
+			return retryError(errRet)
 		}
+		instanceIds = result
 		return nil
 	})
 	if err != nil {
 		return err
+	}
+	if len(instanceIds) < 1 {
+		return nil
 	}
 
 	err = asService.DetachInstances(ctx, scalingGroupId, instanceIds)

@@ -38,7 +38,7 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 				Description: "Name prefix of the Mongodb instance.",
 			},
 			"cluster_type": {
-				Type:         schema.TypeInt,
+				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(MONGODB_CLUSTER_TYPE),
 				Description:  "Type of Mongodb cluster, and available values include replica set cluster(expressed with `REPLSET`), sharding cluster(expressed with `SHARD`).",
