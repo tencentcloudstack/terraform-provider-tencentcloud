@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"go/parser"
 	"go/token"
-	"log"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -451,8 +450,6 @@ func checkDescription(k, s string) {
 		message("[FAIL!]There is space on the right of description: '%s': '%s'", k, s)
 		os.Exit(1)
 	}
-
-	log.Println(k,s,string(s[len(s)-1] ))
 
 	if s[len(s)-1] != '.' && s[len(s)-1] != ':' {
 		message("[FAIL!]There is no ending charset(. or :) on the description: '%s': '%s'", k, s)
