@@ -71,7 +71,7 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 			},
 			"assigned_eip_set": {
 				Type:     schema.TypeSet,
-				Optional: true,
+				Required: true,
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
 					ValidateFunc: validateIp,
