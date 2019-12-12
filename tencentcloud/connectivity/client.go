@@ -23,6 +23,7 @@ import (
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
+	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
@@ -50,6 +51,7 @@ type TencentCloudClient struct {
 	sslConn     *ssl.Client
 	cfsConn     *cfs.Client
 	scfConn     *scf.Client
+	tcaplusConn *tcaplusdb.Client
 }
 
 // NewTencentCloudClient returns a new TencentCloudClient
@@ -310,4 +312,17 @@ func (me *TencentCloudClient) UseScfClient() *scf.Client {
 	me.scfConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.scfConn
+}
+
+// UseScfClient returns tcaplush client for service
+func (me *TencentCloudClient) UseTcaplusClient() *tcaplusdb.Client {
+	if me.tcaplusConn != nil {
+		return me.tcaplusConn
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.tcaplusConn, _ = tcaplusdb.NewClient(me.Credential, me.Region, cpf)
+	me.tcaplusConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tcaplusConn
 }

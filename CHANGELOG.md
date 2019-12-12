@@ -1,4 +1,14 @@
-## 1.26.1 (Unreleased)
+## 1.27.0 (Unreleased)
+
+FEATURES:
+* **New Data Source**: `tencentcloud_tcaplus_applications`
+* **New Data Source**: `tencentcloud_tcaplus_zones`
+* **New Data Source**: `tencentcloud_tcaplus_tables`
+* **New Data Source**: `tencentcloud_tcaplus_idls`
+* **New Resource**: `tencentcloud_tcaplus_application`
+* **New Resource**: `tencentcloud_tcaplus_zone`
+* **New Resource**: `tencentcloud_tcaplus_idl`
+* **New Resource**: `tencentcloud_tcaplus_table`
 
 ENHANCEMENTS:
 

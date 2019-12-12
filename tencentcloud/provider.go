@@ -95,6 +95,10 @@ Data Sources
   tencentcloud_security_groups
   tencentcloud_ssl_certificates
   tencentcloud_subnet
+  tencentcloud_tcaplus_applications
+  tencentcloud_tcaplus_zones
+  tencentcloud_tcaplus_tables
+  tencentcloud_tcaplus_idls
   tencentcloud_vpc
   tencentcloud_vpc_instances
   tencentcloud_vpc_route_tables
@@ -209,6 +213,12 @@ SCF Resources
 
 SSL Resources
   tencentcloud_ssl_certificate
+
+Tcaplus Resources
+ tencentcloud_tcaplus_application
+ tencentcloud_tcaplus_zone
+ tencentcloud_tcaplus_idl
+ tencentcloud_tcaplus_table
 
 VPC Resources
   tencentcloud_eni
@@ -362,6 +372,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpn_connections":              dataSourceTencentCloudVpnConnections(),
 			"tencentcloud_ha_vips":                      dataSourceTencentCloudHaVips(),
 			"tencentcloud_ha_vip_eip_attachments":       dataSourceTencentCloudHaVipEipAttachments(),
+			"tencentcloud_tcaplus_applications":         dataSourceTencentCloudTcaplusApplications(),
+			"tencentcloud_tcaplus_zones":                dataSourceTencentCloudTcaplusZones(),
+			"tencentcloud_tcaplus_tables":               dataSourceTencentCloudTcaplusTables(),
+			"tencentcloud_tcaplus_idls":                 dataSourceTencentCloudTcaplusIdls(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -453,6 +467,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpn_connection":              resourceTencentCloudVpnConnection(),
 			"tencentcloud_ha_vip":                      resourceTencentCloudHaVip(),
 			"tencentcloud_ha_vip_eip_attachment":       resourceTencentCloudHaVipEipAttachment(),
+			"tencentcloud_tcaplus_application":         resourceTencentCloudTcaplusApplication(),
+			"tencentcloud_tcaplus_zone":                resourceTencentCloudTcaplusZone(),
+			"tencentcloud_tcaplus_idl":                 resourceTencentCloudTcaplusIdl(),
+			"tencentcloud_tcaplus_table":               resourceTencentCloudTcaplusTable(),
 		},
 
 		ConfigureFunc: providerConfigure,
