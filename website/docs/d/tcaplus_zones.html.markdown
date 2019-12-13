@@ -45,7 +45,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list of tcaplus zones. Each element contains the following attributes.
-  * `create_time` - create time of the tcapplus application.
+  * `create_time` - Create time of the tcapplus zone.
   * `table_count` - Number of tables.
   * `total_size` - The total storage(MB).
   * `zone_id` - Id of the tcapplus zone.

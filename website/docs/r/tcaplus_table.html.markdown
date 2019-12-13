@@ -95,7 +95,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `create_time` - Create time of the tcapplus application.
+* `create_time` - Create time of the tcapplus table.
 * `error` - Show if this table  create error.
 * `status` - Status of this table.
 * `table_size` - Size of this table.

@@ -64,7 +64,7 @@ func resourceTencentCloudTcaplusZone() *schema.Resource {
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "create time of the tcapplus application.",
+				Description: "Create time of the tcapplus zone.",
 			},
 		},
 	}

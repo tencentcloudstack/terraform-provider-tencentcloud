@@ -130,7 +130,7 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the tcapplus application.",
+							Description: "Create time of the tcapplus table.",
 						},
 						"error": {
 							Type:        schema.TypeString,

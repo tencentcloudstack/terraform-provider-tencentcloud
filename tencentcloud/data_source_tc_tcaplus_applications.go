@@ -84,32 +84,32 @@ func dataSourceTencentCloudTcaplusApplications() *schema.Resource {
 						"network_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "network type of the tcapplus application.",
+							Description: "Network type of the tcapplus application.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "create time of the tcapplus application.",
+							Description: "Create time of the tcapplus application.",
 						},
 						"password_status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "password status of the tcapplus application.`unmodifiable` means:can not change password now,`modifiable` means:can change password now.",
+							Description: "Password status of the tcapplus application.`unmodifiable` means:can not change password now,`modifiable` means:can change password now.",
 						},
 						"api_access_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "access id of the tcapplus application.For TcaplusDB SDK connect.",
+							Description: "Access id of the tcapplus application.For TcaplusDB SDK connect.",
 						},
 						"api_access_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "access ip of the tcapplus application.For TcaplusDB SDK connect.",
+							Description: "Access ip of the tcapplus application.For TcaplusDB SDK connect.",
 						},
 						"api_access_port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "access port of the tcapplus application.For TcaplusDB SDK connect.",
+							Description: "Access port of the tcapplus application.For TcaplusDB SDK connect.",
 						},
 						"old_password_expire_time": {
 							Type:        schema.TypeString,

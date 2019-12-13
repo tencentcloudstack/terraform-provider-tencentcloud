@@ -55,7 +55,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list of tcaplus zones. Each element contains the following attributes.
-  * `create_time` - Create time of the tcapplus application.
+  * `create_time` - Create time of the tcapplus table.
   * `description` - Description of this table.
   * `error` - Show if this table  create error.
   * `idl_id` - Idl file id for this table.
