@@ -1,6 +1,8 @@
 /*
 Use this resource to create tcaplus application
 
+~> **NOTE:** tcaplus now only supports the following regions:ap-shanghai,ap-hongkong,na-siliconvalley,ap-singapore,ap-seoul,ap-tokyo,eu-frankfurt
+
 Example Usage
 
 ```hcl
