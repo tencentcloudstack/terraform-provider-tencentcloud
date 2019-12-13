@@ -262,42 +262,12 @@ func resourceTencentCloudEipAssociationDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	var eip *vpc.Address
-	var errRet error
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		eip, errRet = vpcService.DescribeEipById(ctx, association.EipId)
-		if errRet != nil {
-			return retryError(errRet)
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-	if eip == nil {
-		return nil
-	}
-
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		err := vpcService.UnattachEip(ctx, association.EipId)
 		if err != nil {
-			return retryError(err)
+			return retryError(err, "DesOperation.MutexTaskRunning")
 		}
 		return nil
-	})
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		eip, errRet = vpcService.DescribeEipById(ctx, association.EipId)
-		if errRet != nil {
-			return retryError(errRet)
-		}
-		if *eip.AddressStatus == EIP_STATUS_UNBIND {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("wait for unbind success: %s", *eip.AddressStatus))
 	})
 	if err != nil {
 		return err

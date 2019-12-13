@@ -110,7 +110,7 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
 		snapshot, e := cbsService.DescribeSnapshotById(ctx, snapshotId)
 		if e != nil {
 			return retryError(e)
