@@ -64,7 +64,7 @@ func dataSourceTencentCloudTcaplusApplications() *schema.Resource {
 						"idl_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the tcapplus application.",
+							Description: "Idl type of the tcapplus application.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,

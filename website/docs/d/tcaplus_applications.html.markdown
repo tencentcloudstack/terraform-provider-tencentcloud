@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
   * `api_access_ip` - Access ip of the tcapplus application.For TcaplusDB SDK connect.
   * `api_access_port` - Access port of the tcapplus application.For TcaplusDB SDK connect.
   * `create_time` - Create time of the tcapplus application.
-  * `idl_type` - ID of the tcapplus application.
+  * `idl_type` - Idl type of the tcapplus application.
   * `network_type` - Network type of the tcapplus application.
   * `old_password_expire_time` - This field will display the old password expiration time,if password_status is `unmodifiable` means the old password has not yet expired, otherwise `-`.
   * `password_status` - Password status of the tcapplus application.`unmodifiable` means:can not change password now,`modifiable` means:can change password now.
