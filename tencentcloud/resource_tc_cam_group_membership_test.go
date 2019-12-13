@@ -51,9 +51,9 @@ func testAccCheckCamGroupMembershipDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := camService.DescribeGroupMembershipById(ctx, rs.Primary.ID)
-		if err == nil {
-			return fmt.Errorf("CAM group membership still exists: %s", rs.Primary.ID)
+		instance, err := camService.DescribeGroupMembershipById(ctx, rs.Primary.ID)
+		if err == nil && len(instance) > 0 {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM group membership][Destroy] check: CAM group membership still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -66,17 +66,20 @@ func testAccCheckCamGroupMembershipExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("CAM group %s is not found", n)
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM group membership][Exists] check: CAM group membership %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("CAM group id is not set")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM group membership][Exists] check: CAM group membership id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := camService.DescribeGroupMembershipById(ctx, rs.Primary.ID)
+		instance, err := camService.DescribeGroupMembershipById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if len(instance) == 0 {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM group membership][Exists] check: CAM group membership %s is not exists", rs.Primary.ID)
 		}
 		return nil
 	}
@@ -89,7 +92,7 @@ resource "tencentcloud_cam_group" "group_basic" {
 }
 
 resource "tencentcloud_cam_user" "foo" {
-  name                = "cam-user-test2"
+  name                = "cam-user-test22"
   remark              = "test"
   console_login       = true
   use_api             = true
@@ -113,7 +116,7 @@ resource "tencentcloud_cam_group" "group_basic" {
 }
 
 resource "tencentcloud_cam_user" "user_basic" {
-  name                = "cam-user-testj"
+  name                = "cam-user-test33"
   remark              = "test"
   console_login       = true
   use_api             = true

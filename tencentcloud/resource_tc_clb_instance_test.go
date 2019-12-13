@@ -147,9 +147,12 @@ func testAccCheckClbInstanceExists(n string) resource.TestCheckFunc {
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := clbService.DescribeLoadBalancerById(ctx, rs.Primary.ID)
+		instance, err := clbService.DescribeLoadBalancerById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if instance == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

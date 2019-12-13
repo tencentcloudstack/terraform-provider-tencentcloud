@@ -32,7 +32,7 @@ resource "tencentcloud_cam_group" "group_basic" {
 }
 
 resource "tencentcloud_cam_user" "user_basic" {
-  name                = "cam-user-testj"
+  name                = "cam-user-testjj"
   remark              = "test"
   console_login       = true
   use_api             = true

@@ -175,9 +175,19 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	listenerId := items[1]
 	clbId := items[2]
 
+	//firstly see if listener and location exists
+	request := clb.NewDeregisterTargetsRequest()
+	request.ListenerId = stringToPointer(listenerId)
+	request.LoadBalancerId = stringToPointer(clbId)
+	if locationId != "" {
+		request.LocationId = stringToPointer(locationId)
+	}
+
+	//check exists
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, d.Get("targets").(*schema.Set).List())
 		if e != nil {
@@ -205,12 +215,14 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 	locationId := items[0]
 	listenerId := items[1]
 	clbId := items[2]
+
 	request := clb.NewDeregisterTargetsRequest()
 	request.ListenerId = stringToPointer(listenerId)
 	request.LoadBalancerId = stringToPointer(clbId)
 	if locationId != "" {
 		request.LocationId = stringToPointer(locationId)
 	}
+
 	for _, inst_ := range remove {
 		inst := inst_.(map[string]interface{})
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
@@ -341,6 +353,13 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 		log.Printf("[CRITAL]%s read CLB attachment failed, reason:%+v", logId, err)
 		return err
 	}
+	//see if read empty
+
+	if instance == nil || (len(instance.Targets) == 0 && locationId == "") || (len(instance.Rules) == 0 && locationId != "") {
+		d.SetId("")
+		return nil
+	}
+
 	d.Set("clb_id", clbId)
 	d.Set("listener_id", listenerId)
 	d.Set("protocol_type", instance.Protocol)

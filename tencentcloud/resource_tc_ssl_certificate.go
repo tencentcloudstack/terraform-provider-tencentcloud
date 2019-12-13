@@ -53,7 +53,7 @@ func resourceTencentCloudSslCertificate() *schema.Resource {
 			"type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue([]string{"CA", "SVR"}),
+				ValidateFunc: validateAllowedStringValue(SSL_CERT_TYPE),
 				ForceNew:     true,
 				Description:  "Type of the SSL certificate. Available values includes: `CA` and `SVR`.",
 			},
