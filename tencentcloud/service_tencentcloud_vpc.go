@@ -937,7 +937,7 @@ func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg 
 
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 				logId, request.GetAction(), request.ToJsonString(), err)
-			return retryError(err)
+			return retryError(err, InternalError)
 		}
 
 		if len(response.Response.SecurityGroupSet) == 0 {
@@ -1275,7 +1275,7 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 					logId, request.GetAction(), request.ToJsonString(), err)
-				return retryError(err)
+				return retryError(err, InternalError)
 			}
 
 			set := response.Response.SecurityGroupSet
