@@ -284,7 +284,6 @@ const (
 COMMON
 */
 const (
-	VPCInternalError        = "InternalError"
 	VPCNotFound             = "ResourceNotFound"
 	VPCUnsupportedOperation = "UnsupportedOperation"
 )

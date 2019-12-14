@@ -32,6 +32,10 @@ const readRetryTimeout = 3 * time.Minute
 // writeRetryTimeout is write retry timeout
 const writeRetryTimeout = 5 * time.Minute
 
+// InternalError common internalError, do not add in retryableErrorCode,
+// because when some product return this error, retry won't fix anything.
+const InternalError = "InternalError"
+
 // retryableErrorCode is retryable error code
 var retryableErrorCode = []string{
 	// client
