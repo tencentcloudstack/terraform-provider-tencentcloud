@@ -96,9 +96,9 @@ Data Sources
   tencentcloud_ssl_certificates
   tencentcloud_subnet
   tencentcloud_tcaplus_applications
-  tencentcloud_tcaplus_zones
-  tencentcloud_tcaplus_tables
   tencentcloud_tcaplus_idls
+  tencentcloud_tcaplus_tables
+  tencentcloud_tcaplus_zones
   tencentcloud_vpc
   tencentcloud_vpc_instances
   tencentcloud_vpc_route_tables
