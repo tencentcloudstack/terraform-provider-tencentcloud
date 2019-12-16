@@ -135,11 +135,11 @@ func resourceTencentCloudCfsAccessRuleRead(d *schema.ResourceData, meta interfac
 		return nil
 	}
 
-	d.Set("auth_client_ip", accessRule.AuthClientIp)
-	d.Set("user_permission", accessRule.UserPermission)
-	d.Set("priority", accessRule.Priority)
+	_ = d.Set("auth_client_ip", accessRule.AuthClientIp)
+	_ = d.Set("user_permission", accessRule.UserPermission)
+	_ = d.Set("priority", accessRule.Priority)
 	if accessRule.RWPermission != nil {
-		d.Set("rw_permission", strings.ToUpper(*accessRule.RWPermission))
+		_ = d.Set("rw_permission", strings.ToUpper(*accessRule.RWPermission))
 	}
 
 	return nil

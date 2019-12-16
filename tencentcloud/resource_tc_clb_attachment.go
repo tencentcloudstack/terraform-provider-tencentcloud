@@ -341,21 +341,21 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 		log.Printf("[CRITAL]%s read CLB attachment failed, reason:%+v", logId, err)
 		return err
 	}
-	d.Set("clb_id", clbId)
-	d.Set("listener_id", listenerId)
-	d.Set("protocol_type", instance.Protocol)
+	_ = d.Set("clb_id", clbId)
+	_ = d.Set("listener_id", listenerId)
+	_ = d.Set("protocol_type", instance.Protocol)
 
 	if *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
-		d.Set("rule_id", locationId)
+		_ = d.Set("rule_id", locationId)
 		if len(instance.Rules) > 0 {
 			for _, loc := range instance.Rules {
 				if locationId == "" || locationId == *loc.LocationId {
-					d.Set("targets", flattenBackendList(loc.Targets))
+					_ = d.Set("targets", flattenBackendList(loc.Targets))
 				}
 			}
 		}
 	} else if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
-		d.Set("targets", flattenBackendList(instance.Targets))
+		_ = d.Set("targets", flattenBackendList(instance.Targets))
 	}
 
 	return nil

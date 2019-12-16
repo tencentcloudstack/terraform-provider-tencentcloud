@@ -186,7 +186,7 @@ func dataSourceTencentCloudGaapRealserversRead(d *schema.ResourceData, m interfa
 		realserverList = append(realserverList, m)
 	}
 
-	d.Set("realservers", realserverList)
+	_ = d.Set("realservers", realserverList)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

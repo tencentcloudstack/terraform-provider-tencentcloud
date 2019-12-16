@@ -638,25 +638,25 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		return nil
 	}
 
-	d.Set("image_id", instance.ImageId)
-	d.Set("availability_zone", instance.Placement.Zone)
-	d.Set("instance_name", instance.InstanceName)
-	d.Set("instance_type", instance.InstanceType)
-	d.Set("project_id", instance.Placement.ProjectId)
-	d.Set("instance_charge_type", instance.InstanceChargeType)
-	d.Set("instance_charge_type_prepaid_renew_flag", instance.RenewFlag)
-	d.Set("internet_charge_type", instance.InternetAccessible.InternetChargeType)
-	d.Set("internet_max_bandwidth_out", instance.InternetAccessible.InternetMaxBandwidthOut)
-	d.Set("vpc_id", instance.VirtualPrivateCloud.VpcId)
-	d.Set("subnet_id", instance.VirtualPrivateCloud.SubnetId)
-	d.Set("security_groups", flattenStringList(instance.SecurityGroupIds))
-	d.Set("system_disk_type", instance.SystemDisk.DiskType)
-	d.Set("system_disk_size", instance.SystemDisk.DiskSize)
-	d.Set("system_disk_id", instance.SystemDisk.DiskId)
-	d.Set("tags", flattenCvmTagsMapping(instance.Tags))
-	d.Set("instance_status", instance.InstanceState)
-	d.Set("create_time", instance.CreatedTime)
-	d.Set("expired_time", instance.ExpiredTime)
+	_ = d.Set("image_id", instance.ImageId)
+	_ = d.Set("availability_zone", instance.Placement.Zone)
+	_ = d.Set("instance_name", instance.InstanceName)
+	_ = d.Set("instance_type", instance.InstanceType)
+	_ = d.Set("project_id", instance.Placement.ProjectId)
+	_ = d.Set("instance_charge_type", instance.InstanceChargeType)
+	_ = d.Set("instance_charge_type_prepaid_renew_flag", instance.RenewFlag)
+	_ = d.Set("internet_charge_type", instance.InternetAccessible.InternetChargeType)
+	_ = d.Set("internet_max_bandwidth_out", instance.InternetAccessible.InternetMaxBandwidthOut)
+	_ = d.Set("vpc_id", instance.VirtualPrivateCloud.VpcId)
+	_ = d.Set("subnet_id", instance.VirtualPrivateCloud.SubnetId)
+	_ = d.Set("security_groups", flattenStringList(instance.SecurityGroupIds))
+	_ = d.Set("system_disk_type", instance.SystemDisk.DiskType)
+	_ = d.Set("system_disk_size", instance.SystemDisk.DiskSize)
+	_ = d.Set("system_disk_id", instance.SystemDisk.DiskId)
+	_ = d.Set("tags", flattenCvmTagsMapping(instance.Tags))
+	_ = d.Set("instance_status", instance.InstanceState)
+	_ = d.Set("create_time", instance.CreatedTime)
+	_ = d.Set("expired_time", instance.ExpiredTime)
 
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
 	for _, disk := range instance.DataDisks {
@@ -667,21 +667,21 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		dataDisk["delete_with_instance"] = disk.DeleteWithInstance
 		dataDiskList = append(dataDiskList, dataDisk)
 	}
-	d.Set("data_disks", dataDiskList)
+	_ = d.Set("data_disks", dataDiskList)
 
 	if len(instance.PrivateIpAddresses) > 0 {
-		d.Set("private_ip", instance.PrivateIpAddresses[0])
+		_ = d.Set("private_ip", instance.PrivateIpAddresses[0])
 	}
 	if len(instance.PublicIpAddresses) > 0 {
-		d.Set("public_ip", instance.PublicIpAddresses[0])
+		_ = d.Set("public_ip", instance.PublicIpAddresses[0])
 	}
 	if len(instance.LoginSettings.KeyIds) > 0 {
-		d.Set("key_name", instance.LoginSettings.KeyIds)
+		_ = d.Set("key_name", instance.LoginSettings.KeyIds)
 	}
 	if *instance.InstanceState == CVM_STATUS_STOPPED {
-		d.Set("running_flag", false)
+		_ = d.Set("running_flag", false)
 	} else {
-		d.Set("running_flag", true)
+		_ = d.Set("running_flag", true)
 	}
 
 	return nil

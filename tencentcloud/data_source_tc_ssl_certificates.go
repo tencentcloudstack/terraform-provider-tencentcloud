@@ -202,7 +202,7 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 		certificates = append(certificates, m)
 	}
 
-	d.Set("certificates", certificates)
+	_ = d.Set("certificates", certificates)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

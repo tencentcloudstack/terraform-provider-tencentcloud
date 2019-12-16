@@ -90,7 +90,7 @@ func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface
 		d.SetId("")
 		return nil
 	}
-	d.Set("instance_ids", instanceIds)
+	_ = d.Set("instance_ids", instanceIds)
 	return nil
 }
 

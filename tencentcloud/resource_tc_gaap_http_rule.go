@@ -318,27 +318,27 @@ func resourceTencentCloudGaapHttpRuleRead(d *schema.ResourceData, m interface{})
 		return nil
 	}
 
-	d.Set("listener_id", rule.ListenerId)
-	d.Set("domain", rule.Domain)
-	d.Set("path", rule.Path)
-	d.Set("realserver_type", rule.RealServerType)
-	d.Set("scheduler", rule.Scheduler)
+	_ = d.Set("listener_id", rule.ListenerId)
+	_ = d.Set("domain", rule.Domain)
+	_ = d.Set("path", rule.Path)
+	_ = d.Set("realserver_type", rule.RealServerType)
+	_ = d.Set("scheduler", rule.Scheduler)
 
 	if rule.HealthCheck == nil {
 		rule.HealthCheck = intToPointer(0)
 	}
-	d.Set("health_check", *rule.HealthCheck == 1)
+	_ = d.Set("health_check", *rule.HealthCheck == 1)
 
 	if rule.CheckParams == nil {
 		rule.CheckParams = new(gaap.RuleCheckParams)
 	}
 
-	d.Set("interval", rule.CheckParams.DelayLoop)
-	d.Set("connect_timeout", rule.CheckParams.ConnectTimeout)
-	d.Set("health_check_path", rule.CheckParams.Path)
-	d.Set("health_check_method", rule.CheckParams.Method)
-	d.Set("forward_host", rule.ForwardHost)
-	d.Set("health_check_status_codes", rule.CheckParams.StatusCode)
+	_ = d.Set("interval", rule.CheckParams.DelayLoop)
+	_ = d.Set("connect_timeout", rule.CheckParams.ConnectTimeout)
+	_ = d.Set("health_check_path", rule.CheckParams.Path)
+	_ = d.Set("health_check_method", rule.CheckParams.Method)
+	_ = d.Set("forward_host", rule.ForwardHost)
+	_ = d.Set("health_check_status_codes", rule.CheckParams.StatusCode)
 
 	realserverSet := make([]map[string]interface{}, 0, len(rule.RealServerSet))
 	for _, rs := range rule.RealServerSet {
@@ -349,7 +349,7 @@ func resourceTencentCloudGaapHttpRuleRead(d *schema.ResourceData, m interface{})
 			"weight": rs.RealServerWeight,
 		})
 	}
-	d.Set("realservers", realserverSet)
+	_ = d.Set("realservers", realserverSet)
 
 	return nil
 }

@@ -165,7 +165,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 	}
 
 	if len(sgs) == 0 {
-		d.Set("security_groups", []map[string]interface{}{})
+		_ = d.Set("security_groups", []map[string]interface{}{})
 		d.SetId(idBuilder.String())
 		return nil
 	}
@@ -250,7 +250,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 		return errors.New("security group associate statistics is not enough")
 	}
 
-	d.Set("security_groups", sgInstances)
+	_ = d.Set("security_groups", sgInstances)
 	d.SetId(idBuilder.String())
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

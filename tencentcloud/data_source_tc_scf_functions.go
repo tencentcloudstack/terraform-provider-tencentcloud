@@ -382,7 +382,7 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 		functions = append(functions, m)
 	}
 
-	d.Set("functions", functions)
+	_ = d.Set("functions", functions)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

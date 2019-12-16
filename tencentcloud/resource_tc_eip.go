@@ -241,11 +241,11 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 		return err
 	}
 
-	d.Set("name", eip.AddressName)
-	d.Set("type", eip.AddressType)
-	d.Set("public_ip", eip.AddressIp)
-	d.Set("status", eip.AddressStatus)
-	d.Set("tags", tags)
+	_ = d.Set("name", eip.AddressName)
+	_ = d.Set("type", eip.AddressType)
+	_ = d.Set("public_ip", eip.AddressIp)
+	_ = d.Set("status", eip.AddressStatus)
+	_ = d.Set("tags", tags)
 	return nil
 }
 

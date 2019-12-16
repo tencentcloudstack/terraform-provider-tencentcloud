@@ -188,13 +188,13 @@ func resourceTencentCloudVpcRouteTableRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	d.Set("vpc_id", info.vpcId)
-	d.Set("name", info.name)
-	d.Set("subnet_ids", info.subnetIds)
-	d.Set("route_entry_ids", routeEntryIds)
-	d.Set("is_default", info.isDefault)
-	d.Set("create_time", info.createTime)
-	d.Set("tags", tags)
+	_ = d.Set("vpc_id", info.vpcId)
+	_ = d.Set("name", info.name)
+	_ = d.Set("subnet_ids", info.subnetIds)
+	_ = d.Set("route_entry_ids", routeEntryIds)
+	_ = d.Set("is_default", info.isDefault)
+	_ = d.Set("create_time", info.createTime)
+	_ = d.Set("tags", tags)
 
 	return nil
 }

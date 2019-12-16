@@ -103,8 +103,8 @@ func resourceTencentCloudHaVipEipAttachmentRead(d *schema.ResourceData, meta int
 		return err
 	}
 
-	d.Set("havip_id", haVip)
-	d.Set("address_ip", eip)
+	_ = d.Set("havip_id", haVip)
+	_ = d.Set("address_ip", eip)
 	d.SetId(haVipEipAttachmentId)
 
 	return nil

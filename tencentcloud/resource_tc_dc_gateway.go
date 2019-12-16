@@ -158,13 +158,13 @@ func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{})
 			return nil
 		}
 
-		d.Set("name", info.name)
-		d.Set("network_type", info.networkType)
-		d.Set("network_instance_id", info.networkInstanceId)
-		d.Set("gateway_type", info.gatewayType)
-		d.Set("cnn_route_type", info.cnnRouteType)
-		d.Set("enable_bgp", info.enableBGP)
-		d.Set("create_time", info.createTime)
+		_ = d.Set("name", info.name)
+		_ = d.Set("network_type", info.networkType)
+		_ = d.Set("network_instance_id", info.networkInstanceId)
+		_ = d.Set("gateway_type", info.gatewayType)
+		_ = d.Set("cnn_route_type", info.cnnRouteType)
+		_ = d.Set("enable_bgp", info.enableBGP)
+		_ = d.Set("create_time", info.createTime)
 		return nil
 	})
 	if err != nil {

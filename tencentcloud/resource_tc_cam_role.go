@@ -195,22 +195,22 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 		return nil
 	}
 
-	d.Set("name", instance.RoleName)
-	d.Set("document", instance.PolicyDocument)
-	d.Set("create_time", instance.AddTime)
-	d.Set("update_time", instance.UpdateTime)
+	_ = d.Set("name", instance.RoleName)
+	_ = d.Set("document", instance.PolicyDocument)
+	_ = d.Set("create_time", instance.AddTime)
+	_ = d.Set("update_time", instance.UpdateTime)
 	if instance.Description != nil {
-		d.Set("description", instance.Description)
+		_ = d.Set("description", instance.Description)
 	}
 
 	if instance.ConsoleLogin != nil {
 		if int(*instance.ConsoleLogin) == 1 {
-			d.Set("console_login", true)
+			_ = d.Set("console_login", true)
 		} else {
-			d.Set("console_login", false)
+			_ = d.Set("console_login", false)
 		}
 	} else {
-		d.Set("console_login", false)
+		_ = d.Set("console_login", false)
 	}
 	return nil
 }

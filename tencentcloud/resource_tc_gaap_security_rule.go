@@ -158,12 +158,12 @@ func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interfac
 		return nil
 	}
 
-	d.Set("policy_id", rule.PolicyId)
-	d.Set("cidr_ip", rule.SourceCidr)
-	d.Set("action", rule.Action)
-	d.Set("name", rule.AliasName)
-	d.Set("protocol", rule.Protocol)
-	d.Set("port", rule.DestPortRange)
+	_ = d.Set("policy_id", rule.PolicyId)
+	_ = d.Set("cidr_ip", rule.SourceCidr)
+	_ = d.Set("action", rule.Action)
+	_ = d.Set("name", rule.AliasName)
+	_ = d.Set("protocol", rule.Protocol)
+	_ = d.Set("port", rule.DestPortRange)
 
 	return nil
 }

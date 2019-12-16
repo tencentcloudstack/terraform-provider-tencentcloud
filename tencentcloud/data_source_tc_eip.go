@@ -152,8 +152,8 @@ func dataSourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) err
 
 	eip := filteredEips[0]
 	d.SetId(*eip.AddressId)
-	d.Set("public_ip", *eip.AddressIp)
-	d.Set("status", *eip.AddressStatus)
+	_ = d.Set("public_ip", *eip.AddressIp)
+	_ = d.Set("status", *eip.AddressStatus)
 
 	return nil
 }

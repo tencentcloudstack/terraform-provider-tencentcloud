@@ -286,9 +286,9 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		log.Printf("[CRITAL]%s redis read status name error, reason:%s\n", logId, err.Error())
 		return err
 	}
-	d.Set("status", statusName)
+	_ = d.Set("status", statusName)
 
-	d.Set("name", *info.InstanceName)
+	_ = d.Set("name", *info.InstanceName)
 
 	zoneName := REDIS_ZONE_ID2NAME[*info.ZoneId]
 	if zoneName == "" {
@@ -296,7 +296,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		log.Printf("[CRITAL]%s redis read zone name error, reason:%s\n", logId, err.Error())
 		return err
 	}
-	d.Set("availability_zone", zoneName)
+	_ = d.Set("availability_zone", zoneName)
 
 	typeName := REDIS_NAMES[*info.Type]
 	if typeName == "" {
@@ -304,17 +304,17 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		log.Printf("[CRITAL]%s redis read type name error, reason:%s\n", logId, err.Error())
 		return err
 	}
-	d.Set("type", typeName)
+	_ = d.Set("type", typeName)
 
-	d.Set("mem_size", int64(*info.Size))
+	_ = d.Set("mem_size", int64(*info.Size))
 
-	d.Set("vpc_id", *info.UniqVpcId)
-	d.Set("subnet_id", *info.UniqSubnetId)
+	_ = d.Set("vpc_id", *info.UniqVpcId)
+	_ = d.Set("subnet_id", *info.UniqSubnetId)
 
-	d.Set("project_id", *info.ProjectId)
-	d.Set("port", *info.Port)
-	d.Set("ip", *info.WanIp)
-	d.Set("create_time", *info.Createtime)
+	_ = d.Set("project_id", *info.ProjectId)
+	_ = d.Set("port", *info.Port)
+	_ = d.Set("ip", *info.WanIp)
+	_ = d.Set("create_time", *info.Createtime)
 
 	if d.Get("vpc_id").(string) != "" {
 		securityGroups, err := service.DescribeInstanceSecurityGroup(ctx, d.Id())
@@ -322,7 +322,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 			return err
 		}
 		if len(securityGroups) > 0 {
-			d.Set("security_groups", securityGroups)
+			_ = d.Set("security_groups", securityGroups)
 		}
 	}
 
@@ -337,7 +337,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 
 		tags[*tag.TagKey] = *tag.TagValue
 	}
-	d.Set("tags", tags)
+	_ = d.Set("tags", tags)
 
 	return nil
 }

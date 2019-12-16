@@ -393,22 +393,22 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
-	d.Set("scaling_group_name", scalingGroup.AutoScalingGroupName)
-	d.Set("configuration_id", scalingGroup.LaunchConfigurationId)
-	d.Set("status", scalingGroup.AutoScalingGroupStatus)
-	d.Set("instance_count", scalingGroup.InstanceCount)
-	d.Set("max_size", scalingGroup.MaxSize)
-	d.Set("min_size", scalingGroup.MinSize)
-	d.Set("vpc_id", scalingGroup.VpcId)
-	d.Set("project_id", scalingGroup.ProjectId)
-	d.Set("subnet_ids", flattenStringList(scalingGroup.SubnetIdSet))
-	d.Set("zones", flattenStringList(scalingGroup.ZoneSet))
-	d.Set("default_cooldown", scalingGroup.DefaultCooldown)
-	d.Set("desired_capacity", scalingGroup.DesiredCapacity)
-	d.Set("load_balancer_ids", flattenStringList(scalingGroup.LoadBalancerIdSet))
-	d.Set("termination_policies", flattenStringList(scalingGroup.TerminationPolicySet))
-	d.Set("retry_policy", scalingGroup.RetryPolicy)
-	d.Set("create_time", scalingGroup.CreatedTime)
+	_ = d.Set("scaling_group_name", scalingGroup.AutoScalingGroupName)
+	_ = d.Set("configuration_id", scalingGroup.LaunchConfigurationId)
+	_ = d.Set("status", scalingGroup.AutoScalingGroupStatus)
+	_ = d.Set("instance_count", scalingGroup.InstanceCount)
+	_ = d.Set("max_size", scalingGroup.MaxSize)
+	_ = d.Set("min_size", scalingGroup.MinSize)
+	_ = d.Set("vpc_id", scalingGroup.VpcId)
+	_ = d.Set("project_id", scalingGroup.ProjectId)
+	_ = d.Set("subnet_ids", flattenStringList(scalingGroup.SubnetIdSet))
+	_ = d.Set("zones", flattenStringList(scalingGroup.ZoneSet))
+	_ = d.Set("default_cooldown", scalingGroup.DefaultCooldown)
+	_ = d.Set("desired_capacity", scalingGroup.DesiredCapacity)
+	_ = d.Set("load_balancer_ids", flattenStringList(scalingGroup.LoadBalancerIdSet))
+	_ = d.Set("termination_policies", flattenStringList(scalingGroup.TerminationPolicySet))
+	_ = d.Set("retry_policy", scalingGroup.RetryPolicy)
+	_ = d.Set("create_time", scalingGroup.CreatedTime)
 
 	if scalingGroup.ForwardLoadBalancerSet != nil && len(scalingGroup.ForwardLoadBalancerSet) > 0 {
 		forwardLoadBalancers := make([]map[string]interface{}, 0, len(scalingGroup.ForwardLoadBalancerSet))
@@ -429,14 +429,14 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 			}
 			forwardLoadBalancers = append(forwardLoadBalancers, forwardLoadBalancer)
 		}
-		d.Set("forward_balancer_ids", forwardLoadBalancers)
+		_ = d.Set("forward_balancer_ids", forwardLoadBalancers)
 	}
 
 	tags := make(map[string]string, len(scalingGroup.Tags))
 	for _, tag := range scalingGroup.Tags {
 		tags[*tag.Key] = *tag.Value
 	}
-	d.Set("tags", tags)
+	_ = d.Set("tags", tags)
 
 	return nil
 }

@@ -127,11 +127,11 @@ func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
-	d.Set("name", placement.Name)
-	d.Set("type", placement.Type)
-	d.Set("cvm_quota_total", placement.CvmQuotaTotal)
-	d.Set("current_num", placement.CurrentNum)
-	d.Set("create_time", placement.CreateTime)
+	_ = d.Set("name", placement.Name)
+	_ = d.Set("type", placement.Type)
+	_ = d.Set("cvm_quota_total", placement.CvmQuotaTotal)
+	_ = d.Set("current_num", placement.CurrentNum)
+	_ = d.Set("create_time", placement.CreateTime)
 
 	return nil
 }

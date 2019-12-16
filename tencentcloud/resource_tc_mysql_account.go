@@ -152,12 +152,12 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 		return nil
 	}
 	if *accountInfo.Notes == "" {
-		d.Set("description", "--")
+		_ = d.Set("description", "--")
 	} else {
-		d.Set("description", *accountInfo.Notes)
+		_ = d.Set("description", *accountInfo.Notes)
 	}
-	d.Set("mysql_id", mysqlId)
-	d.Set("name", *accountInfo.User)
+	_ = d.Set("mysql_id", mysqlId)
+	_ = d.Set("name", *accountInfo.User)
 	return nil
 }
 func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interface{}) error {

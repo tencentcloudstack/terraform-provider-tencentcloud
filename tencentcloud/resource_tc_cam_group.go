@@ -131,10 +131,10 @@ func resourceTencentCloudCamGroupRead(d *schema.ResourceData, meta interface{}) 
 		return nil
 	}
 
-	d.Set("name", *instance.Response.GroupName)
-	d.Set("create_time", *instance.Response.CreateTime)
+	_ = d.Set("name", *instance.Response.GroupName)
+	_ = d.Set("create_time", *instance.Response.CreateTime)
 	if instance.Response.Remark != nil {
-		d.Set("remark", *instance.Response.Remark)
+		_ = d.Set("remark", *instance.Response.Remark)
 	}
 	return nil
 }

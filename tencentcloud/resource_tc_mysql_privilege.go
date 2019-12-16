@@ -523,10 +523,10 @@ func resourceTencentCloudMysqlPrivilegeRead(d *schema.ResourceData, meta interfa
 		m["privileges"] = privileges
 		columns = append(columns, m)
 	}
-	d.Set("global", globals)
-	d.Set("database", databases)
-	d.Set("table", tables)
-	d.Set("column", columns)
+	_ = d.Set("global", globals)
+	_ = d.Set("database", databases)
+	_ = d.Set("table", tables)
+	_ = d.Set("column", columns)
 
 	return nil
 }

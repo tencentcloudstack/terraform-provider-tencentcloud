@@ -131,10 +131,10 @@ func resourceTencentCloudReservedInstanceRead(d *schema.ResourceData, meta inter
 	}
 	instance := instances[0]
 
-	d.Set("instance_count", instance.InstanceCount)
-	d.Set("start_time", instance.StartTime)
-	d.Set("end_time", instance.EndTime)
-	d.Set("status", instance.State)
+	_ = d.Set("instance_count", instance.InstanceCount)
+	_ = d.Set("start_time", instance.StartTime)
+	_ = d.Set("end_time", instance.EndTime)
+	_ = d.Set("status", instance.State)
 
 	return nil
 }

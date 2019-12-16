@@ -291,7 +291,7 @@ func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error
 		enis = append(enis, m)
 	}
 
-	d.Set("enis", enis)
+	_ = d.Set("enis", enis)
 	d.SetId(dataResourceIdsHash(eniIds))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

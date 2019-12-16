@@ -163,12 +163,12 @@ func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{
 		return nil
 	}
 
-	d.Set("disk_type", snapshot.DiskUsage)
-	d.Set("percent", snapshot.Percent)
-	d.Set("storage_size", snapshot.DiskSize)
-	d.Set("storage_id", snapshot.DiskId)
-	d.Set("snapshot_name", snapshot.SnapshotName)
-	d.Set("snapshot_status", snapshot.SnapshotState)
+	_ = d.Set("disk_type", snapshot.DiskUsage)
+	_ = d.Set("percent", snapshot.Percent)
+	_ = d.Set("storage_size", snapshot.DiskSize)
+	_ = d.Set("storage_id", snapshot.DiskId)
+	_ = d.Set("snapshot_name", snapshot.SnapshotName)
+	_ = d.Set("snapshot_status", snapshot.SnapshotState)
 
 	return nil
 }

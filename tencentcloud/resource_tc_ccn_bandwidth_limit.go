@@ -160,7 +160,7 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 		if e != nil {
 			return retryError(e)
 		}
-		d.Set("bandwidth_limit", bandwidth)
+		_ = d.Set("bandwidth_limit", bandwidth)
 		return nil
 	})
 	if err != nil {

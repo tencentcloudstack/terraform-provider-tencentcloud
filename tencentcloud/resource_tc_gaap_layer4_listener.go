@@ -377,17 +377,17 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		return nil
 	}
 
-	d.Set("protocol", protocol)
-	d.Set("name", name)
-	d.Set("port", port)
-	d.Set("scheduler", scheduler)
-	d.Set("realserver_type", realServerType)
-	d.Set("health_check", healthCheck)
-	d.Set("interval", interval)
-	d.Set("connect_timeout", connectTimeout)
-	d.Set("realserver_bind_set", realservers)
-	d.Set("status", status)
-	d.Set("create_time", createTime)
+	_ = d.Set("protocol", protocol)
+	_ = d.Set("name", name)
+	_ = d.Set("port", port)
+	_ = d.Set("scheduler", scheduler)
+	_ = d.Set("realserver_type", realServerType)
+	_ = d.Set("health_check", healthCheck)
+	_ = d.Set("interval", interval)
+	_ = d.Set("connect_timeout", connectTimeout)
+	_ = d.Set("realserver_bind_set", realservers)
+	_ = d.Set("status", status)
+	_ = d.Set("create_time", createTime)
 
 	return nil
 }

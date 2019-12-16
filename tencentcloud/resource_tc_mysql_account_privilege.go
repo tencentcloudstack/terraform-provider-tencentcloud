@@ -179,7 +179,7 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 				finalPrivileges = append(finalPrivileges, getPrivilege)
 			}
 		}
-		d.Set("privileges", finalPrivileges)
+		_ = d.Set("privileges", finalPrivileges)
 		return nil
 	})
 	if err != nil {

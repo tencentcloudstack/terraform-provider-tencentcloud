@@ -101,10 +101,10 @@ func dataSourceTencentCloudSubnetRead(d *schema.ResourceData, meta interface{}) 
 
 	subnet := infos[0]
 	d.SetId(subnet.subnetId)
-	d.Set("cidr_block", subnet.cidr)
-	d.Set("name", subnet.name)
-	d.Set("route_table_id", subnet.routeTableId)
-	d.Set("availability_zone", subnet.zone)
+	_ = d.Set("cidr_block", subnet.cidr)
+	_ = d.Set("name", subnet.name)
+	_ = d.Set("route_table_id", subnet.routeTableId)
+	_ = d.Set("availability_zone", subnet.zone)
 
 	return nil
 }

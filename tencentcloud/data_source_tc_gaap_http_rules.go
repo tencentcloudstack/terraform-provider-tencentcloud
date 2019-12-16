@@ -334,7 +334,7 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 		}
 	}
 
-	d.Set("rules", rules)
+	_ = d.Set("rules", rules)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

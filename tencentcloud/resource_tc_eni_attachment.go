@@ -159,8 +159,8 @@ func resourceTencentCloudEniAttachmentRead(d *schema.ResourceData, m interface{}
 		return nil
 	}
 
-	d.Set("eni_id", eni.NetworkInterfaceId)
-	d.Set("instance_id", eni.Attachment.InstanceId)
+	_ = d.Set("eni_id", eni.NetworkInterfaceId)
+	_ = d.Set("instance_id", eni.Attachment.InstanceId)
 
 	return nil
 }

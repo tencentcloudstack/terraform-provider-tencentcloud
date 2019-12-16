@@ -164,15 +164,15 @@ func resourceTencentCloudHaVipRead(d *schema.ResourceData, meta interface{}) err
 
 	haVip := response.Response.HaVipSet[0]
 
-	d.Set("name", *haVip.HaVipName)
-	d.Set("create_time", *haVip.CreatedTime)
-	d.Set("vip", *haVip.Vip)
-	d.Set("vpc_id", *haVip.VpcId)
-	d.Set("subnet_id", *haVip.SubnetId)
-	d.Set("address_id", *haVip.AddressIp)
-	d.Set("state", *haVip.State)
-	d.Set("network_interface_id", *haVip.NetworkInterfaceId)
-	d.Set("instance_id", *haVip.InstanceId)
+	_ = d.Set("name", *haVip.HaVipName)
+	_ = d.Set("create_time", *haVip.CreatedTime)
+	_ = d.Set("vip", *haVip.Vip)
+	_ = d.Set("vpc_id", *haVip.VpcId)
+	_ = d.Set("subnet_id", *haVip.SubnetId)
+	_ = d.Set("address_id", *haVip.AddressIp)
+	_ = d.Set("state", *haVip.State)
+	_ = d.Set("network_interface_id", *haVip.NetworkInterfaceId)
+	_ = d.Set("instance_id", *haVip.InstanceId)
 
 	return nil
 }

@@ -365,20 +365,20 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 
 	eni := enis[0]
 
-	d.Set("name", eni.NetworkInterfaceName)
-	d.Set("vpc_id", eni.VpcId)
-	d.Set("subnet_id", eni.SubnetId)
-	d.Set("description", eni.NetworkInterfaceDescription)
-	d.Set("mac", eni.MacAddress)
-	d.Set("state", eni.State)
-	d.Set("primary", eni.Primary)
-	d.Set("create_time", eni.CreatedTime)
+	_ = d.Set("name", eni.NetworkInterfaceName)
+	_ = d.Set("vpc_id", eni.VpcId)
+	_ = d.Set("subnet_id", eni.SubnetId)
+	_ = d.Set("description", eni.NetworkInterfaceDescription)
+	_ = d.Set("mac", eni.MacAddress)
+	_ = d.Set("state", eni.State)
+	_ = d.Set("primary", eni.Primary)
+	_ = d.Set("create_time", eni.CreatedTime)
 
 	sgs := make([]string, 0, len(eni.GroupSet))
 	for _, sg := range eni.GroupSet {
 		sgs = append(sgs, *sg)
 	}
-	d.Set("security_groups", sgs)
+	_ = d.Set("security_groups", sgs)
 
 	ipv4s := make([]map[string]interface{}, 0, len(eni.PrivateIpAddressSet))
 	for _, ipv4 := range eni.PrivateIpAddressSet {
@@ -388,20 +388,20 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 			"description": ipv4.Description,
 		})
 	}
-	d.Set("ipv4_info", ipv4s)
+	_ = d.Set("ipv4_info", ipv4s)
 
 	_, manually := d.GetOk("ipv4s")
 	_, count := d.GetOk("ipv4_count")
 	if !manually && !count {
 		// import mode
-		d.Set("ipv4_count", len(ipv4s))
+		_ = d.Set("ipv4_count", len(ipv4s))
 	}
 
 	tags := make(map[string]string, len(eni.TagSet))
 	for _, tag := range eni.TagSet {
 		tags[*tag.Key] = *tag.Value
 	}
-	d.Set("tags", tags)
+	_ = d.Set("tags", tags)
 
 	return nil
 }

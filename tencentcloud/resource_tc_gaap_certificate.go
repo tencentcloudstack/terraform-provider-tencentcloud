@@ -147,7 +147,7 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 		return errors.New("certificate type is nil")
 	}
 	if certType, ok := gaapCertificateIntMap[int(*certificate.CertificateType)]; ok {
-		d.Set("type", certType)
+		_ = d.Set("type", certType)
 	} else {
 		return fmt.Errorf("unknown certificate type %d", *certificate.CertificateType)
 	}
@@ -155,36 +155,36 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 	if certificate.CertificateContent == nil {
 		return errors.New("certificate content is nil")
 	}
-	d.Set("content", certificate.CertificateContent)
+	_ = d.Set("content", certificate.CertificateContent)
 
 	if certificate.CertificateAlias == nil {
 		return errors.New("certificate name is nil")
 	}
-	d.Set("name", certificate.CertificateAlias)
+	_ = d.Set("name", certificate.CertificateAlias)
 
 	if _, ok := d.GetOk("key"); ok {
 		if certificate.CertificateKey == nil {
 			return errors.New("certificate key is nil")
 		}
-		d.Set("key", certificate.CertificateKey)
+		_ = d.Set("key", certificate.CertificateKey)
 	}
 
 	if certificate.CreateTime == nil {
 		return errors.New("certificate create time is nil")
 	}
-	d.Set("create_time", formatUnixTime(*certificate.CreateTime))
+	_ = d.Set("create_time", formatUnixTime(*certificate.CreateTime))
 
 	if certificate.BeginTime != nil {
-		d.Set("begin_time", formatUnixTime(*certificate.BeginTime))
+		_ = d.Set("begin_time", formatUnixTime(*certificate.BeginTime))
 	}
 	if certificate.EndTime != nil {
-		d.Set("end_time", formatUnixTime(*certificate.EndTime))
+		_ = d.Set("end_time", formatUnixTime(*certificate.EndTime))
 	}
 	if certificate.IssuerCN != nil {
-		d.Set("issuer_cn", certificate.IssuerCN)
+		_ = d.Set("issuer_cn", certificate.IssuerCN)
 	}
 	if certificate.SubjectCN != nil {
-		d.Set("subject_cn", certificate.SubjectCN)
+		_ = d.Set("subject_cn", certificate.SubjectCN)
 	}
 
 	return nil

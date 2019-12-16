@@ -126,8 +126,8 @@ func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, meta i
 		d.SetId("")
 		return nil
 	}
-	d.Set("storage_id", storage.DiskId)
-	d.Set("instance_id", storage.InstanceId)
+	_ = d.Set("storage_id", storage.DiskId)
+	_ = d.Set("instance_id", storage.InstanceId)
 
 	return nil
 }

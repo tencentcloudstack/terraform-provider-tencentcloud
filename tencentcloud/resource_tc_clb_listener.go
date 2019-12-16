@@ -319,15 +319,15 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		return nil
 	}
 
-	d.Set("clb_id", clbId)
-	d.Set("listener_name", instance.ListenerName)
-	d.Set("port", instance.Port)
-	d.Set("protocol", instance.Protocol)
-	d.Set("session_expire_time", instance.SessionExpireTime)
+	_ = d.Set("clb_id", clbId)
+	_ = d.Set("listener_name", instance.ListenerName)
+	_ = d.Set("port", instance.Port)
+	_ = d.Set("protocol", instance.Protocol)
+	_ = d.Set("session_expire_time", instance.SessionExpireTime)
 	if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
-		d.Set("scheduler", instance.Scheduler)
+		_ = d.Set("scheduler", instance.Scheduler)
 	}
-	d.Set("sni_switch", instance.SniSwitch)
+	_ = d.Set("sni_switch", instance.SniSwitch)
 
 	//health check
 	if instance.HealthCheck != nil {
@@ -335,18 +335,18 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		if *instance.HealthCheck.HealthSwitch == int64(1) {
 			health_check_switch = true
 		}
-		d.Set("health_check_switch", health_check_switch)
-		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
-		d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
-		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
-		d.Set("health_check_health_num ", instance.HealthCheck.HealthNum)
-		d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
+		_ = d.Set("health_check_switch", health_check_switch)
+		_ = d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
+		_ = d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
+		_ = d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
+		_ = d.Set("health_check_health_num ", instance.HealthCheck.HealthNum)
+		_ = d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
 	}
 
 	if instance.Certificate != nil {
-		d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
-		d.Set("certificate_id", instance.Certificate.CertId)
-		d.Set("certificate_ca_id", instance.Certificate.CertCaId)
+		_ = d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
+		_ = d.Set("certificate_id", instance.Certificate.CertId)
+		_ = d.Set("certificate_ca_id", instance.Certificate.CertCaId)
 	}
 
 	return nil

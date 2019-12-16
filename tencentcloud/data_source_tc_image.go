@@ -145,7 +145,7 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 		if osName != "" {
 			if strings.Contains(strings.ToLower(*image.OsName), strings.ToLower(osName)) {
 				resultImageId = *image.ImageId
-				d.Set("image_name", *image.ImageName)
+				_ = d.Set("image_name", *image.ImageName)
 				break
 			}
 			continue
@@ -154,14 +154,14 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 		if regImageName != "" {
 			if imageNameRegex.MatchString(*image.ImageName) {
 				resultImageId = *image.ImageId
-				d.Set("image_name", *image.ImageName)
+				_ = d.Set("image_name", *image.ImageName)
 				break
 			}
 			continue
 		}
 
 		resultImageId = *image.ImageId
-		d.Set("image_name", *image.ImageName)
+		_ = d.Set("image_name", *image.ImageName)
 		break
 	}
 

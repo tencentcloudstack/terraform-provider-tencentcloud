@@ -182,9 +182,9 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 			d.SetId("")
 			return nil
 		}
-		d.Set("state", strings.ToUpper(info.state))
-		d.Set("attached_time", info.attachedTime)
-		d.Set("cidr_block", info.cidrBlock)
+		_ = d.Set("state", strings.ToUpper(info.state))
+		_ = d.Set("attached_time", info.attachedTime)
+		_ = d.Set("cidr_block", info.cidrBlock)
 		return nil
 	})
 	if err != nil {

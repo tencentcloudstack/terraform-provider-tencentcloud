@@ -173,9 +173,9 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 
 	gateway := response.Response.CustomerGatewaySet[0]
 
-	d.Set("name", *gateway.CustomerGatewayName)
-	d.Set("public_ip_address", *gateway.IpAddress)
-	d.Set("create_time", *gateway.CreatedTime)
+	_ = d.Set("name", *gateway.CustomerGatewayName)
+	_ = d.Set("public_ip_address", *gateway.IpAddress)
+	_ = d.Set("create_time", *gateway.CreatedTime)
 
 	//tags
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -184,7 +184,7 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 	if err != nil {
 		return err
 	}
-	d.Set("tags", tags)
+	_ = d.Set("tags", tags)
 
 	return nil
 }

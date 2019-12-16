@@ -193,12 +193,12 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 
 	nat := response.Response.NatGatewaySet[0]
 
-	d.Set("vpc_id", *nat.VpcId)
-	d.Set("name", *nat.NatGatewayName)
-	d.Set("max_concurrent", *nat.MaxConcurrentConnection)
-	d.Set("bandwidth", *nat.InternetMaxBandwidthOut)
-	d.Set("create_time", *nat.CreatedTime)
-	d.Set("assigned_eip_set", flattenAddressList((*nat).PublicIpAddressSet))
+	_ = d.Set("vpc_id", *nat.VpcId)
+	_ = d.Set("name", *nat.NatGatewayName)
+	_ = d.Set("max_concurrent", *nat.MaxConcurrentConnection)
+	_ = d.Set("bandwidth", *nat.InternetMaxBandwidthOut)
+	_ = d.Set("create_time", *nat.CreatedTime)
+	_ = d.Set("assigned_eip_set", flattenAddressList((*nat).PublicIpAddressSet))
 	return nil
 }
 

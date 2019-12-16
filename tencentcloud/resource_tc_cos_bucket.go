@@ -312,7 +312,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 
 	// set bucket in the import case
 	if _, ok := d.GetOk("bucket"); !ok {
-		d.Set("bucket", d.Id())
+		_ = d.Set("bucket", d.Id())
 	}
 
 	// read the cors
@@ -348,7 +348,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("get tags failed: %v", err)
 	}
 
-	d.Set("tags", tags)
+	_ = d.Set("tags", tags)
 
 	return nil
 }

@@ -224,7 +224,7 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 			d.SetId("")
 			return nil
 		}
-		d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
+		_ = d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
 		return nil
 	})
 	if err != nil {

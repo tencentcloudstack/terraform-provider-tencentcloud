@@ -527,45 +527,45 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 
 	resp := response.Response
 
-	d.Set("name", resp.FunctionName)
-	d.Set("handler", resp.Handler)
-	d.Set("description", resp.Description)
-	d.Set("mem_size", resp.MemorySize)
-	d.Set("timeout", resp.Timeout)
+	_ = d.Set("name", resp.FunctionName)
+	_ = d.Set("handler", resp.Handler)
+	_ = d.Set("description", resp.Description)
+	_ = d.Set("mem_size", resp.MemorySize)
+	_ = d.Set("timeout", resp.Timeout)
 
 	environment := make(map[string]string, len(resp.Environment.Variables))
 	for _, v := range resp.Environment.Variables {
 		environment[*v.Key] = *v.Value
 	}
-	d.Set("environment", environment)
+	_ = d.Set("environment", environment)
 
-	d.Set("runtime", resp.Runtime)
-	d.Set("vpc_id", resp.VpcConfig.VpcId)
-	d.Set("subnet_id", resp.VpcConfig.SubnetId)
-	d.Set("namespace", resp.Namespace)
-	d.Set("role", resp.Role)
-	d.Set("cls_logset_id", resp.ClsLogsetId)
-	d.Set("cls_topic_id", resp.ClsTopicId)
-	d.Set("l5_enable", *resp.L5Enable == "TRUE")
+	_ = d.Set("runtime", resp.Runtime)
+	_ = d.Set("vpc_id", resp.VpcConfig.VpcId)
+	_ = d.Set("subnet_id", resp.VpcConfig.SubnetId)
+	_ = d.Set("namespace", resp.Namespace)
+	_ = d.Set("role", resp.Role)
+	_ = d.Set("cls_logset_id", resp.ClsLogsetId)
+	_ = d.Set("cls_topic_id", resp.ClsTopicId)
+	_ = d.Set("l5_enable", *resp.L5Enable == "TRUE")
 
 	tags := make(map[string]string, len(resp.Tags))
 	for _, tag := range resp.Tags {
 		tags[*tag.Key] = *tag.Value
 	}
-	d.Set("tags", tags)
+	_ = d.Set("tags", tags)
 
-	d.Set("modify_time", resp.ModTime)
-	d.Set("code_size", resp.CodeSize)
-	d.Set("code_result", resp.CodeResult)
-	d.Set("code_error", resp.CodeError)
-	d.Set("err_no", resp.ErrNo)
-	d.Set("install_dependency", *resp.InstallDependency == "TRUE")
-	d.Set("status", resp.Status)
-	d.Set("status_desc", resp.StatusDesc)
-	d.Set("eip_fixed", *resp.EipConfig.EipFixed == "TRUE")
-	d.Set("eips", resp.EipConfig.Eips)
-	d.Set("host", resp.AccessInfo.Host)
-	d.Set("vip", resp.AccessInfo.Vip)
+	_ = d.Set("modify_time", resp.ModTime)
+	_ = d.Set("code_size", resp.CodeSize)
+	_ = d.Set("code_result", resp.CodeResult)
+	_ = d.Set("code_error", resp.CodeError)
+	_ = d.Set("err_no", resp.ErrNo)
+	_ = d.Set("install_dependency", *resp.InstallDependency == "TRUE")
+	_ = d.Set("status", resp.Status)
+	_ = d.Set("status_desc", resp.StatusDesc)
+	_ = d.Set("eip_fixed", *resp.EipConfig.EipFixed == "TRUE")
+	_ = d.Set("eips", resp.EipConfig.Eips)
+	_ = d.Set("host", resp.AccessInfo.Host)
+	_ = d.Set("vip", resp.AccessInfo.Vip)
 
 	triggers := make([]map[string]interface{}, 0, len(resp.Triggers))
 	for _, trigger := range resp.Triggers {
@@ -594,7 +594,7 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 			"custom_argument": trigger.CustomArgument,
 		})
 	}
-	d.Set("trigger_info", triggers)
+	_ = d.Set("trigger_info", triggers)
 
 	return nil
 }

@@ -304,7 +304,7 @@ func dataSourceTencentCloudGaapProxiesRead(d *schema.ResourceData, m interface{}
 		respProxies = append(respProxies, m)
 	}
 
-	d.Set("proxies", respProxies)
+	_ = d.Set("proxies", respProxies)
 	d.SetId(dataResourceIdsHash(proxyIds))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

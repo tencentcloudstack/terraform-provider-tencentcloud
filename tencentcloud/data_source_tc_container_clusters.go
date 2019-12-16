@@ -237,8 +237,8 @@ func dataSourceTencentCloudContainerClustersRead(d *schema.ResourceData, meta in
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
-	d.Set("clusters", clustersList)
-	d.Set("total_count", *response.Response.TotalCount)
+	_ = d.Set("clusters", clustersList)
+	_ = d.Set("total_count", *response.Response.TotalCount)
 
 	return nil
 }

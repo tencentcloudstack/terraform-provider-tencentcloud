@@ -202,7 +202,7 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 		domains = append(domains, m)
 	}
 
-	d.Set("domains", domains)
+	_ = d.Set("domains", domains)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

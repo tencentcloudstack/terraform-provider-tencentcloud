@@ -121,13 +121,13 @@ func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) e
 		return nil
 	}
 
-	d.Set("key_name", keyPair.KeyName)
-	d.Set("project_id", keyPair.ProjectId)
+	_ = d.Set("key_name", keyPair.KeyName)
+	_ = d.Set("project_id", keyPair.ProjectId)
 	if keyPair.PublicKey != nil {
 		publicKey := *keyPair.PublicKey
 		split := strings.Split(publicKey, " ")
 		publicKey = strings.Join(split[0:len(split)-1], " ")
-		d.Set("public_key", publicKey)
+		_ = d.Set("public_key", publicKey)
 	}
 
 	return nil

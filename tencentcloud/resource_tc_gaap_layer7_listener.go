@@ -333,16 +333,16 @@ LOOP:
 		}
 	}
 
-	d.Set("protocol", protocol)
-	d.Set("name", name)
-	d.Set("port", port)
-	d.Set("certificate_id", certificateId)
-	d.Set("forward_protocol", forwardProtocol)
-	d.Set("auth_type", authType)
-	d.Set("client_certificate_id", clientCertificateId)
-	d.Set("client_certificate_ids", polyClientCertificateIds)
-	d.Set("status", status)
-	d.Set("create_time", createTime)
+	_ = d.Set("protocol", protocol)
+	_ = d.Set("name", name)
+	_ = d.Set("port", port)
+	_ = d.Set("certificate_id", certificateId)
+	_ = d.Set("forward_protocol", forwardProtocol)
+	_ = d.Set("auth_type", authType)
+	_ = d.Set("client_certificate_id", clientCertificateId)
+	_ = d.Set("client_certificate_ids", polyClientCertificateIds)
+	_ = d.Set("status", status)
+	_ = d.Set("create_time", createTime)
 
 	return nil
 }

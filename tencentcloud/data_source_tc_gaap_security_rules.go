@@ -242,7 +242,7 @@ func dataSourceTencentCloudGaapSecurityRulesRead(d *schema.ResourceData, m inter
 		})
 	}
 
-	d.Set("rules", rules)
+	_ = d.Set("rules", rules)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

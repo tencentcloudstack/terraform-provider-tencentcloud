@@ -106,8 +106,8 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 		return nil
 	}
 
-	d.Set("group_id", groupId)
-	d.Set("user_ids", members)
+	_ = d.Set("group_id", groupId)
+	_ = d.Set("user_ids", members)
 
 	return nil
 }

@@ -142,12 +142,12 @@ func resourceTencentCloudCamGroupPolicyAttachmentRead(d *schema.ResourceData, me
 	if e != nil {
 		return e
 	}
-	d.Set("group_id", groupId)
-	d.Set("policy_id", strconv.Itoa(int(policyId)))
-	d.Set("policy_name", *instance.PolicyName)
-	d.Set("create_time", *instance.AddTime)
-	d.Set("create_mode", int(*instance.CreateMode))
-	d.Set("policy_type", *instance.PolicyType)
+	_ = d.Set("group_id", groupId)
+	_ = d.Set("policy_id", strconv.Itoa(int(policyId)))
+	_ = d.Set("policy_name", *instance.PolicyName)
+	_ = d.Set("create_time", *instance.AddTime)
+	_ = d.Set("create_mode", int(*instance.CreateMode))
+	_ = d.Set("policy_type", *instance.PolicyType)
 	return nil
 }
 
