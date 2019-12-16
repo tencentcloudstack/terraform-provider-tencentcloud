@@ -5,10 +5,12 @@ FEATURES:
 * **New Data Source**: `tencentcloud_tcaplus_zones`
 * **New Data Source**: `tencentcloud_tcaplus_tables`
 * **New Data Source**: `tencentcloud_tcaplus_idls`
+* **New Data Source**: `tencentcloud_cbs_snapshot_policys`
 * **New Resource**: `tencentcloud_tcaplus_application`
 * **New Resource**: `tencentcloud_tcaplus_zone`
 * **New Resource**: `tencentcloud_tcaplus_idl`
 * **New Resource**: `tencentcloud_tcaplus_table`
+* **New Resource**: `tencentcloud_cbs_snapshot_policy_attachment`
 
 ENHANCEMENTS:
 
