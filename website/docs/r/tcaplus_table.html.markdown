@@ -29,7 +29,6 @@ resource "tencentcloud_tcaplus_zone" "zone" {
 
 resource "tencentcloud_tcaplus_idl" "main" {
   app_id        = tencentcloud_tcaplus_application.test.id
-  zone_id       = tencentcloud_tcaplus_zone.zone.id
   file_name     = "tf_idl_test_2"
   file_type     = "PROTO"
   file_ext_type = "proto"
