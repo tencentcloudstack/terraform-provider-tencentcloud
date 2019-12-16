@@ -177,7 +177,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 
 	//firstly see if listener and location exists
 	request := clb.NewDeregisterTargetsRequest()
-	request.ListenerId = stringToPointer(listenerId)
+	request.ListenerId = &listenerId
 	request.LoadBalancerId = stringToPointer(clbId)
 	if locationId != "" {
 		request.LocationId = stringToPointer(locationId)
