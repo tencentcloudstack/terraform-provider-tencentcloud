@@ -53,9 +53,9 @@ func testAccCheckCamSAMLProviderDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := camService.DescribeSAMLProviderById(ctx, rs.Primary.ID)
-		if err == nil {
-			return fmt.Errorf("CAM SAML provider still exists: %s", rs.Primary.ID)
+		instance, err := camService.DescribeSAMLProviderById(ctx, rs.Primary.ID)
+		if err == nil && instance != nil && instance.Response != nil && instance.Response.Name != nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM SAML provider][Destroy] check: CAM SAML provider still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -68,17 +68,20 @@ func testAccCheckCamSAMLProviderExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("CAM SAML provider %s is not found", n)
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM SAML provider][Exists] check: CAM SAML provider %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("CAM SAML provider id is not set")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM SAML provider][Exists] check: CAM SAML provider id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := camService.DescribeSAMLProviderById(ctx, rs.Primary.ID)
+		instance, err := camService.DescribeSAMLProviderById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if instance == nil || instance.Response == nil || instance.Response.Name == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM SAML provider][Exists] check: CAM SAML provider %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

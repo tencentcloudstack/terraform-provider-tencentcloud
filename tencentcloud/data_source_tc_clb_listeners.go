@@ -221,7 +221,9 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 		if listener.Certificate != nil {
 			mapping["certificate_ssl_mode"] = *listener.Certificate.SSLMode
 			mapping["certificate_id"] = *listener.Certificate.CertId
-			mapping["certificate_ca_id"] = *listener.Certificate.CertCaId
+			if listener.Certificate.CertCaId != nil {
+				mapping["certificate_ca_id"] = *listener.Certificate.CertCaId
+			}
 		}
 		listenerList = append(listenerList, mapping)
 		ids = append(ids, *listener.ListenerId)

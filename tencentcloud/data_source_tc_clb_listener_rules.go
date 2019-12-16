@@ -242,7 +242,9 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 		if rule.Certificate != nil {
 			mapping["certificate_ssl_mode"] = *rule.Certificate.SSLMode
 			mapping["certificate_id"] = *rule.Certificate.CertId
-			mapping["certificate_ca_id"] = *rule.Certificate.CertCaId
+			if rule.Certificate.CertCaId != nil {
+				mapping["certificate_ca_id"] = *rule.Certificate.CertCaId
+			}
 		}
 		ruleList = append(ruleList, mapping)
 		ids = append(ids, *rule.LocationId)

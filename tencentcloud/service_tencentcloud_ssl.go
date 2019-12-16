@@ -210,3 +210,32 @@ func (me *SslService) DeleteCertificate(ctx context.Context, id string) error {
 
 	return nil
 }
+
+func (me *SslService) checkCertificateType(ctx context.Context, certId string, checkType string) (bool, error) {
+
+	//get certificate by id
+
+	certificates, err := me.DescribeCertificates(ctx, &certId, nil, nil)
+	if err != nil {
+		return false, err
+	}
+
+	var certificate *ssl.SSLCertificate
+	for _, c := range certificates {
+		if c.Id == nil {
+			return false, errors.New("certificate id is nil")
+		}
+
+		if *c.Id == certId {
+			certificate = c
+			break
+		}
+	}
+
+	if certificate != nil && *certificate.CertType == checkType {
+		return true, nil
+	} else {
+		return false, nil
+	}
+
+}

@@ -51,9 +51,9 @@ func testAccCheckCamRoleDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := camService.DescribeRoleById(ctx, rs.Primary.ID)
-		if err == nil {
-			return fmt.Errorf("CAM role still exists: %s", rs.Primary.ID)
+		instance, err := camService.DescribeRoleById(ctx, rs.Primary.ID)
+		if err == nil && instance != nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM role][Destroy] check: CAM role still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -66,17 +66,20 @@ func testAccCheckCamRoleExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("CAM role %s is not found", n)
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM role][Exists] check: CAM role %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("CAM role id is not set")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM role][Exists] check: CAM role id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := camService.DescribeRoleById(ctx, rs.Primary.ID)
+		instance, err := camService.DescribeRoleById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if instance == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM role][Exists] check: CAM role %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

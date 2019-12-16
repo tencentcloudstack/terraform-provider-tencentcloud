@@ -171,6 +171,9 @@ func getUidFromName(name string, meta interface{}) (uid *uint64, errRet error) {
 		if e != nil {
 			return retryError(e)
 		}
+		if result == nil || result.Response == nil || result.Response.Uid == nil {
+			return nil
+		}
 		uid = result.Response.Uid
 		return nil
 	})
@@ -192,6 +195,9 @@ func addUsersToGroup(members []interface{}, groupId string, meta interface{}) er
 		uId, e := getUidFromName(member.(string), meta)
 		if e != nil {
 			return e
+		}
+		if uId == nil {
+			continue
 		}
 		info.Uid = uId
 		groupIdInt, ee := strconv.Atoi(groupId)
@@ -240,6 +246,9 @@ func removeUsersFromGroup(members []interface{}, groupId string, meta interface{
 			} else {
 				return e
 			}
+		}
+		if uId == nil {
+			continue
 		}
 		info.Uid = uId
 		groupIdInt, eee := strconv.Atoi(groupId)
