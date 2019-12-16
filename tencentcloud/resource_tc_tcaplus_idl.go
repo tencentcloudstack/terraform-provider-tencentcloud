@@ -86,7 +86,7 @@ func resourceTencentCloudTcaplusIdl() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Application of the idl  belongs.",
+				Description: "Application id of the idl belongs..",
 			},
 			"file_name": {
 				Type:        schema.TypeString,

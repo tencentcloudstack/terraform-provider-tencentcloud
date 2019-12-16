@@ -21,7 +21,7 @@ Use this resource to create tcaplus application
 The following arguments are supported:
 
 * `app_name` - (Required) Name of the tcapplus application. length should between 1 and 30.
-* `idl_type` - (Required, ForceNew) ID of the tcapplus application.Valid values are PROTO,TDR,MIX.
+* `idl_type` - (Required, ForceNew) Idl type of the tcapplus application.Valid values are PROTO,TDR,MIX.
 * `password` - (Required) Password of the tcapplus application. length should between 12 and 16,a-z and 0-9 and A-Z must contain.
 * `subnet_id` - (Required, ForceNew) Subnet id of the tcapplus application.
 * `vpc_id` - (Required, ForceNew) VPC id of the tcapplus application.

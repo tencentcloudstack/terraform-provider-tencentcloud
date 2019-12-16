@@ -46,7 +46,7 @@ The following arguments are supported:
 
 * `app_id` - (Required) Id of the tcapplus application to be query.
 * `result_output_file` - (Optional) Used to save results.
-* `table_id` - (Optional) Zone id to be query.
+* `table_id` - (Optional) Table id to be query.
 * `table_name` - (Optional) Table name to be query.
 * `zone_id` - (Optional) Zone id to be query.
 

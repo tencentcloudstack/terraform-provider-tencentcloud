@@ -314,7 +314,7 @@ func (me *TencentCloudClient) UseScfClient() *scf.Client {
 	return me.scfConn
 }
 
-// UseScfClient returns tcaplush client for service
+// UseTcaplusClient returns tcaplush client for service
 func (me *TencentCloudClient) UseTcaplusClient() *tcaplusdb.Client {
 	if me.tcaplusConn != nil {
 		return me.tcaplusConn

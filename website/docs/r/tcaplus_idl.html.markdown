@@ -67,7 +67,7 @@ resource "tencentcloud_tcaplus_idl" "main" {
 
 The following arguments are supported:
 
-* `app_id` - (Required, ForceNew) Application of the idl  belongs.
+* `app_id` - (Required, ForceNew) Application id of the idl belongs..
 * `file_content` - (Required, ForceNew) Idl file content.
 * `file_ext_type` - (Required, ForceNew) File ext type of this idl file. if `file_type` is PROTO  `file_ext_type` must be 'proto',if `file_type` is TDR  `file_ext_type` must be 'xml',if `file_type` is MIX  `file_ext_type` must be 'xml' or 'proto'.
 * `file_name` - (Required, ForceNew) Name of this idl file.

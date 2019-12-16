@@ -59,7 +59,7 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 			"table_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Zone id to be query.",
+				Description: "Table id to be query.",
 			},
 			"table_name": {
 				Type:        schema.TypeString,

@@ -4,21 +4,8 @@ Use this data source to query tcaplus idl files
 Example Usage
 
 ```hcl
-data "tencentcloud_tcaplus_zones" "null" {
-  app_id = "19162256624"
-}
-data "tencentcloud_tcaplus_zones" "id" {
-  app_id  = "19162256624"
-  zone_id = "19162256624:1"
-}
-data "tencentcloud_tcaplus_zones" "name" {
-  app_id    = "19162256624"
-  zone_name = "test"
-}
-data "tencentcloud_tcaplus_zones" "all" {
-  app_id    = "19162256624"
-  zone_id   = "19162256624:1"
-  zone_name = "test"
+data "tencentcloud_tcaplus_idls" "id_test" {
+   app_id    = "19162256624"
 }
 ```
 */

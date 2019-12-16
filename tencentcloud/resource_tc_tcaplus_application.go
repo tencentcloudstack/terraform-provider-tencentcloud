@@ -55,7 +55,7 @@ func resourceTencentCloudTcaplusApplication() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_IDL_TYPES),
-				Description:  "ID of the tcapplus application.Valid values are " + strings.Join(TCAPLUS_IDL_TYPES, ",") + ".",
+				Description:  "Idl type of the tcapplus application.Valid values are " + strings.Join(TCAPLUS_IDL_TYPES, ",") + ".",
 			},
 			"app_name": {
 				Type:         schema.TypeString,
