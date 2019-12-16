@@ -21,6 +21,8 @@ BUG FIXES:
 * Fix bug that resource `tencentcloud_security_group` read error when response is InternalError.
 * Fix bug that the type of `cluster_type` is wrong in data source `tencentcloud_mongodb_instances`([#242](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/242)).
 * Fix bug that resource `tencentcloud_eip` unattach error([#233](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/233)).
+* Fix bug that terraform read nil attachment resource when the attached resource of attachment resource is removed of resource CLB and CAM.
+* Fix doc example error of resource `tencentcloud_nat_gateway`.
 
 ## 1.26.0 (December 09, 2019)
 
