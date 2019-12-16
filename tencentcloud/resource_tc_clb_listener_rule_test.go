@@ -131,9 +131,12 @@ func testAccCheckClbListenerRuleExists(n string) resource.TestCheckFunc {
 		listenerId := rs.Primary.Attributes["listener_id"]
 		clbId := rs.Primary.Attributes["clb_id"]
 		filter := map[string]string{"rule_id": locationId, "listener_id": listenerId, "clb_id": clbId}
-		_, err := clbService.DescribeRulesByFilter(ctx, filter)
+		rules, err := clbService.DescribeRulesByFilter(ctx, filter)
 		if err != nil {
 			return err
+		}
+		if len(rules) == 0 {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener rule][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

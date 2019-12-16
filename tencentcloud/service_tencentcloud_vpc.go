@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -20,6 +21,8 @@ import (
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+var eipUnattachLocker = &sync.Mutex{}
 
 // VPC basic information
 type VpcBasicInfo struct {
@@ -934,7 +937,7 @@ func (me *VpcService) DescribeSecurityGroup(ctx context.Context, id string) (sg 
 
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 				logId, request.GetAction(), request.ToJsonString(), err)
-			return retryError(err)
+			return retryError(err, InternalError)
 		}
 
 		if len(response.Response.SecurityGroupSet) == 0 {
@@ -1272,7 +1275,7 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 					logId, request.GetAction(), request.ToJsonString(), err)
-				return retryError(err)
+				return retryError(err, InternalError)
 			}
 
 			set := response.Response.SecurityGroupSet
@@ -1709,10 +1712,20 @@ func (me *VpcService) AttachEip(ctx context.Context, eipId, instanceId string) e
 }
 
 func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
+	eipUnattachLocker.Lock()
+	defer eipUnattachLocker.Unlock()
+
 	logId := getLogId(ctx)
+	eip, err := me.DescribeEipById(ctx, eipId)
+	if err != nil {
+		return err
+	}
+	if eip == nil || *eip.AddressStatus == EIP_STATUS_UNBIND {
+		return nil
+	}
+
 	request := vpc.NewDisassociateAddressRequest()
 	request.AddressId = &eipId
-
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DisassociateAddress(request)
 	if err != nil {
@@ -1720,8 +1733,30 @@ func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response.Response.TaskId == nil {
+		return nil
+	}
+	taskId, err := strconv.ParseUint(*response.Response.TaskId, 10, 64)
+	if err != nil {
+		return nil
+	}
+
+	taskRequest := vpc.NewDescribeTaskResultRequest()
+	taskRequest.TaskId = &taskId
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(taskRequest.GetAction())
+		taskResponse, err := me.client.UseVpcClient().DescribeTaskResult(taskRequest)
+		if err != nil {
+			return retryError(err)
+		}
+		if taskResponse.Response.Result != nil && *taskResponse.Response.Result == EIP_TASK_STATUS_RUNNING {
+			return resource.RetryableError(errors.New("eip task is running"))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -44,9 +44,9 @@ func testAccCheckCamRolePolicyAttachmentDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := camService.DescribeRolePolicyAttachmentById(ctx, rs.Primary.ID)
-		if err == nil {
-			return fmt.Errorf("CAM role policy attachment still exists: %s", rs.Primary.ID)
+		instance, err := camService.DescribeRolePolicyAttachmentById(ctx, rs.Primary.ID)
+		if err == nil && instance != nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM role policy attachment][Desctroy] check: CAM role policy attachment still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -59,17 +59,20 @@ func testAccCheckCamRolePolicyAttachmentExists(n string) resource.TestCheckFunc 
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("CAM role policy attachment %s is not found", n)
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM role policy attachment][Exist] check: CAM role policy attachment %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("CAM role policy attachment id is not set")
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM role policy attachment][Exist] check: CAM role policy attachment id is not set")
 		}
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := camService.DescribeRolePolicyAttachmentById(ctx, rs.Primary.ID)
+		instance, err := camService.DescribeRolePolicyAttachmentById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if instance == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM role policy attachment][Exist] check: CAM role policy attachment %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

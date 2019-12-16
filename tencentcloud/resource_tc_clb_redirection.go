@@ -317,7 +317,7 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	if instance == nil {
+	if instance == nil || len(*instance) == 0 {
 		d.SetId("")
 		return nil
 	}

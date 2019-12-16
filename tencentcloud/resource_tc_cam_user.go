@@ -196,7 +196,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 	if response.Response.Uid == nil {
-		return fmt.Errorf("CAM user id is nil")
+		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM user][Create] check: CAM user id is nil")
 	}
 
 	d.SetId(*response.Response.Name)

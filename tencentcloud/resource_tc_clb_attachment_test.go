@@ -85,7 +85,7 @@ func testAccCheckClbServerAttachmentDestroy(s *terraform.State) error {
 		listenerId := items[1]
 		clbId := items[2]
 		instance, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
-		if instance != nil && err == nil {
+		if (instance != nil && !(len(instance.Targets) == 0 && locationId == "") && !(len(instance.Rules) == 0 && locationId != "")) && err == nil {
 			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Destroy] check: CLB Attachment still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -114,9 +114,12 @@ func testAccCheckClbServerAttachmentExists(n string) resource.TestCheckFunc {
 		locationId := items[0]
 		listenerId := items[1]
 		clbId := items[2]
-		_, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+		instance, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
 		if err != nil {
 			return err
+		}
+		if instance == nil || (len(instance.Targets) == 0 && locationId == "") || (len(instance.Rules) == 0 && locationId != "") {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

@@ -7,13 +7,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type ClbService struct {
@@ -99,6 +99,11 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteLoadBalancer(request)
 	if err != nil {
+		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return nil
+			}
+		}
 		return errors.WithStack(err)
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -120,6 +125,11 @@ func (me *ClbService) DescribeListenerById(ctx context.Context, listenerId strin
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
+		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
 		errRet = err
 		errRet = errors.WithStack(errRet)
 		return
@@ -163,6 +173,11 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
+		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
 		errRet = err
 		errRet = errors.WithStack(errRet)
 		return
@@ -236,15 +251,21 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
+		//in case that the lb is not exist, return empty
+		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
 		errRet = err
 		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	//listener not found, return empty
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id %s is not found", listenerId)
-		errRet = errors.WithStack(errRet)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -284,6 +305,12 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
+		//in case that the lb is not exist, return empty
+		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
 		errRet = err
 		errRet = errors.WithStack(errRet)
 		return
@@ -291,9 +318,8 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	//listener not found, return empty
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id %s is not found", listenerId)
-		errRet = errors.WithStack(errRet)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -345,6 +371,12 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
+		//in case that the lb is not exist, return empty
+		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
 		errRet = err
 		errRet = errors.WithStack(errRet)
 		return
@@ -352,9 +384,8 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	//listener not found, return empty
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id %s is not found", listenerId)
-		errRet = errors.WithStack(errRet)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -370,6 +401,12 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	aResponse, aErr := me.client.UseClbClient().DescribeTargets(aRequest)
 
 	if aErr != nil {
+		//in case that the lb is not exist, return empty
+		if e, ok := aErr.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
 		errRet = aErr
 		errRet = errors.WithStack(errRet)
 		return
@@ -378,8 +415,6 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 		logId, aRequest.GetAction(), aRequest.ToJsonString(), aResponse.ToJsonString())
 
 	if len(aResponse.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id %s is not found", listenerId)
-		errRet = errors.WithStack(errRet)
 		return
 	} else {
 		clbAttachment = aResponse.Response.Listeners[0]
@@ -415,17 +450,20 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		//in case that the lb is not exist, return empty
+		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
 		errRet = err
 		errRet = errors.WithStack(errRet)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	if len(response.Response.Listeners) < 1 {
-		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB attachment][Describe] check: Listener id %s is not found", listenerId)
-		errRet = errors.WithStack(errRet)
 		return
 	}
 	clbListener := response.Response.Listeners[0]
@@ -441,6 +479,12 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 	aResponse, aErr := me.client.UseClbClient().DescribeTargets(aRequest)
 
 	if aErr != nil {
+		//in case that the lb is not exist, return empty
+		if e, ok := aErr.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
 		errRet = aErr
 		errRet = errors.WithStack(errRet)
 		return
@@ -505,6 +549,12 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeRewrite(request)
 	if err != nil {
+		//in case that the lb is not exist, return empty
+		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
 		errRet = err
 		errRet = errors.WithStack(errRet)
 		return
@@ -727,7 +777,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 
 }
 
-func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData) (certificateSetFlag bool, certPara *clb.CertificateInput, errRet error) {
+func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta interface{}) (certificateSetFlag bool, certPara *clb.CertificateInput, errRet error) {
 	certificateSetFlag = false
 	var certificateInput clb.CertificateInput
 	certificateSSLMode := ""
@@ -754,7 +804,7 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData) (cer
 
 	if certificateSetFlag && certificateId == "" {
 		certificateSetFlag = false
-		errRet = fmt.Errorf("certificatedId is null")
+		errRet = fmt.Errorf("certificated Id is null")
 		errRet = errors.WithStack(errRet)
 		return
 	}
@@ -768,8 +818,41 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData) (cer
 
 	certPara = &certificateInput
 
+	//check type valid
+	sslService := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	if certificateInput.CertCaId != nil {
+		check, err := sslService.checkCertificateType(ctx, *certificateInput.CertCaId, SSL_CERT_TYPE_CA)
+		if err != nil {
+			certificateSetFlag = false
+			errRet = fmt.Errorf("certificated %s check error %s", *certificateInput.CertCaId, err)
+			errRet = errors.WithStack(errRet)
+			return
+		}
+		if !check {
+			certificateSetFlag = false
+			errRet = fmt.Errorf("certificated %s check error cert type is not `%s`", *certificateInput.CertCaId, SSL_CERT_TYPE_CA)
+			return
+		}
+	}
+	if certificateInput.CertId != nil {
+		check, err := sslService.checkCertificateType(ctx, *certificateInput.CertId, SSL_CERT_TYPE_SERVER)
+		if err != nil {
+			certificateSetFlag = false
+			errRet = fmt.Errorf("certificated %s check error %s", *certificateInput.CertId, err)
+			errRet = errors.WithStack(errRet)
+			return
+		}
+		if !check {
+			certificateSetFlag = false
+			errRet = fmt.Errorf("certificated %s check error cert type is not `%s`", *certificateInput.CertId, SSL_CERT_TYPE_SERVER)
+			errRet = errors.WithStack(errRet)
+			return
+		}
+	}
 	return
 }
+
 func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 	taskQueryRequest := clb.NewDescribeTaskStatusRequest()
 	taskQueryRequest.TaskId = &requestId

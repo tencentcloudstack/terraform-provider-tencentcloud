@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -53,7 +54,7 @@ func (me *CamService) DescribeRoleById(ctx context.Context, roleId string) (camI
 	}
 
 	if len(result) == 0 {
-		return nil, fmt.Errorf("CAM role id is not found")
+		return
 	}
 	camInstance = result[0]
 	return
@@ -162,6 +163,13 @@ func (me *CamService) DescribeRolePolicyAttachmentById(ctx context.Context, role
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") || errCode == "InvalidParameter.RoleNotExist" {
+					return
+				}
+			}
 			errRet = err
 			return
 		}
@@ -183,7 +191,7 @@ func (me *CamService) DescribeRolePolicyAttachmentById(ctx context.Context, role
 	}
 
 	if len(result) == 0 {
-		return nil, fmt.Errorf("CAM role policy attachment id is not found")
+		return
 	}
 	policyOfRole = result[0]
 	return
@@ -205,6 +213,13 @@ func (me *CamService) DescribeRolePolicyAttachmentsByFilter(ctx context.Context,
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") || errCode == "InvalidParameter.RoleNotExist" {
+					return
+				}
+			}
 			errRet = err
 			return
 		}
@@ -272,6 +287,9 @@ func (me *CamService) DescribeUserPolicyAttachmentById(ctx context.Context, user
 	if err != nil {
 		return nil, err
 	}
+	if user == nil || user.Response == nil || user.Response.Uid == nil {
+		return
+	}
 	uin := user.Response.Uin
 
 	request := cam.NewListAttachedUserPoliciesRequest()
@@ -287,6 +305,13 @@ func (me *CamService) DescribeUserPolicyAttachmentById(ctx context.Context, user
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") {
+					return
+				}
+			}
 			errRet = err
 			return
 		}
@@ -308,7 +333,7 @@ func (me *CamService) DescribeUserPolicyAttachmentById(ctx context.Context, user
 	}
 
 	if len(result) == 0 {
-		return nil, fmt.Errorf("CAM user policy attachment id is not found")
+		return
 	}
 	policyResults = result[0]
 	return
@@ -320,6 +345,9 @@ func (me *CamService) DescribeUserPolicyAttachmentsByFilter(ctx context.Context,
 	user, err := me.DescribeUserById(ctx, userId)
 	if err != nil {
 		return nil, err
+	}
+	if user == nil || user.Response == nil || user.Response.Uid == nil {
+		return
 	}
 	uin := user.Response.Uin
 	request := cam.NewListAttachedUserPoliciesRequest()
@@ -335,6 +363,13 @@ func (me *CamService) DescribeUserPolicyAttachmentsByFilter(ctx context.Context,
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") {
+					return
+				}
+			}
 			errRet = err
 			return
 		}
@@ -377,6 +412,9 @@ func (me *CamService) AddUserPolicyAttachment(ctx context.Context, userId string
 	if err != nil {
 		return err
 	}
+	if user == nil || user.Response == nil || user.Response.Uid == nil {
+		return nil
+	}
 	uin := user.Response.Uin
 	policyIdInt, e := strconv.Atoi(policyId)
 	if e != nil {
@@ -407,6 +445,9 @@ func (me *CamService) DeleteUserPolicyAttachmentById(ctx context.Context, userPo
 	user, err := me.DescribeUserById(ctx, userId)
 	if err != nil {
 		return err
+	}
+	if user == nil || user.Response == nil || user.Response.Uid == nil {
+		return nil
 	}
 	uin := user.Response.Uin
 
@@ -451,6 +492,13 @@ func (me *CamService) DescribeGroupPolicyAttachmentById(ctx context.Context, gro
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") {
+					return
+				}
+			}
 			errRet = err
 			return
 		}
@@ -471,7 +519,7 @@ func (me *CamService) DescribeGroupPolicyAttachmentById(ctx context.Context, gro
 		pageStart += 1
 	}
 	if len(result) == 0 {
-		return nil, fmt.Errorf("CAM group policy attachment id is not found")
+		return
 	}
 	policyResults = result[0]
 	return
@@ -499,6 +547,13 @@ func (me *CamService) DescribeGroupPolicyAttachmentsByFilter(ctx context.Context
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") {
+					return
+				}
+			}
 			errRet = err
 			return
 		}
@@ -604,17 +659,18 @@ func (me *CamService) DescribePolicyById(ctx context.Context, policyId string) (
 	result, err := me.client.UseCamClient().GetPolicy(request)
 
 	if err != nil {
-		log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s read CAM policy failed, reason:%s\n", logId, err.Error())
+		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			errCode := ee.GetCode()
+			//check if read empty
+			if strings.Contains(errCode, "ResourceNotFound") {
+				return
+			}
+		}
 		return nil, err
 	} else {
-		if result == nil {
-			return nil, fmt.Errorf("policy id not found")
-		}
-		if result.Response == nil {
-			return nil, fmt.Errorf("policy id not found")
-		}
-		if result.Response.PolicyName == nil {
-			return nil, fmt.Errorf("policy id not found")
+		if result == nil || result.Response == nil || result.Response.PolicyName == nil {
+			return
 		}
 	}
 
@@ -658,7 +714,14 @@ func (me *CamService) DescribePoliciesByFilter(ctx context.Context, params map[s
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseCamClient().ListPolicies(request)
 		if err != nil {
-			log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
+			log.Printf("[CRITAL]%s read CAM policy failed, reason:%s\n", logId, err.Error())
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") {
+					return
+				}
+			}
 			errRet = err
 			return
 		}
@@ -707,6 +770,13 @@ func (me *CamService) DescribeUserById(ctx context.Context, userId string) (resp
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			errCode := ee.GetCode()
+			//check if read empty
+			if strings.Contains(errCode, "ResourceNotFound") {
+				return
+			}
+		}
 		errRet = err
 		return
 	}
@@ -726,6 +796,13 @@ func (me *CamService) DescribeUsersByFilter(ctx context.Context, params map[stri
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			errCode := ee.GetCode()
+			//check if read empty
+			if strings.Contains(errCode, "ResourceNotFound") {
+				return
+			}
+		}
 		errRet = err
 		return
 	}
@@ -822,6 +899,7 @@ func (me *CamService) DescribeGroupById(ctx context.Context, groupId string) (ca
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
+
 		errRet = err
 		return
 	}
@@ -844,6 +922,13 @@ func (me *CamService) DescribeGroupsByFilter(ctx context.Context, params map[str
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") {
+					return
+				}
+			}
 			errRet = err
 			return
 		}
@@ -899,6 +984,13 @@ func (me *CamService) DescribeGroupMembershipById(ctx context.Context, groupId s
 		response, err := me.client.UseCamClient().ListUsersForGroup(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s read CAM group membership failed, reason:%s\n", logId, err.Error())
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") {
+					return
+				}
+			}
 			errRet = err
 			return
 		}
@@ -926,16 +1018,17 @@ func (me *CamService) DescribeSAMLProviderById(ctx context.Context, providerName
 
 	if err != nil {
 		log.Printf("[CRITAL]%s read cam SAML provider failed, reason:%s\n", logId, err.Error())
+		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			errCode := ee.GetCode()
+			//check if read empty
+			if strings.Contains(errCode, "ResourceNotFound") {
+				return
+			}
+		}
 		return nil, err
 	} else {
-		if result == nil {
-			return nil, fmt.Errorf("SAML provider name not found")
-		}
-		if result.Response == nil {
-			return nil, fmt.Errorf("SAML provider name not found")
-		}
-		if result.Response == nil || result.Response.Name == nil {
-			return nil, fmt.Errorf("SAML provider name not found")
+		if result == nil || result.Response == nil || result.Response.Name == nil {
+			return
 		}
 	}
 
@@ -962,6 +1055,13 @@ func (me *CamService) DescribeSAMLProvidersByFilter(ctx context.Context, params 
 	response, err := me.client.UseCamClient().ListSAMLProviders(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s read CAM SAML provider failed, reason:%s\n", logId, err.Error())
+		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			errCode := ee.GetCode()
+			//check if read empty
+			if strings.Contains(errCode, "ResourceNotFound") {
+				return
+			}
+		}
 		errRet = err
 		return
 	}

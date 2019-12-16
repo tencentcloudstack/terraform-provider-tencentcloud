@@ -143,7 +143,7 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		results, e := camService.DescribePoliciesByFilter(ctx, params)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "InternalError")
 		}
 		policies = results
 		return nil

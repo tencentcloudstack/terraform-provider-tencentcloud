@@ -218,7 +218,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 		request.HealthCheck = healthCheck
 	}
 
-	certificateSetFlag, certificateInput, certErr := checkCertificateInputPara(ctx, d)
+	certificateSetFlag, certificateInput, certErr := checkCertificateInputPara(ctx, d, meta)
 
 	if certErr != nil {
 		return certErr
@@ -346,7 +346,9 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	if instance.Certificate != nil {
 		_ = d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
 		_ = d.Set("certificate_id", instance.Certificate.CertId)
-		_ = d.Set("certificate_ca_id", instance.Certificate.CertCaId)
+		if instance.Certificate.CertCaId != nil {
+			_ = d.Set("certificate_ca_id", instance.Certificate.CertCaId)
+		}
 	}
 
 	return nil
@@ -411,7 +413,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		request.HealthCheck = healthCheck
 	}
 
-	certificateSetFlag, certificateInput, certErr := checkCertificateInputPara(ctx, d)
+	certificateSetFlag, certificateInput, certErr := checkCertificateInputPara(ctx, d, meta)
 	if certErr != nil {
 		return certErr
 	}

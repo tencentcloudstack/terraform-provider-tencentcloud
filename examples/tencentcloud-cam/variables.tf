@@ -3,7 +3,7 @@ variable "password" {
 }
 
 variable "phone_num" {
-  default = "13631555963"
+  default = "12345678903"
 }
 
 variable "country_code" {

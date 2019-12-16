@@ -298,33 +298,15 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	eipId := d.Id()
-	var eip *vpc.Address
-	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		eip, errRet = vpcService.DescribeEipById(ctx, eipId)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		errRet := vpcService.UnattachEip(ctx, eipId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, "DesOperation.MutexTaskRunning")
 		}
 		return nil
 	})
 	if err != nil {
 		return err
-	}
-	if eip == nil {
-		return nil
-	}
-
-	if eip.InstanceId != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := vpcService.UnattachEip(ctx, eipId)
-			if errRet != nil {
-				return retryError(errRet)
-			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
 	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {

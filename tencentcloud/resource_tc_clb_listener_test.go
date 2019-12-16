@@ -203,9 +203,12 @@ func testAccCheckClbListenerExists(n string) resource.TestCheckFunc {
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
 		clbId := rs.Primary.Attributes["clb_id"]
-		_, err := clbService.DescribeListenerById(ctx, rs.Primary.ID, clbId)
+		instance, err := clbService.DescribeListenerById(ctx, rs.Primary.ID, clbId)
 		if err != nil {
 			return err
+		}
+		if instance == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}

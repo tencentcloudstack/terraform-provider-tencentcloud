@@ -64,7 +64,7 @@ func testAccCheckClbRedirectionDestroy(s *terraform.State) error {
 		}
 		time.Sleep(5 * time.Second)
 		instance, err := clbService.DescribeRedirectionById(ctx, rs.Primary.ID)
-		if instance != nil && err == nil {
+		if instance != nil && len(*instance) > 0 && err == nil {
 			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Destroy] check: CLB redirection still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -86,9 +86,12 @@ func testAccCheckClbRedirectionExists(n string) resource.TestCheckFunc {
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := clbService.DescribeRedirectionById(ctx, rs.Primary.ID)
+		instance, err := clbService.DescribeRedirectionById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if instance == nil || len(*instance) == 0 {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil
 	}
