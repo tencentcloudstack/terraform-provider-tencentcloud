@@ -166,7 +166,7 @@ func (me *CamService) DescribeRolePolicyAttachmentById(ctx context.Context, role
 			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
-				if strings.Contains(errCode, "ResourceNotFound") {
+				if strings.Contains(errCode, "ResourceNotFound") || errCode == "InvalidParameter.RoleNotExist"{
 					return
 				}
 			}
@@ -216,7 +216,7 @@ func (me *CamService) DescribeRolePolicyAttachmentsByFilter(ctx context.Context,
 			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
-				if strings.Contains(errCode, "ResourceNotFound") {
+				if strings.Contains(errCode, "ResourceNotFound") || errCode == "InvalidParameter.RoleNotExist"{
 					return
 				}
 			}
