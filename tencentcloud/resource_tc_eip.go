@@ -66,7 +66,6 @@ func resourceTencentCloudEip() *schema.Resource {
 			"applicable_for_clb": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Indicates whether the anycast eip can be associated to a CLB.",
 				Deprecated:  "It has been deprecated from version 1.27.0.",
 			},
