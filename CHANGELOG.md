@@ -24,6 +24,10 @@ BUG FIXES:
 * Fix bug that terraform read nil attachment resource when the attached resource of attachment resource is removed of resource CLB and CAM.
 * Fix doc example error of resource `tencentcloud_nat_gateway`.
 
+DEPRECATED:
+
+* Resource: `tencentcloud_eip`: optional argument `applicable_for_clb` is no longer supported.
+
 ## 1.26.0 (December 09, 2019)
 
 FEATURES:
