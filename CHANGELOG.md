@@ -1,4 +1,4 @@
-## 1.27.0 (Unreleased)
+## 1.27.0 (December 17, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_tcaplus_applications`
