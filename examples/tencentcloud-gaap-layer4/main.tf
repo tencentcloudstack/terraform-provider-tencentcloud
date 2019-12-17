@@ -22,21 +22,21 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   port            = 80
   scheduler       = "wrr"
   realserver_type = "IP"
-  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id        = tencentcloud_gaap_proxy.foo.id
   health_check    = true
-  interval      = 11
+  interval        = 11
   connect_timeout = 10
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.foo.id}"
-    ip     = "${tencentcloud_gaap_realserver.foo.ip}"
+    id     = tencentcloud_gaap_realserver.foo.id
+    ip     = tencentcloud_gaap_realserver.foo.ip
     port   = 80
     weight = 1
   }
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.bar.id}"
-    ip     = "${tencentcloud_gaap_realserver.bar.ip}"
+    id     = tencentcloud_gaap_realserver.bar.id
+    ip     = tencentcloud_gaap_realserver.bar.ip
     port   = 80
     weight = 2
   }
@@ -44,6 +44,6 @@ resource tencentcloud_gaap_layer4_listener "foo" {
 
 data tencentcloud_gaap_layer4_listeners "foo" {
   protocol    = "TCP"
-  proxy_id    = "${tencentcloud_gaap_proxy.foo.id}"
-  listener_id = "${tencentcloud_gaap_layer4_listener.foo.id}"
+  proxy_id    = tencentcloud_gaap_proxy.foo.id
+  listener_id = tencentcloud_gaap_layer4_listener.foo.id
 }

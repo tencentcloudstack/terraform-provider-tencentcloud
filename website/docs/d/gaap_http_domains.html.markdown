@@ -62,6 +62,7 @@ In addition to all arguments above, the following attributes are exported:
   * `gaap_auth` - Indicates whether SSL certificate authentication is enable.
   * `realserver_auth` - Indicates whether realserver authentication is enable.
   * `realserver_certificate_domain` - CA certificate domain of the realserver.
-  * `realserver_certificate_id` - CA certificate ID of the realserver.
+  * `realserver_certificate_id` - (**Deprecated**) It has been deprecated from version 1.27.0. Use `realserver_certificate_ids` instead. CA certificate ID of the realserver.
+  * `realserver_certificate_ids` - CA certificate ID list of the realserver.
 
 

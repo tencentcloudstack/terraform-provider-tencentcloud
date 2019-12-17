@@ -14,6 +14,8 @@ ENHANCEMENTS:
 
 * Resource: `tencentcloud_mongodb_instance` support more instance type([#241](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/241)).
 * Resource: `tencentcloud_kubernetes_cluster` support more instance type([#237](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/237)).
+* Resource: `tencentcloud_gaap_http_domain` add new optional argument `realserver_certificate_ids`.
+* Data Source: `tencentcloud_gaap_http_domains` add new output argument `realserver_certificate_ids`.
 
 BUG FIXES:
 
@@ -23,6 +25,11 @@ BUG FIXES:
 * Fix bug that resource `tencentcloud_eip` unattach error([#233](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/233)).
 * Fix bug that terraform read nil attachment resource when the attached resource of attachment resource is removed of resource CLB and CAM.
 * Fix doc example error of resource `tencentcloud_nat_gateway`.
+
+DEPRECATED:
+
+* Resource: `tencentcloud_gaap_http_domain`: optional argument `realserver_certificate_id` is no longer supported.
+* Data Source: `tencentcloud_gaap_http_domains`: output argument `realserver_certificate_id` is no longer supported.
 
 ## 1.26.0 (December 09, 2019)
 

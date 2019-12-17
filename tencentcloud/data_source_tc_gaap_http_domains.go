@@ -94,9 +94,16 @@ func dataSourceTencentCloudGaapHttpDomains() *schema.Resource {
 							Description: "Indicates whether realserver authentication is enable.",
 						},
 						"realserver_certificate_id": {
+							Deprecated:  "It has been deprecated from version 1.27.0. Use `realserver_certificate_ids` instead.",
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "CA certificate ID of the realserver.",
+						},
+						"realserver_certificate_ids": {
+							Type:        schema.TypeList,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Computed:    true,
+							Description: "CA certificate ID list of the realserver.",
 						},
 						"realserver_certificate_domain": {
 							Type:        schema.TypeString,
@@ -169,6 +176,7 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 		var (
 			clientCertificateId      *string
 			polyClientCertificateIds []*string
+			realserverCertificateIds []*string
 		)
 
 		clientCertificateId = dr.PolyClientCertificateAliasInfo[0].CertificateId
@@ -176,33 +184,48 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 			polyClientCertificateIds = append(polyClientCertificateIds, poly.CertificateId)
 		}
 
-		m := map[string]interface{}{
-			"domain":                 dr.Domain,
-			"certificate_id":         dr.CertificateId,
-			"client_certificate_id":  clientCertificateId,
-			"client_certificate_ids": polyClientCertificateIds,
-			"realserver_auth":        *dr.RealServerAuth == 1,
-			"basic_auth":             *dr.BasicAuth == 1,
-			"gaap_auth":              *dr.GaapAuth == 1,
+		realserverCertificateIds = make([]*string, 0, len(dr.PolyRealServerCertificateAliasInfo))
+		for _, info := range dr.PolyRealServerCertificateAliasInfo {
+			realserverCertificateIds = append(realserverCertificateIds, info.CertificateId)
 		}
 
-		if dr.RealServerCertificateId != nil {
-			m["realserver_certificate_id"] = *dr.RealServerCertificateId
+		var realserverCertificateId *string
+		if len(realserverCertificateIds) > 0 {
+			realserverCertificateId = realserverCertificateIds[0]
 		}
-		if dr.RealServerCertificateDomain != nil {
-			m["realserver_certificate_domain"] = *dr.RealServerCertificateDomain
+
+		if dr.RealServerAuth == nil {
+			dr.RealServerAuth = int64Pt(0)
 		}
-		if dr.BasicAuthConfId != nil {
-			m["basic_auth_id"] = *dr.BasicAuthConfId
+
+		if dr.BasicAuth == nil {
+			dr.BasicAuth = int64Pt(0)
 		}
-		if dr.GaapCertificateId != nil {
-			m["gaap_auth_id"] = *dr.GaapCertificateId
+
+		if dr.GaapAuth == nil {
+			dr.GaapAuth = int64Pt(0)
+		}
+
+		m := map[string]interface{}{
+			"domain":                        dr.Domain,
+			"certificate_id":                dr.CertificateId,
+			"client_certificate_id":         clientCertificateId,
+			"client_certificate_ids":        polyClientCertificateIds,
+			"realserver_auth":               *dr.RealServerAuth == 1,
+			"basic_auth":                    *dr.BasicAuth == 1,
+			"basic_auth_id":                 dr.BasicAuthConfId,
+			"gaap_auth":                     *dr.GaapAuth == 1,
+			"gaap_auth_id":                  dr.GaapCertificateId,
+			"realserver_certificate_id":     realserverCertificateId,
+			"realserver_certificate_ids":    realserverCertificateIds,
+			"realserver_certificate_domain": dr.RealServerCertificateDomain,
 		}
 
 		domains = append(domains, m)
 	}
 
-	d.Set("domains", domains)
+	_ = d.Set("domains", domains)
+
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
