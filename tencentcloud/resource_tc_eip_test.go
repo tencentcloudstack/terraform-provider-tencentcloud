@@ -231,7 +231,6 @@ resource "tencentcloud_eip" "foo" {
   name = "eip_anycast"
   type = "AnycastEIP"
   anycast_zone = "ANYCAST_ZONE_GLOBAL"
-  applicable_for_clb = false
 }
 `
 

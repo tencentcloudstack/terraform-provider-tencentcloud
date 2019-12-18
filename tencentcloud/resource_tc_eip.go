@@ -66,8 +66,8 @@ func resourceTencentCloudEip() *schema.Resource {
 			"applicable_for_clb": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Indicates whether the anycast eip can be associated to a CLB.",
+				Deprecated:  "It has been deprecated from version 1.27.0.",
 			},
 			"internet_service_provider": {
 				Type:         schema.TypeString,
@@ -128,10 +128,6 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	if v, ok := d.GetOk("anycast_zone"); ok {
 		request.AnycastZone = stringToPointer(v.(string))
-	}
-	if v, ok := d.GetOkExists("applicable_for_clb"); ok {
-		applicable := v.(bool)
-		request.ApplicableForCLB = &applicable
 	}
 	if v, ok := d.GetOk("internet_service_provider"); ok {
 		request.InternetServiceProvider = stringToPointer(v.(string))

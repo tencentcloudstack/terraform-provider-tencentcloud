@@ -1,4 +1,5 @@
-## 1.27.0 (Unreleased)
+## 1.27.1 (Unreleased)
+## 1.27.0 (December 17, 2019)
 
 FEATURES:
 * **New Data Source**: `tencentcloud_tcaplus_applications`
@@ -25,6 +26,10 @@ BUG FIXES:
 * Fix bug that resource `tencentcloud_eip` unattach error([#233](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/233)).
 * Fix bug that terraform read nil attachment resource when the attached resource of attachment resource is removed of resource CLB and CAM.
 * Fix doc example error of resource `tencentcloud_nat_gateway`.
+
+DEPRECATED:
+
+* Resource: `tencentcloud_eip`: optional argument `applicable_for_clb` is no longer supported.
 
 ## 1.26.0 (December 09, 2019)
 
