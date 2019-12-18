@@ -118,7 +118,7 @@ func dataSourceTencentCloudCbsSnapshotPolicysRead(d *schema.ResourceData, meta i
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		policys, errRet = cbsService.DescribeSnapshotPolicy(ctx, policyId, policyName)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})
@@ -127,7 +127,7 @@ func dataSourceTencentCloudCbsSnapshotPolicysRead(d *schema.ResourceData, meta i
 		return err
 	}
 
-	ids := make([]string, len(policys))
+	ids := make([]string, 0, len(policys))
 	policyList := make([]map[string]interface{}, 0, len(policys))
 	for _, policy := range policys {
 		mapping := map[string]interface{}{

@@ -1,17 +1,22 @@
-## 1.27.1 (Unreleased)
+## 1.28.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_cbs_snapshot_policys`
+* **New Resource**: `tencentcloud_cbs_snapshot_policy_attachment`
+
 ## 1.27.0 (December 17, 2019)
 
 FEATURES:
+
 * **New Data Source**: `tencentcloud_tcaplus_applications`
 * **New Data Source**: `tencentcloud_tcaplus_zones`
 * **New Data Source**: `tencentcloud_tcaplus_tables`
 * **New Data Source**: `tencentcloud_tcaplus_idls`
-* **New Data Source**: `tencentcloud_cbs_snapshot_policys`
 * **New Resource**: `tencentcloud_tcaplus_application`
 * **New Resource**: `tencentcloud_tcaplus_zone`
 * **New Resource**: `tencentcloud_tcaplus_idl`
 * **New Resource**: `tencentcloud_tcaplus_table`
-* **New Resource**: `tencentcloud_cbs_snapshot_policy_attachment`
 
 ENHANCEMENTS:
 
