@@ -399,10 +399,6 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	listenerId, protocol, domain = split[0], split[1], split[2]
 
 	switch protocol {
-	default:
-		log.Printf("[CRITAL]%s id is broken, protocol %s is invalid", logId, protocol)
-		return resourceTencentCloudGaapHttpDomainRead(d, m)
-
 	case "HTTP":
 		// when protocol is http, nothing can be updated
 		return errors.New("http listener can't set auth")
