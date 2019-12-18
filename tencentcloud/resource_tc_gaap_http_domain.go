@@ -112,7 +112,7 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 				Description: "Indicates whether realserver authentication is enable, default is `false`.",
 			},
 			"realserver_certificate_id": {
-				Deprecated:    "It has been deprecated from version 1.27.0. Set `client_certificate_ids` instead.",
+				Deprecated:    "It has been deprecated from version 1.28.0. Set `client_certificate_ids` instead.",
 				Type:          schema.TypeString,
 				Optional:      true,
 				Computed:      true,
