@@ -215,10 +215,10 @@ SSL Resources
   tencentcloud_ssl_certificate
 
 Tcaplus Resources
- tencentcloud_tcaplus_application
- tencentcloud_tcaplus_zone
- tencentcloud_tcaplus_idl
- tencentcloud_tcaplus_table
+  tencentcloud_tcaplus_application
+  tencentcloud_tcaplus_zone
+  tencentcloud_tcaplus_idl
+  tencentcloud_tcaplus_table
 
 VPC Resources
   tencentcloud_eni
