@@ -19,7 +19,7 @@ provider "tencentcloud" {
 
 Resources List
 
-AS
+Auto Scaling(AS)
   Data Source
     tencentcloud_as_scaling_configs
     tencentcloud_as_scaling_groups
@@ -34,7 +34,7 @@ AS
     tencentcloud_as_lifecycle_hook
     tencentcloud_as_notification
 
-CAM
+Cloud Access Management(CAM)
   Data Source
     tencentcloud_cam_group_memberships
     tencentcloud_cam_group_policy_attachments
@@ -57,7 +57,7 @@ CAM
     tencentcloud_cam_group_membership
     tencentcloud_cam_saml_provider
 
-CBS
+Cloud Block Storage(CBS)
   Data Source
     tencentcloud_cbs_snapshots
     tencentcloud_cbs_storages
@@ -68,7 +68,7 @@ CBS
     tencentcloud_cbs_snapshot
     tencentcloud_cbs_snapshot_policy
 
-CCN
+Cloud Connect Network(CCN)
   Data Source
     tencentcloud_ccn_bandwidth_limits
     tencentcloud_ccn_instances
@@ -78,7 +78,7 @@ CCN
     tencentcloud_ccn_attachment
     tencentcloud_ccn_bandwidth_limit
 
-CFS
+Cloud File Storage(CFS)
   Data Source
     tencentcloud_cfs_access_groups
     tencentcloud_cfs_access_rules
@@ -98,7 +98,7 @@ Container Cluster
     tencentcloud_container_cluster
     tencentcloud_container_cluster_instance
 
-CLB
+Cloud Load Balance(CLB)
   Data Source
     tencentcloud_clb_attachments
     tencentcloud_clb_instances
@@ -115,7 +115,7 @@ CLB
     tencentcloud_lb
     tencentcloud_alb_server_attachment
 
-COS
+Cloud Object Storage(COS)
   Data Source
     tencentcloud_cos_bucket_object
     tencentcloud_cos_buckets
@@ -124,7 +124,7 @@ COS
     tencentcloud_cos_bucket
     tencentcloud_cos_bucket_object
 
-CVM
+Cloud Virtual Machine(CVM)
   Data Source
     tencentcloud_availability_zones
     tencentcloud_image
@@ -146,7 +146,7 @@ CVM
     tencentcloud_placement_group
     tencentcloud_reserved_instance
 
-DC
+Direct Connect(DC)
   Data Source
     tencentcloud_dc_instances
     tencentcloud_dcx_instances
@@ -154,7 +154,7 @@ DC
   Resource
     tencentcloud_dcx
 
-DCG
+Direct Connect Gateway(DCG)
   Data Source
     tencentcloud_dc_gateway_ccn_routes
     tencentcloud_dc_gateway_instances
@@ -163,7 +163,7 @@ DCG
     tencentcloud_dc_gateway
     tencentcloud_dc_gateway_ccn_route
 
-GAAP
+Global Application Acceleration Platform(GAAP)
   Data Source
     tencentcloud_gaap_certificates
     tencentcloud_gaap_http_domains
@@ -228,7 +228,7 @@ Redis
     tencentcloud_redis_instance
     tencentcloud_redis_backup_config
 
-SCF
+Serverless Cloud Function(SCF)
   Data Source
     tencentcloud_scf_functions
     tencentcloud_scf_logs

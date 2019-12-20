@@ -52,7 +52,7 @@ In addition to all arguments above, the following attributes are exported:
                     <ul class="nav">
                         <li>
                             <a href="#">Data Sources</a>
-                            <ul class="nav">{{range $Resource := .DataSources}}
+                            <ul class="nav nav-auto-expand">{{range $Resource := .DataSources}}
                                 <li>
                                     <a href="/docs/providers/{{$.cloud_mark}}/d/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
                                 </li>{{end}}
@@ -60,7 +60,7 @@ In addition to all arguments above, the following attributes are exported:
                         </li>
                         <li>
                             <a href="#">Resources</a>
-                            <ul class="nav">{{range $Resource := .Resources}}
+                            <ul class="nav nav-auto-expand">{{range $Resource := .Resources}}
                                 <li>
                                     <a href="/docs/providers/{{$.cloud_mark}}/r/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
                                 </li>{{end}}

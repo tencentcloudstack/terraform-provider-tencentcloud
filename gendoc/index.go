@@ -43,6 +43,14 @@ func GetIndex(doc string) ([]Product, error) {
 				if prod.Name == "" {
 					prod.Name = text
 				} else {
+					sort.Slice(prod.DataSources, func(i, j int) bool {
+						return prod.DataSources[i] < prod.DataSources[j]
+					})
+
+					sort.Slice(prod.Resources, func(i, j int) bool {
+						return prod.Resources[i] < prod.Resources[j]
+					})
+
 					prods = append(prods, prod)
 					prod = Product{Name: text}
 				}
@@ -78,11 +86,6 @@ func GetIndex(doc string) ([]Product, error) {
 	sort.Slice(prods, func(i, j int) bool {
 		return prods[i].Name < prods[j].Name
 	})
-
-	for i := range prods {
-		sort.Strings(prods[i].DataSources)
-		sort.Strings(prods[i].Resources)
-	}
 
 	return prods, nil
 }
