@@ -142,6 +142,7 @@ func (me *CvmService) ModifyInstanceType(ctx context.Context, instanceId, instan
 	request := cvm.NewResetInstancesTypeRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.InstanceType = &instanceType
+	request.ForceStop = boolToPointer(true)
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().ResetInstancesType(request)

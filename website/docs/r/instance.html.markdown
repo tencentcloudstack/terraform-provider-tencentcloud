@@ -81,7 +81,7 @@ The following arguments are supported:
 * `availability_zone` - (Required, ForceNew) The available zone that the CVM instance locates at.
 * `image_id` - (Required, ForceNew) The Image to use for the instance. Change 'image_id' will case instance destroy and re-created.
 * `allocate_public_ip` - (Optional, ForceNew) Associate a public ip address with an instance in a VPC or Classic. Boolean value, Default is false.
-* `data_disks` - (Optional) Settings for data disk.
+* `data_disks` - (Optional, ForceNew) Settings for data disk.
 * `disable_monitor_service` - (Optional) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed.
 * `disable_security_service` - (Optional) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed.
 * `hostname` - (Optional, ForceNew) The hostname of CVM. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-).
@@ -89,7 +89,7 @@ The following arguments are supported:
 * `instance_charge_type_prepaid_renew_flag` - (Optional) When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR` and `SPOTPAID`, The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
 * `instance_name` - (Optional) The name of the CVM. The max length of instance_name is 60, and default value is `Terrafrom-CVM-Instance`.
-* `instance_type` - (Optional, ForceNew) The type of instance to start.
+* `instance_type` - (Optional) The type of instance to start.
 * `internet_charge_type` - (Optional, ForceNew) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. The default is `TRAFFIC_POSTPAID_BY_HOUR`.
 * `internet_max_bandwidth_out` - (Optional, ForceNew) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). If this value is not specified, then automatically sets it to 0 Mbps.
 * `key_name` - (Optional) The key pair to use for the instance, it looks like skey-16jig7tx.
@@ -103,7 +103,7 @@ The following arguments are supported:
 * `spot_max_price` - (Optional, ForceNew) Max price of spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `subnet_id` - (Optional) The id of a VPC subnetwork. If you want to create instances in VPC network, this parameter must be set.
 * `system_disk_id` - (Optional) System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
-* `system_disk_size` - (Optional) Size of the system disk. Value range: [50, 1000], and unit is GB. Default is 50GB.
+* `system_disk_size` - (Optional, ForceNew) Size of the system disk. Value range: [50, 1000], and unit is GB. Default is 50GB.
 * `system_disk_type` - (Optional, ForceNew) Type of the system disk. Valid values are `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`, default value is `CLOUD_BASIC`. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
 * `tags` - (Optional) A mapping of tags to assign to the resource. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
 * `user_data_raw` - (Optional, ForceNew) The user data to be specified into this instance, plain text. Conflicts with `user_data`. Limited in 16 KB after encrypted in base64 format.
@@ -112,10 +112,10 @@ The following arguments are supported:
 
 The `data_disks` object supports the following:
 
-* `data_disk_size` - (Required) Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
-* `data_disk_type` - (Required) Type of the data disk. Valid values are `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
+* `data_disk_size` - (Required, ForceNew) Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
+* `data_disk_type` - (Required, ForceNew) Type of the data disk. Valid values are `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
 * `data_disk_id` - (Optional) Data disk snapshot ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
-* `delete_with_instance` - (Optional) Decides whether the disk is deleted with instance(only applied to cloud disk), default to true.
+* `delete_with_instance` - (Optional, ForceNew) Decides whether the disk is deleted with instance(only applied to cloud disk), default to true.
 
 ## Attributes Reference
 

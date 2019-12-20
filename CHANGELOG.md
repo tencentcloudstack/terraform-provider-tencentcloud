@@ -5,6 +5,10 @@ FEATURES:
 * **New Data Source**: `tencentcloud_cbs_snapshot_policys`
 * **New Resource**: `tencentcloud_cbs_snapshot_policy_attachment`
 
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_instance` support modifying instance type([#251](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/251)).
+
 ## 1.27.0 (December 17, 2019)
 
 FEATURES:
