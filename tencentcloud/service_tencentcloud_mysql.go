@@ -9,6 +9,7 @@ import (
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -658,9 +659,9 @@ func (me *MysqlService) DescribeIsolatedDBInstanceById(ctx context.Context, mysq
 	request := cdb.NewDescribeDBInstancesRequest()
 	request.InstanceIds = []*string{&mysqlId}
 
-	request.Status = []*uint64{uint64Pt(MYSQL_STATUS_ISOLATED),
-		uint64Pt(MYSQL_STATUS_ISOLATED_1),
-		uint64Pt(MYSQL_STATUS_ISOLATED_2)}
+	request.Status = []*uint64{helper.Uint64(MYSQL_STATUS_ISOLATED),
+		helper.Uint64(MYSQL_STATUS_ISOLATED_1),
+		helper.Uint64(MYSQL_STATUS_ISOLATED_2)}
 
 	defer func() {
 		if errRet != nil {

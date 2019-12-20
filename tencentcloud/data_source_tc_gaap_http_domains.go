@@ -37,6 +37,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudGaapHttpDomains() *schema.Resource {
@@ -156,19 +157,19 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 	domains := make([]map[string]interface{}, 0, len(domainRules))
 	for _, dr := range domainRules {
 		if dr.CertificateId == nil {
-			dr.CertificateId = stringToPointer("default")
+			dr.CertificateId = helper.String("default")
 		}
 		if dr.ClientCertificateId == nil {
-			dr.ClientCertificateId = stringToPointer("default")
+			dr.ClientCertificateId = helper.String("default")
 		}
 		if dr.RealServerAuth == nil {
-			dr.RealServerAuth = int64ToPointer(0)
+			dr.RealServerAuth = helper.IntInt64(0)
 		}
 		if dr.BasicAuth == nil {
-			dr.BasicAuth = int64ToPointer(0)
+			dr.BasicAuth = helper.IntInt64(0)
 		}
 		if dr.GaapAuth == nil {
-			dr.GaapAuth = int64ToPointer(0)
+			dr.GaapAuth = helper.IntInt64(0)
 		}
 
 		ids = append(ids, *dr.Domain)
@@ -195,15 +196,15 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 		}
 
 		if dr.RealServerAuth == nil {
-			dr.RealServerAuth = int64Pt(0)
+			dr.RealServerAuth = helper.Int64(0)
 		}
 
 		if dr.BasicAuth == nil {
-			dr.BasicAuth = int64Pt(0)
+			dr.BasicAuth = helper.Int64(0)
 		}
 
 		if dr.GaapAuth == nil {
-			dr.GaapAuth = int64Pt(0)
+			dr.GaapAuth = helper.Int64(0)
 		}
 
 		m := map[string]interface{}{
@@ -226,7 +227,7 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 
 	_ = d.Set("domains", domains)
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), domains); err != nil {

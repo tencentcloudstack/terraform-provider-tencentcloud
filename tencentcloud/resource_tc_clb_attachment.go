@@ -37,6 +37,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudClbServerAttachment() *schema.Resource {
@@ -116,12 +117,12 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 	clbId := d.Get("clb_id").(string)
 	locationId := ""
 	request := clb.NewRegisterTargetsRequest()
-	request.LoadBalancerId = stringToPointer(clbId)
-	request.ListenerId = stringToPointer(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
+	request.ListenerId = helper.String(listenerId)
 	if v, ok := d.GetOk("rule_id"); ok {
 		locationId = v.(string)
 		if locationId != "" {
-			request.LocationId = stringToPointer(locationId)
+			request.LocationId = helper.String(locationId)
 		}
 	}
 
@@ -178,9 +179,9 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	//firstly see if listener and location exists
 	request := clb.NewDeregisterTargetsRequest()
 	request.ListenerId = &listenerId
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.LoadBalancerId = helper.String(clbId)
 	if locationId != "" {
-		request.LocationId = stringToPointer(locationId)
+		request.LocationId = helper.String(locationId)
 	}
 
 	//check exists
@@ -217,10 +218,10 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 	clbId := items[2]
 
 	request := clb.NewDeregisterTargetsRequest()
-	request.ListenerId = stringToPointer(listenerId)
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.ListenerId = helper.String(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
 	if locationId != "" {
-		request.LocationId = stringToPointer(locationId)
+		request.LocationId = helper.String(locationId)
 	}
 
 	for _, inst_ := range remove {
@@ -259,13 +260,13 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 	clbId := d.Get("clb_id").(string)
 	locationId := ""
 	request := clb.NewRegisterTargetsRequest()
-	request.LoadBalancerId = stringToPointer(clbId)
-	request.ListenerId = stringToPointer(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
+	request.ListenerId = helper.String(listenerId)
 
 	if v, ok := d.GetOk("rule_id"); ok {
 		locationId = v.(string)
 		if locationId != "" {
-			request.LocationId = stringToPointer(locationId)
+			request.LocationId = helper.String(locationId)
 		}
 	}
 

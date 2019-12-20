@@ -38,6 +38,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudDnat() *schema.Resource {
@@ -113,15 +114,15 @@ func resourceTencentCloudDnatCreate(d *schema.ResourceData, meta interface{}) er
 	logId := getLogId(contextNil)
 	request := vpc.NewCreateNatGatewayDestinationIpPortTranslationNatRuleRequest()
 	var natForward vpc.DestinationIpPortTranslationNatRule
-	natForward.IpProtocol = stringToPointer(d.Get("protocol").(string))
-	natForward.PublicIpAddress = stringToPointer(d.Get("elastic_ip").(string))
+	natForward.IpProtocol = helper.String(d.Get("protocol").(string))
+	natForward.PublicIpAddress = helper.String(d.Get("elastic_ip").(string))
 	uePort, epErr := strconv.ParseInt(d.Get("elastic_port").(string), 10, 64)
 	if epErr != nil {
 		return fmt.Errorf("elastic port format error")
 	}
 	ePort := uint64(uePort)
 	natForward.PublicPort = &ePort
-	natForward.PrivateIpAddress = stringToPointer(d.Get("private_ip").(string))
+	natForward.PrivateIpAddress = helper.String(d.Get("private_ip").(string))
 	upPort, ppErr := strconv.ParseInt(d.Get("private_port").(string), 10, 64)
 	if ppErr != nil {
 		return fmt.Errorf("private port format error")
@@ -132,9 +133,9 @@ func resourceTencentCloudDnatCreate(d *schema.ResourceData, meta interface{}) er
 	if v, ok := d.GetOk("description"); ok {
 		description = v.(string)
 	}
-	natForward.Description = stringToPointer(description)
+	natForward.Description = helper.String(description)
 	natGatewayId := d.Get("nat_id").(string)
-	request.NatGatewayId = stringToPointer(natGatewayId)
+	request.NatGatewayId = helper.String(natGatewayId)
 
 	request.DestinationIpPortTranslationNatRules = []*vpc.DestinationIpPortTranslationNatRule{&natForward}
 
@@ -171,8 +172,8 @@ func resourceTencentCloudDnatRead(d *schema.ResourceData, meta interface{}) erro
 	request.Filters = make([]*vpc.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &vpc.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -227,8 +228,8 @@ func resourceTencentCloudDnatUpdate(d *schema.ResourceData, meta interface{}) er
 		srequest.Filters = make([]*vpc.Filter, 0, len(params))
 		for k, v := range params {
 			filter := &vpc.Filter{
-				Name:   stringToPointer(k),
-				Values: []*string{stringToPointer(v)},
+				Name:   helper.String(k),
+				Values: []*string{helper.String(v)},
 			}
 			srequest.Filters = append(srequest.Filters, filter)
 		}
@@ -255,7 +256,7 @@ func resourceTencentCloudDnatUpdate(d *schema.ResourceData, meta interface{}) er
 		natForward.PrivatePort = target.PrivatePort
 		natForward.Description = target.Description
 		request := vpc.NewModifyNatGatewayDestinationIpPortTranslationNatRuleRequest()
-		request.NatGatewayId = stringToPointer(params["nat-gateway-id"])
+		request.NatGatewayId = helper.String(params["nat-gateway-id"])
 		request.SourceNatRule = natForward
 		newNatForward := &vpc.DestinationIpPortTranslationNatRule{}
 		newNatForward.PublicPort = natForward.PublicPort
@@ -263,7 +264,7 @@ func resourceTencentCloudDnatUpdate(d *schema.ResourceData, meta interface{}) er
 		newNatForward.PrivatePort = natForward.PrivatePort
 		newNatForward.PrivateIpAddress = natForward.PrivateIpAddress
 		newNatForward.IpProtocol = natForward.IpProtocol
-		newNatForward.Description = stringToPointer(description)
+		newNatForward.Description = helper.String(description)
 		request.DestinationNatRule = newNatForward
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyNatGatewayDestinationIpPortTranslationNatRule(request)
@@ -295,8 +296,8 @@ func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) er
 	srequest.Filters = make([]*vpc.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &vpc.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		srequest.Filters = append(srequest.Filters, filter)
 	}
@@ -322,7 +323,7 @@ func resourceTencentCloudDnatDelete(d *schema.ResourceData, meta interface{}) er
 	natForward.PrivateIpAddress = target.PrivateIpAddress
 	natForward.PrivatePort = target.PrivatePort
 	request := vpc.NewDeleteNatGatewayDestinationIpPortTranslationNatRuleRequest()
-	request.NatGatewayId = stringToPointer(params["nat-gateway-id"])
+	request.NatGatewayId = helper.String(params["nat-gateway-id"])
 	request.DestinationIpPortTranslationNatRules = []*vpc.DestinationIpPortTranslationNatRule{natForward}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -363,8 +364,8 @@ func parseDnatId(entryId string) (entry *vpc.DestinationIpPortTranslationNatRule
 	entry = &vpc.DestinationIpPortTranslationNatRule{}
 	params["nat-gateway-id"] = natId
 	params["vpc-id"] = u.User.Username()
-	entry.IpProtocol = stringToPointer(strings.ToUpper(u.Scheme))
-	entry.PublicIpAddress = stringToPointer(host)
+	entry.IpProtocol = helper.String(strings.ToUpper(u.Scheme))
+	entry.PublicIpAddress = helper.String(host)
 
 	portInt, err := strconv.Atoi(port)
 	port64 := uint64(portInt)

@@ -37,6 +37,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudCbsStorage() *schema.Resource {
@@ -126,33 +127,33 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 
 	request := cbs.NewCreateDisksRequest()
-	request.DiskName = stringToPointer(d.Get("storage_name").(string))
-	request.DiskType = stringToPointer(d.Get("storage_type").(string))
-	request.DiskSize = intToPointer(d.Get("storage_size").(int))
+	request.DiskName = helper.String(d.Get("storage_name").(string))
+	request.DiskType = helper.String(d.Get("storage_type").(string))
+	request.DiskSize = helper.IntUint64(d.Get("storage_size").(int))
 	request.Placement = &cbs.Placement{
-		Zone: stringToPointer(d.Get("availability_zone").(string)),
+		Zone: helper.String(d.Get("availability_zone").(string)),
 	}
 	if v, ok := d.GetOk("project_id"); ok {
-		request.Placement.ProjectId = intToPointer(v.(int))
+		request.Placement.ProjectId = helper.IntUint64(v.(int))
 	}
 	if v, ok := d.GetOk("snapshot_id"); ok {
-		request.SnapshotId = stringToPointer(v.(string))
+		request.SnapshotId = helper.String(v.(string))
 	}
 	if _, ok := d.GetOk("encrypt"); ok {
-		request.Encrypt = stringToPointer("ENCRYPT")
+		request.Encrypt = helper.String("ENCRYPT")
 	}
 	if v, ok := d.GetOk("tags"); ok {
 		tags := v.(map[string]interface{})
 		request.Tags = make([]*cbs.Tag, 0, len(tags))
 		for key, value := range tags {
 			tag := cbs.Tag{
-				Key:   stringToPointer(key),
-				Value: stringToPointer(value.(string)),
+				Key:   helper.String(key),
+				Value: helper.String(value.(string)),
 			}
 			request.Tags = append(request.Tags, &tag)
 		}
 	}
-	request.DiskChargeType = stringToPointer("POSTPAID_BY_HOUR")
+	request.DiskChargeType = helper.String("POSTPAID_BY_HOUR")
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CreateDisks(request)

@@ -20,6 +20,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCosBucketObject() *schema.Resource {
@@ -101,7 +102,7 @@ func dataSourceTencentCloudCosBucketObjectsRead(d *schema.ResourceData, meta int
 	}
 
 	ids := []string{bucket, key}
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	_ = d.Set("cache_control", info.CacheControl)
 	outputMap["cache_control"] = getStringValue(info.CacheControl)
 	_ = d.Set("content_disposition", info.ContentDisposition)

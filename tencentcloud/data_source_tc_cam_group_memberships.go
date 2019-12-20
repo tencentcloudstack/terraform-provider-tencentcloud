@@ -13,6 +13,7 @@ package tencentcloud
 
 import (
 	"context"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -92,7 +93,7 @@ func dataSourceTencentCloudCamGroupMembershipsRead(d *schema.ResourceData, meta 
 	groupList = append(groupList, mapping)
 	ids = append(ids, groupId)
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("membership_list", groupList); e != nil {
 		log.Printf("[CRITAL]%s provider set membership list fail, reason:%s\n", logId, e.Error())
 		return e

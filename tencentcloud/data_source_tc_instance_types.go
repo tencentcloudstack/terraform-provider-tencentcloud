@@ -18,9 +18,9 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceInstanceTypes() *schema.Resource {
@@ -197,7 +197,7 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 		}
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("instance_types", typeList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set instance type list fail, reason:%s\n ", logId, err.Error())

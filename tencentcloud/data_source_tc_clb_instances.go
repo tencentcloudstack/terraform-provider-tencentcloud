@@ -22,6 +22,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudClbInstances() *schema.Resource {
@@ -189,10 +190,10 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			"project_id":                *clb.ProjectId,
 			"vpc_id":                    *clb.VpcId,
 			"subnet_id":                 *clb.SubnetId,
-			"clb_vips":                  flattenStringList(clb.LoadBalancerVips),
+			"clb_vips":                  helper.FlattenStringList(clb.LoadBalancerVips),
 			"target_region_info_region": *(clb.TargetRegionInfo.Region),
 			"target_region_info_vpc_id": *(clb.TargetRegionInfo.VpcId),
-			"security_groups":           flattenStringList(clb.SecureGroups),
+			"security_groups":           helper.FlattenStringList(clb.SecureGroups),
 		}
 		if clb.Tags != nil {
 			tags := make(map[string]interface{}, len(clb.Tags))
@@ -205,7 +206,7 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 		ids = append(ids, *clb.LoadBalancerId)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("clb_list", clbList); e != nil {
 		log.Printf("[CRITAL]%s provider set CLB list fail, reason:%+v", logId, e)
 		return e

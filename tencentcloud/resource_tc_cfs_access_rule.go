@@ -24,6 +24,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -75,11 +76,11 @@ func resourceTencentCloudCfsAccessRuleCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 
 	request := cfs.NewCreateCfsRuleRequest()
-	request.PGroupId = stringToPointer(d.Get("access_group_id").(string))
-	request.AuthClientIp = stringToPointer(d.Get("auth_client_ip").(string))
-	request.Priority = int64ToPointer(d.Get("priority").(int))
-	request.RWPermission = stringToPointer(d.Get("rw_permission").(string))
-	request.UserPermission = stringToPointer(d.Get("user_permission").(string))
+	request.PGroupId = helper.String(d.Get("access_group_id").(string))
+	request.AuthClientIp = helper.String(d.Get("auth_client_ip").(string))
+	request.Priority = helper.IntInt64(d.Get("priority").(int))
+	request.RWPermission = helper.String(d.Get("rw_permission").(string))
+	request.UserPermission = helper.String(d.Get("user_permission").(string))
 	ruleId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -150,19 +151,19 @@ func resourceTencentCloudCfsAccessRuleUpdate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 
 	request := cfs.NewUpdateCfsRuleRequest()
-	request.RuleId = stringToPointer(d.Id())
-	request.PGroupId = stringToPointer(d.Get("access_group_id").(string))
+	request.RuleId = helper.String(d.Id())
+	request.PGroupId = helper.String(d.Get("access_group_id").(string))
 	if d.HasChange("auth_client_ip") {
-		request.AuthClientIp = stringToPointer(d.Get("auth_client_ip").(string))
+		request.AuthClientIp = helper.String(d.Get("auth_client_ip").(string))
 	}
 	if d.HasChange("rw_permission") {
-		request.RWPermission = stringToPointer(d.Get("rw_permission").(string))
+		request.RWPermission = helper.String(d.Get("rw_permission").(string))
 	}
 	if d.HasChange("user_permission") {
-		request.UserPermission = stringToPointer(d.Get("user_permission").(string))
+		request.UserPermission = helper.String(d.Get("user_permission").(string))
 	}
 	if d.HasChange("priority") {
-		request.Priority = int64ToPointer(d.Get("priority").(int))
+		request.Priority = helper.IntInt64(d.Get("priority").(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

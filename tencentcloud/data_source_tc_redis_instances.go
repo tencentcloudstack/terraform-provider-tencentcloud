@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentRedisInstances() *schema.Resource {
@@ -185,7 +186,7 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	instances, err := service.DescribeInstances(ctx, zone, searchKey, projectId, limit)
 	if err != nil {

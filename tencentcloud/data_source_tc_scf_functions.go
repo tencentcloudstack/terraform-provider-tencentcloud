@@ -30,6 +30,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudScfFunctions() *schema.Resource {
@@ -274,16 +275,16 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 	)
 
 	if raw, ok := d.GetOk("name"); ok {
-		name = stringToPointer(raw.(string))
+		name = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("namespace"); ok {
-		namespace = stringToPointer(raw.(string))
+		namespace = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("description"); ok {
-		desc = stringToPointer(raw.(string))
+		desc = helper.String(raw.(string))
 	}
 
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 	if len(tags) > 10 {
 		return errors.Errorf("can't set more than 10 tags")
 	}
@@ -383,7 +384,7 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 	}
 
 	_ = d.Set("functions", functions)
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), functions); err != nil {

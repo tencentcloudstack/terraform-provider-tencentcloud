@@ -31,6 +31,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudSecurityGroup() *schema.Resource {
@@ -99,7 +100,7 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 
 	d.SetId(id)
 
-	if tags := getTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := BuildTagResourceName("cvm", "sg", region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -172,12 +173,12 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 	)
 
 	if d.HasChange("name") {
-		newName = stringToPointer(d.Get("name").(string))
+		newName = helper.String(d.Get("name").(string))
 		attrUpdate = append(attrUpdate, "name")
 	}
 
 	if d.HasChange("description") {
-		newDesc = stringToPointer(d.Get("description").(string))
+		newDesc = helper.String(d.Get("description").(string))
 		attrUpdate = append(attrUpdate, "description")
 	}
 

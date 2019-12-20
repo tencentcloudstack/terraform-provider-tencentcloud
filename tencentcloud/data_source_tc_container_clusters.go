@@ -22,6 +22,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudContainerClusters() *schema.Resource {
@@ -236,7 +237,7 @@ func dataSourceTencentCloudContainerClustersRead(d *schema.ResourceData, meta in
 		clustersList = append(clustersList, clusterInfo)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	_ = d.Set("clusters", clustersList)
 	_ = d.Set("total_count", *response.Response.TotalCount)
 

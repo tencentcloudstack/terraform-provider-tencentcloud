@@ -46,6 +46,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudCamRole() *schema.Resource {
@@ -128,7 +129,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 	request.RoleName = &name
 	request.PolicyDocument = &document
 	if v, ok := d.GetOk("description"); ok {
-		request.Description = stringToPointer(v.(string))
+		request.Description = helper.String(v.(string))
 	}
 	if v, ok := d.GetOkExists("console_login"); ok {
 		loginBool := v.(bool)

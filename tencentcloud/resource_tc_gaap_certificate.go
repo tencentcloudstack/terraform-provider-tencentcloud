@@ -27,6 +27,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudGaapCertificate() *schema.Resource {
@@ -109,7 +110,7 @@ func resourceTencentCloudGaapCertificateCreate(d *schema.ResourceData, m interfa
 
 	var key *string
 	if rawKey, ok := d.GetOk("key"); ok {
-		key = stringToPointer(rawKey.(string))
+		key = helper.String(rawKey.(string))
 	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -172,13 +173,13 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 	if certificate.CreateTime == nil {
 		return errors.New("certificate create time is nil")
 	}
-	_ = d.Set("create_time", formatUnixTime(*certificate.CreateTime))
+	_ = d.Set("create_time", helper.FormatUnixTime(*certificate.CreateTime))
 
 	if certificate.BeginTime != nil {
-		_ = d.Set("begin_time", formatUnixTime(*certificate.BeginTime))
+		_ = d.Set("begin_time", helper.FormatUnixTime(*certificate.BeginTime))
 	}
 	if certificate.EndTime != nil {
-		_ = d.Set("end_time", formatUnixTime(*certificate.EndTime))
+		_ = d.Set("end_time", helper.FormatUnixTime(*certificate.EndTime))
 	}
 	if certificate.IssuerCN != nil {
 		_ = d.Set("issuer_cn", certificate.IssuerCN)

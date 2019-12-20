@@ -31,6 +31,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudSslCertificate() *schema.Resource {
@@ -155,7 +156,7 @@ func resourceTencentCloudSslCertificateCreate(d *schema.ResourceData, m interfac
 
 	var key *string
 	if raw, ok := d.GetOk("key"); ok {
-		key = stringToPointer(raw.(string))
+		key = helper.String(raw.(string))
 	}
 
 	if certType == "SVR" && (key == nil || *key == "") {

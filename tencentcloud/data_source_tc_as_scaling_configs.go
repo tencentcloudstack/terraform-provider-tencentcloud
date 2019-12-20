@@ -17,6 +17,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudAsScalingConfigs() *schema.Resource {
@@ -199,18 +200,18 @@ func dataSourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta inte
 			"configuration_name":         *config.LaunchConfigurationName,
 			"image_id":                   *config.ImageId,
 			"project_id":                 *config.ProjectId,
-			"instance_types":             flattenStringList(config.InstanceTypes),
+			"instance_types":             helper.FlattenStringList(config.InstanceTypes),
 			"system_disk_type":           *config.SystemDisk.DiskType,
 			"system_disk_size":           *config.SystemDisk.DiskSize,
 			"data_disk":                  flattenDataDiskMappings(config.DataDisks),
 			"internet_charge_type":       *config.InternetAccessible.InternetChargeType,
 			"internet_max_bandwidth_out": *config.InternetAccessible.InternetMaxBandwidthOut,
 			"public_ip_assigned":         *config.InternetAccessible.PublicIpAssigned,
-			"key_ids":                    flattenStringList(config.LoginSettings.KeyIds),
-			"security_group_ids":         flattenStringList(config.SecurityGroupIds),
+			"key_ids":                    helper.FlattenStringList(config.LoginSettings.KeyIds),
+			"security_group_ids":         helper.FlattenStringList(config.SecurityGroupIds),
 			"enhanced_security_service":  *config.EnhancedService.SecurityService.Enabled,
 			"enhanced_monitor_service":   *config.EnhancedService.MonitorService.Enabled,
-			"user_data":                  pointerToString(config.UserData),
+			"user_data":                  helper.PString(config.UserData),
 			"instance_tags":              flattenInstanceTagsMapping(config.InstanceTags),
 			"status":                     *config.LaunchConfigurationStatus,
 			"create_time":                *config.CreatedTime,

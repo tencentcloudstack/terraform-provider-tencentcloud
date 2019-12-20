@@ -37,8 +37,9 @@ package tencentcloud
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceTencentCloudDcGatewayCCNRoutes() *schema.Resource {

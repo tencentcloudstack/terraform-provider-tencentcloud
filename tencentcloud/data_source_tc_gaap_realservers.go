@@ -23,6 +23,7 @@ import (
 	"net"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudGaapRealservers() *schema.Resource {
@@ -121,16 +122,16 @@ func dataSourceTencentCloudGaapRealserversRead(d *schema.ResourceData, m interfa
 		name    *string
 	)
 	if raw, ok := d.GetOk("ip"); ok {
-		address = stringToPointer(raw.(string))
+		address = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("domain"); ok {
-		address = stringToPointer(raw.(string))
+		address = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("name"); ok {
-		name = stringToPointer(raw.(string))
+		name = helper.String(raw.(string))
 	}
 
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -187,7 +188,7 @@ func dataSourceTencentCloudGaapRealserversRead(d *schema.ResourceData, m interfa
 	}
 
 	_ = d.Set("realservers", realserverList)
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), realserverList); err != nil {

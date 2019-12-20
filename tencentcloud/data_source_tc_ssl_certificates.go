@@ -18,6 +18,7 @@ import (
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudSslCertificates() *schema.Resource {
@@ -132,15 +133,15 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 	)
 
 	if raw, ok := d.GetOk("name"); ok {
-		name = stringToPointer(raw.(string))
+		name = helper.String(raw.(string))
 	}
 
 	if raw, ok := d.GetOk("type"); ok {
-		certType = stringToPointer(raw.(string))
+		certType = helper.String(raw.(string))
 	}
 
 	if raw, ok := d.GetOk("id"); ok {
-		id = stringToPointer(raw.(string))
+		id = helper.String(raw.(string))
 	}
 
 	service := SslService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -203,7 +204,7 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 	}
 
 	_ = d.Set("certificates", certificates)
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), certificates); err != nil {

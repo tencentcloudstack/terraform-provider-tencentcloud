@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"strconv"
 	"strings"
 	"testing"
@@ -71,7 +72,7 @@ func testAccMysqlPrivilegeExists(s *terraform.State) error {
 	request := cdb.NewDescribeAccountPrivilegesRequest()
 	request.InstanceId = &privilegeId.MysqlId
 	request.User = &privilegeId.AccountName
-	request.Host = stringToPointer(MYSQL_DEFAULT_ACCOUNT_HOST)
+	request.Host = helper.String(MYSQL_DEFAULT_ACCOUNT_HOST)
 
 	response, err := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
 	if err != nil {
@@ -116,7 +117,7 @@ func testAccMysqlPrivilegeDestroy(s *terraform.State) error {
 	request := cdb.NewDescribeAccountPrivilegesRequest()
 	request.InstanceId = &privilegeId.MysqlId
 	request.User = &privilegeId.AccountName
-	request.Host = stringToPointer(MYSQL_DEFAULT_ACCOUNT_HOST)
+	request.Host = helper.String(MYSQL_DEFAULT_ACCOUNT_HOST)
 
 	response, err := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
 	if err != nil {

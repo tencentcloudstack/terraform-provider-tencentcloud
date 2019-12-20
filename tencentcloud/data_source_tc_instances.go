@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudInstances() *schema.Resource {
@@ -290,7 +291,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 			"internet_max_bandwidth_out": instance.InternetAccessible.InternetMaxBandwidthOut,
 			"allocate_public_ip":         instance.InternetAccessible.PublicIpAssigned,
 			"status":                     instance.InstanceState,
-			"security_groups":            flattenStringList(instance.SecurityGroupIds),
+			"security_groups":            helper.FlattenStringList(instance.SecurityGroupIds),
 			"tags":                       flattenCvmTagsMapping(instance.Tags),
 			"create_time":                instance.CreatedTime,
 			"expired_time":               instance.ExpiredTime,
@@ -316,7 +317,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 		ids = append(ids, *instance.InstanceId)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("instance_list", instanceList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set instance list fail, reason:%s\n ", logId, err.Error())

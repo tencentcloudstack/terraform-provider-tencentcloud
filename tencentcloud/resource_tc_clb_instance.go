@@ -57,6 +57,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 var clbActionMu = &sync.Mutex{}
@@ -180,10 +181,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 	request := clb.NewCreateLoadBalancerRequest()
-	request.LoadBalancerType = stringToPointer(networkType)
-	request.LoadBalancerName = stringToPointer(clbName)
+	request.LoadBalancerType = helper.String(networkType)
+	request.LoadBalancerName = helper.String(clbName)
 	if v, ok := d.GetOk("vpc_id"); ok {
-		request.VpcId = stringToPointer(v.(string))
+		request.VpcId = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("project_id"); ok {
 		projectId := int64(v.(int))
@@ -193,15 +194,15 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		if networkType == CLB_NETWORK_TYPE_OPEN {
 			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance][Create] check: OPEN network_type do not support this operation with subnet_id")
 		}
-		request.SubnetId = stringToPointer(v.(string))
+		request.SubnetId = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("tags"); ok {
 		tags := v.(map[string]interface{})
 		request.Tags = make([]*clb.TagInfo, 0, len(tags))
 		for key, value := range tags {
 			tag := clb.TagInfo{
-				TagKey:   stringToPointer(key),
-				TagValue: stringToPointer(value.(string)),
+				TagKey:   helper.String(key),
+				TagValue: helper.String(value.(string)),
 			}
 			request.Tags = append(request.Tags, &tag)
 		}
@@ -236,7 +237,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("security_groups"); ok {
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
-		sgRequest.LoadBalancerId = stringToPointer(clbId)
+		sgRequest.LoadBalancerId = helper.String(clbId)
 		securityGroups := v.([]interface{})
 		sgRequest.SecurityGroups = make([]*string, 0, len(securityGroups))
 		for i := range securityGroups {
@@ -271,7 +272,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			VpcId:  &targetRegionInfoVpcId,
 		}
 		mRequest := clb.NewModifyLoadBalancerAttributesRequest()
-		mRequest.LoadBalancerId = stringToPointer(clbId)
+		mRequest.LoadBalancerId = helper.String(clbId)
 		mRequest.TargetRegionInfo = &targetRegionInfo
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			mResponse, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(mRequest)
@@ -327,13 +328,13 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 
 	_ = d.Set("network_type", instance.LoadBalancerType)
 	_ = d.Set("clb_name", instance.LoadBalancerName)
-	_ = d.Set("clb_vips", flattenStringList(instance.LoadBalancerVips))
+	_ = d.Set("clb_vips", helper.FlattenStringList(instance.LoadBalancerVips))
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("vpc_id", instance.VpcId)
 	_ = d.Set("target_region_info_region", instance.TargetRegionInfo.Region)
 	_ = d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
 	_ = d.Set("project_id", instance.ProjectId)
-	_ = d.Set("security_groups", flattenStringList(instance.SecureGroups))
+	_ = d.Set("security_groups", helper.FlattenStringList(instance.SecureGroups))
 	_ = d.Set("tags", flattenClbTagsMapping(instance.Tags))
 	return nil
 }
@@ -380,9 +381,9 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	if changed {
 		request := clb.NewModifyLoadBalancerAttributesRequest()
-		request.LoadBalancerId = stringToPointer(clbId)
+		request.LoadBalancerId = helper.String(clbId)
 		if d.HasChange("clb_name") {
-			request.LoadBalancerName = stringToPointer(clbName)
+			request.LoadBalancerName = helper.String(clbName)
 		}
 		if d.HasChange("target_region_info_region") || d.HasChange("target_region_info_vpc_id") {
 			request.TargetRegionInfo = &targetRegionInfo
@@ -425,7 +426,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB instance %s][Update] check: INTERNAL network_type do not support this operation with sercurity_groups", clbId)
 		}
 		sgRequest := clb.NewSetLoadBalancerSecurityGroupsRequest()
-		sgRequest.LoadBalancerId = stringToPointer(clbId)
+		sgRequest.LoadBalancerId = helper.String(clbId)
 		securityGroups := d.Get("security_groups").([]interface{})
 		sgRequest.SecurityGroups = make([]*string, 0, len(securityGroups))
 		for i := range securityGroups {

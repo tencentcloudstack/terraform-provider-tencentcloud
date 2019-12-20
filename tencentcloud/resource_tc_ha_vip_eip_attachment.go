@@ -31,6 +31,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudHaVipEipAttachment() *schema.Resource {
@@ -133,8 +134,8 @@ func haVipAssociateEip(meta interface{}, havipId string, eip string) error {
 	//associate eip
 	logId := getLogId(contextNil)
 	bindRequest := vpc.NewHaVipAssociateAddressIpRequest()
-	bindRequest.HaVipId = stringToPointer(havipId)
-	bindRequest.AddressIp = stringToPointer(eip)
+	bindRequest.HaVipId = helper.String(havipId)
+	bindRequest.AddressIp = helper.String(eip)
 	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().HaVipAssociateAddressIp(bindRequest)
 		if e != nil {
@@ -176,7 +177,7 @@ func haVipDisassociateEip(meta interface{}, havipId string, eip string) error {
 	//associate eip
 	logId := getLogId(contextNil)
 	bindRequest := vpc.NewHaVipDisassociateAddressIpRequest()
-	bindRequest.HaVipId = stringToPointer(havipId)
+	bindRequest.HaVipId = helper.String(havipId)
 	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().HaVipDisassociateAddressIp(bindRequest)
 		if e != nil {

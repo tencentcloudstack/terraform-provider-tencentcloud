@@ -6,6 +6,7 @@ import (
 
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -40,8 +41,8 @@ func (me *CbsService) DescribeDisksByFilter(ctx context.Context, params map[stri
 	request.Filters = make([]*cbs.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &cbs.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -50,8 +51,8 @@ func (me *CbsService) DescribeDisksByFilter(ctx context.Context, params map[stri
 	pageSize := 100
 	disks = make([]*cbs.Disk, 0)
 	for {
-		request.Offset = intToPointer(offset)
-		request.Limit = intToPointer(pageSize)
+		request.Offset = helper.IntUint64(offset)
+		request.Limit = helper.IntUint64(pageSize)
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseCbsClient().DescribeDisks(request)
 		if err != nil {
@@ -85,7 +86,7 @@ func (me *CbsService) ModifyDiskAttributes(ctx context.Context, diskId, diskName
 		request.DiskName = &diskName
 	}
 	if projectId >= 0 {
-		request.ProjectId = intToPointer(projectId)
+		request.ProjectId = helper.IntUint64(projectId)
 	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().ModifyDiskAttributes(request)
@@ -120,7 +121,7 @@ func (me *CbsService) ResizeDisk(ctx context.Context, diskId string, diskSize in
 	logId := getLogId(ctx)
 	request := cbs.NewResizeDiskRequest()
 	request.DiskId = &diskId
-	request.DiskSize = intToPointer(diskSize)
+	request.DiskSize = helper.IntUint64(diskSize)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCbsClient().ResizeDisk(request)
 	if err != nil {
@@ -231,8 +232,8 @@ func (me *CbsService) DescribeSnapshotsByFilter(ctx context.Context, params map[
 	request.Filters = make([]*cbs.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &cbs.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -240,8 +241,8 @@ func (me *CbsService) DescribeSnapshotsByFilter(ctx context.Context, params map[
 	offset := 0
 	pageSize := 100
 	for {
-		request.Offset = intToPointer(offset)
-		request.Limit = intToPointer(pageSize)
+		request.Offset = helper.IntUint64(offset)
+		request.Limit = helper.IntUint64(pageSize)
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseCbsClient().DescribeSnapshots(request)
 		if err != nil {
@@ -327,14 +328,14 @@ func (me *CbsService) DescribeSnapshotPolicy(ctx context.Context, policyId, poli
 	request.Filters = make([]*cbs.Filter, 0)
 	if policyId != "" {
 		filter := cbs.Filter{
-			Name:   stringToPointer("auto-snapshot-policy-id"),
+			Name:   helper.String("auto-snapshot-policy-id"),
 			Values: []*string{&policyId},
 		}
 		request.Filters = append(request.Filters, &filter)
 	}
 	if policyName != "" {
 		filter := cbs.Filter{
-			Name:   stringToPointer("auto-snapshot-policy-name"),
+			Name:   helper.String("auto-snapshot-policy-name"),
 			Values: []*string{&policyName},
 		}
 		request.Filters = append(request.Filters, &filter)

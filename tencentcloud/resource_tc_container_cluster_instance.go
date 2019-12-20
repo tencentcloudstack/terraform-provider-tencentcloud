@@ -39,6 +39,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudContainerClusterInstance() *schema.Resource {
@@ -316,7 +317,7 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 				break
 			}
 		}
-		place.Zone = stringToPointer(zone)
+		place.Zone = helper.String(zone)
 	}
 	runInstancesPara.Placement = &place
 	runInstancesPara.InstanceCount = common.Int64Ptr(1)

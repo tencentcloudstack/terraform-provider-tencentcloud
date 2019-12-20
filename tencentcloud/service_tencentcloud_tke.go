@@ -8,6 +8,7 @@ import (
 
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -154,7 +155,7 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 
 	if name != "" {
 		filter := &tke.Filter{
-			Name:   stringToPointer("ClusterName"),
+			Name:   helper.String("ClusterName"),
 			Values: []*string{&name},
 		}
 		request.Filters = []*tke.Filter{filter}
@@ -299,13 +300,13 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	for k, v := range tags {
 		if len(request.ClusterBasicSettings.TagSpecification) == 0 {
 			request.ClusterBasicSettings.TagSpecification = []*tke.TagSpecification{{
-				ResourceType: stringToPointer("cluster"),
+				ResourceType: helper.String("cluster"),
 			}}
 		}
 
 		request.ClusterBasicSettings.TagSpecification[0].Tags = append(request.ClusterBasicSettings.TagSpecification[0].Tags, &tke.Tag{
-			Key:   stringToPointer(k),
-			Value: stringToPointer(v),
+			Key:   helper.String(k),
+			Value: helper.String(v),
 		})
 	}
 
@@ -324,20 +325,20 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	if len(cvms.Master) != 0 {
 
 		var node tke.RunInstancesForNode
-		node.NodeRole = stringToPointer(TKE_ROLE_MASTER_ETCD)
+		node.NodeRole = helper.String(TKE_ROLE_MASTER_ETCD)
 		node.RunInstancesPara = []*string{}
-		request.ClusterType = stringToPointer(TKE_DEPLOY_TYPE_INDEPENDENT)
+		request.ClusterType = helper.String(TKE_DEPLOY_TYPE_INDEPENDENT)
 		for v := range cvms.Master {
 			node.RunInstancesPara = append(node.RunInstancesPara, &cvms.Master[v])
 		}
 		request.RunInstancesForNode = append(request.RunInstancesForNode, &node)
 
 	} else {
-		request.ClusterType = stringToPointer(TKE_DEPLOY_TYPE_MANAGED)
+		request.ClusterType = helper.String(TKE_DEPLOY_TYPE_MANAGED)
 	}
 
 	var node tke.RunInstancesForNode
-	node.NodeRole = stringToPointer(TKE_ROLE_WORKER)
+	node.NodeRole = helper.String(TKE_ROLE_WORKER)
 	node.RunInstancesPara = []*string{}
 	for v := range cvms.Work {
 		node.RunInstancesPara = append(node.RunInstancesPara, &cvms.Work[v])
@@ -428,7 +429,7 @@ func (me *TkeService) DeleteClusterInstances(ctx context.Context, id string, ins
 		request.InstanceIds = append(request.InstanceIds, &instanceIds[index])
 	}
 
-	request.InstanceDeleteMode = stringToPointer("terminate")
+	request.InstanceDeleteMode = helper.String("terminate")
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTkeClient().DeleteClusterInstances(request)
 	return err
@@ -446,7 +447,7 @@ func (me *TkeService) DeleteCluster(ctx context.Context, id string) (errRet erro
 		}
 	}()
 	request.ClusterId = &id
-	request.InstanceDeleteMode = stringToPointer("terminate")
+	request.InstanceDeleteMode = helper.String("terminate")
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTkeClient().DeleteCluster(request)

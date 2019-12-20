@@ -13,6 +13,7 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -48,11 +49,11 @@ func (me *GaapService) CreateRealserver(ctx context.Context, address, name strin
 	request := gaap.NewAddRealServersRequest()
 	request.RealServerName = &name
 	request.RealServerIP = []*string{&address}
-	request.ProjectId = intToPointer(projectId)
+	request.ProjectId = helper.IntUint64(projectId)
 	for k, v := range tags {
 		request.TagSet = append(request.TagSet, &gaap.TagPair{
-			TagKey:   stringToPointer(k),
-			TagValue: stringToPointer(v),
+			TagKey:   helper.String(k),
+			TagValue: helper.String(v),
 		})
 	}
 
@@ -104,25 +105,25 @@ func (me *GaapService) DescribeRealservers(ctx context.Context, address, name *s
 	request.SearchValue = address
 	if name != nil {
 		request.Filters = append(request.Filters, &gaap.Filter{
-			Name:   stringToPointer("RealServerName"),
+			Name:   helper.String("RealServerName"),
 			Values: []*string{name},
 		})
 	}
 	for k, v := range tags {
 		request.TagSet = append(request.TagSet, &gaap.TagPair{
-			TagKey:   stringToPointer(k),
-			TagValue: stringToPointer(v),
+			TagKey:   helper.String(k),
+			TagValue: helper.String(v),
 		})
 	}
-	request.ProjectId = int64ToPointer(projectId)
+	request.ProjectId = helper.IntInt64(projectId)
 
-	request.Limit = intToPointer(50)
+	request.Limit = helper.IntUint64(50)
 	offset := 0
 
 	// run loop at least one times
 	count := 50
 	for count == 50 {
-		request.Offset = intToPointer(offset)
+		request.Offset = helper.IntUint64(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -201,7 +202,7 @@ func (me *GaapService) createCertificate(ctx context.Context, certificateType in
 	logId := getLogId(ctx)
 
 	request := gaap.NewCreateCertificateRequest()
-	request.CertificateType = int64ToPointer(certificateType)
+	request.CertificateType = helper.IntInt64(certificateType)
 	request.CertificateContent = &content
 	request.CertificateAlias = &name
 	request.CertificateKey = key
@@ -322,16 +323,16 @@ func (me *GaapService) CreateProxy(
 
 	createRequest := gaap.NewCreateProxyRequest()
 	createRequest.ProxyName = &name
-	createRequest.ProjectId = int64ToPointer(projectId)
-	createRequest.Bandwidth = intToPointer(bandwidth)
-	createRequest.Concurrent = intToPointer(concurrent)
+	createRequest.ProjectId = helper.IntInt64(projectId)
+	createRequest.Bandwidth = helper.IntUint64(bandwidth)
+	createRequest.Concurrent = helper.IntUint64(concurrent)
 	createRequest.AccessRegion = &accessRegion
 	createRequest.RealServerRegion = &realserverRegion
-	createRequest.ClientToken = stringToPointer(buildToken())
+	createRequest.ClientToken = helper.String(helper.BuildToken())
 	for k, v := range tags {
 		createRequest.TagSet = append(createRequest.TagSet, &gaap.TagPair{
-			TagKey:   stringToPointer(k),
-			TagValue: stringToPointer(v),
+			TagKey:   helper.String(k),
+			TagValue: helper.String(v),
 		})
 	}
 
@@ -406,7 +407,7 @@ func (me *GaapService) EnableProxy(ctx context.Context, id string) error {
 
 	enableRequest := gaap.NewOpenProxiesRequest()
 	enableRequest.ProxyIds = []*string{&id}
-	enableRequest.ClientToken = stringToPointer(buildToken())
+	enableRequest.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(enableRequest.GetAction())
@@ -484,7 +485,7 @@ func (me *GaapService) DisableProxy(ctx context.Context, id string) error {
 
 	disableRequest := gaap.NewCloseProxiesRequest()
 	disableRequest.ProxyIds = []*string{&id}
-	disableRequest.ClientToken = stringToPointer(buildToken())
+	disableRequest.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(disableRequest.GetAction())
@@ -571,36 +572,36 @@ func (me *GaapService) DescribeProxies(
 	}
 	if projectId != nil {
 		request.Filters = append(request.Filters, &gaap.Filter{
-			Name:   stringToPointer("ProjectId"),
-			Values: []*string{stringToPointer(strconv.Itoa(*projectId))},
+			Name:   helper.String("ProjectId"),
+			Values: []*string{helper.String(strconv.Itoa(*projectId))},
 		})
 	}
 	if accessRegion != nil {
 		request.Filters = append(request.Filters, &gaap.Filter{
-			Name:   stringToPointer("AccessRegion"),
+			Name:   helper.String("AccessRegion"),
 			Values: []*string{accessRegion},
 		})
 	}
 	if realserverRegion != nil {
 		request.Filters = append(request.Filters, &gaap.Filter{
-			Name:   stringToPointer("RealServerRegion"),
+			Name:   helper.String("RealServerRegion"),
 			Values: []*string{realserverRegion},
 		})
 	}
 	for k, v := range tags {
 		request.TagSet = append(request.TagSet, &gaap.TagPair{
-			TagKey:   stringToPointer(k),
-			TagValue: stringToPointer(v),
+			TagKey:   helper.String(k),
+			TagValue: helper.String(v),
 		})
 	}
 
-	request.Limit = intToPointer(100)
+	request.Limit = helper.IntUint64(100)
 	offset := 0
 
 	// to run loop at least one times
 	count := 100
 	for count == 100 {
-		request.Offset = intToPointer(offset)
+		request.Offset = helper.IntUint64(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -641,7 +642,7 @@ func (me *GaapService) ModifyProxyName(ctx context.Context, id, name string) err
 	request := gaap.NewModifyProxiesAttributeRequest()
 	request.ProxyIds = []*string{&id}
 	request.ProxyName = &name
-	request.ClientToken = stringToPointer(buildToken())
+	request.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -665,8 +666,8 @@ func (me *GaapService) ModifyProxyProjectId(ctx context.Context, id string, proj
 
 	request := gaap.NewModifyProxiesProjectRequest()
 	request.ProxyIds = []*string{&id}
-	request.ProjectId = int64ToPointer(projectId)
-	request.ClientToken = stringToPointer(buildToken())
+	request.ProjectId = helper.IntInt64(projectId)
+	request.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -692,12 +693,12 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 	modifyRequest := gaap.NewModifyProxyConfigurationRequest()
 	modifyRequest.ProxyId = &id
 	if bandwidth != nil {
-		modifyRequest.Bandwidth = intToPointer(*bandwidth)
+		modifyRequest.Bandwidth = helper.IntUint64(*bandwidth)
 	}
 	if concurrent != nil {
-		modifyRequest.Concurrent = intToPointer(*concurrent)
+		modifyRequest.Concurrent = helper.IntUint64(*concurrent)
 	}
-	modifyRequest.ClientToken = stringToPointer(buildToken())
+	modifyRequest.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(modifyRequest.GetAction())
@@ -761,8 +762,8 @@ func (me *GaapService) DeleteProxy(ctx context.Context, id string) error {
 
 	deleteRequest := gaap.NewDestroyProxiesRequest()
 	deleteRequest.ProxyIds = []*string{&id}
-	deleteRequest.Force = int64ToPointer(0)
-	deleteRequest.ClientToken = stringToPointer(buildToken())
+	deleteRequest.Force = helper.IntInt64(0)
+	deleteRequest.ClientToken = helper.String(helper.BuildToken())
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(deleteRequest.GetAction())
@@ -840,14 +841,14 @@ func (me *GaapService) CreateTCPListener(
 	request.Scheduler = &scheduler
 	request.RealServerType = &realserverType
 	request.ProxyId = &proxyId
-	request.Ports = []*uint64{intToPointer(port)}
+	request.Ports = []*uint64{helper.IntUint64(port)}
 	if healthCheck {
-		request.HealthCheck = intToPointer(1)
+		request.HealthCheck = helper.IntUint64(1)
 	} else {
-		request.HealthCheck = intToPointer(0)
+		request.HealthCheck = helper.IntUint64(0)
 	}
-	request.DelayLoop = intToPointer(interval)
-	request.ConnectTimeout = intToPointer(connectTimeout)
+	request.DelayLoop = helper.IntUint64(interval)
+	request.ConnectTimeout = helper.IntUint64(connectTimeout)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -893,7 +894,7 @@ func (me *GaapService) CreateUDPListener(
 	request.Scheduler = &scheduler
 	request.RealServerType = &realserverType
 	request.ProxyId = &proxyId
-	request.Ports = []*uint64{intToPointer(port)}
+	request.Ports = []*uint64{helper.IntUint64(port)}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -935,10 +936,10 @@ func (me *GaapService) BindLayer4ListenerRealservers(ctx context.Context, id, pr
 	request.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realserverBinds))
 	for _, bind := range realserverBinds {
 		request.RealServerBindSet = append(request.RealServerBindSet, &gaap.RealServerBindSetReq{
-			RealServerId:     stringToPointer(bind.id),
-			RealServerPort:   intToPointer(bind.port),
-			RealServerIP:     stringToPointer(bind.ip),
-			RealServerWeight: intToPointer(bind.weight),
+			RealServerId:     helper.String(bind.id),
+			RealServerPort:   helper.IntUint64(bind.port),
+			RealServerIP:     helper.String(bind.ip),
+			RealServerWeight: helper.IntUint64(bind.weight),
 		})
 	}
 
@@ -972,7 +973,7 @@ func (me *GaapService) DescribeTCPListeners(ctx context.Context, proxyId, listen
 	request.ListenerId = listenerId
 
 	if port != nil {
-		request.Port = intToPointer(*port)
+		request.Port = helper.IntUint64(*port)
 	}
 
 	// if port set, name can't use fuzzy search
@@ -984,13 +985,13 @@ func (me *GaapService) DescribeTCPListeners(ctx context.Context, proxyId, listen
 		}
 	}
 
-	request.Limit = intToPointer(50)
+	request.Limit = helper.IntUint64(50)
 	offset := 0
 
 	// to run loop at least once
 	count := 50
 	for count == 50 {
-		request.Offset = intToPointer(offset)
+		request.Offset = helper.IntUint64(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -1027,7 +1028,7 @@ func (me *GaapService) DescribeUDPListeners(ctx context.Context, proxyId, id, na
 	request.ListenerId = id
 
 	if port != nil {
-		request.Port = intToPointer(*port)
+		request.Port = helper.IntUint64(*port)
 	}
 
 	// if port set, name can't use fuzzy search
@@ -1039,13 +1040,13 @@ func (me *GaapService) DescribeUDPListeners(ctx context.Context, proxyId, id, na
 		}
 	}
 
-	request.Limit = intToPointer(50)
+	request.Limit = helper.IntUint64(50)
 	offset := 0
 
 	// to run loop at least once
 	count := 50
 	for count == 50 {
-		request.Offset = intToPointer(offset)
+		request.Offset = helper.IntUint64(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -1091,13 +1092,13 @@ func (me *GaapService) ModifyTCPListenerAttribute(
 	request.Scheduler = scheduler
 	if healthCheck != nil {
 		if *healthCheck {
-			request.HealthCheck = intToPointer(1)
+			request.HealthCheck = helper.IntUint64(1)
 		} else {
-			request.HealthCheck = intToPointer(0)
+			request.HealthCheck = helper.IntUint64(0)
 		}
 	}
-	request.DelayLoop = intToPointer(interval)
-	request.ConnectTimeout = intToPointer(connectTimeout)
+	request.DelayLoop = helper.IntUint64(interval)
+	request.ConnectTimeout = helper.IntUint64(connectTimeout)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1164,7 +1165,7 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 	deleteRequest := gaap.NewDeleteListenersRequest()
 	deleteRequest.ProxyId = &proxyId
 	deleteRequest.ListenerIds = []*string{&id}
-	deleteRequest.Force = intToPointer(0)
+	deleteRequest.Force = helper.IntUint64(0)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(deleteRequest.GetAction())
@@ -1648,7 +1649,7 @@ func (me *GaapService) CreateHTTPListener(ctx context.Context, name, proxyId str
 	request := gaap.NewCreateHTTPListenerRequest()
 	request.ProxyId = &proxyId
 	request.ListenerName = &name
-	request.Port = intToPointer(port)
+	request.Port = helper.IntUint64(port)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1695,9 +1696,9 @@ func (me *GaapService) CreateHTTPSListener(
 	request.CertificateId = &certificateId
 	request.ForwardProtocol = &forwardProtocol
 	request.ListenerName = &name
-	request.Port = intToPointer(port)
-	request.AuthType = intToPointer(authType)
-	request.PolyClientCertificateIds = stringsToPointer(polyClientCertificateIds)
+	request.Port = helper.IntUint64(port)
+	request.AuthType = helper.IntUint64(authType)
+	request.PolyClientCertificateIds = helper.Strings(polyClientCertificateIds)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1742,7 +1743,7 @@ func (me *GaapService) DescribeHTTPListeners(
 	request.ListenerId = id
 
 	if port != nil {
-		request.Port = intToPointer(*port)
+		request.Port = helper.IntUint64(*port)
 	}
 
 	// if port set, name can't use fuzzy search
@@ -1754,13 +1755,13 @@ func (me *GaapService) DescribeHTTPListeners(
 		}
 	}
 
-	request.Limit = intToPointer(50)
+	request.Limit = helper.IntUint64(50)
 	offset := 0
 
 	// run loop at least once
 	count := 50
 	for count == 50 {
-		request.Offset = intToPointer(offset)
+		request.Offset = helper.IntUint64(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -1801,7 +1802,7 @@ func (me *GaapService) DescribeHTTPSListeners(
 	request.ListenerId = listenerId
 
 	if port != nil {
-		request.Port = intToPointer(*port)
+		request.Port = helper.IntUint64(*port)
 	}
 
 	// if port set, name can't use fuzzy search
@@ -1813,13 +1814,13 @@ func (me *GaapService) DescribeHTTPSListeners(
 		}
 	}
 
-	request.Limit = intToPointer(50)
+	request.Limit = helper.IntUint64(50)
 	offset := 0
 
 	// run loop at least once
 	count := 50
 	for count == 50 {
-		request.Offset = intToPointer(offset)
+		request.Offset = helper.IntUint64(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -1894,7 +1895,7 @@ func (me *GaapService) ModifyHTTPSListener(
 	request.ListenerName = name
 	request.ForwardProtocol = forwardProtocol
 	request.CertificateId = certificateId
-	request.PolyClientCertificateIds = stringsToPointer(polyClientCertificateIds)
+	request.PolyClientCertificateIds = helper.Strings(polyClientCertificateIds)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -1924,8 +1925,8 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 
 	deleteRequest := gaap.NewDeleteListenersRequest()
 	deleteRequest.ProxyId = &proxyId
-	deleteRequest.ListenerIds = []*string{stringToPointer(id)}
-	deleteRequest.Force = intToPointer(0)
+	deleteRequest.ListenerIds = []*string{helper.String(id)}
+	deleteRequest.Force = helper.IntUint64(0)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(deleteRequest.GetAction())
@@ -2255,7 +2256,7 @@ func (me *GaapService) CreateHTTPSDomain(
 	createRequest.CertificateId = &certificateId
 
 	for _, polyId := range polyClientCertificateIds {
-		createRequest.PolyClientCertificateIds = append(createRequest.PolyClientCertificateIds, stringToPointer(polyId))
+		createRequest.PolyClientCertificateIds = append(createRequest.PolyClientCertificateIds, helper.String(polyId))
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -2322,29 +2323,29 @@ func (me *GaapService) SetAdvancedAuth(
 	request.Domain = &domain
 
 	if realserverAuth {
-		request.RealServerAuth = int64ToPointer(1)
+		request.RealServerAuth = helper.IntInt64(1)
 	} else {
-		request.RealServerAuth = int64ToPointer(0)
+		request.RealServerAuth = helper.IntInt64(0)
 	}
 
 	request.RealServerCertificateDomain = realserverCertificateDomain
 
 	for _, id := range realserverCertificateIds {
-		request.PolyRealServerCertificateIds = append(request.PolyRealServerCertificateIds, stringToPointer(id))
+		request.PolyRealServerCertificateIds = append(request.PolyRealServerCertificateIds, helper.String(id))
 	}
 
 	if basicAuth {
-		request.BasicAuth = int64ToPointer(1)
+		request.BasicAuth = helper.IntInt64(1)
 	} else {
-		request.BasicAuth = int64ToPointer(0)
+		request.BasicAuth = helper.IntInt64(0)
 	}
 
 	request.BasicAuthConfId = basicAuthId
 
 	if gaapAuth {
-		request.GaapAuth = int64ToPointer(1)
+		request.GaapAuth = helper.IntInt64(1)
 	} else {
-		request.GaapAuth = int64ToPointer(0)
+		request.GaapAuth = helper.IntInt64(0)
 	}
 
 	request.GaapCertificateId = gaapAuthId
@@ -2417,7 +2418,7 @@ func (me *GaapService) ModifyDomainCertificate(
 	request.CertificateId = &certificateId
 
 	for _, polyId := range polyClientCertificateIds {
-		request.PolyClientCertificateIds = append(request.PolyClientCertificateIds, stringToPointer(polyId))
+		request.PolyClientCertificateIds = append(request.PolyClientCertificateIds, helper.String(polyId))
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -2444,7 +2445,7 @@ func (me *GaapService) DeleteDomain(ctx context.Context, listenerId, domain stri
 	deleteRequest := gaap.NewDeleteDomainRequest()
 	deleteRequest.ListenerId = &listenerId
 	deleteRequest.Domain = &domain
-	deleteRequest.Force = intToPointer(0)
+	deleteRequest.Force = helper.IntUint64(0)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(deleteRequest.GetAction())
@@ -2507,20 +2508,20 @@ func (me *GaapService) CreateHttpRule(ctx context.Context, httpRule gaapHttpRule
 	request.RealServerType = &httpRule.realserverType
 	request.Scheduler = &httpRule.scheduler
 	if httpRule.healthCheck {
-		request.HealthCheck = intToPointer(1)
+		request.HealthCheck = helper.IntUint64(1)
 	} else {
-		request.HealthCheck = intToPointer(0)
+		request.HealthCheck = helper.IntUint64(0)
 	}
 
 	request.CheckParams = &gaap.RuleCheckParams{
-		DelayLoop:      intToPointer(httpRule.interval),
-		ConnectTimeout: intToPointer(httpRule.connectTimeout),
+		DelayLoop:      helper.IntUint64(httpRule.interval),
+		ConnectTimeout: helper.IntUint64(httpRule.connectTimeout),
 		Path:           &httpRule.healthCheckPath,
 		Method:         &httpRule.healthCheckMethod,
 		StatusCode:     make([]*uint64, 0, len(httpRule.healthCheckStatusCodes)),
 	}
 	for _, code := range httpRule.healthCheckStatusCodes {
-		request.CheckParams.StatusCode = append(request.CheckParams.StatusCode, intToPointer(code))
+		request.CheckParams.StatusCode = append(request.CheckParams.StatusCode, helper.IntUint64(code))
 	}
 
 	request.ForwardHost = &httpRule.forwardHost
@@ -2565,10 +2566,10 @@ func (me *GaapService) BindHttpRuleRealservers(ctx context.Context, listenerId, 
 	request.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realservers))
 	for _, realserver := range realservers {
 		request.RealServerBindSet = append(request.RealServerBindSet, &gaap.RealServerBindSetReq{
-			RealServerId:     stringToPointer(realserver.id),
-			RealServerPort:   intToPointer(realserver.port),
-			RealServerIP:     stringToPointer(realserver.ip),
-			RealServerWeight: intToPointer(realserver.weight),
+			RealServerId:     helper.String(realserver.id),
+			RealServerPort:   helper.IntUint64(realserver.port),
+			RealServerIP:     helper.String(realserver.ip),
+			RealServerWeight: helper.IntUint64(realserver.weight),
 		})
 	}
 
@@ -2648,20 +2649,20 @@ func (me *GaapService) ModifyHTTPRuleAttribute(
 	request.Scheduler = scheduler
 
 	if healthCheck {
-		request.HealthCheck = intToPointer(1)
+		request.HealthCheck = helper.IntUint64(1)
 	} else {
-		request.HealthCheck = intToPointer(0)
+		request.HealthCheck = helper.IntUint64(0)
 	}
 
 	request.CheckParams = &gaap.RuleCheckParams{
-		DelayLoop:      intToPointer(interval),
-		ConnectTimeout: intToPointer(connectTimeout),
+		DelayLoop:      helper.IntUint64(interval),
+		ConnectTimeout: helper.IntUint64(connectTimeout),
 		Path:           &healthCheckPath,
 		Method:         &healthCheckMethod,
 		StatusCode:     make([]*uint64, 0, len(healthCheckStatusCodes)),
 	}
 	for _, code := range healthCheckStatusCodes {
-		request.CheckParams.StatusCode = append(request.CheckParams.StatusCode, intToPointer(code))
+		request.CheckParams.StatusCode = append(request.CheckParams.StatusCode, helper.IntUint64(code))
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -2688,7 +2689,7 @@ func (me *GaapService) DeleteHttpRule(ctx context.Context, listenerId, ruleId st
 	deleteRequest := gaap.NewDeleteRuleRequest()
 	deleteRequest.ListenerId = &listenerId
 	deleteRequest.RuleId = &ruleId
-	deleteRequest.Force = intToPointer(1)
+	deleteRequest.Force = helper.IntUint64(1)
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(deleteRequest.GetAction())
@@ -2865,16 +2866,16 @@ func (me *GaapService) DescribeCertificates(ctx context.Context, id, name *strin
 	request := gaap.NewDescribeCertificatesRequest()
 
 	if certificateType != nil {
-		request.CertificateType = int64ToPointer(*certificateType)
+		request.CertificateType = helper.IntInt64(*certificateType)
 	}
 
-	request.Limit = intToPointer(50)
+	request.Limit = helper.IntUint64(50)
 
 	offset := 0
 	count := 50
 	// run loop at least once
 	for count == 50 {
-		request.Offset = intToPointer(offset)
+		request.Offset = helper.IntUint64(offset)
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())

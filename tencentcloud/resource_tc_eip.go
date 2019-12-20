@@ -27,6 +27,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -124,19 +125,19 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 
 	request := vpc.NewAllocateAddressesRequest()
 	if v, ok := d.GetOk("type"); ok {
-		request.AddressType = stringToPointer(v.(string))
+		request.AddressType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("anycast_zone"); ok {
-		request.AnycastZone = stringToPointer(v.(string))
+		request.AnycastZone = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("internet_service_provider"); ok {
-		request.InternetServiceProvider = stringToPointer(v.(string))
+		request.InternetServiceProvider = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("internet_charge_type"); ok {
-		request.InternetChargeType = stringToPointer(v.(string))
+		request.InternetChargeType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
-		request.InternetMaxBandwidthOut = int64ToPointer(v.(int))
+		request.InternetMaxBandwidthOut = helper.IntInt64(v.(int))
 	}
 
 	eipId := ""
@@ -191,7 +192,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 
-	if tags := getTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := BuildTagResourceName(VPC_SERVICE_TYPE, EIP_RESOURCE_TYPE, region, eipId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			log.Printf("[CRITAL]%s set eip tags failed: %+v", logId, err)

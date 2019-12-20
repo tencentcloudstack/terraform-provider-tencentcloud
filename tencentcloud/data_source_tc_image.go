@@ -29,6 +29,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudImage() *schema.Resource {
@@ -169,7 +170,7 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 		return errors.New("No image found")
 	}
 
-	d.SetId(dataResourceIdHash(resultImageId))
+	d.SetId(helper.DataResourceIdHash(resultImageId))
 	if err := d.Set("image_id", resultImageId); err != nil {
 		return err
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -57,7 +58,7 @@ func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, res
 	request.ResourcePrefix = &resourceType
 	request.ResourceRegion = &region
 	request.ResourceIds = []*string{&resourceId}
-	request.Limit = intToPointer(DESCRIBE_TAGS_LIMIT)
+	request.Limit = helper.IntUint64(DESCRIBE_TAGS_LIMIT)
 
 	var offset uint64
 	request.Offset = &offset

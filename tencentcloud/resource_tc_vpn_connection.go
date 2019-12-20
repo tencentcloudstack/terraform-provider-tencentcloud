@@ -55,6 +55,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudVpnConnection() *schema.Resource {
@@ -277,11 +278,11 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	request := vpc.NewCreateVpnConnectionRequest()
-	request.VpnConnectionName = stringToPointer(d.Get("name").(string))
-	request.VpcId = stringToPointer(d.Get("vpc_id").(string))
-	request.VpnGatewayId = stringToPointer(d.Get("vpn_gateway_id").(string))
-	request.CustomerGatewayId = stringToPointer(d.Get("customer_gateway_id").(string))
-	request.PreShareKey = stringToPointer(d.Get("pre_share_key").(string))
+	request.VpnConnectionName = helper.String(d.Get("name").(string))
+	request.VpcId = helper.String(d.Get("vpc_id").(string))
+	request.VpnGatewayId = helper.String(d.Get("vpn_gateway_id").(string))
+	request.CustomerGatewayId = helper.String(d.Get("customer_gateway_id").(string))
+	request.PreShareKey = helper.String(d.Get("pre_share_key").(string))
 
 	//set up  SecurityPolicyDatabases
 
@@ -306,53 +307,53 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 
 	//set up IKEOptionsSpecification
 	var ikeOptionsSpecification vpc.IKEOptionsSpecification
-	ikeOptionsSpecification.PropoEncryAlgorithm = stringToPointer(d.Get("ike_proto_encry_algorithm").(string))
-	ikeOptionsSpecification.PropoAuthenAlgorithm = stringToPointer(d.Get("ike_proto_authen_algorithm").(string))
-	ikeOptionsSpecification.ExchangeMode = stringToPointer(d.Get("ike_exchange_mode").(string))
-	ikeOptionsSpecification.LocalIdentity = stringToPointer(d.Get("ike_local_identity").(string))
-	ikeOptionsSpecification.RemoteIdentity = stringToPointer(d.Get("ike_remote_identity").(string))
+	ikeOptionsSpecification.PropoEncryAlgorithm = helper.String(d.Get("ike_proto_encry_algorithm").(string))
+	ikeOptionsSpecification.PropoAuthenAlgorithm = helper.String(d.Get("ike_proto_authen_algorithm").(string))
+	ikeOptionsSpecification.ExchangeMode = helper.String(d.Get("ike_exchange_mode").(string))
+	ikeOptionsSpecification.LocalIdentity = helper.String(d.Get("ike_local_identity").(string))
+	ikeOptionsSpecification.RemoteIdentity = helper.String(d.Get("ike_remote_identity").(string))
 	if *ikeOptionsSpecification.LocalIdentity == VPN_IKE_IDENTITY_ADDRESS {
 		if v, ok := d.GetOk("ike_local_address"); ok {
-			ikeOptionsSpecification.LocalAddress = stringToPointer(v.(string))
+			ikeOptionsSpecification.LocalAddress = helper.String(v.(string))
 		} else {
 			return fmt.Errorf("ike_local_address need to be set when ike_local_identity is `ADDRESS`.")
 		}
 	} else {
 		if v, ok := d.GetOk("ike_local_fqdn_name"); ok {
-			ikeOptionsSpecification.LocalFqdnName = stringToPointer(v.(string))
+			ikeOptionsSpecification.LocalFqdnName = helper.String(v.(string))
 		} else {
 			return fmt.Errorf("ike_local_fqdn_name need to be set when ike_local_identity is `FQDN`")
 		}
 	}
 	if *ikeOptionsSpecification.LocalIdentity == VPN_IKE_IDENTITY_ADDRESS {
 		if v, ok := d.GetOk("ike_remote_address"); ok {
-			ikeOptionsSpecification.RemoteAddress = stringToPointer(v.(string))
+			ikeOptionsSpecification.RemoteAddress = helper.String(v.(string))
 		} else {
 			return fmt.Errorf("ike_remote_address need to be set when ike_remote_identity is `ADDRESS`.")
 		}
 	} else {
 		if v, ok := d.GetOk("ike_remote_fqdn_name"); ok {
-			ikeOptionsSpecification.RemoteFqdnName = stringToPointer(v.(string))
+			ikeOptionsSpecification.RemoteFqdnName = helper.String(v.(string))
 		} else {
 			return fmt.Errorf("ike_remote_fqdn_name need to be set when ike_remote_identity is `FQDN`")
 		}
 	}
 
-	ikeOptionsSpecification.DhGroupName = stringToPointer(d.Get("ike_dh_group_name").(string))
+	ikeOptionsSpecification.DhGroupName = helper.String(d.Get("ike_dh_group_name").(string))
 	saLifetime := d.Get("ike_sa_lifetime_seconds").(int)
 	saLifetime64 := uint64(saLifetime)
 	ikeOptionsSpecification.IKESaLifetimeSeconds = &saLifetime64
-	ikeOptionsSpecification.IKEVersion = stringToPointer(d.Get("ike_version").(string))
+	ikeOptionsSpecification.IKEVersion = helper.String(d.Get("ike_version").(string))
 	request.IKEOptionsSpecification = &ikeOptionsSpecification
 
 	//set up IPSECOptionsSpecification
 	var ipsecOptionsSpecification vpc.IPSECOptionsSpecification
-	ipsecOptionsSpecification.EncryptAlgorithm = stringToPointer(d.Get("ipsec_encrypt_algorithm").(string))
-	ipsecOptionsSpecification.IntegrityAlgorith = stringToPointer(d.Get("ipsec_integrity_algorithm").(string))
+	ipsecOptionsSpecification.EncryptAlgorithm = helper.String(d.Get("ipsec_encrypt_algorithm").(string))
+	ipsecOptionsSpecification.IntegrityAlgorith = helper.String(d.Get("ipsec_integrity_algorithm").(string))
 	ipsecSaLifetimeSeconds := d.Get("ipsec_sa_lifetime_seconds").(int)
 	ipsecSaLifetimeSeconds64 := uint64(ipsecSaLifetimeSeconds)
 	ipsecOptionsSpecification.IPSECSaLifetimeSeconds = &ipsecSaLifetimeSeconds64
-	ipsecOptionsSpecification.PfsDhGroup = stringToPointer(d.Get("ipsec_pfs_dh_group").(string))
+	ipsecOptionsSpecification.PfsDhGroup = helper.String(d.Get("ipsec_pfs_dh_group").(string))
 	ipsecSaLifetimeTraffic := d.Get("ipsec_sa_lifetime_traffic").(int)
 	ipsecSaLifetimeTraffic64 := uint64(ipsecSaLifetimeTraffic)
 	ipsecOptionsSpecification.IPSECSaLifetimeTraffic = &ipsecSaLifetimeTraffic64
@@ -395,8 +396,8 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		}
 		for k, v := range params {
 			filter := &vpc.Filter{
-				Name:   stringToPointer(k),
-				Values: []*string{stringToPointer(v)},
+				Name:   helper.String(k),
+				Values: []*string{helper.String(v)},
 			}
 			idRequest.Filters = append(idRequest.Filters, filter)
 		}
@@ -459,7 +460,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	}
 
 	//modify tags
-	if tags := getTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -574,11 +575,11 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 	request.VpnConnectionId = &connectionId
 	changeFlag := false
 	if d.HasChange("name") {
-		request.VpnConnectionName = stringToPointer(d.Get("name").(string))
+		request.VpnConnectionName = helper.String(d.Get("name").(string))
 		changeFlag = true
 	}
 	if d.HasChange("pre_share_key") {
-		request.PreShareKey = stringToPointer(d.Get("pre_share_key").(string))
+		request.PreShareKey = helper.String(d.Get("pre_share_key").(string))
 		changeFlag = true
 	}
 
@@ -627,43 +628,43 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 	if ikeChangeFlag {
 		//set up IKEOptionsSpecification
 		var ikeOptionsSpecification vpc.IKEOptionsSpecification
-		ikeOptionsSpecification.PropoEncryAlgorithm = stringToPointer(d.Get("ike_proto_encry_algorithm").(string))
-		ikeOptionsSpecification.PropoAuthenAlgorithm = stringToPointer(d.Get("ike_proto_authen_algorithm").(string))
-		ikeOptionsSpecification.ExchangeMode = stringToPointer(d.Get("ike_exchange_mode").(string))
-		ikeOptionsSpecification.LocalIdentity = stringToPointer(d.Get("ike_local_identity").(string))
-		ikeOptionsSpecification.RemoteIdentity = stringToPointer(d.Get("ike_remote_identity").(string))
+		ikeOptionsSpecification.PropoEncryAlgorithm = helper.String(d.Get("ike_proto_encry_algorithm").(string))
+		ikeOptionsSpecification.PropoAuthenAlgorithm = helper.String(d.Get("ike_proto_authen_algorithm").(string))
+		ikeOptionsSpecification.ExchangeMode = helper.String(d.Get("ike_exchange_mode").(string))
+		ikeOptionsSpecification.LocalIdentity = helper.String(d.Get("ike_local_identity").(string))
+		ikeOptionsSpecification.RemoteIdentity = helper.String(d.Get("ike_remote_identity").(string))
 		if *ikeOptionsSpecification.LocalIdentity == VPN_IKE_IDENTITY_ADDRESS {
 			if v, ok := d.GetOk("ike_local_address"); ok {
-				ikeOptionsSpecification.LocalAddress = stringToPointer(v.(string))
+				ikeOptionsSpecification.LocalAddress = helper.String(v.(string))
 			} else {
 				return fmt.Errorf("ike_local_address need to be set when ike_local_identity is `ADDRESS`.")
 			}
 		} else {
 			if v, ok := d.GetOk("ike_local_fqdn_name"); ok {
-				ikeOptionsSpecification.LocalFqdnName = stringToPointer(v.(string))
+				ikeOptionsSpecification.LocalFqdnName = helper.String(v.(string))
 			} else {
 				return fmt.Errorf("ike_local_fqdn_name need to be set when ike_local_identity is `FQDN`")
 			}
 		}
 		if *ikeOptionsSpecification.LocalIdentity == VPN_IKE_IDENTITY_ADDRESS {
 			if v, ok := d.GetOk("ike_remote_address"); ok {
-				ikeOptionsSpecification.RemoteAddress = stringToPointer(v.(string))
+				ikeOptionsSpecification.RemoteAddress = helper.String(v.(string))
 			} else {
 				return fmt.Errorf("ike_remote_address need to be set when ike_remote_identity is `ADDRESS`.")
 			}
 		} else {
 			if v, ok := d.GetOk("ike_remote_fqdn_name"); ok {
-				ikeOptionsSpecification.RemoteFqdnName = stringToPointer(v.(string))
+				ikeOptionsSpecification.RemoteFqdnName = helper.String(v.(string))
 			} else {
 				return fmt.Errorf("ike_remote_fqdn_name need to be set when ike_remote_identity is `FQDN`")
 			}
 		}
 
-		ikeOptionsSpecification.DhGroupName = stringToPointer(d.Get("ike_dh_group_name").(string))
+		ikeOptionsSpecification.DhGroupName = helper.String(d.Get("ike_dh_group_name").(string))
 		saLifetime := d.Get("ike_sa_lifetime_seconds").(int)
 		saLifetime64 := uint64(saLifetime)
 		ikeOptionsSpecification.IKESaLifetimeSeconds = &saLifetime64
-		ikeOptionsSpecification.IKEVersion = stringToPointer(d.Get("ike_version").(string))
+		ikeOptionsSpecification.IKEVersion = helper.String(d.Get("ike_version").(string))
 		request.IKEOptionsSpecification = &ikeOptionsSpecification
 		changeFlag = true
 	}
@@ -683,12 +684,12 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 	}
 	if ipsecChangeFlag {
 		var ipsecOptionsSpecification vpc.IPSECOptionsSpecification
-		ipsecOptionsSpecification.EncryptAlgorithm = stringToPointer(d.Get("ipsec_encrypt_algorithm").(string))
-		ipsecOptionsSpecification.IntegrityAlgorith = stringToPointer(d.Get("ipsec_integrity_algorithm").(string))
+		ipsecOptionsSpecification.EncryptAlgorithm = helper.String(d.Get("ipsec_encrypt_algorithm").(string))
+		ipsecOptionsSpecification.IntegrityAlgorith = helper.String(d.Get("ipsec_integrity_algorithm").(string))
 		ipsecSaLifetimeSeconds := d.Get("ipsec_sa_lifetime_seconds").(int)
 		ipsecSaLifetimeSeconds64 := uint64(ipsecSaLifetimeSeconds)
 		ipsecOptionsSpecification.IPSECSaLifetimeSeconds = &ipsecSaLifetimeSeconds64
-		ipsecOptionsSpecification.PfsDhGroup = stringToPointer(d.Get("ipsec_pfs_dh_group").(string))
+		ipsecOptionsSpecification.PfsDhGroup = helper.String(d.Get("ipsec_pfs_dh_group").(string))
 		ipsecSaLifetimeTraffic := d.Get("ipsec_sa_lifetime_traffic").(int)
 		ipsecSaLifetimeTraffic64 := uint64(ipsecSaLifetimeTraffic)
 		ipsecOptionsSpecification.IPSECSaLifetimeTraffic = &ipsecSaLifetimeTraffic64

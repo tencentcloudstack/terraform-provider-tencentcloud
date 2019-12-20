@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudKeyPairs() *schema.Resource {
@@ -143,7 +144,7 @@ func dataSourceTencentCloudKeyPairsRead(d *schema.ResourceData, meta interface{}
 		ids = append(ids, *keyPair.KeyId)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("key_pair_list", keyPairList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set key pair list fail, reason:%s\n ", logId, err.Error())

@@ -27,6 +27,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudAsSchedule() *schema.Resource {
@@ -91,18 +92,18 @@ func resourceTencentCloudAsScheduleCreate(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 
 	request := as.NewCreateScheduledActionRequest()
-	request.AutoScalingGroupId = stringToPointer(d.Get("scaling_group_id").(string))
-	request.ScheduledActionName = stringToPointer(d.Get("schedule_action_name").(string))
-	request.MaxSize = intToPointer(d.Get("max_size").(int))
-	request.MinSize = intToPointer(d.Get("min_size").(int))
-	request.DesiredCapacity = intToPointer(d.Get("desired_capacity").(int))
-	request.StartTime = stringToPointer(d.Get("start_time").(string))
+	request.AutoScalingGroupId = helper.String(d.Get("scaling_group_id").(string))
+	request.ScheduledActionName = helper.String(d.Get("schedule_action_name").(string))
+	request.MaxSize = helper.IntUint64(d.Get("max_size").(int))
+	request.MinSize = helper.IntUint64(d.Get("min_size").(int))
+	request.DesiredCapacity = helper.IntUint64(d.Get("desired_capacity").(int))
+	request.StartTime = helper.String(d.Get("start_time").(string))
 
 	// end_time and recurrence must be specified at the same time
 	if v, ok := d.GetOk("end_time"); ok {
-		request.EndTime = stringToPointer(v.(string))
+		request.EndTime = helper.String(v.(string))
 		if vv, ok := d.GetOk("recurrence"); ok {
-			request.Recurrence = stringToPointer(vv.(string))
+			request.Recurrence = helper.String(vv.(string))
 		} else {
 			return fmt.Errorf("end_time and recurrence must be specified at the same time.")
 		}
@@ -181,27 +182,27 @@ func resourceTencentCloudAsScheduleUpdate(d *schema.ResourceData, meta interface
 	scheduledActionId := d.Id()
 	request.ScheduledActionId = &scheduledActionId
 	if d.HasChange("schedule_action_name") {
-		request.ScheduledActionName = stringToPointer(d.Get("schedule_action_name").(string))
+		request.ScheduledActionName = helper.String(d.Get("schedule_action_name").(string))
 	}
 	if d.HasChange("max_size") {
-		request.MaxSize = intToPointer(d.Get("max_size").(int))
+		request.MaxSize = helper.IntUint64(d.Get("max_size").(int))
 	}
 	if d.HasChange("min_size") {
-		request.MinSize = intToPointer(d.Get("min_size").(int))
+		request.MinSize = helper.IntUint64(d.Get("min_size").(int))
 	}
 	if d.HasChange("desired_capacity") {
-		request.DesiredCapacity = intToPointer(d.Get("desired_capacity").(int))
+		request.DesiredCapacity = helper.IntUint64(d.Get("desired_capacity").(int))
 	}
 	if d.HasChange("start_time") {
-		request.StartTime = stringToPointer(d.Get("start_time").(string))
+		request.StartTime = helper.String(d.Get("start_time").(string))
 	}
 	if d.HasChange("end_time") {
-		request.EndTime = stringToPointer(d.Get("end_time").(string))
-		request.Recurrence = stringToPointer(d.Get("recurrence").(string))
+		request.EndTime = helper.String(d.Get("end_time").(string))
+		request.Recurrence = helper.String(d.Get("recurrence").(string))
 	}
 	if d.HasChange("recurrence") {
-		request.Recurrence = stringToPointer(d.Get("recurrence").(string))
-		request.EndTime = stringToPointer(d.Get("end_time").(string))
+		request.Recurrence = helper.String(d.Get("recurrence").(string))
+		request.EndTime = helper.String(d.Get("end_time").(string))
 	}
 
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().ModifyScheduledAction(request)

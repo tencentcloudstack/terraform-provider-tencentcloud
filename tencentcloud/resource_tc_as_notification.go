@@ -21,6 +21,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudAsNotification() *schema.Resource {
@@ -64,16 +65,16 @@ func resourceTencentCloudAsNotificationCreate(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 
 	request := as.NewCreateNotificationConfigurationRequest()
-	request.AutoScalingGroupId = stringToPointer(d.Get("scaling_group_id").(string))
+	request.AutoScalingGroupId = helper.String(d.Get("scaling_group_id").(string))
 	notificationTypes := d.Get("notification_types").([]interface{})
 	request.NotificationTypes = make([]*string, 0, len(notificationTypes))
 	for _, value := range notificationTypes {
-		request.NotificationTypes = append(request.NotificationTypes, stringToPointer(value.(string)))
+		request.NotificationTypes = append(request.NotificationTypes, helper.String(value.(string)))
 	}
 	userGroupIds := d.Get("notification_user_group_ids").([]interface{})
 	request.NotificationUserGroupIds = make([]*string, 0, len(userGroupIds))
 	for _, value := range userGroupIds {
-		request.NotificationUserGroupIds = append(request.NotificationUserGroupIds, stringToPointer(value.(string)))
+		request.NotificationUserGroupIds = append(request.NotificationUserGroupIds, helper.String(value.(string)))
 	}
 
 	response, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().CreateNotificationConfiguration(request)
@@ -113,8 +114,8 @@ func resourceTencentCloudAsNotificationRead(d *schema.ResourceData, meta interfa
 			return nil
 		}
 		_ = d.Set("scaling_group_id", *notification.AutoScalingGroupId)
-		_ = d.Set("notification_type", flattenStringList(notification.NotificationTypes))
-		_ = d.Set("notification_user_group_ids", flattenStringList(notification.NotificationUserGroupIds))
+		_ = d.Set("notification_type", helper.FlattenStringList(notification.NotificationTypes))
+		_ = d.Set("notification_user_group_ids", helper.FlattenStringList(notification.NotificationUserGroupIds))
 		return nil
 	})
 	if err != nil {
@@ -135,14 +136,14 @@ func resourceTencentCloudAsNotificationUpdate(d *schema.ResourceData, meta inter
 		notificationTypes := d.Get("notification_types").([]interface{})
 		request.NotificationTypes = make([]*string, 0, len(notificationTypes))
 		for _, value := range notificationTypes {
-			request.NotificationTypes = append(request.NotificationTypes, stringToPointer(value.(string)))
+			request.NotificationTypes = append(request.NotificationTypes, helper.String(value.(string)))
 		}
 	}
 	if d.HasChange("notification_user_group_ids") {
 		userGroupIds := d.Get("notification_user_group_ids").([]interface{})
 		request.NotificationUserGroupIds = make([]*string, 0, len(userGroupIds))
 		for _, value := range userGroupIds {
-			request.NotificationUserGroupIds = append(request.NotificationUserGroupIds, stringToPointer(value.(string)))
+			request.NotificationUserGroupIds = append(request.NotificationUserGroupIds, helper.String(value.(string)))
 		}
 	}
 

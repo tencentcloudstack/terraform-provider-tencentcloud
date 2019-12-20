@@ -37,6 +37,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudRedisInstance() *schema.Resource {
@@ -177,7 +178,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	securityGroups := d.Get("security_groups").(*schema.Set).List()
 	projectId := d.Get("project_id").(int)
 	port := d.Get("port").(int)
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	if availabilityZone != "" {
 		if !strings.Contains(availabilityZone, region) {

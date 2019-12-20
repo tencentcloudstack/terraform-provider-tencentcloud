@@ -13,6 +13,7 @@ import (
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -47,13 +48,13 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 
 	for k, v := range params {
 		if k == "clb_id" {
-			request.LoadBalancerIds = []*string{stringToPointer(v.(string))}
+			request.LoadBalancerIds = []*string{helper.String(v.(string))}
 		}
 		if k == "network_type" {
-			request.LoadBalancerType = stringToPointer(v.(string))
+			request.LoadBalancerType = helper.String(v.(string))
 		}
 		if k == "clb_name" {
-			request.LoadBalancerName = stringToPointer(v.(string))
+			request.LoadBalancerName = helper.String(v.(string))
 		}
 		if k == "project_id" {
 			projectId := int64(v.(int))
@@ -121,7 +122,7 @@ func (me *ClbService) DescribeListenerById(ctx context.Context, listenerId strin
 	request := clb.NewDescribeListenersRequest()
 
 	request.ListenerIds = []*string{&listenerId}
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.LoadBalancerId = helper.String(clbId)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
@@ -151,17 +152,17 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 	for k, v := range params {
 		if k == "listener_id" {
 			listenerId := v.(string)
-			request.ListenerIds = []*string{stringToPointer(listenerId)}
-			request.LoadBalancerId = stringToPointer(clbId)
+			request.ListenerIds = []*string{helper.String(listenerId)}
+			request.LoadBalancerId = helper.String(clbId)
 		}
 		if k == "clb_id" {
 			if clbId == "" {
 				clbId = v.(string)
-				request.LoadBalancerId = stringToPointer(clbId)
+				request.LoadBalancerId = helper.String(clbId)
 			}
 		}
 		if k == "protocol" {
-			request.Protocol = stringToPointer(v.(string))
+			request.Protocol = helper.String(v.(string))
 		}
 		if k == "port" {
 			port := int64(v.(int))
@@ -193,8 +194,8 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 func (me *ClbService) DeleteListenerById(ctx context.Context, clbId string, listenerId string) error {
 	logId := getLogId(ctx)
 	request := clb.NewDeleteListenerRequest()
-	request.ListenerId = stringToPointer(listenerId)
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.ListenerId = helper.String(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteListener(request)
 	if err != nil {
@@ -246,7 +247,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id and CLB id can not be null")
 		return
 	}
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.LoadBalancerId = helper.String(clbId)
 	request.ListenerIds = []*string{&listenerId}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
@@ -301,7 +302,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
 	request.ListenerIds = []*string{&listenerId}
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.LoadBalancerId = helper.String(clbId)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
@@ -345,8 +346,8 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 func (me *ClbService) DeleteRuleById(ctx context.Context, clbId string, listenerId string, locationId string) error {
 	logId := getLogId(ctx)
 	request := clb.NewDeleteRuleRequest()
-	request.ListenerId = stringToPointer(listenerId)
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.ListenerId = helper.String(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
 	request.LocationIds = []*string{&locationId}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteRule(request)
@@ -367,7 +368,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
 	request.ListenerIds = []*string{&listenerId}
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.LoadBalancerId = helper.String(clbId)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
@@ -394,7 +395,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 
 	aRequest := clb.NewDescribeTargetsRequest()
 	aRequest.ListenerIds = []*string{&listenerId}
-	aRequest.LoadBalancerId = stringToPointer(clbId)
+	aRequest.LoadBalancerId = helper.String(clbId)
 	aRequest.Protocol = protocol
 	aRequest.Port = port
 	ratelimit.Check(request.GetAction())
@@ -445,7 +446,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 		errRet = errors.WithStack(errRet)
 		return
 	}
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.LoadBalancerId = helper.String(clbId)
 	request.ListenerIds = []*string{&listenerId}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
@@ -472,7 +473,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 
 	aRequest := clb.NewDescribeTargetsRequest()
 	aRequest.ListenerIds = []*string{&listenerId}
-	aRequest.LoadBalancerId = stringToPointer(clbId)
+	aRequest.LoadBalancerId = helper.String(clbId)
 	aRequest.Protocol = protocol
 	aRequest.Port = port
 	ratelimit.Check(request.GetAction())
@@ -504,14 +505,14 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, listenerId string, locationId string, targets []interface{}) error {
 	logId := getLogId(ctx)
 	request := clb.NewDeregisterTargetsRequest()
-	request.ListenerId = stringToPointer(listenerId)
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.ListenerId = helper.String(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
 	for _, inst_ := range targets {
 		inst := inst_.(map[string]interface{})
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
 	}
 	if locationId != "" {
-		request.LocationId = stringToPointer(locationId)
+		request.LocationId = helper.String(locationId)
 	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeregisterTargets(request)
@@ -543,7 +544,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	clbId := items[4]
 	result := make(map[string]string)
 	request := clb.NewDescribeRewriteRequest()
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.LoadBalancerId = helper.String(clbId)
 	request.SourceListenerIds = []*string{&sourceListenerId}
 	request.SourceLocationIds = []*string{&sourceLocId}
 	ratelimit.Check(request.GetAction())
@@ -606,7 +607,7 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 		}
 	}
 	request := clb.NewDescribeRewriteRequest()
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.LoadBalancerId = helper.String(clbId)
 	request.SourceListenerIds = []*string{&sourceListenerId}
 	request.SourceLocationIds = []*string{&sourceLocId}
 	ratelimit.Check(request.GetAction())
@@ -656,12 +657,12 @@ func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId strin
 	clbId := items[4]
 
 	request := clb.NewDeleteRewriteRequest()
-	request.LoadBalancerId = stringToPointer(clbId)
-	request.SourceListenerId = stringToPointer(sourceListenerId)
-	request.TargetListenerId = stringToPointer(targetListenerId)
+	request.LoadBalancerId = helper.String(clbId)
+	request.SourceListenerId = helper.String(sourceListenerId)
+	request.TargetListenerId = helper.String(targetListenerId)
 	var rewriteInfo clb.RewriteLocationMap
-	rewriteInfo.SourceLocationId = stringToPointer(sourceLocId)
-	rewriteInfo.TargetLocationId = stringToPointer(targetLocId)
+	rewriteInfo.SourceLocationId = helper.String(sourceLocId)
+	rewriteInfo.TargetLocationId = helper.String(targetLocId)
 	request.RewriteInfos = []*clb.RewriteLocationMap{&rewriteInfo}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteRewrite(request)
@@ -735,7 +736,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 			return
 		} else {
 			healthSetFlag = true
-			healthCheck.HttpCheckPath = stringToPointer(v.(string))
+			healthCheck.HttpCheckPath = helper.String(v.(string))
 		}
 	}
 
@@ -747,7 +748,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 			return
 		} else {
 			healthSetFlag = true
-			healthCheck.HttpCheckDomain = stringToPointer(v.(string))
+			healthCheck.HttpCheckDomain = helper.String(v.(string))
 		}
 	}
 
@@ -759,7 +760,7 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 			return
 		} else {
 			healthSetFlag = true
-			healthCheck.HttpCheckMethod = stringToPointer(v.(string))
+			healthCheck.HttpCheckMethod = helper.String(v.(string))
 		}
 
 	}
@@ -787,19 +788,19 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta
 	if v, ok := d.GetOk("certificate_ssl_mode"); ok {
 		certificateSetFlag = true
 		certificateSSLMode = v.(string)
-		certificateInput.SSLMode = stringToPointer(v.(string))
+		certificateInput.SSLMode = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("certificate_id"); ok {
 		certificateSetFlag = true
 		certificateId = v.(string)
-		certificateInput.CertId = stringToPointer(v.(string))
+		certificateInput.CertId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("certificate_ca_id"); ok {
 		certificateSetFlag = true
 		certificateCaId = v.(string)
-		certificateInput.CertCaId = stringToPointer(v.(string))
+		certificateInput.CertCaId = helper.String(v.(string))
 	}
 
 	if certificateSetFlag && certificateId == "" {

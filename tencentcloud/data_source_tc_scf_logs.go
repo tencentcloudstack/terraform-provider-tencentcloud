@@ -28,6 +28,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudScfLogs() *schema.Resource {
@@ -201,19 +202,19 @@ func dataSourceTencentCloudScfLogsRead(d *schema.ResourceData, m interface{}) er
 	)
 
 	if raw, ok := d.GetOk("ret_code"); ok {
-		retCode = stringToPointer(raw.(string))
+		retCode = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("invoke_request_id"); ok {
-		invokeRequestId = stringToPointer(raw.(string))
+		invokeRequestId = helper.String(raw.(string))
 	}
 
 	if raw, ok := d.GetOk("start_time"); ok {
-		startTime = stringToPointer(raw.(string))
+		startTime = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("end_time"); ok {
-		endTime = stringToPointer(raw.(string))
+		endTime = helper.String(raw.(string))
 	}
-	if err := checkIfSetTogether(d, "start_time", "end_time"); err != nil {
+	if err := helper.CheckIfSetTogether(d, "start_time", "end_time"); err != nil {
 		return err
 	}
 
@@ -258,7 +259,7 @@ func dataSourceTencentCloudScfLogsRead(d *schema.ResourceData, m interface{}) er
 	}
 
 	_ = d.Set("logs", logs)
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), logs); err != nil {

@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCbsSnapshotPolicies() *schema.Resource {
@@ -136,17 +137,17 @@ func dataSourceTencentCloudCbsSnapshotPoliciesRead(d *schema.ResourceData, meta 
 			"retention_days":       policy.RetentionDays,
 			"status":               policy.AutoSnapshotPolicyState,
 			"create_time":          policy.CreateTime,
-			"attached_storage_ids": flattenStringList(policy.DiskIdSet),
+			"attached_storage_ids": helper.FlattenStringList(policy.DiskIdSet),
 		}
 		if len(policy.Policy) < 1 {
 			continue
 		}
-		mapping["repeat_weekdays"] = flattenIntList(policy.Policy[0].DayOfWeek)
-		mapping["repeat_hours"] = flattenIntList(policy.Policy[0].Hour)
+		mapping["repeat_weekdays"] = helper.FlattenIntList(policy.Policy[0].DayOfWeek)
+		mapping["repeat_hours"] = helper.FlattenIntList(policy.Policy[0].Hour)
 		policyList = append(policyList, mapping)
 		ids = append(ids, *policy.AutoSnapshotPolicyId)
 	}
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if err = d.Set("snapshot_policy_list", policyList); err != nil {
 		log.Printf("[CRITAL]%s provider set snapshot policy list fail, reason:%s\n ", logId, err.Error())
 		return err

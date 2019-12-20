@@ -28,6 +28,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudScfNamespaces() *schema.Resource {
@@ -102,10 +103,10 @@ func dataSourceTencentCloudScfNamespacesRead(d *schema.ResourceData, m interface
 	)
 
 	if raw, ok := d.GetOk("namespace"); ok {
-		namespace = stringToPointer(raw.(string))
+		namespace = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("description"); ok {
-		desc = stringToPointer(raw.(string))
+		desc = helper.String(raw.(string))
 	}
 
 	nss, err := service.DescribeNamespaces(ctx)
@@ -137,7 +138,7 @@ func dataSourceTencentCloudScfNamespacesRead(d *schema.ResourceData, m interface
 	}
 
 	_ = d.Set("namespaces", namespaces)
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), namespaces); err != nil {

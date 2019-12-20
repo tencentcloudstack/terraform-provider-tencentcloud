@@ -33,6 +33,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -111,19 +112,19 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	}
 
 	request := cfs.NewCreateCfsFileSystemRequest()
-	request.Zone = stringToPointer(d.Get("availability_zone").(string))
-	request.PGroupId = stringToPointer(d.Get("access_group_id").(string))
-	request.Protocol = stringToPointer(d.Get("protocol").(string))
-	request.VpcId = stringToPointer(d.Get("vpc_id").(string))
-	request.SubnetId = stringToPointer(d.Get("subnet_id").(string))
+	request.Zone = helper.String(d.Get("availability_zone").(string))
+	request.PGroupId = helper.String(d.Get("access_group_id").(string))
+	request.Protocol = helper.String(d.Get("protocol").(string))
+	request.VpcId = helper.String(d.Get("vpc_id").(string))
+	request.SubnetId = helper.String(d.Get("subnet_id").(string))
 	if v, ok := d.GetOk("name"); ok {
-		request.FsName = stringToPointer(v.(string))
+		request.FsName = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("mount_ip"); ok {
-		request.MountIP = stringToPointer(v.(string))
+		request.MountIP = helper.String(v.(string))
 	}
-	request.NetInterface = stringToPointer("VPC")
-	request.StorageType = stringToPointer("SD")
+	request.NetInterface = helper.String("VPC")
+	request.StorageType = helper.String("SD")
 
 	fsId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

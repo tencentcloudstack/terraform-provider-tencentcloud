@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"fmt"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
 	"testing"
 
@@ -54,8 +55,8 @@ func testAccCheckDnatExists(n string, id *string) resource.TestCheckFunc {
 		request.Filters = make([]*vpc.Filter, 0, len(params))
 		for k, v := range params {
 			filter := &vpc.Filter{
-				Name:   stringToPointer(k),
-				Values: []*string{stringToPointer(v)},
+				Name:   helper.String(k),
+				Values: []*string{helper.String(v)},
 			}
 			request.Filters = append(request.Filters, filter)
 		}
@@ -97,8 +98,8 @@ func testAccCheckDnatDestroy(s *terraform.State) error {
 		request.Filters = make([]*vpc.Filter, 0, len(params))
 		for k, v := range params {
 			filter := &vpc.Filter{
-				Name:   stringToPointer(k),
-				Values: []*string{stringToPointer(v)},
+				Name:   helper.String(k),
+				Values: []*string{helper.String(v)},
 			}
 			request.Filters = append(request.Filters, filter)
 		}

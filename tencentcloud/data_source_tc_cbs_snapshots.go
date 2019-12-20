@@ -18,6 +18,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCbsSnapshots() *schema.Resource {
@@ -178,7 +179,7 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 			ids = append(ids, *snapshot.SnapshotId)
 		}
 
-		d.SetId(dataResourceIdsHash(ids))
+		d.SetId(helper.DataResourceIdsHash(ids))
 		if e = d.Set("snapshot_list", snapshotList); e != nil {
 			log.Printf("[CRITAL]%s provider set snapshot list fail, reason:%s\n ", logId, e.Error())
 			return resource.NonRetryableError(e)

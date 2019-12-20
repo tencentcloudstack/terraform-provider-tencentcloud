@@ -3,10 +3,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"log"
 )
 
 // info  for one direct connect gateway.

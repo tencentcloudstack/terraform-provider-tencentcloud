@@ -41,6 +41,7 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudSecurityGroupLiteRule() *schema.Resource {
@@ -91,7 +92,7 @@ func resourceTencentCloudSecurityGroupLiteRuleCreate(d *schema.ResourceData, m i
 	)
 
 	if raw, ok := d.GetOk("ingress"); ok {
-		ingressStrs := expandStringList(raw.([]interface{}))
+		ingressStrs := helper.ExpandStringList(raw.([]interface{}))
 		for _, ingressStr := range ingressStrs {
 			liteRule, err := parseRule(ingressStr)
 			if err != nil {
@@ -102,7 +103,7 @@ func resourceTencentCloudSecurityGroupLiteRuleCreate(d *schema.ResourceData, m i
 	}
 
 	if raw, ok := d.GetOk("egress"); ok {
-		egressStrs := expandStringList(raw.([]interface{}))
+		egressStrs := helper.ExpandStringList(raw.([]interface{}))
 		for _, egressStr := range egressStrs {
 			liteRule, err := parseRule(egressStr)
 			if err != nil {
@@ -172,7 +173,7 @@ func resourceTencentCloudSecurityGroupLiteRuleUpdate(d *schema.ResourceData, m i
 	)
 
 	if raw, ok := d.GetOk("ingress"); ok {
-		ingressStrs := expandStringList(raw.([]interface{}))
+		ingressStrs := helper.ExpandStringList(raw.([]interface{}))
 		for _, ingressStr := range ingressStrs {
 			liteRule, err := parseRule(ingressStr)
 			if err != nil {
@@ -183,7 +184,7 @@ func resourceTencentCloudSecurityGroupLiteRuleUpdate(d *schema.ResourceData, m i
 	}
 
 	if raw, ok := d.GetOk("egress"); ok {
-		egressStrs := expandStringList(raw.([]interface{}))
+		egressStrs := helper.ExpandStringList(raw.([]interface{}))
 		for _, egressStr := range egressStrs {
 			liteRule, err := parseRule(egressStr)
 			if err != nil {

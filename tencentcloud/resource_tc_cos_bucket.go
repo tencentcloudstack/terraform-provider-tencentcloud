@@ -86,6 +86,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 const (
@@ -281,7 +282,7 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 
 	d.SetId(bucket)
 
-	if tags := getTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		if err := cosService.SetBucketTags(ctx, bucket, tags); err != nil {
 			return err
 		}
@@ -399,7 +400,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		bucket := d.Id()
 
 		cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
-		if err := cosService.SetBucketTags(ctx, bucket, getTags(d, "tags")); err != nil {
+		if err := cosService.SetBucketTags(ctx, bucket, helper.GetTags(d, "tags")); err != nil {
 			return err
 		}
 

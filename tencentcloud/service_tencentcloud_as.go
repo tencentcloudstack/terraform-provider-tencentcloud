@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -44,14 +45,14 @@ func (me *AsService) DescribeLaunchConfigurationByFilter(ctx context.Context, co
 	request.Filters = make([]*as.Filter, 0)
 	if configurationId != "" {
 		filter := &as.Filter{
-			Name:   stringToPointer("launch-configuration-id"),
+			Name:   helper.String("launch-configuration-id"),
 			Values: []*string{&configurationId},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
 	if configurationName != "" {
 		filter := &as.Filter{
-			Name:   stringToPointer("launch-configuration-name"),
+			Name:   helper.String("launch-configuration-name"),
 			Values: []*string{&configurationName},
 		}
 		request.Filters = append(request.Filters, filter)
@@ -61,8 +62,8 @@ func (me *AsService) DescribeLaunchConfigurationByFilter(ctx context.Context, co
 	pageSize := 100
 	configs = make([]*as.LaunchConfiguration, 0)
 	for {
-		request.Offset = intToPointer(offset)
-		request.Limit = intToPointer(pageSize)
+		request.Offset = helper.IntUint64(offset)
+		request.Limit = helper.IntUint64(pageSize)
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAsClient().DescribeLaunchConfigurations(request)
 		if err != nil {
@@ -137,29 +138,29 @@ func (me *AsService) DescribeAutoScalingGroupByFilter(
 	request.Filters = make([]*as.Filter, 0)
 	if scalingGroupId != "" {
 		filter := &as.Filter{
-			Name:   stringToPointer("auto-scaling-group-id"),
+			Name:   helper.String("auto-scaling-group-id"),
 			Values: []*string{&scalingGroupId},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
 	if configurationId != "" {
 		filter := &as.Filter{
-			Name:   stringToPointer("launch-configuration-id"),
+			Name:   helper.String("launch-configuration-id"),
 			Values: []*string{&configurationId},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
 	if scalingGroupName != "" {
 		filter := &as.Filter{
-			Name:   stringToPointer("auto-scaling-group-name"),
+			Name:   helper.String("auto-scaling-group-name"),
 			Values: []*string{&scalingGroupName},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
 	for k, v := range tags {
 		request.Filters = append(request.Filters, &as.Filter{
-			Name:   stringToPointer("tag:" + k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String("tag:" + k),
+			Values: []*string{helper.String(v)},
 		})
 	}
 
@@ -167,8 +168,8 @@ func (me *AsService) DescribeAutoScalingGroupByFilter(
 	pageSize := 100
 	scalingGroups = make([]*as.AutoScalingGroup, 0)
 	for {
-		request.Offset = intToPointer(offset)
-		request.Limit = intToPointer(pageSize)
+		request.Offset = helper.IntUint64(offset)
+		request.Limit = helper.IntUint64(pageSize)
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAsClient().DescribeAutoScalingGroups(request)
 		if err != nil {
@@ -200,9 +201,9 @@ func (me *AsService) ClearScalingGroupInstance(ctx context.Context, scalingGroup
 	logId := getLogId(ctx)
 	request := as.NewModifyAutoScalingGroupRequest()
 	request.AutoScalingGroupId = &scalingGroupId
-	request.MinSize = intToPointer(0)
-	request.MaxSize = intToPointer(0)
-	request.DesiredCapacity = intToPointer(0)
+	request.MinSize = helper.IntUint64(0)
+	request.MaxSize = helper.IntUint64(0)
+	request.DesiredCapacity = helper.IntUint64(0)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().ModifyAutoScalingGroup(request)
 	if err != nil {
@@ -336,7 +337,7 @@ func (me *AsService) DescribeAutoScalingAttachment(ctx context.Context, scalingG
 	request := as.NewDescribeAutoScalingInstancesRequest()
 	request.Filters = []*as.Filter{
 		{
-			Name:   stringToPointer("auto-scaling-group-id"),
+			Name:   helper.String("auto-scaling-group-id"),
 			Values: []*string{&scalingGroupId},
 		},
 	}
@@ -388,21 +389,21 @@ func (me *AsService) DescribeScalingPolicyByFilter(ctx context.Context, policyId
 	request.Filters = make([]*as.Filter, 0)
 	if policyId != "" {
 		filter := &as.Filter{
-			Name:   stringToPointer("auto-scaling-policy-id"),
+			Name:   helper.String("auto-scaling-policy-id"),
 			Values: []*string{&policyId},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
 	if policyName != "" {
 		filter := &as.Filter{
-			Name:   stringToPointer("scaling-policy-name"),
+			Name:   helper.String("scaling-policy-name"),
 			Values: []*string{&policyName},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
 	if scalingGroupId != "" {
 		filter := &as.Filter{
-			Name:   stringToPointer("auto-scaling-group-id"),
+			Name:   helper.String("auto-scaling-group-id"),
 			Values: []*string{&scalingGroupId},
 		}
 		request.Filters = append(request.Filters, filter)
@@ -412,8 +413,8 @@ func (me *AsService) DescribeScalingPolicyByFilter(ctx context.Context, policyId
 	pageSize := 100
 	scalingPolicies = make([]*as.ScalingPolicy, 0)
 	for {
-		request.Offset = intToPointer(offset)
-		request.Limit = intToPointer(pageSize)
+		request.Offset = helper.IntUint64(offset)
+		request.Limit = helper.IntUint64(pageSize)
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAsClient().DescribeScalingPolicies(request)
 		if err != nil {

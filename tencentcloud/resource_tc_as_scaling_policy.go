@@ -29,6 +29,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudAsScalingPolicy() *schema.Resource {
@@ -119,29 +120,29 @@ func resourceTencentCloudAsScalingPolicyCreate(d *schema.ResourceData, meta inte
 	logId := getLogId(contextNil)
 
 	request := as.NewCreateScalingPolicyRequest()
-	request.AutoScalingGroupId = stringToPointer(d.Get("scaling_group_id").(string))
-	request.ScalingPolicyName = stringToPointer(d.Get("policy_name").(string))
-	request.AdjustmentType = stringToPointer(d.Get("adjustment_type").(string))
+	request.AutoScalingGroupId = helper.String(d.Get("scaling_group_id").(string))
+	request.ScalingPolicyName = helper.String(d.Get("policy_name").(string))
+	request.AdjustmentType = helper.String(d.Get("adjustment_type").(string))
 	adjustMentValue := int64(d.Get("adjustment_value").(int))
 	request.AdjustmentValue = &adjustMentValue
 	request.MetricAlarm = &as.MetricAlarm{}
-	request.MetricAlarm.ComparisonOperator = stringToPointer(d.Get("comparison_operator").(string))
-	request.MetricAlarm.MetricName = stringToPointer(d.Get("metric_name").(string))
-	request.MetricAlarm.Threshold = intToPointer(d.Get("threshold").(int))
-	request.MetricAlarm.Period = intToPointer(d.Get("period").(int))
-	request.MetricAlarm.ContinuousTime = intToPointer(d.Get("continuous_time").(int))
+	request.MetricAlarm.ComparisonOperator = helper.String(d.Get("comparison_operator").(string))
+	request.MetricAlarm.MetricName = helper.String(d.Get("metric_name").(string))
+	request.MetricAlarm.Threshold = helper.IntUint64(d.Get("threshold").(int))
+	request.MetricAlarm.Period = helper.IntUint64(d.Get("period").(int))
+	request.MetricAlarm.ContinuousTime = helper.IntUint64(d.Get("continuous_time").(int))
 
 	if v, ok := d.GetOk("statistic"); ok {
-		request.MetricAlarm.Statistic = stringToPointer(v.(string))
+		request.MetricAlarm.Statistic = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("cooldown"); ok {
-		request.Cooldown = intToPointer(v.(int))
+		request.Cooldown = helper.IntUint64(v.(int))
 	}
 	if v, ok := d.GetOk("notification_user_group_ids"); ok {
 		notificationUserGroupIds := v.([]interface{})
 		request.NotificationUserGroupIds = make([]*string, 0, len(notificationUserGroupIds))
 		for _, value := range notificationUserGroupIds {
-			request.NotificationUserGroupIds = append(request.NotificationUserGroupIds, stringToPointer(value.(string)))
+			request.NotificationUserGroupIds = append(request.NotificationUserGroupIds, helper.String(value.(string)))
 		}
 	}
 
@@ -193,7 +194,7 @@ func resourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta interf
 		_ = d.Set("statistic", *scalingPolicy.MetricAlarm.Statistic)
 		_ = d.Set("cooldown", *scalingPolicy.Cooldown)
 		if scalingPolicy.NotificationUserGroupIds != nil {
-			_ = d.Set("notification_user_group_ids", flattenStringList(scalingPolicy.NotificationUserGroupIds))
+			_ = d.Set("notification_user_group_ids", helper.FlattenStringList(scalingPolicy.NotificationUserGroupIds))
 		}
 		return nil
 	})
@@ -211,10 +212,10 @@ func resourceTencentCloudAsScalingPolicyUpdate(d *schema.ResourceData, meta inte
 	scalingPolicyId := d.Id()
 	request.AutoScalingPolicyId = &scalingPolicyId
 	if d.HasChange("policy_name") {
-		request.ScalingPolicyName = stringToPointer(d.Get("policy_name").(string))
+		request.ScalingPolicyName = helper.String(d.Get("policy_name").(string))
 	}
 	if d.HasChange("adjustment_type") {
-		request.AdjustmentType = stringToPointer(d.Get("adjustment_type").(string))
+		request.AdjustmentType = helper.String(d.Get("adjustment_type").(string))
 	}
 	if d.HasChange("adjustment_value") {
 		adjustmentValue := int64(d.Get("adjustment_value").(int))
@@ -222,31 +223,31 @@ func resourceTencentCloudAsScalingPolicyUpdate(d *schema.ResourceData, meta inte
 	}
 	request.MetricAlarm = &as.MetricAlarm{}
 	if d.HasChange("comparison_operator") {
-		request.MetricAlarm.ComparisonOperator = stringToPointer(d.Get("comparison_operator").(string))
+		request.MetricAlarm.ComparisonOperator = helper.String(d.Get("comparison_operator").(string))
 	}
 	if d.HasChange("metric_name") {
-		request.MetricAlarm.MetricName = stringToPointer(d.Get("metric_name").(string))
+		request.MetricAlarm.MetricName = helper.String(d.Get("metric_name").(string))
 	}
 	if d.HasChange("threshold") {
-		request.MetricAlarm.Threshold = intToPointer(d.Get("threshold").(int))
+		request.MetricAlarm.Threshold = helper.IntUint64(d.Get("threshold").(int))
 	}
 	if d.HasChange("period") {
-		request.MetricAlarm.Period = intToPointer(d.Get("period").(int))
+		request.MetricAlarm.Period = helper.IntUint64(d.Get("period").(int))
 	}
 	if d.HasChange("continuous_time") {
-		request.MetricAlarm.ContinuousTime = intToPointer(d.Get("continuous_time").(int))
+		request.MetricAlarm.ContinuousTime = helper.IntUint64(d.Get("continuous_time").(int))
 	}
 	if d.HasChange("statistic") {
-		request.MetricAlarm.Statistic = stringToPointer(d.Get("statistic").(string))
+		request.MetricAlarm.Statistic = helper.String(d.Get("statistic").(string))
 	}
 	if d.HasChange("cooldown") {
-		request.Cooldown = intToPointer(d.Get("cooldown").(int))
+		request.Cooldown = helper.IntUint64(d.Get("cooldown").(int))
 	}
 	if d.HasChange("notification_user_group_ids") {
 		notificationUserGroupIds := d.Get("notification_user_group_ids").([]interface{})
 		request.NotificationUserGroupIds = make([]*string, 0, len(notificationUserGroupIds))
 		for _, value := range notificationUserGroupIds {
-			request.NotificationUserGroupIds = append(request.NotificationUserGroupIds, stringToPointer(value.(string)))
+			request.NotificationUserGroupIds = append(request.NotificationUserGroupIds, helper.String(value.(string)))
 		}
 	}
 

@@ -32,6 +32,7 @@ import (
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudHaVip() *schema.Resource {
@@ -106,12 +107,12 @@ func resourceTencentCloudHaVipCreate(d *schema.ResourceData, meta interface{}) e
 	logId := getLogId(contextNil)
 
 	request := vpc.NewCreateHaVipRequest()
-	request.VpcId = stringToPointer(d.Get("vpc_id").(string))
-	request.SubnetId = stringToPointer(d.Get("subnet_id").(string))
-	request.HaVipName = stringToPointer(d.Get("name").(string))
+	request.VpcId = helper.String(d.Get("vpc_id").(string))
+	request.SubnetId = helper.String(d.Get("subnet_id").(string))
+	request.HaVipName = helper.String(d.Get("name").(string))
 	//optional
 	if v, ok := d.GetOk("vip"); ok {
-		request.Vip = stringToPointer(v.(string))
+		request.Vip = helper.String(v.(string))
 	}
 	var response *vpc.CreateHaVipResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -186,7 +187,7 @@ func resourceTencentCloudHaVipUpdate(d *schema.ResourceData, meta interface{}) e
 	request := vpc.NewModifyHaVipAttributeRequest()
 	request.HaVipId = &haVipId
 	if d.HasChange("name") {
-		request.HaVipName = stringToPointer(d.Get("name").(string))
+		request.HaVipName = helper.String(d.Get("name").(string))
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyHaVipAttribute(request)
 			if e != nil {

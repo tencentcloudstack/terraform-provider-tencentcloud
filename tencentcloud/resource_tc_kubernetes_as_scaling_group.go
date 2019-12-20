@@ -66,6 +66,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
@@ -410,22 +411,22 @@ func kubernetesAsScalingGroupParaSerial(dMap map[string]interface{}, meta interf
 	)
 
 	request := as.NewCreateAutoScalingGroupRequest()
-	request.AutoScalingGroupName = stringToPointer(dMap["scaling_group_name"].(string))
-	request.MaxSize = intToPointer(dMap["max_size"].(int))
-	request.MinSize = intToPointer(dMap["min_size"].(int))
+	request.AutoScalingGroupName = helper.String(dMap["scaling_group_name"].(string))
+	request.MaxSize = helper.IntUint64(dMap["max_size"].(int))
+	request.MinSize = helper.IntUint64(dMap["min_size"].(int))
 
 	if *request.MinSize > *request.MaxSize {
 		return "", fmt.Errorf("constraints `min_size <= desired_capacity <= max_size` must be established,")
 	}
 
-	request.VpcId = stringToPointer(dMap["vpc_id"].(string))
+	request.VpcId = helper.String(dMap["vpc_id"].(string))
 
 	if v, ok := dMap["default_cooldown"]; ok {
-		request.DefaultCooldown = intToPointer(v.(int))
+		request.DefaultCooldown = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := dMap["desired_capacity"]; ok {
-		request.DesiredCapacity = intToPointer(v.(int))
+		request.DesiredCapacity = helper.IntUint64(v.(int))
 		if *request.DesiredCapacity > *request.MaxSize ||
 			*request.DesiredCapacity < *request.MinSize {
 			return "", fmt.Errorf("constraints `min_size <= desired_capacity <= max_size` must be established,")
@@ -434,7 +435,7 @@ func kubernetesAsScalingGroupParaSerial(dMap map[string]interface{}, meta interf
 	}
 
 	if v, ok := dMap["retry_policy"]; ok {
-		request.RetryPolicy = stringToPointer(v.(string))
+		request.RetryPolicy = helper.String(v.(string))
 	}
 
 	if v, ok := dMap["subnet_ids"]; ok {
@@ -471,16 +472,16 @@ func kubernetesAsScalingGroupParaSerial(dMap map[string]interface{}, meta interf
 			vv := v.(map[string]interface{})
 			targets := vv["target_attribute"].([]interface{})
 			forwardBalancer := as.ForwardLoadBalancer{
-				LoadBalancerId: stringToPointer(vv["load_balancer_id"].(string)),
-				ListenerId:     stringToPointer(vv["listener_id"].(string)),
-				LocationId:     stringToPointer(vv["rule_id"].(string)),
+				LoadBalancerId: helper.String(vv["load_balancer_id"].(string)),
+				ListenerId:     helper.String(vv["listener_id"].(string)),
+				LocationId:     helper.String(vv["rule_id"].(string)),
 			}
 			forwardBalancer.TargetAttributes = make([]*as.TargetAttribute, 0, len(targets))
 			for _, target := range targets {
 				t := target.(map[string]interface{})
 				targetAttribute := as.TargetAttribute{
-					Port:   intToPointer(t["port"].(int)),
-					Weight: intToPointer(t["weight"].(int)),
+					Port:   helper.IntUint64(t["port"].(int)),
+					Weight: helper.IntUint64(t["weight"].(int)),
 				}
 				forwardBalancer.TargetAttributes = append(forwardBalancer.TargetAttributes, &targetAttribute)
 			}
@@ -501,8 +502,8 @@ func kubernetesAsScalingGroupParaSerial(dMap map[string]interface{}, meta interf
 	if v, ok := dMap["tags"]; ok {
 		for k, v := range v.(map[string]interface{}) {
 			request.Tags = append(request.Tags, &as.Tag{
-				Key:   stringToPointer(k),
-				Value: stringToPointer(v.(string)),
+				Key:   helper.String(k),
+				Value: helper.String(v.(string)),
 			})
 		}
 	}
@@ -519,10 +520,10 @@ func kubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta inter
 
 	request := as.NewCreateLaunchConfigurationRequest()
 
-	request.LaunchConfigurationName = stringToPointer(dMap["configuration_name"].(string))
+	request.LaunchConfigurationName = helper.String(dMap["configuration_name"].(string))
 
 	if v, ok := dMap["project_id"]; ok {
-		request.ProjectId = intToPointer(v.(int))
+		request.ProjectId = helper.IntUint64(v.(int))
 	}
 
 	instanceType := dMap["instance_type"].(string)
@@ -530,11 +531,11 @@ func kubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta inter
 
 	request.SystemDisk = &as.SystemDisk{}
 	if v, ok := dMap["system_disk_type"]; ok {
-		request.SystemDisk.DiskType = stringToPointer(v.(string))
+		request.SystemDisk.DiskType = helper.String(v.(string))
 	}
 
 	if v, ok := dMap["system_disk_size"]; ok {
-		request.SystemDisk.DiskSize = intToPointer(v.(int))
+		request.SystemDisk.DiskSize = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := dMap["data_disk"]; ok {
@@ -558,10 +559,10 @@ func kubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta inter
 
 	request.InternetAccessible = &as.InternetAccessible{}
 	if v, ok := dMap["internet_charge_type"]; ok {
-		request.InternetAccessible.InternetChargeType = stringToPointer(v.(string))
+		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
 	}
 	if v, ok := dMap["internet_max_bandwidth_out"]; ok {
-		request.InternetAccessible.InternetMaxBandwidthOut = intToPointer(v.(int))
+		request.InternetAccessible.InternetMaxBandwidthOut = helper.IntUint64(v.(int))
 	}
 	if v, ok := dMap["public_ip_assigned"]; ok {
 		publicIpAssigned := v.(bool)
@@ -571,7 +572,7 @@ func kubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta inter
 	request.LoginSettings = &as.LoginSettings{}
 
 	if v, ok := dMap["password"]; ok {
-		request.LoginSettings.Password = stringToPointer(v.(string))
+		request.LoginSettings.Password = helper.String(v.(string))
 	}
 	if v, ok := dMap["key_ids"]; ok {
 		keyIds := v.([]interface{})
@@ -620,7 +621,7 @@ func kubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta inter
 	request.InstanceChargeType = &chargeType
 
 	if v, ok := dMap["instance_types_check_policy"]; ok {
-		request.InstanceTypesCheckPolicy = stringToPointer(v.(string))
+		request.InstanceTypesCheckPolicy = helper.String(v.(string))
 	}
 
 	if v, ok := dMap["instance_tags"]; ok {

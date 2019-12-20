@@ -35,6 +35,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudGaapLayer7Listeners() *schema.Resource {
@@ -162,10 +163,10 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 	)
 
 	if raw, ok := d.GetOk("proxy_id"); ok {
-		proxyId = stringToPointer(raw.(string))
+		proxyId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("listener_id"); ok {
-		listenerId = stringToPointer(raw.(string))
+		listenerId = helper.String(raw.(string))
 	}
 
 	if proxyId == nil && listenerId == nil {
@@ -173,7 +174,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 	}
 
 	if raw, ok := d.GetOk("listener_name"); ok {
-		name = stringToPointer(raw.(string))
+		name = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("port"); ok {
 		port = common.IntPtr(raw.(int))
@@ -216,7 +217,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 				"name":        *ls.ListenerName,
 				"port":        *ls.Port,
 				"status":      *ls.ListenerStatus,
-				"create_time": formatUnixTime(*ls.CreateTime),
+				"create_time": helper.FormatUnixTime(*ls.CreateTime),
 			})
 		}
 
@@ -278,7 +279,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 				"certificate_id":         ls.CertificateId,
 				"auth_type":              ls.AuthType,
 				"forward_protocol":       ls.ForwardProtocol,
-				"create_time":            formatUnixTime(*ls.CreateTime),
+				"create_time":            helper.FormatUnixTime(*ls.CreateTime),
 				"client_certificate_id":  clientCertificateId,
 				"client_certificate_ids": polyClientCertificateIds,
 			}
@@ -288,7 +289,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 	}
 
 	_ = d.Set("listeners", listeners)
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), listeners); err != nil {

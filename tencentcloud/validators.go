@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
 	"net"
 	"regexp"
 	"strconv"
@@ -308,4 +309,15 @@ func validateStringNumber(v interface{}, k string) (ws []string, errors []error)
 		errors = append(errors, fmt.Errorf("%s must be a number: %s", k, value))
 	}
 	return
+}
+
+func validateTime(layout string) schema.SchemaValidateFunc {
+	return func(v interface{}, k string) (wss []string, errs []error) {
+		timeStr := v.(string)
+		if _, err := time.Parse(layout, timeStr); err != nil {
+			errs = append(errs, errors.Errorf("%s time format is invalid", k))
+		}
+
+		return
+	}
 }

@@ -24,6 +24,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudGaapCertificates() *schema.Resource {
@@ -120,10 +121,10 @@ func dataSourceTencentCloudGaapCertificatesRead(d *schema.ResourceData, m interf
 	)
 
 	if raw, ok := d.GetOk("id"); ok {
-		id = stringToPointer(raw.(string))
+		id = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("name"); ok {
-		name = stringToPointer(raw.(string))
+		name = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("type"); ok {
 		certificateType = common.IntPtr(gaapCertificateStringMap[raw.(string)])
@@ -153,15 +154,15 @@ func dataSourceTencentCloudGaapCertificatesRead(d *schema.ResourceData, m interf
 			"id":          *certificate.CertificateId,
 			"name":        *certificate.CertificateAlias,
 			"type":        certificateType,
-			"create_time": formatUnixTime(*certificate.CreateTime),
+			"create_time": helper.FormatUnixTime(*certificate.CreateTime),
 		}
 
 		if certificate.BeginTime != nil {
-			m["begin_time"] = formatUnixTime(*certificate.BeginTime)
+			m["begin_time"] = helper.FormatUnixTime(*certificate.BeginTime)
 		}
 
 		if certificate.EndTime != nil {
-			m["end_time"] = formatUnixTime(*certificate.EndTime)
+			m["end_time"] = helper.FormatUnixTime(*certificate.EndTime)
 		}
 
 		if certificate.IssuerCN != nil {
@@ -176,7 +177,7 @@ func dataSourceTencentCloudGaapCertificatesRead(d *schema.ResourceData, m interf
 	}
 
 	_ = d.Set("certificates", certificates)
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), certificates); err != nil {

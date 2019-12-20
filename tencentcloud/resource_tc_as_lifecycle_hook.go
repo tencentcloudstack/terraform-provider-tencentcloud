@@ -26,6 +26,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudAsLifecycleHook() *schema.Resource {
@@ -99,32 +100,32 @@ func resourceTencentCloudAsLifecycleHookCreate(d *schema.ResourceData, meta inte
 	logId := getLogId(contextNil)
 
 	request := as.NewCreateLifecycleHookRequest()
-	request.AutoScalingGroupId = stringToPointer(d.Get("scaling_group_id").(string))
-	request.LifecycleHookName = stringToPointer(d.Get("lifecycle_hook_name").(string))
-	request.LifecycleTransition = stringToPointer(d.Get("lifecycle_transition").(string))
+	request.AutoScalingGroupId = helper.String(d.Get("scaling_group_id").(string))
+	request.LifecycleHookName = helper.String(d.Get("lifecycle_hook_name").(string))
+	request.LifecycleTransition = helper.String(d.Get("lifecycle_transition").(string))
 
 	if v, ok := d.GetOk("default_result"); ok {
-		request.DefaultResult = stringToPointer(v.(string))
+		request.DefaultResult = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("heartbeat_timeout"); ok {
 		heartbeatTimeout := int64(v.(int))
 		request.HeartbeatTimeout = &heartbeatTimeout
 	}
 	if v, ok := d.GetOk("notification_metadata"); ok {
-		request.NotificationMetadata = stringToPointer(v.(string))
+		request.NotificationMetadata = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("notification_target_type"); ok {
 		request.NotificationTarget = &as.NotificationTarget{}
-		request.NotificationTarget.TargetType = stringToPointer(v.(string))
+		request.NotificationTarget.TargetType = helper.String(v.(string))
 		if v.(string) == "CMQ_QUEUE" {
 			if vv, ok := d.GetOk("notification_queue_name"); ok {
-				request.NotificationTarget.QueueName = stringToPointer(vv.(string))
+				request.NotificationTarget.QueueName = helper.String(vv.(string))
 			} else {
 				return fmt.Errorf("queue_name must not be null when target_type is CMQ_QUEUE")
 			}
 		} else if v.(string) == "CMQ_TOPIC" {
 			if vv, ok := d.GetOk("notification_topic_name"); ok {
-				request.NotificationTarget.TopicName = stringToPointer(vv.(string))
+				request.NotificationTarget.TopicName = helper.String(vv.(string))
 			} else {
 				return fmt.Errorf("topic_name must ot be null when target_type is CMQ_TOPIC")
 			}
@@ -204,30 +205,30 @@ func resourceTencentCloudAsLifecycleHookUpdate(d *schema.ResourceData, meta inte
 	request := as.NewUpgradeLifecycleHookRequest()
 	lifecycleHookId := d.Id()
 	request.LifecycleHookId = &lifecycleHookId
-	request.LifecycleHookName = stringToPointer(d.Get("lifecycle_hook_name").(string))
-	request.LifecycleTransition = stringToPointer(d.Get("lifecycle_transition").(string))
+	request.LifecycleHookName = helper.String(d.Get("lifecycle_hook_name").(string))
+	request.LifecycleTransition = helper.String(d.Get("lifecycle_transition").(string))
 	if v, ok := d.GetOk("default_result"); ok {
-		request.DefaultResult = stringToPointer(v.(string))
+		request.DefaultResult = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("heartbeat_timeout"); ok {
 		heartbeatTimeout := int64(v.(int))
 		request.HeartbeatTimeout = &heartbeatTimeout
 	}
 	if v, ok := d.GetOk("notification_metadata"); ok {
-		request.NotificationMetadata = stringToPointer(v.(string))
+		request.NotificationMetadata = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("notification_target_type"); ok {
 		request.NotificationTarget = &as.NotificationTarget{}
-		request.NotificationTarget.TargetType = stringToPointer(v.(string))
+		request.NotificationTarget.TargetType = helper.String(v.(string))
 		if v.(string) == "CMQ_QUEUE" {
 			if vv, ok := d.GetOk("notification_queue_name"); ok {
-				request.NotificationTarget.QueueName = stringToPointer(vv.(string))
+				request.NotificationTarget.QueueName = helper.String(vv.(string))
 			} else {
 				return fmt.Errorf("queue_name must not be null when target_type is CMQ_QUEUE")
 			}
 		} else if v.(string) == "CMQ_TOPIC" {
 			if vv, ok := d.GetOk("notification_topic_name"); ok {
-				request.NotificationTarget.TopicName = stringToPointer(vv.(string))
+				request.NotificationTarget.TopicName = helper.String(vv.(string))
 			} else {
 				return fmt.Errorf("topic_name must ot be null when target_type is CMQ_TOPIC")
 			}

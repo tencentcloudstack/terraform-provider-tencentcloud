@@ -32,6 +32,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudGaapRealserver() *schema.Resource {
@@ -108,7 +109,7 @@ func resourceTencentCloudGaapRealserverCreate(d *schema.ResourceData, m interfac
 	name := d.Get("name").(string)
 	projectId := d.Get("project_id").(int)
 
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 

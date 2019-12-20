@@ -22,6 +22,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudClbRedirections() *schema.Resource {
@@ -145,7 +146,7 @@ func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta inte
 		ids = append(ids, (*r)["source_rule_id"]+"#"+(*r)["target_rule_id"]+(*r)["source_listener_id"]+"#"+(*r)["target_listener_id"]+"#"+(*r)["clb_id"])
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("redirection_list", redirectionList); e != nil {
 		log.Printf("[CRITAL]%s provider set CLB redirection list fail, reason:%+v", logId, e)
 		return e

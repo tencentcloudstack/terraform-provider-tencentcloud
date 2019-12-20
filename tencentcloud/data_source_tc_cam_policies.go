@@ -26,6 +26,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCamPolicies() *schema.Resource {
@@ -170,7 +171,7 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 		ids = append(ids, strconv.Itoa(int(*policy.PolicyId)))
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("policy_list", policyList); e != nil {
 		log.Printf("[CRITAL]%s provider set policy list fail, reason:%s\n", logId, e.Error())
 		return e

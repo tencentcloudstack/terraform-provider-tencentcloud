@@ -10,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -24,8 +25,8 @@ func (me *SslService) CreateCertificate(ctx context.Context, certType, cert, nam
 	createRequest := ssl.NewUploadCertRequest()
 	createRequest.Cert = &cert
 	createRequest.CertType = &certType
-	createRequest.ProjectId = stringToPointer(strconv.Itoa(projectId))
-	createRequest.ModuleType = stringToPointer(SSL_MODULE_TYPE)
+	createRequest.ProjectId = helper.String(strconv.Itoa(projectId))
+	createRequest.ModuleType = helper.String(SSL_MODULE_TYPE)
 	createRequest.Alias = &name
 	createRequest.Key = key
 
@@ -53,7 +54,7 @@ func (me *SslService) CreateCertificate(ctx context.Context, certType, cert, nam
 	}
 
 	describeRequest := ssl.NewDescribeCertListRequest()
-	describeRequest.ModuleType = stringToPointer(SSL_MODULE_TYPE)
+	describeRequest.ModuleType = helper.String(SSL_MODULE_TYPE)
 	describeRequest.Id = &id
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -111,16 +112,16 @@ func (me *SslService) DescribeCertificates(ctx context.Context, id, name, certTy
 	logId := getLogId(ctx)
 
 	request := ssl.NewDescribeCertListRequest()
-	request.ModuleType = stringToPointer(SSL_MODULE_TYPE)
+	request.ModuleType = helper.String(SSL_MODULE_TYPE)
 	request.SearchKey = name
 	request.Id = id
 	request.CertType = certType
-	request.WithCert = stringToPointer(SSL_WITH_CERT)
+	request.WithCert = helper.String(SSL_WITH_CERT)
 
 	var offset uint64
 
 	request.Offset = &offset
-	request.Limit = intToPointer(20)
+	request.Limit = helper.IntUint64(20)
 
 	// run loop at least once
 	count := 20
@@ -157,7 +158,7 @@ func (me *SslService) DeleteCertificate(ctx context.Context, id string) error {
 	client := me.client.UseSslClient()
 
 	deleteRequest := ssl.NewDeleteCertRequest()
-	deleteRequest.ModuleType = stringToPointer(SSL_MODULE_TYPE)
+	deleteRequest.ModuleType = helper.String(SSL_MODULE_TYPE)
 	deleteRequest.Id = &id
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -175,7 +176,7 @@ func (me *SslService) DeleteCertificate(ctx context.Context, id string) error {
 	}
 
 	describeRequest := ssl.NewDescribeCertListRequest()
-	describeRequest.ModuleType = stringToPointer(SSL_MODULE_TYPE)
+	describeRequest.ModuleType = helper.String(SSL_MODULE_TYPE)
 	describeRequest.Id = &id
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
