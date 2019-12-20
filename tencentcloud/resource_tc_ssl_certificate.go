@@ -29,7 +29,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 )
 
@@ -220,26 +220,26 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 		return fmt.Errorf("certificate %v are nil", nilNames)
 	}
 
-	d.Set("name", certificate.Alias)
-	d.Set("type", certificate.CertType)
+	_ = d.Set("name", certificate.Alias)
+	_ = d.Set("type", certificate.CertType)
 	projectId, err := strconv.Atoi(*certificate.ProjectId)
 	if err != nil {
 		return err
 	}
-	d.Set("project_id", projectId)
-	d.Set("cert", certificate.Cert)
-	d.Set("product_zh_name", certificate.ProductZhName)
-	d.Set("domain", certificate.Domain)
-	d.Set("status", certificate.Status)
-	d.Set("begin_time", certificate.CertBeginTime)
-	d.Set("end_time", certificate.CertEndTime)
-	d.Set("create_time", certificate.InsertTime)
+	_ = d.Set("project_id", projectId)
+	_ = d.Set("cert", certificate.Cert)
+	_ = d.Set("product_zh_name", certificate.ProductZhName)
+	_ = d.Set("domain", certificate.Domain)
+	_ = d.Set("status", certificate.Status)
+	_ = d.Set("begin_time", certificate.CertBeginTime)
+	_ = d.Set("end_time", certificate.CertEndTime)
+	_ = d.Set("create_time", certificate.InsertTime)
 
 	subjectAltNames := make([]string, 0, len(certificate.SubjectAltName))
 	for _, subjectAltName := range certificate.SubjectAltName {
 		subjectAltNames = append(subjectAltNames, *subjectAltName)
 	}
-	d.Set("subject_names", subjectAltNames)
+	_ = d.Set("subject_names", subjectAltNames)
 
 	return nil
 }

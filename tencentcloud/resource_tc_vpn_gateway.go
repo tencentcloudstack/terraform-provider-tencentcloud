@@ -51,8 +51,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	errors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
@@ -278,19 +278,19 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 
 	gateway := response.Response.VpnGatewaySet[0]
 
-	d.Set("name", *gateway.VpnGatewayName)
-	d.Set("public_ip_address", *gateway.PublicIpAddress)
-	d.Set("bandwidth", int(*gateway.InternetMaxBandwidthOut))
-	d.Set("type", *gateway.Type)
-	d.Set("create_time", *gateway.CreatedTime)
-	d.Set("state", *gateway.Type)
-	d.Set("prepaid_renew_flag", *gateway.RenewFlag)
-	d.Set("charge_type", *gateway.InstanceChargeType)
-	d.Set("expired_time", *gateway.ExpiredTime)
-	d.Set("is_address_blocked", *gateway.IsAddressBlocked)
-	d.Set("new_purchase_plan", *gateway.NewPurchasePlan)
-	d.Set("restrict_state", *gateway.RestrictState)
-	d.Set("zone", *gateway.Zone)
+	_ = d.Set("name", *gateway.VpnGatewayName)
+	_ = d.Set("public_ip_address", *gateway.PublicIpAddress)
+	_ = d.Set("bandwidth", int(*gateway.InternetMaxBandwidthOut))
+	_ = d.Set("type", *gateway.Type)
+	_ = d.Set("create_time", *gateway.CreatedTime)
+	_ = d.Set("state", *gateway.Type)
+	_ = d.Set("prepaid_renew_flag", *gateway.RenewFlag)
+	_ = d.Set("charge_type", *gateway.InstanceChargeType)
+	_ = d.Set("expired_time", *gateway.ExpiredTime)
+	_ = d.Set("is_address_blocked", *gateway.IsAddressBlocked)
+	_ = d.Set("new_purchase_plan", *gateway.NewPurchasePlan)
+	_ = d.Set("restrict_state", *gateway.RestrictState)
+	_ = d.Set("zone", *gateway.Zone)
 
 	//tags
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -299,7 +299,7 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return err
 	}
-	d.Set("tags", tags)
+	_ = d.Set("tags", tags)
 
 	return nil
 }

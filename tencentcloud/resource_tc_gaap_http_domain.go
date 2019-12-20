@@ -44,7 +44,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudGaapHttpDomain() *schema.Resource {
@@ -305,50 +305,50 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 		return nil
 	}
 
-	d.Set("domain", httpDomain.Domain)
-	d.Set("listener_id", listenerId)
+	_ = d.Set("domain", httpDomain.Domain)
+	_ = d.Set("listener_id", listenerId)
 
 	if httpDomain.CertificateId == nil {
 		httpDomain.CertificateId = stringToPointer("default")
 	}
-	d.Set("certificate_id", httpDomain.CertificateId)
+	_ = d.Set("certificate_id", httpDomain.CertificateId)
 
 	polyClientCertificateIds := make([]*string, 0, len(httpDomain.PolyClientCertificateAliasInfo))
 	for _, info := range httpDomain.PolyClientCertificateAliasInfo {
 		polyClientCertificateIds = append(polyClientCertificateIds, info.CertificateId)
 	}
 
-	d.Set("client_certificate_id", polyClientCertificateIds[0])
-	d.Set("client_certificate_ids", polyClientCertificateIds)
+	_ = d.Set("client_certificate_id", polyClientCertificateIds[0])
+	_ = d.Set("client_certificate_ids", polyClientCertificateIds)
 
 	if httpDomain.BasicAuth == nil {
 		httpDomain.BasicAuth = int64ToPointer(0)
 	}
-	d.Set("basic_auth", *httpDomain.BasicAuth == 1)
+	_ = d.Set("basic_auth", *httpDomain.BasicAuth == 1)
 
 	if httpDomain.BasicAuthConfId != nil {
-		d.Set("basic_auth_id", httpDomain.BasicAuthConfId)
+		_ = d.Set("basic_auth_id", httpDomain.BasicAuthConfId)
 	}
 
 	if httpDomain.RealServerAuth == nil {
 		httpDomain.RealServerAuth = int64ToPointer(0)
 	}
-	d.Set("realserver_auth", *httpDomain.RealServerAuth == 1)
+	_ = d.Set("realserver_auth", *httpDomain.RealServerAuth == 1)
 
 	if httpDomain.RealServerCertificateId != nil {
-		d.Set("realserver_certificate_id", httpDomain.RealServerCertificateId)
+		_ = d.Set("realserver_certificate_id", httpDomain.RealServerCertificateId)
 	}
 	if httpDomain.RealServerCertificateDomain != nil {
-		d.Set("realserver_certificate_domain", httpDomain.RealServerCertificateDomain)
+		_ = d.Set("realserver_certificate_domain", httpDomain.RealServerCertificateDomain)
 	}
 
 	if httpDomain.GaapAuth == nil {
 		httpDomain.GaapAuth = int64ToPointer(0)
 	}
-	d.Set("gaap_auth", *httpDomain.GaapAuth == 1)
+	_ = d.Set("gaap_auth", *httpDomain.GaapAuth == 1)
 
 	if httpDomain.GaapCertificateId != nil {
-		d.Set("gaap_auth_id", httpDomain.GaapCertificateId)
+		_ = d.Set("gaap_auth_id", httpDomain.GaapCertificateId)
 	}
 
 	return nil

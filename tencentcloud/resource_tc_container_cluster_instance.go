@@ -34,8 +34,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -239,13 +239,13 @@ func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m
 	for _, v := range workers {
 		if v.InstanceId == d.Id() {
 			found = true
-			d.Set("instance_id", v.InstanceId)
-			d.Set("abnormal_reason", v.FailedReason)
-			d.Set("wan_ip", "")
-			d.Set("lan_ip", "")
-			d.Set("is_normal", true)
+			_ = d.Set("instance_id", v.InstanceId)
+			_ = d.Set("abnormal_reason", v.FailedReason)
+			_ = d.Set("wan_ip", "")
+			_ = d.Set("lan_ip", "")
+			_ = d.Set("is_normal", true)
 			if v.InstanceState == "failed" {
-				d.Set("is_normal", false)
+				_ = d.Set("is_normal", false)
 			}
 
 			describeInstancesreq := cvm.NewDescribeInstancesRequest()
@@ -268,10 +268,10 @@ func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, m
 
 			if len(describeInstancesResponse.Response.InstanceSet) > 0 {
 				if len(describeInstancesResponse.Response.InstanceSet[0].PublicIpAddresses) > 0 {
-					d.Set("wan_ip", *describeInstancesResponse.Response.InstanceSet[0].PublicIpAddresses[0])
+					_ = d.Set("wan_ip", *describeInstancesResponse.Response.InstanceSet[0].PublicIpAddresses[0])
 				}
 				if len(describeInstancesResponse.Response.InstanceSet[0].PrivateIpAddresses) > 0 {
-					d.Set("lan_ip", *describeInstancesResponse.Response.InstanceSet[0].PrivateIpAddresses[0])
+					_ = d.Set("lan_ip", *describeInstancesResponse.Response.InstanceSet[0].PrivateIpAddresses[0])
 				}
 			}
 		}

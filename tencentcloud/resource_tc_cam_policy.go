@@ -45,8 +45,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 )
 
@@ -191,14 +191,14 @@ func resourceTencentCloudCamPolicyRead(d *schema.ResourceData, meta interface{})
 		return nil
 	}
 
-	d.Set("name", *instance.Response.PolicyName)
+	_ = d.Set("name", *instance.Response.PolicyName)
 	//document with special change rule, the `\\/` must be replaced with `/`
-	d.Set("document", strings.Replace(*instance.Response.PolicyDocument, "\\/", "/", -1))
-	d.Set("create_time", *instance.Response.AddTime)
-	d.Set("update_time", *instance.Response.UpdateTime)
-	d.Set("type", int(*instance.Response.Type))
+	_ = d.Set("document", strings.Replace(*instance.Response.PolicyDocument, "\\/", "/", -1))
+	_ = d.Set("create_time", *instance.Response.AddTime)
+	_ = d.Set("update_time", *instance.Response.UpdateTime)
+	_ = d.Set("type", int(*instance.Response.Type))
 	if instance.Response.Description != nil {
-		d.Set("description", *instance.Response.Description)
+		_ = d.Set("description", *instance.Response.Description)
 	}
 	return nil
 }

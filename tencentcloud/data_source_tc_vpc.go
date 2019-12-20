@@ -28,7 +28,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceTencentCloudVpc() *schema.Resource {
@@ -103,10 +103,10 @@ func dataSourceTencentCloudVpcRead(d *schema.ResourceData, meta interface{}) err
 
 	vpc := vpcInfos[0]
 	d.SetId(vpc.vpcId)
-	d.Set("name", vpc.name)
-	d.Set("cidr_block", vpc.cidr)
-	d.Set("is_default", vpc.isDefault)
-	d.Set("is_multicast", vpc.isMulticast)
+	_ = d.Set("name", vpc.name)
+	_ = d.Set("cidr_block", vpc.cidr)
+	_ = d.Set("is_default", vpc.isDefault)
+	_ = d.Set("is_multicast", vpc.isMulticast)
 
 	return nil
 }

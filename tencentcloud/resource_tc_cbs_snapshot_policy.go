@@ -27,8 +27,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
 
@@ -153,12 +153,12 @@ func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
-	d.Set("snapshot_policy_name", policy.AutoSnapshotPolicyName)
+	_ = d.Set("snapshot_policy_name", policy.AutoSnapshotPolicyName)
 	if len(policy.Policy) > 0 {
-		d.Set("repeat_weekdays", flattenIntList(policy.Policy[0].DayOfWeek))
-		d.Set("repeat_hours", flattenIntList(policy.Policy[0].Hour))
+		_ = d.Set("repeat_weekdays", flattenIntList(policy.Policy[0].DayOfWeek))
+		_ = d.Set("repeat_hours", flattenIntList(policy.Policy[0].Hour))
 	}
-	d.Set("retention_days", policy.RetentionDays)
+	_ = d.Set("retention_days", policy.RetentionDays)
 
 	return nil
 }

@@ -27,8 +27,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
@@ -103,8 +103,8 @@ func resourceTencentCloudHaVipEipAttachmentRead(d *schema.ResourceData, meta int
 		return err
 	}
 
-	d.Set("havip_id", haVip)
-	d.Set("address_ip", eip)
+	_ = d.Set("havip_id", haVip)
+	_ = d.Set("address_ip", eip)
 	d.SetId(haVipEipAttachmentId)
 
 	return nil

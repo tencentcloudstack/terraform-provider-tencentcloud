@@ -30,8 +30,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
@@ -224,7 +224,7 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 			d.SetId("")
 			return nil
 		}
-		d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
+		_ = d.Set("master_instance_id", *mysqlInfo.MasterInfo.InstanceId)
 		return nil
 	})
 	if err != nil {

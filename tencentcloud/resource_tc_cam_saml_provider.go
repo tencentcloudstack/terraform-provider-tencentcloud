@@ -26,8 +26,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 )
 
@@ -113,7 +113,7 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 	}
 
 	d.SetId(d.Get("name").(string))
-	d.Set("provider_arn", *response.Response.ProviderArn)
+	_ = d.Set("provider_arn", *response.Response.ProviderArn)
 	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamSAMLProviderRead(d, meta)
@@ -146,12 +146,12 @@ func resourceTencentCloudCamSAMLProviderRead(d *schema.ResourceData, meta interf
 		return nil
 	}
 
-	d.Set("name", *instance.Response.Name)
-	d.Set("create_time", *instance.Response.CreateTime)
-	d.Set("update_time", *instance.Response.ModifyTime)
-	d.Set("meta_data", *instance.Response.SAMLMetadata)
+	_ = d.Set("name", *instance.Response.Name)
+	_ = d.Set("create_time", *instance.Response.CreateTime)
+	_ = d.Set("update_time", *instance.Response.ModifyTime)
+	_ = d.Set("meta_data", *instance.Response.SAMLMetadata)
 	if instance.Response.Description != nil {
-		d.Set("description", *instance.Response.Description)
+		_ = d.Set("description", *instance.Response.Description)
 	}
 	return nil
 }

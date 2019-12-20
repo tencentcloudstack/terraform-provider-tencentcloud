@@ -23,8 +23,8 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
@@ -127,11 +127,11 @@ func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
-	d.Set("name", placement.Name)
-	d.Set("type", placement.Type)
-	d.Set("cvm_quota_total", placement.CvmQuotaTotal)
-	d.Set("current_num", placement.CurrentNum)
-	d.Set("create_time", placement.CreateTime)
+	_ = d.Set("name", placement.Name)
+	_ = d.Set("type", placement.Type)
+	_ = d.Set("cvm_quota_total", placement.CvmQuotaTotal)
+	_ = d.Set("current_num", placement.CurrentNum)
+	_ = d.Set("create_time", placement.CreateTime)
 
 	return nil
 }

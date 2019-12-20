@@ -17,8 +17,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
 
@@ -126,8 +126,8 @@ func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, meta i
 		d.SetId("")
 		return nil
 	}
-	d.Set("storage_id", storage.DiskId)
-	d.Set("instance_id", storage.InstanceId)
+	_ = d.Set("storage_id", storage.DiskId)
+	_ = d.Set("instance_id", storage.InstanceId)
 
 	return nil
 }

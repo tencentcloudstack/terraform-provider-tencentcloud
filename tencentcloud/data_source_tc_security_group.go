@@ -17,7 +17,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 )
 
@@ -101,12 +101,12 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, meta interf
 	}
 
 	d.SetId(*sg.SecurityGroupId)
-	d.Set("security_group_id", sg.SecurityGroupId)
-	d.Set("name", sg.SecurityGroupName)
-	d.Set("description", sg.SecurityGroupDesc)
-	d.Set("create_time", sg.CreatedTime)
-	d.Set("be_associate_count", len(in)+len(out))
-	d.Set("project_id", sg.ProjectId)
+	_ = d.Set("security_group_id", sg.SecurityGroupId)
+	_ = d.Set("name", sg.SecurityGroupName)
+	_ = d.Set("description", sg.SecurityGroupDesc)
+	_ = d.Set("create_time", sg.CreatedTime)
+	_ = d.Set("be_associate_count", len(in)+len(out))
+	_ = d.Set("project_id", sg.ProjectId)
 
 	return nil
 }

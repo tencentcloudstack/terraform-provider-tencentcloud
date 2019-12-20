@@ -36,7 +36,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceTencentCloudGaapHttpDomains() *schema.Resource {
@@ -202,7 +202,7 @@ func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interfa
 		domains = append(domains, m)
 	}
 
-	d.Set("domains", domains)
+	_ = d.Set("domains", domains)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

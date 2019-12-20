@@ -26,8 +26,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 )
 
@@ -149,12 +149,12 @@ func resourceTencentCloudCamRolePolicyAttachmentRead(d *schema.ResourceData, met
 	if e != nil {
 		return e
 	}
-	d.Set("role_id", roleId)
-	d.Set("policy_id", strconv.Itoa(int(policyId)))
-	d.Set("policy_name", *instance.PolicyName)
-	d.Set("create_time", *instance.AddTime)
-	d.Set("create_mode", int(*instance.CreateMode))
-	d.Set("policy_type", *instance.PolicyType)
+	_ = d.Set("role_id", roleId)
+	_ = d.Set("policy_id", strconv.Itoa(int(policyId)))
+	_ = d.Set("policy_name", *instance.PolicyName)
+	_ = d.Set("create_time", *instance.AddTime)
+	_ = d.Set("create_mode", int(*instance.CreateMode))
+	_ = d.Set("policy_type", *instance.PolicyType)
 
 	return nil
 }

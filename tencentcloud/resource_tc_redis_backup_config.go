@@ -25,8 +25,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -99,9 +99,9 @@ func resourceTencentCloudRedisBackupConfigRead(d *schema.ResourceData, meta inte
 			}
 			return retryError(e)
 		}
-		d.Set("backup_time", backupTime)
-		d.Set("redis_id", d.Id())
-		d.Set("backup_period", backupPeriods)
+		_ = d.Set("backup_time", backupTime)
+		_ = d.Set("redis_id", d.Id())
+		_ = d.Set("backup_period", backupPeriods)
 		return nil
 	})
 	if err != nil {

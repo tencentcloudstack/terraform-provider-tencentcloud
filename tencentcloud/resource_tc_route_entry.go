@@ -40,8 +40,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -205,11 +205,11 @@ func resourceTencentCloudRouteEntryRead(d *schema.ResourceData, meta interface{}
 				nextTypeId == route["nextType"] &&
 				v.nextBub == route["nextHub"] &&
 				v.description == route["description"] {
-				d.Set("vpc_id", route["vpcId"])
-				d.Set("route_table_id", route["routeTableId"])
-				d.Set("cidr_block", route["destinationCidrBlock"])
-				d.Set("next_type", nextType)
-				d.Set("next_hub", route["nextHub"])
+				_ = d.Set("vpc_id", route["vpcId"])
+				_ = d.Set("route_table_id", route["routeTableId"])
+				_ = d.Set("cidr_block", route["destinationCidrBlock"])
+				_ = d.Set("next_type", nextType)
+				_ = d.Set("next_hub", route["nextHub"])
 				return nil
 			}
 		}

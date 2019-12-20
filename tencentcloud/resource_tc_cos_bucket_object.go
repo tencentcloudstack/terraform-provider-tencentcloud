@@ -43,7 +43,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudCosBucketObject() *schema.Resource {
@@ -213,14 +213,14 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	d.Set("cache_control", response.CacheControl)
-	d.Set("content_disposition", response.ContentDisposition)
-	d.Set("content_encoding", response.ContentEncoding)
-	d.Set("content_type", response.ContentType)
-	d.Set("etag", strings.Trim(*response.ETag, `"`))
-	d.Set("storage_class", s3.StorageClassStandard)
+	_ = d.Set("cache_control", response.CacheControl)
+	_ = d.Set("content_disposition", response.ContentDisposition)
+	_ = d.Set("content_encoding", response.ContentEncoding)
+	_ = d.Set("content_type", response.ContentType)
+	_ = d.Set("etag", strings.Trim(*response.ETag, `"`))
+	_ = d.Set("storage_class", s3.StorageClassStandard)
 	if response.StorageClass != nil {
-		d.Set("storage_class", response.StorageClass)
+		_ = d.Set("storage_class", response.StorageClass)
 	}
 
 	return nil

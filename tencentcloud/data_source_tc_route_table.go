@@ -30,7 +30,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceTencentCloudRouteTable() *schema.Resource {
@@ -139,11 +139,11 @@ func dataSourceTencentCloudRouteTableRead(d *schema.ResourceData, meta interface
 
 	routetable := infos[0]
 	d.SetId(routetable.routeTableId)
-	d.Set("route_table_id", routetable.routeTableId)
-	d.Set("vpc_id", routetable.vpcId)
-	d.Set("name", routetable.name)
-	d.Set("subnet_num", len(routetable.entryInfos))
-	d.Set("create_time", routetable.createTime)
+	_ = d.Set("route_table_id", routetable.routeTableId)
+	_ = d.Set("vpc_id", routetable.vpcId)
+	_ = d.Set("name", routetable.name)
+	_ = d.Set("subnet_num", len(routetable.entryInfos))
+	_ = d.Set("create_time", routetable.createTime)
 
 	routes := make([]map[string]interface{}, 0, len(routetable.entryInfos))
 	for _, r := range routetable.entryInfos {

@@ -30,8 +30,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -198,11 +198,11 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 		return nil
 	}
 
-	d.Set("name", fileSystem.FsName)
-	d.Set("availability_zone", fileSystem.Zone)
-	d.Set("access_group_id", fileSystem.PGroup.PGroupId)
-	d.Set("protocol", fileSystem.Protocol)
-	d.Set("create_time", fileSystem.CreationTime)
+	_ = d.Set("name", fileSystem.FsName)
+	_ = d.Set("availability_zone", fileSystem.Zone)
+	_ = d.Set("access_group_id", fileSystem.PGroup.PGroupId)
+	_ = d.Set("protocol", fileSystem.Protocol)
+	_ = d.Set("create_time", fileSystem.CreationTime)
 
 	var mountTarget *cfs.MountInfo
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -219,9 +219,9 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 	if mountTarget != nil {
-		d.Set("vpc_id", mountTarget.VpcId)
-		d.Set("subnet_id", mountTarget.SubnetId)
-		d.Set("mount_ip", mountTarget.IpAddress)
+		_ = d.Set("vpc_id", mountTarget.VpcId)
+		_ = d.Set("subnet_id", mountTarget.SubnetId)
+		_ = d.Set("mount_ip", mountTarget.IpAddress)
 	}
 
 	return nil

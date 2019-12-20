@@ -30,7 +30,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 )
 
@@ -165,20 +165,20 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 		return errors.New("realserver ip or domain is nil")
 	}
 	if net.ParseIP(*realserver.RealServerIP) != nil {
-		d.Set("ip", realserver.RealServerIP)
+		_ = d.Set("ip", realserver.RealServerIP)
 	} else {
-		d.Set("domain", realserver.RealServerIP)
+		_ = d.Set("domain", realserver.RealServerIP)
 	}
 
 	if realserver.RealServerName == nil {
 		return errors.New("realserver name is nil")
 	}
-	d.Set("name", realserver.RealServerName)
+	_ = d.Set("name", realserver.RealServerName)
 
 	if realserver.ProjectId == nil {
 		return errors.New("realserver project id is nil")
 	}
-	d.Set("project_id", realserver.ProjectId)
+	_ = d.Set("project_id", realserver.ProjectId)
 
 	respTags := make(map[string]string, len(realserver.TagSet))
 	for _, tag := range realserver.TagSet {
@@ -187,7 +187,7 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 		}
 		respTags[*tag.TagKey] = *tag.TagValue
 	}
-	d.Set("tags", respTags)
+	_ = d.Set("tags", respTags)
 
 	return nil
 }

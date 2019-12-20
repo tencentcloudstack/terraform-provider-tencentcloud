@@ -23,8 +23,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 )
 
@@ -167,25 +167,25 @@ func resourceTencentCloudAsLifecycleHookRead(d *schema.ResourceData, meta interf
 			d.SetId("")
 			return nil
 		}
-		d.Set("scaling_group_id", *lifecycleHook.AutoScalingGroupId)
-		d.Set("lifecycle_hook_name", *lifecycleHook.LifecycleHookName)
-		d.Set("lifecycle_transition", *lifecycleHook.LifecycleTransition)
+		_ = d.Set("scaling_group_id", *lifecycleHook.AutoScalingGroupId)
+		_ = d.Set("lifecycle_hook_name", *lifecycleHook.LifecycleHookName)
+		_ = d.Set("lifecycle_transition", *lifecycleHook.LifecycleTransition)
 		if lifecycleHook.DefaultResult != nil {
-			d.Set("default_result", *lifecycleHook.DefaultResult)
+			_ = d.Set("default_result", *lifecycleHook.DefaultResult)
 		}
 		if lifecycleHook.HeartbeatTimeout != nil {
-			d.Set("heartbeat_timeout", *lifecycleHook.HeartbeatTimeout)
+			_ = d.Set("heartbeat_timeout", *lifecycleHook.HeartbeatTimeout)
 		}
 		if lifecycleHook.NotificationMetadata != nil {
-			d.Set("notification_metadata", *lifecycleHook.NotificationMetadata)
+			_ = d.Set("notification_metadata", *lifecycleHook.NotificationMetadata)
 		}
 		if lifecycleHook.NotificationTarget != nil {
-			d.Set("notification_target_type", *lifecycleHook.NotificationTarget.TargetType)
+			_ = d.Set("notification_target_type", *lifecycleHook.NotificationTarget.TargetType)
 			if lifecycleHook.NotificationTarget.QueueName != nil {
-				d.Set("notification_queue_name", *lifecycleHook.NotificationTarget.QueueName)
+				_ = d.Set("notification_queue_name", *lifecycleHook.NotificationTarget.QueueName)
 			}
 			if lifecycleHook.NotificationTarget.TopicName != nil {
-				d.Set("notification_topic_name", *lifecycleHook.NotificationTarget.TopicName)
+				_ = d.Set("notification_topic_name", *lifecycleHook.NotificationTarget.TopicName)
 			}
 		}
 		return nil

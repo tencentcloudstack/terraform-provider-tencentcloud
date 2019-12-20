@@ -38,8 +38,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -251,16 +251,16 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	d.Set("vpc_id", info.vpcId)
-	d.Set("availability_zone", info.zone)
-	d.Set("name", info.name)
-	d.Set("cidr_block", info.cidr)
-	d.Set("is_multicast", info.isMulticast)
-	d.Set("route_table_id", info.routeTableId)
-	d.Set("is_default", info.isDefault)
-	d.Set("available_ip_count", info.availableIpCount)
-	d.Set("create_time", info.createTime)
-	d.Set("tags", tags)
+	_ = d.Set("vpc_id", info.vpcId)
+	_ = d.Set("availability_zone", info.zone)
+	_ = d.Set("name", info.name)
+	_ = d.Set("cidr_block", info.cidr)
+	_ = d.Set("is_multicast", info.isMulticast)
+	_ = d.Set("route_table_id", info.routeTableId)
+	_ = d.Set("is_default", info.isDefault)
+	_ = d.Set("available_ip_count", info.availableIpCount)
+	_ = d.Set("create_time", info.createTime)
+	_ = d.Set("tags", tags)
 
 	return nil
 }
