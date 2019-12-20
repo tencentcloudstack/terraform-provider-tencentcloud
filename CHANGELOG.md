@@ -2,11 +2,12 @@
 
 FEATURES:
 
-* **New Data Source**: `tencentcloud_cbs_snapshot_policys`
+* **New Data Source**: `tencentcloud_cbs_snapshot_policies`
 * **New Resource**: `tencentcloud_cbs_snapshot_policy_attachment`
 
 ENHANCEMENTS:
 
+* doc: rewrite website index
 * Resource: `tencentcloud_instance` support modifying instance type([#251](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/251)).
 * Resource: `tencentcloud_gaap_http_domain` add new optional argument `realserver_certificate_ids`.
 * Data Source: `tencentcloud_gaap_http_domains` add new output argument `realserver_certificate_ids`.
