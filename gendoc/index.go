@@ -64,6 +64,12 @@ func GetIndex(doc string) ([]Product, error) {
 				prod.Resources = append(prod.Resources, text)
 
 			default:
+				if prod.Name == "Provider Data Sources" {
+					prod.DataSources = append(prod.DataSources, text)
+
+					continue
+				}
+
 				return nil, errors.New("no Data Source or Resource")
 			}
 		}
@@ -84,6 +90,15 @@ func GetIndex(doc string) ([]Product, error) {
 	prods = append(prods, prod)
 
 	sort.Slice(prods, func(i, j int) bool {
+		// make sure Provider Data Sources at first
+		if prods[i].Name == "Provider Data Sources" {
+			return true
+		}
+
+		if prods[j].Name == "Provider Data Sources" {
+			return false
+		}
+
 		return prods[i].Name < prods[j].Name
 	})
 

@@ -19,6 +19,9 @@ provider "tencentcloud" {
 
 Resources List
 
+Provider Data Sources
+  tencentcloud_availability_zones
+
 Auto Scaling(AS)
   Data Source
     tencentcloud_as_scaling_configs
@@ -100,7 +103,7 @@ Container Cluster
     tencentcloud_container_cluster
     tencentcloud_container_cluster_instance
 
-Cloud Load Balance(CLB)
+CLB
   Data Source
     tencentcloud_clb_attachments
     tencentcloud_clb_instances
@@ -117,7 +120,7 @@ Cloud Load Balance(CLB)
     tencentcloud_lb
     tencentcloud_alb_server_attachment
 
-Cloud Object Storage(COS)
+COS
   Data Source
     tencentcloud_cos_bucket_object
     tencentcloud_cos_buckets
@@ -126,9 +129,8 @@ Cloud Object Storage(COS)
     tencentcloud_cos_bucket
     tencentcloud_cos_bucket_object
 
-Cloud Virtual Machine(CVM)
+CVM
   Data Source
-    tencentcloud_availability_zones
     tencentcloud_image
     tencentcloud_images
     tencentcloud_instance_types
@@ -165,7 +167,7 @@ Direct Connect Gateway(DCG)
     tencentcloud_dc_gateway
     tencentcloud_dc_gateway_ccn_route
 
-Global Application Acceleration Platform(GAAP)
+Global Application Acceleration(GAAP)
   Data Source
     tencentcloud_gaap_certificates
     tencentcloud_gaap_http_domains
@@ -240,7 +242,7 @@ Serverless Cloud Function(SCF)
     tencentcloud_scf_function
     tencentcloud_scf_namespace
 
-SSL
+SSL Certificates
   Data Source
     tencentcloud_ssl_certificates
 

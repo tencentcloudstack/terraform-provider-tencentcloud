@@ -6,7 +6,10 @@ import (
 )
 
 const successDoc = `
-AS
+Provider Data Sources
+  tencentcloud_availability_zones
+
+Auto Scaling(AS)
   Data Source
     tencentcloud_as_scaling_configs
     tencentcloud_as_scaling_groups
@@ -17,7 +20,7 @@ AS
     tencentcloud_as_scaling_group
 
 
-CAM
+Cloud Access Management(CAM)
   Data Source
     tencentcloud_cam_group_memberships
     tencentcloud_cam_group_policy_attachments
@@ -46,7 +49,13 @@ func TestGetIndex(t *testing.T) {
 			},
 			want: []Product{
 				{
-					Name: "AS",
+					Name: "Provider Data Sources",
+					DataSources: []string{
+						"tencentcloud_availability_zones",
+					},
+				},
+				{
+					Name: "Auto Scaling(AS)",
 					DataSources: []string{
 						"tencentcloud_as_scaling_configs",
 						"tencentcloud_as_scaling_groups",
@@ -57,7 +66,7 @@ func TestGetIndex(t *testing.T) {
 					},
 				},
 				{
-					Name: "CAM",
+					Name: "Cloud Access Management(CAM)",
 					DataSources: []string{
 						"tencentcloud_cam_group_memberships",
 						"tencentcloud_cam_group_policy_attachments",

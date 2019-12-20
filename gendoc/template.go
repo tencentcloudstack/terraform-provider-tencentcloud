@@ -49,7 +49,10 @@ In addition to all arguments above, the following attributes are exported:
                 {{range .Products}}
                 <li>
                     <a href="#">{{.Name}}</a>
-                    <ul class="nav">
+                    <ul class="nav">{{if eq .Name "Provider Data Sources"}}{{range $Resource := .DataSources}}
+                        <li>
+                            <a href="/docs/providers/{{$.cloud_mark}}/d/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
+                        </li>{{end}}{{else}}
                         <li>
                             <a href="#">Data Sources</a>
                             <ul class="nav nav-auto-expand">{{range $Resource := .DataSources}}
@@ -65,7 +68,7 @@ In addition to all arguments above, the following attributes are exported:
                                     <a href="/docs/providers/{{$.cloud_mark}}/r/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
                                 </li>{{end}}
                             </ul>
-                        </li>
+                        </li>{{end}}
                     </ul>
                 </li>{{end}}
             </ul>
