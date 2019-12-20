@@ -216,7 +216,7 @@ func dataSourceTencentCloudDnatsRead(d *schema.ResourceData, meta interface{}) e
 		}
 		dnatList = append(dnatList, mapping)
 		var entry = &vpc.DestinationIpPortTranslationNatRule{}
-		entry.IpProtocol = helper.String(*dnat.IpProtocol)
+		entry.IpProtocol = dnat.IpProtocol
 		entry.PublicIpAddress = dnat.PublicIpAddress
 		entry.PublicPort = dnat.PublicPort
 		ids = append(ids, buildDnatId(entry, *dnat.VpcId, *dnat.NatGatewayId))

@@ -13,11 +13,11 @@ package tencentcloud
 
 import (
 	"context"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCamGroupMemberships() *schema.Resource {
