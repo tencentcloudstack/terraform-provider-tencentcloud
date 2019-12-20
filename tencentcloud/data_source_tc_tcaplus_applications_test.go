@@ -3,7 +3,7 @@ package tencentcloud
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 var testDataTcaplusApplicationsName = "data.tencentcloud_tcaplus_applications.id_test"

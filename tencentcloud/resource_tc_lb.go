@@ -21,8 +21,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
 
@@ -175,21 +175,21 @@ func resourceTencentCloudLBRead(d *schema.ResourceData, meta interface{}) error 
 		return err
 	}
 
-	d.Set("type", instance.LoadBalancerType)
-	d.Set("name", instance.LoadBalancerName)
-	d.Set("vpc_id", instance.VpcId)
-	d.Set("project_id", instance.ProjectId)
+	_ = d.Set("type", instance.LoadBalancerType)
+	_ = d.Set("name", instance.LoadBalancerName)
+	_ = d.Set("vpc_id", instance.VpcId)
+	_ = d.Set("project_id", instance.ProjectId)
 
 	if *instance.Forward == 0 {
-		d.Set("forward", lbForwardTypeClassic)
+		_ = d.Set("forward", lbForwardTypeClassic)
 	} else {
-		d.Set("forward", lbForwardTypeApplication)
+		_ = d.Set("forward", lbForwardTypeApplication)
 	}
 
 	if *instance.Status == 0 {
-		d.Set("status", "CREATING")
+		_ = d.Set("status", "CREATING")
 	} else {
-		d.Set("status", "NORMAL")
+		_ = d.Set("status", "NORMAL")
 	}
 
 	return nil

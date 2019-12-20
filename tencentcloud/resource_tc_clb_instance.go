@@ -53,8 +53,8 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
@@ -325,16 +325,16 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 		return nil
 	}
 
-	d.Set("network_type", instance.LoadBalancerType)
-	d.Set("clb_name", instance.LoadBalancerName)
-	d.Set("clb_vips", flattenStringList(instance.LoadBalancerVips))
-	d.Set("subnet_id", instance.SubnetId)
-	d.Set("vpc_id", instance.VpcId)
-	d.Set("target_region_info_region", instance.TargetRegionInfo.Region)
-	d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
-	d.Set("project_id", instance.ProjectId)
-	d.Set("security_groups", flattenStringList(instance.SecureGroups))
-	d.Set("tags", flattenClbTagsMapping(instance.Tags))
+	_ = d.Set("network_type", instance.LoadBalancerType)
+	_ = d.Set("clb_name", instance.LoadBalancerName)
+	_ = d.Set("clb_vips", flattenStringList(instance.LoadBalancerVips))
+	_ = d.Set("subnet_id", instance.SubnetId)
+	_ = d.Set("vpc_id", instance.VpcId)
+	_ = d.Set("target_region_info_region", instance.TargetRegionInfo.Region)
+	_ = d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
+	_ = d.Set("project_id", instance.ProjectId)
+	_ = d.Set("security_groups", flattenStringList(instance.SecureGroups))
+	_ = d.Set("tags", flattenClbTagsMapping(instance.Tags))
 	return nil
 }
 

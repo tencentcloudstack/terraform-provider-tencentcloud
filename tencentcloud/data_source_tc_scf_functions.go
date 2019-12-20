@@ -28,7 +28,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 )
 
@@ -382,7 +382,7 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 		functions = append(functions, m)
 	}
 
-	d.Set("functions", functions)
+	_ = d.Set("functions", functions)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

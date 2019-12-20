@@ -15,8 +15,8 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudAsAttachment() *schema.Resource {
@@ -90,7 +90,7 @@ func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface
 		d.SetId("")
 		return nil
 	}
-	d.Set("instance_ids", instanceIds)
+	_ = d.Set("instance_ids", instanceIds)
 	return nil
 }
 

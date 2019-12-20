@@ -27,8 +27,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudCcnBandwidthLimit() *schema.Resource {
@@ -160,7 +160,7 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 		if e != nil {
 			return retryError(e)
 		}
-		d.Set("bandwidth_limit", bandwidth)
+		_ = d.Set("bandwidth_limit", bandwidth)
 		return nil
 	})
 	if err != nil {

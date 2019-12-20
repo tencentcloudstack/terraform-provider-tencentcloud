@@ -32,8 +32,8 @@ import (
 
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
@@ -236,15 +236,15 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	d.Set("eip_id", association.EipId)
+	_ = d.Set("eip_id", association.EipId)
 	// associate with instance
 	if len(association.InstanceId) > 0 {
-		d.Set("instance_id", association.InstanceId)
+		_ = d.Set("instance_id", association.InstanceId)
 		return nil
 	}
 
-	d.Set("network_interface_id", association.NetworkInterfaceId)
-	d.Set("private_ip", association.PrivateIp)
+	_ = d.Set("network_interface_id", association.NetworkInterfaceId)
+	_ = d.Set("private_ip", association.PrivateIp)
 	return nil
 }
 

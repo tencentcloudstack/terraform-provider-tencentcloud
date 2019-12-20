@@ -31,7 +31,7 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudGaapSecurityPolicy() *schema.Resource {
@@ -114,9 +114,9 @@ func resourceTencentCloudGaapSecurityPolicyRead(d *schema.ResourceData, m interf
 		return nil
 	}
 
-	d.Set("proxy_id", proxyId)
-	d.Set("action", action)
-	d.Set("enable", status == GAAP_SECURITY_POLICY_BOUND)
+	_ = d.Set("proxy_id", proxyId)
+	_ = d.Set("action", action)
+	_ = d.Set("enable", status == GAAP_SECURITY_POLICY_BOUND)
 
 	return nil
 }

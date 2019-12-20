@@ -15,7 +15,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
@@ -291,7 +291,7 @@ func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error
 		enis = append(enis, m)
 	}
 
-	d.Set("enis", enis)
+	_ = d.Set("enis", enis)
 	d.SetId(dataResourceIdsHash(eniIds))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

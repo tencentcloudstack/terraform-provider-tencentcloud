@@ -27,8 +27,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudCcn() *schema.Resource {
@@ -125,12 +125,12 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 			return nil
 		}
 
-		d.Set("name", info.name)
-		d.Set("description", info.description)
-		d.Set("qos", strings.ToUpper(info.qos))
-		d.Set("state", strings.ToUpper(info.state))
-		d.Set("instance_count", info.instanceCount)
-		d.Set("create_time", info.createTime)
+		_ = d.Set("name", info.name)
+		_ = d.Set("description", info.description)
+		_ = d.Set("qos", strings.ToUpper(info.qos))
+		_ = d.Set("state", strings.ToUpper(info.state))
+		_ = d.Set("instance_count", info.instanceCount)
+		_ = d.Set("create_time", info.createTime)
 
 		return nil
 	})

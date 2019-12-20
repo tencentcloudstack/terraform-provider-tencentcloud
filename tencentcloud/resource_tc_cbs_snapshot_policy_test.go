@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 func TestAccTencentCloudCbsSnapshotPolicy(t *testing.T) {
@@ -101,18 +101,6 @@ func testAccCheckSnapshotPolicyExists(n string) resource.TestCheckFunc {
 }
 
 const testAccCbsSnapshotPolicy = `
-resource "tencentcloud_cbs_storage" "storage" {
-  availability_zone = "ap-guangzhou-3"
-  storage_size      = 50
-  storage_type      = "CLOUD_PREMIUM"
-  storage_name      = "tf-test-storage"
-}
-
-resource "tencentcloud_cbs_snapshot" "snapshot" {
-  storage_id    = "${tencentcloud_cbs_storage.storage.id}"
-  snapshot_name = "tf-test-snapshot"
-}
-
 resource "tencentcloud_cbs_snapshot_policy" "snapshot_policy" {
   snapshot_policy_name = "tf-test-snapshot-policy"
   repeat_weekdays      = [0, 3]
@@ -122,18 +110,6 @@ resource "tencentcloud_cbs_snapshot_policy" "snapshot_policy" {
 `
 
 const testAccCbsSnapshotPolicy_update = `
-resource "tencentcloud_cbs_storage" "storage" {
-  availability_zone = "ap-guangzhou-3"
-  storage_size      = 50
-  storage_type      = "CLOUD_PREMIUM"
-  storage_name      = "tf-test-storage"
-}
-
-resource "tencentcloud_cbs_snapshot" "snapshot" {
-  storage_id    = "${tencentcloud_cbs_storage.storage.id}"
-  snapshot_name = "tf-test-snapshot"
-}
-
 resource "tencentcloud_cbs_snapshot_policy" "snapshot_policy" {
   snapshot_policy_name = "tf-snapshot-policy-update"
   repeat_weekdays      = [1, 4]

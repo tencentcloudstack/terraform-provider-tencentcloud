@@ -66,9 +66,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/hashcode"
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/likexian/gokit/assert"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -523,10 +523,10 @@ func resourceTencentCloudMysqlPrivilegeRead(d *schema.ResourceData, meta interfa
 		m["privileges"] = privileges
 		columns = append(columns, m)
 	}
-	d.Set("global", globals)
-	d.Set("database", databases)
-	d.Set("table", tables)
-	d.Set("column", columns)
+	_ = d.Set("global", globals)
+	_ = d.Set("database", databases)
+	_ = d.Set("table", tables)
+	_ = d.Set("column", columns)
 
 	return nil
 }

@@ -38,8 +38,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudCcnAttachment() *schema.Resource {
@@ -182,9 +182,9 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 			d.SetId("")
 			return nil
 		}
-		d.Set("state", strings.ToUpper(info.state))
-		d.Set("attached_time", info.attachedTime)
-		d.Set("cidr_block", info.cidrBlock)
+		_ = d.Set("state", strings.ToUpper(info.state))
+		_ = d.Set("attached_time", info.attachedTime)
+		_ = d.Set("cidr_block", info.cidrBlock)
 		return nil
 	})
 	if err != nil {

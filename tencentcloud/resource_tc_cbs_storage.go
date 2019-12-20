@@ -34,8 +34,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
 
@@ -210,15 +210,15 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 		return nil
 	}
 
-	d.Set("storage_type", storage.DiskType)
-	d.Set("storage_size", storage.DiskSize)
-	d.Set("availability_zone", storage.Placement.Zone)
-	d.Set("storage_name", storage.DiskName)
-	d.Set("project_id", storage.Placement.ProjectId)
-	d.Set("encrypt", storage.Encrypt)
-	d.Set("tags", flattenCbsTagsMapping(storage.Tags))
-	d.Set("storage_status", storage.DiskState)
-	d.Set("attached", storage.Attached)
+	_ = d.Set("storage_type", storage.DiskType)
+	_ = d.Set("storage_size", storage.DiskSize)
+	_ = d.Set("availability_zone", storage.Placement.Zone)
+	_ = d.Set("storage_name", storage.DiskName)
+	_ = d.Set("project_id", storage.Placement.ProjectId)
+	_ = d.Set("encrypt", storage.Encrypt)
+	_ = d.Set("tags", flattenCbsTagsMapping(storage.Tags))
+	_ = d.Set("storage_status", storage.DiskState)
+	_ = d.Set("attached", storage.Attached)
 
 	return nil
 }

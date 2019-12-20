@@ -33,8 +33,8 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"strings"
 )
 
@@ -121,9 +121,9 @@ func resourceTencentCloudDcGatewayCcnRouteRead(d *schema.ResourceData, meta inte
 			return nil
 		}
 
-		d.Set("dcg_id", info.dcgId)
-		d.Set("cidr_block", info.cidrBlock)
-		d.Set("as_path", info.asPaths)
+		_ = d.Set("dcg_id", info.dcgId)
+		_ = d.Set("cidr_block", info.cidrBlock)
+		_ = d.Set("as_path", info.asPaths)
 		return nil
 	})
 	if err != nil {

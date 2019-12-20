@@ -43,9 +43,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/hashcode"
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
@@ -628,22 +628,22 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		d.SetId("")
 		return
 	}
-	d.Set("instance_name", *mysqlInfo.InstanceName)
-	d.Set("pay_type", int(*mysqlInfo.PayType))
+	_ = d.Set("instance_name", *mysqlInfo.InstanceName)
+	_ = d.Set("pay_type", int(*mysqlInfo.PayType))
 
 	if int(*mysqlInfo.PayType) == MysqlPayByMonth {
 		tempInt, _ := d.Get("period").(int)
 		if tempInt == 0 {
-			d.Set("period", 1)
+			_ = d.Set("period", 1)
 		}
 	}
 
 	if *mysqlInfo.AutoRenew == MYSQL_RENEW_CLOSE {
 		*mysqlInfo.AutoRenew = MYSQL_RENEW_NOUSE
 	}
-	d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
-	d.Set("mem_size", *mysqlInfo.Memory)
-	d.Set("volume_size", *mysqlInfo.Volume)
+	_ = d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
+	_ = d.Set("mem_size", *mysqlInfo.Memory)
+	_ = d.Set("volume_size", *mysqlInfo.Volume)
 	if d.Get("vpc_id").(string) != "" {
 		errRet = d.Set("vpc_id", *mysqlInfo.UniqVpcId)
 	}
@@ -664,14 +664,14 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		errRet = err
 		return
 	}
-	d.Set("security_groups", securityGroups)
+	_ = d.Set("security_groups", securityGroups)
 	if master {
 		isGTIDOpen, err := mysqlService.CheckDBGTIDOpen(ctx, d.Id())
 		if err != nil {
 			errRet = err
 			return
 		}
-		d.Set("gtid", int(isGTIDOpen))
+		_ = d.Set("gtid", int(isGTIDOpen))
 	}
 	tags, err := mysqlService.DescribeTagsOfInstanceId(ctx, d.Id())
 	if err != nil {
@@ -683,16 +683,16 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		return
 	}
 
-	d.Set("intranet_ip", *mysqlInfo.Vip)
-	d.Set("intranet_port", int(*mysqlInfo.Vport))
+	_ = d.Set("intranet_ip", *mysqlInfo.Vip)
+	_ = d.Set("intranet_port", int(*mysqlInfo.Vport))
 
 	if *mysqlInfo.CdbError != 0 {
-		d.Set("locked", 1)
+		_ = d.Set("locked", 1)
 	} else {
-		d.Set("locked", 0)
+		_ = d.Set("locked", 0)
 	}
-	d.Set("status", *mysqlInfo.Status)
-	d.Set("task_status", *mysqlInfo.TaskStatus)
+	_ = d.Set("status", *mysqlInfo.Status)
+	_ = d.Set("task_status", *mysqlInfo.TaskStatus)
 	return
 }
 
@@ -720,16 +720,16 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 			onlineHas = false
 			return nil
 		}
-		d.Set("project_id", int(*mysqlInfo.ProjectId))
-		d.Set("engine_version", *mysqlInfo.EngineVersion)
+		_ = d.Set("project_id", int(*mysqlInfo.ProjectId))
+		_ = d.Set("engine_version", *mysqlInfo.EngineVersion)
 		if *mysqlInfo.WanStatus == 1 {
-			d.Set("internet_service", 1)
-			d.Set("internet_host", *mysqlInfo.WanDomain)
-			d.Set("internet_port", int(*mysqlInfo.WanPort))
+			_ = d.Set("internet_service", 1)
+			_ = d.Set("internet_host", *mysqlInfo.WanDomain)
+			_ = d.Set("internet_port", int(*mysqlInfo.WanPort))
 		} else {
-			d.Set("internet_service", 0)
-			d.Set("internet_host", "")
-			d.Set("internet_port", 0)
+			_ = d.Set("internet_service", 0)
+			_ = d.Set("internet_host", "")
+			_ = d.Set("internet_port", 0)
 		}
 		return nil
 	})
@@ -762,7 +762,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 				log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, e.Error())
 				return resource.NonRetryableError(e)
 			}
-			d.Set("availability_zone", *mysqlInfo.Zone)
+			_ = d.Set("availability_zone", *mysqlInfo.Zone)
 			return nil
 		})
 		if err != nil {
@@ -782,18 +782,18 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 			}
 			return retryError(e)
 		}
-		d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
-		d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
+		_ = d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
+		_ = d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
 		if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
 			//if you set ,i set
 			if _, ok := d.GetOk("first_slave_zone"); ok {
-				d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
+				_ = d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
 			}
 		}
 		if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
 			//if you set ,i set
 			if _, ok := d.GetOk("second_slave_zone"); ok {
-				d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
+				_ = d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
 			}
 		}
 		return nil

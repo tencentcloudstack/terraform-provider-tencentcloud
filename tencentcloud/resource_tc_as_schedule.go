@@ -23,8 +23,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
@@ -151,18 +151,18 @@ func resourceTencentCloudAsScheduleRead(d *schema.ResourceData, meta interface{}
 			return retryError(e)
 		}
 
-		d.Set("scaling_group_id", *scheduledAction.AutoScalingGroupId)
-		d.Set("schedule_action_name", *scheduledAction.ScheduledActionName)
-		d.Set("max_size", *scheduledAction.MaxSize)
-		d.Set("min_size", *scheduledAction.MinSize)
-		d.Set("desired_capacity", *scheduledAction.DesiredCapacity)
-		d.Set("start_time", *scheduledAction.StartTime)
+		_ = d.Set("scaling_group_id", *scheduledAction.AutoScalingGroupId)
+		_ = d.Set("schedule_action_name", *scheduledAction.ScheduledActionName)
+		_ = d.Set("max_size", *scheduledAction.MaxSize)
+		_ = d.Set("min_size", *scheduledAction.MinSize)
+		_ = d.Set("desired_capacity", *scheduledAction.DesiredCapacity)
+		_ = d.Set("start_time", *scheduledAction.StartTime)
 
 		if scheduledAction.EndTime != nil {
-			d.Set("end_time", *scheduledAction.EndTime)
+			_ = d.Set("end_time", *scheduledAction.EndTime)
 		}
 		if scheduledAction.Recurrence != nil {
-			d.Set("recurrence", *scheduledAction.Recurrence)
+			_ = d.Set("recurrence", *scheduledAction.Recurrence)
 		}
 		return nil
 	})

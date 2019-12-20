@@ -7,7 +7,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/hashicorp/terraform/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"

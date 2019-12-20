@@ -26,7 +26,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 )
 
@@ -257,7 +257,7 @@ func dataSourceTencentCloudScfLogsRead(d *schema.ResourceData, m interface{}) er
 		})
 	}
 
-	d.Set("logs", logs)
+	_ = d.Set("logs", logs)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

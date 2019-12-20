@@ -51,8 +51,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
@@ -504,51 +504,51 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	}
 
 	connection := response.Response.VpnConnectionSet[0]
-	d.Set("name", *connection.VpnConnectionName)
-	d.Set("vpc_id", *connection.VpcId)
-	d.Set("create_time", *connection.CreatedTime)
-	d.Set("vpn_gateway_id", *connection.VpnGatewayId)
-	d.Set("customer_gateway_id", *connection.CustomerGatewayId)
-	d.Set("pre_share_key", *connection.PreShareKey)
+	_ = d.Set("name", *connection.VpnConnectionName)
+	_ = d.Set("vpc_id", *connection.VpcId)
+	_ = d.Set("create_time", *connection.CreatedTime)
+	_ = d.Set("vpn_gateway_id", *connection.VpnGatewayId)
+	_ = d.Set("customer_gateway_id", *connection.CustomerGatewayId)
+	_ = d.Set("pre_share_key", *connection.PreShareKey)
 	//set up SPD
-	d.Set("security_group_policy", flattenVpnSPDList(connection.SecurityPolicyDatabaseSet))
+	_ = d.Set("security_group_policy", flattenVpnSPDList(connection.SecurityPolicyDatabaseSet))
 
 	//set up IKE
-	d.Set("ike_proto_encry_algorithm", *connection.IKEOptionsSpecification.PropoEncryAlgorithm)
-	d.Set("ike_proto_authen_algorithm", *connection.IKEOptionsSpecification.PropoAuthenAlgorithm)
-	d.Set("ike_exchange_mode", *connection.IKEOptionsSpecification.ExchangeMode)
-	d.Set("ike_local_identity", *connection.IKEOptionsSpecification.LocalIdentity)
-	d.Set("ike_remote_idetity", *connection.IKEOptionsSpecification.RemoteIdentity)
+	_ = d.Set("ike_proto_encry_algorithm", *connection.IKEOptionsSpecification.PropoEncryAlgorithm)
+	_ = d.Set("ike_proto_authen_algorithm", *connection.IKEOptionsSpecification.PropoAuthenAlgorithm)
+	_ = d.Set("ike_exchange_mode", *connection.IKEOptionsSpecification.ExchangeMode)
+	_ = d.Set("ike_local_identity", *connection.IKEOptionsSpecification.LocalIdentity)
+	_ = d.Set("ike_remote_idetity", *connection.IKEOptionsSpecification.RemoteIdentity)
 	//optional
 	if connection.IKEOptionsSpecification.LocalAddress != nil {
-		d.Set("ike_local_address", *connection.IKEOptionsSpecification.LocalAddress)
+		_ = d.Set("ike_local_address", *connection.IKEOptionsSpecification.LocalAddress)
 	}
 	if connection.IKEOptionsSpecification.RemoteAddress != nil {
-		d.Set("ike_remote_address", *connection.IKEOptionsSpecification.RemoteAddress)
+		_ = d.Set("ike_remote_address", *connection.IKEOptionsSpecification.RemoteAddress)
 	}
 	if connection.IKEOptionsSpecification.LocalFqdnName != nil {
-		d.Set("ike_local_fqdn_name", *connection.IKEOptionsSpecification.LocalFqdnName)
+		_ = d.Set("ike_local_fqdn_name", *connection.IKEOptionsSpecification.LocalFqdnName)
 	}
 	if connection.IKEOptionsSpecification.RemoteFqdnName != nil {
-		d.Set("ike_remote_fqdn_name", *connection.IKEOptionsSpecification.RemoteFqdnName)
+		_ = d.Set("ike_remote_fqdn_name", *connection.IKEOptionsSpecification.RemoteFqdnName)
 	}
-	d.Set("ike_dh_group_name", *connection.IKEOptionsSpecification.DhGroupName)
-	d.Set("ike_sa_lifetime_seconds", int(*connection.IKEOptionsSpecification.IKESaLifetimeSeconds))
-	d.Set("ike_version", *connection.IKEOptionsSpecification.IKEVersion)
+	_ = d.Set("ike_dh_group_name", *connection.IKEOptionsSpecification.DhGroupName)
+	_ = d.Set("ike_sa_lifetime_seconds", int(*connection.IKEOptionsSpecification.IKESaLifetimeSeconds))
+	_ = d.Set("ike_version", *connection.IKEOptionsSpecification.IKEVersion)
 
 	//set up ipsec
-	d.Set("ipsec_encrypt_algorithm", *connection.IPSECOptionsSpecification.EncryptAlgorithm)
-	d.Set("ipsec_integrity_algorithm", *connection.IPSECOptionsSpecification.IntegrityAlgorith)
-	d.Set("ipsec_sa_lifetime_seconds", int(*connection.IPSECOptionsSpecification.IPSECSaLifetimeSeconds))
-	d.Set("ipsec_pfs_dh_group", *connection.IPSECOptionsSpecification.PfsDhGroup)
-	d.Set("ipsec_sa_lifetime_traffic", int(*connection.IPSECOptionsSpecification.IPSECSaLifetimeTraffic))
+	_ = d.Set("ipsec_encrypt_algorithm", *connection.IPSECOptionsSpecification.EncryptAlgorithm)
+	_ = d.Set("ipsec_integrity_algorithm", *connection.IPSECOptionsSpecification.IntegrityAlgorith)
+	_ = d.Set("ipsec_sa_lifetime_seconds", int(*connection.IPSECOptionsSpecification.IPSECSaLifetimeSeconds))
+	_ = d.Set("ipsec_pfs_dh_group", *connection.IPSECOptionsSpecification.PfsDhGroup)
+	_ = d.Set("ipsec_sa_lifetime_traffic", int(*connection.IPSECOptionsSpecification.IPSECSaLifetimeTraffic))
 
 	//to be add
-	d.Set("state", *connection.State)
-	d.Set("net_status", *connection.NetStatus)
-	d.Set("vpn_proto", *connection.VpnProto)
-	d.Set("encrypt_proto", *connection.EncryptProto)
-	d.Set("route_type", *connection.RouteType)
+	_ = d.Set("state", *connection.State)
+	_ = d.Set("net_status", *connection.NetStatus)
+	_ = d.Set("vpn_proto", *connection.VpnProto)
+	_ = d.Set("encrypt_proto", *connection.EncryptProto)
+	_ = d.Set("route_type", *connection.RouteType)
 
 	//tags
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -557,7 +557,7 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
-	d.Set("tags", tags)
+	_ = d.Set("tags", tags)
 
 	return nil
 }

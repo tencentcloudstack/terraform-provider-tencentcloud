@@ -42,8 +42,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -504,15 +504,15 @@ func resourceTencentCloudContainerClusterRead(d *schema.ResourceData, meta inter
 		return nil
 	}
 
-	d.Set("cluster_name", info.ClusterName)
-	d.Set("cluster_desc", info.ClusterDescription)
-	d.Set("kubernetes_version", info.ClusterVersion)
-	d.Set("vpc_id", info.VpcId)
-	d.Set("cluster_cidr", info.ClusterCidr)
-	d.Set("nodes_num", info.ClusterNodeNum)
-	d.Set("nodes_status", info.ClusterStatus)
-	d.Set("total_cpu", 0)
-	d.Set("total_mem", 0)
+	_ = d.Set("cluster_name", info.ClusterName)
+	_ = d.Set("cluster_desc", info.ClusterDescription)
+	_ = d.Set("kubernetes_version", info.ClusterVersion)
+	_ = d.Set("vpc_id", info.VpcId)
+	_ = d.Set("cluster_cidr", info.ClusterCidr)
+	_ = d.Set("nodes_num", info.ClusterNodeNum)
+	_ = d.Set("nodes_status", info.ClusterStatus)
+	_ = d.Set("total_cpu", 0)
+	_ = d.Set("total_mem", 0)
 
 	var workers []InstanceInfo
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -564,8 +564,8 @@ func resourceTencentCloudContainerClusterRead(d *schema.ResourceData, meta inter
 			total_mem += *v.Memory
 		}
 
-		d.Set("total_cpu", total_cpu)
-		d.Set("total_mem", total_mem)
+		_ = d.Set("total_cpu", total_cpu)
+		_ = d.Set("total_mem", total_mem)
 	}
 
 	return nil

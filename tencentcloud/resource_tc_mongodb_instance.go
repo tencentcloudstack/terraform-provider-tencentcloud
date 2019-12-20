@@ -35,9 +35,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/hashcode"
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 )
 
@@ -306,27 +306,27 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("mongodb %v are nil", nilFields)
 	}
 
-	d.Set("instance_name", instance.InstanceName)
-	d.Set("memory", *instance.Memory/1024)
-	d.Set("volume", *instance.Volume/1024)
-	d.Set("engine_version", instance.MongoVersion)
+	_ = d.Set("instance_name", instance.InstanceName)
+	_ = d.Set("memory", *instance.Memory/1024)
+	_ = d.Set("volume", *instance.Volume/1024)
+	_ = d.Set("engine_version", instance.MongoVersion)
 
 	switch *instance.MachineType {
 	case "HIO10G":
-		d.Set("machine_type", MONGODB_MACHINE_TYPE_TGIO)
+		_ = d.Set("machine_type", MONGODB_MACHINE_TYPE_TGIO)
 
 	case "HIO":
-		d.Set("machine_type", MONGODB_MACHINE_TYPE_GIO)
+		_ = d.Set("machine_type", MONGODB_MACHINE_TYPE_GIO)
 	}
 
-	d.Set("available_zone", instance.Zone)
-	d.Set("vpc_id", instance.VpcId)
-	d.Set("subnet_id", instance.SubnetId)
-	d.Set("project_id", instance.ProjectId)
-	d.Set("status", instance.Status)
-	d.Set("vip", instance.Vip)
-	d.Set("vport", instance.Vport)
-	d.Set("create_time", instance.CreateTime)
+	_ = d.Set("available_zone", instance.Zone)
+	_ = d.Set("vpc_id", instance.VpcId)
+	_ = d.Set("subnet_id", instance.SubnetId)
+	_ = d.Set("project_id", instance.ProjectId)
+	_ = d.Set("status", instance.Status)
+	_ = d.Set("vip", instance.Vip)
+	_ = d.Set("vport", instance.Vport)
+	_ = d.Set("create_time", instance.CreateTime)
 
 	tags := make(map[string]string, len(instance.Tags))
 	for _, tag := range instance.Tags {
@@ -339,7 +339,7 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 
 		tags[*tag.TagKey] = *tag.TagValue
 	}
-	d.Set("tags", tags)
+	_ = d.Set("tags", tags)
 
 	return nil
 }

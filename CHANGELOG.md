@@ -1,7 +1,25 @@
-## 1.27.1 (Unreleased)
+## 1.28.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_cbs_snapshot_policys`
+* **New Resource**: `tencentcloud_cbs_snapshot_policy_attachment`
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_instance` support modifying instance type([#251](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/251)).
+* Resource: `tencentcloud_gaap_http_domain` add new optional argument `realserver_certificate_ids`.
+* Data Source: `tencentcloud_gaap_http_domains` add new output argument `realserver_certificate_ids`.
+
+DEPRECATED:
+
+* Resource: `tencentcloud_gaap_http_domain`: optional argument `realserver_certificate_id` is no longer supported.
+* Data Source: `tencentcloud_gaap_http_domains`: output argument `realserver_certificate_id` is no longer supported.
+
 ## 1.27.0 (December 17, 2019)
 
 FEATURES:
+
 * **New Data Source**: `tencentcloud_tcaplus_applications`
 * **New Data Source**: `tencentcloud_tcaplus_zones`
 * **New Data Source**: `tencentcloud_tcaplus_tables`
