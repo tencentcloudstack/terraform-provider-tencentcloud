@@ -122,7 +122,6 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"instance_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateInstanceType,
 				Description:  "The type of instance to start.",
@@ -248,6 +247,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      50,
+				ForceNew:     true,
 				ValidateFunc: validateIntegerInRange(50, 1000),
 				Description:  "Size of the system disk. Value range: [50, 1000], and unit is GB. Default is 50GB.",
 			},
@@ -262,18 +262,21 @@ func resourceTencentCloudInstance() *schema.Resource {
 				MaxItems:    10,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 				Description: "Settings for data disk.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"data_disk_type": {
 							Type:         schema.TypeString,
 							Required:     true,
+							ForceNew:     true,
 							ValidateFunc: validateAllowedStringValue(CVM_DISK_TYPE),
 							Description:  "Type of the data disk. Valid values are `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.",
 						},
 						"data_disk_size": {
 							Type:         schema.TypeInt,
 							Required:     true,
+							ForceNew:     true,
 							ValidateFunc: validateIntegerInRange(10, 16000),
 							Description:  "Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].",
 						},
@@ -287,6 +290,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Default:     true,
+							ForceNew:    true,
 							Description: "Decides whether the disk is deleted with instance(only applied to cloud disk), default to true.",
 						},
 					},
@@ -702,11 +706,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	unsupportedUpdateFields := []string{
 		"instance_charge_type_prepaid_period",
 		"instance_charge_type_prepaid_renew_flag",
-		"internet_charge_type",
-		"internet_max_bandwidth_out",
-		"allocate_public_ip",
-		"system_disk_size",
-		"data_disks",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
@@ -744,62 +743,9 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		d.SetPartial("project_id")
 	}
 
-	if d.HasChange("instance_type") {
-		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string))
-		if err != nil {
-			return err
-		}
-		d.SetPartial("instance_type")
-
-		// wait for status
-		err = resource.Retry(5*time.Minute, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, "InternalError")
-			}
-			if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
-				return nil
-			}
-			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-		})
-		if err != nil {
-			return err
-		}
-	}
-
-	if d.HasChange("password") {
-		err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string))
-		if err != nil {
-			return err
-		}
-		d.SetPartial("password")
-		// just wait, 95% change password will be reset
-		// waiting for status changed is not work
-		// a little stupid, but it's ok for now
-		time.Sleep(1 * time.Minute)
-	}
-
-	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("private_ip") {
-		vpcId := d.Get("vpc_id").(string)
-		subnetId := d.Get("subnet_id").(string)
-		privateIp := d.Get("private_ip").(string)
-		err := cvmService.ModifyVpc(ctx, instanceId, vpcId, subnetId, privateIp)
-		if err != nil {
-			return err
-		}
-		if d.HasChange("vpc_id") {
-			d.SetPartial("vpc_id")
-		}
-		if d.HasChange("subnet_id") {
-			d.SetPartial("subnet_id")
-		}
-		if d.HasChange("private_ip") {
-			d.SetPartial("private_ip")
-		}
-	}
-
+	var flag bool
 	if d.HasChange("running_flag") {
-		flag := d.Get("running_flag").(bool)
+		flag = d.Get("running_flag").(bool)
 		if flag {
 			err = cvmService.StartInstance(ctx, instanceId)
 			if err != nil {
@@ -838,6 +784,63 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 		}
 		d.SetPartial("running_flag")
+	}
+
+	if d.HasChange("instance_type") {
+		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string))
+		if err != nil {
+			return err
+		}
+		d.SetPartial("instance_type")
+
+		// wait for status
+		err = resource.Retry(4*time.Minute, func() *resource.RetryError {
+			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, "InternalError")
+			}
+			// Modifying instance type need restart the instance
+			// so status of CVM must be running when running flag is true
+			if instance != nil && (*instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING ||
+				(flag && *instance.InstanceState != CVM_STATUS_RUNNING)) {
+				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("password") {
+		err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string))
+		if err != nil {
+			return err
+		}
+		d.SetPartial("password")
+		// just wait, 95% change password will be reset
+		// waiting for status changed is not work
+		// a little stupid, but it's ok for now
+		time.Sleep(1 * time.Minute)
+	}
+
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("private_ip") {
+		vpcId := d.Get("vpc_id").(string)
+		subnetId := d.Get("subnet_id").(string)
+		privateIp := d.Get("private_ip").(string)
+		err := cvmService.ModifyVpc(ctx, instanceId, vpcId, subnetId, privateIp)
+		if err != nil {
+			return err
+		}
+		if d.HasChange("vpc_id") {
+			d.SetPartial("vpc_id")
+		}
+		if d.HasChange("subnet_id") {
+			d.SetPartial("subnet_id")
+		}
+		if d.HasChange("private_ip") {
+			d.SetPartial("private_ip")
+		}
 	}
 
 	if d.HasChange("tags") {

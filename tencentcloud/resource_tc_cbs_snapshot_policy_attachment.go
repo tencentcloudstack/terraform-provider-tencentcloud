@@ -18,8 +18,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
 
@@ -104,8 +104,8 @@ func resourceTencentCloudCbsSnapshotPolicyAttachmentRead(d *schema.ResourceData,
 		d.SetId("")
 		return nil
 	}
-	d.Set("storage_id", storageId)
-	d.Set("snapshot_policy_id", policyId)
+	_ = d.Set("storage_id", storageId)
+	_ = d.Set("snapshot_policy_id", policyId)
 
 	return nil
 }

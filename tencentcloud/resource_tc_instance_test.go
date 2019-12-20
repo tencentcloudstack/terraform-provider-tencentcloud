@@ -75,6 +75,14 @@ func TestAccTencentCloudInstanceBasic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccTencentCloudInstanceModifyInstanceType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr(id, "instance_type", "S2.SMALL2"),
+				),
+			},
+			{
 				ResourceName:            id,
 				ImportState:             true,
 				ImportStateVerify:       true,
@@ -489,6 +497,29 @@ resource "tencentcloud_instance" "foo" {
   availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
   image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
   instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  vpc_id            = "${var.vpc_id}"
+  subnet_id         = "${var.subnet_id}"
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+}
+`
+
+const testAccTencentCloudInstanceModifyInstanceType = defaultInstanceVariable + `
+data "tencentcloud_instance_types" "new_type" {
+  filter {
+    name   = "instance-family"
+    values = ["S2"]
+  }
+
+  cpu_core_count = 1
+  memory_size    = 2
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "${var.instance_name}"
+  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
+  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
+  instance_type     = "${data.tencentcloud_instance_types.new_type.instance_types.0.instance_type}"
   vpc_id            = "${var.vpc_id}"
   subnet_id         = "${var.subnet_id}"
   system_disk_type  = "CLOUD_PREMIUM"
