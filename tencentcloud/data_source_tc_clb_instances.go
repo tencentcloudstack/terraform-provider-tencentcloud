@@ -190,10 +190,10 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 			"project_id":                *clb.ProjectId,
 			"vpc_id":                    *clb.VpcId,
 			"subnet_id":                 *clb.SubnetId,
-			"clb_vips":                  helper.FlattenStringList(clb.LoadBalancerVips),
+			"clb_vips":                  helper.StringsInterfaces(clb.LoadBalancerVips),
 			"target_region_info_region": *(clb.TargetRegionInfo.Region),
 			"target_region_info_vpc_id": *(clb.TargetRegionInfo.VpcId),
-			"security_groups":           helper.FlattenStringList(clb.SecureGroups),
+			"security_groups":           helper.StringsInterfaces(clb.SecureGroups),
 		}
 		if clb.Tags != nil {
 			tags := make(map[string]interface{}, len(clb.Tags))

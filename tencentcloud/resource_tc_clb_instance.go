@@ -328,13 +328,13 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 
 	_ = d.Set("network_type", instance.LoadBalancerType)
 	_ = d.Set("clb_name", instance.LoadBalancerName)
-	_ = d.Set("clb_vips", helper.FlattenStringList(instance.LoadBalancerVips))
+	_ = d.Set("clb_vips", helper.StringsInterfaces(instance.LoadBalancerVips))
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("vpc_id", instance.VpcId)
 	_ = d.Set("target_region_info_region", instance.TargetRegionInfo.Region)
 	_ = d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
 	_ = d.Set("project_id", instance.ProjectId)
-	_ = d.Set("security_groups", helper.FlattenStringList(instance.SecureGroups))
+	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecureGroups))
 	_ = d.Set("tags", flattenClbTagsMapping(instance.Tags))
 	return nil
 }

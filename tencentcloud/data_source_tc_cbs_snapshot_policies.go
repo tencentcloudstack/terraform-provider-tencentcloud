@@ -137,13 +137,13 @@ func dataSourceTencentCloudCbsSnapshotPoliciesRead(d *schema.ResourceData, meta 
 			"retention_days":       policy.RetentionDays,
 			"status":               policy.AutoSnapshotPolicyState,
 			"create_time":          policy.CreateTime,
-			"attached_storage_ids": helper.FlattenStringList(policy.DiskIdSet),
+			"attached_storage_ids": helper.StringsInterfaces(policy.DiskIdSet),
 		}
 		if len(policy.Policy) < 1 {
 			continue
 		}
-		mapping["repeat_weekdays"] = helper.FlattenIntList(policy.Policy[0].DayOfWeek)
-		mapping["repeat_hours"] = helper.FlattenIntList(policy.Policy[0].Hour)
+		mapping["repeat_weekdays"] = helper.Uint64sInterfaces(policy.Policy[0].DayOfWeek)
+		mapping["repeat_hours"] = helper.Uint64sInterfaces(policy.Policy[0].Hour)
 		policyList = append(policyList, mapping)
 		ids = append(ids, *policy.AutoSnapshotPolicyId)
 	}

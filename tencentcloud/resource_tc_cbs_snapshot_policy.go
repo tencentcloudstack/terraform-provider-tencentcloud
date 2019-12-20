@@ -156,8 +156,8 @@ func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta inte
 
 	_ = d.Set("snapshot_policy_name", policy.AutoSnapshotPolicyName)
 	if len(policy.Policy) > 0 {
-		_ = d.Set("repeat_weekdays", helper.FlattenIntList(policy.Policy[0].DayOfWeek))
-		_ = d.Set("repeat_hours", helper.FlattenIntList(policy.Policy[0].Hour))
+		_ = d.Set("repeat_weekdays", helper.Uint64sInterfaces(policy.Policy[0].DayOfWeek))
+		_ = d.Set("repeat_hours", helper.Uint64sInterfaces(policy.Policy[0].Hour))
 	}
 	_ = d.Set("retention_days", policy.RetentionDays)
 

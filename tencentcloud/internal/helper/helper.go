@@ -28,33 +28,6 @@ func DataResourceIdHash(id string) string {
 	return fmt.Sprintf("%d", hashcode.String(id))
 }
 
-// Takes the result of flatmap.Expand for an array of strings
-// and returns a []string
-func ExpandStringList(configured []interface{}) []string {
-	vs := make([]string, 0, len(configured))
-	for _, v := range configured {
-		vs = append(vs, v.(string))
-	}
-	return vs
-}
-
-// Flatten to an array of raw strings and returns a []interface{}
-func FlattenStringList(list []*string) []interface{} {
-	vs := make([]interface{}, 0, len(list))
-	for _, v := range list {
-		vs = append(vs, *v)
-	}
-	return vs
-}
-
-func FlattenIntList(list []*uint64) []interface{} {
-	vi := make([]interface{}, 0, len(list))
-	for _, v := range list {
-		vi = append(vi, int(*v))
-	}
-	return vi
-}
-
 func GetTags(d *schema.ResourceData, k string) map[string]string {
 	tags := make(map[string]string)
 	if raw, ok := d.GetOk(k); ok {

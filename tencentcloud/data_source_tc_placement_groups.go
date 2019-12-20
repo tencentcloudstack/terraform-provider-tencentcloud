@@ -131,7 +131,7 @@ func dataSourceTencentCloudPlacementGroupsRead(d *schema.ResourceData, meta inte
 			"type":               placement.Type,
 			"cvm_quota_total":    placement.CvmQuotaTotal,
 			"current_num":        placement.CurrentNum,
-			"instance_ids":       helper.FlattenStringList(placement.InstanceIds),
+			"instance_ids":       helper.StringsInterfaces(placement.InstanceIds),
 			"create_time":        placement.CreateTime,
 		}
 		placementGroupList = append(placementGroupList, mapping)

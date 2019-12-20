@@ -204,7 +204,7 @@ func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error
 	)
 
 	if raw, ok := d.GetOk("ids"); ok {
-		ids = helper.ExpandStringList(raw.(*schema.Set).List())
+		ids = helper.InterfacesStrings(raw.(*schema.Set).List())
 	}
 
 	if raw, ok := d.GetOk("vpc_id"); ok {

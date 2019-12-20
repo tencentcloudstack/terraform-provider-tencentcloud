@@ -160,7 +160,7 @@ func dataSourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta inte
 			"continuous_time":             *scalingPolicy.MetricAlarm.ContinuousTime,
 			"statistic":                   *scalingPolicy.MetricAlarm.Statistic,
 			"cooldown":                    *scalingPolicy.Cooldown,
-			"notification_user_group_ids": helper.FlattenStringList(scalingPolicy.NotificationUserGroupIds),
+			"notification_user_group_ids": helper.StringsInterfaces(scalingPolicy.NotificationUserGroupIds),
 		}
 		scalingPolicyList = append(scalingPolicyList, mapping)
 	}

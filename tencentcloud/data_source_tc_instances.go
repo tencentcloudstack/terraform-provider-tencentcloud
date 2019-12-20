@@ -291,7 +291,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 			"internet_max_bandwidth_out": instance.InternetAccessible.InternetMaxBandwidthOut,
 			"allocate_public_ip":         instance.InternetAccessible.PublicIpAssigned,
 			"status":                     instance.InstanceState,
-			"security_groups":            helper.FlattenStringList(instance.SecurityGroupIds),
+			"security_groups":            helper.StringsInterfaces(instance.SecurityGroupIds),
 			"tags":                       flattenCvmTagsMapping(instance.Tags),
 			"create_time":                instance.CreatedTime,
 			"expired_time":               instance.ExpiredTime,

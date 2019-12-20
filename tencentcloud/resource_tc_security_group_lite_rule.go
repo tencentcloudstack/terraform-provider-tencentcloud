@@ -92,7 +92,7 @@ func resourceTencentCloudSecurityGroupLiteRuleCreate(d *schema.ResourceData, m i
 	)
 
 	if raw, ok := d.GetOk("ingress"); ok {
-		ingressStrs := helper.ExpandStringList(raw.([]interface{}))
+		ingressStrs := helper.InterfacesStrings(raw.([]interface{}))
 		for _, ingressStr := range ingressStrs {
 			liteRule, err := parseRule(ingressStr)
 			if err != nil {
@@ -103,7 +103,7 @@ func resourceTencentCloudSecurityGroupLiteRuleCreate(d *schema.ResourceData, m i
 	}
 
 	if raw, ok := d.GetOk("egress"); ok {
-		egressStrs := helper.ExpandStringList(raw.([]interface{}))
+		egressStrs := helper.InterfacesStrings(raw.([]interface{}))
 		for _, egressStr := range egressStrs {
 			liteRule, err := parseRule(egressStr)
 			if err != nil {
@@ -173,7 +173,7 @@ func resourceTencentCloudSecurityGroupLiteRuleUpdate(d *schema.ResourceData, m i
 	)
 
 	if raw, ok := d.GetOk("ingress"); ok {
-		ingressStrs := helper.ExpandStringList(raw.([]interface{}))
+		ingressStrs := helper.InterfacesStrings(raw.([]interface{}))
 		for _, ingressStr := range ingressStrs {
 			liteRule, err := parseRule(ingressStr)
 			if err != nil {
@@ -184,7 +184,7 @@ func resourceTencentCloudSecurityGroupLiteRuleUpdate(d *schema.ResourceData, m i
 	}
 
 	if raw, ok := d.GetOk("egress"); ok {
-		egressStrs := helper.ExpandStringList(raw.([]interface{}))
+		egressStrs := helper.InterfacesStrings(raw.([]interface{}))
 		for _, egressStr := range egressStrs {
 			liteRule, err := parseRule(egressStr)
 			if err != nil {

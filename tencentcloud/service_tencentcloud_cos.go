@@ -189,12 +189,12 @@ func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRul
 	if len(response.CORSRules) > 0 {
 		for _, value := range response.CORSRules {
 			rule := make(map[string]interface{})
-			rule["allowed_origins"] = helper.FlattenStringList(value.AllowedOrigins)
-			rule["allowed_methods"] = helper.FlattenStringList(value.AllowedMethods)
-			rule["allowed_headers"] = helper.FlattenStringList(value.AllowedHeaders)
+			rule["allowed_origins"] = helper.StringsInterfaces(value.AllowedOrigins)
+			rule["allowed_methods"] = helper.StringsInterfaces(value.AllowedMethods)
+			rule["allowed_headers"] = helper.StringsInterfaces(value.AllowedHeaders)
 
 			if value.ExposeHeaders != nil {
-				rule["expose_headers"] = helper.FlattenStringList(value.ExposeHeaders)
+				rule["expose_headers"] = helper.StringsInterfaces(value.ExposeHeaders)
 			}
 			if value.MaxAgeSeconds != nil {
 				rule["max_age_seconds"] = int(*value.MaxAgeSeconds)

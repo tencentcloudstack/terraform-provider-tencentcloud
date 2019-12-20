@@ -194,7 +194,7 @@ func resourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta interf
 		_ = d.Set("statistic", *scalingPolicy.MetricAlarm.Statistic)
 		_ = d.Set("cooldown", *scalingPolicy.Cooldown)
 		if scalingPolicy.NotificationUserGroupIds != nil {
-			_ = d.Set("notification_user_group_ids", helper.FlattenStringList(scalingPolicy.NotificationUserGroupIds))
+			_ = d.Set("notification_user_group_ids", helper.StringsInterfaces(scalingPolicy.NotificationUserGroupIds))
 		}
 		return nil
 	})

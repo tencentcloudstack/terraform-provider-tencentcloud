@@ -114,8 +114,8 @@ func resourceTencentCloudAsNotificationRead(d *schema.ResourceData, meta interfa
 			return nil
 		}
 		_ = d.Set("scaling_group_id", *notification.AutoScalingGroupId)
-		_ = d.Set("notification_type", helper.FlattenStringList(notification.NotificationTypes))
-		_ = d.Set("notification_user_group_ids", helper.FlattenStringList(notification.NotificationUserGroupIds))
+		_ = d.Set("notification_type", helper.StringsInterfaces(notification.NotificationTypes))
+		_ = d.Set("notification_user_group_ids", helper.StringsInterfaces(notification.NotificationUserGroupIds))
 		return nil
 	})
 	if err != nil {

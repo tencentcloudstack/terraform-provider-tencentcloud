@@ -41,3 +41,30 @@ func PString(pointer *string) string {
 	}
 	return *pointer
 }
+
+// Takes the result of flatmap.Expand for an array of strings
+// and returns a []string
+func InterfacesStrings(configured []interface{}) []string {
+	vs := make([]string, 0, len(configured))
+	for _, v := range configured {
+		vs = append(vs, v.(string))
+	}
+	return vs
+}
+
+// Flatten to an array of raw strings and returns a []interface{}
+func StringsInterfaces(list []*string) []interface{} {
+	vs := make([]interface{}, 0, len(list))
+	for _, v := range list {
+		vs = append(vs, *v)
+	}
+	return vs
+}
+
+func Uint64sInterfaces(list []*uint64) []interface{} {
+	vi := make([]interface{}, 0, len(list))
+	for _, v := range list {
+		vi = append(vi, int(*v))
+	}
+	return vi
+}

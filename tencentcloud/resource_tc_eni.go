@@ -201,7 +201,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 	)
 
 	if raw, ok := d.GetOk("security_groups"); ok {
-		securityGroups = helper.ExpandStringList(raw.(*schema.Set).List())
+		securityGroups = helper.InterfacesStrings(raw.(*schema.Set).List())
 	}
 
 	if raw, ok := d.GetOk("ipv4s"); ok {
@@ -441,7 +441,7 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 	if d.HasChange("security_groups") {
 		updateAttrs = append(updateAttrs, "security_groups")
 	}
-	sgs = helper.ExpandStringList(d.Get("security_groups").(*schema.Set).List())
+	sgs = helper.InterfacesStrings(d.Get("security_groups").(*schema.Set).List())
 
 	if len(updateAttrs) > 0 {
 		if err := vpcService.ModifyEniAttribute(ctx, id, name, desc, sgs); err != nil {

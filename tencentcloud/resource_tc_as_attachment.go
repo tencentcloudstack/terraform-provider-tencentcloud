@@ -52,7 +52,7 @@ func resourceTencentCloudAsAttachmentCreate(d *schema.ResourceData, meta interfa
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	scalingGroupId := d.Get("scaling_group_id").(string)
-	instanceIds := helper.ExpandStringList(d.Get("instance_ids").(*schema.Set).List())
+	instanceIds := helper.InterfacesStrings(d.Get("instance_ids").(*schema.Set).List())
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -106,8 +106,8 @@ func resourceTencentCloudAsAttachmentUpdate(d *schema.ResourceData, meta interfa
 		old, new := d.GetChange("instance_ids")
 		oldInstances := old.(*schema.Set)
 		newInstances := new.(*schema.Set)
-		remove := helper.ExpandStringList(oldInstances.Difference(newInstances).List())
-		add := helper.ExpandStringList(newInstances.Difference(oldInstances).List())
+		remove := helper.InterfacesStrings(oldInstances.Difference(newInstances).List())
+		add := helper.InterfacesStrings(newInstances.Difference(oldInstances).List())
 
 		asService := AsService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
