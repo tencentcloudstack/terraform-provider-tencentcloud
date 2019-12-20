@@ -2,7 +2,7 @@
 
 FEATURES:
 
-* **New Data Source**: `tencentcloud_cbs_snapshot_policys`
+* **New Data Source**: `tencentcloud_cbs_snapshot_policies`
 * **New Resource**: `tencentcloud_cbs_snapshot_policy_attachment`
 
 ENHANCEMENTS:

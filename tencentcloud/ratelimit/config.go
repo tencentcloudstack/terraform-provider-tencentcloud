@@ -3,7 +3,7 @@ package ratelimit
 //default cgi limit
 
 const (
-	DefaultLimit int64 = 20
+	DefaultLimit int64 = 15
 )
 
 func init() {

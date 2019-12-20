@@ -1,10 +1,10 @@
 /*
-Use this data source to query detailed information of CBS snapshot policys.
+Use this data source to query detailed information of CBS snapshot policies.
 
 Example Usage
 
 ```hcl
-data "tencentcloud_cbs_snapshot_policys" "policys" {
+data "tencentcloud_cbs_snapshot_policies" "policies" {
   snapshot_policy_id = "snap-f3io7adt"
   snapshot_policy_name = "test"
 }
@@ -21,9 +21,9 @@ import (
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
 
-func dataSourceTencentCloudCbsSnapshotPolicys() *schema.Resource {
+func dataSourceTencentCloudCbsSnapshotPolicies() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudCbsSnapshotPolicysRead,
+		Read: dataSourceTencentCloudCbsSnapshotPoliciesRead,
 
 		Schema: map[string]*schema.Schema{
 			"snapshot_policy_id": {
@@ -97,8 +97,8 @@ func dataSourceTencentCloudCbsSnapshotPolicys() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudCbsSnapshotPolicysRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cbs_snapshot_policys.read")()
+func dataSourceTencentCloudCbsSnapshotPoliciesRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_cbs_snapshot_policies.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -113,23 +113,23 @@ func dataSourceTencentCloudCbsSnapshotPolicysRead(d *schema.ResourceData, meta i
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	var policys []*cbs.AutoSnapshotPolicy
+	var policies []*cbs.AutoSnapshotPolicy
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		policys, errRet = cbsService.DescribeSnapshotPolicy(ctx, policyId, policyName)
+		policies, errRet = cbsService.DescribeSnapshotPolicy(ctx, policyId, policyName)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read cbs snapshot policys failed, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s read cbs snapshot policies failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
-	ids := make([]string, 0, len(policys))
-	policyList := make([]map[string]interface{}, 0, len(policys))
-	for _, policy := range policys {
+	ids := make([]string, 0, len(policies))
+	policyList := make([]map[string]interface{}, 0, len(policies))
+	for _, policy := range policies {
 		mapping := map[string]interface{}{
 			"snapshot_policy_id":   policy.AutoSnapshotPolicyId,
 			"snapshot_policy_name": policy.AutoSnapshotPolicyName,
