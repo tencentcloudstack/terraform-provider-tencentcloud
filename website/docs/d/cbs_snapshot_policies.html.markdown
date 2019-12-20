@@ -1,19 +1,19 @@
 ---
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_cbs_snapshot_policys"
-sidebar_current: "docs-tencentcloud-datasource-cbs_snapshot_policys"
+page_title: "TencentCloud: tencentcloud_cbs_snapshot_policies"
+sidebar_current: "docs-tencentcloud-datasource-cbs_snapshot_policies"
 description: |-
-  Use this data source to query detailed information of CBS snapshot policys.
+  Use this data source to query detailed information of CBS snapshot policies.
 ---
 
-# tencentcloud_cbs_snapshot_policys
+# tencentcloud_cbs_snapshot_policies
 
-Use this data source to query detailed information of CBS snapshot policys.
+Use this data source to query detailed information of CBS snapshot policies.
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_cbs_snapshot_policys" "policys" {
+data "tencentcloud_cbs_snapshot_policies" "policies" {
   snapshot_policy_id   = "snap-f3io7adt"
   snapshot_policy_name = "test"
 }
