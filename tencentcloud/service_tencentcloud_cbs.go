@@ -321,7 +321,7 @@ func (me *CbsService) DescribeSnapshotPolicyById(ctx context.Context, policyId s
 	return
 }
 
-func (me *CbsService) DescribeSnapshotPolicy(ctx context.Context, policyId, policyName string) (policys []*cbs.AutoSnapshotPolicy, errRet error) {
+func (me *CbsService) DescribeSnapshotPolicy(ctx context.Context, policyId, policyName string) (policies []*cbs.AutoSnapshotPolicy, errRet error) {
 	logId := getLogId(contextNil)
 	request := cbs.NewDescribeAutoSnapshotPoliciesRequest()
 	request.Filters = make([]*cbs.Filter, 0)
@@ -347,7 +347,7 @@ func (me *CbsService) DescribeSnapshotPolicy(ctx context.Context, policyId, poli
 		errRet = err
 		return
 	}
-	policys = response.Response.AutoSnapshotPolicySet
+	policies = response.Response.AutoSnapshotPolicySet
 	return
 }
 

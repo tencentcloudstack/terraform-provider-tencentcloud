@@ -8,7 +8,7 @@ require (
 	github.com/client9/misspell v0.3.4
 	github.com/fatih/color v1.7.0
 	github.com/golangci/golangci-lint v1.21.0
-	github.com/hashicorp/hcl2 v0.0.0-20191002203319-fb75b3253c80
+	github.com/hashicorp/hcl/v2 v2.0.0
 	github.com/hashicorp/terraform-plugin-sdk v1.4.1
 	github.com/likexian/gokit v0.21.11
 	github.com/mattn/go-isatty v0.0.11 // indirect
