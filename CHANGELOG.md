@@ -7,6 +7,7 @@ FEATURES:
 
 ENHANCEMENTS:
 
+* Resource: `tencentcloud_instance` support modifying instance type([#251](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/251)).
 * Resource: `tencentcloud_gaap_http_domain` add new optional argument `realserver_certificate_ids`.
 * Data Source: `tencentcloud_gaap_http_domains` add new output argument `realserver_certificate_ids`.
 
