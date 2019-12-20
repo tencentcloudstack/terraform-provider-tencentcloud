@@ -2311,8 +2311,9 @@ func (me *GaapService) CreateHTTPSDomain(
 func (me *GaapService) SetAdvancedAuth(
 	ctx context.Context,
 	listenerId, domain string,
-	realserverAuth, basicAuth, gaapAuth *bool,
-	realserverCertificateId, realserverCertificateDomain, basicAuthId, gaapAuthId *string,
+	realserverAuth, basicAuth, gaapAuth bool,
+	realserverCertificateIds []string,
+	realserverCertificateDomain, basicAuthId, gaapAuthId *string,
 ) error {
 	logId := getLogId(ctx)
 
@@ -2320,32 +2321,32 @@ func (me *GaapService) SetAdvancedAuth(
 	request.ListenerId = &listenerId
 	request.Domain = &domain
 
-	if realserverAuth != nil {
-		if *realserverAuth {
-			request.RealServerAuth = int64ToPointer(1)
-		} else {
-			request.RealServerAuth = int64ToPointer(0)
-		}
+	if realserverAuth {
+		request.RealServerAuth = int64ToPointer(1)
+	} else {
+		request.RealServerAuth = int64ToPointer(0)
 	}
-	request.RealServerCertificateId = realserverCertificateId
+
 	request.RealServerCertificateDomain = realserverCertificateDomain
 
-	if basicAuth != nil {
-		if *basicAuth {
-			request.BasicAuth = int64ToPointer(1)
-		} else {
-			request.BasicAuth = int64ToPointer(0)
-		}
+	for _, id := range realserverCertificateIds {
+		request.PolyRealServerCertificateIds = append(request.PolyRealServerCertificateIds, stringToPointer(id))
 	}
+
+	if basicAuth {
+		request.BasicAuth = int64ToPointer(1)
+	} else {
+		request.BasicAuth = int64ToPointer(0)
+	}
+
 	request.BasicAuthConfId = basicAuthId
 
-	if gaapAuth != nil {
-		if *gaapAuth {
-			request.GaapAuth = int64ToPointer(1)
-		} else {
-			request.GaapAuth = int64ToPointer(0)
-		}
+	if gaapAuth {
+		request.GaapAuth = int64ToPointer(1)
+	} else {
+		request.GaapAuth = int64ToPointer(0)
 	}
+
 	request.GaapCertificateId = gaapAuthId
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
