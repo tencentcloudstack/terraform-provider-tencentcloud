@@ -41,7 +41,7 @@ import (
 	"log"
 	"regexp"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceTencentCloudGaapSecurityRules() *schema.Resource {
@@ -242,7 +242,7 @@ func dataSourceTencentCloudGaapSecurityRulesRead(d *schema.ResourceData, m inter
 		})
 	}
 
-	d.Set("rules", rules)
+	_ = d.Set("rules", rules)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

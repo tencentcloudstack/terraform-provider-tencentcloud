@@ -22,7 +22,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceTencentCloudGaapRealservers() *schema.Resource {
@@ -186,7 +186,7 @@ func dataSourceTencentCloudGaapRealserversRead(d *schema.ResourceData, m interfa
 		realserverList = append(realserverList, m)
 	}
 
-	d.Set("realservers", realserverList)
+	_ = d.Set("realservers", realserverList)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

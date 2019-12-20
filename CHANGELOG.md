@@ -1,5 +1,10 @@
 ## 1.28.0 (Unreleased)
 
+FEATURES:
+
+* **New Data Source**: `tencentcloud_cbs_snapshot_policys`
+* **New Resource**: `tencentcloud_cbs_snapshot_policy_attachment`
+
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_gaap_http_domain` add new optional argument `realserver_certificate_ids`.
@@ -13,6 +18,7 @@ DEPRECATED:
 ## 1.27.0 (December 17, 2019)
 
 FEATURES:
+
 * **New Data Source**: `tencentcloud_tcaplus_applications`
 * **New Data Source**: `tencentcloud_tcaplus_zones`
 * **New Data Source**: `tencentcloud_tcaplus_tables`

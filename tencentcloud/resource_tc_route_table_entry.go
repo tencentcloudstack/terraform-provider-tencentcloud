@@ -44,8 +44,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -173,11 +173,11 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 
 		for _, v := range info.entryInfos {
 			if fmt.Sprintf("%d", v.routeEntryId) == items[0] {
-				d.Set("description", v.description)
-				d.Set("route_table_id", v.routeEntryId)
-				d.Set("destination_cidr_block", v.destinationCidr)
-				d.Set("next_type", v.nextType)
-				d.Set("next_hub", v.nextBub)
+				_ = d.Set("description", v.description)
+				_ = d.Set("route_table_id", v.routeEntryId)
+				_ = d.Set("destination_cidr_block", v.destinationCidr)
+				_ = d.Set("next_type", v.nextType)
+				_ = d.Set("next_hub", v.nextBub)
 				return nil
 			}
 		}

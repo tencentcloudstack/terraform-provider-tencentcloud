@@ -35,8 +35,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
@@ -317,13 +317,13 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	}
 
 	instance := instances[0]
-	d.Set("clb_id", clbId)
-	d.Set("listener_id", listenerId)
-	d.Set("domain", instance.Domain)
-	d.Set("rule_id", instance.LocationId)
-	d.Set("url", instance.Url)
-	d.Set("scheduler", instance.Scheduler)
-	d.Set("session_expire_time", instance.SessionExpireTime)
+	_ = d.Set("clb_id", clbId)
+	_ = d.Set("listener_id", listenerId)
+	_ = d.Set("domain", instance.Domain)
+	_ = d.Set("rule_id", instance.LocationId)
+	_ = d.Set("url", instance.Url)
+	_ = d.Set("scheduler", instance.Scheduler)
+	_ = d.Set("session_expire_time", instance.SessionExpireTime)
 
 	//health check
 	if instance.HealthCheck != nil {
@@ -331,22 +331,22 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 		if *instance.HealthCheck.HealthSwitch == int64(1) {
 			health_check_switch = true
 		}
-		d.Set("health_check_switch", health_check_switch)
-		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
-		d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
-		d.Set("health_check_health_num", instance.HealthCheck.HealthNum)
-		d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
-		d.Set("health_check_http_method", stringToPointer(strings.ToUpper(*instance.HealthCheck.HttpCheckMethod)))
-		d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
-		d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
-		d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
+		_ = d.Set("health_check_switch", health_check_switch)
+		_ = d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
+		_ = d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
+		_ = d.Set("health_check_health_num", instance.HealthCheck.HealthNum)
+		_ = d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
+		_ = d.Set("health_check_http_method", stringToPointer(strings.ToUpper(*instance.HealthCheck.HttpCheckMethod)))
+		_ = d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
+		_ = d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
+		_ = d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
 	}
 
 	if instance.Certificate != nil {
-		d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
-		d.Set("certificate_id", instance.Certificate.CertId)
+		_ = d.Set("certificate_ssl_mode", instance.Certificate.SSLMode)
+		_ = d.Set("certificate_id", instance.Certificate.CertId)
 		if instance.Certificate.CertCaId != nil {
-			d.Set("certificate_ca_id", instance.Certificate.CertCaId)
+			_ = d.Set("certificate_ca_id", instance.Certificate.CertCaId)
 		}
 	}
 

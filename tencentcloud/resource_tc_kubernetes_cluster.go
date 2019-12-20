@@ -123,8 +123,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
@@ -938,20 +938,20 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		return nil
 	}
 
-	d.Set("cluster_name", info.ClusterName)
-	d.Set("cluster_desc", info.ClusterDescription)
-	d.Set("cluster_os", tkeToShowClusterOs(info.ClusterOs))
-	d.Set("cluster_deploy_type", info.DeployType)
-	d.Set("cluster_version", info.ClusterVersion)
-	d.Set("cluster_ipvs", info.Ipvs)
-	d.Set("vpc_id", info.VpcId)
-	d.Set("project_id", info.ProjectId)
-	d.Set("cluster_cidr", info.ClusterCidr)
-	d.Set("ignore_cluster_cidr_conflict", info.IgnoreClusterCidrConflict)
-	d.Set("cluster_max_pod_num", info.MaxNodePodNum)
-	d.Set("cluster_max_service_num", info.MaxClusterServiceNum)
-	d.Set("cluster_node_num", info.ClusterNodeNum)
-	d.Set("tags", info.Tags)
+	_ = d.Set("cluster_name", info.ClusterName)
+	_ = d.Set("cluster_desc", info.ClusterDescription)
+	_ = d.Set("cluster_os", tkeToShowClusterOs(info.ClusterOs))
+	_ = d.Set("cluster_deploy_type", info.DeployType)
+	_ = d.Set("cluster_version", info.ClusterVersion)
+	_ = d.Set("cluster_ipvs", info.Ipvs)
+	_ = d.Set("vpc_id", info.VpcId)
+	_ = d.Set("project_id", info.ProjectId)
+	_ = d.Set("cluster_cidr", info.ClusterCidr)
+	_ = d.Set("ignore_cluster_cidr_conflict", info.IgnoreClusterCidrConflict)
+	_ = d.Set("cluster_max_pod_num", info.MaxNodePodNum)
+	_ = d.Set("cluster_max_service_num", info.MaxClusterServiceNum)
+	_ = d.Set("cluster_node_num", info.ClusterNodeNum)
+	_ = d.Set("tags", info.Tags)
 
 	_, workers, err := service.DescribeClusterInstances(ctx, d.Id())
 	if err != nil {
@@ -983,7 +983,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		workerInstancesList = append(workerInstancesList, tempMap)
 	}
 
-	d.Set("worker_instances_list", workerInstancesList)
+	_ = d.Set("worker_instances_list", workerInstancesList)
 
 	securityRet, err := service.DescribeClusterSecurity(ctx, d.Id())
 
@@ -1017,13 +1017,13 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		policies = append(policies, *v)
 	}
 
-	d.Set("user_name", emptyStrFunc(securityRet.Response.UserName))
-	d.Set("password", emptyStrFunc(securityRet.Response.Password))
-	d.Set("certification_authority", emptyStrFunc(securityRet.Response.CertificationAuthority))
-	d.Set("cluster_external_endpoint", emptyStrFunc(securityRet.Response.ClusterExternalEndpoint))
-	d.Set("domain", emptyStrFunc(securityRet.Response.Domain))
-	d.Set("pgw_endpoint", emptyStrFunc(securityRet.Response.PgwEndpoint))
-	d.Set("security_policy", policies)
+	_ = d.Set("user_name", emptyStrFunc(securityRet.Response.UserName))
+	_ = d.Set("password", emptyStrFunc(securityRet.Response.Password))
+	_ = d.Set("certification_authority", emptyStrFunc(securityRet.Response.CertificationAuthority))
+	_ = d.Set("cluster_external_endpoint", emptyStrFunc(securityRet.Response.ClusterExternalEndpoint))
+	_ = d.Set("domain", emptyStrFunc(securityRet.Response.Domain))
+	_ = d.Set("pgw_endpoint", emptyStrFunc(securityRet.Response.PgwEndpoint))
+	_ = d.Set("security_policy", policies)
 
 	return nil
 }

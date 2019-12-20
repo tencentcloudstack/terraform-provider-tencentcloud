@@ -41,8 +41,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
@@ -298,7 +298,7 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	isAutoRewrite := false
 	if v, ok := d.GetOkExists("is_auto_rewrite"); ok {
 		isAutoRewrite = v.(bool)
-		d.Set("is_auto_rewrite", isAutoRewrite)
+		_ = d.Set("is_auto_rewrite", isAutoRewrite)
 	}
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -322,11 +322,11 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
-	d.Set("clb_id", (*instance)["clb_id"])
-	d.Set("source_listener_id", (*instance)["source_listener_id"])
-	d.Set("target_listener_id", (*instance)["target_listener_id"])
-	d.Set("source_rule_id", (*instance)["source_rule_id"])
-	d.Set("target_rule_id", (*instance)["target_rule_id"])
+	_ = d.Set("clb_id", (*instance)["clb_id"])
+	_ = d.Set("source_listener_id", (*instance)["source_listener_id"])
+	_ = d.Set("target_listener_id", (*instance)["target_listener_id"])
+	_ = d.Set("source_rule_id", (*instance)["source_rule_id"])
+	_ = d.Set("target_rule_id", (*instance)["target_rule_id"])
 
 	return nil
 }

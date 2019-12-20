@@ -19,7 +19,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceTencentCloudCosBucketObject() *schema.Resource {
@@ -102,23 +102,23 @@ func dataSourceTencentCloudCosBucketObjectsRead(d *schema.ResourceData, meta int
 
 	ids := []string{bucket, key}
 	d.SetId(dataResourceIdsHash(ids))
-	d.Set("cache_control", info.CacheControl)
+	_ = d.Set("cache_control", info.CacheControl)
 	outputMap["cache_control"] = getStringValue(info.CacheControl)
-	d.Set("content_disposition", info.ContentDisposition)
+	_ = d.Set("content_disposition", info.ContentDisposition)
 	outputMap["content_disposition"] = getStringValue(info.ContentDisposition)
-	d.Set("content_encoding", info.ContentEncoding)
+	_ = d.Set("content_encoding", info.ContentEncoding)
 	outputMap["content_encoding"] = getStringValue(info.ContentEncoding)
-	d.Set("content_type", info.ContentType)
+	_ = d.Set("content_type", info.ContentType)
 	outputMap["content_type"] = getStringValue(info.ContentType)
 	etag := getStringValue(info.ETag)
-	d.Set("etag", strings.Trim(etag, `"`))
+	_ = d.Set("etag", strings.Trim(etag, `"`))
 	outputMap["etag"] = strings.Trim(etag, `"`)
-	d.Set("last_modified", info.LastModified.Format(time.RFC1123))
+	_ = d.Set("last_modified", info.LastModified.Format(time.RFC1123))
 	outputMap["last_modified"] = info.LastModified.Format(time.RFC1123)
-	d.Set("storage_class", s3.StorageClassStandard)
+	_ = d.Set("storage_class", s3.StorageClassStandard)
 	outputMap["storage_class"] = s3.StorageClassStandard
 	if info.StorageClass != nil {
-		d.Set("storage_class", info.StorageClass)
+		_ = d.Set("storage_class", info.StorageClass)
 		outputMap["storage_class"] = getStringValue(info.StorageClass)
 	}
 

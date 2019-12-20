@@ -32,9 +32,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/hashcode"
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -197,13 +197,13 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 			tags[*tag.Key] = *tag.Value
 		}
 
-		d.Set("name", info.name)
-		d.Set("cidr_block", info.cidr)
-		d.Set("dns_servers", info.dnsServers)
-		d.Set("is_multicast", info.isMulticast)
-		d.Set("create_time", info.createTime)
-		d.Set("is_default", info.isDefault)
-		d.Set("tags", tags)
+		_ = d.Set("name", info.name)
+		_ = d.Set("cidr_block", info.cidr)
+		_ = d.Set("dns_servers", info.dnsServers)
+		_ = d.Set("is_multicast", info.isMulticast)
+		_ = d.Set("create_time", info.createTime)
+		_ = d.Set("is_default", info.isDefault)
+		_ = d.Set("tags", tags)
 
 		return nil
 	})

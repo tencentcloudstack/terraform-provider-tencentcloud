@@ -17,8 +17,8 @@ package tencentcloud
 import (
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -237,8 +237,8 @@ func dataSourceTencentCloudContainerClustersRead(d *schema.ResourceData, meta in
 	}
 
 	d.SetId(dataResourceIdsHash(ids))
-	d.Set("clusters", clustersList)
-	d.Set("total_count", *response.Response.TotalCount)
+	_ = d.Set("clusters", clustersList)
+	_ = d.Set("total_count", *response.Response.TotalCount)
 
 	return nil
 }

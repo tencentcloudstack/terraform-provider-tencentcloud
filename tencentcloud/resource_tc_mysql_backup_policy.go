@@ -21,8 +21,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudMysqlBackupPolicy() *schema.Resource {
@@ -94,9 +94,9 @@ func resourceTencentCloudMysqlBackupPolicyRead(d *schema.ResourceData, meta inte
 			}
 			return retryError(e)
 		}
-		d.Set("mysql_id", d.Id())
-		d.Set("retention_period", int(*desResponse.Response.BackupExpireDays))
-		d.Set("backup_model", *desResponse.Response.BackupMethod)
+		_ = d.Set("mysql_id", d.Id())
+		_ = d.Set("retention_period", int(*desResponse.Response.BackupExpireDays))
+		_ = d.Set("backup_model", *desResponse.Response.BackupMethod)
 		var buf bytes.Buffer
 
 		if *desResponse.Response.StartTimeMin < 10 {
@@ -108,8 +108,8 @@ func resourceTencentCloudMysqlBackupPolicyRead(d *schema.ResourceData, meta inte
 			buf.WriteString("0")
 		}
 		buf.WriteString(fmt.Sprintf("%d:00", *desResponse.Response.StartTimeMax))
-		d.Set("backup_time", buf.String())
-		d.Set("binlog_period", int(*desResponse.Response.BinlogExpireDays))
+		_ = d.Set("backup_time", buf.String())
+		_ = d.Set("binlog_period", int(*desResponse.Response.BinlogExpireDays))
 		return nil
 	})
 	if err != nil {

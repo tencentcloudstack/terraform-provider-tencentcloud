@@ -40,7 +40,7 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudSecurityGroupLiteRule() *schema.Resource {
@@ -150,9 +150,9 @@ func resourceTencentCloudSecurityGroupLiteRuleRead(d *schema.ResourceData, m int
 		egress = append(egress, eg.String())
 	}
 
-	d.Set("security_group_id", id)
-	d.Set("ingress", ingress)
-	d.Set("egress", egress)
+	_ = d.Set("security_group_id", id)
+	_ = d.Set("ingress", ingress)
+	_ = d.Set("egress", egress)
 
 	return nil
 }

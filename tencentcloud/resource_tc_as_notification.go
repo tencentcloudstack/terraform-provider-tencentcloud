@@ -18,8 +18,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 )
 
@@ -112,9 +112,9 @@ func resourceTencentCloudAsNotificationRead(d *schema.ResourceData, meta interfa
 			d.SetId("")
 			return nil
 		}
-		d.Set("scaling_group_id", *notification.AutoScalingGroupId)
-		d.Set("notification_type", flattenStringList(notification.NotificationTypes))
-		d.Set("notification_user_group_ids", flattenStringList(notification.NotificationUserGroupIds))
+		_ = d.Set("scaling_group_id", *notification.AutoScalingGroupId)
+		_ = d.Set("notification_type", flattenStringList(notification.NotificationTypes))
+		_ = d.Set("notification_user_group_ids", flattenStringList(notification.NotificationUserGroupIds))
 		return nil
 	})
 	if err != nil {

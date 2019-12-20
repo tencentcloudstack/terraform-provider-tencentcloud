@@ -23,7 +23,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudScfNamespace() *schema.Resource {
@@ -110,11 +110,11 @@ func resourceTencentCloudScfNamespaceRead(d *schema.ResourceData, m interface{})
 		return nil
 	}
 
-	d.Set("namespace", namespace.Name)
-	d.Set("description", namespace.Description)
-	d.Set("create_time", namespace.AddTime)
-	d.Set("modify_time", namespace.ModTime)
-	d.Set("type", namespace.Type)
+	_ = d.Set("namespace", namespace.Name)
+	_ = d.Set("description", namespace.Description)
+	_ = d.Set("create_time", namespace.AddTime)
+	_ = d.Set("modify_time", namespace.ModTime)
+	_ = d.Set("type", namespace.Type)
 
 	return nil
 }

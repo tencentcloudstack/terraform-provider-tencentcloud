@@ -49,9 +49,9 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform/helper/hashcode"
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"strings"
 )
 
@@ -274,23 +274,23 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 			return nil
 		}
 
-		d.Set("dc_id", service.strPt2str(item.DirectConnectId))
-		d.Set("name", *item.DirectConnectTunnelName)
-		d.Set("network_type", strings.ToUpper(service.strPt2str(item.NetworkType)))
-		d.Set("network_region", service.strPt2str(item.NetworkRegion))
-		d.Set("vpc_id", service.strPt2str(item.VpcId))
-		d.Set("bandwidth", service.int64Pt2int64(item.Bandwidth))
+		_ = d.Set("dc_id", service.strPt2str(item.DirectConnectId))
+		_ = d.Set("name", *item.DirectConnectTunnelName)
+		_ = d.Set("network_type", strings.ToUpper(service.strPt2str(item.NetworkType)))
+		_ = d.Set("network_region", service.strPt2str(item.NetworkRegion))
+		_ = d.Set("vpc_id", service.strPt2str(item.VpcId))
+		_ = d.Set("bandwidth", service.int64Pt2int64(item.Bandwidth))
 
 		var routeType = strings.ToUpper(service.strPt2str(item.RouteType))
-		d.Set("route_type", routeType)
+		_ = d.Set("route_type", routeType)
 
 		if routeType == DC_ROUTE_TYPE_BGP {
 			if item.BgpPeer == nil {
-				d.Set("bgp_asn", 0)
-				d.Set("bgp_auth_key", "")
+				_ = d.Set("bgp_asn", 0)
+				_ = d.Set("bgp_auth_key", "")
 			} else {
-				d.Set("bgp_asn", service.int64Pt2int64(item.BgpPeer.Asn))
-				d.Set("bgp_auth_key", service.strPt2str(item.BgpPeer.AuthKey))
+				_ = d.Set("bgp_asn", service.int64Pt2int64(item.BgpPeer.Asn))
+				_ = d.Set("bgp_auth_key", service.strPt2str(item.BgpPeer.AuthKey))
 			}
 		} else {
 			var routeFilterPrefixes = make([]string, 0, len(item.RouteFilterPrefixes))
@@ -299,16 +299,16 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 					routeFilterPrefixes = append(routeFilterPrefixes, *v.Cidr)
 				}
 			}
-			d.Set("route_filter_prefixes", routeFilterPrefixes)
+			_ = d.Set("route_filter_prefixes", routeFilterPrefixes)
 		}
 
-		d.Set("vlan", service.int64Pt2int64(item.Vlan))
-		d.Set("tencent_address", service.strPt2str(item.TencentAddress))
-		d.Set("customer_address", service.strPt2str(item.CustomerAddress))
-		d.Set("dcg_id", service.strPt2str(item.DirectConnectGatewayId))
+		_ = d.Set("vlan", service.int64Pt2int64(item.Vlan))
+		_ = d.Set("tencent_address", service.strPt2str(item.TencentAddress))
+		_ = d.Set("customer_address", service.strPt2str(item.CustomerAddress))
+		_ = d.Set("dcg_id", service.strPt2str(item.DirectConnectGatewayId))
 
-		d.Set("state", strings.ToUpper(service.strPt2str(item.State)))
-		d.Set("create_time", service.strPt2str(item.CreatedTime))
+		_ = d.Set("state", strings.ToUpper(service.strPt2str(item.State)))
+		_ = d.Set("create_time", service.strPt2str(item.CreatedTime))
 		return nil
 	})
 	if err != nil {

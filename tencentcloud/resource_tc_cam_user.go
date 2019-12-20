@@ -33,8 +33,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 )
 
@@ -200,9 +200,9 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	d.SetId(*response.Response.Name)
-	d.Set("secret_key", *response.Response.SecretKey)
-	d.Set("password", *response.Response.Password)
-	d.Set("secret_id", *response.Response.SecretId)
+	_ = d.Set("secret_key", *response.Response.SecretKey)
+	_ = d.Set("password", *response.Response.Password)
+	_ = d.Set("secret_id", *response.Response.SecretId)
 	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamUserRead(d, meta)
@@ -237,17 +237,17 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 		return nil
 	}
 
-	d.Set("name", userId)
-	d.Set("uin", int(*instance.Response.Uin))
-	d.Set("uid", int(*instance.Response.Uid))
-	d.Set("remark", *instance.Response.Remark)
-	d.Set("phone_num", *instance.Response.PhoneNum)
-	d.Set("country_code", *instance.Response.CountryCode)
-	d.Set("email", *instance.Response.Email)
+	_ = d.Set("name", userId)
+	_ = d.Set("uin", int(*instance.Response.Uin))
+	_ = d.Set("uid", int(*instance.Response.Uid))
+	_ = d.Set("remark", *instance.Response.Remark)
+	_ = d.Set("phone_num", *instance.Response.PhoneNum)
+	_ = d.Set("country_code", *instance.Response.CountryCode)
+	_ = d.Set("email", *instance.Response.Email)
 	if int(*instance.Response.ConsoleLogin) == 0 {
-		d.Set("console_login", false)
+		_ = d.Set("console_login", false)
 	} else if int(*instance.Response.ConsoleLogin) == 1 {
-		d.Set("console_login", true)
+		_ = d.Set("console_login", true)
 	}
 
 	return nil

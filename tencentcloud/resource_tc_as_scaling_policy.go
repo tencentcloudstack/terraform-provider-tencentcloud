@@ -26,8 +26,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 )
 
@@ -181,19 +181,19 @@ func resourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta interf
 			d.SetId("")
 			return nil
 		}
-		d.Set("scaling_group_id", *scalingPolicy.AutoScalingGroupId)
-		d.Set("policy_name", *scalingPolicy.ScalingPolicyName)
-		d.Set("adjustment_type", *scalingPolicy.AdjustmentType)
-		d.Set("adjustment_value", *scalingPolicy.AdjustmentValue)
-		d.Set("comparison_operator", *scalingPolicy.MetricAlarm.ComparisonOperator)
-		d.Set("metric_name", *scalingPolicy.MetricAlarm.MetricName)
-		d.Set("threshold", *scalingPolicy.MetricAlarm.Threshold)
-		d.Set("period", *scalingPolicy.MetricAlarm.Period)
-		d.Set("continuous_time", *scalingPolicy.MetricAlarm.ContinuousTime)
-		d.Set("statistic", *scalingPolicy.MetricAlarm.Statistic)
-		d.Set("cooldown", *scalingPolicy.Cooldown)
+		_ = d.Set("scaling_group_id", *scalingPolicy.AutoScalingGroupId)
+		_ = d.Set("policy_name", *scalingPolicy.ScalingPolicyName)
+		_ = d.Set("adjustment_type", *scalingPolicy.AdjustmentType)
+		_ = d.Set("adjustment_value", *scalingPolicy.AdjustmentValue)
+		_ = d.Set("comparison_operator", *scalingPolicy.MetricAlarm.ComparisonOperator)
+		_ = d.Set("metric_name", *scalingPolicy.MetricAlarm.MetricName)
+		_ = d.Set("threshold", *scalingPolicy.MetricAlarm.Threshold)
+		_ = d.Set("period", *scalingPolicy.MetricAlarm.Period)
+		_ = d.Set("continuous_time", *scalingPolicy.MetricAlarm.ContinuousTime)
+		_ = d.Set("statistic", *scalingPolicy.MetricAlarm.Statistic)
+		_ = d.Set("cooldown", *scalingPolicy.Cooldown)
 		if scalingPolicy.NotificationUserGroupIds != nil {
-			d.Set("notification_user_group_ids", flattenStringList(scalingPolicy.NotificationUserGroupIds))
+			_ = d.Set("notification_user_group_ids", flattenStringList(scalingPolicy.NotificationUserGroupIds))
 		}
 		return nil
 	})

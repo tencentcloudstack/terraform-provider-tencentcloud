@@ -33,7 +33,7 @@ import (
 	"errors"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 )
 
@@ -287,7 +287,7 @@ func dataSourceTencentCloudGaapLayer7ListenersRead(d *schema.ResourceData, m int
 		}
 	}
 
-	d.Set("listeners", listeners)
+	_ = d.Set("listeners", listeners)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

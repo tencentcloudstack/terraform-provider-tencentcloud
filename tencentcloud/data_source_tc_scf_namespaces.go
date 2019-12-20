@@ -26,7 +26,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 )
 
@@ -136,7 +136,7 @@ func dataSourceTencentCloudScfNamespacesRead(d *schema.ResourceData, m interface
 		})
 	}
 
-	d.Set("namespaces", namespaces)
+	_ = d.Set("namespaces", namespaces)
 	d.SetId(dataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {

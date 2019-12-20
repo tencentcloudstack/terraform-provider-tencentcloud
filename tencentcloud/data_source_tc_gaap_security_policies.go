@@ -28,7 +28,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func dataSourceTencentCloudGaapSecurityPolices() *schema.Resource {
@@ -85,9 +85,9 @@ func dataSourceTencentCloudGaapSecurityPoliciesRead(d *schema.ResourceData, m in
 		return nil
 	}
 
-	d.Set("proxy_id", proxyId)
-	d.Set("status", status)
-	d.Set("action", action)
+	_ = d.Set("proxy_id", proxyId)
+	_ = d.Set("status", status)
+	_ = d.Set("action", action)
 
 	d.SetId(id)
 
