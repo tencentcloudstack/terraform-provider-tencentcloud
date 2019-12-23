@@ -3,707 +3,873 @@
     <% content_for :sidebar do %>
         <div class="docs-sidebar hidden-print affix-top" role="complementary">
             <ul class="nav docs-sidenav">
-                <li<%= sidebar_current("docs-home") %>>
+                <li>
                     <a href="/docs/providers/index.html">All Providers</a>
                 </li>
-                <li<%= sidebar_current("docs-tencentcloud-index") %>>
+                <li>
                     <a href="/docs/providers/tencentcloud/index.html">TencentCloud Provider</a>
                 </li>
                 
-                <li<%= sidebar_current("docs-tencentcloud-datasource") %>>
-                    <a href="#">Data Sources</a>
+                <li>
+                    <a href="#">Provider Data Sources</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-as_scaling_configs") %>>
-                            <a href="/docs/providers/tencentcloud/d/as_scaling_configs.html">tencentcloud_as_scaling_configs</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-as_scaling_groups") %>>
-                            <a href="/docs/providers/tencentcloud/d/as_scaling_groups.html">tencentcloud_as_scaling_groups</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-as_scaling_policies") %>>
-                            <a href="/docs/providers/tencentcloud/d/as_scaling_policies.html">tencentcloud_as_scaling_policies</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-availability_zones") %>>
+                        <li>
                             <a href="/docs/providers/tencentcloud/d/availability_zones.html">tencentcloud_availability_zones</a>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cam_group_memberships") %>>
-                            <a href="/docs/providers/tencentcloud/d/cam_group_memberships.html">tencentcloud_cam_group_memberships</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cam_group_policy_attachments") %>>
-                            <a href="/docs/providers/tencentcloud/d/cam_group_policy_attachments.html">tencentcloud_cam_group_policy_attachments</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cam_groups") %>>
-                            <a href="/docs/providers/tencentcloud/d/cam_groups.html">tencentcloud_cam_groups</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cam_policies") %>>
-                            <a href="/docs/providers/tencentcloud/d/cam_policies.html">tencentcloud_cam_policies</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cam_role_policy_attachments") %>>
-                            <a href="/docs/providers/tencentcloud/d/cam_role_policy_attachments.html">tencentcloud_cam_role_policy_attachments</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cam_roles") %>>
-                            <a href="/docs/providers/tencentcloud/d/cam_roles.html">tencentcloud_cam_roles</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cam_saml_providers") %>>
-                            <a href="/docs/providers/tencentcloud/d/cam_saml_providers.html">tencentcloud_cam_saml_providers</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cam_user_policy_attachments") %>>
-                            <a href="/docs/providers/tencentcloud/d/cam_user_policy_attachments.html">tencentcloud_cam_user_policy_attachments</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cam_users") %>>
-                            <a href="/docs/providers/tencentcloud/d/cam_users.html">tencentcloud_cam_users</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cbs_snapshots") %>>
-                            <a href="/docs/providers/tencentcloud/d/cbs_snapshots.html">tencentcloud_cbs_snapshots</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cbs_snapshot_policies") %>>
-                            <a href="/docs/providers/tencentcloud/d/cbs_snapshot_policies.html">tencentcloud_cbs_snapshot_policies</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cbs_storages") %>>
-                            <a href="/docs/providers/tencentcloud/d/cbs_storages.html">tencentcloud_cbs_storages</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-ccn_bandwidth_limits") %>>
-                            <a href="/docs/providers/tencentcloud/d/ccn_bandwidth_limits.html">tencentcloud_ccn_bandwidth_limits</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-ccn_instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/ccn_instances.html">tencentcloud_ccn_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cfs_access_groups") %>>
-                            <a href="/docs/providers/tencentcloud/d/cfs_access_groups.html">tencentcloud_cfs_access_groups</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cfs_access_rules") %>>
-                            <a href="/docs/providers/tencentcloud/d/cfs_access_rules.html">tencentcloud_cfs_access_rules</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cfs_file_systems") %>>
-                            <a href="/docs/providers/tencentcloud/d/cfs_file_systems.html">tencentcloud_cfs_file_systems</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-clb_attachments") %>>
-                            <a href="/docs/providers/tencentcloud/d/clb_attachments.html">tencentcloud_clb_attachments</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-clb_instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/clb_instances.html">tencentcloud_clb_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-clb_listener_rules") %>>
-                            <a href="/docs/providers/tencentcloud/d/clb_listener_rules.html">tencentcloud_clb_listener_rules</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-clb_listeners") %>>
-                            <a href="/docs/providers/tencentcloud/d/clb_listeners.html">tencentcloud_clb_listeners</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-clb_redirections") %>>
-                            <a href="/docs/providers/tencentcloud/d/clb_redirections.html">tencentcloud_clb_redirections</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-container_cluster_instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/container_cluster_instances.html">tencentcloud_container_cluster_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-container_clusters") %>>
-                            <a href="/docs/providers/tencentcloud/d/container_clusters.html">tencentcloud_container_clusters</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cos_bucket_object") %>>
-                            <a href="/docs/providers/tencentcloud/d/cos_bucket_object.html">tencentcloud_cos_bucket_object</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-cos_buckets") %>>
-                            <a href="/docs/providers/tencentcloud/d/cos_buckets.html">tencentcloud_cos_buckets</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-dc_gateway_ccn_routes") %>>
-                            <a href="/docs/providers/tencentcloud/d/dc_gateway_ccn_routes.html">tencentcloud_dc_gateway_ccn_routes</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-dc_gateway_instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/dc_gateway_instances.html">tencentcloud_dc_gateway_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-dc_instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/dc_instances.html">tencentcloud_dc_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-dcx_instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/dcx_instances.html">tencentcloud_dcx_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-dnats") %>>
-                            <a href="/docs/providers/tencentcloud/d/dnats.html">tencentcloud_dnats</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-eip") %>>
-                            <a href="/docs/providers/tencentcloud/d/eip.html">tencentcloud_eip</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-eips") %>>
-                            <a href="/docs/providers/tencentcloud/d/eips.html">tencentcloud_eips</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-enis") %>>
-                            <a href="/docs/providers/tencentcloud/d/enis.html">tencentcloud_enis</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-gaap_certificates") %>>
-                            <a href="/docs/providers/tencentcloud/d/gaap_certificates.html">tencentcloud_gaap_certificates</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-gaap_http_domains") %>>
-                            <a href="/docs/providers/tencentcloud/d/gaap_http_domains.html">tencentcloud_gaap_http_domains</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-gaap_http_rules") %>>
-                            <a href="/docs/providers/tencentcloud/d/gaap_http_rules.html">tencentcloud_gaap_http_rules</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-gaap_layer4_listeners") %>>
-                            <a href="/docs/providers/tencentcloud/d/gaap_layer4_listeners.html">tencentcloud_gaap_layer4_listeners</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-gaap_layer7_listeners") %>>
-                            <a href="/docs/providers/tencentcloud/d/gaap_layer7_listeners.html">tencentcloud_gaap_layer7_listeners</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-gaap_proxies") %>>
-                            <a href="/docs/providers/tencentcloud/d/gaap_proxies.html">tencentcloud_gaap_proxies</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-gaap_realservers") %>>
-                            <a href="/docs/providers/tencentcloud/d/gaap_realservers.html">tencentcloud_gaap_realservers</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-gaap_security_policies") %>>
-                            <a href="/docs/providers/tencentcloud/d/gaap_security_policies.html">tencentcloud_gaap_security_policies</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-gaap_security_rules") %>>
-                            <a href="/docs/providers/tencentcloud/d/gaap_security_rules.html">tencentcloud_gaap_security_rules</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-ha_vip_eip_attachments") %>>
-                            <a href="/docs/providers/tencentcloud/d/ha_vip_eip_attachments.html">tencentcloud_ha_vip_eip_attachments</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-ha_vips") %>>
-                            <a href="/docs/providers/tencentcloud/d/ha_vips.html">tencentcloud_ha_vips</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-image") %>>
-                            <a href="/docs/providers/tencentcloud/d/image.html">tencentcloud_image</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-images") %>>
-                            <a href="/docs/providers/tencentcloud/d/images.html">tencentcloud_images</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-instance_types") %>>
-                            <a href="/docs/providers/tencentcloud/d/instance_types.html">tencentcloud_instance_types</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/instances.html">tencentcloud_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-key_pairs") %>>
-                            <a href="/docs/providers/tencentcloud/d/key_pairs.html">tencentcloud_key_pairs</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-kubernetes_clusters") %>>
-                            <a href="/docs/providers/tencentcloud/d/kubernetes_clusters.html">tencentcloud_kubernetes_clusters</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-mongodb_instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/mongodb_instances.html">tencentcloud_mongodb_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-mongodb_zone_config") %>>
-                            <a href="/docs/providers/tencentcloud/d/mongodb_zone_config.html">tencentcloud_mongodb_zone_config</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-mysql_backup_list") %>>
-                            <a href="/docs/providers/tencentcloud/d/mysql_backup_list.html">tencentcloud_mysql_backup_list</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-mysql_instance") %>>
-                            <a href="/docs/providers/tencentcloud/d/mysql_instance.html">tencentcloud_mysql_instance</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-mysql_parameter_list") %>>
-                            <a href="/docs/providers/tencentcloud/d/mysql_parameter_list.html">tencentcloud_mysql_parameter_list</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-mysql_zone_config") %>>
-                            <a href="/docs/providers/tencentcloud/d/mysql_zone_config.html">tencentcloud_mysql_zone_config</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-nat_gateways") %>>
-                            <a href="/docs/providers/tencentcloud/d/nat_gateways.html">tencentcloud_nat_gateways</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-nats") %>>
-                            <a href="/docs/providers/tencentcloud/d/nats.html">tencentcloud_nats</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-placement_groups") %>>
-                            <a href="/docs/providers/tencentcloud/d/placement_groups.html">tencentcloud_placement_groups</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-redis_instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/redis_instances.html">tencentcloud_redis_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-redis_zone_config") %>>
-                            <a href="/docs/providers/tencentcloud/d/redis_zone_config.html">tencentcloud_redis_zone_config</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-reserved_instance_configs") %>>
-                            <a href="/docs/providers/tencentcloud/d/reserved_instance_configs.html">tencentcloud_reserved_instance_configs</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-reserved_instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/reserved_instances.html">tencentcloud_reserved_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-route_table") %>>
-                            <a href="/docs/providers/tencentcloud/d/route_table.html">tencentcloud_route_table</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-scf_functions") %>>
-                            <a href="/docs/providers/tencentcloud/d/scf_functions.html">tencentcloud_scf_functions</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-scf_logs") %>>
-                            <a href="/docs/providers/tencentcloud/d/scf_logs.html">tencentcloud_scf_logs</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-scf_namespaces") %>>
-                            <a href="/docs/providers/tencentcloud/d/scf_namespaces.html">tencentcloud_scf_namespaces</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-security_group") %>>
-                            <a href="/docs/providers/tencentcloud/d/security_group.html">tencentcloud_security_group</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-security_groups") %>>
-                            <a href="/docs/providers/tencentcloud/d/security_groups.html">tencentcloud_security_groups</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-ssl_certificates") %>>
-                            <a href="/docs/providers/tencentcloud/d/ssl_certificates.html">tencentcloud_ssl_certificates</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-subnet") %>>
-                            <a href="/docs/providers/tencentcloud/d/subnet.html">tencentcloud_subnet</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-tcaplus_applications") %>>
-                            <a href="/docs/providers/tencentcloud/d/tcaplus_applications.html">tencentcloud_tcaplus_applications</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-tcaplus_idls") %>>
-                            <a href="/docs/providers/tencentcloud/d/tcaplus_idls.html">tencentcloud_tcaplus_idls</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-tcaplus_tables") %>>
-                            <a href="/docs/providers/tencentcloud/d/tcaplus_tables.html">tencentcloud_tcaplus_tables</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-tcaplus_zones") %>>
-                            <a href="/docs/providers/tencentcloud/d/tcaplus_zones.html">tencentcloud_tcaplus_zones</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-vpc") %>>
-                            <a href="/docs/providers/tencentcloud/d/vpc.html">tencentcloud_vpc</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-vpc_instances") %>>
-                            <a href="/docs/providers/tencentcloud/d/vpc_instances.html">tencentcloud_vpc_instances</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-vpc_route_tables") %>>
-                            <a href="/docs/providers/tencentcloud/d/vpc_route_tables.html">tencentcloud_vpc_route_tables</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-vpc_subnets") %>>
-                            <a href="/docs/providers/tencentcloud/d/vpc_subnets.html">tencentcloud_vpc_subnets</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-vpn_connections") %>>
-                            <a href="/docs/providers/tencentcloud/d/vpn_connections.html">tencentcloud_vpn_connections</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-vpn_customer_gateways") %>>
-                            <a href="/docs/providers/tencentcloud/d/vpn_customer_gateways.html">tencentcloud_vpn_customer_gateways</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-datasource-vpn_gateways") %>>
-                            <a href="/docs/providers/tencentcloud/d/vpn_gateways.html">tencentcloud_vpn_gateways</a>
-                        </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-as") %>>
-                    <a href="#">AS Resources</a>
+                <li>
+                    <a href="#">Auto Scaling(AS)</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-as_scaling_config") %>>
-                            <a href="/docs/providers/tencentcloud/r/as_scaling_config.html">tencentcloud_as_scaling_config</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/as_scaling_configs.html">tencentcloud_as_scaling_configs</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/as_scaling_groups.html">tencentcloud_as_scaling_groups</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/as_scaling_policies.html">tencentcloud_as_scaling_policies</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-as_scaling_group") %>>
-                            <a href="/docs/providers/tencentcloud/r/as_scaling_group.html">tencentcloud_as_scaling_group</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-as_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/as_attachment.html">tencentcloud_as_attachment</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-as_scaling_policy") %>>
-                            <a href="/docs/providers/tencentcloud/r/as_scaling_policy.html">tencentcloud_as_scaling_policy</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-as_schedule") %>>
-                            <a href="/docs/providers/tencentcloud/r/as_schedule.html">tencentcloud_as_schedule</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-as_lifecycle_hook") %>>
-                            <a href="/docs/providers/tencentcloud/r/as_lifecycle_hook.html">tencentcloud_as_lifecycle_hook</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-as_notification") %>>
-                            <a href="/docs/providers/tencentcloud/r/as_notification.html">tencentcloud_as_notification</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/as_attachment.html">tencentcloud_as_attachment</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/as_lifecycle_hook.html">tencentcloud_as_lifecycle_hook</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/as_notification.html">tencentcloud_as_notification</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/as_scaling_config.html">tencentcloud_as_scaling_config</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/as_scaling_group.html">tencentcloud_as_scaling_group</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/as_scaling_policy.html">tencentcloud_as_scaling_policy</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/as_schedule.html">tencentcloud_as_schedule</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-cam") %>>
-                    <a href="#">CAM Resources</a>
+                <li>
+                    <a href="#">CLB</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cam_role") %>>
-                            <a href="/docs/providers/tencentcloud/r/cam_role.html">tencentcloud_cam_role</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/clb_attachments.html">tencentcloud_clb_attachments</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/clb_instances.html">tencentcloud_clb_instances</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/clb_listener_rules.html">tencentcloud_clb_listener_rules</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/clb_listeners.html">tencentcloud_clb_listeners</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/clb_redirections.html">tencentcloud_clb_redirections</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cam_role_policy_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/cam_role_policy_attachment.html">tencentcloud_cam_role_policy_attachment</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cam_policy") %>>
-                            <a href="/docs/providers/tencentcloud/r/cam_policy.html">tencentcloud_cam_policy</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cam_user") %>>
-                            <a href="/docs/providers/tencentcloud/r/cam_user.html">tencentcloud_cam_user</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cam_user_policy_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/cam_user_policy_attachment.html">tencentcloud_cam_user_policy_attachment</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cam_group") %>>
-                            <a href="/docs/providers/tencentcloud/r/cam_group.html">tencentcloud_cam_group</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cam_group_policy_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/cam_group_policy_attachment.html">tencentcloud_cam_group_policy_attachment</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cam_group_membership") %>>
-                            <a href="/docs/providers/tencentcloud/r/cam_group_membership.html">tencentcloud_cam_group_membership</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cam_saml_provider") %>>
-                            <a href="/docs/providers/tencentcloud/r/cam_saml_provider.html">tencentcloud_cam_saml_provider</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/alb_server_attachment.html">tencentcloud_alb_server_attachment</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/clb_attachment.html">tencentcloud_clb_attachment</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/clb_instance.html">tencentcloud_clb_instance</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/clb_listener.html">tencentcloud_clb_listener</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/clb_listener_rule.html">tencentcloud_clb_listener_rule</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/clb_redirection.html">tencentcloud_clb_redirection</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/lb.html">tencentcloud_lb</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-cbs") %>>
-                    <a href="#">CBS Resources</a>
+                <li>
+                    <a href="#">COS</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cbs_storage") %>>
-                            <a href="/docs/providers/tencentcloud/r/cbs_storage.html">tencentcloud_cbs_storage</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cos_bucket_object.html">tencentcloud_cos_bucket_object</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cos_buckets.html">tencentcloud_cos_buckets</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cbs_storage_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/cbs_storage_attachment.html">tencentcloud_cbs_storage_attachment</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cbs_snapshot") %>>
-                            <a href="/docs/providers/tencentcloud/r/cbs_snapshot.html">tencentcloud_cbs_snapshot</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cbs_snapshot_policy") %>>
-                            <a href="/docs/providers/tencentcloud/r/cbs_snapshot_policy.html">tencentcloud_cbs_snapshot_policy</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cbs_snapshot_policy_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/cbs_snapshot_policy_attachment.html">tencentcloud_cbs_snapshot_policy_attachment</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cos_bucket.html">tencentcloud_cos_bucket</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cos_bucket_object.html">tencentcloud_cos_bucket_object</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-ccn") %>>
-                    <a href="#">CCN Resources</a>
+                <li>
+                    <a href="#">CVM</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-ccn") %>>
-                            <a href="/docs/providers/tencentcloud/r/ccn.html">tencentcloud_ccn</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/eip.html">tencentcloud_eip</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/eips.html">tencentcloud_eips</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/image.html">tencentcloud_image</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/images.html">tencentcloud_images</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/instance_types.html">tencentcloud_instance_types</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/instances.html">tencentcloud_instances</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/key_pairs.html">tencentcloud_key_pairs</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/placement_groups.html">tencentcloud_placement_groups</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/reserved_instance_configs.html">tencentcloud_reserved_instance_configs</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/reserved_instances.html">tencentcloud_reserved_instances</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-ccn_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/ccn_attachment.html">tencentcloud_ccn_attachment</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-ccn_bandwidth_limit") %>>
-                            <a href="/docs/providers/tencentcloud/r/ccn_bandwidth_limit.html">tencentcloud_ccn_bandwidth_limit</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/eip.html">tencentcloud_eip</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/eip_association.html">tencentcloud_eip_association</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/instance.html">tencentcloud_instance</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/key_pair.html">tencentcloud_key_pair</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/placement_group.html">tencentcloud_placement_group</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/reserved_instance.html">tencentcloud_reserved_instance</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-cfs") %>>
-                    <a href="#">CFS Resources</a>
+                <li>
+                    <a href="#">Cloud Access Management(CAM)</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cfs_file_system") %>>
-                            <a href="/docs/providers/tencentcloud/r/cfs_file_system.html">tencentcloud_cfs_file_system</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cam_group_memberships.html">tencentcloud_cam_group_memberships</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cam_group_policy_attachments.html">tencentcloud_cam_group_policy_attachments</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cam_groups.html">tencentcloud_cam_groups</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cam_policies.html">tencentcloud_cam_policies</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cam_role_policy_attachments.html">tencentcloud_cam_role_policy_attachments</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cam_roles.html">tencentcloud_cam_roles</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cam_saml_providers.html">tencentcloud_cam_saml_providers</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cam_user_policy_attachments.html">tencentcloud_cam_user_policy_attachments</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cam_users.html">tencentcloud_cam_users</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cfs_access_group") %>>
-                            <a href="/docs/providers/tencentcloud/r/cfs_access_group.html">tencentcloud_cfs_access_group</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cfs_access_rule") %>>
-                            <a href="/docs/providers/tencentcloud/r/cfs_access_rule.html">tencentcloud_cfs_access_rule</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cam_group.html">tencentcloud_cam_group</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cam_group_membership.html">tencentcloud_cam_group_membership</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cam_group_policy_attachment.html">tencentcloud_cam_group_policy_attachment</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cam_policy.html">tencentcloud_cam_policy</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cam_role.html">tencentcloud_cam_role</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cam_role_policy_attachment.html">tencentcloud_cam_role_policy_attachment</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cam_saml_provider.html">tencentcloud_cam_saml_provider</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cam_user.html">tencentcloud_cam_user</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cam_user_policy_attachment.html">tencentcloud_cam_user_policy_attachment</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-container-cluster") %>>
-                    <a href="#">Container Cluster Resources</a>
+                <li>
+                    <a href="#">Cloud Block Storage(CBS)</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-container_cluster") %>>
-                            <a href="/docs/providers/tencentcloud/r/container_cluster.html">tencentcloud_container_cluster</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cbs_snapshot_policies.html">tencentcloud_cbs_snapshot_policies</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cbs_snapshots.html">tencentcloud_cbs_snapshots</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cbs_storages.html">tencentcloud_cbs_storages</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-container_cluster_instance") %>>
-                            <a href="/docs/providers/tencentcloud/r/container_cluster_instance.html">tencentcloud_container_cluster_instance</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cbs_snapshot.html">tencentcloud_cbs_snapshot</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cbs_snapshot_policy.html">tencentcloud_cbs_snapshot_policy</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cbs_snapshot_policy_attachment.html">tencentcloud_cbs_snapshot_policy_attachment</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cbs_storage.html">tencentcloud_cbs_storage</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cbs_storage_attachment.html">tencentcloud_cbs_storage_attachment</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-clb") %>>
-                    <a href="#">CLB Resources</a>
+                <li>
+                    <a href="#">Cloud Connect Network(CCN)</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-clb_instance") %>>
-                            <a href="/docs/providers/tencentcloud/r/clb_instance.html">tencentcloud_clb_instance</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/ccn_bandwidth_limits.html">tencentcloud_ccn_bandwidth_limits</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/ccn_instances.html">tencentcloud_ccn_instances</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-clb_listener") %>>
-                            <a href="/docs/providers/tencentcloud/r/clb_listener.html">tencentcloud_clb_listener</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-clb_listener_rule") %>>
-                            <a href="/docs/providers/tencentcloud/r/clb_listener_rule.html">tencentcloud_clb_listener_rule</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-clb_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/clb_attachment.html">tencentcloud_clb_attachment</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-clb_redirection") %>>
-                            <a href="/docs/providers/tencentcloud/r/clb_redirection.html">tencentcloud_clb_redirection</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-lb") %>>
-                            <a href="/docs/providers/tencentcloud/r/lb.html">tencentcloud_lb</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-alb_server_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/alb_server_attachment.html">tencentcloud_alb_server_attachment</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/ccn.html">tencentcloud_ccn</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/ccn_attachment.html">tencentcloud_ccn_attachment</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/ccn_bandwidth_limit.html">tencentcloud_ccn_bandwidth_limit</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-cos") %>>
-                    <a href="#">COS Resources</a>
+                <li>
+                    <a href="#">Cloud File Storage(CFS)</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cos_bucket") %>>
-                            <a href="/docs/providers/tencentcloud/r/cos_bucket.html">tencentcloud_cos_bucket</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cfs_access_groups.html">tencentcloud_cfs_access_groups</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cfs_access_rules.html">tencentcloud_cfs_access_rules</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/cfs_file_systems.html">tencentcloud_cfs_file_systems</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-cos_bucket_object") %>>
-                            <a href="/docs/providers/tencentcloud/r/cos_bucket_object.html">tencentcloud_cos_bucket_object</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cfs_access_group.html">tencentcloud_cfs_access_group</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cfs_access_rule.html">tencentcloud_cfs_access_rule</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/cfs_file_system.html">tencentcloud_cfs_file_system</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-cvm") %>>
-                    <a href="#">CVM Resources</a>
+                <li>
+                    <a href="#">Container Cluster</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-instance") %>>
-                            <a href="/docs/providers/tencentcloud/r/instance.html">tencentcloud_instance</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/container_cluster_instances.html">tencentcloud_container_cluster_instances</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/container_clusters.html">tencentcloud_container_clusters</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-eip") %>>
-                            <a href="/docs/providers/tencentcloud/r/eip.html">tencentcloud_eip</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-eip_association") %>>
-                            <a href="/docs/providers/tencentcloud/r/eip_association.html">tencentcloud_eip_association</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-key_pair") %>>
-                            <a href="/docs/providers/tencentcloud/r/key_pair.html">tencentcloud_key_pair</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-placement_group") %>>
-                            <a href="/docs/providers/tencentcloud/r/placement_group.html">tencentcloud_placement_group</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-reserved_instance") %>>
-                            <a href="/docs/providers/tencentcloud/r/reserved_instance.html">tencentcloud_reserved_instance</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/container_cluster.html">tencentcloud_container_cluster</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/container_cluster_instance.html">tencentcloud_container_cluster_instance</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-dc") %>>
-                    <a href="#">DC Resources</a>
+                <li>
+                    <a href="#">Direct Connect Gateway(DCG)</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-dcx") %>>
-                            <a href="/docs/providers/tencentcloud/r/dcx.html">tencentcloud_dcx</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/dc_gateway_ccn_routes.html">tencentcloud_dc_gateway_ccn_routes</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/dc_gateway_instances.html">tencentcloud_dc_gateway_instances</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/dc_gateway.html">tencentcloud_dc_gateway</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/dc_gateway_ccn_route.html">tencentcloud_dc_gateway_ccn_route</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-dcg") %>>
-                    <a href="#">DCG Resources</a>
+                <li>
+                    <a href="#">Direct Connect(DC)</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-dc_gateway") %>>
-                            <a href="/docs/providers/tencentcloud/r/dc_gateway.html">tencentcloud_dc_gateway</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/dc_instances.html">tencentcloud_dc_instances</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/dcx_instances.html">tencentcloud_dcx_instances</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-dc_gateway_ccn_route") %>>
-                            <a href="/docs/providers/tencentcloud/r/dc_gateway_ccn_route.html">tencentcloud_dc_gateway_ccn_route</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/dcx.html">tencentcloud_dcx</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-gaap") %>>
-                    <a href="#">GAAP Resources</a>
+                <li>
+                    <a href="#">Global Application Acceleration(GAAP)</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-gaap_proxy") %>>
-                            <a href="/docs/providers/tencentcloud/r/gaap_proxy.html">tencentcloud_gaap_proxy</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/gaap_certificates.html">tencentcloud_gaap_certificates</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/gaap_http_domains.html">tencentcloud_gaap_http_domains</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/gaap_http_rules.html">tencentcloud_gaap_http_rules</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/gaap_layer4_listeners.html">tencentcloud_gaap_layer4_listeners</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/gaap_layer7_listeners.html">tencentcloud_gaap_layer7_listeners</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/gaap_proxies.html">tencentcloud_gaap_proxies</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/gaap_realservers.html">tencentcloud_gaap_realservers</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/gaap_security_policies.html">tencentcloud_gaap_security_policies</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/gaap_security_rules.html">tencentcloud_gaap_security_rules</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-gaap_realserver") %>>
-                            <a href="/docs/providers/tencentcloud/r/gaap_realserver.html">tencentcloud_gaap_realserver</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-gaap_layer4_listener") %>>
-                            <a href="/docs/providers/tencentcloud/r/gaap_layer4_listener.html">tencentcloud_gaap_layer4_listener</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-gaap_layer7_listener") %>>
-                            <a href="/docs/providers/tencentcloud/r/gaap_layer7_listener.html">tencentcloud_gaap_layer7_listener</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-gaap_http_domain") %>>
-                            <a href="/docs/providers/tencentcloud/r/gaap_http_domain.html">tencentcloud_gaap_http_domain</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-gaap_http_rule") %>>
-                            <a href="/docs/providers/tencentcloud/r/gaap_http_rule.html">tencentcloud_gaap_http_rule</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-gaap_certificate") %>>
-                            <a href="/docs/providers/tencentcloud/r/gaap_certificate.html">tencentcloud_gaap_certificate</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-gaap_security_policy") %>>
-                            <a href="/docs/providers/tencentcloud/r/gaap_security_policy.html">tencentcloud_gaap_security_policy</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-gaap_security_rule") %>>
-                            <a href="/docs/providers/tencentcloud/r/gaap_security_rule.html">tencentcloud_gaap_security_rule</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/gaap_certificate.html">tencentcloud_gaap_certificate</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/gaap_http_domain.html">tencentcloud_gaap_http_domain</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/gaap_http_rule.html">tencentcloud_gaap_http_rule</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/gaap_layer4_listener.html">tencentcloud_gaap_layer4_listener</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/gaap_layer7_listener.html">tencentcloud_gaap_layer7_listener</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/gaap_proxy.html">tencentcloud_gaap_proxy</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/gaap_realserver.html">tencentcloud_gaap_realserver</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/gaap_security_policy.html">tencentcloud_gaap_security_policy</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/gaap_security_rule.html">tencentcloud_gaap_security_rule</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-kubernetes") %>>
-                    <a href="#">Kubernetes Resources</a>
+                <li>
+                    <a href="#">Kubernetes</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-kubernetes_cluster") %>>
-                            <a href="/docs/providers/tencentcloud/r/kubernetes_cluster.html">tencentcloud_kubernetes_cluster</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/kubernetes_clusters.html">tencentcloud_kubernetes_clusters</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-kubernetes_scale_worker") %>>
-                            <a href="/docs/providers/tencentcloud/r/kubernetes_scale_worker.html">tencentcloud_kubernetes_scale_worker</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-kubernetes_as_scaling_group") %>>
-                            <a href="/docs/providers/tencentcloud/r/kubernetes_as_scaling_group.html">tencentcloud_kubernetes_as_scaling_group</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/kubernetes_as_scaling_group.html">tencentcloud_kubernetes_as_scaling_group</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/kubernetes_cluster.html">tencentcloud_kubernetes_cluster</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/kubernetes_scale_worker.html">tencentcloud_kubernetes_scale_worker</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-mongodb") %>>
-                    <a href="#">MongoDB Resources</a>
+                <li>
+                    <a href="#">MongoDB</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-mongodb_instance") %>>
-                            <a href="/docs/providers/tencentcloud/r/mongodb_instance.html">tencentcloud_mongodb_instance</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/mongodb_instances.html">tencentcloud_mongodb_instances</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/mongodb_zone_config.html">tencentcloud_mongodb_zone_config</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-mongodb_sharding_instance") %>>
-                            <a href="/docs/providers/tencentcloud/r/mongodb_sharding_instance.html">tencentcloud_mongodb_sharding_instance</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/mongodb_instance.html">tencentcloud_mongodb_instance</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/mongodb_sharding_instance.html">tencentcloud_mongodb_sharding_instance</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-mysql") %>>
-                    <a href="#">MySQL Resources</a>
+                <li>
+                    <a href="#">MySQL</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-mysql_instance") %>>
-                            <a href="/docs/providers/tencentcloud/r/mysql_instance.html">tencentcloud_mysql_instance</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/mysql_backup_list.html">tencentcloud_mysql_backup_list</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/mysql_instance.html">tencentcloud_mysql_instance</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/mysql_parameter_list.html">tencentcloud_mysql_parameter_list</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/mysql_zone_config.html">tencentcloud_mysql_zone_config</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-mysql_readonly_instance") %>>
-                            <a href="/docs/providers/tencentcloud/r/mysql_readonly_instance.html">tencentcloud_mysql_readonly_instance</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-mysql_account") %>>
-                            <a href="/docs/providers/tencentcloud/r/mysql_account.html">tencentcloud_mysql_account</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-mysql_privilege") %>>
-                            <a href="/docs/providers/tencentcloud/r/mysql_privilege.html">tencentcloud_mysql_privilege</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-mysql_account_privilege") %>>
-                            <a href="/docs/providers/tencentcloud/r/mysql_account_privilege.html">tencentcloud_mysql_account_privilege</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-mysql_backup_policy") %>>
-                            <a href="/docs/providers/tencentcloud/r/mysql_backup_policy.html">tencentcloud_mysql_backup_policy</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/mysql_account.html">tencentcloud_mysql_account</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/mysql_account_privilege.html">tencentcloud_mysql_account_privilege</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/mysql_backup_policy.html">tencentcloud_mysql_backup_policy</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/mysql_instance.html">tencentcloud_mysql_instance</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/mysql_privilege.html">tencentcloud_mysql_privilege</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/mysql_readonly_instance.html">tencentcloud_mysql_readonly_instance</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-redis") %>>
-                    <a href="#">Redis Resources</a>
+                <li>
+                    <a href="#">Redis</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-redis_instance") %>>
-                            <a href="/docs/providers/tencentcloud/r/redis_instance.html">tencentcloud_redis_instance</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/redis_instances.html">tencentcloud_redis_instances</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/redis_zone_config.html">tencentcloud_redis_zone_config</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-redis_backup_config") %>>
-                            <a href="/docs/providers/tencentcloud/r/redis_backup_config.html">tencentcloud_redis_backup_config</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/redis_backup_config.html">tencentcloud_redis_backup_config</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/redis_instance.html">tencentcloud_redis_instance</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-scf") %>>
-                    <a href="#">SCF Resources</a>
+                <li>
+                    <a href="#">SSL Certificates</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-scf_function") %>>
-                            <a href="/docs/providers/tencentcloud/r/scf_function.html">tencentcloud_scf_function</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/ssl_certificates.html">tencentcloud_ssl_certificates</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-scf_namespace") %>>
-                            <a href="/docs/providers/tencentcloud/r/scf_namespace.html">tencentcloud_scf_namespace</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/ssl_certificate.html">tencentcloud_ssl_certificate</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-ssl") %>>
-                    <a href="#">SSL Resources</a>
+                <li>
+                    <a href="#">Serverless Cloud Function(SCF)</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-ssl_certificate") %>>
-                            <a href="/docs/providers/tencentcloud/r/ssl_certificate.html">tencentcloud_ssl_certificate</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/scf_functions.html">tencentcloud_scf_functions</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/scf_logs.html">tencentcloud_scf_logs</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/scf_namespaces.html">tencentcloud_scf_namespaces</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/scf_function.html">tencentcloud_scf_function</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/scf_namespace.html">tencentcloud_scf_namespace</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-tcaplus") %>>
-                    <a href="#">Tcaplus Resources</a>
+                <li>
+                    <a href="#">Tcaplus</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-tcaplus_application") %>>
-                            <a href="/docs/providers/tencentcloud/r/tcaplus_application.html">tencentcloud_tcaplus_application</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/tcaplus_applications.html">tencentcloud_tcaplus_applications</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/tcaplus_idls.html">tencentcloud_tcaplus_idls</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/tcaplus_tables.html">tencentcloud_tcaplus_tables</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/tcaplus_zones.html">tencentcloud_tcaplus_zones</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-tcaplus_zone") %>>
-                            <a href="/docs/providers/tencentcloud/r/tcaplus_zone.html">tencentcloud_tcaplus_zone</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-tcaplus_idl") %>>
-                            <a href="/docs/providers/tencentcloud/r/tcaplus_idl.html">tencentcloud_tcaplus_idl</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-tcaplus_table") %>>
-                            <a href="/docs/providers/tencentcloud/r/tcaplus_table.html">tencentcloud_tcaplus_table</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/tcaplus_application.html">tencentcloud_tcaplus_application</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/tcaplus_idl.html">tencentcloud_tcaplus_idl</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/tcaplus_table.html">tencentcloud_tcaplus_table</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/tcaplus_zone.html">tencentcloud_tcaplus_zone</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-vpc") %>>
-                    <a href="#">VPC Resources</a>
+                <li>
+                    <a href="#">VPC</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-eni") %>>
-                            <a href="/docs/providers/tencentcloud/r/eni.html">tencentcloud_eni</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/dnats.html">tencentcloud_dnats</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/enis.html">tencentcloud_enis</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/ha_vip_eip_attachments.html">tencentcloud_ha_vip_eip_attachments</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/ha_vips.html">tencentcloud_ha_vips</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/nat_gateways.html">tencentcloud_nat_gateways</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/nats.html">tencentcloud_nats</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/route_table.html">tencentcloud_route_table</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/security_group.html">tencentcloud_security_group</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/security_groups.html">tencentcloud_security_groups</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/subnet.html">tencentcloud_subnet</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/vpc.html">tencentcloud_vpc</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/vpc_instances.html">tencentcloud_vpc_instances</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/vpc_route_tables.html">tencentcloud_vpc_route_tables</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/vpc_subnets.html">tencentcloud_vpc_subnets</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-eni_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/eni_attachment.html">tencentcloud_eni_attachment</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-vpc") %>>
-                            <a href="/docs/providers/tencentcloud/r/vpc.html">tencentcloud_vpc</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-subnet") %>>
-                            <a href="/docs/providers/tencentcloud/r/subnet.html">tencentcloud_subnet</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-security_group") %>>
-                            <a href="/docs/providers/tencentcloud/r/security_group.html">tencentcloud_security_group</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-security_group_rule") %>>
-                            <a href="/docs/providers/tencentcloud/r/security_group_rule.html">tencentcloud_security_group_rule</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-security_group_lite_rule") %>>
-                            <a href="/docs/providers/tencentcloud/r/security_group_lite_rule.html">tencentcloud_security_group_lite_rule</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-route_table") %>>
-                            <a href="/docs/providers/tencentcloud/r/route_table.html">tencentcloud_route_table</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-route_entry") %>>
-                            <a href="/docs/providers/tencentcloud/r/route_entry.html">tencentcloud_route_entry</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-route_table_entry") %>>
-                            <a href="/docs/providers/tencentcloud/r/route_table_entry.html">tencentcloud_route_table_entry</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-dnat") %>>
-                            <a href="/docs/providers/tencentcloud/r/dnat.html">tencentcloud_dnat</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-nat_gateway") %>>
-                            <a href="/docs/providers/tencentcloud/r/nat_gateway.html">tencentcloud_nat_gateway</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-ha_vip") %>>
-                            <a href="/docs/providers/tencentcloud/r/ha_vip.html">tencentcloud_ha_vip</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-ha_vip_eip_attachment") %>>
-                            <a href="/docs/providers/tencentcloud/r/ha_vip_eip_attachment.html">tencentcloud_ha_vip_eip_attachment</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/dnat.html">tencentcloud_dnat</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/eni.html">tencentcloud_eni</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/eni_attachment.html">tencentcloud_eni_attachment</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/ha_vip.html">tencentcloud_ha_vip</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/ha_vip_eip_attachment.html">tencentcloud_ha_vip_eip_attachment</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/nat_gateway.html">tencentcloud_nat_gateway</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/route_entry.html">tencentcloud_route_entry</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/route_table.html">tencentcloud_route_table</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/route_table_entry.html">tencentcloud_route_table_entry</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/security_group.html">tencentcloud_security_group</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/security_group_lite_rule.html">tencentcloud_security_group_lite_rule</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/security_group_rule.html">tencentcloud_security_group_rule</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/subnet.html">tencentcloud_subnet</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/vpc.html">tencentcloud_vpc</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
-                <li<%= sidebar_current("docs-tencentcloud-resource-vpn") %>>
-                    <a href="#">VPN Resources</a>
+                <li>
+                    <a href="#">VPN</a>
                     <ul class="nav">
-                        
-                        <li<%= sidebar_current("docs-tencentcloud-resource-vpn_customer_gateway") %>>
-                            <a href="/docs/providers/tencentcloud/r/vpn_customer_gateway.html">tencentcloud_vpn_customer_gateway</a>
+                        <li>
+                            <a href="#">Data Sources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/vpn_connections.html">tencentcloud_vpn_connections</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/vpn_customer_gateways.html">tencentcloud_vpn_customer_gateways</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/d/vpn_gateways.html">tencentcloud_vpn_gateways</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-vpn_gateway") %>>
-                            <a href="/docs/providers/tencentcloud/r/vpn_gateway.html">tencentcloud_vpn_gateway</a>
-                        </li>
-                        <li<%= sidebar_current("docs-tencentcloud-resource-vpn_connection") %>>
-                            <a href="/docs/providers/tencentcloud/r/vpn_connection.html">tencentcloud_vpn_connection</a>
+                        <li>
+                            <a href="#">Resources</a>
+                            <ul class="nav nav-auto-expand">
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/vpn_customer_gateway.html">tencentcloud_vpn_customer_gateway</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/vpn_gateway.html">tencentcloud_vpn_gateway</a>
+                                </li>
+                                <li>
+                                    <a href="/docs/providers/tencentcloud/r/vpn_connection.html">tencentcloud_vpn_connection</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
-                
             </ul>
         </div>
     <% end %>

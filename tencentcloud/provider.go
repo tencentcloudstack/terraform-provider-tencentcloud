@@ -19,229 +19,292 @@ provider "tencentcloud" {
 
 Resources List
 
-Data Sources
-  tencentcloud_as_scaling_configs
-  tencentcloud_as_scaling_groups
-  tencentcloud_as_scaling_policies
+Provider Data Sources
   tencentcloud_availability_zones
-  tencentcloud_cam_group_memberships
-  tencentcloud_cam_group_policy_attachments
-  tencentcloud_cam_groups
-  tencentcloud_cam_policies
-  tencentcloud_cam_role_policy_attachments
-  tencentcloud_cam_roles
-  tencentcloud_cam_saml_providers
-  tencentcloud_cam_user_policy_attachments
-  tencentcloud_cam_users
-  tencentcloud_cbs_snapshots
-  tencentcloud_cbs_snapshot_policies
-  tencentcloud_cbs_storages
-  tencentcloud_ccn_bandwidth_limits
-  tencentcloud_ccn_instances
-  tencentcloud_cfs_access_groups
-  tencentcloud_cfs_access_rules
-  tencentcloud_cfs_file_systems
-  tencentcloud_clb_attachments
-  tencentcloud_clb_instances
-  tencentcloud_clb_listener_rules
-  tencentcloud_clb_listeners
-  tencentcloud_clb_redirections
-  tencentcloud_container_cluster_instances
-  tencentcloud_container_clusters
-  tencentcloud_cos_bucket_object
-  tencentcloud_cos_buckets
-  tencentcloud_dc_gateway_ccn_routes
-  tencentcloud_dc_gateway_instances
-  tencentcloud_dc_instances
-  tencentcloud_dcx_instances
-  tencentcloud_dnats
-  tencentcloud_eip
-  tencentcloud_eips
-  tencentcloud_enis
-  tencentcloud_gaap_certificates
-  tencentcloud_gaap_http_domains
-  tencentcloud_gaap_http_rules
-  tencentcloud_gaap_layer4_listeners
-  tencentcloud_gaap_layer7_listeners
-  tencentcloud_gaap_proxies
-  tencentcloud_gaap_realservers
-  tencentcloud_gaap_security_policies
-  tencentcloud_gaap_security_rules
-  tencentcloud_ha_vip_eip_attachments
-  tencentcloud_ha_vips
-  tencentcloud_image
-  tencentcloud_images
-  tencentcloud_instance_types
-  tencentcloud_instances
-  tencentcloud_key_pairs
-  tencentcloud_kubernetes_clusters
-  tencentcloud_mongodb_instances
-  tencentcloud_mongodb_zone_config
-  tencentcloud_mysql_backup_list
-  tencentcloud_mysql_instance
-  tencentcloud_mysql_parameter_list
-  tencentcloud_mysql_zone_config
-  tencentcloud_nat_gateways
-  tencentcloud_nats
-  tencentcloud_placement_groups
-  tencentcloud_redis_instances
-  tencentcloud_redis_zone_config
-  tencentcloud_reserved_instance_configs
-  tencentcloud_reserved_instances
-  tencentcloud_route_table
-  tencentcloud_scf_functions
-  tencentcloud_scf_logs
-  tencentcloud_scf_namespaces
-  tencentcloud_security_group
-  tencentcloud_security_groups
-  tencentcloud_ssl_certificates
-  tencentcloud_subnet
-  tencentcloud_tcaplus_applications
-  tencentcloud_tcaplus_idls
-  tencentcloud_tcaplus_tables
-  tencentcloud_tcaplus_zones
-  tencentcloud_vpc
-  tencentcloud_vpc_instances
-  tencentcloud_vpc_route_tables
-  tencentcloud_vpc_subnets
-  tencentcloud_vpn_connections
-  tencentcloud_vpn_customer_gateways
-  tencentcloud_vpn_gateways
 
-AS Resources
-  tencentcloud_as_scaling_config
-  tencentcloud_as_scaling_group
-  tencentcloud_as_attachment
-  tencentcloud_as_scaling_policy
-  tencentcloud_as_schedule
-  tencentcloud_as_lifecycle_hook
-  tencentcloud_as_notification
+Auto Scaling(AS)
+  Data Source
+    tencentcloud_as_scaling_configs
+    tencentcloud_as_scaling_groups
+    tencentcloud_as_scaling_policies
 
-CAM Resources
-  tencentcloud_cam_role
-  tencentcloud_cam_role_policy_attachment
-  tencentcloud_cam_policy
-  tencentcloud_cam_user
-  tencentcloud_cam_user_policy_attachment
-  tencentcloud_cam_group
-  tencentcloud_cam_group_policy_attachment
-  tencentcloud_cam_group_membership
-  tencentcloud_cam_saml_provider
+  Resource
+    tencentcloud_as_scaling_config
+    tencentcloud_as_scaling_group
+    tencentcloud_as_attachment
+    tencentcloud_as_scaling_policy
+    tencentcloud_as_schedule
+    tencentcloud_as_lifecycle_hook
+    tencentcloud_as_notification
 
-CBS Resources
-  tencentcloud_cbs_storage
-  tencentcloud_cbs_storage_attachment
-  tencentcloud_cbs_snapshot
-  tencentcloud_cbs_snapshot_policy
-  tencentcloud_cbs_snapshot_policy_attachment
+Cloud Access Management(CAM)
+  Data Source
+    tencentcloud_cam_group_memberships
+    tencentcloud_cam_group_policy_attachments
+    tencentcloud_cam_groups
+    tencentcloud_cam_policies
+    tencentcloud_cam_role_policy_attachments
+    tencentcloud_cam_roles
+    tencentcloud_cam_saml_providers
+    tencentcloud_cam_user_policy_attachments
+    tencentcloud_cam_users
 
-CCN Resources
-  tencentcloud_ccn
-  tencentcloud_ccn_attachment
-  tencentcloud_ccn_bandwidth_limit
+  Resource
+    tencentcloud_cam_role
+    tencentcloud_cam_role_policy_attachment
+    tencentcloud_cam_policy
+    tencentcloud_cam_user
+    tencentcloud_cam_user_policy_attachment
+    tencentcloud_cam_group
+    tencentcloud_cam_group_policy_attachment
+    tencentcloud_cam_group_membership
+    tencentcloud_cam_saml_provider
 
-CFS Resources
-  tencentcloud_cfs_file_system
-  tencentcloud_cfs_access_group
-  tencentcloud_cfs_access_rule
+Cloud Block Storage(CBS)
+  Data Source
+    tencentcloud_cbs_snapshots
+    tencentcloud_cbs_storages
+    tencentcloud_cbs_snapshot_policies
 
-Container Cluster Resources
-  tencentcloud_container_cluster
-  tencentcloud_container_cluster_instance
+  Resource
+    tencentcloud_cbs_storage
+    tencentcloud_cbs_storage_attachment
+    tencentcloud_cbs_snapshot
+    tencentcloud_cbs_snapshot_policy
+    tencentcloud_cbs_snapshot_policy_attachment
 
-CLB Resources
-  tencentcloud_clb_instance
-  tencentcloud_clb_listener
-  tencentcloud_clb_listener_rule
-  tencentcloud_clb_attachment
-  tencentcloud_clb_redirection
-  tencentcloud_lb
-  tencentcloud_alb_server_attachment
+Cloud Connect Network(CCN)
+  Data Source
+    tencentcloud_ccn_bandwidth_limits
+    tencentcloud_ccn_instances
 
-COS Resources
-  tencentcloud_cos_bucket
-  tencentcloud_cos_bucket_object
+  Resource
+    tencentcloud_ccn
+    tencentcloud_ccn_attachment
+    tencentcloud_ccn_bandwidth_limit
 
-CVM Resources
-  tencentcloud_instance
-  tencentcloud_eip
-  tencentcloud_eip_association
-  tencentcloud_key_pair
-  tencentcloud_placement_group
-  tencentcloud_reserved_instance
+Cloud File Storage(CFS)
+  Data Source
+    tencentcloud_cfs_access_groups
+    tencentcloud_cfs_access_rules
+    tencentcloud_cfs_file_systems
 
-DC Resources
-  tencentcloud_dcx
+  Resource
+    tencentcloud_cfs_file_system
+    tencentcloud_cfs_access_group
+    tencentcloud_cfs_access_rule
 
-DCG Resources
-  tencentcloud_dc_gateway
-  tencentcloud_dc_gateway_ccn_route
+Container Cluster
+  Data Source
+    tencentcloud_container_cluster_instances
+    tencentcloud_container_clusters
 
-GAAP Resources
-  tencentcloud_gaap_proxy
-  tencentcloud_gaap_realserver
-  tencentcloud_gaap_layer4_listener
-  tencentcloud_gaap_layer7_listener
-  tencentcloud_gaap_http_domain
-  tencentcloud_gaap_http_rule
-  tencentcloud_gaap_certificate
-  tencentcloud_gaap_security_policy
-  tencentcloud_gaap_security_rule
+  Resource
+    tencentcloud_container_cluster
+    tencentcloud_container_cluster_instance
 
-Kubernetes Resources
-  tencentcloud_kubernetes_cluster
-  tencentcloud_kubernetes_scale_worker
-  tencentcloud_kubernetes_as_scaling_group
+CLB
+  Data Source
+    tencentcloud_clb_attachments
+    tencentcloud_clb_instances
+    tencentcloud_clb_listener_rules
+    tencentcloud_clb_listeners
+    tencentcloud_clb_redirections
 
-MongoDB Resources
-  tencentcloud_mongodb_instance
-  tencentcloud_mongodb_sharding_instance
+  Resource
+    tencentcloud_clb_instance
+    tencentcloud_clb_listener
+    tencentcloud_clb_listener_rule
+    tencentcloud_clb_attachment
+    tencentcloud_clb_redirection
+    tencentcloud_lb
+    tencentcloud_alb_server_attachment
 
-MySQL Resources
-  tencentcloud_mysql_instance
-  tencentcloud_mysql_readonly_instance
-  tencentcloud_mysql_account
-  tencentcloud_mysql_privilege
-  tencentcloud_mysql_account_privilege
-  tencentcloud_mysql_backup_policy
+COS
+  Data Source
+    tencentcloud_cos_bucket_object
+    tencentcloud_cos_buckets
 
-Redis Resources
-  tencentcloud_redis_instance
-  tencentcloud_redis_backup_config
+  Resource
+    tencentcloud_cos_bucket
+    tencentcloud_cos_bucket_object
 
-SCF Resources
-  tencentcloud_scf_function
-  tencentcloud_scf_namespace
+CVM
+  Data Source
+    tencentcloud_image
+    tencentcloud_images
+    tencentcloud_instance_types
+    tencentcloud_instances
+    tencentcloud_key_pairs
+    tencentcloud_eip
+    tencentcloud_eips
+    tencentcloud_placement_groups
+    tencentcloud_reserved_instance_configs
+    tencentcloud_reserved_instances
 
-SSL Resources
-  tencentcloud_ssl_certificate
+  Resource
+    tencentcloud_instance
+    tencentcloud_eip
+    tencentcloud_eip_association
+    tencentcloud_key_pair
+    tencentcloud_placement_group
+    tencentcloud_reserved_instance
 
-Tcaplus Resources
-  tencentcloud_tcaplus_application
-  tencentcloud_tcaplus_zone
-  tencentcloud_tcaplus_idl
-  tencentcloud_tcaplus_table
+Direct Connect(DC)
+  Data Source
+    tencentcloud_dc_instances
+    tencentcloud_dcx_instances
 
-VPC Resources
-  tencentcloud_eni
-  tencentcloud_eni_attachment
-  tencentcloud_vpc
-  tencentcloud_subnet
-  tencentcloud_security_group
-  tencentcloud_security_group_rule
-  tencentcloud_security_group_lite_rule
-  tencentcloud_route_table
-  tencentcloud_route_entry
-  tencentcloud_route_table_entry
-  tencentcloud_dnat
-  tencentcloud_nat_gateway
-  tencentcloud_ha_vip
-  tencentcloud_ha_vip_eip_attachment
+  Resource
+    tencentcloud_dcx
 
-VPN Resources
-  tencentcloud_vpn_customer_gateway
-  tencentcloud_vpn_gateway
-  tencentcloud_vpn_connection
+Direct Connect Gateway(DCG)
+  Data Source
+    tencentcloud_dc_gateway_ccn_routes
+    tencentcloud_dc_gateway_instances
+
+  Resource
+    tencentcloud_dc_gateway
+    tencentcloud_dc_gateway_ccn_route
+
+Global Application Acceleration(GAAP)
+  Data Source
+    tencentcloud_gaap_certificates
+    tencentcloud_gaap_http_domains
+    tencentcloud_gaap_http_rules
+    tencentcloud_gaap_layer4_listeners
+    tencentcloud_gaap_layer7_listeners
+    tencentcloud_gaap_proxies
+    tencentcloud_gaap_realservers
+    tencentcloud_gaap_security_policies
+    tencentcloud_gaap_security_rules
+
+  Resource
+    tencentcloud_gaap_proxy
+    tencentcloud_gaap_realserver
+    tencentcloud_gaap_layer4_listener
+    tencentcloud_gaap_layer7_listener
+    tencentcloud_gaap_http_domain
+    tencentcloud_gaap_http_rule
+    tencentcloud_gaap_certificate
+    tencentcloud_gaap_security_policy
+    tencentcloud_gaap_security_rule
+
+Kubernetes
+  Data Source
+    tencentcloud_kubernetes_clusters
+
+  Resource
+    tencentcloud_kubernetes_cluster
+    tencentcloud_kubernetes_scale_worker
+    tencentcloud_kubernetes_as_scaling_group
+
+MongoDB
+  Data Source
+    tencentcloud_mongodb_instances
+    tencentcloud_mongodb_zone_config
+
+  Resource
+    tencentcloud_mongodb_instance
+    tencentcloud_mongodb_sharding_instance
+
+MySQL
+  Data Source
+    tencentcloud_mysql_backup_list
+    tencentcloud_mysql_instance
+    tencentcloud_mysql_parameter_list
+    tencentcloud_mysql_zone_config
+
+  Resource
+    tencentcloud_mysql_instance
+    tencentcloud_mysql_readonly_instance
+    tencentcloud_mysql_account
+    tencentcloud_mysql_privilege
+    tencentcloud_mysql_account_privilege
+    tencentcloud_mysql_backup_policy
+
+Redis
+  Data Source
+    tencentcloud_redis_zone_config
+    tencentcloud_redis_instances
+
+  Resource
+    tencentcloud_redis_instance
+    tencentcloud_redis_backup_config
+
+Serverless Cloud Function(SCF)
+  Data Source
+    tencentcloud_scf_functions
+    tencentcloud_scf_logs
+    tencentcloud_scf_namespaces
+
+  Resource
+    tencentcloud_scf_function
+    tencentcloud_scf_namespace
+
+SSL Certificates
+  Data Source
+    tencentcloud_ssl_certificates
+
+  Resource
+    tencentcloud_ssl_certificate
+
+Tcaplus
+  Data Source
+    tencentcloud_tcaplus_applications
+    tencentcloud_tcaplus_idls
+    tencentcloud_tcaplus_tables
+    tencentcloud_tcaplus_zones
+
+  Resource
+    tencentcloud_tcaplus_application
+    tencentcloud_tcaplus_zone
+    tencentcloud_tcaplus_idl
+    tencentcloud_tcaplus_table
+
+VPC
+  Data Source
+    tencentcloud_route_table
+    tencentcloud_security_group
+    tencentcloud_security_groups
+    tencentcloud_subnet
+    tencentcloud_vpc
+    tencentcloud_vpc_instances
+    tencentcloud_vpc_route_tables
+    tencentcloud_vpc_subnets
+    tencentcloud_dnats
+    tencentcloud_enis
+    tencentcloud_ha_vip_eip_attachments
+    tencentcloud_ha_vips
+    tencentcloud_nat_gateways
+    tencentcloud_nats
+
+  Resource
+    tencentcloud_eni
+    tencentcloud_eni_attachment
+    tencentcloud_vpc
+    tencentcloud_subnet
+    tencentcloud_security_group
+    tencentcloud_security_group_rule
+    tencentcloud_security_group_lite_rule
+    tencentcloud_route_table
+    tencentcloud_route_entry
+    tencentcloud_route_table_entry
+    tencentcloud_dnat
+    tencentcloud_nat_gateway
+    tencentcloud_ha_vip
+    tencentcloud_ha_vip_eip_attachment
+
+VPN
+  Data Source
+    tencentcloud_vpn_connections
+    tencentcloud_vpn_customer_gateways
+    tencentcloud_vpn_gateways
+
+  Resource
+    tencentcloud_vpn_customer_gateway
+    tencentcloud_vpn_gateway
+    tencentcloud_vpn_connection
 */
 package tencentcloud
 

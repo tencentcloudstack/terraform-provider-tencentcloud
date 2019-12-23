@@ -3,13 +3,11 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcaplus_zone"
 sidebar_current: "docs-tencentcloud-resource-tcaplus_zone"
 description: |-
-  /*
-Use this resource to create tcaplus zone
+  Use this resource to create tcaplus zone
 ---
 
 # tencentcloud_tcaplus_zone
 
-/*
 Use this resource to create tcaplus zone
 
 ## Example Usage

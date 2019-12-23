@@ -65,7 +65,7 @@ test-compile:
 	go test -c $(TEST) $(TESTARGS)
 
 doc:
-	cd gendoc && go run main.go template.go && cd ..
+	cd gendoc && go run ./... && cd ..
 
 hooks: tools
 	find .git/hooks -type l -exec rm {} \;
@@ -73,7 +73,7 @@ hooks: tools
 
 website:
 ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
-	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
+	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), getting..."
 	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
 endif
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
@@ -84,7 +84,7 @@ website-lint:
 
 website-test:
 ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
-	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
+	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), getting..."
 	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
 endif
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)

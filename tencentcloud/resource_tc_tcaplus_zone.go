@@ -1,5 +1,4 @@
 /*
-/*
 Use this resource to create tcaplus zone
 
 Example Usage

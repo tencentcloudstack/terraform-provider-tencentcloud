@@ -22,6 +22,7 @@ import (
 const (
 	cloudMark      = "tencentcloud"
 	cloudTitle     = "TencentCloud"
+	cloudPrefix    = cloudMark + "_"
 	cloudMarkShort = "tc"
 	docRoot        = "../website/docs"
 )
@@ -35,43 +36,31 @@ func main() {
 	provider := cloud.Provider().(*schema.Provider)
 	vProvider := runtime.FuncForPC(reflect.ValueOf(cloud.Provider).Pointer())
 
-	fname, _ := vProvider.FileLine(0)
-	fpath := filepath.Dir(fname)
-	message("generating doc from: %s\n", fpath)
+	filename, _ := vProvider.FileLine(0)
+	filePath := filepath.Dir(filename)
+	message("generating doc from: %s\n", filePath)
 
 	// document for DataSources
 	for k, v := range provider.DataSourcesMap {
-		genDoc("data_source", fpath, k, v)
+		genDoc("data_source", filePath, k, v)
 	}
 
 	// document for Resources
 	for k, v := range provider.ResourcesMap {
-		genDoc("resource", fpath, k, v)
+		genDoc("resource", filePath, k, v)
 	}
 
 	// document for Index
-	genIdx(fpath)
+	genIdx(filePath)
 }
 
 // genIdx generating index for resource
-func genIdx(fpath string) {
-	type Index struct {
-		Name         string
-		NameShort    string
-		ResType      string
-		ResTypeShort string
-		Resources    [][]string
-	}
+func genIdx(filePath string) {
+	filename := "provider.go"
 
-	var (
-		resources   string
-		dataSources []Index
-		sources     []Index
-	)
+	message("[START]get description from file: %s\n", filename)
 
-	fname := "provider.go"
-	message("[START]get description from file: %s\n", fname)
-	description, err := getFileDescription(fmt.Sprintf("%s/%s", fpath, fname))
+	description, err := getFileDescription(filepath.Join(filePath, filename))
 	if err != nil {
 		message("[SKIP!]get description failed, skip: %s", err)
 		return
@@ -79,87 +68,49 @@ func genIdx(fpath string) {
 
 	description = strings.TrimSpace(description)
 	if description == "" {
-		message("[SKIP!]description empty, skip: %s\n", fname)
+		message("[SKIP!]description empty, skip: %s\n", filename)
 		return
 	}
 
 	pos := strings.Index(description, "\nResources List\n")
-	if pos != -1 {
-		resources = strings.TrimSpace(description[pos+16:])
-		// description = strings.TrimSpace(description[:pos])
-	} else {
-		message("[SKIP!]resource list missing, skip: %s\n", fname)
+	if pos == -1 {
+		message("[SKIP!]resource list missing, skip: %s\n", filename)
 		return
 	}
 
-	index := Index{}
-	for _, v := range strings.Split(resources, "\n") {
-		vv := strings.TrimSpace(v)
-		if vv == "" {
-			continue
-		}
-		if strings.HasPrefix(v, "  ") {
-			if index.Name == "" {
-				message("[FAIL!]no resource name found: %s", v)
-				return
-			}
-			index.Resources = append(index.Resources, []string{vv, vv[len(cloudMark)+1:]})
-		} else {
-			if index.Name != "" {
-				if index.Name == "Data Sources" {
-					dataSources = append(dataSources, index)
-				} else {
-					sources = append(sources, index)
-				}
-			}
-			vvv := ""
-			resType := "datasource"
-			if vv != "Data Sources" {
-				resType = "resource"
-				vs := strings.Split(vv, " ")
-				vvv = strings.ToLower(strings.Join(vs[:len(vs)-1], "-"))
-			}
-			index = Index{
-				Name:         vv,
-				NameShort:    vvv,
-				ResType:      resType,
-				ResTypeShort: resType[0:1],
-				Resources:    [][]string{},
-			}
-		}
+	doc := strings.TrimSpace(description[pos+16:])
+	// description = strings.TrimSpace(description[:pos])
+
+	prods, err := GetIndex(doc)
+	if err != nil {
+		message("[FAIL!]: %s", err)
+		os.Exit(1)
 	}
 
-	if index.Name != "" {
-		if index.Name == "Data Sources" {
-			dataSources = append(dataSources, index)
-		} else {
-			sources = append(sources, index)
-		}
-	}
-
-	dataSources = append(dataSources, sources...)
 	data := map[string]interface{}{
-		"datasource":  dataSources,
 		"cloud_mark":  cloudMark,
 		"cloud_title": cloudTitle,
+		"cloudPrefix": cloudPrefix,
+		"Products":    prods,
 	}
 
-	fname = fmt.Sprintf("%s/../%s.erb", docRoot, cloudMark)
-	fd, err := os.OpenFile(fname, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	filename = filepath.Join(docRoot, "..", fmt.Sprintf("%s.erb", cloudMark))
+	fd, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
-		message("[FAIL!]open file %s failed: %s", fname, err)
+		message("[FAIL!]open file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
 
 	defer fd.Close()
-	t := template.Must(template.New("t").Parse(idxTPL))
-	err = t.Execute(fd, data)
-	if err != nil {
-		message("[FAIL!]write file %s failed: %s", fname, err)
+
+	tmpl := template.Must(template.New("t").Funcs(template.FuncMap{"replace": replace}).Parse(idxTPL))
+
+	if err := tmpl.Execute(fd, data); err != nil {
+		message("[FAIL!]write file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
 
-	message("[SUCC.]write doc to file success: %s", fname)
+	message("[SUCC.]write doc to file success: %s", filename)
 }
 
 // genDoc generating doc for data source and resource
@@ -176,10 +127,10 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 		"import":            "",
 	}
 
-	fname := fmt.Sprintf("%s_%s_%s.go", dtype, cloudMarkShort, data["resource"])
-	message("[START]get description from file: %s\n", fname)
+	filename := fmt.Sprintf("%s_%s_%s.go", dtype, cloudMarkShort, data["resource"])
+	message("[START]get description from file: %s\n", filename)
 
-	description, err := getFileDescription(fmt.Sprintf("%s/%s", fpath, fname))
+	description, err := getFileDescription(filepath.Join(fpath, filename))
 	if err != nil {
 		message("[FAIL!]get description failed: %s", err)
 		os.Exit(1)
@@ -187,7 +138,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 
 	description = strings.TrimSpace(description)
 	if description == "" {
-		message("[FAIL!]description empty: %s\n", fname)
+		message("[FAIL!]description empty: %s\n", filename)
 		os.Exit(1)
 	}
 
@@ -202,7 +153,7 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 		data["example"] = formatHCL(description[pos+15:])
 		description = strings.TrimSpace(description[:pos])
 	} else {
-		message("[FAIL!]example usage missing: %s\n", fname)
+		message("[FAIL!]example usage missing: %s\n", filename)
 		os.Exit(1)
 	}
 
@@ -223,16 +174,16 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 
 	if _, ok := resource.Schema["result_output_file"]; dtype == "data_source" && !ok {
 		if resource.DeprecationMessage != "" {
-			message("[SKIP!]argument 'result_output_file' is missing, skip: %s", fname)
+			message("[SKIP!]argument 'result_output_file' is missing, skip: %s", filename)
 		} else {
-			message("[FAIL!]argument 'result_output_file' is missing: %s", fname)
+			message("[FAIL!]argument 'result_output_file' is missing: %s", filename)
 			os.Exit(1)
 		}
 	}
 
 	for k, v := range resource.Schema {
 		if v.Description == "" {
-			message("[FAIL!]description for '%s' is missing: %s\n", k, fname)
+			message("[FAIL!]description for '%s' is missing: %s\n", k, filename)
 			os.Exit(1)
 		} else {
 			checkDescription(k, v.Description)
@@ -300,10 +251,11 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	}
 	data["attributes"] = strings.Join(attributes, "\n")
 
-	fname = fmt.Sprintf("%s/%s/%s.html.markdown", docRoot, dtype[0:1], data["resource"])
-	fd, err := os.OpenFile(fname, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	filename = filepath.Join(docRoot, dtype[:1], fmt.Sprintf("%s.html.markdown", data["resource"]))
+
+	fd, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
-		message("[FAIL!]open file %s failed: %s", fname, err)
+		message("[FAIL!]open file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
 
@@ -311,11 +263,11 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 	t := template.Must(template.New("t").Parse(docTPL))
 	err = t.Execute(fd, data)
 	if err != nil {
-		message("[FAIL!]write file %s failed: %s", fname, err)
+		message("[FAIL!]write file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
 
-	message("[SUCC.]write doc to file success: %s", fname)
+	message("[SUCC.]write doc to file success: %s", filename)
 }
 
 // getAttributes get attributes from schema
