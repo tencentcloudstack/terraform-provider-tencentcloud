@@ -27,6 +27,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -134,10 +135,10 @@ func resourceTencentCloudCfsAccessGroupUpdate(d *schema.ResourceData, meta inter
 
 	request := cfs.NewUpdateCfsPGroupRequest()
 	if d.HasChange("name") {
-		request.Name = stringToPointer(d.Get("name").(string))
+		request.Name = helper.String(d.Get("name").(string))
 	}
 	if d.HasChange("description") {
-		request.DescInfo = stringToPointer(d.Get("description").(string))
+		request.DescInfo = helper.String(d.Get("description").(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

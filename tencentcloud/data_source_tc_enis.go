@@ -17,6 +17,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudEnis() *schema.Resource {
@@ -203,31 +204,31 @@ func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error
 	)
 
 	if raw, ok := d.GetOk("ids"); ok {
-		ids = expandStringList(raw.(*schema.Set).List())
+		ids = helper.InterfacesStrings(raw.(*schema.Set).List())
 	}
 
 	if raw, ok := d.GetOk("vpc_id"); ok {
-		vpcId = stringToPointer(raw.(string))
+		vpcId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("subnet_id"); ok {
-		subnetId = stringToPointer(raw.(string))
+		subnetId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("instance_id"); ok {
-		cvmId = stringToPointer(raw.(string))
+		cvmId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("security_group"); ok {
-		sgId = stringToPointer(raw.(string))
+		sgId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("name"); ok {
-		name = stringToPointer(raw.(string))
+		name = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("description"); ok {
-		desc = stringToPointer(raw.(string))
+		desc = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("ipv4"); ok {
-		ipv4 = stringToPointer(raw.(string))
+		ipv4 = helper.String(raw.(string))
 	}
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	var (
 		respEnis []*vpc.NetworkInterface
@@ -292,7 +293,7 @@ func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error
 	}
 
 	_ = d.Set("enis", enis)
-	d.SetId(dataResourceIdsHash(eniIds))
+	d.SetId(helper.DataResourceIdsHash(eniIds))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), enis); err != nil {

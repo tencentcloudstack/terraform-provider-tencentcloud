@@ -37,6 +37,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudGaapProxy() *schema.Resource {
@@ -154,7 +155,7 @@ func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) 
 	accessRegion := d.Get("access_region").(string)
 	realserverRegion := d.Get("realserver_region").(string)
 	enable := d.Get("enable").(bool)
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -251,7 +252,7 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 	if proxy.CreateTime == nil {
 		return errors.New("proxy create time is nil")
 	}
-	_ = d.Set("create_time", formatUnixTime(*proxy.CreateTime))
+	_ = d.Set("create_time", helper.FormatUnixTime(*proxy.CreateTime))
 
 	if proxy.Domain == nil {
 		return errors.New("proxy access domain is nil")
@@ -377,7 +378,7 @@ func resourceTencentCloudGaapProxyDelete(d *schema.ResourceData, m interface{}) 
 	id := d.Id()
 	createTimeStr := d.Get("create_time").(string)
 
-	if createTime, err := parseTime(createTimeStr); err == nil {
+	if createTime, err := helper.ParseTime(createTimeStr); err == nil {
 		if !time.Now().After(createTime.Add(2 * time.Minute)) {
 			log.Printf("[DEBUG]%s proxy can't be deleted unless it has lived 2 minutes", logId)
 			time.Sleep(time.Until(createTime.Add(2 * time.Minute)))

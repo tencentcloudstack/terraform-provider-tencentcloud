@@ -17,6 +17,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudAsScalingPolicies() *schema.Resource {
@@ -159,7 +160,7 @@ func dataSourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta inte
 			"continuous_time":             *scalingPolicy.MetricAlarm.ContinuousTime,
 			"statistic":                   *scalingPolicy.MetricAlarm.Statistic,
 			"cooldown":                    *scalingPolicy.Cooldown,
-			"notification_user_group_ids": flattenStringList(scalingPolicy.NotificationUserGroupIds),
+			"notification_user_group_ids": helper.StringsInterfaces(scalingPolicy.NotificationUserGroupIds),
 		}
 		scalingPolicyList = append(scalingPolicyList, mapping)
 	}

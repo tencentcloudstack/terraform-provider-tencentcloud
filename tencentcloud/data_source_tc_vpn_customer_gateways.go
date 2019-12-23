@@ -24,6 +24,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudVpnCustomerGateways() *schema.Resource {
@@ -119,13 +120,13 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 	if v, ok := d.GetOk("public_ip_address"); ok {
 		params["ip-address"] = v.(string)
 	}
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	request.Filters = make([]*vpc.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &vpc.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -182,7 +183,7 @@ func dataSourceTencentCloudVpnCustomerGatewaysRead(d *schema.ResourceData, meta 
 		gatewayList = append(gatewayList, mapping)
 		ids = append(ids, *gateway.CustomerGatewayId)
 	}
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("gateway_list", gatewayList); e != nil {
 		log.Printf("[CRITAL]%s provider set gateway list fail, reason:%s\n", logId, e.Error())
 		return e

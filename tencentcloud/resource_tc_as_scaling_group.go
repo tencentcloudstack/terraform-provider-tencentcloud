@@ -50,6 +50,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -227,19 +228,19 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	request := as.NewCreateAutoScalingGroupRequest()
 
-	request.AutoScalingGroupName = stringToPointer(d.Get("scaling_group_name").(string))
-	request.LaunchConfigurationId = stringToPointer(d.Get("configuration_id").(string))
-	request.MaxSize = intToPointer(d.Get("max_size").(int))
-	request.MinSize = intToPointer(d.Get("min_size").(int))
-	request.VpcId = stringToPointer(d.Get("vpc_id").(string))
+	request.AutoScalingGroupName = helper.String(d.Get("scaling_group_name").(string))
+	request.LaunchConfigurationId = helper.String(d.Get("configuration_id").(string))
+	request.MaxSize = helper.IntUint64(d.Get("max_size").(int))
+	request.MinSize = helper.IntUint64(d.Get("min_size").(int))
+	request.VpcId = helper.String(d.Get("vpc_id").(string))
 	if v, ok := d.GetOk("default_cooldown"); ok {
-		request.DefaultCooldown = intToPointer(v.(int))
+		request.DefaultCooldown = helper.IntUint64(v.(int))
 	}
 	if v, ok := d.GetOk("desired_capacity"); ok {
-		request.DesiredCapacity = intToPointer(v.(int))
+		request.DesiredCapacity = helper.IntUint64(v.(int))
 	}
 	if v, ok := d.GetOk("retry_policy"); ok {
-		request.RetryPolicy = stringToPointer(v.(string))
+		request.RetryPolicy = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("subnet_ids"); ok {
@@ -276,16 +277,16 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 			vv := v.(map[string]interface{})
 			targets := vv["target_attribute"].([]interface{})
 			forwardBalancer := as.ForwardLoadBalancer{
-				LoadBalancerId: stringToPointer(vv["load_balancer_id"].(string)),
-				ListenerId:     stringToPointer(vv["listener_id"].(string)),
-				LocationId:     stringToPointer(vv["rule_id"].(string)),
+				LoadBalancerId: helper.String(vv["load_balancer_id"].(string)),
+				ListenerId:     helper.String(vv["listener_id"].(string)),
+				LocationId:     helper.String(vv["rule_id"].(string)),
 			}
 			forwardBalancer.TargetAttributes = make([]*as.TargetAttribute, 0, len(targets))
 			for _, target := range targets {
 				t := target.(map[string]interface{})
 				targetAttribute := as.TargetAttribute{
-					Port:   intToPointer(t["port"].(int)),
-					Weight: intToPointer(t["weight"].(int)),
+					Port:   helper.IntUint64(t["port"].(int)),
+					Weight: helper.IntUint64(t["weight"].(int)),
 				}
 				forwardBalancer.TargetAttributes = append(forwardBalancer.TargetAttributes, &targetAttribute)
 			}
@@ -303,11 +304,11 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if tags := getTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		for k, v := range tags {
 			request.Tags = append(request.Tags, &as.Tag{
-				Key:   stringToPointer(k),
-				Value: stringToPointer(v),
+				Key:   helper.String(k),
+				Value: helper.String(v),
 			})
 		}
 	}
@@ -401,12 +402,12 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("min_size", scalingGroup.MinSize)
 	_ = d.Set("vpc_id", scalingGroup.VpcId)
 	_ = d.Set("project_id", scalingGroup.ProjectId)
-	_ = d.Set("subnet_ids", flattenStringList(scalingGroup.SubnetIdSet))
-	_ = d.Set("zones", flattenStringList(scalingGroup.ZoneSet))
+	_ = d.Set("subnet_ids", helper.StringsInterfaces(scalingGroup.SubnetIdSet))
+	_ = d.Set("zones", helper.StringsInterfaces(scalingGroup.ZoneSet))
 	_ = d.Set("default_cooldown", scalingGroup.DefaultCooldown)
 	_ = d.Set("desired_capacity", scalingGroup.DesiredCapacity)
-	_ = d.Set("load_balancer_ids", flattenStringList(scalingGroup.LoadBalancerIdSet))
-	_ = d.Set("termination_policies", flattenStringList(scalingGroup.TerminationPolicySet))
+	_ = d.Set("load_balancer_ids", helper.StringsInterfaces(scalingGroup.LoadBalancerIdSet))
+	_ = d.Set("termination_policies", helper.StringsInterfaces(scalingGroup.TerminationPolicySet))
 	_ = d.Set("retry_policy", scalingGroup.RetryPolicy)
 	_ = d.Set("create_time", scalingGroup.CreatedTime)
 
@@ -461,35 +462,35 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	request.AutoScalingGroupId = &scalingGroupId
 	if d.HasChange("scaling_group_name") {
 		updateAttrs = append(updateAttrs, "scaling_group_name")
-		request.AutoScalingGroupName = stringToPointer(d.Get("scaling_group_name").(string))
+		request.AutoScalingGroupName = helper.String(d.Get("scaling_group_name").(string))
 	}
 	if d.HasChange("max_size") {
 		updateAttrs = append(updateAttrs, "max_size")
-		request.MaxSize = intToPointer(d.Get("max_size").(int))
+		request.MaxSize = helper.IntUint64(d.Get("max_size").(int))
 	}
 	if d.HasChange("min_size") {
 		updateAttrs = append(updateAttrs, "max_size")
-		request.MinSize = intToPointer(d.Get("min_size").(int))
+		request.MinSize = helper.IntUint64(d.Get("min_size").(int))
 	}
 	if d.HasChange("vpc_id") {
 		updateAttrs = append(updateAttrs, "vpc_id")
-		request.VpcId = stringToPointer(d.Get("vpc_id").(string))
+		request.VpcId = helper.String(d.Get("vpc_id").(string))
 	}
 	if d.HasChange("project_id") {
 		updateAttrs = append(updateAttrs, "project_id")
-		request.ProjectId = intToPointer(d.Get("project_id").(int))
+		request.ProjectId = helper.IntUint64(d.Get("project_id").(int))
 	}
 	if d.HasChange("default_cooldown") {
 		updateAttrs = append(updateAttrs, "default_cooldown")
-		request.DefaultCooldown = intToPointer(d.Get("default_cooldown").(int))
+		request.DefaultCooldown = helper.IntUint64(d.Get("default_cooldown").(int))
 	}
 	if d.HasChange("desired_capacity") {
 		updateAttrs = append(updateAttrs, "desired_capacity")
-		request.DesiredCapacity = intToPointer(d.Get("desired_capacity").(int))
+		request.DesiredCapacity = helper.IntUint64(d.Get("desired_capacity").(int))
 	}
 	if d.HasChange("retry_policy") {
 		updateAttrs = append(updateAttrs, "retry_policy")
-		request.RetryPolicy = stringToPointer(d.Get("retry_policy").(string))
+		request.RetryPolicy = helper.String(d.Get("retry_policy").(string))
 	}
 	if d.HasChange("subnet_ids") {
 		updateAttrs = append(updateAttrs, "subnet_ids")
@@ -564,16 +565,16 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 			vv := v.(map[string]interface{})
 			targets := vv["target_attribute"].([]interface{})
 			forwardBalancer := as.ForwardLoadBalancer{
-				LoadBalancerId: stringToPointer(vv["load_balancer_id"].(string)),
-				ListenerId:     stringToPointer(vv["listener_id"].(string)),
-				LocationId:     stringToPointer(vv["rule_id"].(string)),
+				LoadBalancerId: helper.String(vv["load_balancer_id"].(string)),
+				ListenerId:     helper.String(vv["listener_id"].(string)),
+				LocationId:     helper.String(vv["rule_id"].(string)),
 			}
 			forwardBalancer.TargetAttributes = make([]*as.TargetAttribute, 0, len(targets))
 			for _, target := range targets {
 				t := target.(map[string]interface{})
 				targetAttribute := as.TargetAttribute{
-					Port:   intToPointer(t["port"].(int)),
-					Weight: intToPointer(t["weight"].(int)),
+					Port:   helper.IntUint64(t["port"].(int)),
+					Weight: helper.IntUint64(t["weight"].(int)),
 				}
 				forwardBalancer.TargetAttributes = append(forwardBalancer.TargetAttributes, &targetAttribute)
 			}

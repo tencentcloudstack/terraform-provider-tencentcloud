@@ -20,6 +20,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func TencentCloudMysqlParameterDetail() map[string]*schema.Schema {
@@ -152,7 +153,7 @@ func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interf
 	ids[0] = "DescribeParameter"
 	ids[1] = instanceIdString
 	ids[2] = engineVersionString
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("parameter_list", parameterList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set parameter list fail, reason:%s\n ", logId, err.Error())

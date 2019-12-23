@@ -36,6 +36,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
@@ -281,7 +282,7 @@ LOOP:
 			if listener.CreateTime == nil {
 				return errors.New("listener create time is nil")
 			}
-			createTime = formatUnixTime(*listener.CreateTime)
+			createTime = helper.FormatUnixTime(*listener.CreateTime)
 
 			break LOOP
 
@@ -327,7 +328,7 @@ LOOP:
 			if listener.CreateTime == nil {
 				return errors.New("listener create time is nil")
 			}
-			createTime = formatUnixTime(*listener.CreateTime)
+			createTime = helper.FormatUnixTime(*listener.CreateTime)
 
 			break LOOP
 		}
@@ -376,13 +377,13 @@ func resourceTencentCloudGaapLayer7ListenerUpdate(d *schema.ResourceData, m inte
 		)
 
 		if d.HasChange("name") {
-			name = stringToPointer(d.Get("name").(string))
+			name = helper.String(d.Get("name").(string))
 		}
 		if d.HasChange("certificate_id") {
-			certificateId = stringToPointer(d.Get("certificate_id").(string))
+			certificateId = helper.String(d.Get("certificate_id").(string))
 		}
 		if d.HasChange("forward_protocol") {
-			forwardProtocol = stringToPointer(d.Get("forward_protocol").(string))
+			forwardProtocol = helper.String(d.Get("forward_protocol").(string))
 		}
 
 		if d.HasChange("client_certificate_id") {

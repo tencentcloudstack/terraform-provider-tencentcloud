@@ -12,6 +12,7 @@ import (
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -69,7 +70,7 @@ func (me *TcaplusService) DescribeApps(ctx context.Context, applicationId string
 	if applicationName != "" {
 		request.Filters = []*tcaplusdb.Filter{
 			{
-				Name:  stringToPointer("AppName"),
+				Name:  helper.String("AppName"),
 				Value: &applicationName,
 			},
 		}
@@ -181,7 +182,7 @@ func (me *TcaplusService) ModifyAppName(ctx context.Context, applicationId strin
 		}
 	}()
 	request.ApplicationId = &applicationId
-	request.AppName = stringToPointer(url.QueryEscape(applicationName))
+	request.AppName = helper.String(url.QueryEscape(applicationName))
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTcaplusClient().ModifyAppName(request)
@@ -207,7 +208,7 @@ func (me *TcaplusService) ModifyAppPassword(ctx context.Context, applicationId s
 	request.ApplicationId = &applicationId
 	request.OldPassword = &oldPassword
 	request.NewPassword = &newPassword
-	request.Mode = stringToPointer("1")
+	request.Mode = helper.String("1")
 
 	if oldPasswordExpireLast > 0 {
 		expireTime := time.Now().Add(time.Second * time.Duration(oldPasswordExpireLast))
@@ -323,7 +324,7 @@ func (me *TcaplusService) DescribeZones(ctx context.Context, applicationId strin
 	if zoneName != "" {
 		request.Filters = []*tcaplusdb.Filter{
 			{
-				Name:  stringToPointer("ZoneName"),
+				Name:  helper.String("ZoneName"),
 				Value: &zoneName,
 			},
 		}
@@ -701,7 +702,7 @@ func (me *TcaplusService) DescribeTables(ctx context.Context, applicationId stri
 	if tableId != "" {
 		request.Filters = []*tcaplusdb.Filter{
 			{
-				Name:  stringToPointer("TableInstanceId"),
+				Name:  helper.String("TableInstanceId"),
 				Value: &tableId,
 			},
 		}
@@ -709,7 +710,7 @@ func (me *TcaplusService) DescribeTables(ctx context.Context, applicationId stri
 
 	if tableName != "" {
 		filter := &tcaplusdb.Filter{
-			Name:  stringToPointer("TableName"),
+			Name:  helper.String("TableName"),
 			Value: &tableName,
 		}
 
@@ -761,7 +762,7 @@ func (me *TcaplusService) DescribeTable(ctx context.Context, applicationId, tabl
 	request.ApplicationId = &applicationId
 	request.Filters = []*tcaplusdb.Filter{
 		{
-			Name:  stringToPointer("TableInstanceId"),
+			Name:  helper.String("TableInstanceId"),
 			Value: &tableInstanceId,
 		},
 	}

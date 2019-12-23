@@ -39,6 +39,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudClbListenerRule() *schema.Resource {
@@ -193,16 +194,16 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener rule][Create] check: The rule can only be created/modified with listeners of protocol HTTP/HTTPS")
 	}
 	request := clb.NewCreateRuleRequest()
-	request.LoadBalancerId = stringToPointer(clbId)
-	request.ListenerId = stringToPointer(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
+	request.ListenerId = helper.String(listenerId)
 
 	//rule set
 	var rule clb.RuleInput
 
 	domain := d.Get("domain").(string)
-	rule.Domain = stringToPointer(domain)
+	rule.Domain = helper.String(domain)
 	url := d.Get("url").(string)
-	rule.Url = stringToPointer(url)
+	rule.Url = helper.String(url)
 	scheduler := ""
 	if v, ok := d.GetOk("scheduler"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
@@ -210,7 +211,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		}
 
 		scheduler = v.(string)
-		rule.Scheduler = stringToPointer(scheduler)
+		rule.Scheduler = helper.String(scheduler)
 	}
 
 	if v, ok := d.GetOk("session_expire_time"); ok {
@@ -336,7 +337,7 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 		_ = d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
 		_ = d.Set("health_check_health_num", instance.HealthCheck.HealthNum)
 		_ = d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
-		_ = d.Set("health_check_http_method", stringToPointer(strings.ToUpper(*instance.HealthCheck.HttpCheckMethod)))
+		_ = d.Set("health_check_http_method", helper.String(strings.ToUpper(*instance.HealthCheck.HttpCheckMethod)))
 		_ = d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
 		_ = d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
 		_ = d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
@@ -387,13 +388,13 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 	sessionExpireTime := 0
 
 	request := clb.NewModifyRuleRequest()
-	request.ListenerId = stringToPointer(listenerId)
-	request.LoadBalancerId = stringToPointer(clbId)
-	request.LocationId = stringToPointer(locationId)
+	request.ListenerId = helper.String(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
+	request.LocationId = helper.String(locationId)
 	if d.HasChange("url") {
 		changed = true
 		url = d.Get("url").(string)
-		request.Url = stringToPointer(url)
+		request.Url = helper.String(url)
 	}
 
 	if d.HasChange("scheduler") {
@@ -402,7 +403,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
 			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener rule %s][Update] check: Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS", locationId)
 		}
-		request.Scheduler = stringToPointer(scheduler)
+		request.Scheduler = helper.String(scheduler)
 	}
 
 	if d.HasChange("session_expire_time") {

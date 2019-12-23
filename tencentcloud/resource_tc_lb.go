@@ -24,6 +24,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 const (
@@ -96,22 +97,22 @@ func resourceTencentCloudLBCreate(d *schema.ResourceData, meta interface{}) erro
 	request := clb.NewCreateLoadBalancerRequest()
 
 	networkType := d.Get("type").(string)
-	request.LoadBalancerType = stringToPointer(networkType)
+	request.LoadBalancerType = helper.String(networkType)
 
 	if v, ok := d.GetOk("forward"); ok {
 		if v == lbForwardTypeClassic {
-			request.Forward = int64ToPointer(0)
+			request.Forward = helper.IntInt64(0)
 		} else {
-			request.Forward = int64ToPointer(1)
+			request.Forward = helper.IntInt64(1)
 		}
 	}
 
 	if v, ok := d.GetOk("name"); ok {
-		request.LoadBalancerName = stringToPointer(v.(string))
+		request.LoadBalancerName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("vpc_id"); ok {
-		request.VpcId = stringToPointer(v.(string))
+		request.VpcId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("project_id"); ok {
@@ -211,8 +212,8 @@ func resourceTencentCloudLBUpdate(d *schema.ResourceData, meta interface{}) erro
 	d.Partial(true)
 
 	request := clb.NewModifyLoadBalancerAttributesRequest()
-	request.LoadBalancerId = stringToPointer(clbId)
-	request.LoadBalancerName = stringToPointer(d.Get("name").(string))
+	request.LoadBalancerId = helper.String(clbId)
+	request.LoadBalancerName = helper.String(d.Get("name").(string))
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(request)

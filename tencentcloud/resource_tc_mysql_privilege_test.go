@@ -13,6 +13,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 var testAccTencentCloudMysqlPrivilegeType = "tencentcloud_mysql_privilege"
@@ -71,7 +72,7 @@ func testAccMysqlPrivilegeExists(s *terraform.State) error {
 	request := cdb.NewDescribeAccountPrivilegesRequest()
 	request.InstanceId = &privilegeId.MysqlId
 	request.User = &privilegeId.AccountName
-	request.Host = stringToPointer(MYSQL_DEFAULT_ACCOUNT_HOST)
+	request.Host = helper.String(MYSQL_DEFAULT_ACCOUNT_HOST)
 
 	response, err := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
 	if err != nil {
@@ -116,7 +117,7 @@ func testAccMysqlPrivilegeDestroy(s *terraform.State) error {
 	request := cdb.NewDescribeAccountPrivilegesRequest()
 	request.InstanceId = &privilegeId.MysqlId
 	request.User = &privilegeId.AccountName
-	request.Host = stringToPointer(MYSQL_DEFAULT_ACCOUNT_HOST)
+	request.Host = helper.String(MYSQL_DEFAULT_ACCOUNT_HOST)
 
 	response, err := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
 	if err != nil {

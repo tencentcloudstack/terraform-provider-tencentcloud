@@ -50,6 +50,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
@@ -175,10 +176,10 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 	)
 
 	if raw, ok := d.GetOk("proxy_id"); ok {
-		proxyId = stringToPointer(raw.(string))
+		proxyId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("listener_id"); ok {
-		listenerId = stringToPointer(raw.(string))
+		listenerId = helper.String(raw.(string))
 	}
 
 	if proxyId == nil && listenerId == nil {
@@ -186,7 +187,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 	}
 
 	if raw, ok := d.GetOk("listener_name"); ok {
-		name = stringToPointer(raw.(string))
+		name = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("port"); ok {
 		port = common.IntPtr(raw.(int))
@@ -206,7 +207,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 
 		for _, ls := range tcpListeners {
 			if ls.HealthCheck == nil {
-				ls.HealthCheck = intToPointer(0)
+				ls.HealthCheck = helper.IntUint64(0)
 			}
 
 			ids = append(ids, *ls.ListenerId)
@@ -220,7 +221,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 				"status":          ls.ListenerStatus,
 				"scheduler":       ls.Scheduler,
 				"health_check":    *ls.HealthCheck == 1,
-				"create_time":     formatUnixTime(*ls.CreateTime),
+				"create_time":     helper.FormatUnixTime(*ls.CreateTime),
 				"connect_timeout": ls.ConnectTimeout,
 				"interval":        ls.DelayLoop,
 			}
@@ -248,7 +249,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 				"realserver_type": ls.RealServerType,
 				"status":          ls.ListenerStatus,
 				"scheduler":       ls.Scheduler,
-				"create_time":     formatUnixTime(*ls.CreateTime),
+				"create_time":     helper.FormatUnixTime(*ls.CreateTime),
 			}
 
 			listeners = append(listeners, m)
@@ -256,7 +257,7 @@ func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m int
 	}
 
 	_ = d.Set("listeners", listeners)
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), listeners); err != nil {

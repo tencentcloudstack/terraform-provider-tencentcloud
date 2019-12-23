@@ -20,6 +20,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCfsFileSystems() *schema.Resource {
@@ -188,7 +189,7 @@ func dataSourceTencentCloudCfsFileSystemsRead(d *schema.ResourceData, meta inter
 		ids = append(ids, *fileSystem.FileSystemId)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("file_system_list", fileSystemList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set cfs file system list fail, reason:%s\n ", logId, err.Error())

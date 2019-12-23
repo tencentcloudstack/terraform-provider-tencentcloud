@@ -19,6 +19,7 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -889,7 +890,7 @@ func (me *VpcService) CreateSecurityGroup(ctx context.Context, name, desc string
 	request.GroupDescription = &desc
 
 	if projectId != nil {
-		request.ProjectId = stringToPointer(strconv.Itoa(*projectId))
+		request.ProjectId = helper.String(strconv.Itoa(*projectId))
 	}
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -1232,33 +1233,33 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 	} else {
 		if sgName != nil {
 			request.Filters = append(request.Filters, &vpc.Filter{
-				Name:   stringToPointer("security-group-name"),
+				Name:   helper.String("security-group-name"),
 				Values: []*string{sgName},
 			})
 		}
 
 		if projectId != nil {
 			request.Filters = append(request.Filters, &vpc.Filter{
-				Name:   stringToPointer("project-id"),
-				Values: []*string{stringToPointer(strconv.Itoa(*projectId))},
+				Name:   helper.String("project-id"),
+				Values: []*string{helper.String(strconv.Itoa(*projectId))},
 			})
 		}
 
 		for k, v := range tags {
 			request.Filters = append(request.Filters, &vpc.Filter{
-				Name:   stringToPointer("tag:" + k),
-				Values: []*string{stringToPointer(v)},
+				Name:   helper.String("tag:" + k),
+				Values: []*string{helper.String(v)},
 			})
 		}
 	}
 
-	request.Limit = stringToPointer(strconv.Itoa(DESCRIBE_SECURITY_GROUP_LIMIT))
+	request.Limit = helper.String(strconv.Itoa(DESCRIBE_SECURITY_GROUP_LIMIT))
 
 	offset := 0
 	count := DESCRIBE_SECURITY_GROUP_LIMIT
 	// run loop at least once
 	for count == DESCRIBE_SECURITY_GROUP_LIMIT {
-		request.Offset = stringToPointer(strconv.Itoa(offset))
+		request.Offset = helper.String(strconv.Itoa(offset))
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -1303,13 +1304,13 @@ func (me *VpcService) modifyLiteRulesInSecurityGroup(ctx context.Context, sgId s
 
 	for _, in := range ingress {
 		policy := &vpc.SecurityGroupPolicy{
-			Protocol:  stringToPointer(in.protocol),
-			CidrBlock: stringToPointer(in.cidrIp),
-			Action:    stringToPointer(in.action),
+			Protocol:  helper.String(in.protocol),
+			CidrBlock: helper.String(in.cidrIp),
+			Action:    helper.String(in.action),
 		}
 
 		if in.port != "" {
-			policy.Port = stringToPointer(in.port)
+			policy.Port = helper.String(in.port)
 		}
 
 		request.SecurityGroupPolicySet.Ingress = append(request.SecurityGroupPolicySet.Ingress, policy)
@@ -1317,13 +1318,13 @@ func (me *VpcService) modifyLiteRulesInSecurityGroup(ctx context.Context, sgId s
 
 	for _, eg := range egress {
 		policy := &vpc.SecurityGroupPolicy{
-			Protocol:  stringToPointer(eg.protocol),
-			CidrBlock: stringToPointer(eg.cidrIp),
-			Action:    stringToPointer(eg.action),
+			Protocol:  helper.String(eg.protocol),
+			CidrBlock: helper.String(eg.cidrIp),
+			Action:    helper.String(eg.action),
 		}
 
 		if eg.port != "" {
-			policy.Port = stringToPointer(eg.port)
+			policy.Port = helper.String(eg.port)
 		}
 
 		request.SecurityGroupPolicySet.Egress = append(request.SecurityGroupPolicySet.Egress, policy)
@@ -1334,7 +1335,7 @@ func (me *VpcService) modifyLiteRulesInSecurityGroup(ctx context.Context, sgId s
 		request.SecurityGroupPolicySet.Ingress = nil
 		request.SecurityGroupPolicySet.Egress = nil
 		// 0 means delete all rules
-		request.SecurityGroupPolicySet.Version = stringToPointer("0")
+		request.SecurityGroupPolicySet.Version = helper.String("0")
 	}
 
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -1631,11 +1632,11 @@ func (me *VpcService) DescribeEipByFilter(ctx context.Context, filters map[strin
 	request.Filters = make([]*vpc.Filter, 0, len(filters))
 	for k, v := range filters {
 		filter := &vpc.Filter{
-			Name:   stringToPointer(k),
+			Name:   helper.String(k),
 			Values: []*string{},
 		}
 		for _, vv := range v {
-			filter.Values = append(filter.Values, stringToPointer(vv))
+			filter.Values = append(filter.Values, helper.String(vv))
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -1783,7 +1784,7 @@ func (me *VpcService) CreateEni(
 
 	if ipv4Count != nil {
 		// create will assign a primary ip, secondary ip count is *ipv4Count-1
-		createRequest.SecondaryPrivateIpAddressCount = intToPointer(*ipv4Count - 1)
+		createRequest.SecondaryPrivateIpAddressCount = helper.IntUint64(*ipv4Count - 1)
 	}
 
 	var wantIpv4 []string
@@ -1791,8 +1792,8 @@ func (me *VpcService) CreateEni(
 	for _, ipv4 := range ipv4s {
 		wantIpv4 = append(wantIpv4, ipv4.ip.String())
 		createRequest.PrivateIpAddresses = append(createRequest.PrivateIpAddresses, &vpc.PrivateIpAddressSpecification{
-			PrivateIpAddress: stringToPointer(ipv4.ip.String()),
-			Primary:          boolToPointer(ipv4.primary),
+			PrivateIpAddress: helper.String(ipv4.ip.String()),
+			Primary:          helper.Bool(ipv4.primary),
 			Description:      ipv4.desc,
 		})
 	}
@@ -1897,70 +1898,70 @@ func (me *VpcService) describeEnis(
 
 	if vpcId != nil {
 		request.Filters = append(request.Filters, &vpc.Filter{
-			Name:   stringToPointer("vpc-id"),
+			Name:   helper.String("vpc-id"),
 			Values: []*string{vpcId},
 		})
 	}
 
 	if subnetId != nil {
 		request.Filters = append(request.Filters, &vpc.Filter{
-			Name:   stringToPointer("subnet-id"),
+			Name:   helper.String("subnet-id"),
 			Values: []*string{subnetId},
 		})
 	}
 
 	if id != nil {
 		request.Filters = append(request.Filters, &vpc.Filter{
-			Name:   stringToPointer("network-interface-id"),
+			Name:   helper.String("network-interface-id"),
 			Values: []*string{id},
 		})
 	}
 
 	if cvmId != nil {
 		request.Filters = append(request.Filters, &vpc.Filter{
-			Name:   stringToPointer("attachment.instance-id"),
+			Name:   helper.String("attachment.instance-id"),
 			Values: []*string{cvmId},
 		})
 	}
 
 	if sgId != nil {
 		request.Filters = append(request.Filters, &vpc.Filter{
-			Name:   stringToPointer("groups.security-group-id"),
+			Name:   helper.String("groups.security-group-id"),
 			Values: []*string{sgId},
 		})
 	}
 
 	if name != nil {
 		request.Filters = append(request.Filters, &vpc.Filter{
-			Name:   stringToPointer("network-interface-name"),
+			Name:   helper.String("network-interface-name"),
 			Values: []*string{name},
 		})
 	}
 
 	if desc != nil {
 		request.Filters = append(request.Filters, &vpc.Filter{
-			Name:   stringToPointer("network-interface-description"),
+			Name:   helper.String("network-interface-description"),
 			Values: []*string{desc},
 		})
 	}
 
 	if ipv4 != nil {
 		request.Filters = append(request.Filters, &vpc.Filter{
-			Name:   stringToPointer("address-ip"),
+			Name:   helper.String("address-ip"),
 			Values: []*string{ipv4},
 		})
 	}
 
 	for k, v := range tags {
 		request.Filters = append(request.Filters, &vpc.Filter{
-			Name:   stringToPointer("tag:" + k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String("tag:" + k),
+			Values: []*string{helper.String(v)},
 		})
 	}
 
 	var offset uint64
 	request.Offset = &offset
-	request.Limit = intToPointer(ENI_DESCRIBE_LIMIT)
+	request.Limit = helper.IntUint64(ENI_DESCRIBE_LIMIT)
 
 	count := ENI_DESCRIBE_LIMIT
 	for count == ENI_DESCRIBE_LIMIT {
@@ -2044,7 +2045,7 @@ func (me *VpcService) UnAssignIpv4FromEni(ctx context.Context, id string, ipv4s 
 	request.PrivateIpAddresses = make([]*vpc.PrivateIpAddressSpecification, 0, len(ipv4s))
 	for _, ipv4 := range ipv4s {
 		request.PrivateIpAddresses = append(request.PrivateIpAddresses, &vpc.PrivateIpAddressSpecification{
-			PrivateIpAddress: stringToPointer(ipv4),
+			PrivateIpAddress: helper.String(ipv4),
 		})
 	}
 
@@ -2079,7 +2080,7 @@ func (me *VpcService) AssignIpv4ToEni(ctx context.Context, id string, ipv4s []Vp
 	request.NetworkInterfaceId = &id
 
 	if ipv4Count != nil {
-		request.SecondaryPrivateIpAddressCount = intToPointer(*ipv4Count)
+		request.SecondaryPrivateIpAddressCount = helper.IntUint64(*ipv4Count)
 	}
 
 	var wantIpv4 []string
@@ -2091,8 +2092,8 @@ func (me *VpcService) AssignIpv4ToEni(ctx context.Context, id string, ipv4s []Vp
 		for _, ipv4 := range ipv4s {
 			wantIpv4 = append(wantIpv4, ipv4.ip.String())
 			request.PrivateIpAddresses = append(request.PrivateIpAddresses, &vpc.PrivateIpAddressSpecification{
-				PrivateIpAddress: stringToPointer(ipv4.ip.String()),
-				Primary:          boolToPointer(ipv4.primary),
+				PrivateIpAddress: helper.String(ipv4.ip.String()),
+				Primary:          helper.Bool(ipv4.primary),
 				Description:      ipv4.desc,
 			})
 		}
@@ -2454,7 +2455,7 @@ func waitEniReady(ctx context.Context, id string, client *vpc.Client, wantIpv4s 
 	}
 
 	request := vpc.NewDescribeNetworkInterfacesRequest()
-	request.NetworkInterfaceIds = []*string{stringToPointer(id)}
+	request.NetworkInterfaceIds = []*string{helper.String(id)}
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

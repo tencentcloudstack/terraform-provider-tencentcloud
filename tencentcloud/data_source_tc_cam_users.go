@@ -29,6 +29,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCamUsers() *schema.Resource {
@@ -208,7 +209,7 @@ func dataSourceTencentCloudCamUsersRead(d *schema.ResourceData, meta interface{}
 		ids = append(ids, *user.Name)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("user_list", userList); e != nil {
 		log.Printf("[CRITAL]%s provider set CAM user list fail, reason:%s\n", logId, e.Error())
 		return e

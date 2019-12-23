@@ -30,6 +30,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
@@ -83,24 +84,24 @@ func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 
 	request := cbs.NewCreateAutoSnapshotPolicyRequest()
-	request.AutoSnapshotPolicyName = stringToPointer(d.Get("snapshot_policy_name").(string))
+	request.AutoSnapshotPolicyName = helper.String(d.Get("snapshot_policy_name").(string))
 
 	request.Policy = make([]*cbs.Policy, 0, 1)
 	policy := &cbs.Policy{}
 	repeatWeekdays := d.Get("repeat_weekdays").([]interface{})
 	policy.DayOfWeek = make([]*uint64, 0, len(repeatWeekdays))
 	for _, v := range repeatWeekdays {
-		policy.DayOfWeek = append(policy.DayOfWeek, intToPointer(v.(int)))
+		policy.DayOfWeek = append(policy.DayOfWeek, helper.IntUint64(v.(int)))
 	}
 	repeatHours := d.Get("repeat_hours").([]interface{})
 	policy.Hour = make([]*uint64, 0, len(repeatHours))
 	for _, v := range repeatHours {
-		policy.Hour = append(policy.Hour, intToPointer(v.(int)))
+		policy.Hour = append(policy.Hour, helper.IntUint64(v.(int)))
 	}
 	request.Policy = append(request.Policy, policy)
 
 	if v, ok := d.GetOk("retention_days"); ok {
-		request.RetentionDays = intToPointer(v.(int))
+		request.RetentionDays = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -155,8 +156,8 @@ func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta inte
 
 	_ = d.Set("snapshot_policy_name", policy.AutoSnapshotPolicyName)
 	if len(policy.Policy) > 0 {
-		_ = d.Set("repeat_weekdays", flattenIntList(policy.Policy[0].DayOfWeek))
-		_ = d.Set("repeat_hours", flattenIntList(policy.Policy[0].Hour))
+		_ = d.Set("repeat_weekdays", helper.Uint64sInterfaces(policy.Policy[0].DayOfWeek))
+		_ = d.Set("repeat_hours", helper.Uint64sInterfaces(policy.Policy[0].Hour))
 	}
 	_ = d.Set("retention_days", policy.RetentionDays)
 
@@ -172,10 +173,10 @@ func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta in
 	request := cbs.NewModifyAutoSnapshotPolicyAttributeRequest()
 	request.AutoSnapshotPolicyId = &policyId
 	if d.HasChange("snapshot_policy_name") {
-		request.AutoSnapshotPolicyName = stringToPointer(d.Get("snapshot_policy_name").(string))
+		request.AutoSnapshotPolicyName = helper.String(d.Get("snapshot_policy_name").(string))
 	}
 	if d.HasChange("retention_days") {
-		request.RetentionDays = intToPointer(d.Get("retention_days").(int))
+		request.RetentionDays = helper.IntUint64(d.Get("retention_days").(int))
 	}
 	if d.HasChange("repeat_weekdays") || d.HasChange("repeat_hours") {
 		request.Policy = make([]*cbs.Policy, 0, 1)
@@ -183,12 +184,12 @@ func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta in
 		repeatWeekdays := d.Get("repeat_weekdays").([]interface{})
 		policy.DayOfWeek = make([]*uint64, 0, len(repeatWeekdays))
 		for _, v := range repeatWeekdays {
-			policy.DayOfWeek = append(policy.DayOfWeek, intToPointer(v.(int)))
+			policy.DayOfWeek = append(policy.DayOfWeek, helper.IntUint64(v.(int)))
 		}
 		repeatHours := d.Get("repeat_hours").([]interface{})
 		policy.Hour = make([]*uint64, 0, len(repeatHours))
 		for _, v := range repeatHours {
-			policy.Hour = append(policy.Hour, intToPointer(v.(int)))
+			policy.Hour = append(policy.Hour, helper.IntUint64(v.(int)))
 		}
 		request.Policy = append(request.Policy, policy)
 	}

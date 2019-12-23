@@ -3,11 +3,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
 
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type MongodbService struct {
@@ -76,8 +77,8 @@ func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string
 	logId := getLogId(ctx)
 	request := mongodb.NewUpgradeDBInstanceHourRequest()
 	request.InstanceId = &instanceId
-	request.Memory = intToPointer(memory)
-	request.Volume = intToPointer(volume)
+	request.Memory = helper.IntUint64(memory)
+	request.Volume = helper.IntUint64(volume)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().UpgradeDBInstanceHour(request)
 	if err != nil {
@@ -94,7 +95,7 @@ func (me *MongodbService) ModifyProjectId(ctx context.Context, instanceId string
 	logId := getLogId(ctx)
 	request := mongodb.NewAssignProjectRequest()
 	request.InstanceIds = []*string{&instanceId}
-	request.ProjectId = intToPointer(projectId)
+	request.ProjectId = helper.IntUint64(projectId)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().AssignProject(request)
 	if err != nil {
@@ -161,8 +162,8 @@ func (me *MongodbService) DescribeInstancesByFilter(ctx context.Context, instanc
 	pageSize := 100
 	mongodbs = make([]*mongodb.MongoDBInstanceDetail, 0)
 	for {
-		request.Offset = intToPointer(offset)
-		request.Limit = intToPointer(pageSize)
+		request.Offset = helper.IntUint64(offset)
+		request.Limit = helper.IntUint64(pageSize)
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseMongodbClient().DescribeDBInstances(request)
 		if err != nil {

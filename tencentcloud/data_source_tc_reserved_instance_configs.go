@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudReservedInstanceConfigs() *schema.Resource {
@@ -145,7 +146,7 @@ func dataSourceTencentCloudReservedInstanceConfigsRead(d *schema.ResourceData, m
 		ids = append(ids, *config.ReservedInstancesOfferingId)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("config_list", configList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set config list fail, reason:%s\n ", logId, err.Error())

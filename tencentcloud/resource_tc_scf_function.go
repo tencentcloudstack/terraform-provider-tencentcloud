@@ -37,6 +37,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func scfFunctionValidate(allowDot bool) schema.SchemaValidateFunc {
@@ -85,7 +86,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
-				ValidateFunc: composeValidateFunc(
+				ValidateFunc: helper.ComposeValidateFunc(
 					validateStringLengthInRange(2, 60),
 					scfFunctionValidate(false),
 				),
@@ -94,7 +95,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 			"handler": {
 				Type:     schema.TypeString,
 				Required: true,
-				ValidateFunc: composeValidateFunc(
+				ValidateFunc: helper.ComposeValidateFunc(
 					validateStringLengthInRange(2, 60),
 					scfFunctionValidate(true),
 				),
@@ -111,7 +112,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  128,
-				ValidateFunc: composeValidateFunc(
+				ValidateFunc: helper.ComposeValidateFunc(
 					validateIntegerInRange(128, 1536),
 					func(v interface{}, k string) (wss []string, errs []error) {
 						if v.(int)%128 != 0 {
@@ -363,35 +364,35 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	var functionInfo scfFunctionInfo
 
 	functionInfo.name = d.Get("name").(string)
-	functionInfo.handler = stringToPointer(d.Get("handler").(string))
-	functionInfo.desc = stringToPointer(d.Get("description").(string))
-	functionInfo.memSize = integerToPointer(d.Get("mem_size").(int))
-	functionInfo.timeout = integerToPointer(d.Get("timeout").(int))
-	functionInfo.environment = getTags(d, "environment")
-	functionInfo.runtime = stringToPointer(d.Get("runtime").(string))
-	functionInfo.namespace = stringToPointer(d.Get("namespace").(string))
+	functionInfo.handler = helper.String(d.Get("handler").(string))
+	functionInfo.desc = helper.String(d.Get("description").(string))
+	functionInfo.memSize = helper.Int(d.Get("mem_size").(int))
+	functionInfo.timeout = helper.Int(d.Get("timeout").(int))
+	functionInfo.environment = helper.GetTags(d, "environment")
+	functionInfo.runtime = helper.String(d.Get("runtime").(string))
+	functionInfo.namespace = helper.String(d.Get("namespace").(string))
 
 	if raw, ok := d.GetOk("vpc_id"); ok {
-		functionInfo.vpcId = stringToPointer(raw.(string))
+		functionInfo.vpcId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("subnet_id"); ok {
-		functionInfo.subnetId = stringToPointer(raw.(string))
+		functionInfo.subnetId = helper.String(raw.(string))
 	}
-	if err := checkIfSetTogether(d, "vpc_id", "subnet_id"); err != nil {
+	if err := helper.CheckIfSetTogether(d, "vpc_id", "subnet_id"); err != nil {
 		return err
 	}
 
 	if raw, ok := d.GetOk("role"); ok {
-		functionInfo.role = stringToPointer(raw.(string))
+		functionInfo.role = helper.String(raw.(string))
 	}
 
 	if raw, ok := d.GetOk("cls_logset_id"); ok {
-		functionInfo.clsLogsetId = stringToPointer(raw.(string))
+		functionInfo.clsLogsetId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("cls_topic_id"); ok {
-		functionInfo.clsTopicId = stringToPointer(raw.(string))
+		functionInfo.clsTopicId = helper.String(raw.(string))
 	}
-	if err := checkIfSetTogether(d, "cls_logset_id", "cls_topic_id"); err != nil {
+	if err := helper.CheckIfSetTogether(d, "cls_logset_id", "cls_topic_id"); err != nil {
 		return err
 	}
 
@@ -405,30 +406,30 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 
 	if raw, ok := d.GetOk("cos_bucket_name"); ok {
 		codeType = scfFunctionCosCode
-		functionInfo.cosBucketName = stringToPointer(raw.(string))
+		functionInfo.cosBucketName = helper.String(raw.(string))
 		// to remove string like -1234567890 from bucket id
 		split := strings.Split(*functionInfo.cosBucketName, "-")
 		if len(split) > 1 {
-			functionInfo.cosBucketName = stringToPointer(strings.Join(split[:len(split)-1], "-"))
+			functionInfo.cosBucketName = helper.String(strings.Join(split[:len(split)-1], "-"))
 		}
 	}
 	if raw, ok := d.GetOk("cos_object_name"); ok {
 		codeType = scfFunctionCosCode
-		functionInfo.cosObjectName = stringToPointer(raw.(string))
+		functionInfo.cosObjectName = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("cos_bucket_region"); ok {
 		codeType = scfFunctionCosCode
-		functionInfo.cosBucketRegion = stringToPointer(raw.(string))
+		functionInfo.cosBucketRegion = helper.String(raw.(string))
 	}
 
 	if raw, ok := d.GetOk("zip_file"); ok {
 		codeType = scfFunctionZipFileCode
-		functionInfo.zipFile = stringToPointer(raw.(string))
+		functionInfo.zipFile = helper.String(raw.(string))
 	}
 
 	switch codeType {
 	case scfFunctionCosCode:
-		if err := checkIfSetTogether(d, "cos_bucket_name", "cos_object_name", "cos_bucket_region"); err != nil {
+		if err := helper.CheckIfSetTogether(d, "cos_bucket_name", "cos_object_name", "cos_bucket_region"); err != nil {
 			return err
 		}
 
@@ -450,7 +451,7 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		if err := scfService.ModifyFunctionConfig(ctx, scfFunctionInfo{
 			name:      functionInfo.name,
 			namespace: functionInfo.namespace,
-			l5Enable:  boolToPointer(true),
+			l5Enable:  helper.Bool(true),
 		}); err != nil {
 			log.Printf("[CRITAL]%s enable function L5 failed: %+v", logId, err)
 			return err
@@ -488,7 +489,7 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		return err
 	}
 
-	if tags := getTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE, region, *resp.Response.FunctionId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			log.Printf("[CRITAL]%s set function tags failed: %+v", logId, err)
@@ -622,7 +623,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 
 	functionInfo := scfFunctionInfo{
 		name:      name,
-		namespace: stringToPointer(namespace),
+		namespace: helper.String(namespace),
 	}
 
 	var updateAttrs []string
@@ -641,20 +642,20 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		updateAttrs = append(updateAttrs, "cos_bucket_region")
 	}
 	if raw, ok := d.GetOk("cos_bucket_name"); ok {
-		functionInfo.cosBucketName = stringToPointer(raw.(string))
+		functionInfo.cosBucketName = helper.String(raw.(string))
 		// to remove string like -1234567890 from bucket id
 		split := strings.Split(*functionInfo.cosBucketName, "-")
 		if len(split) > 1 {
-			functionInfo.cosBucketName = stringToPointer(strings.Join(split[:len(split)-1], "-"))
+			functionInfo.cosBucketName = helper.String(strings.Join(split[:len(split)-1], "-"))
 		}
 	}
 	if raw, ok := d.GetOk("cos_object_name"); ok {
-		functionInfo.cosObjectName = stringToPointer(raw.(string))
+		functionInfo.cosObjectName = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("cos_bucket_region"); ok {
-		functionInfo.cosBucketRegion = stringToPointer(raw.(string))
+		functionInfo.cosBucketRegion = helper.String(raw.(string))
 	}
-	if err := checkIfSetTogether(d, "cos_bucket_name", "cos_object_name", "cos_bucket_region"); err != nil {
+	if err := helper.CheckIfSetTogether(d, "cos_bucket_name", "cos_object_name", "cos_bucket_region"); err != nil {
 		return err
 	}
 
@@ -662,7 +663,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		updateAttrs = append(updateAttrs, "zip_file")
 	}
 	if raw, ok := d.GetOk("zip_file"); ok {
-		functionInfo.zipFile = stringToPointer(raw.(string))
+		functionInfo.zipFile = helper.String(raw.(string))
 	}
 
 	// update function code
@@ -671,7 +672,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			return errors.New("can't only change handler")
 		}
 
-		functionInfo.handler = stringToPointer(d.Get("handler").(string))
+		functionInfo.handler = helper.String(d.Get("handler").(string))
 
 		if err := scfService.ModifyFunctionCode(ctx, functionInfo); err != nil {
 			log.Printf("[CRITAL]%s update function code failed: %+v", logId, err)
@@ -686,30 +687,30 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 	updateAttrs = updateAttrs[:0]
 	functionInfo = scfFunctionInfo{
 		name:      name,
-		namespace: stringToPointer(namespace),
+		namespace: helper.String(namespace),
 	}
 
 	if d.HasChange("description") {
 		updateAttrs = append(updateAttrs, "description")
-		functionInfo.desc = stringToPointer(d.Get("description").(string))
+		functionInfo.desc = helper.String(d.Get("description").(string))
 	}
 	if d.HasChange("mem_size") {
 		updateAttrs = append(updateAttrs, "mem_size")
-		functionInfo.memSize = integerToPointer(d.Get("mem_size").(int))
+		functionInfo.memSize = helper.Int(d.Get("mem_size").(int))
 	}
 	if d.HasChange("timeout") {
 		updateAttrs = append(updateAttrs, "timeout")
-		functionInfo.timeout = integerToPointer(d.Get("timeout").(int))
+		functionInfo.timeout = helper.Int(d.Get("timeout").(int))
 	}
 
 	if d.HasChange("environment") {
 		updateAttrs = append(updateAttrs, "environment")
 	}
-	functionInfo.environment = getTags(d, "environment")
+	functionInfo.environment = helper.GetTags(d, "environment")
 
 	if d.HasChange("runtime") {
 		updateAttrs = append(updateAttrs, "runtime")
-		functionInfo.runtime = stringToPointer(d.Get("runtime").(string))
+		functionInfo.runtime = helper.String(d.Get("runtime").(string))
 	}
 
 	if d.HasChange("vpc_id") {
@@ -719,18 +720,18 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		updateAttrs = append(updateAttrs, "subnet_id")
 	}
 	if raw, ok := d.GetOk("vpc_id"); ok {
-		functionInfo.vpcId = stringToPointer(raw.(string))
+		functionInfo.vpcId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("subnet_id"); ok {
-		functionInfo.subnetId = stringToPointer(raw.(string))
+		functionInfo.subnetId = helper.String(raw.(string))
 	}
-	if err := checkIfSetTogether(d, "vpc_id", "subnet_id"); err != nil {
+	if err := helper.CheckIfSetTogether(d, "vpc_id", "subnet_id"); err != nil {
 		return err
 	}
 
 	if d.HasChange("role") {
 		updateAttrs = append(updateAttrs, "role")
-		functionInfo.role = stringToPointer(d.Get("role").(string))
+		functionInfo.role = helper.String(d.Get("role").(string))
 	}
 
 	if d.HasChange("cls_logset_id") {
@@ -740,18 +741,18 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		updateAttrs = append(updateAttrs, "cls_topic_id")
 	}
 	if raw, ok := d.GetOk("cls_logset_id"); ok {
-		functionInfo.clsLogsetId = stringToPointer(raw.(string))
+		functionInfo.clsLogsetId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("cls_topic_id"); ok {
-		functionInfo.clsTopicId = stringToPointer(raw.(string))
+		functionInfo.clsTopicId = helper.String(raw.(string))
 	}
-	if err := checkIfSetTogether(d, "cls_logset_id", "cls_topic_id"); err != nil {
+	if err := helper.CheckIfSetTogether(d, "cls_logset_id", "cls_topic_id"); err != nil {
 		return err
 	}
 
 	if d.HasChange("l5_enable") {
 		updateAttrs = append(updateAttrs, "l5_enable")
-		functionInfo.l5Enable = boolToPointer(d.Get("l5_enable").(bool))
+		functionInfo.l5Enable = helper.Bool(d.Get("l5_enable").(bool))
 	}
 
 	// update function configuration

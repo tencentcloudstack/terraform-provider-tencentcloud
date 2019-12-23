@@ -49,6 +49,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudAsScalingConfig() *schema.Resource {
@@ -220,13 +221,13 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 	request := as.NewCreateLaunchConfigurationRequest()
 
 	v := d.Get("configuration_name")
-	request.LaunchConfigurationName = stringToPointer(v.(string))
+	request.LaunchConfigurationName = helper.String(v.(string))
 
 	v = d.Get("image_id")
-	request.ImageId = stringToPointer(v.(string))
+	request.ImageId = helper.String(v.(string))
 
 	if v, ok := d.GetOk("project_id"); ok {
-		request.ProjectId = intToPointer(v.(int))
+		request.ProjectId = helper.IntUint64(v.(int))
 	}
 
 	v = d.Get("instance_types")
@@ -239,11 +240,11 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 
 	request.SystemDisk = &as.SystemDisk{}
 	if v, ok := d.GetOk("system_disk_type"); ok {
-		request.SystemDisk.DiskType = stringToPointer(v.(string))
+		request.SystemDisk.DiskType = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("system_disk_size"); ok {
-		request.SystemDisk.DiskSize = intToPointer(v.(int))
+		request.SystemDisk.DiskSize = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("data_disk"); ok {
@@ -267,10 +268,10 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 
 	request.InternetAccessible = &as.InternetAccessible{}
 	if v, ok := d.GetOk("internet_charge_type"); ok {
-		request.InternetAccessible.InternetChargeType = stringToPointer(v.(string))
+		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
-		request.InternetAccessible.InternetMaxBandwidthOut = intToPointer(v.(int))
+		request.InternetAccessible.InternetMaxBandwidthOut = helper.IntUint64(v.(int))
 	}
 	if v, ok := d.GetOkExists("public_ip_assigned"); ok {
 		publicIpAssigned := v.(bool)
@@ -279,7 +280,7 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 
 	request.LoginSettings = &as.LoginSettings{}
 	if v, ok := d.GetOk("password"); ok {
-		request.LoginSettings.Password = stringToPointer(v.(string))
+		request.LoginSettings.Password = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("key_ids"); ok {
 		keyIds := v.([]interface{})
@@ -319,14 +320,14 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 	}
 
 	if v, ok := d.GetOk("user_data"); ok {
-		request.UserData = stringToPointer(v.(string))
+		request.UserData = helper.String(v.(string))
 	}
 
 	chargeType := INSTANCE_CHARGE_TYPE_POSTPAID
 	request.InstanceChargeType = &chargeType
 
 	if v, ok := d.GetOk("instance_types_check_policy"); ok {
-		request.InstanceTypesCheckPolicy = stringToPointer(v.(string))
+		request.InstanceTypesCheckPolicy = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("instance_tags"); ok {
@@ -383,18 +384,18 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("status", *config.LaunchConfigurationStatus)
 		_ = d.Set("image_id", *config.ImageId)
 		_ = d.Set("project_id", *config.ProjectId)
-		_ = d.Set("instance_types", flattenStringList(config.InstanceTypes))
+		_ = d.Set("instance_types", helper.StringsInterfaces(config.InstanceTypes))
 		_ = d.Set("system_disk_type", *config.SystemDisk.DiskType)
 		_ = d.Set("system_disk_size", *config.SystemDisk.DiskSize)
 		_ = d.Set("data_disk", flattenDataDiskMappings(config.DataDisks))
 		_ = d.Set("internet_charge_type", *config.InternetAccessible.InternetChargeType)
 		_ = d.Set("internet_max_bandwidth_out", *config.InternetAccessible.InternetMaxBandwidthOut)
 		_ = d.Set("public_ip_assigned", *config.InternetAccessible.PublicIpAssigned)
-		_ = d.Set("login_settings.key_ids", flattenStringList(config.LoginSettings.KeyIds))
-		_ = d.Set("security_group_ids", flattenStringList(config.SecurityGroupIds))
+		_ = d.Set("login_settings.key_ids", helper.StringsInterfaces(config.LoginSettings.KeyIds))
+		_ = d.Set("security_group_ids", helper.StringsInterfaces(config.SecurityGroupIds))
 		_ = d.Set("enhanced_security_service", *config.EnhancedService.SecurityService.Enabled)
 		_ = d.Set("enhanced_monitor_service", *config.EnhancedService.MonitorService.Enabled)
-		_ = d.Set("user_data", pointerToString(config.UserData))
+		_ = d.Set("user_data", helper.PString(config.UserData))
 		_ = d.Set("instance_tags", flattenInstanceTagsMapping(config.InstanceTags))
 		return nil
 	})
@@ -414,10 +415,10 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 	request.LaunchConfigurationId = &configurationId
 
 	v := d.Get("configuration_name")
-	request.LaunchConfigurationName = stringToPointer(v.(string))
+	request.LaunchConfigurationName = helper.String(v.(string))
 
 	v = d.Get("image_id")
-	request.ImageId = stringToPointer(v.(string))
+	request.ImageId = helper.String(v.(string))
 
 	if v, ok := d.GetOk("project_id"); ok {
 		projectId := int64(v.(int))
@@ -434,11 +435,11 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 
 	request.SystemDisk = &as.SystemDisk{}
 	if v, ok := d.GetOk("system_disk_type"); ok {
-		request.SystemDisk.DiskType = stringToPointer(v.(string))
+		request.SystemDisk.DiskType = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("system_disk_size"); ok {
-		request.SystemDisk.DiskSize = intToPointer(v.(int))
+		request.SystemDisk.DiskSize = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("data_disk"); ok {
@@ -462,10 +463,10 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 
 	request.InternetAccessible = &as.InternetAccessible{}
 	if v, ok := d.GetOk("internet_charge_type"); ok {
-		request.InternetAccessible.InternetChargeType = stringToPointer(v.(string))
+		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
-		request.InternetAccessible.InternetMaxBandwidthOut = intToPointer(v.(int))
+		request.InternetAccessible.InternetMaxBandwidthOut = helper.IntUint64(v.(int))
 	}
 	if v, ok := d.GetOkExists("public_ip_assigned"); ok {
 		publicIpAssigned := v.(bool)
@@ -474,7 +475,7 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 
 	request.LoginSettings = &as.LoginSettings{}
 	if v, ok := d.GetOk("password"); ok {
-		request.LoginSettings.Password = stringToPointer(v.(string))
+		request.LoginSettings.Password = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("key_ids"); ok {
 		keyIds := v.([]interface{})
@@ -514,14 +515,14 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 	}
 
 	if v, ok := d.GetOk("user_data"); ok {
-		request.UserData = stringToPointer(v.(string))
+		request.UserData = helper.String(v.(string))
 	}
 
 	chargeType := INSTANCE_CHARGE_TYPE_POSTPAID
 	request.InstanceChargeType = &chargeType
 
 	if v, ok := d.GetOk("instance_types_check_policy"); ok {
-		request.InstanceTypesCheckPolicy = stringToPointer(v.(string))
+		request.InstanceTypesCheckPolicy = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("instance_tags"); ok {

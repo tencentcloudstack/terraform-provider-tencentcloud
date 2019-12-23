@@ -18,6 +18,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudAsScalingGroups() *schema.Resource {
@@ -225,7 +226,7 @@ func dataSourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta inter
 		scalingGroupName = v.(string)
 	}
 
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	scalingGroups, err := asService.DescribeAutoScalingGroupByFilter(ctx, scalingGroupId, configurationId, scalingGroupName, tags)
 	if err != nil {
@@ -248,12 +249,12 @@ func dataSourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta inter
 			"max_size":             scalingGroup.MaxSize,
 			"min_size":             scalingGroup.MinSize,
 			"vpc_id":               scalingGroup.VpcId,
-			"subnet_ids":           flattenStringList(scalingGroup.SubnetIdSet),
-			"zones":                flattenStringList(scalingGroup.ZoneSet),
+			"subnet_ids":           helper.StringsInterfaces(scalingGroup.SubnetIdSet),
+			"zones":                helper.StringsInterfaces(scalingGroup.ZoneSet),
 			"default_cooldown":     scalingGroup.DefaultCooldown,
 			"desired_capacity":     scalingGroup.DesiredCapacity,
-			"load_balancer_ids":    flattenStringList(scalingGroup.LoadBalancerIdSet),
-			"termination_policies": flattenStringList(scalingGroup.TerminationPolicySet),
+			"load_balancer_ids":    helper.StringsInterfaces(scalingGroup.LoadBalancerIdSet),
+			"termination_policies": helper.StringsInterfaces(scalingGroup.TerminationPolicySet),
 			"retry_policy":         scalingGroup.RetryPolicy,
 			"create_time":          scalingGroup.CreatedTime,
 			"tags":                 tags,

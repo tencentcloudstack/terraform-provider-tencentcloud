@@ -39,6 +39,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudAlbServerAttachment() *schema.Resource {
@@ -118,14 +119,14 @@ func resourceTencentCloudAlbServerAttachmentCreate(d *schema.ResourceData, meta 
 
 	loadbalancerId := d.Get("loadbalancer_id").(string)
 	listenerId := d.Get("listener_id").(string)
-	request.LoadBalancerId = stringToPointer(loadbalancerId)
-	request.ListenerId = stringToPointer(listenerId)
+	request.LoadBalancerId = helper.String(loadbalancerId)
+	request.ListenerId = helper.String(listenerId)
 
 	location_id := ""
 	if v, ok := d.GetOk("location_id"); ok {
 		location_id = v.(string)
 		if location_id != "" {
-			request.LocationId = stringToPointer(location_id)
+			request.LocationId = helper.String(location_id)
 		}
 	}
 
@@ -264,10 +265,10 @@ func resourceTencentCloudAlbServerAttachementRemove(d *schema.ResourceData, meta
 	listenerId := items[1]
 	locationId := items[2]
 	request := clb.NewDeregisterTargetsRequest()
-	request.ListenerId = stringToPointer(listenerId)
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.ListenerId = helper.String(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
 	if locationId != "" {
-		request.LocationId = stringToPointer(locationId)
+		request.LocationId = helper.String(locationId)
 	}
 	for _, inst_ := range remove {
 		inst := inst_.(map[string]interface{})
@@ -307,13 +308,13 @@ func resourceTencentCloudAlbServerAttachementAdd(d *schema.ResourceData, meta in
 	clbId := d.Get("loadbalancer_id").(string)
 	locationId := ""
 	request := clb.NewRegisterTargetsRequest()
-	request.LoadBalancerId = stringToPointer(clbId)
-	request.ListenerId = stringToPointer(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
+	request.ListenerId = helper.String(listenerId)
 
 	if v, ok := d.GetOk("location_id"); ok {
 		locationId = v.(string)
 		if locationId != "" {
-			request.LocationId = stringToPointer(locationId)
+			request.LocationId = helper.String(locationId)
 		}
 	}
 

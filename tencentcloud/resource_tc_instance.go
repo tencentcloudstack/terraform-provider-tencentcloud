@@ -86,6 +86,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -376,22 +377,22 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	request := cvm.NewRunInstancesRequest()
-	request.ImageId = stringToPointer(d.Get("image_id").(string))
+	request.ImageId = helper.String(d.Get("image_id").(string))
 	request.Placement = &cvm.Placement{
-		Zone: stringToPointer(d.Get("availability_zone").(string)),
+		Zone: helper.String(d.Get("availability_zone").(string)),
 	}
 	if v, ok := d.GetOk("project_id"); ok {
 		projectId := int64(v.(int))
 		request.Placement.ProjectId = &projectId
 	}
 	if v, ok := d.GetOk("instance_name"); ok {
-		request.InstanceName = stringToPointer(v.(string))
+		request.InstanceName = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("instance_type"); ok {
-		request.InstanceType = stringToPointer(v.(string))
+		request.InstanceType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("hostname"); ok {
-		request.HostName = stringToPointer(v.(string))
+		request.HostName = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("instance_charge_type"); ok {
 		instanceChargeType := v.(string)
@@ -406,33 +407,33 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 					instanceChargeType)
 			}
 			if renewFlag, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
-				request.InstanceChargePrepaid.RenewFlag = stringToPointer(renewFlag.(string))
+				request.InstanceChargePrepaid.RenewFlag = helper.String(renewFlag.(string))
 			}
 		}
 		if instanceChargeType == CVM_CHARGE_TYPE_SPOTPAID {
 			request.InstanceMarketOptions = &cvm.InstanceMarketOptionsRequest{}
-			request.InstanceMarketOptions.MarketType = stringToPointer(CVM_MARKET_TYPE_SPOT)
+			request.InstanceMarketOptions.MarketType = helper.String(CVM_MARKET_TYPE_SPOT)
 			request.InstanceMarketOptions.SpotOptions = &cvm.SpotMarketOptions{}
 			if v, ok := d.GetOk("spot_instance_type"); ok {
-				request.InstanceMarketOptions.SpotOptions.SpotInstanceType = stringToPointer(strings.ToLower(v.(string)))
+				request.InstanceMarketOptions.SpotOptions.SpotInstanceType = helper.String(strings.ToLower(v.(string)))
 			} else {
 				return fmt.Errorf("spot_instance_type can not be empty when instance_charge_type is %s", instanceChargeType)
 			}
 			if v, ok := d.GetOk("spot_max_price"); ok {
-				request.InstanceMarketOptions.SpotOptions.MaxPrice = stringToPointer(v.(string))
+				request.InstanceMarketOptions.SpotOptions.MaxPrice = helper.String(v.(string))
 			} else {
 				return fmt.Errorf("spot_max_price can not be empty when instance_charge_type is %s", instanceChargeType)
 			}
 		}
 	}
 	if v, ok := d.GetOk("placement_group_id"); ok {
-		request.DisasterRecoverGroupIds = []*string{stringToPointer(v.(string))}
+		request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
 	}
 
 	// network
 	request.InternetAccessible = &cvm.InternetAccessible{}
 	if v, ok := d.GetOk("internet_charge_type"); ok {
-		request.InternetAccessible.InternetChargeType = stringToPointer(v.(string))
+		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
 		maxBandwidthOut := int64(v.(int))
@@ -446,38 +447,38 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	// vpc
 	request.VirtualPrivateCloud = &cvm.VirtualPrivateCloud{}
 	if v, ok := d.GetOk("vpc_id"); ok {
-		request.VirtualPrivateCloud.VpcId = stringToPointer(v.(string))
+		request.VirtualPrivateCloud.VpcId = helper.String(v.(string))
 	} else {
-		request.VirtualPrivateCloud.VpcId = stringToPointer("DEFAULT")
+		request.VirtualPrivateCloud.VpcId = helper.String("DEFAULT")
 	}
 	if v, ok := d.GetOk("subnet_id"); ok {
-		request.VirtualPrivateCloud.SubnetId = stringToPointer(v.(string))
+		request.VirtualPrivateCloud.SubnetId = helper.String(v.(string))
 	} else {
-		request.VirtualPrivateCloud.SubnetId = stringToPointer("DEFAULT")
+		request.VirtualPrivateCloud.SubnetId = helper.String("DEFAULT")
 	}
 	if v, ok := d.GetOk("private_ip"); ok {
-		request.VirtualPrivateCloud.PrivateIpAddresses = []*string{stringToPointer(v.(string))}
+		request.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
 	}
 
 	if v, ok := d.GetOk("security_groups"); ok {
 		securityGroups := v.(*schema.Set).List()
 		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
 		for _, securityGroup := range securityGroups {
-			request.SecurityGroupIds = append(request.SecurityGroupIds, stringToPointer(securityGroup.(string)))
+			request.SecurityGroupIds = append(request.SecurityGroupIds, helper.String(securityGroup.(string)))
 		}
 	}
 
 	// storage
 	request.SystemDisk = &cvm.SystemDisk{}
 	if v, ok := d.GetOk("system_disk_type"); ok {
-		request.SystemDisk.DiskType = stringToPointer(v.(string))
+		request.SystemDisk.DiskType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("system_disk_size"); ok {
 		diskSize := int64(v.(int))
 		request.SystemDisk.DiskSize = &diskSize
 	}
 	if v, ok := d.GetOk("system_disk_id"); ok {
-		request.SystemDisk.DiskId = stringToPointer(v.(string))
+		request.SystemDisk.DiskId = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("data_disks"); ok {
 		dataDisks := v.([]interface{})
@@ -491,7 +492,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				DiskSize: &diskSize,
 			}
 			if value["data_disk_id"] != "" {
-				dataDisk.DiskId = stringToPointer(value["data_disk_id"].(string))
+				dataDisk.DiskId = helper.String(value["data_disk_id"].(string))
 			}
 			if deleteWithInstance, ok := value["delete_with_instance"]; ok {
 				deleteWithInstanceBool := deleteWithInstance.(bool)
@@ -520,14 +521,14 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	// login
 	request.LoginSettings = &cvm.LoginSettings{}
 	if v, ok := d.GetOk("key_name"); ok {
-		request.LoginSettings.KeyIds = []*string{stringToPointer(v.(string))}
+		request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
 	}
 	if v, ok := d.GetOk("password"); ok {
-		request.LoginSettings.Password = stringToPointer(v.(string))
+		request.LoginSettings.Password = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("user_data"); ok {
-		request.UserData = stringToPointer(v.(string))
+		request.UserData = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("user_data_raw"); ok {
 		userData := base64.StdEncoding.EncodeToString([]byte(v.(string)))
@@ -539,13 +540,13 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		tags := make([]*cvm.Tag, 0)
 		for key, value := range v.(map[string]interface{}) {
 			tag := &cvm.Tag{
-				Key:   stringToPointer(key),
-				Value: stringToPointer(value.(string)),
+				Key:   helper.String(key),
+				Value: helper.String(value.(string)),
 			}
 			tags = append(tags, tag)
 		}
 		tagSpecification := &cvm.TagSpecification{
-			ResourceType: stringToPointer("instance"),
+			ResourceType: helper.String("instance"),
 			Tags:         tags,
 		}
 		request.TagSpecification = []*cvm.TagSpecification{tagSpecification}
@@ -653,7 +654,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("internet_max_bandwidth_out", instance.InternetAccessible.InternetMaxBandwidthOut)
 	_ = d.Set("vpc_id", instance.VirtualPrivateCloud.VpcId)
 	_ = d.Set("subnet_id", instance.VirtualPrivateCloud.SubnetId)
-	_ = d.Set("security_groups", flattenStringList(instance.SecurityGroupIds))
+	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecurityGroupIds))
 	_ = d.Set("system_disk_type", instance.SystemDisk.DiskType)
 	_ = d.Set("system_disk_size", instance.SystemDisk.DiskSize)
 	_ = d.Set("system_disk_id", instance.SystemDisk.DiskId)
@@ -725,7 +726,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		securityGroups := d.Get("security_groups").(*schema.Set).List()
 		securityGroupIds := make([]*string, 0, len(securityGroups))
 		for _, securityGroup := range securityGroups {
-			securityGroupIds = append(securityGroupIds, stringToPointer(securityGroup.(string)))
+			securityGroupIds = append(securityGroupIds, helper.String(securityGroup.(string)))
 		}
 		err := cvmService.ModifySecurityGroups(ctx, instanceId, securityGroupIds)
 		if err != nil {

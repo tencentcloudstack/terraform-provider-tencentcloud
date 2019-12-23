@@ -45,6 +45,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudGaapHttpDomain() *schema.Resource {
@@ -228,7 +229,7 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 		basicAuth := d.Get("basic_auth").(bool)
 
 		if raw, ok := d.GetOk("basic_auth_id"); ok {
-			basicAuthId = stringToPointer(raw.(string))
+			basicAuthId = helper.String(raw.(string))
 		}
 
 		if basicAuth && basicAuthId == nil {
@@ -253,7 +254,7 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 		}
 
 		if raw, ok := d.GetOk("realserver_certificate_domain"); ok {
-			realserverCertificateDomain = stringToPointer(raw.(string))
+			realserverCertificateDomain = helper.String(raw.(string))
 		}
 
 		if realserverAuth && (len(realserverCertificateIds) == 0 || realserverCertificateDomain == nil) {
@@ -267,7 +268,7 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 		}
 
 		if raw, ok := d.GetOk("gaap_auth_id"); ok {
-			gaapCertificateId = stringToPointer(raw.(string))
+			gaapCertificateId = helper.String(raw.(string))
 		}
 
 		if gaapAuth && gaapCertificateId == nil {
@@ -331,7 +332,7 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	_ = d.Set("listener_id", listenerId)
 
 	if httpDomain.CertificateId == nil {
-		httpDomain.CertificateId = stringToPointer("default")
+		httpDomain.CertificateId = helper.String("default")
 	}
 	_ = d.Set("certificate_id", httpDomain.CertificateId)
 
@@ -344,13 +345,13 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	_ = d.Set("client_certificate_ids", clientCertificateIds)
 
 	if httpDomain.BasicAuth == nil {
-		httpDomain.BasicAuth = int64ToPointer(0)
+		httpDomain.BasicAuth = helper.IntInt64(0)
 	}
 	_ = d.Set("basic_auth", *httpDomain.BasicAuth == 1)
 	_ = d.Set("basic_auth_id", httpDomain.BasicAuthConfId)
 
 	if httpDomain.RealServerAuth == nil {
-		httpDomain.RealServerAuth = int64ToPointer(0)
+		httpDomain.RealServerAuth = helper.IntInt64(0)
 	}
 	_ = d.Set("realserver_auth", *httpDomain.RealServerAuth == 1)
 
@@ -370,7 +371,7 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	_ = d.Set("realserver_certificate_domain", httpDomain.RealServerCertificateDomain)
 
 	if httpDomain.GaapAuth == nil {
-		httpDomain.GaapAuth = int64ToPointer(0)
+		httpDomain.GaapAuth = helper.IntInt64(0)
 	}
 	_ = d.Set("gaap_auth", *httpDomain.GaapAuth == 1)
 	_ = d.Set("gaap_auth_id", httpDomain.GaapCertificateId)
@@ -507,7 +508,7 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	}
 
 	if raw, ok := d.GetOk("basic_auth_id"); ok {
-		basicAuthId = stringToPointer(raw.(string))
+		basicAuthId = helper.String(raw.(string))
 	}
 
 	if d.HasChange("basic_auth_id") {
@@ -540,7 +541,7 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	}
 
 	if raw, ok := d.GetOk("realserver_certificate_domain"); ok {
-		realserverCertificateDomain = stringToPointer(raw.(string))
+		realserverCertificateDomain = helper.String(raw.(string))
 	}
 
 	if d.HasChange("realserver_certificate_domain") {
@@ -559,7 +560,7 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	}
 
 	if raw, ok := d.GetOk("gaap_auth_id"); ok {
-		gaapCertificateId = stringToPointer(raw.(string))
+		gaapCertificateId = helper.String(raw.(string))
 	}
 
 	if d.HasChange("gaap_auth_id") {

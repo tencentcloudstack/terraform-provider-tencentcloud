@@ -20,6 +20,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentMysqlBackupList() *schema.Resource {
@@ -134,7 +135,7 @@ func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface
 	if err := d.Set("list", itemShemas); err != nil {
 		log.Printf("[CRITAL]%s provider set itemShemas fail, reason:%s\n ", logId, err.Error())
 	}
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 

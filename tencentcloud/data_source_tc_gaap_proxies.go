@@ -26,6 +26,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudGaapProxies() *schema.Resource {
@@ -195,14 +196,14 @@ func dataSourceTencentCloudGaapProxiesRead(d *schema.ResourceData, m interface{}
 	}
 
 	if raw, ok := d.GetOk("access_region"); ok {
-		accessRegion = stringToPointer(raw.(string))
+		accessRegion = helper.String(raw.(string))
 	}
 
 	if raw, ok := d.GetOk("realserver_region"); ok {
-		realserverRegion = stringToPointer(raw.(string))
+		realserverRegion = helper.String(raw.(string))
 	}
 
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -272,7 +273,7 @@ func dataSourceTencentCloudGaapProxiesRead(d *schema.ResourceData, m interface{}
 			"access_region":     *proxy.AccessRegion,
 			"realserver_region": *proxy.RealServerRegion,
 			"project_id":        *proxy.ProjectId,
-			"create_time":       formatUnixTime(*proxy.CreateTime),
+			"create_time":       helper.FormatUnixTime(*proxy.CreateTime),
 			"status":            *proxy.Status,
 			"scalable":          *proxy.Scalarable == 1,
 			"forward_ip":        *proxy.ForwardIP,
@@ -305,7 +306,7 @@ func dataSourceTencentCloudGaapProxiesRead(d *schema.ResourceData, m interface{}
 	}
 
 	_ = d.Set("proxies", respProxies)
-	d.SetId(dataResourceIdsHash(proxyIds))
+	d.SetId(helper.DataResourceIdsHash(proxyIds))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), respProxies); err != nil {

@@ -21,6 +21,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func tkeClusterInfo() map[string]*schema.Schema {
@@ -180,7 +181,7 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 		name = v.(string)
 	}
 
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	infos, err := service.DescribeClusters(ctx, id, name)
 	if err != nil && id == "" {

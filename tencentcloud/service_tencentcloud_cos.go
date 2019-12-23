@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -188,12 +189,12 @@ func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRul
 	if len(response.CORSRules) > 0 {
 		for _, value := range response.CORSRules {
 			rule := make(map[string]interface{})
-			rule["allowed_origins"] = flattenStringList(value.AllowedOrigins)
-			rule["allowed_methods"] = flattenStringList(value.AllowedMethods)
-			rule["allowed_headers"] = flattenStringList(value.AllowedHeaders)
+			rule["allowed_origins"] = helper.StringsInterfaces(value.AllowedOrigins)
+			rule["allowed_methods"] = helper.StringsInterfaces(value.AllowedMethods)
+			rule["allowed_headers"] = helper.StringsInterfaces(value.AllowedHeaders)
 
 			if value.ExposeHeaders != nil {
-				rule["expose_headers"] = flattenStringList(value.ExposeHeaders)
+				rule["expose_headers"] = helper.StringsInterfaces(value.ExposeHeaders)
 			}
 			if value.MaxAgeSeconds != nil {
 				rule["max_age_seconds"] = int(*value.MaxAgeSeconds)

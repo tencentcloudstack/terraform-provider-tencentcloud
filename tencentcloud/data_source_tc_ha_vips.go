@@ -22,6 +22,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudHaVips() *schema.Resource {
@@ -152,8 +153,8 @@ func dataSourceTencentCloudHaVipsRead(d *schema.ResourceData, meta interface{}) 
 	request.Filters = make([]*vpc.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &vpc.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -208,7 +209,7 @@ func dataSourceTencentCloudHaVipsRead(d *schema.ResourceData, meta interface{}) 
 		haVipList = append(haVipList, mapping)
 		ids = append(ids, *haVip.HaVipId)
 	}
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("ha_vip_list", haVipList); e != nil {
 		log.Printf("[CRITAL]%s provider set haVip list fail, reason:%s\n", logId, e)
 		return e

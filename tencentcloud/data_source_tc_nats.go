@@ -33,6 +33,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudNats() *schema.Resource {
@@ -131,8 +132,8 @@ func dataSourceTencentCloudNatsRead(d *schema.ResourceData, meta interface{}) er
 
 	logId := getLogId(contextNil)
 	request := vpc.NewDescribeNatGatewaysRequest()
-	request.Offset = uint64Pt(0)
-	request.Limit = uint64Pt(100)
+	request.Offset = helper.Uint64(0)
+	request.Limit = helper.Uint64(100)
 
 	params := make(map[string]string)
 	if v, ok := d.GetOk("id"); ok {
@@ -148,8 +149,8 @@ func dataSourceTencentCloudNatsRead(d *schema.ResourceData, meta interface{}) er
 	request.Filters = make([]*vpc.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &vpc.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -207,7 +208,7 @@ func dataSourceTencentCloudNatsRead(d *schema.ResourceData, meta interface{}) er
 		ids = append(ids, *nat.NatGatewayId)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("nats", natList); e != nil {
 		log.Printf("[CRITAL]%s provider set clb list fail, reason:%s\n ", logId, e.Error())
 		return e

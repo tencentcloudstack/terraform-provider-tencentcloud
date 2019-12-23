@@ -42,6 +42,7 @@ import (
 	"regexp"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudGaapSecurityRules() *schema.Resource {
@@ -164,22 +165,22 @@ func dataSourceTencentCloudGaapSecurityRulesRead(d *schema.ResourceData, m inter
 	)
 
 	if raw, ok := d.GetOk("rule_id"); ok {
-		ruleId = stringToPointer(raw.(string))
+		ruleId = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("action"); ok {
-		action = stringToPointer(raw.(string))
+		action = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("cidr_ip"); ok {
-		cidrIp = stringToPointer(raw.(string))
+		cidrIp = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("name"); ok {
-		name = stringToPointer(raw.(string))
+		name = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("port"); ok {
-		port = stringToPointer(raw.(string))
+		port = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("protocol"); ok {
-		protocol = stringToPointer(raw.(string))
+		protocol = helper.String(raw.(string))
 	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -243,7 +244,7 @@ func dataSourceTencentCloudGaapSecurityRulesRead(d *schema.ResourceData, m inter
 	}
 
 	_ = d.Set("rules", rules)
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), rules); err != nil {

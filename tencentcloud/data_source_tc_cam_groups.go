@@ -25,6 +25,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCamGroups() *schema.Resource {
@@ -127,7 +128,7 @@ func dataSourceTencentCloudCamGroupsRead(d *schema.ResourceData, meta interface{
 		ids = append(ids, strconv.Itoa(int(*group.GroupId)))
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("group_list", groupList); e != nil {
 		log.Printf("[CRITAL]%s provider set group list fail, reason:%s\n", logId, e.Error())
 		return e

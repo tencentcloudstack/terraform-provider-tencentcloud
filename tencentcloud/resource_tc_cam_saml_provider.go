@@ -29,6 +29,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudCamSAMLProvider() *schema.Resource {
@@ -83,11 +84,11 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 	logId := getLogId(contextNil)
 
 	request := cam.NewCreateSAMLProviderRequest()
-	request.Name = stringToPointer(d.Get("name").(string))
-	request.SAMLMetadataDocument = stringToPointer(d.Get("meta_data").(string))
+	request.Name = helper.String(d.Get("name").(string))
+	request.SAMLMetadataDocument = helper.String(d.Get("meta_data").(string))
 	//special check function
 	if v, ok := d.GetOk("description"); ok {
-		request.Description = stringToPointer(v.(string))
+		request.Description = helper.String(v.(string))
 	}
 
 	var response *cam.CreateSAMLProviderResponse
@@ -167,12 +168,12 @@ func resourceTencentCloudCamSAMLProviderUpdate(d *schema.ResourceData, meta inte
 	changeFlag := false
 
 	if d.HasChange("description") {
-		request.Description = stringToPointer(d.Get("description").(string))
+		request.Description = helper.String(d.Get("description").(string))
 		changeFlag = true
 
 	}
 	if d.HasChange("meta_data") {
-		request.SAMLMetadataDocument = stringToPointer(d.Get("meta_data").(string))
+		request.SAMLMetadataDocument = helper.String(d.Get("meta_data").(string))
 		changeFlag = true
 	}
 

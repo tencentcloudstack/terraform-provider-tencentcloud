@@ -44,6 +44,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func eniIpOutputResource() *schema.Resource {
@@ -200,7 +201,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 	)
 
 	if raw, ok := d.GetOk("security_groups"); ok {
-		securityGroups = expandStringList(raw.(*schema.Set).List())
+		securityGroups = helper.InterfacesStrings(raw.(*schema.Set).List())
 	}
 
 	if raw, ok := d.GetOk("ipv4s"); ok {
@@ -232,7 +233,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 				primary: primary,
 			}
 
-			ipv4.desc = stringToPointer(m["description"].(string))
+			ipv4.desc = helper.String(m["description"].(string))
 
 			ipv4s = append(ipv4s, ipv4)
 		}
@@ -250,7 +251,7 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 		return errors.New("ipv4s or ipv4_count must be set")
 	}
 
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	client := m.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -429,18 +430,18 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 
 	if d.HasChange("name") {
 		updateAttrs = append(updateAttrs, "name")
-		name = stringToPointer(d.Get("name").(string))
+		name = helper.String(d.Get("name").(string))
 	}
 
 	if d.HasChange("description") {
 		updateAttrs = append(updateAttrs, "description")
-		desc = stringToPointer(d.Get("description").(string))
+		desc = helper.String(d.Get("description").(string))
 	}
 
 	if d.HasChange("security_groups") {
 		updateAttrs = append(updateAttrs, "security_groups")
 	}
-	sgs = expandStringList(d.Get("security_groups").(*schema.Set).List())
+	sgs = helper.InterfacesStrings(d.Get("security_groups").(*schema.Set).List())
 
 	if len(updateAttrs) > 0 {
 		if err := vpcService.ModifyEniAttribute(ctx, id, name, desc, sgs); err != nil {
@@ -509,14 +510,14 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 					return errors.New("can't change primary ipv4")
 				}
 
-				modifyPrimaryIpv4.desc = stringToPointer(m["description"].(string))
+				modifyPrimaryIpv4.desc = helper.String(m["description"].(string))
 				continue
 			}
 
 			ipv4 := VpcEniIP{
 				ip:      ip,
 				primary: m["primary"].(bool),
-				desc:    stringToPointer(m["description"].(string)),
+				desc:    helper.String(m["description"].(string)),
 			}
 
 			addIpv4 = append(addIpv4, ipv4)

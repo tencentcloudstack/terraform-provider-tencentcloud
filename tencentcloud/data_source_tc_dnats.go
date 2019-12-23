@@ -29,6 +29,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudDnats() *schema.Resource {
@@ -165,8 +166,8 @@ func dataSourceTencentCloudDnatsRead(d *schema.ResourceData, meta interface{}) e
 	request.Filters = make([]*vpc.Filter, 0, len(params))
 	for k, v := range params {
 		filter := &vpc.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -215,12 +216,12 @@ func dataSourceTencentCloudDnatsRead(d *schema.ResourceData, meta interface{}) e
 		}
 		dnatList = append(dnatList, mapping)
 		var entry = &vpc.DestinationIpPortTranslationNatRule{}
-		entry.IpProtocol = stringToPointer(*dnat.IpProtocol)
+		entry.IpProtocol = dnat.IpProtocol
 		entry.PublicIpAddress = dnat.PublicIpAddress
 		entry.PublicPort = dnat.PublicPort
 		ids = append(ids, buildDnatId(entry, *dnat.VpcId, *dnat.NatGatewayId))
 	}
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("dnat_list", dnatList); e != nil {
 		log.Printf("[CRITAL]%s provider set DNAT list fail, reason:%s\n", logId, e.Error())
 		return e

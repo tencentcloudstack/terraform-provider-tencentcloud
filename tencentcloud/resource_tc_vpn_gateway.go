@@ -53,8 +53,9 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	errors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudVpnGateway() *schema.Resource {
@@ -168,18 +169,18 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	request := vpc.NewCreateVpnGatewayRequest()
-	request.VpnGatewayName = stringToPointer(d.Get("name").(string))
+	request.VpnGatewayName = helper.String(d.Get("name").(string))
 	bandwidth := d.Get("bandwidth").(int)
 	bandwidth64 := uint64(bandwidth)
 	request.InternetMaxBandwidthOut = &bandwidth64
-	request.Zone = stringToPointer(d.Get("zone").(string))
-	request.VpcId = stringToPointer(d.Get("vpc_id").(string))
+	request.Zone = helper.String(d.Get("zone").(string))
+	request.VpcId = helper.String(d.Get("vpc_id").(string))
 	chargeType := d.Get("charge_type").(string)
 	//only support change renew_flag when charge type is pre-paid
 	if chargeType == VPN_CHARGE_TYPE_PREPAID {
 		var preChargePara vpc.InstanceChargePrepaid
-		preChargePara.Period = intToPointer(d.Get("prepaid_period").(int))
-		preChargePara.RenewFlag = stringToPointer(d.Get("prepaid_renew_flag").(string))
+		preChargePara.Period = helper.IntUint64(d.Get("prepaid_period").(int))
+		preChargePara.RenewFlag = helper.String(d.Get("prepaid_renew_flag").(string))
 		request.InstanceChargePrepaid = &preChargePara
 	}
 	request.InstanceChargeType = &chargeType
@@ -207,7 +208,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 
 	// must wait for creating gateway finished
 	statRequest := vpc.NewDescribeVpnGatewaysRequest()
-	statRequest.VpnGatewayIds = []*string{stringToPointer(gatewayId)}
+	statRequest.VpnGatewayIds = []*string{helper.String(gatewayId)}
 	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(statRequest)
 		if e != nil {
@@ -233,7 +234,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	}
 
 	//modify tags
-	if tags := getTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -326,7 +327,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 		newChargeType := new.(string)
 		request := vpc.NewModifyVpnGatewayAttributeRequest()
 		request.VpnGatewayId = &gatewayId
-		request.VpnGatewayName = stringToPointer(d.Get("name").(string))
+		request.VpnGatewayName = helper.String(d.Get("name").(string))
 		if oldChargeType == VPN_CHARGE_TYPE_PREPAID && newChargeType == VPN_CHARGE_TYPE_POSTPAID_BY_HOUR {
 			request.InstanceChargeType = &newChargeType
 		} else if oldChargeType == VPN_CHARGE_TYPE_POSTPAID_BY_HOUR && newChargeType == VPN_CHARGE_TYPE_PREPAID {
@@ -452,8 +453,8 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 
 	for k, v := range params {
 		filter := &vpc.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		tRequest.Filters = append(tRequest.Filters, filter)
 	}

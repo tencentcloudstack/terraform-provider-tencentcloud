@@ -31,6 +31,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudNatGateway() *schema.Resource {
@@ -213,7 +214,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 	request.NatGatewayId = &natGatewayId
 	changed := false
 	if d.HasChange("name") {
-		request.NatGatewayName = stringToPointer(d.Get("name").(string))
+		request.NatGatewayName = helper.String(d.Get("name").(string))
 		changed = true
 	}
 	if d.HasChange("bandwidth") {

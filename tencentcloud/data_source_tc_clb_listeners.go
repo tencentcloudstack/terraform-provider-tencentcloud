@@ -21,6 +21,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudClbListeners() *schema.Resource {
@@ -229,7 +230,7 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 		ids = append(ids, *listener.ListenerId)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("listener_list", listenerList); e != nil {
 		log.Printf("[CRITAL]%s provider set CLB listener list fail, reason:%+v", logId, e)
 		return e

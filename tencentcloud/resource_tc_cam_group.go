@@ -31,6 +31,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudCamGroup() *schema.Resource {
@@ -69,9 +70,9 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 	logId := getLogId(contextNil)
 
 	request := cam.NewCreateGroupRequest()
-	request.GroupName = stringToPointer(d.Get("name").(string))
+	request.GroupName = helper.String(d.Get("name").(string))
 	if v, ok := d.GetOk("remark"); ok {
-		request.Remark = stringToPointer(v.(string))
+		request.Remark = helper.String(v.(string))
 	}
 
 	var response *cam.CreateGroupResponse
@@ -164,12 +165,12 @@ func resourceTencentCloudCamGroupUpdate(d *schema.ResourceData, meta interface{}
 	changeFlag := false
 
 	if d.HasChange("remark") {
-		request.Remark = stringToPointer(d.Get("remark").(string))
+		request.Remark = helper.String(d.Get("remark").(string))
 		changeFlag = true
 
 	}
 	if d.HasChange("name") {
-		request.GroupName = stringToPointer(d.Get("name").(string))
+		request.GroupName = helper.String(d.Get("name").(string))
 		changeFlag = true
 	}
 

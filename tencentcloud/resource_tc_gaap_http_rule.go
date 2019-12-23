@@ -77,6 +77,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudGaapHttpRule() *schema.Resource {
@@ -325,7 +326,7 @@ func resourceTencentCloudGaapHttpRuleRead(d *schema.ResourceData, m interface{})
 	_ = d.Set("scheduler", rule.Scheduler)
 
 	if rule.HealthCheck == nil {
-		rule.HealthCheck = intToPointer(0)
+		rule.HealthCheck = helper.IntUint64(0)
 	}
 	_ = d.Set("health_check", *rule.HealthCheck == 1)
 
@@ -370,12 +371,12 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 
 	if d.HasChange("path") {
 		updateAttr = append(updateAttr, "path")
-		path = stringToPointer(d.Get("path").(string))
+		path = helper.String(d.Get("path").(string))
 	}
 
 	if d.HasChange("scheduler") {
 		updateAttr = append(updateAttr, "scheduler")
-		scheduler = stringToPointer(d.Get("scheduler").(string))
+		scheduler = helper.String(d.Get("scheduler").(string))
 	}
 
 	if d.HasChange("health_check") {

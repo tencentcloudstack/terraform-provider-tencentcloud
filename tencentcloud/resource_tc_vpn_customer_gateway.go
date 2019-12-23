@@ -32,8 +32,9 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	errors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudVpnCustomerGateway() *schema.Resource {
@@ -81,8 +82,8 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	request := vpc.NewCreateCustomerGatewayRequest()
-	request.CustomerGatewayName = stringToPointer(d.Get("name").(string))
-	request.IpAddress = stringToPointer(d.Get("public_ip_address").(string))
+	request.CustomerGatewayName = helper.String(d.Get("name").(string))
+	request.IpAddress = helper.String(d.Get("public_ip_address").(string))
 	var response *vpc.CreateCustomerGatewayResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateCustomerGateway(request)
@@ -128,7 +129,7 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 	}
 
 	//modify tags
-	if tags := getTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -200,7 +201,7 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 	request := vpc.NewModifyCustomerGatewayAttributeRequest()
 	request.CustomerGatewayId = &customerGatewayId
 	if d.HasChange("name") {
-		request.CustomerGatewayName = stringToPointer(d.Get("name").(string))
+		request.CustomerGatewayName = helper.String(d.Get("name").(string))
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyCustomerGatewayAttribute(request)
 			if e != nil {
@@ -252,8 +253,8 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 
 	for k, v := range params {
 		filter := &vpc.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		tRequest.Filters = append(tRequest.Filters, filter)
 	}

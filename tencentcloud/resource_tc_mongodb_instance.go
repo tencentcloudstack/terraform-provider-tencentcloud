@@ -39,6 +39,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudMongodbInstance() *schema.Resource {
@@ -169,21 +170,21 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	region := client.Region
 
 	request := mongodb.NewCreateDBInstanceHourRequest()
-	request.ReplicateSetNum = intToPointer(1)
-	request.SecondaryNum = intToPointer(2)
-	request.GoodsNum = intToPointer(1)
-	request.InstanceRole = stringToPointer("MASTER")
-	request.InstanceType = stringToPointer("REPLSET")
-	request.Memory = intToPointer(d.Get("memory").(int))
-	request.Volume = intToPointer(d.Get("volume").(int))
-	request.EngineVersion = stringToPointer(d.Get("engine_version").(string))
-	request.Machine = stringToPointer(d.Get("machine_type").(string))
-	request.Zone = stringToPointer(d.Get("available_zone").(string))
+	request.ReplicateSetNum = helper.IntUint64(1)
+	request.SecondaryNum = helper.IntUint64(2)
+	request.GoodsNum = helper.IntUint64(1)
+	request.InstanceRole = helper.String("MASTER")
+	request.InstanceType = helper.String("REPLSET")
+	request.Memory = helper.IntUint64(d.Get("memory").(int))
+	request.Volume = helper.IntUint64(d.Get("volume").(int))
+	request.EngineVersion = helper.String(d.Get("engine_version").(string))
+	request.Machine = helper.String(d.Get("machine_type").(string))
+	request.Zone = helper.String(d.Get("available_zone").(string))
 	if v, ok := d.GetOk("vpc_id"); ok {
-		request.VpcId = stringToPointer(v.(string))
+		request.VpcId = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("subnet_id"); ok {
-		request.SubnetId = stringToPointer(v.(string))
+		request.SubnetId = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("project_id"); ok {
 		projectId := int64(v.(int))
@@ -193,7 +194,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 		securityGroups := v.(*schema.Set).List()
 		request.SecurityGroup = make([]*string, 0, len(securityGroups))
 		for _, v := range securityGroups {
-			request.SecurityGroup = append(request.SecurityGroup, stringToPointer(v.(string)))
+			request.SecurityGroup = append(request.SecurityGroup, helper.String(v.(string)))
 		}
 	}
 
@@ -264,7 +265,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(instanceId)
 
-	if tags := getTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err

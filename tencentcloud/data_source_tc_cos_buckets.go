@@ -18,6 +18,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCosBuckets() *schema.Resource {
@@ -193,7 +194,7 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 	}
 
 	prefix := d.Get("bucket_prefix").(string)
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	bucketList := make([]map[string]interface{}, 0, len(buckets))
 
@@ -240,7 +241,7 @@ LOOP:
 	ids := make([]string, 2)
 	ids[0] = "bucketlist"
 	ids[1] = prefix
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if err := d.Set("bucket_list", bucketList); err != nil {
 		return fmt.Errorf("setting bucket list error: %s", err.Error())
 	}

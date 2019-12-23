@@ -2,13 +2,14 @@ package ratelimit
 
 import (
 	"fmt"
-	"github.com/yangwenmai/ratelimit/simpleratelimit"
 	"log"
 	"math/rand"
 	"runtime"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/yangwenmai/ratelimit/simpleratelimit"
 )
 
 var (

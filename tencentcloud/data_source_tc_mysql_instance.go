@@ -18,6 +18,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudMysqlInstance() *schema.Resource {
@@ -395,7 +396,7 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 		ids = append(ids, *item.InstanceId)
 		instanceList = append(instanceList, mapping)
 	}
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("instance_list", instanceList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set instance list fail, reason:%s\n ", logId, err.Error())

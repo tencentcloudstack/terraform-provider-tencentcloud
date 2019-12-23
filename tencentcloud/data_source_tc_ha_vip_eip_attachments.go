@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudHaVipEipAttachments() *schema.Resource {
@@ -104,7 +105,7 @@ func dataSourceTencentCloudHaVipEipAttachmentsRead(d *schema.ResourceData, meta 
 		ids = append(ids, haVipId+"#"+*haVip.AddressIp)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("ha_vip_eip_attachment_list", haVipEipAttachmentList); e != nil {
 		log.Printf("[CRITAL]%s provider set HA VIP EIP attachment list fail, reason:%s\n", logId, e)
 		return e

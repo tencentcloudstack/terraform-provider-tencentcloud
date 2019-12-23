@@ -61,6 +61,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
@@ -315,7 +316,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		if listener.HealthCheck == nil {
 			return errors.New("listener health check is nil")
 		}
-		healthCheck = boolToPointer(*listener.HealthCheck == 1)
+		healthCheck = helper.Bool(*listener.HealthCheck == 1)
 
 		interval = listener.DelayLoop
 		connectTimeout = listener.ConnectTimeout
@@ -337,7 +338,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		if listener.CreateTime == nil {
 			return errors.New("listener create time is nil")
 		}
-		createTime = formatUnixTime(*listener.CreateTime)
+		createTime = helper.FormatUnixTime(*listener.CreateTime)
 
 	case len(udpListeners) > 0:
 		protocol = "UDP"
@@ -349,9 +350,9 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		scheduler = listener.Scheduler
 		realServerType = listener.RealServerType
 
-		healthCheck = boolToPointer(false)
-		connectTimeout = intToPointer(2)
-		interval = intToPointer(5)
+		healthCheck = helper.Bool(false)
+		connectTimeout = helper.IntUint64(2)
+		interval = helper.IntUint64(5)
 
 		if len(listener.RealServerSet) > 0 {
 			realservers = make([]map[string]interface{}, 0, len(listener.RealServerSet))
@@ -370,7 +371,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 		if listener.CreateTime == nil {
 			return errors.New("listener create time is nil")
 		}
-		createTime = formatUnixTime(*listener.CreateTime)
+		createTime = helper.FormatUnixTime(*listener.CreateTime)
 
 	default:
 		d.SetId("")
@@ -415,17 +416,17 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 
 	if d.HasChange("name") {
 		attrChange = append(attrChange, "name")
-		name = stringToPointer(d.Get("name").(string))
+		name = helper.String(d.Get("name").(string))
 	}
 
 	if d.HasChange("scheduler") {
 		attrChange = append(attrChange, "scheduler")
-		scheduler = stringToPointer(d.Get("scheduler").(string))
+		scheduler = helper.String(d.Get("scheduler").(string))
 	}
 
 	if d.HasChange("health_check") {
 		attrChange = append(attrChange, "health_check")
-		healthCheck = boolToPointer(d.Get("health_check").(bool))
+		healthCheck = helper.Bool(d.Get("health_check").(bool))
 	}
 	if protocol == "UDP" && healthCheck != nil && *healthCheck {
 		return errors.New("UDP listener can't enable health check")

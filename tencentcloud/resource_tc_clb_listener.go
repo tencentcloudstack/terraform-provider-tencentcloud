@@ -78,6 +78,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudClbListener() *schema.Resource {
@@ -201,14 +202,14 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	listenerName := d.Get("listener_name").(string)
 	request := clb.NewCreateListenerRequest()
 
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.LoadBalancerId = helper.String(clbId)
 	request.ListenerNames = []*string{&listenerName}
 
 	port := int64(d.Get("port").(int))
 	ports := []*int64{&port}
 	request.Ports = ports
 	protocol := d.Get("protocol").(string)
-	request.Protocol = stringToPointer(protocol)
+	request.Protocol = helper.String(protocol)
 
 	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol, HEALTH_APPLY_TYPE_LISTENER)
 	if healthErr != nil {
@@ -236,7 +237,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener][Create] check: Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS")
 		}
 		scheduler = v.(string)
-		request.Scheduler = stringToPointer(scheduler)
+		request.Scheduler = helper.String(scheduler)
 	}
 
 	if v, ok := d.GetOk("session_expire_time"); ok {
@@ -371,12 +372,12 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	protocol := d.Get("protocol").(string)
 
 	request := clb.NewModifyListenerRequest()
-	request.ListenerId = stringToPointer(listenerId)
-	request.LoadBalancerId = stringToPointer(clbId)
+	request.ListenerId = helper.String(listenerId)
+	request.LoadBalancerId = helper.String(clbId)
 
 	if d.HasChange("listener_name") {
 		listenerName = d.Get("listener_name").(string)
-		request.ListenerName = stringToPointer(listenerName)
+		request.ListenerName = helper.String(listenerName)
 	}
 
 	if d.HasChange("scheduler") {
@@ -388,7 +389,7 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		if scheduler == CLB_LISTENER_SCHEDULER_IP_HASH {
 			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB listener %s][Update] check: Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS", listenerId)
 		}
-		request.Scheduler = stringToPointer(scheduler)
+		request.Scheduler = helper.String(scheduler)
 	}
 
 	if d.HasChange("session_expire_time") {

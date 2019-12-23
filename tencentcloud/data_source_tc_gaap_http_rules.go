@@ -54,6 +54,7 @@ import (
 	"net"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
@@ -225,10 +226,10 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 		domain = raw.(string)
 	}
 	if raw, ok := d.GetOk("path"); ok {
-		path = stringToPointer(raw.(string))
+		path = helper.String(raw.(string))
 	}
 	if raw, ok := d.GetOk("forward_host"); ok {
-		forwardHost = stringToPointer(raw.(string))
+		forwardHost = helper.String(raw.(string))
 	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
@@ -335,7 +336,7 @@ func dataSourceTencentCloudGaapHttpRulesRead(d *schema.ResourceData, m interface
 	}
 
 	_ = d.Set("rules", rules)
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), rules); err != nil {

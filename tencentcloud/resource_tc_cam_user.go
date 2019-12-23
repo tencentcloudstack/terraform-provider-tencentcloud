@@ -36,6 +36,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudCamUser() *schema.Resource {
@@ -134,10 +135,10 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 
 	logId := getLogId(contextNil)
 	request := cam.NewAddUserRequest()
-	request.Name = stringToPointer(d.Get("name").(string))
+	request.Name = helper.String(d.Get("name").(string))
 	//optional
 	if v, ok := d.GetOk("remark"); ok {
-		request.Remark = stringToPointer(v.(string))
+		request.Remark = helper.String(v.(string))
 	}
 	if v, ok := d.GetOkExists("use_api"); ok {
 		apiBool := v.(bool)
@@ -164,17 +165,17 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		request.NeedResetPassword = &resetInt
 	}
 	if v, ok := d.GetOk("phone_num"); ok {
-		request.PhoneNum = stringToPointer(v.(string))
+		request.PhoneNum = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("country_code"); ok {
-		request.CountryCode = stringToPointer(v.(string))
+		request.CountryCode = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("email"); ok {
-		request.Email = stringToPointer(v.(string))
+		request.Email = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("password"); ok {
-		request.Password = stringToPointer(v.(string))
+		request.Password = helper.String(v.(string))
 	}
 
 	var response *cam.AddUserResponse
@@ -265,7 +266,7 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 	request := cam.NewUpdateUserRequest()
 	request.Name = &userId
 	if d.HasChange("remark") {
-		request.Remark = stringToPointer(d.Get("remark").(string))
+		request.Remark = helper.String(d.Get("remark").(string))
 		updateAttrs = append(updateAttrs, "remark")
 	}
 
@@ -290,15 +291,15 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	if d.HasChange("phone_num") {
-		request.PhoneNum = stringToPointer(d.Get("phone_num").(string))
+		request.PhoneNum = helper.String(d.Get("phone_num").(string))
 		updateAttrs = append(updateAttrs, "phone_num")
 	}
 	if d.HasChange("country_code") {
-		request.CountryCode = stringToPointer(d.Get("country_code").(string))
+		request.CountryCode = helper.String(d.Get("country_code").(string))
 		updateAttrs = append(updateAttrs, "country_code")
 	}
 	if d.HasChange("email") {
-		request.Email = stringToPointer(d.Get("email").(string))
+		request.Email = helper.String(d.Get("email").(string))
 		updateAttrs = append(updateAttrs, "email")
 	}
 

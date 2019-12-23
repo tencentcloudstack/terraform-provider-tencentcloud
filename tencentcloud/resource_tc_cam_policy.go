@@ -48,6 +48,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudCamPolicy() *schema.Resource {
@@ -129,7 +130,7 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 	request.PolicyName = &name
 	request.PolicyDocument = &document
 	if v, ok := d.GetOk("description"); ok {
-		request.Description = stringToPointer(v.(string))
+		request.Description = helper.String(v.(string))
 	}
 
 	var response *cam.CreatePolicyResponse
@@ -219,12 +220,12 @@ func resourceTencentCloudCamPolicyUpdate(d *schema.ResourceData, meta interface{
 	changeFlag := false
 
 	if d.HasChange("description") {
-		request.Description = stringToPointer(d.Get("description").(string))
+		request.Description = helper.String(d.Get("description").(string))
 		changeFlag = true
 
 	}
 	if d.HasChange("name") {
-		request.PolicyName = stringToPointer(d.Get("name").(string))
+		request.PolicyName = helper.String(d.Get("name").(string))
 		changeFlag = true
 	}
 

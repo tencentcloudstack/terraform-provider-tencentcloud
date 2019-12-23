@@ -45,6 +45,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudClbRedirection() *schema.Resource {
@@ -131,8 +132,8 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 	if isAutoRewrite {
 		request := clb.NewAutoRewriteRequest()
 
-		request.LoadBalancerId = stringToPointer(clbId)
-		request.ListenerId = stringToPointer(targetListenerId)
+		request.LoadBalancerId = helper.String(clbId)
+		request.ListenerId = helper.String(targetListenerId)
 
 		//check target listener is https:443
 		clbService := ClbService{
@@ -253,13 +254,13 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 	} else {
 		request := clb.NewManualRewriteRequest()
 
-		request.LoadBalancerId = stringToPointer(clbId)
-		request.SourceListenerId = stringToPointer(sourceListenerId)
-		request.TargetListenerId = stringToPointer(targetListenerId)
+		request.LoadBalancerId = helper.String(clbId)
+		request.SourceListenerId = helper.String(sourceListenerId)
+		request.TargetListenerId = helper.String(targetListenerId)
 
 		var rewriteInfo clb.RewriteLocationMap
-		rewriteInfo.SourceLocationId = stringToPointer(sourceLocId)
-		rewriteInfo.TargetLocationId = stringToPointer(targetLocId)
+		rewriteInfo.SourceLocationId = helper.String(sourceLocId)
+		rewriteInfo.TargetLocationId = helper.String(targetLocId)
 		request.RewriteInfos = []*clb.RewriteLocationMap{&rewriteInfo}
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ManualRewrite(request)

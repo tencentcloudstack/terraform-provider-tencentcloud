@@ -9,6 +9,7 @@ import (
 
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -45,8 +46,8 @@ func (me *CvmService) DescribeInstanceByFilter(ctx context.Context, filters map[
 	request.Filters = make([]*cvm.Filter, 0, len(filters))
 	for k, v := range filters {
 		filter := cvm.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		request.Filters = append(request.Filters, &filter)
 	}
@@ -142,7 +143,7 @@ func (me *CvmService) ModifyInstanceType(ctx context.Context, instanceId, instan
 	request := cvm.NewResetInstancesTypeRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.InstanceType = &instanceType
-	request.ForceStop = boolToPointer(true)
+	request.ForceStop = helper.Bool(true)
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().ResetInstancesType(request)
@@ -261,7 +262,7 @@ func (me *CvmService) DescribeInstanceTypes(ctx context.Context, zone string) (i
 	if zone != "" {
 		request.Filters = make([]*cvm.Filter, 0, 1)
 		filter := &cvm.Filter{
-			Name:   stringToPointer("zone"),
+			Name:   helper.String("zone"),
 			Values: []*string{&zone},
 		}
 		request.Filters = append(request.Filters, filter)
@@ -289,10 +290,10 @@ func (me *CvmService) DescribeInstanceTypesByFilter(ctx context.Context, filters
 	for k, v := range filters {
 		values := make([]*string, 0, len(v))
 		for _, value := range v {
-			values = append(values, stringToPointer(value))
+			values = append(values, helper.String(value))
 		}
 		filter := &cvm.Filter{
-			Name:   stringToPointer(k),
+			Name:   helper.String(k),
 			Values: values,
 		}
 		request.Filters = append(request.Filters, filter)
@@ -344,15 +345,15 @@ func (me *CvmService) DescribeKeyPairByFilter(ctx context.Context, id, name stri
 	request.Filters = make([]*cvm.Filter, 0)
 	if name != "" {
 		filter := &cvm.Filter{
-			Name:   stringToPointer("key-name"),
+			Name:   helper.String("key-name"),
 			Values: []*string{&name},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
 	if projectId != nil {
 		filter := &cvm.Filter{
-			Name:   stringToPointer("project-id"),
-			Values: []*string{stringToPointer(fmt.Sprintf("%d", *projectId))},
+			Name:   helper.String("project-id"),
+			Values: []*string{helper.String(fmt.Sprintf("%d", *projectId))},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
@@ -642,8 +643,8 @@ func (me *CvmService) DescribeReservedInstanceByFilter(ctx context.Context, filt
 	request.Filters = make([]*cvm.Filter, 0, len(filters))
 	for k, v := range filters {
 		filter := cvm.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		request.Filters = append(request.Filters, &filter)
 	}
@@ -683,8 +684,8 @@ func (me *CvmService) DescribeReservedInstanceConfigs(ctx context.Context, filte
 	request.Filters = make([]*cvm.Filter, 0, len(filters))
 	for k, v := range filters {
 		filter := cvm.Filter{
-			Name:   stringToPointer(k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
 		}
 		request.Filters = append(request.Filters, &filter)
 	}
@@ -761,11 +762,11 @@ func (me *CvmService) DescribeImagesByFilter(ctx context.Context, filters map[st
 	request.Filters = make([]*cvm.Filter, 0, len(filters))
 	for k, v := range filters {
 		filter := cvm.Filter{
-			Name:   stringToPointer(k),
+			Name:   helper.String(k),
 			Values: []*string{},
 		}
 		for _, vv := range v {
-			filter.Values = append(filter.Values, stringToPointer(vv))
+			filter.Values = append(filter.Values, helper.String(vv))
 		}
 		request.Filters = append(request.Filters, &filter)
 	}

@@ -43,6 +43,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudVpcRouteTables() *schema.Resource {
@@ -184,7 +185,7 @@ func dataSourceTencentCloudVpcRouteTablesRead(d *schema.ResourceData, meta inter
 		}
 	}
 
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	var infos, err = service.DescribeRouteTables(ctx, routeTableId, name, "", tags)
 	if err != nil {

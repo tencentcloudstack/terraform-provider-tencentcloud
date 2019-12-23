@@ -20,6 +20,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
@@ -165,7 +166,7 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 		ids = append(ids, locationId+"#"+listenerId+"#"+clbId)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("attachment_list", attachmentList); e != nil {
 		log.Printf("[CRITAL]%s provider set attachment list fail, reason:%+v", logId, e)
 		return e

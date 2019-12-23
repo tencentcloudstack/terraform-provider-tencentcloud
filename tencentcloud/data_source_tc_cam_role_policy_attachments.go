@@ -26,6 +26,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCamRolePolicyAttachments() *schema.Resource {
@@ -157,7 +158,7 @@ func dataSourceTencentCloudCamRolePolicyAttachmentsRead(d *schema.ResourceData, 
 		ids = append(ids, roleId+"#"+strconv.Itoa(int(*policy.PolicyId)))
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("role_policy_attachment_list", policyOfRoleList); e != nil {
 		log.Printf("[CRITAL]%s provider set role polilcy attachment list fail, reason:%s\n", logId, e.Error())
 		return e

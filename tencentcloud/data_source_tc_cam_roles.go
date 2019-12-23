@@ -24,6 +24,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCamRoles() *schema.Resource {
@@ -152,7 +153,7 @@ func dataSourceTencentCloudCamRolesRead(d *schema.ResourceData, meta interface{}
 		ids = append(ids, *role.RoleId)
 	}
 
-	d.SetId(dataResourceIdsHash(ids))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("role_list", roleList); e != nil {
 		log.Printf("[CRITAL]%s provider set CAM role list fail, reason:%s\n", logId, e.Error())
 		return e

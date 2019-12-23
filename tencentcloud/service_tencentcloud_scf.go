@@ -8,6 +8,7 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -51,15 +52,15 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 	request.FunctionName = &info.name
 	request.Handler = info.handler
 	request.Description = info.desc
-	request.MemorySize = int64ToPointer(*info.memSize)
-	request.Timeout = int64ToPointer(*info.timeout)
+	request.MemorySize = helper.IntInt64(*info.memSize)
+	request.Timeout = helper.IntInt64(*info.timeout)
 	for k, v := range info.environment {
 		if request.Environment == nil {
 			request.Environment = new(scf.Environment)
 		}
 		request.Environment.Variables = append(request.Environment.Variables, &scf.Variable{
-			Key:   stringToPointer(k),
-			Value: stringToPointer(v),
+			Key:   helper.String(k),
+			Value: helper.String(v),
 		})
 	}
 	request.Runtime = info.runtime
@@ -75,7 +76,7 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 	request.Role = info.role
 	request.ClsLogsetId = info.clsLogsetId
 	request.ClsTopicId = info.clsTopicId
-	request.Type = stringToPointer(SCF_FUNCTION_TYPE_EVENT)
+	request.Type = helper.String(SCF_FUNCTION_TYPE_EVENT)
 
 	request.Code = &scf.Code{
 		CosBucketName:   info.cosBucketName,
@@ -135,11 +136,11 @@ func (me *ScfService) DescribeFunctions(ctx context.Context, name, namespace, de
 	request.Description = desc
 	for k, v := range tags {
 		request.Filters = append(request.Filters, &scf.Filter{
-			Name:   stringToPointer("tag-" + k),
-			Values: []*string{stringToPointer(v)},
+			Name:   helper.String("tag-" + k),
+			Values: []*string{helper.String(v)},
 		})
 	}
-	request.Limit = int64ToPointer(SCF_FUNCTION_DESCRIBE_LIMIT)
+	request.Limit = helper.IntInt64(SCF_FUNCTION_DESCRIBE_LIMIT)
 
 	var offset int64
 	count := SCF_FUNCTION_DESCRIBE_LIMIT
@@ -205,26 +206,26 @@ func (me *ScfService) ModifyFunctionConfig(ctx context.Context, info scfFunction
 	request.FunctionName = &info.name
 	request.Description = info.desc
 	if info.memSize != nil {
-		request.MemorySize = int64ToPointer(*info.memSize)
+		request.MemorySize = helper.IntInt64(*info.memSize)
 	}
 	if info.timeout != nil {
-		request.Timeout = int64ToPointer(*info.timeout)
+		request.Timeout = helper.IntInt64(*info.timeout)
 	}
 	request.Runtime = info.runtime
 
 	request.Environment = new(scf.Environment)
 	for k, v := range info.environment {
 		request.Environment.Variables = append(request.Environment.Variables, &scf.Variable{
-			Key:   stringToPointer(k),
-			Value: stringToPointer(v),
+			Key:   helper.String(k),
+			Value: helper.String(v),
 		})
 	}
 	// clean all environments
 	if len(request.Environment.Variables) == 0 {
 		request.Environment.Variables = []*scf.Variable{
 			{
-				Key:   stringToPointer(""),
-				Value: stringToPointer(""),
+				Key:   helper.String(""),
+				Value: helper.String(""),
 			},
 		}
 	}
@@ -243,9 +244,9 @@ func (me *ScfService) ModifyFunctionConfig(ctx context.Context, info scfFunction
 	request.ClsLogsetId = info.clsLogsetId
 	request.ClsTopicId = info.clsTopicId
 	if info.l5Enable != nil {
-		request.L5Enable = stringToPointer("FALSE")
+		request.L5Enable = helper.String("FALSE")
 		if *info.l5Enable {
-			request.L5Enable = stringToPointer("TRUE")
+			request.L5Enable = helper.String("TRUE")
 		}
 	}
 
@@ -330,7 +331,7 @@ func (me *ScfService) CreateNamespace(ctx context.Context, namespace, desc strin
 
 func (me *ScfService) DescribeNamespace(ctx context.Context, namespace string) (ns *scf.Namespace, err error) {
 	request := scf.NewListNamespacesRequest()
-	request.Limit = int64ToPointer(SCF_NAMESPACE_DESCRIBE_LIMIT)
+	request.Limit = helper.IntInt64(SCF_NAMESPACE_DESCRIBE_LIMIT)
 
 	var offset int64
 	count := SCF_NAMESPACE_DESCRIBE_LIMIT
@@ -372,7 +373,7 @@ func (me *ScfService) DescribeNamespace(ctx context.Context, namespace string) (
 
 func (me *ScfService) DescribeNamespaces(ctx context.Context) (nss []*scf.Namespace, err error) {
 	request := scf.NewListNamespacesRequest()
-	request.Limit = int64ToPointer(SCF_NAMESPACE_DESCRIBE_LIMIT)
+	request.Limit = helper.IntInt64(SCF_NAMESPACE_DESCRIBE_LIMIT)
 
 	var offset int64
 	count := SCF_NAMESPACE_DESCRIBE_LIMIT
@@ -441,7 +442,7 @@ func (me *ScfService) CreateTriggers(ctx context.Context, functionName, namespac
 		request.Type = &trigger.triggerType
 		request.TriggerDesc = &trigger.triggerDesc
 		request.Namespace = &namespace
-		request.Enable = stringToPointer("OPEN")
+		request.Enable = helper.String("OPEN")
 
 		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -490,8 +491,8 @@ func (me *ScfService) DescribeLogs(
 ) (logs []*scf.FunctionLog, err error) {
 	request := scf.NewGetFunctionLogsRequest()
 	request.FunctionName = &fnName
-	request.Offset = int64ToPointer(offset)
-	request.Limit = int64ToPointer(limit)
+	request.Offset = helper.IntInt64(offset)
+	request.Limit = helper.IntInt64(limit)
 	request.Order = &order
 	request.OrderBy = &orderBy
 	if retCode != nil {

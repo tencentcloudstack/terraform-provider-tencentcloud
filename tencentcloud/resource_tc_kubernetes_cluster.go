@@ -127,6 +127,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func tkeCvmState() map[string]*schema.Schema {
@@ -584,11 +585,11 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 			errRet = fmt.Errorf("availability_zone[%s] should in [%s]", v.(string), configRegion)
 			return
 		}
-		place.Zone = stringToPointer(v.(string))
+		place.Zone = helper.String(v.(string))
 	}
 
 	if v, ok := dMap["instance_type"]; ok {
-		request.InstanceType = stringToPointer(v.(string))
+		request.InstanceType = helper.String(v.(string))
 	} else {
 		errRet = fmt.Errorf("instance_type must be set.")
 		return
@@ -617,14 +618,14 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		if request.SystemDisk == nil {
 			request.SystemDisk = &cvm.SystemDisk{}
 		}
-		request.SystemDisk.DiskType = stringToPointer(v.(string))
+		request.SystemDisk.DiskType = helper.String(v.(string))
 	}
 
 	if v, ok := dMap["system_disk_size"]; ok {
 		if request.SystemDisk == nil {
 			request.SystemDisk = &cvm.SystemDisk{}
 		}
-		request.SystemDisk.DiskSize = int64Pt(int64(v.(int)))
+		request.SystemDisk.DiskSize = helper.Int64(int64(v.(int)))
 
 	}
 
@@ -657,14 +658,14 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		if request.InternetAccessible == nil {
 			request.InternetAccessible = &cvm.InternetAccessible{}
 		}
-		request.InternetAccessible.InternetChargeType = stringToPointer(v.(string))
+		request.InternetAccessible.InternetChargeType = helper.String(v.(string))
 	}
 
 	if v, ok := dMap["internet_max_bandwidth_out"]; ok {
 		if request.InternetAccessible == nil {
 			request.InternetAccessible = &cvm.InternetAccessible{}
 		}
-		request.InternetAccessible.InternetMaxBandwidthOut = int64Pt(int64(v.(int)))
+		request.InternetAccessible.InternetMaxBandwidthOut = helper.Int64(int64(v.(int)))
 	}
 
 	if v, ok := dMap["public_ip_assigned"]; ok {
@@ -678,12 +679,12 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		}
 
 		if v.(string) != "" {
-			request.LoginSettings.Password = stringToPointer(v.(string))
+			request.LoginSettings.Password = helper.String(v.(string))
 		}
 	}
 
 	if v, ok := dMap["instance_name"]; ok {
-		request.InstanceName = stringToPointer(v.(string))
+		request.InstanceName = helper.String(v.(string))
 	}
 
 	if v, ok := dMap["key_ids"]; ok {
@@ -741,7 +742,7 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		}
 	}
 	if v, ok := dMap["user_data"]; ok {
-		request.UserData = stringToPointer(v.(string))
+		request.UserData = helper.String(v.(string))
 	}
 	if v, ok := dMap["instance_charge_type"]; ok {
 		instanceChargeType := v.(string)
@@ -757,7 +758,7 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 				return
 			}
 			if renewFlag, ok := dMap["instance_charge_type_prepaid_renew_flag"]; ok {
-				request.InstanceChargePrepaid.RenewFlag = stringToPointer(renewFlag.(string))
+				request.InstanceChargePrepaid.RenewFlag = helper.String(renewFlag.(string))
 			}
 		}
 	}
@@ -868,7 +869,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	tags := getTags(d, "tags")
+	tags := helper.GetTags(d, "tags")
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
