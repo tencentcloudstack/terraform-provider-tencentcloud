@@ -2,12 +2,13 @@ package tencentcloud
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"net"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/likexian/gokit/assert"

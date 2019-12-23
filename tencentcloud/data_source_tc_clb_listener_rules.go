@@ -218,11 +218,11 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	ids := make([]string, 0, len(rules))
 	for _, rule := range rules {
 		mapping := map[string]interface{}{
-			"clb_id":              clbId,
-			"listener_id":         listenerId,
-			"rule_id":             *rule.LocationId,
-			"domain":              *rule.Domain,
-			"url":                 *rule.Url,
+			"clb_id":      clbId,
+			"listener_id": listenerId,
+			"rule_id":     *rule.LocationId,
+			"domain":      *rule.Domain,
+			"url":         *rule.Url,
 			"session_expire_time": *rule.SessionExpireTime,
 			"scheduler":           *rule.Scheduler,
 		}

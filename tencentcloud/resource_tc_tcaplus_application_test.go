@@ -3,9 +3,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"testing"
 )
 
 var testTcaplusApplicationResourceName = "tencentcloud_tcaplus_application"
