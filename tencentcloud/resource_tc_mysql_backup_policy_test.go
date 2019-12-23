@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"

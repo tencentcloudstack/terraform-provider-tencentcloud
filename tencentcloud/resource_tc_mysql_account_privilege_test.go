@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"

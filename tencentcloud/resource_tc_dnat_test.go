@@ -2,13 +2,13 @@ package tencentcloud
 
 import (
 	"fmt"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func TestAccTencentCloudDnat_basic(t *testing.T) {
