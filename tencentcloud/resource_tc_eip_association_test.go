@@ -130,39 +130,39 @@ func testAccCheckEipAssociationExists(n string) resource.TestCheckFunc {
 
 const testAccTencentCloudEipAssociationWithInstance = defaultInstanceVariable + `
 resource "tencentcloud_eip" "foo" {
-  name = "${var.instance_name}"
+  name = var.instance_name
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name      = "${var.instance_name}"
-  availability_zone  = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id           = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type      = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  instance_name      = var.instance_name
+  availability_zone  = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id           = data.tencentcloud_images.default.images.0.image_id
+  instance_type      = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type   = "CLOUD_PREMIUM"
 }
 
 resource "tencentcloud_eip_association" "foo" {
-  eip_id      = "${tencentcloud_eip.foo.id}"
-  instance_id = "${tencentcloud_instance.foo.id}"
+  eip_id      = tencentcloud_eip.foo.id
+  instance_id = tencentcloud_instance.foo.id
 }
 `
 
 const testAccTencentCloudEipAssociationWithNetworkInterface = defaultVpcVariable + `
 resource "tencentcloud_eip" "foo" {
-  name = "${var.instance_name}"
+  name = var.instance_name
 }
 
 resource "tencentcloud_eni" "foo" {
-  name        = "${var.instance_name}"
-  vpc_id      = "${var.vpc_id}"
-  subnet_id   = "${var.subnet_id}"
-  description = "${var.instance_name}"
+  name        = var.instance_name
+  vpc_id      = var.vpc_id
+  subnet_id   = var.subnet_id
+  description = var.instance_name
   ipv4_count  = 1
 }
 
 resource "tencentcloud_eip_association" "foo" {
-  eip_id               = "${tencentcloud_eip.foo.id}"
-  network_interface_id = "${tencentcloud_eni.foo.id}"
-  private_ip           = "${tencentcloud_eni.foo.ipv4_info.0.ip}"
+  eip_id               = tencentcloud_eip.foo.id
+  network_interface_id = tencentcloud_eni.foo.id
+  private_ip           = tencentcloud_eni.foo.ipv4_info.0.ip
 }
 `

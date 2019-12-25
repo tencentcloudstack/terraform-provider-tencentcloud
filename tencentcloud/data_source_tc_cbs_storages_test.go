@@ -51,6 +51,6 @@ resource "tencentcloud_cbs_storage" "storage" {
 }
 
 data "tencentcloud_cbs_storages" "storages" {
-  storage_id = "${tencentcloud_cbs_storage.storage.id}"
+  storage_id = tencentcloud_cbs_storage.storage.id
 }
 `

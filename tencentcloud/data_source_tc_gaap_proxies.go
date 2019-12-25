@@ -13,7 +13,7 @@ resource "tencentcloud_gaap_proxy" "foo" {
 }
 
 data "tencentcloud_gaap_proxies" "foo" {
-  ids = ["${tencentcloud_gaap_proxy.foo.id}"]
+  ids = [tencentcloud_gaap_proxy.foo.id]
 }
 ```
 */

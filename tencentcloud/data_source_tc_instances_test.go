@@ -34,7 +34,7 @@ func TestAccTencentCloudDataSourceInstancesBase(t *testing.T) {
 
 const testAccTencentCloudDataSourceInstancesBase = instanceCommonTestCase + `
 data "tencentcloud_instances" "foo" {
-  instance_id = "${tencentcloud_instance.default.id}"
-  instance_name = "${tencentcloud_instance.default.instance_name}"
+  instance_id = tencentcloud_instance.default.id
+  instance_name = tencentcloud_instance.default.instance_name
 }
 `

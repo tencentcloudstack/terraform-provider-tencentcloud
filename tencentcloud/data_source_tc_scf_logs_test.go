@@ -58,7 +58,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 
 data "tencentcloud_scf_logs" "foo" {
-  function_name = "${tencentcloud_scf_function.foo.name}"
+  function_name = tencentcloud_scf_function.foo.name
 }
 `
 
@@ -72,7 +72,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 
 data "tencentcloud_scf_logs" "foo" {
-  function_name = "${tencentcloud_scf_function.foo.name}"
+  function_name = tencentcloud_scf_function.foo.name
   offset        = 0
   limit         = 100
   order         = "desc"

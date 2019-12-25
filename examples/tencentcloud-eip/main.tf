@@ -7,5 +7,5 @@ resource "tencentcloud_eip" "foo" {
 }
 
 data "tencentcloud_eips" "tags" {
-  tags = "${tencentcloud_eip.foo.tags}"
+  tags = tencentcloud_eip.foo.tags
 }

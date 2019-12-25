@@ -119,7 +119,7 @@ resource tencentcloud_gaap_proxy "foo" {
 }
 
 data tencentcloud_gaap_proxies "foo" {
-  ids = ["${tencentcloud_gaap_proxy.foo.id}"]
+  ids = [tencentcloud_gaap_proxy.foo.id]
 }
 `
 
@@ -147,7 +147,7 @@ resource tencentcloud_gaap_proxy "foo" {
 }
 
 data tencentcloud_gaap_proxies "access" {
-  access_region = "${tencentcloud_gaap_proxy.foo.access_region}"
+  access_region = tencentcloud_gaap_proxy.foo.access_region
 }
 `
 
@@ -161,6 +161,6 @@ resource tencentcloud_gaap_proxy "foo" {
 }
 
 data tencentcloud_gaap_proxies "realserver" {
-  realserver_region = "${tencentcloud_gaap_proxy.foo.realserver_region}"
+  realserver_region = tencentcloud_gaap_proxy.foo.realserver_region
 }
 `

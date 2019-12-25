@@ -37,6 +37,6 @@ resource "tencentcloud_cam_policy" "policy" {
 }
  
 data "tencentcloud_cam_policies" "policies" {
-  policy_id = "${tencentcloud_cam_policy.policy.id}"
+  policy_id = tencentcloud_cam_policy.policy.id
 }
 `

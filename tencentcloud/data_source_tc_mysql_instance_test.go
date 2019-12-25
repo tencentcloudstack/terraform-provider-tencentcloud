@@ -33,8 +33,8 @@ func testAccTencentCloudMysqlInstanceDataSourceConfig(commonTestCase string) str
 	return fmt.Sprintf(`
 %s
 data "tencentcloud_mysql_instance" "mysql" {
-	mysql_id = "${tencentcloud_mysql_instance.default.id}"
-	instance_name = "${tencentcloud_mysql_instance.default.instance_name}"
+	mysql_id = tencentcloud_mysql_instance.default.id
+	instance_name = tencentcloud_mysql_instance.default.instance_name
 }
 	`, commonTestCase)
 }

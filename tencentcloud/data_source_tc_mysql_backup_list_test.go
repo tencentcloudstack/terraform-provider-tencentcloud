@@ -24,6 +24,6 @@ func TestAccDataSourceMysqlBackupList_basic(t *testing.T) {
 func testAccDataSourceMysqlBackupListConfig() string {
 	return mysqlInstanceCommonTestCase + `
 data "tencentcloud_mysql_backup_list" "test" {
-  mysql_id = "${tencentcloud_mysql_instance.default.id}"
+  mysql_id = tencentcloud_mysql_instance.default.id
 }`
 }

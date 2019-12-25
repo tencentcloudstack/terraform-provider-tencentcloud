@@ -11,8 +11,8 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
 data "tencentcloud_availability_zones" "my_favorate_zones" {}
 
 resource "tencentcloud_instance" "jilei" {
-  availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  availability_zone = data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name
+  instance_type     = data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type
   instance_name     = "tf_example_os_reinstall"
 
   disable_monitor_service = true

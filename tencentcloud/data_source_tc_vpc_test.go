@@ -29,6 +29,6 @@ resource "tencentcloud_vpc" "foo" {
 }
 
 data "tencentcloud_vpc" "id" {
-  id = "${tencentcloud_vpc.foo.id}"
+  id = tencentcloud_vpc.foo.id
 }
 `

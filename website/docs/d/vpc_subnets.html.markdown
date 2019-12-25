@@ -23,9 +23,9 @@ resource "tencentcloud_vpc" "foo" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = "${var.availability_zone}"
+  availability_zone = var.availability_zone
   name              = "guagua_vpc_subnet_test"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  vpc_id            = tencentcloud_vpc.foo.id
   cidr_block        = "10.0.20.0/28"
   is_multicast      = false
 
@@ -35,15 +35,15 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 data "tencentcloud_vpc_subnets" "id_instances" {
-  subnet_id = "${tencentcloud_subnet.subnet.id}"
+  subnet_id = tencentcloud_subnet.subnet.id
 }
 
 data "tencentcloud_vpc_subnets" "name_instances" {
-  name = "${tencentcloud_subnet.subnet.name}"
+  name = tencentcloud_subnet.subnet.name
 }
 
 data "tencentcloud_vpc_subnets" "tags_instances" {
-  tags = "${tencentcloud_subnet.subnet.tags}"
+  tags = tencentcloud_subnet.subnet.tags
 }
 ```
 

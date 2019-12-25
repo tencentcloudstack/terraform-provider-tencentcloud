@@ -13,7 +13,7 @@ resource "tencentcloud_security_group" "sglab_1" {
 }
 
 resource "tencentcloud_security_group_rule" "sglab_1" {
-  security_group_id = "${tencentcloud_security_group.sglab_1.id}"
+  security_group_id = tencentcloud_security_group.sglab_1.id
   type              = "ingress"
   cidr_ip           = "10.0.0.0/16"
   ip_protocol       = "TCP"
@@ -39,12 +39,12 @@ resource "tencentcloud_security_group" "sglab_3" {
 }
 
 resource "tencentcloud_security_group_rule" "sglab_2" {
-  security_group_id = "${tencentcloud_security_group.sglab_2.id}"
+  security_group_id = tencentcloud_security_group.sglab_2.id
   type              = "ingress"
   ip_protocol       = "TCP"
   port_range        = "80"
   policy            = "ACCEPT"
-  source_sgid       = "${tencentcloud_security_group.sglab_3.id}"
+  source_sgid       = tencentcloud_security_group.sglab_3.id
   description       = "favourite sg rule_2"
 }
 ```

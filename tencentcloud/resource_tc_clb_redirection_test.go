@@ -104,15 +104,15 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id        = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id        = tencentcloud_clb_instance.clb_basic.id
   port          = 1
   protocol      = "HTTP"
   listener_name = "listener_basic"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
-  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id         = "${tencentcloud_clb_listener.listener_basic.id}"
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_basic.id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -120,15 +120,15 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_target" {
-  clb_id        = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id        = tencentcloud_clb_instance.clb_basic.id
   port          = 44
   protocol      = "HTTP"
   listener_name = "listener_basic1"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_target" {
-  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id         = "${tencentcloud_clb_listener.listener_target.id}"
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_target.id
   domain              = "abcd.com"
   url                 = "/"
   session_expire_time = 30
@@ -136,11 +136,11 @@ resource "tencentcloud_clb_listener_rule" "rule_target" {
 }
 
 resource "tencentcloud_clb_redirection" "redirection_basic" {
-  clb_id             = "${tencentcloud_clb_instance.clb_basic.id}"
-  source_listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
-  target_listener_id = "${tencentcloud_clb_listener.listener_target.id}"
-  source_rule_id     = "${tencentcloud_clb_listener_rule.rule_basic.id}"
-  target_rule_id     = "${tencentcloud_clb_listener_rule.rule_target.id}"
+  clb_id             = tencentcloud_clb_instance.clb_basic.id
+  source_listener_id = tencentcloud_clb_listener.listener_basic.id
+  target_listener_id = tencentcloud_clb_listener.listener_target.id
+  source_rule_id     = tencentcloud_clb_listener_rule.rule_basic.id
+  target_rule_id     = tencentcloud_clb_listener_rule.rule_target.id
     is_auto_rewrite	 = false
 }
 `
@@ -152,7 +152,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id        = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id        = tencentcloud_clb_instance.clb_basic.id
   port          = 443
   protocol      = "HTTPS"
   listener_name = "listener_basic"
@@ -161,8 +161,8 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
-  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id         = "${tencentcloud_clb_listener.listener_basic.id}"
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_basic.id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -171,9 +171,9 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
 
 
 resource "tencentcloud_clb_redirection" "redirection_basic" {
-  clb_id             = "${tencentcloud_clb_instance.clb_basic.id}"
-  target_listener_id = "${tencentcloud_clb_listener.listener_basic.id}"
-  target_rule_id     = "${tencentcloud_clb_listener_rule.rule_basic.id}"
+  clb_id             = tencentcloud_clb_instance.clb_basic.id
+  target_listener_id = tencentcloud_clb_listener.listener_basic.id
+  target_rule_id     = tencentcloud_clb_listener_rule.rule_basic.id
   is_auto_rewrite	 = true
 }
 `

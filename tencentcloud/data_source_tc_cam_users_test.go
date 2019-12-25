@@ -45,6 +45,6 @@ resource "tencentcloud_cam_user" "user" {
 }
   
 data "tencentcloud_cam_users" "users" {
-  name = "${tencentcloud_cam_user.user.id}"
+  name = tencentcloud_cam_user.user.id
 }
 `

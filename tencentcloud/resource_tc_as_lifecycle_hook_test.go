@@ -93,7 +93,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = "${tencentcloud_vpc.vpc.id}"
+  vpc_id            = tencentcloud_vpc.vpc.id
   name              = "tf-as-subnet"
   cidr_block        = "10.2.11.0/24"
   availability_zone = "ap-guangzhou-3"
@@ -107,15 +107,15 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
   scaling_group_name = "tf-as-scaling-group"
-  configuration_id   = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
   min_size           = 0
-  vpc_id             = "${tencentcloud_vpc.vpc.id}"
-  subnet_ids         = ["${tencentcloud_subnet.subnet.id}"]
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_ids         = [tencentcloud_subnet.subnet.id]
 }
 
 resource "tencentcloud_as_lifecycle_hook" "lifecycle_hook" {
-  scaling_group_id      = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  scaling_group_id      = tencentcloud_as_scaling_group.scaling_group.id
   lifecycle_hook_name   = "tf-as-lifecycle-hook"
   lifecycle_transition  = "INSTANCE_LAUNCHING"
   default_result        = "CONTINUE"
@@ -133,7 +133,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = "${tencentcloud_vpc.vpc.id}"
+  vpc_id            = tencentcloud_vpc.vpc.id
   name              = "tf-as-subnet"
   cidr_block        = "10.2.11.0/24"
   availability_zone = "ap-guangzhou-3"
@@ -147,15 +147,15 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
   scaling_group_name = "tf-as-scaling-group"
-  configuration_id   = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
   min_size           = 0
-  vpc_id             = "${tencentcloud_vpc.vpc.id}"
-  subnet_ids         = ["${tencentcloud_subnet.subnet.id}"]
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_ids         = [tencentcloud_subnet.subnet.id]
 }
 
 resource "tencentcloud_as_lifecycle_hook" "lifecycle_hook" {
-  scaling_group_id      = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  scaling_group_id      = tencentcloud_as_scaling_group.scaling_group.id
   lifecycle_hook_name   = "tf-as-lifecycle-test"
   lifecycle_transition  = "INSTANCE_TERMINATING"
   default_result        = "ABANDON"

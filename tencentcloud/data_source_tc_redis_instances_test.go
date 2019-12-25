@@ -60,12 +60,12 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
 
 data "tencentcloud_redis_instances" "redis" {
   zone       = "ap-guangzhou-3"
-  search_key = "${tencentcloud_redis_instance.redis_instance_test.id}"
+  search_key = tencentcloud_redis_instance.redis_instance_test.id
 }
 
 data "tencentcloud_redis_instances" "redis-tags" {
   zone = "ap-guangzhou-3"
-  tags = "${tencentcloud_redis_instance.redis_instance_test.tags}"
+  tags = tencentcloud_redis_instance.redis_instance_test.tags
 }
 `
 }

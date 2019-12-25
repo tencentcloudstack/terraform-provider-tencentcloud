@@ -21,11 +21,11 @@ resource "tencentcloud_key_pair" "random_key" {
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name     = "${var.instance_name}"
-  availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id          = "${data.tencentcloud_images.my_favorate_image.images.0.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
-  key_name          = "${tencentcloud_key_pair.random_key.id}"
+  instance_name     = var.instance_name
+  availability_zone = data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name
+  image_id          = data.tencentcloud_images.my_favorate_image.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type
+  key_name          = tencentcloud_key_pair.random_key.id
   system_disk_type  = "CLOUD_PREMIUM"
 
   disable_monitor_service    = true

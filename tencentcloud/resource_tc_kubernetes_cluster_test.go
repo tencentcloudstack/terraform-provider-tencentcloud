@@ -153,8 +153,8 @@ func testAccTkeCluster(key, value string) string {
 	}
 	
 	resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-	  vpc_id                  = "${var.vpc}"
-	  cluster_cidr            = "${var.cluster_cidr}"
+	  vpc_id                  = var.vpc
+	  cluster_cidr            = var.cluster_cidr
 	  cluster_max_pod_num     = 32
 	  cluster_name            = "test"
 	  cluster_desc            = "test cluster desc"
@@ -162,14 +162,14 @@ func testAccTkeCluster(key, value string) string {
 	
 	  worker_config {
 	    count                      = 1
-	    availability_zone          = "${var.availability_zone}"
-	    instance_type              = "${var.default_instance_type}"
+	    availability_zone          = var.availability_zone
+	    instance_type              = var.default_instance_type
 	    system_disk_type           = "CLOUD_SSD"
 	    system_disk_size           = 60
 	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
 	    internet_max_bandwidth_out = 100
 	    public_ip_assigned         = true
-	    subnet_id                  = "${var.subnet}"
+	    subnet_id                  = var.subnet
 	
 	    data_disk {
 	      disk_type = "CLOUD_PREMIUM"

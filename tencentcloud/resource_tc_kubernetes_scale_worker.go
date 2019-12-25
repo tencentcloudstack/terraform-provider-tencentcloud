@@ -21,9 +21,9 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 
   worker_config {
     count                      = 3
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.scale_instance_type}"
-    subnet_id                  = "${var.subnet}"
+    availability_zone          = var.availability_zone
+    instance_type              = var.scale_instance_type
+    subnet_id                  = var.subnet
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 50
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"

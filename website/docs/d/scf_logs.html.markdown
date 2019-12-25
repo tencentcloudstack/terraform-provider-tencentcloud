@@ -24,7 +24,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 
 data "tencentcloud_scf_logs" "foo" {
-  function_name = "${tencentcloud_scf_function.foo.name}"
+  function_name = tencentcloud_scf_function.foo.name
 }
 ```
 

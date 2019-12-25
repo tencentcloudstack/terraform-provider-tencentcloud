@@ -160,15 +160,15 @@ func testAccCheckVpcDestroy(s *terraform.State) error {
 
 const testAccVpcConfig = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 }
 `
 
 const testAccVpcConfigUpdate = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name_update}"
-  cidr_block = "${var.vpc_cidr_less}"
+  name       = var.instance_name_update
+  cidr_block = var.vpc_cidr_less
   dns_servers  = ["119.29.29.29", "182.254.116.116"]
   is_multicast = false
 }
@@ -176,8 +176,8 @@ resource "tencentcloud_vpc" "foo" {
 
 const testAccVpcConfigWithTags = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 
   tags = {
     "test" = "test"
@@ -187,8 +187,8 @@ resource "tencentcloud_vpc" "foo" {
 
 const testAccVpcConfigWithTagsUpdate = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 
   tags = {
     "abc" = "abc"

@@ -31,10 +31,10 @@ resource "tencentcloud_ccn" "main" {
 }
 
 resource "tencentcloud_ccn_attachment" "attachment" {
-  ccn_id          = "${tencentcloud_ccn.main.id}"
+  ccn_id          = tencentcloud_ccn.main.id
   instance_type   = "VPC"
-  instance_id     = "${tencentcloud_vpc.vpc.id}"
-  instance_region = "${var.region}"
+  instance_id     = tencentcloud_vpc.vpc.id
+  instance_region = var.region
 }
 ```
 

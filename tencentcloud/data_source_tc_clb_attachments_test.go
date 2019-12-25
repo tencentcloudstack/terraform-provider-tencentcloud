@@ -31,13 +31,13 @@ func TestAccTencentCloudDataSourceClbServerAttachments(t *testing.T) {
 const testAccTencentCloudDataSourceClbServerAttachments = instanceCommonTestCase + `
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = "${var.instance_name}"
-  vpc_id       = "${var.vpc_id}"
+  clb_name     = var.instance_name
+  vpc_id       = var.vpc_id
 }
 
 resource "tencentcloud_clb_listener" "foo" {
-  clb_id                     = "${tencentcloud_clb_instance.foo.id}"
-  listener_name              = "${var.instance_name}"
+  clb_id                     = tencentcloud_clb_instance.foo.id
+  listener_name              = var.instance_name
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -50,18 +50,18 @@ resource "tencentcloud_clb_listener" "foo" {
 }
 
 resource "tencentcloud_clb_attachment" "foo" {
-  clb_id      = "${tencentcloud_clb_instance.foo.id}"
-  listener_id = "${tencentcloud_clb_listener.foo.id}"
+  clb_id      = tencentcloud_clb_instance.foo.id
+  listener_id = tencentcloud_clb_listener.foo.id
 
   targets {
-    instance_id = "${tencentcloud_instance.default.id}"
+    instance_id = tencentcloud_instance.default.id
     port        = 23
     weight      = 10
   }
 }
 
 data "tencentcloud_clb_attachments" "foo" {
-  clb_id      = "${tencentcloud_clb_instance.foo.id}"
-  listener_id = "${tencentcloud_clb_attachment.foo.listener_id}"
+  clb_id      = tencentcloud_clb_instance.foo.id
+  listener_id = tencentcloud_clb_attachment.foo.listener_id
 }
 `

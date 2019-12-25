@@ -78,11 +78,11 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 }
 
 data "tencentcloud_as_scaling_configs" "scaling_configs" {
-  configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  configuration_id = tencentcloud_as_scaling_config.launch_configuration.id
 }
 
 data "tencentcloud_as_scaling_configs" "scaling_configs_name" {
-  configuration_name = "${tencentcloud_as_scaling_config.launch_configuration.configuration_name}"
+  configuration_name = tencentcloud_as_scaling_config.launch_configuration.configuration_name
 }
 `
 }
@@ -117,7 +117,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 }
 
 data "tencentcloud_as_scaling_configs" "scaling_configs" {
-  configuration_id = "${tencentcloud_as_scaling_config.launch_configuration.id}"
+  configuration_id = tencentcloud_as_scaling_config.launch_configuration.id
 }
 `
 }

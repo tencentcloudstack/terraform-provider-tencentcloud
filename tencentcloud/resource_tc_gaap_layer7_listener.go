@@ -16,7 +16,7 @@ resource "tencentcloud_gaap_layer7_listener" "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = tencentcloud_gaap_proxy.foo.id
 }
 ```
 

@@ -10,11 +10,11 @@ resource "tencentcloud_vpc" "foo" {
 }
 
 data "tencentcloud_vpc_instances" "id_instances" {
-  vpc_id = "${tencentcloud_vpc.foo.id}"
+  vpc_id = tencentcloud_vpc.foo.id
 }
 
 data "tencentcloud_vpc_instances" "name_instances" {
-  name = "${tencentcloud_vpc.foo.name}"
+  name = tencentcloud_vpc.foo.name
 }
 ```
 */

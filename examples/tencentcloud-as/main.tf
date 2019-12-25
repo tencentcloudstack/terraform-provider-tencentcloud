@@ -4,16 +4,16 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = "${tencentcloud_vpc.vpc.id}"
+  vpc_id            = tencentcloud_vpc.vpc.id
   name              = "tf-as-subnet"
   cidr_block        = "10.2.11.0/24"
-  availability_zone = "${var.availability_zone}"
+  availability_zone = var.availability_zone
 }
 
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
   configuration_name = "tf-as-configuration"
   image_id           = "img-9qabwvbn"
-  instance_types     = ["${var.instance_type}"]
+  instance_types     = [var.instance_type]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
   system_disk_size   = "50"
@@ -38,14 +38,14 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
   scaling_group_name   = "tf-as-scaling-group"
-  configuration_id     = "${tencentcloud_as_scaling_config.launch_configuration.id}"
-  max_size             = "${var.max_size}"
-  min_size             = "${var.min_size}"
-  vpc_id               = "${tencentcloud_vpc.vpc.id}"
-  subnet_ids           = ["${tencentcloud_subnet.subnet.id}"]
+  configuration_id     = tencentcloud_as_scaling_config.launch_configuration.id
+  max_size             = var.max_size
+  min_size             = var.min_size
+  vpc_id               = tencentcloud_vpc.vpc.id
+  subnet_ids           = [tencentcloud_subnet.subnet.id]
   project_id           = 0
   default_cooldown     = 400
-  desired_capacity     = "${var.desired_capacity}"
+  desired_capacity     = var.desired_capacity
   termination_policies = ["NEWEST_INSTANCE"]
   retry_policy         = "INCREMENTAL_INTERVALS"
 
@@ -55,7 +55,7 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
 }
 
 resource "tencentcloud_as_scaling_policy" "scaling_policy" {
-  scaling_group_id    = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  scaling_group_id    = tencentcloud_as_scaling_group.scaling_group.id
   policy_name         = "tf-as-scaling-policy"
   adjustment_type     = "EXACT_CAPACITY"
   adjustment_value    = 2
@@ -69,18 +69,18 @@ resource "tencentcloud_as_scaling_policy" "scaling_policy" {
 }
 
 resource "tencentcloud_as_schedule" "schedule" {
-  scaling_group_id     = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  scaling_group_id     = tencentcloud_as_scaling_group.scaling_group.id
   schedule_action_name = "tf-as-schedule"
-  max_size             = "${var.max_size}"
-  min_size             = "${var.min_size}"
-  desired_capacity     = "${var.desired_capacity}"
+  max_size             = var.max_size
+  min_size             = var.min_size
+  desired_capacity     = var.desired_capacity
   start_time           = "2020-01-01T00:00:00+08:00"
   end_time             = "2020-12-01T00:00:00+08:00"
   recurrence           = "0 0 */1 * *"
 }
 
 resource "tencentcloud_as_lifecycle_hook" "lifecycle_hook" {
-  scaling_group_id         = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  scaling_group_id         = tencentcloud_as_scaling_group.scaling_group.id
   lifecycle_hook_name      = "tf-as-lifecycle"
   lifecycle_transition     = "INSTANCE_TERMINATING"
   default_result           = "ABANDON"
@@ -91,11 +91,11 @@ resource "tencentcloud_as_lifecycle_hook" "lifecycle_hook" {
 }
 
 resource "tencentcloud_as_notification" "notification" {
-  scaling_group_id            = "${tencentcloud_as_scaling_group.scaling_group.id}"
+  scaling_group_id            = tencentcloud_as_scaling_group.scaling_group.id
   notification_types          = ["SCALE_OUT_FAILED"]
   notification_user_group_ids = ["76955"]
 }
 
 data "tencentcloud_as_scaling_groups" "scaling_groups_tags" {
-  tags = "${tencentcloud_as_scaling_group.scaling_group.tags}"
+  tags = tencentcloud_as_scaling_group.scaling_group.tags
 }

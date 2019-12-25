@@ -44,11 +44,11 @@ resource "tencentcloud_cam_user" "user_basic" {
 }
 
 resource "tencentcloud_cam_group_membership" "membership" {
-  group_id = "${tencentcloud_cam_group.group_basic.id}"
-  user_ids = ["${tencentcloud_cam_user.user_basic.id}"]
+  group_id = tencentcloud_cam_group.group_basic.id
+  user_ids = [tencentcloud_cam_user.user_basic.id]
 }
 
 data "tencentcloud_cam_group_memberships" "memberships" {
-  group_id = "${tencentcloud_cam_group_membership.membership.id}"
+  group_id = tencentcloud_cam_group_membership.membership.id
 }
 `

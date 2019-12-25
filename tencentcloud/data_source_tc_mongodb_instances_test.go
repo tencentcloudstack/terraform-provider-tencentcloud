@@ -58,8 +58,8 @@ resource "tencentcloud_mongodb_instance" "mongodb_instance" {
 }
 
 data "tencentcloud_mongodb_instances" "mongodb_instances" {
-  instance_id = "${tencentcloud_mongodb_instance.mongodb_instance.id}"
+  instance_id = tencentcloud_mongodb_instance.mongodb_instance.id
 
-  tags = "${tencentcloud_mongodb_instance.mongodb_instance.tags}"
+  tags = tencentcloud_mongodb_instance.mongodb_instance.tags
 }
 `

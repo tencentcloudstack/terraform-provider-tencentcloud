@@ -22,7 +22,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 
 resource "tencentcloud_cos_bucket_object" "myobject" {
-  bucket = "${tencentcloud_cos_bucket.mycos.bucket}"
+  bucket = tencentcloud_cos_bucket.mycos.bucket
   key    = "new_object_key"
   content = "the content that you want to upload."
 }

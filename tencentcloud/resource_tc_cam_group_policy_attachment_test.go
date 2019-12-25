@@ -91,7 +91,7 @@ resource "tencentcloud_cam_policy" "policy" {
 }
   
 resource "tencentcloud_cam_group_policy_attachment" "group_policy_attachment_basic" {
-  group_id  = "${tencentcloud_cam_group.group.id}"
-  policy_id = "${tencentcloud_cam_policy.policy.id}"
+  group_id  = tencentcloud_cam_group.group.id
+  policy_id = tencentcloud_cam_policy.policy.id
 }
 `

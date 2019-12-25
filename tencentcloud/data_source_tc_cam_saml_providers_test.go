@@ -35,6 +35,6 @@ resource "tencentcloud_cam_saml_provider" "provider" {
 }
 
 data "tencentcloud_cam_saml_providers" "saml_providers" {
-  name = "${tencentcloud_cam_saml_provider.provider.id}"
+  name = tencentcloud_cam_saml_provider.provider.id
 }
 `

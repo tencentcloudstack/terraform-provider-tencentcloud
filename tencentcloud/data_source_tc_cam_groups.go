@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 # query by group_id
 data "tencentcloud_cam_groups" "foo" {
-  group_id = "${tencentcloud_cam_group.foo.id}"
+  group_id = tencentcloud_cam_group.foo.id
 }
 
 # query by name

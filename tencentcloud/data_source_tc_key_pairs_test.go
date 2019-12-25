@@ -35,6 +35,6 @@ resource "tencentcloud_key_pair" "key" {
 }
 
 data "tencentcloud_key_pairs" "data_key" {
-  key_id = "${tencentcloud_key_pair.key.id}"
+  key_id = tencentcloud_key_pair.key.id
 }
 `

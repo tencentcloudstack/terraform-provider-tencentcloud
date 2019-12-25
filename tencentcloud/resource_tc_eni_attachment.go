@@ -12,15 +12,15 @@ resource "tencentcloud_vpc" "foo" {
 resource "tencentcloud_subnet" "foo" {
   availability_zone = "ap-guangzhou-3"
   name              = "ci-test-eni-subnet"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  vpc_id            = tencentcloud_vpc.foo.id
   cidr_block        = "10.0.0.0/16"
   is_multicast      = false
 }
 
 resource "tencentcloud_eni" "foo" {
   name        = "ci-test-eni"
-  vpc_id      = "${tencentcloud_vpc.foo.id}"
-  subnet_id   = "${tencentcloud_subnet.foo.id}"
+  vpc_id      = tencentcloud_vpc.foo.id
+  subnet_id   = tencentcloud_subnet.foo.id
   description = "eni desc"
   ipv4_count  = 1
 }
@@ -45,19 +45,19 @@ data "tencentcloud_availability_zones" "my_favorate_zones" {
 
 resource "tencentcloud_instance" "foo" {
   instance_name            = "ci-test-eni-attach"
-  availability_zone        = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id                 = "${data.tencentcloud_images.my_favorate_image.images.0.image_id}"
-  instance_type            = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  availability_zone        = data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name
+  image_id                 = data.tencentcloud_images.my_favorate_image.images.0.image_id
+  instance_type            = data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type
   system_disk_type         = "CLOUD_PREMIUM"
   disable_security_service = true
   disable_monitor_service  = true
-  vpc_id                   = "${tencentcloud_vpc.foo.id}"
-  subnet_id                = "${tencentcloud_subnet.foo.id}"
+  vpc_id                   = tencentcloud_vpc.foo.id
+  subnet_id                = tencentcloud_subnet.foo.id
 }
 
 resource "tencentcloud_eni_attachment" "foo" {
-  eni_id      = "${tencentcloud_eni.foo.id}"
-  instance_id = "${tencentcloud_instance.foo.id}"
+  eni_id      = tencentcloud_eni.foo.id
+  instance_id = tencentcloud_instance.foo.id
 }
 ```
 

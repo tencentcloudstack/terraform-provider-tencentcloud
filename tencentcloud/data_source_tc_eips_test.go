@@ -42,10 +42,10 @@ resource "tencentcloud_eip" "eip" {
 }
 
 data "tencentcloud_eips" "data_eips" {
-  eip_id = "${tencentcloud_eip.eip.id}"
+  eip_id = tencentcloud_eip.eip.id
 }
 
 data "tencentcloud_eips" "tags" {
-  tags = "${tencentcloud_eip.eip.tags}"
+  tags = tencentcloud_eip.eip.tags
 }
 `

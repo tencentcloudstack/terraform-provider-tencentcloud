@@ -147,7 +147,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 
 data "tencentcloud_scf_functions" "foo" {
-  name = "${tencentcloud_scf_function.foo.name}"
+  name = tencentcloud_scf_function.foo.name
 }
 `
 
@@ -158,7 +158,7 @@ resource "tencentcloud_scf_namespace" "foo" {
 
 resource "tencentcloud_scf_function" "foo" {
   name      = "ci-test-function"
-  namespace = "${tencentcloud_scf_namespace.foo.id}"
+  namespace = tencentcloud_scf_namespace.foo.id
   handler   = "main.do_it"
   runtime   = "Python3.6"
 
@@ -166,7 +166,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 
 data "tencentcloud_scf_functions" "foo" {
-  namespace = "${tencentcloud_scf_function.foo.namespace}"
+  namespace = tencentcloud_scf_function.foo.namespace
 }
 `
 
@@ -181,7 +181,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 
 data "tencentcloud_scf_functions" "foo" {
-  description = "${tencentcloud_scf_function.foo.description}"
+  description = tencentcloud_scf_function.foo.description
 }
 `
 
@@ -199,6 +199,6 @@ resource "tencentcloud_scf_function" "foo" {
 }
 
 data "tencentcloud_scf_functions" "foo" {
-  tags = "${tencentcloud_scf_function.foo.tags}"
+  tags = tencentcloud_scf_function.foo.tags
 }
 `

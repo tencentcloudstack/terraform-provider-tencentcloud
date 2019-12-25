@@ -20,9 +20,9 @@ Use the navigation on the left to read about the available resources.
 ```hcl
 # Configure the TencentCloud Provider
 provider "tencentcloud" {
-  secret_id  = "${var.secret_id}"
-  secret_key = "${var.secret_key}"
-  region     = "${var.region}"
+  secret_id  = var.secret_id
+  secret_key = var.secret_key
+  region     = var.region
 }
 
 # Create a web server
@@ -32,8 +32,8 @@ resource "tencentcloud_instance" "web" {
   image_id                   = "img-9qabwvbn"
   instance_type              = "S1.SMALL1"
   system_disk_type           = "CLOUD_PREMIUM"
-  key_name                   = "${tencentcloud_key_pair.my_ssh_key.id}"
-  security_groups            = ["${tencentcloud_security_group.default.id}"]
+  key_name                   = tencentcloud_key_pair.my_ssh_key.id
+  security_groups            = [tencentcloud_security_group.default.id]
   internet_max_bandwidth_out = 20
   count                      = 1
 }
@@ -51,7 +51,7 @@ resource "tencentcloud_security_group" "default" {
 }
 
 resource "tencentcloud_security_group_rule" "web" {
-  security_group_id = "${tencentcloud_security_group.default.id}"
+  security_group_id = tencentcloud_security_group.default.id
   type              = "ingress"
   cidr_ip           = "0.0.0.0/0"
   ip_protocol       = "tcp"
@@ -60,7 +60,7 @@ resource "tencentcloud_security_group_rule" "web" {
 }
 
 resource "tencentcloud_security_group_rule" "ssh" {
-  security_group_id = "${tencentcloud_security_group.default.id}"
+  security_group_id = tencentcloud_security_group.default.id
   type              = "ingress"
   cidr_ip           = "202.119.230.10/32"
   ip_protocol       = "tcp"
@@ -85,9 +85,9 @@ Usage:
 
 ```hcl
 provider "tencentcloud" {
-  secret_id  = "${var.secret_id}"
-  secret_key = "${var.secret_key}"
-  region     = "${var.region}"
+  secret_id  = var.secret_id
+  secret_key = var.secret_key
+  region     = var.region
 }
 ```
 

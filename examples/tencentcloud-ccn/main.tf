@@ -19,21 +19,21 @@ resource tencentcloud_ccn main {
 }
 
 resource tencentcloud_ccn_attachment attachment1 {
-  ccn_id          = "${tencentcloud_ccn.main.id}"
+  ccn_id          = tencentcloud_ccn.main.id
   instance_type   = "VPC"
-  instance_id     = "${tencentcloud_vpc.vpc1.id}"
-  instance_region = "${var.region}"
+  instance_id     = tencentcloud_vpc.vpc1.id
+  instance_region = var.region
 }
 
 resource tencentcloud_ccn_attachment attachment2 {
-  ccn_id          = "${tencentcloud_ccn.main.id}"
+  ccn_id          = tencentcloud_ccn.main.id
   instance_type   = "VPC"
-  instance_id     = "${tencentcloud_vpc.vpc2.id}"
-  instance_region = "${var.region}"
+  instance_id     = tencentcloud_vpc.vpc2.id
+  instance_region = var.region
 }
 
 resource tencentcloud_ccn_bandwidth_limit limit1 {
-  ccn_id          = "${tencentcloud_ccn.main.id}"
-  region          = "${var.other_region}"
+  ccn_id          = tencentcloud_ccn.main.id
+  region          = var.other_region
   bandwidth_limit = 500
 }

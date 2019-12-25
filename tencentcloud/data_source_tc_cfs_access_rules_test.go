@@ -32,13 +32,13 @@ resource "tencentcloud_cfs_access_group" "foo" {
 }
 
 resource "tencentcloud_cfs_access_rule" "foo" {
-  access_group_id = "${tencentcloud_cfs_access_group.foo.id}"
+  access_group_id = tencentcloud_cfs_access_group.foo.id
   auth_client_ip = "10.10.1.0/24"
   priority = 1
 }
 
 data "tencentcloud_cfs_access_rules" "access_rules" {
-  access_group_id = "${tencentcloud_cfs_access_group.foo.id}"
-  access_rule_id = "${tencentcloud_cfs_access_rule.foo.id}"
+  access_group_id = tencentcloud_cfs_access_group.foo.id
+  access_rule_id = tencentcloud_cfs_access_rule.foo.id
 }
 `

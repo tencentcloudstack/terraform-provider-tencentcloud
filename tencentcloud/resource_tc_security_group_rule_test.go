@@ -178,7 +178,7 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 resource "tencentcloud_security_group_rule" "http-in" {
-  security_group_id = "${tencentcloud_security_group.foo.id}"
+  security_group_id = tencentcloud_security_group.foo.id
   type              = "ingress"
   cidr_ip           = "1.1.1.1"
   ip_protocol       = "tcp"
@@ -194,7 +194,7 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 resource "tencentcloud_security_group_rule" "ssh-in" {
-  security_group_id = "${tencentcloud_security_group.foo.id}"
+  security_group_id = tencentcloud_security_group.foo.id
   type              = "INGRESS"
   cidr_ip           = "0.0.0.0/0"
   ip_protocol       = "TCP"
@@ -211,7 +211,7 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 resource "tencentcloud_security_group_rule" "egress-drop" {
-  security_group_id = "${tencentcloud_security_group.foo.id}"
+  security_group_id = tencentcloud_security_group.foo.id
   type              = "EGRESS"
   cidr_ip           = "10.2.3.0/24"
   ip_protocol       = "UDP"
@@ -232,9 +232,9 @@ resource "tencentcloud_security_group" "boo" {
 }
 
 resource "tencentcloud_security_group_rule" "sourcesgid-in" {
-  security_group_id = "${tencentcloud_security_group.foo.id}"
+  security_group_id = tencentcloud_security_group.foo.id
   type              = "ingress"
-  source_sgid		= "${tencentcloud_security_group.boo.id}"
+  source_sgid		= tencentcloud_security_group.boo.id
   ip_protocol       = "TCP"
   port_range        = "80,8080"
   policy            = "ACCEPT"
@@ -248,7 +248,7 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 resource "tencentcloud_security_group_rule" "egress-drop" {
-  security_group_id = "${tencentcloud_security_group.foo.id}"
+  security_group_id = tencentcloud_security_group.foo.id
   cidr_ip           = "0.0.0.0/0"
   type              = "ingress"
   policy            = "DROP"

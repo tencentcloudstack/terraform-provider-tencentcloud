@@ -33,7 +33,7 @@ data "tencentcloud_vpc_instances" "foo" {
 
 resource "tencentcloud_vpn_gateway" "my_cgw" {
   name      = "terraform_test"
-  vpc_id    = "${data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id}"
+  vpc_id    = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
   bandwidth = 10
   zone      = "ap-guangzhou-3"
 
@@ -43,6 +43,6 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 }
 
 data "tencentcloud_vpn_gateways" "cgws" {
-  id = "${tencentcloud_vpn_gateway.my_cgw.id}"
+  id = tencentcloud_vpn_gateway.my_cgw.id
 }
 `

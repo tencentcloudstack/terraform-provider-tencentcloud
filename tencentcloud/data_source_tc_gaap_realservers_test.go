@@ -73,7 +73,7 @@ resource tencentcloud_gaap_realserver "foo" {
 }
 
 data tencentcloud_gaap_realservers "foo" {
-  ip = "${tencentcloud_gaap_realserver.foo.ip}"
+  ip = tencentcloud_gaap_realserver.foo.ip
 }
 `
 
@@ -84,7 +84,7 @@ resource tencentcloud_gaap_realserver "foo" {
 }
 
 data tencentcloud_gaap_realservers "foo" {
-  domain = "${tencentcloud_gaap_realserver.foo.domain}"
+  domain = tencentcloud_gaap_realserver.foo.domain
 }
 `
 
@@ -95,6 +95,6 @@ resource tencentcloud_gaap_realserver "foo" {
 }
 
 data tencentcloud_gaap_realservers "foo" {
-  name = "${tencentcloud_gaap_realserver.foo.name}"
+  name = tencentcloud_gaap_realserver.foo.name
 }
 `

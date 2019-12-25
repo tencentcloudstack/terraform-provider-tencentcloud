@@ -154,23 +154,23 @@ func testAccCheckHaVipExists(n string) resource.TestCheckFunc {
 const testAccHaVipConfig = defaultVpcVariable + `
 resource "tencentcloud_ha_vip" "havip" {
   name      = "terraform_test"
-  vpc_id    = "${var.vpc_id}"
-  subnet_id = "${var.subnet_id}"
+  vpc_id    = var.vpc_id
+  subnet_id = var.subnet_id
 }
 `
 const testAccHaVipConfigUpdate = defaultVpcVariable + `
 resource "tencentcloud_ha_vip" "havip" {
   name      = "terraform_update"
-  vpc_id    = "${var.vpc_id}"
-  subnet_id = "${var.subnet_id}"
+  vpc_id    = var.vpc_id
+  subnet_id = var.subnet_id
 }
 `
 
 const testAccHaVipConfigAssigned = defaultVpcVariable + `
 resource "tencentcloud_ha_vip" "havip" {
   name      = "terraform_test"
-  vpc_id    = "${var.vpc_id}"
-  subnet_id = "${var.subnet_id}"
+  vpc_id    = var.vpc_id
+  subnet_id = var.subnet_id
   vip       = "172.16.0.255"
 }
 `

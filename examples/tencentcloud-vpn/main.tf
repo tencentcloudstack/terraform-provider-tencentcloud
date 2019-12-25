@@ -14,9 +14,9 @@ data "tencentcloud_vpc_instances" "example" {
 
 resource "tencentcloud_vpn_gateway" "example" {
   name      = "example"
-  vpc_id    = "${data.tencentcloud_vpc_instances.example.instance_list.0.vpc_id}"
+  vpc_id    = data.tencentcloud_vpc_instances.example.instance_list.0.vpc_id
   bandwidth = 5
-  zone      = "${var.availability_zone}"
+  zone      = var.availability_zone
 
   tags = {
     test = "test"
@@ -25,16 +25,16 @@ resource "tencentcloud_vpn_gateway" "example" {
 
 resource "tencentcloud_vpn_connection" "example" {
   name                       = "example"
-  vpc_id                     = "${data.tencentcloud_vpc_instances.example.instance_list.0.vpc_id}"
-  vpn_gateway_id             = "${tencentcloud_vpn_gateway.example.id}"
-  customer_gateway_id        = "${tencentcloud_vpn_customer_gateway.example.id}"
+  vpc_id                     = data.tencentcloud_vpc_instances.example.instance_list.0.vpc_id
+  vpn_gateway_id             = tencentcloud_vpn_gateway.example.id
+  customer_gateway_id        = tencentcloud_vpn_customer_gateway.example.id
   pre_share_key              = "test"
   ike_proto_encry_algorithm  = "3DES-CBC"
   ike_proto_authen_algorithm = "MD5"
   ike_local_identity         = "ADDRESS"
-  ike_local_address          = "${tencentcloud_vpn_gateway.example.public_ip_address}"
+  ike_local_address          = tencentcloud_vpn_gateway.example.public_ip_address
   ike_remote_identity        = "ADDRESS"
-  ike_remote_address         = "${tencentcloud_vpn_customer_gateway.example.public_ip_address}"
+  ike_remote_address         = tencentcloud_vpn_customer_gateway.example.public_ip_address
   ike_dh_group_name          = "GROUP1"
   ike_sa_lifetime_seconds    = 86400
   ipsec_encrypt_algorithm    = "3DES-CBC"
@@ -53,13 +53,13 @@ resource "tencentcloud_vpn_connection" "example" {
 }
 
 data "tencentcloud_vpn_customer_gateways" "example" {
-  id = "${tencentcloud_vpn_customer_gateway.example.id}"
+  id = tencentcloud_vpn_customer_gateway.example.id
 }
 
 data "tencentcloud_vpn_gateways" "example" {
-  id = "${tencentcloud_vpn_gateway.example.id}"
+  id = tencentcloud_vpn_gateway.example.id
 }
 
 data "tencentcloud_vpn_connections" "example" {
-  id = "${tencentcloud_vpn_connection.example.id}"
+  id = tencentcloud_vpn_connection.example.id
 }

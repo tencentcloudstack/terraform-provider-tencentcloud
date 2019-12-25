@@ -121,13 +121,13 @@ func testAccCheckAlbServerAttachmentExists(n string) resource.TestCheckFunc {
 const testAccTencentCloudAlbServerAttachmentTcp = instanceCommonTestCase + `
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = "${var.instance_name}"
-  vpc_id       = "${var.vpc_id}"
+  clb_name     = var.instance_name
+  vpc_id       = var.vpc_id
 }
 
 resource "tencentcloud_clb_listener" "foo" {
-  clb_id                     = "${tencentcloud_clb_instance.foo.id}"
-  listener_name              = "${var.instance_name}"
+  clb_id                     = tencentcloud_clb_instance.foo.id
+  listener_name              = var.instance_name
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -140,11 +140,11 @@ resource "tencentcloud_clb_listener" "foo" {
 }
 
 resource "tencentcloud_alb_server_attachment" "foo" {
-  loadbalancer_id = "${tencentcloud_clb_instance.foo.id}"
-  listener_id     = "${tencentcloud_clb_listener.foo.id}"
+  loadbalancer_id = tencentcloud_clb_instance.foo.id
+  listener_id     = tencentcloud_clb_listener.foo.id
 
   backends {
-    instance_id = "${tencentcloud_instance.default.id}"
+    instance_id = tencentcloud_instance.default.id
     port        = 23
     weight      = 10
   }
@@ -154,13 +154,13 @@ resource "tencentcloud_alb_server_attachment" "foo" {
 const testAccTencentCloudAlbServerAttachmentTcpUpdate = instanceCommonTestCase + `
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = "${var.instance_name}"
-  vpc_id       = "${var.vpc_id}"
+  clb_name     = var.instance_name
+  vpc_id       = var.vpc_id
 }
 
 resource "tencentcloud_clb_listener" "foo" {
-  clb_id                     = "${tencentcloud_clb_instance.foo.id}"
-  listener_name              = "${var.instance_name}"
+  clb_id                     = tencentcloud_clb_instance.foo.id
+  listener_name              = var.instance_name
   port                       = 44
   protocol                   = "TCP"
   health_check_switch        = true
@@ -173,11 +173,11 @@ resource "tencentcloud_clb_listener" "foo" {
 }
 
 resource "tencentcloud_alb_server_attachment" "foo" {
-  loadbalancer_id = "${tencentcloud_clb_instance.foo.id}"
-  listener_id     = "${tencentcloud_clb_listener.foo.id}"
+  loadbalancer_id = tencentcloud_clb_instance.foo.id
+  listener_id     = tencentcloud_clb_listener.foo.id
 
   backends {
-    instance_id = "${tencentcloud_instance.default.id}"
+    instance_id = tencentcloud_instance.default.id
     port        = 80
     weight      = 30
   }
@@ -187,20 +187,20 @@ resource "tencentcloud_alb_server_attachment" "foo" {
 const testAccTencentCloudAlbServerAttachmentHttp = instanceCommonTestCase + `
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
-  clb_name     = "${var.instance_name}"
-  vpc_id       = "${var.vpc_id}"
+  clb_name     = var.instance_name
+  vpc_id       = var.vpc_id
 }
 
 resource "tencentcloud_clb_listener" "foo" {
-  clb_id               = "${tencentcloud_clb_instance.foo.id}"
-  listener_name        = "${var.instance_name}"
+  clb_id               = tencentcloud_clb_instance.foo.id
+  listener_name        = var.instance_name
   port                 = 77
   protocol             = "HTTP"
 }
 
 resource "tencentcloud_clb_listener_rule" "foo" {
-  clb_id              = "${tencentcloud_clb_instance.foo.id}"
-  listener_id         = "${tencentcloud_clb_listener.foo.id}"
+  clb_id              = tencentcloud_clb_instance.foo.id
+  listener_id         = tencentcloud_clb_listener.foo.id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -208,12 +208,12 @@ resource "tencentcloud_clb_listener_rule" "foo" {
 }
 
 resource "tencentcloud_alb_server_attachment" "foo" {
-  loadbalancer_id      = "${tencentcloud_clb_instance.foo.id}"
-  listener_id          = "${tencentcloud_clb_listener.foo.id}"
-  location_id          = "${tencentcloud_clb_listener_rule.foo.id}"
+  loadbalancer_id      = tencentcloud_clb_instance.foo.id
+  listener_id          = tencentcloud_clb_listener.foo.id
+  location_id          = tencentcloud_clb_listener_rule.foo.id
 
   backends {
-    instance_id = "${tencentcloud_instance.default.id}"
+    instance_id = tencentcloud_instance.default.id
     port        = 88
     weight      = 20
   }

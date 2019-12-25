@@ -22,7 +22,7 @@ resource "tencentcloud_gaap_proxy" "foo" {
 }
 
 resource "tencentcloud_gaap_security_policy" "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = tencentcloud_gaap_proxy.foo.id
   action   = "DROP"
 }
 ```

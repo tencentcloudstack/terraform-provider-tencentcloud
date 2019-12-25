@@ -32,6 +32,6 @@ resource tencentcloud_gaap_security_policy "foo" {
 }
 
 data tencentcloud_gaap_security_policies "foo" {
-  id = "${tencentcloud_gaap_security_policy.foo.id}"
+  id = tencentcloud_gaap_security_policy.foo.id
 }
 `, defaultGaapProxyId)

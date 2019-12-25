@@ -221,7 +221,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
   port                = 1
   protocol            = "TCP"
   listener_name       = "listener_basic"
@@ -237,7 +237,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_tcp" {
-  clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id                     = tencentcloud_clb_instance.clb_basic.id
   listener_name              = "listener_tcp"
   port                       = 44
   protocol                   = "TCP"
@@ -260,7 +260,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_tcp"{
-  clb_id = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id = tencentcloud_clb_instance.clb_basic.id
   listener_name              = "listener_tcp_update"
   port                       = 44
   protocol                   = "TCP"
@@ -281,7 +281,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_tcpssl" {
-  clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id                     = tencentcloud_clb_instance.clb_basic.id
   listener_name              = "listener_tcpssl"
   port                       = 44
   protocol                   = "TCP_SSL"
@@ -302,7 +302,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_tcpssl"{
-  clb_id = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id = tencentcloud_clb_instance.clb_basic.id
   listener_name              = "listener_tcpssl_update"
   port                       = 44
   protocol                   = "TCP_SSL"
@@ -323,7 +323,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_https" {
-  clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id               = tencentcloud_clb_instance.clb_basic.id
   listener_name        = "listener_https"
   port                 = 77
   protocol             = "HTTPS"
@@ -340,7 +340,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_https" {
-  clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id               = tencentcloud_clb_instance.clb_basic.id
   listener_name        = "listener_https_update"
   port                 = 33
   protocol             = "HTTPS"

@@ -82,11 +82,11 @@ resource "tencentcloud_eip" "eip" {
 }
 resource "tencentcloud_ha_vip" "havip" {
   name      = "terraform_test"
-  vpc_id    = "${var.vpc_id}"
-  subnet_id = "${var.subnet_id}"
+  vpc_id    = var.vpc_id
+  subnet_id = var.subnet_id
 }
 resource "tencentcloud_ha_vip_eip_attachment" "ha_vip_eip_attachment_basic"{
-  havip_id = "${tencentcloud_ha_vip.havip.id}"
-  address_ip = "${tencentcloud_eip.eip.public_ip}"
+  havip_id = tencentcloud_ha_vip.havip.id
+  address_ip = tencentcloud_eip.eip.public_ip
 }
 `

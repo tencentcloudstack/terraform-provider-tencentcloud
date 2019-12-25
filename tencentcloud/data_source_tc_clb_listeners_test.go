@@ -39,7 +39,7 @@ resource "tencentcloud_clb_instance" "clb" {
 }
 
 resource "tencentcloud_clb_listener" "listener" {
-  clb_id              = "${tencentcloud_clb_instance.clb.id}"
+  clb_id              = tencentcloud_clb_instance.clb.id
   port                = 1
   protocol            = "TCP"
   listener_name       = "mylistener1234"
@@ -48,7 +48,7 @@ resource "tencentcloud_clb_listener" "listener" {
 }
 
 data "tencentcloud_clb_listeners" "listeners" {
-  clb_id      = "${tencentcloud_clb_instance.clb.id}"
-  listener_id = "${tencentcloud_clb_listener.listener.id}"
+  clb_id      = tencentcloud_clb_instance.clb.id
+  listener_id = tencentcloud_clb_listener.listener.id
 }
 `

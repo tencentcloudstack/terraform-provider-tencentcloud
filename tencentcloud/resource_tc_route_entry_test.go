@@ -142,27 +142,27 @@ func testAccCheckRouteEntryExists(n string, id *string) resource.TestCheckFunc {
 
 const testAccVpcRouteEntryV2Config = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 }
 
 resource "tencentcloud_route_table" "foo" {
-  name   = "${var.instance_name}"
-  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = var.instance_name
+  vpc_id = tencentcloud_vpc.foo.id
 }
 
 resource "tencentcloud_subnet" "foo" {
-  name              = "${var.instance_name}"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  availability_zone = "${var.availability_zone}"
-  cidr_block        = "${var.subnet_cidr}"
+  name              = var.instance_name
+  vpc_id            = tencentcloud_vpc.foo.id
+  availability_zone = var.availability_zone
+  cidr_block        = var.subnet_cidr
   is_multicast      = false
-  route_table_id    = "${tencentcloud_route_table.foo.id}"
+  route_table_id    = tencentcloud_route_table.foo.id
 }
 
 resource "tencentcloud_route_entry" "foo" {
-  vpc_id        	= "${tencentcloud_vpc.foo.id}"
-  route_table_id 	= "${tencentcloud_route_table.foo.id}"
+  vpc_id        	= tencentcloud_vpc.foo.id
+  route_table_id 	= tencentcloud_route_table.foo.id
   cidr_block 		= "10.0.0.0/24"
   next_type 		= "eip"
   next_hub  		= "0"

@@ -39,6 +39,6 @@ resource "tencentcloud_cam_role" "role" {
 }
   
 data "tencentcloud_cam_roles" "roles" {
-  role_id = "${tencentcloud_cam_role.role.id}"
+  role_id = tencentcloud_cam_role.role.id
 }
 `

@@ -7,7 +7,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_security_group" "sglab" {
-  security_group_id = "${tencentcloud_security_group.sglab.id}"
+  security_group_id = tencentcloud_security_group.sglab.id
 }
 ```
 */

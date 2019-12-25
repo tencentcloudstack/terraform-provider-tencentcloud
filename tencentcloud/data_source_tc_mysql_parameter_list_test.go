@@ -48,7 +48,7 @@ func testAccMysqlParameterListDataSourceConfig(commonTestCase string) string {
 	return fmt.Sprintf(`
 %s
 data "tencentcloud_mysql_parameter_list" "mysql" {
-	mysql_id = "${tencentcloud_mysql_instance.default.id}"
+	mysql_id = tencentcloud_mysql_instance.default.id
 }
 	`, commonTestCase)
 }

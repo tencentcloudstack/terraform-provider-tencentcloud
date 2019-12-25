@@ -86,7 +86,7 @@ resource tencentcloud_gaap_certificate "foo" {
 }
 
 data "tencentcloud_gaap_certificates" "foo" {
-  id = "${tencentcloud_gaap_certificate.foo.id}"
+  id = tencentcloud_gaap_certificate.foo.id
 }
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
 
@@ -100,7 +100,7 @@ resource tencentcloud_gaap_certificate "foo" {
 }
 
 data "tencentcloud_gaap_certificates" "foo" {
-  name = "${tencentcloud_gaap_certificate.foo.name}"
+  name = tencentcloud_gaap_certificate.foo.name
 }
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")
 
@@ -114,6 +114,6 @@ resource tencentcloud_gaap_certificate "foo" {
 }
 
 data "tencentcloud_gaap_certificates" "foo" {
-  type = "${tencentcloud_gaap_certificate.foo.type}"
+  type = tencentcloud_gaap_certificate.foo.type
 }
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF")

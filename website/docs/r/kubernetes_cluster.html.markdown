@@ -31,7 +31,7 @@ variable "default_instance_type" {
 
 #examples for MANAGED_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = "${var.vpc}"
+  vpc_id                  = var.vpc
   cluster_cidr            = "10.1.0.0/16"
   cluster_max_pod_num     = 32
   cluster_name            = "test"
@@ -40,14 +40,14 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   worker_config {
     count                      = 2
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.default_instance_type}"
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = "${var.subnet}"
+    subnet_id                  = var.subnet
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -65,7 +65,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
 #examples for INDEPENDENT_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
-  vpc_id                  = "${var.vpc}"
+  vpc_id                  = var.vpc
   cluster_cidr            = "10.1.0.0/16"
   cluster_max_pod_num     = 32
   cluster_name            = "test"
@@ -74,14 +74,14 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
 
   master_config {
     count                      = 3
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.default_instance_type}"
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = "${var.subnet}"
+    subnet_id                  = var.subnet
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -96,14 +96,14 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
 
   worker_config {
     count                      = 2
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.default_instance_type}"
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = "${var.subnet}"
+    subnet_id                  = var.subnet
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
