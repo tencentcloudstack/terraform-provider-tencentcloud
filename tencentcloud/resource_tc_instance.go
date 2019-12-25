@@ -577,7 +577,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	d.SetId(instanceId)
 
 	// wait for status
-	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(15*time.Minute, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, "InternalError")
