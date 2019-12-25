@@ -69,7 +69,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/likexian/gokit/assert"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -247,7 +246,7 @@ func (me *resourceTencentCloudMysqlPrivilegeId) update(ctx context.Context, d *s
 			request.GlobalPrivileges = make([]*string, 0, len(sliceInterface))
 			for _, v := range sliceInterface {
 				ptr := sp(v)
-				if !assert.IsContains(MYSQL_GlOBAL_PRIVILEGE, *ptr) {
+				if !IsContains(MYSQL_GlOBAL_PRIVILEGE, *ptr) {
 					return errors.New("global privileges not support " + *ptr)
 				}
 				request.GlobalPrivileges = append(request.GlobalPrivileges, ptr)
@@ -276,7 +275,7 @@ func (me *resourceTencentCloudMysqlPrivilegeId) update(ctx context.Context, d *s
 
 				for _, privilege := range vmap["privileges"].(*schema.Set).List() {
 					ptr := sp(privilege)
-					if !assert.IsContains(MYSQL_DATABASE_PRIVILEGE, *ptr) {
+					if !IsContains(MYSQL_DATABASE_PRIVILEGE, *ptr) {
 						return errors.New("database privileges not support:" + *ptr)
 					}
 					p.Privileges = append(p.Privileges, ptr)
@@ -305,7 +304,7 @@ func (me *resourceTencentCloudMysqlPrivilegeId) update(ctx context.Context, d *s
 				}
 				for _, privilege := range vmap["privileges"].(*schema.Set).List() {
 					ptr := sp(privilege)
-					if !assert.IsContains(MYSQL_TABLE_PRIVILEGE, *ptr) {
+					if !IsContains(MYSQL_TABLE_PRIVILEGE, *ptr) {
 						return errors.New("table privileges not support:" + *ptr)
 					}
 					p.Privileges = append(p.Privileges, ptr)
@@ -335,7 +334,7 @@ func (me *resourceTencentCloudMysqlPrivilegeId) update(ctx context.Context, d *s
 				}
 				for _, privilege := range vmap["privileges"].(*schema.Set).List() {
 					ptr := sp(privilege)
-					if !assert.IsContains(MYSQL_COLUMN_PRIVILEGE, *ptr) {
+					if !IsContains(MYSQL_COLUMN_PRIVILEGE, *ptr) {
 						return errors.New("column privileges not support:" + *ptr)
 					}
 					p.Privileges = append(p.Privileges, ptr)
