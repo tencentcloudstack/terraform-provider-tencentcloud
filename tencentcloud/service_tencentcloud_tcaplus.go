@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"net/url"
@@ -555,15 +556,17 @@ func (me *TcaplusService) VerifyIdlFiles(ctx context.Context, tid TcaplusIdlId, 
 	}()
 
 	request.ApplicationId = &tid.ApplicationId
+
 	request.NewIdlFiles = []*tcaplusdb.IdlFileInfo{
 		{
 			FileName:    &tid.FileName,
 			FileType:    &tid.FileType,
 			FileExtType: &tid.FileExtType,
 			FileSize:    &tid.FileSize,
-			FileContent: &fileContent,
+			FileContent: helper.String(base64.StdEncoding.EncodeToString([]byte(url.QueryEscape(fileContent)))),
 		},
 	}
+
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTcaplusClient().VerifyIdlFiles(request)
 	if err != nil {
