@@ -13,7 +13,7 @@ resource "tencentcloud_vpc" "main" {
 
 resource "tencentcloud_route_table" "r" {
   name   = "Used to test the routing entry"
-  vpc_id = "${tencent_vpc.main.id}"
+  vpc_id = tencentcloud_vpc.main.id
 }
 
 resource "tencentcloud_route_entry" "rtb_entry_instance" {
