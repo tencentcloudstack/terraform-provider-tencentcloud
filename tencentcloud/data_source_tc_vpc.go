@@ -11,14 +11,14 @@ Example Usage
 variable "vpc_id" {}
 
 data "tencentcloud_vpc" "selected" {
-  id = "${var.vpc_id}"
+  id = var.vpc_id
 }
 
 resource "tencentcloud_subnet" "main" {
   name              = "my test subnet"
   cidr_block        = "${cidrsubnet(data.tencentcloud_vpc.selected.cidr_block, 4, 1)}"
   availability_zone = "eu-frankfurt-1"
-  vpc_id            = "${data.tencentcloud_vpc.selected.id}"
+  vpc_id            = data.tencentcloud_vpc.selected.id
 }
 ```
 */

@@ -128,7 +128,7 @@ func testAccMysqlReadonlyInstance(mysqlTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-  master_instance_id = "${tencentcloud_mysql_instance.default.id}"
+  master_instance_id = tencentcloud_mysql_instance.default.id
   mem_size           = 1000
   volume_size        = 50
   instance_name      = "mysql-readonly-test"
@@ -144,7 +144,7 @@ func testAccMysqlReadonlyInstance_multiTags(mysqlTestCase, value string) string 
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-  master_instance_id = "${tencentcloud_mysql_instance.default.id}"
+  master_instance_id = tencentcloud_mysql_instance.default.id
   mem_size           = 1000
   volume_size        = 50
   instance_name      = "mysql-readonly-test"
@@ -161,7 +161,7 @@ func testAccMysqlReadonlyInstance_update(mysqlTestCase, instance_name, instranet
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
-  master_instance_id = "${tencentcloud_mysql_instance.default.id}"
+  master_instance_id = tencentcloud_mysql_instance.default.id
   mem_size           = 1000
   volume_size        = 50
   instance_name      = "%s"

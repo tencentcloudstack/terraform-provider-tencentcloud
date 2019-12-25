@@ -56,7 +56,7 @@ resource "tencentcloud_scf_namespace" "foo" {
 }
 
 data "tencentcloud_scf_namespaces" "foo" {
-  namespace = "${tencentcloud_scf_namespace.foo.id}"
+  namespace = tencentcloud_scf_namespace.foo.id
 }
 `
 
@@ -67,6 +67,6 @@ resource "tencentcloud_scf_namespace" "foo" {
 }
 
 data "tencentcloud_scf_namespaces" "foo" {
-  description = "${tencentcloud_scf_namespace.foo.description}"
+  description = tencentcloud_scf_namespace.foo.description
 }
 `

@@ -84,14 +84,14 @@ func testAccCheckCbsStorageAttachmentExists(n string) resource.TestCheckFunc {
 
 const testAccCbsStorageAttachmentConfig = instanceCommonTestCase + `
 resource "tencentcloud_cbs_storage" "foo" {
-  availability_zone = "${var.availability_zone}"
+  availability_zone = var.availability_zone
   storage_size      = 100
   storage_type      = "CLOUD_PREMIUM"
-  storage_name      = "${var.instance_name}"
+  storage_name      = var.instance_name
 }
 
 resource "tencentcloud_cbs_storage_attachment" "foo" {
-  storage_id  = "${tencentcloud_cbs_storage.foo.id}"
-  instance_id = "${tencentcloud_instance.default.id}"
+  storage_id  = tencentcloud_cbs_storage.foo.id
+  instance_id = tencentcloud_instance.default.id
 }
 `

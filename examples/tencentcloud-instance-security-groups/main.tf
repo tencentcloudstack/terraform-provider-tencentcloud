@@ -21,7 +21,7 @@ resource "tencentcloud_security_group" "my_sg" {
 }
 
 resource "tencentcloud_security_group_rule" "web" {
-  security_group_id = "${tencentcloud_security_group.my_sg.id}"
+  security_group_id = tencentcloud_security_group.my_sg.id
   type              = "ingress"
   cidr_ip           = "115.158.44.225/32"
   ip_protocol       = "tcp"
@@ -30,7 +30,7 @@ resource "tencentcloud_security_group_rule" "web" {
 }
 
 resource "tencentcloud_security_group_rule" "login" {
-  security_group_id = "${tencentcloud_security_group.my_sg.id}"
+  security_group_id = tencentcloud_security_group.my_sg.id
   type              = "ingress"
   cidr_ip           = "119.28.86.93/32"
   ip_protocol       = "tcp"
@@ -44,7 +44,7 @@ resource "tencentcloud_security_group" "my_sg2" {
 }
 
 resource "tencentcloud_security_group_rule" "qortex" {
-  security_group_id = "${tencentcloud_security_group.my_sg2.id}"
+  security_group_id = tencentcloud_security_group.my_sg2.id
   type              = "ingress"
   cidr_ip           = "119.28.86.93/32"
   ip_protocol       = "tcp"
@@ -53,16 +53,16 @@ resource "tencentcloud_security_group_rule" "qortex" {
 }
 
 resource "tencentcloud_instance" "instance-without-specified-image-id-example" {
-  instance_name     = "${var.instance_name}"
-  availability_zone = "${data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name}"
-  image_id          = "${data.tencentcloud_images.my_favorate_image.images.0.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
+  instance_name     = var.instance_name
+  availability_zone = data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name
+  image_id          = data.tencentcloud_images.my_favorate_image.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type
   password          = "test1234"
   system_disk_type  = "CLOUD_PREMIUM"
 
   security_groups = [
-    "${tencentcloud_security_group.my_sg.id}",
-    "${tencentcloud_security_group.my_sg2.id}",
+    tencentcloud_security_group.my_sg.id,
+    tencentcloud_security_group.my_sg2.id,
   ]
 
   internet_max_bandwidth_out = 2

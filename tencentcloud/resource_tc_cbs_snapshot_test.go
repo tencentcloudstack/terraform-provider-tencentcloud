@@ -98,7 +98,7 @@ resource "tencentcloud_cbs_storage" "storage" {
 }
 
 resource "tencentcloud_cbs_snapshot" "snapshot" {
-	storage_id    = "${tencentcloud_cbs_storage.storage.id}"
+	storage_id    = tencentcloud_cbs_storage.storage.id
 	snapshot_name = "tf-test-snapshot"
 }
 `
@@ -112,7 +112,7 @@ resource "tencentcloud_cbs_storage" "storage" {
 }
 
 resource "tencentcloud_cbs_snapshot" "snapshot" {
-	storage_id    = "${tencentcloud_cbs_storage.storage.id}"
+	storage_id    = tencentcloud_cbs_storage.storage.id
 	snapshot_name = "tf-test-snapshot-update"
 }
 `

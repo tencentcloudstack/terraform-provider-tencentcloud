@@ -158,37 +158,37 @@ func testAccCheckVpcRouteTableDestroy(s *terraform.State) error {
 
 const testAccVpcRouteTableConfig = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 }
 
 resource "tencentcloud_route_table" "foo" {
-  name   = "${var.instance_name}"
-  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = var.instance_name
+  vpc_id = tencentcloud_vpc.foo.id
 }
 `
 
 const testAccVpcRouteTableConfigUpdate = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 }
 
 resource "tencentcloud_route_table" "foo" {
-  name   = "${var.instance_name_update}"
-  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = var.instance_name_update
+  vpc_id = tencentcloud_vpc.foo.id
 }
 `
 
 const testAccVpcRouteTableConfigWithTags = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 }
 
 resource "tencentcloud_route_table" "foo" {
-  name   = "${var.instance_name}"
-  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = var.instance_name
+  vpc_id = tencentcloud_vpc.foo.id
 
   tags = {
     "test" = "test"
@@ -198,13 +198,13 @@ resource "tencentcloud_route_table" "foo" {
 
 const testAccVpcRouteTableConfigWithTagsUpdate = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 }
 
 resource "tencentcloud_route_table" "foo" {
-  name   = "${var.instance_name}"
-  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = var.instance_name
+  vpc_id = tencentcloud_vpc.foo.id
 
   tags = {
     "abc" = "abc"

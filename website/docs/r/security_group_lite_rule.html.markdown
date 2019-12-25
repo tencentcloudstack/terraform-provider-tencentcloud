@@ -20,7 +20,7 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 resource "tencentcloud_security_group_lite_rule" "foo" {
-  security_group_id = "${tencentcloud_security_group.foo.id}"
+  security_group_id = tencentcloud_security_group.foo.id
 
   ingress = [
     "ACCEPT#192.168.1.0/24#80#TCP",

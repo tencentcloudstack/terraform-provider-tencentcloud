@@ -42,11 +42,11 @@ resource "tencentcloud_cam_policy" "policy" {
 }
 
 resource "tencentcloud_cam_role_policy_attachment" "role_policy_attachment" {
-  role_id   = "${tencentcloud_cam_role.role.id}"
-  policy_id = "${tencentcloud_cam_policy.policy.id}"
+  role_id   = tencentcloud_cam_role.role.id
+  policy_id = tencentcloud_cam_policy.policy.id
 }
   
 data "tencentcloud_cam_role_policy_attachments" "role_policy_attachments" {
-  role_id = "${tencentcloud_cam_role_policy_attachment.role_policy_attachment.role_id}"
+  role_id = tencentcloud_cam_role_policy_attachment.role_policy_attachment.role_id
 }
 `

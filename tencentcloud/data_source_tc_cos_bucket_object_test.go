@@ -36,15 +36,15 @@ resource "tencentcloud_cos_bucket" "object_bucket" {
 }
 
 resource "tencentcloud_cos_bucket_object" "object_content" {
-  bucket       = "${tencentcloud_cos_bucket.object_bucket.bucket}"
+  bucket       = tencentcloud_cos_bucket.object_bucket.bucket
   key          = "tf-object-content"
   content      = "aaaaaaaaaaaaaaaa"
   content_type = "binary/octet-stream"
 }
 
 data "tencentcloud_cos_bucket_object" "object" {
-  bucket = "${tencentcloud_cos_bucket_object.object_content.bucket}"
-  key    = "${tencentcloud_cos_bucket_object.object_content.key}"
+  bucket = tencentcloud_cos_bucket_object.object_content.bucket
+  key    = tencentcloud_cos_bucket_object.object_content.key
 }
 `, acctest.RandInt(), appid)
 }

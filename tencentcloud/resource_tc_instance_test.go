@@ -308,7 +308,7 @@ func TestAccTencentCloudInstanceWithSecurityGroup(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithSecurityGroup(`["${tencentcloud_security_group.foo.id}"]`),
+				Config: testAccTencentCloudInstanceWithSecurityGroup(`[tencentcloud_security_group.foo.id]`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(instanceId),
 					testAccCheckTencentCloudInstanceExists(instanceId),
@@ -323,8 +323,8 @@ func TestAccTencentCloudInstanceWithSecurityGroup(t *testing.T) {
 			},
 			{
 				Config: testAccTencentCloudInstanceWithSecurityGroup(`[
-					"${tencentcloud_security_group.foo.id}",
-					"${tencentcloud_security_group.bar.id}"
+					tencentcloud_security_group.foo.id,
+					tencentcloud_security_group.bar.id
 				]`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(instanceId),
@@ -493,12 +493,12 @@ func testAccCheckInstanceDestroy(s *terraform.State) error {
 
 const testAccTencentCloudInstanceBasic = defaultInstanceVariable + `
 resource "tencentcloud_instance" "foo" {
-  instance_name     = "${var.instance_name}"
-  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
-  vpc_id            = "${var.vpc_id}"
-  subnet_id         = "${var.subnet_id}"
+  instance_name     = var.instance_name
+  availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = var.vpc_id
+  subnet_id         = var.subnet_id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
 }
@@ -516,12 +516,12 @@ data "tencentcloud_instance_types" "new_type" {
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name     = "${var.instance_name}"
-  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.new_type.instance_types.0.instance_type}"
-  vpc_id            = "${var.vpc_id}"
-  subnet_id         = "${var.subnet_id}"
+  instance_name     = var.instance_name
+  availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.new_type.instance_types.0.instance_type
+  vpc_id            = var.vpc_id
+  subnet_id         = var.subnet_id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
 }
@@ -529,10 +529,10 @@ resource "tencentcloud_instance" "foo" {
 
 const testAccTencentCloudInstanceWithDataDisk = defaultInstanceVariable + `
 resource "tencentcloud_instance" "foo" {
-  instance_name     = "${var.instance_name}"
-  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  instance_name     = var.instance_name
+  availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 
   system_disk_type = "CLOUD_PREMIUM"
   data_disks {
@@ -556,10 +556,10 @@ func testAccTencentCloudInstanceWithNetwork(hasPublicIp string) string {
 	return fmt.Sprintf(
 		defaultInstanceVariable+`
 resource "tencentcloud_instance" "foo" {
-  instance_name              = "${var.instance_name}"
-  availability_zone          = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id                   = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type              = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  instance_name              = var.instance_name
+  availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 1
   allocate_public_ip         = %s
@@ -572,13 +572,13 @@ resource "tencentcloud_instance" "foo" {
 
 const testAccTencentCloudInstanceWithPrivateIP = defaultInstanceVariable + `
 resource "tencentcloud_instance" "foo" {
-  instance_name     = "${var.instance_name}"
-  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  instance_name     = var.instance_name
+  availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
-  vpc_id            = "${var.vpc_id}"
-  subnet_id         = "${var.subnet_id}"
+  vpc_id            = var.vpc_id
+  subnet_id         = var.subnet_id
   private_ip        = "172.16.0.130"
 }
 `
@@ -592,11 +592,11 @@ resource "tencentcloud_key_pair" "foo" {
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name     = "${var.instance_name}"
-  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
-  key_name          = "${tencentcloud_key_pair.foo.id}"
+  instance_name     = var.instance_name
+  availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  key_name          = tencentcloud_key_pair.foo.id
   system_disk_type  = "CLOUD_PREMIUM"
 }
 `,
@@ -608,10 +608,10 @@ func testAccTencentCloudInstanceWithPassword(password string) string {
 	return fmt.Sprintf(
 		defaultInstanceVariable+`
 resource "tencentcloud_instance" "foo" {
-  instance_name              = "${var.instance_name}"
-  availability_zone          = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id                   = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type              = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  instance_name              = var.instance_name
+  availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   internet_max_bandwidth_out = 1
   password                   = "%s"
   system_disk_type           = "CLOUD_PREMIUM"
@@ -626,9 +626,9 @@ func testAccTencentCloudInstanceWithName(instanceName string) string {
 		defaultInstanceVariable+`
 resource "tencentcloud_instance" "foo" {
   instance_name     = "%s"
-  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
 }
 `,
@@ -638,11 +638,11 @@ resource "tencentcloud_instance" "foo" {
 
 const testAccTencentCloudInstanceWithHostname = defaultInstanceVariable + `
 resource "tencentcloud_instance" "foo" {
-  instance_name     = "${var.instance_name}"
-  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
-  hostname          = "${var.instance_name}"
+  instance_name     = var.instance_name
+  availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  hostname          = var.instance_name
   system_disk_type  = "CLOUD_PREMIUM"
 }
 `
@@ -651,12 +651,12 @@ func testAccTencentCloudInstanceWithSecurityGroup(ids string) string {
 	return fmt.Sprintf(
 		defaultInstanceVariable+`
 resource "tencentcloud_security_group" "foo" {
-  name        = "${var.instance_name}"
-  description = "${var.instance_name}"
+  name        = var.instance_name
+  description = var.instance_name
 }
 
 resource "tencentcloud_security_group_rule" "foo" {
-  security_group_id = "${tencentcloud_security_group.foo.id}"
+  security_group_id = tencentcloud_security_group.foo.id
   type              = "ingress"
   cidr_ip           = "0.0.0.0/0"
   ip_protocol       = "tcp"
@@ -665,12 +665,12 @@ resource "tencentcloud_security_group_rule" "foo" {
 }
 
 resource "tencentcloud_security_group" "bar" {
-  name        = "${var.instance_name}"
-  description = "${var.instance_name}"
+  name        = var.instance_name
+  description = var.instance_name
 }
 
 resource "tencentcloud_security_group_rule" "bar" {
-  security_group_id = "${tencentcloud_security_group.bar.id}"
+  security_group_id = tencentcloud_security_group.bar.id
   type              = "ingress"
   cidr_ip           = "0.0.0.0/0"
   ip_protocol       = "tcp"
@@ -679,10 +679,10 @@ resource "tencentcloud_security_group_rule" "bar" {
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name              = "${var.instance_name}"
-  availability_zone          = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id                   = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type              = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  instance_name              = var.instance_name
+  availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   internet_max_bandwidth_out = 1
   security_groups            = %s
@@ -696,10 +696,10 @@ func testAccTencentCloudInstanceWithTags(tags string) string {
 	return fmt.Sprintf(
 		defaultInstanceVariable+`
 resource "tencentcloud_instance" "foo" {
-  instance_name     = "${var.instance_name}"
-  availability_zone = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id          = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type     = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  instance_name     = var.instance_name
+  availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
 
   tags = %s
@@ -711,27 +711,27 @@ resource "tencentcloud_instance" "foo" {
 
 const testAccTencentCloudInstanceWithPlacementGroup = defaultInstanceVariable + `
 resource "tencentcloud_placement_group" "foo" {
-  name = "${var.instance_name}"
+  name = var.instance_name
   type = "HOST"
 }
 
 resource "tencentcloud_instance" "foo" {
-  instance_name      = "${var.instance_name}"
-  availability_zone  = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id           = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type      = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  instance_name      = var.instance_name
+  availability_zone  = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id           = data.tencentcloud_images.default.images.0.image_id
+  instance_type      = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type   = "CLOUD_PREMIUM"
-  placement_group_id = "${tencentcloud_placement_group.foo.id}"
+  placement_group_id = tencentcloud_placement_group.foo.id
 }
 `
 
 const testAccTencentCloudInstanceWithSpotpaid = defaultInstanceVariable + `
 resource "tencentcloud_instance" "foo" {
-  instance_name        = "${var.instance_name}"
-  availability_zone    = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id             = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type        = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
-  hostname             = "${var.instance_name}"
+  instance_name        = var.instance_name
+  availability_zone    = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id             = data.tencentcloud_images.default.images.0.image_id
+  instance_type        = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  hostname             = var.instance_name
   system_disk_type     = "CLOUD_PREMIUM"
   instance_charge_type = "SPOTPAID"
   spot_instance_type   = "ONE-TIME"

@@ -20,7 +20,7 @@ resource "tencentcloud_vpc" "main" {
 
 resource "tencentcloud_dc_gateway" "vpc_main" {
   name                = "ci-cdg-vpc-test"
-  network_instance_id = "${tencentcloud_vpc.main.id}"
+  network_instance_id = tencentcloud_vpc.main.id
   network_type        = "VPC"
   gateway_type        = "NAT"
 }

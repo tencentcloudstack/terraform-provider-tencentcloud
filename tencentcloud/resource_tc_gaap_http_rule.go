@@ -16,7 +16,7 @@ resource "tencentcloud_gaap_layer7_listener" "foo" {
   protocol = "HTTP"
   name     = "ci-test-gaap-l7-listener"
   port     = 80
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = tencentcloud_gaap_proxy.foo.id
 }
 
 resource "tencentcloud_gaap_realserver" "foo" {
@@ -30,13 +30,13 @@ resource "tencentcloud_gaap_realserver" "bar" {
 }
 
 resource "tencentcloud_gaap_http_domain" "foo" {
-  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  listener_id = tencentcloud_gaap_layer7_listener.foo.id
   domain      = "www.qq.com"
 }
 
 resource "tencentcloud_gaap_http_rule" "foo" {
-  listener_id               = "${tencentcloud_gaap_layer7_listener.foo.id}"
-  domain                    = "${tencentcloud_gaap_http_domain.foo.domain}"
+  listener_id               = tencentcloud_gaap_layer7_listener.foo.id
+  domain                    = tencentcloud_gaap_http_domain.foo.domain
   path                      = "/"
   realserver_type           = "IP"
   health_check              = true
@@ -45,14 +45,14 @@ resource "tencentcloud_gaap_http_rule" "foo" {
   health_check_status_codes = [200]
 
   realservers {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 
   realservers {
-    id   = "${tencentcloud_gaap_realserver.bar.id}"
-    ip   = "${tencentcloud_gaap_realserver.bar.ip}"
+    id   = tencentcloud_gaap_realserver.bar.id
+    ip   = tencentcloud_gaap_realserver.bar.ip
     port = 80
   }
 }

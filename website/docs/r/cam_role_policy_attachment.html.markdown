@@ -14,8 +14,8 @@ Provides a resource to create a CAM role policy attachment.
 
 ```hcl
 resource "tencentcloud_cam_role_policy_attachment" "foo" {
-  role_id   = "${tencentcloud_cam_role.foo.id}"
-  policy_id = "${tencentcloud_cam_policy.foo.id}"
+  role_id   = tencentcloud_cam_role.foo.id
+  policy_id = tencentcloud_cam_policy.foo.id
 }
 ```
 

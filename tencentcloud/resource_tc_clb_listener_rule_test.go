@@ -149,15 +149,15 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id        = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id        = tencentcloud_clb_instance.clb_basic.id
   port          = 1
   protocol      = "HTTP"
   listener_name = "listener_basic"
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
-  clb_id              = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id         = "${tencentcloud_clb_listener.listener_basic.id}"
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_basic.id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -172,7 +172,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id               = tencentcloud_clb_instance.clb_basic.id
   listener_name        = "listener_https"
   port                 = 77
   protocol             = "HTTPS"
@@ -181,8 +181,8 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_full" {
-  clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id                = "${tencentcloud_clb_listener.listener_basic.id}"
+  clb_id                     = tencentcloud_clb_instance.clb_basic.id
+  listener_id                = tencentcloud_clb_listener.listener_basic.id
   domain                     = "abc.com"
   url                        = "/"
   session_expire_time        = 30
@@ -207,7 +207,7 @@ resource "tencentcloud_clb_instance" "clb_basic" {
 }
 
 resource "tencentcloud_clb_listener" "listener_basic" {
-  clb_id               = "${tencentcloud_clb_instance.clb_basic.id}"
+  clb_id               = tencentcloud_clb_instance.clb_basic.id
   listener_name        = "listener_https"
   port                 = 77
   protocol             = "HTTPS"
@@ -216,8 +216,8 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_full" {
-  clb_id                     = "${tencentcloud_clb_instance.clb_basic.id}"
-  listener_id                = "${tencentcloud_clb_listener.listener_basic.id}"
+  clb_id                     = tencentcloud_clb_instance.clb_basic.id
+  listener_id                = tencentcloud_clb_listener.listener_basic.id
   domain                     = "abcdr.com"
   url                        = "/"
   session_expire_time        = 60

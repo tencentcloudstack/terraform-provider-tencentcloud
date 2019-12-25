@@ -93,16 +93,16 @@ data "tencentcloud_instance_types" "default" {
 
 const instanceCommonTestCase = defaultInstanceVariable + `
 resource "tencentcloud_instance" "default" {
-  instance_name              = "${var.instance_name}"
-  availability_zone          = "${data.tencentcloud_availability_zones.default.zones.0.name}"
-  image_id                   = "${data.tencentcloud_images.default.images.0.image_id}"
-  instance_type              = "${data.tencentcloud_instance_types.default.instance_types.0.instance_type}"
+  instance_name              = var.instance_name
+  availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   system_disk_size           = 50
   allocate_public_ip         = true
   internet_max_bandwidth_out = 10
-  vpc_id                     = "${var.vpc_id}"
-  subnet_id                  = "${var.subnet_id}"
+  vpc_id                     = var.vpc_id
+  subnet_id                  = var.subnet_id
 }
 `
 
@@ -110,9 +110,9 @@ const mysqlInstanceCommonTestCase = defaultVpcVariable + `
 resource "tencentcloud_mysql_instance" "default" {
   mem_size = 1000
   volume_size = 25
-  instance_name = "${var.instance_name}"
+  instance_name = var.instance_name
   engine_version = "5.7"
   root_password = "0153Y474"
-  availability_zone = "${var.availability_zone}"
+  availability_zone = var.availability_zone
 }
 `

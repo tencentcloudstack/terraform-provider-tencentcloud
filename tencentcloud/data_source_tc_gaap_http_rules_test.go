@@ -108,15 +108,15 @@ resource "tencentcloud_gaap_realserver" "foo" {
 }
 
 resource tencentcloud_gaap_http_rule "foo" {
-  listener_id     = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  listener_id     = tencentcloud_gaap_layer7_listener.foo.id
   domain          = "www.qq.com"
   path            = "/"
   realserver_type = "IP"
   health_check    = true
 
   realservers {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 
@@ -127,23 +127,23 @@ resource tencentcloud_gaap_http_rule "foo" {
 var TestAccDataSourceTencentCloudGaapHttpRulesDomain = gaapHttpRulesResources + `
 
 data tencentcloud_gaap_http_rules "foo" {
-  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
-  domain      = "${tencentcloud_gaap_http_rule.foo.domain}"
+  listener_id = tencentcloud_gaap_layer7_listener.foo.id
+  domain      = tencentcloud_gaap_http_rule.foo.domain
 }
 `
 
 var TestAccDataSourceTencentCloudGaapHttpRulesPath = gaapHttpRulesResources + `
 
 data tencentcloud_gaap_http_rules "foo" {
-  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
-  path        = "${tencentcloud_gaap_http_rule.foo.path}"
+  listener_id = tencentcloud_gaap_layer7_listener.foo.id
+  path        = tencentcloud_gaap_http_rule.foo.path
 }
 `
 
 var TestAccDataSourceTencentCloudGaapHttpRulesForwardHost = gaapHttpRulesResources + `
 
 data tencentcloud_gaap_http_rules "foo" {
-  listener_id  = "${tencentcloud_gaap_layer7_listener.foo.id}"
-  forward_host = "${tencentcloud_gaap_http_rule.foo.forward_host}"
+  listener_id  = tencentcloud_gaap_layer7_listener.foo.id
+  forward_host = tencentcloud_gaap_http_rule.foo.forward_host
 }
 `

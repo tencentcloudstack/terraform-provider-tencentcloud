@@ -341,7 +341,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name             = "ci-test-gaap-l7-listener"
   port             = 80
   proxy_id         = "%s"
-  certificate_id   = "${tencentcloud_gaap_certificate.foo.id}"
+  certificate_id   = tencentcloud_gaap_certificate.foo.id
   forward_protocol = "HTTP"
   auth_type        = 0
 }
@@ -366,7 +366,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name             = "ci-test-gaap-l7-listener-new"
   port             = 80
   proxy_id         = "%s"
-  certificate_id   = "${tencentcloud_gaap_certificate.bar.id}"
+  certificate_id   = tencentcloud_gaap_certificate.bar.id
   forward_protocol = "HTTP"
   auth_type        = 0
 }
@@ -392,10 +392,10 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                  = "ci-test-gaap-l7-listener"
   port                  = 80
   proxy_id              = "%s"
-  certificate_id        = "${tencentcloud_gaap_certificate.foo.id}"
+  certificate_id        = tencentcloud_gaap_certificate.foo.id
   forward_protocol      = "HTTP"
   auth_type             = 1
-  client_certificate_id = "${tencentcloud_gaap_certificate.bar.id}"
+  client_certificate_id = tencentcloud_gaap_certificate.bar.id
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
@@ -413,7 +413,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name             = "ci-test-gaap-l7-listener"
   port             = 80
   proxy_id         = "%s"
-  certificate_id   = "${tencentcloud_gaap_certificate.foo.id}"
+  certificate_id   = tencentcloud_gaap_certificate.foo.id
   forward_protocol = "HTTPS"
   auth_type        = 0
 }
@@ -438,10 +438,10 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                        = "ci-test-gaap-l7-listener"
   port                        = 80
   proxy_id                    = "%s"
-  certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
+  certificate_id              = tencentcloud_gaap_certificate.foo.id
   forward_protocol            = "HTTP"
   auth_type                   = 1
-  client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
+  client_certificate_ids = [tencentcloud_gaap_certificate.bar.id]
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
@@ -471,10 +471,10 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                        = "ci-test-gaap-l7-listener"
   port                        = 80
   proxy_id                    = "%s"
-  certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
+  certificate_id              = tencentcloud_gaap_certificate.foo.id
   forward_protocol            = "HTTP"
   auth_type                   = 1
-  client_certificate_ids = ["${tencentcloud_gaap_certificate.client1.id}", "${tencentcloud_gaap_certificate.client2.id}"]
+  client_certificate_ids = [tencentcloud_gaap_certificate.client1.id, tencentcloud_gaap_certificate.client2.id]
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
@@ -500,10 +500,10 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                  = "ci-test-gaap-l7-listener"
   port                  = 80
   proxy_id              = "%s"
-  certificate_id        = "${tencentcloud_gaap_certificate.foo.id}"
+  certificate_id        = tencentcloud_gaap_certificate.foo.id
   forward_protocol      = "HTTP"
   auth_type             = 1
-  client_certificate_id = "${tencentcloud_gaap_certificate.bar.id}"
+  client_certificate_id = tencentcloud_gaap_certificate.bar.id
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
@@ -527,10 +527,10 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   name                        = "ci-test-gaap-l7-listener"
   port                        = 80
   proxy_id                    = "%s"
-  certificate_id              = "${tencentcloud_gaap_certificate.foo.id}"
+  certificate_id              = tencentcloud_gaap_certificate.foo.id
   forward_protocol            = "HTTP"
   auth_type                   = 1
-  client_certificate_ids = ["${tencentcloud_gaap_certificate.bar.id}"]
+  client_certificate_ids = [tencentcloud_gaap_certificate.bar.id]
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",

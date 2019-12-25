@@ -45,7 +45,7 @@ data "tencentcloud_availability_zones" "all" {
 
 const testAccTencentCloudAvailabilityZonesDataSourceConfigFilterWithName = defaultVpcVariable + `
 data "tencentcloud_availability_zones" "filter" {
-  name = "${var.availability_zone}"
+  name = var.availability_zone
 }
 `
 

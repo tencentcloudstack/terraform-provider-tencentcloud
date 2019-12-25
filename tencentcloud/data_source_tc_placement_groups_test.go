@@ -33,6 +33,6 @@ resource "tencentcloud_placement_group" "placement" {
 }
 
 data "tencentcloud_placement_groups" "data_placement" {
-  placement_group_id = "${tencentcloud_placement_group.placement.id}"
+  placement_group_id = tencentcloud_placement_group.placement.id
 }
 `

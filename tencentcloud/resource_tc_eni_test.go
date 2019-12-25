@@ -253,9 +253,9 @@ resource "tencentcloud_vpc" "foo" {
 }
 
 resource "tencentcloud_subnet" "foo" {
-  availability_zone = "${var.availability_zone}"
+  availability_zone = var.availability_zone
   name              = "ci-test-eni-subnet"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  vpc_id            = tencentcloud_vpc.foo.id
   cidr_block        = "10.0.0.0/16"
   is_multicast      = false
 }
@@ -265,8 +265,8 @@ const testAccEniBasic = testAccEniVpc + `
 
 resource "tencentcloud_eni" "foo" {
   name        = "ci-test-eni"
-  vpc_id      = "${tencentcloud_vpc.foo.id}"
-  subnet_id   = "${tencentcloud_subnet.foo.id}"
+  vpc_id      = tencentcloud_vpc.foo.id
+  subnet_id   = tencentcloud_subnet.foo.id
   description = "eni desc"
   ipv4_count  = 1
 }
@@ -284,10 +284,10 @@ resource "tencentcloud_security_group" "bar" {
 
 resource "tencentcloud_eni" "foo" {
   name            = "ci-test-eni-new"
-  vpc_id          = "${tencentcloud_vpc.foo.id}"
-  subnet_id       = "${tencentcloud_subnet.foo.id}"
+  vpc_id          = tencentcloud_vpc.foo.id
+  subnet_id       = tencentcloud_subnet.foo.id
   description     = "eni desc new"
-  security_groups = ["${tencentcloud_security_group.foo.id}", "${tencentcloud_security_group.bar.id}"]
+  security_groups = [tencentcloud_security_group.foo.id, tencentcloud_security_group.bar.id]
   ipv4_count      = 1
 }
 `
@@ -304,10 +304,10 @@ resource "tencentcloud_security_group" "bar" {
 
 resource "tencentcloud_eni" "foo" {
   name            = "ci-test-eni-new"
-  vpc_id          = "${tencentcloud_vpc.foo.id}"
-  subnet_id       = "${tencentcloud_subnet.foo.id}"
+  vpc_id          = tencentcloud_vpc.foo.id
+  subnet_id       = tencentcloud_subnet.foo.id
   description     = "eni desc new"
-  security_groups = ["${tencentcloud_security_group.foo.id}", "${tencentcloud_security_group.bar.id}"]
+  security_groups = [tencentcloud_security_group.foo.id, tencentcloud_security_group.bar.id]
   ipv4_count      = 1
 
   tags = {
@@ -320,8 +320,8 @@ const testAccEniUpdateCountAdd = testAccEniVpc + `
 
 resource "tencentcloud_eni" "foo" {
   name        = "ci-test-eni"
-  vpc_id      = "${tencentcloud_vpc.foo.id}"
-  subnet_id   = "${tencentcloud_subnet.foo.id}"
+  vpc_id      = tencentcloud_vpc.foo.id
+  subnet_id   = tencentcloud_subnet.foo.id
   description = "eni desc"
   ipv4_count  = 30
 }
@@ -331,8 +331,8 @@ const testAccEniUpdateCountSub = testAccEniVpc + `
 
 resource "tencentcloud_eni" "foo" {
   name        = "ci-test-eni"
-  vpc_id      = "${tencentcloud_vpc.foo.id}"
-  subnet_id   = "${tencentcloud_subnet.foo.id}"
+  vpc_id      = tencentcloud_vpc.foo.id
+  subnet_id   = tencentcloud_subnet.foo.id
   description = "eni desc"
   ipv4_count  = 20
 }
@@ -342,8 +342,8 @@ const testAccEniManually = testAccEniVpc + `
 
 resource "tencentcloud_eni" "foo" {
   name        = "ci-test-eni"
-  vpc_id      = "${tencentcloud_vpc.foo.id}"
-  subnet_id   = "${tencentcloud_subnet.foo.id}"
+  vpc_id      = tencentcloud_vpc.foo.id
+  subnet_id   = tencentcloud_subnet.foo.id
   description = "eni desc"
   
   ipv4s {
@@ -358,8 +358,8 @@ const testAccEniManuallyUpdatePrimaryDesc = testAccEniVpc + `
 
 resource "tencentcloud_eni" "foo" {
   name        = "ci-test-eni"
-  vpc_id      = "${tencentcloud_vpc.foo.id}"
-  subnet_id   = "${tencentcloud_subnet.foo.id}"
+  vpc_id      = tencentcloud_vpc.foo.id
+  subnet_id   = tencentcloud_subnet.foo.id
   description = "eni desc"
   
   ipv4s {
@@ -374,8 +374,8 @@ const testAccEniManuallyUpdateAdd = testAccEniVpc + `
 
 resource "tencentcloud_eni" "foo" {
   name        = "ci-test-eni"
-  vpc_id      = "${tencentcloud_vpc.foo.id}"
-  subnet_id   = "${tencentcloud_subnet.foo.id}"
+  vpc_id      = tencentcloud_vpc.foo.id
+  subnet_id   = tencentcloud_subnet.foo.id
   description = "eni desc"
   
   ipv4s {
@@ -535,8 +535,8 @@ const testAccEniManuallyUpdateSub = testAccEniVpc + `
 
 resource "tencentcloud_eni" "foo" {
   name        = "ci-test-eni"
-  vpc_id      = "${tencentcloud_vpc.foo.id}"
-  subnet_id   = "${tencentcloud_subnet.foo.id}"
+  vpc_id      = tencentcloud_vpc.foo.id
+  subnet_id   = tencentcloud_subnet.foo.id
   description = "eni desc"
   
   ipv4s {

@@ -124,8 +124,8 @@ variable "default_instance_type" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = "${var.vpc}"
-  cluster_cidr            = "${var.cluster_cidr}"
+  vpc_id                  = var.vpc
+  cluster_cidr            = var.cluster_cidr
   cluster_max_pod_num     = 32
   cluster_name            = "tf-tke-unit-test"
   cluster_desc            = "test cluster desc"
@@ -133,14 +133,14 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   worker_config {
     count                      = 1
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.default_instance_type}"
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = "${var.subnet}"
+    subnet_id                  = var.subnet
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -159,14 +159,14 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
 resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
 
-  cluster_id = "${tencentcloud_kubernetes_cluster.managed_cluster.id}"
+  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
 
   auto_scaling_group {
     scaling_group_name   = "tf-tke-as-group-unit-test"
     max_size             = "5"
     min_size             = "0"
-    vpc_id               = "${var.vpc}"
-    subnet_ids           = ["${var.subnet}"]
+    vpc_id               = var.vpc
+    subnet_ids           = [var.subnet]
     project_id           = 0
     default_cooldown     = 400
     desired_capacity     = "0"
@@ -181,7 +181,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
 
   auto_scaling_config {
     configuration_name = "tf-tke-as-config-unit-test"
-    instance_type      = "${var.default_instance_type}"
+    instance_type      = var.default_instance_type
     project_id         = 0
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"

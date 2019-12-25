@@ -102,7 +102,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = "${tencentcloud_vpc.vpc.id}"
+  vpc_id            = tencentcloud_vpc.vpc.id
   name              = "test-cfs-subnet"
   cidr_block        = "10.2.11.0/24"
   availability_zone = "ap-guangzhou-3"
@@ -115,9 +115,9 @@ resource "tencentcloud_cfs_access_group" "foo" {
 resource "tencentcloud_cfs_file_system" "foo" {
   name = "test_cfs_file_system"
   availability_zone = "ap-guangzhou-3"
-  access_group_id = "${tencentcloud_cfs_access_group.foo.id}"
+  access_group_id = tencentcloud_cfs_access_group.foo.id
   protocol = "NFS"
-  vpc_id = "${tencentcloud_vpc.vpc.id}"
-  subnet_id = "${tencentcloud_subnet.subnet.id}"
+  vpc_id = tencentcloud_vpc.vpc.id
+  subnet_id = tencentcloud_subnet.subnet.id
 }
 `

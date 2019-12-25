@@ -10,7 +10,7 @@ resource "tencentcloud_gaap_realserver" "foo" {
 }
 
 data "tencentcloud_gaap_realservers" "foo" {
-  ip = "${tencentcloud_gaap_realserver.foo.ip}"
+  ip = tencentcloud_gaap_realserver.foo.ip
 }
 ```
 */

@@ -23,9 +23,9 @@ resource "tencentcloud_vpc" "foo" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = "${var.availability_zone}"
+  availability_zone = var.availability_zone
   name              = "guagua-ci-temp-test"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  vpc_id            = tencentcloud_vpc.foo.id
   cidr_block        = "10.0.20.0/28"
   is_multicast      = false
 }

@@ -100,7 +100,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   name              = "terrform_test"
 }
 resource "tencentcloud_redis_backup_config" "redis_backup_config" {
-  redis_id      = "${tencentcloud_redis_instance.redis_instance_test.id}"
+  redis_id      = tencentcloud_redis_instance.redis_instance_test.id
   backup_time   = "01:00-02:00"
   backup_period = ["Saturday", "Sunday"]
 }`)
@@ -115,7 +115,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   name              = "terrform_test"
 }
 resource "tencentcloud_redis_backup_config" "redis_backup_config" {
-  redis_id      = "${tencentcloud_redis_instance.redis_instance_test.id}"
+  redis_id      = tencentcloud_redis_instance.redis_instance_test.id
   backup_time   = "06:00-07:00"
   backup_period = ["Wednesday"]
 }`)

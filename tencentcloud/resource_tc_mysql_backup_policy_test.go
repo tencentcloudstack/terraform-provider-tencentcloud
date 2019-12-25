@@ -108,7 +108,7 @@ func testAccMysqlBackupPolicy(commonTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_backup_policy" "mysql_backup_policy" {
-  mysql_id         = "${tencentcloud_mysql_instance.default.id}"
+  mysql_id         = tencentcloud_mysql_instance.default.id
   retention_period = 56
   backup_time      = "10:00-14:00"
 }`, commonTestCase)
@@ -118,7 +118,7 @@ func testAccMysqlBackupPolicyUpdate(commonTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_backup_policy" "mysql_backup_policy" {
-  mysql_id         = "${tencentcloud_mysql_instance.default.id}"
+  mysql_id         = tencentcloud_mysql_instance.default.id
   retention_period = 80
   backup_time      = "06:00-10:00"
 }`, commonTestCase)

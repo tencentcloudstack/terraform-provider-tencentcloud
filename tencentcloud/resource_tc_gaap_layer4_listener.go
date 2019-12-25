@@ -27,18 +27,18 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
   name            = "ci-test-gaap-4-listener"
   port            = 80
   realserver_type = "IP"
-  proxy_id        = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id        = tencentcloud_gaap_proxy.foo.id
   health_check    = true
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.bar.id}"
-    ip     = "${tencentcloud_gaap_realserver.bar.ip}"
+    id     = tencentcloud_gaap_realserver.bar.id
+    ip     = tencentcloud_gaap_realserver.bar.ip
     port   = 80
   }
 }

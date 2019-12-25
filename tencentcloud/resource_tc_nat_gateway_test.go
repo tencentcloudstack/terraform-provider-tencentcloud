@@ -121,14 +121,14 @@ resource "tencentcloud_eip" "eip_test_dnat" {
   name = "terraform_test"
 }
 resource "tencentcloud_nat_gateway" "my_nat" {
-  vpc_id           = "${data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id}"
+  vpc_id           = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
   name             = "terraform_test"
   max_concurrent   = 3000000
   bandwidth        = 500
 
   assigned_eip_set = [
-	  "${tencentcloud_eip.eip_dev_dnat.public_ip}",
-	  "${tencentcloud_eip.eip_test_dnat.public_ip}",
+	  tencentcloud_eip.eip_dev_dnat.public_ip,
+	  tencentcloud_eip.eip_test_dnat.public_ip,
 	]
 }
 `
@@ -148,13 +148,13 @@ resource "tencentcloud_eip" "new_eip" {
 }
 
 resource "tencentcloud_nat_gateway" "my_nat" {
-  vpc_id           = "${data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id}"
+  vpc_id           = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
   name             = "new_name"
   max_concurrent   = 10000000
   bandwidth        = 1000
   assigned_eip_set = [
-	  "${tencentcloud_eip.eip_dev_dnat.public_ip}",
-	  "${tencentcloud_eip.new_eip.public_ip}",
+	  tencentcloud_eip.eip_dev_dnat.public_ip,
+	  tencentcloud_eip.new_eip.public_ip,
 	]
 }
 `

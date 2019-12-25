@@ -13,12 +13,12 @@ resource "tencentcloud_gaap_proxy" "foo" {
 }
 
 resource "tencentcloud_gaap_security_policy" "foo" {
-  proxy_id = "${tencentcloud_gaap_proxy.foo.id}"
+  proxy_id = tencentcloud_gaap_proxy.foo.id
   action   = "ACCEPT"
 }
 
 resource "tencentcloud_gaap_security_rule" "foo" {
-  policy_id = "${tencentcloud_gaap_security_policy.foo.id}"
+  policy_id = tencentcloud_gaap_security_policy.foo.id
   name      = "ci-test-gaap-s-rule"
   cidr_ip   = "1.1.1.1"
   action    = "ACCEPT"
@@ -27,8 +27,8 @@ resource "tencentcloud_gaap_security_rule" "foo" {
 }
 
 data "tencentcloud_gaap_security_rules" "protocol" {
-  policy_id = "${tencentcloud_gaap_security_policy.foo.id}"
-  protocol  = "${tencentcloud_gaap_security_rule.foo.protocol}"
+  policy_id = tencentcloud_gaap_security_policy.foo.id
+  protocol  = tencentcloud_gaap_security_rule.foo.protocol
 }
 ```
 */

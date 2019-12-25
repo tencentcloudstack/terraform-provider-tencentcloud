@@ -512,8 +512,8 @@ resource "tencentcloud_scf_function" "foo" {
   }
 
   runtime   = "Python2.7"
-  vpc_id    = "${var.vpc_id}"
-  subnet_id = "${var.subnet_id}"
+  vpc_id    = var.vpc_id
+  subnet_id = var.subnet_id
   l5_enable = true
 
   tags = {
@@ -532,7 +532,7 @@ resource "tencentcloud_cos_bucket" "foo" {
 }
 
 resource "tencentcloud_cos_bucket_object" "myobject" {
-  bucket = "${tencentcloud_cos_bucket.foo.bucket}"
+  bucket = tencentcloud_cos_bucket.foo.bucket
   key    = "/new_object_key.zip"
   source = "%s"
   acl    = "public-read"
@@ -543,8 +543,8 @@ resource "tencentcloud_scf_function" "foo" {
   handler = "main.do_it"
   runtime = "Python3.6"
 
-  cos_bucket_name   = "${tencentcloud_cos_bucket.foo.id}"
-  cos_object_name   = "${tencentcloud_cos_bucket_object.myobject.key}"
+  cos_bucket_name   = tencentcloud_cos_bucket.foo.id
+  cos_object_name   = tencentcloud_cos_bucket_object.myobject.key
   cos_bucket_region = "ap-guangzhou"
 }`, codeSource)
 }
@@ -557,7 +557,7 @@ resource "tencentcloud_cos_bucket" "foo" {
 }
 
 resource "tencentcloud_cos_bucket_object" "myobject" {
-  bucket = "${tencentcloud_cos_bucket.foo.bucket}"
+  bucket = tencentcloud_cos_bucket.foo.bucket
   key    = "/new_object_key.zip"
   source = "%s"
   acl    = "public-read"
@@ -569,7 +569,7 @@ resource "tencentcloud_cos_bucket" "bar" {
 }
 
 resource "tencentcloud_cos_bucket_object" "bar" {
-  bucket = "${tencentcloud_cos_bucket.bar.bucket}"
+  bucket = tencentcloud_cos_bucket.bar.bucket
   key    = "/new_code.zip"
   source = "%s"
   acl    = "public-read"
@@ -580,8 +580,8 @@ resource "tencentcloud_scf_function" "foo" {
   handler = "main.do_it"
   runtime = "Python3.6"
 
-  cos_bucket_name   = "${tencentcloud_cos_bucket.bar.id}"
-  cos_object_name   = "${tencentcloud_cos_bucket_object.bar.key}"
+  cos_bucket_name   = tencentcloud_cos_bucket.bar.id
+  cos_object_name   = tencentcloud_cos_bucket_object.bar.key
   cos_bucket_region = "ap-guangzhou"
 }`, codeSource, codeSource)
 }
@@ -593,7 +593,7 @@ variable "role_document" {
 
 resource "tencentcloud_cam_role" "foo" {
   name          = "ci-scf-role"
-  document      = "${var.role_document}"
+  document      = var.role_document
   description   = "ci-scf-role"
   console_login = true
 }
@@ -602,7 +602,7 @@ resource "tencentcloud_scf_function" "foo" {
   name    = "ci-test-function"
   handler = "main.do_it"
   runtime = "Python3.6"
-  role    = "${tencentcloud_cam_role.foo.id}"
+  role    = tencentcloud_cam_role.foo.id
 
   zip_file = "%s"
 }
@@ -615,14 +615,14 @@ variable "role_document" {
 
 resource "tencentcloud_cam_role" "foo" {
   name          = "ci-scf-role"
-  document      = "${var.role_document}"
+  document      = var.role_document
   description   = "ci-scf-role"
   console_login = true
 }
 
 resource "tencentcloud_cam_role" "bar" {
   name          = "ci-scf-role-new"
-  document      = "${var.role_document}"
+  document      = var.role_document
   description   = "ci-scf-role"
   console_login = true
 }
@@ -631,7 +631,7 @@ resource "tencentcloud_scf_function" "foo" {
   name    = "ci-test-function"
   handler = "main.do_it"
   runtime = "Python3.6"
-  role    = "${tencentcloud_cam_role.bar.id}"
+  role    = tencentcloud_cam_role.bar.id
 
   zip_file = "%s"
 }
@@ -657,7 +657,7 @@ resource "tencentcloud_scf_function" "foo" {
   }
 
   triggers {
-    name         = "${tencentcloud_cos_bucket.foo.id}"
+    name         = tencentcloud_cos_bucket.foo.id
     type         = "cos"
     trigger_desc = "{\"event\":\"cos:ObjectCreated:Put\",\"filter\":{\"Prefix\":\"\",\"Suffix\":\"\"}}"
   }
@@ -689,7 +689,7 @@ resource "tencentcloud_scf_function" "foo" {
   }
 
   triggers {
-    name         = "${tencentcloud_cos_bucket.bar.id}"
+    name         = tencentcloud_cos_bucket.bar.id
     type         = "cos"
     trigger_desc = "{\"event\":\"cos:ObjectCreated:Put\",\"filter\":{\"Prefix\":\"\",\"Suffix\":\"\"}}"
   }
@@ -704,7 +704,7 @@ resource "tencentcloud_scf_namespace" "foo" {
 
 resource "tencentcloud_scf_function" "foo" {
   name      = "ci-test-function"
-  namespace = "${tencentcloud_scf_namespace.foo.id}"
+  namespace = tencentcloud_scf_namespace.foo.id
   handler   = "main.do_it"
   runtime   = "Python3.6"
 

@@ -165,51 +165,51 @@ func testAccCheckVpcSubnetDestroy(s *terraform.State) error {
 
 const testAccVpcSubnetConfig = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  name              = "${var.instance_name}"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  availability_zone = "${var.availability_zone}"
-  cidr_block        = "${var.subnet_cidr}"
+  name              = var.instance_name
+  vpc_id            = tencentcloud_vpc.foo.id
+  availability_zone = var.availability_zone
+  cidr_block        = var.subnet_cidr
   is_multicast      = false
 }
 `
 
 const testAccVpcSubnetConfigUpdate = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 }
 
 resource "tencentcloud_route_table" "route_table" {
-  name   = "${var.instance_name}"
-  vpc_id = "${tencentcloud_vpc.foo.id}"
+  name   = var.instance_name
+  vpc_id = tencentcloud_vpc.foo.id
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  name              = "${var.instance_name_update}"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  availability_zone = "${var.availability_zone}"
-  cidr_block        = "${var.subnet_cidr_less}"
+  name              = var.instance_name_update
+  vpc_id            = tencentcloud_vpc.foo.id
+  availability_zone = var.availability_zone
+  cidr_block        = var.subnet_cidr_less
   is_multicast      = true
-  route_table_id    = "${tencentcloud_route_table.route_table.id}"
+  route_table_id    = tencentcloud_route_table.route_table.id
 }
 `
 
 const testAccVpcSubnetConfigWithTags = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  name              = "${var.instance_name}"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  availability_zone = "${var.availability_zone}"
-  cidr_block        = "${var.subnet_cidr}"
+  name              = var.instance_name
+  vpc_id            = tencentcloud_vpc.foo.id
+  availability_zone = var.availability_zone
+  cidr_block        = var.subnet_cidr
   is_multicast      = false
 
   tags = {
@@ -220,15 +220,15 @@ resource "tencentcloud_subnet" "subnet" {
 
 const testAccVpcSubnetConfigWithTagsUpdate = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = "${var.instance_name}"
-  cidr_block = "${var.vpc_cidr}"
+  name       = var.instance_name
+  cidr_block = var.vpc_cidr
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  name              = "${var.instance_name}"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
-  availability_zone = "${var.availability_zone}"
-  cidr_block        = "${var.subnet_cidr}"
+  name              = var.instance_name
+  vpc_id            = tencentcloud_vpc.foo.id
+  availability_zone = var.availability_zone
+  cidr_block        = var.subnet_cidr
   is_multicast      = false
 
   tags = {

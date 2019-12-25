@@ -14,8 +14,8 @@ Provides a resource to create a CAM user policy attachment.
 
 ```hcl
 resource "tencentcloud_cam_user_policy_attachment" "foo" {
-  user_id   = "${tencentcloud_cam_user.foo.id}"
-  policy_id = "${tencentcloud_cam_policy.foo.id}"
+  user_id   = tencentcloud_cam_user.foo.id
+  policy_id = tencentcloud_cam_policy.foo.id
 }
 ```
 

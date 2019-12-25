@@ -20,7 +20,7 @@ resource "tencentcloud_gaap_certificate" "foo" {
 }
 
 data "tencentcloud_gaap_certificates" "foo" {
-  id = "${tencentcloud_gaap_certificate.foo.id}"
+  id = tencentcloud_gaap_certificate.foo.id
 }
 ```
 

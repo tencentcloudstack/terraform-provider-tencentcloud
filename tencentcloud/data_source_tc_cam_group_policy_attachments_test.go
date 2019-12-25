@@ -40,11 +40,11 @@ resource "tencentcloud_cam_policy" "policy" {
 }
 
 resource "tencentcloud_cam_group_policy_attachment" "group_policy_attachment" {
-  group_id  = "${tencentcloud_cam_group.group.id}"
-  policy_id = "${tencentcloud_cam_policy.policy.id}"
+  group_id  = tencentcloud_cam_group.group.id
+  policy_id = tencentcloud_cam_policy.policy.id
 }
   
 data "tencentcloud_cam_group_policy_attachments" "group_policy_attachments" {
-  group_id = "${tencentcloud_cam_group_policy_attachment.group_policy_attachment.group_id}"
+  group_id = tencentcloud_cam_group_policy_attachment.group_policy_attachment.group_id
 }
 `

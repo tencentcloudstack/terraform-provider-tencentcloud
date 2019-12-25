@@ -83,13 +83,13 @@ resource tencentcloud_ccn main {
 }
 
 resource tencentcloud_ccn_bandwidth_limit limit1 {
-  ccn_id          = "${tencentcloud_ccn.main.id}"
-  region          = "${var.other_region1}"
+  ccn_id          = tencentcloud_ccn.main.id
+  region          = var.other_region1
   bandwidth_limit = 500
 }
 
 resource tencentcloud_ccn_bandwidth_limit limit2 {
-  ccn_id = "${tencentcloud_ccn.main.id}"
-  region = "${var.other_region2}"
+  ccn_id = tencentcloud_ccn.main.id
+  region = var.other_region2
 }
 `

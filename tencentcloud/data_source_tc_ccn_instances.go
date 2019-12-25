@@ -11,11 +11,11 @@ resource "tencentcloud_ccn" "main"{
 }
 
 data "tencentcloud_ccn_instances" "id_instances"{
-	ccn_id = "${tencentcloud_ccn.main.id}"
+	ccn_id = tencentcloud_ccn.main.id
 }
 
 data "tencentcloud_ccn_instances" "name_instances"{
-	name = "${tencentcloud_ccn.main.name}"
+	name = tencentcloud_ccn.main.name
 }
 ```
 */

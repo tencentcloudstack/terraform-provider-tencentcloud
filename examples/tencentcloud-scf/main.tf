@@ -9,7 +9,7 @@ resource "tencentcloud_cos_bucket" "bar" {
 }
 
 resource "tencentcloud_cos_bucket_object" "myobject" {
-  bucket = "${tencentcloud_cos_bucket.foo.bucket}"
+  bucket = tencentcloud_cos_bucket.foo.bucket
   key    = "/new_object_key.zip"
   source = "code.zip"
   acl    = "public-read"
@@ -17,7 +17,7 @@ resource "tencentcloud_cos_bucket_object" "myobject" {
 
 resource "tencentcloud_cam_role" "foo" {
   name          = "ci-scf-role"
-  document      = "${var.role_document}"
+  document      = var.role_document
   description   = "ci-scf-role"
   console_login = true
 }
@@ -33,10 +33,10 @@ resource "tencentcloud_vpc" "test_vpc" {
 }
 
 resource "tencentcloud_subnet" "test_subnet" {
-  vpc_id            = "${tencentcloud_vpc.test_vpc.id}"
+  vpc_id            = tencentcloud_vpc.test_vpc.id
   name              = "terraform test subnet"
   cidr_block        = "10.1.1.0/24"
-  availability_zone = "${var.availability_zone}"
+  availability_zone = var.availability_zone
 }
 
 resource "tencentcloud_scf_function" "foo" {
@@ -44,13 +44,13 @@ resource "tencentcloud_scf_function" "foo" {
   description = "test"
   handler     = "main.do_it"
   runtime     = "Python3.6"
-  namespace   = "${tencentcloud_scf_namespace.foo.id}"
-  role        = "${tencentcloud_cam_role.foo.id}"
-  vpc_id      = "${tencentcloud_vpc.test_vpc.id}"
-  subnet_id   = "${tencentcloud_subnet.test_subnet.id}"
+  namespace   = tencentcloud_scf_namespace.foo.id
+  role        = tencentcloud_cam_role.foo.id
+  vpc_id      = tencentcloud_vpc.test_vpc.id
+  subnet_id   = tencentcloud_subnet.test_subnet.id
 
-  cos_bucket_name   = "${tencentcloud_cos_bucket.foo.id}"
-  cos_object_name   = "${tencentcloud_cos_bucket_object.myobject.key}"
+  cos_bucket_name   = tencentcloud_cos_bucket.foo.id
+  cos_object_name   = tencentcloud_cos_bucket_object.myobject.key
   cos_bucket_region = "ap-guangzhou"
 
   triggers {
@@ -60,9 +60,9 @@ resource "tencentcloud_scf_function" "foo" {
   }
 
   triggers {
-    name         = "${tencentcloud_cos_bucket.bar.id}"
+    name         = tencentcloud_cos_bucket.bar.id
     type         = "cos"
-    trigger_desc = "${var.trigger_desc}"
+    trigger_desc = var.trigger_desc
   }
 
   tags = {
@@ -71,20 +71,20 @@ resource "tencentcloud_scf_function" "foo" {
 }
 
 data "tencentcloud_scf_functions" "foo" {
-  name        = "${tencentcloud_scf_function.foo.name}"
-  description = "${tencentcloud_scf_function.foo.description}"
-  namespace   = "${tencentcloud_scf_function.foo.namespace}"
-  tags        = "${tencentcloud_scf_function.foo.tags}"
+  name        = tencentcloud_scf_function.foo.name
+  description = tencentcloud_scf_function.foo.description
+  namespace   = tencentcloud_scf_function.foo.namespace
+  tags        = tencentcloud_scf_function.foo.tags
 }
 
 data "tencentcloud_scf_namespaces" "foo" {
-  namespace   = "${tencentcloud_scf_namespace.foo.id}"
-  description = "${tencentcloud_scf_namespace.foo.description}"
+  namespace   = tencentcloud_scf_namespace.foo.id
+  description = tencentcloud_scf_namespace.foo.description
 }
 
 data "tencentcloud_scf_logs" "foo" {
-  function_name = "${tencentcloud_scf_function.foo.name}"
-  namespace     = "${tencentcloud_scf_function.foo.namespace}"
+  function_name = tencentcloud_scf_function.foo.name
+  namespace     = tencentcloud_scf_function.foo.namespace
   offset        = 0
   limit         = 100
   order         = "desc"

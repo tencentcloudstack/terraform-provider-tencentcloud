@@ -4,7 +4,7 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   volume         = 100
   engine_version = "MONGO_36_WT"
   machine_type   = "GIO"
-  available_zone = "${var.availability_zone}"
+  available_zone = var.availability_zone
   project_id     = 0
   password       = "test1234"
 
@@ -21,7 +21,7 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_sharding" {
   volume          = 100
   engine_version  = "MONGO_36_WT"
   machine_type    = "TGIO"
-  available_zone  = "${var.availability_zone}"
+  available_zone  = var.availability_zone
   project_id      = 0
   password        = "test1234"
 
@@ -31,7 +31,7 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_sharding" {
 }
 
 data "tencentcloud_mongodb_instances" "mongodb_instances" {
-  instance_id = "${tencentcloud_mongodb_instance.mongodb.id}"
+  instance_id = tencentcloud_mongodb_instance.mongodb.id
 
   tags = {
     "test" = "test"

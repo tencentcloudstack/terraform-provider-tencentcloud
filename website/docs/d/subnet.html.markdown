@@ -21,8 +21,8 @@ variable "subnet_id" {}
 variable "vpc_id" {}
 
 data "tencentcloud_subnet" "selected" {
-  vpc_id    = "${var.vpc_id}"
-  subnet_id = "${var.subnet_id}"
+  vpc_id    = var.vpc_id
+  subnet_id = var.subnet_id
 }
 
 resource "tencentcloud_security_group" "default" {
@@ -31,9 +31,9 @@ resource "tencentcloud_security_group" "default" {
 }
 
 resource "tencentcloud_security_group_rule" "subnet" {
-  security_group_id = "${tencentcloud_security_group.default.id}"
+  security_group_id = tencentcloud_security_group.default.id
   type              = "ingress"
-  cidr_ip           = "${data.tencentcloud_subnet.selected.cidr_block}"
+  cidr_ip           = data.tencentcloud_subnet.selected.cidr_block
   ip_protocol       = "tcp"
   port_range        = "80,8080"
   policy            = "accept"

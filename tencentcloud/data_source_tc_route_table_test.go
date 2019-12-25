@@ -33,11 +33,11 @@ resource "tencentcloud_vpc" "foo" {
 }
 
 resource "tencentcloud_route_table" "route_table" {
-  vpc_id = "${tencentcloud_vpc.foo.id}"
+  vpc_id = tencentcloud_vpc.foo.id
   name   = "tf-ci-test"
 }
 
 data "tencentcloud_route_table" "foo" {
-  route_table_id = "${tencentcloud_route_table.route_table.id}"
+  route_table_id = tencentcloud_route_table.route_table.id
 }
 `

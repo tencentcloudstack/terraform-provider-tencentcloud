@@ -123,7 +123,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 
 data tencentcloud_gaap_layer7_listeners "listenerId" {
   protocol    = "HTTP"
-  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  listener_id = tencentcloud_gaap_layer7_listener.foo.id
 }
 `, defaultGaapProxyId)
 
@@ -138,7 +138,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 data tencentcloud_gaap_layer7_listeners "listenerName" {
   protocol      = "HTTP"
   proxy_id      = "%s"
-  listener_name = "${tencentcloud_gaap_layer7_listener.foo.name}"
+  listener_name = tencentcloud_gaap_layer7_listener.foo.name
 }
 `, defaultGaapProxyId, defaultGaapProxyId)
 
@@ -153,7 +153,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 data tencentcloud_gaap_layer7_listeners "port" {
   protocol = "HTTP"
   proxy_id = "%s"
-  port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
+  port     = tencentcloud_gaap_layer7_listener.foo.port
 }
 `, defaultGaapProxyId, defaultGaapProxyId)
 
@@ -168,7 +168,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener"
   port             = 80
-  certificate_id   = "${tencentcloud_gaap_certificate.foo.id}"
+  certificate_id   = tencentcloud_gaap_certificate.foo.id
   auth_type        = 0
   forward_protocol = "HTTP"
   proxy_id         = "%s"
@@ -177,7 +177,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 data tencentcloud_gaap_layer7_listeners "listenerId" {
   protocol    = "HTTPS"
   proxy_id    = "%s"
-  listener_id = "${tencentcloud_gaap_layer7_listener.foo.id}"
+  listener_id = tencentcloud_gaap_layer7_listener.foo.id
 }
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId, defaultGaapProxyId)
 
@@ -192,7 +192,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener"
   port             = 80
-  certificate_id   = "${tencentcloud_gaap_certificate.foo.id}"
+  certificate_id   = tencentcloud_gaap_certificate.foo.id
   auth_type        = 0
   forward_protocol = "HTTP"
   proxy_id         = "%s"
@@ -201,7 +201,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 data tencentcloud_gaap_layer7_listeners "name" {
   protocol      = "HTTPS"
   proxy_id      = "%s"
-  listener_name = "${tencentcloud_gaap_layer7_listener.foo.name}"
+  listener_name = tencentcloud_gaap_layer7_listener.foo.name
 }
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId, defaultGaapProxyId)
 
@@ -216,7 +216,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   protocol         = "HTTPS"
   name             = "ci-test-gaap-l7-listener"
   port             = 80
-  certificate_id   = "${tencentcloud_gaap_certificate.foo.id}"
+  certificate_id   = tencentcloud_gaap_certificate.foo.id
   auth_type        = 0
   forward_protocol = "HTTP"
   proxy_id         = "%s"
@@ -225,6 +225,6 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 data tencentcloud_gaap_layer7_listeners "port" {
   protocol = "HTTPS"
   proxy_id = "%s"
-  port     = "${tencentcloud_gaap_layer7_listener.foo.port}"
+  port     = tencentcloud_gaap_layer7_listener.foo.port
 }
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF", defaultGaapProxyId, defaultGaapProxyId)

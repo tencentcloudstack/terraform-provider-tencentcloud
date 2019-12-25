@@ -99,7 +99,7 @@ resource "tencentcloud_cam_policy" "policy" {
 }
 
 resource "tencentcloud_cam_user_policy_attachment" "user_policy_attachment_basic" {
-  user_id   = "${tencentcloud_cam_user.user.id}"
-  policy_id = "${tencentcloud_cam_policy.policy.id}"
+  user_id   = tencentcloud_cam_user.user.id
+  policy_id = tencentcloud_cam_policy.policy.id
 }
 `

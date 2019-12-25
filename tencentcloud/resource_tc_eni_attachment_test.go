@@ -106,15 +106,15 @@ func testAccCheckEniAttachmentDestroy(eniId *string) resource.TestCheckFunc {
 
 const testAccEniAttachmentBasic = instanceCommonTestCase + `
 resource "tencentcloud_eni" "foo" {
-  name        = "${var.instance_name}"
-  vpc_id      = "${var.vpc_id}"
-  subnet_id   = "${var.subnet_id}"
-  description = "${var.instance_name}"
+  name        = var.instance_name
+  vpc_id      = var.vpc_id
+  subnet_id   = var.subnet_id
+  description = var.instance_name
   ipv4_count  = 1
 }
 
 resource "tencentcloud_eni_attachment" "foo" {
-  eni_id      = "${tencentcloud_eni.foo.id}"
-  instance_id = "${tencentcloud_instance.default.id}"
+  eni_id      = tencentcloud_eni.foo.id
+  instance_id = tencentcloud_instance.default.id
 }
 `

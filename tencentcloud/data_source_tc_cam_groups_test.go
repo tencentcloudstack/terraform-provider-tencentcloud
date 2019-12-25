@@ -33,6 +33,6 @@ resource "tencentcloud_cam_group" "group" {
 }
   
 data "tencentcloud_cam_groups" "groups" {
-  group_id = "${tencentcloud_cam_group.group.id}"
+  group_id = tencentcloud_cam_group.group.id
 }
 `

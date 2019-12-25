@@ -1,6 +1,6 @@
 #examples for MANAGED_CLUSTER  cluster
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = "${var.vpc}"
+  vpc_id                  = var.vpc
   cluster_cidr            = "10.1.0.0/16"
   cluster_max_pod_num     = 32
   cluster_name            = "test"
@@ -9,14 +9,14 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   worker_config {
     count                      = 2
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.default_instance_type}"
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = "${var.subnet}"
+    subnet_id                  = var.subnet
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -38,7 +38,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
 #examples for INDEPENDENT_CLUSTER  cluster
 resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
-  vpc_id                  = "${var.vpc}"
+  vpc_id                  = var.vpc
   cluster_cidr            = "10.1.0.0/16"
   cluster_max_pod_num     = 32
   cluster_name            = "test"
@@ -47,14 +47,14 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
 
   master_config {
     count                      = 3
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.default_instance_type}"
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = "${var.subnet}"
+    subnet_id                  = var.subnet
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -69,14 +69,14 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
 
   worker_config {
     count                      = 2
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.default_instance_type}"
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = "${var.subnet}"
+    subnet_id                  = var.subnet
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -94,13 +94,13 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
 
 #examples for scale  worker
 resource tencentcloud_kubernetes_scale_worker test_scale {
-  cluster_id = "${tencentcloud_kubernetes_cluster.managed_cluster.id}"
+  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
 
   worker_config {
     count                      = 3
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.scale_instance_type}"
-    subnet_id                  = "${var.subnet}"
+    availability_zone          = var.availability_zone
+    instance_type              = var.scale_instance_type
+    subnet_id                  = var.subnet
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 50
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
@@ -123,14 +123,14 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 #examples for auto scaling group
 resource "tencentcloud_kubernetes_as_scaling_group" "test" {
 
-  cluster_id = "${tencentcloud_kubernetes_cluster.managed_cluster.id}"
+  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
 
   auto_scaling_group {
     scaling_group_name   = "tf-guagua-as-group"
     max_size             = "5"
     min_size             = "0"
-    vpc_id               = "${var.vpc}"
-    subnet_ids           = ["${var.subnet}"]
+    vpc_id               = var.vpc
+    subnet_ids           = [var.subnet]
     project_id           = 0
     default_cooldown     = 400
     desired_capacity     = "0"
@@ -146,7 +146,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
 
   auto_scaling_config {
     configuration_name = "tf-guagua-as-config"
-    instance_type      = "${var.scale_instance_type}"
+    instance_type      = var.scale_instance_type
     project_id         = 0
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"

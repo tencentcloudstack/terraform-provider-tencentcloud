@@ -29,6 +29,6 @@ data "tencentcloud_container_clusters" "foo" {
 }
 
 data "tencentcloud_container_cluster_instances" "foo_instance" {
-	cluster_id = "${data.tencentcloud_container_clusters.foo.clusters.0.cluster_id}"
+	cluster_id = data.tencentcloud_container_clusters.foo.clusters.0.cluster_id
 }
 `

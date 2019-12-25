@@ -35,6 +35,6 @@ resource "tencentcloud_vpn_customer_gateway" "my_cgw" {
 }
 
 data "tencentcloud_vpn_customer_gateways" "cgws" {
-  id = "${tencentcloud_vpn_customer_gateway.my_cgw.id}"
+  id = tencentcloud_vpn_customer_gateway.my_cgw.id
 }
 `

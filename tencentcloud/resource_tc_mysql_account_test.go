@@ -93,7 +93,7 @@ func testAccMysqlAccount(commonTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_account" "mysql_account" {
-	mysql_id = "${tencentcloud_mysql_instance.default.id}"
+	mysql_id = tencentcloud_mysql_instance.default.id
 	name = "test"
 	password = "test1234"
 	description = "test from terraform"

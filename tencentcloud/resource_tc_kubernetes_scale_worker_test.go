@@ -157,7 +157,7 @@ variable "scale_instance_type" {
   default = "S2.LARGE16"
 }
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = "${var.vpc}"
+  vpc_id                  = var.vpc
   cluster_cidr            = "192.168.0.0/16"
   cluster_max_pod_num     = 32
   cluster_name            = "test"
@@ -166,14 +166,14 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   worker_config {
     count                      = 1
-    availability_zone          = "${var.availability_zone}"
-    instance_type              = "${var.default_instance_type}"
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = "${var.subnet}"
+    subnet_id                  = var.subnet
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -190,16 +190,16 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 
 resource tencentcloud_kubernetes_scale_worker test_scale {
-  cluster_id = "${tencentcloud_kubernetes_cluster.managed_cluster.id}"
+  cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
 
   worker_config {
     count                      				= 1
-    availability_zone          				= "${var.availability_zone}"
-    instance_type              				= "${var.scale_instance_type}"
+    availability_zone          				= var.availability_zone
+    instance_type              				= var.scale_instance_type
 	instance_charge_type	   				= "PREPAID"
 	instance_charge_type_prepaid_period 	= 6
 	instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_AUTO_RENEW"
-    subnet_id                  				= "${var.subnet}"
+    subnet_id                  				= var.subnet
     system_disk_type           				= "CLOUD_SSD"
     system_disk_size           				= 50
     internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"

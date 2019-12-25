@@ -104,8 +104,8 @@ resource "tencentcloud_cam_user" "foo" {
 }
 
 resource "tencentcloud_cam_group_membership" "group_membership_basic" {
-  group_id = "${tencentcloud_cam_group.group_basic.id}"
-  user_ids = ["${tencentcloud_cam_user.foo.id}",]
+  group_id = tencentcloud_cam_group.group_basic.id
+  user_ids = [tencentcloud_cam_user.foo.id,]
 }
 `
 
@@ -128,7 +128,7 @@ resource "tencentcloud_cam_user" "user_basic" {
 }
 
 resource "tencentcloud_cam_group_membership" "group_membership_basic" {
-  group_id = "${tencentcloud_cam_group.group_basic.id}"
-  user_ids = ["${tencentcloud_cam_user.user_basic.id}"]
+  group_id = tencentcloud_cam_group.group_basic.id
+  user_ids = [tencentcloud_cam_user.user_basic.id]
 }
 `

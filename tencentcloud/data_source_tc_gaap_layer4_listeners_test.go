@@ -149,8 +149,8 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
   connect_timeout = 2
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 }
@@ -173,8 +173,8 @@ resource tencentcloud_gaap_layer4_listener "bar" {
   connect_timeout = 2
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.bar.id}"
-    ip     = "${tencentcloud_gaap_realserver.bar.ip}"
+    id     = tencentcloud_gaap_realserver.bar.id
+    ip     = tencentcloud_gaap_realserver.bar.ip
     port   = 80
   }
 }
@@ -184,7 +184,7 @@ var TestAccDataSourceTencentCloudGaapLayer4ListenersBasic = gaapLayer4Listener +
 
 data tencentcloud_gaap_layer4_listeners "foo" {
   protocol    = "TCP"
-  listener_id = "${tencentcloud_gaap_layer4_listener.foo.id}"
+  listener_id = tencentcloud_gaap_layer4_listener.foo.id
 }
 `
 
@@ -193,7 +193,7 @@ var TestAccDataSourceTencentCloudGaapLayer4ListenersListenerName = gaapLayer4Lis
 data tencentcloud_gaap_layer4_listeners "name" {
   protocol      = "TCP"
   proxy_id      = "%s"
-  listener_name = "${tencentcloud_gaap_layer4_listener.foo.name}"
+  listener_name = tencentcloud_gaap_layer4_listener.foo.name
 }
 `, defaultGaapProxyId)
 
@@ -202,7 +202,7 @@ var TestAccDataSourceTencentCloudGaapLayer4ListenersPort = gaapLayer4Listener + 
 data tencentcloud_gaap_layer4_listeners "port" {
   protocol = "TCP"
   proxy_id = "%s"
-  port     = "${tencentcloud_gaap_layer4_listener.foo.port}"
+  port     = tencentcloud_gaap_layer4_listener.foo.port
 }
 `, defaultGaapProxyId)
 
@@ -221,8 +221,8 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   health_check    = false
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 }
@@ -230,7 +230,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
 data tencentcloud_gaap_layer4_listeners "foo" {
   protocol    = "UDP"
   proxy_id    = "%s"
-  listener_id = "${tencentcloud_gaap_layer4_listener.foo.id}"
+  listener_id = tencentcloud_gaap_layer4_listener.foo.id
 }
 `, defaultGaapProxyId, defaultGaapProxyId)
 
@@ -239,7 +239,7 @@ var TestAccDataSourceTencentCloudGaapLayer4ListenersUDPName = TestAccDataSourceT
 data tencentcloud_gaap_layer4_listeners "name" {
   protocol      = "UDP"
   proxy_id      = "%s"
-  listener_name = "${tencentcloud_gaap_layer4_listener.foo.name}"
+  listener_name = tencentcloud_gaap_layer4_listener.foo.name
 }
 `, defaultGaapProxyId)
 
@@ -248,6 +248,6 @@ var TestAccDataSourceTencentCloudGaapLayer4ListenersUDPPort = TestAccDataSourceT
 data tencentcloud_gaap_layer4_listeners "port" {
   protocol = "UDP"
   proxy_id = "%s"
-  port     = "${tencentcloud_gaap_layer4_listener.foo.port}"
+  port     = tencentcloud_gaap_layer4_listener.foo.port
 }
 `, defaultGaapProxyId)

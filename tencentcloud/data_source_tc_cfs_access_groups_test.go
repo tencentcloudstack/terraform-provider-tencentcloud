@@ -34,7 +34,7 @@ resource "tencentcloud_cfs_access_group" "foo" {
 }
 
 data "tencentcloud_cfs_access_groups" "access_groups" {
-  access_group_id = "${tencentcloud_cfs_access_group.foo.id}"
-  name = "${tencentcloud_cfs_access_group.foo.name}"
+  access_group_id = tencentcloud_cfs_access_group.foo.id
+  name = tencentcloud_cfs_access_group.foo.name
 }
 `

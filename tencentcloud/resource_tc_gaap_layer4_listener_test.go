@@ -331,14 +331,14 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   health_check    = true
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.bar.id}"
-    ip     = "${tencentcloud_gaap_realserver.bar.ip}"
+    id     = tencentcloud_gaap_realserver.bar.id
+    ip     = tencentcloud_gaap_realserver.bar.ip
     port   = 80
   }
 }
@@ -364,14 +364,14 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   health_check    = true
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.domain}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.domain
     port = 80
   }
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.bar.id}"
-    ip     = "${tencentcloud_gaap_realserver.bar.domain}"
+    id     = tencentcloud_gaap_realserver.bar.id
+    ip     = tencentcloud_gaap_realserver.bar.domain
     port   = 80
   }
 }
@@ -400,14 +400,14 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   connect_timeout = 10
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.bar.id}"
-    ip     = "${tencentcloud_gaap_realserver.bar.ip}"
+    id     = tencentcloud_gaap_realserver.bar.id
+    ip     = tencentcloud_gaap_realserver.bar.ip
     port   = 80
   }
 }
@@ -434,14 +434,14 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   health_check    = false
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.bar.id}"
-    ip     = "${tencentcloud_gaap_realserver.bar.ip}"
+    id     = tencentcloud_gaap_realserver.bar.id
+    ip     = tencentcloud_gaap_realserver.bar.ip
     port   = 80
   }
 }
@@ -468,8 +468,8 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   health_check    = false
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 }
@@ -494,14 +494,14 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   proxy_id        = "%s"
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.bar.id}"
-    ip     = "${tencentcloud_gaap_realserver.bar.ip}"
+    id     = tencentcloud_gaap_realserver.bar.id
+    ip     = tencentcloud_gaap_realserver.bar.ip
     port   = 80
   }
 }
@@ -526,14 +526,14 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   proxy_id        = "%s"
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.domain}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.domain
     port = 80
   }
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.bar.id}"
-    ip     = "${tencentcloud_gaap_realserver.bar.domain}"
+    id     = tencentcloud_gaap_realserver.bar.id
+    ip     = tencentcloud_gaap_realserver.bar.domain
     port   = 80
   }
 }
@@ -558,14 +558,14 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   proxy_id        = "%s"
 
   realserver_bind_set {
-    id   = "${tencentcloud_gaap_realserver.foo.id}"
-    ip   = "${tencentcloud_gaap_realserver.foo.ip}"
+    id   = tencentcloud_gaap_realserver.foo.id
+    ip   = tencentcloud_gaap_realserver.foo.ip
     port = 80
   }
 
   realserver_bind_set {
-    id     = "${tencentcloud_gaap_realserver.bar.id}"
-    ip     = "${tencentcloud_gaap_realserver.bar.ip}"
+    id     = tencentcloud_gaap_realserver.bar.id
+    ip     = tencentcloud_gaap_realserver.bar.ip
     port   = 80
   }
 }

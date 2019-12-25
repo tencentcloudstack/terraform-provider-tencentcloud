@@ -86,7 +86,7 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 data "tencentcloud_security_groups" "foo" {
-  security_group_id = "${tencentcloud_security_group.foo.id}"
+  security_group_id = tencentcloud_security_group.foo.id
 }
 `
 
@@ -97,7 +97,7 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 data "tencentcloud_security_groups" "foo" {
-  name = "${tencentcloud_security_group.foo.name}"
+  name = tencentcloud_security_group.foo.name
 }
 `
 
@@ -122,6 +122,6 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 data "tencentcloud_security_groups" "foo" {
-  tags = "${tencentcloud_security_group.foo.tags}"
+  tags = tencentcloud_security_group.foo.tags
 }
 `

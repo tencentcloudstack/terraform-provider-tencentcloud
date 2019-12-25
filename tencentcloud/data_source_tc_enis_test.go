@@ -165,9 +165,9 @@ resource "tencentcloud_vpc" "foo" {
 }
 
 resource "tencentcloud_subnet" "foo" {
-  availability_zone = "${var.availability_zone}"
+  availability_zone = var.availability_zone
   name              = "ci-test-eni-subnet"
-  vpc_id            = "${tencentcloud_vpc.foo.id}"
+  vpc_id            = tencentcloud_vpc.foo.id
   cidr_block        = "10.0.0.0/16"
   is_multicast      = false
 }
@@ -181,15 +181,15 @@ resource "tencentcloud_security_group" "foo" {
 
 resource "tencentcloud_eni" "foo" {
   name            = "ci-test-eni"
-  vpc_id          = "${tencentcloud_vpc.foo.id}"
-  subnet_id       = "${tencentcloud_subnet.foo.id}"
+  vpc_id          = tencentcloud_vpc.foo.id
+  subnet_id       = tencentcloud_subnet.foo.id
   description     = "eni desc"
-  security_groups = ["${tencentcloud_security_group.foo.id}"]
+  security_groups = [tencentcloud_security_group.foo.id]
   ipv4_count      = 1
 }
 
 data "tencentcloud_enis" "foo" {
-  ids = ["${tencentcloud_eni.foo.id}"]
+  ids = [tencentcloud_eni.foo.id]
 }
 `
 
@@ -201,10 +201,10 @@ resource "tencentcloud_security_group" "foo" {
 
 resource "tencentcloud_eni" "foo" {
   name            = "ci-test-eni"
-  vpc_id          = "${tencentcloud_vpc.foo.id}"
-  subnet_id       = "${tencentcloud_subnet.foo.id}"
+  vpc_id          = tencentcloud_vpc.foo.id
+  subnet_id       = tencentcloud_subnet.foo.id
   description     = "eni desc"
-  security_groups = ["${tencentcloud_security_group.foo.id}"]
+  security_groups = [tencentcloud_security_group.foo.id]
   ipv4_count      = 1
 
   tags = {
@@ -213,27 +213,27 @@ resource "tencentcloud_eni" "foo" {
 }
 
 data "tencentcloud_enis" "vpc" {
-  vpc_id = "${tencentcloud_eni.foo.vpc_id}"
+  vpc_id = tencentcloud_eni.foo.vpc_id
 }
 
 data "tencentcloud_enis" "subnet" {
-  subnet_id      = "${tencentcloud_eni.foo.subnet_id}"
-  security_group = "${tencentcloud_security_group.foo.id}"
+  subnet_id      = tencentcloud_eni.foo.subnet_id
+  security_group = tencentcloud_security_group.foo.id
 }
 
 data "tencentcloud_enis" "name" {
-  name = "${tencentcloud_eni.foo.name}"
+  name = tencentcloud_eni.foo.name
 }
 
 data "tencentcloud_enis" "description" {
-  description = "${tencentcloud_eni.foo.description}"
+  description = tencentcloud_eni.foo.description
 }
 
 data "tencentcloud_enis" "ipv4" {
-  ipv4 = "${tencentcloud_eni.foo.ipv4_info.0.ip}"
+  ipv4 = tencentcloud_eni.foo.ipv4_info.0.ip
 }
 
 data "tencentcloud_enis" "tags" {
-  tags = "${tencentcloud_eni.foo.tags}"
+  tags = tencentcloud_eni.foo.tags
 }
 `

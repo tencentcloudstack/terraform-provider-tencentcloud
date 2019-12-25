@@ -14,7 +14,7 @@ resource "tencentcloud_vpc" "foo" {
 }
 
 resource "tencentcloud_route_table" "route_table" {
-  vpc_id = "${tencentcloud_vpc.foo.id}"
+  vpc_id = tencentcloud_vpc.foo.id
   name   = "ci-temp-test-rt"
 
   tags = {
@@ -23,15 +23,15 @@ resource "tencentcloud_route_table" "route_table" {
 }
 
 data "tencentcloud_vpc_route_tables" "id_instances" {
-  route_table_id = "${tencentcloud_route_table.route_table.id}"
+  route_table_id = tencentcloud_route_table.route_table.id
 }
 
 data "tencentcloud_vpc_route_tables" "name_instances" {
-  name = "${tencentcloud_route_table.route_table.name}"
+  name = tencentcloud_route_table.route_table.name
 }
 
 data "tencentcloud_vpc_route_tables" "tags_instances" {
-  tags = "${tencentcloud_route_table.route_table.tags}"
+  tags = tencentcloud_route_table.route_table.tags
 }
 ```
 */

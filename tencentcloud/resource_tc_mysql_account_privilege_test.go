@@ -129,14 +129,14 @@ func testAccMysqlAccountPrivilege(commonTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_account" "mysql_account" {
-  mysql_id    = "${tencentcloud_mysql_instance.default.id}"
+  mysql_id    = tencentcloud_mysql_instance.default.id
   name        = "test"
   password    = "test1234"
   description = "test from terraform"
 }
 resource "tencentcloud_mysql_account_privilege" "mysql_account_privilege" {
-  mysql_id       = "${tencentcloud_mysql_instance.default.id}"
-  account_name   = "${tencentcloud_mysql_account.mysql_account.name}"
+  mysql_id       = tencentcloud_mysql_instance.default.id
+  account_name   = tencentcloud_mysql_account.mysql_account.name
   privileges     = ["SELECT", "INSERT", "UPDATE", "DELETE"]
   database_names = ["test"]
 }`, commonTestCase)
@@ -146,14 +146,14 @@ func testAccMysqlAccountPrivilegeUpdate(commonTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_account" "mysql_account" {
-  mysql_id    = "${tencentcloud_mysql_instance.default.id}"
+  mysql_id    = tencentcloud_mysql_instance.default.id
   name        = "test"
   password    = "test1234"
   description = "test from terraform"
 }
 resource "tencentcloud_mysql_account_privilege" "mysql_account_privilege" {
-  mysql_id       = "${tencentcloud_mysql_instance.default.id}"
-  account_name   = "${tencentcloud_mysql_account.mysql_account.name}"
+  mysql_id       = tencentcloud_mysql_instance.default.id
+  account_name   = tencentcloud_mysql_account.mysql_account.name
   privileges     = ["TRIGGER"]
   database_names = ["test"]
 }`, commonTestCase)

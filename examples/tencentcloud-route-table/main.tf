@@ -4,8 +4,8 @@ resource "tencentcloud_vpc" "my_vpc" {
 }
 
 resource "tencentcloud_route_table" "my_rtb" {
-  vpc_id = "${tencentcloud_vpc.my_vpc.id}"
-  name   = "${var.short_name}"
+  vpc_id = tencentcloud_vpc.my_vpc.id
+  name   = var.short_name
 
   tags = {
     "test" = "test"
@@ -13,5 +13,5 @@ resource "tencentcloud_route_table" "my_rtb" {
 }
 
 data "tencentcloud_vpc_route_tables" "tags_instances" {
-  tags = "${tencentcloud_route_table.my_rtb.tags}"
+  tags = tencentcloud_route_table.my_rtb.tags
 }

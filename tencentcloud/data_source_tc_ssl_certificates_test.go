@@ -98,7 +98,7 @@ resource "tencentcloud_ssl_certificate" "foo" {
 }
 
 data "tencentcloud_ssl_certificates" "foo" {
-  name = "${tencentcloud_ssl_certificate.foo.name}"
+  name = tencentcloud_ssl_certificate.foo.name
 }
 `, testAccSslCertificateCA)
 
@@ -110,7 +110,7 @@ resource "tencentcloud_ssl_certificate" "foo" {
 }
 
 data "tencentcloud_ssl_certificates" "foo" {
-  type = "${tencentcloud_ssl_certificate.foo.type}"
+  type = tencentcloud_ssl_certificate.foo.type
 }
 `, testAccSslCertificateCA)
 
@@ -122,6 +122,6 @@ resource "tencentcloud_ssl_certificate" "foo" {
 }
 
 data "tencentcloud_ssl_certificates" "foo" {
-  id = "${tencentcloud_ssl_certificate.foo.id}"
+  id = tencentcloud_ssl_certificate.foo.id
 }
 `, testAccSslCertificateCA)

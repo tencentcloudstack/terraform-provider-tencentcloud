@@ -24,12 +24,12 @@ resource "tencentcloud_ccn" "main" {
 }
 
 data "tencentcloud_ccn_bandwidth_limits" "limit" {
-  ccn_id = "${tencentcloud_ccn.main.id}"
+  ccn_id = tencentcloud_ccn.main.id
 }
 
 resource "tencentcloud_ccn_bandwidth_limit" "limit1" {
-  ccn_id          = "${tencentcloud_ccn.main.id}"
-  region          = "${var.other_region1}"
+  ccn_id          = tencentcloud_ccn.main.id
+  region          = var.other_region1
   bandwidth_limit = 500
 }
 ```
