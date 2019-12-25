@@ -10,12 +10,11 @@ require (
 	github.com/golangci/golangci-lint v1.21.0
 	github.com/hashicorp/hcl/v2 v2.0.0
 	github.com/hashicorp/terraform-plugin-sdk v1.4.1
-	github.com/likexian/gokit v0.21.11
 	github.com/mattn/go-isatty v0.0.11 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pkg/errors v0.8.1
 	github.com/smartystreets/goconvey v1.6.4 // indirect
-	github.com/tencentcloud/tencentcloud-sdk-go v3.0.111+incompatible
+	github.com/tencentcloud/tencentcloud-sdk-go v3.0.112+incompatible
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	golang.org/x/sys v0.0.0-20191219235734-af0d71d358ab // indirect
 )

@@ -8,10 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/likexian/gokit/assert"
+	"github.com/pkg/errors"
 )
 
 func validateNameRegex(v interface{}, k string) (ws []string, errors []error) {
@@ -127,7 +125,7 @@ func validateAllowedStringValueIgnoreCase(ss []string) schema.SchemaValidateFunc
 	}
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)
-		if !assert.IsContains(upperStrs, strings.ToUpper(value)) {
+		if !IsContains(upperStrs, strings.ToUpper(value)) {
 			errors = append(errors, fmt.Errorf("%q must contain a valid string value must in array %#v, got %q", k, ss, value))
 		}
 		return
@@ -137,7 +135,7 @@ func validateAllowedStringValueIgnoreCase(ss []string) schema.SchemaValidateFunc
 func validateAllowedStringValue(ss []string) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(string)
-		if !assert.IsContains(ss, value) {
+		if !IsContains(ss, value) {
 			errors = append(errors, fmt.Errorf("%q must contain a valid string value must in array %#v, got %q", k, ss, value))
 		}
 		return
@@ -193,7 +191,7 @@ func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error
 func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
 		value := v.(int)
-		if !assert.IsContains(ints, value) {
+		if !IsContains(ints, value) {
 			errors = append(errors, fmt.Errorf("%q must contain a valid int value in array %#v, got %d", k, ints, value))
 		}
 		return

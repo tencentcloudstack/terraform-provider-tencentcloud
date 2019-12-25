@@ -14,7 +14,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/likexian/gokit/assert"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
@@ -107,13 +106,13 @@ func isExpectError(err error, expectError []string) bool {
 	}
 
 	longCode := e.Code
-	if assert.IsContains(expectError, longCode) {
+	if IsContains(expectError, longCode) {
 		return true
 	}
 
 	if strings.Contains(longCode, ".") {
 		shortCode := strings.Split(longCode, ".")[0]
-		if assert.IsContains(expectError, shortCode) {
+		if IsContains(expectError, shortCode) {
 			return true
 		}
 	}
@@ -183,5 +182,45 @@ func BuildTagResourceName(serviceType, resourceType, region, id string) string {
 
 	default:
 		return fmt.Sprintf("qcs::%s:%s:uin/:%s/%s", serviceType, region, resourceType, id)
+	}
+}
+
+// IsContains returns whether value is within array
+func IsContains(array interface{}, value interface{}) bool {
+	vv := reflect.ValueOf(array)
+	if vv.Kind() == reflect.Ptr || vv.Kind() == reflect.Interface {
+		if vv.IsNil() {
+			return false
+		}
+		vv = vv.Elem()
+	}
+
+	switch vv.Kind() {
+	case reflect.Invalid:
+		return false
+	case reflect.Slice:
+		for i := 0; i < vv.Len(); i++ {
+			if reflect.DeepEqual(value, vv.Index(i).Interface()) {
+				return true
+			}
+		}
+		return false
+	case reflect.Map:
+		s := vv.MapKeys()
+		for i := 0; i < len(s); i++ {
+			if reflect.DeepEqual(value, s[i].Interface()) {
+				return true
+			}
+		}
+		return false
+	case reflect.String:
+		ss := reflect.ValueOf(value)
+		switch ss.Kind() {
+		case reflect.String:
+			return strings.Contains(vv.String(), ss.String())
+		}
+		return false
+	default:
+		return reflect.DeepEqual(array, value)
 	}
 }
