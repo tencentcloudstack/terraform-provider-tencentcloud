@@ -1,4 +1,4 @@
-## 1.28.0 (Unreleased)
+## 1.28.0 (December 25, 2019)
 
 FEATURES:
 
