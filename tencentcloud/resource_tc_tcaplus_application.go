@@ -159,6 +159,7 @@ func resourceTencentCloudTcaplusApplication() *schema.Resource {
 }
 
 func resourceTencentCloudTcaplusApplicationCreate(d *schema.ResourceData, meta interface{}) error {
+
 	defer logElapsed("resource.tencentcloud_tcaplus_application.create")()
 
 	logId := getLogId(contextNil)
@@ -173,12 +174,21 @@ func resourceTencentCloudTcaplusApplicationCreate(d *schema.ResourceData, meta i
 		subnetId = d.Get("subnet_id").(string)
 		password = d.Get("password").(string)
 	)
-	applicationId, err := tcaplusService.CreateApp(ctx, idlType, appName, vpcId, subnetId, password)
-	if err != nil {
-		return err
+
+	var applicationId string
+	var inErr, outErr error
+
+	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		applicationId, inErr = tcaplusService.CreateApp(ctx, idlType, appName, vpcId, subnetId, password)
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		return nil
+	})
+	if outErr != nil {
+		return outErr
 	}
 	d.SetId(applicationId)
-
 	time.Sleep(3 * time.Second)
 	return resourceTencentCloudTcaplusApplicationRead(d, meta)
 }
