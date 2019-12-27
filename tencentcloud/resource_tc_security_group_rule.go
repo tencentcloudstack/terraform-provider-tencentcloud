@@ -123,7 +123,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 					value := v.(string)
 					match, _ := regexp.MatchString("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}\\-\\d{1,5}$", value)
 					if !match {
-						errors = append(errors, fmt.Errorf("%s example: 53、80,443、80-90, Not configured to represent all ports", k))
+						errors = append(errors, fmt.Errorf("%s example: `53`, `80,443` and `80-90`, Not configured to represent all ports", k))
 					}
 					return
 				},
