@@ -2,7 +2,7 @@
 
 ENHANCEMENTS:
 * Data Source: `tencentcloud_vpc_instances` add new optional argument `is_default`.
-* Data Source: `tencentcloud_vpc_subnets` add new output argument `availability_zone`,`is_default`.
+* Data Source: `tencentcloud_vpc_subnets` add new optional argument `availability_zone`,`is_default`.
 
 ## 1.28.0 (December 25, 2019)
 
