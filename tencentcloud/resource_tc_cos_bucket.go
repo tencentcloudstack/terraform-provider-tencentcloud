@@ -119,7 +119,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateCosBucketName,
-				Description:  "The name of a bucket to be created.",
+				Description:  "The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.",
 			},
 			"acl": {
 				Type:     schema.TypeString,
