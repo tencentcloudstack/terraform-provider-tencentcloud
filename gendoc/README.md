@@ -65,7 +65,7 @@ description & example usage 需要在对应 resource 及 data_source 定义的�
     \n
     Example Usage
     \n
-    Example Usage 是 必须的，在 Example Usage 以下的内容都会当成 Example Usage 填充到文档中。
+    Example Usage 是必须的，在 Example Usage 以下的内容都会当成 Example Usage 填充到文档中。
     */
     package tencentcloud
 
@@ -135,28 +135,32 @@ map[string]*schema.Schema{
 
 完成了新的 Data Sources 或 Resources 后，需要更新 provider.go 的文件注释，格式可参考已有的 Data Sources 或 Resources。
 
-### Data Sources
+### Data Source
 
-在注释中找到 Data Sources，在它的下面填写新的 Data Sources 名称，比如：tencentcloud_mysql_instance，注意前面需要空两个空格。
+在注释中找到对应产品的 `Data Source`，在它的下面填写新的 Data Source 名称。如果是新的产品，则先添加新的产品类，例如 `CVM`，产品名称的简写如果容易使人迷惑，则先写产品名称详写，再写缩写，例如 `Direct Connect(DC)`。
 
 例如：
 
 ```go
-Data Sources
-  tencentcloud_mysql_instance
-  tencentcloud_mysql_backup_list
-  tencentcloud_mysql_parameter_list
+CVM
+  Data Source
+    tencentcloud_image
 ```
 
-### Resources
+如果是通用的 Data Source，则添加到 `Provider Data Sources` 这个类下面。
 
-在注释的 Data Sources 段之后，直接添加新的 Resources 类并添加 Resources，也可以将 Resources 添加到已有的 Resources 类。
+### Resource
+
+在注释中找到对应产品的 `Resource`，在它的下面填写新的 Resource 名称。如果是新的产品，则先添加新的产品类，例如 `CVM`，产品名称的简写如果容易使人迷惑，则先写产品名称详写，再写缩写，例如 `Direct Connect(DC)`。
 
 例如：
 
 ```go
-MySQL Resources
-  tencentcloud_mysql_instance
-  tencentcloud_mysql_readonly_instance
-  tencentcloud_mysql_account
+CVM
+  Data Source
+    tencentcloud_image
+    ...
+
+  Resource
+    tencentcloud_instance
 ```
