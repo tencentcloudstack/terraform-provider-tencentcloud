@@ -90,7 +90,7 @@ func dataSourceTencentCloudSubnetRead(d *schema.ResourceData, meta interface{}) 
 	vpcId := d.Get("vpc_id").(string)
 	subnetId := d.Get("subnet_id").(string)
 
-	infos, err := vpcService.DescribeSubnets(ctx, subnetId, vpcId, "", "", map[string]string{},nil)
+	infos, err := vpcService.DescribeSubnets(ctx, subnetId, vpcId, "", "", map[string]string{}, nil)
 	if err != nil {
 		return err
 	}
