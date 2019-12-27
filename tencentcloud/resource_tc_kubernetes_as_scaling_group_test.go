@@ -111,12 +111,9 @@ variable "cluster_cidr" {
   default = "172.31.0.0/16"
 }
 
-variable "vpc" {
-  default = "%s"
-}
-
-variable "subnet" {
-  default = "%s"
+data "tencentcloud_vpc_subnets" "vpc" {
+    is_default        = true
+    availability_zone = var.availability_zone
 }
 
 variable "default_instance_type" {
@@ -124,7 +121,7 @@ variable "default_instance_type" {
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = var.vpc
+  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
   cluster_cidr            = var.cluster_cidr
   cluster_max_pod_num     = 32
   cluster_name            = "tf-tke-unit-test"
@@ -140,7 +137,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = var.subnet
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -165,8 +162,8 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
     scaling_group_name   = "tf-tke-as-group-unit-test"
     max_size             = "5"
     min_size             = "0"
-    vpc_id               = var.vpc
-    subnet_ids           = [var.subnet]
+    vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+    subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
     project_id           = 0
     default_cooldown     = 400
     desired_capacity     = "0"
@@ -205,6 +202,6 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
   }
 }
 
-`, defaultVpcId, defaultSubnetId,
+`,
 	)
 }

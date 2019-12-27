@@ -149,7 +149,7 @@ func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 }
 
 func (me *VpcService) DescribeVpc(ctx context.Context, vpcId string) (info VpcBasicInfo, has int, errRet error) {
-	infos, err := me.DescribeVpcs(ctx, vpcId, "", nil)
+	infos, err := me.DescribeVpcs(ctx, vpcId, "", nil, nil)
 	if err != nil {
 		errRet = err
 		return
@@ -161,7 +161,7 @@ func (me *VpcService) DescribeVpc(ctx context.Context, vpcId string) (info VpcBa
 	return
 }
 
-func (me *VpcService) DescribeVpcs(ctx context.Context, vpcId, name string, tags map[string]string) (infos []VpcBasicInfo, errRet error) {
+func (me *VpcService) DescribeVpcs(ctx context.Context, vpcId, name string, tags map[string]string, isDefaultPtr *bool) (infos []VpcBasicInfo, errRet error) {
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeVpcsRequest()
 	defer func() {
@@ -187,6 +187,10 @@ func (me *VpcService) DescribeVpcs(ctx context.Context, vpcId, name string, tags
 
 	if name != "" {
 		filters = me.fillFilter(filters, "vpc-name", name)
+	}
+
+	if isDefaultPtr != nil {
+		filters = me.fillFilter(filters, "is-default", map[bool]string{true: "true", false: "false"}[*isDefaultPtr])
 	}
 
 	for k, v := range tags {
@@ -258,7 +262,7 @@ getMoreData:
 
 }
 func (me *VpcService) DescribeSubnet(ctx context.Context, subnetId string) (info VpcSubnetBasicInfo, has int, errRet error) {
-	infos, err := me.DescribeSubnets(ctx, subnetId, "", "", "", nil)
+	infos, err := me.DescribeSubnets(ctx, subnetId, "", "", "", nil, nil)
 	if err != nil {
 		errRet = err
 		return
@@ -270,7 +274,7 @@ func (me *VpcService) DescribeSubnet(ctx context.Context, subnetId string) (info
 	return
 }
 
-func (me *VpcService) DescribeSubnets(ctx context.Context, subnetId, vpcId, subnetName, zone string, tags map[string]string) (infos []VpcSubnetBasicInfo, errRet error) {
+func (me *VpcService) DescribeSubnets(ctx context.Context, subnetId, vpcId, subnetName, zone string, tags map[string]string, isDefaultPtr *bool) (infos []VpcSubnetBasicInfo, errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeSubnetsRequest()
@@ -300,6 +304,10 @@ func (me *VpcService) DescribeSubnets(ctx context.Context, subnetId, vpcId, subn
 	}
 	if zone != "" {
 		filters = me.fillFilter(filters, "zone", zone)
+	}
+
+	if isDefaultPtr != nil {
+		filters = me.fillFilter(filters, "is-default", map[bool]string{true: "true", false: "false"}[*isDefaultPtr])
 	}
 
 	for k, v := range tags {

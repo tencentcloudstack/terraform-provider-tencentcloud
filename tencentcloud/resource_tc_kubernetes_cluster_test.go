@@ -30,7 +30,6 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_node_num", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "worker_instances_list.#", "1"),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "worker_instances_list.0.instance_id"),
-					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_charge_type", CVM_CHARGE_TYPE_POSTPAID),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "certification_authority"),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "user_name"),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "password"),
@@ -139,21 +138,18 @@ func testAccTkeCluster(key, value string) string {
 	variable "cluster_cidr" {
 	  default = "172.31.0.0/16"
 	}
-	
-	variable "vpc" {
-	  default = "%s"
-	}
-	
-	variable "subnet" {
-	  default = "%s"
-	}
-	
+
 	variable "default_instance_type" {
 	  default = "SA1.LARGE8"
 	}
-	
+
+	data "tencentcloud_vpc_subnets" "vpc" {
+      is_default        = true
+      availability_zone = var.availability_zone
+    }
+
 	resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-	  vpc_id                  = var.vpc
+	  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
 	  cluster_cidr            = var.cluster_cidr
 	  cluster_max_pod_num     = 32
 	  cluster_name            = "test"
@@ -169,7 +165,7 @@ func testAccTkeCluster(key, value string) string {
 	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
 	    internet_max_bandwidth_out = 100
 	    public_ip_assigned         = true
-	    subnet_id                  = var.subnet
+	    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
 	
 	    data_disk {
 	      disk_type = "CLOUD_PREMIUM"
@@ -188,6 +184,6 @@ func testAccTkeCluster(key, value string) string {
 	    "%s" = "%s"
 	  }
 	}
-`, defaultVpcId, defaultSubnetId, key, value,
+`, key, value,
 	)
 }

@@ -31,6 +31,7 @@ data "tencentcloud_vpc_instances" "name_instances" {
 
 The following arguments are supported:
 
+* `is_default` - (Optional) Filter default or no default vpcs.
 * `name` - (Optional) Name of the VPC to be queried.
 * `result_output_file` - (Optional) Used to save results.
 * `tags` - (Optional) Tags of the VPC to be queried.

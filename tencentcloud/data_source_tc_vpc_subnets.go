@@ -42,6 +42,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -62,6 +63,16 @@ func dataSourceTencentCloudVpcSubnets() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Name of the subnet to be queried.",
+			},
+			"availability_zone": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Zone of the subnet to be queried.",
+			},
+			"is_default": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Filter default or no default subnets.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -153,8 +164,10 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 	region := meta.(*TencentCloudClient).apiV3Conn.Region
 
 	var (
-		subnetId string
-		name     string
+		subnetId         string
+		name             string
+		availabilityZone string
+		isDefault        *bool
 	)
 	if temp, ok := d.GetOk("subnet_id"); ok {
 		tempStr := temp.(string)
@@ -168,10 +181,20 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 			name = tempStr
 		}
 	}
+	if temp, ok := d.GetOk("availability_zone"); ok {
+		tempStr := temp.(string)
+		if tempStr != "" {
+			availabilityZone = tempStr
+		}
+	}
+
+	if temp, ok := d.GetOkExists("is_default"); ok {
+		isDefault = helper.Bool(temp.(bool))
+	}
 
 	tags := helper.GetTags(d, "tags")
 
-	infos, err := vpcService.DescribeSubnets(ctx, subnetId, "", name, "", tags)
+	infos, err := vpcService.DescribeSubnets(ctx, subnetId, "", name, availabilityZone, tags, isDefault)
 	if err != nil {
 		return err
 	}
@@ -206,7 +229,16 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	d.SetId("vpc_subnet" + subnetId + "_" + name)
+	key := "vpc_subnet" + subnetId + "_" + name
+
+	if isDefault != nil {
+		key += "_" + fmt.Sprintf("%v", *isDefault)
+	}
+	if availabilityZone != "" {
+		key += "_" + availabilityZone
+	}
+
+	d.SetId(key)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), infoList); err != nil {
