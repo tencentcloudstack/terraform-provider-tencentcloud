@@ -1,12 +1,12 @@
 ---
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_gaap_domain_error_page_info_list"
-sidebar_current: "docs-tencentcloud-datasource-gaap_domain_error_page_info_list"
+page_title: "TencentCloud: tencentcloud_gaap_domain_error_pages"
+sidebar_current: "docs-tencentcloud-datasource-gaap_domain_error_pages"
 description: |-
   Use this data source to query custom GAAP HTTP domain error page info list.
 ---
 
-# tencentcloud_gaap_domain_error_page_info_list
+# tencentcloud_gaap_domain_error_pages
 
 Use this data source to query custom GAAP HTTP domain error page info list.
 
@@ -33,7 +33,7 @@ resource tencentcloud_gaap_http_domain "foo" {
   domain      = "www.qq.com"
 }
 
-resource tencentcloud_gaap_domain_error_page_info "foo" {
+resource tencentcloud_gaap_domain_error_page "foo" {
   listener_id    = tencentcloud_gaap_layer7_listener.foo.id
   domain         = tencentcloud_gaap_http_domain.foo.domain
   error_codes    = [406, 504]
@@ -46,9 +46,9 @@ resource tencentcloud_gaap_domain_error_page_info "foo" {
   }
 }
 
-data tencentcloud_gaap_domain_error_page_info_list "foo" {
-  listener_id = tencentcloud_gaap_domain_error_page_info.foo.listener_id
-  domain      = tencentcloud_gaap_domain_error_page_info.foo.domain
+data tencentcloud_gaap_domain_error_pages "foo" {
+  listener_id = tencentcloud_gaap_domain_error_page.foo.listener_id
+  domain      = tencentcloud_gaap_domain_error_page.foo.domain
 }
 ```
 

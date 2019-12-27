@@ -24,7 +24,7 @@ resource tencentcloud_gaap_http_domain "foo" {
   domain      = "www.qq.com"
 }
 
-resource tencentcloud_gaap_domain_error_page_info "foo" {
+resource tencentcloud_gaap_domain_error_page "foo" {
   listener_id = tencentcloud_gaap_layer7_listener.foo.id
   domain      = tencentcloud_gaap_http_domain.foo.domain
   error_codes = [404, 503]
@@ -98,7 +98,7 @@ func resourceTencentCloudGaapDomainErrorPageInfo() *schema.Resource {
 }
 
 func resourceTencentCloudGaapDomainErrorPageInfoCreate(d *schema.ResourceData, m interface{}) error {
-	defer logElapsed("resource.tencentcloud_gaap_domain_error_page_info.create")()
+	defer logElapsed("resource.tencentcloud_gaap_domain_error_page.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -141,7 +141,7 @@ func resourceTencentCloudGaapDomainErrorPageInfoCreate(d *schema.ResourceData, m
 }
 
 func resourceTencentCloudGaapDomainErrorPageInfoRead(d *schema.ResourceData, m interface{}) error {
-	defer logElapsed("resource.tencentcloud_gaap_domain_error_page_info.read")()
+	defer logElapsed("resource.tencentcloud_gaap_domain_error_page.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
@@ -180,7 +180,7 @@ func resourceTencentCloudGaapDomainErrorPageInfoRead(d *schema.ResourceData, m i
 }
 
 func resourceTencentCloudGaapDomainErrorPageInfoDelete(d *schema.ResourceData, m interface{}) error {
-	defer logElapsed("resource.tencentcloud_gaap_domain_error_page_info.delete")()
+	defer logElapsed("resource.tencentcloud_gaap_domain_error_page.delete")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

@@ -106,6 +106,19 @@ resource tencentcloud_gaap_http_rule "foo" {
   }
 }
 
+resource tencentcloud_gaap_domain_error_page "foo" {
+  listener_id    = tencentcloud_gaap_layer7_listener.foo.id
+  domain         = tencentcloud_gaap_http_domain.foo.domain
+  error_codes    = [406, 504]
+  new_error_code = 502
+  body           = "bad request"
+  clear_headers  = ["Content-Length", "X-TEST"]
+
+  set_headers = {
+    "X-TEST" = "test"
+  }
+}
+
 data "tencentcloud_gaap_http_domains" "foo" {
   listener_id = tencentcloud_gaap_layer7_listener.foo.id
   domain      = tencentcloud_gaap_http_domain.foo.domain
@@ -115,4 +128,10 @@ data tencentcloud_gaap_http_rules "foo" {
   listener_id  = tencentcloud_gaap_layer7_listener.foo.id
   path         = tencentcloud_gaap_http_rule.foo.path
   forward_host = tencentcloud_gaap_http_rule.foo.forward_host
+}
+
+data tencentcloud_gaap_domain_error_pages "foo" {
+  listener_id = tencentcloud_gaap_domain_error_page.foo.listener_id
+  domain      = tencentcloud_gaap_domain_error_page.foo.domain
+  ids         = [tencentcloud_gaap_domain_error_page.foo.id]
 }

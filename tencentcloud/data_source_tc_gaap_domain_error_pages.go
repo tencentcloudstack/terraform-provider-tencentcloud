@@ -24,7 +24,7 @@ resource tencentcloud_gaap_http_domain "foo" {
   domain      = "www.qq.com"
 }
 
-resource tencentcloud_gaap_domain_error_page_info "foo" {
+resource tencentcloud_gaap_domain_error_page "foo" {
   listener_id    = tencentcloud_gaap_layer7_listener.foo.id
   domain         = tencentcloud_gaap_http_domain.foo.domain
   error_codes    = [406, 504]
@@ -37,9 +37,9 @@ resource tencentcloud_gaap_domain_error_page_info "foo" {
   }
 }
 
-data tencentcloud_gaap_domain_error_page_info_list "foo" {
-  listener_id = tencentcloud_gaap_domain_error_page_info.foo.listener_id
-  domain      = tencentcloud_gaap_domain_error_page_info.foo.domain
+data tencentcloud_gaap_domain_error_pages "foo" {
+  listener_id = tencentcloud_gaap_domain_error_page.foo.listener_id
+  domain      = tencentcloud_gaap_domain_error_page.foo.domain
 }
 ```
 */
@@ -137,7 +137,7 @@ func dataSourceTencentCloudGaapDomainErrorPageInfoList() *schema.Resource {
 }
 
 func dataSourceTencentCloudGaapDomainErrorPageInfoListRead(d *schema.ResourceData, m interface{}) error {
-	defer logElapsed("data_source.tencentcloud_gaap_domain_error_page_info_list.read")()
+	defer logElapsed("data_source.tencentcloud_gaap_domain_error_pages.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

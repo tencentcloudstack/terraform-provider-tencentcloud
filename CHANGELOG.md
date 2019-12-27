@@ -2,8 +2,8 @@
 
 FEATURES:
 
-* **New Data Source**: `tencentcloud_gaap_domain_error_page_info_list`
-* **New Resource**: `tencentcloud_gaap_domain_error_page_info`
+* **New Data Source**: `tencentcloud_gaap_domain_error_pages`
+* **New Resource**: `tencentcloud_gaap_domain_error_page`
 
 ENHANCEMENTS:
 * Data Source: `tencentcloud_vpc_instances` add new optional argument `is_default`.

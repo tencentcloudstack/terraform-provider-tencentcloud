@@ -1,12 +1,12 @@
 ---
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_gaap_domain_error_page_info"
-sidebar_current: "docs-tencentcloud-resource-gaap_domain_error_page_info"
+page_title: "TencentCloud: tencentcloud_gaap_domain_error_page"
+sidebar_current: "docs-tencentcloud-resource-gaap_domain_error_page"
 description: |-
   Provide a resource to custom error page info for a GAAP HTTP domain.
 ---
 
-# tencentcloud_gaap_domain_error_page_info
+# tencentcloud_gaap_domain_error_page
 
 Provide a resource to custom error page info for a GAAP HTTP domain.
 
@@ -33,7 +33,7 @@ resource tencentcloud_gaap_http_domain "foo" {
   domain      = "www.qq.com"
 }
 
-resource tencentcloud_gaap_domain_error_page_info "foo" {
+resource tencentcloud_gaap_domain_error_page "foo" {
   listener_id = tencentcloud_gaap_layer7_listener.foo.id
   domain      = tencentcloud_gaap_http_domain.foo.domain
   error_codes = [404, 503]
