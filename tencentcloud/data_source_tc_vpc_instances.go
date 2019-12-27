@@ -23,6 +23,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -43,6 +44,11 @@ func dataSourceTencentCloudVpcInstances() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Name of the VPC to be queried.",
+			},
+			"is_default": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Filter default or no default vpcs.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -128,8 +134,9 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		vpcId string
-		name  string
+		vpcId     string
+		name      string
+		isDefault *bool
 	)
 	if temp, ok := d.GetOk("vpc_id"); ok {
 		tempStr := temp.(string)
@@ -143,10 +150,13 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 			name = tempStr
 		}
 	}
+	if temp, ok := d.GetOkExists("is_default"); ok {
+		isDefault = helper.Bool(temp.(bool))
+	}
 
 	tags := helper.GetTags(d, "tags")
 
-	var vpcInfos, err = service.DescribeVpcs(ctx, vpcId, name, tags)
+	var vpcInfos, err = service.DescribeVpcs(ctx, vpcId, name, tags, isDefault)
 	if err != nil {
 		return err
 	}
@@ -176,7 +186,7 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 		}
 		infoMap["tags"] = respTags
 
-		subnetInfos, err := service.DescribeSubnets(ctx, "", item.vpcId, "", "", nil)
+		subnetInfos, err := service.DescribeSubnets(ctx, "", item.vpcId, "", "", nil, nil)
 		if err != nil {
 			return err
 		}
@@ -194,7 +204,11 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	d.SetId("vpc_instances" + vpcId + "_" + name)
+	key := "vpc_instances" + vpcId + "_" + name
+	if isDefault != nil {
+		key += "_" + fmt.Sprintf("%v", *isDefault)
+	}
+	d.SetId(key)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), vpcInfoList); err != nil {

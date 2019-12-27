@@ -92,7 +92,7 @@ func dataSourceTencentCloudVpcRead(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 
-	var vpcInfos, err = service.DescribeVpcs(ctx, vpcId, name, map[string]string{})
+	var vpcInfos, err = service.DescribeVpcs(ctx, vpcId, name, map[string]string{},nil)
 	if err != nil {
 		return err
 	}

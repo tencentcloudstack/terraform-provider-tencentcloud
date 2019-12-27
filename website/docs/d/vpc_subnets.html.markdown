@@ -51,6 +51,8 @@ data "tencentcloud_vpc_subnets" "tags_instances" {
 
 The following arguments are supported:
 
+* `availability_zone` - (Optional) Zone of the subnet to be queried.
+* `is_default` - (Optional) Filter default or no default subnets.
 * `name` - (Optional) Name of the subnet to be queried.
 * `result_output_file` - (Optional) Used to save results.
 * `subnet_id` - (Optional) ID of the subnet to be queried.
