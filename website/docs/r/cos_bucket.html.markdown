@@ -77,7 +77,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 
 The following arguments are supported:
 
-* `bucket` - (Required, ForceNew) The name of a bucket to be created.
+* `bucket` - (Required, ForceNew) The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
 * `acl` - (Optional) The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.
 * `cors_rules` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
 * `lifecycle_rules` - (Optional) A configuration of object lifecycle management (documented below).

@@ -57,7 +57,7 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The name of a bucket to use.",
+				Description: "The name of a bucket to use. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.",
 			},
 			"key": {
 				Type:        schema.TypeString,

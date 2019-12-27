@@ -41,7 +41,7 @@ resource "tencentcloud_cos_bucket_object" "myobject" {
 
 The following arguments are supported:
 
-* `bucket` - (Required, ForceNew) The name of a bucket to use.
+* `bucket` - (Required, ForceNew) The name of a bucket to use. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
 * `key` - (Required, ForceNew) The name of the object once it is in the bucket.
 * `acl` - (Optional) The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.
 * `cache_control` - (Optional) Specifies caching behavior along the request/reply chain. For further details, RFC2616 can be referred.
