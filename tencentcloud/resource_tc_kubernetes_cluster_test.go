@@ -144,7 +144,8 @@ func testAccTkeCluster(key, value string) string {
 	}
 
 	data "tencentcloud_vpc_subnets" "vpc" {
-       availability_zone=var.availability_zone
+      is_default        = true
+      availability_zone = var.availability_zone
     }
 
 	resource "tencentcloud_kubernetes_cluster" "managed_cluster" {

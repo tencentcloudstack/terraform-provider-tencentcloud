@@ -142,7 +142,8 @@ variable "availability_zone" {
 }
 
 data "tencentcloud_vpc_subnets" "vpc" {
-    availability_zone= var.availability_zone
+    is_default        = true
+    availability_zone = var.availability_zone
 }
 
 variable "default_instance_type" {
