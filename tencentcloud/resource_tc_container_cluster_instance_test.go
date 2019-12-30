@@ -29,9 +29,12 @@ func testAccCheckContainerClusterInstanceDestroy(s *terraform.State) error {
 }
 
 const testAccTencentCloudContainerClusterInstanceConfig_basic = `
+variable "my_vpc" {
+  default = "` + defaultVpcId + `"
+}
 
-data "tencentcloud_vpc_subnets" "vpc" {
-    availability_zone= "ap-guangzhou-3"
+variable "my_subnet" {
+  default = "` + defaultSubnetId + `"
 }
 
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
@@ -49,13 +52,13 @@ resource "tencentcloud_container_cluster" "foo" {
   bandwidth         = 1
   bandwidth_type    = "PayByHour"
   require_wan_ip    = 1
-  subnet_id         = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+  subnet_id         = var.my_subnet
   is_vpc_gateway    = 0
   storage_size      = 0
   root_size         = 50
   goods_num         = 2
   password          = "Admin12345678"
-  vpc_id            = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  vpc_id            = var.my_vpc
   cluster_cidr      = "10.0.32.0/19"
   cvm_type          = "PayByHour"
   cluster_desc      = "foofoofoo"
@@ -71,11 +74,11 @@ resource "tencentcloud_container_cluster_instance" "bar_instance" {
   bandwidth         = 1
   bandwidth_type    = "PayByHour"
   require_wan_ip    = 1
-  subnet_id         = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+  subnet_id         = var.my_subnet
   is_vpc_gateway    = 0
   storage_size      = 10
   root_size         = 50
-  root_type 	    = "CLOUD_SSD"
+  root_type 		    = "CLOUD_SSD"
   password          = "Admin12345678"
   cvm_type          = "PayByHour"
   period            = 1
