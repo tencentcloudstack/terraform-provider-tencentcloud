@@ -73,7 +73,7 @@ func dataSourceTencentCloudAccountInfoRead(d *schema.ResourceData, meta interfac
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), map[string]interface{}{
-			"appid":res.Response.AppId,
+			"appid": res.Response.AppId,
 		}); e != nil {
 			return e
 		}
