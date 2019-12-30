@@ -52,6 +52,7 @@ type TencentCloudClient struct {
 	cfsConn     *cfs.Client
 	scfConn     *scf.Client
 	tcaplusConn *tcaplusdb.Client
+	baseConn    *common.Client
 }
 
 // NewTencentCloudClient returns a new TencentCloudClient
@@ -325,4 +326,20 @@ func (me *TencentCloudClient) UseTcaplusClient() *tcaplusdb.Client {
 	me.tcaplusConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tcaplusConn
+}
+
+// UseBaseClient returns base client for service
+func (me *TencentCloudClient) UseBaseClient() *common.Client {
+	if me.baseConn != nil {
+		return me.baseConn
+	}
+	cpf := newTencentCloudClientProfile(300)
+	me.baseConn = &common.Client{}
+
+	me.baseConn = me.baseConn.Init(me.Region).
+		WithCredential(me.Credential).
+		WithProfile(cpf).
+		WithHttpTransport(&LogRoundTripper{})
+
+	return me.baseConn
 }

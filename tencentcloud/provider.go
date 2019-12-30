@@ -305,6 +305,9 @@ VPN
     tencentcloud_vpn_customer_gateway
     tencentcloud_vpn_gateway
     tencentcloud_vpn_connection
+Account
+ Data Source
+	tencentcloud_account_info
 */
 package tencentcloud
 
@@ -442,6 +445,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcaplus_zones":                dataSourceTencentCloudTcaplusZones(),
 			"tencentcloud_tcaplus_tables":               dataSourceTencentCloudTcaplusTables(),
 			"tencentcloud_tcaplus_idls":                 dataSourceTencentCloudTcaplusIdls(),
+			"tencentcloud_account_info":                 dataSourceTencentCloudAccountInfo(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
