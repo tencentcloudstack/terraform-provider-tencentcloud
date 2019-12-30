@@ -2971,3 +2971,133 @@ func (me *GaapService) ModifyHTTPRuleForwardHost(ctx context.Context, listenerId
 
 	return nil
 }
+
+func (me *GaapService) CreateDomainErrorPageInfo(ctx context.Context,
+	listenerId, domain, body string,
+	newErrorCode *int64,
+	errorCodes []int,
+	clearHeaders []string,
+	setHeaders map[string]string,
+) (id string, errRet error) {
+	client := me.client.UseGaapClient()
+
+	request := gaap.NewCreateDomainErrorPageInfoRequest()
+	request.ListenerId = &listenerId
+	request.Domain = &domain
+	request.Body = &body
+	request.NewErrorNo = newErrorCode
+
+	for _, code := range errorCodes {
+		request.ErrorNos = append(request.ErrorNos, helper.IntInt64(code))
+	}
+
+	request.ClearHeaders = helper.Strings(clearHeaders)
+
+	for k, v := range setHeaders {
+		request.SetHeaders = append(request.SetHeaders, &gaap.HttpHeaderParam{
+			HeaderName:  helper.String(k),
+			HeaderValue: helper.String(v),
+		})
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		resp, err := client.CreateDomainErrorPageInfo(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "FailedOperation.DomainAlreadyExisted" {
+				return resource.NonRetryableError(helper.WrapErrorf(err, "", sdkError.RequestId, sdkError.Message))
+			}
+
+			return retryError(err)
+		}
+
+		id = *resp.Response.ErrorPageId
+
+		return nil
+	}); err != nil {
+		return "", helper.WrapErrorf(err, "", "", "create gaap domain error page info failed")
+	}
+
+	return
+}
+
+func (me *GaapService) DescribeDomainErrorPageInfo(ctx context.Context, listenerId, domain, id string) (info *gaap.DomainErrorPageInfo, err error) {
+	client := me.client.UseGaapClient()
+
+	request := gaap.NewDescribeDomainErrorPageInfoRequest()
+	request.ListenerId = &listenerId
+	request.Domain = &domain
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		resp, err := client.DescribeDomainErrorPageInfo(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
+				return nil
+			}
+
+			return retryError(err)
+		}
+
+		for _, pageInfo := range resp.Response.ErrorPageSet {
+			if *pageInfo.ErrorPageId == id {
+				info = pageInfo
+				break
+			}
+		}
+
+		return nil
+	}); err != nil {
+		return nil, helper.WrapErrorf(err, id, "", "describe domain error page info failed")
+	}
+
+	return
+}
+
+func (me *GaapService) DescribeDomainErrorPageInfoList(ctx context.Context, listenerId, domain string) (list []*gaap.DomainErrorPageInfo, err error) {
+	client := me.client.UseGaapClient()
+
+	request := gaap.NewDescribeDomainErrorPageInfoRequest()
+	request.ListenerId = &listenerId
+	request.Domain = &domain
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		resp, err := client.DescribeDomainErrorPageInfo(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
+				return nil
+			}
+
+			return retryError(err)
+		}
+
+		list = resp.Response.ErrorPageSet
+
+		return nil
+	}); err != nil {
+		return nil, helper.WrapErrorf(err, "", "", "describe domain error page info list failed")
+	}
+
+	return
+}
+
+func (me *GaapService) DeleteDomainErrorPageInfo(ctx context.Context, id string) error {
+	client := me.client.UseGaapClient()
+
+	request := gaap.NewDeleteDomainErrorPageInfoRequest()
+	request.ErrorPageId = &id
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if _, err := client.DeleteDomainErrorPageInfo(request); err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
+				return nil
+			}
+
+			return retryError(err)
+		}
+
+		return nil
+	}); err != nil {
+		return helper.WrapErrorf(err, id, "", "delete domain error page info failed")
+	}
+
+	return nil
+}

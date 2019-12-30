@@ -178,6 +178,7 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_realservers
     tencentcloud_gaap_security_policies
     tencentcloud_gaap_security_rules
+    tencentcloud_gaap_domain_error_pages
 
   Resource
     tencentcloud_gaap_proxy
@@ -189,6 +190,7 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_certificate
     tencentcloud_gaap_security_policy
     tencentcloud_gaap_security_rule
+    tencentcloud_gaap_domain_error_page
 
 Kubernetes
   Data Source
@@ -442,6 +444,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcaplus_zones":                dataSourceTencentCloudTcaplusZones(),
 			"tencentcloud_tcaplus_tables":               dataSourceTencentCloudTcaplusTables(),
 			"tencentcloud_tcaplus_idls":                 dataSourceTencentCloudTcaplusIdls(),
+			"tencentcloud_gaap_domain_error_pages":      dataSourceTencentCloudGaapDomainErrorPageInfoList(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -538,6 +541,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcaplus_zone":                   resourceTencentCloudTcaplusZone(),
 			"tencentcloud_tcaplus_idl":                    resourceTencentCloudTcaplusIdl(),
 			"tencentcloud_tcaplus_table":                  resourceTencentCloudTcaplusTable(),
+			"tencentcloud_gaap_domain_error_page":         resourceTencentCloudGaapDomainErrorPageInfo(),
 		},
 
 		ConfigureFunc: providerConfigure,

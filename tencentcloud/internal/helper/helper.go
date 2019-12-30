@@ -87,3 +87,13 @@ func CheckIfSetTogether(d *schema.ResourceData, args ...string) error {
 
 	return nil
 }
+
+func StringsContain(ss []string, str string) bool {
+	for _, s := range ss {
+		if str == s {
+			return true
+		}
+	}
+
+	return false
+}

@@ -1,4 +1,9 @@
-## 1.28.1 (Unreleased)
+## 1.29.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_gaap_domain_error_pages`
+* **New Resource**: `tencentcloud_gaap_domain_error_page`
 
 ENHANCEMENTS:
 * Data Source: `tencentcloud_vpc_instances` add new optional argument `is_default`.

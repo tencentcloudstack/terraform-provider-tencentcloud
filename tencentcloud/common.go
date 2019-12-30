@@ -69,9 +69,9 @@ func getLogId(ctx context.Context) string {
 
 // logElapsed log func elapsed time, using in defer
 func logElapsed(mark ...string) func() {
-	start_at := time.Now()
+	startAt := time.Now()
 	return func() {
-		log.Printf("[DEBUG] [ELAPSED] %s elapsed %d ms\n", strings.Join(mark, " "), int64(time.Since(start_at)/time.Millisecond))
+		log.Printf("[DEBUG] [ELAPSED] %s elapsed %d ms\n", strings.Join(mark, " "), int64(time.Since(startAt)/time.Millisecond))
 	}
 }
 
