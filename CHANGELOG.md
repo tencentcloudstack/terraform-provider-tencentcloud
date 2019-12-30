@@ -1,5 +1,8 @@
 ## 1.28.1 (Unreleased)
 
+FEATURES:
+* **New Data Source**: `tencentcloud_account_info`
+
 ENHANCEMENTS:
 * Data Source: `tencentcloud_vpc_instances` add new optional argument `is_default`.
 * Data Source: `tencentcloud_vpc_subnets` add new optional argument `availability_zone`,`is_default`.
