@@ -77,9 +77,14 @@ func checkContainerClusterInstancesAllNormal(n string) resource.TestCheckFunc {
 }
 
 const testAccTencentCloudContainerClusterConfig_basic = `
-data "tencentcloud_vpc_subnets" "vpc" {
-    availability_zone= "ap-guangzhou-3"
+variable "my_vpc" {
+   default = "` + defaultVpcId + `"
 }
+
+variable "my_subnet" {
+  default = "` + defaultSubnetId + `"
+}
+
 data "tencentcloud_instance_types" "my_favorate_instance_types" {
   filter {
     name   = "instance-family"
@@ -95,19 +100,19 @@ resource "tencentcloud_container_cluster" "foo" {
   bandwidth         = 1
   bandwidth_type    = "PayByHour"
   require_wan_ip    = 1
-  subnet_id         = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+  subnet_id         = "${var.my_subnet}"
   is_vpc_gateway    = 0
   storage_size      = 0
   root_size         = 50
   goods_num         = 2
   password          = "Admin12345678"
-  vpc_id            = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  vpc_id            = "${var.my_vpc}"
   cluster_cidr      = "10.0.0.0/19"
   cvm_type          = "PayByHour"
   cluster_desc      = "foofoofoo"
   period            = 1
   zone_id           = 100003
-  instance_type     = data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type
+  instance_type     = "${data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type}"
   mount_target      = ""
   docker_graph_path = ""
   instance_name     = "terraform-container-acc-test-vm"
