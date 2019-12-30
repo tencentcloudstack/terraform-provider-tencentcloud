@@ -187,9 +187,7 @@ func dataSourceTencentCloudGaapDomainErrorPageInfoListRead(d *schema.ResourceDat
 		list = append(list, m)
 	}
 
-	if err := d.Set("error_page_info_list", list); err != nil {
-		panic(err)
-	}
+	_ = d.Set("error_page_info_list", list)
 
 	d.SetId(helper.DataResourceIdsHash(idList))
 
