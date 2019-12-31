@@ -1,0 +1,1632 @@
+package tencentcloud
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"net/url"
+
+	"github.com/pkg/errors"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+)
+
+type DayuService struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (me *DayuService) DescribeCCSelfdefinePolicies(ctx context.Context, resourceType string, resourceId string, policyName string, policyId string) (infos []*dayu.CCPolicy, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribeCCSelfDefinePolicyRequest()
+
+	infos = make([]*dayu.CCPolicy, 0, 100)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	var offset, limit uint64 = 0, 20
+
+	request.Business = &resourceType
+	if resourceId != "" {
+		request.Id = &resourceId
+	}
+
+	request.Offset = &offset
+	request.Limit = &limit
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDayuClient().DescribeCCSelfDefinePolicy(request)
+
+		if err != nil {
+			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == "InvalidParameterValue" {
+					errRet = nil
+					has = false
+					return
+				}
+			}
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+			has = false
+			return
+		}
+		if policyName == "" && policyId == "" {
+			infos = append(infos, response.Response.Policys...)
+		} else {
+			for _, policy := range response.Response.Policys {
+				if policyName != "" && *policy.Name != policyName {
+					continue
+				}
+				if policyId != "" && *policy.SetId != policyId {
+					continue
+				}
+				infos = append(infos, policy)
+			}
+		}
+		if len(response.Response.Policys) < int(limit) {
+			if len(infos) == 0 {
+				has = false
+			} else {
+				has = true
+			}
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *DayuService) DescribeCCSelfdefinePolicy(ctx context.Context, resourceType string, resourceId string, policyId string) (infos *dayu.CCPolicy, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribeCCSelfDefinePolicyRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	policies, _, err := me.DescribeCCSelfdefinePolicies(ctx, resourceType, resourceId, "", policyId)
+	if err != nil {
+		errRet = err
+		has = false
+		return
+	}
+
+	length := len(policies)
+	if length != 1 {
+		has = false
+		if length > 1 {
+			errRet = fmt.Errorf("Create CC self-define policy returns %d policies", length)
+		}
+		return
+	}
+
+	infos = policies[0]
+	has = true
+	return
+}
+
+func (me *DayuService) CreateCCSelfdefinePolicy(ctx context.Context, resourceType string, resourceId string, ccPolicy dayu.CCPolicy) (policyId string, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewCreateCCSelfDefinePolicyRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.Policy = &ccPolicy
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().CreateCCSelfDefinePolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	//describe CC self-define policies to get policy ID
+	policies, has, dErr := me.DescribeCCSelfdefinePolicies(ctx, resourceType, resourceId, *ccPolicy.Name, "")
+	if dErr != nil {
+		errRet = dErr
+		return
+	}
+	if !has {
+		errRet = fmt.Errorf("Create CC self-define policy failed")
+		return
+	}
+	if len(policies) != 1 {
+		errRet = fmt.Errorf("Create CC self-define policy returns %d policies", len(policies))
+	}
+	policyId = *policies[0].SetId
+	return
+}
+
+func (me *DayuService) ModifyCCSelfdefinePolicy(ctx context.Context, resourceType string, resourceId string, policyId string, ccPolicy dayu.CCPolicy) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewModifyCCSelfDefinePolicyRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.SetId = &policyId
+	request.Policy = &ccPolicy
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().ModifyCCSelfDefinePolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func (me *DayuService) DeleteCCSelfdefinePolicy(ctx context.Context, resourceType string, resourceId string, policyId string) (errRet error) {
+
+	logId := getLogId(ctx)
+	request := dayu.NewDeleteCCSelfDefinePolicyRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.SetId = &policyId
+	request.Business = &resourceType
+	request.Id = &resourceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DeleteCCSelfDefinePolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+	return
+}
+
+func (me *DayuService) CreateDdosPolicy(ctx context.Context, resourceType string, name string, ddosPolicyDropOption []*dayu.DDoSPolicyDropOption, ddosPolicyPortLimit []*dayu.DDoSPolicyPortLimit, ipBlackWhite []*dayu.IpBlackWhite, ddosPacketFilter []*dayu.DDoSPolicyPacketFilter, waterPrintPolicy []*dayu.WaterPrintPolicy) (policyId string, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewCreateDDoSPolicyRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Name = &name
+	request.Business = &resourceType
+	request.DropOptions = ddosPolicyDropOption
+	request.PortLimits = ddosPolicyPortLimit
+	request.IpAllowDenys = ipBlackWhite
+	request.PacketFilters = ddosPacketFilter
+	request.WaterPrint = waterPrintPolicy
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().CreateDDoSPolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+	if response.Response.PolicyId == nil || *response.Response.PolicyId == "" {
+		errRet = errors.New("TencentCloud SDK  return empty DDoS policy Id")
+		return
+	}
+	policyId = *response.Response.PolicyId
+	return
+}
+
+func (me *DayuService) DescribeDdosPolicies(ctx context.Context, resourceType string, policyId string) (ddosPolicies []*dayu.DDosPolicy, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribeDDoSPolicyRequest()
+
+	ddosPolicies = make([]*dayu.DDosPolicy, 0, 100)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Business = &resourceType
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DescribeDDoSPolicy(request)
+	if err != nil {
+		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr.Code == "InvalidParameterValue" {
+				//this is when resource is not exist
+				errRet = nil
+				return
+			}
+		}
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+	if policyId != "" {
+		for i, p := range response.Response.DDosPolicyList {
+			if *p.PolicyId == policyId {
+				ddosPolicies = append(ddosPolicies, response.Response.DDosPolicyList[i])
+				return
+			}
+		}
+	} else {
+		ddosPolicies = append(ddosPolicies, response.Response.DDosPolicyList...)
+		return
+	}
+	return
+}
+
+func (me *DayuService) DescribeDdosPolicy(ctx context.Context, resourceType string, policyId string) (ddosPolicy dayu.DDosPolicy, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribeDDoSPolicyRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Business = &resourceType
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DescribeDDoSPolicy(request)
+	if err != nil {
+		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr.Code == "InvalidParameterValue" {
+				has = false
+				errRet = nil
+				return
+			}
+		}
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+	has = false
+
+	if len(response.Response.DDosPolicyList) == 0 {
+		return
+	}
+
+	for i, p := range response.Response.DDosPolicyList {
+		if *p.PolicyId == policyId {
+			has = true
+			ddosPolicy = *response.Response.DDosPolicyList[i]
+			return
+		}
+	}
+
+	return
+}
+
+func intToBool(i int) bool {
+	return i >= 1
+}
+
+func flattenDdosDropOptionList(list []*dayu.DDoSPolicyDropOption) (mapping []map[string]interface{}) {
+	result := make([]map[string]interface{}, 0, len(list))
+	for _, v := range list {
+		mapping := map[string]interface{}{
+			"drop_tcp":           intToBool(int(*v.DropTcp)),
+			"drop_udp":           intToBool(int(*v.DropUdp)),
+			"drop_icmp":          intToBool(int(*v.DropIcmp)),
+			"drop_other":         intToBool(int(*v.DropOther)),
+			"drop_abroad":        intToBool(int(*v.DropAbroad)),
+			"check_sync_conn":    intToBool(int(*v.CheckSyncConn)),
+			"source_new_limit":   int(*v.SdNewLimit),
+			"dst_new_limit":      int(*v.DstNewLimit),
+			"source_conn_limit":  int(*v.SdConnLimit),
+			"dst_conn_limit":     int(*v.DstConnLimit),
+			"bad_conn_threshold": int(*v.BadConnThreshold),
+			"null_conn_enable":   intToBool(int(*v.NullConnEnable)),
+			"conn_timeout":       int(*v.ConnTimeout),
+			"syn_rate":           int(*v.SynRate),
+			"syn_limit":          int(*v.SynLimit),
+			"tcp_mbps_limit":     int(*v.DTcpMbpsLimit),
+			"udp_mbps_limit":     int(*v.DUdpMbpsLimit),
+			"icmp_mbps_limit":    int(*v.DIcmpMbpsLimit),
+			"other_mbps_limit":   int(*v.DOtherMbpsLimit),
+		}
+		result = append(result, mapping)
+	}
+	return result
+}
+
+func flattenCCRuleList(list []*dayu.CCRule) (re []map[string]interface{}) {
+	result := make([]map[string]interface{}, 0, len(list))
+	for _, v := range list {
+		mapping := map[string]interface{}{
+			"skey":     v.Skey,
+			"operator": v.Operator,
+			"value":    v.Value,
+		}
+		result = append(result, mapping)
+	}
+	return result
+}
+
+func flattenDdosPortLimitList(list []*dayu.DDoSPolicyPortLimit) (re []map[string]interface{}) {
+	result := make([]map[string]interface{}, 0, len(list))
+	for _, v := range list {
+		mapping := map[string]interface{}{
+			"protocol": v.Protocol,
+			"action":   v.Action,
+			"kind":     int(*v.Kind),
+		}
+		if int(*v.Kind) == 0 || int(*v.Kind) == 2 {
+			mapping["start_port"] = int(*v.DPortStart)
+			mapping["end_port"] = int(*v.DPortEnd)
+		} else {
+			mapping["start_port"] = int(*v.SPortStart)
+			mapping["end_port"] = int(*v.SPortEnd)
+		}
+		result = append(result, mapping)
+	}
+	return result
+}
+
+func flattenDdosPacketFilterList(list []*dayu.DDoSPolicyPacketFilter) (re []map[string]interface{}) {
+	result := make([]map[string]interface{}, 0, len(list))
+	for _, v := range list {
+		mapping := map[string]interface{}{
+			"protocol":       v.Protocol,
+			"action":         v.Action,
+			"d_start_port":   int(*v.DportStart),
+			"d_end_port":     int(*v.DportEnd),
+			"s_start_port":   int(*v.SportStart),
+			"s_end_port":     int(*v.SportEnd),
+			"pkt_length_max": int(*v.PktlenMax),
+			"pkt_length_min": int(*v.PktlenMin),
+			"match_begin":    v.MatchBegin,
+			"match_type":     v.MatchType,
+			"match_str":      v.Str,
+			"is_include":     intToBool(int(*v.IsNot)),
+			"depth":          int(*v.Depth),
+			"offset":         int(*v.Offset),
+		}
+		result = append(result, mapping)
+	}
+	return result
+}
+
+func flattenIpBlackWhiteList(list []*dayu.IpBlackWhite) (re []map[string]interface{}) {
+	result := make([]map[string]interface{}, 0, len(list))
+	for _, v := range list {
+		mapping := map[string]interface{}{
+			"ip":   v.Ip,
+			"type": v.Type,
+		}
+		result = append(result, mapping)
+	}
+	return result
+}
+
+func flattenWaterPrintPolicyList(list []*dayu.WaterPrintPolicy) (re []map[string]interface{}) {
+	result := make([]map[string]interface{}, 0, len(list))
+	for _, v := range list {
+		mapping := map[string]interface{}{
+			"tcp_port_list": helper.StringsInterfaces(v.TcpPortList),
+			"udp_port_list": helper.StringsInterfaces(v.UdpPortList),
+			"offset":        int(*v.Offset),
+			"auto_remove":   intToBool(int(*v.RemoveSwitch)),
+			"open_switch":   intToBool(int(*v.OpenStatus)),
+		}
+		result = append(result, mapping)
+	}
+	return result
+}
+
+func boolToInt64Pointer(s bool) (i *uint64) {
+	result := uint64(0)
+	if s {
+		result = uint64(1)
+	}
+	i = &result
+	return
+}
+
+func setDdosPolicyDropOption(mapping []interface{}) (result []*dayu.DDoSPolicyDropOption, err error) {
+	result = make([]*dayu.DDoSPolicyDropOption, 0, len(mapping))
+	for _, vv := range mapping {
+		v := vv.(map[string]interface{})
+		var r dayu.DDoSPolicyDropOption
+		r.DropTcp = boolToInt64Pointer(v["drop_tcp"].(bool))
+		r.DropUdp = boolToInt64Pointer(v["drop_udp"].(bool))
+		r.DropIcmp = boolToInt64Pointer(v["drop_icmp"].(bool))
+		r.DropOther = boolToInt64Pointer(v["drop_other"].(bool))
+		r.DropAbroad = boolToInt64Pointer(v["drop_abroad"].(bool))
+		r.CheckSyncConn = boolToInt64Pointer(v["check_sync_conn"].(bool))
+		r.SdNewLimit = helper.IntUint64(v["source_new_limit"].(int))
+		r.DstNewLimit = helper.IntUint64(v["dst_new_limit"].(int))
+		r.SdConnLimit = helper.IntUint64(v["source_conn_limit"].(int))
+		r.DstConnLimit = helper.IntUint64(v["dst_conn_limit"].(int))
+		r.BadConnThreshold = helper.IntUint64(v["bad_conn_threshold"].(int))
+		r.NullConnEnable = boolToInt64Pointer(v["null_conn_enable"].(bool))
+		r.ConnTimeout = helper.IntUint64(v["conn_timeout"].(int))
+		r.SynRate = helper.IntUint64(v["syn_rate"].(int))
+		r.SynLimit = helper.IntUint64((v["syn_limit"]).(int))
+		r.DTcpMbpsLimit = helper.IntUint64(v["tcp_mbps_limit"].(int))
+		r.DUdpMbpsLimit = helper.IntUint64(v["udp_mbps_limit"].(int))
+		r.DIcmpMbpsLimit = helper.IntUint64(v["icmp_mbps_limit"].(int))
+		r.DOtherMbpsLimit = helper.IntUint64(v["other_mbps_limit"].(int))
+		result = append(result, &r)
+	}
+	return
+}
+
+func setDdosPolicyPortLimit(mapping []interface{}) (result []*dayu.DDoSPolicyPortLimit, err error) {
+	result = make([]*dayu.DDoSPolicyPortLimit, 0, len(mapping))
+	for _, vv := range mapping {
+		v := vv.(map[string]interface{})
+		var r dayu.DDoSPolicyPortLimit
+		startPort := v["start_port"].(int)
+		endPort := v["end_port"].(int)
+		kind := v["kind"].(int)
+		if startPort > endPort {
+			err = fmt.Errorf("The `start_port` should not be greater than `end_port`.")
+		}
+		if kind == 0 || kind == 2 {
+			r.DPortStart = helper.IntUint64(startPort)
+			r.DPortEnd = helper.IntUint64(endPort)
+		} else if kind == 1 {
+			r.SPortStart = helper.IntUint64(startPort)
+			r.SPortEnd = helper.IntUint64(endPort)
+		}
+
+		r.Protocol = helper.String(v["protocol"].(string))
+		r.Action = helper.String(v["action"].(string))
+		r.Kind = helper.IntUint64(kind)
+		result = append(result, &r)
+	}
+	return
+}
+
+func setIpBlackWhite(mapping []interface{}) (result []*dayu.IpBlackWhite, err error) {
+	result = make([]*dayu.IpBlackWhite, 0, len(mapping))
+	for _, vv := range mapping {
+		var r dayu.IpBlackWhite
+		v := vv.(map[string]interface{})
+		r.Ip = helper.String(v["ip"].(string))
+		r.Type = helper.String(v["type"].(string))
+		result = append(result, &r)
+	}
+	return
+}
+
+func setDdosPolicyPacketFilter(mapping []interface{}) (result []*dayu.DDoSPolicyPacketFilter, err error) {
+	result = make([]*dayu.DDoSPolicyPacketFilter, 0, len(mapping))
+	for _, vv := range mapping {
+		v := vv.(map[string]interface{})
+		var r dayu.DDoSPolicyPacketFilter
+		dStartPort := v["d_start_port"].(int)
+		dEndPort := v["d_end_port"].(int)
+		sStartPort := v["s_start_port"].(int)
+		sEndPort := v["s_end_port"].(int)
+		if dStartPort > dEndPort {
+			err = fmt.Errorf("The `d_start_port` should not be greater than `d_end_port`.")
+		}
+		if sStartPort > sEndPort {
+			err = fmt.Errorf("The `s_start_port` should not be greater than `s_end_port`.")
+		}
+		pktLenMax := v["pkt_length_max"].(int)
+		pktLenMin := v["pkt_length_min"].(int)
+		if pktLenMax < pktLenMin {
+			err = fmt.Errorf("The `pkt_length_min` should not be greater than `pkt_length_max`.")
+		}
+		r.Protocol = helper.String(v["protocol"].(string))
+		r.DportStart = helper.IntUint64(dStartPort)
+		r.DportEnd = helper.IntUint64(dEndPort)
+		r.SportStart = helper.IntUint64(sStartPort)
+		r.SportEnd = helper.IntUint64(sEndPort)
+		r.Action = helper.String(v["action"].(string))
+		r.IsNot = boolToInt64Pointer(v["is_include"].(bool))
+		r.PktlenMax = helper.IntUint64(pktLenMax)
+		r.PktlenMin = helper.IntUint64(pktLenMin)
+		r.MatchBegin = helper.String(v["match_begin"].(string))
+		r.MatchType = helper.String(v["match_type"].(string))
+		r.Str = helper.String(v["match_str"].(string))
+		r.Depth = helper.IntUint64(v["depth"].(int))
+		r.Offset = helper.IntUint64(v["offset"].(int))
+		result = append(result, &r)
+	}
+	return
+}
+
+func setWaterPrintPolicy(mapping []interface{}) (result []*dayu.WaterPrintPolicy, err error) {
+	result = make([]*dayu.WaterPrintPolicy, 0, len(mapping))
+	for _, vv := range mapping {
+		v := vv.(map[string]interface{})
+		var r dayu.WaterPrintPolicy
+		tcpPortList := v["tcp_port_list"].([]interface{})
+		r.TcpPortList = make([]*string, 0, len(tcpPortList))
+		for _, tcpPort := range tcpPortList {
+			r.TcpPortList = append(r.TcpPortList, helper.String(tcpPort.(string)))
+		}
+		udpPortList := v["udp_port_list"].([]interface{})
+		r.UdpPortList = make([]*string, 0, len(udpPortList))
+		for _, udpPort := range udpPortList {
+			r.UdpPortList = append(r.UdpPortList, helper.String(udpPort.(string)))
+		}
+		r.RemoveSwitch = boolToInt64Pointer(v["auto_remove"].(bool))
+		r.OpenStatus = boolToInt64Pointer(v["open_switch"].(bool))
+		r.Offset = helper.IntUint64(v["offset"].(int))
+		result = append(result, &r)
+	}
+	return
+}
+
+func (me *DayuService) DeleteDdosPolicy(ctx context.Context, resourceType string, policyId string) (errRet error) {
+
+	logId := getLogId(ctx)
+	request := dayu.NewDeleteDDoSPolicyRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.PolicyId = &policyId
+	request.Business = &resourceType
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DeleteDDoSPolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+	return
+}
+
+func (me *DayuService) ModifyDdosPolicy(ctx context.Context, resourceType string, policyId string, ddosPolicyDropOption []*dayu.DDoSPolicyDropOption, ddosPolicyPortLimit []*dayu.DDoSPolicyPortLimit, ipBlackWhite []*dayu.IpBlackWhite, ddosPacketFilter []*dayu.DDoSPolicyPacketFilter, waterPrintPolicy []*dayu.WaterPrintPolicy) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewModifyDDoSPolicyRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Business = &resourceType
+	request.PolicyId = &policyId
+	request.DropOptions = ddosPolicyDropOption
+	request.PortLimits = ddosPolicyPortLimit
+	request.IpAllowDenys = ipBlackWhite
+	request.PacketFilters = ddosPacketFilter
+	request.WaterPrint = waterPrintPolicy
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().ModifyDDoSPolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func (me *DayuService) ModifyDdosPolicyName(ctx context.Context, resourceType string, policyId string, name string) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewModifyDDoSPolicyNameRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Business = &resourceType
+	request.PolicyId = &policyId
+	request.Name = helper.String(url.QueryEscape(name))
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().ModifyDDoSPolicyName(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+	return
+}
+
+func (me *DayuService) CreateDdosPolicyCase(ctx context.Context, request *dayu.CreateDDoSPolicyCaseRequest) (sceneId string, errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().CreateDDoSPolicyCase(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+	if response.Response.SceneId == nil || *response.Response.SceneId == "" {
+		errRet = errors.New("TencentCloud SDK  return empty DDoS policy case Id")
+		return
+	}
+	sceneId = *response.Response.SceneId
+	return
+}
+
+func (me *DayuService) DescribeDdosPolicyCase(ctx context.Context, resourceType string, sceneId string) (ddosPolicyCase dayu.KeyValueRecord, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribePolicyCaseRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.SceneId = &sceneId
+	request.Business = &resourceType
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DescribePolicyCase(request)
+	if err != nil {
+		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr.Code == "ResourceNotFound" {
+				has = false
+				errRet = nil
+				return
+			}
+		}
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+	has = true
+	if len(response.Response.CaseList) == 0 {
+		has = false
+		return
+	}
+	if len(response.Response.CaseList) != 1 {
+		errRet = fmt.Errorf("TencentCloud SDK return %d appInfo with one applicationId %s",
+			len(response.Response.CaseList), sceneId)
+		return
+	}
+	ddosPolicyCase = *response.Response.CaseList[0]
+	return
+}
+
+func (me *DayuService) DeleteDdosPolicyCase(ctx context.Context, resourceType string, sceneId string) (errRet error) {
+
+	logId := getLogId(ctx)
+	request := dayu.NewDeleteDDoSPolicyCaseRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.SceneId = &sceneId
+	request.Business = &resourceType
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DeleteDDoSPolicyCase(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		//describe the scene
+		_, has, _ := me.DescribeDdosPolicyCase(ctx, resourceType, sceneId)
+		if !has {
+			return
+		}
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+	return
+}
+
+func (me *DayuService) ModifyDdosPolicyCase(ctx context.Context, request *dayu.ModifyDDoSPolicyCaseRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().ModifyDDoSPolicyCase(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func (me *DayuService) DescribeDdosPolicyAttachments(ctx context.Context, resourceId string, resourceType string, policyId string) (attachments []map[string]interface{}, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribeDDoSPolicyRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	if resourceId != "" {
+		request.Id = &resourceId
+	}
+	request.Business = &resourceType
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DescribeDDoSPolicy(request)
+	if err != nil {
+		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr.Code == "InvalidParameterValue" {
+				//this is when resource is not exist
+				errRet = nil
+				return
+			}
+		}
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+	has = true
+	if len(response.Response.DDosPolicyList) == 0 {
+		has = false
+		return
+	}
+
+	for _, policy := range response.Response.DDosPolicyList {
+		if policyId != "" && *policy.PolicyId != policyId {
+			continue
+		}
+		has = true
+		for _, resource := range policy.BoundResources {
+			attachments = append(attachments, map[string]interface{}{"resource_id": *resource, "policy_id": policyId, "resource_type": resourceType})
+		}
+	}
+	if len(attachments) == 0 {
+		has = false
+	}
+	return
+}
+
+func (me *DayuService) BindDdosPolicy(ctx context.Context, resourceId string, resourceType string, policyId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewModifyResBindDDoSPolicyRequest()
+	request.PolicyId = &policyId
+	request.Business = &resourceType
+	request.Id = &resourceId
+	request.Method = helper.String("bind")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().ModifyResBindDDoSPolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func (me *DayuService) UnbindDdosPolicy(ctx context.Context, resourceId string, resourceType string, policyId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewModifyResBindDDoSPolicyRequest()
+	request.PolicyId = &policyId
+	request.Business = &resourceType
+	request.Id = &resourceId
+	request.Method = helper.String("unbind")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().ModifyResBindDDoSPolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		//when resource is not exist, return
+		if *response.Response.Success.Code == "InvalidParameterValue" && *response.Response.Success.Message == "resource not exist" {
+			return
+		}
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func (me *DayuService) DescribeL7Rules(ctx context.Context, resourceType string, resourceId string, ruleDomain string, ruleId string, protocol string) (infos []*dayu.L7RuleEntry, healths []*dayu.L7RuleHealth, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribleL7RulesRequest()
+
+	infos = make([]*dayu.L7RuleEntry, 0, 100)
+	healths = make([]*dayu.L7RuleHealth, 0, 100)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	var offset, limit uint64 = 0, 20
+
+	request.Business = &resourceType
+	request.Id = &resourceId
+	if protocol != "" {
+		request.ProtocolList = []*string{&protocol}
+	}
+
+	if ruleDomain != "" {
+		request.Domain = &ruleDomain
+	}
+	request.Offset = &offset
+	request.Limit = &limit
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDayuClient().DescribleL7Rules(request)
+
+		if err != nil {
+			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == "InvalidParameterValue" {
+					errRet = nil
+					has = false
+					return
+				}
+			}
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+			has = false
+			return
+		}
+		if ruleId == "" {
+			infos = append(infos, response.Response.Rules...)
+			healths = append(healths, response.Response.Healths...)
+		} else {
+			for _, rule := range response.Response.Rules {
+				if *rule.RuleId != ruleId {
+					continue
+				}
+				infos = append(infos, rule)
+				//get right health, the SDK returns with no order
+				var theHealth dayu.L7RuleHealth
+				for _, health := range response.Response.Healths {
+					if *health.RuleId != *rule.RuleId {
+						continue
+					}
+					theHealth = *health
+				}
+				healths = append(healths, &theHealth)
+			}
+		}
+		if len(response.Response.Rules) < int(limit) {
+			if len(infos) == 0 {
+				has = false
+			} else {
+				has = true
+			}
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *DayuService) DescribeL7Rule(ctx context.Context, resourceType string, resourceId string, ruleId string) (infos *dayu.L7RuleEntry, health *dayu.L7RuleHealth, has bool, errRet error) {
+	policies, healths, _, err := me.DescribeL7Rules(ctx, resourceType, resourceId, "", ruleId, "")
+	if err != nil {
+		errRet = err
+		has = false
+		return
+	}
+
+	length := len(policies)
+	if length != 1 {
+		has = false
+		if length > 1 {
+			errRet = fmt.Errorf("Create l7 rule returns %d rules", length)
+		}
+		return
+	}
+
+	infos = policies[0]
+	if len(healths) > 0 {
+		health = healths[0]
+	}
+	has = true
+	return
+}
+
+func (me *DayuService) SetL7Health(ctx context.Context, resourceType string, resourceId string, healthCheck dayu.L7HealthConfig) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewCreateL7HealthConfigRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.HealthConfig = []*dayu.L7HealthConfig{&healthCheck}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().CreateL7HealthConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func (me *DayuService) DescribeL7Health(ctx context.Context, resourceType string, resourceId string, ruleId string) (healthCheck *dayu.L7HealthConfig, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribeL7HealthConfigRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.RuleIdList = []*string{&ruleId}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DescribeL7HealthConfig(request)
+	if err != nil {
+		errRet = err
+		has = false
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	healthChecks := response.Response.HealthConfig
+	length := len(healthChecks)
+	if length != 1 {
+		has = false
+		if length > 1 {
+			has = true
+			errRet = fmt.Errorf("Get L7 health check returns %d healthchecks", length)
+		}
+		return
+	}
+
+	healthCheck = healthChecks[0]
+	has = true
+	return
+}
+
+func (me *DayuService) CreateL7Rule(ctx context.Context, resourceType string, resourceId string, rule dayu.L7RuleEntry) (ruleId string, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewCreateL7RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.Rules = []*dayu.L7RuleEntry{&rule}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().CreateL7Rules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	//describe rules to get rule ID
+	rules, _, has, dErr := me.DescribeL7Rules(ctx, resourceType, resourceId, *rule.Domain, "", "")
+	if dErr != nil {
+		errRet = dErr
+		return
+	}
+	if !has {
+		errRet = fmt.Errorf("Create L7 rule failed")
+		return
+	}
+	if len(rules) != 1 {
+		errRet = fmt.Errorf("Create L7 rule returns %d rules", len(rules))
+	}
+	ruleId = *rules[0].RuleId
+	return
+}
+
+func (me *DayuService) ModifyL7Rule(ctx context.Context, resourceType string, resourceId string, rule dayu.L7RuleEntry) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewModifyL7RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.Rule = &rule
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().ModifyL7Rules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func flattenSourceList(list []*dayu.L4RuleSource) (re []map[string]interface{}) {
+	result := make([]map[string]interface{}, 0, len(list))
+	for _, v := range list {
+		mapping := map[string]interface{}{
+			"weight": v.Weight,
+			"source": v.Source,
+		}
+		result = append(result, mapping)
+	}
+
+	return result
+}
+
+func (me *DayuService) DeleteL7Rule(ctx context.Context, resourceType string, resourceId string, ruleId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDeleteL7RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.RuleIdList = []*string{&ruleId}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DeleteL7Rules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func (me *DayuService) SetRuleSwitch(ctx context.Context, resourceType string, resourceId string, ruleId string, switchFlag bool, protocol string) (errRet error) {
+	logId := getLogId(ctx)
+	if protocol == DAYU_L7_RULE_PROTOCOL_HTTP {
+		request := dayu.NewModifyCCHostProtectionRequest()
+		defer func() {
+			if errRet != nil {
+				log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			}
+		}()
+		request.Id = &resourceId
+		request.Business = &resourceType
+		request.RuleId = &ruleId
+		if switchFlag {
+			request.Method = helper.String("open")
+		} else {
+			request.Method = helper.String("close")
+		}
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDayuClient().ModifyCCHostProtection(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || response.Response == nil || response.Response.Success == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+			return
+		}
+
+		if *response.Response.Success.Code != "Success" {
+			errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+			return
+		}
+	} else {
+		request := dayu.NewModifyCCThresholdRequest()
+		defer func() {
+			if errRet != nil {
+				log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			}
+		}()
+		request.Id = &resourceId
+		request.Business = &resourceType
+		request.RuleId = &ruleId
+		request.Protocol = &protocol
+
+		if !switchFlag {
+			request.Threshold = helper.IntUint64(DAYU_L7_HTTPS_SWITCH_OFF)
+		} else {
+			//this default value can be a request value that asks the whole threshold value if needed
+			request.Threshold = helper.IntUint64(DAYU_L7_HTTPS_SWITCH_ON_DEFAULT)
+		}
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDayuClient().ModifyCCThreshold(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response == nil || response.Response == nil || response.Response.Success == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+			return
+		}
+
+		if *response.Response.Success.Code != "Success" {
+			errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+			return
+		}
+	}
+	return
+}
+
+func (me *DayuService) DescribeL4Rules(ctx context.Context, resourceType string, resourceId string, ruleName string, ruleId string) (infos []*dayu.L4RuleEntry, healths []*dayu.L4RuleHealth, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribleL4RulesRequest()
+
+	infos = make([]*dayu.L4RuleEntry, 0, 100)
+	healths = make([]*dayu.L4RuleHealth, 0, 100)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	var offset, limit uint64 = 0, 20
+
+	request.Business = &resourceType
+	request.Id = &resourceId
+
+	request.Offset = &offset
+	request.Limit = &limit
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDayuClient().DescribleL4Rules(request)
+
+		if err != nil {
+			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == "InvalidParameterValue" {
+					errRet = nil
+					has = false
+					return
+				}
+			}
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+			has = false
+			return
+		}
+		if ruleId == "" && ruleName == "" {
+			infos = append(infos, response.Response.Rules...)
+			healths = append(healths, response.Response.Healths...)
+		} else {
+			for _, rule := range response.Response.Rules {
+				if ruleId != "" && *rule.RuleId != ruleId {
+					continue
+				}
+				if ruleName != "" && *rule.RuleName != ruleName {
+					continue
+				}
+				infos = append(infos, rule)
+
+				//get right health, the SDK returns with no order
+				var theHealth dayu.L4RuleHealth
+				for _, health := range response.Response.Healths {
+					if *health.RuleId != *rule.RuleId {
+						continue
+					}
+					theHealth = *health
+				}
+				healths = append(healths, &theHealth)
+			}
+		}
+		if len(response.Response.Rules) < int(limit) {
+			if len(infos) == 0 {
+				has = false
+			} else {
+				has = true
+			}
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *DayuService) DescribeL4Rule(ctx context.Context, resourceType string, resourceId string, ruleId string) (infos *dayu.L4RuleEntry, health *dayu.L4RuleHealth, has bool, errRet error) {
+	policies, healths, _, err := me.DescribeL4Rules(ctx, resourceType, resourceId, "", ruleId)
+	if err != nil {
+		errRet = err
+		has = false
+		return
+	}
+
+	length := len(policies)
+	if length != 1 {
+		has = false
+		if length > 1 {
+			errRet = fmt.Errorf("Create L4 rule returns %d rules", length)
+		}
+		return
+	}
+
+	infos = policies[0]
+	if len(healths) > 0 {
+		health = healths[0]
+	}
+	has = true
+	return
+}
+
+func (me *DayuService) SetL4Health(ctx context.Context, resourceType string, resourceId string, healthCheck dayu.L4HealthConfig) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewCreateL4HealthConfigRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.HealthConfig = []*dayu.L4HealthConfig{&healthCheck}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().CreateL4HealthConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func (me *DayuService) DescribeL4Health(ctx context.Context, resourceType string, resourceId string, ruleId string) (healthCheck *dayu.L4HealthConfig, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDescribeL4HealthConfigRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.RuleIdList = []*string{&ruleId}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DescribeL4HealthConfig(request)
+	if err != nil {
+		errRet = err
+		has = false
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	healthChecks := response.Response.HealthConfig
+	length := len(healthChecks)
+	if length != 1 {
+		has = false
+		if length > 1 {
+			has = true
+			errRet = fmt.Errorf("Get L4 health check returns %d healthchecks", length)
+		}
+		return
+	}
+
+	healthCheck = healthChecks[0]
+	has = true
+	return
+}
+
+func (me *DayuService) CreateL4Rule(ctx context.Context, resourceType string, resourceId string, rule dayu.L4RuleEntry) (ruleId string, errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewCreateL4RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.Rules = []*dayu.L4RuleEntry{&rule}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().CreateL4Rules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	//describe rules to get rule ID
+	rules, _, has, dErr := me.DescribeL4Rules(ctx, resourceType, resourceId, *rule.RuleName, "")
+	if dErr != nil {
+		errRet = dErr
+		return
+	}
+	if !has {
+		errRet = fmt.Errorf("Create L4 rule failed")
+		return
+	}
+	if len(rules) != 1 {
+		errRet = fmt.Errorf("Create L4 rule returns %d rules", len(rules))
+	}
+	ruleId = *rules[0].RuleId
+	return
+}
+
+func (me *DayuService) ModifyL4Rule(ctx context.Context, resourceType string, resourceId string, rule dayu.L4RuleEntry) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewModifyL4RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.Rule = &rule
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().ModifyL4Rules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func (me *DayuService) DeleteL4Rule(ctx context.Context, resourceType string, resourceId string, ruleId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewDeleteL4RulesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.RuleIdList = []*string{&ruleId}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().DeleteL4Rules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}
+
+func (me *DayuService) SetSession(ctx context.Context, resourceType string, resourceId string, ruleId string, switchFlag bool, sessionTime int) (errRet error) {
+	logId := getLogId(ctx)
+	request := dayu.NewModifyL4KeepTimeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.Id = &resourceId
+	request.Business = &resourceType
+	request.RuleId = &ruleId
+	request.KeepEnable = boolToInt64Pointer(switchFlag)
+	request.KeepTime = helper.IntUint64(sessionTime)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDayuClient().ModifyL4KeepTime(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.Success == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+
+	if *response.Response.Success.Code != "Success" {
+		errRet = fmt.Errorf("TencentCloud SDK return %s response,%s", *response.Response.Success.Code, *response.Response.Success.Message)
+		return
+	}
+
+	return
+}

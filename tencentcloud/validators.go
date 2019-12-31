@@ -159,6 +159,32 @@ func validatePort(v interface{}, k string) (ws []string, errors []error) {
 	return
 }
 
+func validatePortRange(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	items := strings.Split(value, "-")
+	if len(items) < 2 {
+		errors = append(errors, fmt.Errorf("%q must be like minport-maxport format", k))
+	}
+	minPort, err := strconv.Atoi(items[0])
+	if err != nil {
+		errors = append(errors, err)
+	}
+	if minPort < 1 || minPort > 65535 {
+		errors = append(errors, fmt.Errorf("%q min port must be a valid port between 1 and 65535", k))
+	}
+	maxPort, err := strconv.Atoi(items[1])
+	if err != nil {
+		errors = append(errors, err)
+	}
+	if maxPort < 1 || maxPort > 65535 {
+		errors = append(errors, fmt.Errorf("%q max port must be a valid port between 1 and 65535", k))
+	}
+	if minPort > maxPort {
+		errors = append(errors, fmt.Errorf("%q min port should not be greater than max port", k))
+	}
+	return
+}
+
 func validateMysqlPassword(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 64 || len(value) < 8 {
