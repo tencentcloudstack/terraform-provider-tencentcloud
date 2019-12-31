@@ -29,6 +29,8 @@ Anti-DDoS(Dayu)
     tencentcloud_dayu_ddos_policies
     tencentcloud_dayu_ddos_policy_attachments
     tencentcloud_dayu_ddos_policy_cases
+    tencentcloud_dayu_l4_rules
+    tencentcloud_dayu_l7_rules
 
   Resource
     tencentcloud_dayu_cc_http_policy
