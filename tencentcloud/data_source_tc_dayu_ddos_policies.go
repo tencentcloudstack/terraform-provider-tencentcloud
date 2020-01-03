@@ -393,7 +393,7 @@ func dataSourceTencentCloudDayuDdosPoliciesRead(d *schema.ResourceData, meta int
 	policyId := d.Get("policy_id").(string)
 
 	policies := make([]*dayu.DDosPolicy, 0)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, err := service.DescribeDdosPolicies(ctx, resourceType, policyId)
 		if err != nil {
 			return retryError(err)

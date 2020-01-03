@@ -295,16 +295,15 @@ func resourceTencentCloudDayuL4RuleCreate(d *schema.ResourceData, meta interface
 	if sessionTime == 0 && sessionFlag {
 		return fmt.Errorf("`session_time` should be set when `session_switch` is true.")
 	}
-	err = dayuService.SetSession(ctx, resourceType, resourceId, ruleId, sessionFlag, sessionTime)
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = dayuService.SetSession(ctx, resourceType, resourceId, ruleId, sessionFlag, sessionTime)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.SetSession(ctx, resourceType, resourceId, ruleId, sessionFlag, sessionTime)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -384,16 +383,14 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 			rule.SourceList = append(rule.SourceList, &l4RuleSource)
 		}
 
-		err := dayuService.ModifyL4Rule(ctx, resourceType, resourceId, rule)
-		if err != nil {
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				err = dayuService.ModifyL4Rule(ctx, resourceType, resourceId, rule)
-				if err != nil {
-					return retryError(err)
-				}
-				return nil
-			})
-		}
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := dayuService.ModifyL4Rule(ctx, resourceType, resourceId, rule)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+
 		if err != nil {
 			return err
 		}
@@ -427,16 +424,14 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		healthCheck.TimeOut = helper.IntUint64(d.Get("health_check_timeout").(int))
 		healthCheck.VirtualPort = helper.IntUint64(d.Get("d_port").(int))
 
-		err := dayuService.SetL4Health(ctx, resourceType, resourceId, healthCheck)
-		if err != nil {
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				err = dayuService.SetL4Health(ctx, resourceType, resourceId, healthCheck)
-				if err != nil {
-					return retryError(err)
-				}
-				return nil
-			})
-		}
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := dayuService.SetL4Health(ctx, resourceType, resourceId, healthCheck)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+
 		if err != nil {
 			return err
 		}
@@ -455,16 +450,15 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		if sessionTime == 0 && sessionFlag {
 			return fmt.Errorf("`session_time` should be set when `session_switch` is true.")
 		}
-		err := dayuService.SetSession(ctx, resourceType, resourceId, ruleId, sessionFlag, sessionTime)
-		if err != nil {
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				err = dayuService.SetSession(ctx, resourceType, resourceId, ruleId, sessionFlag, sessionTime)
-				if err != nil {
-					return retryError(err)
-				}
-				return nil
-			})
-		}
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := dayuService.SetSession(ctx, resourceType, resourceId, ruleId, sessionFlag, sessionTime)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+
 		if err != nil {
 			return err
 		}
@@ -552,17 +546,13 @@ func resourceTencentCloudDayuL4RuleDelete(d *schema.ResourceData, meta interface
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err := dayuService.DeleteL4Rule(ctx, resourceType, resourceId, ruleId)
-
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = dayuService.DeleteL4Rule(ctx, resourceType, resourceId, ruleId)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.DeleteL4Rule(ctx, resourceType, resourceId, ruleId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
 
 	if err != nil {
 		return err

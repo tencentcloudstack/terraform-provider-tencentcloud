@@ -12,7 +12,7 @@ resource "tencentcloud_dayu_cc_https_policy" "test_policy" {
   rule_id				= tencentcloud_dayu_l7_rule.test_rule.rule_id
   domain				= tencentcloud_dayu_l7_rule.test_rule.domain
   name					= "policy_test"
-  exe_mode				= "drop"
+  action				= "drop"
   switch				= true
 
   rule_list {
@@ -84,12 +84,12 @@ func resourceTencentCloudDayuCCHttpsPolicy() *schema.Resource {
 				Default:     true,
 				Description: "Indicate the CC self-define https policy takes effect or not.",
 			},
-			"exe_mode": {
+			"action": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_CC_POLICY_ACTION),
-				Description:  "Execute mode. Valid values are `alg` and `drop`.",
+				Description:  "Action mode. Valid values are `alg` and `drop`.",
 			},
 			"rule_list": {
 				Type:     schema.TypeSet,
@@ -154,7 +154,7 @@ func resourceTencentCloudDayuCCHttpsPolicyCreate(d *schema.ResourceData, meta in
 	ccPolicy.Protocol = helper.String(DAYU_L7_RULE_PROTOCOL_HTTPS)
 	ccPolicy.Domain = helper.String(d.Get("domain").(string))
 	ccPolicy.RuleId = helper.String(d.Get("rule_id").(string))
-	ccPolicy.ExeMode = helper.String(d.Get("exe_mode").(string))
+	ccPolicy.ExeMode = helper.String(d.Get("action").(string))
 
 	ccPolicy.IpList = []*string{}
 
@@ -238,7 +238,7 @@ func resourceTencentCloudDayuCCHttpsPolicyRead(d *schema.ResourceData, meta inte
 	_ = d.Set("name", policy.Name)
 	_ = d.Set("create_time", policy.CreateTime)
 	_ = d.Set("policy_id", policy.SetId)
-	_ = d.Set("exe_mode", policy.ExeMode)
+	_ = d.Set("action", policy.ExeMode)
 	_ = d.Set("rule_id", policy.RuleId)
 	_ = d.Set("domain", policy.Domain)
 	_ = d.Set("switch", *policy.Switch > 0)
@@ -280,7 +280,7 @@ func resourceTencentCloudDayuCCHttpsPolicyUpdate(d *schema.ResourceData, meta in
 		ccPolicy.Switch = helper.IntUint64(0)
 	}
 
-	ccPolicy.ExeMode = helper.String(d.Get("exe_mode").(string))
+	ccPolicy.ExeMode = helper.String(d.Get("action").(string))
 	ruleList := d.Get("rule_list").(*schema.Set).List()
 	ccPolicy.RuleList = make([]*dayu.CCRule, 0, len(ruleList))
 	for _, rule := range ruleList {

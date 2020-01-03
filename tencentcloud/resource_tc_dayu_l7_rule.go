@@ -223,16 +223,16 @@ func resourceTencentCloudDayuL7RuleCreate(d *schema.ResourceData, meta interface
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	ruleId, err := dayuService.CreateL7Rule(ctx, resourceType, resourceId, rule)
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			ruleId, err = dayuService.CreateL7Rule(ctx, resourceType, resourceId, rule)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	ruleId := ""
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := dayuService.CreateL7Rule(ctx, resourceType, resourceId, rule)
+		if e != nil {
+			return retryError(e)
+		}
+		ruleId = result
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -259,16 +259,14 @@ func resourceTencentCloudDayuL7RuleCreate(d *schema.ResourceData, meta interface
 	healthCheck.AliveNum = helper.IntUint64(d.Get("health_check_health_num").(int))
 	healthCheck.StatusCode = helper.IntUint64(d.Get("health_check_code").(int))
 
-	err = dayuService.SetL7Health(ctx, resourceType, resourceId, healthCheck)
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = dayuService.SetL7Health(ctx, resourceType, resourceId, healthCheck)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.SetL7Health(ctx, resourceType, resourceId, healthCheck)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -283,16 +281,15 @@ func resourceTencentCloudDayuL7RuleCreate(d *schema.ResourceData, meta interface
 
 	//set switch
 	switchFlag := d.Get("switch").(bool)
-	err = dayuService.SetRuleSwitch(ctx, resourceType, resourceId, ruleId, switchFlag, protocol)
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = dayuService.SetRuleSwitch(ctx, resourceType, resourceId, ruleId, switchFlag, protocol)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.SetRuleSwitch(ctx, resourceType, resourceId, ruleId, switchFlag, protocol)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -371,16 +368,14 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 			rule.SourceList = append(rule.SourceList, &l4RuleSource)
 		}
 
-		err := dayuService.ModifyL7Rule(ctx, resourceType, resourceId, rule)
-		if err != nil {
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				err = dayuService.ModifyL7Rule(ctx, resourceType, resourceId, rule)
-				if err != nil {
-					return retryError(err)
-				}
-				return nil
-			})
-		}
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := dayuService.ModifyL7Rule(ctx, resourceType, resourceId, rule)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+
 		if err != nil {
 			return err
 		}
@@ -426,16 +421,14 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 		healthCheck.AliveNum = helper.IntUint64(d.Get("health_check_health_num").(int))
 		healthCheck.StatusCode = helper.IntUint64(d.Get("health_check_code").(int))
 
-		err := dayuService.SetL7Health(ctx, resourceType, resourceId, healthCheck)
-		if err != nil {
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				err = dayuService.SetL7Health(ctx, resourceType, resourceId, healthCheck)
-				if err != nil {
-					return retryError(err)
-				}
-				return nil
-			})
-		}
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := dayuService.SetL7Health(ctx, resourceType, resourceId, healthCheck)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+
 		if err != nil {
 			return err
 		}
@@ -471,16 +464,15 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 			}
 		}
 		if protocol != "" {
-			err := dayuService.SetRuleSwitch(ctx, resourceType, resourceId, ruleId, switchFlag, protocol)
-			if err != nil {
-				err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-					err = dayuService.SetRuleSwitch(ctx, resourceType, resourceId, ruleId, switchFlag, protocol)
-					if err != nil {
-						return retryError(err)
-					}
-					return nil
-				})
-			}
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				e := dayuService.SetRuleSwitch(ctx, resourceType, resourceId, ruleId, switchFlag, protocol)
+				if e != nil {
+					return retryError(e)
+				}
+				return nil
+			})
+
 			if err != nil {
 				return err
 			}
@@ -587,17 +579,13 @@ func resourceTencentCloudDayuL7RuleDelete(d *schema.ResourceData, meta interface
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err := dayuService.DeleteL7Rule(ctx, resourceType, resourceId, ruleId)
-
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = dayuService.DeleteL7Rule(ctx, resourceType, resourceId, ruleId)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.DeleteL7Rule(ctx, resourceType, resourceId, ruleId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
 
 	if err != nil {
 		return err

@@ -23,7 +23,7 @@ func TestAccTencentCloudDataDayuCCHttpsPolicies(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testDataDayuCCHttpsPoliciesName, "list.0.create_time"),
 					resource.TestCheckResourceAttrSet(testDataDayuCCHttpsPoliciesName, "list.0.policy_id"),
 					resource.TestCheckResourceAttr(testDataDayuCCHttpsPoliciesName, "list.0.name", "policy_test"),
-					resource.TestCheckResourceAttr(testDataDayuCCHttpsPoliciesName, "list.0.exe_mode", "drop"),
+					resource.TestCheckResourceAttr(testDataDayuCCHttpsPoliciesName, "list.0.action", "drop"),
 					resource.TestCheckResourceAttr(testDataDayuCCHttpsPoliciesName, "list.0.rule_list.#", "1"),
 				),
 			},
@@ -57,7 +57,7 @@ resource "tencentcloud_dayu_cc_https_policy" "test_policy" {
   rule_id				= tencentcloud_dayu_l7_rule.test_rule.rule_id
   domain				= tencentcloud_dayu_l7_rule.test_rule.domain
   name					= "policy_test"
-  exe_mode				= "drop"
+  action				= "drop"
   switch				= true
 
   rule_list {

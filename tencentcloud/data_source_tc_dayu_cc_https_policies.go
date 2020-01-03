@@ -80,10 +80,10 @@ func dataSourceTencentCloudDayuCCHttpsPolicies() *schema.Resource {
 							Computed:    true,
 							Description: "Name of the CC self-define https policy.",
 						},
-						"exe_mode": {
+						"action": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Execute mode.",
+							Description: "Action mode.",
 						},
 						"switch": {
 							Type:        schema.TypeBool,
@@ -163,7 +163,7 @@ func dataSourceTencentCloudDayuCCHttpsPoliciesRead(d *schema.ResourceData, meta 
 	name := d.Get("name").(string)
 
 	ccPolicies := make([]*dayu.CCPolicy, 0)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, _, err := service.DescribeCCSelfdefinePolicies(ctx, resourceType, resourceId, name, policyId)
 		if err != nil {
 			return retryError(err)
@@ -185,7 +185,7 @@ func dataSourceTencentCloudDayuCCHttpsPoliciesRead(d *schema.ResourceData, meta 
 		listItem["policy_id"] = *policy.SetId
 		listItem["switch"] = *policy.Switch > 0
 		listItem["ip_list"] = helper.StringsInterfaces(policy.IpList)
-		listItem["exe_mode"] = *policy.ExeMode
+		listItem["action"] = *policy.ExeMode
 		listItem["rule_list"] = flattenCCRuleList(policy.RuleList)
 		listItem["rule_id"] = *policy.RuleId
 		listItem["domain"] = *policy.Domain

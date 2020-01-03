@@ -178,7 +178,7 @@ func dataSourceTencentCloudDayuL7RulesRead(d *schema.ResourceData, meta interfac
 
 	rules := make([]*dayu.L7RuleEntry, 0)
 	healths := make([]*dayu.L7RuleHealth, 0)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, hResult, _, err := service.DescribeL7Rules(ctx, resourceType, resourceId, domain, ruleId, protocol)
 		if err != nil {
 			return retryError(err)

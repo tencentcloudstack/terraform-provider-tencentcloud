@@ -30,8 +30,8 @@ resource "tencentcloud_dayu_ddos_policy_case" "foo" {
   has_initiate_udp    = "yes"
   peer_tcp_port       = "1111"
   peer_udp_port       = "3333"
-  tcp_foot_print      = "511"
-  udp_foot_print      = "500"
+  tcp_footprint       = "511"
+  udp_footprint       = "500"
   web_api_urls        = ["abc.com", "test.cn/aaa.png"]
   min_tcp_package_len = "1000"
   max_tcp_package_len = "1200"
@@ -65,8 +65,8 @@ The following arguments are supported:
 * `min_udp_package_len` - (Optional) The minimum length of UDP message package, valid value length should be greater than 0 and less than 1500.
 * `peer_tcp_port` - (Optional) The port that actively initiates TCP requests, valid value is range from 1 to 65535.
 * `peer_udp_port` - (Optional) The port that actively initiates UDP requests, valid value is range from 1 to 65535.
-* `tcp_foot_print` - (Optional) The fixed signature of TCP protocol load, valid value length is range from 1 to 512.
-* `udp_foot_print` - (Optional) The fixed signature of TCP protocol load, valid value length is range from 1 to 512.
+* `tcp_footprint` - (Optional) The fixed signature of TCP protocol load, valid value length is range from 1 to 512.
+* `udp_footprint` - (Optional) The fixed signature of TCP protocol load, valid value length is range from 1 to 512.
 
 ## Attributes Reference
 

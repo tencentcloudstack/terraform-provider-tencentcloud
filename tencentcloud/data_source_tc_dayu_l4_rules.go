@@ -177,7 +177,7 @@ func dataSourceTencentCloudDayuL4RulesRead(d *schema.ResourceData, meta interfac
 
 	rules := make([]*dayu.L4RuleEntry, 0)
 	healths := make([]*dayu.L4RuleHealth, 0)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, hResult, _, err := service.DescribeL4Rules(ctx, resourceType, resourceId, name, ruleId)
 		if err != nil {
 			return retryError(err)

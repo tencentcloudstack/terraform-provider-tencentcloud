@@ -18,7 +18,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_bgpip" {
   resource_id   = "bgpip-00000294"
   name          = "policy_match"
   smode         = "matching"
-  exe_mode      = "drop"
+  action        = "drop"
   switch        = true
   rule_list {
     skey     = "host"
@@ -32,7 +32,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_net" {
   resource_id   = "net-0000007e"
   name          = "policy_match"
   smode         = "matching"
-  exe_mode      = "drop"
+  action        = "drop"
   switch        = true
   rule_list {
     skey     = "cgi"
@@ -46,7 +46,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_bgpmultip" {
   resource_id   = "bgp-0000008o"
   name          = "policy_match"
   smode         = "matching"
-  exe_mode      = "alg"
+  action        = "alg"
   switch        = true
   ip            = "111.230.178.25"
 
@@ -62,7 +62,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_bgp" {
   resource_id   = "bgp-000006mq"
   name          = "policy_match"
   smode         = "matching"
-  exe_mode      = "alg"
+  action        = "alg"
   switch        = true
 
   rule_list {
@@ -80,7 +80,7 @@ The following arguments are supported:
 * `name` - (Required, ForceNew) Name of the CC self-define http policy. Length should between 1 and 20.
 * `resource_id` - (Required, ForceNew) ID of the resource that the CC self-define http policy works for.
 * `resource_type` - (Required, ForceNew) Type of the resource that the CC self-define http policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
-* `exe_mode` - (Optional) Execute mode, only valid when `smode` is `matching`. Valid values are `alg` and `drop`.
+* `action` - (Optional) Action mode, only valid when `smode` is `matching`. Valid values are `alg` and `drop`.
 * `frequency` - (Optional) Max frequency per minute, only valid when `smode` is `speedlimit`, the valid value ranges from 1 to 10000.
 * `ip` - (Optional) Ip of the CC self-define http policy, only valid when `resource_type` is `bgp-multip`. The num of list items can only be set one.
 * `rule_list` - (Optional) Rule list of the CC self-define http policy,  only valid when `smode` is `matching`.

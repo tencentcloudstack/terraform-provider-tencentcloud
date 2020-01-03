@@ -9,7 +9,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_bgpip" {
   resource_id 			= "bgpip-00000294"
   name					= "policy_match"
   smode					= "matching"
-  exe_mode				= "drop"
+  action				= "drop"
   switch				= true
   rule_list {
 	skey 				= "host"
@@ -23,7 +23,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_net" {
   resource_id 			= "net-0000007e"
   name					= "policy_match"
   smode					= "matching"
-  exe_mode				= "drop"
+  action				= "drop"
   switch				= true
   rule_list {
 	skey 				= "cgi"
@@ -37,7 +37,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_bgpmultip" {
   resource_id 			= "bgp-0000008o"
   name					= "policy_match"
   smode					= "matching"
-  exe_mode				= "alg"
+  action				= "alg"
   switch				= true
   ip					= "111.230.178.25"
 
@@ -53,7 +53,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_bgp" {
   resource_id 			= "bgp-000006mq"
   name					= "policy_match"
   smode					= "matching"
-  exe_mode				= "alg"
+  action				= "alg"
   switch				= true
 
   rule_list {
@@ -122,12 +122,12 @@ func resourceTencentCloudDayuCCHttpPolicy() *schema.Resource {
 				ValidateFunc: validateIntegerInRange(1, 10000),
 				Description:  "Max frequency per minute, only valid when `smode` is `speedlimit`, the valid value ranges from 1 to 10000.",
 			},
-			"exe_mode": {
+			"action": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_CC_POLICY_ACTION),
-				Description:  "Execute mode, only valid when `smode` is `matching`. Valid values are `alg` and `drop`.",
+				Description:  "Action mode, only valid when `smode` is `matching`. Valid values are `alg` and `drop`.",
 			},
 			"switch": {
 				Type:        schema.TypeBool,
@@ -211,7 +211,7 @@ func resourceTencentCloudDayuCCHttpPolicyCreate(d *schema.ResourceData, meta int
 		}
 		ccPolicy.Frequency = helper.IntUint64(frequency)
 	} else {
-		ccPolicy.ExeMode = helper.String(d.Get("exe_mode").(string))
+		ccPolicy.ExeMode = helper.String(d.Get("action").(string))
 	}
 	ccPolicy.Protocol = helper.String(DAYU_L7_RULE_PROTOCOL_HTTP)
 	switchFlag := d.Get("switch").(bool)
@@ -300,7 +300,7 @@ func resourceTencentCloudDayuCCHttpPolicyRead(d *schema.ResourceData, meta inter
 	_ = d.Set("create_time", policy.CreateTime)
 	_ = d.Set("smode", policy.Smode)
 	_ = d.Set("policy_id", policy.SetId)
-	_ = d.Set("exe_mode", policy.ExeMode)
+	_ = d.Set("action", policy.ExeMode)
 	ipList := helper.StringsInterfaces(policy.IpList)
 	if len(ipList) == 1 {
 		_ = d.Set("ip", ipList[0])
@@ -346,7 +346,7 @@ func resourceTencentCloudDayuCCHttpPolicyUpdate(d *schema.ResourceData, meta int
 		}
 		ccPolicy.Frequency = helper.IntUint64(frequency)
 	} else {
-		ccPolicy.ExeMode = helper.String(d.Get("exe_mode").(string))
+		ccPolicy.ExeMode = helper.String(d.Get("action").(string))
 	}
 	ccPolicy.Protocol = helper.String(DAYU_L7_RULE_PROTOCOL_HTTP)
 

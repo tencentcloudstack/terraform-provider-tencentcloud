@@ -50,10 +50,10 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_type` - Type of the resource that the DDoS policy case works for.
   * `scene_id` - Id of the DDoS policy case.
   * `tcp_end_port` - End port of the TCP service.
-  * `tcp_foot_print` - The fixed signature of TCP protocol load.
+  * `tcp_footprint` - The fixed signature of TCP protocol load.
   * `tcp_start_port` - Start port of the TCP service.
   * `udp_end_port` - End port of the UDP service.
-  * `udp_foot_print` - The fixed signature of TCP protocol load.
+  * `udp_footprint` - The fixed signature of TCP protocol load.
   * `udp_start_port` - Start port of the UDP service.
   * `web_api_urls` - Web API url set.
 

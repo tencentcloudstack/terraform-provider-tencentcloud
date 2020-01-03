@@ -39,8 +39,8 @@ func TestAccTencentCloudDayuDdosPolicyCaseResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "udp_end_port", "4000"),
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "peer_tcp_port", "1111"),
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "peer_udp_port", "3333"),
-					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "tcp_foot_print", "511"),
-					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "udp_foot_print", "500"),
+					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "tcp_footprint", "511"),
+					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "udp_footprint", "500"),
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "min_tcp_package_len", "1000"),
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "max_tcp_package_len", "1200"),
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "min_udp_package_len", "1000"),
@@ -67,8 +67,8 @@ func TestAccTencentCloudDayuDdosPolicyCaseResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "udp_end_port", "2000"),
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "peer_tcp_port", "333"),
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "peer_udp_port", "111"),
-					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "tcp_foot_print", "411"),
-					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "udp_foot_print", "400"),
+					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "tcp_footprint", "411"),
+					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "udp_footprint", "400"),
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "min_tcp_package_len", "900"),
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "max_tcp_package_len", "1100"),
 					resource.TestCheckResourceAttr(testDayuDdosPolicyCaseResourceKey, "min_udp_package_len", "900"),
@@ -162,8 +162,8 @@ resource "tencentcloud_dayu_ddos_policy_case" "test_policy_case" {
   has_initiate_udp		= "yes"
   peer_tcp_port			= "1111"
   peer_udp_port			= "3333"
-  tcp_foot_print		= "511"
-  udp_foot_print		= "500"
+  tcp_footprint		= "511"
+  udp_footprint		= "500"
   web_api_urls			= ["abc.com", "test.cn/aaa.png"]
   min_tcp_package_len	= "1000"
   max_tcp_package_len	= "1200"
@@ -188,8 +188,8 @@ resource "tencentcloud_dayu_ddos_policy_case" "test_policy_case" {
   has_initiate_udp		= "no"
   peer_tcp_port			= "333"
   peer_udp_port			= "111"
-  tcp_foot_print		= "411"
-  udp_foot_print		= "400"
+  tcp_footprint		= "411"
+  udp_footprint		= "400"
   web_api_urls			= ["abc.com/aaa.xls", "test.cn/bbb.png"]
   min_tcp_package_len	= "900"
   max_tcp_package_len	= "1100"

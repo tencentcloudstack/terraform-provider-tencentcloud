@@ -90,10 +90,10 @@ func dataSourceTencentCloudDayuCCHttpPolicies() *schema.Resource {
 							Computed:    true,
 							Description: "Max frequency per minute.",
 						},
-						"exe_mode": {
+						"action": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Execute mode.",
+							Description: "Action mode.",
 						},
 						"switch": {
 							Type:        schema.TypeBool,
@@ -163,7 +163,7 @@ func dataSourceTencentCloudDayuCCHttpPoliciesRead(d *schema.ResourceData, meta i
 	name := d.Get("name").(string)
 
 	ccPolicies := make([]*dayu.CCPolicy, 0)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, _, err := service.DescribeCCSelfdefinePolicies(ctx, resourceType, resourceId, name, policyId)
 		if err != nil {
 			return retryError(err)
@@ -188,7 +188,7 @@ func dataSourceTencentCloudDayuCCHttpPoliciesRead(d *schema.ResourceData, meta i
 		listItem["switch"] = *policy.Switch > 0
 		listItem["ip_list"] = helper.StringsInterfaces(policy.IpList)
 		if *policy.Smode == "matching" {
-			listItem["exe_mode"] = *policy.ExeMode
+			listItem["action"] = *policy.ExeMode
 			listItem["rule_list"] = flattenCCRuleList(policy.RuleList)
 		} else {
 			listItem["frequency"] = int(*policy.Frequency)

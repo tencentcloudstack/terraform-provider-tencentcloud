@@ -132,12 +132,12 @@ func dataSourceTencentCloudDayuDdosPolicyCases() *schema.Resource {
 							Computed:    true,
 							Description: "The port that actively initiates UDP requests.",
 						},
-						"tcp_foot_print": {
+						"tcp_footprint": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "The fixed signature of TCP protocol load.",
 						},
-						"udp_foot_print": {
+						"udp_footprint": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "The fixed signature of TCP protocol load.",
@@ -203,7 +203,7 @@ func dataSourceTencentCloudDayuDdosPolicyCasesRead(d *schema.ResourceData, meta 
 
 	var ddosPolicyCase dayu.KeyValueRecord
 	has := false
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, flag, err := service.DescribeDdosPolicyCase(ctx, resourceType, sceneId)
 		if err != nil {
 			return retryError(err)
@@ -246,10 +246,10 @@ func dataSourceTencentCloudDayuDdosPolicyCasesRead(d *schema.ResourceData, meta 
 			listItem["peer_udp_port"] = *record.Value
 		}
 		if key == "TcpFootprint" {
-			listItem["tcp_foot_print"] = *record.Value
+			listItem["tcp_footprint"] = *record.Value
 		}
 		if key == "UdpFootprint" {
-			listItem["udp_foot_print"] = *record.Value
+			listItem["udp_footprint"] = *record.Value
 		}
 		if key == "HasAbroad" {
 			_ = d.Set("has_abroad", *record.Value)

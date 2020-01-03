@@ -74,8 +74,8 @@ resource "tencentcloud_dayu_ddos_policy_case" "example" {
   has_initiate_udp    = "yes"
   peer_tcp_port       = "1111"
   peer_udp_port       = "3333"
-  tcp_foot_print      = "511"
-  udp_foot_print      = "500"
+  tcp_footprint       = "511"
+  udp_footprint       = "500"
   web_api_urls        = ["abc.com", "test.cn/aaa.png"]
   min_tcp_package_len = "1000"
   max_tcp_package_len = "1200"
@@ -141,7 +141,7 @@ resource "tencentcloud_dayu_cc_https_policy" "example" {
   rule_id       = tencentcloud_dayu_l7_rule.example.rule_id
   domain        = tencentcloud_dayu_l7_rule.example.domain
   name          = "example"
-  exe_mode      = "drop"
+  action        = "drop"
   switch        = true
 
   rule_list {
@@ -156,7 +156,7 @@ resource "tencentcloud_dayu_cc_http_policy" "example_bgpip" {
   resource_id   = var.resource_bgpip
   name          = "example_bgpip"
   smode         = "matching"
-  exe_mode      = "drop"
+  action        = "drop"
   switch        = true
   rule_list {
     skey     = "host"
@@ -170,7 +170,7 @@ resource "tencentcloud_dayu_cc_http_policy" "example_net" {
   resource_id   = var.resource_net
   name          = "example_net"
   smode         = "matching"
-  exe_mode      = "drop"
+  action        = "drop"
   switch        = true
   rule_list {
     skey     = "cgi"
@@ -184,7 +184,7 @@ resource "tencentcloud_dayu_cc_http_policy" "example_bgpmultip" {
   resource_id   = var.resource_bgpmultip
   name          = "example_bgpmultip"
   smode         = "matching"
-  exe_mode      = "alg"
+  action        = "alg"
   switch        = true
   ip            = var.bgpmultip_ip
 
@@ -200,7 +200,7 @@ resource "tencentcloud_dayu_cc_http_policy" "example_bgp" {
   resource_id   = var.resource_bgp
   name          = "example_bgp"
   smode         = "matching"
-  exe_mode      = "alg"
+  action        = "alg"
   switch        = true
 
   rule_list {

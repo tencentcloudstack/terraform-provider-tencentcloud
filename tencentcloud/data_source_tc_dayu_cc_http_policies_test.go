@@ -24,7 +24,7 @@ func TestAccTencentCloudDataDayuCCHttpPolicies(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testDataDayuCCHttpPoliciesName, "list.0.policy_id"),
 					resource.TestCheckResourceAttr(testDataDayuCCHttpPoliciesName, "list.0.name", "policy_match"),
 					resource.TestCheckResourceAttr(testDataDayuCCHttpPoliciesName, "list.0.smode", "matching"),
-					resource.TestCheckResourceAttr(testDataDayuCCHttpPoliciesName, "list.0.exe_mode", "drop"),
+					resource.TestCheckResourceAttr(testDataDayuCCHttpPoliciesName, "list.0.action", "drop"),
 					resource.TestCheckResourceAttr(testDataDayuCCHttpPoliciesName, "list.0.rule_list.#", "1"),
 				),
 			},
@@ -38,7 +38,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_id 			= "%s"
   name					= "policy_match"
   smode					= "matching"
-  exe_mode				= "drop"
+  action				= "drop"
   switch				= true
 
   rule_list {

@@ -40,8 +40,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list of CC http policies. Each element contains the following attributes:
+  * `action` - Action mode.
   * `create_time` - Create time of the CC self-define http policy.
-  * `exe_mode` - Execute mode.
   * `frequency` - Max frequency per minute.
   * `ip_list` - Ip of the CC self-define http policy.
   * `name` - Name of the CC self-define http policy.

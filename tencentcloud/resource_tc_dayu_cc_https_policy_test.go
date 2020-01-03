@@ -28,7 +28,7 @@ func TestAccTencentCloudDayuCCHttpsPolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testDayuCCHttpsPolicyResourceKey, "domain"),
 					resource.TestCheckResourceAttr(testDayuCCHttpsPolicyResourceKey, "resource_type", "bgpip"),
 					resource.TestCheckResourceAttr(testDayuCCHttpsPolicyResourceKey, "name", "policy_test"),
-					resource.TestCheckResourceAttr(testDayuCCHttpsPolicyResourceKey, "exe_mode", "drop"),
+					resource.TestCheckResourceAttr(testDayuCCHttpsPolicyResourceKey, "action", "drop"),
 					resource.TestCheckResourceAttr(testDayuCCHttpsPolicyResourceKey, "rule_list.#", "1"),
 				),
 			},
@@ -41,7 +41,7 @@ func TestAccTencentCloudDayuCCHttpsPolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testDayuCCHttpsPolicyResourceKey, "domain"),
 					resource.TestCheckResourceAttr(testDayuCCHttpsPolicyResourceKey, "resource_type", "bgpip"),
 					resource.TestCheckResourceAttr(testDayuCCHttpsPolicyResourceKey, "name", "policy_test"),
-					resource.TestCheckResourceAttr(testDayuCCHttpsPolicyResourceKey, "exe_mode", "alg"),
+					resource.TestCheckResourceAttr(testDayuCCHttpsPolicyResourceKey, "action", "alg"),
 					resource.TestCheckResourceAttr(testDayuCCHttpsPolicyResourceKey, "rule_list.#", "1"),
 				),
 			},
@@ -144,7 +144,7 @@ resource "tencentcloud_dayu_cc_https_policy" "test_policy" {
   rule_id				= tencentcloud_dayu_l7_rule.test_rule.rule_id
   domain				= tencentcloud_dayu_l7_rule.test_rule.domain
   name					= "policy_test"
-  exe_mode				= "drop"
+  action				= "drop"
   switch				= true
 
   rule_list {
@@ -180,7 +180,7 @@ resource "tencentcloud_dayu_cc_https_policy" "test_policy" {
   rule_id				= tencentcloud_dayu_l7_rule.test_rule.rule_id
   domain				= tencentcloud_dayu_l7_rule.test_rule.domain
   name					= "policy_test"
-  exe_mode				= "alg"
+  action				= "alg"
   switch				= true
 
   rule_list {

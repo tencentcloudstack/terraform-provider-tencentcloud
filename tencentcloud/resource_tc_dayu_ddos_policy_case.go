@@ -21,8 +21,8 @@ resource "tencentcloud_dayu_ddos_policy_case" "foo" {
   has_initiate_udp		= "yes"
   peer_tcp_port			= "1111"
   peer_udp_port			= "3333"
-  tcp_foot_print		= "511"
-  udp_foot_print		= "500"
+  tcp_footprint		= "511"
+  udp_footprint		= "500"
   web_api_urls			= ["abc.com", "test.cn/aaa.png"]
   min_tcp_package_len	= "1000"
   max_tcp_package_len	= "1200"
@@ -156,13 +156,13 @@ func resourceTencentCloudDayuDdosPolicyCase() *schema.Resource {
 				ValidateFunc: validatePort,
 				Description:  "The port that actively initiates UDP requests, valid value is range from 1 to 65535.",
 			},
-			"tcp_foot_print": {
+			"tcp_footprint": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(1, 512),
 				Description:  "The fixed signature of TCP protocol load, valid value length is range from 1 to 512.",
 			},
-			"udp_foot_print": {
+			"udp_footprint": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateStringLengthInRange(1, 512),
@@ -245,8 +245,8 @@ func resourceTencentCloudDayuDdosPolicyCaseCreate(d *schema.ResourceData, meta i
 	request.HasVPN = helper.String(d.Get("has_vpn").(string))
 	request.PeerTcpPort = helper.String(d.Get("peer_tcp_port").(string))
 	request.PeerUdpPort = helper.String(d.Get("peer_udp_port").(string))
-	request.TcpFootprint = helper.String(d.Get("tcp_foot_print").(string))
-	request.UdpFootprint = helper.String(d.Get("udp_foot_print").(string))
+	request.TcpFootprint = helper.String(d.Get("tcp_footprint").(string))
+	request.UdpFootprint = helper.String(d.Get("udp_footprint").(string))
 
 	tcpPortStart := d.Get("tcp_start_port").(string)
 	tcpPortEnd := d.Get("tcp_end_port").(string)
@@ -373,10 +373,10 @@ func resourceTencentCloudDayuDdosPolicyCaseRead(d *schema.ResourceData, meta int
 			_ = d.Set("peer_udp_port", record.Value)
 		}
 		if key == "TcpFootprint" {
-			_ = d.Set("tcp_foot_print", record.Value)
+			_ = d.Set("tcp_footprint", record.Value)
 		}
 		if key == "UdpFootprint" {
-			_ = d.Set("udp_foot_print", record.Value)
+			_ = d.Set("udp_footprint", record.Value)
 		}
 		if key == "HasAbroad" {
 			_ = d.Set("has_abroad", record.Value)
@@ -463,8 +463,8 @@ func resourceTencentCloudDayuDdosPolicyCaseUpdate(d *schema.ResourceData, meta i
 	request.HasVPN = helper.String(d.Get("has_vpn").(string))
 	request.PeerTcpPort = helper.String(d.Get("peer_tcp_port").(string))
 	request.PeerUdpPort = helper.String(d.Get("peer_udp_port").(string))
-	request.TcpFootprint = helper.String(d.Get("tcp_foot_print").(string))
-	request.UdpFootprint = helper.String(d.Get("udp_foot_print").(string))
+	request.TcpFootprint = helper.String(d.Get("tcp_footprint").(string))
+	request.UdpFootprint = helper.String(d.Get("udp_footprint").(string))
 
 	tcpPortStart := d.Get("tcp_start_port").(string)
 	tcpPortEnd := d.Get("tcp_end_port").(string)

@@ -27,7 +27,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "resource_type", "bgpip"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "name", "policy_match"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "smode", "matching"),
-					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "exe_mode", "drop"),
+					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "action", "drop"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "rule_list.#", "1"),
 				),
 			},
@@ -61,7 +61,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource_BGP(t *testing.T) {
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "resource_type", "bgp"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "name", "policy_match"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "smode", "matching"),
-					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "exe_mode", "alg"),
+					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "action", "alg"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "rule_list.#", "1"),
 				),
 			},
@@ -84,7 +84,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource_NET(t *testing.T) {
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "resource_type", "net"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "name", "policy_match"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "smode", "matching"),
-					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "exe_mode", "drop"),
+					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "action", "drop"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "rule_list.#", "1"),
 				),
 			},
@@ -107,7 +107,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource_BGPMUL(t *testing.T) {
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "resource_type", "bgp-multip"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "name", "policy_match"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "smode", "matching"),
-					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "exe_mode", "alg"),
+					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "action", "alg"),
 					resource.TestCheckResourceAttr(testDayuCCHttpPolicyResourceKey, "rule_list.#", "1"),
 				),
 			},
@@ -189,7 +189,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_id 			= "%s"
   name					= "policy_match"
   smode					= "matching"
-  exe_mode				= "drop"
+  action				= "drop"
   switch				= true
   rule_list {
 	skey 				= "host"
@@ -214,7 +214,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_id 			= "%s"
   name					= "policy_match"
   smode					= "matching"
-  exe_mode				= "drop"
+  action				= "drop"
   switch				= true
   rule_list {
 	skey 				= "cgi"
@@ -230,7 +230,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_id 			= "%s"
   name					= "policy_match"
   smode					= "matching"
-  exe_mode				= "alg"
+  action				= "alg"
   switch				= true
   ip					= "111.230.178.25"
 
@@ -248,7 +248,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_id 			= "%s"
   name					= "policy_match"
   smode					= "matching"
-  exe_mode				= "alg"
+  action				= "alg"
   switch				= true
 
   rule_list {

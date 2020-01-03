@@ -21,7 +21,7 @@ resource "tencentcloud_dayu_cc_https_policy" "test_policy" {
   rule_id       = tencentcloud_dayu_l7_rule.test_rule.rule_id
   domain        = tencentcloud_dayu_l7_rule.test_rule.domain
   name          = "policy_test"
-  exe_mode      = "drop"
+  action        = "drop"
   switch        = true
 
   rule_list {
@@ -42,7 +42,7 @@ The following arguments are supported:
 * `resource_type` - (Required, ForceNew) Type of the resource that the CC self-define https policy works for, valid value is `bgpip`.
 * `rule_id` - (Required, ForceNew) Rule id of the domain that the CC self-define https policy works for, only valid when `protocol` is `https`.
 * `rule_list` - (Required) Rule list of the CC self-define https policy.
-* `exe_mode` - (Optional) Execute mode. Valid values are `alg` and `drop`.
+* `action` - (Optional) Action mode. Valid values are `alg` and `drop`.
 * `switch` - (Optional) Indicate the CC self-define https policy takes effect or not.
 
 The `rule_list` object supports the following:

@@ -34,8 +34,8 @@ func TestAccTencentCloudDataDayuDdosPolicyCases(t *testing.T) {
 					resource.TestCheckResourceAttr(testDataDayuDdosPolicyCasesName, "list.0.udp_end_port", "4000"),
 					resource.TestCheckResourceAttr(testDataDayuDdosPolicyCasesName, "list.0.peer_tcp_port", "1111"),
 					resource.TestCheckResourceAttr(testDataDayuDdosPolicyCasesName, "list.0.peer_udp_port", "3333"),
-					resource.TestCheckResourceAttr(testDataDayuDdosPolicyCasesName, "list.0.tcp_foot_print", "511"),
-					resource.TestCheckResourceAttr(testDataDayuDdosPolicyCasesName, "list.0.udp_foot_print", "500"),
+					resource.TestCheckResourceAttr(testDataDayuDdosPolicyCasesName, "list.0.tcp_footprint", "511"),
+					resource.TestCheckResourceAttr(testDataDayuDdosPolicyCasesName, "list.0.udp_footprint", "500"),
 					resource.TestCheckResourceAttr(testDataDayuDdosPolicyCasesName, "list.0.min_tcp_package_len", "1000"),
 					resource.TestCheckResourceAttr(testDataDayuDdosPolicyCasesName, "list.0.max_tcp_package_len", "1200"),
 					resource.TestCheckResourceAttr(testDataDayuDdosPolicyCasesName, "list.0.min_udp_package_len", "1000"),
@@ -62,8 +62,8 @@ resource "tencentcloud_dayu_ddos_policy_case" "test_policy_case" {
   has_initiate_udp		= "yes"
   peer_tcp_port			= "1111"
   peer_udp_port			= "3333"
-  tcp_foot_print		= "511"
-  udp_foot_print		= "500"
+  tcp_footprint		= "511"
+  udp_footprint		= "500"
   web_api_urls			= ["abc.com", "test.cn/aaa.png"]
   min_tcp_package_len	= "1000"
   max_tcp_package_len	= "1200"

@@ -40,9 +40,9 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list of CC https policies. Each element contains the following attributes:
+  * `action` - Action mode.
   * `create_time` - Create time of the CC self-define https policy.
   * `domain` - Domain that the CC self-define https policy works for.
-  * `exe_mode` - Execute mode.
   * `ip_list` - Ip of the CC self-define https policy.
   * `name` - Name of the CC self-define https policy.
   * `policy_id` - Id of the CC self-define https policy.
