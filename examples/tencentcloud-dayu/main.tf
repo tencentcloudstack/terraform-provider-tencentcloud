@@ -1,6 +1,8 @@
 resource "tencentcloud_dayu_ddos_policy" "example" {
   resource_type = "bgpip"
   name          = "example"
+  black_ips     = ["1.1.1.1"]
+  white_ips     = ["2.2.2.2"]
 
   drop_options {
     drop_tcp           = true
@@ -9,10 +11,10 @@ resource "tencentcloud_dayu_ddos_policy" "example" {
     drop_other         = true
     drop_abroad        = true
     check_sync_conn    = true
-    source_new_limit   = 100
-    dst_new_limit      = 100
-    source_conn_limit  = 100
-    dst_conn_limit     = 100
+    s_new_limit        = 100
+    d_new_limit        = 100
+    s_conn_limit       = 100
+    d_conn_limit       = 100
     tcp_mbps_limit     = 100
     udp_mbps_limit     = 100
     icmp_mbps_limit    = 100
@@ -24,12 +26,7 @@ resource "tencentcloud_dayu_ddos_policy" "example" {
     syn_limit          = 100
   }
 
-  black_white_ips {
-    ip   = "1.1.1.1"
-    type = "black"
-  }
-
-  port_limits {
+  port_filters {
     start_port = "2000"
     end_port   = "2500"
     protocol   = "all"
@@ -53,7 +50,7 @@ resource "tencentcloud_dayu_ddos_policy" "example" {
     offset         = 500
   }
 
-  water_prints {
+  watermark_filters {
     tcp_port_list = ["2000-3000", "3500-4000"]
     udp_port_list = ["5000-6000"]
     offset        = 50
@@ -98,8 +95,8 @@ resource "tencentcloud_dayu_l4_rule" "example" {
   resource_id               = var.resource_net
   name                      = "example"
   protocol                  = "TCP"
-  source_port               = 80
-  dest_port                 = 66
+  s_port                    = 80
+  d_port                    = 66
   source_type               = 2
   health_check_switch       = true
   health_check_timeout      = 30
@@ -284,3 +281,4 @@ data "tencentcloud_dayu_l7_rules" "id_test" {
   resource_id   = tencentcloud_dayu_l7_rule.example.resource_id
   rule_id       = tencentcloud_dayu_l7_rule.example.rule_id
 }
+

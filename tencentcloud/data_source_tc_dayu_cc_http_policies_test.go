@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -15,7 +16,7 @@ func TestAccTencentCloudDataDayuCCHttpPolicies(t *testing.T) {
 		CheckDestroy: testAccCheckDayuCCHttpPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudDataDayuCCHttpPoliciesBaic,
+				Config: fmt.Sprintf(testAccTencentCloudDataDayuCCHttpPoliciesBaic, defaultDayuBgpIp),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckDayuCCHttpPolicyExists("tencentcloud_dayu_cc_http_policy.test_policy"),
 					resource.TestCheckResourceAttr(testDataDayuCCHttpPoliciesName, "list.#", "1"),
@@ -34,7 +35,7 @@ func TestAccTencentCloudDataDayuCCHttpPolicies(t *testing.T) {
 const testAccTencentCloudDataDayuCCHttpPoliciesBaic = `
 resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_type         = "bgpip"
-  resource_id 			= "bgpip-00000294"
+  resource_id 			= "%s"
   name					= "policy_match"
   smode					= "matching"
   exe_mode				= "drop"

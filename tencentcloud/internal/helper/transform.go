@@ -68,3 +68,12 @@ func Uint64sInterfaces(list []*uint64) []interface{} {
 	}
 	return vi
 }
+
+func BoolToInt64Pointer(s bool) (i *uint64) {
+	result := uint64(0)
+	if s {
+		result = uint64(1)
+	}
+	i = &result
+	return
+}

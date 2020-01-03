@@ -1,6 +1,8 @@
 /*
 Use this data source to query dayu CC https policies
+
 Example Usage
+
 ```hcl
 data "tencentcloud_dayu_cc_https_policies" "name_test" {
   resource_type = tencentcloud_dayu_cc_https_policy.test_policy.resource_type
@@ -20,7 +22,9 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -32,7 +36,7 @@ func dataSourceTencentCloudDayuCCHttpsPolicies() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE),
-				Description:  "Type of the resource that the CC https policy works for, valid values are `bgpip`.",
+				Description:  "Type of the resource that the CC https policy works for, valid value is `bgpip`.",
 			},
 			"resource_id": {
 				Type:        schema.TypeString,
@@ -58,7 +62,7 @@ func dataSourceTencentCloudDayuCCHttpsPolicies() *schema.Resource {
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of CC https policies. Each element contains the following attributes.",
+				Description: "A list of CC https policies. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"resource_id": {
@@ -97,7 +101,7 @@ func dataSourceTencentCloudDayuCCHttpsPolicies() *schema.Resource {
 							Description: "Rule id of the domain that the CC self-define https policy works for.",
 						},
 						"rule_list": {
-							Type:     schema.TypeSet,
+							Type:     schema.TypeList,
 							Required: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -120,7 +124,6 @@ func dataSourceTencentCloudDayuCCHttpsPolicies() *schema.Resource {
 							},
 							Description: "Rule list of the CC self-define https policy.",
 						},
-						//computed
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -132,7 +135,7 @@ func dataSourceTencentCloudDayuCCHttpsPolicies() *schema.Resource {
 							Description: "Id of the CC self-define https policy.",
 						},
 						"ip_list": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Ip of the CC self-define https policy.",
@@ -156,20 +159,18 @@ func dataSourceTencentCloudDayuCCHttpsPoliciesRead(d *schema.ResourceData, meta 
 
 	resourceType := d.Get("resource_type").(string)
 	resourceId := d.Get("resource_id").(string)
-	policyId := ""
-	if v, ok := d.GetOk("policy_id"); ok {
-		policyId = v.(string)
-	}
-	name := ""
-	if v, ok := d.GetOk("name"); ok {
-		name = v.(string)
-	}
+	policyId := d.Get("policy_id").(string)
+	name := d.Get("name").(string)
 
-	ccPolicies, _, err := service.DescribeCCSelfdefinePolicies(ctx, resourceType, resourceId, name, policyId)
-	if err != nil {
-		ccPolicies, _, err = service.DescribeCCSelfdefinePolicies(ctx, resourceType, resourceId, name, policyId)
-	}
-
+	ccPolicies := make([]*dayu.CCPolicy, 0)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, _, err := service.DescribeCCSelfdefinePolicies(ctx, resourceType, resourceId, name, policyId)
+		if err != nil {
+			return retryError(err)
+		}
+		ccPolicies = result
+		return nil
+	})
 	if err != nil {
 		return err
 	}
@@ -182,7 +183,7 @@ func dataSourceTencentCloudDayuCCHttpsPoliciesRead(d *schema.ResourceData, meta 
 		listItem["name"] = *policy.Name
 		listItem["create_time"] = *policy.CreateTime
 		listItem["policy_id"] = *policy.SetId
-		listItem["switch"] = intToBool(int(*policy.Switch))
+		listItem["switch"] = *policy.Switch > 0
 		listItem["ip_list"] = helper.StringsInterfaces(policy.IpList)
 		listItem["exe_mode"] = *policy.ExeMode
 		listItem["rule_list"] = flattenCCRuleList(policy.RuleList)
@@ -190,7 +191,7 @@ func dataSourceTencentCloudDayuCCHttpsPoliciesRead(d *schema.ResourceData, meta 
 		listItem["domain"] = *policy.Domain
 
 		list = append(list, listItem)
-		ids = append(ids, listItem["policy_id"].(string))
+		ids = append(ids, *policy.SetId)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

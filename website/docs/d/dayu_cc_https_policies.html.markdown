@@ -30,7 +30,7 @@ data "tencentcloud_dayu_cc_https_policies" "id_test" {
 The following arguments are supported:
 
 * `resource_id` - (Required) Id of the resource that the CC https policy works for.
-* `resource_type` - (Required) Type of the resource that the CC https policy works for, valid values are `bgpip`.
+* `resource_type` - (Required) Type of the resource that the CC https policy works for, valid value is `bgpip`.
 * `name` - (Optional) Name of the CC https policy to be queried.
 * `policy_id` - (Optional) Id of the CC https policy to be queried.
 * `result_output_file` - (Optional) Used to save results.
@@ -39,7 +39,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `list` - A list of CC https policies. Each element contains the following attributes.
+* `list` - A list of CC https policies. Each element contains the following attributes:
   * `create_time` - Create time of the CC self-define https policy.
   * `domain` - Domain that the CC self-define https policy works for.
   * `exe_mode` - Execute mode.

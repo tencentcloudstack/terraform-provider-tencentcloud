@@ -42,7 +42,7 @@ func dataSourceTencentCloudDayuDdosPolicyAttachments() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE),
-				Description:  "Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.",
+				Description:  "Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -57,7 +57,7 @@ func dataSourceTencentCloudDayuDdosPolicyAttachments() *schema.Resource {
 			"dayu_ddos_policy_attachment_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of dayu DDoS policy  attachments. Each element contains the following attributes:",
+				Description: "A list of dayu DDoS policy attachments. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"resource_id": {
@@ -88,15 +88,9 @@ func dataSourceTencentCloudDayuDdosPolicyAttachmentsRead(d *schema.ResourceData,
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	resourceId := ""
-	if v, ok := d.GetOk("resource_id"); ok {
-		resourceId = v.(string)
-	}
+	resourceId := d.Get("resource_id").(string)
 	resourceType := d.Get("resource_type").(string)
-	policyId := ""
-	if v, ok := d.GetOk("policy_id"); ok {
-		policyId = v.(string)
-	}
+	policyId := d.Get("policy_id").(string)
 
 	dayuService := DayuService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

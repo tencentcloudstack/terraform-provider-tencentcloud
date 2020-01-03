@@ -23,7 +23,7 @@ data "tencentcloud_dayu_ddos_policy_cases" "id_test" {
 
 The following arguments are supported:
 
-* `resource_type` - (Required) Type of the resource that the DDoS policy case works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.
+* `resource_type` - (Required) Type of the resource that the DDoS policy case works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
 * `scene_id` - (Required) Id of the DDoS policy case to be query.
 * `result_output_file` - (Optional) Used to save results.
 
@@ -31,7 +31,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `list` - A list of DDoS policy cases. Each element contains the following attributes.
+* `list` - A list of DDoS policy cases. Each element contains the following attributes:
   * `app_protocols` - App protocol set of the DDoS policy case.
   * `app_type` - App type of the DDoS policy case.
   * `create_time` - Create time of the DDoS policy case.

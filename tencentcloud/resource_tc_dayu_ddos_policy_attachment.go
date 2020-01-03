@@ -29,9 +29,6 @@ func resourceTencentCloudDayuDdosPolicyAttachment() *schema.Resource {
 		Create: resourceTencentCloudDayuDdosPolicyAttachmentCreate,
 		Read:   resourceTencentCloudDayuDdosPolicyAttachmentRead,
 		Delete: resourceTencentCloudDayuDdosPolicyAttachmentDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"resource_id": {
@@ -69,16 +66,14 @@ func resourceTencentCloudDayuDdosPolicyAttachmentCreate(d *schema.ResourceData, 
 	dayuService := DayuService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := dayuService.BindDdosPolicy(ctx, resourceId, resourceType, policyId)
-	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			err = dayuService.BindDdosPolicy(ctx, resourceId, resourceType, policyId)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.BindDdosPolicy(ctx, resourceId, resourceType, policyId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
 
 	if err != nil {
 		return err
@@ -88,10 +83,10 @@ func resourceTencentCloudDayuDdosPolicyAttachmentCreate(d *schema.ResourceData, 
 	//check bind status
 	_, has, statusErr := dayuService.DescribeDdosPolicyAttachments(ctx, resourceId, resourceType, policyId)
 	if statusErr != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		statusErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, has, statusErr = dayuService.DescribeDdosPolicyAttachments(ctx, resourceId, resourceType, policyId)
-			if err != nil {
-				return retryError(err, "ClientError.NetworkError")
+			if statusErr != nil {
+				return retryError(statusErr)
 			}
 			return nil
 		})
@@ -130,7 +125,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentRead(d *schema.ResourceData, me
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, has, err = dayuService.DescribeDdosPolicyAttachments(ctx, resourceId, resourceType, policyId)
 			if err != nil {
-				return retryError(err, "ClientError.NetworkError")
+				return retryError(err)
 			}
 			return nil
 		})
@@ -168,16 +163,15 @@ func resourceTencentCloudDayuDdosPolicyAttachmentDelete(d *schema.ResourceData, 
 	dayuService := DayuService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := dayuService.UnbindDdosPolicy(ctx, resourceId, resourceType, policyId)
-	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			err = dayuService.UnbindDdosPolicy(ctx, resourceId, resourceType, policyId)
-			if err != nil {
-				return retryError(err, "ClientError.NetworkError")
-			}
-			return nil
-		})
-	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.UnbindDdosPolicy(ctx, resourceId, resourceType, policyId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -185,11 +179,11 @@ func resourceTencentCloudDayuDdosPolicyAttachmentDelete(d *schema.ResourceData, 
 	time.Sleep(1 * time.Minute)
 	//check bind status
 	_, has, statusErr := dayuService.DescribeDdosPolicyAttachments(ctx, resourceId, resourceType, policyId)
-	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	if statusErr != nil {
+		statusErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, has, statusErr = dayuService.DescribeDdosPolicyAttachments(ctx, resourceId, resourceType, policyId)
-			if err != nil {
-				return retryError(err, "ClientError.NetworkError")
+			if statusErr != nil {
+				return retryError(statusErr)
 			}
 			return nil
 		})

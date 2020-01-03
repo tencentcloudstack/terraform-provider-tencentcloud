@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dayu_cc_http_policies"
 sidebar_current: "docs-tencentcloud-datasource-dayu_cc_http_policies"
 description: |-
-  Use this data source to query dayu CC http policys
+  Use this data source to query dayu CC http policies
 ---
 
 # tencentcloud_dayu_cc_http_policies
 
-Use this data source to query dayu CC http policys
+Use this data source to query dayu CC http policies
 
 ## Example Usage
 
@@ -30,7 +30,7 @@ data "tencentcloud_dayu_cc_http_policies" "name_test" {
 The following arguments are supported:
 
 * `resource_id` - (Required) Id of the resource that the CC http policy works for.
-* `resource_type` - (Required) Type of the resource that the CC http policy works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.
+* `resource_type` - (Required) Type of the resource that the CC http policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
 * `name` - (Optional) Name of the CC http policy to be queried.
 * `policy_id` - (Optional) Id of the CC http policy to be queried.
 * `result_output_file` - (Optional) Used to save results.
@@ -39,7 +39,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `list` - A list of CC http policies. Each element contains the following attributes.
+* `list` - A list of CC http policies. Each element contains the following attributes:
   * `create_time` - Create time of the CC self-define http policy.
   * `exe_mode` - Execute mode.
   * `frequency` - Max frequency per minute.

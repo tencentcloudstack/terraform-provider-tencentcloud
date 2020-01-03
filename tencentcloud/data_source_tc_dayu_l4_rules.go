@@ -1,6 +1,8 @@
 /*
-Use this data source to query dayu L4 rules
+Use this data source to query dayu layer 4 rules
+
 Example Usage
+
 ```hcl
 data "tencentcloud_dayu_l4_rules" "name_test" {
   resource_type = tencentcloud_dayu_l4_rule.test_rule.resource_type
@@ -20,7 +22,9 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -32,22 +36,22 @@ func dataSourceTencentCloudDayuL4Rules() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE),
-				Description:  "Type of the resource that the L4 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.",
+				Description:  "Type of the resource that the layer 4 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.",
 			},
 			"resource_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the resource that the L4 rule works for.",
+				Description: "Id of the resource that the layer 4 rule works for.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the L4 rule to be queried.",
+				Description: "Id of the layer 4 rule to be queried.",
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of the L4 rule to be queried.",
+				Description: "Name of the layer 4 rule to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -57,7 +61,7 @@ func dataSourceTencentCloudDayuL4Rules() *schema.Resource {
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of L4 rules. Each element contains the following attributes.",
+				Description: "A list of layer 4 rules. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"source_type": {
@@ -70,15 +74,15 @@ func dataSourceTencentCloudDayuL4Rules() *schema.Resource {
 							Computed:    true,
 							Description: "Name of the rule.",
 						},
-						"source_port": {
+						"s_port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The source port of the L4 rule.",
+							Description: "The source port of the layer 4 rule.",
 						},
-						"dest_port": {
+						"d_port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The destination port of the L4 rule.",
+							Description: "The destination port of the layer 4 rule.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
@@ -86,7 +90,7 @@ func dataSourceTencentCloudDayuL4Rules() *schema.Resource {
 							Description: "Protocol of the rule.",
 						},
 						"source_list": {
-							Type:     schema.TypeSet,
+							Type:     schema.TypeList,
 							Required: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -157,7 +161,7 @@ func dataSourceTencentCloudDayuL4Rules() *schema.Resource {
 }
 
 func dataSourceTencentCloudDayuL4RulesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_dayu_l7_rules.read")()
+	defer logElapsed("data_source.tencentcloud_dayu_l4_rules.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -168,19 +172,20 @@ func dataSourceTencentCloudDayuL4RulesRead(d *schema.ResourceData, meta interfac
 
 	resourceType := d.Get("resource_type").(string)
 	resourceId := d.Get("resource_id").(string)
-	ruleId := ""
-	if v, ok := d.GetOk("rule_id"); ok {
-		ruleId = v.(string)
-	}
-	name := ""
-	if v, ok := d.GetOk("name"); ok {
-		name = v.(string)
-	}
+	ruleId := d.Get("rule_id").(string)
+	name := d.Get("name").(string)
 
-	rules, healths, _, err := service.DescribeL4Rules(ctx, resourceType, resourceId, name, ruleId)
-	if err != nil {
-		rules, healths, _, err = service.DescribeL4Rules(ctx, resourceType, resourceId, name, ruleId)
-	}
+	rules := make([]*dayu.L4RuleEntry, 0)
+	healths := make([]*dayu.L4RuleHealth, 0)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, hResult, _, err := service.DescribeL4Rules(ctx, resourceType, resourceId, name, ruleId)
+		if err != nil {
+			return retryError(err)
+		}
+		rules = result
+		healths = hResult
+		return nil
+	})
 
 	if err != nil {
 		return err
@@ -194,16 +199,16 @@ func dataSourceTencentCloudDayuL4RulesRead(d *schema.ResourceData, meta interfac
 		health := healths[k]
 		listItem["name"] = *rule.RuleName
 		listItem["protocol"] = *rule.Protocol
-		listItem["source_port"] = int(*rule.SourcePort)
-		listItem["dest_port"] = int(*rule.VirtualPort)
+		listItem["s_port"] = int(*rule.SourcePort)
+		listItem["d_port"] = int(*rule.VirtualPort)
 		listItem["rule_id"] = *rule.RuleId
 		listItem["lb_type"] = int(*rule.LbType)
 		listItem["source_type"] = int(*rule.SourceType)
 		listItem["session_time"] = int(*rule.KeepTime)
-		listItem["session_switch"] = intToBool(int(*rule.KeepEnable))
+		listItem["session_switch"] = *rule.KeepEnable > 0
 		listItem["source_list"] = flattenSourceList(rule.SourceList)
 		if health.Enable != nil {
-			listItem["health_check_switch"] = intToBool(int(*health.Enable))
+			listItem["health_check_switch"] = *health.Enable > 0
 		}
 		if health.TimeOut != nil {
 			listItem["health_check_timeout"] = int(*health.TimeOut)

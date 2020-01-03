@@ -1,5 +1,5 @@
 /*
-Use this resource to create dayu 7 layer rule
+Use this resource to create dayu layer 7 rule
 
 ~> **NOTE:** This resource only support resource Anti-DDoS of type `bgpip`
 
@@ -31,14 +31,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	//sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 )
 
@@ -48,30 +46,27 @@ func resourceTencentCloudDayuL7Rule() *schema.Resource {
 		Read:   resourceTencentCloudDayuL7RuleRead,
 		Update: resourceTencentCloudDayuL7RuleUpdate,
 		Delete: resourceTencentCloudDayuL7RuleDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"resource_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "ID of the resource that the 7 layer rule works for.",
+				Description: "ID of the resource that the layer 7 rule works for.",
 			},
 			"resource_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE),
 				ForceNew:     true,
-				Description:  "Type of the resource that the 7 layer rule works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.",
+				Description:  "Type of the resource that the layer 7 rule works for, valid value is `bgpip`.",
 			},
 			"domain": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(0, 80),
-				Description:  "Domain that the 7 layer rule works for. Valid string length ranges from 0 to 80.",
+				Description:  "Domain that the layer 7 rule works for. Valid string length ranges from 0 to 80.",
 			},
 			"protocol": {
 				Type:         schema.TypeString,
@@ -163,12 +158,12 @@ func resourceTencentCloudDayuL7Rule() *schema.Resource {
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Id of the 7 layer rule.",
+				Description: "Id of the layer 7 rule.",
 			},
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Status of the rule. 0 for create/modify success, 2 for create/modify fail, 3 for delete success, 5 for waiting to be created/modified, 7 for waiting to be deleted and 8 for waiting to get SSL id.",
+				Description: "Status of the rule. 0 for create/modify success, 2 for create/modify fail, 3 for delete success, 5 for delete failed, 6 for waiting to be created/modified, 7 for waiting to be deleted and 8 for waiting to get SSL id.",
 			},
 		},
 	}
@@ -256,7 +251,7 @@ func resourceTencentCloudDayuL7RuleCreate(d *schema.ResourceData, meta interface
 	var healthCheck dayu.L7HealthConfig
 	healthCheck.Protocol = helper.String(d.Get("protocol").(string))
 	healthCheck.Domain = &domain
-	healthCheck.Enable = boolToInt64Pointer(d.Get("health_check_switch").(bool))
+	healthCheck.Enable = helper.BoolToInt64Pointer(d.Get("health_check_switch").(bool))
 	healthCheck.Interval = helper.IntUint64(d.Get("health_check_interval").(int))
 	healthCheck.Method = helper.String(d.Get("health_check_method").(string))
 	healthCheck.Url = helper.String(d.Get("health_check_path").(string))
@@ -423,7 +418,7 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 		var healthCheck dayu.L7HealthConfig
 		healthCheck.Protocol = helper.String(d.Get("protocol").(string))
 		healthCheck.Domain = &domain
-		healthCheck.Enable = boolToInt64Pointer(d.Get("health_check_switch").(bool))
+		healthCheck.Enable = helper.BoolToInt64Pointer(d.Get("health_check_switch").(bool))
 		healthCheck.Interval = helper.IntUint64(d.Get("health_check_interval").(int))
 		healthCheck.Method = helper.String(d.Get("health_check_method").(string))
 		healthCheck.Url = helper.String(d.Get("health_check_path").(string))
@@ -555,9 +550,9 @@ func resourceTencentCloudDayuL7RuleRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("source_list", helper.StringsInterfaces(sourceList))
 
 	if *rule.Protocol == DAYU_L7_RULE_PROTOCOL_HTTPS {
-		_ = d.Set("switch", intToBool(int(*rule.CCEnable)))
+		_ = d.Set("switch", *rule.CCEnable > 0)
 	} else {
-		_ = d.Set("switch", intToBool(int(*rule.CCStatus)))
+		_ = d.Set("switch", *rule.CCStatus > 0)
 	}
 	//set health check
 	if health == nil {
@@ -565,7 +560,7 @@ func resourceTencentCloudDayuL7RuleRead(d *schema.ResourceData, meta interface{}
 		return nil
 	}
 
-	_ = d.Set("health_check_switch", intToBool(int(*health.Enable)))
+	_ = d.Set("health_check_switch", *health.Enable > 0)
 	_ = d.Set("health_check_path", health.Url)
 	_ = d.Set("health_check_method", health.Method)
 	_ = d.Set("health_check_health_num", int(*health.AliveNum))
@@ -627,74 +622,82 @@ func checkL7RuleStatus(meta interface{}, resourceType string, resourceId string,
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	_, health, has, err := dayuService.DescribeL7Rule(ctx, resourceType, resourceId, ruleId)
-	//check delete status
-	if !has && checkType == "delete" {
-		return true, nil
-	}
-	if health != nil && *health.Status == 0 && checkType == "check_health" {
-		return true, nil
-	}
-	if err != nil || has {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			sRule, health, has, err := dayuService.DescribeL7Rule(ctx, resourceType, resourceId, ruleId)
-			if err != nil {
-				return retryError(err)
-			}
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		sRule, health, has, err := dayuService.DescribeL7Rule(ctx, resourceType, resourceId, ruleId)
+		if err != nil {
+			return retryError(err)
+		}
 
-			if has {
-				//created failed
-				if *sRule.Status == 2 && (checkType == "create" || checkType == "modify") {
-					err = fmt.Errorf("%s rule %s failed...", checkType, ruleId)
-					log.Printf("CHECK WHY1 %+v", err)
-					status = false
-					return resource.NonRetryableError(err)
-				} else if *sRule.Status == 0 && (checkType == "create" || checkType == "modify") {
+		if has {
+			//created failed
+			if *sRule.Status == DAYU_L7_STATUS_SET_FAIL && (checkType == "create" || checkType == "modify") {
+				err = fmt.Errorf("%s rule %s failed...", checkType, ruleId)
+				status = false
+				return resource.NonRetryableError(err)
+			} else if *sRule.Status == DAYU_L7_STATUS_SET_DONE && (checkType == "create" || checkType == "modify") {
+				//action completed
+				status = true
+				return nil
+			} else if *sRule.Status == DAYU_L7_STATUS_DEL_FAIL && checkType == "delete" {
+				//delete failed
+				err = fmt.Errorf("%s rule %s failed...", checkType, ruleId)
+				status = false
+				return resource.NonRetryableError(err)
+			} else if health != nil && *health.Status == DAYU_L7_HEALTH_STATUS_SET_DONE && checkType == "check_health" {
+				//check health setting completed
+				status = true
+				return nil
+			} else if health != nil && *health.Status == DAYU_L7_HEALTH_STATUS_SET_FAIL && checkType == "check_health" {
+				//check health setting failed
+				status = false
+				err = fmt.Errorf("%s rule %s failed...status %d", checkType, ruleId, *sRule.Status)
+				return resource.NonRetryableError(err)
+			} else if checkType == "check_switch_true" {
+				//check switch set on completed, the para of http is different from https
+				if (*sRule.Protocol == DAYU_L7_RULE_PROTOCOL_HTTPS && *sRule.CCEnable == 1) || (*sRule.Protocol == DAYU_L7_RULE_PROTOCOL_HTTP && *sRule.CCStatus == 1) {
 					status = true
 					return nil
-				} else if health != nil && *health.Status == 0 && checkType == "check_health" {
-					status = true
-					return nil
-				} else if health != nil && *health.Status == 2 && checkType == "check_health" {
-					status = false
-					err = fmt.Errorf("%s rule %s failed...status %d", checkType, ruleId, *sRule.Status)
-					return resource.NonRetryableError(err)
-				} else if checkType == "check_switch_true" {
-					if (*sRule.Protocol == DAYU_L7_RULE_PROTOCOL_HTTPS && *sRule.CCEnable == 1) || (*sRule.Protocol == DAYU_L7_RULE_PROTOCOL_HTTP && *sRule.CCStatus == 1) {
-						status = true
-						return nil
-					} else {
-
-						status = false
-						err = fmt.Errorf("%s rule %s ...", checkType, ruleId)
-						return resource.RetryableError(err)
-					}
-				} else if checkType == "check_switch_false" {
-					if (*sRule.Protocol == DAYU_L7_RULE_PROTOCOL_HTTPS && *sRule.CCEnable == 0) || (*sRule.Protocol == DAYU_L7_RULE_PROTOCOL_HTTP && *sRule.CCStatus == 0) {
-						status = true
-						return nil
-					} else {
-						status = false
-						err = fmt.Errorf("%s rule %s ...", checkType, ruleId)
-						return resource.RetryableError(err)
-					}
 				} else {
-					err = fmt.Errorf("%s rule %s wait to be done... describe retry", checkType, ruleId)
+					//check switch set on failed
+					status = false
+					err = fmt.Errorf("%s rule %s ...", checkType, ruleId)
+					return resource.RetryableError(err)
+				}
+			} else if checkType == "check_switch_false" {
+				//check switch set off completed, same as above
+				if (*sRule.Protocol == DAYU_L7_RULE_PROTOCOL_HTTPS && *sRule.CCEnable == 0) || (*sRule.Protocol == DAYU_L7_RULE_PROTOCOL_HTTP && *sRule.CCStatus == 0) {
+					status = true
+					return nil
+				} else {
+					//check switch set off failed
+					status = false
+					err = fmt.Errorf("%s rule %s ...", checkType, ruleId)
 					return resource.RetryableError(err)
 				}
 			} else {
-				if checkType == "delete" {
-					status = true
-					return nil
+				if *sRule.Status == DAYU_L7_STATUS_SSL_WAIT {
+					//wait to check ssl
+					err = fmt.Errorf("SSL is not ready")
 				} else {
-					err = fmt.Errorf("cannot find %s rule", ruleId)
-					return resource.NonRetryableError(err)
+					//other cases lead to retry(delete done, set waiting, delete waiting, health setting)
+					err = fmt.Errorf("%s rule %s wait to be done, Status %d... describe retry", checkType, ruleId, *sRule.Status)
 				}
+				return resource.RetryableError(err)
 			}
-		})
-	}
+		} else {
+			if checkType == "delete" {
+				//check delete and do not exist, consider success
+				status = true
+				return nil
+			} else {
+				//other cases with no exist, report error
+				err = fmt.Errorf("cannot find %s rule", ruleId)
+				return resource.NonRetryableError(err)
+			}
+		}
+	})
+
 	if err != nil {
-		log.Printf("CHECK WHY %+v", err)
 		status = false
 	}
 	return status, err

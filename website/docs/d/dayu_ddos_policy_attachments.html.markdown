@@ -30,7 +30,7 @@ data "tencentcloud_dayu_ddos_policy_attachments" "foo_policy" {
 
 The following arguments are supported:
 
-* `resource_type` - (Required) Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.
+* `resource_type` - (Required) Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
 * `policy_id` - (Optional) Id of the policy to be queried.
 * `resource_id` - (Optional) Id of the attached resource to be queried.
 * `result_output_file` - (Optional) Used to save results.
@@ -39,7 +39,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `dayu_ddos_policy_attachment_list` - A list of dayu DDoS policy  attachments. Each element contains the following attributes:
+* `dayu_ddos_policy_attachment_list` - A list of dayu DDoS policy attachments. Each element contains the following attributes:
   * `policy_id` - Id of the policy.
   * `resource_id` - Id of the attached resource.
   * `resource_type` - Type of the resource that the DDoS policy works for.

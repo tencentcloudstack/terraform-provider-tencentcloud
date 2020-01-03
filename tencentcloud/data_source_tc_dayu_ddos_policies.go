@@ -1,6 +1,8 @@
 /*
 Use this data source to query dayu DDoS policies
+
 Example Usage
+
 ```hcl
 data "tencentcloud_dayu_ddos_policies" "id_test" {
   resource_type = tencentcloud_dayu_ddos_policy.test_policy.resource_type
@@ -14,6 +16,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -27,7 +30,7 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE),
-				Description:  "Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.",
+				Description:  "Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -42,7 +45,7 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of DDoS policies. Each element contains the following attributes.",
+				Description: "A list of DDoS policies. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -85,22 +88,22 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 										Computed:    true,
 										Description: "Indicate whether to check null connection or not.",
 									},
-									"dst_new_limit": {
+									"d_new_limit": {
 										Type:        schema.TypeInt,
 										Computed:    true,
 										Description: "The limit of new connections based on destination IP.",
 									},
-									"dst_conn_limit": {
+									"d_conn_limit": {
 										Type:        schema.TypeInt,
 										Computed:    true,
 										Description: "The limit of concurrent connections based on destination IP.", //?
 									},
-									"source_conn_limit": {
+									"s_conn_limit": {
 										Type:        schema.TypeInt,
 										Computed:    true,
 										Description: "The limit of concurrent connections based on source IP.",
 									},
-									"source_new_limit": {
+									"s_new_limit": {
 										Type:        schema.TypeInt,
 										Computed:    true,
 										Description: "The limit of new connections based on source IP.",
@@ -154,7 +157,7 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 							},
 							Description: "Option list of abnormal check of the DDoS policy.",
 						},
-						"port_limits": {
+						"port_filters": {
 							Type:     schema.TypeList,
 							Computed: true,
 							Elem: &schema.Resource{
@@ -188,24 +191,23 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 							},
 							Description: "Port limits of abnormal check of the DDoS policy.",
 						},
-						"black_white_ips": {
-							Type:     schema.TypeList,
-							Computed: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"ip": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Ip.",
-									},
-									"type": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Type of the ip.",
-									},
-								},
+						"black_ips": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type:         schema.TypeString,
+								ValidateFunc: validateIp,
 							},
-							Description: "Black and white ip list.",
+							Optional:    true,
+							Description: "Black ip list.",
+						},
+						"white_ips": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type:         schema.TypeString,
+								ValidateFunc: validateIp,
+							},
+							Optional:    true,
+							Description: "White ip list.",
 						},
 						"packet_filters": {
 							Type:     schema.TypeList,
@@ -286,13 +288,13 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 							},
 							Description: "Message filter options list.",
 						},
-						"water_prints": {
+						"watermark_filters": {
 							Type:     schema.TypeList,
 							Computed: true,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"tcp_port_list": {
-										Type:     schema.TypeSet,
+										Type:     schema.TypeList,
 										Computed: true,
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
@@ -300,7 +302,7 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 										Description: "Port range of TCP.",
 									},
 									"udp_port_list": {
-										Type:     schema.TypeSet,
+										Type:     schema.TypeList,
 										Computed: true,
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
@@ -341,6 +343,35 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 							Computed:    true,
 							Description: "Id of policy.",
 						},
+						"watermark_key": {
+							Type:     schema.TypeList,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Id of the watermark.",
+									},
+									"content": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Content of the watermark.",
+									},
+									"open_switch": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Indicate whether to auto-remove the water print or not.",
+									},
+									"create_time": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Create time of the watermark.",
+									},
+								},
+							},
+							Description: "Watermark content.",
+						},
 					},
 				},
 			},
@@ -359,15 +390,17 @@ func dataSourceTencentCloudDayuDdosPoliciesRead(d *schema.ResourceData, meta int
 	}
 
 	resourceType := d.Get("resource_type").(string)
-	policyId := ""
-	if v, ok := d.GetOk("policy_id"); ok {
-		policyId = v.(string)
-	}
+	policyId := d.Get("policy_id").(string)
 
-	policies, err := service.DescribeDdosPolicies(ctx, resourceType, policyId)
-	if err != nil {
-		policies, err = service.DescribeDdosPolicies(ctx, resourceType, policyId)
-	}
+	policies := make([]*dayu.DDosPolicy, 0)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, err := service.DescribeDdosPolicies(ctx, resourceType, policyId)
+		if err != nil {
+			return retryError(err)
+		}
+		policies = result
+		return nil
+	})
 
 	if err != nil {
 		return err
@@ -378,19 +411,19 @@ func dataSourceTencentCloudDayuDdosPoliciesRead(d *schema.ResourceData, meta int
 	for _, ddosPolicy := range policies {
 		listItem := make(map[string]interface{})
 		listItem["drop_options"] = flattenDdosDropOptionList([]*dayu.DDoSPolicyDropOption{ddosPolicy.DropOptions})
-		listItem["port_limits"] = flattenDdosPortLimitList(ddosPolicy.PortLimits)
+		listItem["port_filters"] = flattenDdosPortLimitList(ddosPolicy.PortLimits)
 		listItem["packet_filters"] = flattenDdosPacketFilterList(ddosPolicy.PacketFilters)
-		listItem["black_white_ips"] = flattenIpBlackWhiteList(ddosPolicy.IpBlackWhiteLists)
-		listItem["water_prints"] = flattenWaterPrintPolicyList(ddosPolicy.WaterPrint)
+		listItem["black_ips"], listItem["white_ips"] = flattenIpBlackWhiteList(ddosPolicy.IpBlackWhiteLists)
+		listItem["watermark_filters"] = flattenWaterPrintPolicyList(ddosPolicy.WaterPrint)
 		listItem["create_time"] = *ddosPolicy.CreateTime
 		listItem["name"] = *ddosPolicy.PolicyName
 		listItem["policy_id"] = *ddosPolicy.PolicyId
 		listItem["scene_id"] = *ddosPolicy.SceneId
+		listItem["watermark_key"] = flattenWaterPrintKeyList(ddosPolicy.WaterKey)
 		list = append(list, listItem)
 		ids = append(ids, *ddosPolicy.PolicyId)
 	}
 
-	log.Printf("check this %+v", list)
 	d.SetId(helper.DataResourceIdsHash(ids))
 	if e := d.Set("list", list); e != nil {
 		log.Printf("[CRITAL]%s provider set list fail, reason:%s\n", logId, e.Error())

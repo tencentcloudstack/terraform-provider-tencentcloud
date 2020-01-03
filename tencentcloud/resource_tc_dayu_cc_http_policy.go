@@ -86,9 +86,6 @@ func resourceTencentCloudDayuCCHttpPolicy() *schema.Resource {
 		Read:   resourceTencentCloudDayuCCHttpPolicyRead,
 		Update: resourceTencentCloudDayuCCHttpPolicyUpdate,
 		Delete: resourceTencentCloudDayuCCHttpPolicyDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"resource_id": {
@@ -102,7 +99,7 @@ func resourceTencentCloudDayuCCHttpPolicy() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE),
 				ForceNew:     true,
-				Description:  "Type of the resource that the CC self-define http policy works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.",
+				Description:  "Type of the resource that the CC self-define http policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -115,7 +112,7 @@ func resourceTencentCloudDayuCCHttpPolicy() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_CC_POLICY_SMODE),
-				Default:      "matching",
+				Default:      DAYU_CC_POLICY_SMODE_MATCH,
 				Description:  "Match mode, and valid values are `matching`, `speedlimit`. Note: the speed limit type CC self-define policy can only set one.",
 			},
 			"frequency": {
@@ -130,7 +127,7 @@ func resourceTencentCloudDayuCCHttpPolicy() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_CC_POLICY_ACTION),
-				Description:  "Execute mode, only valid when `smode` is `matching`. Valid values are `alg`, `drop`.",
+				Description:  "Execute mode, only valid when `smode` is `matching`. Valid values are `alg` and `drop`.",
 			},
 			"switch": {
 				Type:        schema.TypeBool,
@@ -247,16 +244,16 @@ func resourceTencentCloudDayuCCHttpPolicyCreate(d *schema.ResourceData, meta int
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	policyId, err := dayuService.CreateCCSelfdefinePolicy(ctx, resourceType, resourceId, ccPolicy)
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			policyId, err = dayuService.CreateCCSelfdefinePolicy(ctx, resourceType, resourceId, ccPolicy)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	policyId := ""
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := dayuService.CreateCCSelfdefinePolicy(ctx, resourceType, resourceId, ccPolicy)
+		if e != nil {
+			return retryError(e)
+		}
+		policyId = result
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -308,7 +305,7 @@ func resourceTencentCloudDayuCCHttpPolicyRead(d *schema.ResourceData, meta inter
 	if len(ipList) == 1 {
 		_ = d.Set("ip", ipList[0])
 	}
-	_ = d.Set("switch", intToBool(int(*policy.Switch)))
+	_ = d.Set("switch", *policy.Switch > 0)
 
 	if policy.Frequency != nil && *policy.Smode == "frequency" {
 		_ = d.Set("frequency", policy.Frequency)
@@ -381,16 +378,14 @@ func resourceTencentCloudDayuCCHttpPolicyUpdate(d *schema.ResourceData, meta int
 	}
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err := dayuService.ModifyCCSelfdefinePolicy(ctx, resourceType, resourceId, policyId, ccPolicy)
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = dayuService.ModifyCCSelfdefinePolicy(ctx, resourceType, resourceId, policyId, ccPolicy)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.ModifyCCSelfdefinePolicy(ctx, resourceType, resourceId, policyId, ccPolicy)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -414,17 +409,13 @@ func resourceTencentCloudDayuCCHttpPolicyDelete(d *schema.ResourceData, meta int
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err := dayuService.DeleteCCSelfdefinePolicy(ctx, resourceType, resourceId, policyId)
-
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = dayuService.DeleteCCSelfdefinePolicy(ctx, resourceType, resourceId, policyId)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.DeleteCCSelfdefinePolicy(ctx, resourceType, resourceId, policyId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
 
 	if err != nil {
 		return err

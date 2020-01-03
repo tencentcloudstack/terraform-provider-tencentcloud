@@ -22,9 +22,8 @@ func TestAccTencentCloudDayuDdosPolicyResource(t *testing.T) {
 					testAccCheckDayuDdosPolicyExists("tencentcloud_dayu_ddos_policy.test_policy"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dayu_ddos_policy.test_policy", "create_time"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "name", "tf_test_policy"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "black_white_ips.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "black_white_ips.0.ip", "1.1.1.1"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "black_white_ips.0.type", "black"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "white_ips.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "black_ips.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.drop_tcp", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.drop_udp", "true"),
@@ -33,10 +32,10 @@ func TestAccTencentCloudDayuDdosPolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.drop_abroad", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.check_sync_conn", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.null_conn_enable", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.source_new_limit", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.dst_new_limit", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.source_conn_limit", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.dst_conn_limit", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.s_new_limit", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.d_new_limit", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.s_conn_limit", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.d_conn_limit", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.tcp_mbps_limit", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.udp_mbps_limit", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.icmp_mbps_limit", "100"),
@@ -44,12 +43,12 @@ func TestAccTencentCloudDayuDdosPolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.conn_timeout", "500"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.syn_rate", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.syn_limit", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.0.start_port", "2000"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.0.end_port", "2500"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.0.protocol", "all"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.0.kind", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.0.action", "drop"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.0.start_port", "2000"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.0.end_port", "2500"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.0.protocol", "all"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.0.kind", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.0.action", "drop"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.0.d_start_port", "1000"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.0.d_end_port", "1500"),
@@ -62,14 +61,14 @@ func TestAccTencentCloudDayuDdosPolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.0.match_type", "pcre"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.0.depth", "1000"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.0.offset", "500"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.tcp_port_list.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.tcp_port_list.0", "2000-3000"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.udp_port_list.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.udp_port_list.0", "5000-6000"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.offset", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.auto_remove", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.open_switch", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.tcp_port_list.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.tcp_port_list.0", "2000-3000"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.udp_port_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.udp_port_list.0", "5000-6000"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.offset", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.auto_remove", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.open_switch", "true"),
 				),
 			},
 			{
@@ -78,9 +77,8 @@ func TestAccTencentCloudDayuDdosPolicyResource(t *testing.T) {
 					testAccCheckDayuDdosPolicyExists("tencentcloud_dayu_ddos_policy.test_policy"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dayu_ddos_policy.test_policy", "create_time"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "name", "tf_test_policy_update"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "black_white_ips.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "black_white_ips.0.ip", "2.2.2.2"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "black_white_ips.0.type", "white"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "black_ips.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "white_ips.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.drop_tcp", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.drop_udp", "false"),
@@ -89,10 +87,10 @@ func TestAccTencentCloudDayuDdosPolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.drop_abroad", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.check_sync_conn", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.null_conn_enable", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.source_new_limit", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.dst_new_limit", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.source_conn_limit", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.dst_conn_limit", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.s_new_limit", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.d_new_limit", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.s_conn_limit", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.d_conn_limit", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.tcp_mbps_limit", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.udp_mbps_limit", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.icmp_mbps_limit", "50"),
@@ -100,12 +98,12 @@ func TestAccTencentCloudDayuDdosPolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.conn_timeout", "3000"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.syn_rate", "80"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "drop_options.0.syn_limit", "80"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.0.start_port", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.0.end_port", "150"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.0.protocol", "tcp"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.0.kind", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_limits.0.action", "transmit"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.0.start_port", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.0.end_port", "150"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.0.protocol", "tcp"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.0.kind", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "port_filters.0.action", "transmit"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.0.d_start_port", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.0.d_end_port", "150"),
@@ -118,14 +116,14 @@ func TestAccTencentCloudDayuDdosPolicyResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.0.match_type", "sunday"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.0.depth", "500"),
 					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "packet_filters.0.offset", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.tcp_port_list.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.tcp_port_list.0", "5000-6000"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.udp_port_list.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.udp_port_list.0", "2000-3000"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.offset", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.auto_remove", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "water_prints.0.open_switch", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.tcp_port_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.tcp_port_list.0", "5000-6000"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.udp_port_list.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.udp_port_list.0", "2000-3000"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.offset", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.auto_remove", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_policy.test_policy", "watermark_filters.0.open_switch", "false"),
 				),
 			},
 		},
@@ -203,7 +201,8 @@ const testAccDayuDdosPolicy string = `
 resource "tencentcloud_dayu_ddos_policy" "test_policy" {
   resource_type         = "bgpip"
   name                  = "tf_test_policy"
-  
+  black_ips = ["1.1.1.1"]
+
   drop_options{
     drop_tcp  = true 
 	drop_udp  = true
@@ -211,10 +210,10 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	drop_other  = true
 	drop_abroad  = true
 	check_sync_conn = true
-	source_new_limit = 100
-	dst_new_limit = 100
-	source_conn_limit = 100
-	dst_conn_limit = 100
+	s_new_limit = 100
+	d_new_limit = 100
+	s_conn_limit = 100
+	d_conn_limit = 100
 	tcp_mbps_limit = 100
 	udp_mbps_limit = 100
 	icmp_mbps_limit = 100
@@ -226,12 +225,7 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	syn_limit = 100
   }
 
-  black_white_ips{
-	ip = "1.1.1.1"
-	type = "black"
-  }
-
-  port_limits{
+  port_filters{
 	start_port = "2000"
 	end_port = "2500"
 	protocol = "all"
@@ -255,7 +249,7 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	offset = 500
   }
 
-  water_prints{
+  watermark_filters{
   	tcp_port_list = ["2000-3000", "3500-4000"]
 	udp_port_list = ["5000-6000"]
 	offset = 50
@@ -268,6 +262,7 @@ const testAccDayuDdosPolicyUpdate string = `
 resource "tencentcloud_dayu_ddos_policy" "test_policy" {
   resource_type         = "bgpip"
   name                  = "tf_test_policy_update"
+  white_ips = ["2.2.2.2"]
   
   drop_options {
     drop_tcp  = false 
@@ -276,10 +271,10 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	drop_other  = false
 	drop_abroad  = false
 	check_sync_conn = false
-	source_new_limit = 50
-	dst_new_limit = 50
-	source_conn_limit = 50
-	dst_conn_limit = 50
+	s_new_limit = 50
+	d_new_limit = 50
+	s_conn_limit = 50
+	d_conn_limit = 50
 	tcp_mbps_limit = 50
 	udp_mbps_limit = 50
 	icmp_mbps_limit = 50
@@ -291,12 +286,7 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	syn_limit = 80
   }
 
-  black_white_ips {
-	ip = "2.2.2.2"
-	type = "white"
-  }
-
-  port_limits {
+  port_filters {
 	start_port = "100"
 	end_port = "150"
 	protocol = "tcp"
@@ -320,7 +310,7 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	offset = 100
   }
 
-  water_prints {
+  watermark_filters {
   	tcp_port_list = ["5000-6000"]
 	udp_port_list = ["2000-3000", "3500-4000"]
 	offset = 0

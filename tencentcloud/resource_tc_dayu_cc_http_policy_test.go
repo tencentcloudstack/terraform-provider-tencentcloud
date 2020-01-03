@@ -19,7 +19,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource(t *testing.T) {
 		CheckDestroy: testAccCheckDayuCCHttpPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDayuCCHttpPolicy,
+				Config: fmt.Sprintf(testAccDayuCCHttpPolicy, defaultDayuBgpIp),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuCCHttpPolicyExists(testDayuCCHttpPolicyResourceKey),
 					resource.TestCheckResourceAttrSet(testDayuCCHttpPolicyResourceKey, "create_time"),
@@ -32,7 +32,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccDayuCCHttpPolicyUpdate,
+				Config: fmt.Sprintf(testAccDayuCCHttpPolicyUpdate, defaultDayuBgpIp),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuCCHttpPolicyExists(testDayuCCHttpPolicyResourceKey),
 					resource.TestCheckResourceAttrSet(testDayuCCHttpPolicyResourceKey, "create_time"),
@@ -53,7 +53,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource_BGP(t *testing.T) {
 		CheckDestroy: testAccCheckDayuCCHttpPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDayuCCHttpPolicy_BGP,
+				Config: fmt.Sprintf(testAccDayuCCHttpPolicy_BGP, defaultDayuBgp),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuCCHttpPolicyExists(testDayuCCHttpPolicyResourceKey),
 					resource.TestCheckResourceAttrSet(testDayuCCHttpPolicyResourceKey, "create_time"),
@@ -76,7 +76,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource_NET(t *testing.T) {
 		CheckDestroy: testAccCheckDayuCCHttpPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDayuCCHttpPolicy_NET,
+				Config: fmt.Sprintf(testAccDayuCCHttpPolicy_NET, defaultDayuNet),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuCCHttpPolicyExists(testDayuCCHttpPolicyResourceKey),
 					resource.TestCheckResourceAttrSet(testDayuCCHttpPolicyResourceKey, "create_time"),
@@ -99,7 +99,7 @@ func TestAccTencentCloudDayuCCHttpPolicyResource_BGPMUL(t *testing.T) {
 		CheckDestroy: testAccCheckDayuCCHttpPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDayuCCHttpPolicy_BGPMUL,
+				Config: fmt.Sprintf(testAccDayuCCHttpPolicy_BGPMUL, defaultDayuBgpMul),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuCCHttpPolicyExists(testDayuCCHttpPolicyResourceKey),
 					resource.TestCheckResourceAttrSet(testDayuCCHttpPolicyResourceKey, "create_time"),
@@ -186,7 +186,7 @@ func testAccCheckDayuCCHttpPolicyExists(n string) resource.TestCheckFunc {
 const testAccDayuCCHttpPolicy string = `
 resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_type         = "bgpip"
-  resource_id 			= "bgpip-00000294"
+  resource_id 			= "%s"
   name					= "policy_match"
   smode					= "matching"
   exe_mode				= "drop"
@@ -201,7 +201,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
 const testAccDayuCCHttpPolicyUpdate string = `
 resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_type         = "bgpip"
-  resource_id 			= "bgpip-00000294"
+  resource_id 			= "%s"
   name					= "policy_limit"
   smode					= "speedlimit"
   switch				= true
@@ -211,7 +211,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
 const testAccDayuCCHttpPolicy_NET string = `
 resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_type         = "net"
-  resource_id 			= "net-0000007e"
+  resource_id 			= "%s"
   name					= "policy_match"
   smode					= "matching"
   exe_mode				= "drop"
@@ -227,7 +227,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
 const testAccDayuCCHttpPolicy_BGPMUL string = `
 resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_type         = "bgp-multip"
-  resource_id 			= "bgp-0000008o"
+  resource_id 			= "%s"
   name					= "policy_match"
   smode					= "matching"
   exe_mode				= "alg"
@@ -245,7 +245,7 @@ resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
 const testAccDayuCCHttpPolicy_BGP string = `
 resource "tencentcloud_dayu_cc_http_policy" "test_policy" {
   resource_type         = "bgp"
-  resource_id 			= "bgp-000006mq"
+  resource_id 			= "%s"
   name					= "policy_match"
   smode					= "matching"
   exe_mode				= "alg"

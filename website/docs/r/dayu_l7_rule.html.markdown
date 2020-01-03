@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dayu_l7_rule"
 sidebar_current: "docs-tencentcloud-resource-dayu_l7_rule"
 description: |-
-  Use this resource to create dayu 7 layer rule
+  Use this resource to create dayu layer 7 rule
 ---
 
 # tencentcloud_dayu_l7_rule
 
-Use this resource to create dayu 7 layer rule
+Use this resource to create dayu layer 7 rule
 
 ~> **NOTE:** This resource only support resource Anti-DDoS of type `bgpip`
 
@@ -39,11 +39,11 @@ resource "tencentcloud_dayu_l7_rule" "test_rule" {
 
 The following arguments are supported:
 
-* `domain` - (Required, ForceNew) Domain that the 7 layer rule works for. Valid string length ranges from 0 to 80.
+* `domain` - (Required, ForceNew) Domain that the layer 7 rule works for. Valid string length ranges from 0 to 80.
 * `name` - (Required, ForceNew) Name of the rule.
 * `protocol` - (Required) Protocol of the rule, valid values are `http`, `https`.
-* `resource_id` - (Required, ForceNew) ID of the resource that the 7 layer rule works for.
-* `resource_type` - (Required, ForceNew) Type of the resource that the 7 layer rule works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.
+* `resource_id` - (Required, ForceNew) ID of the resource that the layer 7 rule works for.
+* `resource_type` - (Required, ForceNew) Type of the resource that the layer 7 rule works for, valid value is `bgpip`.
 * `source_list` - (Required) Source list of the rule, it can be a set of ip sources or a set of domain sources. The number of items ranges from 1 to 16.
 * `source_type` - (Required) Source type, 1 for source of host, 2 for source of ip.
 * `switch` - (Required) Indicate the rule will take effect or not.
@@ -60,7 +60,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `rule_id` - Id of the 7 layer rule.
-* `status` - Status of the rule. 0 for create/modify success, 2 for create/modify fail, 3 for delete success, 5 for waiting to be created/modified, 7 for waiting to be deleted and 8 for waiting to get SSL id.
+* `rule_id` - Id of the layer 7 rule.
+* `status` - Status of the rule. 0 for create/modify success, 2 for create/modify fail, 3 for delete success, 5 for delete failed, 6 for waiting to be created/modified, 7 for waiting to be deleted and 8 for waiting to get SSL id.
 
 

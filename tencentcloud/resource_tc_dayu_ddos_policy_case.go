@@ -54,9 +54,6 @@ func resourceTencentCloudDayuDdosPolicyCase() *schema.Resource {
 		Read:   resourceTencentCloudDayuDdosPolicyCaseRead,
 		Update: resourceTencentCloudDayuDdosPolicyCaseUpdate,
 		Delete: resourceTencentCloudDayuDdosPolicyCaseDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"resource_type": {
@@ -64,7 +61,7 @@ func resourceTencentCloudDayuDdosPolicyCase() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE_CASE),
 				ForceNew:     true,
-				Description:  "Type of the resource that the DDoS policy case works for, valid values are `bgpip`, `bgp`, `bgp-multip`.",
+				Description:  "Type of the resource that the DDoS policy case works for, valid values are `bgpip`, `bgp` and `bgp-multip`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -78,7 +75,7 @@ func resourceTencentCloudDayuDdosPolicyCase() *schema.Resource {
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
 					ValidateFunc: validateAllowedStringValue(DAYU_APP_PLATFORM),
-					Description:  "Platform of the DDoS policy case, and valid values are `PC`, `MOBILE`, `TV`, `SERVER`.",
+					Description:  "Platform of the DDoS policy case, and valid values are `PC`, `MOBILE`, `TV` and `SERVER`.",
 				},
 				Required:    true,
 				Description: "Platform set of the DDoS policy case.",
@@ -88,7 +85,7 @@ func resourceTencentCloudDayuDdosPolicyCase() *schema.Resource {
 				Elem: &schema.Schema{
 					Type:         schema.TypeString,
 					ValidateFunc: validateAllowedStringValue(DAYU_PROTOCOL),
-					Description:  "App protocol of the DDoS policy case, and valid values are `tcp`, `udp`, `icmp`, `all`.",
+					Description:  "App protocol of the DDoS policy case, and valid values are `tcp`, `udp`, `icmp` and `all`.",
 				},
 				Required:    true,
 				Description: "App protocol set of the DDoS policy case.",
@@ -97,7 +94,7 @@ func resourceTencentCloudDayuDdosPolicyCase() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_APP_TYPE), //to see the max
-				Description:  "App type of the DDoS policy case, and valid values are `WEB`, `GAME`, `APP`, `OTHER`.",
+				Description:  "App type of the DDoS policy case, and valid values are `WEB`, `GAME`, `APP` and `OTHER`.",
 			},
 			"tcp_start_port": {
 				Type:         schema.TypeString,
@@ -253,12 +250,28 @@ func resourceTencentCloudDayuDdosPolicyCaseCreate(d *schema.ResourceData, meta i
 
 	tcpPortStart := d.Get("tcp_start_port").(string)
 	tcpPortEnd := d.Get("tcp_end_port").(string)
-	if tcpPortEnd < tcpPortStart {
+	startInt, sErr := strconv.Atoi(tcpPortStart)
+	endInt, eErr := strconv.Atoi(tcpPortEnd)
+	if sErr != nil {
+		return sErr
+	}
+	if eErr != nil {
+		return eErr
+	}
+	if endInt < startInt {
 		return fmt.Errorf("`tcp_start_port`:%s should not be greater than `tcp_end_port`:%s.", tcpPortStart, tcpPortEnd)
 	}
 	udpPortStart := d.Get("udp_start_port").(string)
 	udpPortEnd := d.Get("udp_end_port").(string)
-	if udpPortEnd < udpPortStart {
+	startInt, sErr = strconv.Atoi(udpPortStart)
+	endInt, eErr = strconv.Atoi(udpPortEnd)
+	if sErr != nil {
+		return sErr
+	}
+	if eErr != nil {
+		return eErr
+	}
+	if endInt < startInt {
 		return fmt.Errorf("`udp_start_port`:%s should not be greater than `udp_end_port`:%s.", udpPortStart, udpPortEnd)
 	}
 	request.TcpSportStart = &tcpPortStart
@@ -287,16 +300,16 @@ func resourceTencentCloudDayuDdosPolicyCaseCreate(d *schema.ResourceData, meta i
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	sceneId, err := dayuService.CreateDdosPolicyCase(ctx, request)
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			sceneId, err = dayuService.CreateDdosPolicyCase(ctx, request)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	sceneId := ""
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := dayuService.CreateDdosPolicyCase(ctx, request)
+		if e != nil {
+			return retryError(e)
+		}
+		sceneId = result
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -455,12 +468,30 @@ func resourceTencentCloudDayuDdosPolicyCaseUpdate(d *schema.ResourceData, meta i
 
 	tcpPortStart := d.Get("tcp_start_port").(string)
 	tcpPortEnd := d.Get("tcp_end_port").(string)
-	if tcpPortEnd < tcpPortStart {
+	startInt, sErr := strconv.Atoi(tcpPortStart)
+	endInt, eErr := strconv.Atoi(tcpPortEnd)
+	if sErr != nil {
+		return sErr
+	}
+	if eErr != nil {
+		return eErr
+	}
+
+	if endInt < startInt {
 		return fmt.Errorf("`tcp_start_port`:%s should not be greater than `tcp_end_port`:%s.", tcpPortStart, tcpPortEnd)
 	}
 	udpPortStart := d.Get("udp_start_port").(string)
 	udpPortEnd := d.Get("udp_end_port").(string)
-	if udpPortEnd < udpPortStart {
+	startInt, sErr = strconv.Atoi(udpPortStart)
+	endInt, eErr = strconv.Atoi(udpPortEnd)
+	if sErr != nil {
+		return sErr
+	}
+	if eErr != nil {
+		return eErr
+	}
+
+	if endInt < startInt {
 		return fmt.Errorf("`udp_start_port`:%s should not be greater than `udp_end_port`:%s.", udpPortStart, udpPortEnd)
 	}
 	request.TcpSportStart = &tcpPortStart
@@ -489,10 +520,10 @@ func resourceTencentCloudDayuDdosPolicyCaseUpdate(d *schema.ResourceData, meta i
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		err := dayuService.ModifyDdosPolicyCase(ctx, request)
-		if err != nil {
-			return retryError(err)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.ModifyDdosPolicyCase(ctx, request)
+		if e != nil {
+			return retryError(e)
 		}
 		return nil
 	})
@@ -552,9 +583,9 @@ func resourceTencentCloudDayuDdosPolicyCaseDelete(d *schema.ResourceData, meta i
 			}
 		}
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = dayuService.DeleteDdosPolicyCase(ctx, resourceType, sceneId)
-			if err != nil {
-				return retryError(err)
+			e := dayuService.DeleteDdosPolicyCase(ctx, resourceType, sceneId)
+			if e != nil {
+				return retryError(e)
 			}
 			return nil
 		})

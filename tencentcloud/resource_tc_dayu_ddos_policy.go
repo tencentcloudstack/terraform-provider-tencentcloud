@@ -7,6 +7,8 @@ Example Usage
 resource "tencentcloud_dayu_ddos_policy" "test_policy" {
   resource_type         = "bgpip"
   name                  = "tf_test_policy"
+  black_ips = ["1.1.1.1"]
+  white_ips = ["2.2.2.2]
 
   drop_options{
     drop_tcp  = true
@@ -15,10 +17,10 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	drop_other  = true
 	drop_abroad  = true
 	check_sync_conn = true
-	source_new_limit = 100
-	dst_new_limit = 100
-	source_conn_limit = 100
-	dst_conn_limit = 100
+	s_new_limit = 100
+	d_new_limit = 100
+	s_conn_limit = 100
+	d_conn_limit = 100
 	tcp_mbps_limit = 100
 	udp_mbps_limit = 100
 	icmp_mbps_limit = 100
@@ -28,11 +30,6 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	conn_timeout = 500
 	syn_rate = 50
 	syn_limit = 100
-  }
-
-  black_white_ips{
-	ip = "1.1.1.1"
-	type = "black"
   }
 
   port_limits{
@@ -59,7 +56,7 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	offset = 500
   }
 
-  water_prints{
+  watermark_filters{
   	tcp_port_list = ["2000-3000", "3500-4000"]
 	udp_port_list = ["5000-6000"]
 	offset = 50
@@ -88,9 +85,6 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 		Read:   resourceTencentCloudDayuDdosPolicyRead,
 		Update: resourceTencentCloudDayuDdosPolicyUpdate,
 		Delete: resourceTencentCloudDayuDdosPolicyDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"resource_type": {
@@ -98,7 +92,7 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE),
 				ForceNew:     true,
-				Description:  "Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.",
+				Description:  "Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -141,25 +135,25 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 							Required:    true,
 							Description: "Indicate whether to check null connection or not.",
 						},
-						"dst_new_limit": {
+						"d_new_limit": {
 							Type:         schema.TypeInt,
 							Required:     true,
 							ValidateFunc: validateIntegerInRange(0, 4294967295),
 							Description:  "The limit of new connections based on destination IP, and valid value is range from 0 to 4294967295.",
 						},
-						"dst_conn_limit": {
+						"d_conn_limit": {
 							Type:         schema.TypeInt,
 							Required:     true,
 							ValidateFunc: validateIntegerInRange(0, 4294967295),
 							Description:  "The limit of concurrent connections based on destination IP, and valid value is range from 0 to 4294967295.",
 						},
-						"source_new_limit": {
+						"s_new_limit": {
 							Type:         schema.TypeInt,
 							Required:     true,
 							ValidateFunc: validateIntegerInRange(0, 4294967295),
 							Description:  "The limit of new connections based on source IP, and valid value is range from 0 to 4294967295.",
 						},
-						"source_conn_limit": {
+						"s_conn_limit": {
 							Type:         schema.TypeInt,
 							Required:     true,
 							ValidateFunc: validateIntegerInRange(0, 4294967295),
@@ -222,7 +216,7 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 				},
 				Description: "Option list of abnormal check of the DDos policy, should set at least one policy.",
 			},
-			"port_limits": {
+			"port_filters": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
@@ -263,26 +257,23 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 				},
 				Description: "Port limits of abnormal check of the DDos policy.",
 			},
-			"black_white_ips": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"ip": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ValidateFunc: validateIp,
-							Description:  "Ip.",
-						},
-						"type": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							ValidateFunc: validateAllowedStringValue(DAYU_IP_TYPE),
-							Description:  "Type of the ip, and valid values are `black` and `white`.",
-						},
-					},
+			"black_ips": {
+				Type: schema.TypeSet,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: validateIp,
 				},
-				Description: "Black and white ip list.",
+				Optional:    true,
+				Description: "Black ip list.",
+			},
+			"white_ips": {
+				Type: schema.TypeSet,
+				Elem: &schema.Schema{
+					Type:         schema.TypeString,
+					ValidateFunc: validateIp,
+				},
+				Optional:    true,
+				Description: "White ip list.",
 			},
 			"packet_filters": {
 				Type:     schema.TypeList,
@@ -376,7 +367,7 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 				},
 				Description: "Message filter options list.",
 			},
-			"water_prints": {
+			"watermark_filters": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
@@ -435,6 +426,35 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 				Computed:    true,
 				Description: "Id of policy.",
 			},
+			"watermark_key": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Id of the watermark.",
+						},
+						"content": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Content of the watermark.",
+						},
+						"open_switch": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Indicate whether to auto-remove the water print or not.",
+						},
+						"create_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Create time of the watermark.",
+						},
+					},
+				},
+				Description: "Watermark content.",
+			},
 		},
 	}
 }
@@ -452,7 +472,7 @@ func resourceTencentCloudDayuDdosPolicyCreate(d *schema.ResourceData, meta inter
 	ddosPolicyDropOption, _ := setDdosPolicyDropOption(dropMapping)
 
 	//set DDoSPolicyPortLimit
-	portMapping := d.Get("port_limits").([]interface{})
+	portMapping := d.Get("port_filters").([]interface{})
 	ddosPolicyPortLimit, lErr := setDdosPolicyPortLimit(portMapping)
 
 	if lErr != nil {
@@ -460,8 +480,9 @@ func resourceTencentCloudDayuDdosPolicyCreate(d *schema.ResourceData, meta inter
 	}
 
 	//set IpBlackWhite
-	blackWhiteMapping := d.Get("black_white_ips").([]interface{})
-	ipBlackWhite, ipErr := setIpBlackWhite(blackWhiteMapping)
+	blackIps := d.Get("black_ips").(*schema.Set).List()
+	whiteIps := d.Get("white_ips").(*schema.Set).List()
+	ipBlackWhite, ipErr := setIpBlackWhite(blackIps, whiteIps)
 
 	if ipErr != nil {
 		return ipErr
@@ -474,21 +495,22 @@ func resourceTencentCloudDayuDdosPolicyCreate(d *schema.ResourceData, meta inter
 	}
 
 	//set WaterPrintPolicy
-	waterPrintMapping := d.Get("water_prints").([]interface{})
+	waterPrintMapping := d.Get("watermark_filters").([]interface{})
 	waterPrintPolicy, _ := setWaterPrintPolicy(waterPrintMapping)
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	policyId, err := dayuService.CreateDdosPolicy(ctx, resourceType, name, ddosPolicyDropOption, ddosPolicyPortLimit, ipBlackWhite, ddosPacketFilter, waterPrintPolicy)
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			policyId, err = dayuService.CreateDdosPolicy(ctx, resourceType, name, ddosPolicyDropOption, ddosPolicyPortLimit, ipBlackWhite, ddosPacketFilter, waterPrintPolicy)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	policyId := ""
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := dayuService.CreateDdosPolicy(ctx, resourceType, name, ddosPolicyDropOption, ddosPolicyPortLimit, ipBlackWhite, ddosPacketFilter, waterPrintPolicy)
+		if e != nil {
+			return retryError(e)
+		}
+		policyId = result
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -504,7 +526,7 @@ func resourceTencentCloudDayuDdosPolicyRead(d *schema.ResourceData, meta interfa
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	items := strings.Split(d.Id(), "#")
+	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
 		return fmt.Errorf("broken ID of DDos policy")
 	}
@@ -531,14 +553,17 @@ func resourceTencentCloudDayuDdosPolicyRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 	_ = d.Set("drop_options", flattenDdosDropOptionList([]*dayu.DDoSPolicyDropOption{ddosPolicy.DropOptions}))
-	_ = d.Set("port_limits", flattenDdosPortLimitList(ddosPolicy.PortLimits))
+	_ = d.Set("port_filters", flattenDdosPortLimitList(ddosPolicy.PortLimits))
 	_ = d.Set("packet_filters", flattenDdosPacketFilterList(ddosPolicy.PacketFilters))
-	_ = d.Set("black_white_ips", flattenIpBlackWhiteList(ddosPolicy.IpBlackWhiteLists))
-	_ = d.Set("water_prints", flattenWaterPrintPolicyList(ddosPolicy.WaterPrint))
+	blackIps, whiteIps := flattenIpBlackWhiteList(ddosPolicy.IpBlackWhiteLists)
+	_ = d.Set("black_ips", blackIps)
+	_ = d.Set("white_ips", whiteIps)
+	_ = d.Set("watermark_filters", flattenWaterPrintPolicyList(ddosPolicy.WaterPrint))
 	_ = d.Set("create_time", ddosPolicy.CreateTime)
 	_ = d.Set("name", ddosPolicy.PolicyName)
 	_ = d.Set("scene_id", ddosPolicy.SceneId)
 	_ = d.Set("policy_id", ddosPolicy.PolicyId)
+	_ = d.Set("watermark_key", flattenWaterPrintKeyList(ddosPolicy.WaterKey))
 
 	return nil
 }
@@ -560,10 +585,10 @@ func resourceTencentCloudDayuDdosPolicyUpdate(d *schema.ResourceData, meta inter
 	d.Partial(true)
 
 	if d.HasChange("name") {
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			err := dayuService.ModifyDdosPolicyName(ctx, resourceType, policyId, d.Get("name").(string))
-			if err != nil {
-				return retryError(err)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := dayuService.ModifyDdosPolicyName(ctx, resourceType, policyId, d.Get("name").(string))
+			if e != nil {
+				return retryError(e)
 			}
 			return nil
 		})
@@ -573,14 +598,14 @@ func resourceTencentCloudDayuDdosPolicyUpdate(d *schema.ResourceData, meta inter
 		d.SetPartial("name")
 	}
 
-	if d.HasChange("water_prints") || d.HasChange("black_white_ips") || d.HasChange("packet_filters") || d.HasChange("port_limits") || d.HasChange("drop_options") {
+	if d.HasChange("watermark_filters") || d.HasChange("ip_filters") || d.HasChange("packet_filters") || d.HasChange("port_filters") || d.HasChange("drop_options") {
 
 		//set DDosPolicyDropOption
 		dropMapping := d.Get("drop_options").([]interface{})
 		ddosPolicyDropOption, _ := setDdosPolicyDropOption(dropMapping)
 
 		//set DDoSPolicyPortLimit
-		portMapping := d.Get("port_limits").([]interface{})
+		portMapping := d.Get("port_filters").([]interface{})
 		ddosPolicyPortLimit, lErr := setDdosPolicyPortLimit(portMapping)
 
 		if lErr != nil {
@@ -588,8 +613,9 @@ func resourceTencentCloudDayuDdosPolicyUpdate(d *schema.ResourceData, meta inter
 		}
 
 		//set IpBlackWhite
-		blackWhiteMapping := d.Get("black_white_ips").([]interface{})
-		ipBlackWhite, ipErr := setIpBlackWhite(blackWhiteMapping)
+		blackIps := d.Get("black_ips").(*schema.Set).List()
+		whiteIps := d.Get("white_ips").(*schema.Set).List()
+		ipBlackWhite, ipErr := setIpBlackWhite(blackIps, whiteIps)
 
 		if ipErr != nil {
 			return ipErr
@@ -602,23 +628,24 @@ func resourceTencentCloudDayuDdosPolicyUpdate(d *schema.ResourceData, meta inter
 		}
 
 		//set WaterPrintPolicy
-		waterPrintMapping := d.Get("water_prints").([]interface{})
+		waterPrintMapping := d.Get("watermark_filters").([]interface{})
 		waterPrintPolicy, _ := setWaterPrintPolicy(waterPrintMapping)
 
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			err := dayuService.ModifyDdosPolicy(ctx, resourceType, policyId, ddosPolicyDropOption, ddosPolicyPortLimit, ipBlackWhite, ddosPacketFilter, waterPrintPolicy)
-			if err != nil {
-				return retryError(err)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := dayuService.ModifyDdosPolicy(ctx, resourceType, policyId, ddosPolicyDropOption, ddosPolicyPortLimit, ipBlackWhite, ddosPacketFilter, waterPrintPolicy)
+			if e != nil {
+				return retryError(e)
 			}
 			return nil
 		})
 		if err != nil {
 			return err
 		}
-		d.SetPartial("water_prints")
-		d.SetPartial("black_white_ips")
+		d.SetPartial("watermark_filters")
+		d.SetPartial("white_ips")
+		d.SetPartial("black_ips")
 		d.SetPartial("drop_options")
-		d.SetPartial("port_limits")
+		d.SetPartial("port_filters")
 		d.SetPartial("packet_filters")
 	}
 
@@ -642,17 +669,13 @@ func resourceTencentCloudDayuDdosPolicyDelete(d *schema.ResourceData, meta inter
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err := dayuService.DeleteDdosPolicy(ctx, resourceType, policyId)
-
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = dayuService.DeleteDdosPolicy(ctx, resourceType, policyId)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.DeleteDdosPolicy(ctx, resourceType, policyId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
 
 	if err != nil {
 		return err

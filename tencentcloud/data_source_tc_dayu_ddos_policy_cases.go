@@ -1,6 +1,8 @@
 /*
 Use this data source to query dayu DDoS policy cases
+
 Example Usage
+
 ```hcl
 data "tencentcloud_dayu_ddos_policy_cases" "id_test" {
   resource_type = tencentcloud_dayu_ddos_policy_case.test_policy_case.resource_type
@@ -15,7 +17,9 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -27,7 +31,7 @@ func dataSourceTencentCloudDayuDdosPolicyCases() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE),
-				Description:  "Type of the resource that the DDoS policy case works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.",
+				Description:  "Type of the resource that the DDoS policy case works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.",
 			},
 			"scene_id": {
 				Type:        schema.TypeString,
@@ -42,7 +46,7 @@ func dataSourceTencentCloudDayuDdosPolicyCases() *schema.Resource {
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of DDoS policy cases. Each element contains the following attributes.",
+				Description: "A list of DDoS policy cases. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"resource_type": {
@@ -56,7 +60,7 @@ func dataSourceTencentCloudDayuDdosPolicyCases() *schema.Resource {
 							Description: "Name of the DDoS policy case.",
 						},
 						"platform_types": {
-							Type: schema.TypeSet,
+							Type: schema.TypeList,
 							Elem: &schema.Schema{
 								Type:        schema.TypeString,
 								Description: "Platform of the DDoS policy case.",
@@ -65,7 +69,7 @@ func dataSourceTencentCloudDayuDdosPolicyCases() *schema.Resource {
 							Description: "Platform set of the DDoS policy case.",
 						},
 						"app_protocols": {
-							Type: schema.TypeSet,
+							Type: schema.TypeList,
 							Elem: &schema.Schema{
 								Type:        schema.TypeString,
 								Description: "App protocol of the DDoS policy case.",
@@ -139,7 +143,7 @@ func dataSourceTencentCloudDayuDdosPolicyCases() *schema.Resource {
 							Description: "The fixed signature of TCP protocol load.",
 						},
 						"web_api_urls": {
-							Type: schema.TypeSet,
+							Type: schema.TypeList,
 							Elem: &schema.Schema{
 								Type:        schema.TypeString,
 								Description: "Web API url.",
@@ -197,10 +201,17 @@ func dataSourceTencentCloudDayuDdosPolicyCasesRead(d *schema.ResourceData, meta 
 	resourceType := d.Get("resource_type").(string)
 	sceneId := d.Get("scene_id").(string)
 
-	ddosPolicyCase, has, err := service.DescribeDdosPolicyCase(ctx, resourceType, sceneId)
-	if err != nil {
-		ddosPolicyCase, has, err = service.DescribeDdosPolicyCase(ctx, resourceType, sceneId)
-	}
+	var ddosPolicyCase dayu.KeyValueRecord
+	has := false
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, flag, err := service.DescribeDdosPolicyCase(ctx, resourceType, sceneId)
+		if err != nil {
+			return retryError(err)
+		}
+		ddosPolicyCase = result
+		has = flag
+		return nil
+	})
 
 	if err != nil {
 		return err

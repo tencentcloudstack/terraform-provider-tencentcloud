@@ -45,8 +45,8 @@ func (me *DayuService) DescribeCCSelfdefinePolicies(ctx context.Context, resourc
 		if err != nil {
 			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
 				if sdkErr.Code == "InvalidParameterValue" {
+					//this error case is what sdk returns when the dayu service is overdue
 					errRet = nil
-					has = false
 					return
 				}
 			}
@@ -55,7 +55,6 @@ func (me *DayuService) DescribeCCSelfdefinePolicies(ctx context.Context, resourc
 		}
 		if response == nil || response.Response == nil {
 			errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
-			has = false
 			return
 		}
 		if policyName == "" && policyId == "" {
@@ -72,9 +71,7 @@ func (me *DayuService) DescribeCCSelfdefinePolicies(ctx context.Context, resourc
 			}
 		}
 		if len(response.Response.Policys) < int(limit) {
-			if len(infos) == 0 {
-				has = false
-			} else {
+			if len(infos) > 0 {
 				has = true
 			}
 			return
@@ -95,17 +92,15 @@ func (me *DayuService) DescribeCCSelfdefinePolicy(ctx context.Context, resourceT
 	policies, _, err := me.DescribeCCSelfdefinePolicies(ctx, resourceType, resourceId, "", policyId)
 	if err != nil {
 		errRet = err
-		has = false
 		return
 	}
 
 	length := len(policies)
-	if length != 1 {
-		has = false
-		if length > 1 {
-			errRet = fmt.Errorf("Create CC self-define policy returns %d policies", length)
-		}
+	if length == 0 {
 		return
+	}
+	if length > 1 {
+		errRet = fmt.Errorf("Create CC self-define policy returns %d policies", length)
 	}
 
 	infos = policies[0]
@@ -316,7 +311,6 @@ func (me *DayuService) DescribeDdosPolicy(ctx context.Context, resourceType stri
 	if err != nil {
 		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
 			if sdkErr.Code == "InvalidParameterValue" {
-				has = false
 				errRet = nil
 				return
 			}
@@ -328,7 +322,6 @@ func (me *DayuService) DescribeDdosPolicy(ctx context.Context, resourceType stri
 		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
 		return
 	}
-	has = false
 
 	if len(response.Response.DDosPolicyList) == 0 {
 		return
@@ -345,26 +338,22 @@ func (me *DayuService) DescribeDdosPolicy(ctx context.Context, resourceType stri
 	return
 }
 
-func intToBool(i int) bool {
-	return i >= 1
-}
-
 func flattenDdosDropOptionList(list []*dayu.DDoSPolicyDropOption) (mapping []map[string]interface{}) {
 	result := make([]map[string]interface{}, 0, len(list))
 	for _, v := range list {
 		mapping := map[string]interface{}{
-			"drop_tcp":           intToBool(int(*v.DropTcp)),
-			"drop_udp":           intToBool(int(*v.DropUdp)),
-			"drop_icmp":          intToBool(int(*v.DropIcmp)),
-			"drop_other":         intToBool(int(*v.DropOther)),
-			"drop_abroad":        intToBool(int(*v.DropAbroad)),
-			"check_sync_conn":    intToBool(int(*v.CheckSyncConn)),
-			"source_new_limit":   int(*v.SdNewLimit),
-			"dst_new_limit":      int(*v.DstNewLimit),
-			"source_conn_limit":  int(*v.SdConnLimit),
-			"dst_conn_limit":     int(*v.DstConnLimit),
+			"drop_tcp":           *v.DropTcp > 0,
+			"drop_udp":           *v.DropUdp > 0,
+			"drop_icmp":          *v.DropIcmp > 0,
+			"drop_other":         *v.DropOther > 0,
+			"drop_abroad":        *v.DropAbroad > 0,
+			"check_sync_conn":    *v.CheckSyncConn > 0,
+			"s_new_limit":        int(*v.SdNewLimit),
+			"d_new_limit":        int(*v.DstNewLimit),
+			"s_conn_limit":       int(*v.SdConnLimit),
+			"d_conn_limit":       int(*v.DstConnLimit),
 			"bad_conn_threshold": int(*v.BadConnThreshold),
-			"null_conn_enable":   intToBool(int(*v.NullConnEnable)),
+			"null_conn_enable":   *v.NullConnEnable > 0,
 			"conn_timeout":       int(*v.ConnTimeout),
 			"syn_rate":           int(*v.SynRate),
 			"syn_limit":          int(*v.SynLimit),
@@ -426,7 +415,7 @@ func flattenDdosPacketFilterList(list []*dayu.DDoSPolicyPacketFilter) (re []map[
 			"match_begin":    v.MatchBegin,
 			"match_type":     v.MatchType,
 			"match_str":      v.Str,
-			"is_include":     intToBool(int(*v.IsNot)),
+			"is_include":     *v.IsNot > 0,
 			"depth":          int(*v.Depth),
 			"offset":         int(*v.Offset),
 		}
@@ -435,16 +424,19 @@ func flattenDdosPacketFilterList(list []*dayu.DDoSPolicyPacketFilter) (re []map[
 	return result
 }
 
-func flattenIpBlackWhiteList(list []*dayu.IpBlackWhite) (re []map[string]interface{}) {
-	result := make([]map[string]interface{}, 0, len(list))
+func flattenIpBlackWhiteList(list []*dayu.IpBlackWhite) (reB []string, reW []string) {
+	reB = make([]string, 0)
+	reW = make([]string, 0)
 	for _, v := range list {
-		mapping := map[string]interface{}{
-			"ip":   v.Ip,
-			"type": v.Type,
+		if *v.Type == DAYU_IP_TYPE_BLACK {
+			reB = append(reB, *v.Ip)
 		}
-		result = append(result, mapping)
+		if *v.Type == DAYU_IP_TYPE_WHITE {
+			reW = append(reW, *v.Ip)
+		}
+
 	}
-	return result
+	return
 }
 
 func flattenWaterPrintPolicyList(list []*dayu.WaterPrintPolicy) (re []map[string]interface{}) {
@@ -454,21 +446,26 @@ func flattenWaterPrintPolicyList(list []*dayu.WaterPrintPolicy) (re []map[string
 			"tcp_port_list": helper.StringsInterfaces(v.TcpPortList),
 			"udp_port_list": helper.StringsInterfaces(v.UdpPortList),
 			"offset":        int(*v.Offset),
-			"auto_remove":   intToBool(int(*v.RemoveSwitch)),
-			"open_switch":   intToBool(int(*v.OpenStatus)),
+			"auto_remove":   *v.RemoveSwitch > 0,
+			"open_switch":   *v.OpenStatus > 0,
 		}
 		result = append(result, mapping)
 	}
 	return result
 }
 
-func boolToInt64Pointer(s bool) (i *uint64) {
-	result := uint64(0)
-	if s {
-		result = uint64(1)
+func flattenWaterPrintKeyList(list []*dayu.WaterPrintKey) (re []map[string]interface{}) {
+	result := make([]map[string]interface{}, 0, len(list))
+	for _, v := range list {
+		mapping := map[string]interface{}{
+			"id":          *v.KeyId,
+			"content":     *v.KeyContent,
+			"create_time": *v.CreateTime,
+			"open_switch": *v.OpenStatus > 0,
+		}
+		result = append(result, mapping)
 	}
-	i = &result
-	return
+	return result
 }
 
 func setDdosPolicyDropOption(mapping []interface{}) (result []*dayu.DDoSPolicyDropOption, err error) {
@@ -476,18 +473,18 @@ func setDdosPolicyDropOption(mapping []interface{}) (result []*dayu.DDoSPolicyDr
 	for _, vv := range mapping {
 		v := vv.(map[string]interface{})
 		var r dayu.DDoSPolicyDropOption
-		r.DropTcp = boolToInt64Pointer(v["drop_tcp"].(bool))
-		r.DropUdp = boolToInt64Pointer(v["drop_udp"].(bool))
-		r.DropIcmp = boolToInt64Pointer(v["drop_icmp"].(bool))
-		r.DropOther = boolToInt64Pointer(v["drop_other"].(bool))
-		r.DropAbroad = boolToInt64Pointer(v["drop_abroad"].(bool))
-		r.CheckSyncConn = boolToInt64Pointer(v["check_sync_conn"].(bool))
-		r.SdNewLimit = helper.IntUint64(v["source_new_limit"].(int))
-		r.DstNewLimit = helper.IntUint64(v["dst_new_limit"].(int))
-		r.SdConnLimit = helper.IntUint64(v["source_conn_limit"].(int))
-		r.DstConnLimit = helper.IntUint64(v["dst_conn_limit"].(int))
+		r.DropTcp = helper.BoolToInt64Pointer(v["drop_tcp"].(bool))
+		r.DropUdp = helper.BoolToInt64Pointer(v["drop_udp"].(bool))
+		r.DropIcmp = helper.BoolToInt64Pointer(v["drop_icmp"].(bool))
+		r.DropOther = helper.BoolToInt64Pointer(v["drop_other"].(bool))
+		r.DropAbroad = helper.BoolToInt64Pointer(v["drop_abroad"].(bool))
+		r.CheckSyncConn = helper.BoolToInt64Pointer(v["check_sync_conn"].(bool))
+		r.SdNewLimit = helper.IntUint64(v["s_new_limit"].(int))
+		r.DstNewLimit = helper.IntUint64(v["d_new_limit"].(int))
+		r.SdConnLimit = helper.IntUint64(v["s_conn_limit"].(int))
+		r.DstConnLimit = helper.IntUint64(v["d_conn_limit"].(int))
 		r.BadConnThreshold = helper.IntUint64(v["bad_conn_threshold"].(int))
-		r.NullConnEnable = boolToInt64Pointer(v["null_conn_enable"].(bool))
+		r.NullConnEnable = helper.BoolToInt64Pointer(v["null_conn_enable"].(bool))
 		r.ConnTimeout = helper.IntUint64(v["conn_timeout"].(int))
 		r.SynRate = helper.IntUint64(v["syn_rate"].(int))
 		r.SynLimit = helper.IntUint64((v["syn_limit"]).(int))
@@ -527,13 +524,18 @@ func setDdosPolicyPortLimit(mapping []interface{}) (result []*dayu.DDoSPolicyPor
 	return
 }
 
-func setIpBlackWhite(mapping []interface{}) (result []*dayu.IpBlackWhite, err error) {
-	result = make([]*dayu.IpBlackWhite, 0, len(mapping))
-	for _, vv := range mapping {
+func setIpBlackWhite(blackIps []interface{}, whiteIps []interface{}) (result []*dayu.IpBlackWhite, err error) {
+	result = make([]*dayu.IpBlackWhite, 0, len(blackIps)+len(whiteIps))
+	for _, vv := range blackIps {
 		var r dayu.IpBlackWhite
-		v := vv.(map[string]interface{})
-		r.Ip = helper.String(v["ip"].(string))
-		r.Type = helper.String(v["type"].(string))
+		r.Ip = helper.String(vv.(string))
+		r.Type = helper.String(DAYU_IP_TYPE_BLACK)
+		result = append(result, &r)
+	}
+	for _, vv := range whiteIps {
+		var r dayu.IpBlackWhite
+		r.Ip = helper.String(vv.(string))
+		r.Type = helper.String(DAYU_IP_TYPE_WHITE)
 		result = append(result, &r)
 	}
 	return
@@ -565,7 +567,7 @@ func setDdosPolicyPacketFilter(mapping []interface{}) (result []*dayu.DDoSPolicy
 		r.SportStart = helper.IntUint64(sStartPort)
 		r.SportEnd = helper.IntUint64(sEndPort)
 		r.Action = helper.String(v["action"].(string))
-		r.IsNot = boolToInt64Pointer(v["is_include"].(bool))
+		r.IsNot = helper.BoolToInt64Pointer(v["is_include"].(bool))
 		r.PktlenMax = helper.IntUint64(pktLenMax)
 		r.PktlenMin = helper.IntUint64(pktLenMin)
 		r.MatchBegin = helper.String(v["match_begin"].(string))
@@ -593,8 +595,8 @@ func setWaterPrintPolicy(mapping []interface{}) (result []*dayu.WaterPrintPolicy
 		for _, udpPort := range udpPortList {
 			r.UdpPortList = append(r.UdpPortList, helper.String(udpPort.(string)))
 		}
-		r.RemoveSwitch = boolToInt64Pointer(v["auto_remove"].(bool))
-		r.OpenStatus = boolToInt64Pointer(v["open_switch"].(bool))
+		r.RemoveSwitch = helper.BoolToInt64Pointer(v["auto_remove"].(bool))
+		r.OpenStatus = helper.BoolToInt64Pointer(v["open_switch"].(bool))
 		r.Offset = helper.IntUint64(v["offset"].(int))
 		result = append(result, &r)
 	}
@@ -741,8 +743,8 @@ func (me *DayuService) DescribeDdosPolicyCase(ctx context.Context, resourceType 
 	response, err := me.client.UseDayuClient().DescribePolicyCase(request)
 	if err != nil {
 		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
-			if sdkErr.Code == "ResourceNotFound" {
-				has = false
+			if sdkErr.Code == "InvalidParameterValue" {
+				//this is when resource is not exist
 				errRet = nil
 				return
 			}
@@ -754,9 +756,8 @@ func (me *DayuService) DescribeDdosPolicyCase(ctx context.Context, resourceType 
 		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
 		return
 	}
-	has = true
+
 	if len(response.Response.CaseList) == 0 {
-		has = false
 		return
 	}
 	if len(response.Response.CaseList) != 1 {
@@ -765,6 +766,7 @@ func (me *DayuService) DescribeDdosPolicyCase(ctx context.Context, resourceType 
 		return
 	}
 	ddosPolicyCase = *response.Response.CaseList[0]
+	has = true
 	return
 }
 
@@ -793,7 +795,11 @@ func (me *DayuService) DeleteDdosPolicyCase(ctx context.Context, resourceType st
 
 	if *response.Response.Success.Code != "Success" {
 		//describe the scene
-		_, has, _ := me.DescribeDdosPolicyCase(ctx, resourceType, sceneId)
+		_, has, err := me.DescribeDdosPolicyCase(ctx, resourceType, sceneId)
+		if err != nil {
+			errRet = err
+			return
+		}
 		if !has {
 			return
 		}
@@ -861,9 +867,7 @@ func (me *DayuService) DescribeDdosPolicyAttachments(ctx context.Context, resour
 		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
 		return
 	}
-	has = true
 	if len(response.Response.DDosPolicyList) == 0 {
-		has = false
 		return
 	}
 
@@ -871,13 +875,12 @@ func (me *DayuService) DescribeDdosPolicyAttachments(ctx context.Context, resour
 		if policyId != "" && *policy.PolicyId != policyId {
 			continue
 		}
-		has = true
 		for _, resource := range policy.BoundResources {
 			attachments = append(attachments, map[string]interface{}{"resource_id": *resource, "policy_id": policyId, "resource_type": resourceType})
 		}
 	}
-	if len(attachments) == 0 {
-		has = false
+	if len(attachments) > 0 {
+		has = true
 	}
 	return
 }
@@ -987,7 +990,6 @@ func (me *DayuService) DescribeL7Rules(ctx context.Context, resourceType string,
 			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
 				if sdkErr.Code == "InvalidParameterValue" {
 					errRet = nil
-					has = false
 					return
 				}
 			}
@@ -996,7 +998,6 @@ func (me *DayuService) DescribeL7Rules(ctx context.Context, resourceType string,
 		}
 		if response == nil || response.Response == nil {
 			errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
-			has = false
 			return
 		}
 		if ruleId == "" {
@@ -1020,9 +1021,7 @@ func (me *DayuService) DescribeL7Rules(ctx context.Context, resourceType string,
 			}
 		}
 		if len(response.Response.Rules) < int(limit) {
-			if len(infos) == 0 {
-				has = false
-			} else {
+			if len(infos) > 0 {
 				has = true
 			}
 			return
@@ -1035,17 +1034,15 @@ func (me *DayuService) DescribeL7Rule(ctx context.Context, resourceType string, 
 	policies, healths, _, err := me.DescribeL7Rules(ctx, resourceType, resourceId, "", ruleId, "")
 	if err != nil {
 		errRet = err
-		has = false
 		return
 	}
 
 	length := len(policies)
-	if length != 1 {
-		has = false
-		if length > 1 {
-			errRet = fmt.Errorf("Create l7 rule returns %d rules", length)
-		}
+	if length == 0 {
 		return
+	}
+	if length > 1 {
+		errRet = fmt.Errorf("Create l7 rule returns %d rules", length)
 	}
 
 	infos = policies[0]
@@ -1103,8 +1100,14 @@ func (me *DayuService) DescribeL7Health(ctx context.Context, resourceType string
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDayuClient().DescribeL7HealthConfig(request)
 	if err != nil {
+		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr.Code == "InvalidParameterValue" {
+				//this is when resource is not exist
+				errRet = nil
+				return
+			}
+		}
 		errRet = err
-		has = false
 		return
 	}
 	if response == nil || response.Response == nil {
@@ -1114,13 +1117,11 @@ func (me *DayuService) DescribeL7Health(ctx context.Context, resourceType string
 
 	healthChecks := response.Response.HealthConfig
 	length := len(healthChecks)
-	if length != 1 {
-		has = false
-		if length > 1 {
-			has = true
-			errRet = fmt.Errorf("Get L7 health check returns %d healthchecks", length)
-		}
+	if length == 0 {
 		return
+	}
+	if length > 1 {
+		errRet = fmt.Errorf("Get L7 health check returns %d healthchecks", length)
 	}
 
 	healthCheck = healthChecks[0]
@@ -1346,7 +1347,6 @@ func (me *DayuService) DescribeL4Rules(ctx context.Context, resourceType string,
 			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
 				if sdkErr.Code == "InvalidParameterValue" {
 					errRet = nil
-					has = false
 					return
 				}
 			}
@@ -1355,7 +1355,6 @@ func (me *DayuService) DescribeL4Rules(ctx context.Context, resourceType string,
 		}
 		if response == nil || response.Response == nil {
 			errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
-			has = false
 			return
 		}
 		if ruleId == "" && ruleName == "" {
@@ -1383,9 +1382,7 @@ func (me *DayuService) DescribeL4Rules(ctx context.Context, resourceType string,
 			}
 		}
 		if len(response.Response.Rules) < int(limit) {
-			if len(infos) == 0 {
-				has = false
-			} else {
+			if len(infos) > 0 {
 				has = true
 			}
 			return
@@ -1398,17 +1395,15 @@ func (me *DayuService) DescribeL4Rule(ctx context.Context, resourceType string, 
 	policies, healths, _, err := me.DescribeL4Rules(ctx, resourceType, resourceId, "", ruleId)
 	if err != nil {
 		errRet = err
-		has = false
 		return
 	}
 
 	length := len(policies)
-	if length != 1 {
-		has = false
-		if length > 1 {
-			errRet = fmt.Errorf("Create L4 rule returns %d rules", length)
-		}
+	if length == 0 {
 		return
+	}
+	if length > 1 {
+		errRet = fmt.Errorf("Create L4 rule returns %d rules", length)
 	}
 
 	infos = policies[0]
@@ -1467,7 +1462,6 @@ func (me *DayuService) DescribeL4Health(ctx context.Context, resourceType string
 	response, err := me.client.UseDayuClient().DescribeL4HealthConfig(request)
 	if err != nil {
 		errRet = err
-		has = false
 		return
 	}
 	if response == nil || response.Response == nil {
@@ -1477,15 +1471,12 @@ func (me *DayuService) DescribeL4Health(ctx context.Context, resourceType string
 
 	healthChecks := response.Response.HealthConfig
 	length := len(healthChecks)
-	if length != 1 {
-		has = false
-		if length > 1 {
-			has = true
-			errRet = fmt.Errorf("Get L4 health check returns %d healthchecks", length)
-		}
+	if length == 0 {
 		return
 	}
-
+	if length > 1 {
+		errRet = fmt.Errorf("Get L4 health check returns %d healthchecks", length)
+	}
 	healthCheck = healthChecks[0]
 	has = true
 	return
@@ -1609,7 +1600,7 @@ func (me *DayuService) SetSession(ctx context.Context, resourceType string, reso
 	request.Id = &resourceId
 	request.Business = &resourceType
 	request.RuleId = &ruleId
-	request.KeepEnable = boolToInt64Pointer(switchFlag)
+	request.KeepEnable = helper.BoolToInt64Pointer(switchFlag)
 	request.KeepTime = helper.IntUint64(sessionTime)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDayuClient().ModifyL4KeepTime(request)

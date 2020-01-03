@@ -1,6 +1,8 @@
 /*
-Use this data source to query dayu L7 rules
+Use this data source to query dayu layer 7 rules
+
 Example Usage
+
 ```hcl
 data "tencentcloud_dayu_l7_rules" "domain_test" {
   resource_type = tencentcloud_dayu_l7_rule.test_rule.resource_type
@@ -20,7 +22,9 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -31,23 +35,23 @@ func dataSourceTencentCloudDayuL7Rules() *schema.Resource {
 			"resource_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE),
-				Description:  "Type of the resource that the L7 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.",
+				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE_HTTPS),
+				Description:  "Type of the resource that the layer 7 rule works for, valid value is `bgpip`.",
 			},
 			"resource_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the resource that the L7 rule works for.",
+				Description: "Id of the resource that the layer 7 rule works for.",
 			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the L7 rule to be queried.",
+				Description: "Id of the layer 7 rule to be queried.",
 			},
 			"domain": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Domain of the L7 rule to be queried.",
+				Description: "Domain of the layer 7 rule to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -57,7 +61,7 @@ func dataSourceTencentCloudDayuL7Rules() *schema.Resource {
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of L7 rules. Each element contains the following attributes.",
+				Description: "A list of layer 7 rules. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"domain": {
@@ -86,7 +90,7 @@ func dataSourceTencentCloudDayuL7Rules() *schema.Resource {
 							Description: "Source type, 1 for source of host, 2 for source of ip.",
 						},
 						"source_list": {
-							Type:     schema.TypeSet,
+							Type:     schema.TypeList,
 							Computed: true,
 							Elem: &schema.Schema{
 								Type:        schema.TypeString,
@@ -168,24 +172,21 @@ func dataSourceTencentCloudDayuL7RulesRead(d *schema.ResourceData, meta interfac
 
 	resourceType := d.Get("resource_type").(string)
 	resourceId := d.Get("resource_id").(string)
-	ruleId := ""
-	if v, ok := d.GetOk("rule_id"); ok {
-		ruleId = v.(string)
-	}
-	domain := ""
-	if v, ok := d.GetOk("domain"); ok {
-		domain = v.(string)
-	}
+	ruleId := d.Get("rule_id").(string)
+	domain := d.Get("domain").(string)
 	protocol := ""
-	if v, ok := d.GetOk("protocol"); ok {
-		protocol = v.(string)
-	}
 
-	rules, healths, _, err := service.DescribeL7Rules(ctx, resourceType, resourceId, domain, ruleId, protocol)
-	if err != nil {
-		rules, healths, _, err = service.DescribeL7Rules(ctx, resourceType, resourceId, domain, ruleId, protocol)
-	}
-
+	rules := make([]*dayu.L7RuleEntry, 0)
+	healths := make([]*dayu.L7RuleHealth, 0)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, hResult, _, err := service.DescribeL7Rules(ctx, resourceType, resourceId, domain, ruleId, protocol)
+		if err != nil {
+			return retryError(err)
+		}
+		rules = result
+		healths = hResult
+		return nil
+	})
 	if err != nil {
 		return err
 	}
@@ -206,9 +207,9 @@ func dataSourceTencentCloudDayuL7RulesRead(d *schema.ResourceData, meta interfac
 		listItem["threshold"] = int(*rule.CCThreshold)
 
 		if *rule.Protocol == DAYU_L7_RULE_PROTOCOL_HTTPS {
-			listItem["switch"] = intToBool(int(*rule.CCEnable))
+			listItem["switch"] = *rule.CCEnable > 0
 		} else {
-			listItem["switch"] = intToBool(int(*rule.CCStatus))
+			listItem["switch"] = *rule.CCStatus > 0
 		}
 		sourceList := make([]*string, 0, len(rule.SourceList))
 		for _, v := range rule.SourceList {
@@ -217,7 +218,7 @@ func dataSourceTencentCloudDayuL7RulesRead(d *schema.ResourceData, meta interfac
 		listItem["source_list"] = helper.StringsInterfaces(sourceList)
 
 		if health.Enable != nil {
-			listItem["health_check_switch"] = intToBool(int(*health.Enable))
+			listItem["health_check_switch"] = *health.Enable > 0
 		}
 		if health.Url != nil {
 			listItem["health_check_path"] = *health.Url

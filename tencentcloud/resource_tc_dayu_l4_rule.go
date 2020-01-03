@@ -1,5 +1,5 @@
 /*
-Use this resource to create dayu 4 layer rule
+Use this resource to create dayu layer 4 rule
 
 ~> **NOTE:** This resource only support resource Anti-DDoS of type `bgpip` and `net`
 
@@ -11,8 +11,8 @@ resource "tencentcloud_dayu_l4_rule" "test_rule" {
   resource_id 			= "bgpip-00000294"
   name					= "rule_test"
   protocol				= "TCP"
-  source_port			= 80
-  dest_port				= 60
+  s_port			= 80
+  d_port				= 60
   source_type			= 2
   health_check_switch	= true
   health_check_timeout	= 30
@@ -53,23 +53,20 @@ func resourceTencentCloudDayuL4Rule() *schema.Resource {
 		Read:   resourceTencentCloudDayuL4RuleRead,
 		Update: resourceTencentCloudDayuL4RuleUpdate,
 		Delete: resourceTencentCloudDayuL4RuleDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: map[string]*schema.Schema{
 			"resource_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "ID of the resource that the 4 layer rule works for.",
+				Description: "ID of the resource that the layer 4 rule works for.",
 			},
 			"resource_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE_RULE),
 				ForceNew:     true,
-				Description:  "Type of the resource that the 4 layer rule works for, valid values are `bgpip`, `net`.",
+				Description:  "Type of the resource that the layer 4 rule works for, valid values are `bgpip` and `net`.",
 			},
 			"source_type": {
 				Type:         schema.TypeInt,
@@ -84,13 +81,13 @@ func resourceTencentCloudDayuL4Rule() *schema.Resource {
 				ForceNew:    true,
 				Description: "Name of the rule. When the `resource_type` is `net`, this field should be set with valid domain.",
 			},
-			"source_port": {
+			"s_port": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validatePort,
 				Description:  "The source port of the L4 rule.",
 			},
-			"dest_port": {
+			"d_port": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validatePort,
@@ -156,7 +153,7 @@ func resourceTencentCloudDayuL4Rule() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(2, 60),
-				Description:  "HTTP Status Code. The default is 26 and value range is 2-60. 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.",
+				Description:  "HTTP Status Code. The default is 26 and value range is 2-60.",
 			},
 			"session_switch": {
 				Type:        schema.TypeBool,
@@ -175,7 +172,7 @@ func resourceTencentCloudDayuL4Rule() *schema.Resource {
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Id of the 4 layer rule.",
+				Description: "Id of the layer 4 rule.",
 			},
 			"lb_type": {
 				Type:        schema.TypeInt,
@@ -195,14 +192,14 @@ func resourceTencentCloudDayuL4RuleCreate(d *schema.ResourceData, meta interface
 	resourceId := d.Get("resource_id").(string)
 	resourceType := d.Get("resource_type").(string)
 
-	destPort := d.Get("dest_port").(int)
+	destPort := d.Get("d_port").(int)
 
 	//check
 	protocol := d.Get("protocol").(string)
 	source_type := d.Get("source_type").(int)
 	sourceList := d.Get("source_list").(*schema.Set).List()
 
-	if source_type == 1 && protocol != DAYU_L4_RULE_PROTOCOL_TCP {
+	if source_type == DAYU_L7_RULE_SOURCE_TYPE_HOST && protocol != DAYU_L4_RULE_PROTOCOL_TCP {
 		return fmt.Errorf("`protocol` can only be set with `TCP` when `source_type` is 1(host source).")
 	}
 
@@ -232,7 +229,7 @@ func resourceTencentCloudDayuL4RuleCreate(d *schema.ResourceData, meta interface
 	//set L4RuleEntry
 	var rule dayu.L4RuleEntry
 	rule.LbType = helper.IntUint64(1)
-	rule.SourcePort = helper.IntUint64(d.Get("source_port").(int))
+	rule.SourcePort = helper.IntUint64(d.Get("s_port").(int))
 	rule.VirtualPort = helper.IntUint64(destPort)
 	rule.Protocol = helper.String(d.Get("protocol").(string))
 	rule.RuleName = helper.String(d.Get("name").(string))
@@ -251,16 +248,16 @@ func resourceTencentCloudDayuL4RuleCreate(d *schema.ResourceData, meta interface
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	ruleId, err := dayuService.CreateL4Rule(ctx, resourceType, resourceId, rule)
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			ruleId, err = dayuService.CreateL4Rule(ctx, resourceType, resourceId, rule)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	ruleId := ""
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := dayuService.CreateL4Rule(ctx, resourceType, resourceId, rule)
+		if e != nil {
+			return retryError(e)
+		}
+		ruleId = result
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -270,23 +267,21 @@ func resourceTencentCloudDayuL4RuleCreate(d *schema.ResourceData, meta interface
 	//set health check
 	var healthCheck dayu.L4HealthConfig
 	healthCheck.Protocol = helper.String(d.Get("protocol").(string))
-	healthCheck.Enable = boolToInt64Pointer(d.Get("health_check_switch").(bool))
+	healthCheck.Enable = helper.BoolToInt64Pointer(d.Get("health_check_switch").(bool))
 	healthCheck.Interval = helper.IntUint64(d.Get("health_check_interval").(int))
 	healthCheck.KickNum = helper.IntUint64(d.Get("health_check_unhealth_num").(int))
 	healthCheck.AliveNum = helper.IntUint64(d.Get("health_check_health_num").(int))
 	healthCheck.TimeOut = helper.IntUint64(d.Get("health_check_timeout").(int))
 	healthCheck.VirtualPort = helper.IntUint64(destPort)
 
-	err = dayuService.SetL4Health(ctx, resourceType, resourceId, healthCheck)
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = dayuService.SetL4Health(ctx, resourceType, resourceId, healthCheck)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		e := dayuService.SetL4Health(ctx, resourceType, resourceId, healthCheck)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -372,8 +367,8 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		//set L4RuleEntry
 		var rule dayu.L4RuleEntry
 		rule.LbType = helper.IntUint64(1)
-		rule.SourcePort = helper.IntUint64(d.Get("source_port").(int))
-		rule.VirtualPort = helper.IntUint64(d.Get("dest_port").(int))
+		rule.SourcePort = helper.IntUint64(d.Get("s_port").(int))
+		rule.VirtualPort = helper.IntUint64(d.Get("d_port").(int))
 		rule.Protocol = helper.String(d.Get("protocol").(string))
 		rule.RuleName = helper.String(d.Get("name").(string))
 
@@ -425,12 +420,12 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 
 		var healthCheck dayu.L4HealthConfig
 		healthCheck.Protocol = helper.String(d.Get("protocol").(string))
-		healthCheck.Enable = boolToInt64Pointer(d.Get("health_check_switch").(bool))
+		healthCheck.Enable = helper.BoolToInt64Pointer(d.Get("health_check_switch").(bool))
 		healthCheck.Interval = helper.IntUint64(d.Get("health_check_interval").(int))
 		healthCheck.KickNum = helper.IntUint64(d.Get("health_check_unhealth_num").(int))
 		healthCheck.AliveNum = helper.IntUint64(d.Get("health_check_health_num").(int))
 		healthCheck.TimeOut = helper.IntUint64(d.Get("health_check_timeout").(int))
-		healthCheck.VirtualPort = helper.IntUint64(d.Get("dest_port").(int))
+		healthCheck.VirtualPort = helper.IntUint64(d.Get("d_port").(int))
 
 		err := dayuService.SetL4Health(ctx, resourceType, resourceId, healthCheck)
 		if err != nil {
@@ -517,14 +512,14 @@ func resourceTencentCloudDayuL4RuleRead(d *schema.ResourceData, meta interface{}
 		return nil
 	}
 	_ = d.Set("protocol", rule.Protocol)
-	_ = d.Set("source_port", int(*rule.SourcePort))
-	_ = d.Set("dest_port", int(*rule.VirtualPort))
+	_ = d.Set("s_port", int(*rule.SourcePort))
+	_ = d.Set("d_port", int(*rule.VirtualPort))
 	_ = d.Set("rule_id", rule.RuleId)
 	_ = d.Set("lb_type", int(*rule.LbType))
 	_ = d.Set("name", rule.RuleName)
 	_ = d.Set("source_type", int(*rule.SourceType))
 	_ = d.Set("session_time", int(*rule.KeepTime))
-	_ = d.Set("session_switch", intToBool(int(*rule.KeepEnable)))
+	_ = d.Set("session_switch", *rule.KeepEnable > 0)
 	_ = d.Set("source_list", flattenSourceList(rule.SourceList))
 
 	//set health check
@@ -532,7 +527,7 @@ func resourceTencentCloudDayuL4RuleRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("health_check_switch", false)
 		return nil
 	}
-	_ = d.Set("health_check_switch", intToBool(int(*health.Enable)))
+	_ = d.Set("health_check_switch", *health.Enable > 0)
 	_ = d.Set("health_check_timeout", int(*health.TimeOut))
 	_ = d.Set("health_check_health_num", int(*health.AliveNum))
 	_ = d.Set("health_check_unhealth_num", int(*health.KickNum))
@@ -582,7 +577,7 @@ func resourceTencentCloudDayuL4RuleDelete(d *schema.ResourceData, meta interface
 			}
 
 			if has {
-				err = fmt.Errorf("delete L4 rule fail, L4 rule %s still exist from sdk DescribeCCSelfDefinePolicy", ruleId)
+				err = fmt.Errorf("delete L4 rule fail, L4 rule %s still exist from sdk", ruleId)
 				return resource.RetryableError(err)
 			}
 
@@ -595,6 +590,6 @@ func resourceTencentCloudDayuL4RuleDelete(d *schema.ResourceData, meta interface
 	if !has {
 		return nil
 	} else {
-		return errors.New("delete CC policy fail, CC policy still exist from sdk DescribeCCSelfDefinePolicy")
+		return errors.New("delete CC policy fail, CC policy still exist from sdk")
 	}
 }

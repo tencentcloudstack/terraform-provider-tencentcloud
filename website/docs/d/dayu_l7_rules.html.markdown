@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dayu_l7_rules"
 sidebar_current: "docs-tencentcloud-datasource-dayu_l7_rules"
 description: |-
-  Use this data source to query dayu L7 rules
+  Use this data source to query dayu layer 7 rules
 ---
 
 # tencentcloud_dayu_l7_rules
 
-Use this data source to query dayu L7 rules
+Use this data source to query dayu layer 7 rules
 
 ## Example Usage
 
@@ -29,17 +29,17 @@ data "tencentcloud_dayu_l7_rules" "id_test" {
 
 The following arguments are supported:
 
-* `resource_id` - (Required) Id of the resource that the L7 rule works for.
-* `resource_type` - (Required) Type of the resource that the L7 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.
-* `domain` - (Optional) Domain of the L7 rule to be queried.
+* `resource_id` - (Required) Id of the resource that the layer 7 rule works for.
+* `resource_type` - (Required) Type of the resource that the layer 7 rule works for, valid value is `bgpip`.
+* `domain` - (Optional) Domain of the layer 7 rule to be queried.
 * `result_output_file` - (Optional) Used to save results.
-* `rule_id` - (Optional) Id of the L7 rule to be queried.
+* `rule_id` - (Optional) Id of the layer 7 rule to be queried.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `list` - A list of L7 rules. Each element contains the following attributes.
+* `list` - A list of layer 7 rules. Each element contains the following attributes:
   * `domain` - Domain that the 7 layer rule works for.
   * `health_check_code` - HTTP Status Code. 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.
   * `health_check_health_num` - Health threshold of health check.

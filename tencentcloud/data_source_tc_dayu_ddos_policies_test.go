@@ -23,9 +23,9 @@ func TestAccTencentCloudDataDayuDdosPolicies(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testDataDayuDdosPoliciesName, "list.0.policy_id"),
 					resource.TestCheckResourceAttr(testDataDayuDdosPoliciesName, "list.0.name", "tf_test_policy"),
 					resource.TestCheckResourceAttr(testDataDayuDdosPoliciesName, "list.0.drop_options.#", "1"),
-					resource.TestCheckResourceAttr(testDataDayuDdosPoliciesName, "list.0.black_white_ips.#", "1"),
-					resource.TestCheckResourceAttr(testDataDayuDdosPoliciesName, "list.0.port_limits.#", "1"),
-					resource.TestCheckResourceAttr(testDataDayuDdosPoliciesName, "list.0.water_prints.#", "1"),
+					resource.TestCheckResourceAttr(testDataDayuDdosPoliciesName, "list.0.black_ips.#", "1"),
+					resource.TestCheckResourceAttr(testDataDayuDdosPoliciesName, "list.0.port_filters.#", "1"),
+					resource.TestCheckResourceAttr(testDataDayuDdosPoliciesName, "list.0.watermark_filters.#", "1"),
 					resource.TestCheckResourceAttr(testDataDayuDdosPoliciesName, "list.0.packet_filters.#", "1"),
 				),
 			},
@@ -37,7 +37,8 @@ const testAccTencentCloudDataDayuDdosPoliciesBaic = `
 resource "tencentcloud_dayu_ddos_policy" "test_policy" {
   resource_type         = "bgpip"
   name                  = "tf_test_policy"
-  
+  black_ips = ["1.1.1.1"]
+
   drop_options{
     drop_tcp  = true 
 	drop_udp  = true
@@ -45,10 +46,10 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	drop_other  = true
 	drop_abroad  = true
 	check_sync_conn = true
-	source_new_limit = 100
-	dst_new_limit = 100
-	source_conn_limit = 100
-	dst_conn_limit = 100
+	s_new_limit = 100
+	d_new_limit = 100
+	s_conn_limit = 100
+	d_conn_limit = 100
 	tcp_mbps_limit = 100
 	udp_mbps_limit = 100
 	icmp_mbps_limit = 100
@@ -60,12 +61,7 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	syn_limit = 100
   }
 
-  black_white_ips{
-	ip = "1.1.1.1"
-	type = "black"
-  }
-
-  port_limits{
+  port_filters{
 	start_port = "2000"
 	end_port = "2500"
 	protocol = "all"
@@ -89,7 +85,7 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 	offset = 500
   }
 
-  water_prints{
+  watermark_filters{
   	tcp_port_list = ["2000-3000", "3500-4000"]
 	udp_port_list = ["5000-6000"]
 	offset = 50

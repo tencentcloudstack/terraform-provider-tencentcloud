@@ -46,12 +46,12 @@ resource "tencentcloud_dayu_ddos_policy_case" "foo" {
 The following arguments are supported:
 
 * `app_protocols` - (Required) App protocol set of the DDoS policy case.
-* `app_type` - (Required) App type of the DDoS policy case, and valid values are `WEB`, `GAME`, `APP`, `OTHER`.
+* `app_type` - (Required) App type of the DDoS policy case, and valid values are `WEB`, `GAME`, `APP` and `OTHER`.
 * `has_abroad` - (Required) Indicate whether the service involves overseas or not, valid values are `no` and `yes`.
 * `has_initiate_tcp` - (Required) Indicate whether the service actively initiates TCP requests or not, valid values are `no` and `yes`.
 * `name` - (Required, ForceNew) Name of the DDoS policy case. Length should between 1 and 64.
 * `platform_types` - (Required) Platform set of the DDoS policy case.
-* `resource_type` - (Required, ForceNew) Type of the resource that the DDoS policy case works for, valid values are `bgpip`, `bgp`, `bgp-multip`.
+* `resource_type` - (Required, ForceNew) Type of the resource that the DDoS policy case works for, valid values are `bgpip`, `bgp` and `bgp-multip`.
 * `tcp_end_port` - (Required) End port of the TCP service, valid value is range from 0 to 65535. It must be greater than `tcp_start_port`.
 * `tcp_start_port` - (Required) Start port of the TCP service, valid value is range from 0 to 65535.
 * `udp_end_port` - (Required) End port of the UDP service, valid value is range from 0 to 65535. It must be greater than `udp_start_port`.

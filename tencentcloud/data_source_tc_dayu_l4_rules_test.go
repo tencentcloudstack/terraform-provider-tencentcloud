@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -15,15 +16,15 @@ func TestAccTencentCloudDataDayuL4Rules(t *testing.T) {
 		CheckDestroy: testAccCheckDayuL4RuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudDataDayuL4RulesBaic,
+				Config: fmt.Sprintf(testAccTencentCloudDataDayuL4RulesBaic, defaultDayuBgpIp),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckDayuL4RuleExists("tencentcloud_dayu_l4_rule.test_rule"),
 					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.#", "1"),
 					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.0.name", "rule_testt"),
 					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.0.source_type", "2"),
 					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.0.protocol", "TCP"),
-					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.0.source_port", "80"),
-					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.0.dest_port", "60"),
+					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.0.s_port", "80"),
+					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.0.d_port", "60"),
 					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.0.lb_type", "1"),
 					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.0.health_check_switch", "true"),
 					resource.TestCheckResourceAttr(testDataDayuL4RulesName, "list.0.health_check_interval", "35"),
@@ -41,11 +42,11 @@ func TestAccTencentCloudDataDayuL4Rules(t *testing.T) {
 const testAccTencentCloudDataDayuL4RulesBaic = `
 resource "tencentcloud_dayu_l4_rule" "test_rule" {
   resource_type         = "bgpip"
-  resource_id 			= "bgpip-00000294"
+  resource_id 			= "%s"
   name					= "rule_testt"
   protocol				= "TCP"
-  source_port			= 80
-  dest_port				= 60
+  s_port			= 80
+  d_port				= 60
   source_type			= 2
   health_check_switch	= true
   health_check_timeout	= 30

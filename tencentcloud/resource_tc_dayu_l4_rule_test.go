@@ -21,7 +21,7 @@ func TestAccTencentCloudDayuL4RuleResource(t *testing.T) {
 		CheckDestroy: testAccCheckDayuL4RuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDayuL4Rule,
+				Config: fmt.Sprintf(testAccDayuL4Rule, defaultDayuBgpIp),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuL4RuleExists(testDayuL4RuleResourceKey),
 					resource.TestCheckResourceAttrSet(testDayuL4RuleResourceKey, "rule_id"),
@@ -30,8 +30,8 @@ func TestAccTencentCloudDayuL4RuleResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "source_type", "2"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "source_list.#", "2"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "protocol", "TCP"),
-					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "source_port", "80"),
-					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "dest_port", "60"),
+					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "s_port", "80"),
+					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "d_port", "60"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "lb_type", "1"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "health_check_switch", "true"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "health_check_interval", "35"),
@@ -43,7 +43,7 @@ func TestAccTencentCloudDayuL4RuleResource(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccDayuL4RuleUpdate,
+				Config: fmt.Sprintf(testAccDayuL4RuleUpdate, defaultDayuBgpIp),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuL4RuleExists(testDayuL4RuleResourceKey),
 					testAccCheckDayuL4RuleExists(testDayuL4RuleResourceKey),
@@ -54,8 +54,8 @@ func TestAccTencentCloudDayuL4RuleResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "source_type", "1"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "source_list.#", "3"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "protocol", "TCP"),
-					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "source_port", "800"),
-					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "dest_port", "600"),
+					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "s_port", "800"),
+					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "d_port", "600"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "health_check_switch", "false"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "health_check_interval", "45"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKey, "health_check_timeout", "25"),
@@ -76,7 +76,7 @@ func TestAccTencentCloudDayuL4RuleResource_UDP(t *testing.T) {
 		CheckDestroy: testAccCheckDayuL4RuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDayuL4Rule_udp,
+				Config: fmt.Sprintf(testAccDayuL4Rule_udp, defaultDayuNet),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuL4RuleExists(testDayuL4RuleResourceKeyUdp),
 					resource.TestCheckResourceAttrSet(testDayuL4RuleResourceKeyUdp, "rule_id"),
@@ -85,8 +85,8 @@ func TestAccTencentCloudDayuL4RuleResource_UDP(t *testing.T) {
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "source_type", "2"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "source_list.#", "2"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "protocol", "UDP"),
-					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "source_port", "80"),
-					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "dest_port", "60"),
+					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "s_port", "80"),
+					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "d_port", "60"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "lb_type", "1"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "health_check_switch", "true"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "health_check_interval", "35"),
@@ -94,7 +94,6 @@ func TestAccTencentCloudDayuL4RuleResource_UDP(t *testing.T) {
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "health_check_health_num", "5"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "health_check_unhealth_num", "10"),
 					resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "session_switch", "false"),
-					//resource.TestCheckResourceAttr(testDayuL4RuleResourceKeyUdp, "session_time", "30"),
 				),
 			},
 		},
@@ -173,11 +172,11 @@ func testAccCheckDayuL4RuleExists(n string) resource.TestCheckFunc {
 const testAccDayuL4Rule string = `
 resource "tencentcloud_dayu_l4_rule" "test_rule" {
   resource_type         = "bgpip"
-  resource_id 			= "bgpip-00000294"
+  resource_id 			= "%s"
   name					= "rule_test"
   protocol				= "TCP"
-  source_port			= 80
-  dest_port				= 60
+  s_port			= 80
+  d_port				= 60
   source_type			= 2
   health_check_switch	= true
   health_check_timeout	= 30
@@ -200,11 +199,11 @@ resource "tencentcloud_dayu_l4_rule" "test_rule" {
 const testAccDayuL4RuleUpdate string = `
 resource "tencentcloud_dayu_l4_rule" "test_rule" {
   resource_type         = "bgpip"
-  resource_id 			= "bgpip-00000294"
+  resource_id 			= "%s"
   name					= "rule_test"
   protocol				= "TCP"
-  source_port			= 800
-  dest_port				= 600
+  s_port			= 800
+  d_port				= 600
   source_type			= 1
   health_check_switch	= false
   health_check_timeout	= 25
@@ -232,11 +231,11 @@ resource "tencentcloud_dayu_l4_rule" "test_rule" {
 const testAccDayuL4Rule_udp string = `
 resource "tencentcloud_dayu_l4_rule" "test_rule" {
   resource_type         = "net"
-  resource_id 			= "net-0000007e"
+  resource_id 			= "%s"
   name					= "zhaoshaona.com"
   protocol				= "UDP"
-  source_port			= 80
-  dest_port				= 60
+  s_port			= 80
+  d_port				= 60
   source_type			= 2
   health_check_switch	= true
   health_check_timeout	= 30

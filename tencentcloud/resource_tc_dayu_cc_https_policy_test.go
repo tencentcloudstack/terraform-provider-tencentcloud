@@ -19,7 +19,7 @@ func TestAccTencentCloudDayuCCHttpsPolicyResource(t *testing.T) {
 		CheckDestroy: testAccCheckDayuCCHttpsPolicyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccDayuCCHttpsPolicy, defaultSshCertificate),
+				Config: fmt.Sprintf(testAccDayuCCHttpsPolicy, defaultDayuBgpIp, defaultSshCertificate),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuCCHttpsPolicyExists(testDayuCCHttpsPolicyResourceKey),
 					resource.TestCheckResourceAttrSet(testDayuCCHttpsPolicyResourceKey, "create_time"),
@@ -33,7 +33,7 @@ func TestAccTencentCloudDayuCCHttpsPolicyResource(t *testing.T) {
 				),
 			},
 			{
-				Config: fmt.Sprintf(testAccDayuCCHttpsPolicyUpdate, defaultSshCertificate),
+				Config: fmt.Sprintf(testAccDayuCCHttpsPolicyUpdate, defaultDayuBgpIp, defaultSshCertificate),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuCCHttpsPolicyExists(testDayuCCHttpsPolicyResourceKey),
 					resource.TestCheckResourceAttrSet(testDayuCCHttpsPolicyResourceKey, "create_time"),
@@ -121,7 +121,7 @@ func testAccCheckDayuCCHttpsPolicyExists(n string) resource.TestCheckFunc {
 const testAccDayuCCHttpsPolicy string = `
 resource "tencentcloud_dayu_l7_rule" "test_rule" {
   resource_type         = "bgpip"
-  resource_id 			= "bgpip-00000294"
+  resource_id 			= "%s"
   name					= "rule_test"
   domain				= "zhaoshaona.com"
   protocol				= "https"
@@ -157,7 +157,7 @@ resource "tencentcloud_dayu_cc_https_policy" "test_policy" {
 const testAccDayuCCHttpsPolicyUpdate string = `
 resource "tencentcloud_dayu_l7_rule" "test_rule" {
   resource_type         = "bgpip"
-  resource_id 			= "bgpip-00000294"
+  resource_id 			= "%s"
   name					= "rule_test"
   domain				= "zhaoshaona.com"
   protocol				= "https"
