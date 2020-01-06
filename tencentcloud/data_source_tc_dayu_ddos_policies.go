@@ -312,21 +312,21 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 									"offset": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "The offset of water print.",
+										Description: "The offset of watermark.",
 									},
 									"auto_remove": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "Indicate whether to auto-remove the water print or not.",
+										Description: "Indicate whether to auto-remove the watermark or not.",
 									},
 									"open_switch": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "Indicate whether to open water print or not.",
+										Description: "Indicate whether to open watermark or not.",
 									},
 								},
 							},
-							Description: "Water print policy options, and only support one water print policy at most.",
+							Description: "Water print policy options, and only support one watermark policy at most.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -361,7 +361,7 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 									"open_switch": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "Indicate whether to auto-remove the water print or not.",
+										Description: "Indicate whether to auto-remove the watermark or not.",
 									},
 									"create_time": {
 										Type:        schema.TypeString,

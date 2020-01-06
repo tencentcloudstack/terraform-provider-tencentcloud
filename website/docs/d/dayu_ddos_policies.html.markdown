@@ -76,15 +76,15 @@ In addition to all arguments above, the following attributes are exported:
     * `protocol` - Protocol.
     * `start_port` - Start port.
   * `scene_id` - Id of scene that the DDoS policy works for.
-  * `watermark_filters` - Water print policy options, and only support one water print policy at most.
-    * `auto_remove` - Indicate whether to auto-remove the water print or not.
-    * `offset` - The offset of water print.
-    * `open_switch` - Indicate whether to open water print or not.
+  * `watermark_filters` - Water print policy options, and only support one watermark policy at most.
+    * `auto_remove` - Indicate whether to auto-remove the watermark or not.
+    * `offset` - The offset of watermark.
+    * `open_switch` - Indicate whether to open watermark or not.
     * `tcp_port_list` - Port range of TCP.
     * `udp_port_list` - Port range of TCP.
   * `watermark_key` - Watermark content.
     * `content` - Content of the watermark.
     * `id` - Id of the watermark.
-    * `open_switch` - Indicate whether to auto-remove the water print or not.
+    * `open_switch` - Indicate whether to auto-remove the watermark or not.
 
 

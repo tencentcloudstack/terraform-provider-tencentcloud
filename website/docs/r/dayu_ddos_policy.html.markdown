@@ -85,7 +85,7 @@ The following arguments are supported:
 * `black_ips` - (Optional) Black ip list.
 * `packet_filters` - (Optional) Message filter options list.
 * `port_filters` - (Optional) Port limits of abnormal check of the DDos policy.
-* `watermark_filters` - (Optional) Water print policy options, and only support one water print policy at most.
+* `watermark_filters` - (Optional) Water print policy options, and only support one watermark policy at most.
 * `white_ips` - (Optional) White ip list.
 
 The `drop_options` object supports the following:
@@ -137,9 +137,9 @@ The `port_filters` object supports the following:
 
 The `watermark_filters` object supports the following:
 
-* `auto_remove` - (Optional) Indicate whether to auto-remove the water print or not.
-* `offset` - (Optional) The offset of water print, and valid value is range from 0 to 100.
-* `open_switch` - (Optional) Indicate whether to open water print or not.
+* `auto_remove` - (Optional) Indicate whether to auto-remove the watermark or not.
+* `offset` - (Optional) The offset of watermark, and valid value is range from 0 to 100.
+* `open_switch` - (Optional) Indicate whether to open watermark or not. It muse be set `true` when any field of watermark was set.
 * `tcp_port_list` - (Optional) Port range of TCP, the format is like `2000-3000`.
 * `udp_port_list` - (Optional) Port range of TCP, the format is like `2000-3000`.
 
@@ -153,6 +153,6 @@ In addition to all arguments above, the following attributes are exported:
 * `watermark_key` - Watermark content.
   * `content` - Content of the watermark.
   * `id` - Id of the watermark.
-  * `open_switch` - Indicate whether to auto-remove the water print or not.
+  * `open_switch` - Indicate whether to auto-remove the watermark or not.
 
 
