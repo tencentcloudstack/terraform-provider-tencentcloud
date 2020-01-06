@@ -1,4 +1,4 @@
-## 1.29.0 (Unreleased)
+## 1.29.0 (January 06, 2020)
 
 FEATURES:
 
