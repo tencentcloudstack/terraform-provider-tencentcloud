@@ -75,8 +75,8 @@ In addition to all arguments above, the following attributes are exported:
     * `kind` - The type of forbidden port, and valid values are 0, 1, 2. 0 for destination port, 1 for source port and 2 for both destination and source posts.
     * `protocol` - Protocol.
     * `start_port` - Start port.
-  * `scene_id` - Id of scene that the DDoS policy works for.
-  * `watermark_filters` - Water print policy options, and only support one watermark policy at most.
+  * `scene_id` - Id of policy case that the DDoS policy works for.
+  * `watermark_filters` - Watermark policy options, and only support one watermark policy at most.
     * `auto_remove` - Indicate whether to auto-remove the watermark or not.
     * `offset` - The offset of watermark.
     * `open_switch` - Indicate whether to open watermark or not.

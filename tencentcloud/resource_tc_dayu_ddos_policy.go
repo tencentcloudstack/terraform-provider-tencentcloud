@@ -408,18 +408,18 @@ func resourceTencentCloudDayuDdosPolicy() *schema.Resource {
 						},
 					},
 				},
-				Description: "Water print policy options, and only support one watermark policy at most.",
+				Description: "Watermark policy options, and only support one watermark policy at most.",
 			},
 			//computed
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the DDos policy.",
+				Description: "Create time of the DDoS policy.",
 			},
 			"scene_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Id of scene that the DDos policy works for.",
+				Description: "Id of policy case that the DDoS policy works for.",
 			},
 			"policy_id": {
 				Type:        schema.TypeString,
@@ -528,7 +528,7 @@ func resourceTencentCloudDayuDdosPolicyRead(d *schema.ResourceData, meta interfa
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
-		return fmt.Errorf("broken ID of DDos policy")
+		return fmt.Errorf("broken ID of DDoS policy")
 	}
 	resourceType := items[0]
 	policyId := items[1]
@@ -576,7 +576,7 @@ func resourceTencentCloudDayuDdosPolicyUpdate(d *schema.ResourceData, meta inter
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
-		return fmt.Errorf("broken ID of DDos policy")
+		return fmt.Errorf("broken ID of DDoS policy")
 	}
 	resourceType := items[0]
 	policyId := items[1]
@@ -662,7 +662,7 @@ func resourceTencentCloudDayuDdosPolicyDelete(d *schema.ResourceData, meta inter
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
-		return fmt.Errorf("broken ID of DDos policy")
+		return fmt.Errorf("broken ID of DDoS policy")
 	}
 	resourceType := items[0]
 	policyId := items[1]

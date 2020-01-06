@@ -85,7 +85,7 @@ The following arguments are supported:
 * `black_ips` - (Optional) Black ip list.
 * `packet_filters` - (Optional) Message filter options list.
 * `port_filters` - (Optional) Port limits of abnormal check of the DDos policy.
-* `watermark_filters` - (Optional) Water print policy options, and only support one watermark policy at most.
+* `watermark_filters` - (Optional) Watermark policy options, and only support one watermark policy at most.
 * `white_ips` - (Optional) White ip list.
 
 The `drop_options` object supports the following:
@@ -147,9 +147,9 @@ The `watermark_filters` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `create_time` - Create time of the DDos policy.
+* `create_time` - Create time of the DDoS policy.
 * `policy_id` - Id of policy.
-* `scene_id` - Id of scene that the DDos policy works for.
+* `scene_id` - Id of policy case that the DDoS policy works for.
 * `watermark_key` - Watermark content.
   * `content` - Content of the watermark.
   * `id` - Id of the watermark.

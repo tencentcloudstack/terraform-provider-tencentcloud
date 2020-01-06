@@ -326,7 +326,7 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 									},
 								},
 							},
-							Description: "Water print policy options, and only support one watermark policy at most.",
+							Description: "Watermark policy options, and only support one watermark policy at most.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -336,7 +336,7 @@ func dataSourceTencentCloudDayuDdosPolicies() *schema.Resource {
 						"scene_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of scene that the DDoS policy works for.",
+							Description: "Id of policy case that the DDoS policy works for.",
 						},
 						"policy_id": {
 							Type:        schema.TypeString,

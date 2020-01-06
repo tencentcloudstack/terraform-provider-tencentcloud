@@ -205,12 +205,12 @@ func resourceTencentCloudDayuDdosPolicyCase() *schema.Resource {
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the DDos policy case.",
+				Description: "Create time of the DDoS policy case.",
 			},
 			"scene_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Id of the DDos policy case.",
+				Description: "Id of the DDoS policy case.",
 			},
 		},
 	}
@@ -327,7 +327,7 @@ func resourceTencentCloudDayuDdosPolicyCaseRead(d *schema.ResourceData, meta int
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
-		return fmt.Errorf("broken ID of DDos policy case")
+		return fmt.Errorf("broken ID of DDoS policy case")
 	}
 	resourceType := items[0]
 	sceneId := items[1]
@@ -435,7 +435,7 @@ func resourceTencentCloudDayuDdosPolicyCaseUpdate(d *schema.ResourceData, meta i
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
-		return fmt.Errorf("broken ID of DDos policy case")
+		return fmt.Errorf("broken ID of DDoS policy case")
 	}
 	resourceType := items[0]
 	sceneId := items[1]
@@ -542,7 +542,7 @@ func resourceTencentCloudDayuDdosPolicyCaseDelete(d *schema.ResourceData, meta i
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
-		return fmt.Errorf("broken ID of DDos policy")
+		return fmt.Errorf("broken ID of DDoS policy")
 	}
 	resourceType := items[0]
 	sceneId := items[1]
@@ -604,7 +604,7 @@ func resourceTencentCloudDayuDdosPolicyCaseDelete(d *schema.ResourceData, meta i
 			}
 
 			if has {
-				err = fmt.Errorf("delete DDoS policy case fail, DDoS policy case still exist from sdk DescribeDDosPolicy")
+				err = fmt.Errorf("delete DDoS policy case fail, DDoS policy case still exist.")
 				return resource.RetryableError(err)
 			}
 
@@ -617,6 +617,6 @@ func resourceTencentCloudDayuDdosPolicyCaseDelete(d *schema.ResourceData, meta i
 	if !has {
 		return nil
 	} else {
-		return errors.New("delete DDoS policy case fail, DDoS policy case still exist from sdk DescribeDDosPolicy")
+		return errors.New("delete DDoS policy case fail, DDoS policy case still exist.")
 	}
 }

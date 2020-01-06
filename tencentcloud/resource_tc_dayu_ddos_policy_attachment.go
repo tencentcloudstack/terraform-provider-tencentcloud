@@ -95,7 +95,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentCreate(d *schema.ResourceData, 
 		return statusErr
 	}
 	if !has {
-		return fmt.Errorf("Create DDos policy attachment faild")
+		return fmt.Errorf("Create DDoS policy attachment faild")
 	}
 
 	d.SetId(resourceId + FILED_SP + resourceType + FILED_SP + policyId)
@@ -111,7 +111,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentRead(d *schema.ResourceData, me
 
 	items := strings.Split(d.Id(), "#")
 	if len(items) < 3 {
-		return fmt.Errorf("broken ID of DDos policy attachment")
+		return fmt.Errorf("broken ID of DDoS policy attachment")
 	}
 	resourceId := items[0]
 	resourceType := items[1]
@@ -154,7 +154,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentDelete(d *schema.ResourceData, 
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
-		return fmt.Errorf("broken ID of DDos policy attachment")
+		return fmt.Errorf("broken ID of DDoS policy attachment")
 	}
 	resourceId := items[0]
 	resourceType := items[1]
@@ -192,7 +192,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentDelete(d *schema.ResourceData, 
 		return statusErr
 	}
 	if has {
-		return fmt.Errorf("Delete DDos policy attachment faild")
+		return fmt.Errorf("Delete DDoS policy attachment faild")
 	}
 
 	return nil

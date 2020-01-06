@@ -72,7 +72,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `create_time` - Create time of the DDos policy case.
-* `scene_id` - Id of the DDos policy case.
+* `create_time` - Create time of the DDoS policy case.
+* `scene_id` - Id of the DDoS policy case.
 
 
