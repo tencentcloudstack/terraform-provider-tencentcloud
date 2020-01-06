@@ -9,6 +9,9 @@ ENHANCEMENTS:
 * Data Source: `tencentcloud_vpc_instances` add new optional argument `is_default`.
 * Data Source: `tencentcloud_vpc_subnets` add new optional argument `availability_zone`,`is_default`.
 
+BUG FIXES:
+* Resource: `tencentcloud_redis_instance` read security_groups id list,not name list([#291](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/291)).
+
 ## 1.28.0 (December 25, 2019)
 
 FEATURES:
