@@ -105,7 +105,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 					}
 					return
 				},
-				Description: "Target port. Available values includes `80`,`80,443`,`3306-20000`.",
+				Description: "Target port. Default is `ALL`, the available values includes `80`,`80,443`,`3306-20000`.",
 			},
 		},
 	}

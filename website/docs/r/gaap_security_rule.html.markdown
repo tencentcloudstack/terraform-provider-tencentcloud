@@ -42,7 +42,7 @@ The following arguments are supported:
 * `cidr_ip` - (Required, ForceNew) A network address block of the request source.
 * `policy_id` - (Required, ForceNew) ID of the security policy.
 * `name` - (Optional) Name of the security policy rule. Maximum length is 30.
-* `port` - (Optional, ForceNew) Target port. Available values includes `80`,`80,443`,`3306-20000`.
+* `port` - (Optional, ForceNew) Target port. Default is `ALL`, the available values includes `80`,`80,443`,`3306-20000`.
 * `protocol` - (Optional, ForceNew) Protocol of the security policy rule. Default is `ALL`, the available values includes `TCP`,`UDP` and `ALL`.
 
 
