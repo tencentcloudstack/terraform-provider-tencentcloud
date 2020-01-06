@@ -75,22 +75,22 @@ The following arguments are supported:
 * `health_check` - (Required) Indicates whether health check is enable.
 * `listener_id` - (Required, ForceNew) ID of the layer7 listener.
 * `path` - (Required) Path of the forward rule. Maximum length is 80.
-* `realserver_type` - (Required, ForceNew) Type of the realserver, and the available values include `IP`,`DOMAIN`.
-* `realservers` - (Required) An information list of GAAP realserver. Each element contains the following attributes:
+* `realserver_type` - (Required, ForceNew) Type of the realserver, and the available values include `IP` and `DOMAIN`.
+* `realservers` - (Required) An information list of GAAP realserver.
 * `connect_timeout` - (Optional) Timeout of the health check response, default is 2s.
 * `forward_host` - (Optional) The default value of requested host which is forwarded to the realserver by the listener is `default`.
 * `health_check_method` - (Optional) Method of the health check. Available values includes `GET` and `HEAD`.
 * `health_check_path` - (Optional) Path of health check. Maximum length is 80.
-* `health_check_status_codes` - (Optional) Return code of confirmed normal. Available values includes `100`,`200`,`300`,`400` and `500`.
+* `health_check_status_codes` - (Optional) Return code of confirmed normal. Available values includes `100`, `200`, `300`, `400` and `500`.
 * `interval` - (Optional) Interval of the health check, default is 5s.
-* `scheduler` - (Optional) Scheduling policy of the layer4 listener, default is `rr`. Available values include `rr`,`wrr` and `lc`.
+* `scheduler` - (Optional) Scheduling policy of the layer4 listener, default is `rr`. Available values include `rr`, `wrr` and `lc`.
 
 The `realservers` object supports the following:
 
 * `id` - (Required) ID of the GAAP realserver.
 * `ip` - (Required) IP of the GAAP realserver.
 * `port` - (Required) Port of the GAAP realserver.
-* `weight` - (Optional) Scheduling weight, default is 1. The range of values is [1,100].
+* `weight` - (Optional) Scheduling weight, default is `1`. The range of values is [1,100].
 
 
 ## Import

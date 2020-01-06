@@ -100,14 +100,14 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Optional:     true,
 				Default:      "rr",
 				ValidateFunc: validateAllowedStringValue([]string{"rr", "wrr", "lc"}),
-				Description:  "Scheduling policy of the layer4 listener, default is `rr`. Available values include `rr`,`wrr` and `lc`.",
+				Description:  "Scheduling policy of the layer4 listener, default is `rr`. Available values include `rr`, `wrr` and `lc`.",
 			},
 			"realserver_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"IP", "DOMAIN"}),
 				ForceNew:     true,
-				Description:  "Type of the realserver, and the available values include `IP`,`DOMAIN`. NOTES: when the `protocol` is specified as `TCP` and the `scheduler` is specified as `wrr`, the item can only be set to `IP`.",
+				Description:  "Type of the realserver, and the available values include `IP` and `DOMAIN`. NOTES: when the `protocol` is specified as `TCP` and the `scheduler` is specified as `wrr`, the item can only be set to `IP`.",
 			},
 			"proxy_id": {
 				Type:        schema.TypeString,
@@ -119,7 +119,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether health check is enable, default is false. NOTES: Only supports listeners of `TCP` protocol.",
+				Description: "Indicates whether health check is enable, default is `false`. NOTES: Only supports listeners of `TCP` protocol.",
 			},
 			"interval": {
 				Type:         schema.TypeInt,
@@ -142,7 +142,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 					m := v.(map[string]interface{})
 					return hashcode.String(fmt.Sprintf("%s-%s-%d-%d", m["id"].(string), m["ip"].(string), m["port"].(int), m["weight"].(int)))
 				},
-				Description: "An information list of GAAP realserver. Each element contains the following attributes:",
+				Description: "An information list of GAAP realserver.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
@@ -166,7 +166,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 							Optional:     true,
 							Default:      1,
 							ValidateFunc: validateIntegerInRange(1, 100),
-							Description:  "Scheduling weight, default is 1. The range of values is [1,100].",
+							Description:  "Scheduling weight, default is `1`. The range of values is [1,100].",
 						},
 					},
 				},

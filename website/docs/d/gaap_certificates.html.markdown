@@ -31,7 +31,7 @@ The following arguments are supported:
 * `id` - (Optional) ID of the certificate to be queried.
 * `name` - (Optional) Name of the certificate to be queried.
 * `result_output_file` - (Optional) Used to save results.
-* `type` - (Optional) Type of the certificate to be queried. Available values include: `BASIC`,`CLIENT`,`SERVER`,`REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.
+* `type` - (Optional) Type of the certificate to be queried. Available values include `BASIC`, `CLIENT`, `SERVER`, `REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.
 
 ## Attributes Reference
 

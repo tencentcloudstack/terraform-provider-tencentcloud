@@ -38,7 +38,7 @@ func dataSourceTencentCloudGaapProxies() *schema.Resource {
 				Optional:      true,
 				Elem:          &schema.Schema{Type: schema.TypeString},
 				ConflictsWith: []string{"project_id", "access_region", "realserver_region"},
-				Description:   "ID of the GAAP proxy to be queried. Conflict with `project_id`,`access_region`,`realserver_region`.",
+				Description:   "ID of the GAAP proxy to be queried. Conflict with `project_id`, `access_region` amd `realserver_region`.",
 			},
 			"project_id": {
 				Type:          schema.TypeInt,

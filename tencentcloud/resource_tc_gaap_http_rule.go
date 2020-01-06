@@ -120,14 +120,14 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"IP", "DOMAIN"}),
 				ForceNew:     true,
-				Description:  "Type of the realserver, and the available values include `IP`,`DOMAIN`.",
+				Description:  "Type of the realserver, and the available values include `IP` and `DOMAIN`.",
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "rr",
 				ValidateFunc: validateAllowedStringValue([]string{"rr", "wrr", "lc"}),
-				Description:  "Scheduling policy of the layer4 listener, default is `rr`. Available values include `rr`,`wrr` and `lc`.",
+				Description:  "Scheduling policy of the layer4 listener, default is `rr`. Available values include `rr`, `wrr` and `lc`.",
 			},
 			"health_check": {
 				Type:        schema.TypeBool,
@@ -175,7 +175,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 				Set:         schema.HashInt,
 				Computed:    true,
-				Description: "Return code of confirmed normal. Available values includes `100`,`200`,`300`,`400` and `500`.",
+				Description: "Return code of confirmed normal. Available values includes `100`, `200`, `300`, `400` and `500`.",
 			},
 			"realservers": {
 				Type:     schema.TypeSet,
@@ -185,7 +185,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 					return hashcode.String(fmt.Sprintf("%s-%s-%d-%d", m["id"].(string), m["ip"].(string), m["port"].(int), m["weight"].(int)))
 
 				},
-				Description: "An information list of GAAP realserver. Each element contains the following attributes:",
+				Description: "An information list of GAAP realserver.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
@@ -209,7 +209,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 							Optional:     true,
 							Default:      1,
 							ValidateFunc: validateIntegerInRange(1, 100),
-							Description:  "Scheduling weight, default is 1. The range of values is [1,100].",
+							Description:  "Scheduling weight, default is `1`. The range of values is [1,100].",
 						},
 					},
 				},

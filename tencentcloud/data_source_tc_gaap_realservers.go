@@ -33,7 +33,7 @@ func dataSourceTencentCloudGaapRealservers() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "ID of the project within the GAAP realserver to be queried, default is '-1' means all projects.",
+				Description: "ID of the project within the GAAP realserver to be queried, default is `-1` means all projects.",
 			},
 			"domain": {
 				Type:          schema.TypeString,

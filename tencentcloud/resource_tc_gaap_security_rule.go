@@ -73,7 +73,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"ACCEPT", "DROP"}),
 				ForceNew:     true,
-				Description:  "Policy of the rule, the available values includes `ACCEPT` and `DROP`.",
+				Description:  "Policy of the rule, the available values include `ACCEPT` and `DROP`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -88,7 +88,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 				Default:      "ALL",
 				ValidateFunc: validateAllowedStringValue([]string{"ALL", "TCP", "UDP"}),
 				ForceNew:     true,
-				Description:  "Protocol of the security policy rule. Default is `ALL`, the available values includes `TCP`,`UDP` and `ALL`.",
+				Description:  "Protocol of the security policy rule. Default value is `ALL`, the available values include `TCP`, `UDP` and `ALL`.",
 			},
 			"port": {
 				Type:     schema.TypeString,
@@ -105,7 +105,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 					}
 					return
 				},
-				Description: "Target port. Default is `ALL`, the available values includes `80`,`80,443`,`3306-20000`.",
+				Description: "Target port. Default value is `ALL`, the available values include `80`, `80,443` and `3306-20000`.",
 			},
 		},
 	}
