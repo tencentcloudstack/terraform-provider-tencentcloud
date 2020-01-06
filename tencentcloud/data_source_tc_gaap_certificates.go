@@ -45,7 +45,7 @@ func dataSourceTencentCloudGaapCertificates() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"BASIC", "CLIENT", "SERVER", "REALSERVER", "PROXY"}),
-				Description:  "Type of the certificate to be queried. Available values include `BASIC`, `CLIENT`, `SERVER`, `REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.",
+				Description:  "Type of the certificate to be queried, the available values include `BASIC`, `CLIENT`, `SERVER`, `REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

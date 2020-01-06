@@ -45,7 +45,7 @@ func resourceTencentCloudGaapCertificate() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"BASIC", "CLIENT", "SERVER", "REALSERVER", "PROXY"}),
-				Description:  "Type of the certificate. Available values include  `BASIC`, `CLIENT`, `SERVER`, `REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.",
+				Description:  "Type of the certificate, the available values include `BASIC`, `CLIENT`, `SERVER`, `REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.",
 			},
 			"content": {
 				Type:        schema.TypeString,
@@ -64,7 +64,7 @@ func resourceTencentCloudGaapCertificate() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Sensitive:   true,
-				Description: "Key of the `CA` or `SSL` certificate.",
+				Description: "Key of the `SSL` certificate.",
 			},
 
 			// computed
@@ -153,22 +153,9 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 		return fmt.Errorf("unknown certificate type %d", *certificate.CertificateType)
 	}
 
-	if certificate.CertificateContent == nil {
-		return errors.New("certificate content is nil")
-	}
 	_ = d.Set("content", certificate.CertificateContent)
-
-	if certificate.CertificateAlias == nil {
-		return errors.New("certificate name is nil")
-	}
 	_ = d.Set("name", certificate.CertificateAlias)
-
-	if _, ok := d.GetOk("key"); ok {
-		if certificate.CertificateKey == nil {
-			return errors.New("certificate key is nil")
-		}
-		_ = d.Set("key", certificate.CertificateKey)
-	}
+	_ = d.Set("key", certificate.CertificateKey)
 
 	if certificate.CreateTime == nil {
 		return errors.New("certificate create time is nil")
@@ -181,12 +168,9 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 	if certificate.EndTime != nil {
 		_ = d.Set("end_time", helper.FormatUnixTime(*certificate.EndTime))
 	}
-	if certificate.IssuerCN != nil {
-		_ = d.Set("issuer_cn", certificate.IssuerCN)
-	}
-	if certificate.SubjectCN != nil {
-		_ = d.Set("subject_cn", certificate.SubjectCN)
-	}
+
+	_ = d.Set("issuer_cn", certificate.IssuerCN)
+	_ = d.Set("subject_cn", certificate.SubjectCN)
 
 	return nil
 }

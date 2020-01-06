@@ -30,13 +30,13 @@ resource "tencentcloud_gaap_proxy" "foo" {
 
 The following arguments are supported:
 
-* `access_region` - (Required, ForceNew) Access region of the GAAP proxy. The available values include `NorthChina`, `EastChina`, `SouthChina`, `SouthwestChina`, `Hongkong`, `SL_TAIWAN`, `SoutheastAsia`, `Korea`, `SL_India`, `SL_Australia`, `Europe`, `SL_UK`, `SL_SouthAmerica`, `NorthAmerica`, `SL_MiddleUSA`, `Canada`, `SL_VIET`, `WestIndia`, `Thailand`, `Virginia`, `Russia`, `Japan` and `SL_Indonesia`.
-* `bandwidth` - (Required) Maximum bandwidth of the GAAP proxy, unit is Mbps. The available values include `10`, `20`, `50`, `100`, `200`, `500` and `1000`.
-* `concurrent` - (Required) Maximum concurrency of the GAAP proxy, unit is 10k. The available values include `2`, `5`, `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90` and `100`.
+* `access_region` - (Required, ForceNew) Access region of the GAAP proxy, the available values include `NorthChina`, `EastChina`, `SouthChina`, `SouthwestChina`, `Hongkong`, `SL_TAIWAN`, `SoutheastAsia`, `Korea`, `SL_India`, `SL_Australia`, `Europe`, `SL_UK`, `SL_SouthAmerica`, `NorthAmerica`, `SL_MiddleUSA`, `Canada`, `SL_VIET`, `WestIndia`, `Thailand`, `Virginia`, `Russia`, `Japan` and `SL_Indonesia`.
+* `bandwidth` - (Required) Maximum bandwidth of the GAAP proxy, unit is Mbps, the available values include `10`, `20`, `50`, `100`, `200`, `500` and `1000`.
+* `concurrent` - (Required) Maximum concurrency of the GAAP proxy, unit is 10k, the available values include `2`, `5`, `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90` and `100`.
 * `name` - (Required) Name of the GAAP proxy, the maximum length is 30.
-* `realserver_region` - (Required, ForceNew) Region of the GAAP realserver. The available values include `NorthChina`, `EastChina`, `SouthChina`, `SouthwestChina`, `Hongkong`, `SL_TAIWAN`, `SoutheastAsia`, `Korea`, `SL_India`, `SL_Australia`, `Europe`, `SL_UK`, `SL_SouthAmerica`, `NorthAmerica`, `SL_MiddleUSA`, `Canada`, `SL_VIET`, `WestIndia`, `Thailand`, `Virginia`, `Russia`, `Japan` and `SL_Indonesia`.
-* `enable` - (Optional) Indicates whether GAAP proxy is enabled, default is `true`.
-* `project_id` - (Optional) ID of the project within the GAAP proxy, '0' means is Default Project.
+* `realserver_region` - (Required, ForceNew) Region of the GAAP realserver, the available values include `NorthChina`, `EastChina`, `SouthChina`, `SouthwestChina`, `Hongkong`, `SL_TAIWAN`, `SoutheastAsia`, `Korea`, `SL_India`, `SL_Australia`, `Europe`, `SL_UK`, `SL_SouthAmerica`, `NorthAmerica`, `SL_MiddleUSA`, `Canada`, `SL_VIET`, `WestIndia`, `Thailand`, `Virginia`, `Russia`, `Japan` and `SL_Indonesia`.
+* `enable` - (Optional) Indicates whether GAAP proxy is enabled, default value is `true`.
+* `project_id` - (Optional) ID of the project within the GAAP proxy, '0' means is default project.
 * `tags` - (Optional) Tags of the GAAP proxy.
 
 ## Attributes Reference

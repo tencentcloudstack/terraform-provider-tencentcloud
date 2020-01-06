@@ -39,7 +39,7 @@ data "tencentcloud_gaap_layer7_listeners" "listenerId" {
 
 The following arguments are supported:
 
-* `protocol` - (Required) Protocol of the layer7 listener to be queried, and the available values include `HTTP` and `HTTPS`.
+* `protocol` - (Required) Protocol of the layer7 listener to be queried, the available values include `HTTP` and `HTTPS`.
 * `listener_id` - (Optional) ID of the layer7 listener to be queried.
 * `listener_name` - (Optional) Name of the layer7 listener to be queried.
 * `port` - (Optional) Port of the layer7 listener to be queried.

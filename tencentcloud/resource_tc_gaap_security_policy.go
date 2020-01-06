@@ -62,7 +62,7 @@ func resourceTencentCloudGaapSecurityPolicy() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Indicates whether policy is enable, default is `true`.",
+				Description: "Indicates whether policy is enable, default value is `true`.",
 			},
 		},
 	}
