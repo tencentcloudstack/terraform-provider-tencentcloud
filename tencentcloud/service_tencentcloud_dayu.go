@@ -876,7 +876,7 @@ func (me *DayuService) DescribeDdosPolicyAttachments(ctx context.Context, resour
 			continue
 		}
 		for _, resource := range policy.BoundResources {
-			attachments = append(attachments, map[string]interface{}{"resource_id": *resource, "policy_id": policyId, "resource_type": resourceType})
+			attachments = append(attachments, map[string]interface{}{"resource_id": *resource, "policy_id": *policy.PolicyId, "resource_type": resourceType})
 		}
 	}
 	if len(attachments) > 0 {

@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -13,7 +14,7 @@ func TestAccTencentCloudDataDayuDdosPolicyAttachmentsDataSource_basic(t *testing
 		CheckDestroy: testAccCheckDayuDdosPolicyAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDayuDdosPolicyAttachmentsDataSource_basic,
+				Config: fmt.Sprintf(testAccDayuDdosPolicyAttachmentsDataSource_basic, defaultDayuBgpIp),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckDayuDdosPolicyAttachmentExists("tencentcloud_dayu_ddos_policy_attachment.dayu_ddos_policy_attachment"),
 					resource.TestCheckResourceAttr("data.tencentcloud_dayu_ddos_policy_attachments.dayu_ddos_policy_attachments", "dayu_ddos_policy_attachment_list.#", "1"),
@@ -87,7 +88,7 @@ resource "tencentcloud_dayu_ddos_policy" "test_policy" {
 
 resource "tencentcloud_dayu_ddos_policy_attachment" "dayu_ddos_policy_attachment" {
   resource_type = tencentcloud_dayu_ddos_policy.test_policy.resource_type
-  resource_id = "bgpip-00000294"
+  resource_id = "%s"
   policy_id = tencentcloud_dayu_ddos_policy.test_policy.policy_id
 }
 
