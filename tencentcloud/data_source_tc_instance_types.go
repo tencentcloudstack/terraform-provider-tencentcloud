@@ -105,7 +105,7 @@ func dataSourceInstanceTypes() *schema.Resource {
 							Description: "The number of GPU cores of the instance.",
 						},
 						"memory_size": {
-							Type:        schema.TypeFloat,
+							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Instance memory capacity, unit in GB.",
 						},

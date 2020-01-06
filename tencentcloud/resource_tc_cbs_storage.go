@@ -113,7 +113,7 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Description: "Status of CBS, and available values include UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.",
 			},
 			"attached": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeBool,
 				Computed:    true,
 				Description: "Indicates whether the CBS is mounted the CVM.",
 			},
