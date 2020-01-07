@@ -15,7 +15,9 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -91,7 +93,7 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, meta interf
 	}
 
 	if len(sgs) == 0 {
-		return fmt.Errorf("security group security_group_id=%s, name=%s not found", *sgId, *sgName)
+		return errors.New("security group not found")
 	}
 
 	sg := sgs[0]
@@ -106,7 +108,13 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, meta interf
 	_ = d.Set("description", sg.SecurityGroupDesc)
 	_ = d.Set("create_time", sg.CreatedTime)
 	_ = d.Set("be_associate_count", len(in)+len(out))
-	_ = d.Set("project_id", sg.ProjectId)
+
+	projectId, err := strconv.Atoi(*sg.ProjectId)
+	if err != nil {
+		return fmt.Errorf("project id is not valid number: %v", err)
+	}
+
+	_ = d.Set("project_id", projectId)
 
 	return nil
 }
