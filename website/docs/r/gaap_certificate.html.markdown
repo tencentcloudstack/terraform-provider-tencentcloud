@@ -25,8 +25,8 @@ resource "tencentcloud_gaap_certificate" "foo" {
 The following arguments are supported:
 
 * `content` - (Required, ForceNew) Content of the certificate, and URL encoding. When the certificate is basic authentication, use the `user:xxx password:xxx` format, where the password is encrypted with `htpasswd` or `openssl`; When the certificate is `CA` or `SSL`, the format is `pem`.
-* `type` - (Required, ForceNew) Type of the certificate. Available values include: `BASIC`,`CLIENT`,`SERVER`,`REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.
-* `key` - (Optional, ForceNew) Key of the `CA` or `SSL` certificate.
+* `type` - (Required, ForceNew) Type of the certificate, the available values include `BASIC`, `CLIENT`, `SERVER`, `REALSERVER` and `PROXY`; `BASIC` means basic certificate; `CLIENT` means client CA certificate; `SERVER` means server SSL certificate; `REALSERVER` means realserver CA certificate; `PROXY` means proxy SSL certificate.
+* `key` - (Optional, ForceNew) Key of the `SSL` certificate.
 * `name` - (Optional) Name of the certificate.
 
 ## Attributes Reference

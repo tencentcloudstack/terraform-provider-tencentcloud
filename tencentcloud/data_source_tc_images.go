@@ -81,7 +81,7 @@ func dataSourceTencentCloudImages() *schema.Resource {
 							Description: "Type of the image.",
 						},
 						"created_time": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Created time of the image.",
 						},

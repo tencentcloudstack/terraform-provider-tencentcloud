@@ -1,4 +1,3 @@
-
 ## 1.30.0 (Unreleased)
 
 FEATURES:

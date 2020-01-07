@@ -55,7 +55,7 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
 				ForceNew:     true,
-				Description:  "Protocol of the layer7 listener, and the available values include `HTTP` and `HTTPS`.",
+				Description:  "Protocol of the layer7 listener, the available values include `HTTP` and `HTTPS`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -102,7 +102,7 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Optional:      true,
 				Computed:      true,
 				ConflictsWith: []string{"client_certificate_ids"},
-				Description:   "ID of the client certificate. Set only when `auth_type` is specified as mutual authentication.  NOTES: Only supports listeners of `HTTPS` protocol.",
+				Description:   "ID of the client certificate. Set only when `auth_type` is specified as mutual authentication. NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
 			"client_certificate_ids": {
 				Type:          schema.TypeSet,
@@ -111,7 +111,7 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Elem:          &schema.Schema{Type: schema.TypeString},
 				Set:           schema.HashString,
 				ConflictsWith: []string{"client_certificate_id"},
-				Description:   "ID list of the client certificate.  Set only when `auth_type` is specified as mutual authentication.  NOTES: Only supports listeners of `HTTPS` protocol.",
+				Description:   "ID list of the client certificate. Set only when `auth_type` is specified as mutual authentication. NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
 
 			// computed
