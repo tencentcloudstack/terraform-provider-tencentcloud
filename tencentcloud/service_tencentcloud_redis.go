@@ -488,7 +488,7 @@ func (me *RedisService) DescribeInstanceSecurityGroup(ctx context.Context, redis
 			if *item.InstanceId == redisId {
 				sg = make([]string, 0, len(item.SecurityGroupDetails))
 				for _, v := range item.SecurityGroupDetails {
-					sg = append(sg, *v.SecurityGroupName)
+					sg = append(sg, *v.SecurityGroupId)
 				}
 				break
 			}
