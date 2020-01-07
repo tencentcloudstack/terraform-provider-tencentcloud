@@ -56,13 +56,13 @@ func resourceTencentCloudGaapSecurityPolicy() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"ACCEPT", "DROP"}),
 				ForceNew:     true,
-				Description:  "Default policy, the available values includes `ACCEPT` and `DROP`.",
+				Description:  "Default policy, the available values include `ACCEPT` and `DROP`.",
 			},
 			"enable": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Indicates whether policy is enable, default is true.",
+				Description: "Indicates whether policy is enable, default value is `true`.",
 			},
 		},
 	}

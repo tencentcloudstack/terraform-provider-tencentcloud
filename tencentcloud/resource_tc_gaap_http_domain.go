@@ -98,7 +98,7 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether basic authentication is enable, default is `false`.",
+				Description: "Indicates whether basic authentication is enable, default value is `false`.",
 			},
 			"basic_auth_id": {
 				Type:        schema.TypeString,
@@ -110,7 +110,7 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether realserver authentication is enable, default is `false`.",
+				Description: "Indicates whether realserver authentication is enable, default value is `false`.",
 			},
 			"realserver_certificate_id": {
 				Deprecated:    "It has been deprecated from version 1.28.0. Set `realserver_certificate_ids` instead.",
@@ -139,7 +139,7 @@ func resourceTencentCloudGaapHttpDomain() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether SSL certificate authentication is enable, default is `false`.",
+				Description: "Indicates whether SSL certificate authentication is enable, default value is `false`.",
 			},
 			"gaap_auth_id": {
 				Type:        schema.TypeString,

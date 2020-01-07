@@ -108,7 +108,7 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 						"domain": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Forward domain of the layer7 listener.",
+							Description: "Forward domain of the forward rule.",
 						},
 						"path": {
 							Type:        schema.TypeString,
@@ -123,7 +123,7 @@ func dataSourceTencentCloudGaapHttpRules() *schema.Resource {
 						"scheduler": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Scheduling policy of the layer4 listener.",
+							Description: "Scheduling policy of the forward rule.",
 						},
 						"health_check": {
 							Type:        schema.TypeBool,
