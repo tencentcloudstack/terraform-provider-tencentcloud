@@ -399,7 +399,7 @@ github.com/stretchr/objx
 # github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/mock
-# github.com/tencentcloud/tencentcloud-sdk-go v3.0.112+incompatible
+# github.com/tencentcloud/tencentcloud-sdk-go v3.0.114+incompatible
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
@@ -412,6 +412,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408

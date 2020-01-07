@@ -25,6 +25,11 @@ const defaultInsNameUpdate = "tf-ci-test-update"
 const defaultSshCertificate = "VjANRdz8"
 const defaultSshCertificateB = "VfqO4zkB"
 
+const defaultDayuBgp = "bgp-000006mq"
+const defaultDayuBgpMul = "bgp-0000008o"
+const defaultDayuBgpIp = "bgpip-00000294"
+const defaultDayuNet = "net-0000007e"
+
 const defaultGaapProxyId = "link-9ck3lzq7"
 
 /*

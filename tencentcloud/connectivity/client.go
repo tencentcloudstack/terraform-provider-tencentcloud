@@ -17,6 +17,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
@@ -42,6 +43,7 @@ type TencentCloudClient struct {
 	cbsConn     *cbs.Client
 	cvmConn     *cvm.Client
 	clbConn     *clb.Client
+	dayuConn    *dayu.Client
 	dcConn      *dc.Client
 	tagConn     *tag.Client
 	mongodbConn *mongodb.Client
@@ -325,4 +327,17 @@ func (me *TencentCloudClient) UseTcaplusClient() *tcaplusdb.Client {
 	me.tcaplusConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tcaplusConn
+}
+
+// UseDayuClient returns dayu client for service
+func (me *TencentCloudClient) UseDayuClient() *dayu.Client {
+	if me.dayuConn != nil {
+		return me.dayuConn
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.dayuConn, _ = dayu.NewClient(me.Credential, me.Region, cpf)
+	me.dayuConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dayuConn
 }

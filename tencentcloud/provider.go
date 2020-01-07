@@ -22,6 +22,25 @@ Resources List
 Provider Data Sources
   tencentcloud_availability_zones
 
+Anti-DDoS(Dayu)
+  Data Source
+    tencentcloud_dayu_cc_http_policies
+    tencentcloud_dayu_cc_https_policies
+    tencentcloud_dayu_ddos_policies
+    tencentcloud_dayu_ddos_policy_attachments
+    tencentcloud_dayu_ddos_policy_cases
+    tencentcloud_dayu_l4_rules
+    tencentcloud_dayu_l7_rules
+
+  Resource
+    tencentcloud_dayu_cc_http_policy
+    tencentcloud_dayu_cc_https_policy
+    tencentcloud_dayu_ddos_policy
+    tencentcloud_dayu_ddos_policy_attachment
+    tencentcloud_dayu_ddos_policy_case
+    tencentcloud_dayu_l4_rule
+    tencentcloud_dayu_l7_rule
+
 Auto Scaling(AS)
   Data Source
     tencentcloud_as_scaling_configs
@@ -400,6 +419,13 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcx_instances":                dataSourceTencentCloudDcxInstances(),
 			"tencentcloud_mongodb_zone_config":          dataSourceTencentCloudMongodbZoneConfig(),
 			"tencentcloud_mongodb_instances":            dataSourceTencentCloudMongodbInstances(),
+			"tencentcloud_dayu_cc_https_policies":       dataSourceTencentCloudDayuCCHttpsPolicies(),
+			"tencentcloud_dayu_cc_http_policies":        dataSourceTencentCloudDayuCCHttpPolicies(),
+			"tencentcloud_dayu_ddos_policies":           dataSourceTencentCloudDayuDdosPolicies(),
+			"tencentcloud_dayu_ddos_policy_cases":       dataSourceTencentCloudDayuDdosPolicyCases(),
+			"tencentcloud_dayu_ddos_policy_attachments": dataSourceTencentCloudDayuDdosPolicyAttachments(),
+			"tencentcloud_dayu_l4_rules":                dataSourceTencentCloudDayuL4Rules(),
+			"tencentcloud_dayu_l7_rules":                dataSourceTencentCloudDayuL7Rules(),
 			"tencentcloud_dc_gateway_instances":         dataSourceTencentCloudDcGatewayInstances(),
 			"tencentcloud_dc_gateway_ccn_routes":        dataSourceTencentCloudDcGatewayCCNRoutes(),
 			"tencentcloud_kubernetes_clusters":          dataSourceTencentCloudKubernetesClusters(),
@@ -498,6 +524,13 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcx":                            resourceTencentCloudDcxInstance(),
 			"tencentcloud_mongodb_instance":               resourceTencentCloudMongodbInstance(),
 			"tencentcloud_mongodb_sharding_instance":      resourceTencentCloudMongodbShardingInstance(),
+			"tencentcloud_dayu_cc_http_policy":            resourceTencentCloudDayuCCHttpPolicy(),
+			"tencentcloud_dayu_cc_https_policy":           resourceTencentCloudDayuCCHttpsPolicy(),
+			"tencentcloud_dayu_ddos_policy":               resourceTencentCloudDayuDdosPolicy(),
+			"tencentcloud_dayu_ddos_policy_case":          resourceTencentCloudDayuDdosPolicyCase(),
+			"tencentcloud_dayu_ddos_policy_attachment":    resourceTencentCloudDayuDdosPolicyAttachment(),
+			"tencentcloud_dayu_l4_rule":                   resourceTencentCloudDayuL4Rule(),
+			"tencentcloud_dayu_l7_rule":                   resourceTencentCloudDayuL7Rule(),
 			"tencentcloud_dc_gateway":                     resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":           resourceTencentCloudDcGatewayCcnRouteInstance(),
 			"tencentcloud_kubernetes_cluster":             resourceTencentCloudTkeCluster(),
