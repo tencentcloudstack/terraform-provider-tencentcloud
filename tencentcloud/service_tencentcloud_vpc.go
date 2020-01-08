@@ -2611,11 +2611,11 @@ func waitEniDetach(ctx context.Context, id string, client *vpc.Client) error {
 		}
 
 		if eni.Attachment.InstanceId != nil && *eni.Attachment.InstanceId != "" {
-			return resource.RetryableError(fmt.Errorf("eni still bind in cvm %s", *eni.Attachment.InstanceId))
+			return resource.RetryableError(fmt.Errorf("eni %s still bind in cvm %s", id, *eni.Attachment.InstanceId))
 		}
 
 		if eni.State == nil {
-			return resource.NonRetryableError(errors.New("eni state is nil"))
+			return resource.NonRetryableError(fmt.Errorf("eni %s state is nil", id))
 		}
 
 		if *eni.State != ENI_STATE_AVAILABLE {
