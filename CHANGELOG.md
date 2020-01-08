@@ -1,5 +1,22 @@
 ## 1.30.0 (Unreleased)
 
+FEATURES:
+
+* **New Data Source**: `tencentcloud_dayu_cc_http_policies`
+* **New Data Source**: `tencentcloud_dayu_cc_https_policies`
+* **New Data Source**: `tencentcloud_dayu_ddos_policies`
+* **New Data Source**: `tencentcloud_dayu_ddos_policy_attachments`
+* **New Data Source**: `tencentcloud_dayu_ddos_policy_cases`
+* **New Data Source**: `tencentcloud_dayu_l4_rules`
+* **New Data Source**: `tencentcloud_dayu_l7_rules`
+* **New Resource**: `tencentcloud_dayu_cc_http_policy`
+* **New Resource**: `tencentcloud_dayu_cc_https_policy`
+* **New Resource**: `tencentcloud_dayu_ddos_policy`
+* **New Resource**: `tencentcloud_dayu_ddos_policy_attachment`
+* **New Resource**: `tencentcloud_dayu_ddos_policy_case`
+* **New Resource**: `tencentcloud_dayu_l4_rule`
+* **New Resource**: `tencentcloud_dayu_l7_rule`
+
 BUG FIXES:
 * Data Source: `tencentcloud_security_group` set `project_id` error
 
