@@ -2346,6 +2346,17 @@ func (me *VpcService) DetachEniFromCvm(ctx context.Context, eniId, cvmId string)
 		ratelimit.Check(request.GetAction())
 
 		if _, err := client.DetachNetworkInterface(request); err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				switch sdkError.Code {
+				case "UnsupportedOperation.InvalidState":
+					return resource.RetryableError(errors.New("cvm may still bind eni"))
+
+				case "ResourceNotFound":
+					// eni or cvm doesn't exist
+					return nil
+				}
+			}
+
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
@@ -2357,7 +2368,7 @@ func (me *VpcService) DetachEniFromCvm(ctx context.Context, eniId, cvmId string)
 		return err
 	}
 
-	if err := waitEniReady(ctx, eniId, client, nil, nil); err != nil {
+	if err := waitEniDetach(ctx, eniId, client); err != nil {
 		log.Printf("[CRITAL]%s detach eni from instance failed, reason: %v", logId, err)
 		return err
 	}
@@ -2565,4 +2576,52 @@ func flattenVpnSPDList(spd []*vpc.SecurityPolicyDatabase) (mapping []*map[string
 		mapping = append(mapping, &item)
 	}
 	return
+}
+
+func waitEniDetach(ctx context.Context, id string, client *vpc.Client) error {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeNetworkInterfacesRequest()
+	request.NetworkInterfaceIds = []*string{helper.String(id)}
+
+	return resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		response, err := client.DescribeNetworkInterfaces(request)
+		if err != nil {
+			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
+				return nil
+			}
+
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		enis := response.Response.NetworkInterfaceSet
+
+		if len(enis) == 0 {
+			return nil
+		}
+
+		eni := enis[0]
+
+		if eni.Attachment == nil {
+			return nil
+		}
+
+		if eni.Attachment.InstanceId != nil && *eni.Attachment.InstanceId != "" {
+			return resource.RetryableError(fmt.Errorf("eni still bind in cvm %s", *eni.Attachment.InstanceId))
+		}
+
+		if eni.State == nil {
+			return resource.NonRetryableError(errors.New("eni state is nil"))
+		}
+
+		if *eni.State != ENI_STATE_AVAILABLE {
+			return resource.RetryableError(errors.New("eni is not available"))
+		}
+
+		return nil
+	})
 }
