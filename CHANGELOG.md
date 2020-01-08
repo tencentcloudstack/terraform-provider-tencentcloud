@@ -17,6 +17,12 @@ FEATURES:
 * **New Resource**: `tencentcloud_dayu_l4_rule`
 * **New Resource**: `tencentcloud_dayu_l7_rule`
 
+BUG FIXES:
+* Resource: `tencentcloud_clb_listener` field `sni_switch` set error type.([#297](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/297)).
+* Resource: `tencentcloud_vpn_gateway` twice apply shows change field `prepaid_renew_flag`.([#298](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/298)).
+* Resource: `tencentcloud_clb_instance` query status failed but applied in CLB resources.([#303](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/303)).
+
+
 ## 1.29.0 (January 06, 2020)
 
 FEATURES:
