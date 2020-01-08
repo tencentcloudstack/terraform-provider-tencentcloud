@@ -1,8 +1,7 @@
-## 1.29.0 (Unreleased)
+## 1.30.0 (Unreleased)
 
 FEATURES:
 
-* **New Data Source**: `tencentcloud_gaap_domain_error_pages`
 * **New Data Source**: `tencentcloud_dayu_cc_http_policies`
 * **New Data Source**: `tencentcloud_dayu_cc_https_policies`
 * **New Data Source**: `tencentcloud_dayu_ddos_policies`
@@ -10,7 +9,6 @@ FEATURES:
 * **New Data Source**: `tencentcloud_dayu_ddos_policy_cases`
 * **New Data Source**: `tencentcloud_dayu_l4_rules`
 * **New Data Source**: `tencentcloud_dayu_l7_rules`
-* **New Resource**: `tencentcloud_gaap_domain_error_page`
 * **New Resource**: `tencentcloud_dayu_cc_http_policy`
 * **New Resource**: `tencentcloud_dayu_cc_https_policy`
 * **New Resource**: `tencentcloud_dayu_ddos_policy`
@@ -19,10 +17,19 @@ FEATURES:
 * **New Resource**: `tencentcloud_dayu_l4_rule`
 * **New Resource**: `tencentcloud_dayu_l7_rule`
 
+## 1.29.0 (January 06, 2020)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_gaap_domain_error_pages`
+* **New Resource**: `tencentcloud_gaap_domain_error_page`
 
 ENHANCEMENTS:
 * Data Source: `tencentcloud_vpc_instances` add new optional argument `is_default`.
 * Data Source: `tencentcloud_vpc_subnets` add new optional argument `availability_zone`,`is_default`.
+
+BUG FIXES:
+* Resource: `tencentcloud_redis_instance` field security_groups are id list,not name list([#291](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/291)).
 
 ## 1.28.0 (December 25, 2019)
 

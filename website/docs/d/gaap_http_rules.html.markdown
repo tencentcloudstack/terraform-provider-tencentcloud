@@ -69,7 +69,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `rules` - An information list of forward rule of the layer7 listeners. Each element contains the following attributes:
   * `connect_timeout` - Timeout of the health check response.
-  * `domain` - Forward domain of the layer7 listener.
+  * `domain` - Forward domain of the forward rule.
   * `forward_host` - Requested host which is forwarded to the realserver by the listener.
   * `health_check_method` - Method of the health check.
   * `health_check_path` - Path of health check.
@@ -87,6 +87,6 @@ In addition to all arguments above, the following attributes are exported:
     * `port` - Port of the GAAP realserver.
     * `status` - Status of the GAAP realserver.
     * `weight` - Scheduling weight.
-  * `scheduler` - Scheduling policy of the layer4 listener.
+  * `scheduler` - Scheduling policy of the forward rule.
 
 

@@ -71,7 +71,7 @@ func resourceTencentCloudGaapRealserver() *schema.Resource {
 				Optional:    true,
 				Default:     0,
 				ForceNew:    true,
-				Description: "ID of the project within the GAAP realserver, '0' means is Default Project.",
+				Description: "ID of the project within the GAAP realserver, '0' means is default project.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,

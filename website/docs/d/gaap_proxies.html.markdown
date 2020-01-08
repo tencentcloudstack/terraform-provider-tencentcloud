@@ -31,7 +31,7 @@ data "tencentcloud_gaap_proxies" "foo" {
 The following arguments are supported:
 
 * `access_region` - (Optional) Access region of the GAAP proxy to be queried. Conflict with `ids`.
-* `ids` - (Optional) ID of the GAAP proxy to be queried. Conflict with `project_id`,`access_region`,`realserver_region`.
+* `ids` - (Optional) ID of the GAAP proxy to be queried. Conflict with `project_id`, `access_region` and `realserver_region`.
 * `project_id` - (Optional) Project ID of the GAAP proxy to be queried. Conflict with `ids`.
 * `realserver_region` - (Optional) Region of the GAAP realserver to be queried. Conflict with `ids`.
 * `result_output_file` - (Optional) Used to save results.
@@ -52,7 +52,7 @@ In addition to all arguments above, the following attributes are exported:
   * `ip` - Access domain of the GAAP proxy.
   * `name` - Name of the GAAP proxy.
   * `policy_id` - Security policy ID of the GAAP proxy.
-  * `project_id` - ID of the project within the GAAP proxy, '0' means is Default Project.
+  * `project_id` - ID of the project within the GAAP proxy, '0' means is default project.
   * `realserver_region` - Region of the GAAP realserver.
   * `scalable` - Indicates whether GAAP proxy can scalable.
   * `status` - Status of the GAAP proxy.
