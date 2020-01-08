@@ -1,5 +1,5 @@
 # terraform-provider-tencentcloud
-
+[![Go Report Card](https://goreportcard.com/badge/github.com/terraform-providers/terraform-provider-tencentcloud)](https://goreportcard.com/report/github.com/terraform-providers/terraform-provider-tencentcloud)
 ## Requirements
 
 * [Terraform](https://www.terraform.io/downloads.html) 0.12.x
