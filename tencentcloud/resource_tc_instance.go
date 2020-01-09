@@ -665,11 +665,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	// as attachment add tencentcloud:autoscaling:auto-scaling-group-id tag automatically
 	// we should remove this tag, otherwise it will cause terraform state change
 	tags := flattenCvmTagsMapping(instance.Tags)
-	for k := range tags {
-		if k == "tencentcloud:autoscaling:auto-scaling-group-id" {
-			delete(tags, k)
-		}
-	}
+	delete(tags, "tencentcloud:autoscaling:auto-scaling-group-id")
 	_ = d.Set("tags", tags)
 
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))

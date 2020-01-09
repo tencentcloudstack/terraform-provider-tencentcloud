@@ -20,7 +20,7 @@ FEATURES:
 BUG FIXES:
 
 * Resource: `tencentcloud_eni_attachment` fix detach may failed.
-* Resource: `tencentcloud_instance` remove the tag that be added by as attachment automatically.
+* Resource: `tencentcloud_instance` remove the tag that be added by as attachment automatically([#300](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/300)).
 
 ## 1.29.0 (January 06, 2020)
 
