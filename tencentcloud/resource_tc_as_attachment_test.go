@@ -50,9 +50,12 @@ func testAccCheckAsAttachmentExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("auto scaling attachment id is not set")
 		}
 		asService := AsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		_, err := asService.DescribeAutoScalingAttachment(ctx, rs.Primary.ID)
+		instances, err := asService.DescribeAutoScalingAttachment(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if len(instances) < 1 {
+			return fmt.Errorf("auto scaling attachement not exists: %s", rs.Primary.ID)
 		}
 		return nil
 	}

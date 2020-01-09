@@ -20,6 +20,7 @@ FEATURES:
 BUG FIXES:
 
 * Resource: `tencentcloud_eni_attachment` fix detach may failed.
+* Resource: `tencentcloud_instance` remove the tag that be added by as attachment automatically([#300](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/300)).
 * Data Source: `tencentcloud_security_group` set `project_id` error
 * Resource: `tencentcloud_clb_listener` argument `sni_switch` set error type.([#297](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/297)).
 * Resource: `tencentcloud_vpn_gateway` twice apply shows change argument `prepaid_renew_flag`.([#298](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/298)).

@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -33,8 +34,6 @@ func (me *AsService) DescribeLaunchConfigurationById(ctx context.Context, config
 	if has < 1 {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	config = response.Response.LaunchConfigurationSet[0]
 	return
 }
@@ -72,19 +71,13 @@ func (me *AsService) DescribeLaunchConfigurationByFilter(ctx context.Context, co
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 		if response == nil || len(response.Response.LaunchConfigurationSet) < 1 {
 			break
 		}
-
 		configs = append(configs, response.Response.LaunchConfigurationSet...)
-
 		if len(response.Response.LaunchConfigurationSet) < pageSize {
 			break
 		}
-
 		offset += pageSize
 	}
 	return
@@ -95,14 +88,12 @@ func (me *AsService) DeleteLaunchConfiguration(ctx context.Context, configuratio
 	request := as.NewDeleteLaunchConfigurationRequest()
 	request.LaunchConfigurationId = &configurationId
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAsClient().DeleteLaunchConfiguration(request)
+	_, err := me.client.UseAsClient().DeleteLaunchConfiguration(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
 
@@ -122,8 +113,6 @@ func (me *AsService) DescribeAutoScalingGroupById(ctx context.Context, scalingGr
 	if has < 1 {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	scalingGroup = response.Response.AutoScalingGroupSet[0]
 	return
 }
@@ -178,19 +167,13 @@ func (me *AsService) DescribeAutoScalingGroupByFilter(
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 		if response == nil || len(response.Response.AutoScalingGroupSet) < 1 {
 			break
 		}
-
 		scalingGroups = append(scalingGroups, response.Response.AutoScalingGroupSet...)
-
 		if len(response.Response.AutoScalingGroupSet) < pageSize {
 			break
 		}
-
 		offset += pageSize
 	}
 	return
@@ -205,14 +188,12 @@ func (me *AsService) ClearScalingGroupInstance(ctx context.Context, scalingGroup
 	request.MaxSize = helper.IntUint64(0)
 	request.DesiredCapacity = helper.IntUint64(0)
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAsClient().ModifyAutoScalingGroup(request)
+	_, err := me.client.UseAsClient().ModifyAutoScalingGroup(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
 
@@ -221,14 +202,12 @@ func (me *AsService) DeleteScalingGroup(ctx context.Context, scalingGroupId stri
 	request := as.NewDeleteAutoScalingGroupRequest()
 	request.AutoScalingGroupId = &scalingGroupId
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAsClient().DeleteAutoScalingGroup(request)
+	_, err := me.client.UseAsClient().DeleteAutoScalingGroup(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
 
@@ -247,9 +226,6 @@ func (me *AsService) AttachInstances(ctx context.Context, scalingGroupId string,
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 	activityId := *response.Response.ActivityId
 
 	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
@@ -283,9 +259,6 @@ func (me *AsService) DescribeActivityById(ctx context.Context, activityId string
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 	if len(response.Response.ActivitySet) < 1 {
 		errRet = fmt.Errorf("activity id set is nil")
 	}
@@ -308,9 +281,6 @@ func (me *AsService) DetachInstances(ctx context.Context, scalingGroupId string,
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 	activityId := *response.Response.ActivityId
 
 	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
@@ -349,8 +319,6 @@ func (me *AsService) DescribeAutoScalingAttachment(ctx context.Context, scalingG
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	instanceIds = make([]string, 0)
 	for _, instance := range response.Response.AutoScalingInstanceSet {
@@ -377,8 +345,6 @@ func (me *AsService) DescribeScalingPolicyById(ctx context.Context, scalingPolic
 	if has < 1 {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	scalingPolicy = response.Response.ScalingPolicySet[0]
 	return
 }
@@ -423,19 +389,13 @@ func (me *AsService) DescribeScalingPolicyByFilter(ctx context.Context, policyId
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 		if response == nil || len(response.Response.ScalingPolicySet) < 1 {
 			break
 		}
-
 		scalingPolicies = append(scalingPolicies, response.Response.ScalingPolicySet...)
-
 		if len(response.Response.ScalingPolicySet) < pageSize {
 			break
 		}
-
 		offset += pageSize
 	}
 	return
@@ -446,34 +406,35 @@ func (me *AsService) DeleteScalingPolicy(ctx context.Context, scalingPolicyId st
 	request := as.NewDeleteScalingPolicyRequest()
 	request.AutoScalingPolicyId = &scalingPolicyId
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAsClient().DeleteScalingPolicy(request)
+	_, err := me.client.UseAsClient().DeleteScalingPolicy(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
 
-func (me *AsService) DescribeScheduledActionById(ctx context.Context, scheduledActionId string) (scheduledAction *as.ScheduledAction, errRet error) {
+func (me *AsService) DescribeScheduledActionById(ctx context.Context, scheduledActionId string) (scheduledAction *as.ScheduledAction, has int, errRet error) {
 	logId := getLogId(ctx)
 	request := as.NewDescribeScheduledActionsRequest()
 	request.ScheduledActionIds = []*string{&scheduledActionId}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAsClient().DescribeScheduledActions(request)
 	if err != nil {
+		sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError)
+		if ok && sdkErr.Code == AsScheduleNotFound {
+			has = 0
+			return
+		}
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.ScheduledActionSet) < 1 {
-		errRet = fmt.Errorf("scheduled action id is not found")
+	has = len(response.Response.ScheduledActionSet)
+	if has < 1 {
 		return
 	}
 	scheduledAction = response.Response.ScheduledActionSet[0]
@@ -485,14 +446,12 @@ func (me *AsService) DeleteScheduledAction(ctx context.Context, scheduledActonId
 	request := as.NewDeleteScheduledActionRequest()
 	request.ScheduledActionId = &scheduledActonId
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAsClient().DeleteScheduledAction(request)
+	_, err := me.client.UseAsClient().DeleteScheduledAction(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
 
@@ -512,8 +471,6 @@ func (me *AsService) DescribeLifecycleHookById(ctx context.Context, lifecycleHoo
 	if has < 1 {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	lifecycleHook = response.Response.LifecycleHookSet[0]
 	return
 }
@@ -523,14 +480,12 @@ func (me *AsService) DeleteLifecycleHook(ctx context.Context, lifecycleHookId st
 	request := as.NewDeleteLifecycleHookRequest()
 	request.LifecycleHookId = &lifecycleHookId
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAsClient().DeleteLifecycleHook(request)
+	_, err := me.client.UseAsClient().DeleteLifecycleHook(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
 
@@ -550,8 +505,6 @@ func (me *AsService) DescribeNotificationById(ctx context.Context, notificationI
 	if has < 1 {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	notification = response.Response.AutoScalingNotificationSet[0]
 	return
 }
@@ -561,14 +514,12 @@ func (me *AsService) DeleteNotification(ctx context.Context, notificationId stri
 	request := as.NewDeleteNotificationConfigurationRequest()
 	request.AutoScalingNotificationId = &notificationId
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseAsClient().DeleteNotificationConfiguration(request)
+	_, err := me.client.UseAsClient().DeleteNotificationConfiguration(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
 

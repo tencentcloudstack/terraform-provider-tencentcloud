@@ -66,9 +66,12 @@ func testAccCheckAsScalingPolicyExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("auto scaling policy id is not set")
 		}
 		asService := AsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		_, _, err := asService.DescribeScalingPolicyById(ctx, rs.Primary.ID)
+		_, has, err := asService.DescribeScalingPolicyById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if has < 1 {
+			return fmt.Errorf("auto scaling policy not exists: %s", rs.Primary.ID)
 		}
 		return nil
 	}
@@ -86,8 +89,11 @@ func testAccCheckAsScalingPolicyDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, _, err := asService.DescribeScalingPolicyById(ctx, rs.Primary.ID)
-		if err == nil {
+		_, has, err := asService.DescribeScalingPolicyById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if has > 0 {
 			return fmt.Errorf("auto scaling policy still exists: %s", rs.Primary.ID)
 		}
 	}

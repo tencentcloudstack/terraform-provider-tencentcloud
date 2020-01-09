@@ -658,10 +658,15 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("system_disk_type", instance.SystemDisk.DiskType)
 	_ = d.Set("system_disk_size", instance.SystemDisk.DiskSize)
 	_ = d.Set("system_disk_id", instance.SystemDisk.DiskId)
-	_ = d.Set("tags", flattenCvmTagsMapping(instance.Tags))
 	_ = d.Set("instance_status", instance.InstanceState)
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
+
+	// as attachment add tencentcloud:autoscaling:auto-scaling-group-id tag automatically
+	// we should remove this tag, otherwise it will cause terraform state change
+	tags := flattenCvmTagsMapping(instance.Tags)
+	delete(tags, "tencentcloud:autoscaling:auto-scaling-group-id")
+	_ = d.Set("tags", tags)
 
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
 	for _, disk := range instance.DataDisks {

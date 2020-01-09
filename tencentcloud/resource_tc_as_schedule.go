@@ -26,7 +26,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -141,15 +140,13 @@ func resourceTencentCloudAsScheduleRead(d *schema.ResourceData, meta interface{}
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		scheduledAction, e := asService.DescribeScheduledActionById(ctx, scheduledActionId)
+		scheduledAction, has, e := asService.DescribeScheduledActionById(ctx, scheduledActionId)
 		if e != nil {
-			if sdkErr, ok := e.(*errors.TencentCloudSDKError); ok {
-				if sdkErr.Code == AsScheduleNotFound {
-					d.SetId("")
-					return nil
-				}
-			}
 			return retryError(e)
+		}
+		if has == 0 {
+			d.SetId("")
+			return nil
 		}
 
 		_ = d.Set("scaling_group_id", *scheduledAction.AutoScalingGroupId)
