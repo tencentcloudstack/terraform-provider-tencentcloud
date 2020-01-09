@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
@@ -92,14 +93,14 @@ func validateIntegerMin(min int) schema.SchemaValidateFunc {
 
 func validateStringLengthInRange(min, max int) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
-		value := len(v.(string))
-		if value < min {
+		length := utf8.RuneCountInString(v.(string))
+		if length < min {
 			errors = append(errors, fmt.Errorf(
-				"length of %q cannot be lower than %d: %d", k, min, value))
+				"length of %q cannot be lower than %d: %d", k, min, length))
 		}
-		if value > max {
+		if length > max {
 			errors = append(errors, fmt.Errorf(
-				"length of %q cannot be higher than %d: %d", k, max, value))
+				"length of %q cannot be higher than %d: %d", k, max, length))
 		}
 		return
 	}
