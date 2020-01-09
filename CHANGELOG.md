@@ -20,6 +20,7 @@ FEATURES:
 BUG FIXES:
 
 * Resource: `tencentcloud_eni_attachment` fix detach may failed.
+* Resource: `tencentcloud_instance` remove the tag that be added by as attachment automatically.
 
 ## 1.29.0 (January 06, 2020)
 

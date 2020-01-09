@@ -382,15 +382,13 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		}
-		if has == 0 {
-			d.SetId("")
-		}
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 	if has == 0 {
+		d.SetId("")
 		return nil
 	}
 
