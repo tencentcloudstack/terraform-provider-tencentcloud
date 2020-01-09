@@ -419,7 +419,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 			if len(result.Response.VpnGatewaySet) == 0 {
 				return nil
 			}
-			if result.Response.VpnGatewaySet[0].ExpiredTime != nil {
+			if result.Response.VpnGatewaySet[0].ExpiredTime != nil && *result.Response.VpnGatewaySet[0].InstanceChargeType == VPN_CHARGE_TYPE_PREPAID {
 				expiredTime := *result.Response.VpnGatewaySet[0].ExpiredTime
 				if expiredTime != "0000-00-00 00:00:00" {
 					t, err := time.Parse("2006-01-02 15:04:05", expiredTime)
