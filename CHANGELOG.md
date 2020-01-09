@@ -21,13 +21,12 @@ BUG FIXES:
 
 * Resource: `tencentcloud_eni_attachment` fix detach may failed.
 * Resource: `tencentcloud_instance` remove the tag that be added by as attachment automatically([#300](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/300)).
-* Resource: `tencentcloud_clb_listener` argument `sni_switch` set error type.([#297](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/297)).
-* Resource: `tencentcloud_vpn_gateway` twice apply shows change argument `prepaid_renew_flag`.([#298](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/298)).
-* Resource: `tencentcloud_clb_instance` query status failed but applied in CLB resources.([#303](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/303)).
-* Resource: `tencentcloud_vpn_gateway` of postpaid charge type cannot be deleted normally.([#312](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/312)).
-* Resource: `tencentcloud_eni_attachment` fix detach may failed.
-* Data Source: `tencentcloud_security_group` set `project_id` error.
-* Data Source: `tencentcloud_security_groups` fix `project_id` filter not works ([#303](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/314)).
+* Resource: `tencentcloud_clb_listener` fix `sni_switch` type error([#297](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/297)).
+* Resource: `tencentcloud_vpn_gateway` shows argument `prepaid_renew_flag` has changed when applied again([#298](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/298)).
+* Resource: `tencentcloud_clb_instance` fix the bug that instance id is not set in state file([#303](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/303)).
+* Resource: `tencentcloud_vpn_gateway` that is postpaid charge type cannot be deleted normally([#312](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/312)).
+* Data Source: `tencentcloud_security_group` fix `project_id` type error.
+* Data Source: `tencentcloud_security_groups` fix `project_id` filter not works([#303](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/314)).
 
 ## 1.29.0 (January 06, 2020)
 
