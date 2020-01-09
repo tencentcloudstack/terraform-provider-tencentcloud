@@ -79,6 +79,23 @@ func TestAccDataSourceTencentCloudSecurityGroups_tags(t *testing.T) {
 	})
 }
 
+func TestAccDataSourceTencentCloudSecurityGroups_searchByProjectId(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: TestAccDataSourceTencentCloudSecurityGroupsConfigSearchByProjectId,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_security_groups.foo"),
+					resource.TestMatchResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.#", regexp.MustCompile(`^[1-9]\d*$`)),
+					resource.TestCheckResourceAttr("data.tencentcloud_security_groups.foo", "security_groups.0.project_id", "0"),
+				),
+			},
+		},
+	})
+}
+
 const TestAccDataSourceTencentCloudSecurityGroupsConfig = `
 resource "tencentcloud_security_group" "foo" {
   name        = "ci-temp-security-groups-test"
@@ -123,5 +140,17 @@ resource "tencentcloud_security_group" "foo" {
 
 data "tencentcloud_security_groups" "foo" {
   tags = tencentcloud_security_group.foo.tags
+}
+`
+
+const TestAccDataSourceTencentCloudSecurityGroupsConfigSearchByProjectId = `
+resource "tencentcloud_security_group" "foo" {
+  name        = "ci-temp-security-groups-test"
+  description = "ci-temp-security-groups-test"
+  project_id  = 0
+}
+
+data "tencentcloud_security_groups" "foo" {
+  project_id = tencentcloud_security_group.foo.project_id
 }
 `
