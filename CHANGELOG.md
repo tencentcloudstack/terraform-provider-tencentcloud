@@ -17,6 +17,10 @@ FEATURES:
 * **New Resource**: `tencentcloud_dayu_l4_rule`
 * **New Resource**: `tencentcloud_dayu_l7_rule`
 
+BUG FIXES:
+
+* Resource: `tencentcloud_eni_attachment` fix detach may failed.
+
 ## 1.29.0 (January 06, 2020)
 
 FEATURES:
@@ -29,7 +33,7 @@ ENHANCEMENTS:
 * Data Source: `tencentcloud_vpc_subnets` add new optional argument `availability_zone`,`is_default`.
 
 BUG FIXES:
-* Resource: `tencentcloud_redis_instance` field security_groups are id list,not name list([#291](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/291)).
+* Resource: `tencentcloud_redis_instance` field security_groups are id list, not name list([#291](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/291)).
 
 ## 1.28.0 (December 25, 2019)
 
