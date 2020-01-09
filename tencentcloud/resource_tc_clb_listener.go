@@ -328,7 +328,7 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
 		_ = d.Set("scheduler", instance.Scheduler)
 	}
-	_ = d.Set("sni_switch", instance.SniSwitch)
+	_ = d.Set("sni_switch", *instance.SniSwitch > 0)
 
 	//health check
 	if instance.HealthCheck != nil {

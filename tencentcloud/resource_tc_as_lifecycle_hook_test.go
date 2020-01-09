@@ -57,9 +57,12 @@ func testAccCheckAsLifecycleHookExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("auto scaling lifecycle hook id is not set")
 		}
 		asService := AsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		_, _, err := asService.DescribeLifecycleHookById(ctx, rs.Primary.ID)
+		_, has, err := asService.DescribeLifecycleHookById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if has < 1 {
+			return fmt.Errorf("auto scaling lifecycle hook not exists: %s", rs.Primary.ID)
 		}
 		return nil
 	}
@@ -77,8 +80,11 @@ func testAccCheckAsLifecycleHookDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, _, err := asService.DescribeLifecycleHookById(ctx, rs.Primary.ID)
-		if err == nil {
+		_, has, err := asService.DescribeLifecycleHookById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if has > 0 {
 			return fmt.Errorf("auto scaling lifecycle hook still exists: %s", rs.Primary.ID)
 		}
 	}

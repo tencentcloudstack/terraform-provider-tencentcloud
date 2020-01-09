@@ -62,9 +62,12 @@ func testAccCheckAsScheduleExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("auto scaling schedule id is not set")
 		}
 		asService := AsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		_, err := asService.DescribeScheduledActionById(ctx, rs.Primary.ID)
+		_, has, err := asService.DescribeScheduledActionById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if has < 1 {
+			return fmt.Errorf("auto scaling schedule not exists: %s", rs.Primary.ID)
 		}
 		return nil
 	}
@@ -82,8 +85,11 @@ func testAccCheckAsScheduleDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := asService.DescribeScheduledActionById(ctx, rs.Primary.ID)
-		if err == nil {
+		_, has, err := asService.DescribeScheduledActionById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if has > 0 {
 			return fmt.Errorf("auto scaling schedule still exists: %s", rs.Primary.ID)
 		}
 	}

@@ -106,7 +106,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 			"prepaid_renew_flag": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     VPN_PERIOD_PREPAID_RENEW_FLAG_NOT,
+				Default:     VPN_PERIOD_PREPAID_RENEW_FLAG_AUTO_NOTIFY,
 				Description: "Flag indicates whether to renew or not, valid values are `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`. This para can only be set to take effect in create operation.",
 			},
 			"prepaid_period": {
@@ -419,7 +419,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 			if len(result.Response.VpnGatewaySet) == 0 {
 				return nil
 			}
-			if result.Response.VpnGatewaySet[0].ExpiredTime != nil {
+			if result.Response.VpnGatewaySet[0].ExpiredTime != nil && *result.Response.VpnGatewaySet[0].InstanceChargeType == VPN_CHARGE_TYPE_PREPAID {
 				expiredTime := *result.Response.VpnGatewaySet[0].ExpiredTime
 				if expiredTime != "0000-00-00 00:00:00" {
 					t, err := time.Parse("2006-01-02 15:04:05", expiredTime)

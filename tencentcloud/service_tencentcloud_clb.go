@@ -863,7 +863,9 @@ func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 			return resource.NonRetryableError(errors.WithStack(e))
 		}
 		if *taskResponse.Response.Status == int64(CLB_TASK_EXPANDING) {
-			return resource.RetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d, requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+			return resource.RetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(expanding), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+		} else if *taskResponse.Response.Status == int64(CLB_TASK_FAIL) {
+			return resource.NonRetryableError(errors.WithStack(fmt.Errorf("CLB task status is %d(failed), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
 		}
 		return nil
 	})
