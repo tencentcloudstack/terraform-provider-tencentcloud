@@ -704,7 +704,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	var mysqlInfo *cdb.InstanceInfo
 	var e error
-	var onlineHas bool = true
+	var onlineHas = true
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, e = tencentMsyqlBasicInfoRead(ctx, d, meta, true)
 		if e != nil {

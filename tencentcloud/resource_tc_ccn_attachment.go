@@ -148,11 +148,11 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		ccnId               = d.Get("ccn_id").(string)
-		instanceType        = d.Get("instance_type").(string)
-		instanceRegion      = d.Get("instance_region").(string)
-		instanceId          = d.Get("instance_id").(string)
-		onlineHas      bool = true
+		ccnId          = d.Get("ccn_id").(string)
+		instanceType   = d.Get("instance_type").(string)
+		instanceRegion = d.Get("instance_region").(string)
+		instanceId     = d.Get("instance_id").(string)
+		onlineHas      = true
 	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, has, e := service.DescribeCcn(ctx, ccnId)

@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 data "tencentcloud_as_scaling_groups" "as_scaling_groups" {
     scaling_group_name  = "myasgroup"
-    configureation_id   = "asc-oqio4yyj"
+    configuration_id   = "asc-oqio4yyj"
     result_output_file  = "my_test_path"
 }
 ```

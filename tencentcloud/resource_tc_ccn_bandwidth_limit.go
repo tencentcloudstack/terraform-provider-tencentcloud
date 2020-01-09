@@ -132,9 +132,9 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		ccnId          = d.Get("ccn_id").(string)
-		region         = d.Get("region").(string)
-		onlineHas bool = true
+		ccnId     = d.Get("ccn_id").(string)
+		region    = d.Get("region").(string)
+		onlineHas = true
 	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, has, e := service.DescribeCcn(ctx, ccnId)

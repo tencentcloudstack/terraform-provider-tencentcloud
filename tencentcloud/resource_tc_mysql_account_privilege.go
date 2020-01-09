@@ -115,7 +115,7 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 
 	//check if the account is delete
 	var accountInfo *cdb.AccountInfo = nil
-	var onlineHas bool = true
+	var onlineHas = true
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		accountInfos, e := mysqlService.DescribeAccounts(ctx, privilegeId.MysqlId)
 		if e != nil {

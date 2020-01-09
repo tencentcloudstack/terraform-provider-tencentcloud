@@ -249,7 +249,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	var onlineHas bool = true
+	var onlineHas = true
 	var (
 		has  bool
 		info *redis.InstanceSet

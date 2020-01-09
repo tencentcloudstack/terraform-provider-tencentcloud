@@ -126,8 +126,8 @@ func dataSourceTencentCloudDcGatewayInstancesRead(d *schema.ResourceData, meta i
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		id   string = ""
-		name string = ""
+		id   = ""
+		name = ""
 	)
 
 	if temp, ok := d.GetOk("dcg_id"); ok {

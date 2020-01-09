@@ -735,8 +735,8 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 	}
 	//tag
 	if d.HasChange("tags") {
-		old, new := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(old.(map[string]interface{}), new.(map[string]interface{}))
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
 		tagService := TagService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}

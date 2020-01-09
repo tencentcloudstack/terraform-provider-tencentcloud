@@ -50,7 +50,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   type              = "master_slave_redis"
   password          = "test12345789"
   mem_size          = 8192
-  name              = "terrform_test"
+  name              = "terraform_test"
   port              = 6379
 
   tags = {

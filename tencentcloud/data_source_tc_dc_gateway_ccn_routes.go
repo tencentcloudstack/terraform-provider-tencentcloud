@@ -102,7 +102,7 @@ func dataSourceTencentCloudDcGatewayCCNRoutesRead(d *schema.ResourceData, meta i
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		id string = d.Get("dcg_id").(string)
+		id = d.Get("dcg_id").(string)
 	)
 
 	var infos, err = service.DescribeDirectConnectGatewayCcnRoutes(ctx, id)

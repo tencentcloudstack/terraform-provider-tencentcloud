@@ -121,7 +121,7 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 		accountName                  = items[1]
 		accountInfo *cdb.AccountInfo = nil
 	)
-	var onlineHas bool = true
+	var onlineHas = true
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		allAccounts, e := mysqlService.DescribeAccounts(ctx, mysqlId)
 		if e != nil {

@@ -322,9 +322,9 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	if d.HasChange("name") || d.HasChange("charge_type") {
 		//check that the charge type change is valid
 		//only pre-paid --> post-paid is valid
-		old, new := d.GetChange("charge_type")
-		oldChargeType := old.(string)
-		newChargeType := new.(string)
+		oldInterface, newInterface := d.GetChange("charge_type")
+		oldChargeType := oldInterface.(string)
+		newChargeType := newInterface.(string)
 		request := vpc.NewModifyVpnGatewayAttributeRequest()
 		request.VpnGatewayId = &gatewayId
 		request.VpnGatewayName = helper.String(d.Get("name").(string))
@@ -379,8 +379,8 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 
 	//tag
 	if d.HasChange("tags") {
-		old, new := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(old.(map[string]interface{}), new.(map[string]interface{}))
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
 		tagService := TagService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}

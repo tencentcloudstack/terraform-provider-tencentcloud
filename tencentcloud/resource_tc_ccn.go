@@ -91,9 +91,9 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name        string = d.Get("name").(string)
-		description string = ""
-		qos         string = d.Get("qos").(string)
+		name        = d.Get("name").(string)
+		description = ""
+		qos         = d.Get("qos").(string)
 	)
 	if temp, ok := d.GetOk("description"); ok {
 		description = temp.(string)
@@ -149,9 +149,9 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name        string = ""
-		description string = ""
-		change      bool   = false
+		name        = ""
+		description = ""
+		change      = false
 	)
 	if d.HasChange("name") {
 		name = d.Get("name").(string)

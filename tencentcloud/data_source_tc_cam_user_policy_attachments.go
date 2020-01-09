@@ -148,7 +148,7 @@ func dataSourceTencentCloudCamUserPolicyAttachmentsRead(d *schema.ResourceData, 
 	for _, policy := range policyOfUsers {
 		mapping := map[string]interface{}{
 			"user_id":     userId,
-			"policy_id":   strconv.Itoa(int((*policy.PolicyId))),
+			"policy_id":   strconv.Itoa(int(*policy.PolicyId)),
 			"create_time": *policy.AddTime,
 			"create_mode": *policy.CreateMode,
 			"policy_type": *policy.PolicyType,

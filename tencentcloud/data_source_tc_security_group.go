@@ -91,7 +91,7 @@ func dataSourceTencentCloudSecurityGroupRead(d *schema.ResourceData, meta interf
 	}
 
 	if len(sgs) == 0 {
-		return fmt.Errorf("security group security_group_id=%s, name=%s not found", *sgId, *sgName)
+		return fmt.Errorf("security group not found with the query condition")
 	}
 
 	sg := sgs[0]
