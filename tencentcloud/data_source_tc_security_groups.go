@@ -133,16 +133,16 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 	region := client.Region
 
 	var (
-		sgId           *string
-		sgName         *string
-		inputProjectId *int
+		sgId      *string
+		sgName    *string
+		projectId *int
 	)
 
 	idBuilder := strings.Builder{}
 	idBuilder.WriteString("securityGroups-")
 
 	if raw, ok := d.GetOk("security_group_id"); ok {
-		sgId = common.StringPtr(raw.(string))
+		sgId = helper.String(raw.(string))
 		idBuilder.WriteString(*sgId)
 		idBuilder.WriteRune('-')
 	}
@@ -153,14 +153,14 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 		idBuilder.WriteRune('-')
 	}
 
-	if raw, ok := d.GetOk("project_id"); ok {
-		inputProjectId = common.IntPtr(raw.(int))
-		idBuilder.WriteString(strconv.Itoa(*inputProjectId))
+	if raw, ok := d.GetOkExists("project_id"); ok {
+		projectId = helper.Int(raw.(int))
+		idBuilder.WriteString(strconv.Itoa(*projectId))
 	}
 
 	tags := helper.GetTags(d, "tags")
 
-	sgs, err := vpcService.DescribeSecurityGroups(ctx, sgId, sgName, inputProjectId, tags)
+	sgs, err := vpcService.DescribeSecurityGroups(ctx, sgId, sgName, projectId, tags)
 	if err != nil {
 		return err
 	}
