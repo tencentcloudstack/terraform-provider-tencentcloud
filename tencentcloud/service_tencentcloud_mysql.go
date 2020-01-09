@@ -1056,6 +1056,9 @@ func (me *MysqlService) ModifyDBInstanceName(ctx context.Context, mysqlId,
 	ratelimit.Check(request.GetAction())
 	response, errRet := me.client.UseMysqlClient().ModifyDBInstanceName(request)
 
+	if errRet != nil {
+		return
+	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
@@ -1083,6 +1086,9 @@ func (me *MysqlService) ModifyDBInstanceVipVport(ctx context.Context, mysqlId, v
 	ratelimit.Check(request.GetAction())
 	response, errRet := me.client.UseMysqlClient().ModifyDBInstanceVipVport(request)
 
+	if errRet != nil {
+		return
+	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return

@@ -237,6 +237,8 @@ func resourceTencentCloudDayuL7RuleCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
+	d.SetId(resourceType + FILED_SP + resourceId + FILED_SP + ruleId)
+
 	readyFlag, rErr := checkL7RuleStatus(meta, resourceType, resourceId, ruleId, "create")
 	if rErr != nil {
 		return rErr
@@ -244,8 +246,6 @@ func resourceTencentCloudDayuL7RuleCreate(d *schema.ResourceData, meta interface
 	if !readyFlag {
 		return fmt.Errorf("Creating operation is timeout %s", ruleId)
 	}
-
-	d.SetId(resourceType + FILED_SP + resourceId + FILED_SP + ruleId)
 
 	//set health check
 	var healthCheck dayu.L7HealthConfig

@@ -50,7 +50,7 @@ func testAccCheckDayuDdosPolicyAttachmentDestroy(s *terraform.State) error {
 		if err != nil {
 			return err
 		}
-		if err == nil && has {
+		if has {
 			return fmt.Errorf("DDoS policy attachment still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -83,7 +83,7 @@ func testAccCheckDayuDdosPolicyAttachmentExists(n string) resource.TestCheckFunc
 		if err != nil {
 			return err
 		}
-		if err == nil && !has {
+		if !has {
 			return fmt.Errorf("DDoS policy attachment does not exist: %s", rs.Primary.ID)
 		}
 		return nil
