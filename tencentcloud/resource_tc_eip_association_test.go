@@ -114,7 +114,7 @@ func testAccCheckEipAssociationExists(n string) resource.TestCheckFunc {
 		}
 		associationId, err := parseEipAssociationId(rs.Primary.ID)
 
-		if err!=nil{
+		if err != nil {
 			return err
 		}
 		eip, err := vpcService.DescribeEipById(ctx, associationId.EipId)

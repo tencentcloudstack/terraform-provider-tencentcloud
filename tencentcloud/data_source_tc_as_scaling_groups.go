@@ -119,13 +119,13 @@ func dataSourceTencentCloudAsScalingGroups() *schema.Resource {
 						"load_balancer_ids": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "A lsit of traditional clb ids which the CVM instances attached to.",
+							Description: "A list of traditional clb ids which the CVM instances attached to.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"forward_balancer_ids": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "A lsit of application clb ids.",
+							Description: "A list of application clb ids.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"load_balancer_id": {

@@ -271,7 +271,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("storage_size") {
-		oldInterface, newInterface:= d.GetChange("storage_size")
+		oldInterface, newInterface := d.GetChange("storage_size")
 		oldValue := oldInterface.(int)
 		newValue := newInterface.(int)
 		if oldValue > newValue {
