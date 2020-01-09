@@ -21,6 +21,7 @@ BUG FIXES:
 * Resource: `tencentcloud_clb_listener` argument `sni_switch` set error type.([#297](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/297)).
 * Resource: `tencentcloud_vpn_gateway` twice apply shows change argument `prepaid_renew_flag`.([#298](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/298)).
 * Resource: `tencentcloud_clb_instance` query status failed but applied in CLB resources.([#303](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/303)).
+* Resource: `tencentcloud_vpn_gateway` of postpaid charge type cannot be deleted normally.([#312](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/312)).
 * Resource: `tencentcloud_eni_attachment` fix detach may failed.
 * Data Source: `tencentcloud_security_group` set `project_id` error
 
