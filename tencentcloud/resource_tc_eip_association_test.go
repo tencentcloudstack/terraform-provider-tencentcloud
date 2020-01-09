@@ -69,6 +69,11 @@ func testAccCheckEipAssociationDestroy(s *terraform.State) error {
 		}
 
 		associationId, err := parseEipAssociationId(rs.Primary.ID)
+
+		if err != nil {
+			return err
+		}
+
 		eip, err := vpcService.DescribeEipById(ctx, associationId.EipId)
 		if err != nil {
 			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
