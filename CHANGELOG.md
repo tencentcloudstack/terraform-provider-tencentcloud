@@ -1,3 +1,12 @@
+## 1.30.1 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_vpn_gateway` add `InternalError` SDK error to triggering the retry process.
+* Resource: `tencentcloud_vpn_gateway` fix read nil issue when the resource is not exist.
+* Resource: `tencentcloud_clb_listener_rule` fix unclear error message of SSL type error.
+* Resource: `tencentcloud_ha_vip_attachment` fix read nil issue when the resource is not exist.
+
 ## 1.30.0 (Unreleased)
 
 FEATURES:

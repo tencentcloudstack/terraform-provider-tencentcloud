@@ -2426,6 +2426,7 @@ func (me *VpcService) DescribeHaVipEipById(ctx context.Context, haVipEipAttachme
 	items := strings.Split(haVipEipAttachmentId, "#")
 	if len(items) != 2 {
 		errRet = fmt.Errorf("decode HA VIP EIP attachment ID error %s", haVipEipAttachmentId)
+		return
 	}
 	haVipId := items[0]
 	addressIp := items[1]
@@ -2442,8 +2443,14 @@ func (me *VpcService) DescribeHaVipEipById(ctx context.Context, haVipEipAttachme
 				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		} else {
-			if len(result.Response.HaVipSet) != 1 {
-				return nil
+			length := len(result.Response.HaVipSet)
+			if length != 1 {
+				if length == 0 {
+					return nil
+				} else {
+					err = fmt.Errorf("query havip %s eip %s failed, the SDK returns %d HaVips", haVipId, addressIp, length)
+					return resource.NonRetryableError(err)
+				}
 			} else {
 				eip = *result.Response.HaVipSet[0].AddressIp
 				if addressIp != eip {

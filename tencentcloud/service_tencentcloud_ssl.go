@@ -237,7 +237,7 @@ func (me *SslService) checkCertificateType(ctx context.Context, certId string, c
 		return true, nil
 	} else {
 		if certificate == nil {
-			return false, fmt.Errorf("Certificate Id %s is not found.", certId)
+			return false, fmt.Errorf("certificate id %s is not found", certId)
 		}
 		return false, nil
 	}
