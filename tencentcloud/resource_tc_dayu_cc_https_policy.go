@@ -203,7 +203,7 @@ func resourceTencentCloudDayuCCHttpsPolicyCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudDayuCCHttpsPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dayu_cc_http_policy.read")()
+	defer logElapsed("resource.tencentcloud_dayu_cc_https_policy.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -249,7 +249,7 @@ func resourceTencentCloudDayuCCHttpsPolicyRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudDayuCCHttpsPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dayu_cc_http_policy.update")()
+	defer logElapsed("resource.tencentcloud_dayu_cc_https_policy.update")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -315,7 +315,7 @@ func resourceTencentCloudDayuCCHttpsPolicyUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudDayuCCHttpsPolicyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dayu_cc_http_policy.delete")()
+	defer logElapsed("resource.tencentcloud_dayu_cc_https_policy.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
