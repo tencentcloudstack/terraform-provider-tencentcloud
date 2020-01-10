@@ -160,7 +160,7 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		}
-		ids := make([]string, len(snapshots))
+		ids := make([]string, 0, len(snapshots))
 		snapshotList := make([]map[string]interface{}, 0, len(snapshots))
 		for _, snapshot := range snapshots {
 			mapping := map[string]interface{}{
