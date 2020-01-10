@@ -156,9 +156,19 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeCustomerGateways(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			ee, ok := e.(*errors.TencentCloudSDKError)
+			if !ok {
+				return retryError(e)
+			}
+			if ee.Code == VPCNotFound {
+				log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return nil
+			} else {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
 		}
 		response = result
 		return nil
