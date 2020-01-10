@@ -75,7 +75,7 @@ func dataSourceTencentCloudCamSAMLProviders() *schema.Resource {
 }
 
 func dataSourceTencentCloudCamSAMLProvidersRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cam_SAML_providers.read")()
+	defer logElapsed("data_source.tencentcloud_cam_saml_providers.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
