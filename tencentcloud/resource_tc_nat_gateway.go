@@ -136,7 +136,7 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 	// must wait for finishing creating NAT
 	statRequest := vpc.NewDescribeNatGatewaysRequest()
 	statRequest.NatGatewayIds = []*string{response.Response.NatGatewaySet[0].NatGatewayId}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGateways(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -438,7 +438,7 @@ func resourceTencentCloudNatGatewayDelete(d *schema.ResourceData, meta interface
 
 	statRequest := vpc.NewDescribeNatGatewaysRequest()
 	statRequest.NatGatewayIds = []*string{&natGatewayId}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGateways(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",

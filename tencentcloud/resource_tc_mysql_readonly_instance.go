@@ -28,7 +28,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -146,7 +145,7 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 
 	// the mysql master instance must have a backup before creating a read-only instance
 	masterInstanceId := d.Get("master_instance_id").(string)
-	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		backups, err := mysqlService.DescribeBackupsByMysqlId(ctx, masterInstanceId, 10)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -178,7 +177,7 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 
 	mysqlID := d.Id()
 
-	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -277,7 +276,7 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 	}
 	var hasDeleted = false
 
-	err = resource.Retry(20*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 		if err != nil {

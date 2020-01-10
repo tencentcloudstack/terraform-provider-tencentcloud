@@ -28,7 +28,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -151,7 +150,7 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	d.SetId(fsId)
 
 	// wait for success status
-	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		fileSystems, errRet := cfsService.DescribeFileSystem(ctx, fsId, "", "")
 		if errRet != nil {
 			return retryError(errRet, "InternalError")

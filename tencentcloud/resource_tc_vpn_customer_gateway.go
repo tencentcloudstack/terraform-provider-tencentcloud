@@ -28,7 +28,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -108,7 +107,7 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 	// must wait for finishing creating customer gateway
 	statRequest := vpc.NewDescribeCustomerGatewaysRequest()
 	statRequest.CustomerGatewayIds = []*string{response.Response.CustomerGateway.CustomerGatewayId}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeCustomerGateways(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -261,7 +260,7 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 	offset := uint64(0)
 	tRequest.Offset = &offset
 
-	tErr := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	tErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(tRequest)
 
 		if e != nil {
@@ -299,7 +298,7 @@ func resourceTencentCloudVpnCustomerGatewayDelete(d *schema.ResourceData, meta i
 	//to get the status of customer gateway
 	statRequest := vpc.NewDescribeCustomerGatewaysRequest()
 	statRequest.CustomerGatewayIds = []*string{&customerGatewayId}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeCustomerGateways(statRequest)
 		if e != nil {
 			ee, ok := e.(*errors.TencentCloudSDKError)

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
@@ -228,7 +227,7 @@ func (me *AsService) AttachInstances(ctx context.Context, scalingGroupId string,
 	}
 	activityId := *response.Response.ActivityId
 
-	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 		status, err := me.DescribeActivityById(ctx, activityId)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -283,7 +282,7 @@ func (me *AsService) DetachInstances(ctx context.Context, scalingGroupId string,
 	}
 	activityId := *response.Response.ActivityId
 
-	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 		status, err := me.DescribeActivityById(ctx, activityId)
 		if err != nil {
 			return resource.NonRetryableError(err)

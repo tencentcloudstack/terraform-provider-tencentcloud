@@ -36,7 +36,6 @@ import (
 	"crypto/md5"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -224,7 +223,7 @@ func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	return resource.Retry(5*time.Minute, func() *resource.RetryError {
+	return resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		_, has, err := service.DescribeCcnAttachedInstance(ctx, ccnId, instanceRegion, instanceType, instanceId)
 		if err != nil {
 			return resource.RetryableError(err)

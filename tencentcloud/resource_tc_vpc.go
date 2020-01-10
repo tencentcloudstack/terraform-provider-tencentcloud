@@ -30,7 +30,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -310,7 +309,7 @@ func resourceTencentCloudVpcInstanceDelete(d *schema.ResourceData, meta interfac
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if err := service.DeleteVpc(ctx, d.Id()); err != nil {
 			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
 				if sdkErr.Code == VPCNotFound {

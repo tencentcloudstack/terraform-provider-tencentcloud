@@ -544,7 +544,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	mysqlID := d.Id()
 
-	err := resource.Retry(20*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -575,7 +575,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
 				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
@@ -1029,7 +1029,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 				log.Printf("[CRITAL]%s update mysql %s fail, reason:%s\n ", logId, tag, err.Error())
 				return err
 			}
-			err = resource.Retry(60*time.Minute, func() *resource.RetryError {
+			err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 				if err != nil {
 					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
@@ -1074,7 +1074,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			log.Printf("[CRITAL]%s update mysql %s fail, reason:%s\n ", logId, tag, err.Error())
 			return err
 		}
-		err = resource.Retry(60*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
 				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
@@ -1113,7 +1113,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			return err
 		}
 
-		err = resource.Retry(60*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
 				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
@@ -1217,7 +1217,7 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 
 	var hasDeleted = false
 
-	err = resource.Retry(20*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 		if err != nil {
@@ -1252,7 +1252,7 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	err = resource.Retry(20*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeIsolatedDBInstanceById(ctx, d.Id())
 		if err != nil {
 			if _, ok := err.(*errors.TencentCloudSDKError); !ok {

@@ -35,7 +35,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -228,7 +227,7 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 	instanceId := *response.Response.InstanceIds[0]
 
-	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 		instance, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 		if e != nil {
 			return resource.NonRetryableError(e)
@@ -261,7 +260,7 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 		instance, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 		if e != nil {
 			return resource.NonRetryableError(e)
@@ -389,7 +388,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 			instance, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 			if e != nil {
 				return resource.NonRetryableError(e)
@@ -441,7 +440,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 			instance, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 			if e != nil {
 				return resource.NonRetryableError(e)

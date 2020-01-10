@@ -404,7 +404,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		offset := uint64(0)
 		idRequest.Offset = &offset
 
-		err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(idRequest)
 
 			if e != nil {
@@ -435,7 +435,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	// must wait for finishing creating connection
 	statRequest := vpc.NewDescribeVpnConnectionsRequest()
 	statRequest.VpnConnectionIds = []*string{&vpnConnectionId}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -785,7 +785,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 	//to get the status of vpn connection
 	statRequest := vpc.NewDescribeVpnConnectionsRequest()
 	statRequest.VpnConnectionIds = []*string{&connectionId}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(statRequest)
 		if e != nil {
 			ee, ok := e.(*errors.TencentCloudSDKError)

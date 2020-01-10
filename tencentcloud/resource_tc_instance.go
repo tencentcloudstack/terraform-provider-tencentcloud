@@ -577,7 +577,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	d.SetId(instanceId)
 
 	// wait for status
-	err = resource.Retry(15*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, "InternalError")
@@ -598,7 +598,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 
-		err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
 				return retryError(errRet, "InternalError")
@@ -757,7 +757,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return err
 			}
-			err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 				if errRet != nil {
 					return retryError(errRet, "InternalError")
@@ -775,7 +775,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return err
 			}
-			err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 				if errRet != nil {
 					return retryError(errRet, "InternalError")
@@ -800,7 +800,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		d.SetPartial("instance_type")
 
 		// wait for status
-		err = resource.Retry(4*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
 				return retryError(errRet, "InternalError")
@@ -890,7 +890,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, "InternalError")
