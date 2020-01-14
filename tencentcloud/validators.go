@@ -65,9 +65,9 @@ func validateIp(v interface{}, k string) (ws []string, errors []error) {
 }
 
 // NOTE not exactly strict, but ok for now
-func validateIntegerInRange(min, max int) schema.SchemaValidateFunc {
+func validateIntegerInRange(min, max int64) schema.SchemaValidateFunc {
 	return func(v interface{}, k string) (ws []string, errors []error) {
-		value := v.(int)
+		value := int64(v.(int))
 		if value < min {
 			errors = append(errors, fmt.Errorf(
 				"%q cannot be lower than %d: %d", k, min, value))
