@@ -410,7 +410,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, idRequest.GetAction(), idRequest.ToJsonString(), e.Error())
-				return retryError(e)
+				return retryError(e, "InternalError")
 			} else {
 				if len(result.Response.VpnConnectionSet) == 0 || *result.Response.VpnConnectionSet[0].VpnConnectionId == "" {
 					return resource.RetryableError(fmt.Errorf("Id is creating, wait..."))

@@ -144,6 +144,7 @@ func resourceTencentCloudHaVipRead(d *schema.ResourceData, meta interface{}) err
 	haVipId := d.Id()
 	request := vpc.NewDescribeHaVipsRequest()
 	request.HaVipIds = []*string{&haVipId}
+
 	var response *vpc.DescribeHaVipsResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeHaVips(request)

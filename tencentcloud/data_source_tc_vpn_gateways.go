@@ -185,7 +185,7 @@ func dataSourceTencentCloudVpnGatewaysRead(d *schema.ResourceData, meta interfac
 		params["vpn-gateway-name"] = v.(string)
 	}
 	if v, ok := d.GetOk("public_ip_address"); ok {
-		params["ip-address"] = v.(string)
+		params["public-ip-address"] = v.(string)
 	}
 	if v, ok := d.GetOk("vpc_id"); ok {
 		params["vpc-id"] = v.(string)

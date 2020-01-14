@@ -86,14 +86,16 @@ func resourceTencentCloudHaVipEipAttachmentRead(d *schema.ResourceData, meta int
 
 	eip := ""
 	haVip := ""
+	has := false
 	vpcService := VpcService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		eipId, haVipId, e := vpcService.DescribeHaVipEipById(ctx, haVipEipAttachmentId)
+		eipId, haVipId, flag, e := vpcService.DescribeHaVipEipById(ctx, haVipEipAttachmentId)
 		if e != nil {
 			return retryError(e)
 		}
+		has = flag
 		eip = eipId
 		haVip = haVipId
 		return nil
@@ -103,6 +105,9 @@ func resourceTencentCloudHaVipEipAttachmentRead(d *schema.ResourceData, meta int
 		return err
 	}
 
+	if !has {
+		d.SetId("")
+	}
 	_ = d.Set("havip_id", haVip)
 	_ = d.Set("address_ip", eip)
 	d.SetId(haVipEipAttachmentId)

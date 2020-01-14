@@ -2419,13 +2419,14 @@ func (me *VpcService) DescribeEniByFilters(
 	return me.describeEnis(ctx, nil, vpcId, subnetId, nil, cvmId, sgId, name, desc, ipv4, tags)
 }
 
-func (me *VpcService) DescribeHaVipEipById(ctx context.Context, haVipEipAttachmentId string) (eip string, haVip string, errRet error) {
+func (me *VpcService) DescribeHaVipEipById(ctx context.Context, haVipEipAttachmentId string) (eip string, haVip string, has bool, errRet error) {
 	logId := getLogId(ctx)
 	client := me.client.UseVpcClient()
 
 	items := strings.Split(haVipEipAttachmentId, "#")
 	if len(items) != 2 {
 		errRet = fmt.Errorf("decode HA VIP EIP attachment ID error %s", haVipEipAttachmentId)
+		return
 	}
 	haVipId := items[0]
 	addressIp := items[1]
@@ -2442,13 +2443,20 @@ func (me *VpcService) DescribeHaVipEipById(ctx context.Context, haVipEipAttachme
 				logId, request.GetAction(), request.ToJsonString(), err)
 			return retryError(err)
 		} else {
-			if len(result.Response.HaVipSet) != 1 {
-				return resource.NonRetryableError(fmt.Errorf("cannot find HA VIP"))
+			length := len(result.Response.HaVipSet)
+			if length != 1 {
+				if length == 0 {
+					return nil
+				} else {
+					err = fmt.Errorf("query havip %s eip %s failed, the SDK returns %d HaVips", haVipId, addressIp, length)
+					return resource.NonRetryableError(err)
+				}
 			} else {
 				eip = *result.Response.HaVipSet[0].AddressIp
 				if addressIp != eip {
-					return resource.NonRetryableError(fmt.Errorf("HA VIP EIP attachment does not exist, eip %s, %s", addressIp, eip))
+					return nil
 				}
+				has = true
 				haVip = haVipId
 			}
 		}
@@ -2457,7 +2465,7 @@ func (me *VpcService) DescribeHaVipEipById(ctx context.Context, haVipEipAttachme
 		log.Printf("[CRITAL]%s describe HA VIP attachment failed, reason: %v", logId, err)
 		errRet = err
 	}
-	return eip, haVip, errRet
+	return eip, haVip, has, errRet
 }
 
 func waitEniReady(ctx context.Context, id string, client *vpc.Client, wantIpv4s []string, dropIpv4s []string) error {

@@ -44,8 +44,8 @@ func testAccCheckHaVipEipAttachmentDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, _, err := vpcService.DescribeHaVipEipById(ctx, rs.Primary.ID)
-		if err == nil {
+		_, _, has, err := vpcService.DescribeHaVipEipById(ctx, rs.Primary.ID)
+		if err == nil && has {
 			return fmt.Errorf("HA VIP EIP attachment still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -67,9 +67,12 @@ func testAccCheckHaVipEipAttachmentExists(n string) resource.TestCheckFunc {
 		vpcService := VpcService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, _, err := vpcService.DescribeHaVipEipById(ctx, rs.Primary.ID)
+		_, _, has, err := vpcService.DescribeHaVipEipById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if !has {
+			return fmt.Errorf("HA VIP EIP attachment does not exist: %s", rs.Primary.ID)
 		}
 		return nil
 	}
