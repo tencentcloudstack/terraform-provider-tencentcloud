@@ -12,6 +12,8 @@ import (
 )
 
 func TestAccTencentCloudGaapProxy_basic(t *testing.T) {
+	t.Parallel()
+
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -50,6 +52,8 @@ func TestAccTencentCloudGaapProxy_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudGaapProxy_update(t *testing.T) {
+	t.Parallel()
+
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{

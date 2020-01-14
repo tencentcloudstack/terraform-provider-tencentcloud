@@ -8,6 +8,8 @@ import (
 )
 
 func TestAccDataSourceTencentCloudGaapRealservers_basic(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -28,6 +30,8 @@ func TestAccDataSourceTencentCloudGaapRealservers_basic(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudGaapRealservers_domain(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -48,6 +52,8 @@ func TestAccDataSourceTencentCloudGaapRealservers_domain(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudGaapRealservers_name(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -90,7 +96,7 @@ data tencentcloud_gaap_realservers "foo" {
 
 const TestAccDataSourceTencentCloudGaapRealserversName = `
 resource tencentcloud_gaap_realserver "foo" {
-  domain = "www.qq.com"
+  domain = "www.tencent.com"
   name   = "ci-test-gaap-realserver"
 }
 
