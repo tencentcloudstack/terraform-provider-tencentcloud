@@ -1,11 +1,3 @@
-## 1.30.1 (Unreleased)
-
-BUG FIXES:
-
-* Resource: `tencentcloud_vpn_gateway` add `InternalError` SDK error to triggering the retry process.
-* Resource: `tencentcloud_vpn_gateway` fix read nil issue when the resource is not exist.
-* Resource: `tencentcloud_clb_listener_rule` fix unclear error message of SSL type error.
-* Resource: `tencentcloud_ha_vip_attachment` fix read nil issue when the resource is not exist.
 
 ## 1.30.0 (Unreleased)
 
@@ -34,6 +26,10 @@ BUG FIXES:
 * Resource: `tencentcloud_vpn_gateway` shows argument `prepaid_renew_flag` has changed when applied again([#298](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/298)).
 * Resource: `tencentcloud_clb_instance` fix the bug that instance id is not set in state file([#303](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/303)).
 * Resource: `tencentcloud_vpn_gateway` that is postpaid charge type cannot be deleted normally([#312](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/312)).
+* Resource: `tencentcloud_vpn_gateway` add `InternalError` SDK error to triggering the retry process.
+* Resource: `tencentcloud_vpn_gateway` fix read nil issue when the resource is not exist.
+* Resource: `tencentcloud_clb_listener_rule` fix unclear error message of SSL type error.
+* Resource: `tencentcloud_ha_vip_attachment` fix read nil issue when the resource is not exist.
 * Data Source: `tencentcloud_security_group` fix `project_id` type error.
 * Data Source: `tencentcloud_security_groups` fix `project_id` filter not works([#303](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/314)).
 
