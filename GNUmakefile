@@ -2,6 +2,7 @@ TEST?=./...
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 PKG_NAME=tencentcloud
 WEBSITE_REPO=github.com/hashicorp/terraform-website
+PLATFORMS=darwin/amd64 freebsd/386 freebsd/amd64 freebsd/arm linux/386 linux/amd64 linux/arm openbsd/amd64 openbsd/386 solaris/amd64 windows/386 windows/amd64
 
 default: build
 
@@ -20,6 +21,7 @@ testacc: fmtcheck
 
 fmt:
 	@echo "==> Fixing source code with gofmt..."
+	goimports -w ./$(PKG_NAME)
 	gofmt -s -w ./$(PKG_NAME)
 
 # Currently required by tf-deploy compile
@@ -63,6 +65,25 @@ test-compile:
 		exit 1; \
 	fi
 	go test -c $(TEST) $(TESTARGS)
+
+test-build-all:
+	@$(foreach platform, $(PLATFORMS), \
+		echo GOOS=$(firstword $(subst /, ,$(platform))) GOARCH=$(lastword $(subst /, ,$(platform))) \
+		go build -o terraform-provider-tencentcloud; \
+		GOOS=$(firstword $(subst /, ,$(platform))) GOARCH=$(lastword $(subst /, ,$(platform))) \
+		go build -o terraform-provider-tencentcloud; \
+		rm -f terraform-provider-tencentcloud; \
+	)
+
+test-build: test-build-x64 test-build-x86
+
+test-build-x64:
+	GOARCH=amd64 go build -o terraform-provider-tencentcloud-amd64
+	rm -f terraform-provider-tencentcloud-amd64
+
+test-build-x86:
+	GOARCH=386 go build -o terraform-provider-tencentcloud-386
+	rm -f terraform-provider-tencentcloud-386
 
 doc:
 	cd gendoc && go run ./... && cd ..

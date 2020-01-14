@@ -6,6 +6,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+make test-build
+if [ $? -ne 0 ]; then
+    printf "COMMIT FAILED\n"
+    exit 1
+fi
+
 make lint
 if [ $? -ne 0 ]; then
     printf "COMMIT FAILED\n"
