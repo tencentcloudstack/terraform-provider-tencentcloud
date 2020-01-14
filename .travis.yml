@@ -16,6 +16,7 @@ install:
 script:
   - make lint
   - make test
+  - make test-build-all
   - make website-lint
   - make website-test
 
