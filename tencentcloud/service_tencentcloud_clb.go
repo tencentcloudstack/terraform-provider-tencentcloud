@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -857,7 +856,7 @@ func checkCertificateInputPara(ctx context.Context, d *schema.ResourceData, meta
 func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 	taskQueryRequest := clb.NewDescribeTaskStatusRequest()
 	taskQueryRequest.TaskId = &requestId
-	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 		taskResponse, e := meta.DescribeTaskStatus(taskQueryRequest)
 		if e != nil {
 			return resource.NonRetryableError(errors.WithStack(e))

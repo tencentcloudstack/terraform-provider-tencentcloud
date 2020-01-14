@@ -118,7 +118,7 @@ func dataSourceTencentCloudDcGatewayInstances() *schema.Resource {
 }
 
 func dataSourceTencentCloudDcGatewayInstancesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_dcgateway_instances.read")()
+	defer logElapsed("data_source.tencentcloud_dc_gateway_instances.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -126,8 +126,8 @@ func dataSourceTencentCloudDcGatewayInstancesRead(d *schema.ResourceData, meta i
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		id   string = ""
-		name string = ""
+		id   = ""
+		name = ""
 	)
 
 	if temp, ok := d.GetOk("dcg_id"); ok {

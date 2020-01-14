@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -83,7 +82,7 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 	if err != nil {
 		return err
 	}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -121,7 +120,7 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 		accountName                  = items[1]
 		accountInfo *cdb.AccountInfo = nil
 	)
-	var onlineHas bool = true
+	var onlineHas = true
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		allAccounts, e := mysqlService.DescribeAccounts(ctx, mysqlId)
 		if e != nil {
@@ -184,7 +183,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 			return err
 		}
 
-		err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
 				return resource.NonRetryableError(err)
@@ -214,7 +213,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 			return err
 		}
 
-		err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 			if err != nil {
 				return resource.NonRetryableError(err)
@@ -262,7 +261,7 @@ func resourceTencentCloudMysqlAccountDelete(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 		if err != nil {
 			return resource.NonRetryableError(err)

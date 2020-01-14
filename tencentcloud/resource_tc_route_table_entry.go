@@ -42,7 +42,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -209,7 +208,7 @@ func resourceTencentCloudVpcRouteEntryDelete(d *schema.ResourceData, meta interf
 		return fmt.Errorf("entry id be destroyed, we can not get route entry id")
 	}
 
-	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if err := service.DeleteRoutes(ctx, routeTableId, entryId); err != nil {
 			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
 				if sdkErr.Code == VPCNotFound {

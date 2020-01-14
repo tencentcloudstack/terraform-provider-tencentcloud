@@ -25,7 +25,6 @@ import (
 	"context"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -91,9 +90,9 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name        string = d.Get("name").(string)
-		description string = ""
-		qos         string = d.Get("qos").(string)
+		name        = d.Get("name").(string)
+		description = ""
+		qos         = d.Get("qos").(string)
 	)
 	if temp, ok := d.GetOk("description"); ok {
 		description = temp.(string)
@@ -149,9 +148,9 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name        string = ""
-		description string = ""
-		change      bool   = false
+		name        = ""
+		description = ""
+		change      = false
 	)
 	if d.HasChange("name") {
 		name = d.Get("name").(string)
@@ -202,7 +201,7 @@ func resourceTencentCloudCcnDelete(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	return resource.Retry(5*time.Minute, func() *resource.RetryError {
+	return resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		_, has, err := service.DescribeCcn(ctx, d.Id())
 		if err != nil {
 			return resource.RetryableError(err)

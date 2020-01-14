@@ -26,7 +26,6 @@ import (
 	"fmt"
 	"log"
 	"strconv"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -220,7 +219,7 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 	vpcService := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	// wait until all instances unbind this security group
-	if err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		associateSet, err := vpcService.DescribeSecurityGroupsAssociate(ctx, []string{id})
 		if err != nil {
 			return resource.RetryableError(err)
@@ -256,7 +255,7 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 		return err
 	}
 
-	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		e := vpcService.DeleteSecurityGroup(ctx, id)
 		if e != nil {
 			return resource.RetryableError(fmt.Errorf("security group delete failed: %v", e))

@@ -180,6 +180,7 @@ func (me *CosService) GetBucketCors(ctx context.Context, bucket string) (corsRul
 			errRet = fmt.Errorf("cos get bucket cors error: %s, bucket: %s", err.Error(), bucket)
 			return
 		}
+		return
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -222,6 +223,7 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string) (li
 			errRet = fmt.Errorf("cos get bucket cors error: %s, bucket: %s", err.Error(), bucket)
 			return
 		}
+		return
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -294,6 +296,7 @@ func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket s
 			errRet = fmt.Errorf("cos get bucket cors error: %s, bucket: %s", err.Error(), bucket)
 			return
 		}
+		return
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -365,6 +368,7 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (webs
 			errRet = fmt.Errorf("cos get bucket website error: %s, bucket: %s", err.Error(), bucket)
 			return
 		}
+		return
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",

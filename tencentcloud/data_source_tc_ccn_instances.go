@@ -147,8 +147,8 @@ func dataSourceTencentCloudCcnInstancesRead(d *schema.ResourceData, meta interfa
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		ccnId string = ""
-		name  string = ""
+		ccnId = ""
+		name  = ""
 	)
 
 	if temp, ok := d.GetOk("ccn_id"); ok {

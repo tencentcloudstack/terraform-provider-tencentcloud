@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 data "tencentcloud_as_scaling_groups" "as_scaling_groups" {
     scaling_group_name  = "myasgroup"
-    configureation_id   = "asc-oqio4yyj"
+    configuration_id   = "asc-oqio4yyj"
     result_output_file  = "my_test_path"
 }
 ```
@@ -119,13 +119,13 @@ func dataSourceTencentCloudAsScalingGroups() *schema.Resource {
 						"load_balancer_ids": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "A lsit of traditional clb ids which the CVM instances attached to.",
+							Description: "A list of traditional clb ids which the CVM instances attached to.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"forward_balancer_ids": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "A lsit of application clb ids.",
+							Description: "A list of application clb ids.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"load_balancer_id": {

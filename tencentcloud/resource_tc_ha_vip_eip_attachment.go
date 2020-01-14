@@ -25,7 +25,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -136,7 +135,7 @@ func haVipAssociateEip(meta interface{}, havipId string, eip string) error {
 	bindRequest := vpc.NewHaVipAssociateAddressIpRequest()
 	bindRequest.HaVipId = helper.String(havipId)
 	bindRequest.AddressIp = helper.String(eip)
-	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().HaVipAssociateAddressIp(bindRequest)
 		if e != nil {
 			return retryError(errors.WithStack(e))
@@ -150,7 +149,7 @@ func haVipAssociateEip(meta interface{}, havipId string, eip string) error {
 
 	statRequest := vpc.NewDescribeHaVipsRequest()
 	statRequest.HaVipIds = []*string{&havipId}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeHaVips(statRequest)
 		if e != nil {
 			return retryError(errors.WithStack(e), VPCUnsupportedOperation)
@@ -178,7 +177,7 @@ func haVipDisassociateEip(meta interface{}, havipId string, eip string) error {
 	logId := getLogId(contextNil)
 	bindRequest := vpc.NewHaVipDisassociateAddressIpRequest()
 	bindRequest.HaVipId = helper.String(havipId)
-	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().HaVipDisassociateAddressIp(bindRequest)
 		if e != nil {
 			return retryError(errors.WithStack(e))
@@ -192,7 +191,7 @@ func haVipDisassociateEip(meta interface{}, havipId string, eip string) error {
 
 	statRequest := vpc.NewDescribeHaVipsRequest()
 	statRequest.HaVipIds = []*string{&havipId}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeHaVips(statRequest)
 		if e != nil {
 			//when associated eip is in deleting process, delete ha vip may return unsupported operation error

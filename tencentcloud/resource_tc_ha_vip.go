@@ -25,7 +25,6 @@ package tencentcloud
 import (
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -227,7 +226,7 @@ func resourceTencentCloudHaVipDelete(d *schema.ResourceData, meta interface{}) e
 	//to get the status of haVip
 	statRequest := vpc.NewDescribeHaVipsRequest()
 	statRequest.HaVipIds = []*string{&haVipId}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeHaVips(statRequest)
 		if e != nil {
 			ee, ok := e.(*sdkErrors.TencentCloudSDKError)

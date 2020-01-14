@@ -17,7 +17,6 @@ func TestAccDataSourceTencentCloudCcnV3InstancesBasic(t *testing.T) {
 				Config: TestAccDataSourceTencentCloudCcnInstances,
 
 				Check: resource.ComposeTestCheckFunc(
-
 					//id filter
 					testAccCheckTencentCloudDataSourceID(keyId),
 					resource.TestCheckResourceAttr(keyId, "instance_list.#", "1"),

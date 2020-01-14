@@ -176,7 +176,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return retryError(e)
 		}
-		ids := make([]string, len(storages))
+		ids := make([]string, 0, len(storages))
 		storageList := make([]map[string]interface{}, 0, len(storages))
 		for _, storage := range storages {
 			mapping := map[string]interface{}{

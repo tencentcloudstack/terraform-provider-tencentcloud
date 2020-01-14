@@ -18,7 +18,6 @@ func TestAccDataSourceTencentCloudDcgV3InstancesBasic(t *testing.T) {
 			{
 				Config: TestAccDataSourceTencentCloudDcgInstances,
 				Check: resource.ComposeTestCheckFunc(
-
 					//name filter
 					testAccCheckTencentCloudDataSourceID(nameKey),
 					resource.TestCheckResourceAttrSet(nameKey, "instance_list.#"),

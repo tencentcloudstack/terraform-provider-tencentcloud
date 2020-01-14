@@ -23,6 +23,7 @@ package tencentcloud
 import (
 	"context"
 	"errors"
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -67,7 +68,7 @@ func dataSourceTencentCloudImage() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateNotEmpty,
-				Description:  "A string to apply with fuzzy match to the os_name atrribute on the image list returned by TencentCloud. **NOTE**: when os_name is provided, highest priority is applied in this field instead of `image_name_regex`.",
+				Description:  "A string to apply with fuzzy match to the os_name attribute on the image list returned by TencentCloud. **NOTE**: when os_name is provided, highest priority is applied in this field instead of `image_name_regex`.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -137,7 +138,10 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 	var imageNameRegex *regexp.Regexp
 	if v, ok := d.GetOk("image_name_regex"); ok {
 		regImageName = v.(string)
-		imageNameRegex = regexp.MustCompile(regImageName)
+		imageNameRegex, err = regexp.Compile(regImageName)
+		if err != nil {
+			return fmt.Errorf("image_name_regex format error,%s", err.Error())
+		}
 	}
 
 	var resultImageId string
@@ -152,7 +156,7 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 			continue
 		}
 
-		if regImageName != "" {
+		if imageNameRegex != nil {
 			if imageNameRegex.MatchString(*image.ImageName) {
 				resultImageId = *image.ImageId
 				_ = d.Set("image_name", *image.ImageName)

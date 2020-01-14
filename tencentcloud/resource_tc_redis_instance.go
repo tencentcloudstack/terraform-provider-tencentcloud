@@ -30,7 +30,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -212,7 +211,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("redis api CreateInstances return empty redis id")
 	}
 	var redisId = dealId
-	err = resource.Retry(60*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
 		has, online, _, err := redisService.CheckRedisCreateOk(ctx, dealId)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -249,7 +248,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	var onlineHas bool = true
+	var onlineHas = true
 	var (
 		has  bool
 		info *redis.InstanceSet
@@ -391,7 +390,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis update mem size error, reason:%s\n", logId, err.Error())
 		}
 
-		err = resource.Retry(600*time.Second, func() *resource.RetryError {
+		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 			_, _, info, err := redisService.CheckRedisCreateOk(ctx, redisId)
 
 			if info != nil {
@@ -433,7 +432,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis change password error, reason:%s\n", logId, err.Error())
 			return err
 		}
-		err = resource.Retry(300*time.Second, func() *resource.RetryError {
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			ok, err := redisService.DescribeTaskInfo(ctx, id, taskId)
 			if err != nil {
 				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {

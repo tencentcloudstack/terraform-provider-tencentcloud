@@ -33,7 +33,6 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -212,7 +211,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	}
 	instanceId := *response.Response.InstanceIds[0]
 
-	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 		instance, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 		if e != nil {
 			return resource.NonRetryableError(e)
@@ -245,7 +244,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 		instance, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 		if e != nil {
 			return resource.NonRetryableError(e)
@@ -368,7 +367,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 			instance, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 			if e != nil {
 				return resource.NonRetryableError(e)
@@ -420,7 +419,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		err = resource.Retry(10*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
 			instance, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 			if e != nil {
 				return resource.NonRetryableError(e)
