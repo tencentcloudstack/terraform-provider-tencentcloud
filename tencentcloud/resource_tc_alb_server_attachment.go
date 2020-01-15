@@ -196,6 +196,10 @@ func resourceTencentCloudAlbServerAttachmentRead(d *schema.ResourceData, meta in
 		log.Printf("[CRITAL]%s read alb attachment failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	if instance == nil {
+		d.SetId("")
+		return nil
+	}
 
 	_ = d.Set("loadbalancer_id", clbId)
 	_ = d.Set("listener_id", listenerId)

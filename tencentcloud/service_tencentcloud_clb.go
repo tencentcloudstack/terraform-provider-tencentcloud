@@ -27,8 +27,7 @@ func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeLoadBalancers(request)
 	if err != nil {
-		errRet = err
-		errRet = errors.WithStack(errRet)
+		errRet = errors.WithStack(err)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -70,8 +69,7 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseClbClient().DescribeLoadBalancers(request)
 		if err != nil {
-			errRet = err
-			errRet = errors.WithStack(errRet)
+			errRet = errors.WithStack(err)
 			return
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -121,7 +119,7 @@ func (me *ClbService) DescribeListenerById(ctx context.Context, listenerId strin
 	request := clb.NewDescribeListenersRequest()
 
 	request.ListenerIds = []*string{&listenerId}
-	request.LoadBalancerId = helper.String(clbId)
+	request.LoadBalancerId = &clbId
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
@@ -130,8 +128,7 @@ func (me *ClbService) DescribeListenerById(ctx context.Context, listenerId strin
 				return
 			}
 		}
-		errRet = err
-		errRet = errors.WithStack(errRet)
+		errRet = errors.WithStack(err)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -151,13 +148,13 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 	for k, v := range params {
 		if k == "listener_id" {
 			listenerId := v.(string)
-			request.ListenerIds = []*string{helper.String(listenerId)}
-			request.LoadBalancerId = helper.String(clbId)
+			request.ListenerIds = []*string{&listenerId}
+			request.LoadBalancerId = &clbId
 		}
 		if k == "clb_id" {
 			if clbId == "" {
 				clbId = v.(string)
-				request.LoadBalancerId = helper.String(clbId)
+				request.LoadBalancerId = &clbId
 			}
 		}
 		if k == "protocol" {
@@ -178,8 +175,7 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 				return
 			}
 		}
-		errRet = err
-		errRet = errors.WithStack(errRet)
+		errRet = errors.WithStack(err)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -193,8 +189,8 @@ func (me *ClbService) DescribeListenersByFilter(ctx context.Context, params map[
 func (me *ClbService) DeleteListenerById(ctx context.Context, clbId string, listenerId string) error {
 	logId := getLogId(ctx)
 	request := clb.NewDeleteListenerRequest()
-	request.ListenerId = helper.String(listenerId)
-	request.LoadBalancerId = helper.String(clbId)
+	request.ListenerId = &listenerId
+	request.LoadBalancerId = &clbId
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteListener(request)
 	if err != nil {
@@ -246,7 +242,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB rule][Describe] check: Listener id and CLB id can not be null")
 		return
 	}
-	request.LoadBalancerId = helper.String(clbId)
+	request.LoadBalancerId = &clbId
 	request.ListenerIds = []*string{&listenerId}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
@@ -257,8 +253,7 @@ func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[stri
 				return
 			}
 		}
-		errRet = err
-		errRet = errors.WithStack(errRet)
+		errRet = errors.WithStack(err)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -301,7 +296,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
 	request.ListenerIds = []*string{&listenerId}
-	request.LoadBalancerId = helper.String(clbId)
+	request.LoadBalancerId = &clbId
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
@@ -311,8 +306,7 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 				return
 			}
 		}
-		errRet = err
-		errRet = errors.WithStack(errRet)
+		errRet = errors.WithStack(err)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -345,8 +339,8 @@ func (me *ClbService) DescribeRuleByPara(ctx context.Context, clbId string, list
 func (me *ClbService) DeleteRuleById(ctx context.Context, clbId string, listenerId string, locationId string) error {
 	logId := getLogId(ctx)
 	request := clb.NewDeleteRuleRequest()
-	request.ListenerId = helper.String(listenerId)
-	request.LoadBalancerId = helper.String(clbId)
+	request.ListenerId = &listenerId
+	request.LoadBalancerId = &clbId
 	request.LocationIds = []*string{&locationId}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteRule(request)
@@ -367,7 +361,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
 	request.ListenerIds = []*string{&listenerId}
-	request.LoadBalancerId = helper.String(clbId)
+	request.LoadBalancerId = &clbId
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
 	if err != nil {
@@ -377,8 +371,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 				return
 			}
 		}
-		errRet = err
-		errRet = errors.WithStack(errRet)
+		errRet = errors.WithStack(err)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -394,7 +387,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 
 	aRequest := clb.NewDescribeTargetsRequest()
 	aRequest.ListenerIds = []*string{&listenerId}
-	aRequest.LoadBalancerId = helper.String(clbId)
+	aRequest.LoadBalancerId = &clbId
 	aRequest.Protocol = protocol
 	aRequest.Port = port
 	ratelimit.Check(request.GetAction())
@@ -407,8 +400,7 @@ func (me *ClbService) DescribeAttachmentByPara(ctx context.Context, clbId string
 				return
 			}
 		}
-		errRet = aErr
-		errRet = errors.WithStack(errRet)
+		errRet = errors.WithStack(aErr)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -445,7 +437,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 		errRet = errors.WithStack(errRet)
 		return
 	}
-	request.LoadBalancerId = helper.String(clbId)
+	request.LoadBalancerId = &clbId
 	request.ListenerIds = []*string{&listenerId}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DescribeListeners(request)
@@ -456,8 +448,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 				return
 			}
 		}
-		errRet = err
-		errRet = errors.WithStack(errRet)
+		errRet = errors.WithStack(err)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -472,7 +463,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 
 	aRequest := clb.NewDescribeTargetsRequest()
 	aRequest.ListenerIds = []*string{&listenerId}
-	aRequest.LoadBalancerId = helper.String(clbId)
+	aRequest.LoadBalancerId = &clbId
 	aRequest.Protocol = protocol
 	aRequest.Port = port
 	ratelimit.Check(request.GetAction())
@@ -485,8 +476,7 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 				return
 			}
 		}
-		errRet = aErr
-		errRet = errors.WithStack(errRet)
+		errRet = errors.WithStack(aErr)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -504,14 +494,14 @@ func (me *ClbService) DescribeAttachmentsByFilter(ctx context.Context, params ma
 func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, listenerId string, locationId string, targets []interface{}) error {
 	logId := getLogId(ctx)
 	request := clb.NewDeregisterTargetsRequest()
-	request.ListenerId = helper.String(listenerId)
-	request.LoadBalancerId = helper.String(clbId)
+	request.ListenerId = &listenerId
+	request.LoadBalancerId = &clbId
 	for _, inst_ := range targets {
 		inst := inst_.(map[string]interface{})
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
 	}
 	if locationId != "" {
-		request.LocationId = helper.String(locationId)
+		request.LocationId = &locationId
 	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeregisterTargets(request)
@@ -543,7 +533,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 	clbId := items[4]
 	result := make(map[string]string)
 	request := clb.NewDescribeRewriteRequest()
-	request.LoadBalancerId = helper.String(clbId)
+	request.LoadBalancerId = &clbId
 	request.SourceListenerIds = []*string{&sourceListenerId}
 	request.SourceLocationIds = []*string{&sourceLocId}
 	ratelimit.Check(request.GetAction())
@@ -555,8 +545,7 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 				return
 			}
 		}
-		errRet = err
-		errRet = errors.WithStack(errRet)
+		errRet = errors.WithStack(err)
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -606,7 +595,7 @@ func (me *ClbService) DescribeRedirectionsByFilter(ctx context.Context, params m
 		}
 	}
 	request := clb.NewDescribeRewriteRequest()
-	request.LoadBalancerId = helper.String(clbId)
+	request.LoadBalancerId = &clbId
 	request.SourceListenerIds = []*string{&sourceListenerId}
 	request.SourceLocationIds = []*string{&sourceLocId}
 	ratelimit.Check(request.GetAction())
@@ -656,12 +645,12 @@ func (me *ClbService) DeleteRedirectionById(ctx context.Context, rewriteId strin
 	clbId := items[4]
 
 	request := clb.NewDeleteRewriteRequest()
-	request.LoadBalancerId = helper.String(clbId)
-	request.SourceListenerId = helper.String(sourceListenerId)
-	request.TargetListenerId = helper.String(targetListenerId)
+	request.LoadBalancerId = &clbId
+	request.SourceListenerId = &sourceListenerId
+	request.TargetListenerId = &targetListenerId
 	var rewriteInfo clb.RewriteLocationMap
-	rewriteInfo.SourceLocationId = helper.String(sourceLocId)
-	rewriteInfo.TargetLocationId = helper.String(targetLocId)
+	rewriteInfo.SourceLocationId = &sourceLocId
+	rewriteInfo.TargetLocationId = &targetLocId
 	request.RewriteInfos = []*clb.RewriteLocationMap{&rewriteInfo}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseClbClient().DeleteRewrite(request)

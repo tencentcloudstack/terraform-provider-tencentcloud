@@ -179,31 +179,31 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	}
 	clbList := make([]map[string]interface{}, 0, len(clbs))
 	ids := make([]string, 0, len(clbs))
-	for _, clb := range clbs {
+	for _, clbInstance := range clbs {
 		mapping := map[string]interface{}{
-			"clb_id":                    *clb.LoadBalancerId,
-			"clb_name":                  *clb.LoadBalancerName,
-			"network_type":              *clb.LoadBalancerType,
-			"status":                    *clb.Status,
-			"create_time":               *clb.CreateTime,
-			"status_time":               *clb.StatusTime,
-			"project_id":                *clb.ProjectId,
-			"vpc_id":                    *clb.VpcId,
-			"subnet_id":                 *clb.SubnetId,
-			"clb_vips":                  helper.StringsInterfaces(clb.LoadBalancerVips),
-			"target_region_info_region": *(clb.TargetRegionInfo.Region),
-			"target_region_info_vpc_id": *(clb.TargetRegionInfo.VpcId),
-			"security_groups":           helper.StringsInterfaces(clb.SecureGroups),
+			"clb_id":                    *clbInstance.LoadBalancerId,
+			"clb_name":                  *clbInstance.LoadBalancerName,
+			"network_type":              *clbInstance.LoadBalancerType,
+			"status":                    *clbInstance.Status,
+			"create_time":               *clbInstance.CreateTime,
+			"status_time":               *clbInstance.StatusTime,
+			"project_id":                *clbInstance.ProjectId,
+			"vpc_id":                    *clbInstance.VpcId,
+			"subnet_id":                 *clbInstance.SubnetId,
+			"clb_vips":                  helper.StringsInterfaces(clbInstance.LoadBalancerVips),
+			"target_region_info_region": *(clbInstance.TargetRegionInfo.Region),
+			"target_region_info_vpc_id": *(clbInstance.TargetRegionInfo.VpcId),
+			"security_groups":           helper.StringsInterfaces(clbInstance.SecureGroups),
 		}
-		if clb.Tags != nil {
-			tags := make(map[string]interface{}, len(clb.Tags))
-			for _, t := range clb.Tags {
+		if clbInstance.Tags != nil {
+			tags := make(map[string]interface{}, len(clbInstance.Tags))
+			for _, t := range clbInstance.Tags {
 				tags[*t.TagKey] = *t.TagValue
 			}
 			mapping["tags"] = tags
 		}
 		clbList = append(clbList, mapping)
-		ids = append(ids, *clb.LoadBalancerId)
+		ids = append(ids, *clbInstance.LoadBalancerId)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

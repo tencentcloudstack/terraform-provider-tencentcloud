@@ -101,6 +101,7 @@ func (me *DayuService) DescribeCCSelfdefinePolicy(ctx context.Context, resourceT
 	}
 	if length > 1 {
 		errRet = fmt.Errorf("Create CC self-define policy returns %d policies", length)
+		return
 	}
 
 	infos = policies[0]
@@ -148,6 +149,7 @@ func (me *DayuService) CreateCCSelfdefinePolicy(ctx context.Context, resourceTyp
 	}
 	if len(policies) != 1 {
 		errRet = fmt.Errorf("Create CC self-define policy returns %d policies", len(policies))
+		return
 	}
 	policyId = *policies[0].SetId
 	return
@@ -507,6 +509,7 @@ func setDdosPolicyPortLimit(mapping []interface{}) (result []*dayu.DDoSPolicyPor
 		kind := v["kind"].(int)
 		if startPort > endPort {
 			err = fmt.Errorf("The `start_port` should not be greater than `end_port`.")
+			return
 		}
 		if kind == 0 || kind == 2 {
 			r.DPortStart = helper.IntUint64(startPort)
@@ -552,14 +555,17 @@ func setDdosPolicyPacketFilter(mapping []interface{}) (result []*dayu.DDoSPolicy
 		sEndPort := v["s_end_port"].(int)
 		if dStartPort > dEndPort {
 			err = fmt.Errorf("The `d_start_port` should not be greater than `d_end_port`.")
+			return
 		}
 		if sStartPort > sEndPort {
 			err = fmt.Errorf("The `s_start_port` should not be greater than `s_end_port`.")
+			return
 		}
 		pktLenMax := v["pkt_length_max"].(int)
 		pktLenMin := v["pkt_length_min"].(int)
 		if pktLenMax < pktLenMin {
 			err = fmt.Errorf("The `pkt_length_min` should not be greater than `pkt_length_max`.")
+			return
 		}
 		r.Protocol = helper.String(v["protocol"].(string))
 		r.DportStart = helper.IntUint64(dStartPort)
@@ -1043,6 +1049,7 @@ func (me *DayuService) DescribeL7Rule(ctx context.Context, resourceType string, 
 	}
 	if length > 1 {
 		errRet = fmt.Errorf("Create l7 rule returns %d rules", length)
+		return
 	}
 
 	infos = policies[0]
@@ -1404,6 +1411,7 @@ func (me *DayuService) DescribeL4Rule(ctx context.Context, resourceType string, 
 	}
 	if length > 1 {
 		errRet = fmt.Errorf("Create L4 rule returns %d rules", length)
+		return
 	}
 
 	infos = policies[0]
@@ -1476,6 +1484,7 @@ func (me *DayuService) DescribeL4Health(ctx context.Context, resourceType string
 	}
 	if length > 1 {
 		errRet = fmt.Errorf("Get L4 health check returns %d healthchecks", length)
+		return
 	}
 	healthCheck = healthChecks[0]
 	has = true
@@ -1522,6 +1531,7 @@ func (me *DayuService) CreateL4Rule(ctx context.Context, resourceType string, re
 	}
 	if len(rules) != 1 {
 		errRet = fmt.Errorf("Create L4 rule returns %d rules", len(rules))
+		return
 	}
 	ruleId = *rules[0].RuleId
 	return
