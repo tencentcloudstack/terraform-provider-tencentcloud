@@ -246,7 +246,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("availability_zone"); ok {
 		filter["zone"] = v.(string)
 	}
-	if v, ok := d.GetOk("project_id"); ok {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		filter["project-id"] = fmt.Sprintf("%d", v.(int))
 	}
 	if v, ok := d.GetOk("vpc_id"); ok {

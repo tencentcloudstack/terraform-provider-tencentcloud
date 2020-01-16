@@ -16,6 +16,10 @@ Use this data source to query key pairs.
 data "tencentcloud_key_pairs" "foo" {
   key_id = "skey-ie97i3ml"
 }
+
+data "tencentcloud_key_pairs" "name" {
+  key_name = "^test$"
+}
 ```
 
 ## Argument Reference
@@ -23,7 +27,7 @@ data "tencentcloud_key_pairs" "foo" {
 The following arguments are supported:
 
 * `key_id` - (Optional) ID of the key pair to be queried.
-* `key_name` - (Optional) Name of the key pair to be queried.
+* `key_name` - (Optional) Name of the key pair to be queried. Support regular expression search, only `^` and `$` are supported.
 * `project_id` - (Optional) Project id of the key pair to be queried.
 * `result_output_file` - (Optional) Used to save results.
 

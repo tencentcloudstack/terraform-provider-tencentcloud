@@ -154,7 +154,7 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("clb_name"); ok {
 		params["clb_name"] = v.(string)
 	}
-	if v, ok := d.GetOk("project_id"); ok {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		params["project_id"] = v.(int)
 	}
 	if v, ok := d.GetOk("network_type"); ok {
