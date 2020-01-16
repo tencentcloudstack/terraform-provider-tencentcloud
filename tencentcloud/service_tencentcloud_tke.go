@@ -393,6 +393,7 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context,
 
 	if err != nil {
 		errRet = err
+		return
 	}
 
 	if response == nil || response.Response == nil {
