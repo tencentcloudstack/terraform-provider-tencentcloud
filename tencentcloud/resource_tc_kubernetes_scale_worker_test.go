@@ -29,11 +29,7 @@ func TestAccTencentCloudTkeScaleWorkerResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_config.#"),
 					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.#", "1"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_id"),
-					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_role"),
-					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_charge_type", CVM_CHARGE_TYPE_PREPAID),
-					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_charge_type_prepaid_period", "6"),
-					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_charge_type_prepaid_renew_flag", CVM_PREPAID_RENEW_FLAG_NOTIFY_NOTIFY_AND_AUTO_RENEW),
-				),
+					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_role")),
 			},
 		},
 	})
@@ -61,7 +57,7 @@ func testAccCheckTkeScaleWorkerDestroy(s *terraform.State) error {
 				_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
 
 				if e, ok := err.(*errors.TencentCloudSDKError); ok {
-					if e.GetCode() == "InternalError.ClusterNotFound" {
+					if e.GetCode() == "InvalidParameter.ClusterNotFound" {
 						return nil
 					}
 				}
@@ -111,7 +107,7 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 				_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
 
 				if e, ok := err.(*errors.TencentCloudSDKError); ok {
-					if e.GetCode() == "InternalError.ClusterNotFound" {
+					if e.GetCode() == "InvalidParameter.ClusterNotFound" {
 						return nil
 					}
 				}
@@ -193,9 +189,6 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
     count                      				= 1
     availability_zone          				= var.availability_zone
     instance_type              				= var.scale_instance_type
-	instance_charge_type	   				= "PREPAID"
-	instance_charge_type_prepaid_period 	= 6
-	instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_AUTO_RENEW"
     subnet_id                  				= data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
     system_disk_type           				= "CLOUD_SSD"
     system_disk_size           				= 50

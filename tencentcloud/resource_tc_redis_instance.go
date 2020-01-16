@@ -290,11 +290,9 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 
 	_ = d.Set("name", *info.InstanceName)
 
-	zoneName := REDIS_ZONE_ID2NAME[*info.ZoneId]
-	if zoneName == "" {
-		err = fmt.Errorf("redis read unkwnow zoneid %d", *info.ZoneId)
-		log.Printf("[CRITAL]%s redis read zone name error, reason:%s\n", logId, err.Error())
-		return err
+	zoneName ,err:=service.getZoneName(*info.ZoneId)
+	if err!=nil{
+		return  err
 	}
 	_ = d.Set("availability_zone", zoneName)
 

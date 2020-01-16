@@ -88,6 +88,9 @@ func testAccCheckEniAttachmentExists(n string, eniId, cvmId *string) resource.Te
 
 func testAccCheckEniAttachmentDestroy(eniId *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
+		if *eniId==""{
+			return nil
+		}
 		client := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn
 		service := VpcService{client: client}
 

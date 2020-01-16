@@ -250,7 +250,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"dr_instance_ids": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "ID list of disaster-recovory type associated with the current instance.",
+							Description: "ID list of disaster-recovery type associated with the current instance.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
