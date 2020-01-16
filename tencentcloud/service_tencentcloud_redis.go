@@ -68,7 +68,7 @@ func (me *RedisService) getZoneId(name string) (id int64, errRet error) {
 			return
 		}
 	}
-	errRet = fmt.Errorf("this redis zone %s not support yet,%s", name)
+	errRet = fmt.Errorf("this redis zone %s not support yet", name)
 	return
 }
 

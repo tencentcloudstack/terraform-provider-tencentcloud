@@ -290,9 +290,9 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 
 	_ = d.Set("name", *info.InstanceName)
 
-	zoneName ,err:=service.getZoneName(*info.ZoneId)
-	if err!=nil{
-		return  err
+	zoneName, err := service.getZoneName(*info.ZoneId)
+	if err != nil {
+		return err
 	}
 	_ = d.Set("availability_zone", zoneName)
 

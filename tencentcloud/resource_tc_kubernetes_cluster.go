@@ -1085,7 +1085,7 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			_, _, err = service.DescribeClusterInstances(ctx, d.Id())
 			if e, ok := err.(*errors.TencentCloudSDKError); ok {
-				if e.GetCode() == "InvalidParameter.ClusterNotFound"{
+				if e.GetCode() == "InvalidParameter.ClusterNotFound" {
 					return nil
 				}
 			}
