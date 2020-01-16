@@ -172,7 +172,7 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	if temp, ok := d.GetOk("project_id"); ok {
+	if temp, ok := d.GetOkExists("project_id"); ok {
 		tempInt := temp.(int)
 		if tempInt >= 0 {
 			projectId = int64(tempInt)

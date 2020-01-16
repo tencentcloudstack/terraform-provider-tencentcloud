@@ -1,4 +1,9 @@
 ## 1.31.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_key_pairs` support regular expression search by name.
+
 ## 1.30.0 (January 14, 2020)
 
 FEATURES:

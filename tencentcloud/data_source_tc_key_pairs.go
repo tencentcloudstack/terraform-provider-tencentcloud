@@ -7,13 +7,19 @@ Example Usage
 data "tencentcloud_key_pairs" "foo" {
   key_id = "skey-ie97i3ml"
 }
+
+data "tencentcloud_key_pairs" "name" {
+  key_name = "^test$"
+}
 ```
 */
 package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"regexp"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -37,7 +43,7 @@ func dataSourceTencentCloudKeyPairs() *schema.Resource {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"key_id"},
-				Description:   "Name of the key pair to be queried.",
+				Description:   "Name of the key pair to be queried. Support regular expression search, only `^` and `$` are supported.",
 			},
 			"project_id": {
 				Type:          schema.TypeInt,
@@ -98,16 +104,26 @@ func dataSourceTencentCloudKeyPairsRead(d *schema.ResourceData, meta interface{}
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	var keyId string
-	var keyName string
+	keyId := d.Get("key_id").(string)
+	keyName := d.Get("key_name").(string)
+	name := keyName
+	if keyName != "" {
+		if name[0] == '^' {
+			name = name[1:]
+		}
+		length := len(name)
+		if length > 0 && name[length-1] == '$' {
+			name = name[:length-1]
+		}
+
+		pattern := `^[a-zA-Z0-9_]+$`
+		if match, _ := regexp.MatchString(pattern, name); !match {
+			return fmt.Errorf("key_name only support letters, numbers, and _ : %s", keyName)
+		}
+	}
+
 	var projectId *int
-	if v, ok := d.GetOk("key_id"); ok {
-		keyId = v.(string)
-	}
-	if v, ok := d.GetOk("key_name"); ok {
-		keyName = v.(string)
-	}
-	if v, ok := d.GetOk("project_id"); ok {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		vv := v.(int)
 		projectId = &vv
 	}
@@ -115,7 +131,7 @@ func dataSourceTencentCloudKeyPairsRead(d *schema.ResourceData, meta interface{}
 	var keyPairs []*cvm.KeyPair
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		keyPairs, errRet = cvmService.DescribeKeyPairByFilter(ctx, keyId, keyName, projectId)
+		keyPairs, errRet = cvmService.DescribeKeyPairByFilter(ctx, keyId, name, projectId)
 		if errRet != nil {
 			return retryError(errRet, "InternalError")
 		}
@@ -127,7 +143,11 @@ func dataSourceTencentCloudKeyPairsRead(d *schema.ResourceData, meta interface{}
 
 	keyPairList := make([]map[string]interface{}, 0, len(keyPairs))
 	ids := make([]string, 0, len(keyPairs))
+	namePattern, _ := regexp.Compile(keyName)
 	for _, keyPair := range keyPairs {
+		if match := namePattern.MatchString(*keyPair.KeyName); !match {
+			continue
+		}
 		mapping := map[string]interface{}{
 			"key_id":      keyPair.KeyId,
 			"key_name":    keyPair.KeyName,
