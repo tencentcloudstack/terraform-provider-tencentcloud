@@ -100,6 +100,8 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 }
 
 func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace string) (resp *scf.GetFunctionResponse, err error) {
+	client := me.client.UseScfClient()
+
 	request := scf.NewGetFunctionRequest()
 	request.FunctionName = &name
 	request.Namespace = &namespace
@@ -107,7 +109,7 @@ func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace stri
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 
-		response, err := me.client.UseScfClient().GetFunction(request)
+		response, err := client.GetFunction(request)
 		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				for _, code := range SCF_FUNCTIONS_NOT_FOUND_SET {
@@ -130,6 +132,8 @@ func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace stri
 }
 
 func (me *ScfService) DescribeFunctions(ctx context.Context, name, namespace, desc *string, tags map[string]string) (functions []*scf.Function, err error) {
+	client := me.client.UseScfClient()
+
 	request := scf.NewListFunctionsRequest()
 	request.SearchKey = name
 	request.Namespace = namespace
@@ -145,14 +149,14 @@ func (me *ScfService) DescribeFunctions(ctx context.Context, name, namespace, de
 	var offset int64
 	count := SCF_FUNCTION_DESCRIBE_LIMIT
 
+	request.Offset = &offset
+
 	// at least run loop once
 	for count == SCF_FUNCTION_DESCRIBE_LIMIT {
-		request.Offset = &offset
-
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 
-			response, err := me.client.UseScfClient().ListFunctions(request)
+			response, err := client.ListFunctions(request)
 			if err != nil {
 				return retryError(errors.WithStack(err))
 			}
@@ -314,6 +318,8 @@ func (me *ScfService) DeleteFunction(ctx context.Context, name, namespace string
 }
 
 func (me *ScfService) CreateNamespace(ctx context.Context, namespace, desc string) error {
+	client := me.client.UseScfClient()
+
 	request := scf.NewCreateNamespaceRequest()
 	request.Namespace = &namespace
 	request.Description = &desc
@@ -321,7 +327,7 @@ func (me *ScfService) CreateNamespace(ctx context.Context, namespace, desc strin
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 
-		if _, err := me.client.UseScfClient().CreateNamespace(request); err != nil {
+		if _, err := client.CreateNamespace(request); err != nil {
 			return retryError(errors.WithStack(err))
 		}
 
@@ -330,20 +336,22 @@ func (me *ScfService) CreateNamespace(ctx context.Context, namespace, desc strin
 }
 
 func (me *ScfService) DescribeNamespace(ctx context.Context, namespace string) (ns *scf.Namespace, err error) {
+	client := me.client.UseScfClient()
+
 	request := scf.NewListNamespacesRequest()
 	request.Limit = helper.IntInt64(SCF_NAMESPACE_DESCRIBE_LIMIT)
 
 	var offset int64
 	count := SCF_NAMESPACE_DESCRIBE_LIMIT
 
+	request.Offset = &offset
+
 	// at least run loop once
 	for count == SCF_NAMESPACE_DESCRIBE_LIMIT {
-		request.Offset = &offset
-
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 
-			response, err := me.client.UseScfClient().ListNamespaces(request)
+			response, err := client.ListNamespaces(request)
 			if err != nil {
 				return retryError(errors.WithStack(err))
 			}
@@ -372,20 +380,22 @@ func (me *ScfService) DescribeNamespace(ctx context.Context, namespace string) (
 }
 
 func (me *ScfService) DescribeNamespaces(ctx context.Context) (nss []*scf.Namespace, err error) {
+	client := me.client.UseScfClient()
+
 	request := scf.NewListNamespacesRequest()
 	request.Limit = helper.IntInt64(SCF_NAMESPACE_DESCRIBE_LIMIT)
 
 	var offset int64
 	count := SCF_NAMESPACE_DESCRIBE_LIMIT
 
+	request.Offset = &offset
+
 	// at least run loop once
 	for count == SCF_NAMESPACE_DESCRIBE_LIMIT {
-		request.Offset = &offset
-
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 
-			response, err := me.client.UseScfClient().ListNamespaces(request)
+			response, err := client.ListNamespaces(request)
 			if err != nil {
 				return retryError(errors.WithStack(err))
 			}
@@ -405,6 +415,8 @@ func (me *ScfService) DescribeNamespaces(ctx context.Context) (nss []*scf.Namesp
 }
 
 func (me *ScfService) ModifyNamespace(ctx context.Context, namespace, desc string) error {
+	client := me.client.UseScfClient()
+
 	request := scf.NewUpdateNamespaceRequest()
 	request.Namespace = &namespace
 	request.Description = &desc
@@ -412,7 +424,7 @@ func (me *ScfService) ModifyNamespace(ctx context.Context, namespace, desc strin
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 
-		if _, err := me.client.UseScfClient().UpdateNamespace(request); err != nil {
+		if _, err := client.UpdateNamespace(request); err != nil {
 			return retryError(errors.WithStack(err))
 		}
 		return nil
@@ -420,13 +432,15 @@ func (me *ScfService) ModifyNamespace(ctx context.Context, namespace, desc strin
 }
 
 func (me *ScfService) DeleteNamespace(ctx context.Context, namespace string) error {
+	client := me.client.UseScfClient()
+
 	request := scf.NewDeleteNamespaceRequest()
 	request.Namespace = &namespace
 
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 
-		if _, err := me.client.UseScfClient().DeleteNamespace(request); err != nil {
+		if _, err := client.DeleteNamespace(request); err != nil {
 			return retryError(errors.WithStack(err))
 		}
 
@@ -435,6 +449,8 @@ func (me *ScfService) DeleteNamespace(ctx context.Context, namespace string) err
 }
 
 func (me *ScfService) CreateTriggers(ctx context.Context, functionName, namespace string, triggers []scfTrigger) error {
+	client := me.client.UseScfClient()
+
 	for _, trigger := range triggers {
 		request := scf.NewCreateTriggerRequest()
 		request.FunctionName = &functionName
@@ -447,7 +463,7 @@ func (me *ScfService) CreateTriggers(ctx context.Context, functionName, namespac
 		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 
-			if _, err := me.client.UseScfClient().CreateTrigger(request); err != nil {
+			if _, err := client.CreateTrigger(request); err != nil {
 				return retryError(errors.WithStack(err))
 			}
 			return nil
@@ -460,6 +476,8 @@ func (me *ScfService) CreateTriggers(ctx context.Context, functionName, namespac
 }
 
 func (me *ScfService) DeleteTriggers(ctx context.Context, functionName, namespace string, triggers []scfTrigger) error {
+	client := me.client.UseScfClient()
+
 	for _, trigger := range triggers {
 		request := scf.NewDeleteTriggerRequest()
 		request.FunctionName = &functionName
@@ -471,7 +489,7 @@ func (me *ScfService) DeleteTriggers(ctx context.Context, functionName, namespac
 		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 
-			if _, err := me.client.UseScfClient().DeleteTrigger(request); err != nil {
+			if _, err := client.DeleteTrigger(request); err != nil {
 				return retryError(errors.WithStack(err))
 			}
 			return nil
@@ -489,6 +507,8 @@ func (me *ScfService) DescribeLogs(
 	offset, limit int,
 	retCode, invokeRequestId, startTime, endTime *string,
 ) (logs []*scf.FunctionLog, err error) {
+	client := me.client.UseScfClient()
+
 	request := scf.NewGetFunctionLogsRequest()
 	request.FunctionName = &fnName
 	request.Offset = helper.IntInt64(offset)
@@ -506,7 +526,7 @@ func (me *ScfService) DescribeLogs(
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 
-		response, err := me.client.UseScfClient().GetFunctionLogs(request)
+		response, err := client.GetFunctionLogs(request)
 		if err != nil {
 			if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				for _, code := range SCF_FUNCTIONS_NOT_FOUND_SET {

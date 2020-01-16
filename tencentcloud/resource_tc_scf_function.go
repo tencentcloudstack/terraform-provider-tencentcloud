@@ -33,6 +33,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -497,6 +498,9 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		}
 	}
 
+	// wait for tags add successfully
+	time.Sleep(time.Second)
+
 	return resourceTencentCloudScfFunctionRead(d, m)
 }
 
@@ -831,6 +835,9 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			return err
 		}
 		d.SetPartial("tags")
+
+		// wait for tags add successfully
+		time.Sleep(time.Second)
 	}
 
 	d.Partial(false)
