@@ -354,6 +354,7 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ruleFlag := false
+	//没有ssl_id
 	ruleKey := []string{"protocol", "source_type", "source_list", "ssl_id", "lb_type"}
 
 	for _, key := range ruleKey {
@@ -401,6 +402,7 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 	}
 
 	healthFlag := false
+	//d_port
 	healthKey := []string{"health_check_switch", "health_check_interval", "health_check_timeout", "health_check_unhealth_num", "health_check_health_num"}
 
 	for _, key := range healthKey {

@@ -109,7 +109,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentRead(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	items := strings.Split(d.Id(), "#")
+	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
 		return fmt.Errorf("broken ID of DDoS policy attachment")
 	}

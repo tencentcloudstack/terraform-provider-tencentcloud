@@ -327,6 +327,7 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ruleFlag := false
+	//source_list没有更新
 	ruleKey := []string{"protocol", "source_type", "source_list", "ssl_id"}
 
 	for _, key := range ruleKey {
