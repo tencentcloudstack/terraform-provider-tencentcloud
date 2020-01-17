@@ -52,7 +52,7 @@ The following arguments are supported:
 * `desired_capacity` - (Optional) Desired volume of CVM instances, which is between max_size and min_size.
 * `forward_balancer_ids` - (Optional) List of application load balancers, which can't be specified with load_balancer_ids together.
 * `load_balancer_ids` - (Optional) ID list of traditional load balancers.
-* `project_id` - (Optional) Specifys to which project the scaling group belongs.
+* `project_id` - (Optional) Specifies to which project the scaling group belongs.
 * `retry_policy` - (Optional) Available values for retry policies include IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.
 * `subnet_ids` - (Optional) ID list of subnet, and for VPC it is required.
 * `tags` - (Optional) Tags of a scaling group.

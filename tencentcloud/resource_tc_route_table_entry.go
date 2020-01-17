@@ -173,7 +173,7 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 		for _, v := range info.entryInfos {
 			if fmt.Sprintf("%d", v.routeEntryId) == items[0] {
 				_ = d.Set("description", v.description)
-				_ = d.Set("route_table_id", v.routeEntryId)
+				_ = d.Set("route_table_id", items[1])
 				_ = d.Set("destination_cidr_block", v.destinationCidr)
 				_ = d.Set("next_type", v.nextType)
 				_ = d.Set("next_hub", v.nextBub)

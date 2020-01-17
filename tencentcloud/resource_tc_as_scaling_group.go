@@ -96,7 +96,7 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
-				Description: "Specifys to which project the scaling group belongs.",
+				Description: "Specifies to which project the scaling group belongs.",
 			},
 			"subnet_ids": {
 				Type:        schema.TypeList,
