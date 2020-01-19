@@ -103,9 +103,9 @@ func resourceTencentCloudAsAttachmentUpdate(d *schema.ResourceData, meta interfa
 
 	scalingGroupId := d.Id()
 	if d.HasChange("instance_ids") {
-		old, new := d.GetChange("instance_ids")
-		oldInstances := old.(*schema.Set)
-		newInstances := new.(*schema.Set)
+		oldInterface, newInterface := d.GetChange("instance_ids")
+		oldInstances := oldInterface.(*schema.Set)
+		newInstances := newInterface.(*schema.Set)
 		remove := helper.InterfacesStrings(oldInstances.Difference(newInstances).List())
 		add := helper.InterfacesStrings(newInstances.Difference(oldInstances).List())
 

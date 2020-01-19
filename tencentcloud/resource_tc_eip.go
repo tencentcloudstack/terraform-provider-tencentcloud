@@ -282,6 +282,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 		}
 		d.SetPartial("tags")
 	}
+	d.Partial(false)
 
 	return resourceTencentCloudEipRead(d, meta)
 }

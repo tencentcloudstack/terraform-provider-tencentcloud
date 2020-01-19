@@ -17,7 +17,7 @@ func TestAccDataSourceTencentCloudScfFunctions_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_scf_functions.foo"),
 					resource.TestMatchResourceAttr("data.tencentcloud_scf_functions.foo", "functions.#", regexp.MustCompile(`^[1-9]\d*$`)),
-					resource.TestMatchResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.name", regexp.MustCompile(`ci-test-function`)),
+					resource.TestMatchResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.name", regexp.MustCompile(`ci-test-function-basic`)),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.handler"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.mem_size"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.timeout"),
@@ -49,7 +49,7 @@ func TestAccDataSourceTencentCloudScfFunctions_namespace(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_scf_functions.foo"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.name", "ci-test-function"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.name", "ci-test-function-ns"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.handler", "main.do_it"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.mem_size", "128"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.timeout", "3"),
@@ -139,7 +139,7 @@ func TestAccDataSourceTencentCloudScfFunctions_tag(t *testing.T) {
 
 const TestAccDataSourceTencentCloudScfFunctions = `
 resource "tencentcloud_scf_function" "foo" {
-  name    = "ci-test-function"
+  name    = "ci-test-function-basic"
   handler = "main.do_it"
   runtime = "Python3.6"
 
@@ -157,7 +157,7 @@ resource "tencentcloud_scf_namespace" "foo" {
 }
 
 resource "tencentcloud_scf_function" "foo" {
-  name      = "ci-test-function"
+  name      = "ci-test-function-ns"
   namespace = tencentcloud_scf_namespace.foo.id
   handler   = "main.do_it"
   runtime   = "Python3.6"
@@ -172,7 +172,7 @@ data "tencentcloud_scf_functions" "foo" {
 
 const TestAccDataSourceTencentCloudScfFunctionsDesc = `
 resource "tencentcloud_scf_function" "foo" {
-  name        = "ci-test-function"
+  name        = "ci-test-function-desc"
   handler     = "main.do_it"
   runtime     = "Python3.6"
   description = "test"
@@ -187,7 +187,7 @@ data "tencentcloud_scf_functions" "foo" {
 
 const TestAccDataSourceTencentCloudScfFunctionsTag = `
 resource "tencentcloud_scf_function" "foo" {
-  name    = "ci-test-function"
+  name    = "ci-test-function-tag"
   handler = "main.do_it"
   runtime = "Python3.6"
 

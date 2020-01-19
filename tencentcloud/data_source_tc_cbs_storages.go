@@ -157,7 +157,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 	if v, ok := d.GetOk("availability_zone"); ok {
 		params["zone"] = v.(string)
 	}
-	if v, ok := d.GetOk("project_id"); ok {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		params["project-id"] = fmt.Sprintf("%d", v.(int))
 	}
 	if v, ok := d.GetOk("storage_type"); ok {
@@ -176,7 +176,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return retryError(e)
 		}
-		ids := make([]string, len(storages))
+		ids := make([]string, 0, len(storages))
 		storageList := make([]map[string]interface{}, 0, len(storages))
 		for _, storage := range storages {
 			mapping := map[string]interface{}{

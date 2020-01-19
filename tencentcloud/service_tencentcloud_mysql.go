@@ -684,6 +684,7 @@ func (me *MysqlService) DescribeIsolatedDBInstanceById(ctx context.Context, mysq
 	}
 	if len(response.Response.Items) > 1 {
 		errRet = fmt.Errorf("One mysql id got %d instance info", len(response.Response.Items))
+		return
 	}
 	mysqlInfo = response.Response.Items[0]
 

@@ -191,7 +191,7 @@ func dataSourceTencentCloudGaapProxiesRead(d *schema.ResourceData, m interface{}
 		}
 	}
 
-	if raw, ok := d.GetOk("project_id"); ok {
+	if raw, ok := d.GetOkExists("project_id"); ok {
 		projectId = common.IntPtr(raw.(int))
 	}
 

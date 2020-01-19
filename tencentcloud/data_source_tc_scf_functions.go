@@ -317,6 +317,12 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 			log.Printf("[CRITAL]%s read function detail failed: %+v", logId, err)
 			return err
 		}
+
+		// if function deleted, ignore it
+		if rawResp == nil {
+			continue
+		}
+
 		resp := rawResp.Response
 
 		m["handler"] = resp.Handler

@@ -14,6 +14,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"regexp"
 	"strings"
@@ -52,7 +53,7 @@ func dataSourceTencentCloudImages() *schema.Resource {
 				Optional:      true,
 				ConflictsWith: []string{"image_name_regex"},
 				ValidateFunc:  validateNotEmpty,
-				Description:   "A string to apply with fuzzy match to the os_name atrribute on the image list returned by TencentCloud, conflict with 'image_name_regex'.",
+				Description:   "A string to apply with fuzzy match to the os_name attribute on the image list returned by TencentCloud, conflict with 'image_name_regex'.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -158,6 +159,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 		imageName      string
 		osName         string
 		imageNameRegex *regexp.Regexp
+		err            error
 	)
 
 	filter := make(map[string][]string)
@@ -183,7 +185,10 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	if v, ok := d.GetOk("image_name_regex"); ok {
 		imageName = v.(string)
 		if imageName != "" {
-			imageNameRegex = regexp.MustCompile(imageName)
+			imageNameRegex, err = regexp.Compile(imageName)
+			if err != nil {
+				return fmt.Errorf("image_name_regex format error,%s", err.Error())
+			}
 		}
 	}
 
@@ -192,7 +197,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	var images []*cvm.Image
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		var e error
 		images, e = cvmService.DescribeImagesByFilter(ctx, filter)
 		if e != nil {
@@ -217,7 +222,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 					continue
 				}
 			}
-			if imageName != "" {
+			if imageNameRegex != nil {
 				if imageNameRegex.MatchString(*image.ImageName) {
 					results = append(results, image)
 					continue

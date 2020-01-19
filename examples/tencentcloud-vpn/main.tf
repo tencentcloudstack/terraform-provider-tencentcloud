@@ -2,7 +2,7 @@
 resource "tencentcloud_vpn_customer_gateway" "example" {
   name              = "example"
   public_ip_address = "3.3.3.3"
-  
+
   tags = {
     test = "example"
   }

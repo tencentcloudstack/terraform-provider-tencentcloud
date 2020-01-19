@@ -321,9 +321,11 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 		if err != nil {
 			return err
 		}
-		d.SetPartial("idl_id")
-		if d.HasChange("table_idl_type") {
-			d.SetPartial("table_idl_type")
+
+		for _, key := range []string{"idl_id", "table_name", "table_idl_type"} {
+			if d.HasChange(key) {
+				d.SetPartial(key)
+			}
 		}
 	}
 

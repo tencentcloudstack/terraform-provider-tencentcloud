@@ -334,7 +334,6 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 		}
 		_ = d.Set("health_check_switch", health_check_switch)
 		_ = d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
-		_ = d.Set("health_check_interval_time", instance.HealthCheck.IntervalTime)
 		_ = d.Set("health_check_health_num", instance.HealthCheck.HealthNum)
 		_ = d.Set("health_check_unhealth_num", instance.HealthCheck.UnHealthNum)
 		_ = d.Set("health_check_http_method", helper.String(strings.ToUpper(*instance.HealthCheck.HttpCheckMethod)))

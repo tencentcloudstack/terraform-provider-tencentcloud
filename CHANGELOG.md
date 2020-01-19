@@ -1,4 +1,10 @@
-## 1.30.0 (Unreleased)
+## 1.31.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_key_pairs` support regular expression search by name.
+
+## 1.30.0 (January 14, 2020)
 
 FEATURES:
 
@@ -19,6 +25,7 @@ FEATURES:
 
 BUG FIXES:
 
+* gaap: optimize gaap describe: when describe resource by id but get more than 1 resources, return error directly instead of using the first result 
 * Resource: `tencentcloud_eni_attachment` fix detach may failed.
 * Resource: `tencentcloud_instance` remove the tag that be added by as attachment automatically([#300](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/300)).
 * Resource: `tencentcloud_clb_listener` fix `sni_switch` type error([#297](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/297)).

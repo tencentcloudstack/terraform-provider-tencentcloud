@@ -209,7 +209,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	// must wait for creating gateway finished
 	statRequest := vpc.NewDescribeVpnGatewaysRequest()
 	statRequest.VpnGatewayIds = []*string{helper.String(gatewayId)}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -332,9 +332,9 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	if d.HasChange("name") || d.HasChange("charge_type") {
 		//check that the charge type change is valid
 		//only pre-paid --> post-paid is valid
-		old, new := d.GetChange("charge_type")
-		oldChargeType := old.(string)
-		newChargeType := new.(string)
+		oldInterface, newInterface := d.GetChange("charge_type")
+		oldChargeType := oldInterface.(string)
+		newChargeType := newInterface.(string)
 		request := vpc.NewModifyVpnGatewayAttributeRequest()
 		request.VpnGatewayId = &gatewayId
 		request.VpnGatewayName = helper.String(d.Get("name").(string))
@@ -389,8 +389,8 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 
 	//tag
 	if d.HasChange("tags") {
-		old, new := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(old.(map[string]interface{}), new.(map[string]interface{}))
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
 		tagService := TagService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
@@ -420,7 +420,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 	//to get the status of gateway
 	chargeRequest := vpc.NewDescribeVpnGatewaysRequest()
 	chargeRequest.VpnGatewayIds = []*string{&gatewayId}
-	chargeErr := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	chargeErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(chargeRequest)
 		if e != nil {
 			return retryError(e)
@@ -471,7 +471,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 	offset := uint64(0)
 	tRequest.Offset = &offset
 
-	tErr := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	tErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(tRequest)
 
 		if e != nil {
@@ -510,7 +510,7 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 	//to get the status of gateway
 	statRequest := vpc.NewDescribeVpnGatewaysRequest()
 	statRequest.VpnGatewayIds = []*string{&gatewayId}
-	err = resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(statRequest)
 		if e != nil {
 			ee, ok := e.(*errors.TencentCloudSDKError)

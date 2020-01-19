@@ -17,12 +17,12 @@ Provides a CVM instance resource.
 ## Example Usage
 
 ```hcl
-data "tencentcloud_images" "my_favorate_image" {
+data "tencentcloud_images" "my_favorite_image" {
   image_type = ["PUBLIC_IMAGE"]
   os_name    = "centos"
 }
 
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
+data "tencentcloud_instance_types" "my_favorite_instance_types" {
   filter {
     name   = "instance-family"
     values = ["S3"]
@@ -32,7 +32,7 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
   memory_size    = 1
 }
 
-data "tencentcloud_availability_zones" "my_favorate_zones" {
+data "tencentcloud_availability_zones" "my_favorite_zones" {
 }
 
 // Create VPC resource
@@ -43,7 +43,7 @@ resource "tencentcloud_vpc" "app" {
 
 resource "tencentcloud_subnet" "app" {
   vpc_id            = tencentcloud_vpc.app.id
-  availability_zone = data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
   name              = "awesome_app_subnet"
   cidr_block        = "10.0.1.0/24"
 }
@@ -52,8 +52,8 @@ resource "tencentcloud_subnet" "app" {
 resource "tencentcloud_instance" "my_awesome_app" {
   instance_name              = "awesome_app"
   availability_zone          = data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name
-  image_id                   = data.tencentcloud_images.my_favorate_image.images.0.image_id
-  instance_type              = data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type
+  image_id                   = data.tencentcloud_images.my_favorite_image.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   system_disk_size           = 50
   hostname                   = "user"
@@ -88,7 +88,7 @@ The following arguments are supported:
 * `instance_charge_type_prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.
 * `instance_charge_type_prepaid_renew_flag` - (Optional) When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR` and `SPOTPAID`, The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
-* `instance_name` - (Optional) The name of the CVM. The max length of instance_name is 60, and default value is `Terrafrom-CVM-Instance`.
+* `instance_name` - (Optional) The name of the CVM. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.
 * `instance_type` - (Optional) The type of instance to start.
 * `internet_charge_type` - (Optional, ForceNew) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. The default is `TRAFFIC_POSTPAID_BY_HOUR`.
 * `internet_max_bandwidth_out` - (Optional, ForceNew) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). If this value is not specified, then automatically sets it to 0 Mbps.

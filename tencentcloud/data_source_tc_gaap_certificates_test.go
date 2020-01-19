@@ -9,6 +9,8 @@ import (
 )
 
 func TestAccDataSourceTencentCloudGaapCertificates_basic(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -32,6 +34,8 @@ func TestAccDataSourceTencentCloudGaapCertificates_basic(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudGaapCertificates_name(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
@@ -55,6 +59,8 @@ func TestAccDataSourceTencentCloudGaapCertificates_name(t *testing.T) {
 }
 
 func TestAccDataSourceTencentCloudGaapCertificates_type(t *testing.T) {
+	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,

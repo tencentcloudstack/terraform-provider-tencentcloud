@@ -36,7 +36,6 @@ import (
 	"crypto/md5"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -148,11 +147,11 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		ccnId               = d.Get("ccn_id").(string)
-		instanceType        = d.Get("instance_type").(string)
-		instanceRegion      = d.Get("instance_region").(string)
-		instanceId          = d.Get("instance_id").(string)
-		onlineHas      bool = true
+		ccnId          = d.Get("ccn_id").(string)
+		instanceType   = d.Get("instance_type").(string)
+		instanceRegion = d.Get("instance_region").(string)
+		instanceId     = d.Get("instance_id").(string)
+		onlineHas      = true
 	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, has, e := service.DescribeCcn(ctx, ccnId)
@@ -224,7 +223,7 @@ func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	return resource.Retry(5*time.Minute, func() *resource.RetryError {
+	return resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		_, has, err := service.DescribeCcnAttachedInstance(ctx, ccnId, instanceRegion, instanceType, instanceId)
 		if err != nil {
 			return resource.RetryableError(err)

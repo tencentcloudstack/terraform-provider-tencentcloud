@@ -58,7 +58,6 @@ import (
 	"log"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -121,7 +120,7 @@ func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 				Description: "Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports.",
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
-					match, _ := regexp.MatchString("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}\\-\\d{1,5}$", value)
+					match, _ := regexp.MatchString("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}-\\d{1,5}$", value)
 					if !match {
 						errors = append(errors, fmt.Errorf("%s example: `53`, `80,443` and `80-90`, Not configured to represent all ports", k))
 					}
@@ -293,7 +292,7 @@ func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m inter
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	ruleId := d.Id()
-	err := resource.Retry(3*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := service.DeleteSecurityGroupPolicy(ctx, ruleId)
 		if e != nil {
 			return resource.RetryableError(fmt.Errorf("security group delete failed: %s", e.Error()))

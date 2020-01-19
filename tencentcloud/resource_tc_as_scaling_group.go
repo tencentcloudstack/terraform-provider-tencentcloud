@@ -44,7 +44,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -97,7 +96,7 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
-				Description: "Specifys to which project the scaling group belongs.",
+				Description: "Specifies to which project the scaling group belongs.",
 			},
 			"subnet_ids": {
 				Type:        schema.TypeList,
@@ -344,7 +343,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := resource.Retry(5*time.Minute, func() *resource.RetryError {
+	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		scalingGroup, _, errRet := asService.DescribeAutoScalingGroupById(ctx, id)
 		if errRet != nil {
 			return retryError(errRet, "InternalError")

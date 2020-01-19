@@ -9,28 +9,30 @@ the following must be changed to your resource id.
 
 const appid string = "1259649581"
 
-const defaultRegion = "ap-guangzhou"
-const defaultVpcId = "vpc-h70b6b49"
-const defaultVpcCidr = "172.16.0.0/16"
-const defaultVpcCidrLess = "172.16.0.0/18"
+const (
+	defaultRegion      = "ap-guangzhou"
+	defaultVpcId       = "vpc-h70b6b49"
+	defaultVpcCidr     = "172.16.0.0/16"
+	defaultVpcCidrLess = "172.16.0.0/18"
 
-const defaultAZone = "ap-guangzhou-3"
-const defaultSubnetId = "subnet-1uwh63so"
-const defaultSubnetCidr = "172.16.0.0/20"
-const defaultSubnetCidrLess = "172.16.0.0/22"
+	defaultAZone          = "ap-guangzhou-3"
+	defaultSubnetId       = "subnet-1uwh63so"
+	defaultSubnetCidr     = "172.16.0.0/20"
+	defaultSubnetCidrLess = "172.16.0.0/22"
 
-const defaultInsName = "tf-ci-test"
-const defaultInsNameUpdate = "tf-ci-test-update"
+	defaultInsName       = "tf-ci-test"
+	defaultInsNameUpdate = "tf-ci-test-update"
 
-const defaultSshCertificate = "VjANRdz8"
-const defaultSshCertificateB = "VfqO4zkB"
+	defaultSshCertificate  = "VjANRdz8"
+	defaultSshCertificateB = "VfqO4zkB"
 
-const defaultDayuBgp = "bgp-000006mq"
-const defaultDayuBgpMul = "bgp-0000008o"
-const defaultDayuBgpIp = "bgpip-00000294"
-const defaultDayuNet = "net-0000007e"
+	defaultDayuBgp    = "bgp-000006mq"
+	defaultDayuBgpMul = "bgp-0000008o"
+	defaultDayuBgpIp  = "bgpip-00000294"
+	defaultDayuNet    = "net-0000007e"
 
-const defaultGaapProxyId = "link-9ck3lzq7"
+	defaultGaapProxyId = "link-9ck3lzq7"
+)
 
 /*
 ---------------------------------------------------

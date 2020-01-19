@@ -109,22 +109,22 @@ func resourceTencentCloudContainerCluster() *schema.Resource {
 			"storage_size": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "The size of the data volumn.",
+				Description: "The size of the data volume.",
 			},
 			"storage_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The type of the data volumn. see more from CVM.",
+				Description: "The type of the data volume. see more from CVM.",
 			},
 			"root_size": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "The size of the root volumn.",
+				Description: "The size of the root volume.",
 			},
 			"root_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The type of the root volumn. see more from CVM.",
+				Description: "The type of the root volume. see more from CVM.",
 			},
 			"goods_num": {
 				Type:        schema.TypeInt,
@@ -184,7 +184,7 @@ func resourceTencentCloudContainerCluster() *schema.Resource {
 			"mount_target": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The path which volumn is going to be mounted.",
+				Description: "The path which volume is going to be mounted.",
 			},
 			"docker_graph_path": {
 				Type:        schema.TypeString,

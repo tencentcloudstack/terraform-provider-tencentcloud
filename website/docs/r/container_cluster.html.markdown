@@ -56,8 +56,8 @@ The following arguments are supported:
 * `instance_type` - (Required) The instance type of the node needed by cvm.
 * `is_vpc_gateway` - (Required) Describe whether the node enable the gateway capability.
 * `os_name` - (Required) The system os name of the node.
-* `root_size` - (Required) The size of the root volumn.
-* `storage_size` - (Required) The size of the data volumn.
+* `root_size` - (Required) The size of the root volume.
+* `storage_size` - (Required) The size of the data volume.
 * `subnet_id` - (Required) The subnet id which the node stays in.
 * `vpc_id` - (Required) Specify vpc which the node(s) stay in.
 * `zone_id` - (Required) The zone which the node stays in.
@@ -69,13 +69,13 @@ The following arguments are supported:
 * `instance_name` - (Optional) The name ot node.
 * `key_id` - (Optional) The key_id of each node(if using key pair to access).
 * `mem` - (Optional, **Deprecated**) It has been deprecated from version 1.16.0. Set 'instance_type' instead. The memory of the node.
-* `mount_target` - (Optional) The path which volumn is going to be mounted.
+* `mount_target` - (Optional) The path which volume is going to be mounted.
 * `password` - (Optional) The password of each node.
 * `period` - (Optional) The puchase duration of the node needed by cvm.
 * `require_wan_ip` - (Optional) Indicate whether wan ip is needed.
-* `root_type` - (Optional) The type of the root volumn. see more from CVM.
+* `root_type` - (Optional) The type of the root volume. see more from CVM.
 * `sg_id` - (Optional) The security group id.
-* `storage_type` - (Optional) The type of the data volumn. see more from CVM.
+* `storage_type` - (Optional) The type of the data volume. see more from CVM.
 * `unschedulable` - (Optional) Determine whether the node will be schedulable. 0 is the default meaning node will be schedulable. 1 for unschedulable.
 * `user_script` - (Optional) User defined script in a base64-format. The script runs after the kubernetes component is ready on node. see more from CCS api documents.
 

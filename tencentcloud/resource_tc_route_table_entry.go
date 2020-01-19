@@ -42,7 +42,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -174,7 +173,7 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 		for _, v := range info.entryInfos {
 			if fmt.Sprintf("%d", v.routeEntryId) == items[0] {
 				_ = d.Set("description", v.description)
-				_ = d.Set("route_table_id", v.routeEntryId)
+				_ = d.Set("route_table_id", items[1])
 				_ = d.Set("destination_cidr_block", v.destinationCidr)
 				_ = d.Set("next_type", v.nextType)
 				_ = d.Set("next_hub", v.nextBub)
@@ -209,7 +208,7 @@ func resourceTencentCloudVpcRouteEntryDelete(d *schema.ResourceData, meta interf
 		return fmt.Errorf("entry id be destroyed, we can not get route entry id")
 	}
 
-	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if err := service.DeleteRoutes(ctx, routeTableId, entryId); err != nil {
 			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
 				if sdkErr.Code == VPCNotFound {

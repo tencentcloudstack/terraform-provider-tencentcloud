@@ -94,7 +94,7 @@ func dataSourceTencentCloudDcGatewayCCNRoutes() *schema.Resource {
 }
 
 func dataSourceTencentCloudDcGatewayCCNRoutesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_dcgateway_ccn_routes.read")()
+	defer logElapsed("data_source.tencentcloud_dc_gateway_ccn_routes.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -102,7 +102,7 @@ func dataSourceTencentCloudDcGatewayCCNRoutesRead(d *schema.ResourceData, meta i
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		id string = d.Get("dcg_id").(string)
+		id = d.Get("dcg_id").(string)
 	)
 
 	var infos, err = service.DescribeDirectConnectGatewayCcnRoutes(ctx, id)

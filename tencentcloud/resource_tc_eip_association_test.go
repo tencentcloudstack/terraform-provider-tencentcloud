@@ -113,6 +113,10 @@ func testAccCheckEipAssociationExists(n string) resource.TestCheckFunc {
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
 		associationId, err := parseEipAssociationId(rs.Primary.ID)
+
+		if err != nil {
+			return err
+		}
 		eip, err := vpcService.DescribeEipById(ctx, associationId.EipId)
 		if err != nil {
 			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {

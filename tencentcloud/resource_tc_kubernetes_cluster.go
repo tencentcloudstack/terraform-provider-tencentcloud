@@ -121,7 +121,6 @@ import (
 	"net"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -884,7 +883,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	if err != nil {
 		// create often cost more than 20 Minutes.
-		err = resource.Retry(30*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			_, _, err = service.DescribeClusterInstances(ctx, d.Id())
 
 			if e, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -1086,7 +1085,7 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			_, _, err = service.DescribeClusterInstances(ctx, d.Id())
 			if e, ok := err.(*errors.TencentCloudSDKError); ok {
-				if e.GetCode() == "InternalError.ClusterNotFound" {
+				if e.GetCode() == "InvalidParameter.ClusterNotFound" {
 					return nil
 				}
 			}

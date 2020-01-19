@@ -48,7 +48,7 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - The time at which a instance is created.
   * `dead_line_time` - Expire date of instance. NOTES: Only supported prepay instance.
   * `device_type` - Supported instance model.HA - high available version; Basic - basic version.
-  * `dr_instance_ids` - ID list of disaster-recovory type associated with the current instance.
+  * `dr_instance_ids` - ID list of disaster-recovery type associated with the current instance.
   * `engine_version` - The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.
   * `init_flag` - Initialization mark. Available values: 0 - Uninitialized; 1 - Initialized.
   * `instance_name` - Name of mysql instance.

@@ -67,8 +67,8 @@ func (me *GaapService) CreateRealserver(ctx context.Context, address, name strin
 			return retryError(err)
 		}
 
-		if len(response.Response.RealServerSet) == 0 {
-			err = fmt.Errorf("api[%s] return empty realserver set", request.GetAction())
+		if len(response.Response.RealServerSet) != 1 {
+			err = fmt.Errorf("api[%s] return %d realservers", request.GetAction(), len(response.Response.RealServerSet))
 			log.Printf("[CRITAL]%s, %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -373,10 +373,19 @@ func (me *GaapService) CreateProxy(
 		}
 
 		proxies := response.Response.ProxySet
-		if len(proxies) == 0 {
+
+		switch len(proxies) {
+		case 0:
 			err := errors.New("read no proxy")
 			log.Printf("[DEBUG]%s %v", logId, err)
 			return resource.RetryableError(err)
+
+		default:
+			err := errors.New("return more than 1 proxy")
+			log.Printf("[DEBUG]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+
+		case 1:
 		}
 
 		proxy := proxies[0]
@@ -451,8 +460,9 @@ func (me *GaapService) EnableProxy(ctx context.Context, id string) error {
 		}
 
 		proxies := response.Response.ProxySet
-		if len(proxies) == 0 {
-			err := fmt.Errorf("api[%s] read no proxy", describeRequest.GetAction())
+
+		if len(proxies) != 1 {
+			err := fmt.Errorf("api[%s] read %d proxies", describeRequest.GetAction(), len(proxies))
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -529,8 +539,9 @@ func (me *GaapService) DisableProxy(ctx context.Context, id string) error {
 		}
 
 		proxies := response.Response.ProxySet
-		if len(proxies) == 0 {
-			err := fmt.Errorf("api[%s] read no proxy", describeRequest.GetAction())
+
+		if len(proxies) != 1 {
+			err := fmt.Errorf("api[%s] read %d proxies", describeRequest.GetAction(), len(proxies))
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -728,8 +739,9 @@ func (me *GaapService) ModifyProxyConfiguration(ctx context.Context, id string, 
 		}
 
 		proxies := response.Response.ProxySet
-		if len(proxies) == 0 {
-			err := fmt.Errorf("api[%s] read no proxy", describeRequest.GetAction())
+
+		if len(proxies) != 1 {
+			err := fmt.Errorf("api[%s] read %d proxies", describeRequest.GetAction(), len(proxies))
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -860,8 +872,8 @@ func (me *GaapService) CreateTCPListener(
 			return retryError(err)
 		}
 
-		if len(response.Response.ListenerIds) == 0 {
-			err := fmt.Errorf("api[%s] return empty TCP listener id set", request.GetAction())
+		if len(response.Response.ListenerIds) != 1 {
+			err := fmt.Errorf("api[%s] return %d TCP listener ids", request.GetAction(), len(response.Response.ListenerIds))
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -906,8 +918,8 @@ func (me *GaapService) CreateUDPListener(
 			return retryError(err)
 		}
 
-		if len(response.Response.ListenerIds) == 0 {
-			err := fmt.Errorf("api[%s] return empty UDP listener id set", request.GetAction())
+		if len(response.Response.ListenerIds) != 1 {
+			err := fmt.Errorf("api[%s] return %d UDP listener ids", request.GetAction(), len(response.Response.ListenerIds))
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -1534,8 +1546,8 @@ func (me *GaapService) CreateSecurityRule(
 			return retryError(err)
 		}
 
-		if len(response.Response.RuleIdList) == 0 {
-			err := fmt.Errorf("api[%s] return empty rule id set", request.GetAction())
+		if len(response.Response.RuleIdList) != 1 {
+			err := fmt.Errorf("api[%s] return %d rule ids", request.GetAction(), len(response.Response.RuleIdList))
 			log.Printf("[CRITAL]%s %v", logId, err)
 			return resource.NonRetryableError(err)
 		}
@@ -1578,8 +1590,16 @@ func (me *GaapService) DescribeSecurityRule(ctx context.Context, id string) (sec
 			return retryError(err)
 		}
 
-		if len(response.Response.SecurityRuleSet) == 0 {
+		switch len(response.Response.SecurityRuleSet) {
+		case 0:
 			return nil
+
+		default:
+			err := fmt.Errorf("api[%s] return more than 1 security rule", request.GetAction())
+			log.Printf("[CRITAL]%s %v", logId, err)
+			return resource.NonRetryableError(err)
+
+		case 1:
 		}
 
 		securityRule = response.Response.SecurityRuleSet[0]
@@ -2040,10 +2060,18 @@ func waitLayer4ListenerReady(ctx context.Context, client *gaap.Client, id, proto
 				return retryError(err, GAAPInternalError)
 			}
 
-			if len(response.Response.ListenerSet) == 0 {
+			switch len(response.Response.ListenerSet) {
+			case 0:
 				err := fmt.Errorf("api[%s] return empty TCP listener set", request.GetAction())
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
+
+			default:
+				err := fmt.Errorf("api[%s] return more than 1 TCP listener", request.GetAction())
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+
+			case 1:
 			}
 
 			listener := response.Response.ListenerSet[0]
@@ -2076,10 +2104,18 @@ func waitLayer4ListenerReady(ctx context.Context, client *gaap.Client, id, proto
 				return retryError(err, GAAPInternalError)
 			}
 
-			if len(response.Response.ListenerSet) == 0 {
+			switch len(response.Response.ListenerSet) {
+			case 0:
 				err := fmt.Errorf("api[%s] return empty UDP listener set", request.GetAction())
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
+
+			default:
+				err := fmt.Errorf("api[%s] return more than 1 UDP listener", request.GetAction())
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+
+			case 1:
 			}
 
 			listener := response.Response.ListenerSet[0]
@@ -2121,10 +2157,18 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 				return retryError(err)
 			}
 
-			if len(response.Response.ListenerSet) == 0 {
+			switch len(response.Response.ListenerSet) {
+			case 0:
 				err := fmt.Errorf("api[%s] return empty HTTP listener set", request.GetAction())
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
+
+			default:
+				err := fmt.Errorf("api[%s] return more than 1 HTTP listener", request.GetAction())
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+
+			case 1:
 			}
 
 			listener := response.Response.ListenerSet[0]
@@ -2158,10 +2202,18 @@ func waitLayer7ListenerReady(ctx context.Context, client *gaap.Client, proxyId, 
 				return retryError(err)
 			}
 
-			if len(response.Response.ListenerSet) == 0 {
+			switch len(response.Response.ListenerSet) {
+			case 0:
 				err := fmt.Errorf("api[%s] return empty HTTPS listener set", request.GetAction())
 				log.Printf("[DEBUG]%s %v", logId, err)
 				return resource.RetryableError(err)
+
+			default:
+				err := fmt.Errorf("api[%s] return more than 1 HTTPS listener", request.GetAction())
+				log.Printf("[DEBUG]%s %v", logId, err)
+				return resource.NonRetryableError(err)
+
+			case 1:
 			}
 
 			listener := response.Response.ListenerSet[0]

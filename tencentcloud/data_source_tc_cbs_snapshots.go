@@ -144,7 +144,7 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("storage_usage"); ok {
 		params["disk-usage"] = v.(string)
 	}
-	if v, ok := d.GetOk("project_id"); ok {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		params["project-id"] = v.(string)
 	}
 	if v, ok := d.GetOk("availability_zone"); ok {
@@ -160,7 +160,7 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		}
-		ids := make([]string, len(snapshots))
+		ids := make([]string, 0, len(snapshots))
 		snapshotList := make([]map[string]interface{}, 0, len(snapshots))
 		for _, snapshot := range snapshots {
 			mapping := map[string]interface{}{

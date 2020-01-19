@@ -83,7 +83,7 @@ func dataSourceTencentCloudCcnBandwidthLimitsRead(d *schema.ResourceData, meta i
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		ccnId string = d.Get("ccn_id").(string)
+		ccnId = d.Get("ccn_id").(string)
 	)
 
 	var infos, err = service.DescribeCcnRegionBandwidthLimits(ctx, ccnId)

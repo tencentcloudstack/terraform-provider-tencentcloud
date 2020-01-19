@@ -4,16 +4,20 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type RedisService struct {
-	client *connectivity.TencentCloudClient
+	client  *connectivity.TencentCloudClient
+	zoneMap map[int64]string
 }
 
 type TencentCloudRedisDetail struct {
@@ -30,6 +34,53 @@ type TencentCloudRedisDetail struct {
 	Port       int64
 	CreateTime string
 	Tags       map[string]string
+}
+
+func (me *RedisService) fullZoneId() (errRet error) {
+	if me.zoneMap == nil {
+		me.zoneMap = make(map[int64]string)
+	}
+	if len(me.zoneMap) != 0 {
+		return
+	}
+	response, err := me.client.UseCvmClient().DescribeZones(cvm.NewDescribeZonesRequest())
+	if err != nil {
+		return err
+	}
+	for _, item := range response.Response.ZoneSet {
+		if zoneId, err := strconv.ParseInt(*item.ZoneId, 10, 64); err != nil {
+			return fmt.Errorf("[sdk]DescribeZones return ZoneId is not illegal,%s", *item.ZoneId)
+		} else {
+			me.zoneMap[zoneId] = *item.Zone
+		}
+	}
+
+	return nil
+}
+
+func (me *RedisService) getZoneId(name string) (id int64, errRet error) {
+	if errRet = me.fullZoneId(); errRet != nil {
+		return
+	}
+	for key, value := range me.zoneMap {
+		if value == name {
+			id = key
+			return
+		}
+	}
+	errRet = fmt.Errorf("this redis zone %s not support yet", name)
+	return
+}
+
+func (me *RedisService) getZoneName(id int64) (name string, errRet error) {
+	if errRet = me.fullZoneId(); errRet != nil {
+		return
+	}
+	name = me.zoneMap[id]
+	if name == "" {
+		errRet = fmt.Errorf("this redis zoneid %d not support yet", id)
+	}
+	return
 }
 
 func (me *RedisService) DescribeRedisZoneConfig(ctx context.Context) (sellConfigures []*redis.RegionConf, errRet error) {
@@ -59,14 +110,8 @@ func (me *RedisService) DescribeInstances(ctx context.Context, zoneName, searchK
 	var zoneId int64 = -1
 
 	if zoneName != "" {
-		for id, name := range REDIS_ZONE_ID2NAME {
-			if name == zoneName {
-				zoneId = id
-				break
-			}
-		}
-		if zoneId == -1 {
-			errRet = fmt.Errorf("redis instances not support this zone search.")
+		zoneId, errRet = me.getZoneId(zoneName)
+		if errRet != nil {
 			return
 		}
 	}
@@ -127,12 +172,13 @@ needMoreItems:
 			instance.Status = REDIS_STATUS[*item.Status]
 		}
 
-		if REDIS_ZONE_ID2NAME[*item.ZoneId] == "" {
-			instance.Zone = "unknown"
-		} else {
-			instance.Zone = REDIS_ZONE_ID2NAME[*item.ZoneId]
+		name, err := me.getZoneName(*item.ZoneId)
+		if err != nil {
+			errRet = err
+			return
 		}
 
+		instance.Zone = name
 		instance.CreateTime = *item.Createtime
 		instance.Ip = *item.WanIp
 		instance.MemSize = int64(*item.Size)
@@ -183,19 +229,12 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	}()
 
 	// zone
-	var intZoneId uint64
-
-	for id, name := range REDIS_ZONE_ID2NAME {
-		if zoneName == name {
-			intZoneId = uint64(id)
-			break
-		}
-	}
-	if intZoneId == 0 {
-		errRet = fmt.Errorf("redis not supports this zone %s now", zoneName)
+	var intZoneId int64
+	intZoneId, errRet = me.getZoneId(zoneName)
+	if errRet != nil {
 		return
 	}
-	request.ZoneId = &intZoneId
+	request.ZoneId = helper.Int64Uint64(intZoneId)
 
 	// type
 	var intTypeId uint64

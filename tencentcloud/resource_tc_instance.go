@@ -8,12 +8,12 @@ Provides a CVM instance resource.
 Example Usage
 
 ```hcl
-data "tencentcloud_images" "my_favorate_image" {
+data "tencentcloud_images" "my_favorite_image" {
   image_type = ["PUBLIC_IMAGE"]
   os_name    = "centos"
 }
 
-data "tencentcloud_instance_types" "my_favorate_instance_types" {
+data "tencentcloud_instance_types" "my_favorite_instance_types" {
   filter {
     name   = "instance-family"
     values = ["S3"]
@@ -23,7 +23,7 @@ data "tencentcloud_instance_types" "my_favorate_instance_types" {
   memory_size    = 1
 }
 
-data "tencentcloud_availability_zones" "my_favorate_zones" {
+data "tencentcloud_availability_zones" "my_favorite_zones" {
 }
 
 // Create VPC resource
@@ -34,7 +34,7 @@ resource "tencentcloud_vpc" "app" {
 
 resource "tencentcloud_subnet" "app" {
   vpc_id            = tencentcloud_vpc.app.id
-  availability_zone = data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
   name              = "awesome_app_subnet"
   cidr_block        = "10.0.1.0/24"
 }
@@ -43,8 +43,8 @@ resource "tencentcloud_subnet" "app" {
 resource "tencentcloud_instance" "my_awesome_app" {
   instance_name              = "awesome_app"
   availability_zone          = data.tencentcloud_availability_zones.my_favorate_zones.zones.0.name
-  image_id                   = data.tencentcloud_images.my_favorate_image.images.0.image_id
-  instance_type              = data.tencentcloud_instance_types.my_favorate_instance_types.instance_types.0.instance_type
+  image_id                   = data.tencentcloud_images.my_favorite_image.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
   system_disk_type           = "CLOUD_PREMIUM"
   system_disk_size           = 50
   hostname                   = "user"
@@ -116,9 +116,9 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      "Terrafrom-CVM-Instance",
+				Default:      "Terraform-CVM-Instance",
 				ValidateFunc: validateStringLengthInRange(2, 128),
-				Description:  "The name of the CVM. The max length of instance_name is 60, and default value is `Terrafrom-CVM-Instance`.",
+				Description:  "The name of the CVM. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.",
 			},
 			"instance_type": {
 				Type:         schema.TypeString,
@@ -577,7 +577,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	d.SetId(instanceId)
 
 	// wait for status
-	err = resource.Retry(15*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, "InternalError")
@@ -598,7 +598,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 
-		err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
 				return retryError(errRet, "InternalError")
@@ -757,7 +757,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return err
 			}
-			err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 				if errRet != nil {
 					return retryError(errRet, "InternalError")
@@ -775,7 +775,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return err
 			}
-			err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 				if errRet != nil {
 					return retryError(errRet, "InternalError")
@@ -800,7 +800,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		d.SetPartial("instance_type")
 
 		// wait for status
-		err = resource.Retry(4*time.Minute, func() *resource.RetryError {
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
 				return retryError(errRet, "InternalError")
@@ -850,8 +850,8 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("tags") {
-		old, new := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(old.(map[string]interface{}), new.(map[string]interface{}))
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
 		tagService := TagService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
@@ -890,7 +890,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	err = resource.Retry(5*time.Minute, func() *resource.RetryError {
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, "InternalError")
