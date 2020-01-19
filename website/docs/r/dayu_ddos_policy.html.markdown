@@ -130,7 +130,7 @@ The `packet_filters` object supports the following:
 The `port_filters` object supports the following:
 
 * `action` - (Optional) Action of port to take, valid values area `drop`, `transmit`.
-* `end_port` - (Optional) End port, valid value is range from 0 to 65535. It must be greater than `d_start_port`.
+* `end_port` - (Optional) End port, valid value is range from 0 to 65535. It must be greater than `start_port`.
 * `kind` - (Optional) The type of forbidden port, and valid values are 0, 1, 2. 0 for destination ports make effect, 1 for source ports make effect. 2 for both destination and source ports.
 * `protocol` - (Optional) Protocol, valid values are `tcp`, `udp`, `icmp`, `all`.
 * `start_port` - (Optional) Start port, valid value is range from 0 to 65535.

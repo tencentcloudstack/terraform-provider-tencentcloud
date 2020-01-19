@@ -67,6 +67,24 @@ func resourceTencentCloudDayuDdosPolicyAttachmentCreate(d *schema.ResourceData, 
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
+	//only one bind relationship supported, check unbind status
+	_, has, statusErr := dayuService.DescribeDdosPolicyAttachments(ctx, resourceId, resourceType, "")
+	if statusErr != nil {
+		statusErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			_, has, statusErr = dayuService.DescribeDdosPolicyAttachments(ctx, resourceId, resourceType, "")
+			if statusErr != nil {
+				return retryError(statusErr)
+			}
+			return nil
+		})
+	}
+	if statusErr != nil {
+		return statusErr
+	}
+	if has {
+		return fmt.Errorf("DDoS is already bined by policy")
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := dayuService.BindDdosPolicy(ctx, resourceId, resourceType, policyId)
 		if e != nil {
@@ -81,7 +99,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentCreate(d *schema.ResourceData, 
 
 	time.Sleep(10 * time.Second)
 	//check bind status
-	_, has, statusErr := dayuService.DescribeDdosPolicyAttachments(ctx, resourceId, resourceType, policyId)
+	_, has, statusErr = dayuService.DescribeDdosPolicyAttachments(ctx, resourceId, resourceType, policyId)
 	if statusErr != nil {
 		statusErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, has, statusErr = dayuService.DescribeDdosPolicyAttachments(ctx, resourceId, resourceType, policyId)
@@ -109,7 +127,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentRead(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	items := strings.Split(d.Id(), "#")
+	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
 		return fmt.Errorf("broken ID of DDoS policy attachment")
 	}

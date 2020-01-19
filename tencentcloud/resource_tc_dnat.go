@@ -202,9 +202,9 @@ func resourceTencentCloudDnatRead(d *schema.ResourceData, meta interface{}) erro
 	_ = d.Set("nat_id", dnat.NatGatewayId)
 	_ = d.Set("protocol", dnat.IpProtocol)
 	_ = d.Set("elastic_ip", dnat.PublicIpAddress)
-	_ = d.Set("elastic_port", dnat.PublicPort)
+	_ = d.Set("elastic_port", strconv.Itoa(int(*dnat.PublicPort)))
 	_ = d.Set("private_ip", dnat.PrivateIpAddress)
-	_ = d.Set("internal_port", dnat.PrivatePort)
+	_ = d.Set("private_port", strconv.Itoa(int(*dnat.PrivatePort)))
 	_ = d.Set("description", dnat.Description)
 	return nil
 }

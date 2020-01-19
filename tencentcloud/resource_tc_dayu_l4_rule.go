@@ -354,7 +354,7 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ruleFlag := false
-	ruleKey := []string{"protocol", "source_type", "source_list", "ssl_id", "lb_type"}
+	ruleKey := []string{"s_port", "d_port", "protocol", "source_list"}
 
 	for _, key := range ruleKey {
 		if d.HasChange(key) {
@@ -370,6 +370,7 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		rule.VirtualPort = helper.IntUint64(d.Get("d_port").(int))
 		rule.Protocol = helper.String(d.Get("protocol").(string))
 		rule.RuleName = helper.String(d.Get("name").(string))
+		rule.RuleId = &ruleId
 
 		rule.SourceType = helper.IntUint64(sourceType)
 		rule.Protocol = &protocol
@@ -401,7 +402,7 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 	}
 
 	healthFlag := false
-	healthKey := []string{"health_check_switch", "health_check_interval", "health_check_timeout", "health_check_unhealth_num", "health_check_health_num"}
+	healthKey := []string{"health_check_switch", "health_check_interval", "health_check_timeout", "health_check_unhealth_num", "health_check_health_num", "d_port"}
 
 	for _, key := range healthKey {
 		if d.HasChange(key) {
