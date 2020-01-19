@@ -294,7 +294,7 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("bandwidth", int(*gateway.InternetMaxBandwidthOut))
 	_ = d.Set("type", *gateway.Type)
 	_ = d.Set("create_time", *gateway.CreatedTime)
-	_ = d.Set("state", *gateway.Type)
+	_ = d.Set("state", *gateway.State)
 	_ = d.Set("prepaid_renew_flag", *gateway.RenewFlag)
 	_ = d.Set("charge_type", *gateway.InstanceChargeType)
 	_ = d.Set("expired_time", *gateway.ExpiredTime)

@@ -285,7 +285,7 @@ func resourceTencentCloudDayuL7RuleCreate(d *schema.ResourceData, meta interface
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := dayuService.SetRuleSwitch(ctx, resourceType, resourceId, ruleId, switchFlag, protocol)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "InternalError")
 		}
 		return nil
 	})
@@ -468,7 +468,7 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				e := dayuService.SetRuleSwitch(ctx, resourceType, resourceId, ruleId, switchFlag, protocol)
 				if e != nil {
-					return retryError(e)
+					return retryError(e, "InternalError")
 				}
 				return nil
 			})
