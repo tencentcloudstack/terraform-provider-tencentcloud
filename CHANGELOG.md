@@ -1,5 +1,15 @@
 ## 1.31.0 (Unreleased)
 
+BUG FIXES:
+
+* Resource: `tencentcloud_dnat` fix `elastic_port` and `internal_port` type error.
+* Resource: `tencentcloud_vpn_gateway` fix `state` type error.
+* Resource: `tencentcloud_dayu_cc_https_policy` fix message description error.
+* Resource: `tencentcloud_dayu_ddos_policy` fix unchangeable `white_ips` and `black_ips`.
+* Resource: `tencentcloud_dayu_l4_rule` fix unchangeable rule paras.
+* Resource: `tencentcloud_dayu_l4_rule` add `InternalError` SDK error process.
+* Resource: `tencentcloud_dayu_l7_rule` add `InternalError` SDK error process.
+
 ENHANCEMENTS:
 
 * Data Source: `tencentcloud_key_pairs` support regular expression search by name.

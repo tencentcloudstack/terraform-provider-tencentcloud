@@ -559,6 +559,7 @@ func resourceTencentCloudDayuDdosPolicyCaseDelete(d *schema.ResourceData, meta i
 				policies, dErr := dayuService.DescribeDdosPolicies(ctx, resourceType, "")
 				if dErr != nil {
 					err = dErr
+					return err
 				}
 				bindPolicyId := ""
 				bindResourceIds := []string{}
@@ -578,6 +579,7 @@ func resourceTencentCloudDayuDdosPolicyCaseDelete(d *schema.ResourceData, meta i
 					bErr := dayuService.UnbindDdosPolicy(ctx, resourceId, resourceType, bindPolicyId)
 					if bErr != nil {
 						err = bErr
+						return err
 					}
 				}
 			}
