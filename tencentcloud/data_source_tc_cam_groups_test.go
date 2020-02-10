@@ -20,6 +20,7 @@ func TestAccTencentCloudCamGroupsDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_groups.groups", "group_list.0.name", "cam-group-test3"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_groups.groups", "group_list.0.remark", "test"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_groups.groups", "group_list.0.create_time"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_groups.groups", "group_list.0.group_id"),
 				),
 			},
 		},

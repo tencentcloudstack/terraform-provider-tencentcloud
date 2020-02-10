@@ -39,6 +39,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `group_list` - A list of CAM groups. Each element contains the following attributes:
   * `create_time` - Create time of the CAM group.
+  * `group_id` - Id of the CAM group.
   * `name` - Name of CAM group.
   * `remark` - Description of CAM group.
 
