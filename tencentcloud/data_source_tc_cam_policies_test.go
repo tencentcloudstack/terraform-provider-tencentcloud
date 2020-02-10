@@ -23,6 +23,7 @@ func TestAccTencentCloudCamPoliciesDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_policies.policies", "policy_list.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_policies.policies", "policy_list.0.service_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_policies.policies", "policy_list.0.create_mode"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_policies.policies", "policy_list.0.policy_id"),
 				),
 			},
 		},

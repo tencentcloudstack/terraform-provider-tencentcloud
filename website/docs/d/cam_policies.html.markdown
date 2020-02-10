@@ -46,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - Create time of the CAM policy.
   * `description` - Description of CAM policy.
   * `name` - Name of CAM policy.
+  * `policy_id` - Id of the policy strategy.
   * `service_type` - Name of attached products.
   * `type` - Type of the policy strategy. 1 means customer strategy and 2 means preset strategy.
 
