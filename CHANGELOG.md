@@ -1,4 +1,18 @@
-## 1.31.0 (Unreleased)
+## 1.30.2 (Unreleased)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_cam_policies` add new attribute `policy_id`.
+* Data Source: `tencentcloud_cam_groups` add new attribute `group_id`.
+
+## 1.30.1 (January 21, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_dnat` fix `elastic_port` and `internal_port` type error.
+* Resource: `tencentcloud_vpn_gateway` fix `state` type error.
+* Resource: `tencentcloud_dayu_ddos_policy` fix that `white_ips` and `black_ips` can not be updated.
+* Resource: `tencentcloud_dayu_l4_rule` fix that rule parameters can not be updated.
 
 ENHANCEMENTS:
 
