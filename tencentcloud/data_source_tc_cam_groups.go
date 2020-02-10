@@ -74,6 +74,11 @@ func dataSourceTencentCloudCamGroups() *schema.Resource {
 							Computed:    true,
 							Description: "Create time of the CAM group.",
 						},
+						"group_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Id of the CAM group.",
+						},
 					},
 				},
 			},
@@ -89,7 +94,12 @@ func dataSourceTencentCloudCamGroupsRead(d *schema.ResourceData, meta interface{
 
 	params := make(map[string]interface{})
 	if v, ok := d.GetOk("group_id"); ok {
-		params["group_id"], _ = strconv.Atoi(v.(string))
+		groupId, e := strconv.Atoi(v.(string))
+		if e != nil {
+			return e
+		} else {
+			params["group_id"] = groupId
+		}
 	}
 	if v, ok := d.GetOk("name"); ok {
 		params["name"] = v.(string)
@@ -120,6 +130,7 @@ func dataSourceTencentCloudCamGroupsRead(d *schema.ResourceData, meta interface{
 		mapping := map[string]interface{}{
 			"name":        *group.GroupName,
 			"create_time": *group.CreateTime,
+			"group_id":    strconv.Itoa(int(*group.GroupId)),
 		}
 		if group.Remark != nil {
 			mapping["remark"] = *group.Remark

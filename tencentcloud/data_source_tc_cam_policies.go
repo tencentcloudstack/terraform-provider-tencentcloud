@@ -107,6 +107,11 @@ func dataSourceTencentCloudCamPolicies() *schema.Resource {
 							Computed:    true,
 							Description: "Mode of creation of policy strategy. 1 means policy was created with console, and 2 means it was created by strategies.",
 						},
+						"policy_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Id of the policy strategy.",
+						},
 					},
 				},
 			},
@@ -122,7 +127,12 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 
 	params := make(map[string]interface{})
 	if v, ok := d.GetOk("policy_id"); ok {
-		params["policy_id"], _ = strconv.Atoi(v.(string))
+		policyId, e := strconv.Atoi(v.(string))
+		if e != nil {
+			return e
+		} else {
+			params["policy_id"] = policyId
+		}
 	}
 	if v, ok := d.GetOk("name"); ok {
 		params["name"] = v.(string)
@@ -163,6 +173,7 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 			"service_type": *policy.ServiceType,
 			"create_mode":  int(*policy.CreateMode),
 			"type":         int(*policy.Type),
+			"policy_id":    strconv.Itoa(int(*policy.PolicyId)),
 		}
 		if policy.Description != nil {
 			mapping["description"] = *policy.Description
