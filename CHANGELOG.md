@@ -1,4 +1,11 @@
-## 1.31.0 (Unreleased)
+## 1.30.2 (Unreleased)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_cam_policies` add new attribute `policy_id`.
+* Data Source: `tencentcloud_cam_groups` add new attribute `group_id`.
+
+## 1.30.1 (January 21, 2020)
 
 BUG FIXES:
 
