@@ -1,4 +1,9 @@
 ## 1.31.0 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix that classic network does not support([#339](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/339)).
+
 ## 1.30.2 (February 17, 2020)
 
 ENHANCEMENTS:

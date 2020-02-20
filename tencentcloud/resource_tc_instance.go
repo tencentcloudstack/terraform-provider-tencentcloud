@@ -445,19 +445,17 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// vpc
-	request.VirtualPrivateCloud = &cvm.VirtualPrivateCloud{}
 	if v, ok := d.GetOk("vpc_id"); ok {
+		request.VirtualPrivateCloud = &cvm.VirtualPrivateCloud{}
 		request.VirtualPrivateCloud.VpcId = helper.String(v.(string))
-	} else {
-		request.VirtualPrivateCloud.VpcId = helper.String("DEFAULT")
-	}
-	if v, ok := d.GetOk("subnet_id"); ok {
-		request.VirtualPrivateCloud.SubnetId = helper.String(v.(string))
-	} else {
-		request.VirtualPrivateCloud.SubnetId = helper.String("DEFAULT")
-	}
-	if v, ok := d.GetOk("private_ip"); ok {
-		request.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
+
+		if v, ok = d.GetOk("subnet_id"); ok {
+			request.VirtualPrivateCloud.SubnetId = helper.String(v.(string))
+		}
+
+		if v, ok = d.GetOk("private_ip"); ok {
+			request.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
+		}
 	}
 
 	if v, ok := d.GetOk("security_groups"); ok {
