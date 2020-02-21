@@ -184,9 +184,11 @@ func (me *CvmService) ModifyVpc(ctx context.Context, instanceId, vpcId, subnetId
 	request := cvm.NewModifyInstancesVpcAttributeRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.VirtualPrivateCloud = &cvm.VirtualPrivateCloud{
-		VpcId:              &vpcId,
-		SubnetId:           &subnetId,
-		PrivateIpAddresses: []*string{&privateIp},
+		VpcId:    &vpcId,
+		SubnetId: &subnetId,
+	}
+	if privateIp != "" {
+		request.VirtualPrivateCloud.PrivateIpAddresses = []*string{&privateIp}
 	}
 
 	ratelimit.Check(request.GetAction())
