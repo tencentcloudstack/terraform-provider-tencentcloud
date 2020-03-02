@@ -391,7 +391,18 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Optional:     true,
 			Default:      TKE_CLUSTER_OS_UBUNTU16,
 			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS),
-			Description:  "Operating system of the cluster, the available values include: 'centos7.2x86_64','centos7.6x86_64','ubuntu16.04.1 LTSx86_64','ubuntu18.04.1 LTSx86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.",
+			Description: "Operating system of the cluster, the available values include: '" + strings.Join(TKE_CLUSTER_OS, "','") +
+				"'. Default is '" + TKE_CLUSTER_OS_UBUNTU16 + "'.",
+		},
+		"cluster_os_type": {
+			Type:         schema.TypeString,
+			ForceNew:     true,
+			Optional:     true,
+			Default:      TKE_CLUSTER_OS_TYPE_GENERAL,
+			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS_TYPES),
+			Description: "Image type of the cluster os, the available values include: '" + strings.Join(TKE_CLUSTER_OS_TYPES, "','") +
+				"'. Default is '" + TKE_CLUSTER_OS_TYPE_GENERAL + "'. 'DOCKER_CUSTOMIZE' means 'TKE-Optimized'. " +
+				"Only 'centos7.6x86_64' or 'ubuntu18.04.1 LTSx86_64' support 'DOCKER_CUSTOMIZE' now.",
 		},
 		"container_runtime": {
 			Type:         schema.TypeString,
@@ -797,7 +808,18 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 
 	basic.ProjectId = int64(d.Get("project_id").(int))
-	basic.ClusterOs = tkeClusterOsMap[d.Get("cluster_os").(string)]
+
+	cluster_os := d.Get("cluster_os").(string)
+
+	basic.ClusterOs = tkeClusterOsMap[cluster_os]
+	basic.ClusterOsType = d.Get("cluster_os_type").(string)
+
+	if basic.ClusterOsType == TKE_CLUSTER_OS_TYPE_DOCKER_CUSTOMIZE {
+		if cluster_os != TKE_CLUSTER_OS_UBUNTU18 && cluster_os != TKE_CLUSTER_OS_CENTOS76 {
+			return fmt.Errorf("Only 'centos7.6x86_64' or 'ubuntu18.04.1 LTSx86_64' support 'DOCKER_CUSTOMIZE' now,can not be " + basic.ClusterOs)
+		}
+	}
+
 	basic.ClusterVersion = d.Get("cluster_version").(string)
 	if v, ok := d.GetOk("cluster_name"); ok {
 		basic.ClusterName = v.(string)
