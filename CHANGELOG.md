@@ -1,4 +1,9 @@
 ## 1.31.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* ReSource: `tencentcloud_kubernetes_cluster` add new attribute `cluster_os_type`.
+
 ## 1.30.3 (February 24, 2020)
 
 BUG FIXES:
