@@ -2,7 +2,7 @@
 
 ENHANCEMENTS:
 
-* ReSource: `tencentcloud_kubernetes_cluster` add new attribute `cluster_os_type`.
+* Resource: `tencentcloud_kubernetes_cluster` add new attribute `cluster_os_type`.
 
 ## 1.30.3 (February 24, 2020)
 
