@@ -15,6 +15,7 @@ import (
 type ClusterBasicSetting struct {
 	ClusterId          string
 	ClusterOs          string
+	ClusterOsType      string
 	ClusterVersion     string
 	ClusterName        string
 	ClusterDescription string
@@ -297,6 +298,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterBasicSettings.VpcId = &basic.VpcId
 	request.ClusterBasicSettings.ClusterDescription = &basic.ClusterDescription
 	request.ClusterBasicSettings.ClusterName = &basic.ClusterName
+	request.ClusterBasicSettings.OsCustomizeType = &basic.ClusterOsType
 	for k, v := range tags {
 		if len(request.ClusterBasicSettings.TagSpecification) == 0 {
 			request.ClusterBasicSettings.TagSpecification = []*tke.TagSpecification{{
