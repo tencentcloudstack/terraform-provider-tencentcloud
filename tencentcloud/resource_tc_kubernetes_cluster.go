@@ -816,7 +816,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	if basic.ClusterOsType == TKE_CLUSTER_OS_TYPE_DOCKER_CUSTOMIZE {
 		if cluster_os != TKE_CLUSTER_OS_UBUNTU18 && cluster_os != TKE_CLUSTER_OS_CENTOS76 {
-			return fmt.Errorf("Only 'centos7.6x86_64' or 'ubuntu18.04.1 LTSx86_64' support 'DOCKER_CUSTOMIZE' now,can not be " + basic.ClusterOs)
+			return fmt.Errorf("Only 'centos7.6x86_64' or 'ubuntu18.04.1 LTSx86_64' support 'DOCKER_CUSTOMIZE' now, can not be " + basic.ClusterOs)
 		}
 	}
 
