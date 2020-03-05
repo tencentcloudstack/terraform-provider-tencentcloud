@@ -48,9 +48,17 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 				Description:  "The key pair's name. It is the only in one TencentCloud account.",
 			},
 			"public_key": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				StateFunc: func(v interface{}) string {
+					switch value := v.(type) {
+					case string:
+						return strings.TrimSpace(value)
+					default:
+						return ""
+					}
+				},
 				Description: "You can import an existing public key and using TencentCloud key pair to manage it.",
 			},
 			"project_id": {
