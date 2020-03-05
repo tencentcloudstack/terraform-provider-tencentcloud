@@ -441,6 +441,25 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			ValidateFunc: validateStringLengthInRange(4, 100),
 			Description:  "Vpc Id of the cluster.",
 		},
+		"cluster_internet": {
+			Type:        schema.TypeBool,
+			Default:     false,
+			Optional:    true,
+			Description: "Open internet access or not",
+		},
+		"managed_cluster_internet_security_policies": {
+			Type:        schema.TypeList,
+			Computed:    true,
+			Optional:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can set only when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true.",
+		},
+		"independent_cluster_intranet_subnet_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Subnet id who can access this independent cluster, this field can set only only where field `cluster_deploy_type` is 'INDEPENDENT_CLUSTER'.",
+		},
 		"project_id": {
 			Type:        schema.TypeInt,
 			ForceNew:    true,
@@ -792,15 +811,32 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	var basic ClusterBasicSetting
-	var advanced ClusterAdvancedSettings
-	var cvms RunInstancesForNode
-	var iAdvanced InstanceAdvancedSettings
-	var cidrSet ClusterCidrSettings
-	cvms.Master = []string{}
-	cvms.Work = []string{}
+	var (
+		basic            ClusterBasicSetting
+		advanced         ClusterAdvancedSettings
+		cvms             RunInstancesForNode
+		iAdvanced        InstanceAdvancedSettings
+		cidrSet          ClusterCidrSettings
+		securityPolicies []string
+		clusterInternet  = d.Get("cluster_internet").(bool)
+		intranetSubnetId = d.Get("independent_cluster_intranet_subnet_id").(string)
+	)
 
+	if temp, ok := d.GetOkExists("managed_cluster_internet_security_policies"); ok {
+		securityPolicies = helper.InterfacesStrings(temp.([]interface{}))
+	}
 	clusterDeployType := d.Get("cluster_deploy_type").(string)
+
+	if intranetSubnetId != "" && clusterDeployType != TKE_DEPLOY_TYPE_INDEPENDENT {
+		return fmt.Errorf("`independent_cluster_intranet_subnet_id` can set only only where field `cluster_deploy_type` is 'INDEPENDENT_CLUSTER'")
+	}
+
+	if len(securityPolicies) > 0 {
+		if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT || !clusterInternet {
+			return fmt.Errorf("`managed_cluster_internet_security_policies` can set only when field" +
+				" `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true")
+		}
+	}
 
 	vpcId := d.Get("vpc_id").(string)
 	if vpcId != "" {
@@ -930,6 +966,107 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		log.Printf("[WARN]%s resource.kubernetes_cluster.read after create fail , %s", logId, err.Error())
 	}
 
+	//TKE_DEPLOY_TYPE_MANAGED Open the internet
+	if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED && clusterInternet {
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr := service.CreateClusterEndpointVip(ctx, id, securityPolicies)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			status, message, inErr := service.DescribeClusterEndpointVipStatus(ctx, id)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			if status == TkeInternetStatusCreating {
+				return resource.RetryableError(
+					fmt.Errorf("%s create cluster endpoint vip status still is %s", id, status))
+			}
+			if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+				return nil
+			}
+			return resource.NonRetryableError(
+				fmt.Errorf("%s create cluster endpoint vip error ,status is %s,message is %s", id, status, message))
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	//TKE_DEPLOY_TYPE_INDEPENDENT Open the internet or set subnet
+	if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
+
+		//open intranet
+		if intranetSubnetId != "" {
+			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				inErr := service.CreateClusterEndpoint(ctx, id, intranetSubnetId, false)
+				if inErr != nil {
+					return retryError(inErr)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+
+			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+				status, message, inErr := service.DescribeClusterEndpointStatus(ctx, id)
+				if inErr != nil {
+					return retryError(inErr)
+				}
+				if status == TkeInternetStatusCreating {
+					return resource.RetryableError(
+						fmt.Errorf("%s create intranet cluster endpoint status still is %s", id, status))
+				}
+				if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+					return nil
+				}
+				return resource.NonRetryableError(
+					fmt.Errorf("%s create intranet cluster endpoint error ,status is %s,message is %s", id, status, message))
+			})
+			if err != nil {
+				return err
+			}
+		}
+		//open internet
+		if clusterInternet {
+			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				inErr := service.CreateClusterEndpoint(ctx, id, "", true)
+				if inErr != nil {
+					return retryError(inErr)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+				status, message, inErr := service.DescribeClusterEndpointStatus(ctx, id)
+				if inErr != nil {
+					return retryError(inErr)
+				}
+				if status == TkeInternetStatusCreating {
+					return resource.RetryableError(
+						fmt.Errorf("%s create cluster internet endpoint status still is %s", id, status))
+				}
+				if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+					return nil
+				}
+				return resource.NonRetryableError(
+					fmt.Errorf("%s create cluster internet endpoint error ,status is %s,message is %s", id, status, message))
+			})
+			if err != nil {
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -1047,6 +1184,12 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("pgw_endpoint", emptyStrFunc(securityRet.Response.PgwEndpoint))
 	_ = d.Set("security_policy", policies)
 
+	if emptyStrFunc(securityRet.Response.ClusterExternalEndpoint) == "" {
+		_ = d.Set("cluster_internet", false)
+	} else {
+		_ = d.Set("cluster_internet", true)
+	}
+	_ = d.Set("managed_cluster_internet_security_policies", policies)
 	return nil
 }
 
@@ -1059,16 +1202,179 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	service := TagService{client: client}
+	tkeService := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := client.Region
+	d.Partial(true)
 
-	oldTags, newTags := d.GetChange("tags")
-	replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-	resourceName := BuildTagResourceName("ccs", "cluster", region, id)
-	if err := service.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-		return err
+		resourceName := BuildTagResourceName("ccs", "cluster", region, id)
+		if err := service.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+		d.SetPartial("tags")
 	}
 
+	var (
+		clusterDeployType = d.Get("cluster_deploy_type").(string)
+		clusterInternet   = d.Get("cluster_internet").(bool)
+		securityPolicies  []string
+	)
+
+	if temp, ok := d.GetOkExists("managed_cluster_internet_security_policies"); ok {
+		securityPolicies = helper.InterfacesStrings(temp.([]interface{}))
+	}
+
+	if clusterDeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
+		if d.HasChange("cluster_internet") {
+			//open
+			if clusterInternet {
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					inErr := tkeService.CreateClusterEndpoint(ctx, id, "", true)
+					if inErr != nil {
+						return retryError(inErr)
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+				err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+					status, message, inErr := tkeService.DescribeClusterEndpointStatus(ctx, id)
+					if inErr != nil {
+						return retryError(inErr)
+					}
+					if status == TkeInternetStatusCreating {
+						return resource.RetryableError(
+							fmt.Errorf("%s create cluster internet endpoint status still is %s", id, status))
+					}
+					if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+						return nil
+					}
+					return resource.NonRetryableError(
+						fmt.Errorf("%s create cluster internet endpoint error ,status is %s,message is %s", id, status, message))
+				})
+				if err != nil {
+					return err
+				}
+				//close
+			} else {
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					inErr := tkeService.DeleteClusterEndpoint(ctx, id)
+					if inErr != nil {
+						return retryError(inErr)
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+				err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+					status, message, inErr := tkeService.DescribeClusterEndpointStatus(ctx, id)
+					if inErr != nil {
+						return retryError(inErr)
+					}
+					if status == TkeInternetStatusDeleting {
+						return resource.RetryableError(
+							fmt.Errorf("%s close cluster internet endpoint status still is %s", id, status))
+					}
+					if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted {
+						return nil
+					}
+					return resource.NonRetryableError(
+						fmt.Errorf("%s close cluster internet endpoint error ,status is %s,message is %s", id, status, message))
+				})
+				if err != nil {
+					return err
+				}
+			}
+
+		}
+	}
+
+	if clusterDeployType == TKE_DEPLOY_TYPE_MANAGED {
+		if d.HasChange("cluster_internet") {
+			//open
+			if clusterInternet {
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					inErr := tkeService.CreateClusterEndpointVip(ctx, id, securityPolicies)
+					if inErr != nil {
+						return retryError(inErr)
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+				err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+					status, message, inErr := tkeService.DescribeClusterEndpointVipStatus(ctx, id)
+					if inErr != nil {
+						return retryError(inErr)
+					}
+					if status == TkeInternetStatusCreating {
+						return resource.RetryableError(
+							fmt.Errorf("%s create cluster endpoint vip status still is %s", id, status))
+					}
+					if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+						return nil
+					}
+					return resource.NonRetryableError(
+						fmt.Errorf("%s create cluster endpoint vip error ,status is %s,message is %s", id, status, message))
+				})
+				if err != nil {
+					return err
+				}
+				//close
+			} else {
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					inErr := tkeService.DeleteClusterEndpointVip(ctx, id)
+					if inErr != nil {
+						return retryError(inErr)
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+				err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+					status, message, inErr := tkeService.DescribeClusterEndpointVipStatus(ctx, id)
+					if inErr != nil {
+						return retryError(inErr)
+					}
+					if status == TkeInternetStatusDeleting {
+						return resource.RetryableError(
+							fmt.Errorf("%s close cluster internet endpoint status still is %s", id, status))
+					}
+					if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted {
+						return nil
+					}
+					return resource.NonRetryableError(
+						fmt.Errorf("%s close cluster internet endpoint error ,status is %s,message is %s", id, status, message))
+				})
+				if err != nil {
+					return err
+				}
+
+			}
+			d.SetPartial("cluster_internet")
+			d.SetPartial("managed_cluster_internet_security_policies")
+			//modify managed_cluster_internet_security_policies
+		} else {
+			if clusterInternet && d.HasChange("managed_cluster_internet_security_policies") {
+				if len(securityPolicies) == 0 {
+					return fmt.Errorf("`managed_cluster_internet_security_policies` can not delete once be setted")
+				}
+				if err := tkeService.ModifyClusterEndpointSP(ctx, id, securityPolicies); err != nil {
+					return err
+				}
+			}
+			d.SetPartial("managed_cluster_internet_security_policies")
+		}
+	}
+
+	d.Partial(false)
 	if err := resourceTencentCloudTkeClusterRead(d, meta); err != nil {
 		log.Printf("[WARN]%s resource.kubernetes_cluster.read after update fail , %s", logId, err.Error())
 	}

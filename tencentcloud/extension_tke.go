@@ -51,3 +51,13 @@ const (
 )
 
 var TKE_CLUSTER_OS_TYPES = []string{TKE_CLUSTER_OS_TYPE_DOCKER_CUSTOMIZE, TKE_CLUSTER_OS_TYPE_GENERAL}
+
+const (
+	TkeInternetStatusCreating      = "Creating"
+	TkeInternetStatusCreateFailed  = "CreateFailed"
+	TkeInternetStatusCreated       = "Created"
+	TkeInternetStatusDeleting      = "Deleting"
+	TkeInternetStatusDeleted       = "Deleted"
+	TkeInternetStatusDeletedFailed = "DeletedFailed"
+	TkeInternetStatusNotfound      = "NotFound"
+)
