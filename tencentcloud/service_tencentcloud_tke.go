@@ -595,12 +595,10 @@ func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subn
 	}()
 	request.ClusterId = &id
 
-	if internet {
-		request.IsExtranet = helper.Bool(true)
-	} else {
-		if subnetId != "" {
-			request.SubnetId = &subnetId
-		}
+	request.IsExtranet = &internet
+
+	if subnetId != "" {
+		request.SubnetId = &subnetId
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -638,7 +636,7 @@ func (me *TkeService) DescribeClusterEndpointStatus(ctx context.Context, id stri
 	return
 }
 
-func (me *TkeService) DeleteClusterEndpoint(ctx context.Context, id string) (errRet error) {
+func (me *TkeService) DeleteClusterEndpoint(ctx context.Context, id string, isInternet bool) (errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDeleteClusterEndpointRequest()
 	defer func() {
@@ -647,7 +645,7 @@ func (me *TkeService) DeleteClusterEndpoint(ctx context.Context, id string) (err
 		}
 	}()
 	request.ClusterId = &id
-	request.IsExtranet = helper.Bool(true)
+	request.IsExtranet = &isInternet
 
 	ratelimit.Check(request.GetAction())
 
