@@ -1,4 +1,16 @@
-## 1.30.2 (Unreleased)
+## 1.31.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_cluster` add new attribute `cluster_os_type`.
+
+## 1.30.3 (February 24, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix that classic network does not support([#339](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/339)).
+
+## 1.30.2 (February 17, 2020)
 
 ENHANCEMENTS:
 
