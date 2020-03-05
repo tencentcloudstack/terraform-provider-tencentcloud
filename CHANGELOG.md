@@ -1,5 +1,9 @@
 ## 1.31.0 (Unreleased)
 
+BUG FIXES:
+
+* Resource: tencentcloud_cam_policy fix read nil issue when the resource is not exist.([#344](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/#344)).
+
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_kubernetes_cluster` add new attribute `cluster_os_type`.
