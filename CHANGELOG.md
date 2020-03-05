@@ -1,8 +1,12 @@
-## 1.31.0 (Unreleased)
+## 1.30.4 (Unreleased)
 
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_kubernetes_cluster` add new attribute `cluster_os_type`.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_key_pair` will be replaced when the end of `public_key` contains spaces([#343](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/343)).
 
 ## 1.30.3 (February 24, 2020)
 
