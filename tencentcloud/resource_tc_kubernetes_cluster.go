@@ -454,7 +454,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Open intranet access or not.",
 		},
 		"managed_cluster_internet_security_policies": {
-			Type: schema.TypeList,
+			Type:     schema.TypeList,
 			Optional: true,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 			Description: "Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all." +
