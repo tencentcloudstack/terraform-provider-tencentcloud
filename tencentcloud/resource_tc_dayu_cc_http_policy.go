@@ -207,7 +207,7 @@ func resourceTencentCloudDayuCCHttpPolicyCreate(d *schema.ResourceData, meta int
 
 	if smode == DAYU_CC_POLICY_SMODE_SPEED_LIMIT {
 		if frequency == 0 {
-			return fmt.Errorf("`speedlimit` should be set when `smode` is `speedlimit`.")
+			return fmt.Errorf("`frequencys` should be set when `smode` is `speedlimit`.")
 		}
 		ccPolicy.Frequency = helper.IntUint64(frequency)
 	} else {

@@ -1,8 +1,14 @@
-## 1.31.0 (Unreleased)
+## 1.30.4 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cam_policy` fix read nil issue when the resource is not exist.([#344](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/#344)).
+* Resource: `tencentcloud_key_pair` will be replaced when the end of `public_key` contains spaces([#343](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/343)).
 
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_kubernetes_cluster` add new attributes `cluster_os_type`,`cluster_internet`,`cluster_intranet`,`managed_cluster_internet_security_policies` and `cluster_intranet_subnet_id`.
+
 
 ## 1.30.3 (February 24, 2020)
 
