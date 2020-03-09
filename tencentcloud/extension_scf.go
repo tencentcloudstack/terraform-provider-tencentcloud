@@ -27,8 +27,6 @@ const (
 	SCF_TRIGGER_TYPE_CKAFKA      = "ckafka"
 	SCF_TRIGGER_TYPE_API_GATEWAY = "apigw"
 
-	SCF_TRIGGER_COS_NAME_SUFFIX = ".cos.ap-guangzhou.myqcloud.com"
-
 	SCF_LOGS_ORDER_BY_FUNCTION_NAME = "function_name"
 	SCF_LOGS_ORDER_BY_DERATION      = "duration"
 	SCF_LOGS_ORDER_BY_MEM_USAGE     = "mem_usage"

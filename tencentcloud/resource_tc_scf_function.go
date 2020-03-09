@@ -225,7 +225,12 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 							Type:         schema.TypeString,
 							Required:     true,
 							ValidateFunc: validateStringLengthInRange(1, 100),
-							Description:  "name of the SCF function trigger, if `type` is `ckafka`, the format of name must be `<ckafkaInstanceId>-<topicId>`; if `type` is `cos`, the name is cos bucket id, other In any case, it can be combined arbitrarily. It can only contain English letters, numbers, connectors and underscores. The maximum length is 100.",
+							Description:  "Name of the SCF function trigger, if `type` is `ckafka`, the format of name must be `<ckafkaInstanceId>-<topicId>`; if `type` is `cos`, the name is cos bucket id, other In any case, it can be combined arbitrarily. It can only contain English letters, numbers, connectors and underscores. The maximum length is 100.",
+						},
+						"cos_region": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Region of cos bucket. if `type` is `cos`, `cos_region` is required.",
 						},
 						"type": {
 							Type:         schema.TypeString,
@@ -467,8 +472,11 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 
 			switch tg["type"].(string) {
 			case SCF_TRIGGER_TYPE_COS:
+				if tg["cos_region"].(string) == "" {
+					return fmt.Errorf("type if cos, cos_region is required")
+				}
 				// scf cos trigger name format is xxx-1234567890.cos.ap-guangzhou.myqcloud.com
-				tg["name"] = tg["name"].(string) + SCF_TRIGGER_COS_NAME_SUFFIX
+				tg["name"] = fmt.Sprintf("%s.cos.%s.myqcloud.com", tg["name"].(string), tg["cos_region"].(string))
 			}
 
 			triggers = append(triggers, scfTrigger{
@@ -584,9 +592,6 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 				continue
 			}
 			*trigger.TriggerDesc = data.Cron
-
-		case SCF_TRIGGER_TYPE_COS:
-			*trigger.TriggerName = strings.Replace(*trigger.TriggerName, SCF_TRIGGER_COS_NAME_SUFFIX, "", -1)
 		}
 
 		triggers = append(triggers, map[string]interface{}{
@@ -781,7 +786,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 
 			switch tg["type"].(string) {
 			case SCF_TRIGGER_TYPE_COS:
-				tg["name"] = tg["name"].(string) + SCF_TRIGGER_COS_NAME_SUFFIX
+				tg["name"] = fmt.Sprintf("%s.cos.%s.myqcloud.com", tg["name"].(string), tg["cos_region"].(string))
 			}
 
 			oldTriggers = append(oldTriggers, scfTrigger{
@@ -801,7 +806,10 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 
 			switch tg["type"].(string) {
 			case SCF_TRIGGER_TYPE_COS:
-				tg["name"] = tg["name"].(string) + SCF_TRIGGER_COS_NAME_SUFFIX
+				if tg["cos_region"].(string) == "" {
+					return fmt.Errorf("type if cos, cos_region is required")
+				}
+				tg["name"] = fmt.Sprintf("%s.cos.%s.myqcloud.com", tg["name"].(string), tg["cos_region"].(string))
 			}
 
 			newTriggers = append(newTriggers, scfTrigger{

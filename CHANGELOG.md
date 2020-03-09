@@ -4,6 +4,7 @@ BUG FIXES:
 
 * Resource: `tencentcloud_cam_policy` fix read nil issue when the resource is not exist.([#344](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/#344)).
 * Resource: `tencentcloud_key_pair` will be replaced when the end of `public_key` contains spaces([#343](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/343)).
+* Resource: `tencentcloud_scf_function` fix trigger does not support cos_region.
 
 ENHANCEMENTS:
 
