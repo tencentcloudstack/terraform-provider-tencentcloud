@@ -678,7 +678,8 @@ resource "tencentcloud_scf_function" "foo" {
   }
 
   triggers {
-    name         = tencentcloud_cos_bucket.foo.id
+	name         = tencentcloud_cos_bucket.foo.id
+	cos_region   = "ap-guangzhou"
     type         = "cos"
     trigger_desc = "{\"event\":\"cos:ObjectCreated:Put\",\"filter\":{\"Prefix\":\"\",\"Suffix\":\"\"}}"
   }
@@ -710,7 +711,8 @@ resource "tencentcloud_scf_function" "foo" {
   }
 
   triggers {
-    name         = tencentcloud_cos_bucket.bar.id
+	name         = tencentcloud_cos_bucket.bar.id
+	cos_region   = "ap-guangzhou"
     type         = "cos"
     trigger_desc = "{\"event\":\"cos:ObjectCreated:Put\",\"filter\":{\"Prefix\":\"\",\"Suffix\":\"\"}}"
   }
