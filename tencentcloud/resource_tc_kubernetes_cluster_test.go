@@ -34,6 +34,8 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "user_name"),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "password"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "tags.test", "test"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "security_policy.#", "2"),
+					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "cluster_external_endpoint"),
 				),
 			},
 			{
@@ -155,7 +157,8 @@ func testAccTkeCluster(key, value string) string {
 	  cluster_name            = "test"
 	  cluster_desc            = "test cluster desc"
 	  cluster_max_service_num = 32
-	
+	  cluster_internet=true
+      managed_cluster_internet_security_policies =["3.3.3.3","1.1.1.1"]
 	  worker_config {
 	    count                      = 1
 	    availability_zone          = var.availability_zone

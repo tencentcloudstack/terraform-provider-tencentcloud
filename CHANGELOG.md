@@ -7,7 +7,7 @@ BUG FIXES:
 
 ENHANCEMENTS:
 
-* Resource: `tencentcloud_kubernetes_cluster` add new attribute `cluster_os_type`.
+* Resource: `tencentcloud_kubernetes_cluster` add new attributes `cluster_os_type`,`cluster_internet`,`cluster_intranet`,`managed_cluster_internet_security_policies` and `cluster_intranet_subnet_id`.
 
 
 ## 1.30.3 (February 24, 2020)
