@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/pkg/errors"
@@ -89,6 +90,10 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 		ratelimit.Check(request.GetAction())
 
 		if _, err := client.CreateFunction(request); err != nil {
+			e, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && strings.Contains(e.Code, "ResourceInUse") {
+				return resource.NonRetryableError(err)
+			}
 			return retryError(errors.WithStack(err))
 		}
 		return nil
