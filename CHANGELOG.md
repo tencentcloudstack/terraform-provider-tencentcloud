@@ -3,6 +3,7 @@
 BUG FIXES: 
 
 * Resource: `tencentcloud_key_pair` will be replaced when `public_key` contains comment.
+* Resource: `tencentcloud_scf_function` upload local file error.
 
 ENHANCEMENTS:
 

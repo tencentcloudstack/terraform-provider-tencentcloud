@@ -29,14 +29,18 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 	"time"
 	"unicode"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -428,8 +432,23 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	}
 
 	if raw, ok := d.GetOk("zip_file"); ok {
+		path, err := homedir.Expand(raw.(string))
+		if err != nil {
+			return fmt.Errorf("zip file (%s) homedir expand error: %s", raw.(string), err.Error())
+		}
+		file, err := os.Open(path)
+		if err != nil {
+			return fmt.Errorf("zip file (%s) open error: %s", path, err.Error())
+		}
+		defer file.Close()
+		body, err := ioutil.ReadAll(file)
+		if err != nil {
+			return fmt.Errorf("zip file (%s) read error: %s", path, err.Error())
+		}
+
 		codeType = scfFunctionZipFileCode
-		functionInfo.zipFile = helper.String(raw.(string))
+		content := base64.StdEncoding.EncodeToString(body)
+		functionInfo.zipFile = &content
 	}
 
 	switch codeType {
@@ -451,6 +470,11 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 
 	// id format is [namespace]+[function name], so that we can support import with enough info
 	d.SetId(fmt.Sprintf("%s+%s", *functionInfo.namespace, functionInfo.name))
+
+	err := waitScfFunctionReady(ctx, functionInfo.name, *functionInfo.namespace, client.UseScfClient())
+	if err != nil {
+		return err
+	}
 
 	if d.Get("l5_enable").(bool) {
 		if err := scfService.ModifyFunctionConfig(ctx, scfFunctionInfo{
