@@ -30,7 +30,7 @@ The following arguments are supported:
 
 * `handler` - (Required) Handler of the SCF function. The format of name is `<filename>.<method_name>`, and it supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
 * `name` - (Required, ForceNew) Name of the SCF function. Name supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
-* `runtime` - (Required) Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.
+* `runtime` - (Required) Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.
 * `cls_logset_id` - (Optional) cls logset id of the SCF function.
 * `cls_topic_id` - (Optional) cls topic id of the SCF function.
 * `cos_bucket_name` - (Optional) Cos bucket name of the SCF function, such as `cos-1234567890`, conflict with `zip_file`.
