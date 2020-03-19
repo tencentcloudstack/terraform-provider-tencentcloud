@@ -137,10 +137,9 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Description: "Environment of the SCF function.",
 			},
 			"runtime": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validateAllowedStringValue(SCF_RUNTIMES),
-				Description:  "Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.",
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
