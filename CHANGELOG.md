@@ -1,4 +1,13 @@
-## 1.31.0 (Unreleased)
+## 1.30.5 (Unreleased)
+
+BUG FIXES: 
+
+* Resource: `tencentcloud_key_pair` will be replaced when `public_key` contains comment.
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_scf_function` runtime support nodejs8.9 and nodejs10.15. 
+
 ## 1.30.4 (March 10, 2020)
 
 BUG FIXES:
