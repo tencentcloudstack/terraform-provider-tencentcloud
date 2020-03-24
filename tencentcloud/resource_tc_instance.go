@@ -292,7 +292,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Optional:    true,
 							Default:     true,
 							ForceNew:    true,
-							Description: "Decides whether the disk is deleted with instance(only applied to cloud disk), default to true.",
+							Description: "Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `POSTPAID_BY_HOUR` instance), default is true.",
 						},
 					},
 				},
