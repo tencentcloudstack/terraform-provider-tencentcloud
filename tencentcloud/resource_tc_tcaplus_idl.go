@@ -20,6 +20,7 @@ resource "tencentcloud_tcaplus_zone" "zone" {
 
 resource "tencentcloud_tcaplus_idl" "main" {
   app_id         = tencentcloud_tcaplus_application.test.id
+  zoneId         = tencentcloud_tcaplus_zone.zone.id
   file_name      = "tf_idl_test"
   file_type      = "PROTO"
   file_ext_type  = "proto"
@@ -86,6 +87,12 @@ func resourceTencentCloudTcaplusIdl() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "Application id of the idl belongs..",
+			},
+			"zone_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Zone of this idl belongs.",
 			},
 			"file_name": {
 				Type:        schema.TypeString,
@@ -177,7 +184,14 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 	tcaplusIdlId.FileType = d.Get("file_type").(string)
 	tcaplusIdlId.FileExtType = d.Get("file_ext_type").(string)
 
+	zoneId := d.Get("zone_id").(string)
 	fileContent := d.Get("file_content").(string)
+
+	items := strings.Split(zoneId, ":")
+	if len(items) != 2 {
+		return fmt.Errorf("zone id is broken,%s", zoneId)
+	}
+	zoneId = items[1]
 
 	matchExtTypes := FileExtTypeMatch[tcaplusIdlId.FileType]
 	if matchExtTypes == nil || !matchExtTypes[tcaplusIdlId.FileExtType] {
@@ -187,10 +201,10 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 
 	tcaplusIdlId.FileSize = int64(len(fileContent))
 
-	idlId, parseTableInfos, err := tcaplusService.VerifyIdlFiles(ctx, tcaplusIdlId, fileContent)
+	idlId, parseTableInfos, err := tcaplusService.VerifyIdlFiles(ctx, tcaplusIdlId, zoneId, fileContent)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			idlId, parseTableInfos, err = tcaplusService.VerifyIdlFiles(ctx, tcaplusIdlId, fileContent)
+			idlId, parseTableInfos, err = tcaplusService.VerifyIdlFiles(ctx, tcaplusIdlId, zoneId, fileContent)
 			if err != nil {
 				return retryError(err)
 			}

@@ -207,8 +207,8 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 		} else {
 			listItem["error"] = ""
 		}
-		if tableInfo.LogicZoneId != nil {
-			listItem["zone_id"] = fmt.Sprintf("%s:%s", applicationId, *tableInfo.LogicZoneId)
+		if tableInfo.TableGroupId != nil {
+			listItem["zone_id"] = fmt.Sprintf("%s:%s", applicationId, *tableInfo.TableGroupId)
 		}
 		if tableInfo.TableInstanceId != nil {
 			listItem["table_id"] = *tableInfo.TableInstanceId

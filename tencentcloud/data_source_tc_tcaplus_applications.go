@@ -149,8 +149,8 @@ func dataSourceTencentCloudTcaplusApplicationsRead(d *schema.ResourceData, meta 
 
 	for _, app := range apps {
 		listItem := make(map[string]interface{})
-		listItem["app_name"] = *app.AppName
-		listItem["app_id"] = *app.ApplicationId
+		listItem["app_name"] = *app.ClusterName
+		listItem["app_id"] = *app.ClusterId
 		listItem["idl_type"] = *app.IdlType
 		listItem["vpc_id"] = *app.VpcId
 		listItem["subnet_id"] = *app.SubnetId

@@ -121,8 +121,8 @@ func dataSourceTencentCloudTcaplusZonesRead(d *schema.ResourceData, meta interfa
 
 	for _, app := range apps {
 		listItem := make(map[string]interface{})
-		listItem["zone_name"] = *app.ZoneName
-		listItem["zone_id"] = fmt.Sprintf("%s:%s", applicationId, *app.LogicZoneId)
+		listItem["zone_name"] = *app.TableGroupName
+		listItem["zone_id"] = fmt.Sprintf("%s:%s", applicationId, *app.TableGroupId)
 		listItem["table_count"] = *app.TableCount
 		listItem["total_size"] = *app.TotalSize
 		listItem["create_time"] = *app.CreatedTime

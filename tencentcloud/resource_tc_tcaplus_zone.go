@@ -118,7 +118,7 @@ func resourceTencentCloudTcaplusZoneRead(d *schema.ResourceData, meta interface{
 		return nil
 	}
 
-	_ = d.Set("zone_name", info.ZoneName)
+	_ = d.Set("zone_name", info.TableGroupName)
 	_ = d.Set("table_count", int(*info.TableCount))
 	_ = d.Set("total_size", int(*info.TotalSize))
 	_ = d.Set("create_time", info.CreatedTime)

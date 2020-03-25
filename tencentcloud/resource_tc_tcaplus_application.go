@@ -219,7 +219,7 @@ func resourceTencentCloudTcaplusApplicationRead(d *schema.ResourceData, meta int
 		return nil
 	}
 	_ = d.Set("idl_type", appInfo.IdlType)
-	_ = d.Set("app_name", appInfo.AppName)
+	_ = d.Set("app_name", appInfo.ClusterName)
 	_ = d.Set("vpc_id", appInfo.VpcId)
 	_ = d.Set("subnet_id", appInfo.SubnetId)
 	_ = d.Set("password", appInfo.Password)

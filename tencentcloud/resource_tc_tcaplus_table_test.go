@@ -142,8 +142,13 @@ resource "tencentcloud_tcaplus_application" "test_app" {
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
+resource "tencentcloud_tcaplus_zone" "zone" {
+  app_id         = tencentcloud_tcaplus_application.test_app.id
+  zone_name      = "tf_test_zone_name"
+}
 resource "tencentcloud_tcaplus_idl" "test_idl" {
   app_id = tencentcloud_tcaplus_application.test_app.id
+  zone_id = tencentcloud_tcaplus_zone.zone.id
   file_name      = "tf_idl_test_guagua"
   file_type      = "PROTO"
   file_ext_type  = "proto"
@@ -182,6 +187,7 @@ resource "tencentcloud_tcaplus_zone" "test_zone" {
 
 resource "tencentcloud_tcaplus_idl" "test_idl_2" {
   app_id = tencentcloud_tcaplus_application.test_app.id
+  zone_id = tencentcloud_tcaplus_zone.test_zone.id
   file_name      = "tf_idl_test_guagua_2"
   file_type      = "PROTO"
   file_ext_type  = "proto"
