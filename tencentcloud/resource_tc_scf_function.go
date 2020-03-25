@@ -29,14 +29,18 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 	"time"
 	"unicode"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -137,10 +141,9 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Description: "Environment of the SCF function.",
 			},
 			"runtime": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: validateAllowedStringValue(SCF_RUNTIMES),
-				Description:  "Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.",
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -225,7 +228,12 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 							Type:         schema.TypeString,
 							Required:     true,
 							ValidateFunc: validateStringLengthInRange(1, 100),
-							Description:  "name of the SCF function trigger, if `type` is `ckafka`, the format of name must be `<ckafkaInstanceId>-<topicId>`; if `type` is `cos`, the name is cos bucket id, other In any case, it can be combined arbitrarily. It can only contain English letters, numbers, connectors and underscores. The maximum length is 100.",
+							Description:  "Name of the SCF function trigger, if `type` is `ckafka`, the format of name must be `<ckafkaInstanceId>-<topicId>`; if `type` is `cos`, the name is cos bucket id, other In any case, it can be combined arbitrarily. It can only contain English letters, numbers, connectors and underscores. The maximum length is 100.",
+						},
+						"cos_region": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Region of cos bucket. if `type` is `cos`, `cos_region` is required.",
 						},
 						"type": {
 							Type:         schema.TypeString,
@@ -424,8 +432,23 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	}
 
 	if raw, ok := d.GetOk("zip_file"); ok {
+		path, err := homedir.Expand(raw.(string))
+		if err != nil {
+			return fmt.Errorf("zip file (%s) homedir expand error: %s", raw.(string), err.Error())
+		}
+		file, err := os.Open(path)
+		if err != nil {
+			return fmt.Errorf("zip file (%s) open error: %s", path, err.Error())
+		}
+		defer file.Close()
+		body, err := ioutil.ReadAll(file)
+		if err != nil {
+			return fmt.Errorf("zip file (%s) read error: %s", path, err.Error())
+		}
+
 		codeType = scfFunctionZipFileCode
-		functionInfo.zipFile = helper.String(raw.(string))
+		content := base64.StdEncoding.EncodeToString(body)
+		functionInfo.zipFile = &content
 	}
 
 	switch codeType {
@@ -448,6 +471,11 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	// id format is [namespace]+[function name], so that we can support import with enough info
 	d.SetId(fmt.Sprintf("%s+%s", *functionInfo.namespace, functionInfo.name))
 
+	err := waitScfFunctionReady(ctx, functionInfo.name, *functionInfo.namespace, client.UseScfClient())
+	if err != nil {
+		return err
+	}
+
 	if d.Get("l5_enable").(bool) {
 		if err := scfService.ModifyFunctionConfig(ctx, scfFunctionInfo{
 			name:      functionInfo.name,
@@ -467,8 +495,11 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 
 			switch tg["type"].(string) {
 			case SCF_TRIGGER_TYPE_COS:
+				if tg["cos_region"].(string) == "" {
+					return fmt.Errorf("type if cos, cos_region is required")
+				}
 				// scf cos trigger name format is xxx-1234567890.cos.ap-guangzhou.myqcloud.com
-				tg["name"] = tg["name"].(string) + SCF_TRIGGER_COS_NAME_SUFFIX
+				tg["name"] = fmt.Sprintf("%s.cos.%s.myqcloud.com", tg["name"].(string), tg["cos_region"].(string))
 			}
 
 			triggers = append(triggers, scfTrigger{
@@ -584,9 +615,6 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 				continue
 			}
 			*trigger.TriggerDesc = data.Cron
-
-		case SCF_TRIGGER_TYPE_COS:
-			*trigger.TriggerName = strings.Replace(*trigger.TriggerName, SCF_TRIGGER_COS_NAME_SUFFIX, "", -1)
 		}
 
 		triggers = append(triggers, map[string]interface{}{
@@ -781,7 +809,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 
 			switch tg["type"].(string) {
 			case SCF_TRIGGER_TYPE_COS:
-				tg["name"] = tg["name"].(string) + SCF_TRIGGER_COS_NAME_SUFFIX
+				tg["name"] = fmt.Sprintf("%s.cos.%s.myqcloud.com", tg["name"].(string), tg["cos_region"].(string))
 			}
 
 			oldTriggers = append(oldTriggers, scfTrigger{
@@ -801,7 +829,10 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 
 			switch tg["type"].(string) {
 			case SCF_TRIGGER_TYPE_COS:
-				tg["name"] = tg["name"].(string) + SCF_TRIGGER_COS_NAME_SUFFIX
+				if tg["cos_region"].(string) == "" {
+					return fmt.Errorf("type if cos, cos_region is required")
+				}
+				tg["name"] = fmt.Sprintf("%s.cos.%s.myqcloud.com", tg["name"].(string), tg["cos_region"].(string))
 			}
 
 			newTriggers = append(newTriggers, scfTrigger{

@@ -1,9 +1,22 @@
-## 1.30.4 (Unreleased)
+## 1.31.0 (Unreleased)
+## 1.30.5 (March 19, 2020)
+
+BUG FIXES: 
+
+* Resource: `tencentcloud_key_pair` will be replaced when `public_key` contains comment.
+* Resource: `tencentcloud_scf_function` upload local file error.
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_scf_function` runtime support nodejs8.9 and nodejs10.15. 
+
+## 1.30.4 (March 10, 2020)
 
 BUG FIXES:
 
 * Resource: `tencentcloud_cam_policy` fix read nil issue when the resource is not exist.([#344](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/#344)).
 * Resource: `tencentcloud_key_pair` will be replaced when the end of `public_key` contains spaces([#343](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/343)).
+* Resource: `tencentcloud_scf_function` fix trigger does not support cos_region.
 
 ENHANCEMENTS:
 

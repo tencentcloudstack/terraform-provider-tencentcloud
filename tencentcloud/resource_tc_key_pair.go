@@ -54,7 +54,12 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 				StateFunc: func(v interface{}) string {
 					switch value := v.(type) {
 					case string:
-						return strings.TrimSpace(value)
+						publicKey := value
+						split := strings.Split(value, " ")
+						if len(split) > 2 {
+							publicKey = strings.Join(split[0:2], " ")
+						}
+						return strings.TrimSpace(publicKey)
 					default:
 						return ""
 					}
@@ -134,7 +139,9 @@ func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) e
 	if keyPair.PublicKey != nil {
 		publicKey := *keyPair.PublicKey
 		split := strings.Split(publicKey, " ")
-		publicKey = strings.Join(split[0:len(split)-1], " ")
+		if len(split) > 2 {
+			publicKey = strings.Join(split[0:2], " ")
+		}
 		_ = d.Set("public_key", publicKey)
 	}
 
