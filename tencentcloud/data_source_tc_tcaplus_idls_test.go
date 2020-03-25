@@ -53,6 +53,11 @@ availability_zone = var.availability_zone
 cidr_block        = var.subnet_cidr
 is_multicast      = false
 }
+resource "tencentcloud_tcaplus_zone" "test_zone" {
+  app_id    = tencentcloud_tcaplus_application.test_app.id
+  zone_name = "tf_test_zone_name_guagua"
+}
+
 resource "tencentcloud_tcaplus_application" "test_app" {
   idl_type                 = "PROTO"
   app_name                 = "tf_tcaplus_data_guagua"
@@ -63,6 +68,7 @@ resource "tencentcloud_tcaplus_application" "test_app" {
 }
 resource "tencentcloud_tcaplus_idl" "test_idl" {
   app_id = tencentcloud_tcaplus_application.test_app.id
+  zone_id = tencentcloud_tcaplus_zone.test_zone.id
   file_name      = "tf_idl_test_guagua"
   file_type      = "PROTO"
   file_ext_type  = "proto"

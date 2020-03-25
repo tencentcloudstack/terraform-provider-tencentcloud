@@ -29,6 +29,7 @@ resource "tencentcloud_tcaplus_zone" "zone" {
 
 resource "tencentcloud_tcaplus_idl" "main" {
   app_id        = tencentcloud_tcaplus_application.test.id
+  zoneId        = tencentcloud_tcaplus_zone.zone.id
   file_name     = "tf_idl_test"
   file_type     = "PROTO"
   file_ext_type = "proto"
@@ -71,6 +72,7 @@ The following arguments are supported:
 * `file_ext_type` - (Required, ForceNew) File ext type of this idl file. if `file_type` is PROTO  `file_ext_type` must be 'proto',if `file_type` is TDR  `file_ext_type` must be 'xml',if `file_type` is MIX  `file_ext_type` must be 'xml' or 'proto'.
 * `file_name` - (Required, ForceNew) Name of this idl file.
 * `file_type` - (Required, ForceNew) Type of this idl file, Valid values are PROTO,TDR,MIX.
+* `zone_id` - (Required, ForceNew) Zone of this idl belongs.
 
 ## Attributes Reference
 

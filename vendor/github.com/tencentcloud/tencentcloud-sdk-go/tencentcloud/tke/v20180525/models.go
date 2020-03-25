@@ -129,6 +129,25 @@ type Cluster struct {
 	// 集群属性(包括集群不同属性的MAP，属性字段包括NodeNameType (lan-ip模式和hostname 模式，默认无lan-ip模式))
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Property *string `json:"Property,omitempty" name:"Property"`
+
+	// 集群当前master数量
+	ClusterMaterNodeNum *uint64 `json:"ClusterMaterNodeNum,omitempty" name:"ClusterMaterNodeNum"`
+
+	// 集群使用镜像id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ImageId *string `json:"ImageId,omitempty" name:"ImageId"`
+
+	// OsCustomizeType
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OsCustomizeType *string `json:"OsCustomizeType,omitempty" name:"OsCustomizeType"`
+
+	// 集群运行环境docker或container
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ContainerRuntime *string `json:"ContainerRuntime,omitempty" name:"ContainerRuntime"`
+
+	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
 }
 
 type ClusterAdvancedSettings struct {
@@ -144,6 +163,15 @@ type ClusterAdvancedSettings struct {
 
 	// 集群中节点NodeName类型（包括 hostname,lan-ip两种形式，默认为lan-ip。如果开启了hostname模式，创建节点时需要设置HostName参数，并且InstanceName需要和HostName一致）
 	NodeNameType *string `json:"NodeNameType,omitempty" name:"NodeNameType"`
+
+	// 集群自定义参数
+	ExtraArgs *ClusterExtraArgs `json:"ExtraArgs,omitempty" name:"ExtraArgs"`
+
+	// 集群网络类型（包括GR(全局路由)和VPC-CNI两种模式，默认为GR。
+	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
+
+	// 集群VPC-CNI模式是否为非固定IP，默认: FALSE 固定IP。
+	IsNonStaticIpMode *bool `json:"IsNonStaticIpMode,omitempty" name:"IsNonStaticIpMode"`
 }
 
 type ClusterAsGroup struct {
@@ -257,6 +285,30 @@ type ClusterCIDRSettings struct {
 
 	// 集群最大的service数量。取值范围32～32768，不为2的幂值时会向上取最接近的2的幂值。
 	MaxClusterServiceNum *uint64 `json:"MaxClusterServiceNum,omitempty" name:"MaxClusterServiceNum"`
+
+	// 用于分配集群服务 IP 的 CIDR，不得与 VPC CIDR 冲突，也不得与同 VPC 内其他集群 CIDR 冲突。且网段范围必须在内网网段内，例如:10.1.0.0/14, 192.168.0.1/18,172.16.0.0/16。
+	ServiceCIDR *string `json:"ServiceCIDR,omitempty" name:"ServiceCIDR"`
+
+	// VPC-CNI网络模式下，弹性网卡的子网Id。
+	EniSubnetIds []*string `json:"EniSubnetIds,omitempty" name:"EniSubnetIds" list`
+
+	// VPC-CNI网络模式下，弹性网卡IP的回收时间，取值范围[300,15768000)
+	ClaimExpiredSeconds *int64 `json:"ClaimExpiredSeconds,omitempty" name:"ClaimExpiredSeconds"`
+}
+
+type ClusterExtraArgs struct {
+
+	// kube-apiserver自定义参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KubeAPIServer []*string `json:"KubeAPIServer,omitempty" name:"KubeAPIServer" list`
+
+	// kube-controller-manager自定义参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KubeControllerManager []*string `json:"KubeControllerManager,omitempty" name:"KubeControllerManager" list`
+
+	// kube-scheduler自定义参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KubeScheduler []*string `json:"KubeScheduler,omitempty" name:"KubeScheduler" list`
 }
 
 type ClusterNetworkSettings struct {
@@ -604,7 +656,7 @@ type DataDisk struct {
 	// 云盘类型
 	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
 
-	// 文件系统
+	// 文件系统(ext3/ext4/xfs)
 	FileSystem *string `json:"FileSystem,omitempty" name:"FileSystem"`
 
 	// 云盘大小(G）
@@ -1462,6 +1514,9 @@ type ExistedInstancesForNode struct {
 
 	// 已存在实例的重装参数
 	ExistedInstancesPara *ExistedInstancesPara `json:"ExistedInstancesPara,omitempty" name:"ExistedInstancesPara"`
+
+	// 节点高级设置，会覆盖集群级别设置的InstanceAdvancedSettings（当前只对节点自定义参数ExtraArgs生效）
+	InstanceAdvancedSettingsOverride *InstanceAdvancedSettings `json:"InstanceAdvancedSettingsOverride,omitempty" name:"InstanceAdvancedSettingsOverride"`
 }
 
 type ExistedInstancesPara struct {
@@ -1507,6 +1562,17 @@ type Instance struct {
 
 	// 实例的状态（running 运行中，initializing 初始化中，failed 异常）
 	InstanceState *string `json:"InstanceState,omitempty" name:"InstanceState"`
+
+	// 实例是否封锁状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DrainStatus *string `json:"DrainStatus,omitempty" name:"DrainStatus"`
+
+	// 节点配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceAdvancedSettings *InstanceAdvancedSettings `json:"InstanceAdvancedSettings,omitempty" name:"InstanceAdvancedSettings"`
+
+	// 添加时间
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
 }
 
 type InstanceAdvancedSettings struct {
@@ -1528,6 +1594,9 @@ type InstanceAdvancedSettings struct {
 
 	// 数据盘相关信息
 	DataDisks []*DataDisk `json:"DataDisks,omitempty" name:"DataDisks" list`
+
+	// 节点相关的自定义参数信息
+	ExtraArgs *InstanceExtraArgs `json:"ExtraArgs,omitempty" name:"ExtraArgs"`
 }
 
 type InstanceDataDiskMountSetting struct {
@@ -1542,6 +1611,13 @@ type InstanceDataDiskMountSetting struct {
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
 }
 
+type InstanceExtraArgs struct {
+
+	// kubelet自定义参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Kubelet []*string `json:"Kubelet,omitempty" name:"Kubelet" list`
+}
+
 type Label struct {
 
 	// map表中的Name
@@ -1553,11 +1629,11 @@ type Label struct {
 
 type LoginSettings struct {
 
-	// 实例登录密码。不同操作系统类型密码复杂度限制不一样，具体如下：<br><li>Linux实例密码必须8到16位，至少包括两项[a-z，A-Z]、[0-9] 和 [( ) ` ~ ! @ # $ % ^ & * - + = | { } [ ] : ; ' , . ? / ]中的特殊符号。<br><li>Windows实例密码必须12到16位，至少包括三项[a-z]，[A-Z]，[0-9] 和 [( ) ` ~ ! @ # $ % ^ & * - + = { } [ ] : ; ' , . ? /]中的特殊符号。<br><br>若不指定该参数，则由系统随机生成密码，并通过站内信方式通知到用户。
+	// 实例登录密码。不同操作系统类型密码复杂度限制不一样，具体如下：<br><li>Linux实例密码必须8到30位，至少包括两项[a-z]，[A-Z]、[0-9] 和 [( ) \` ~ ! @ # $ % ^ & *  - + = | { } [ ] : ; ' , . ? / ]中的特殊符号。<br><li>Windows实例密码必须12到30位，至少包括三项[a-z]，[A-Z]，[0-9] 和 [( ) \` ~ ! @ # $ % ^ & * - + = | { } [ ] : ; ' , . ? /]中的特殊符号。<br><br>若不指定该参数，则由系统随机生成密码，并通过站内信方式通知到用户。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Password *string `json:"Password,omitempty" name:"Password"`
 
-	// 密钥ID列表。关联密钥后，就可以通过对应的私钥来访问实例；KeyId可通过接口DescribeKeyPairs获取，密钥与密码不能同时指定，同时Windows操作系统不支持指定密钥。当前仅支持购买的时候指定一个密钥。
+	// 密钥ID列表。关联密钥后，就可以通过对应的私钥来访问实例；KeyId可通过接口[DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699)获取，密钥与密码不能同时指定，同时Windows操作系统不支持指定密钥。当前仅支持购买的时候指定一个密钥。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KeyIds []*string `json:"KeyIds,omitempty" name:"KeyIds" list`
 
@@ -1689,6 +1765,9 @@ type RunInstancesForNode struct {
 
 	// CVM创建透传参数，json化字符串格式，详见[CVM创建实例](https://cloud.tencent.com/document/product/213/15730)接口，传入公共参数外的其他参数即可，其中ImageId会替换为TKE集群OS对应的镜像。
 	RunInstancesPara []*string `json:"RunInstancesPara,omitempty" name:"RunInstancesPara" list`
+
+	// 节点高级设置，该参数会覆盖集群级别设置的InstanceAdvancedSettings，和上边的RunInstancesPara按照顺序一一对应（当前只对节点自定义参数ExtraArgs生效）。
+	InstanceAdvancedSettingsOverrides []*InstanceAdvancedSettings `json:"InstanceAdvancedSettingsOverrides,omitempty" name:"InstanceAdvancedSettingsOverrides" list`
 }
 
 type RunMonitorServiceEnabled struct {

@@ -111,7 +111,7 @@ func dataSourceTencentCloudMongodbZoneConfigRead(d *schema.ResourceData, meta in
 
 	configList := make([]map[string]interface{}, 0)
 	for _, info := range infos {
-		for _, item := range info.SpecItem {
+		for _, item := range info.SpecItems {
 			clusterType := MONGODB_CLUSTER_TYPE_REPLSET
 			if *item.ClusterType == 1 {
 				clusterType = MONGODB_CLUSTER_TYPE_SHARD

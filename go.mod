@@ -14,7 +14,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pkg/errors v0.8.1
 	github.com/smartystreets/goconvey v1.6.4 // indirect
-	github.com/tencentcloud/tencentcloud-sdk-go v3.0.114+incompatible
+	github.com/tencentcloud/tencentcloud-sdk-go v3.0.142+incompatible
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	golang.org/x/sys v0.0.0-20191219235734-af0d71d358ab // indirect
 )

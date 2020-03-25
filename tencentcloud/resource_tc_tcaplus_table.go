@@ -367,8 +367,8 @@ func resourceTencentCloudTcaplusTableRead(d *schema.ResourceData, meta interface
 		d.SetId("")
 		return nil
 	}
-	_ = d.Set("app_id", tableInfo.ApplicationId)
-	_ = d.Set("zone_id", fmt.Sprintf("%s:%s", *tableInfo.ApplicationId, *tableInfo.LogicZoneId))
+	_ = d.Set("app_id", tableInfo.ClusterId)
+	_ = d.Set("zone_id", fmt.Sprintf("%s:%s", *tableInfo.ClusterId, *tableInfo.TableGroupId))
 	_ = d.Set("table_name", tableInfo.TableName)
 	_ = d.Set("table_type", tableInfo.TableType)
 	_ = d.Set("description", tableInfo.Memo)

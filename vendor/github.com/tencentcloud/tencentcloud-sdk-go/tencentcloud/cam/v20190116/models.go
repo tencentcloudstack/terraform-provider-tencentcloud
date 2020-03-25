@@ -35,7 +35,7 @@ type AddUserRequest struct {
 	// 是否生成子用户密钥。传0不生成子用户密钥，传1生成子用户密钥。
 	UseApi *uint64 `json:"UseApi,omitempty" name:"UseApi"`
 
-	// 子用户控制台登录密码，若未进行密码规则设置则默认密码规则为8位以上同时包含大写小字母、数字和特殊字符。只有可以登录控制台时才有效，如果传空并且上面指定允许登录控制台，则自动生成随机密码，随机密码规则为32位包含大写小字母、数字和特殊字符。
+	// 子用户控制台登录密码，若未进行密码规则设置则默认密码规则为8位以上同时包含大小写字母、数字和特殊字符。只有可以登录控制台时才有效，如果传空并且上面指定允许登录控制台，则自动生成随机密码，随机密码规则为32位包含大小写字母、数字和特殊字符。
 	Password *string `json:"Password,omitempty" name:"Password"`
 
 	// 子用户是否要在下次登录时重置密码。传0子用户下次登录控制台不需重置密码，传1子用户下次登录控制台需要重置密码。
@@ -220,6 +220,14 @@ type AttachPolicyInfo struct {
 	// UinType为0表示OperateUin字段是子帐号Uin，如果UinType为1表示OperateUin字段是角色ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OperateUinType *uint64 `json:"OperateUinType,omitempty" name:"OperateUinType"`
+
+	// 是否已下线
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Deactived *uint64 `json:"Deactived,omitempty" name:"Deactived"`
+
+	// 已下线的产品列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeactivedDetail []*string `json:"DeactivedDetail,omitempty" name:"DeactivedDetail" list`
 }
 
 type AttachRolePolicyRequest struct {
@@ -316,6 +324,18 @@ type AttachedPolicyOfRole struct {
 
 	// 策略创建方式，1表示按产品功能或项目权限创建，其他表示按策略语法创建
 	CreateMode *uint64 `json:"CreateMode,omitempty" name:"CreateMode"`
+
+	// 是否已下线(0:否 1:是)
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Deactived *uint64 `json:"Deactived,omitempty" name:"Deactived"`
+
+	// 已下线的产品列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeactivedDetail []*string `json:"DeactivedDetail,omitempty" name:"DeactivedDetail" list`
+
+	// 策略描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitempty" name:"Description"`
 }
 
 type ConsumeCustomMFATokenRequest struct {
@@ -398,7 +418,7 @@ type CreatePolicyRequest struct {
 	// 策略名
 	PolicyName *string `json:"PolicyName,omitempty" name:"PolicyName"`
 
-	// 策略文档
+	// 策略文档，示例：{"version":"2.0","statement":[{"action":"name/sts:AssumeRole","effect":"allow","principal":{"service":["cloudaudit.cloud.tencent.com","cls.cloud.tencent.com"]}}]}，principal用于指定角色的授权对象。获取该参数可参阅 获取角色详情（https://cloud.tencent.com/document/product/598/36221） 输出参数RoleInfo
 	PolicyDocument *string `json:"PolicyDocument,omitempty" name:"PolicyDocument"`
 
 	// 策略描述
@@ -418,7 +438,7 @@ type CreatePolicyResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 新增策略id
+		// 新增策略ID
 		PolicyId *uint64 `json:"PolicyId,omitempty" name:"PolicyId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -447,8 +467,11 @@ type CreateRoleRequest struct {
 	// 角色描述
 	Description *string `json:"Description,omitempty" name:"Description"`
 
-	// 是否允许登录
+	// 是否允许登录 1 为允许 0 为不允许
 	ConsoleLogin *uint64 `json:"ConsoleLogin,omitempty" name:"ConsoleLogin"`
+
+	// 申请角色临时密钥的最长有效期限制(范围：0~43200)
+	SessionDuration *uint64 `json:"SessionDuration,omitempty" name:"SessionDuration"`
 }
 
 func (r *CreateRoleRequest) ToJsonString() string {
@@ -669,6 +692,9 @@ type DeleteUserRequest struct {
 
 	// 子用户用户名
 	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 是否强制删除该子用户，默认入参为0。0：若该用户存在未删除API密钥，则不删除用户；1：若该用户存在未删除API密钥，则先删除密钥后删除用户。删除密钥需要您拥有cam:DeleteApiKey权限，您将可以删除该用户下启用或禁用状态的所有密钥，无权限则删除密钥和用户失败
+	Force *uint64 `json:"Force,omitempty" name:"Force"`
 }
 
 func (r *DeleteUserRequest) ToJsonString() string {
@@ -1112,7 +1138,7 @@ type GetUserResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 子用户用户 ID
+		// 子用户用户 UIN
 		Uin *uint64 `json:"Uin,omitempty" name:"Uin"`
 
 		// 子用户用户名
@@ -1213,7 +1239,7 @@ type GroupMemberInfo struct {
 type ListAttachedGroupPoliciesRequest struct {
 	*tchttp.BaseRequest
 
-	// 用户组 id
+	// 用户组ID
 	TargetGroupId *uint64 `json:"TargetGroupId,omitempty" name:"TargetGroupId"`
 
 	// 页码，默认值是 1，从 1 开始
@@ -1536,6 +1562,9 @@ type ListPoliciesResponse struct {
 	// type：1 表示自定义策略，2 表示预设策略 
 	// description：策略描述 
 	// createMode：1 表示按业务权限创建的策略，其他值表示可以查看策略语法和通过策略语法更新策略
+	// Attachments: 关联的用户数
+	// ServiceType: 策略关联的产品
+	// IsAttached: 当需要查询标记实体是否已经关联策略时不为null。0表示未关联策略，1表示已关联策略
 		List []*StrategyInfo `json:"List,omitempty" name:"List" list`
 
 		// 保留字段
@@ -1704,6 +1733,9 @@ type OffsiteFlag struct {
 
 	// 微信通知
 	NotifyWechat *uint64 `json:"NotifyWechat,omitempty" name:"NotifyWechat"`
+
+	// 提示
+	Tips *uint64 `json:"Tips,omitempty" name:"Tips"`
 }
 
 type RemoveUserFromGroupRequest struct {
@@ -1762,6 +1794,14 @@ type RoleInfo struct {
 
 	// 角色是否允许登录
 	ConsoleLogin *uint64 `json:"ConsoleLogin,omitempty" name:"ConsoleLogin"`
+
+	// 角色类型，取user或system
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RoleType *string `json:"RoleType,omitempty" name:"RoleType"`
+
+	// 有效时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SessionDuration *uint64 `json:"SessionDuration,omitempty" name:"SessionDuration"`
 }
 
 type SAMLProviderInfo struct {
@@ -1857,6 +1897,18 @@ type StrategyInfo struct {
 	// 当需要查询标记实体是否已经关联策略时不为null。0表示未关联策略，1表示已关联策略
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsAttached *uint64 `json:"IsAttached,omitempty" name:"IsAttached"`
+
+	// 是否已下线
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Deactived *uint64 `json:"Deactived,omitempty" name:"Deactived"`
+
+	// 已下线产品列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeactivedDetail []*string `json:"DeactivedDetail,omitempty" name:"DeactivedDetail" list`
+
+	// 是否是服务相关角色策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsServiceLinkedPolicy *uint64 `json:"IsServiceLinkedPolicy,omitempty" name:"IsServiceLinkedPolicy"`
 }
 
 type SubAccountInfo struct {
@@ -1969,7 +2021,7 @@ func (r *UpdateGroupResponse) FromJsonString(s string) error {
 type UpdatePolicyRequest struct {
 	*tchttp.BaseRequest
 
-	// 策略 id
+	// 策略ID
 	PolicyId *uint64 `json:"PolicyId,omitempty" name:"PolicyId"`
 
 	// 策略名
@@ -1978,7 +2030,7 @@ type UpdatePolicyRequest struct {
 	// 策略描述
 	Description *string `json:"Description,omitempty" name:"Description"`
 
-	// 策略文档
+	// 策略文档，示例：{"version":"2.0","statement":[{"action":"name/sts:AssumeRole","effect":"allow","principal":{"service":["cloudaudit.cloud.tencent.com","cls.cloud.tencent.com"]}}]}，principal用于指定角色的授权对象。获取该参数可参阅 获取角色详情（https://cloud.tencent.com/document/product/598/36221） 输出参数RoleInfo
 	PolicyDocument *string `json:"PolicyDocument,omitempty" name:"PolicyDocument"`
 }
 
@@ -2101,7 +2153,7 @@ type UpdateUserRequest struct {
 	// 子用户是否可以登录控制台。传0子用户无法登录控制台，传1子用户可以登录控制台。
 	ConsoleLogin *uint64 `json:"ConsoleLogin,omitempty" name:"ConsoleLogin"`
 
-	// 子用户控制台登录密码，若未进行密码规则设置则默认密码规则为8位以上同时包含大写小字母、数字和特殊字符。只有可以登录控制台时才有效，如果传空并且上面指定允许登录控制台，则自动生成随机密码，随机密码规则为32位包含大写小字母、数字和特殊字符。
+	// 子用户控制台登录密码，若未进行密码规则设置则默认密码规则为8位以上同时包含大小写字母、数字和特殊字符。只有可以登录控制台时才有效，如果传空并且上面指定允许登录控制台，则自动生成随机密码，随机密码规则为32位包含大小写字母、数字和特殊字符。
 	Password *string `json:"Password,omitempty" name:"Password"`
 
 	// 子用户是否要在下次登录时重置密码。传0子用户下次登录控制台不需重置密码，传1子用户下次登录控制台需要重置密码。
