@@ -24,7 +24,6 @@ import (
 	"context"
 	"log"
 	"strconv"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -102,7 +101,20 @@ func resourceTencentCloudCamGroupPolicyAttachmentCreate(d *schema.ResourceData, 
 	}
 
 	d.SetId(groupId + "#" + policyId)
-	time.Sleep(3 * time.Second)
+
+	//get really instance then read
+	groupPolicyAttachmentId := d.Id()
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, e := camService.DescribeGroupPolicyAttachmentById(ctx, groupPolicyAttachmentId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM group policy failed, reason:%s\n", logId, err.Error())
+		return err
+	}
 
 	return resourceTencentCloudCamGroupPolicyAttachmentRead(d, meta)
 }

@@ -90,6 +90,7 @@ resource "tencentcloud_cam_user" "user" {
   phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
+  delete_force        = true
 }
 
 resource "tencentcloud_cam_policy" "policy" {

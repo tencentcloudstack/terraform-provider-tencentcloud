@@ -24,7 +24,6 @@ import (
 	"context"
 	"log"
 	"strconv"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -102,7 +101,21 @@ func resourceTencentCloudCamUserPolicyAttachmentCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(userId + "#" + policyId)
-	time.Sleep(3 * time.Second)
+
+	//get really instance then read
+
+	userPolicyAttachmentId := d.Id()
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, e := camService.DescribeUserPolicyAttachmentById(ctx, userPolicyAttachmentId)
+		if e != nil {
+			return retryError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM user policy attachment failed, reason:%s\n", logId, err.Error())
+		return err
+	}
 
 	return resourceTencentCloudCamUserPolicyAttachmentRead(d, meta)
 }
