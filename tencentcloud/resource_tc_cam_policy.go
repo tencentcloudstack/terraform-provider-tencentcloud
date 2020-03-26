@@ -37,13 +37,13 @@ $ terraform import tencentcloud_cam_policy.foo 26655801
 package tencentcloud
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"reflect"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -156,7 +156,22 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("CAM policy id is nil")
 	}
 	d.SetId(strconv.Itoa(int(*response.Response.PolicyId)))
-	time.Sleep(3 * time.Second)
+
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	policyId := d.Id()
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, e := camService.DescribePolicyById(ctx, policyId)
+		if e != nil {
+			return retryError(e, "ResourceNotFound")
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM policy failed, reason:%s\n", logId, err.Error())
+		return err
+	}
 
 	return resourceTencentCloudCamPolicyRead(d, meta)
 }

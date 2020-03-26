@@ -42,7 +42,6 @@ import (
 	"log"
 	"reflect"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -164,7 +163,22 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("CAM role id is nil")
 	}
 	d.SetId(*response.Response.RoleId)
-	time.Sleep(3 * time.Second)
+
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	roleId := d.Id()
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, e := camService.DescribeRoleById(ctx, roleId)
+		if e != nil {
+			return retryError(e, "ResourceNotFound")
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
+		return err
+	}
 
 	return resourceTencentCloudCamRoleRead(d, meta)
 }

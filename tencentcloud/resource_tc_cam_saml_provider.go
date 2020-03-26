@@ -22,10 +22,10 @@ $ terraform import tencentcloud_cam_saml_provider.foo cam-SAML-provider-test
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -117,7 +117,25 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 
 	d.SetId(d.Get("name").(string))
 	_ = d.Set("provider_arn", *response.Response.ProviderArn)
-	time.Sleep(3 * time.Second)
+
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	samlProviderId := d.Id()
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, e := camService.DescribeSAMLProviderById(ctx, samlProviderId)
+		if e != nil {
+			return retryError(e, "ResourceNotFound")
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM SAML provider failed, reason:%s\n", logId, err.Error())
+		return err
+	}
 
 	return resourceTencentCloudCamSAMLProviderRead(d, meta)
 }

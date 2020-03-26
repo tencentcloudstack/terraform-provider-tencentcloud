@@ -3,6 +3,7 @@
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_tcaplus_idl` add new attribute `zone_id`. 
+* Resource: `tencentcloud_cam_user` add new attribute `force_delete`.([#354](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/354))
 
 ## 1.30.5 (March 19, 2020)
 

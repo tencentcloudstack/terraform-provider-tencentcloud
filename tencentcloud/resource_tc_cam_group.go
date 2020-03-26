@@ -21,11 +21,11 @@ $ terraform import tencentcloud_cam_group.foo 90496
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -97,7 +97,25 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("CAM group id is nil")
 	}
 	d.SetId(strconv.Itoa(int(*response.Response.GroupId)))
-	time.Sleep(3 * time.Second)
+
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	groupId := d.Id()
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, e := camService.DescribeGroupById(ctx, groupId)
+		if e != nil {
+			return retryError(e, "ResourceNotFound")
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM group failed, reason:%s\n", logId, err.Error())
+		return err
+	}
 
 	return resourceTencentCloudCamGroupRead(d, meta)
 }
