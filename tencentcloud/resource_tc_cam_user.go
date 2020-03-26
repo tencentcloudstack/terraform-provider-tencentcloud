@@ -244,7 +244,7 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 	deleteForce := false
 	if v, ok := d.GetOkExists("force_delete"); ok {
 		deleteForce = v.(bool)
-		_ = d.Set("is_auto_rewrite", deleteForce)
+		_ = d.Set("force_delete", deleteForce)
 	}
 
 	userId := d.Id()
