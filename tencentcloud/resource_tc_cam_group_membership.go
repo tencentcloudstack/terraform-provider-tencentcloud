@@ -22,6 +22,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -81,9 +82,12 @@ func resourceTencentCloudCamGroupMembershipCreate(d *schema.ResourceData, meta i
 	}
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, e := camService.DescribeGroupMembershipById(ctx, groupId)
+		instance, e := camService.DescribeGroupMembershipById(ctx, groupId)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "ResourceNotFound")
+		}
+		if len(instance) == 0 {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
 		}
 		return nil
 	})

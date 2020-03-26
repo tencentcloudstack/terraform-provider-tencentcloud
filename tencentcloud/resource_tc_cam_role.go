@@ -171,7 +171,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, e := camService.DescribeRoleById(ctx, roleId)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "ResourceNotFound")
 		}
 		return nil
 	})

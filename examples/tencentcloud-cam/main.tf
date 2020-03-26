@@ -13,7 +13,7 @@ resource "tencentcloud_cam_user" "example" {
   phone_num           = var.phone_num
   country_code        = var.country_code
   email               = var.email
-  delete_force        = true
+  force_delete        = true
 }
 
 resource "tencentcloud_cam_policy" "example" {

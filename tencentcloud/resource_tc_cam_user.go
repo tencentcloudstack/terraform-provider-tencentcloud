@@ -14,7 +14,7 @@ resource "tencentcloud_cam_user" "foo" {
   phone_num           = "12345678910"
   email               = "hello@test.com"
   country_code        = "86"
-  delete_force        = true
+  force_delete        = true
 }
 ```
 
@@ -64,7 +64,7 @@ func resourceTencentCloudCamUser() *schema.Resource {
 				Default:     "",
 				Description: "Remark of the CAM user.",
 			},
-			"delete_force": {
+			"force_delete": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
@@ -223,7 +223,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, e := camService.DescribeUserById(ctx, userId)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "ResourceNotFound")
 		}
 		return nil
 	})
@@ -242,7 +242,7 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	deleteForce := false
-	if v, ok := d.GetOkExists("delete_force"); ok {
+	if v, ok := d.GetOkExists("force_delete"); ok {
 		deleteForce = v.(bool)
 		_ = d.Set("is_auto_rewrite", deleteForce)
 	}
@@ -376,7 +376,7 @@ func resourceTencentCloudCamUserDelete(d *schema.ResourceData, meta interface{})
 
 	//check is force delete or not
 	deleteForce := false
-	if v, ok := d.GetOkExists("delete_force"); ok {
+	if v, ok := d.GetOkExists("force_delete"); ok {
 		deleteForce = v.(bool)
 	}
 

@@ -164,7 +164,7 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, e := camService.DescribePolicyById(ctx, policyId)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "ResourceNotFound")
 		}
 		return nil
 	})

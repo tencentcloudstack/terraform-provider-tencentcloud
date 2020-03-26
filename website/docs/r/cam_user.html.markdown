@@ -23,7 +23,7 @@ resource "tencentcloud_cam_user" "foo" {
   phone_num           = "12345678910"
   email               = "hello@test.com"
   country_code        = "86"
-  delete_force        = true
+  force_delete        = true
 }
 ```
 
@@ -34,8 +34,8 @@ The following arguments are supported:
 * `name` - (Required, ForceNew) Name of CAM user.
 * `console_login` - (Optional) Indicate whether the CAM user can login or not.
 * `country_code` - (Optional) Country code of the phone num, like '86'.
-* `delete_force` - (Optional) This attribute indicate that delete operation will be done directly or not. When set false, the secret key will be checked before delete operation, if there is secret key existed, the delete operation will fail and report `HasKey` error.
 * `email` - (Optional) Email of the CAM user.
+* `force_delete` - (Optional) This attribute indicate that delete operation will be done directly or not. When set false, the secret key will be checked before delete operation, if there is secret key existed, the delete operation will fail and report `HasKey` error.
 * `need_reset_password` - (Optional) Indicate whether the CAM user will reset the password the next time he/her logs in.
 * `password` - (Optional) The password of the CAM user. The password should be set with 8 characters or more and contains uppercase small letters, numbers, and special characters. Only valid when console_login set true. If not set and the value of console_login is true, a random password is automatically generated.
 * `phone_num` - (Optional) Phone num of the CAM user.

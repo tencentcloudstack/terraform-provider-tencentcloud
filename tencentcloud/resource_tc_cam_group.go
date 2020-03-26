@@ -108,7 +108,7 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, e := camService.DescribeGroupById(ctx, groupId)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "ResourceNotFound")
 		}
 		return nil
 	})

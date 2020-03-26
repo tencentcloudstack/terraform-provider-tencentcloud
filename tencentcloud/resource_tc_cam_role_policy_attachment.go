@@ -22,6 +22,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -117,9 +118,12 @@ func resourceTencentCloudCamRolePolicyAttachmentCreate(d *schema.ResourceData, m
 	}
 	rolePolicyAttachmentId := d.Id()
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, e := camService.DescribeRolePolicyAttachmentById(ctx, rolePolicyAttachmentId)
+		instance, e := camService.DescribeRolePolicyAttachmentById(ctx, rolePolicyAttachmentId)
 		if e != nil {
-			return retryError(e)
+			return retryError(e, "ResourceNotFound")
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
 		}
 		return nil
 	})
