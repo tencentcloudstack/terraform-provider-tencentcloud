@@ -53,6 +53,7 @@ func GetIndex(doc string) ([]Product, error) {
 
 					prods = append(prods, prod)
 					prod = Product{Name: text}
+					currentType = ""
 				}
 			}
 		} else {

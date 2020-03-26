@@ -404,6 +404,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common

@@ -1,5 +1,9 @@
 ## 1.31.0 (Unreleased)
 
+FEATURES:
+
+* **New Resource**: `tencentcloud_cdn_domain`
+
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_tcaplus_idl` add new attribute `zone_id`. 
