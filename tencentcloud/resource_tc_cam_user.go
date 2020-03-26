@@ -194,7 +194,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
-				if strings.Contains(errCode, "InUse") {
+				if strings.Contains(errCode, "SubUserNameInUse") {
 					return resource.NonRetryableError(e)
 				}
 			}

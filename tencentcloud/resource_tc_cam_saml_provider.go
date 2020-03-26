@@ -100,7 +100,7 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				errCode := ee.GetCode()
 				//check if read empty
-				if strings.Contains(errCode, "InUse") {
+				if strings.Contains(errCode, "IdentityNameInUse") {
 					return resource.NonRetryableError(e)
 				}
 			}
