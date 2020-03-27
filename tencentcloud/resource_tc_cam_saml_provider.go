@@ -26,6 +26,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -133,9 +134,12 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 	}
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, e := camService.DescribeSAMLProviderById(ctx, samlProviderId)
+		instance, e := camService.DescribeSAMLProviderById(ctx, samlProviderId)
 		if e != nil {
 			return retryError(e, "ResourceNotFound")
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
 		}
 		return nil
 	})
@@ -143,6 +147,7 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 		log.Printf("[CRITAL]%s read CAM SAML provider failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCamSAMLProviderRead(d, meta)
 }

@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -120,7 +121,7 @@ func resourceTencentCloudCamUserPolicyAttachmentCreate(d *schema.ResourceData, m
 		log.Printf("[CRITAL]%s read CAM user policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-
+	time.Sleep(3 * time.Second)
 	return resourceTencentCloudCamUserPolicyAttachmentRead(d, meta)
 }
 

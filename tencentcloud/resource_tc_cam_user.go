@@ -33,6 +33,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -228,9 +229,12 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, e := camService.DescribeUserById(ctx, userId)
+		instance, e := camService.DescribeUserById(ctx, userId)
 		if e != nil {
 			return retryError(e, "ResourceNotFound")
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
 		}
 		return nil
 	})
@@ -238,7 +242,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		log.Printf("[CRITAL]%s read CAM user failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-
+	time.Sleep(3 * time.Second)
 	return resourceTencentCloudCamUserRead(d, meta)
 }
 
