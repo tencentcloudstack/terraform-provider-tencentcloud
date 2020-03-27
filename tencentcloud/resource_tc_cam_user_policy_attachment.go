@@ -110,7 +110,7 @@ func resourceTencentCloudCamUserPolicyAttachmentCreate(d *schema.ResourceData, m
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instance, e := camService.DescribeUserPolicyAttachmentById(ctx, userPolicyAttachmentId)
 		if e != nil {
-			return retryError(e, "ResourceNotFound")
+			return retryError(e)
 		}
 		if instance == nil {
 			return resource.RetryableError(fmt.Errorf("creation not done"))
