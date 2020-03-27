@@ -134,12 +134,9 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 	}
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		instance, e := camService.DescribeSAMLProviderById(ctx, samlProviderId)
+		_, e := camService.DescribeSAMLProviderById(ctx, samlProviderId)
 		if e != nil {
 			return retryError(e, "ResourceNotFound")
-		}
-		if instance == nil {
-			return resource.RetryableError(fmt.Errorf("creation not done"))
 		}
 		return nil
 	})

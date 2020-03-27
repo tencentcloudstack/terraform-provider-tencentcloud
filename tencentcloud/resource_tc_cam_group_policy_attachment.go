@@ -25,11 +25,13 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudCamGroupPolicyAttachment() *schema.Resource {
@@ -139,6 +141,13 @@ func resourceTencentCloudCamGroupPolicyAttachmentRead(d *schema.ResourceData, me
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeGroupPolicyAttachmentById(ctx, groupPolicyAttachmentId)
 		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") {
+					return nil
+				}
+			}
 			return retryError(e)
 		}
 		instance = result

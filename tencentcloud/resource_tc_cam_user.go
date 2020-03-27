@@ -226,12 +226,9 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		instance, e := camService.DescribeUserById(ctx, *response.Response.Name)
+		_, e := camService.DescribeUserById(ctx, *response.Response.Name)
 		if e != nil {
 			return retryError(e, "ResourceNotFound")
-		}
-		if instance == nil {
-			return resource.RetryableError(fmt.Errorf("creation not done"))
 		}
 		return nil
 	})

@@ -181,6 +181,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 		if e != nil {
 			return retryError(e, "ResourceNotFound")
 		}
+		//Describe Role is travel the list and match, get retry condition with this code
 		if instance == nil {
 			return resource.RetryableError(fmt.Errorf("creation not done"))
 		}
