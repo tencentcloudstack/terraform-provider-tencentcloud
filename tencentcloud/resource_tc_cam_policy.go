@@ -44,6 +44,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -169,9 +170,12 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 	policyId := d.Id()
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, e := camService.DescribePolicyById(ctx, policyId)
+		instance, e := camService.DescribePolicyById(ctx, policyId)
 		if e != nil {
 			return retryError(e, "ResourceNotFound")
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
 		}
 		return nil
 	})
@@ -179,7 +183,7 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 		log.Printf("[CRITAL]%s read CAM policy failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-
+	time.Sleep(3 * time.Second)
 	return resourceTencentCloudCamPolicyRead(d, meta)
 }
 

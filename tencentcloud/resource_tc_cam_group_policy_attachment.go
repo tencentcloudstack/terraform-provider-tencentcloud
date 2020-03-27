@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -119,7 +120,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentCreate(d *schema.ResourceData, 
 		log.Printf("[CRITAL]%s read CAM group policy failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-
+	time.Sleep(3 * time.Second)
 	return resourceTencentCloudCamGroupPolicyAttachmentRead(d, meta)
 }
 
