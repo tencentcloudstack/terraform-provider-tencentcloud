@@ -26,6 +26,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -113,9 +114,12 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, e := camService.DescribeGroupById(ctx, groupId)
+		instance, e := camService.DescribeGroupById(ctx, groupId)
 		if e != nil {
 			return retryError(e, "ResourceNotFound")
+		}
+		if instance == nil || instance.Response == nil || instance.Response.GroupId == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
 		}
 		return nil
 	})
@@ -123,7 +127,7 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 		log.Printf("[CRITAL]%s read CAM group failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-
+	time.Sleep(3 * time.Second)
 	return resourceTencentCloudCamGroupRead(d, meta)
 }
 
