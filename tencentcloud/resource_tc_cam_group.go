@@ -116,7 +116,7 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instance, e := camService.DescribeGroupById(ctx, groupId)
 		if e != nil {
-			return retryError(e, "ResourceNotFound")
+			return retryError(e)
 		}
 		if instance == nil || instance.Response == nil || instance.Response.GroupId == nil {
 			return resource.RetryableError(fmt.Errorf("creation not done"))
@@ -135,26 +135,16 @@ func resourceTencentCloudCamGroupRead(d *schema.ResourceData, meta interface{}) 
 	defer logElapsed("resource.tencentcloud_cam_group.read")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	groupId := d.Id()
-	request := cam.NewGetGroupRequest()
-	groupIdInt, e := strconv.Atoi(groupId)
-	if e != nil {
-		return e
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	groupIdInt64 := uint64(groupIdInt)
-	request.GroupId = &groupIdInt64
 	var instance *cam.GetGroupResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().GetGroup(request)
+		result, e := camService.DescribeGroupById(ctx, groupId)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				errCode := ee.GetCode()
-				//check if read empty
-				if strings.Contains(errCode, "ResourceNotFound") {
-					return nil
-				}
-			}
 			return retryError(e)
 		}
 		instance = result

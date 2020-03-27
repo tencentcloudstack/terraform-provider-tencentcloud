@@ -109,7 +109,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentCreate(d *schema.ResourceData, 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instance, e := camService.DescribeGroupPolicyAttachmentById(ctx, groupPolicyAttachmentId)
 		if e != nil {
-			return retryError(e, "ResourceNotFound")
+			return retryError(e)
 		}
 		if instance == nil {
 			return resource.RetryableError(fmt.Errorf("creation not done"))

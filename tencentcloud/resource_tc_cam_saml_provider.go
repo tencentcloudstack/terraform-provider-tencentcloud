@@ -136,7 +136,7 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instance, e := camService.DescribeSAMLProviderById(ctx, samlProviderId)
 		if e != nil {
-			return retryError(e, "ResourceNotFound")
+			return retryError(e)
 		}
 		if instance == nil {
 			return resource.RetryableError(fmt.Errorf("creation not done"))
@@ -156,21 +156,16 @@ func resourceTencentCloudCamSAMLProviderRead(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_cam_saml_provider.read")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
-	SAMLProviderId := d.Id()
-	request := cam.NewGetSAMLProviderRequest()
-	request.Name = &SAMLProviderId
+	samlProviderId := d.Id()
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
 	var instance *cam.GetSAMLProviderResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().GetSAMLProvider(request)
+		result, e := camService.DescribeSAMLProviderById(ctx, samlProviderId)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				errCode := ee.GetCode()
-				//check if read empty
-				if strings.Contains(errCode, "ResourceNotFound") {
-					return nil
-				}
-			}
 			return retryError(e)
 		}
 		instance = result
