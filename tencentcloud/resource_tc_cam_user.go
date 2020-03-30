@@ -1,5 +1,5 @@
 /*
-Provides a resource to create a CAM user.
+Provides a resource to manage CAM user.
 
 Example Usage
 
@@ -14,12 +14,13 @@ resource "tencentcloud_cam_user" "foo" {
   phone_num           = "12345678910"
   email               = "hello@test.com"
   country_code        = "86"
+  force_delete        = true
 }
 ```
 
 Import
 
-CAM user can be imported using the id, e.g.
+CAM user can be imported using the user name, e.g.
 
 ```
 $ terraform import tencentcloud_cam_user.foo cam-user-test
@@ -56,7 +57,7 @@ func resourceTencentCloudCamUser() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "Name of CAM user.",
+				Description: "Name of the CAM user.",
 			},
 			"remark": {
 				Type:        schema.TypeString,
@@ -64,17 +65,23 @@ func resourceTencentCloudCamUser() *schema.Resource {
 				Default:     "",
 				Description: "Remark of the CAM user.",
 			},
+			"force_delete": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicate whether to force deletes the CAM user. If set false, the API secret key will be checked and failed when exists; otherwise the user will be deleted directly. Default is false.",
+			},
 			"use_api": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Indicate whether to generate a secret key or not.",
+				Description: "Indicate whether to generate the API secret key or not.",
 			},
 			"console_login": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicade whether the CAM user can login or not.",
+				Description: "Indicate whether the CAM user can login to the web console or not.",
 			},
 			"password": {
 				Type:         schema.TypeString,
@@ -82,24 +89,24 @@ func resourceTencentCloudCamUser() *schema.Resource {
 				Computed:     true,
 				Sensitive:    true,
 				ValidateFunc: validateAsConfigPassword,
-				Description:  "The password of the CAM user. The password should be set with 8 characters or more and contains uppercase small letters, numbers, and special characters. Only valid when console_login set true. If not set and the value of console_login is true, a random password is automatically generated.",
+				Description:  "The password of the CAM user. Password should be at least 8 characters and no more than 32 characters, includes uppercase letters, lowercase letters, numbers and special characters. Only required when `console_login` is true. If not set, a random password will be automatically generated.",
 			},
 			"need_reset_password": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Indicate whether the CAM user will reset the password the next time he/her logs in.",
+				Description: "Indicate whether the CAM user need to reset the password when first logins.",
 			},
 			"phone_num": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Phone num of the CAM user.",
+				Description: "Phone number of the CAM user.",
 			},
 			"country_code": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "86",
-				Description: "Country code of the phone num, like '86'.",
+				Description: "Country code of the phone number, for example: '86'.",
 			},
 			"email": {
 				Type:        schema.TypeString,
@@ -121,12 +128,12 @@ func resourceTencentCloudCamUser() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Sensitive:   true,
-				Description: "Secret Id of the CAM user.",
+				Description: "Secret ID of the CAM user.",
 			},
 			"uid": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Id of the CAM user.",
+				Description: "ID of the CAM user.",
 			},
 		},
 	}
@@ -136,6 +143,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_cam_user.create")()
 
 	logId := getLogId(contextNil)
+
 	request := cam.NewAddUserRequest()
 	request.Name = helper.String(d.Get("name").(string))
 	//optional
@@ -172,7 +180,6 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 	if v, ok := d.GetOk("country_code"); ok {
 		request.CountryCode = helper.String(v.(string))
 	}
-
 	if v, ok := d.GetOk("email"); ok {
 		request.Email = helper.String(v.(string))
 	}
@@ -186,6 +193,12 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				if strings.Contains(errCode, "SubUserNameInUse") {
+					return resource.NonRetryableError(e)
+				}
+			}
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -199,15 +212,34 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 	if response.Response.Uid == nil {
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM user][Create] check: CAM user id is nil")
+		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM user][Create] check: CAM user id returns nil")
 	}
 
 	d.SetId(*response.Response.Name)
 	_ = d.Set("secret_key", *response.Response.SecretKey)
 	_ = d.Set("password", *response.Response.Password)
 	_ = d.Set("secret_id", *response.Response.SecretId)
-	time.Sleep(3 * time.Second)
 
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, e := camService.DescribeUserById(ctx, *response.Response.Name)
+		if e != nil {
+			return retryError(e)
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s wait for CAM user ready failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	time.Sleep(3 * time.Second)
 	return resourceTencentCloudCamUserRead(d, meta)
 }
 
@@ -217,6 +249,12 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
+	deleteForce := false
+	if v, ok := d.GetOkExists("force_delete"); ok {
+		deleteForce = v.(bool)
+		_ = d.Set("force_delete", deleteForce)
+	}
+
 	userId := d.Id()
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -225,13 +263,6 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeUserById(ctx, userId)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				errCode := ee.GetCode()
-				//check if read empty
-				if strings.Contains(errCode, "ResourceNotFound") {
-					return nil
-				}
-			}
 			return retryError(e)
 		}
 		instance = result
@@ -343,6 +374,14 @@ func resourceTencentCloudCamUserDelete(d *schema.ResourceData, meta interface{})
 	userId := d.Id()
 	request := cam.NewDeleteUserRequest()
 	request.Name = &userId
+
+	//check is force delete or not
+	deleteForce := false
+	if v, ok := d.GetOkExists("force_delete"); ok {
+		deleteForce = v.(bool)
+	}
+
+	request.Force = helper.BoolToInt64Pointer(deleteForce)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().DeleteUser(request)

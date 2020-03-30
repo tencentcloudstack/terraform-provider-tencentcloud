@@ -37,6 +37,7 @@ $ terraform import tencentcloud_cam_policy.foo 26655801
 package tencentcloud
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -138,6 +139,13 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().CreatePolicy(request)
 		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "PolicyNameInUse") {
+					return resource.NonRetryableError(e)
+				}
+			}
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(e)
@@ -156,8 +164,26 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 		return fmt.Errorf("CAM policy id is nil")
 	}
 	d.SetId(strconv.Itoa(int(*response.Response.PolicyId)))
-	time.Sleep(3 * time.Second)
 
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	policyId := d.Id()
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, e := camService.DescribePolicyById(ctx, policyId)
+		if e != nil {
+			return retryError(e)
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM policy failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	time.Sleep(3 * time.Second)
 	return resourceTencentCloudCamPolicyRead(d, meta)
 }
 
@@ -165,26 +191,16 @@ func resourceTencentCloudCamPolicyRead(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_cam_policy.read")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	policyId := d.Id()
-	request := cam.NewGetPolicyRequest()
-	policyIdInt, e := strconv.Atoi(policyId)
-	if e != nil {
-		return e
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	policyIdInt64 := uint64(policyIdInt)
-	request.PolicyId = &policyIdInt64
 	var instance *cam.GetPolicyResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().GetPolicy(request)
+		result, e := camService.DescribePolicyById(ctx, policyId)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				errCode := ee.GetCode()
-				//check if read empty
-				if strings.Contains(errCode, "ResourceNotFound") {
-					return nil
-				}
-			}
 			return retryError(e)
 		}
 		instance = result

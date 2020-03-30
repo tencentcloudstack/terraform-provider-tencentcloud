@@ -905,6 +905,7 @@ func (me *CamService) DescribeGroupById(ctx context.Context, groupId string) (ca
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	camInstance = response
 	return
 }
 

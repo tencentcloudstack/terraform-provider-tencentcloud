@@ -22,6 +22,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -73,8 +74,29 @@ func resourceTencentCloudCamGroupMembershipCreate(d *schema.ResourceData, meta i
 		return err
 	}
 	d.SetId(groupId)
-	time.Sleep(3 * time.Second)
 
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, e := camService.DescribeGroupMembershipById(ctx, groupId)
+		if e != nil {
+			return retryError(e)
+		}
+		if len(instance) == 0 {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM group membership failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	time.Sleep(3 * time.Second)
 	return resourceTencentCloudCamGroupMembershipRead(d, meta)
 }
 

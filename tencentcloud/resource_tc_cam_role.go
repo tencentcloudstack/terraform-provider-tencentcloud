@@ -146,6 +146,13 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().CreateRole(request)
 		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "RoleNameInUse") {
+					return resource.NonRetryableError(e)
+				}
+			}
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(e)
@@ -164,8 +171,26 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("CAM role id is nil")
 	}
 	d.SetId(*response.Response.RoleId)
-	time.Sleep(3 * time.Second)
 
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	roleId := d.Id()
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, e := camService.DescribeRoleById(ctx, roleId)
+		if e != nil {
+			return retryError(e)
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	time.Sleep(3 * time.Second)
 	return resourceTencentCloudCamRoleRead(d, meta)
 }
 
@@ -183,13 +208,6 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeRoleById(ctx, roleId)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				errCode := ee.GetCode()
-				//check if read empty
-				if strings.Contains(errCode, "ResourceNotFound") {
-					return nil
-				}
-			}
 			return retryError(e)
 		}
 		instance = result

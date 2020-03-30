@@ -51,8 +51,8 @@ func testAccCheckCamGroupDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, err := camService.DescribeGroupById(ctx, rs.Primary.ID)
-		if err == nil {
+		instance, err := camService.DescribeGroupById(ctx, rs.Primary.ID)
+		if err == nil && instance != nil {
 			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM group][Destroy] check: CAM group still exists: %s", rs.Primary.ID)
 		}
 
@@ -75,9 +75,12 @@ func testAccCheckCamGroupExists(n string) resource.TestCheckFunc {
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, err := camService.DescribeGroupById(ctx, rs.Primary.ID)
+		instance, err := camService.DescribeGroupById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
+		}
+		if instance == nil {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][CAM group][Exists] check: CAM group is not exist")
 		}
 		return nil
 	}
