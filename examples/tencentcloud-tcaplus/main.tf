@@ -22,6 +22,7 @@ resource "tencentcloud_tcaplus_application" "test_app" {
 
 resource "tencentcloud_tcaplus_idl" "test_idl" {
   app_id        = tencentcloud_tcaplus_application.test_app.id
+  zone_id       = tencentcloud_tcaplus_zone.test_zone.id
   file_name     = "tf_idl_test_guagua"
   file_type     = "PROTO"
   file_ext_type = "proto"
