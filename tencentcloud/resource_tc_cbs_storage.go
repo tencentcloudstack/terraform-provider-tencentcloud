@@ -32,7 +32,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -125,6 +124,10 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_cbs_storage.create")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+	cbsService := CbsService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
 
 	request := cbs.NewCreateDisksRequest()
 	request.DiskName = helper.String(d.Get("storage_name").(string))
@@ -155,6 +158,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	}
 	request.DiskChargeType = helper.String("POSTPAID_BY_HOUR")
 
+	storageId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CreateDisks(request)
 		if e != nil {
@@ -167,17 +171,29 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 			return resource.NonRetryableError(fmt.Errorf("storage id is nil"))
 		}
 
-		d.SetId(*response.Response.DiskIdSet[0])
-
+		storageId = *response.Response.DiskIdSet[0]
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s create cbs failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
+	d.SetId(storageId)
 
 	// must wait for finishing creating disk
-	time.Sleep(3 * time.Second)
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		storage, e := cbsService.DescribeDiskById(ctx, storageId)
+		if e != nil {
+			return retryError(e, InternalError)
+		}
+		if storage == nil {
+			return resource.RetryableError(fmt.Errorf("storage is still creating..."))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
 
 	return resourceTencentCloudCbsStorageRead(d, meta)
 }
