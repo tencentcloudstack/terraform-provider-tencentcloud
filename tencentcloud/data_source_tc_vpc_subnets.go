@@ -54,6 +54,11 @@ func dataSourceTencentCloudVpcSubnets() *schema.Resource {
 		Read: dataSourceTencentCloudVpcSubnetsRead,
 
 		Schema: map[string]*schema.Schema{
+			"vpc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of the VPC to be queried.",
+			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -164,11 +169,18 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 	region := meta.(*TencentCloudClient).apiV3Conn.Region
 
 	var (
+		vpcId            string
 		subnetId         string
 		name             string
 		availabilityZone string
 		isDefault        *bool
 	)
+	if temp, ok := d.GetOk("vpc_id"); ok {
+		tempStr := temp.(string)
+		if tempStr != "" {
+			vpcId = tempStr
+		}
+	}
 	if temp, ok := d.GetOk("subnet_id"); ok {
 		tempStr := temp.(string)
 		if tempStr != "" {
@@ -194,7 +206,7 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 
 	tags := helper.GetTags(d, "tags")
 
-	infos, err := vpcService.DescribeSubnets(ctx, subnetId, "", name, availabilityZone, tags, isDefault)
+	infos, err := vpcService.DescribeSubnets(ctx, subnetId, vpcId, name, availabilityZone, tags, isDefault)
 	if err != nil {
 		return err
 	}

@@ -57,6 +57,7 @@ The following arguments are supported:
 * `result_output_file` - (Optional) Used to save results.
 * `subnet_id` - (Optional) ID of the subnet to be queried.
 * `tags` - (Optional) Tags of the subnet to be queried.
+* `vpc_id` - (Optional) ID of the VPC to be queried.
 
 ## Attributes Reference
 
