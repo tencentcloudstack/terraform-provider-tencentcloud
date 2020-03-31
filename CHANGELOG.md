@@ -1,9 +1,10 @@
 ## 1.31.0 (Unreleased)
+## 1.30.6 (March 30, 2020)
 
 ENHANCEMENTS:
 
-* Resource: `tencentcloud_tcaplus_idl` add new attribute `zone_id`. 
-* Resource: `tencentcloud_cam_user` add new attribute `force_delete`.([#354](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/354))
+* Resource: `tencentcloud_tcaplus_idl` add new argument `zone_id`. 
+* Resource: `tencentcloud_cam_user` add new argument `force_delete`.([#354](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/354))
 * Data Source: `tencentcloud_vpc_subnets` add new argument `vpc_id`. 
 
 ## 1.30.5 (March 19, 2020)
