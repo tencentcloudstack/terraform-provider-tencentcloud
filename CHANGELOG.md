@@ -1,4 +1,10 @@
 ## 1.31.0 (Unreleased)
+
+
+BUG FIXES: 
+
+* Resource: `tencentcloud_kubernetes_as_scaling_group` set a value to argument `key_ids` cause error .
+
 ## 1.30.6 (March 30, 2020)
 
 ENHANCEMENTS:

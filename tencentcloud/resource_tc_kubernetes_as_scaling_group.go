@@ -583,6 +583,10 @@ func kubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta inter
 		}
 	}
 
+	if request.LoginSettings.Password != nil && *request.LoginSettings.Password == "" {
+		request.LoginSettings.Password = nil
+	}
+
 	if request.LoginSettings.Password == nil && len(request.LoginSettings.KeyIds) == 0 {
 		errRet = fmt.Errorf("Parameters `key_ids` and `password` should be set one")
 		return result, errRet
