@@ -147,7 +147,7 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 		log.Printf("[CRITAL]%s read CAM SAML provider failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	time.Sleep(3 * time.Second)
+	time.Sleep(10 * time.Second)
 
 	return resourceTencentCloudCamSAMLProviderRead(d, meta)
 }

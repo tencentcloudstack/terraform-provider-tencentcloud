@@ -127,7 +127,7 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 		log.Printf("[CRITAL]%s read CAM group failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	time.Sleep(3 * time.Second)
+	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamGroupRead(d, meta)
 }
 

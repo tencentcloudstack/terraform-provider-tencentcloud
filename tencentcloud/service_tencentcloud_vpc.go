@@ -135,16 +135,23 @@ func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 			request.DnsServers = append(request.DnsServers, &dnsServers[index])
 		}
 	}
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().CreateVpc(request)
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-		vpcId, isDefault = *response.Response.Vpc.VpcId, *response.Response.Vpc.IsDefault
+	var response *vpc.CreateVpcResponse
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseVpcClient().CreateVpc(request)
+		if err != nil {
+			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return retryError(err, InternalError)
+		}
+		response = result
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create vpc failed, reason: %v", logId, err)
+		errRet = err
 		return
 	}
-
-	errRet = err
+	vpcId, isDefault = *response.Response.Vpc.VpcId, *response.Response.Vpc.IsDefault
 	return
 }
 
@@ -213,14 +220,21 @@ getMoreData:
 
 	var strOffset = fmt.Sprintf("%d", offset)
 	request.Offset = &strOffset
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DescribeVpcs(request)
-	if err != nil {
-		errRet = err
-		return
+	var response *vpc.DescribeVpcsResponse
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseVpcClient().DescribeVpcs(request)
+		if err != nil {
+			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return retryError(err, InternalError)
+		}
+		response = result
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read vpc failed, reason: %v", logId, err)
+		return nil, err
 	}
-	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if total < 0 {
 		total = int(*response.Response.TotalCount)
@@ -329,11 +343,20 @@ getMoreData:
 
 	var strOffset = fmt.Sprintf("%d", offset)
 	request.Offset = &strOffset
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DescribeSubnets(request)
-	if err != nil {
-		errRet = err
-		return
+	var response *vpc.DescribeSubnetsResponse
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseVpcClient().DescribeSubnets(request)
+		if err != nil {
+			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return retryError(err, InternalError)
+		}
+		response = result
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s read subnets failed, reason: %v", logId, err)
+		return nil, err
 	}
 	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -395,13 +418,21 @@ func (me *VpcService) ModifyVpcAttribute(ctx context.Context, vpcId, name string
 	}
 	var enableMulticast = map[bool]string{true: "true", false: "false"}[isMulticast]
 	request.EnableMulticast = &enableMulticast
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().ModifyVpcAttribute(request)
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseVpcClient().ModifyVpcAttribute(request)
+		if err != nil {
+			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return retryError(err, InternalError)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify vpc failed, reason: %v", logId, err)
+		return err
 	}
-	errRet = err
+
 	return
 }
 
@@ -420,13 +451,20 @@ func (me *VpcService) DeleteVpc(ctx context.Context, vpcId string) (errRet error
 	}
 
 	request.VpcId = &vpcId
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DeleteVpc(request)
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseVpcClient().DeleteVpc(request)
+		if err != nil {
+			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return retryError(err, InternalError)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete vpc failed, reason: %v", logId, err)
+		return err
 	}
-	errRet = err
 	return
 
 }
@@ -449,15 +487,24 @@ func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone 
 	request.SubnetName = &name
 	request.CidrBlock = &cidr
 	request.Zone = &zone
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().CreateSubnet(request)
-	errRet = err
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		subnetId = *response.Response.Subnet.SubnetId
+	var response *vpc.CreateSubnetResponse
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseVpcClient().CreateSubnet(request)
+		if err != nil {
+			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return retryError(err, InternalError)
+		}
+		response = result
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s create subnet failed, reason: %v", logId, err)
+		return "", err
 	}
+
+	subnetId = *response.Response.Subnet.SubnetId
+
 	return
 }
 
@@ -476,13 +523,18 @@ func (me *VpcService) ModifySubnetAttribute(ctx context.Context, subnetId, name 
 	request.SubnetId = &subnetId
 	request.SubnetName = &name
 	request.EnableBroadcast = &enableMulticast
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().ModifySubnetAttribute(request)
-
-	errRet = err
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseVpcClient().ModifySubnetAttribute(request)
+		if err != nil {
+			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return retryError(err, InternalError)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s modify subnet failed, reason: %v", logId, err)
+		return err
 	}
 	return
 }
@@ -498,13 +550,18 @@ func (me *VpcService) DeleteSubnet(ctx context.Context, subnetId string) (errRet
 		}
 	}()
 	request.SubnetId = &subnetId
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DeleteSubnet(request)
-
-	errRet = err
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, err := me.client.UseVpcClient().DeleteSubnet(request)
+		if err != nil {
+			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return retryError(err, InternalError)
+		}
+		return nil
+	}); err != nil {
+		log.Printf("[CRITAL]%s delete subnet failed, reason: %v", logId, err)
+		return err
 	}
 	return
 
@@ -609,6 +666,7 @@ getMoreData:
 	var strOffset = fmt.Sprintf("%d", offset)
 	request.Offset = &strOffset
 	ratelimit.Check(request.GetAction())
+
 	response, err := me.client.UseVpcClient().DescribeRouteTables(request)
 	if err != nil {
 		errRet = err
