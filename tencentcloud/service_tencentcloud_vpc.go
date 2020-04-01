@@ -142,7 +142,7 @@ func (me *VpcService) CreateVpc(ctx context.Context, name, cidr string,
 		if err != nil {
 			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		response = result
 		return nil
@@ -494,7 +494,7 @@ func (me *VpcService) CreateSubnet(ctx context.Context, vpcId, name, cidr, zone 
 		if err != nil {
 			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		response = result
 		return nil
