@@ -826,6 +826,19 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		// waiting for status changed is not work
 		// a little stupid, but it's ok for now
 		time.Sleep(1 * time.Minute)
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("private_ip") {
