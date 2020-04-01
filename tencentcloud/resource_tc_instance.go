@@ -822,11 +822,8 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 		d.SetPartial("password")
-		// just wait, 95% change password will be reset
-		// waiting for status changed is not work
-		// a little stupid, but it's ok for now
-		time.Sleep(1 * time.Minute)
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		time.Sleep(10 * time.Second)
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
 				return retryError(errRet, InternalError)
