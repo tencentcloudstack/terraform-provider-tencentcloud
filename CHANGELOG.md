@@ -8,6 +8,10 @@ BUG FIXES:
 
 ## 1.30.6 (March 30, 2020)
 
+FEATURES:
+
+* **New Resource**: `tencentcloud_cdn_domain`
+
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_tcaplus_idl` add new argument `zone_id`. 
