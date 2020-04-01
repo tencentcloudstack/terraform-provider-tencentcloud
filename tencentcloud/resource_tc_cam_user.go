@@ -281,10 +281,13 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 	_ = d.Set("name", userId)
 	_ = d.Set("uin", int(*instance.Response.Uin))
 	_ = d.Set("uid", int(*instance.Response.Uid))
-	_ = d.Set("remark", *instance.Response.Remark)
+
 	_ = d.Set("phone_num", *instance.Response.PhoneNum)
 	_ = d.Set("country_code", *instance.Response.CountryCode)
 	_ = d.Set("email", *instance.Response.Email)
+	if instance.Response.Remark != nil{
+		_ = d.Set("remark", *instance.Response.Remark)
+	}
 	if int(*instance.Response.ConsoleLogin) == 0 {
 		_ = d.Set("console_login", false)
 	} else if int(*instance.Response.ConsoleLogin) == 1 {
