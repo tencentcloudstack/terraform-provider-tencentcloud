@@ -88,6 +88,11 @@ func dataSourceTencentCloudCamUsers() *schema.Resource {
 				Description: "A list of CAM users. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"user_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Id of CAM user. Its value equals to `name` argument.",
+						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -199,6 +204,7 @@ func dataSourceTencentCloudCamUsersRead(d *schema.ResourceData, meta interface{}
 			"phone_num":    *user.PhoneNum,
 			"country_code": *user.CountryCode,
 			"email":        *user.Email,
+			"user_id":      *user.Name,
 		}
 		if int(*user.ConsoleLogin) == 1 {
 			mapping["console_login"] = true

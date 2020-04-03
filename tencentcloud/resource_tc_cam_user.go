@@ -105,7 +105,7 @@ func resourceTencentCloudCamUser() *schema.Resource {
 			"country_code": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     "86",
+				Computed:    true,
 				Description: "Country code of the phone number, for example: '86'.",
 			},
 			"email": {
@@ -281,10 +281,10 @@ func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) e
 	_ = d.Set("name", userId)
 	_ = d.Set("uin", int(*instance.Response.Uin))
 	_ = d.Set("uid", int(*instance.Response.Uid))
-	_ = d.Set("remark", *instance.Response.Remark)
-	_ = d.Set("phone_num", *instance.Response.PhoneNum)
-	_ = d.Set("country_code", *instance.Response.CountryCode)
-	_ = d.Set("email", *instance.Response.Email)
+	_ = d.Set("remark", instance.Response.Remark)
+	_ = d.Set("phone_num", instance.Response.PhoneNum)
+	_ = d.Set("country_code", instance.Response.CountryCode)
+	_ = d.Set("email", instance.Response.Email)
 	if int(*instance.Response.ConsoleLogin) == 0 {
 		_ = d.Set("console_login", false)
 	} else if int(*instance.Response.ConsoleLogin) == 1 {
@@ -330,11 +330,9 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 		updateAttrs = append(updateAttrs, "need_reset_password")
 	}
 
-	if d.HasChange("phone_num") {
+	if d.HasChange("phone_num") || d.HasChange("country_code") {
 		request.PhoneNum = helper.String(d.Get("phone_num").(string))
 		updateAttrs = append(updateAttrs, "phone_num")
-	}
-	if d.HasChange("country_code") {
 		request.CountryCode = helper.String(d.Get("country_code").(string))
 		updateAttrs = append(updateAttrs, "country_code")
 	}
