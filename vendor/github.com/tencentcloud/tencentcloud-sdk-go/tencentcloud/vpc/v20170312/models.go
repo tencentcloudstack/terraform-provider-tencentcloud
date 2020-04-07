@@ -299,6 +299,9 @@ type AllocateAddressesRequest struct {
 	// <ul style="margin:0"><li>已开通Anycast公网加速白名单的用户，可选值：<ul><li>TRUE：AnycastEIP可绑定对象为负载均衡</li>
 	// <li>FALSE：AnycastEIP可绑定对象为云服务器、NAT网关、高可用虚拟IP等</li></ul>默认值：FALSE。</li></ul>
 	ApplicableForCLB *bool `json:"ApplicableForCLB,omitempty" name:"ApplicableForCLB"`
+
+	// BGP带宽包唯一ID参数。设定该参数且InternetChargeType为BANDWIDTH_PACKAGE，则表示创建的EIP加入该BGP带宽包并采用带宽包计费
+	BandwidthPackageId *string `json:"BandwidthPackageId,omitempty" name:"BandwidthPackageId"`
 }
 
 func (r *AllocateAddressesRequest) ToJsonString() string {
@@ -386,10 +389,10 @@ type AssignIpv6AddressesRequest struct {
 	// 弹性网卡实例`ID`，形如：`eni-m6dyj72l`。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitempty" name:"NetworkInterfaceId"`
 
-	// 指定的`IPv6`地址列表，单次最多指定10个。与入参`Ipv6AddressCount`合并计算配额。
+	// 指定的`IPv6`地址列表，单次最多指定10个。与入参`Ipv6AddressCount`合并计算配额。与Ipv6AddressCount必填一个。
 	Ipv6Addresses []*Ipv6Address `json:"Ipv6Addresses,omitempty" name:"Ipv6Addresses" list`
 
-	// 自动分配`IPv6`地址个数，内网IP地址个数总和不能超过配数。与入参`Ipv6Addresses`合并计算配额。
+	// 自动分配`IPv6`地址个数，内网IP地址个数总和不能超过配数。与入参`Ipv6Addresses`合并计算配额。与Ipv6Addresses必填一个。
 	Ipv6AddressCount *uint64 `json:"Ipv6AddressCount,omitempty" name:"Ipv6AddressCount"`
 }
 
@@ -506,10 +509,10 @@ type AssignPrivateIpAddressesRequest struct {
 	// 弹性网卡实例ID，例如：eni-m6dyj72l。
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitempty" name:"NetworkInterfaceId"`
 
-	// 指定的内网IP信息，单次最多指定10个。
+	// 指定的内网IP信息，单次最多指定10个。与SecondaryPrivateIpAddressCount至少提供一个。
 	PrivateIpAddresses []*PrivateIpAddressSpecification `json:"PrivateIpAddresses,omitempty" name:"PrivateIpAddresses" list`
 
-	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
+	// 新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 }
 
@@ -682,6 +685,43 @@ func (r *AssociateNetworkAclSubnetsResponse) ToJsonString() string {
 }
 
 func (r *AssociateNetworkAclSubnetsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type AssociateNetworkInterfaceSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。
+	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitempty" name:"NetworkInterfaceIds" list`
+
+	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds" list`
+}
+
+func (r *AssociateNetworkInterfaceSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *AssociateNetworkInterfaceSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type AssociateNetworkInterfaceSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *AssociateNetworkInterfaceSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *AssociateNetworkInterfaceSecurityGroupsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -970,6 +1010,43 @@ type CcnRoute struct {
 	InstanceUin *string `json:"InstanceUin,omitempty" name:"InstanceUin"`
 }
 
+type CheckDefaultSubnetRequest struct {
+	*tchttp.BaseRequest
+
+	// 子网所在的可用区ID，不同子网选择不同可用区可以做跨可用区灾备。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+}
+
+func (r *CheckDefaultSubnetRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CheckDefaultSubnetRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CheckDefaultSubnetResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 检查结果。true为可以创建默认子网，false为不可以创建默认子网。
+		Result *bool `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CheckDefaultSubnetResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CheckDefaultSubnetResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type CheckNetDetectStateRequest struct {
 	*tchttp.BaseRequest
 
@@ -992,16 +1069,16 @@ type CheckNetDetectStateRequest struct {
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
-	// 网络探测实例ID。形如：netd-12345678。
+	// 网络探测实例ID。形如：netd-12345678。该参数与（VpcId，SubnetId，NetDetectName），至少要有一个。当NetDetectId存在时，使用NetDetectId。
 	NetDetectId *string `json:"NetDetectId,omitempty" name:"NetDetectId"`
 
-	// `VPC`实例`ID`。形如：`vpc-12345678`
+	// `VPC`实例`ID`。形如：`vpc-12345678`。该参数与（SubnetId，NetDetectName）配合使用，与NetDetectId至少要有一个。当NetDetectId存在时，使用NetDetectId。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 子网实例ID。形如：subnet-12345678。
+	// 子网实例ID。形如：subnet-12345678。该参数与（VpcId，NetDetectName）配合使用，与NetDetectId至少要有一个。当NetDetectId存在时，使用NetDetectId。
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 网络探测名称，最大长度不能超过60个字节。
+	// 网络探测名称，最大长度不能超过60个字节。该参数与（VpcId，SubnetId）配合使用，与NetDetectId至少要有一个。当NetDetectId存在时，使用NetDetectId。
 	NetDetectName *string `json:"NetDetectName,omitempty" name:"NetDetectName"`
 }
 
@@ -3330,46 +3407,6 @@ func (r *DescribeAddressTemplateGroupsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeAddressTemplateInstancesRequest struct {
-	*tchttp.BaseRequest
-
-	// IP地址实例ID。例如：ipm-12345678。
-	AddressTemplateId *string `json:"AddressTemplateId,omitempty" name:"AddressTemplateId"`
-
-	// 偏移量，默认为0。
-	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
-
-	// 返回数量，默认为20，最大值为100。
-	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
-}
-
-func (r *DescribeAddressTemplateInstancesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-func (r *DescribeAddressTemplateInstancesRequest) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
-}
-
-type DescribeAddressTemplateInstancesResponse struct {
-	*tchttp.BaseResponse
-	Response *struct {
-
-		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-	} `json:"Response"`
-}
-
-func (r *DescribeAddressTemplateInstancesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-func (r *DescribeAddressTemplateInstancesResponse) FromJsonString(s string) error {
-    return json.Unmarshal([]byte(s), &r)
-}
-
 type DescribeAddressTemplatesRequest struct {
 	*tchttp.BaseRequest
 
@@ -5180,10 +5217,10 @@ func (r *DescribeSubnetsResponse) FromJsonString(s string) error {
 type DescribeTaskResultRequest struct {
 	*tchttp.BaseRequest
 
-	// 异步任务ID
+	// 异步任务ID。TaskId和DealName必填一个参数
 	TaskId *uint64 `json:"TaskId,omitempty" name:"TaskId"`
 
-	// 计费订单号
+	// 计费订单号。TaskId和DealName必填一个参数
 	DealName *string `json:"DealName,omitempty" name:"DealName"`
 }
 
@@ -5300,6 +5337,43 @@ func (r *DescribeVpcIpv6AddressesResponse) ToJsonString() string {
 }
 
 func (r *DescribeVpcIpv6AddressesResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeVpcLimitsRequest struct {
+	*tchttp.BaseRequest
+
+	// 配额名称。每次最大查询100个配额类型。
+	LimitTypes []*string `json:"LimitTypes,omitempty" name:"LimitTypes" list`
+}
+
+func (r *DescribeVpcLimitsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeVpcLimitsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeVpcLimitsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 私有网络配额
+		VpcLimitSet []*VpcLimit `json:"VpcLimitSet,omitempty" name:"VpcLimitSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeVpcLimitsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeVpcLimitsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5885,6 +5959,43 @@ func (r *DisassociateNetworkAclSubnetsResponse) ToJsonString() string {
 }
 
 func (r *DisassociateNetworkAclSubnetsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DisassociateNetworkInterfaceSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 弹性网卡实例ID。形如：eni-pxir56ns。每次请求的实例的上限为100。
+	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitempty" name:"NetworkInterfaceIds" list`
+
+	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds" list`
+}
+
+func (r *DisassociateNetworkInterfaceSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DisassociateNetworkInterfaceSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DisassociateNetworkInterfaceSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DisassociateNetworkInterfaceSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DisassociateNetworkInterfaceSecurityGroupsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9392,6 +9503,15 @@ type VpcIpv6Address struct {
 
 	// `IPv6`申请时间。
 	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+}
+
+type VpcLimit struct {
+
+	// 私有网络配额描述
+	LimitType *string `json:"LimitType,omitempty" name:"LimitType"`
+
+	// 私有网络配额值
+	LimitValue *uint64 `json:"LimitValue,omitempty" name:"LimitValue"`
 }
 
 type VpcPrivateIpAddress struct {

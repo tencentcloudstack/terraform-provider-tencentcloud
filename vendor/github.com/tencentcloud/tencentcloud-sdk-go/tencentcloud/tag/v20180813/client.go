@@ -143,6 +143,31 @@ func (c *Client) DeleteTag(request *DeleteTagRequest) (response *DeleteTagRespon
     return
 }
 
+func NewDescribeResourceTagsRequest() (request *DescribeResourceTagsRequest) {
+    request = &DescribeResourceTagsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tag", APIVersion, "DescribeResourceTags")
+    return
+}
+
+func NewDescribeResourceTagsResponse() (response *DescribeResourceTagsResponse) {
+    response = &DescribeResourceTagsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询资源关联标签
+func (c *Client) DescribeResourceTags(request *DescribeResourceTagsRequest) (response *DescribeResourceTagsResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceTagsRequest()
+    }
+    response = NewDescribeResourceTagsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeResourceTagsByResourceIdsRequest() (request *DescribeResourceTagsByResourceIdsRequest) {
     request = &DescribeResourceTagsByResourceIdsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -164,6 +189,31 @@ func (c *Client) DescribeResourceTagsByResourceIds(request *DescribeResourceTags
         request = NewDescribeResourceTagsByResourceIdsRequest()
     }
     response = NewDescribeResourceTagsByResourceIdsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourceTagsByTagKeysRequest() (request *DescribeResourceTagsByTagKeysRequest) {
+    request = &DescribeResourceTagsByTagKeysRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tag", APIVersion, "DescribeResourceTagsByTagKeys")
+    return
+}
+
+func NewDescribeResourceTagsByTagKeysResponse() (response *DescribeResourceTagsByTagKeysResponse) {
+    response = &DescribeResourceTagsByTagKeysResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 根据标签键获取资源标签
+func (c *Client) DescribeResourceTagsByTagKeys(request *DescribeResourceTagsByTagKeysRequest) (response *DescribeResourceTagsByTagKeysResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourceTagsByTagKeysRequest()
+    }
+    response = NewDescribeResourceTagsByTagKeysResponse()
     err = c.Send(request, response)
     return
 }
