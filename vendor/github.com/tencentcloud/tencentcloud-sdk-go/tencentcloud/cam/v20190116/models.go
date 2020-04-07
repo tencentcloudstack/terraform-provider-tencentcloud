@@ -1442,6 +1442,9 @@ type ListGroupsForUserRequest struct {
 
 	// 页码。默认为1。
 	Page *uint64 `json:"Page,omitempty" name:"Page"`
+
+	// 子账号UIN
+	SubUin *uint64 `json:"SubUin,omitempty" name:"SubUin"`
 }
 
 func (r *ListGroupsForUserRequest) ToJsonString() string {
@@ -1795,13 +1798,17 @@ type RoleInfo struct {
 	// 角色是否允许登录
 	ConsoleLogin *uint64 `json:"ConsoleLogin,omitempty" name:"ConsoleLogin"`
 
-	// 角色类型，取user或system
+	// 角色类型，取user、system或service_linked
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RoleType *string `json:"RoleType,omitempty" name:"RoleType"`
 
 	// 有效时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SessionDuration *uint64 `json:"SessionDuration,omitempty" name:"SessionDuration"`
+
+	// 服务相关角色删除TaskId
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeletionTaskId *string `json:"DeletionTaskId,omitempty" name:"DeletionTaskId"`
 }
 
 type SAMLProviderInfo struct {
