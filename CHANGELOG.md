@@ -1,16 +1,25 @@
 ## 1.31.0 (Unreleased)
-## 1.30.7 (March 31, 2020)
 
+FEATURES:
+
+* **New Resource**: `tencentcloud_cdn_domain`
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_cam_users` add new argument `user_id`.
+* Resource: `tencentcloud_vpc` add retry logic.
+
+BUG FIXES: 
+
+* Resource: `tencentcloud_instance` fix timeout error when modify password.
+
+## 1.30.7 (March 31, 2020)
 
 BUG FIXES: 
 
 * Resource: `tencentcloud_kubernetes_as_scaling_group` set a value to argument `key_ids` cause error .
 
 ## 1.30.6 (March 30, 2020)
-
-FEATURES:
-
-* **New Resource**: `tencentcloud_cdn_domain`
 
 ENHANCEMENTS:
 
