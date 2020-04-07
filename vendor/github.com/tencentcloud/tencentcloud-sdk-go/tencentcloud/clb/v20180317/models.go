@@ -1561,6 +1561,12 @@ type DescribeLoadBalancersRequest struct {
 
 	// 主可用区ID，如 ："100001" （对应的是广州一区）
 	MasterZone *string `json:"MasterZone,omitempty" name:"MasterZone"`
+
+	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为100。详细的过滤条件如下：
+	// <li> internet-charge-type - String - 是否必填：否 - （过滤条件）按照 CLB 的网络计费模式过滤，包括"BANDWIDTH_PREPAID","TRAFFIC_POSTPAID_BY_HOUR","BANDWIDTH_POSTPAID_BY_HOUR","BANDWIDTH_PACKAGE"。</li>
+	// <li> master-zone-id - String - 是否必填：否 - （过滤条件）按照 CLB 的主可用区ID过滤，如 ："100001" （对应的是广州一区）。</li>
+	// <li> tag-key - String - 是否必填：否 - （过滤条件）按照 CLB 标签的键过滤。</li>
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters" list`
 }
 
 func (r *DescribeLoadBalancersRequest) ToJsonString() string {
@@ -2337,6 +2343,10 @@ type LoadBalancer struct {
 	// vip是否被封堵
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsBlock *bool `json:"IsBlock,omitempty" name:"IsBlock"`
+
+	// 封堵或解封时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsBlockTime *string `json:"IsBlockTime,omitempty" name:"IsBlockTime"`
 }
 
 type LoadBalancerHealth struct {
@@ -2683,8 +2693,14 @@ type ModifyRuleRequest struct {
 	// 会话保持时间
 	SessionExpireTime *int64 `json:"SessionExpireTime,omitempty" name:"SessionExpireTime"`
 
-	// 负载均衡实例与后端服务之间的转发协议，默认HTTP，可取值：HTTP、HTTPS
+	// 负载均衡实例与后端服务之间的转发协议，默认HTTP，可取值：HTTP、HTTPS、TRPC
 	ForwardType *string `json:"ForwardType,omitempty" name:"ForwardType"`
+
+	// TRPC被调服务器路由，ForwardType为TRPC时必填
+	TrpcCallee *string `json:"TrpcCallee,omitempty" name:"TrpcCallee"`
+
+	// TRPC调用服务接口，ForwardType为TRPC时必填
+	TrpcFunc *string `json:"TrpcFunc,omitempty" name:"TrpcFunc"`
 }
 
 func (r *ModifyRuleRequest) ToJsonString() string {
@@ -3191,6 +3207,9 @@ type RuleInput struct {
 
 	// TRPC调用服务接口，ForwardType为TRPC时必填
 	TrpcFunc *string `json:"TrpcFunc,omitempty" name:"TrpcFunc"`
+
+	// 是否开启QUIC，注意，只有HTTPS域名才能开启QUIC
+	Quic *bool `json:"Quic,omitempty" name:"Quic"`
 }
 
 type RuleOutput struct {
@@ -3263,6 +3282,10 @@ type RuleOutput struct {
 	// TRPC调用服务接口，ForwardType为TRPC时有效
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TrpcFunc *string `json:"TrpcFunc,omitempty" name:"TrpcFunc"`
+
+	// QUIC状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QuicStatus *string `json:"QuicStatus,omitempty" name:"QuicStatus"`
 }
 
 type RuleTargets struct {

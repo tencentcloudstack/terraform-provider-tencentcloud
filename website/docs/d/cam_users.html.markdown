@@ -55,5 +55,6 @@ In addition to all arguments above, the following attributes are exported:
   * `remark` - Remark of the CAM user.
   * `uid` - Uid of the CAM user.
   * `uin` - Uin of the CAM user.
+  * `user_id` - Id of CAM user. Its value equals to `name` argument.
 
 

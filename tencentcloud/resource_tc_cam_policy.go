@@ -183,7 +183,7 @@ func resourceTencentCloudCamPolicyCreate(d *schema.ResourceData, meta interface{
 		log.Printf("[CRITAL]%s read CAM policy failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	time.Sleep(3 * time.Second)
+	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamPolicyRead(d, meta)
 }
 

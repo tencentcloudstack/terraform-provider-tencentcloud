@@ -190,7 +190,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 		log.Printf("[CRITAL]%s read CAM role failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	time.Sleep(3 * time.Second)
+	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamRoleRead(d, meta)
 }
 

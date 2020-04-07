@@ -56,6 +56,10 @@ Auto Scaling(AS)
     tencentcloud_as_lifecycle_hook
     tencentcloud_as_notification
 
+CDN
+  Resource
+	tencentcloud_cdn_domain
+
 Cloud Access Management(CAM)
   Data Source
     tencentcloud_cam_group_memberships
@@ -575,6 +579,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcaplus_idl":                    resourceTencentCloudTcaplusIdl(),
 			"tencentcloud_tcaplus_table":                  resourceTencentCloudTcaplusTable(),
 			"tencentcloud_gaap_domain_error_page":         resourceTencentCloudGaapDomainErrorPageInfo(),
+			"tencentcloud_cdn_domain":                     resourceTencentCloudCdnDomain(),
 		},
 
 		ConfigureFunc: providerConfigure,

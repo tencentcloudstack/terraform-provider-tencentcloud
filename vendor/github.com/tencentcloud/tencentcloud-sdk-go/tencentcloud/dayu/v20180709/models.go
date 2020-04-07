@@ -657,7 +657,7 @@ func (r *CreateL4HealthConfigResponse) FromJsonString(s string) error {
 type CreateL4RulesRequest struct {
 	*tchttp.BaseRequest
 
-	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版）
+	// 大禹子产品代号（bgpip表示高防IP；net表示高防IP专业版）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
 	// 资源ID
@@ -795,7 +795,7 @@ type CreateL7RuleCertRequest struct {
 	// 大禹子产品代号（bgpip表示高防IP；net表示高防IP专业版）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
-	// 资源ID
+	// 资源实例ID，比如高防IP实例的ID，高防IP专业版实例的ID
 	Id *string `json:"Id,omitempty" name:"Id"`
 
 	// 规则ID
@@ -847,7 +847,7 @@ func (r *CreateL7RuleCertResponse) FromJsonString(s string) error {
 type CreateL7RulesRequest struct {
 	*tchttp.BaseRequest
 
-	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版）
+	// 大禹子产品代号（bgpip表示高防IP；net表示高防IP专业版）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
 	// 资源ID
@@ -1078,6 +1078,10 @@ type DDoSEventRecord struct {
 	// 资源名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceName *string `json:"ResourceName,omitempty" name:"ResourceName"`
+
+	// 攻击事件Id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EventId *string `json:"EventId,omitempty" name:"EventId"`
 }
 
 type DDoSPolicyDropOption struct {
@@ -1425,7 +1429,7 @@ func (r *DeleteDDoSPolicyResponse) FromJsonString(s string) error {
 type DeleteL4RulesRequest struct {
 	*tchttp.BaseRequest
 
-	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版）
+	// 大禹子产品代号（bgpip表示高防IP；net表示高防IP专业版）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
 	// 资源ID
@@ -1468,7 +1472,7 @@ func (r *DeleteL4RulesResponse) FromJsonString(s string) error {
 type DeleteL7RulesRequest struct {
 	*tchttp.BaseRequest
 
-	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版）
+	// 大禹子产品代号（bgpip表示高防IP；net表示高防IP专业版）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
 	// 资源ID
@@ -4520,6 +4524,10 @@ type L7RuleEntry struct {
 
 	// HTTPS协议的CC防护等级
 	CCLevel *string `json:"CCLevel,omitempty" name:"CCLevel"`
+
+	// 是否开启Https协议使用Http回源，取值[0(关闭), 1(开启)]，不填写默认是关闭
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HttpsToHttpEnable *uint64 `json:"HttpsToHttpEnable,omitempty" name:"HttpsToHttpEnable"`
 }
 
 type L7RuleHealth struct {
@@ -5835,7 +5843,7 @@ func (r *ModifyL4KeepTimeResponse) FromJsonString(s string) error {
 type ModifyL4RulesRequest struct {
 	*tchttp.BaseRequest
 
-	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版）
+	// 大禹子产品代号（bgpip表示高防IP；net表示高防IP专业版）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
 	// 资源ID
@@ -5878,7 +5886,7 @@ func (r *ModifyL4RulesResponse) FromJsonString(s string) error {
 type ModifyL7RulesRequest struct {
 	*tchttp.BaseRequest
 
-	// 大禹子产品代号（bgpip表示高防IP；bgp表示独享包；bgp-multip表示共享包；net表示高防IP专业版）
+	// 大禹子产品代号（bgpip表示高防IP；net表示高防IP专业版）
 	Business *string `json:"Business,omitempty" name:"Business"`
 
 	// 资源ID

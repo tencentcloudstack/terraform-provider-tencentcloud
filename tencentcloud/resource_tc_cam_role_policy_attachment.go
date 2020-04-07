@@ -132,7 +132,7 @@ func resourceTencentCloudCamRolePolicyAttachmentCreate(d *schema.ResourceData, m
 		log.Printf("[CRITAL]%s read CAM role policy attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	time.Sleep(3 * time.Second)
+	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamRolePolicyAttachmentRead(d, meta)
 }
 

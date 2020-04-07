@@ -120,7 +120,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentCreate(d *schema.ResourceData, 
 		log.Printf("[CRITAL]%s read CAM group policy failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	time.Sleep(3 * time.Second)
+	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamGroupPolicyAttachmentRead(d, meta)
 }
 

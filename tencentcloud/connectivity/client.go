@@ -12,6 +12,7 @@ import (
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -54,6 +55,7 @@ type TencentCloudClient struct {
 	cfsConn     *cfs.Client
 	scfConn     *scf.Client
 	tcaplusConn *tcaplusdb.Client
+	cdnConn     *cdn.Client
 }
 
 // NewTencentCloudClient returns a new TencentCloudClient
@@ -340,4 +342,17 @@ func (me *TencentCloudClient) UseDayuClient() *dayu.Client {
 	me.dayuConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dayuConn
+}
+
+// UseCdnClient returns cdn client for service
+func (me *TencentCloudClient) UseCdnClient() *cdn.Client {
+	if me.cdnConn != nil {
+		return me.cdnConn
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.cdnConn, _ = cdn.NewClient(me.Credential, me.Region, cpf)
+	me.cdnConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdnConn
 }
