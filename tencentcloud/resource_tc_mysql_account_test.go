@@ -3,12 +3,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func TestAccTencentCloudMysqlAccountResource(t *testing.T) {
@@ -77,15 +77,14 @@ func testAccCheckMysqlAccountDestroy(s *terraform.State) error {
 		}
 		accounts, err := mysqlService.DescribeAccounts(ctx, split[0])
 		if err != nil {
-			sdkErr, ok := err.(*errors.TencentCloudSDKError)
+			sdkErr, ok := err.(*sdkError.TencentCloudSDKError)
 			if ok && sdkErr.Code == MysqlInstanceIdNotFound {
 				continue
 			}
 			accounts, err = mysqlService.DescribeAccounts(ctx, split[0])
 		}
-
 		if err != nil {
-			sdkErr, ok := err.(*errors.TencentCloudSDKError)
+			sdkErr, ok := err.(*sdkError.TencentCloudSDKError)
 			if ok && sdkErr.Code == MysqlInstanceIdNotFound {
 				continue
 			}
@@ -101,25 +100,13 @@ func testAccCheckMysqlAccountDestroy(s *terraform.State) error {
 	return nil
 }
 
-//func testAccMysqlAccount(commonTestCase string) string {
-//	return fmt.Sprintf(`
-//%s
-//resource "tencentcloud_mysql_account" "mysql_account" {
-//	mysql_id = tencentcloud_mysql_instance.default.id
-//	name = "test"
-//	password = "test1234"
-//	description = "test from terraform"
-//}
-//	`, commonTestCase)
-//}
-
 func testAccMysqlAccount(commonTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_account" "mysql_account" {
 	mysql_id = tencentcloud_mysql_instance.default.id
 	name    = "test"
-    host = "192.168.0.%"
+    host = "192.168.0.%%"
 	password = "test1234"
 	description = "test from terraform"
 }

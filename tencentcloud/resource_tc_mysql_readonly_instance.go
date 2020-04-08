@@ -28,11 +28,12 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
@@ -145,7 +146,32 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 
 	// the mysql master instance must have a backup before creating a read-only instance
 	masterInstanceId := d.Get("master_instance_id").(string)
+
+	monitor := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+
 	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		can, err := monitor.CheckCanCreateMysqlROInstance(ctx, masterInstanceId)
+
+		if err != nil {
+			sdkErr, ok := err.(*sdkError.TencentCloudSDKError)
+			if ok {
+				if sdkErr.Code == "InvalidParameterValue" && strings.Contains(sdkErr.Message, "No objects found") {
+					return nil
+				}
+			}
+			return resource.NonRetryableError(err)
+		}
+		if can {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("waiting master report RealCapacity to monitor too long"))
+	})
+
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		backups, err := mysqlService.DescribeBackupsByMysqlId(ctx, masterInstanceId, 10)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -280,7 +306,7 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 		if err != nil {
-			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+			if _, ok := err.(*sdkError.TencentCloudSDKError); !ok {
 				return resource.RetryableError(err)
 			} else {
 				return resource.NonRetryableError(err)
