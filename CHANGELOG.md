@@ -1,4 +1,9 @@
 ## 1.32.0 (Unreleased)
+
+BUG FIXES: 
+
+* Resource: `tencentcloud_keypair` fix bug when trying to destroy resources containing CVM and key pair([#375](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/375)).
+
 ## 1.31.0 (April 07, 2020)
 
 FEATURES:

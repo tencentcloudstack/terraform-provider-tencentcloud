@@ -37,7 +37,9 @@ const (
 	ZONE_STATE_AVAILABLE   = "AVAILABLE"
 	ZONE_STATE_UNAVAILABLE = "UNAVAILABLE"
 
-	CVM_NOT_FOUND_ERROR = "InvalidInstanceId.NotFound"
+	CVM_NOT_FOUND_ERROR        = "InvalidInstanceId.NotFound"
+	KEY_PAIR_NOT_SUPPORT_ERROR = "InvalidParameterValue.KeyPairNotSupported"
+	KYE_PAIR_INVALID_ERROR     = "InvalidKeyPair"
 
 	CVM_SPOT_INSTANCE_TYPE_ONE_TIME = "ONE-TIME"
 
