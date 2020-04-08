@@ -3,12 +3,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func TestAccTencentCloudMysqlAccountResource(t *testing.T) {
@@ -47,10 +47,13 @@ func testAccCheckMysqlAccountExists(r string) resource.TestCheckFunc {
 		}
 		accounts, err := mysqlService.DescribeAccounts(ctx, split[0])
 		if err != nil {
+			accounts, err = mysqlService.DescribeAccounts(ctx, split[0])
+		}
+		if err != nil {
 			return err
 		}
 		for _, account := range accounts {
-			if *account.User == split[1] {
+			if *account.User == split[1] && *account.Host == split[2] {
 				return nil
 			}
 		}
@@ -78,10 +81,19 @@ func testAccCheckMysqlAccountDestroy(s *terraform.State) error {
 			if ok && sdkErr.Code == MysqlInstanceIdNotFound {
 				continue
 			}
+			accounts, err = mysqlService.DescribeAccounts(ctx, split[0])
+		}
+
+		if err != nil {
+			sdkErr, ok := err.(*errors.TencentCloudSDKError)
+			if ok && sdkErr.Code == MysqlInstanceIdNotFound {
+				continue
+			}
 			return err
 		}
+
 		for _, account := range accounts {
-			if *account.User == split[1] {
+			if *account.User == split[1] && *account.Host == split[2] {
 				return fmt.Errorf("mysql account %s is still existing", split[1])
 			}
 		}
@@ -89,12 +101,25 @@ func testAccCheckMysqlAccountDestroy(s *terraform.State) error {
 	return nil
 }
 
+//func testAccMysqlAccount(commonTestCase string) string {
+//	return fmt.Sprintf(`
+//%s
+//resource "tencentcloud_mysql_account" "mysql_account" {
+//	mysql_id = tencentcloud_mysql_instance.default.id
+//	name = "test"
+//	password = "test1234"
+//	description = "test from terraform"
+//}
+//	`, commonTestCase)
+//}
+
 func testAccMysqlAccount(commonTestCase string) string {
 	return fmt.Sprintf(`
 %s
 resource "tencentcloud_mysql_account" "mysql_account" {
 	mysql_id = tencentcloud_mysql_instance.default.id
-	name = "test"
+	name    = "test"
+    host = "192.168.0.%"
 	password = "test1234"
 	description = "test from terraform"
 }

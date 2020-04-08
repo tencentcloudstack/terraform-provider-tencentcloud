@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func TestAccTencentCloudMysqlAccountPrivilege(t *testing.T) {
@@ -65,7 +66,21 @@ func testAccMysqlAccountPrivilegeExists(r string) resource.TestCheckFunc {
 			return fmt.Errorf("Local data[terraform.tfstate] corruption,can not got old account privilege id")
 		}
 
-		_, err := mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, []string{"test"})
+		_, err := mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, privilegeId.AccountHost, []string{"test"})
+		if err != nil {
+			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == MysqlInstanceIdNotFound {
+					return fmt.Errorf("privilege not exists in mysql")
+				}
+				if sdkErr.Code == "InvalidParameter" && strings.Contains(sdkErr.GetMessage(), "instance not found") {
+					return fmt.Errorf("privilege not exists in mysql")
+				}
+				if sdkErr.Code == "InternalError.TaskError" && strings.Contains(sdkErr.Message, "User does not exist") {
+					return fmt.Errorf("privilege not exists in mysql")
+				}
+			}
+		}
+
 		if err != nil {
 			return err
 		}
@@ -78,7 +93,7 @@ func testAccMysqlAccountPrivilegeExists(r string) resource.TestCheckFunc {
 		}
 
 		for _, account := range accountInfos {
-			if *account.User == privilegeId.AccountName {
+			if *account.User == privilegeId.AccountName && *account.Host == privilegeId.AccountHost {
 				accountInfo = account
 				break
 			}
@@ -108,13 +123,24 @@ func testAccMysqlAccountPrivilegeDestroy(s *terraform.State) error {
 			return fmt.Errorf("Local data[terraform.tfstate] corruption,can not got old account privilege id")
 		}
 
-		privileges, err := mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, []string{"test"})
+		privileges, err := mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, privilegeId.AccountHost, []string{"test"})
 
 		if err != nil {
-			sdkErr, ok := err.(*errors.TencentCloudSDKError)
-			if ok && sdkErr.Code == "CdbError.ExecuteSQLError" {
-				continue
+			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == MysqlInstanceIdNotFound {
+					return nil
+				}
+				if sdkErr.Code == "InvalidParameter" && strings.Contains(sdkErr.GetMessage(), "instance not found") {
+					return nil
+				}
+				if sdkErr.Code == "InternalError.TaskError" && strings.Contains(sdkErr.Message, "User does not exist") {
+					return nil
+				}
+
 			}
+		}
+
+		if err != nil {
 			return err
 		}
 		if len(privileges) != 1 || privileges[0] != MYSQL_DATABASE_MUST_PRIVILEGE {
@@ -131,12 +157,14 @@ func testAccMysqlAccountPrivilege(commonTestCase string) string {
 resource "tencentcloud_mysql_account" "mysql_account" {
   mysql_id    = tencentcloud_mysql_instance.default.id
   name        = "test"
+  host        = "119.168.110.%%"
   password    = "test1234"
   description = "test from terraform"
 }
 resource "tencentcloud_mysql_account_privilege" "mysql_account_privilege" {
   mysql_id       = tencentcloud_mysql_instance.default.id
   account_name   = tencentcloud_mysql_account.mysql_account.name
+  account_host   = tencentcloud_mysql_account.mysql_account.host
   privileges     = ["SELECT", "INSERT", "UPDATE", "DELETE"]
   database_names = ["test"]
 }`, commonTestCase)
@@ -148,12 +176,14 @@ func testAccMysqlAccountPrivilegeUpdate(commonTestCase string) string {
 resource "tencentcloud_mysql_account" "mysql_account" {
   mysql_id    = tencentcloud_mysql_instance.default.id
   name        = "test"
+  host        = "119.168.110.%%"
   password    = "test1234"
   description = "test from terraform"
 }
 resource "tencentcloud_mysql_account_privilege" "mysql_account_privilege" {
   mysql_id       = tencentcloud_mysql_instance.default.id
   account_name   = tencentcloud_mysql_account.mysql_account.name
+  account_host   = tencentcloud_mysql_account.mysql_account.host
   privileges     = ["TRIGGER"]
   database_names = ["test"]
 }`, commonTestCase)

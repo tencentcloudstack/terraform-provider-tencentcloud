@@ -45,6 +45,13 @@ func resourceTencentCloudMysqlAccount() *schema.Resource {
 				Required:    true,
 				Description: "Account name.",
 			},
+			"host": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     MYSQL_DEFAULT_ACCOUNT_HOST,
+				Description: "Account host, default is `%`.",
+			},
 			"password": {
 				Type:         schema.TypeString,
 				Required:     true,
@@ -74,11 +81,12 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 	var (
 		mysqlId            = d.Get("mysql_id").(string)
 		accountName        = d.Get("name").(string)
+		accountHost        = d.Get("host").(string)
 		accountPassword    = d.Get("password").(string)
 		accountDescription = d.Get("description").(string)
 	)
 
-	asyncRequestId, err := mysqlService.CreateAccount(ctx, mysqlId, accountName, accountPassword, accountDescription)
+	asyncRequestId, err := mysqlService.CreateAccount(ctx, mysqlId, accountName, accountHost, accountPassword, accountDescription)
 	if err != nil {
 		return err
 	}
@@ -91,9 +99,9 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 			return nil
 		}
 		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-			return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
+			return resource.RetryableError(fmt.Errorf("%s create account %s.%s task  status is %s", mysqlId, accountName, accountHost, taskStatus))
 		}
-		err = fmt.Errorf("create account task status is %s,we won't wait for it finish ,it show message:%s", ",", message)
+		err = fmt.Errorf("%s create account task status is %s,we won't wait for it finish ,it show message:%s", mysqlId, taskStatus, message)
 		return resource.NonRetryableError(err)
 	})
 
@@ -101,7 +109,15 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 		log.Printf("[CRITAL]%s create mysql account fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	d.SetId(fmt.Sprintf("%s%s%s", mysqlId, FILED_SP, accountName))
+
+	resourceId := fmt.Sprintf("%s%s%s", mysqlId, FILED_SP, accountName)
+
+	if accountHost != MYSQL_DEFAULT_ACCOUNT_HOST {
+		resourceId += FILED_SP + accountHost
+	}
+
+	d.SetId(resourceId)
+
 	return resourceTencentCloudMysqlAccountRead(d, meta)
 }
 
@@ -118,8 +134,14 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 	var (
 		mysqlId                      = items[0]
 		accountName                  = items[1]
+		accountHost                  = MYSQL_DEFAULT_ACCOUNT_HOST
 		accountInfo *cdb.AccountInfo = nil
 	)
+
+	if len(items) == 3 {
+		accountHost = items[2]
+	}
+
 	var onlineHas = true
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		allAccounts, e := mysqlService.DescribeAccounts(ctx, mysqlId)
@@ -132,7 +154,7 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 			return retryError(e)
 		}
 		for _, account := range allAccounts {
-			if *account.User == accountName {
+			if *account.User == accountName && *account.Host == accountHost {
 				accountInfo = account
 				break
 			}
@@ -145,7 +167,7 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 		return nil
 	})
 	if err != nil {
-		return fmt.Errorf("Describe mysql acounts fails, reaseon %s", err.Error())
+		return fmt.Errorf("Describe mysql acounts fails, reason %s", err.Error())
 	}
 	if !onlineHas {
 		return nil
@@ -156,6 +178,7 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 		_ = d.Set("description", *accountInfo.Notes)
 	}
 	_ = d.Set("mysql_id", mysqlId)
+	_ = d.Set("host", *accountInfo.Host)
 	_ = d.Set("name", *accountInfo.User)
 	return nil
 }
@@ -172,13 +195,18 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 	var (
 		mysqlId     = items[0]
 		accountName = items[1]
+		accountHost = MYSQL_DEFAULT_ACCOUNT_HOST
 	)
+
+	if len(items) == 3 {
+		accountHost = items[2]
+	}
 
 	d.Partial(true)
 
 	if d.HasChange("description") {
 
-		asyncRequestId, err := mysqlService.ModifyAccountDescription(ctx, mysqlId, accountName, d.Get("description").(string))
+		asyncRequestId, err := mysqlService.ModifyAccountDescription(ctx, mysqlId, accountName, accountHost, d.Get("description").(string))
 		if err != nil {
 			return err
 		}
@@ -192,7 +220,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 				return nil
 			}
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
+				return resource.RetryableError(fmt.Errorf("%s modify account  description %s.%s task  status is %s", mysqlId, accountName, accountHost, taskStatus))
 			}
 			err = fmt.Errorf("modify mysql account description task status is %s,we won't wait for it finish ,it show message:%s", taskStatus, message)
 			return resource.NonRetryableError(err)
@@ -208,7 +236,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 
 	if d.HasChange("password") {
 
-		asyncRequestId, err := mysqlService.ModifyAccountPassword(ctx, mysqlId, accountName, d.Get("password").(string))
+		asyncRequestId, err := mysqlService.ModifyAccountPassword(ctx, mysqlId, accountName, accountHost, d.Get("password").(string))
 		if err != nil {
 			return err
 		}
@@ -222,7 +250,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 				return nil
 			}
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
+				return resource.RetryableError(fmt.Errorf("%s modify mysql account password %s.%s task  status is %s", mysqlId, accountName, accountHost, taskStatus))
 			}
 			err = fmt.Errorf("modify mysql account password task status is %s,we won't wait for it finish ,it show message:%s", taskStatus,
 				message)
@@ -254,9 +282,13 @@ func resourceTencentCloudMysqlAccountDelete(d *schema.ResourceData, meta interfa
 	var (
 		mysqlId     = items[0]
 		accountName = items[1]
+		accountHost = MYSQL_DEFAULT_ACCOUNT_HOST
 	)
+	if len(items) == 3 {
+		accountHost = items[2]
+	}
 
-	asyncRequestId, err := mysqlService.DeleteAccount(ctx, mysqlId, accountName)
+	asyncRequestId, err := mysqlService.DeleteAccount(ctx, mysqlId, accountName, accountHost)
 	if err != nil {
 		return err
 	}
@@ -270,7 +302,7 @@ func resourceTencentCloudMysqlAccountDelete(d *schema.ResourceData, meta interfa
 			return nil
 		}
 		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-			return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
+			return resource.RetryableError(fmt.Errorf("%s delete mysql account %s.%s task  status is %s", mysqlId, accountName, accountHost, taskStatus))
 		}
 		err = fmt.Errorf("delete mysql account  task status is %s,we won't wait for it finish ,it show message:%s", taskStatus,
 			message)

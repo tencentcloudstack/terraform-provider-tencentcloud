@@ -12,8 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 var testAccTencentCloudMysqlPrivilegeType = "tencentcloud_mysql_privilege"
@@ -72,9 +71,23 @@ func testAccMysqlPrivilegeExists(s *terraform.State) error {
 	request := cdb.NewDescribeAccountPrivilegesRequest()
 	request.InstanceId = &privilegeId.MysqlId
 	request.User = &privilegeId.AccountName
-	request.Host = helper.String(MYSQL_DEFAULT_ACCOUNT_HOST)
+	request.Host = &privilegeId.AccountHost
 
 	response, err := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
+	if err != nil {
+		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr.Code == MysqlInstanceIdNotFound {
+				return fmt.Errorf("privilege not exists in mysql")
+			}
+			if sdkErr.Code == "InvalidParameter" && strings.Contains(sdkErr.GetMessage(), "instance not found") {
+				return fmt.Errorf("privilege not exists in mysql")
+			}
+			if sdkErr.Code == "InternalError.TaskError" && strings.Contains(sdkErr.Message, "User does not exist") {
+				return fmt.Errorf("privilege not exists in mysql")
+			}
+		}
+	}
+
 	if err != nil {
 		return err
 	}
@@ -117,14 +130,26 @@ func testAccMysqlPrivilegeDestroy(s *terraform.State) error {
 	request := cdb.NewDescribeAccountPrivilegesRequest()
 	request.InstanceId = &privilegeId.MysqlId
 	request.User = &privilegeId.AccountName
-	request.Host = helper.String(MYSQL_DEFAULT_ACCOUNT_HOST)
+	request.Host = &privilegeId.AccountHost
 
 	response, err := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
+
 	if err != nil {
-		if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok && sdkerr.GetCode() == "InvalidParameter" &&
-			strings.Contains(sdkerr.GetMessage(), "instance not found") {
-			return nil
+		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr.Code == MysqlInstanceIdNotFound {
+				return nil
+			}
+			if sdkErr.Code == "InvalidParameter" && strings.Contains(sdkErr.GetMessage(), "instance not found") {
+				return nil
+			}
+			if sdkErr.Code == "InternalError.TaskError" && strings.Contains(sdkErr.Message, "User does not exist") {
+				return nil
+			}
+
 		}
+	}
+
+	if err != nil {
 		return err
 	}
 
@@ -147,6 +172,7 @@ func testAccMysqlPrivilege(commonTestCase string) string {
 resource "tencentcloud_mysql_account" "mysql_account" {
   mysql_id    = tencentcloud_mysql_instance.default.id
   name        = "test11"
+  host        = "119.168.110.%%"
   password    = "test1234"
   description = "test from terraform"
 }
@@ -154,6 +180,7 @@ resource "tencentcloud_mysql_account" "mysql_account" {
 resource "tencentcloud_mysql_privilege" "privilege" {
   mysql_id     = tencentcloud_mysql_instance.default.id
   account_name = tencentcloud_mysql_account.mysql_account.name
+  account_host = tencentcloud_mysql_account.mysql_account.host
   global       = ["TRIGGER"]
   database {
     privileges    = ["SELECT"]
@@ -179,6 +206,7 @@ func testAccMysqlPrivilegeUpdate(commonTestCase string) string {
 resource "tencentcloud_mysql_account" "mysql_account" {
   mysql_id    = tencentcloud_mysql_instance.default.id
   name        = "test11"
+  host        = "119.168.110.%%"
   password    = "test1234"
   description = "test from terraform"
 }
@@ -186,6 +214,7 @@ resource "tencentcloud_mysql_account" "mysql_account" {
 resource "tencentcloud_mysql_privilege" "privilege" {
   mysql_id     = tencentcloud_mysql_instance.default.id
   account_name = tencentcloud_mysql_account.mysql_account.name
+  account_host = tencentcloud_mysql_account.mysql_account.host
   global       = ["TRIGGER","SELECT"]
   table {
     privileges    = ["SELECT"]
