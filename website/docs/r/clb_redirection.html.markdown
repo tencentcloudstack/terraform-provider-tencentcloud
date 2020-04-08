@@ -46,6 +46,13 @@ The following arguments are supported:
 * `source_listener_id` - (Optional, ForceNew) Id of source listener.
 * `source_rule_id` - (Optional, ForceNew) Rule id of source listener.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

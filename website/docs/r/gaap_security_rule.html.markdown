@@ -45,6 +45,13 @@ The following arguments are supported:
 * `port` - (Optional, ForceNew) Target port. Default value is `ALL`, the available values include `80`, `80,443` and `3306-20000`.
 * `protocol` - (Optional, ForceNew) Protocol of the security policy rule. Default value is `ALL`, the available values include `TCP`, `UDP` and `ALL`.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

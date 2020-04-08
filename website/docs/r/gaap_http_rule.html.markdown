@@ -92,6 +92,13 @@ The `realservers` object supports the following:
 * `port` - (Required) Port of the GAAP realserver.
 * `weight` - (Optional) Scheduling weight, default value is `1`. The range of values is [1,100].
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

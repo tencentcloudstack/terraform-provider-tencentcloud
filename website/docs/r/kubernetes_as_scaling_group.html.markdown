@@ -123,4 +123,11 @@ The `target_attribute` object supports the following:
 * `port` - (Required, ForceNew) Port number.
 * `weight` - (Required, ForceNew) Weight.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

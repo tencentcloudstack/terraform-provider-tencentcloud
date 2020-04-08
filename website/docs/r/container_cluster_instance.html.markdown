@@ -69,6 +69,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `abnormal_reason` - Describe the reason when node is in abnormal state(if it was).
 * `instance_id` - An id identify the node, provided by cvm.
 * `is_normal` - Describe whether the node is normal.

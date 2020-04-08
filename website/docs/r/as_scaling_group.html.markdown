@@ -75,6 +75,7 @@ The `target_attribute` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - The time when the AS group was created.
 * `instance_count` - Instance number of a scaling group.
 * `status` - Current status of a scaling group.

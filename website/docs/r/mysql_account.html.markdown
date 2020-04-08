@@ -30,4 +30,11 @@ The following arguments are supported:
 * `password` - (Required) Operation password.
 * `description` - (Optional) Database description.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

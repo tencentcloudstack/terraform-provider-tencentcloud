@@ -39,4 +39,11 @@ The following arguments are supported:
 * `notification_target_type` - (Optional) Target type, which can be CMQ_QUEUE or CMQ_TOPIC.
 * `notification_topic_name` - (Optional) For CMQ_TOPIC type, a name of topic must be set.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

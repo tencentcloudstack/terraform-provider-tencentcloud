@@ -30,6 +30,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Creation time of the placement group.
 * `current_num` - Number of hosts in the placement group.
 * `cvm_quota_total` - Maximum number of hosts in the placement group.

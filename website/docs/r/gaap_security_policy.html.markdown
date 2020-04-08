@@ -35,6 +35,13 @@ The following arguments are supported:
 * `proxy_id` - (Required, ForceNew) ID of the GAAP proxy.
 * `enable` - (Optional) Indicates whether policy is enable, default value is `true`.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

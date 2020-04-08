@@ -60,6 +60,7 @@ The `triggers` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `code_error` - SCF function code error message.
 * `code_result` - SCF function code is correct.
 * `code_size` - SCF function code size, unit is M.

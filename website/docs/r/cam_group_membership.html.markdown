@@ -26,6 +26,13 @@ The following arguments are supported:
 * `group_id` - (Required) Id of CAM group.
 * `user_ids` - (Required) Id set of the CAM group members.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

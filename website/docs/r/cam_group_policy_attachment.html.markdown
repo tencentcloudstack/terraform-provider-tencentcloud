@@ -30,6 +30,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_mode` - Mode of Creation of the CAM group policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.
 * `create_time` - Create time of the CAM group policy attachment.
 * `policy_name` - Name of the policy.

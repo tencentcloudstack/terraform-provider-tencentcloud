@@ -46,6 +46,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `secret_id` - Secret ID of the CAM user.
 * `secret_key` - Secret key of the CAM user.
 * `uid` - ID of the CAM user.
