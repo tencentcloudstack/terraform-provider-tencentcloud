@@ -123,3 +123,13 @@ resource "tencentcloud_mysql_instance" "default" {
   availability_zone = var.availability_zone
 }
 `
+const mysqlInstanceHighPerformanceTestCase = defaultVpcVariable + `
+resource "tencentcloud_mysql_instance" "default" {
+  mem_size = 1000
+  volume_size = 50
+  instance_name = var.instance_name
+  engine_version = "5.7"
+  root_password = "0153Y474"
+  availability_zone = var.availability_zone
+}
+`

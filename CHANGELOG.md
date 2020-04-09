@@ -4,6 +4,14 @@ BUG FIXES:
 
 * Resource: `tencentcloud_keypair` fix bug when trying to destroy resources containing CVM and key pair([#375](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/375)).
 
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mysql_account` add new argument `host`. ([#372](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/372))
+* Resource: `tencentcloud_mysql_account_privilege` add new argument `account_host`. ([#372](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/372))
+* Resource: `tencentcloud_mysql_privilege` add new argument `account_host`. ([#372](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/372))
+* Resource: `tencentcloud_mysql_readonly_instance` check master monitor data before create.([#379](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/379))
+* Resource: `tencentcloud_tcaplus_application` remove the pull password from server.  
+
 ## 1.31.0 (April 07, 2020)
 
 FEATURES:

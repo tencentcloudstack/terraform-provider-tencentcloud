@@ -22,6 +22,7 @@ import (
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
+	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
@@ -56,6 +57,7 @@ type TencentCloudClient struct {
 	scfConn     *scf.Client
 	tcaplusConn *tcaplusdb.Client
 	cdnConn     *cdn.Client
+	monitorConn *monitor.Client
 }
 
 // NewTencentCloudClient returns a new TencentCloudClient
@@ -355,4 +357,17 @@ func (me *TencentCloudClient) UseCdnClient() *cdn.Client {
 	me.cdnConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cdnConn
+}
+
+// UseMonitorClient returns monitor client for service
+func (me *TencentCloudClient) UseMonitorClient() *monitor.Client {
+	if me.monitorConn != nil {
+		return me.monitorConn
+	}
+
+	cpf := newTencentCloudClientProfile(300)
+	me.monitorConn, _ = monitor.NewClient(me.Credential, me.Region, cpf)
+	me.monitorConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.monitorConn
 }

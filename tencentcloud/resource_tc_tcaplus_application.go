@@ -222,7 +222,6 @@ func resourceTencentCloudTcaplusApplicationRead(d *schema.ResourceData, meta int
 	_ = d.Set("app_name", appInfo.ClusterName)
 	_ = d.Set("vpc_id", appInfo.VpcId)
 	_ = d.Set("subnet_id", appInfo.SubnetId)
-	_ = d.Set("password", appInfo.Password)
 	_ = d.Set("network_type", appInfo.NetworkType)
 	_ = d.Set("create_time", appInfo.CreatedTime)
 	_ = d.Set("password_status", appInfo.PasswordStatus)

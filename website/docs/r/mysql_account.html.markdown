@@ -29,5 +29,6 @@ The following arguments are supported:
 * `name` - (Required, ForceNew) Account name.
 * `password` - (Required) Operation password.
 * `description` - (Optional) Database description.
+* `host` - (Optional, ForceNew) Account host, default is `%`.
 
 
