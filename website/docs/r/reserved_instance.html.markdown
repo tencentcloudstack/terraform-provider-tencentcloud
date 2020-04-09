@@ -32,6 +32,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `end_time` - Expiry time of the RI.
 * `start_time` - Start time of the RI.
 * `status` - Status of the RI at the time of purchase.

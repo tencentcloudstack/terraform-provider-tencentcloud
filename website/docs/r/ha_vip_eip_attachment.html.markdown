@@ -26,6 +26,13 @@ The following arguments are supported:
 * `address_ip` - (Required, ForceNew) Public address of the EIP.
 * `havip_id` - (Required, ForceNew) Id of the attached HA VIP.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

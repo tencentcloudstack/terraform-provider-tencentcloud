@@ -147,6 +147,7 @@ The `watermark_filters` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Create time of the DDoS policy.
 * `policy_id` - Id of policy.
 * `scene_id` - Id of policy case that the DDoS policy works for.

@@ -77,6 +77,13 @@ The following arguments are supported:
 * `eni_id` - (Required, ForceNew) ID of the ENI.
 * `instance_id` - (Required, ForceNew) ID of the instance which bind the ENI.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

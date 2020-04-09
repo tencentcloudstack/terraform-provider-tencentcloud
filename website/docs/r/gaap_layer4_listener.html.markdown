@@ -79,6 +79,7 @@ The `realserver_bind_set` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Creation time of the layer4 listener.
 * `status` - Status of the layer4 listener.
 

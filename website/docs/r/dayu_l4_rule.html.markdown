@@ -71,6 +71,7 @@ The `source_list` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `lb_type` - LB type of the rule, 1 for weight cycling and 2 for IP hash.
 * `rule_id` - Id of the layer 4 rule.
 

@@ -53,4 +53,11 @@ The following arguments are supported:
 * `source` - (Optional) The path to the source file being uploaded to the bucket.
 * `storage_class` - (Optional) Object storage type, Available values include STANDARD, STANDARD_IA and ARCHIVE.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

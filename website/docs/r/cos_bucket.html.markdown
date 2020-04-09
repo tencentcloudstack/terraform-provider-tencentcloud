@@ -114,6 +114,13 @@ The `website` object supports the following:
 * `error_document` - (Optional) An absolute path to the document to return in case of a 4XX error.
 * `index_document` - (Optional) COS returns this index document when requests are made to the root domain or any of the subfolders.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

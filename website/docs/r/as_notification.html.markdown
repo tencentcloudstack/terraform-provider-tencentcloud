@@ -28,4 +28,11 @@ The following arguments are supported:
 * `notification_user_group_ids` - (Required) A group of user IDs to be notified.
 * `scaling_group_id` - (Required, ForceNew) ID of a scaling group.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

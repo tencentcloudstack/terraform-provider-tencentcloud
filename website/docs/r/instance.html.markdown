@@ -121,6 +121,7 @@ The `data_disks` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Create time of the instance.
 * `expired_time` - Expired time of the instance.
 * `instance_status` - Current status of the instance.

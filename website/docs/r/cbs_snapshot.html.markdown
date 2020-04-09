@@ -30,6 +30,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Creation time of snapshot.
 * `disk_type` - Types of CBS which this snapshot created from.
 * `percent` - Snapshot creation progress percentage. If the snapshot has created successfully, the constant value is 100.

@@ -47,6 +47,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `available_ip_count` - The number of available IPs.
 * `create_time` - Creation time of subnet resource.
 * `is_default` - Indicates whether it is the default VPC for this region.

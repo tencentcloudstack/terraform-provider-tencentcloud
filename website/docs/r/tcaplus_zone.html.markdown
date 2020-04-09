@@ -39,6 +39,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Create time of the tcapplus zone.
 * `table_count` - Number of tables.
 * `total_size` - The total storage(MB).

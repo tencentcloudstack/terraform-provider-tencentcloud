@@ -45,4 +45,11 @@ The following arguments are supported:
 * `notification_user_group_ids` - (Optional) An ID group of users to be notified when an alarm is triggered.
 * `statistic` - (Optional) Statistic types, include AVERAGE, MAXIMUM and MINIMUM. Default is AVERAGE.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

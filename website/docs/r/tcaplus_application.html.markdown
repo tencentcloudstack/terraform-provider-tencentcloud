@@ -31,6 +31,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `api_access_id` - Access id of the tcapplus application.For TcaplusDB SDK connect.
 * `api_access_ip` - Access ip of the tcapplus application.For TcaplusDB SDK connect.
 * `api_access_port` - Access port of the tcapplus application.For TcaplusDB SDK connect.

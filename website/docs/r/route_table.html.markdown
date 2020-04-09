@@ -36,6 +36,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Creation time of the routing table.
 * `is_default` - Indicates whether it is the default routing table.
 * `route_entry_ids` - ID list of the routing entries.

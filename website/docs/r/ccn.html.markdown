@@ -32,6 +32,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Creation time of resource.
 * `instance_count` - Number of attached instances.
 * `state` - States of instance. The available value include 'ISOLATED'(arrears) and 'AVAILABLE'.

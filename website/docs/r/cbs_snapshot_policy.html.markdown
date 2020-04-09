@@ -30,6 +30,13 @@ The following arguments are supported:
 * `snapshot_policy_name` - (Required) Name of snapshot policy. The maximum length can not exceed 60 bytes.
 * `retention_days` - (Optional) Retention days of the snapshot, and the default value is 7.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 
