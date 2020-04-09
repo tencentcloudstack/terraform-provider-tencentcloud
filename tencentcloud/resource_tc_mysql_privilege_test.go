@@ -73,24 +73,31 @@ func testAccMysqlPrivilegeExists(s *terraform.State) error {
 	request.User = &privilegeId.AccountName
 	request.Host = &privilegeId.AccountHost
 
-	response, err := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
-	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
-			if sdkErr.Code == MysqlInstanceIdNotFound {
-				return fmt.Errorf("privilege not exists in mysql")
+	var response *cdb.DescribeAccountPrivilegesResponse
+	var inErr, outErr error
+
+	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, inErr = testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
+		if inErr != nil {
+			if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == MysqlInstanceIdNotFound {
+					return resource.NonRetryableError(fmt.Errorf("mysql account not exists in mysql"))
+				}
+				if sdkErr.Code == "InvalidParameter" && strings.Contains(sdkErr.GetMessage(), "instance not found") {
+					return resource.NonRetryableError(fmt.Errorf("mysql account not exists in mysql"))
+				}
+				if sdkErr.Code == "InternalError.TaskError" && strings.Contains(sdkErr.Message, "User does not exist") {
+					return resource.NonRetryableError(fmt.Errorf("mysql account not exists in mysql"))
+				}
 			}
-			if sdkErr.Code == "InvalidParameter" && strings.Contains(sdkErr.GetMessage(), "instance not found") {
-				return fmt.Errorf("privilege not exists in mysql")
-			}
-			if sdkErr.Code == "InternalError.TaskError" && strings.Contains(sdkErr.Message, "User does not exist") {
-				return fmt.Errorf("privilege not exists in mysql")
-			}
+			return retryError(inErr, "InternalError")
 		}
+		return nil
+	})
+	if outErr != nil {
+		return outErr
 	}
 
-	if err != nil {
-		return err
-	}
 	if response == nil || response.Response == nil {
 		return errors.New("sdk DescribeAccountPrivileges return error,miss Response")
 	}
@@ -132,29 +139,33 @@ func testAccMysqlPrivilegeDestroy(s *terraform.State) error {
 	request.User = &privilegeId.AccountName
 	request.Host = &privilegeId.AccountHost
 
-	response, err := testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
+	var response *cdb.DescribeAccountPrivilegesResponse
+	var inErr, outErr error
 
-	if err != nil {
-		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
-			if sdkErr.Code == MysqlInstanceIdNotFound {
-				return nil
+	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, inErr = testAccProvider.Meta().(*TencentCloudClient).apiV3Conn.UseMysqlClient().DescribeAccountPrivileges(request)
+		if inErr != nil {
+			if sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == MysqlInstanceIdNotFound {
+					return nil
+				}
+				if sdkErr.Code == "InvalidParameter" && strings.Contains(sdkErr.GetMessage(), "instance not found") {
+					return nil
+				}
+				if sdkErr.Code == "InternalError.TaskError" && strings.Contains(sdkErr.Message, "User does not exist") {
+					return nil
+				}
 			}
-			if sdkErr.Code == "InvalidParameter" && strings.Contains(sdkErr.GetMessage(), "instance not found") {
-				return nil
-			}
-			if sdkErr.Code == "InternalError.TaskError" && strings.Contains(sdkErr.Message, "User does not exist") {
-				return nil
-			}
-
+			return retryError(inErr, "InternalError")
 		}
-	}
-
-	if err != nil {
-		return err
+		return nil
+	})
+	if outErr != nil {
+		return outErr
 	}
 
 	if response == nil || response.Response == nil {
-		return errors.New("sdk DescribeAccountPrivileges return error,miss Response")
+		return nil
 	}
 
 	if len(response.Response.GlobalPrivileges) > 0 ||

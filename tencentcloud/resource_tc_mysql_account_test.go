@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -45,14 +46,25 @@ func testAccCheckMysqlAccountExists(r string) resource.TestCheckFunc {
 		if len(split) < 2 {
 			return fmt.Errorf("mysql account is not set")
 		}
-		accounts, err := mysqlService.DescribeAccounts(ctx, split[0])
-		if err != nil {
-			accounts, err = mysqlService.DescribeAccounts(ctx, split[0])
+
+		var accountInfos []*cdb.AccountInfo
+		var inErr, outErr error
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			accountInfos, inErr = mysqlService.DescribeAccounts(ctx, split[0])
+			if inErr != nil {
+				sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError)
+				if ok && sdkErr.Code == MysqlInstanceIdNotFound {
+					return resource.NonRetryableError(fmt.Errorf("mysql account %s is not found", rs.Primary.ID))
+				}
+				return retryError(inErr, "InternalError")
+
+			}
+			return nil
+		})
+		if outErr != nil {
+			return outErr
 		}
-		if err != nil {
-			return err
-		}
-		for _, account := range accounts {
+		for _, account := range accountInfos {
 			if *account.User == split[1] && *account.Host == split[2] {
 				return nil
 			}
@@ -75,23 +87,33 @@ func testAccCheckMysqlAccountDestroy(s *terraform.State) error {
 		if len(split) < 2 {
 			continue
 		}
-		accounts, err := mysqlService.DescribeAccounts(ctx, split[0])
-		if err != nil {
-			sdkErr, ok := err.(*sdkError.TencentCloudSDKError)
-			if ok && sdkErr.Code == MysqlInstanceIdNotFound {
-				continue
-			}
-			accounts, err = mysqlService.DescribeAccounts(ctx, split[0])
-		}
-		if err != nil {
-			sdkErr, ok := err.(*sdkError.TencentCloudSDKError)
-			if ok && sdkErr.Code == MysqlInstanceIdNotFound {
-				continue
-			}
-			return err
+		instance, err := mysqlService.DescribeDBInstanceById(ctx, split[0])
+		if err == nil && instance == nil {
+			return nil
 		}
 
-		for _, account := range accounts {
+		var accountInfos []*cdb.AccountInfo
+		var inErr, outErr error
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			accountInfos, inErr = mysqlService.DescribeAccounts(ctx, split[0])
+			if inErr != nil {
+				sdkErr, ok := inErr.(*sdkError.TencentCloudSDKError)
+				if ok && sdkErr.Code == MysqlInstanceIdNotFound {
+					return nil
+				}
+				return retryError(inErr, "InternalError")
+
+			}
+			return nil
+		})
+
+		if outErr != nil {
+			return outErr
+		}
+		if accountInfos == nil {
+			return nil
+		}
+		for _, account := range accountInfos {
 			if *account.User == split[1] && *account.Host == split[2] {
 				return fmt.Errorf("mysql account %s is still existing", split[1])
 			}
