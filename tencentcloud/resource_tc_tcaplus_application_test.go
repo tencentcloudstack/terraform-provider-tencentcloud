@@ -39,7 +39,7 @@ func TestAccTencentCloudTcaplusApplicationResource(t *testing.T) {
 				ResourceName:            testTcaplusApplicationResourceKey,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"old_password_expire_last"},
+				ImportStateVerifyIgnore: []string{"old_password_expire_last", "password"},
 			},
 
 			{
