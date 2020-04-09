@@ -90,7 +90,7 @@ func testAccMysqlPrivilegeExists(s *terraform.State) error {
 					return resource.NonRetryableError(fmt.Errorf("mysql account not exists in mysql"))
 				}
 			}
-			return retryError(inErr, "InternalError")
+			return retryError(inErr, InternalError)
 		}
 		return nil
 	})
@@ -156,7 +156,7 @@ func testAccMysqlPrivilegeDestroy(s *terraform.State) error {
 					return nil
 				}
 			}
-			return retryError(inErr, "InternalError")
+			return retryError(inErr, InternalError)
 		}
 		return nil
 	})

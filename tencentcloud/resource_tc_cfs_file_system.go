@@ -153,7 +153,7 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		fileSystems, errRet := cfsService.DescribeFileSystem(ctx, fsId, "", "")
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if len(fileSystems) < 1 {
 			return resource.RetryableError(fmt.Errorf("file system %s not exist", fsId))
@@ -183,7 +183,7 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		fileSystems, errRet := cfsService.DescribeFileSystem(ctx, fsId, "", "")
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if len(fileSystems) > 0 {
 			fileSystem = fileSystems[0]
@@ -208,7 +208,7 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		targets, errRet := cfsService.DescribeMountTargets(ctx, fsId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if len(targets) > 0 {
 			mountTarget = targets[0]

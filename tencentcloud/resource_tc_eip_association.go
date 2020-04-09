@@ -102,7 +102,7 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		eip, errRet = vpcService.DescribeEipById(ctx, eipId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if eip == nil {
 			return resource.NonRetryableError(fmt.Errorf("eip is not found"))

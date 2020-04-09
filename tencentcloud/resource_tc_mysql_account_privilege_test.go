@@ -99,7 +99,7 @@ func testAccMysqlAccountPrivilegeExists(r string) resource.TestCheckFunc {
 				if ok && sdkErr.Code == MysqlInstanceIdNotFound {
 					return resource.NonRetryableError(fmt.Errorf("mysql account %s is not found", rs.Primary.ID))
 				}
-				return retryError(inErr, "InternalError")
+				return retryError(inErr, InternalError)
 
 			}
 			return nil

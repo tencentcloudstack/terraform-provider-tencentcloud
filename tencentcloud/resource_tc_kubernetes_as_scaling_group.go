@@ -744,7 +744,7 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		scalingGroup, _, errRet := asService.DescribeAutoScalingGroupById(ctx, asGroupId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if scalingGroup != nil && *scalingGroup.InActivityStatus == SCALING_GROUP_NOT_IN_ACTIVITY_STATUS {
 			return nil
@@ -794,7 +794,7 @@ func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interfa
 	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		scalingGroup, _, errRet := asService.DescribeAutoScalingGroupById(ctx, asGroupId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if scalingGroup != nil && *scalingGroup.InActivityStatus == SCALING_GROUP_NOT_IN_ACTIVITY_STATUS {
 			return nil
@@ -817,7 +817,7 @@ func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interfa
 			}
 		}
 		if err != nil {
-			return retryError(err, "InternalError")
+			return retryError(err, InternalError)
 		}
 		return nil
 	})
@@ -834,7 +834,7 @@ func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interfa
 	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		_, has, errRet := asService.DescribeAutoScalingGroupById(ctx, asGroupId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if has > 0 {
 			resource.RetryableError(fmt.Errorf("as group %s still alive", asGroupId))

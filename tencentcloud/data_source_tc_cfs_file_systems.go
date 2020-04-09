@@ -156,7 +156,7 @@ func dataSourceTencentCloudCfsFileSystemsRead(d *schema.ResourceData, meta inter
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		fileSystems, errRet = cfsService.DescribeFileSystem(ctx, fileSystemId, vpcId, subnetId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

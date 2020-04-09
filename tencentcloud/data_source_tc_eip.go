@@ -114,7 +114,7 @@ func dataSourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) err
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		eips, errRet = vpcService.DescribeEipByFilter(ctx, filter)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

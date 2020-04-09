@@ -261,7 +261,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instances, errRet = cvmService.DescribeInstanceByFilter(ctx, filter)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

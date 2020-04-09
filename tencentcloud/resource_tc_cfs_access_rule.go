@@ -121,7 +121,7 @@ func resourceTencentCloudCfsAccessRuleRead(d *schema.ResourceData, meta interfac
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		rules, errRet := cfsService.DescribeAccessRule(ctx, groupId, ruleId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if len(rules) > 0 {
 			accessRule = rules[0]

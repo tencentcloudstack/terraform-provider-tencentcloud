@@ -114,7 +114,7 @@ func dataSourceTencentCloudPlacementGroupsRead(d *schema.ResourceData, meta inte
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		placementGroups, errRet = cvmService.DescribePlacementGroupByFilter(ctx, placementGroupId, name)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

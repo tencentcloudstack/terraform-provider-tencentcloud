@@ -118,7 +118,7 @@ func resourceTencentCloudReservedInstanceRead(d *schema.ResourceData, meta inter
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instances, errRet = cvmService.DescribeReservedInstanceByFilter(ctx, filter)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

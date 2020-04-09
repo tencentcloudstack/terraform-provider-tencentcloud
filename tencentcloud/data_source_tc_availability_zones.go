@@ -98,7 +98,7 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		zones, errRet = cvmService.DescribeZones(ctx)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

@@ -303,7 +303,7 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 			var e error
 			zones, e = cvmService.DescribeZones(ctx)
 			if e != nil {
-				return retryError(e, "InternalError")
+				return retryError(e, InternalError)
 			}
 			return nil
 		})

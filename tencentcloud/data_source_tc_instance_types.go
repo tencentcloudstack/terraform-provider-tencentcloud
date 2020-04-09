@@ -140,7 +140,7 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			instanceTypes, errRet = cvmService.DescribeInstanceTypes(ctx, zone)
 			if errRet != nil {
-				return retryError(errRet, "InternalError")
+				return retryError(errRet, InternalError)
 			}
 			return nil
 		})
@@ -160,7 +160,7 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			instanceTypes, errRet = cvmService.DescribeInstanceTypesByFilter(ctx, filterMap)
 			if errRet != nil {
-				return retryError(errRet, "InternalError")
+				return retryError(errRet, InternalError)
 			}
 			return nil
 		})
