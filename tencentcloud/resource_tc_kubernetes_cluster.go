@@ -1496,7 +1496,7 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 		}
 
 		if err != nil {
-			return retryError(err, "InternalError")
+			return retryError(err, InternalError)
 		}
 		return nil
 	})
@@ -1515,7 +1515,7 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 				}
 			}
 			if err != nil {
-				return retryError(err, "InternalError")
+				return retryError(err, InternalError)
 			}
 			return nil
 		})

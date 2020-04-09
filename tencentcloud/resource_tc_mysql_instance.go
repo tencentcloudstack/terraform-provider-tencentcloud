@@ -1107,7 +1107,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			userName    = "root"
 		)
 
-		asyncRequestId, err := mysqlService.ModifyAccountPassword(ctx, d.Id(), userName, newPassword)
+		asyncRequestId, err := mysqlService.ModifyAccountPassword(ctx, d.Id(), userName, MYSQL_DEFAULT_ACCOUNT_HOST, newPassword)
 
 		if err != nil {
 			return err

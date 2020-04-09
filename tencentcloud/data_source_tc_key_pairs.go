@@ -133,7 +133,7 @@ func dataSourceTencentCloudKeyPairsRead(d *schema.ResourceData, meta interface{}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		keyPairs, errRet = cvmService.DescribeKeyPairByFilter(ctx, keyId, name, projectId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

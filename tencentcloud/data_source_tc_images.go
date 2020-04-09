@@ -201,7 +201,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 		var e error
 		images, e = cvmService.DescribeImagesByFilter(ctx, filter)
 		if e != nil {
-			return retryError(e, "InternalError")
+			return retryError(e, InternalError)
 		}
 		return nil
 	})

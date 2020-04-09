@@ -302,7 +302,7 @@ func resourceTencentCloudDayuCCHttpsPolicyUpdate(d *schema.ResourceData, meta in
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := dayuService.ModifyCCSelfdefinePolicy(ctx, resourceType, resourceId, policyId, ccPolicy)
 		if e != nil {
-			return retryError(e, "InternalError")
+			return retryError(e, InternalError)
 		}
 		return nil
 	})

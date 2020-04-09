@@ -92,7 +92,7 @@ func resourceTencentCloudCbsSnapshotPolicyAttachmentRead(d *schema.ResourceData,
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		policy, errRet = cbsService.DescribeAttachedSnapshotPolicy(ctx, storageId, policyId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

@@ -301,13 +301,13 @@ func (me *MysqlService) DescribeCaresParameters(ctx context.Context, instanceId 
 }
 
 func (me *MysqlService) CreateAccount(ctx context.Context, mysqlId string,
-	accountName, accountPassword, accountDescription string) (asyncRequestId string, errRet error) {
+	accountName, accountHost, accountPassword, accountDescription string) (asyncRequestId string, errRet error) {
 
 	logId := getLogId(ctx)
 
 	request := cdb.NewCreateAccountsRequest()
 
-	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
+	var accountInfo = cdb.Account{User: &accountName, Host: &accountHost}
 	var accountInfos = []*cdb.Account{&accountInfo}
 
 	request.InstanceId = &mysqlId
@@ -332,13 +332,13 @@ func (me *MysqlService) CreateAccount(ctx context.Context, mysqlId string,
 }
 
 func (me *MysqlService) ModifyAccountPassword(ctx context.Context, mysqlId string,
-	accountName, accountPassword string) (asyncRequestId string, errRet error) {
+	accountName, accountHost, accountPassword string) (asyncRequestId string, errRet error) {
 
 	logId := getLogId(ctx)
 
 	request := cdb.NewModifyAccountPasswordRequest()
 
-	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
+	var accountInfo = cdb.Account{User: &accountName, Host: &accountHost}
 	var accountInfos = []*cdb.Account{&accountInfo}
 
 	request.InstanceId = &mysqlId
@@ -362,13 +362,13 @@ func (me *MysqlService) ModifyAccountPassword(ctx context.Context, mysqlId strin
 }
 
 func (me *MysqlService) ModifyAccountDescription(ctx context.Context, mysqlId string,
-	accountName, accountDescription string) (asyncRequestId string, errRet error) {
+	accountName, accountHost, accountDescription string) (asyncRequestId string, errRet error) {
 
 	logId := getLogId(ctx)
 
 	request := cdb.NewModifyAccountDescriptionRequest()
 
-	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
+	var accountInfo = cdb.Account{User: &accountName, Host: &accountHost}
 	var accountInfos = []*cdb.Account{&accountInfo}
 
 	request.InstanceId = &mysqlId
@@ -392,13 +392,13 @@ func (me *MysqlService) ModifyAccountDescription(ctx context.Context, mysqlId st
 }
 
 func (me *MysqlService) DeleteAccount(ctx context.Context, mysqlId string,
-	accountName string) (asyncRequestId string, errRet error) {
+	accountName string, accountHost string) (asyncRequestId string, errRet error) {
 
 	logId := getLogId(ctx)
 
 	request := cdb.NewDeleteAccountsRequest()
 
-	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
+	var accountInfo = cdb.Account{User: &accountName, Host: &accountHost}
 	var accountInfos = []*cdb.Account{&accountInfo}
 
 	request.InstanceId = &mysqlId
@@ -521,13 +521,13 @@ func (me *MysqlService) DescribeAsyncRequestInfo(ctx context.Context, asyncReque
 }
 
 func (me *MysqlService) ModifyAccountPrivileges(ctx context.Context, mysqlId string,
-	accountName string, databaseNames []string, privileges []string) (asyncRequestId string, errRet error) {
+	accountName, accountHost string, databaseNames []string, privileges []string) (asyncRequestId string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := cdb.NewModifyAccountPrivilegesRequest()
 	request.InstanceId = &mysqlId
 
-	var accountInfo = cdb.Account{User: &accountName, Host: &MYSQL_DEFAULT_ACCOUNT_HOST}
+	var accountInfo = cdb.Account{User: &accountName, Host: &accountHost}
 	request.Accounts = []*cdb.Account{&accountInfo}
 
 	request.DatabasePrivileges = make([]*cdb.DatabasePrivilege, 0, len(databaseNames))
@@ -565,7 +565,7 @@ func (me *MysqlService) ModifyAccountPrivileges(ctx context.Context, mysqlId str
 }
 
 func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId string,
-	accountName string, databaseNames []string) (privileges []string, errRet error) {
+	accountName string, accountHost string, databaseNames []string) (privileges []string, errRet error) {
 
 	logId := getLogId(ctx)
 
@@ -574,7 +574,7 @@ func (me *MysqlService) DescribeAccountPrivileges(ctx context.Context, mysqlId s
 	request := cdb.NewDescribeAccountPrivilegesRequest()
 	request.InstanceId = &mysqlId
 	request.User = &accountName
-	request.Host = &MYSQL_DEFAULT_ACCOUNT_HOST
+	request.Host = &accountHost
 
 	defer func() {
 		if errRet != nil {

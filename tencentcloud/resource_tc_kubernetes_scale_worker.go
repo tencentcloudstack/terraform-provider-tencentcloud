@@ -391,7 +391,7 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 			}
 
 			if err != nil {
-				return retryError(err, "InternalError")
+				return retryError(err, InternalError)
 			}
 			return nil
 		})
