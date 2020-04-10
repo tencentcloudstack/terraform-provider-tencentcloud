@@ -282,9 +282,7 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 	for _, inst_ := range add {
 		inst := inst_.(map[string]interface{})
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
-
 	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		requestId := ""
 		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
@@ -306,7 +304,6 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 		return err
 	}
 	return nil
-
 }
 
 func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
@@ -321,7 +318,6 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 		ns := n.(*schema.Set)
 		add := ns.Difference(os).List()
 		remove := os.Difference(ns).List()
-
 		if len(remove) > 0 {
 			err := resourceTencentCloudClbServerAttachementRemove(d, meta, remove)
 			if err != nil {
