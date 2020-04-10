@@ -659,6 +659,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("instance_status", instance.InstanceState)
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
+	_ = d.Set("allocate_public_ip", len(instance.PublicIpAddresses) > 0)
 
 	// as attachment add tencentcloud:autoscaling:auto-scaling-group-id tag automatically
 	// we should remove this tag, otherwise it will cause terraform state change
