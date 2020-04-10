@@ -52,4 +52,11 @@ The following arguments are supported:
 * `route_table_id` - (Required, ForceNew) The ID of the route table.
 * `vpc_id` - (Required, ForceNew) The VPC ID.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

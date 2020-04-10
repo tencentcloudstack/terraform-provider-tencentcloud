@@ -35,6 +35,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `public_ip` - The elastic ip address.
 * `status` - The eip current status.
 

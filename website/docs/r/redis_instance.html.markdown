@@ -43,6 +43,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - The time when the instance was created.
 * `ip` - IP address of an instance.
 * `status` - Current status of an instance, maybe: init, processing, online, isolate and todelete.

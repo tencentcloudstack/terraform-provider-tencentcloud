@@ -26,4 +26,11 @@ The following arguments are supported:
 * `instance_ids` - (Required) ID list of CVM instances to be attached to the scaling group.
 * `scaling_group_id` - (Required, ForceNew) ID of a scaling group.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

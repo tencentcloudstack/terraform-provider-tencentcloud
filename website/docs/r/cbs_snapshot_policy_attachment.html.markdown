@@ -26,4 +26,11 @@ The following arguments are supported:
 * `snapshot_policy_id` - (Required, ForceNew) ID of CBS snapshot policy.
 * `storage_id` - (Required, ForceNew) ID of CBS.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

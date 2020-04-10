@@ -28,6 +28,13 @@ The following arguments are supported:
 * `backup_time` - (Required) Specifys what time the backup action should take place.
 * `redis_id` - (Required, ForceNew) ID of a Redis instance to which the policy will be applied.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

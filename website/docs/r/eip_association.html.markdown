@@ -40,4 +40,11 @@ The following arguments are supported:
 * `network_interface_id` - (Optional, ForceNew) Indicates the network interface id like `eni-xxxxxx`. This field is conflict with `instance_id`.
 * `private_ip` - (Optional, ForceNew) Indicates an IP belongs to the `network_interface_id`. This field is conflict with `instance_id`.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

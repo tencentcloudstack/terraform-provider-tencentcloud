@@ -53,4 +53,11 @@ The following arguments are supported:
 * `new_error_code` - (Optional, ForceNew) New error code.
 * `set_headers` - (Optional, ForceNew) Response headers to be set.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

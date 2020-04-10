@@ -71,4 +71,11 @@ The following arguments are supported:
 * `port_range` - (Optional, ForceNew) Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports.
 * `source_sgid` - (Optional, ForceNew) ID of the nested security group, and conflict with `cidr_ip`.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

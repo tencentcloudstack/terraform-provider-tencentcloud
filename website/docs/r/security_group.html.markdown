@@ -29,6 +29,13 @@ The following arguments are supported:
 * `project_id` - (Optional, ForceNew) Project ID of the security group.
 * `tags` - (Optional) Tags of the security group.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

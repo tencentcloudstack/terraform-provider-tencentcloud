@@ -202,6 +202,7 @@ The `worker_config` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `certification_authority` - The certificate used for access.
 * `cluster_external_endpoint` - External network address to access.
 * `cluster_node_num` - Number of nodes in the cluster.

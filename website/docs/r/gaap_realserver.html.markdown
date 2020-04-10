@@ -33,6 +33,13 @@ The following arguments are supported:
 * `project_id` - (Optional, ForceNew) ID of the project within the GAAP realserver, '0' means is default project.
 * `tags` - (Optional) Tags of the GAAP realserver.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

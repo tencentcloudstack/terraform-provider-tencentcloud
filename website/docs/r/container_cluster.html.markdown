@@ -83,6 +83,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `kubernetes_version` - The kubernetes version of the cluster.
 * `nodes_num` - The node number of the cluster.
 * `nodes_status` - The node status of the cluster.

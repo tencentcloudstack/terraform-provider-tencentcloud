@@ -38,4 +38,11 @@ The following arguments are supported:
 * `region` - (Required, ForceNew) Limitation of region.
 * `bandwidth_limit` - (Optional) Limitation of bandwidth.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

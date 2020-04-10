@@ -38,6 +38,13 @@ The following arguments are supported:
 * `vpc_id` - (Required, ForceNew) Id of the VPC.
 * `description` - (Optional) Description of the NAT forward.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

@@ -78,6 +78,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `table_infos` - Table infos in this idl.
   * `error` - Show if this table  error.
   * `index_key_set` - Index key set of this table.

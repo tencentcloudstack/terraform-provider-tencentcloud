@@ -39,6 +39,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `cnn_route_type` - Type of CCN route, the available value include 'BGP' and 'STATIC'. The property is available when the DCG type is CCN gateway and BGP enabled.
 * `create_time` - Creation time of resource.
 * `enable_bgp` - Indicates whether the BGP is enabled.
