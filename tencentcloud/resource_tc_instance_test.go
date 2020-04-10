@@ -86,7 +86,7 @@ func TestAccTencentCloudInstanceBasic(t *testing.T) {
 				ResourceName:            id,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "hostname", "password", "allocate_public_ip"},
+				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "hostname", "password"},
 			},
 		},
 	})
