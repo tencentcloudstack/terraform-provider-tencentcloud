@@ -2323,7 +2323,7 @@ func (me *VpcService) AttachEniToCvm(ctx context.Context, eniId, cvmId string) e
 	describeRequest := vpc.NewDescribeNetworkInterfacesRequest()
 	describeRequest.NetworkInterfaceIds = []*string{&eniId}
 
-	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(describeRequest.GetAction())
 
 		response, err := client.DescribeNetworkInterfaces(describeRequest)
