@@ -297,7 +297,7 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 	}
 
 	md := md5.New()
-	md.Write(idBytes)
+	_, _ = md.Write(idBytes)
 	id := fmt.Sprintf("%x", md.Sum(nil))
 	d.SetId(id)
 

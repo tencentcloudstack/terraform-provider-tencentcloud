@@ -244,7 +244,7 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 	}
 
 	md := md5.New()
-	md.Write(idBytes)
+	_, _ = md.Write(idBytes)
 	id := fmt.Sprintf("%x", md.Sum(nil))
 	d.SetId(id)
 
