@@ -20,7 +20,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
 func TencentMysqlSellType() map[string]*schema.Schema {
@@ -142,10 +141,9 @@ func dataSourceTencentMysqlZoneConfig() *schema.Resource {
 		Read: dataSourceTencentMysqlZoneConfigRead,
 		Schema: map[string]*schema.Schema{
 			"region": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(connectivity.MysqlSupportedRegions),
-				Description:  "Region parameter, which is used to identify the region to which the data you want to work with belongs.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Region parameter, which is used to identify the region to which the data you want to work with belongs.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
