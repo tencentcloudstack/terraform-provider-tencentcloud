@@ -48,10 +48,13 @@ data "tencentcloud_vpc_route_tables" "tags_instances" {
 
 The following arguments are supported:
 
+* `association_main` - (Optional) Filter the main routing table.
 * `name` - (Optional) Name of the routing table to be queried.
 * `result_output_file` - (Optional) Used to save results.
 * `route_table_id` - (Optional) ID of the routing table to be queried.
+* `tag_key` - (Optional) Filter if routing table has this tag.
 * `tags` - (Optional) Tags of the routing table to be queried.
+* `vpc_id` - (Optional) ID of the VPC to be queried.
 
 ## Attributes Reference
 

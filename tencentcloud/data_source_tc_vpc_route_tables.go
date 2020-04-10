@@ -68,7 +68,7 @@ func dataSourceTencentCloudVpcRouteTables() *schema.Resource {
 			"tag_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Filter if subnet has this tag.",
+				Description: "Filter if routing table has this tag.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -285,8 +285,6 @@ func dataSourceTencentCloudVpcRouteTablesRead(d *schema.ResourceData, meta inter
 	md.Write(idBytes)
 	id := fmt.Sprintf("%x", md.Sum(nil))
 	d.SetId(id)
-
-	d.SetId("vpc_route_table" + routeTableId + "_" + name)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), infoList); err != nil {
