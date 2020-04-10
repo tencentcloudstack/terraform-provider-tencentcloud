@@ -128,7 +128,7 @@ func testAccCheckVpcSubnetExists(r string) resource.TestCheckFunc {
 		}
 
 		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		_, has, err := service.DescribeSubnet(ctx, rs.Primary.ID)
+		_, has, err := service.DescribeSubnet(ctx, rs.Primary.ID, nil, "", "")
 		if err != nil {
 			return err
 		}
@@ -150,7 +150,7 @@ func testAccCheckVpcSubnetDestroy(s *terraform.State) error {
 			continue
 		}
 		time.Sleep(5 * time.Second)
-		_, has, err := service.DescribeSubnet(ctx, rs.Primary.ID)
+		_, has, err := service.DescribeSubnet(ctx, rs.Primary.ID, nil, "", "")
 		if err != nil {
 			return err
 		}

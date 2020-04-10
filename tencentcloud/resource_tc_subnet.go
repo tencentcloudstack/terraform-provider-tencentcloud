@@ -222,7 +222,7 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 		e    error
 	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		info, has, e = vpcService.DescribeSubnet(ctx, id)
+		info, has, e = vpcService.DescribeSubnet(ctx, id, nil, "", "")
 		if e != nil {
 			return retryError(e)
 		}

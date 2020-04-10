@@ -42,8 +42,12 @@ package tencentcloud
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/json"
 	"fmt"
 	"log"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -78,6 +82,21 @@ func dataSourceTencentCloudVpcSubnets() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Filter default or no default subnets.",
+			},
+			"tag_key": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Filter if subnet has this tag.",
+			},
+			"cidr_block": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Filter subnet with this CIDR.",
+			},
+			"is_remote_vpc_snat": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Filter the VPC SNAT address pool subnet.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -174,39 +193,59 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		name             string
 		availabilityZone string
 		isDefault        *bool
+		isRemoteVpcSNAT  *bool
+		tagKey           string
+		cidrBlock        string
 	)
 	if temp, ok := d.GetOk("vpc_id"); ok {
-		tempStr := temp.(string)
-		if tempStr != "" {
-			vpcId = tempStr
-		}
+		vpcId = temp.(string)
 	}
+
 	if temp, ok := d.GetOk("subnet_id"); ok {
-		tempStr := temp.(string)
-		if tempStr != "" {
-			subnetId = tempStr
-		}
+		subnetId = temp.(string)
 	}
+
 	if temp, ok := d.GetOk("name"); ok {
-		tempStr := temp.(string)
-		if tempStr != "" {
-			name = tempStr
-		}
+		name = temp.(string)
 	}
+
 	if temp, ok := d.GetOk("availability_zone"); ok {
-		tempStr := temp.(string)
-		if tempStr != "" {
-			availabilityZone = tempStr
-		}
+		availabilityZone = temp.(string)
 	}
 
 	if temp, ok := d.GetOkExists("is_default"); ok {
 		isDefault = helper.Bool(temp.(bool))
 	}
 
-	tags := helper.GetTags(d, "tags")
+	if temp, ok := d.GetOkExists("is_remote_vpc_snat"); ok {
+		isRemoteVpcSNAT = helper.Bool(temp.(bool))
+	}
 
-	infos, err := vpcService.DescribeSubnets(ctx, subnetId, vpcId, name, availabilityZone, tags, isDefault)
+	if temp, ok := d.GetOk("tag_key"); ok {
+		tagKey = temp.(string)
+	}
+
+	if temp, ok := d.GetOk("cidr_block"); ok {
+		cidrBlock = temp.(string)
+	}
+
+	var (
+		tags  = helper.GetTags(d, "tags")
+		infos []VpcSubnetBasicInfo
+		err   error
+	)
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		infos, err = vpcService.DescribeSubnets(ctx, subnetId, vpcId,
+			name, availabilityZone, tags,
+			isDefault, isRemoteVpcSNAT, tagKey,
+			cidrBlock)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -241,16 +280,26 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	key := "vpc_subnet" + subnetId + "_" + name
-
-	if isDefault != nil {
-		key += "_" + fmt.Sprintf("%v", *isDefault)
+	idBytes, err := json.Marshal(map[string]interface{}{
+		"vpcId":            vpcId,
+		"subnetId":         subnetId,
+		"availabilityZone": availabilityZone,
+		"name":             name,
+		"isDefault":        isDefault,
+		"tagKey":           tagKey,
+		"isRemoteVpcSnat":  isRemoteVpcSNAT,
+		"cidrBlock":        cidrBlock,
+		"tags":             tags,
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create data source id error, reason:%s\n ", logId, err.Error())
+		return err
 	}
-	if availabilityZone != "" {
-		key += "_" + availabilityZone
-	}
 
-	d.SetId(key)
+	md := md5.New()
+	md.Write(idBytes)
+	id := fmt.Sprintf("%x", md.Sum(nil))
+	d.SetId(id)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), infoList); err != nil {
