@@ -37,7 +37,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -208,6 +207,7 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_clb_attachment.remove")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
 	attachmentId := d.Id()
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
@@ -224,40 +224,23 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 		request.LocationId = helper.String(locationId)
 	}
 
-	for _, inst_ := range remove {
-		inst := inst_.(map[string]interface{})
-		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+	clbService := ClbService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		requestId := ""
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().DeregisterTargets(request)
+		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, remove)
 		if e != nil {
-			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
-			if !ok {
-				return retryError(ee)
-			}
-			if ee.Code == "InvalidParameter" {
-				return nil
-			} else {
-				return retryError(e)
-			}
-
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-			requestId = *response.Response.RequestId
-			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-			if retryErr != nil {
-				return resource.NonRetryableError(errors.WithStack(retryErr))
-			}
+			return retryError(e)
 		}
+
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s remove CLB attachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s reason[%+v]", logId, err)
 		return err
 	}
+
 	return nil
 }
 

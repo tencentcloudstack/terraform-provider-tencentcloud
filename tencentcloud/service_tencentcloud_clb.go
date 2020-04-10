@@ -507,10 +507,7 @@ func (me *ClbService) DeleteAttachmentById(ctx context.Context, clbId string, li
 	response, err := me.client.UseClbClient().DeregisterTargets(request)
 	if err != nil {
 		ee, ok := err.(*sdkErrors.TencentCloudSDKError)
-		if !ok {
-			return errors.WithStack(ee)
-		}
-		if ee.GetCode() == "InvalidParameter" {
+		if ok && ee.GetCode() == "InvalidParameter" {
 			return nil
 		}
 		return errors.WithStack(err)
