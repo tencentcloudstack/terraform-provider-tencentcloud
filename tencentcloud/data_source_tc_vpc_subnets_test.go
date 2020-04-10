@@ -73,9 +73,9 @@ func TestAccDataSourceTencentCloudVpcV3Subnets_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_vpc_subnets.tags_instances", "instance_list.0.tags.test", "test"),
 
 					// name filter ,Every subnet with cidr_block "10.0.20.0/28" will be found
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpc_subnets.cidr_block_instances"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_vpc_subnets.cidr_block_instances", "instance_list.#"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vpc_subnets.cidr_block_instances", "instance_list.0.cidr_block", "10.0.20.0/28"),
+					//testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpc_subnets.cidr_block_instances"),
+					//resource.TestCheckResourceAttrSet("data.tencentcloud_vpc_subnets.cidr_block_instances", "instance_list.#"),
+					//resource.TestCheckResourceAttr("data.tencentcloud_vpc_subnets.cidr_block_instances", "instance_list.0.cidr_block", "10.0.20.0/28"),
 				),
 			},
 		},
