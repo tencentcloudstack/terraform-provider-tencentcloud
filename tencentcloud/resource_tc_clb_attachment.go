@@ -37,6 +37,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -176,17 +177,16 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	listenerId := items[1]
 	clbId := items[2]
 
-	//firstly see if listener and location exists
+	//check exists
+	clbService := ClbService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
 	request := clb.NewDeregisterTargetsRequest()
 	request.ListenerId = &listenerId
 	request.LoadBalancerId = helper.String(clbId)
 	if locationId != "" {
 		request.LocationId = helper.String(locationId)
-	}
-
-	//check exists
-	clbService := ClbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -201,6 +201,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 		log.Printf("[CRITAL]%s reason[%+v]", logId, err)
 		return err
 	}
+
 	return nil
 }
 
@@ -208,6 +209,7 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_clb_attachment.remove")()
 
 	logId := getLogId(contextNil)
+
 	attachmentId := d.Id()
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
@@ -227,27 +229,39 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 	for _, inst_ := range remove {
 		inst := inst_.(map[string]interface{})
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		requestId := ""
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().DeregisterTargets(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-			requestId = *response.Response.RequestId
-			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-			if retryErr != nil {
-				return resource.NonRetryableError(errors.WithStack(retryErr))
+	if len(request.Targets) > 0 {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			requestId := ""
+			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().DeregisterTargets(request)
+			if e != nil {
+				ee, ok := e.(*sdkErrors.TencentCloudSDKError)
+				if !ok {
+					return retryError(ee)
+				}
+				if ee.Code == "InvalidParameter" {
+					return nil
+				} else {
+					return retryError(e)
+				}
+
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				requestId = *response.Response.RequestId
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				if retryErr != nil {
+					return resource.NonRetryableError(errors.WithStack(retryErr))
+				}
 			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s remove CLB attachment failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s remove CLB attachment failed, reason:%+v", logId, err)
-		return err
 	}
 	return nil
 }
@@ -273,28 +287,33 @@ func resourceTencentCloudClbServerAttachementAdd(d *schema.ResourceData, meta in
 	for _, inst_ := range add {
 		inst := inst_.(map[string]interface{})
 		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+
 	}
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		requestId := ""
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-			requestId = *response.Response.RequestId
-			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-			if retryErr != nil {
-				return resource.NonRetryableError(errors.WithStack(retryErr))
+
+	if len(request.Targets) > 0 {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			requestId := ""
+			response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().RegisterTargets(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+				requestId = *response.Response.RequestId
+				retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+				if retryErr != nil {
+					return resource.NonRetryableError(errors.WithStack(retryErr))
+				}
 			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s add CLB attachment failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s add CLB attachment failed, reason:%+v", logId, err)
-		return err
 	}
 	return nil
+
 }
 
 func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
@@ -309,6 +328,7 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 		ns := n.(*schema.Set)
 		add := ns.Difference(os).List()
 		remove := os.Difference(ns).List()
+
 		if len(remove) > 0 {
 			err := resourceTencentCloudClbServerAttachementRemove(d, meta, remove)
 			if err != nil {
