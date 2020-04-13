@@ -29,6 +29,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
@@ -44,6 +45,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 	for _, v := range REDIS_NAMES {
 		types = append(types, "`"+v+"`")
 	}
+	sort.Strings(types)
 	typeStr := strings.Trim(strings.Join(types, ","), ",")
 
 	return &schema.Resource{

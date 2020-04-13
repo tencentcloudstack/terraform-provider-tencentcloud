@@ -3,6 +3,8 @@
 BUG FIXES: 
 
 * Resource: `tencentcloud_keypair` fix bug when trying to destroy resources containing CVM and key pair([#375](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/375)).
+* Resource: `tencentcloud_clb_attachment` fix bug when trying to destroy multiple attachments in the array. 
+* Resource: `tencentcloud_cam_group_membership` fix bug when trying to destroy multiple users in the array. 
 
 ENHANCEMENTS:
 
