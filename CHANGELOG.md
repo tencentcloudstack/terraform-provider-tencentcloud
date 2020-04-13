@@ -6,7 +6,6 @@ BUG FIXES:
 * Resource: `tencentcloud_clb_attachment` fix bug when trying to destroy multiple attachments in the array. 
 * Resource: `tencentcloud_cam_group_membership` fix bug when trying to destroy multiple users in the array. 
 
-
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_mysql_account` add new argument `host`([#372](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/372)).
