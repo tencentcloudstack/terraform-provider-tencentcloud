@@ -357,17 +357,39 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	_ = d.Set("listener_id", listenerId)
 	_ = d.Set("protocol_type", instance.Protocol)
 
+	var onlineTargets []*clb.Backend
 	if *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
 		_ = d.Set("rule_id", locationId)
 		if len(instance.Rules) > 0 {
 			for _, loc := range instance.Rules {
 				if locationId == "" || locationId == *loc.LocationId {
-					_ = d.Set("targets", flattenBackendList(loc.Targets))
+					onlineTargets = loc.Targets
 				}
 			}
 		}
 	} else if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
-		_ = d.Set("targets", flattenBackendList(instance.Targets))
+		onlineTargets = instance.Targets
+	}
+
+	//this may cause problems when there are members in two dimensions array
+	//need to read state of the tfstate file to clear the relationships
+	//in this situation, import action is not supported
+	stateTargets := d.Get("targets").(*schema.Set).List()
+	if len(stateTargets) != 0 {
+		//the old state exist
+		//create a new attachment with state
+		exactTargets := make([]*clb.Backend, 0)
+		for _, sv := range stateTargets {
+			svv := sv.(map[string]interface{})
+			for _, v := range onlineTargets {
+				if int(*v.Weight) == svv["weight"] && int(*v.Port) == svv["port"] && *v.InstanceId == svv["instance_id"] {
+					exactTargets = append(exactTargets, v)
+				}
+			}
+		}
+		_ = d.Set("targets", flattenBackendList(exactTargets))
+	} else {
+		_ = d.Set("targets", flattenBackendList(onlineTargets))
 	}
 
 	return nil
