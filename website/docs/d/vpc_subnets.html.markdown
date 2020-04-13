@@ -52,10 +52,13 @@ data "tencentcloud_vpc_subnets" "tags_instances" {
 The following arguments are supported:
 
 * `availability_zone` - (Optional) Zone of the subnet to be queried.
+* `cidr_block` - (Optional) Filter subnet with this CIDR.
 * `is_default` - (Optional) Filter default or no default subnets.
+* `is_remote_vpc_snat` - (Optional) Filter the VPC SNAT address pool subnet.
 * `name` - (Optional) Name of the subnet to be queried.
 * `result_output_file` - (Optional) Used to save results.
 * `subnet_id` - (Optional) ID of the subnet to be queried.
+* `tag_key` - (Optional) Filter if subnet has this tag.
 * `tags` - (Optional) Tags of the subnet to be queried.
 * `vpc_id` - (Optional) ID of the VPC to be queried.
 

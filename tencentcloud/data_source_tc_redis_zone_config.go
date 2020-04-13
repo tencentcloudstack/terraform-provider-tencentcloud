@@ -20,7 +20,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
 func dataSourceTencentRedisZoneConfig() *schema.Resource {
@@ -28,10 +27,9 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 		Read: dataSourceTencentRedisZoneConfigRead,
 		Schema: map[string]*schema.Schema{
 			"region": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(connectivity.MysqlSupportedRegions),
-				Description:  "Name of a region. If this value is not set, the current region getting from provider's configuration will be used.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of a region. If this value is not set, the current region getting from provider's configuration will be used.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

@@ -22,10 +22,13 @@ package tencentcloud
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -48,7 +51,17 @@ func dataSourceTencentCloudVpcInstances() *schema.Resource {
 			"is_default": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "Filter default or no default vpcs.",
+				Description: "Filter default or no default VPC.",
+			},
+			"tag_key": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Filter if VPC has this tag.",
+			},
+			"cidr_block": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Filter VPC with this CIDR.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -137,26 +150,38 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 		vpcId     string
 		name      string
 		isDefault *bool
+		tagKey    string
+		cidrBlock string
 	)
 	if temp, ok := d.GetOk("vpc_id"); ok {
-		tempStr := temp.(string)
-		if tempStr != "" {
-			vpcId = tempStr
-		}
+		vpcId = temp.(string)
 	}
 	if temp, ok := d.GetOk("name"); ok {
-		tempStr := temp.(string)
-		if tempStr != "" {
-			name = tempStr
-		}
+		name = temp.(string)
 	}
 	if temp, ok := d.GetOkExists("is_default"); ok {
 		isDefault = helper.Bool(temp.(bool))
 	}
+	if temp, ok := d.GetOkExists("tag_key"); ok {
+		tagKey = temp.(string)
+	}
+	if temp, ok := d.GetOkExists("cidr_block"); ok {
+		cidrBlock = temp.(string)
+	}
 
-	tags := helper.GetTags(d, "tags")
+	var (
+		tags     = helper.GetTags(d, "tags")
+		vpcInfos []VpcBasicInfo
+		err      error
+	)
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		vpcInfos, err = service.DescribeVpcs(ctx, vpcId, name, tags, isDefault, tagKey, cidrBlock)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
 
-	var vpcInfos, err = service.DescribeVpcs(ctx, vpcId, name, tags, isDefault)
 	if err != nil {
 		return err
 	}
@@ -186,7 +211,7 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 		}
 		infoMap["tags"] = respTags
 
-		subnetInfos, err := service.DescribeSubnets(ctx, "", item.vpcId, "", "", nil, nil)
+		subnetInfos, err := service.DescribeSubnets(ctx, "", item.vpcId, "", "", nil, nil, nil, "", "")
 		if err != nil {
 			return err
 		}
@@ -204,11 +229,23 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	key := "vpc_instances" + vpcId + "_" + name
-	if isDefault != nil {
-		key += "_" + fmt.Sprintf("%v", *isDefault)
+	idBytes, err := json.Marshal(map[string]interface{}{
+		"vpcId":     vpcId,
+		"name":      name,
+		"isDefault": isDefault,
+		"tagKey":    tagKey,
+		"cidrBlock": cidrBlock,
+		"tags":      tags,
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create data source id error, reason:%s\n ", logId, err.Error())
+		return err
 	}
-	d.SetId(key)
+
+	md := md5.New()
+	_, _ = md.Write(idBytes)
+	id := fmt.Sprintf("%x", md.Sum(nil))
+	d.SetId(id)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		if err := writeToFile(output.(string), vpcInfoList); err != nil {

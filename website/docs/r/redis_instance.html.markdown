@@ -36,7 +36,7 @@ The following arguments are supported:
 * `security_groups` - (Optional, ForceNew) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 * `subnet_id` - (Optional, ForceNew) Specifies which subnet the instance should belong to.
 * `tags` - (Optional) Instance tags.
-* `type` - (Optional, ForceNew) Instance type. Available values: master_slave_redis.
+* `type` - (Optional, ForceNew) Instance type. Available values: `cluster_redis`,`cluster_ckv`,`standalone_redis`,`master_slave_redis5.0`,`cluster_redis5.0`,`master_slave_redis`,`master_slave_ckv`, specific region support specific types, need to refer data `tencentcloud_redis_zone_config`.
 * `vpc_id` - (Optional, ForceNew) ID of the vpc with which the instance is to be associated.
 
 ## Attributes Reference

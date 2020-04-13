@@ -167,7 +167,7 @@ func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{
 
 	id := d.Id()
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		info, has, e := service.DescribeVpc(ctx, id)
+		info, has, e := service.DescribeVpc(ctx, id, "", "")
 		if e != nil {
 			return retryError(e)
 		}

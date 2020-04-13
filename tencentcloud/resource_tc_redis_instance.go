@@ -40,6 +40,12 @@ import (
 )
 
 func resourceTencentCloudRedisInstance() *schema.Resource {
+	types := []string{}
+	for _, v := range REDIS_NAMES {
+		types = append(types, "`"+v+"`")
+	}
+	typeStr := strings.Trim(strings.Join(types, ","), ",")
+
 	return &schema.Resource{
 		Create: resourceTencentCloudRedisInstanceCreate,
 		Read:   resourceTencentCloudRedisInstanceRead,
@@ -77,7 +83,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 					errors = append(errors, fmt.Errorf("this redis type %s not support now.", value))
 					return
 				},
-				Description: "Instance type. Available values: master_slave_redis.",
+				Description: "Instance type. Available values: " + typeStr + ", specific region support specific types, need to refer data `tencentcloud_redis_zone_config`.",
 			},
 			"password": {
 				Type:         schema.TypeString,

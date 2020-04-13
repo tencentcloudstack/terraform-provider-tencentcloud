@@ -47,6 +47,11 @@ func TestAccDataSourceTencentCloudVpcV3RouteTables_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_vpc_route_tables.tags_instances", "instance_list.0.route_entry_infos.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_vpc_route_tables.tags_instances", "instance_list.0.create_time"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vpc_route_tables.tags_instances", "instance_list.0.tags.test", "test"),
+
+					// vpc_id filter
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpc_route_tables.vpc_instances"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_vpc_route_tables.vpc_instances", "instance_list.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_vpc_route_tables.tags_instances", "instance_list.0.vpc_id"),
 				),
 			},
 		},
@@ -78,6 +83,10 @@ data "tencentcloud_vpc_route_tables" "id_instances" {
 
 data "tencentcloud_vpc_route_tables" "name_instances" {
   name = tencentcloud_route_table.route_table.name
+}
+
+data "tencentcloud_vpc_route_tables" "vpc_instances" {
+  vpc_id = tencentcloud_vpc.foo.id
 }
 
 data "tencentcloud_vpc_route_tables" "tags_instances" {
