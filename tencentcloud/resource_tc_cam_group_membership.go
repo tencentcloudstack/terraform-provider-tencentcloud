@@ -146,7 +146,6 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 		}
 		_ = d.Set("user_ids", exactMembers)
 	} else {
-		log.Printf("!!! test import")
 		_ = d.Set("user_ids", members)
 	}
 	_ = d.Set("group_id", groupId)
