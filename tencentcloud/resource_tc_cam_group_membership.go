@@ -132,7 +132,6 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 	//in this situation, import action is not supported
 	stateMembers := d.Get("user_ids").(*schema.Set).List()
 	if len(stateMembers) != 0 {
-		log.Printf("the length of state members %d", len(stateMembers))
 		//the old state exist
 		//create a new membership with state
 		exactMembers := make([]*string, 0)
