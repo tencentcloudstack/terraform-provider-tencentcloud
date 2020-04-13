@@ -374,17 +374,18 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	//this may cause problems when there are members in two dimensions array
 	//need to read state of the tfstate file to clear the relationships
 	//in this situation, import action is not supported
-	stateTargets := d.Get("targets").(*schema.Set).List()
-	if len(stateTargets) != 0 {
+	stateTargets := d.Get("targets").(*schema.Set)
+	if stateTargets.Len() != 0 {
 		//the old state exist
 		//create a new attachment with state
 		exactTargets := make([]*clb.Backend, 0)
-		for _, sv := range stateTargets {
-			svv := sv.(map[string]interface{})
-			for _, v := range onlineTargets {
-				if int(*v.Weight) == svv["weight"] && int(*v.Port) == svv["port"] && *v.InstanceId == svv["instance_id"] {
-					exactTargets = append(exactTargets, v)
-				}
+		for _, v := range onlineTargets {
+			if stateTargets.Contains(map[string]interface{}{
+				"weight":      int(*v.Weight),
+				"port":        int(*v.Port),
+				"instance_id": *v.InstanceId,
+			}) {
+				exactTargets = append(exactTargets, v)
 			}
 		}
 		_ = d.Set("targets", flattenBackendList(exactTargets))
