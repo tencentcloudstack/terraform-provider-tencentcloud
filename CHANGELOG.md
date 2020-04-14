@@ -1,4 +1,4 @@
-## 1.32.0 (Unreleased)
+## 1.31.1 (Unreleased)
 
 BUG FIXES: 
 
@@ -14,11 +14,11 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_mysql_readonly_instance` check master monitor data before create([#379](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/379)).
 * Resource: `tencentcloud_tcaplus_application` remove the pull password from server. 
 * Resource: `tencentcloud_instance` support import `allocate_public_ip`([#382](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/382)).
+* Resource: `tencentcloud_redis_instance` add two redis types.
 * Data Source: `tencentcloud_vpc_instances` add new argument `cidr_block`,`tag_key` ([#378](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/378)).
 * Data Source: `tencentcloud_vpc_route_tables` add new argument `tag_key`,`vpc_id`,`association_main` ([#378](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/378)).
 * Data Source: `tencentcloud_vpc_subnets` add new argument `cidr_block`,`tag_key`,`is_remote_vpc_snat` ([#378](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/378)).
 * Data Source: `tencentcloud_mysql_zone_config` and `tencentcloud_redis_zone_config` remove region check.
-* Resource: `tencentcloud_redis_instance` add two redis types.
 
 ## 1.31.0 (April 07, 2020)
 
