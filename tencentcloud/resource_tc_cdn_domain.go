@@ -257,6 +257,11 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Computed:    true,
 				Description: "Acceleration service status.",
 			},
+			"cname": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "CNAME address of domain name.",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -446,6 +451,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("area", domainConfig.Area)
 	_ = d.Set("status", domainConfig.Status)
 	_ = d.Set("create_time", domainConfig.CreateTime)
+	_ = d.Set("cname", domainConfig.Cname)
 
 	origins := make([]map[string]interface{}, 0, 1)
 	origin := make(map[string]interface{}, 8)

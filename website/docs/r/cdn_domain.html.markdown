@@ -89,6 +89,7 @@ The `server_certificate_config` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `cname` - CNAME address of domain name.
 * `create_time` - Creation time of domain name.
 * `status` - Acceleration service status.
 
