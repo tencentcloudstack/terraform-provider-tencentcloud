@@ -127,9 +127,24 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 		d.SetId("")
 		return nil
 	}
-
+	//this may cause problems when there are members in two dimensions array
+	//need to read state of the tfstate file to clear the relationships
+	//in this situation, import action is not supported
+	stateMembers := d.Get("user_ids").(*schema.Set)
+	if stateMembers.Len() != 0 {
+		//the old state exist
+		//create a new membership with state
+		exactMembers := make([]*string, 0)
+		for _, v := range members {
+			if stateMembers.Contains(*v) {
+				exactMembers = append(exactMembers, v)
+			}
+		}
+		_ = d.Set("user_ids", exactMembers)
+	} else {
+		_ = d.Set("user_ids", members)
+	}
 	_ = d.Set("group_id", groupId)
-	_ = d.Set("user_ids", members)
 
 	return nil
 }
