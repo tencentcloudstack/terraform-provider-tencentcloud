@@ -356,6 +356,21 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		d.SetPartial("snapshot_id")
 	}
 
+	if d.HasChange("tags") {
+		oldInterface, newInterface := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
+		tagService := TagService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::cvm:%s:uin/:volume/%s", region, storageId)
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("tags")
+	}
+
 	d.Partial(false)
 
 	return nil
