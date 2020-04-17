@@ -1,8 +1,8 @@
-## 1.32.0 (Unreleased)
+## 1.31.3 (Unreleased)
 
 ENHANCEMENTS: 
 
-* Resource: `tencentcloud_cdn_domain` add new argument `cname`([#395](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/395)).
+* Resource: `tencentcloud_cdn_domain` add new attribute `cname`([#395](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/395)).
 
 ## 1.31.2 (April 17, 2020)
 
