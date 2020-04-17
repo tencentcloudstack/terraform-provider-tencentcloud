@@ -1,4 +1,9 @@
 ## 1.32.0 (Unreleased)
+
+ENHANCEMENTS: 
+
+* Resource: `tencentcloud_cbs_storage` support modify `tags`.
+
 ## 1.31.1 (April 14, 2020)
 
 BUG FIXES: 
