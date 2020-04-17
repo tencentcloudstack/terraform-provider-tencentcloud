@@ -50,19 +50,13 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.",
 		},
+
+		//computer
 		"security_groups": {
 			Type:        schema.TypeSet,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			ForceNew:    true,
-			Optional:    true,
 			Computed:    true,
-			Description: "A list of security group ids to associate with,if this parameter is not specified, the default security group is bound.(only a single security_group is supported now)",
-		},
-		// Computed values.
-		"instance_status": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Current status of the instance.",
+			Description: "A list of security group ids after attach to cluster.",
 		},
 	}
 
@@ -157,7 +151,6 @@ func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta i
 		_ = d.Set("key_ids", instance.LoginSettings.KeyIds)
 	}
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecurityGroupIds))
-	_ = d.Set("instance_status", instance.InstanceState)
 	return nil
 }
 
@@ -181,7 +174,7 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 	var loginSettingsNumbers = 0
 
 	if v, ok := d.GetOk("key_ids"); ok {
-		request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
+		request.LoginSettings.KeyIds = helper.Strings(helper.InterfacesStrings(v.([]interface{})))
 		loginSettingsNumbers++
 	}
 
@@ -194,17 +187,33 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 		return fmt.Errorf("parameters `key_ids` and `password` must set and only set one")
 	}
 
-	securityGroups := helper.InterfacesStrings(d.Get("security_groups").(*schema.Set).List())
-	switch len(securityGroups) {
-	case 0:
-	case 1:
-		request.SecurityGroupIds = helper.Strings(securityGroups)
-	default:
-		return fmt.Errorf("parameters `security_groups`,only a single security_group is supported now")
+	/*cvm has been  attached*/
+	var err error
+	_, workers, err := tkeService.DescribeClusterInstances(ctx, *request.ClusterId)
+	if err != nil {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			_, workers, err = tkeService.DescribeClusterInstances(ctx, *request.ClusterId)
+			if err != nil {
+				return retryError(err, InternalError)
+			}
+			return nil
+		})
+	}
+	if err != nil {
+		return err
+	}
+
+	has := false
+	for _, worker := range workers {
+		if worker.InstanceId == *instanceId {
+			has = true
+		}
+	}
+	if has {
+		return fmt.Errorf("instance %s has been attached to cluster %s,can not attach again", *instanceId, *request.ClusterId)
 	}
 
 	var response *tke.AddExistedInstancesResponse
-	var err error
 
 	if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -228,7 +237,7 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 		return fmt.Errorf("add existed instance %s to cluster %s error, instance not in success instanceIds", *instanceId, *request.ClusterId)
 	}
 
-	/*wait for status*/
+	/*wait for cvm status*/
 	if err = resource.Retry(4*writeRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, *instanceId)
 		if errRet != nil {
@@ -242,7 +251,39 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 		return err
 	}
 
-	return nil
+	/*wait for tke init ok */
+	err = resource.Retry(4*writeRetryTimeout, func() *resource.RetryError {
+		_, workers, err = tkeService.DescribeClusterInstances(ctx, *request.ClusterId)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		has := false
+		for _, worker := range workers {
+			if worker.InstanceId == *instanceId {
+				has = true
+				if worker.InstanceState == "failed" {
+					return resource.NonRetryableError(fmt.Errorf("cvm instance %s attach to cluster %s fail,reason:%s",
+						*instanceId, *request.ClusterId, worker.FailedReason))
+				}
+
+				if worker.InstanceState != "running" {
+					return resource.RetryableError(fmt.Errorf("cvm instance  %s in tke status is %s, retry...",
+						*instanceId, worker.InstanceState))
+				}
+
+			}
+		}
+		if !has {
+			return resource.NonRetryableError(fmt.Errorf("cvm instance %s not exist in tke instance list", *instanceId))
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return resourceTencentCloudTkeClusterAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudTkeClusterAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
