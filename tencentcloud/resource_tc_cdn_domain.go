@@ -74,7 +74,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_SERVICE_TYPE),
-				Description:  "Service type of Acceleration domain name. Valid values are `web`, `download` and `video`.",
+				Description:  "Service type of Acceleration domain name. Valid values are `web`, `download` and `media`.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -389,7 +389,7 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	d.SetId(domain)
 
 	time.Sleep(1 * time.Second)
-	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 		if err != nil {
 			return retryError(err, InternalError)
@@ -720,7 +720,7 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 			domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 			if err != nil {
 				return retryError(err, InternalError)
