@@ -173,7 +173,7 @@ func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta i
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, has, err = tkeService.DescribeCluster(ctx, clusterId)
 			if err != nil {
-				return retryError(err)
+				return retryError(err, InternalError)
 			}
 			return nil
 		})
