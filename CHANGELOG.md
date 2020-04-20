@@ -1,5 +1,9 @@
 ## 1.31.3 (Unreleased)
 
+FEATURES:
+
+* **New Resource**: `tencentcloud_kubernetes_cluster_attachment`([#285](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/285)).
+
 ENHANCEMENTS: 
 
 * Resource: `tencentcloud_cdn_domain` add new attribute `cname`([#395](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/395)).

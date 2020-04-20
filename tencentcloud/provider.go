@@ -223,6 +223,7 @@ Kubernetes
     tencentcloud_kubernetes_cluster
     tencentcloud_kubernetes_scale_worker
     tencentcloud_kubernetes_as_scaling_group
+    tencentcloud_kubernetes_cluster_attachment
 
 MongoDB
   Data Source
