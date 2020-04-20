@@ -1,3 +1,92 @@
+/*
+Provide a resource to attach an existing  cvm to kubernetes cluster.
+
+Example Usage
+
+```hcl
+
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "cluster_cidr" {
+  default = "172.31.0.0/16"
+}
+
+variable "default_instance_type" {
+  default = "SA1.LARGE8"
+}
+
+data "tencentcloud_images" "default" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "centos"
+}
+
+
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
+  availability_zone = var.availability_zone
+}
+
+data "tencentcloud_instance_types" "default" {
+  filter {
+    name   = "instance-family"
+    values = ["SA2"]
+  }
+
+  cpu_core_count = 8
+  memory_size    = 16
+}
+
+resource "tencentcloud_instance" "foo" {
+  instance_name     = "tf-auto-test-1-1"
+  availability_zone = var.availability_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = var.default_instance_type
+  system_disk_type  = "CLOUD_PREMIUM"
+  system_disk_size  = 50
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  cluster_cidr            = "10.1.0.0/16"
+  cluster_max_pod_num     = 32
+  cluster_name            = "keep"
+  cluster_desc            = "test cluster desc"
+  cluster_max_service_num = 32
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+}
+
+resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
+  cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
+  instance_id = tencentcloud_instance.foo.id
+  password    = "Lo4wbdit"
+}
+```
+*/
 package tencentcloud
 
 import (
@@ -26,13 +115,7 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			Type:        schema.TypeString,
 			Required:    true,
 			ForceNew:    true,
-			Description: "ID of the CVM instance, this machine will be reloaded.",
-		},
-		"hostname": {
-			Type:        schema.TypeString,
-			Required:    true,
-			ForceNew:    true,
-			Description: "When the system is reinstalled, you can specify the HostName of the modified instance. The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-).",
+			Description: "ID of the CVM instance, this cvm will reinstall the system.",
 		},
 		"password": {
 			Type:         schema.TypeString,
@@ -85,10 +168,10 @@ func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta i
 	}
 
 	/*tke has been deleted*/
-	info, has, err := tkeService.DescribeCluster(ctx, clusterId)
+	_, has, err := tkeService.DescribeCluster(ctx, clusterId)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			info, has, err = tkeService.DescribeCluster(ctx, clusterId)
+			_, has, err = tkeService.DescribeCluster(ctx, clusterId)
 			if err != nil {
 				return retryError(err)
 			}
@@ -168,7 +251,6 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 	instanceId := helper.String(d.Get("instance_id").(string))
 	request.ClusterId = helper.String(d.Get("cluster_id").(string))
 	request.InstanceIds = []*string{instanceId}
-	request.HostName = helper.String(d.Get("hostname").(string))
 	request.LoginSettings = &tke.LoginSettings{}
 
 	var loginSettingsNumbers = 0

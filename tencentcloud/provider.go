@@ -540,6 +540,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_kubernetes_cluster":             resourceTencentCloudTkeCluster(),
 			"tencentcloud_kubernetes_as_scaling_group":    ResourceTencentCloudKubernetesAsScalingGroup(),
 			"tencentcloud_kubernetes_scale_worker":        resourceTencentCloudTkeScaleWorker(),
+			"tencentcloud_kubernetes_cluster_attachment":  resourceTencentCloudTkeClusterAttachment(),
 			"tencentcloud_gaap_proxy":                     resourceTencentCloudGaapProxy(),
 			"tencentcloud_gaap_realserver":                resourceTencentCloudGaapRealserver(),
 			"tencentcloud_gaap_layer4_listener":           resourceTencentCloudGaapLayer4Listener(),
