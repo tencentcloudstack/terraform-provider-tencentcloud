@@ -697,3 +697,25 @@ func (me *TkeService) ModifyClusterEndpointSP(ctx context.Context, id string, se
 	}
 	return
 }
+
+func (me *TkeService) DescribeImages(ctx context.Context) (imageIds []string, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeImagesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeImages(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, image := range response.Response.ImageInstanceSet {
+		imageIds = append(imageIds, *image.ImageId)
+	}
+	return
+}

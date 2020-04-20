@@ -624,6 +624,10 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+
+	tkeService := TkeService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
 	var instance *cvm.Instance
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -641,7 +645,23 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		return nil
 	}
 
-	_ = d.Set("image_id", instance.ImageId)
+	var tkeImages []string
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		tkeImages, errRet = tkeService.DescribeImages(ctx)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if d.Get("image_id").(string) == "" || !IsContains(tkeImages, *instance.ImageId) {
+		_ = d.Set("image_id", instance.ImageId)
+	}
+
 	_ = d.Set("availability_zone", instance.Placement.Zone)
 	_ = d.Set("instance_name", instance.InstanceName)
 	_ = d.Set("instance_type", instance.InstanceType)
