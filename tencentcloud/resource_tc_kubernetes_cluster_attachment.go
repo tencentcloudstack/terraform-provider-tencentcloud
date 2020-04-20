@@ -320,7 +320,7 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 	}
 
 	/*wait for cvm status*/
-	if err = resource.Retry(4*writeRetryTimeout, func() *resource.RetryError {
+	if err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, *instanceId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
@@ -334,7 +334,7 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 	}
 
 	/*wait for tke init ok */
-	err = resource.Retry(4*writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		_, workers, err = tkeService.DescribeClusterInstances(ctx, *request.ClusterId)
 		if err != nil {
 			return retryError(err, InternalError)
