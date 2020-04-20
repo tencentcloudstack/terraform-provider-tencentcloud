@@ -25,16 +25,12 @@ func (me *CosService) HeadObject(ctx context.Context, bucket, key string) (info 
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	}
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "head object", request.String(), errRet.Error())
-		}
-	}()
 	ratelimit.Check("HeadObject")
 	response, err := me.client.UseCosClient().HeadObject(&request)
 	if err != nil {
-		errRet = fmt.Errorf("cos head object error: %s, bucket: %s, object: %s", err.Error(), bucket, key)
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "head object", request.String(), err.Error())
+		errRet = err
 		return
 	}
 
