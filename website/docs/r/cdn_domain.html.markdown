@@ -44,7 +44,7 @@ The following arguments are supported:
 
 * `domain` - (Required, ForceNew) Name of the acceleration domain.
 * `origin` - (Required) Origin server configuration. It's a list and consist of at most one item.
-* `service_type` - (Required, ForceNew) Service type of Acceleration domain name. Valid values are `web`, `download` and `video`.
+* `service_type` - (Required, ForceNew) Service type of Acceleration domain name. Valid values are `web`, `download` and `media`.
 * `area` - (Optional) Domain name acceleration region.  Valid values are `mainland`, `overseas` and `global`.
 * `https_config` - (Optional) HTTPS acceleration configuration. It's a list and consist of at most one item.
 * `project_id` - (Optional) The project CDN belongs to, default to 0.
@@ -89,6 +89,7 @@ The `server_certificate_config` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `cname` - CNAME address of domain name.
 * `create_time` - Creation time of domain name.
 * `status` - Acceleration service status.
 

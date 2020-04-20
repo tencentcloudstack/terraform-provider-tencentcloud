@@ -74,7 +74,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_SERVICE_TYPE),
-				Description:  "Service type of Acceleration domain name. Valid values are `web`, `download` and `video`.",
+				Description:  "Service type of Acceleration domain name. Valid values are `web`, `download` and `media`.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -257,6 +257,11 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Computed:    true,
 				Description: "Acceleration service status.",
 			},
+			"cname": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "CNAME address of domain name.",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -384,7 +389,7 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	d.SetId(domain)
 
 	time.Sleep(1 * time.Second)
-	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 		if err != nil {
 			return retryError(err, InternalError)
@@ -446,6 +451,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("area", domainConfig.Area)
 	_ = d.Set("status", domainConfig.Status)
 	_ = d.Set("create_time", domainConfig.CreateTime)
+	_ = d.Set("cname", domainConfig.Cname)
 
 	origins := make([]map[string]interface{}, 0, 1)
 	origin := make(map[string]interface{}, 8)
@@ -714,7 +720,7 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 			domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 			if err != nil {
 				return retryError(err, InternalError)
