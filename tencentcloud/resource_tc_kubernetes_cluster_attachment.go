@@ -134,7 +134,7 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			Description: "The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.",
 		},
 
-		//computer
+		//compute
 		"security_groups": {
 			Type:        schema.TypeSet,
 			Elem:        &schema.Schema{Type: schema.TypeString},
