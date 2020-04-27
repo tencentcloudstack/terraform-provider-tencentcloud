@@ -403,9 +403,9 @@ func (me *VpcService) DescribeCcnAttachmentsByInstance(ctx context.Context, inst
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeCcnAttachedInstancesRequest()
 	request.Filters = make([]*vpc.Filter, 0, 3)
-	request.Filters = append(request.Filters, &vpc.Filter{Name: helper.String("instance-type"), Values: []*string{helper.String(instanceType)}})
-	request.Filters = append(request.Filters, &vpc.Filter{Name: helper.String("instance-id"), Values: []*string{helper.String(instanceId)}})
-	request.Filters = append(request.Filters, &vpc.Filter{Name: helper.String("instance-region"), Values: []*string{helper.String(instanceRegion)}})
+	request.Filters = append(request.Filters, &vpc.Filter{Name: helper.String("instance-type"), Values: []*string{&instanceType}})
+	request.Filters = append(request.Filters, &vpc.Filter{Name: helper.String("instance-id"), Values: []*string{&instanceId}})
+	request.Filters = append(request.Filters, &vpc.Filter{Name: helper.String("instance-region"), Values: []*string{&instanceRegion}})
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().DescribeCcnAttachedInstances(request)
