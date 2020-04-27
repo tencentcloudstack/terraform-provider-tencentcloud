@@ -176,8 +176,7 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	if v, ok := d.GetOk("ccn_uin"); ok && v.(string) != "" {
-
+	if v, ok := d.GetOk("ccn_uin"); ok {
 		ccnUin := v.(string)
 		ccnId := d.Get("ccn_id").(string)
 		instanceType := d.Get("instance_type").(string)
@@ -194,13 +193,19 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 				d.SetId("")
 				return nil
 			}
+			findFlag := false
 			for _, info := range infos {
 				if *info.CcnUin == ccnUin && *info.CcnId == ccnId {
 					_ = d.Set("state", strings.ToUpper(*info.State))
 					_ = d.Set("attached_time", info.AttachedTime)
 					_ = d.Set("cidr_block", info.CidrBlock)
+					findFlag = true
 					break
 				}
+			}
+			if !findFlag {
+				d.SetId("")
+				return nil
 			}
 			return nil
 		})

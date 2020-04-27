@@ -53,12 +53,12 @@ func dataSourceTencentCloudTcaplusApplications() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"app_name": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Name of the tcapplus application.",
 						},
 						"app_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Id of the tcapplus application.",
 						},
 						"idl_type": {

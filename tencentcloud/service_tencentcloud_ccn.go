@@ -450,7 +450,7 @@ func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceReg
 	request.CcnId = &ccnId
 
 	if ccnUin != "" {
-		request.CcnUin = helper.String(ccnUin)
+		request.CcnUin = &ccnUin
 	}
 	var ccnInstance vpc.CcnInstance
 	ccnInstance.InstanceId = &instanceId
