@@ -1,4 +1,4 @@
-## 1.32.0 (Unreleased)
+## 1.32.0 (April 20, 2020)
 
 FEATURES:
 
@@ -7,6 +7,10 @@ FEATURES:
 ENHANCEMENTS: 
 
 * Resource: `tencentcloud_cdn_domain` add new attribute `cname`([#395](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/395)).
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cos_bucket_object` mark the object as destroyed when the object not exist.
 
 ## 1.31.2 (April 17, 2020)
 

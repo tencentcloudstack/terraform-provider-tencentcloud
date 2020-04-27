@@ -40,6 +40,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/mitchellh/go-homedir"
@@ -209,6 +210,11 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 	}
 	response, err := cosService.HeadObject(ctx, bucket, key)
 	if err != nil {
+		if awsError, ok := err.(awserr.RequestFailure); ok && awsError.StatusCode() == 404 {
+			log.Printf("[WARN]%s object (%s) in bucket (%s) not found, error code (404)", logId, key, bucket)
+			d.SetId("")
+			return nil
+		}
 		return err
 	}
 
