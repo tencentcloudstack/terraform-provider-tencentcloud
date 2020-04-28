@@ -1,5 +1,5 @@
 /*
-Use this data source to query monitor policy conditions
+Use this data source to query monitor policy conditions(There is a lot of data and it is recommended to output to a file)
 
 Example Usage
 
