@@ -8,6 +8,14 @@ variable "region" {
     default = "ap-guangzhou"
 }
 
+variable "otheruin" {
+    default = "123353"
+}
+
+variable "otherccn" {
+    default = "ccn-151ssaga"
+}
+
 resource  "tencentcloud_vpc"   "vpc"  {
     name = "ci-temp-test-vpc"
     cidr_block = "10.0.0.0/16"
@@ -26,6 +34,14 @@ resource "tencentcloud_ccn_attachment" "attachment"{
 	instance_type ="VPC"
 	instance_id =tencentcloud_vpc.vpc.id
 	instance_region=var.region
+}
+
+resource "tencentcloud_ccn_attachment" "other_account"{
+	ccn_id = var.otherccn
+	instance_type ="VPC"
+	instance_id =tencentcloud_vpc.vpc.id
+	instance_region=var.region
+	ccn_uin	= var.otheruin
 }
 ```
 */
@@ -73,7 +89,13 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 				ForceNew:    true,
 				Description: "ID of instance is attached.",
 			},
-
+			"ccn_uin": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Uin of the ccn attached. Default is ``, which means the uin of this account. This parameter is used with case when attaching ccn of other account to the instance of this account. For now only support instance type `VPC`.",
+			},
 			// Computed values
 			"state": {
 				Type:        schema.TypeString,
@@ -110,26 +132,34 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 		instanceType   = d.Get("instance_type").(string)
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
+		ccnUin         = ""
 	)
 
 	if len(ccnId) < 4 || len(instanceRegion) < 3 || len(instanceId) < 3 {
 		return fmt.Errorf("param ccn_id or instance_region or instance_id  error")
 	}
 
-	_, has, err := service.DescribeCcn(ctx, ccnId)
-	if err != nil {
-		return err
-	}
-	if has == 0 {
-		return fmt.Errorf("ccn[%s] doesn't exist", ccnId)
+	if v, ok := d.GetOk("ccn_uin"); ok {
+		ccnUin = v.(string)
+		if ccnUin != "" && instanceType != CNN_INSTANCE_TYPE_VPC {
+			return fmt.Errorf("Other ccn account attachment %s only support instance type of `VPC`.", ccnId)
+		}
+	} else {
+		_, has, err := service.DescribeCcn(ctx, ccnId)
+		if err != nil {
+			return err
+		}
+		if has == 0 {
+			return fmt.Errorf("ccn[%s] doesn't exist", ccnId)
+		}
 	}
 
-	if err := service.AttachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId); err != nil {
+	if err := service.AttachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId, ccnUin); err != nil {
 		return err
 	}
 
 	m := md5.New()
-	_, err = m.Write([]byte(ccnId + instanceType + instanceRegion + instanceId))
+	_, err := m.Write([]byte(ccnId + instanceType + instanceRegion + instanceId))
 	if err != nil {
 		return err
 	}
@@ -145,6 +175,46 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	if v, ok := d.GetOk("ccn_uin"); ok {
+		ccnUin := v.(string)
+		ccnId := d.Get("ccn_id").(string)
+		instanceType := d.Get("instance_type").(string)
+		instanceRegion := d.Get("instance_region").(string)
+		instanceId := d.Get("instance_id").(string)
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			infos, e := service.DescribeCcnAttachmentsByInstance(ctx, instanceType, instanceId, instanceRegion)
+			if e != nil {
+				return retryError(e)
+			}
+
+			if len(infos) == 0 {
+				d.SetId("")
+				return nil
+			}
+			findFlag := false
+			for _, info := range infos {
+				if *info.CcnUin == ccnUin && *info.CcnId == ccnId {
+					_ = d.Set("state", strings.ToUpper(*info.State))
+					_ = d.Set("attached_time", info.AttachedTime)
+					_ = d.Set("cidr_block", info.CidrBlock)
+					findFlag = true
+					break
+				}
+			}
+			if !findFlag {
+				d.SetId("")
+				return nil
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+		return nil
+	}
 
 	var (
 		ccnId          = d.Get("ccn_id").(string)
@@ -181,6 +251,7 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 			d.SetId("")
 			return nil
 		}
+
 		_ = d.Set("state", strings.ToUpper(info.state))
 		_ = d.Set("attached_time", info.attachedTime)
 		_ = d.Set("cidr_block", info.cidrBlock)
