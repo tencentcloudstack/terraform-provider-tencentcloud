@@ -1,3 +1,9 @@
+## 1.32.1 (Unreleased)
+
+ENHANCEMENTS: 
+
+* Resource: `tencentcloud_ccn_attachment` add new attribute `ccn_uin`.
+
 ## 1.32.0 (April 20, 2020)
 
 FEATURES:
