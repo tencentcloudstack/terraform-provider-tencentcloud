@@ -476,6 +476,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcaplus_tables":               dataSourceTencentCloudTcaplusTables(),
 			"tencentcloud_tcaplus_idls":                 dataSourceTencentCloudTcaplusIdls(),
 			"tencentcloud_gaap_domain_error_pages":      dataSourceTencentCloudGaapDomainErrorPageInfoList(),
+			"tencentcloud_monitor_policy_conditions":    dataSourceTencentMonitorPolicyConditions(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
