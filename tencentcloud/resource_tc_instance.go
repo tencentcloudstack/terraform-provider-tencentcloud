@@ -171,6 +171,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
+				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
 				Description:  "When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
 			},
@@ -723,7 +724,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 	unsupportedUpdateFields := []string{
 		"instance_charge_type_prepaid_period",
-		//"instance_charge_type_prepaid_renew_flag",
+		"instance_charge_type_prepaid_renew_flag",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
@@ -899,10 +900,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 
 	instanceId := d.Id()
 	//check is force delete or not
-	forceDelete := false
-	if v, ok := d.GetOkExists("force_delete"); ok {
-		forceDelete = v.(bool)
-	}
+	forceDelete := d.Get("force_delete").(bool)
 
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
