@@ -171,7 +171,6 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
-				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
 				Description:  "When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
 			},
@@ -917,7 +916,6 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	}
 
 	//check recycling
-	inRecycle := false
 	notExist := false
 
 	//check exist
@@ -931,7 +929,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			return nil
 		}
 		if *instance.InstanceState == CVM_STATUS_SHUTDOWN {
-			inRecycle = true
+			//in recycling
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
@@ -941,54 +939,48 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	if notExist {
+	if notExist || !forceDelete {
 		return nil
 	}
 
 	//exist in recycle
-	if !forceDelete && inRecycle {
-		return nil
-	} else if forceDelete && inRecycle {
-		//delete again
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := cvmService.DeleteInstance(ctx, instanceId)
-			//when state is terminating, do not delete but check exist
-			if errRet != nil {
-				//check InvalidInstanceState.Terminating
-				ee, ok := errRet.(*errors.TencentCloudSDKError)
-				if !ok {
-					return retryError(errRet)
-				}
-				if ee.Code == "InvalidInstanceState.Terminating" {
-					return nil
-				}
-				return retryError(errRet, "OperationDenied.InstanceOperationInProgress")
-			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
 
-		//describe and check not exist
-		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
+	//delete again
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		errRet := cvmService.DeleteInstance(ctx, instanceId)
+		//when state is terminating, do not delete but check exist
+		if errRet != nil {
+			//check InvalidInstanceState.Terminating
+			ee, ok := errRet.(*errors.TencentCloudSDKError)
+			if !ok {
+				return retryError(errRet)
 			}
-			if instance == nil {
+			if ee.Code == "InvalidInstanceState.Terminating" {
 				return nil
 			}
-			return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-		})
-
-		if err != nil {
-			return err
+			return retryError(errRet, "OperationDenied.InstanceOperationInProgress")
 		}
 		return nil
-
-	} else {
-		return fmt.Errorf("Instance %s exist, delete fail", instanceId)
+	})
+	if err != nil {
+		return err
 	}
+
+	//describe and check not exist
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if instance == nil {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
 
 }
