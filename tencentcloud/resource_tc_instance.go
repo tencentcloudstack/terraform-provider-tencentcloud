@@ -348,7 +348,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.",
+				Description: "Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be permanently deleted instead of staying in recycle bin. Note: only works for `PREPAID` instance.",
 			},
 			// Computed values.
 			"instance_status": {
