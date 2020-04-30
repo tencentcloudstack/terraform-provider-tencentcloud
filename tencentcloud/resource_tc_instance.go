@@ -85,6 +85,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -169,6 +170,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"instance_charge_type_prepaid_renew_flag": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
 				Description:  "When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
 			},
@@ -342,7 +344,12 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:    true,
 				Description: "A mapping of tags to assign to the resource. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).",
 			},
-
+			"force_delete": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.",
+			},
 			// Computed values.
 			"instance_status": {
 				Type:        schema.TypeString,
@@ -621,6 +628,12 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := d.Id()
+	forceDelete := false
+	if v, ok := d.GetOkExists("force_delete"); ok {
+		forceDelete = v.(bool)
+		_ = d.Set("force_delete", forceDelete)
+	}
+
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -905,6 +918,9 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	instanceId := d.Id()
+	//check is force delete or not
+	forceDelete := d.Get("force_delete").(bool)
+
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -919,6 +935,58 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
+	//check recycling
+	notExist := false
+
+	//check exist
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if instance == nil {
+			notExist = true
+			return nil
+		}
+		if *instance.InstanceState == CVM_STATUS_SHUTDOWN {
+			//in recycling
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if notExist || !forceDelete {
+		return nil
+	}
+
+	//exist in recycle
+
+	//delete again
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		errRet := cvmService.DeleteInstance(ctx, instanceId)
+		//when state is terminating, do not delete but check exist
+		if errRet != nil {
+			//check InvalidInstanceState.Terminating
+			ee, ok := errRet.(*errors.TencentCloudSDKError)
+			if !ok {
+				return retryError(errRet)
+			}
+			if ee.Code == "InvalidInstanceState.Terminating" {
+				return nil
+			}
+			return retryError(errRet, "OperationDenied.InstanceOperationInProgress")
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	//describe and check not exist
 	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
@@ -929,9 +997,10 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		}
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 	})
+
 	if err != nil {
 		return err
 	}
-
 	return nil
+
 }
