@@ -215,7 +215,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"cos_bucket_name", "cos_object_name", "cos_bucket_region"},
-				Description:   "Zip file of the SCF function, content is encoded by base64, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.",
+				Description:   "Zip file of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.",
 			},
 
 			"triggers": {
@@ -695,7 +695,22 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		updateAttrs = append(updateAttrs, "zip_file")
 	}
 	if raw, ok := d.GetOk("zip_file"); ok {
-		functionInfo.zipFile = helper.String(raw.(string))
+		path, err := homedir.Expand(raw.(string))
+		if err != nil {
+			return fmt.Errorf("zip file (%s) homedir expand error: %s", raw.(string), err.Error())
+		}
+		file, err := os.Open(path)
+		if err != nil {
+			return fmt.Errorf("zip file (%s) open error: %s", path, err.Error())
+		}
+		defer file.Close()
+		body, err := ioutil.ReadAll(file)
+		if err != nil {
+			return fmt.Errorf("zip file (%s) read error: %s", path, err.Error())
+		}
+
+		content := base64.StdEncoding.EncodeToString(body)
+		functionInfo.zipFile = &content
 	}
 
 	// update function code
