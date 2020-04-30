@@ -3,6 +3,7 @@
 ENHANCEMENTS: 
 
 * Resource: `tencentcloud_ccn_attachment` add new attribute `ccn_uin`.
+* Resource: `tencentcloud_instance` add new attribute `force_delete`.
 
 ## 1.32.0 (April 20, 2020)
 
