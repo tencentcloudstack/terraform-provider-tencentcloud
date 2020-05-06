@@ -14,7 +14,16 @@ Use this resource to create tcaplus application
 
 ## Example Usage
 
-
+```hcl
+resource "tencentcloud_tcaplus_application" "test" {
+  idl_type                 = "PROTO"
+  app_name                 = "tf_tcaplus_app_test"
+  vpc_id                   = "vpc-7k6gzox6"
+  subnet_id                = "subnet-akwgvfa3"
+  password                 = "1qaA2k1wgvfa3ZZZ"
+  old_password_expire_last = 3600
+}
+```
 
 ## Argument Reference
 

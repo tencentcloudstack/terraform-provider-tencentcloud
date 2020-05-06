@@ -14,6 +14,7 @@ resource "tencentcloud_tcaplus_application" "test" {
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
+```
 
 Import
 
