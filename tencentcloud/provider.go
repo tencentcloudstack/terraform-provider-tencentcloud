@@ -479,6 +479,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_policy_conditions":    dataSourceTencentMonitorPolicyConditions(),
 			"tencentcloud_monitor_data":                 dataSourceTencentMonitorData(),
 			"tencentcloud_monitor_product_event":        dataSourceTencentMonitorProductEvent(),
+			"tencentcloud_monitor_binding_objects":      dataSourceTencentMonitorBindingObjects(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
