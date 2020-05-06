@@ -478,6 +478,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_gaap_domain_error_pages":      dataSourceTencentCloudGaapDomainErrorPageInfoList(),
 			"tencentcloud_monitor_policy_conditions":    dataSourceTencentMonitorPolicyConditions(),
 			"tencentcloud_monitor_data":                 dataSourceTencentMonitorData(),
+			"tencentcloud_monitor_product_event":        dataSourceTencentMonitorProductEvent(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
