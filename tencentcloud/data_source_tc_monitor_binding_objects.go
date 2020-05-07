@@ -4,10 +4,12 @@ Use this data source to query policy group binding objects.
 Example Usage
 
 ```hcl
-data "tencentcloud_monitor_product_event" "cvm_event_data" {
-  start_time      = 1588700283
-  is_alarm_config = 0
-  product_name    = ["cvm"]
+data "tencentcloud_monitor_policy_groups" "name" {
+  name = "test"
+}
+
+data "tencentcloud_monitor_binding_objects" "objects" {
+  group_id = data.tencentcloud_monitor_policy_groups.name.list[0].group_id
 }
 ```
 
@@ -84,6 +86,8 @@ func dataSourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta inte
 		offset         int64 = 0
 		limit          int64 = 20
 		err            error
+		finish         bool
+		list           = make([]interface{}, 0, len(objects))
 	)
 
 	request.GroupId = helper.IntInt64(d.Get("group_id").(int))
@@ -91,7 +95,6 @@ func dataSourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta inte
 	request.Offset = &offset
 	request.Limit = &limit
 
-	var finish = false
 	for {
 		if finish {
 			break
@@ -112,8 +115,6 @@ func dataSourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta inte
 
 		offset = offset + limit
 	}
-
-	var list = make([]interface{}, 0, len(objects))
 
 	for _, event := range objects {
 		var listItem = map[string]interface{}{}
