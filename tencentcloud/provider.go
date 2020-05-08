@@ -587,6 +587,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcaplus_table":                  resourceTencentCloudTcaplusTable(),
 			"tencentcloud_gaap_domain_error_page":         resourceTencentCloudGaapDomainErrorPageInfo(),
 			"tencentcloud_cdn_domain":                     resourceTencentCloudCdnDomain(),
+			"tencentcloud_monitor_policy_group":           resourceTencentMonitorPolicyGroup(),
 		},
 
 		ConfigureFunc: providerConfigure,
