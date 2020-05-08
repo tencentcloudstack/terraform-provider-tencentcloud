@@ -266,6 +266,35 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 					},
 				},
 			},
+			"binding_objects": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list binding objects. Each element contains the following attributes:",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"unique_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Object unique id.",
+						},
+						"dimensions_json": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Represents a collection of dimensions of an object instance, json format.",
+						},
+						"is_shielded": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Whether the object is shielded or not, 0 means unshielded and 1 means shielded.",
+						},
+						"region": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The region where the object is located.",
+						},
+					},
+				},
+			},
 			"dimension_group": {
 				Type:        schema.TypeList,
 				Elem:        &schema.Schema{Type: schema.TypeString},
@@ -499,10 +528,57 @@ func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interfac
 		d.Set("last_edit_uin", response.Response.LastEditUin),
 	)
 
+	var (
+		requestList    = monitor.NewDescribeBindingPolicyObjectListRequest()
+		responseList   *monitor.DescribeBindingPolicyObjectListResponse
+		objects        []*monitor.DescribeBindingPolicyObjectListInstance
+		offset         int64 = 0
+		limit          int64 = 20
+		finish         bool
+		bindingObjects = make([]interface{}, 0, len(objects))
+	)
+
+	requestList.GroupId = &groupId
+	requestList.Module = helper.String("monitor")
+	requestList.Offset = &offset
+	requestList.Limit = &limit
+
+	for {
+		if finish {
+			break
+		}
+		if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			if responseList, err = monitorService.client.UseMonitorClient().DescribeBindingPolicyObjectList(requestList); err != nil {
+				return retryError(err, InternalError)
+			}
+			objects = append(objects, responseList.Response.List...)
+			if len(responseList.Response.List) < int(limit) {
+				finish = true
+			}
+			return nil
+		}); err != nil {
+			return err
+		}
+		offset = offset + limit
+	}
+
+	for _, event := range objects {
+		var listItem = map[string]interface{}{}
+		listItem["region"] = event.Region
+		listItem["unique_id"] = event.UniqueId
+		listItem["dimensions_json"] = event.Dimensions
+		listItem["is_shielded"] = event.IsShielded
+		listItem["region"] = event.Region
+		bindingObjects = append(bindingObjects, listItem)
+	}
+	errs = append(errs, d.Set("binding_objects", bindingObjects))
+
 	if len(errs) > 0 {
 		return errs[0]
+	} else {
+		return nil
 	}
-	return nil
 }
 
 func resourceTencentMonitorPolicyGroupUpdate(d *schema.ResourceData, meta interface{}) error {
