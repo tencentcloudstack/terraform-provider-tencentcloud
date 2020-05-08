@@ -498,6 +498,10 @@ func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interfac
 		d.Set("update_time", response.Response.UpdateTime),
 		d.Set("last_edit_uin", response.Response.LastEditUin),
 	)
+
+	if len(errs) > 0 {
+		return errs[0]
+	}
 	return nil
 }
 
