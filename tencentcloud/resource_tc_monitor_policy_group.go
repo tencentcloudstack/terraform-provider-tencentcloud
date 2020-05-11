@@ -51,6 +51,7 @@ $ terraform import tencentcloud_monitor_policy_group.group group-id
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -393,6 +394,9 @@ func resourceTencentMonitorPolicyGroupCreate(d *schema.ResourceData, meta interf
 func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_policy_group.read")()
 
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewDescribePolicyGroupInfoRequest()
@@ -403,6 +407,16 @@ func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return fmt.Errorf("id [%s] is broken", d.Id())
 	}
+
+	info, err := monitorService.DescribePolicyGroup(ctx, groupId)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		d.SetId("")
+		return nil
+	}
+
 	request.GroupId = &groupId
 	request.Module = helper.String("monitor")
 
@@ -528,40 +542,11 @@ func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interfac
 		d.Set("last_edit_uin", response.Response.LastEditUin),
 	)
 
-	var (
-		requestList    = monitor.NewDescribeBindingPolicyObjectListRequest()
-		responseList   *monitor.DescribeBindingPolicyObjectListResponse
-		objects        []*monitor.DescribeBindingPolicyObjectListInstance
-		offset         int64 = 0
-		limit          int64 = 20
-		finish         bool
-		bindingObjects = make([]interface{}, 0, len(objects))
-	)
-
-	requestList.GroupId = &groupId
-	requestList.Module = helper.String("monitor")
-	requestList.Offset = &offset
-	requestList.Limit = &limit
-
-	for {
-		if finish {
-			break
-		}
-		if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			ratelimit.Check(request.GetAction())
-			if responseList, err = monitorService.client.UseMonitorClient().DescribeBindingPolicyObjectList(requestList); err != nil {
-				return retryError(err, InternalError)
-			}
-			objects = append(objects, responseList.Response.List...)
-			if len(responseList.Response.List) < int(limit) {
-				finish = true
-			}
-			return nil
-		}); err != nil {
-			return err
-		}
-		offset = offset + limit
+	objects, err := monitorService.DescribeBindingPolicyObjectList(ctx, groupId)
+	if err != nil {
+		return err
 	}
+	bindingObjects := make([]interface{}, 0, len(objects))
 
 	for _, event := range objects {
 		var listItem = map[string]interface{}{}
