@@ -588,6 +588,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_gaap_domain_error_page":         resourceTencentCloudGaapDomainErrorPageInfo(),
 			"tencentcloud_cdn_domain":                     resourceTencentCloudCdnDomain(),
 			"tencentcloud_monitor_policy_group":           resourceTencentMonitorPolicyGroup(),
+			"tencentcloud_monitor_binding_object":         resourceTencentMonitorBindingObject(),
 		},
 
 		ConfigureFunc: providerConfigure,

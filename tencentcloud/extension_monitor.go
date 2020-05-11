@@ -17,3 +17,8 @@ var monitorEventStatus = []string{
 	monitorEventStatusAlarm,
 	monitorEventStatusNothing,
 }
+
+/*regions in monitor*/
+var MonitorRegionMap = map[string]string{
+	"ap-guangzhou":"gz",
+}

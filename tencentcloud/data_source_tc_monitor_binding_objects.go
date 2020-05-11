@@ -17,13 +17,10 @@ data "tencentcloud_monitor_binding_objects" "objects" {
 package tencentcloud
 
 import (
-	"crypto/md5"
+	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func dataSourceTencentMonitorBindingObjects() *schema.Resource {
@@ -78,42 +75,22 @@ func dataSourceTencentMonitorBindingObjects() *schema.Resource {
 func dataSourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_monitor_binding_objects.read")()
 
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request        = monitor.NewDescribeBindingPolicyObjectListRequest()
-		response       *monitor.DescribeBindingPolicyObjectListResponse
 		objects        []*monitor.DescribeBindingPolicyObjectListInstance
-		offset         int64 = 0
-		limit          int64 = 20
 		err            error
-		finish         bool
-		list           = make([]interface{}, 0, len(objects))
+
+		list = make([]interface{}, 0, len(objects))
 	)
 
-	request.GroupId = helper.IntInt64(d.Get("group_id").(int))
-	request.Module = helper.String("monitor")
-	request.Offset = &offset
-	request.Limit = &limit
+	id := int64(d.Get("group_id").(int))
 
-	for {
-		if finish {
-			break
-		}
-		if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			ratelimit.Check(request.GetAction())
-			if response, err = monitorService.client.UseMonitorClient().DescribeBindingPolicyObjectList(request); err != nil {
-				return retryError(err, InternalError)
-			}
-			objects = append(objects, response.Response.List...)
-			if len(response.Response.List) < int(limit) {
-				finish = true
-			}
-			return nil
-		}); err != nil {
-			return err
-		}
-
-		offset = offset + limit
+	objects, err = monitorService.DescribeBindingPolicyObjectList(ctx, id)
+	if err != nil {
+		return err
 	}
 
 	for _, event := range objects {
@@ -128,12 +105,7 @@ func dataSourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta inte
 	if err = d.Set("list", list); err != nil {
 		return err
 	}
-
-	md := md5.New()
-	md.Write([]byte(request.ToJsonString()))
-	id := fmt.Sprintf("%x", md.Sum(nil))
-	d.SetId(id)
-
+	d.SetId(fmt.Sprintf("%d", id))
 	if output, ok := d.GetOk("result_output_file"); ok {
 		return writeToFile(output.(string), list)
 	}
