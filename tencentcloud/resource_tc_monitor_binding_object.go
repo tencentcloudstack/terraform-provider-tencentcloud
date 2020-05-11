@@ -26,7 +26,7 @@ resource "tencentcloud_monitor_binding_object" "binding" {
 }
 ```
 
- */
+*/
 package tencentcloud
 
 import (
@@ -97,7 +97,6 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 		ctx            = context.WithValue(context.TODO(), "logId", logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewBindingPolicyObjectRequest()
-		response       *monitor.BindingPolicyObjectResponse
 		idSeeds        []string
 		groupId        = int64(d.Get("group_id").(int))
 	)
@@ -129,12 +128,13 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 		dimension.Dimensions = &dimensionsJson
 		dimension.Region = &region
 		request.Dimensions = append(request.Dimensions, &dimension)
+
 	}
 
 	request.Module = helper.String("monitor")
 	if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		if response, err = monitorService.client.UseMonitorClient().BindingPolicyObject(request); err != nil {
+		if _, err = monitorService.client.UseMonitorClient().BindingPolicyObject(request); err != nil {
 			return retryError(err, InternalError)
 		}
 		return nil
@@ -143,11 +143,35 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(helper.DataResourceIdsHash(idSeeds))
 	time.Sleep(3 * time.Second)
+
+	objects, err := monitorService.DescribeBindingPolicyObjectList(ctx, groupId)
+
+	if err != nil {
+		return err
+	}
+
+	successDimensionsJsonMap := make(map[string]bool)
+	bindingFails := make([]string, 0, len(request.Dimensions))
+	for _, v := range objects {
+		successDimensionsJsonMap[*v.Dimensions] = true
+	}
+	for _, v := range request.Dimensions {
+		if !successDimensionsJsonMap[*v.Dimensions] {
+			bindingFails = append(bindingFails, *v.Dimensions)
+		}
+	}
+
+	if len(bindingFails) > 0 {
+		return fmt.Errorf("bind objects to policy has partial failure,Please check if it is an instance of this region `%s`,[%s]",
+			monitorService.client.Region, helper.SliceFieldSerialize(bindingFails))
+	}
+
 	return resourceTencentMonitorBindingObjectRead(d, meta)
 }
 
 func resourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_binding_object.read")()
+	defer inconsistentCheck(d, meta)()
 	var (
 		logId          = getLogId(contextNil)
 		ctx            = context.WithValue(context.TODO(), "logId", logId)
@@ -253,8 +277,7 @@ func resourceTencentMonitorBindingObjectDelete(d *schema.ResourceData, meta inte
 	}
 
 	var (
-		request  = monitor.NewUnBindingPolicyObjectRequest()
-		response *monitor.UnBindingPolicyObjectResponse
+		request = monitor.NewUnBindingPolicyObjectRequest()
 	)
 
 	request.Module = helper.String("monitor")
@@ -263,7 +286,7 @@ func resourceTencentMonitorBindingObjectDelete(d *schema.ResourceData, meta inte
 
 	if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		if response, err = monitorService.client.UseMonitorClient().UnBindingPolicyObject(request); err != nil {
+		if _, err = monitorService.client.UseMonitorClient().UnBindingPolicyObject(request); err != nil {
 			return retryError(err, InternalError)
 		}
 		return nil

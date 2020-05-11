@@ -270,7 +270,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 			"binding_objects": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list binding objects. Each element contains the following attributes:",
+				Description: "A list binding objects(list only those in the `provider.region`). Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"unique_id": {
@@ -393,6 +393,7 @@ func resourceTencentMonitorPolicyGroupCreate(d *schema.ResourceData, meta interf
 
 func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_policy_group.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -577,7 +578,6 @@ func resourceTencentMonitorPolicyGroupDelete(d *schema.ResourceData, meta interf
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewDeletePolicyGroupRequest()
-		response       *monitor.DeletePolicyGroupResponse
 	)
 
 	groupId, err := strconv.ParseInt(d.Id(), 10, 64)
@@ -589,7 +589,7 @@ func resourceTencentMonitorPolicyGroupDelete(d *schema.ResourceData, meta interf
 
 	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		if response, err = monitorService.client.UseMonitorClient().DeletePolicyGroup(request); err != nil {
+		if _, err = monitorService.client.UseMonitorClient().DeletePolicyGroup(request); err != nil {
 			return retryError(err, InternalError)
 		}
 		return nil

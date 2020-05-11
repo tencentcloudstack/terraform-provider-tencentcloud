@@ -213,23 +213,23 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 									"start_time": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Alarm period start time.Range [0,86400], which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'",
+										Description: "Alarm period start time.Range [0,86399], which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'.",
 									},
 									"end_time": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "End of alarm period. Meaning with `start_time`",
+										Description: "End of alarm period. Meaning with `start_time`.",
 									},
 									"notify_way": {
 										Type:        schema.TypeList,
 										Elem:        &schema.Schema{Type: schema.TypeString},
 										Computed:    true,
-										Description: `Method of warning notification.Optional "SMS", "SITE", "EMAIL", "CALL", "WECHAT".`,
+										Description: `Method of warning notification.Optional ` + helper.SliceFieldSerialize(monitorNotifyWays) + `.`,
 									},
 									"receiver_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Receive type. 'Group' (receiving group) or 'user' (receiver).",
+										Description: "Receive type. Optional 'group' or 'user'.",
 									},
 									"round_number": {
 										Type:        schema.TypeInt,
