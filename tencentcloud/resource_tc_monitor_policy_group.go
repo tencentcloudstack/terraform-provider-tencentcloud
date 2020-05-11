@@ -270,7 +270,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 			"binding_objects": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list binding objects. Each element contains the following attributes:",
+				Description: "A list binding objects(list only those in the `provider.region`). Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"unique_id": {

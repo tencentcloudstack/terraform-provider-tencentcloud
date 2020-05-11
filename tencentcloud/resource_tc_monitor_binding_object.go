@@ -26,7 +26,7 @@ resource "tencentcloud_monitor_binding_object" "binding" {
 }
 ```
 
- */
+*/
 package tencentcloud
 
 import (
@@ -129,6 +129,7 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 		dimension.Dimensions = &dimensionsJson
 		dimension.Region = &region
 		request.Dimensions = append(request.Dimensions, &dimension)
+
 	}
 
 	request.Module = helper.String("monitor")
@@ -143,6 +144,29 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 	}
 	d.SetId(helper.DataResourceIdsHash(idSeeds))
 	time.Sleep(3 * time.Second)
+
+	objects, err := monitorService.DescribeBindingPolicyObjectList(ctx, groupId)
+
+	if err != nil {
+		return err
+	}
+
+	successDimensionsJsonMap := make(map[string]bool)
+	bindingFails := make([]string, 0, len(request.Dimensions))
+	for _, v := range objects {
+		successDimensionsJsonMap[*v.Dimensions] = true
+	}
+	for _, v := range request.Dimensions {
+		if !successDimensionsJsonMap[*v.Dimensions] {
+			bindingFails = append(bindingFails, *v.Dimensions)
+		}
+	}
+
+	if len(bindingFails) > 0 {
+		return fmt.Errorf("bind objects to policy has partial failure,Please check if it is an instance of this region `%s`,[%s]",
+			monitorService.client.Region, helper.SliceFieldSerialize(bindingFails))
+	}
+
 	return resourceTencentMonitorBindingObjectRead(d, meta)
 }
 

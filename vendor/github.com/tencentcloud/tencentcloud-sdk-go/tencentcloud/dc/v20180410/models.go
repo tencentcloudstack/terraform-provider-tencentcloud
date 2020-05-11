@@ -220,6 +220,9 @@ type CreateDirectConnectTunnelRequest struct {
 
 	// CustomerAddress，用户侧互联 IP
 	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+
+	// TencentBackupAddress，腾讯侧备用互联 IP
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
 }
 
 func (r *CreateDirectConnectTunnelRequest) ToJsonString() string {
@@ -673,6 +676,10 @@ type DirectConnectTunnel struct {
 	// VPC名称
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpcName *string `json:"VpcName,omitempty" name:"VpcName"`
+
+	// TencentBackupAddress，腾讯侧备用互联 IP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
 }
 
 type Filter struct {
@@ -771,6 +778,9 @@ type ModifyDirectConnectTunnelAttributeRequest struct {
 
 	// 专用通道带宽值，单位为M。
 	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+
+	// 腾讯侧备用互联IP
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
 }
 
 func (r *ModifyDirectConnectTunnelAttributeRequest) ToJsonString() string {

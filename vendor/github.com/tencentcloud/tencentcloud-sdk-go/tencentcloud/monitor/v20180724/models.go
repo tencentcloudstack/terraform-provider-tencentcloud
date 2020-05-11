@@ -150,7 +150,7 @@ type CreatePolicyGroupRequest struct {
 	// 策略组中的阈值告警规则
 	Conditions []*CreatePolicyGroupCondition `json:"Conditions,omitempty" name:"Conditions" list`
 
-	// 策略组中的时间告警规则
+	// 策略组中的事件告警规则
 	EventConditions []*CreatePolicyGroupEventCondition `json:"EventConditions,omitempty" name:"EventConditions" list`
 
 	// 是否为后端调用。当且仅当值为1时，后台拉取策略模版中的规则填充入Conditions以及EventConditions字段
@@ -352,10 +352,10 @@ func (r *DescribeAccidentEventListResponse) FromJsonString(s string) error {
 type DescribeBaseMetricsRequest struct {
 	*tchttp.BaseRequest
 
-	// 业务命名空间
+	// 业务命名空间，各个云产品的业务命名空间不同。如需获取业务命名空间，请前往各产品监控接口文档，例如云服务器的命名空间，可参见 [云服务器监控接口](https://cloud.tencent.com/document/api/248/30385)
 	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
 
-	// 指标名
+	// 指标名，各个云产品的指标名不同。如需获取指标名，请前往各产品监控接口文档，例如云服务器的指标名，可参见 [云服务器监控接口](https://cloud.tencent.com/document/api/248/30385)
 	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 }
 
@@ -514,6 +514,9 @@ type DescribeBasicAlarmListRequest struct {
 
 	// 根据实例组ID过滤
 	InstanceGroupIds []*int64 `json:"InstanceGroupIds,omitempty" name:"InstanceGroupIds" list`
+
+	// 根据指标名过滤
+	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames" list`
 }
 
 func (r *DescribeBasicAlarmListRequest) ToJsonString() string {
@@ -1782,9 +1785,9 @@ type ReceiverInfo struct {
 	NotifyWay []*string `json:"NotifyWay,omitempty" name:"NotifyWay" list`
 
 	// 接收人类型。“group” 或 “user”
-	ReceiverType []*string `json:"ReceiverType,omitempty" name:"ReceiverType" list`
+	ReceiverType *string `json:"ReceiverType,omitempty" name:"ReceiverType"`
 
-	// Id
+	// ReceiverId
 	Id *int64 `json:"Id,omitempty" name:"Id"`
 
 	// 电话告警通知时机。可选"OCCUR"(告警时通知),"RECOVER"(恢复时通知)
