@@ -47,7 +47,7 @@ func dataSourceTencentMonitorPolicyConditions() *schema.Resource {
 						"policy_view_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Policy view name. eg:`cvm_device`,`BANDWIDTHPACKAGE`",
+							Description: "Policy view name. eg:`cvm_device`,`BANDWIDTHPACKAGE`. refer to `data.tencentcloud_monitor_policy_conditions(policy_view_name)`.",
 						},
 						"is_support_multi_region": {
 							Type:        schema.TypeBool,

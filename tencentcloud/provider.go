@@ -249,6 +249,20 @@ MySQL
     tencentcloud_mysql_account_privilege
     tencentcloud_mysql_backup_policy
 
+Monitor
+  Data Source
+	tencentcloud_monitor_policy_conditions
+	tencentcloud_monitor_data
+	tencentcloud_monitor_product_event
+	tencentcloud_monitor_binding_objects
+	tencentcloud_monitor_policy_groups
+	tencentcloud_monitor_product_namespace
+
+  Resource
+    tencentcloud_monitor_policy_group
+    tencentcloud_monitor_binding_object
+    tencentcloud_monitor_binding_receiver
+
 Redis
   Data Source
     tencentcloud_redis_zone_config

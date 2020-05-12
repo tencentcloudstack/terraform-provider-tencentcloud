@@ -38,19 +38,19 @@ func dataSourceTencentMonitorProductEvent() *schema.Resource {
 				Type:        schema.TypeList,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
-				Description: "Product type filtering, such as `cvm` for cloud server",
+				Description: "Product type filtering, such as `cvm` for cloud server.",
 			},
 			"event_name": {
 				Type:        schema.TypeList,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
-				Description: "Event name filtering, such as `guest_reboot` indicates that the machine restart",
+				Description: "Event name filtering, such as `guest_reboot` indicates that the machine restart.",
 			},
 			"instance_id": {
 				Type:        schema.TypeList,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
-				Description: "Affect objects, such as `ins-19708ino`",
+				Description: "Affect objects, such as `ins-19708ino`.",
 			},
 			"dimensions": {
 				Type:     schema.TypeList,
@@ -60,12 +60,12 @@ func dataSourceTencentMonitorProductEvent() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Instance dimension name. eg: `deviceWanIp` for internet ip .",
+							Description: "Instance dimension name. eg: `deviceWanIp` for internet ip.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Instance dimension value. eg: `119.119.119.119` for internet ip ",
+							Description: "Instance dimension value. eg: `119.119.119.119` for internet ip.",
 						},
 					},
 				},
@@ -75,7 +75,7 @@ func dataSourceTencentMonitorProductEvent() *schema.Resource {
 				Type:        schema.TypeList,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
-				Description: "Region filter, such as `gz`",
+				Description: "Region filter, such as `gz`.",
 			},
 			"type": {
 				Type:        schema.TypeList,
