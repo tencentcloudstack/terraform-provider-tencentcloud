@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"testing"
-
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -19,45 +18,42 @@ func TestAccTencentCloudMonitorBindingObjectResource(t *testing.T) {
 		CheckDestroy: testAccCheckMonitorBindingObjectDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTkeScaleWorkerInstance,
+				Config: testAccMonitorBindingObjectInstance,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckMonitorBindingObjectExists(testTkeScaleWorkerResourceKey),
-					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "cluster_id"),
-					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_config.#"),
-					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.#", "1"),
-					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_id"),
-					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_role")),
+					testAccCheckMonitorBindingObjectExists("tencentcloud_monitor_binding_object.binding"),
+					resource.TestCheckResourceAttrSet("tencentcloud_monitor_binding_object.binding", "group_id"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_binding_object.binding", "dimensions.#", "1"),
+				),
 			},
 		},
 	})
 }
 
 func testAccCheckMonitorBindingObjectDestroy(s *terraform.State) error {
+
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != testTkeScaleWorkerResourceName {
+		if rs.Type != "tencentcloud_monitor_binding_object" {
 			continue
 		}
-		instanceId := rs.Primary.Attributes["worker_instances_list.0.instance_id"]
-		clusterId := rs.Primary.Attributes["cluster_id"]
+		groupIdStr := rs.Primary.Attributes["group_id"]
 
-		if clusterId == "" || instanceId == "" {
-			return fmt.Errorf("miss worker_instances_list.0.instance_id[%s] or cluster_id[%s]", instanceId, clusterId)
+		if groupIdStr == "" {
+			return fmt.Errorf("miss group_id[%v] ", groupIdStr)
 		}
+		groupId, err := strconv.ParseInt(groupIdStr, 10, 64)
+		if err != nil {
+			return fmt.Errorf("id [%d] is broken", groupId)
+		}
+
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
-		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
+		info, err := service.DescribePolicyGroup(ctx, groupId)
 		if err != nil {
 			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-				_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
-
-				if e, ok := err.(*errors.TencentCloudSDKError); ok {
-					if e.GetCode() == "InvalidParameter.ClusterNotFound" {
-						return nil
-					}
-				}
+				info, err = service.DescribePolicyGroup(ctx, groupId)
 				if err != nil {
 					return retryError(err)
 				}
@@ -68,12 +64,10 @@ func testAccCheckMonitorBindingObjectDestroy(s *terraform.State) error {
 			return err
 		}
 
-		for _, worker := range workers {
-			if worker.InstanceId == instanceId {
-				return fmt.Errorf("cvm %s found in DescribeClusterInstances", instanceId)
-			}
+		if info != nil {
+			return fmt.Errorf("group %d found in DescribePolicyGroup", groupId)
 		}
-		log.Printf("[DEBUG]instance %s delelte ok", instanceId)
+		log.Printf("[DEBUG]group and receivers %d delete ok", groupId)
 
 	}
 	return nil
@@ -84,31 +78,26 @@ func testAccCheckMonitorBindingObjectExists(n string) resource.TestCheckFunc {
 		rs, ok := s.RootModule().Resources[n]
 
 		if !ok {
-			return fmt.Errorf("tke worker scale instance %s is not found", n)
+			return fmt.Errorf("resource %s not found", n)
 		}
-		instanceId := rs.Primary.Attributes["worker_instances_list.0.instance_id"]
-		clusterId := rs.Primary.Attributes["cluster_id"]
+		groupIdStr := rs.Primary.Attributes["group_id"]
 
-		if clusterId == "" || instanceId == "" {
-			return fmt.Errorf("miss worker_instances_list.0.instance_id[%s] or cluster_id[%s]", instanceId, clusterId)
+		if groupIdStr == "" {
+			return fmt.Errorf("miss group_id[%v] ", groupIdStr)
 		}
-
+		groupId, err := strconv.ParseInt(groupIdStr, 10, 64)
+		if err != nil {
+			return fmt.Errorf("id [%d] is broken", groupId)
+		}
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 
-		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
+		info, err := service.DescribePolicyGroup(ctx, groupId)
 		if err != nil {
 			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-				_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
-
-				if e, ok := err.(*errors.TencentCloudSDKError); ok {
-					if e.GetCode() == "InvalidParameter.ClusterNotFound" {
-						return nil
-					}
-				}
-
+				info, err = service.DescribePolicyGroup(ctx, groupId)
 				if err != nil {
 					return retryError(err)
 				}
@@ -118,24 +107,30 @@ func testAccCheckMonitorBindingObjectExists(n string) resource.TestCheckFunc {
 		if err != nil {
 			return err
 		}
-
-		for _, worker := range workers {
-			if worker.InstanceId == instanceId {
-				log.Printf("[DEBUG]instance %s create ok", instanceId)
-				return nil
-			}
+		if info == nil {
+			return fmt.Errorf("group %d not found in DescribePolicyGroup", groupId)
 		}
-		return fmt.Errorf("cvm %s not found in DescribeClusterInstances", instanceId)
+
+		objects, err := service.DescribeBindingPolicyObjectList(ctx, groupId)
+
+		if err != nil {
+			return err
+		}
+		if len(objects) < 1 {
+			return fmt.Errorf("group %d binding object fail", groupId)
+		}
+		return nil
 	}
 }
 
 const testAccMonitorBindingObjectInstance string = `
-
-
+data "tencentcloud_instances" "instances" {
+}
 resource "tencentcloud_monitor_policy_group" "group" {
-  group_name       = "nice_group"
+  group_name       = "terraform_test"
   policy_view_name = "cvm_device"
   remark           = "this is a test policy group"
+  is_union_rule    = 1
   conditions {
     metric_id           = 33
     alarm_notify_type   = 1
@@ -146,10 +141,11 @@ resource "tencentcloud_monitor_policy_group" "group" {
     continue_period     = 2
   }
 }
+
 resource "tencentcloud_monitor_binding_object" "binding" {
   group_id = tencentcloud_monitor_policy_group.group.id
   dimensions {
-    dimensions_json = "{\"unInstanceId\":\"ins-lqm9lahu\"}"
+    dimensions_json = "{\"unInstanceId\":\"${data.tencentcloud_instances.instances.instance_list[0].instance_id}\"}"
   }
 }
 `

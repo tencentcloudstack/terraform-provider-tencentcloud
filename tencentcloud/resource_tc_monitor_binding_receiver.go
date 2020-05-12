@@ -35,14 +35,6 @@ resource "tencentcloud_monitor_binding_receiver" "receiver" {
   }
 }
 ```
-Import
-
-Policy group receivers can be imported, e.g.
-
-```
-$ terraform import tencentcloud_monitor_binding_receiver.receiver group-id
-```
-
 */
 package tencentcloud
 
