@@ -13,11 +13,11 @@ func TestAccDataSourceTencentCloudScfFunctions_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: scfFunctionCodeEmbed("main.py", TestAccDataSourceTencentCloudScfFunctions),
+				Config: scfFunctionCodeEmbed("first.zip", TestAccDataSourceTencentCloudScfFunctions),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_scf_functions.foo"),
 					resource.TestMatchResourceAttr("data.tencentcloud_scf_functions.foo", "functions.#", regexp.MustCompile(`^[1-9]\d*$`)),
-					resource.TestMatchResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.name", regexp.MustCompile(`ci-test-function-basic`)),
+					resource.TestMatchResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.name", regexp.MustCompile(`ci-test-function`)),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.handler"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.mem_size"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.timeout"),
@@ -45,12 +45,12 @@ func TestAccDataSourceTencentCloudScfFunctions_namespace(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: scfFunctionCodeEmbed("main.py", TestAccDataSourceTencentCloudScfFunctionsNamespace),
+				Config: scfFunctionCodeEmbed("first.zip", TestAccDataSourceTencentCloudScfFunctionsNamespace),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_scf_functions.foo"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.name", "ci-test-function-ns"),
-					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.handler", "main.do_it"),
+					resource.TestMatchResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.name", regexp.MustCompile(`ci-test-function`)),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.handler", "first.do_it_first"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.mem_size", "128"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.timeout", "3"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.runtime", "Python3.6"),
@@ -77,7 +77,7 @@ func TestAccDataSourceTencentCloudScfFunctions_Desc(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: scfFunctionCodeEmbed("main.py", TestAccDataSourceTencentCloudScfFunctionsDesc),
+				Config: scfFunctionCodeEmbed("first.zip", TestAccDataSourceTencentCloudScfFunctionsDesc),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_scf_functions.foo"),
 					resource.TestMatchResourceAttr("data.tencentcloud_scf_functions.foo", "functions.#", regexp.MustCompile(`^[1-9]\d*$`)),
@@ -110,7 +110,7 @@ func TestAccDataSourceTencentCloudScfFunctions_tag(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: scfFunctionCodeEmbed("main.py", TestAccDataSourceTencentCloudScfFunctionsTag),
+				Config: scfFunctionCodeEmbed("first.zip", TestAccDataSourceTencentCloudScfFunctionsTag),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_scf_functions.foo"),
 					resource.TestMatchResourceAttr("data.tencentcloud_scf_functions.foo", "functions.#", regexp.MustCompile(`^[1-9]\d*$`)),
@@ -139,8 +139,8 @@ func TestAccDataSourceTencentCloudScfFunctions_tag(t *testing.T) {
 
 const TestAccDataSourceTencentCloudScfFunctions = `
 resource "tencentcloud_scf_function" "foo" {
-  name    = "ci-test-function-basic"
-  handler = "main.do_it"
+  name    = "%s"
+  handler = "first.do_it_first"
   runtime = "Python3.6"
 
   zip_file = "%s"
@@ -157,9 +157,9 @@ resource "tencentcloud_scf_namespace" "foo" {
 }
 
 resource "tencentcloud_scf_function" "foo" {
-  name      = "ci-test-function-ns"
   namespace = tencentcloud_scf_namespace.foo.id
-  handler   = "main.do_it"
+  name      = "%s"
+  handler   = "first.do_it_first"
   runtime   = "Python3.6"
 
   zip_file = "%s"
@@ -172,8 +172,8 @@ data "tencentcloud_scf_functions" "foo" {
 
 const TestAccDataSourceTencentCloudScfFunctionsDesc = `
 resource "tencentcloud_scf_function" "foo" {
-  name        = "ci-test-function-desc"
-  handler     = "main.do_it"
+  name        = "%s"
+  handler     = "first.do_it_first"
   runtime     = "Python3.6"
   description = "test"
 
@@ -187,8 +187,8 @@ data "tencentcloud_scf_functions" "foo" {
 
 const TestAccDataSourceTencentCloudScfFunctionsTag = `
 resource "tencentcloud_scf_function" "foo" {
-  name    = "ci-test-function-tag"
-  handler = "main.do_it"
+  name    = "%s"
+  handler = "first.do_it_first"
   runtime = "Python3.6"
 
   zip_file = "%s"

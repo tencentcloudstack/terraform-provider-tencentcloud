@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -397,12 +398,60 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId st
 	return
 }
 
-func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceRegion, instanceType, instanceId string) (errRet error) {
+func (me *VpcService) DescribeCcnAttachmentsByInstance(ctx context.Context, instanceType string, instanceId string, instanceRegion string) (infos []vpc.CcnAttachedInstance, errRet error) {
+
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeCcnAttachedInstancesRequest()
+	request.Filters = make([]*vpc.Filter, 0, 3)
+	request.Filters = append(request.Filters, &vpc.Filter{Name: helper.String("instance-type"), Values: []*string{&instanceType}})
+	request.Filters = append(request.Filters, &vpc.Filter{Name: helper.String("instance-id"), Values: []*string{&instanceId}})
+	request.Filters = append(request.Filters, &vpc.Filter{Name: helper.String("instance-region"), Values: []*string{&instanceRegion}})
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeCcnAttachedInstances(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
+		logId,
+		request.GetAction(),
+		request.ToJsonString(),
+		response.ToJsonString())
+
+	infos = make([]vpc.CcnAttachedInstance, 0, len(response.Response.InstanceSet))
+
+	for _, item := range response.Response.InstanceSet {
+		infos = append(infos, *item)
+	}
+	return
+}
+
+func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceRegion, instanceType, instanceId string, ccnUin string) (errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewAttachCcnInstancesRequest()
 	request.CcnId = &ccnId
 
+	if ccnUin != "" {
+		request.CcnUin = &ccnUin
+	}
 	var ccnInstance vpc.CcnInstance
 	ccnInstance.InstanceId = &instanceId
 	ccnInstance.InstanceRegion = &instanceRegion

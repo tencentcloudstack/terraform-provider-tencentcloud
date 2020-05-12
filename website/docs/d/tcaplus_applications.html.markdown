@@ -41,6 +41,8 @@ In addition to all arguments above, the following attributes are exported:
   * `api_access_id` - Access id of the tcapplus application.For TcaplusDB SDK connect.
   * `api_access_ip` - Access ip of the tcapplus application.For TcaplusDB SDK connect.
   * `api_access_port` - Access port of the tcapplus application.For TcaplusDB SDK connect.
+  * `app_id` - Id of the tcapplus application.
+  * `app_name` - Name of the tcapplus application.
   * `create_time` - Create time of the tcapplus application.
   * `idl_type` - Idl type of the tcapplus application.
   * `network_type` - Network type of the tcapplus application.
