@@ -48,7 +48,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -139,7 +138,6 @@ func resourceTencentMonitorBindingAlarmReceiverCreate(d *schema.ResourceData, me
 		ctx            = context.WithValue(context.TODO(), "logId", logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewModifyAlarmReceiversRequest()
-		response       *monitor.ModifyAlarmReceiversResponse
 		groupId        = int64(d.Get("group_id").(int))
 	)
 
@@ -172,14 +170,14 @@ func resourceTencentMonitorBindingAlarmReceiverCreate(d *schema.ResourceData, me
 			receiverInfo.ReceiverUserList = helper.InterfacesIntInt64Point(ifaceMap["receiver_user_list"].([]interface{}))
 		}
 
-		if *receiverInfo.ReceiverType == monitorReceiverTypeGroup{
-			if len(receiverInfo.ReceiverGroupList)<1{
-				return  fmt.Errorf("miss field receiver_group_list, this array at least  has one element when you choose `group` receiver_type")
+		if *receiverInfo.ReceiverType == monitorReceiverTypeGroup {
+			if len(receiverInfo.ReceiverGroupList) < 1 {
+				return fmt.Errorf("miss field receiver_group_list, this array at least  has one element when you choose `group` receiver_type")
 			}
 		}
-		if *receiverInfo.ReceiverType == monitorReceiverTypeUser{
-			if len(receiverInfo.ReceiverUserList)<1{
-				return  fmt.Errorf("miss field receiver_user_list, this array at least  has one element when you choose `user` receiver_type")
+		if *receiverInfo.ReceiverType == monitorReceiverTypeUser {
+			if len(receiverInfo.ReceiverUserList) < 1 {
+				return fmt.Errorf("miss field receiver_user_list, this array at least  has one element when you choose `user` receiver_type")
 			}
 		}
 
@@ -189,7 +187,7 @@ func resourceTencentMonitorBindingAlarmReceiverCreate(d *schema.ResourceData, me
 
 	if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		if response, err = monitorService.client.UseMonitorClient().ModifyAlarmReceivers(request); err != nil {
+		if _, err = monitorService.client.UseMonitorClient().ModifyAlarmReceivers(request); err != nil {
 			return retryError(err, InternalError)
 		}
 		return nil
@@ -198,11 +196,13 @@ func resourceTencentMonitorBindingAlarmReceiverCreate(d *schema.ResourceData, me
 	}
 	d.SetId(fmt.Sprintf("%d", groupId))
 	time.Sleep(3 * time.Second)
+
 	return resourceTencentMonitorBindingAlarmReceiverRead(d, meta)
 }
 
 func resourceTencentMonitorBindingAlarmReceiverRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_binding_receiver.read")()
+	defer inconsistentCheck(d, meta)()
 
 	var (
 		logId          = getLogId(contextNil)
@@ -245,7 +245,6 @@ func resourceTencentMonitorBindingAlarmReceiverUpdate(d *schema.ResourceData, me
 		ctx            = context.WithValue(context.TODO(), "logId", logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewModifyAlarmReceiversRequest()
-		response       *monitor.ModifyAlarmReceiversResponse
 		groupId        = int64(d.Get("group_id").(int))
 	)
 
@@ -278,14 +277,14 @@ func resourceTencentMonitorBindingAlarmReceiverUpdate(d *schema.ResourceData, me
 		if ifaceMap["receiver_user_list"] != nil {
 			receiverInfo.ReceiverUserList = helper.InterfacesIntInt64Point(ifaceMap["receiver_user_list"].([]interface{}))
 		}
-		if *receiverInfo.ReceiverType == monitorReceiverTypeGroup{
-			if len(receiverInfo.ReceiverGroupList)<1{
-				return  fmt.Errorf("miss field receiver_group_list, this array at least  has one element when you choose `group` receiver_type")
+		if *receiverInfo.ReceiverType == monitorReceiverTypeGroup {
+			if len(receiverInfo.ReceiverGroupList) < 1 {
+				return fmt.Errorf("miss field receiver_group_list, this array at least  has one element when you choose `group` receiver_type")
 			}
 		}
-		if *receiverInfo.ReceiverType == monitorReceiverTypeUser{
-			if len(receiverInfo.ReceiverUserList)<1{
-				return  fmt.Errorf("miss field receiver_user_list, this array at least  has one element when you choose `user` receiver_type")
+		if *receiverInfo.ReceiverType == monitorReceiverTypeUser {
+			if len(receiverInfo.ReceiverUserList) < 1 {
+				return fmt.Errorf("miss field receiver_user_list, this array at least  has one element when you choose `user` receiver_type")
 			}
 		}
 		receiverInfo.ReceiveLanguage = helper.String(ifaceMap["receive_language"].(string))
@@ -294,7 +293,7 @@ func resourceTencentMonitorBindingAlarmReceiverUpdate(d *schema.ResourceData, me
 
 	if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		if response, err = monitorService.client.UseMonitorClient().ModifyAlarmReceivers(request); err != nil {
+		if _, err = monitorService.client.UseMonitorClient().ModifyAlarmReceivers(request); err != nil {
 			return retryError(err, InternalError)
 		}
 		return nil
@@ -313,7 +312,6 @@ func resourceTencentMonitorBindingAlarmReceiverDelete(d *schema.ResourceData, me
 		ctx            = context.WithValue(context.TODO(), "logId", logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewModifyAlarmReceiversRequest()
-		response       *monitor.ModifyAlarmReceiversResponse
 		groupId        = int64(d.Get("group_id").(int))
 	)
 
@@ -331,7 +329,7 @@ func resourceTencentMonitorBindingAlarmReceiverDelete(d *schema.ResourceData, me
 	request.Module = helper.String("monitor")
 	if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		if response, err = monitorService.client.UseMonitorClient().ModifyAlarmReceivers(request); err != nil {
+		if _, err = monitorService.client.UseMonitorClient().ModifyAlarmReceivers(request); err != nil {
 			return retryError(err, InternalError)
 		}
 		return nil

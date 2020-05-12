@@ -97,7 +97,6 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 		ctx            = context.WithValue(context.TODO(), "logId", logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewBindingPolicyObjectRequest()
-		response       *monitor.BindingPolicyObjectResponse
 		idSeeds        []string
 		groupId        = int64(d.Get("group_id").(int))
 	)
@@ -135,7 +134,7 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 	request.Module = helper.String("monitor")
 	if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		if response, err = monitorService.client.UseMonitorClient().BindingPolicyObject(request); err != nil {
+		if _, err = monitorService.client.UseMonitorClient().BindingPolicyObject(request); err != nil {
 			return retryError(err, InternalError)
 		}
 		return nil
@@ -172,6 +171,7 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 
 func resourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_binding_object.read")()
+	defer inconsistentCheck(d, meta)()
 	var (
 		logId          = getLogId(contextNil)
 		ctx            = context.WithValue(context.TODO(), "logId", logId)
@@ -277,8 +277,7 @@ func resourceTencentMonitorBindingObjectDelete(d *schema.ResourceData, meta inte
 	}
 
 	var (
-		request  = monitor.NewUnBindingPolicyObjectRequest()
-		response *monitor.UnBindingPolicyObjectResponse
+		request = monitor.NewUnBindingPolicyObjectRequest()
 	)
 
 	request.Module = helper.String("monitor")
@@ -287,7 +286,7 @@ func resourceTencentMonitorBindingObjectDelete(d *schema.ResourceData, meta inte
 
 	if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		if response, err = monitorService.client.UseMonitorClient().UnBindingPolicyObject(request); err != nil {
+		if _, err = monitorService.client.UseMonitorClient().UnBindingPolicyObject(request); err != nil {
 			return retryError(err, InternalError)
 		}
 		return nil
