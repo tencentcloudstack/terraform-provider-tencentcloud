@@ -4,10 +4,13 @@ Provides a resource for bind objects to a policy group resource.
 Example Usage
 
 ```hcl
+data "tencentcloud_instances" "instances" {
+}
 resource "tencentcloud_monitor_policy_group" "group" {
-  group_name       = "nice_group"
+  group_name       = "terraform_test"
   policy_view_name = "cvm_device"
   remark           = "this is a test policy group"
+  is_union_rule    = 1
   conditions {
     metric_id           = 33
     alarm_notify_type   = 1
@@ -18,10 +21,12 @@ resource "tencentcloud_monitor_policy_group" "group" {
     continue_period     = 2
   }
 }
+
+#for cvm
 resource "tencentcloud_monitor_binding_object" "binding" {
   group_id = tencentcloud_monitor_policy_group.group.id
   dimensions {
-    dimensions_json = "{\"unInstanceId\":\"ins-lqm9lahu\"}"
+    dimensions_json = "{\"unInstanceId\":\"${data.tencentcloud_instances.instances.instance_list[0].instance_id}\"}"
   }
 }
 ```
@@ -65,7 +70,6 @@ func resourceTencentMonitorBindingObject() *schema.Resource {
 					if vmap["dimensions_json"] != nil {
 						hashMap["dimensions_json"] = vmap["dimensions_json"]
 					}
-
 					b, _ := json.Marshal(hashMap)
 					return hashcode.String(string(b))
 				},
