@@ -33,7 +33,7 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Policy group name for query",
+				Description: "Policy group name for query.",
 			},
 			"policy_view_names": {
 				Type:        schema.TypeList,
@@ -137,7 +137,7 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 									"calc_type": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to , 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose,  10  means weeks fell, 11 means period rise, 12 means period fell.",
+										Description: "Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell.",
 									},
 									"calc_value": {
 										Type:        schema.TypeString,
@@ -147,7 +147,7 @@ func dataSourceTencentMonitorPolicyGroups() *schema.Resource {
 									"continue_time": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "How long does the triggering rule last (per second)",
+										Description: "How long does the triggering rule last (per second).",
 									},
 								},
 							},

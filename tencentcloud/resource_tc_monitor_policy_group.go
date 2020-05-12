@@ -82,7 +82,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Policy view name. eg:`cvm_device`,`BANDWIDTHPACKAGE`.refer to `data.tencentcloud_monitor_policy_conditions(policy_view_name)`",
+				Description: "Policy view name. eg:`cvm_device`,`BANDWIDTHPACKAGE`. refer to `data.tencentcloud_monitor_policy_conditions(policy_view_name)`.",
 			},
 			"remark": {
 				Type:         schema.TypeString,
@@ -114,7 +114,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 						"metric_id": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Id of the metric.refer to `data.tencentcloud_monitor_policy_conditions(metric_id)`",
+							Description: "Id of the metric.refer to `data.tencentcloud_monitor_policy_conditions(metric_id)`.",
 						},
 						"alarm_notify_type": {
 							Type:         schema.TypeInt,
@@ -132,7 +132,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 							Optional:     true,
 							Computed:     true,
 							ValidateFunc: validateIntegerInRange(1, 12),
-							Description:  "Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to , 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose,  10  means weeks fell, 11 means period rise, 12 means period fell. refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
+							Description:  "Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell. refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
 						},
 						"calc_value": {
 							Type:        schema.TypeFloat,
@@ -208,12 +208,12 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 						"start_time": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Alarm period start time.Range [0,86400], which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'",
+							Description: "Alarm period start time.Range [0,86400], which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'.",
 						},
 						"end_time": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "End of alarm period. Meaning with `start_time`",
+							Description: "End of alarm period. Meaning with `start_time`.",
 						},
 						"notify_way": {
 							Type:        schema.TypeList,

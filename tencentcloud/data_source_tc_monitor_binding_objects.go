@@ -31,7 +31,7 @@ func dataSourceTencentMonitorBindingObjects() *schema.Resource {
 			"group_id": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Policy group id for query",
+				Description: "Policy group id for query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
