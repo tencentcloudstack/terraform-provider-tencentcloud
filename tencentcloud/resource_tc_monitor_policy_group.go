@@ -75,7 +75,6 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 			"group_name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ForceNew:     true,
 				Description:  "Policy group name, length should between 1 and 20.",
 				ValidateFunc: validateStringLengthInRange(1, 20),
 			},
@@ -95,6 +94,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				ForceNew:    true,
 				Default:     0,
 				Description: "The project id to which the policy group belongs. default is 0.",
 			},
@@ -102,7 +102,6 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      0,
-				ForceNew:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 				Description:  "The and or relation of indicator alarm rule, 0 represents or rule (if any rule is met, the alarm will be raised), 1 represents and rule (if all rules are met, the alarm will be raised).The default is 0.",
 			},
@@ -569,7 +568,80 @@ func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interfac
 
 func resourceTencentMonitorPolicyGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_policy_group.update")()
-	return nil
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	var (
+		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+		request        = monitor.NewModifyPolicyGroupRequest()
+	)
+	groupId, err := strconv.ParseInt(d.Id(), 10, 64)
+	if err != nil {
+		return fmt.Errorf("id [%s] is broken", d.Id())
+	}
+
+	info, err := monitorService.DescribePolicyGroup(ctx, groupId)
+	if err != nil {
+		return err
+	}
+	if info == nil {
+		d.SetId("")
+		return nil
+	}
+	request.GroupId = &groupId
+	request.GroupName = helper.String(d.Get("group_name").(string))
+	request.ViewName = helper.String(d.Get("policy_view_name").(string))
+	request.IsUnionRule = helper.IntInt64(d.Get("is_union_rule").(int))
+	request.Module = helper.String("monitor")
+
+	if iface, ok := d.GetOk("conditions"); ok {
+		request.Conditions = make([]*monitor.ModifyPolicyGroupCondition, 0, 10)
+		for _, item := range iface.([]interface{}) {
+			m := item.(map[string]interface{})
+			condition := monitor.ModifyPolicyGroupCondition{}
+			condition.MetricId = helper.IntInt64(m["metric_id"].(int))
+			condition.AlarmNotifyType = helper.IntInt64(m["alarm_notify_type"].(int))
+			condition.AlarmNotifyPeriod = helper.IntInt64(m["alarm_notify_period"].(int))
+			if m["calc_type"] != nil {
+				condition.CalcType = helper.IntInt64(m["calc_type"].(int))
+			}
+			if m["calc_value"] != nil {
+				condition.CalcValue = helper.String(fmt.Sprintf("%f", m["calc_value"].(float64)))
+			}
+			if m["calc_period"] != nil {
+				condition.CalcPeriod = helper.IntInt64(m["calc_period"].(int))
+			}
+			if m["continue_period"] != nil {
+				condition.ContinuePeriod = helper.IntInt64(m["continue_period"].(int))
+			}
+			request.Conditions = append(request.Conditions, &condition)
+		}
+	}
+
+	if iface, ok := d.GetOk("event_conditions"); ok {
+		request.EventConditions = make([]*monitor.ModifyPolicyGroupEventCondition, 0, 10)
+		for _, item := range iface.([]interface{}) {
+			m := item.(map[string]interface{})
+			condition := monitor.ModifyPolicyGroupEventCondition{}
+			condition.EventId = helper.IntInt64(m["event_id"].(int))
+			condition.AlarmNotifyType = helper.IntInt64(m["alarm_notify_type"].(int))
+			condition.AlarmNotifyPeriod = helper.IntInt64(m["alarm_notify_period"].(int))
+			request.EventConditions = append(request.EventConditions, &condition)
+		}
+	}
+
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := monitorService.client.UseMonitorClient().ModifyPolicyGroup(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	return resourceTencentMonitorPolicyGroupRead(d, meta)
 }
 
 func resourceTencentMonitorPolicyGroupDelete(d *schema.ResourceData, meta interface{}) error {
