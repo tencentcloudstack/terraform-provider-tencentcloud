@@ -60,7 +60,7 @@ func dataSourceTencentMonitorData() *schema.Resource {
 			"namespace": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Namespace of each cloud product in monitor system.",
+				Description: "Namespace of each cloud product in monitor system. refer to `data.tencentcloud_monitor_product_namespace`",
 			},
 			"metric_name": {
 				Type:        schema.TypeString,
