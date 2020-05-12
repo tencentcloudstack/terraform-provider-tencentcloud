@@ -47,7 +47,7 @@ The following arguments are supported:
 * `timeout` - (Optional) Timeout of the SCF function, unit is second. Default `3`. Available value is 1-300.
 * `triggers` - (Optional) Trigger list of the SCF function, note that if you modify the trigger list, all existing triggers will be deleted, and then create triggers in the new list. Each element contains the following attributes:
 * `vpc_id` - (Optional) VPC id of the SCF function.
-* `zip_file` - (Optional) Zip file of the SCF function, content is encoded by base64, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.
+* `zip_file` - (Optional) Zip file of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.
 
 The `triggers` object supports the following:
 

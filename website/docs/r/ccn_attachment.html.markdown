@@ -17,6 +17,14 @@ variable "region" {
   default = "ap-guangzhou"
 }
 
+variable "otheruin" {
+  default = "123353"
+}
+
+variable "otherccn" {
+  default = "ccn-151ssaga"
+}
+
 resource "tencentcloud_vpc" "vpc" {
   name         = "ci-temp-test-vpc"
   cidr_block   = "10.0.0.0/16"
@@ -36,6 +44,14 @@ resource "tencentcloud_ccn_attachment" "attachment" {
   instance_id     = tencentcloud_vpc.vpc.id
   instance_region = var.region
 }
+
+resource "tencentcloud_ccn_attachment" "other_account" {
+  ccn_id          = var.otherccn
+  instance_type   = "VPC"
+  instance_id     = tencentcloud_vpc.vpc.id
+  instance_region = var.region
+  ccn_uin         = var.otheruin
+}
 ```
 
 ## Argument Reference
@@ -46,6 +62,7 @@ The following arguments are supported:
 * `instance_id` - (Required, ForceNew) ID of instance is attached.
 * `instance_region` - (Required, ForceNew) The region that the instance locates at.
 * `instance_type` - (Required, ForceNew) Type of attached instance network, and available values include VPC, DIRECTCONNECT and BMVPC.
+* `ccn_uin` - (Optional, ForceNew) Uin of the ccn attached. Default is ``, which means the uin of this account. This parameter is used with case when attaching ccn of other account to the instance of this account. For now only support instance type `VPC`.
 
 ## Attributes Reference
 
