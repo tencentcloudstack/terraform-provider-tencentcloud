@@ -537,6 +537,8 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 
 func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_scf_function.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

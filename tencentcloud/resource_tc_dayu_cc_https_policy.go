@@ -204,6 +204,7 @@ func resourceTencentCloudDayuCCHttpsPolicyCreate(d *schema.ResourceData, meta in
 
 func resourceTencentCloudDayuCCHttpsPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dayu_cc_https_policy.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

@@ -127,6 +127,8 @@ func resourceTencentCloudGaapCertificateCreate(d *schema.ResourceData, m interfa
 
 func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_certificate.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

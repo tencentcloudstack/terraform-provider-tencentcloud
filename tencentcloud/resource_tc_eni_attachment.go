@@ -127,6 +127,8 @@ func resourceTencentCloudEniAttachmentCreate(d *schema.ResourceData, m interface
 
 func resourceTencentCloudEniAttachmentRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_eni_attachment.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

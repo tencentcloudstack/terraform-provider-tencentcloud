@@ -228,6 +228,7 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 
 func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_security_group_rule.read")()
+	defer inconsistentCheck(d, m)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

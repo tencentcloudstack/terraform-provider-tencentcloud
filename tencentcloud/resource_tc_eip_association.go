@@ -209,6 +209,8 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip_association.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	vpcService := VpcService{
