@@ -42,7 +42,6 @@ var monitorReceiverTypes = []string{
 	monitorReceiverTypeGroup,
 }
 
-
 //receive_language
 const monitorReceiveLanguageCN = "zh-CN"
 const monitorReceiveLanguageUS = "en-US"
