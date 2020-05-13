@@ -76,7 +76,7 @@ func testAccCheckMonitorPolicyGroupDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_monitor_policy_group" {
 			continue
 		}
-		groupIdStr :=  rs.Primary.ID
+		groupIdStr := rs.Primary.ID
 
 		if groupIdStr == "" {
 			return fmt.Errorf("miss group_id[%v] ", groupIdStr)

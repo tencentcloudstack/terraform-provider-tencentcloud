@@ -42,15 +42,6 @@ var monitorReceiverTypes = []string{
 	monitorReceiverTypeGroup,
 }
 
-//send_for
-const monitorSendForOCCUR = "OCCUR"
-const monitorSendForRECOVER = "RECOVER"
-
-var monitorSendFor = []string{
-	monitorSendForOCCUR,
-	monitorSendForRECOVER,
-}
-
 //receive_language
 const monitorReceiveLanguageCN = "zh-CN"
 const monitorReceiveLanguageUS = "en-US"

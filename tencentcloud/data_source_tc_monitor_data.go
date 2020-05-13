@@ -168,8 +168,8 @@ func dataSourceTencentMonitorDataRead(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	for _, data := range response.Response.DataPoints {
-
+	if len(response.Response.DataPoints) > 0 {
+		data := response.Response.DataPoints[0]
 		min := len(data.Values)
 		if min > len(data.Timestamps) {
 			min = len(data.Timestamps)
@@ -180,7 +180,6 @@ func dataSourceTencentMonitorDataRead(d *schema.ResourceData, meta interface{}) 
 			kv["value"] = data.Values[i]
 			list = append(list, kv)
 		}
-		break
 	}
 
 	if err = d.Set("list", list); err != nil {
@@ -188,7 +187,7 @@ func dataSourceTencentMonitorDataRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	md := md5.New()
-	md.Write([]byte(request.ToJsonString()))
+	_, _ = md.Write([]byte(request.ToJsonString()))
 	id := fmt.Sprintf("%x", md.Sum(nil))
 	d.SetId(id)
 	if output, ok := d.GetOk("result_output_file"); ok {
