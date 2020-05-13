@@ -347,6 +347,8 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 
 func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_eni.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

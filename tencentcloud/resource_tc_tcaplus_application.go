@@ -196,6 +196,7 @@ func resourceTencentCloudTcaplusApplicationCreate(d *schema.ResourceData, meta i
 
 func resourceTencentCloudTcaplusApplicationRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tcaplus_application.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

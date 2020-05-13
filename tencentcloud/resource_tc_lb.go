@@ -154,6 +154,7 @@ func resourceTencentCloudLBCreate(d *schema.ResourceData, meta interface{}) erro
 
 func resourceTencentCloudLBRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

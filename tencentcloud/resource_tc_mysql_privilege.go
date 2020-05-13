@@ -417,6 +417,7 @@ func resourceTencentCloudMysqlPrivilegeCreate(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudMysqlPrivilegeRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_privilege.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

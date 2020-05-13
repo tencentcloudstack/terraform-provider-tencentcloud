@@ -97,6 +97,8 @@ func resourceTencentCloudGaapSecurityPolicyCreate(d *schema.ResourceData, m inte
 
 func resourceTencentCloudGaapSecurityPolicyRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_security_policy.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

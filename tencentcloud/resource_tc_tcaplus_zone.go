@@ -91,6 +91,7 @@ func resourceTencentCloudTcaplusZoneCreate(d *schema.ResourceData, meta interfac
 
 func resourceTencentCloudTcaplusZoneRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tcaplus_zone.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

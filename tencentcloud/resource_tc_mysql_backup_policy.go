@@ -81,6 +81,7 @@ func resourceTencentCloudMysqlBackupPolicyCreate(d *schema.ResourceData, meta in
 
 func resourceTencentCloudMysqlBackupPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_backup_policy.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

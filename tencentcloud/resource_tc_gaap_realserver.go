@@ -133,6 +133,8 @@ func resourceTencentCloudGaapRealserverCreate(d *schema.ResourceData, m interfac
 
 func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_realserver.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
