@@ -480,7 +480,7 @@ func dataSourceTencentMonitorProductEventRead(d *schema.ResourceData, meta inter
 	}
 
 	md := md5.New()
-	md.Write([]byte(request.ToJsonString()))
+	_, _ = md.Write([]byte(request.ToJsonString()))
 	id := fmt.Sprintf("%x", md.Sum(nil))
 	d.SetId(id)
 
