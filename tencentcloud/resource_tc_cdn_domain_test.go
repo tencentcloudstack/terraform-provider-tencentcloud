@@ -43,6 +43,7 @@ func TestAccTencentCloudCdnDomain(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.ocsp_stapling_switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.spdy_switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "https_config.0.verify_client", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.full_url_cache", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "tags.hello", "world"),
 				),
 			},
@@ -152,6 +153,10 @@ resource "tencentcloud_cdn_domain" "foo" {
     ocsp_stapling_switch = "off"
     spdy_switch = "off"
 	verify_client = "off"
+  }
+
+  cache_key {
+    full_url_cache = "off"
   }
 
   tags = {
