@@ -82,7 +82,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Policy view name. eg:`cvm_device`,`BANDWIDTHPACKAGE`. refer to `data.tencentcloud_monitor_policy_conditions(policy_view_name)`.",
+				Description: "Policy view name, eg:`cvm_device`,`BANDWIDTHPACKAGE`, refer to `data.tencentcloud_monitor_policy_conditions(policy_view_name)`.",
 			},
 			"remark": {
 				Type:         schema.TypeString,
@@ -96,7 +96,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     0,
-				Description: "The project id to which the policy group belongs. default is 0.",
+				Description: "The project id to which the policy group belongs, default is 0.",
 			},
 			"is_union_rule": {
 				Type:         schema.TypeInt,
@@ -114,7 +114,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 						"metric_id": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Id of the metric.refer to `data.tencentcloud_monitor_policy_conditions(metric_id)`.",
+							Description: "Id of the metric, refer to `data.tencentcloud_monitor_policy_conditions(metric_id)`.",
 						},
 						"alarm_notify_type": {
 							Type:         schema.TypeInt,
@@ -125,32 +125,32 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 						"alarm_notify_period": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Alarm sending cycle per second.<0 does not fire, 0 only fires once, and >0 fires every triggerTime second.",
+							Description: "Alarm sending cycle per second. <0 does not fire, 0 only fires once, and >0 fires every triggerTime second.",
 						},
 						"calc_type": {
 							Type:         schema.TypeInt,
 							Optional:     true,
 							Computed:     true,
 							ValidateFunc: validateIntegerInRange(1, 12),
-							Description:  "Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell. refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
+							Description:  "Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
 						},
 						"calc_value": {
 							Type:        schema.TypeFloat,
 							Optional:    true,
 							Computed:    true,
-							Description: "Threshold value. refer to `data.tencentcloud_monitor_policy_conditions(calc_value_*)`.",
+							Description: "Threshold value, refer to `data.tencentcloud_monitor_policy_conditions(calc_value_*)`.",
 						},
 						"calc_period": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Description: "Data aggregation cycle (unit of second), if the metric has a default value can not be filled. refer to `data.tencentcloud_monitor_policy_conditions(period_keys)`.",
+							Description: "Data aggregation cycle (unit of second), if the metric has a default value can not be filled, refer to `data.tencentcloud_monitor_policy_conditions(period_keys)`.",
 						},
 						"continue_period": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Description: "The rule triggers an alert that lasts for several detection cycles. refer to `data.tencentcloud_monitor_policy_conditions(period_num_keys)`.",
+							Description: "The rule triggers an alert that lasts for several detection cycles, refer to `data.tencentcloud_monitor_policy_conditions(period_num_keys)`.",
 						},
 					},
 				},
@@ -164,7 +164,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 						"event_id": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "The id of this event metric. refer to `data.tencentcloud_monitor_policy_conditions(event_id).",
+							Description: "The id of this event metric, refer to `data.tencentcloud_monitor_policy_conditions(event_id).",
 						},
 						"alarm_notify_type": {
 							Type:         schema.TypeInt,
@@ -224,7 +224,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 						"receiver_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Receive type. 'Group' (receiving group) or 'user' (receiver).",
+							Description: "Receive type, 'group' (receiving group) or 'user' (receiver).",
 						},
 						"round_number": {
 							Type:        schema.TypeInt,
