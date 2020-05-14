@@ -501,7 +501,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("origin", origins)
 
 	cacheKeys := make([]map[string]interface{}, 0, 1)
-	cacheKey := make(map[string]interface{}, 0)
+	cacheKey := make(map[string]interface{}, 1)
 	cacheKey["full_url_cache"] = domainConfig.CacheKey.FullUrlCache
 	cacheKeys = append(cacheKeys, cacheKey)
 	_ = d.Set("cache_key", cacheKeys)

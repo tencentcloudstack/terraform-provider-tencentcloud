@@ -32,6 +32,10 @@ resource "tencentcloud_cdn_domain" "foo" {
     verify_client        = "off"
   }
 
+  cache_key {
+    full_url_cache = "off"
+  }
+
   tags = {
     hello = "world"
   }
@@ -46,9 +50,14 @@ The following arguments are supported:
 * `origin` - (Required) Origin server configuration. It's a list and consist of at most one item.
 * `service_type` - (Required, ForceNew) Service type of Acceleration domain name. Valid values are `web`, `download` and `media`.
 * `area` - (Optional) Domain name acceleration region.  Valid values are `mainland`, `overseas` and `global`.
+* `cache_key` - (Optional) Node cache key configuration.
 * `https_config` - (Optional) HTTPS acceleration configuration. It's a list and consist of at most one item.
 * `project_id` - (Optional) The project CDN belongs to, default to 0.
 * `tags` - (Optional) Tags of cdn domain.
+
+The `cache_key` object supports the following:
+
+* `full_url_cache` - (Optional) Whether to enable full-path cache. Valid values are `on` and `off`, and default value is `on`.
 
 The `client_certificate_config` object supports the following:
 
