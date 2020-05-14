@@ -39,8 +39,8 @@ The following arguments are supported:
 
 The `dimensions` object supports the following:
 
-* `name` - (Optional) Instance dimension name. eg: `deviceWanIp` for internet ip.
-* `value` - (Optional) Instance dimension value. eg: `119.119.119.119` for internet ip.
+* `name` - (Optional) Instance dimension name, eg: `deviceWanIp` for internet ip.
+* `value` - (Optional) Instance dimension value, eg: `119.119.119.119` for internet ip.
 
 ## Attributes Reference
 
