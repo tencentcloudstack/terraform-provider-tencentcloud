@@ -60,12 +60,12 @@ func dataSourceTencentMonitorProductEvent() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Instance dimension name. eg: `deviceWanIp` for internet ip.",
+							Description: "Instance dimension name, eg: `deviceWanIp` for internet ip.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Instance dimension value. eg: `119.119.119.119` for internet ip.",
+							Description: "Instance dimension value, eg: `119.119.119.119` for internet ip.",
 						},
 					},
 				},
