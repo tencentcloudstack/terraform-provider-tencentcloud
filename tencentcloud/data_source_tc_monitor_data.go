@@ -60,7 +60,7 @@ func dataSourceTencentMonitorData() *schema.Resource {
 			"namespace": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Namespace of each cloud product in monitor system. refer to `data.tencentcloud_monitor_product_namespace`.",
+				Description: "Namespace of each cloud product in monitor system, refer to `data.tencentcloud_monitor_product_namespace`.",
 			},
 			"metric_name": {
 				Type:        schema.TypeString,
@@ -75,12 +75,12 @@ func dataSourceTencentMonitorData() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Instance dimension name. eg: `InstanceId` for cvm.",
+							Description: "Instance dimension name, eg: `InstanceId` for cvm.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Instance dimension value. eg: `ins-j0hk02zo` for cvm.",
+							Description: "Instance dimension value, eg: `ins-j0hk02zo` for cvm.",
 						},
 					},
 				},
@@ -95,12 +95,12 @@ func dataSourceTencentMonitorData() *schema.Resource {
 			"start_time": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Start time for this query. eg:`2018-09-22T19:51:23+08:00`.",
+				Description: "Start time for this query, eg:`2018-09-22T19:51:23+08:00`.",
 			},
 			"end_time": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "End time for this query. eg:`2018-09-22T20:00:00+08:00`.",
+				Description: "End time for this query, eg:`2018-09-22T20:00:00+08:00`.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

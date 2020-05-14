@@ -60,12 +60,12 @@ func dataSourceTencentMonitorProductEvent() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Instance dimension name. eg: `deviceWanIp` for internet ip.",
+							Description: "Instance dimension name, eg: `deviceWanIp` for internet ip.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Instance dimension value. eg: `119.119.119.119` for internet ip.",
+							Description: "Instance dimension value, eg: `119.119.119.119` for internet ip.",
 						},
 					},
 				},
@@ -105,13 +105,13 @@ func dataSourceTencentMonitorProductEvent() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     defaultStartTime,
-				Description: "Start timestamp for this query. eg:`1588230000`. Default start time is `now-3600`.",
+				Description: "Start timestamp for this query, eg:`1588230000`. Default start time is `now-3600`.",
 			},
 			"end_time": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     defaultStartTime + 600,
-				Description: "End timestamp for this query. eg:`1588232111`. Default start time is `now-3000`.",
+				Description: "End timestamp for this query, eg:`1588232111`. Default start time is `now-3000`.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

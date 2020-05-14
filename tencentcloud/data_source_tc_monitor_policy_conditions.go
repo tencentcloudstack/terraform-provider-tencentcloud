@@ -30,7 +30,7 @@ func dataSourceTencentMonitorPolicyConditions() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of the policy name, support partial matching. eg:`Cloud Virtual Machine`,`Virtual`,`Cloud Load Banlancer-Private CLB Listener`.",
+				Description: "Name of the policy name, support partial matching, eg:`Cloud Virtual Machine`,`Virtual`,`Cloud Load Banlancer-Private CLB Listener`.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -47,7 +47,7 @@ func dataSourceTencentMonitorPolicyConditions() *schema.Resource {
 						"policy_view_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Policy view name. eg:`cvm_device`,`BANDWIDTHPACKAGE`. refer to `data.tencentcloud_monitor_policy_conditions(policy_view_name)`.",
+							Description: "Policy view name, eg:`cvm_device`,`BANDWIDTHPACKAGE`, refer to `data.tencentcloud_monitor_policy_conditions(policy_view_name)`.",
 						},
 						"is_support_multi_region": {
 							Type:        schema.TypeBool,

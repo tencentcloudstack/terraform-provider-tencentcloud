@@ -29,7 +29,7 @@ func dataSourceTencentMonitorProductNamespace() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name for filter. eg:`Load Banlancer`.",
+				Description: "Name for filter, eg:`Load Banlancer`.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
