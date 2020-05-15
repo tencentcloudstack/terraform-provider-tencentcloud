@@ -303,6 +303,9 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 	if d.HasChange("prepaid_period") && (!d.HasChange("charge_type") && d.Get("charge_type").(string) == CBS_CHARGE_TYPE_PREPAID) {
 		return fmt.Errorf("tencentcloud_cbs_storage renew is not support yet")
 	}
+	if d.HasChange("charge_type") && d.Get("charge_type").(string) != CBS_CHARGE_TYPE_PREPAID {
+		return fmt.Errorf("tencentcloud_cbs_storage do not support downgrade instance")
+	}
 
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
