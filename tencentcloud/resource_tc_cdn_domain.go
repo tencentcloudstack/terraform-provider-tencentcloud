@@ -8,6 +8,7 @@ resource "tencentcloud_cdn_domain" "foo" {
   domain = "xxxx.com"
   service_type = "web"
   area = "mainland"
+  full_url_cache = "off"
 
   origin {
     origin_type = "ip"
@@ -21,10 +22,6 @@ resource "tencentcloud_cdn_domain" "foo" {
     ocsp_stapling_switch = "off"
     spdy_switch = "off"
     verify_client = "off"
-  }
-
-  cache_key {
-	full_url_cache = "off"
   }
 
   tags = {
@@ -91,6 +88,13 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_AREA),
 				Description:  "Domain name acceleration region.  Valid values are `mainland`, `overseas` and `global`.",
+			},
+			"full_url_cache": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      CDN_SWITCH_ON,
+				ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+				Description:  "Whether to enable full-path cache. Valid values are `on` and `off`, and default value is `on`.",
 			},
 			"origin": {
 				Type:        schema.TypeList,
@@ -249,24 +253,6 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 					},
 				},
 			},
-			"cache_key": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Computed:    true,
-				MaxItems:    1,
-				Description: "Node cache key configuration.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"full_url_cache": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							Default:      CDN_SWITCH_ON,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
-							Description:  "Whether to enable full-path cache. Valid values are `on` and `off`, and default value is `on`.",
-						},
-					},
-				},
-			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -309,6 +295,8 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("area"); ok {
 		request.Area = helper.String(v.(string))
 	}
+	request.CacheKey = &cdn.CacheKey{}
+	request.CacheKey.FullUrlCache = helper.String(d.Get("full_url_cache").(string))
 
 	// origin
 	origins := d.Get("origin").([]interface{})
@@ -343,18 +331,6 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 		request.Origin.BackupOrigins = make([]*string, 0, len(backupOriginList))
 		for _, item := range backupOriginList {
 			request.Origin.BackupOrigins = append(request.Origin.BackupOrigins, helper.String(item.(string)))
-		}
-	}
-
-	// cache key
-	if v, ok := d.GetOk("cache_key"); ok {
-		cacheKeys := v.([]interface{})
-		if len(cacheKeys) > 0 {
-			cacheKey := cacheKeys[0].(map[string]interface{})
-			request.CacheKey = &cdn.CacheKey{}
-			if v := cacheKey["full_url_cache"]; v.(string) != "" {
-				request.CacheKey.FullUrlCache = helper.String(v.(string))
-			}
 		}
 	}
 
@@ -486,6 +462,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("status", domainConfig.Status)
 	_ = d.Set("create_time", domainConfig.CreateTime)
 	_ = d.Set("cname", domainConfig.Cname)
+	_ = d.Set("full_url_cache", domainConfig.CacheKey.FullUrlCache)
 
 	origins := make([]map[string]interface{}, 0, 1)
 	origin := make(map[string]interface{}, 8)
@@ -499,12 +476,6 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	origin["backup_server_name"] = domainConfig.Origin.BackupServerName
 	origins = append(origins, origin)
 	_ = d.Set("origin", origins)
-
-	cacheKeys := make([]map[string]interface{}, 0, 1)
-	cacheKey := make(map[string]interface{}, 1)
-	cacheKey["full_url_cache"] = domainConfig.CacheKey.FullUrlCache
-	cacheKeys = append(cacheKeys, cacheKey)
-	_ = d.Set("cache_key", cacheKeys)
 
 	httpsConfigs := make([]map[string]interface{}, 0, 1)
 	httpsConfig := make(map[string]interface{}, 7)
@@ -570,6 +541,11 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.Area = helper.String(d.Get("area").(string))
 		updateAttrs = append(updateAttrs, "area")
 	}
+	if d.HasChange("full_url_cache") {
+		request.CacheKey = &cdn.CacheKey{}
+		request.CacheKey.FullUrlCache = helper.String(d.Get("full_url_cache").(string))
+		updateAttrs = append(updateAttrs, "full_url_cache")
+	}
 	if d.HasChange("origin") {
 		updateAttrs = append(updateAttrs, "origin")
 		origins := d.Get("origin").([]interface{})
@@ -604,17 +580,6 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			request.Origin.BackupOrigins = make([]*string, 0, len(backupOriginList))
 			for _, item := range backupOriginList {
 				request.Origin.BackupOrigins = append(request.Origin.BackupOrigins, helper.String(item.(string)))
-			}
-		}
-	}
-	if d.HasChange("cache_key") {
-		updateAttrs = append(updateAttrs, "cache_key")
-		cacheKeys := d.Get("cache_key").([]interface{})
-		if len(cacheKeys) > 0 {
-			cacheKey := cacheKeys[0].(map[string]interface{})
-			request.CacheKey = &cdn.CacheKey{}
-			if v := cacheKey["full_url_cache"]; v.(string) != "" {
-				request.CacheKey.FullUrlCache = helper.String(v.(string))
 			}
 		}
 	}

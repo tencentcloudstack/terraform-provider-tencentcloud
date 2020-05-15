@@ -2,7 +2,7 @@
 
 ENHANCEMENTS: 
 
-* Resource: `tencentcloud_cdn_domain` add new argument `cache_key`([#405](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/405)).
+* Resource: `tencentcloud_cdn_domain` add new argument `full_url_cache`([#405](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/405)).
 
 ## 1.32.1 (April 30, 2020)
 
