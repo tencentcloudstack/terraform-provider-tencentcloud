@@ -255,6 +255,7 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 
 func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dcx.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

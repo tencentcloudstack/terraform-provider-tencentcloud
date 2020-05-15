@@ -436,6 +436,10 @@ type CacheKey struct {
 	// on：开启全路径缓存（即关闭参数过滤）
 	// off：关闭全路径缓存（即开启参数过滤）
 	FullUrlCache *string `json:"FullUrlCache,omitempty" name:"FullUrlCache"`
+
+	// 缓存是否忽略大小写
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CaseSensitive *string `json:"CaseSensitive,omitempty" name:"CaseSensitive"`
 }
 
 type CacheOptResult struct {
@@ -1186,6 +1190,52 @@ func (r *DescribeDomainsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeImageConfigRequest struct {
+	*tchttp.BaseRequest
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+}
+
+func (r *DescribeImageConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeImageConfigRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeImageConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// WebpAdapter配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		WebpAdapter *WebpAdapter `json:"WebpAdapter,omitempty" name:"WebpAdapter"`
+
+		// TpgAdapter配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		TpgAdapter *TpgAdapter `json:"TpgAdapter,omitempty" name:"TpgAdapter"`
+
+		// GuetzliAdapter配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		GuetzliAdapter *GuetzliAdapter `json:"GuetzliAdapter,omitempty" name:"GuetzliAdapter"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeImageConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeImageConfigResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeIpStatusRequest struct {
 	*tchttp.BaseRequest
 
@@ -1503,7 +1553,7 @@ type DescribePurgeQuotaResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// Url刷新用量及配额。
+		// URL刷新用量及配额。
 		UrlPurge []*Quota `json:"UrlPurge,omitempty" name:"UrlPurge" list`
 
 		// 目录刷新用量及配额。
@@ -1699,6 +1749,69 @@ func (r *DescribePushTasksResponse) ToJsonString() string {
 }
 
 func (r *DescribePushTasksResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeReportDataRequest struct {
+	*tchttp.BaseRequest
+
+	// 查询起始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 查询结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 报表类型
+	// daily：日报表
+	// weekly：周报表
+	// monthly：月报表
+	ReportType *string `json:"ReportType,omitempty" name:"ReportType"`
+
+	// 域名加速区域
+	// mainland：中国境内
+	// overseas：中国境外
+	Area *string `json:"Area,omitempty" name:"Area"`
+
+	// 偏移量，默认0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 数据个数，默认1000。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 按项目ID筛选
+	Project *int64 `json:"Project,omitempty" name:"Project"`
+}
+
+func (r *DescribeReportDataRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeReportDataRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeReportDataResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 域名维度数据详情
+		DomainReport []*ReportData `json:"DomainReport,omitempty" name:"DomainReport" list`
+
+		// 项目维度数据详情
+		ProjectReport []*ReportData `json:"ProjectReport,omitempty" name:"ProjectReport" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeReportDataResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeReportDataResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1972,6 +2085,18 @@ type DetailDomain struct {
 	// 回源S3鉴权配置
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AwsPrivateAccess *AwsPrivateAccess `json:"AwsPrivateAccess,omitempty" name:"AwsPrivateAccess"`
+
+	// Scdn配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecurityConfig *SecurityConfig `json:"SecurityConfig,omitempty" name:"SecurityConfig"`
+
+	// ImageOptimization配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ImageOptimization *ImageOptimization `json:"ImageOptimization,omitempty" name:"ImageOptimization"`
+
+	// UA黑白名单配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UserAgentFilter *UserAgentFilter `json:"UserAgentFilter,omitempty" name:"UserAgentFilter"`
 }
 
 type DisableCachesRequest struct {
@@ -2311,6 +2436,27 @@ func (r *GetDisableRecordsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type GuetzliAdapter struct {
+
+	// 开关，"on/off"
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+}
+
+type Hsts struct {
+
+	// 是否开启，on或off。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// MaxAge数值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxAge *int64 `json:"MaxAge,omitempty" name:"MaxAge"`
+
+	// 是否包含子域名，on或off。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IncludeSubDomains *string `json:"IncludeSubDomains,omitempty" name:"IncludeSubDomains"`
+}
+
 type HttpHeaderPathRule struct {
 
 	// http 头部设置方式
@@ -2398,6 +2544,30 @@ type Https struct {
 	// failed：部署失败
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SslStatus *string `json:"SslStatus,omitempty" name:"SslStatus"`
+
+	// TLS版本列表，支持填写以下值：
+	// TLSv1.0, TLSv1.1, TLSv1.2
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TlsVersion []*string `json:"TlsVersion,omitempty" name:"TlsVersion" list`
+
+	// Hsts配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Hsts *Hsts `json:"Hsts,omitempty" name:"Hsts"`
+}
+
+type ImageOptimization struct {
+
+	// WebpAdapter配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WebpAdapter *WebpAdapter `json:"WebpAdapter,omitempty" name:"WebpAdapter"`
+
+	// TpgAdapter配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TpgAdapter *TpgAdapter `json:"TpgAdapter,omitempty" name:"TpgAdapter"`
+
+	// GuetzliAdapter配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GuetzliAdapter *GuetzliAdapter `json:"GuetzliAdapter,omitempty" name:"GuetzliAdapter"`
 }
 
 type IpFilter struct {
@@ -2583,8 +2753,8 @@ type ListTopDataRequest struct {
 	// path：访问 URL 排序，不带参数统计，支持的 Filter 为 flux、request（白名单功能）
 	// district：省份、国家/地区排序，支持的 Filter 为 flux、request
 	// isp：运营商排序，支持的 Filter 为 flux、request
-	// host：域名访问数据排序，支持的 Filter 为：flux, request, bandwidth, fluxHitRate, 2XX, 3XX, 4XX, 5XX，具体状态码统计
-	// originHost：域名回源数据排序，支持的 Filter 为 flux， request，bandwidth，origin_2XX，origin_3XX，oringin_4XX，origin_5XX，具体回源状态码统计
+	// host：域名访问数据排序，支持的 Filter 为：flux、request、bandwidth、fluxHitRate、2XX、3XX、4XX、5XX、statusCode
+	// originHost：域名回源数据排序，支持的 Filter 为 flux、request、bandwidth、origin_2XX、origin_3XX、origin_4XX、origin_5XX、OriginStatusCode
 	Metric *string `json:"Metric,omitempty" name:"Metric"`
 
 	// 排序使用的指标名称：
@@ -2612,7 +2782,7 @@ type ListTopDataRequest struct {
 	Project *int64 `json:"Project,omitempty" name:"Project"`
 
 	// 多域名查询时，默认（false)返回所有域名汇总排序结果
-	// Metric 为 Url、Path、District、Isp，Filter 为 flux、reqeust 时，可设置为 true，返回每一个 Domain 的排序数据
+	// Metric 为 url、path、district、isp，Filter 为 flux、request 时，可设置为 true，返回每一个 Domain 的排序数据
 	Detail *bool `json:"Detail,omitempty" name:"Detail"`
 
 	// Filter 为 statusCode、OriginStatusCode 时，填充指定状态码查询排序结果
@@ -2623,7 +2793,7 @@ type ListTopDataRequest struct {
 	// overseas：指定查询中国境外 CDN 数据，支持的 Metric 为 url、district、host、originHost，当 Metric 为 originHost 时仅支持 flux、request、bandwidth Filter
 	Area *string `json:"Area,omitempty" name:"Area"`
 
-	// 查询中国境外CDN数据，且仅当 Metric 为 District 或 Host 时，可指定地区类型查询，不填充表示查询服务地区数据（仅在 Area 为 overseas，且 Metric 是 District 或 Host 时可用）
+	// 查询中国境外CDN数据，且仅当 Metric 为 district 或 host 时，可指定地区类型查询，不填充表示查询服务地区数据（仅在 Area 为 overseas，且 Metric 是 district 或 host 时可用）
 	// server：指定查询服务地区（腾讯云 CDN 节点服务器所在地区）数据
 	// client：指定查询客户端地区（用户请求终端所在地区）数据，当 Metric 为 host 时仅支持 flux、request、bandwidth Filter
 	AreaType *string `json:"AreaType,omitempty" name:"AreaType"`
@@ -3311,6 +3481,27 @@ type RegionMapRelation struct {
 	SubRegionIdList []*int64 `json:"SubRegionIdList,omitempty" name:"SubRegionIdList" list`
 }
 
+type ReportData struct {
+
+	// 项目ID/域名ID。
+	ResourceId *string `json:"ResourceId,omitempty" name:"ResourceId"`
+
+	// 项目名称/域名。
+	Resource *string `json:"Resource,omitempty" name:"Resource"`
+
+	// 流量总和/带宽最大值，单位分别为bytes，bps。
+	Value *int64 `json:"Value,omitempty" name:"Value"`
+
+	// 单个资源占总体百分比。
+	Percentage *float64 `json:"Percentage,omitempty" name:"Percentage"`
+
+	// 计费流量总和/计费带宽最大值，单位分别为bytes，bps。
+	BillingValue *int64 `json:"BillingValue,omitempty" name:"BillingValue"`
+
+	// 计费数值占总体百分比。
+	BillingPercentage *float64 `json:"BillingPercentage,omitempty" name:"BillingPercentage"`
+}
+
 type RequestHeader struct {
 
 	// 自定义请求头配置开关
@@ -3441,6 +3632,12 @@ func (r *SearchClsLogResponse) ToJsonString() string {
 
 func (r *SearchClsLogResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
+}
+
+type SecurityConfig struct {
+
+	// on|off
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
 type Seo struct {
@@ -3723,6 +3920,13 @@ type TopicInfo struct {
 	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
 }
 
+type TpgAdapter struct {
+
+	// 开关，"on/off"
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+}
+
 type TrafficPackage struct {
 
 	// 流量包 Id
@@ -3890,6 +4094,49 @@ func (r *UpdateDomainConfigResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type UpdateImageConfigRequest struct {
+	*tchttp.BaseRequest
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// WebpAdapter配置项
+	WebpAdapter *WebpAdapter `json:"WebpAdapter,omitempty" name:"WebpAdapter"`
+
+	// TpgAdapter配置项
+	TpgAdapter *TpgAdapter `json:"TpgAdapter,omitempty" name:"TpgAdapter"`
+
+	// GuetzliAdapter配置项
+	GuetzliAdapter *GuetzliAdapter `json:"GuetzliAdapter,omitempty" name:"GuetzliAdapter"`
+}
+
+func (r *UpdateImageConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *UpdateImageConfigRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type UpdateImageConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *UpdateImageConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *UpdateImageConfigResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type UpdatePayTypeRequest struct {
 	*tchttp.BaseRequest
 
@@ -3946,6 +4193,40 @@ type UrlRecord struct {
 	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 }
 
+type UserAgentFilter struct {
+
+	// 开关，on或off
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// UA黑白名单生效规则列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FilterRules []*UserAgentFilterRule `json:"FilterRules,omitempty" name:"FilterRules" list`
+}
+
+type UserAgentFilterRule struct {
+
+	// 访问路径生效类型
+	// all: 所有访问路径生效
+	// file: 根据文件后缀类型生效
+	// directory: 根据目录生效
+	// path: 根据完整访问路径生效
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
+
+	// 访问路径生效内容
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RulePaths []*string `json:"RulePaths,omitempty" name:"RulePaths" list`
+
+	// UserAgent列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UserAgents []*string `json:"UserAgents,omitempty" name:"UserAgents" list`
+
+	// 黑名单或白名单，blacklist或whitelist
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FilterType *string `json:"FilterType,omitempty" name:"FilterType"`
+}
+
 type VideoSeek struct {
 
 	// 视频拖拽开关
@@ -3978,4 +4259,11 @@ type ViolationUrl struct {
 
 	// 更新时间
 	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
+}
+
+type WebpAdapter struct {
+
+	// 开关，"on/off"
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }

@@ -138,6 +138,7 @@ func resourceTencentCloudHaVipCreate(d *schema.ResourceData, meta interface{}) e
 
 func resourceTencentCloudHaVipRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ha_vip.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 

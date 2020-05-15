@@ -276,6 +276,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 
 func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mongodb_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

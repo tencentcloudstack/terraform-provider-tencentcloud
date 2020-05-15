@@ -293,6 +293,7 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 
 func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

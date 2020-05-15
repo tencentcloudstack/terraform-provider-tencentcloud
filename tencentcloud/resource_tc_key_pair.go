@@ -109,6 +109,7 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 
 func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_key_pair.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

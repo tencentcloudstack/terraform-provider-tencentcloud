@@ -177,6 +177,8 @@ func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) 
 
 func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

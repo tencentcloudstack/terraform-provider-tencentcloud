@@ -1,4 +1,17 @@
 ## 1.33.0 (Unreleased)
+FEATURES:
+
+* **New Data Source**: `tencentcloud_monitor_policy_conditions`
+* **New Data Source**: `tencentcloud_monitor_data`
+* **New Data Source**: `tencentcloud_monitor_product_event`
+* **New Data Source**: `tencentcloud_monitor_binding_objects`
+* **New Data Source**: `tencentcloud_monitor_policy_groups`
+* **New Data Source**: `tencentcloud_monitor_product_namespace`
+
+* **New Resource**: `tencentcloud_monitor_policy_group`
+* **New Resource**: `tencentcloud_monitor_binding_object`
+* **New Resource**: `tencentcloud_monitor_binding_receiver`
+
 ## 1.32.1 (April 30, 2020)
 
 ENHANCEMENTS: 
