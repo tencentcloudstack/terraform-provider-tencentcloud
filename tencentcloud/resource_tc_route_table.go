@@ -139,6 +139,7 @@ func resourceTencentCloudVpcRouteTableCreate(d *schema.ResourceData, meta interf
 
 func resourceTencentCloudVpcRouteTableRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_route_table.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

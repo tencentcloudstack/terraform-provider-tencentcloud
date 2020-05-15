@@ -167,6 +167,7 @@ func resourceTencentCloudRouteEntryCreate(d *schema.ResourceData, meta interface
 
 func resourceTencentCloudRouteEntryRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_route_entry.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

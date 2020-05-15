@@ -205,6 +205,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 
 func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

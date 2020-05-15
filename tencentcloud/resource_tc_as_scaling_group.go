@@ -362,6 +362,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_group.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

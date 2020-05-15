@@ -250,6 +250,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 
 func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpn_gateway.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

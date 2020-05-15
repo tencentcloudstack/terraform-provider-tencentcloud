@@ -291,6 +291,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_redirection.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

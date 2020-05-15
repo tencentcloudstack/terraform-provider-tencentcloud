@@ -251,6 +251,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 
 func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

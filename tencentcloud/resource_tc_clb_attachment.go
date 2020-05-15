@@ -321,6 +321,7 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 
 func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

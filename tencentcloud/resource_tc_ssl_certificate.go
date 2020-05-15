@@ -177,6 +177,8 @@ func resourceTencentCloudSslCertificateCreate(d *schema.ResourceData, m interfac
 
 func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssl_certificate.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

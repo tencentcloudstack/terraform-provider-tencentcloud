@@ -166,6 +166,7 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 
 func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_nat_gateway.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 

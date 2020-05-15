@@ -123,6 +123,7 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 
 func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_account.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

@@ -249,6 +249,20 @@ MySQL
     tencentcloud_mysql_account_privilege
     tencentcloud_mysql_backup_policy
 
+Monitor
+  Data Source
+	tencentcloud_monitor_policy_conditions
+	tencentcloud_monitor_data
+	tencentcloud_monitor_product_event
+	tencentcloud_monitor_binding_objects
+	tencentcloud_monitor_policy_groups
+	tencentcloud_monitor_product_namespace
+
+  Resource
+    tencentcloud_monitor_policy_group
+    tencentcloud_monitor_binding_object
+    tencentcloud_monitor_binding_receiver
+
 Redis
   Data Source
     tencentcloud_redis_zone_config
@@ -476,6 +490,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcaplus_tables":               dataSourceTencentCloudTcaplusTables(),
 			"tencentcloud_tcaplus_idls":                 dataSourceTencentCloudTcaplusIdls(),
 			"tencentcloud_gaap_domain_error_pages":      dataSourceTencentCloudGaapDomainErrorPageInfoList(),
+			"tencentcloud_monitor_policy_conditions":    dataSourceTencentMonitorPolicyConditions(),
+			"tencentcloud_monitor_data":                 dataSourceTencentMonitorData(),
+			"tencentcloud_monitor_product_event":        dataSourceTencentMonitorProductEvent(),
+			"tencentcloud_monitor_binding_objects":      dataSourceTencentMonitorBindingObjects(),
+			"tencentcloud_monitor_policy_groups":        dataSourceTencentMonitorPolicyGroups(),
+			"tencentcloud_monitor_product_namespace":    dataSourceTencentMonitorProductNamespace(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -582,6 +602,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcaplus_table":                  resourceTencentCloudTcaplusTable(),
 			"tencentcloud_gaap_domain_error_page":         resourceTencentCloudGaapDomainErrorPageInfo(),
 			"tencentcloud_cdn_domain":                     resourceTencentCloudCdnDomain(),
+			"tencentcloud_monitor_policy_group":           resourceTencentMonitorPolicyGroup(),
+			"tencentcloud_monitor_binding_object":         resourceTencentMonitorBindingObject(),
+			"tencentcloud_monitor_binding_receiver":       resourceTencentMonitorBindingAlarmReceiver(),
 		},
 
 		ConfigureFunc: providerConfigure,
