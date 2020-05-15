@@ -1,4 +1,5 @@
 ## 1.33.0 (Unreleased)
+
 FEATURES:
 
 * **New Data Source**: `tencentcloud_monitor_policy_conditions`
@@ -7,10 +8,13 @@ FEATURES:
 * **New Data Source**: `tencentcloud_monitor_binding_objects`
 * **New Data Source**: `tencentcloud_monitor_policy_groups`
 * **New Data Source**: `tencentcloud_monitor_product_namespace`
-
 * **New Resource**: `tencentcloud_monitor_policy_group`
 * **New Resource**: `tencentcloud_monitor_binding_object`
 * **New Resource**: `tencentcloud_monitor_binding_receiver`
+
+ENHANCEMENTS: 
+
+* Resource: `tencentcloud_cdn_domain` add new argument `full_url_cache`([#405](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/405)).
 
 ## 1.32.1 (April 30, 2020)
 
