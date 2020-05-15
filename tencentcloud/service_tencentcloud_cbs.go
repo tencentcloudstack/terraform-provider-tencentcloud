@@ -425,14 +425,12 @@ func (me *CbsService) ModifyDiskChargeType(ctx context.Context, storageId string
 	request.DiskIds = []*string{&storageId}
 	request.DiskChargePrepaid = &cbs.DiskChargePrepaid{Period: helper.IntUint64(period), RenewFlag: &renewFlag}
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCbsClient().ModifyDisksChargeType(request)
+	_, err := me.client.UseCbsClient().ModifyDisksChargeType(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
 
@@ -443,14 +441,12 @@ func (me *CbsService) ModifyDisksRenewFlag(ctx context.Context, storageId string
 	request.RenewFlag = &renewFlag
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCbsClient().ModifyDisksRenewFlag(request)
+	_, err := me.client.UseCbsClient().ModifyDisksRenewFlag(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
 

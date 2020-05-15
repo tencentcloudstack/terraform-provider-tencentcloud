@@ -284,7 +284,7 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("attached", storage.Attached)
 	_ = d.Set("charge_type", storage.DiskChargeType)
 	_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
-	_ = d.Set("charge_type", storage.DiskChargeType)
+
 	if *storage.DiskChargeType == CBS_CHARGE_TYPE_PREPAID {
 		_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
 	}
@@ -477,7 +477,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			}
 
 			//to pay order wait
-			time.Sleep(3 * readRetryTimeout)
+			time.Sleep(readRetryTimeout)
 			d.SetPartial("prepaid_renew_flag")
 
 		}

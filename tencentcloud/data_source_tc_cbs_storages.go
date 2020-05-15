@@ -190,20 +190,20 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 		storageList := make([]map[string]interface{}, 0, len(storages))
 		for _, storage := range storages {
 			mapping := map[string]interface{}{
-				"storage_id":         *storage.DiskId,
-				"storage_name":       *storage.DiskName,
-				"storage_usage":      *storage.DiskUsage,
-				"storage_type":       *storage.DiskType,
-				"availability_zone":  *storage.Placement.Zone,
-				"project_id":         *storage.Placement.ProjectId,
-				"storage_size":       *storage.DiskSize,
-				"attached":           *storage.Attached,
-				"instance_id":        *storage.InstanceId,
-				"encrypt":            *storage.Encrypt,
-				"create_time":        *storage.CreateTime,
-				"status":             *storage.DiskState,
-				"prepaid_renew_flag": *storage.RenewFlag,
-				"charge_type":        *storage.DiskChargeType,
+				"storage_id":         storage.DiskId,
+				"storage_name":       storage.DiskName,
+				"storage_usage":      storage.DiskUsage,
+				"storage_type":       storage.DiskType,
+				"availability_zone":  storage.Placement.Zone,
+				"project_id":         storage.Placement.ProjectId,
+				"storage_size":       storage.DiskSize,
+				"attached":           storage.Attached,
+				"instance_id":        storage.InstanceId,
+				"encrypt":            storage.Encrypt,
+				"create_time":        storage.CreateTime,
+				"status":             storage.DiskState,
+				"prepaid_renew_flag": storage.RenewFlag,
+				"charge_type":        storage.DiskChargeType,
 			}
 			if storage.Tags != nil {
 				tags := make(map[string]interface{}, len(storage.Tags))
