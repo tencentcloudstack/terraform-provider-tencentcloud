@@ -419,6 +419,41 @@ func (me *CbsService) UnattachSnapshotPolicy(ctx context.Context, diskId, policy
 	return nil
 }
 
+func (me *CbsService) ModifyDiskChargeType(ctx context.Context, storageId string, chargeType string, renewFlag string, period int) error {
+	logId := getLogId(ctx)
+	request := cbs.NewModifyDisksChargeTypeRequest()
+	request.DiskIds = []*string{&storageId}
+	request.DiskChargePrepaid = &cbs.DiskChargePrepaid{Period: helper.IntUint64(period), RenewFlag: &renewFlag}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCbsClient().ModifyDisksChargeType(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return nil
+}
+
+func (me *CbsService) ModifyDisksRenewFlag(ctx context.Context, storageId string, renewFlag string) error {
+	logId := getLogId(ctx)
+	request := cbs.NewModifyDisksRenewFlagRequest()
+	request.DiskIds = []*string{&storageId}
+	request.RenewFlag = &renewFlag
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCbsClient().ModifyDisksRenewFlag(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return nil
+}
+
 func flattenCbsTagsMapping(tags []*cbs.Tag) (mapping map[string]string) {
 	mapping = make(map[string]string)
 	for _, tag := range tags {

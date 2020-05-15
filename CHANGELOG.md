@@ -12,6 +12,21 @@ FEATURES:
 * **New Resource**: `tencentcloud_monitor_binding_object`
 * **New Resource**: `tencentcloud_monitor_binding_receiver`
 
+ENHANCEMENTS: 
+
+* Resource: `tencentcloud_instance` support update with argument `instance_charge_type_prepaid_renew_flag`.
+* Resource: `tencentcloud_cbs_storage` add new argument `force_delete`.
+* Resource: `tencentcloud_cbs_storage` add new argument `charge_type`.
+* Resource: `tencentcloud_cbs_storage` add new argument `prepaid_renew_flag`.
+* Data Source: `tencentcloud_instances` add new output argument `instance_charge_type_prepaid_renew_flag`.
+* Data Source: `tencentcloud_cbs_storages` add new output argument `prepaid_renew_flag`.
+* Data Source: `tencentcloud_cbs_storages` add new output argument `charge_type`.
+
+
+DEPRECATED:
+
+* Resource: `tencentcloud_cbs_storage`: optional argument `period` is no longer supported.
+
 ## 1.32.1 (April 30, 2020)
 
 ENHANCEMENTS: 

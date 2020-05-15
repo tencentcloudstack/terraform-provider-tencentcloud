@@ -46,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
     * `delete_with_instance` - Indicates whether the data disk is destroyed with the instance.
   * `expired_time` - Expired time of the instance.
   * `image_id` - ID of the image.
+  * `instance_charge_type_prepaid_renew_flag` - The way that CVM instance will be renew automatically or not when it reach the end of the prepaid tenancy.
   * `instance_charge_type` - The charge type of the instance.
   * `instance_id` - ID of the instances.
   * `instance_name` - Name of the instances.
