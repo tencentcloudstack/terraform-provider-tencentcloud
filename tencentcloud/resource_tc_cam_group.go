@@ -133,6 +133,7 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 
 func resourceTencentCloudCamGroupRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_group.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

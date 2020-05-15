@@ -96,6 +96,8 @@ func resourceTencentCloudCfsAccessGroupCreate(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudCfsAccessGroupRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cfs_access_group.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	cfsService := CfsService{

@@ -142,6 +142,8 @@ func resourceTencentCloudGaapDomainErrorPageInfoCreate(d *schema.ResourceData, m
 
 func resourceTencentCloudGaapDomainErrorPageInfoRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_domain_error_page.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

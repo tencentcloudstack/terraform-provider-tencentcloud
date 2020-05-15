@@ -245,6 +245,7 @@ func resourceTencentCloudCamUserCreate(d *schema.ResourceData, meta interface{})
 
 func resourceTencentCloudCamUserRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_user.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

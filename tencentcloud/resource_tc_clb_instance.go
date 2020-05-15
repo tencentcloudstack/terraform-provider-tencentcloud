@@ -299,6 +299,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

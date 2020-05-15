@@ -165,6 +165,7 @@ func resourceTencentCloudAsScalingPolicyCreate(d *schema.ResourceData, meta inte
 
 func resourceTencentCloudAsScalingPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_policy.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

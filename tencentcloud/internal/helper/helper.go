@@ -5,6 +5,8 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"sort"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
@@ -96,4 +98,17 @@ func StringsContain(ss []string, str string) bool {
 	}
 
 	return false
+}
+
+/*
+    Serialize slice into the usage document
+	eg["status_change","abnormal"] will be "`abnormal`,`status_change`"
+*/
+func SliceFieldSerialize(slice []string) string {
+	types := []string{}
+	for _, v := range slice {
+		types = append(types, "`"+v+"`")
+	}
+	sort.Strings(types)
+	return strings.Trim(strings.Join(types, ","), ",")
 }

@@ -294,6 +294,7 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_listener.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

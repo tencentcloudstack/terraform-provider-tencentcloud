@@ -2347,6 +2347,10 @@ type LoadBalancer struct {
 	// 封堵或解封时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsBlockTime *string `json:"IsBlockTime,omitempty" name:"IsBlockTime"`
+
+	// IP类型是否是本地BGP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LocalBgp *bool `json:"LocalBgp,omitempty" name:"LocalBgp"`
 }
 
 type LoadBalancerHealth struct {
@@ -3302,6 +3306,46 @@ type RuleTargets struct {
 	// 后端服务的信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Targets []*Backend `json:"Targets,omitempty" name:"Targets" list`
+}
+
+type SetLoadBalancerClsLogRequest struct {
+	*tchttp.BaseRequest
+
+	// 负载均衡实例 ID
+	LoadBalancerId *string `json:"LoadBalancerId,omitempty" name:"LoadBalancerId"`
+
+	// 日志服务(CLS)的日志集ID
+	LogSetId *string `json:"LogSetId,omitempty" name:"LogSetId"`
+
+	// 日志服务(CLS)的日志主题ID
+	LogTopicId *string `json:"LogTopicId,omitempty" name:"LogTopicId"`
+}
+
+func (r *SetLoadBalancerClsLogRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *SetLoadBalancerClsLogRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type SetLoadBalancerClsLogResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *SetLoadBalancerClsLogResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *SetLoadBalancerClsLogResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
 }
 
 type SetLoadBalancerSecurityGroupsRequest struct {

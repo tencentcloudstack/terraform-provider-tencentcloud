@@ -243,6 +243,31 @@ func (c *Client) CreatePolicy(request *CreatePolicyRequest) (response *CreatePol
     return
 }
 
+func NewCreatePolicyVersionRequest() (request *CreatePolicyVersionRequest) {
+    request = &CreatePolicyVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "CreatePolicyVersion")
+    return
+}
+
+func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
+    response = &CreatePolicyVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 该接口（CreatePolicyVersion）用于新增策略版本，用户创建了一个策略版本之后可以方便的通过变更策略版本的方式来变更策略。
+func (c *Client) CreatePolicyVersion(request *CreatePolicyVersionRequest) (response *CreatePolicyVersionResponse, err error) {
+    if request == nil {
+        request = NewCreatePolicyVersionRequest()
+    }
+    response = NewCreatePolicyVersionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateRoleRequest() (request *CreateRoleRequest) {
     request = &CreateRoleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -289,6 +314,31 @@ func (c *Client) CreateSAMLProvider(request *CreateSAMLProviderRequest) (respons
         request = NewCreateSAMLProviderRequest()
     }
     response = NewCreateSAMLProviderResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateServiceLinkedRoleRequest() (request *CreateServiceLinkedRoleRequest) {
+    request = &CreateServiceLinkedRoleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "CreateServiceLinkedRole")
+    return
+}
+
+func NewCreateServiceLinkedRoleResponse() (response *CreateServiceLinkedRoleResponse) {
+    response = &CreateServiceLinkedRoleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建服务相关角色
+func (c *Client) CreateServiceLinkedRole(request *CreateServiceLinkedRoleRequest) (response *CreateServiceLinkedRoleResponse, err error) {
+    if request == nil {
+        request = NewCreateServiceLinkedRoleRequest()
+    }
+    response = NewCreateServiceLinkedRoleResponse()
     err = c.Send(request, response)
     return
 }
@@ -343,6 +393,31 @@ func (c *Client) DeletePolicy(request *DeletePolicyRequest) (response *DeletePol
     return
 }
 
+func NewDeletePolicyVersionRequest() (request *DeletePolicyVersionRequest) {
+    request = &DeletePolicyVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "DeletePolicyVersion")
+    return
+}
+
+func NewDeletePolicyVersionResponse() (response *DeletePolicyVersionResponse) {
+    response = &DeletePolicyVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（DeletePolicyVersion）可用于删除一个策略的策略版本。
+func (c *Client) DeletePolicyVersion(request *DeletePolicyVersionRequest) (response *DeletePolicyVersionResponse, err error) {
+    if request == nil {
+        request = NewDeletePolicyVersionRequest()
+    }
+    response = NewDeletePolicyVersionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteRoleRequest() (request *DeleteRoleRequest) {
     request = &DeleteRoleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -389,6 +464,31 @@ func (c *Client) DeleteSAMLProvider(request *DeleteSAMLProviderRequest) (respons
         request = NewDeleteSAMLProviderRequest()
     }
     response = NewDeleteSAMLProviderResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteServiceLinkedRoleRequest() (request *DeleteServiceLinkedRoleRequest) {
+    request = &DeleteServiceLinkedRoleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "DeleteServiceLinkedRole")
+    return
+}
+
+func NewDeleteServiceLinkedRoleResponse() (response *DeleteServiceLinkedRoleResponse) {
+    response = &DeleteServiceLinkedRoleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除服务相关角色
+func (c *Client) DeleteServiceLinkedRole(request *DeleteServiceLinkedRoleRequest) (response *DeleteServiceLinkedRoleResponse, err error) {
+    if request == nil {
+        request = NewDeleteServiceLinkedRoleRequest()
+    }
+    response = NewDeleteServiceLinkedRoleResponse()
     err = c.Send(request, response)
     return
 }
@@ -593,6 +693,31 @@ func (c *Client) GetPolicy(request *GetPolicyRequest) (response *GetPolicyRespon
     return
 }
 
+func NewGetPolicyVersionRequest() (request *GetPolicyVersionRequest) {
+    request = &GetPolicyVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "GetPolicyVersion")
+    return
+}
+
+func NewGetPolicyVersionResponse() (response *GetPolicyVersionResponse) {
+    response = &GetPolicyVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 该接口（GetPolicyVersion）用于查询策略版本详情
+func (c *Client) GetPolicyVersion(request *GetPolicyVersionRequest) (response *GetPolicyVersionResponse, err error) {
+    if request == nil {
+        request = NewGetPolicyVersionRequest()
+    }
+    response = NewGetPolicyVersionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetRoleRequest() (request *GetRoleRequest) {
     request = &GetRoleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -639,6 +764,31 @@ func (c *Client) GetSAMLProvider(request *GetSAMLProviderRequest) (response *Get
         request = NewGetSAMLProviderRequest()
     }
     response = NewGetSAMLProviderResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetServiceLinkedRoleDeletionStatusRequest() (request *GetServiceLinkedRoleDeletionStatusRequest) {
+    request = &GetServiceLinkedRoleDeletionStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "GetServiceLinkedRoleDeletionStatus")
+    return
+}
+
+func NewGetServiceLinkedRoleDeletionStatusResponse() (response *GetServiceLinkedRoleDeletionStatusResponse) {
+    response = &GetServiceLinkedRoleDeletionStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 根据删除TaskId获取服务相关角色删除状态
+func (c *Client) GetServiceLinkedRoleDeletionStatus(request *GetServiceLinkedRoleDeletionStatusRequest) (response *GetServiceLinkedRoleDeletionStatusResponse, err error) {
+    if request == nil {
+        request = NewGetServiceLinkedRoleDeletionStatusRequest()
+    }
+    response = NewGetServiceLinkedRoleDeletionStatusResponse()
     err = c.Send(request, response)
     return
 }
@@ -743,6 +893,31 @@ func (c *Client) ListAttachedUserPolicies(request *ListAttachedUserPoliciesReque
     return
 }
 
+func NewListCollaboratorsRequest() (request *ListCollaboratorsRequest) {
+    request = &ListCollaboratorsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "ListCollaborators")
+    return
+}
+
+func NewListCollaboratorsResponse() (response *ListCollaboratorsResponse) {
+    response = &ListCollaboratorsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取协作者列表
+func (c *Client) ListCollaborators(request *ListCollaboratorsRequest) (response *ListCollaboratorsResponse, err error) {
+    if request == nil {
+        request = NewListCollaboratorsRequest()
+    }
+    response = NewListCollaboratorsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewListEntitiesForPolicyRequest() (request *ListEntitiesForPolicyRequest) {
     request = &ListEntitiesForPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -833,12 +1008,37 @@ func NewListPoliciesResponse() (response *ListPoliciesResponse) {
     return
 }
 
-// 本接口（ListPolicies）可用于查询策略列表
+// 本接口（ListPolicies）可用于查询策略列表。
 func (c *Client) ListPolicies(request *ListPoliciesRequest) (response *ListPoliciesResponse, err error) {
     if request == nil {
         request = NewListPoliciesRequest()
     }
     response = NewListPoliciesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListPolicyVersionsRequest() (request *ListPolicyVersionsRequest) {
+    request = &ListPolicyVersionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "ListPolicyVersions")
+    return
+}
+
+func NewListPolicyVersionsResponse() (response *ListPolicyVersionsResponse) {
+    response = &ListPolicyVersionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 该接口（ListPolicyVersions）用于获取策略版本列表
+func (c *Client) ListPolicyVersions(request *ListPolicyVersionsRequest) (response *ListPolicyVersionsResponse, err error) {
+    if request == nil {
+        request = NewListPolicyVersionsRequest()
+    }
+    response = NewListPolicyVersionsResponse()
     err = c.Send(request, response)
     return
 }
@@ -943,27 +1143,27 @@ func (c *Client) RemoveUserFromGroup(request *RemoveUserFromGroupRequest) (respo
     return
 }
 
-func NewSetFlagRequest() (request *SetFlagRequest) {
-    request = &SetFlagRequest{
+func NewSetDefaultPolicyVersionRequest() (request *SetDefaultPolicyVersionRequest) {
+    request = &SetDefaultPolicyVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("cam", APIVersion, "SetFlag")
+    request.Init().WithApiInfo("cam", APIVersion, "SetDefaultPolicyVersion")
     return
 }
 
-func NewSetFlagResponse() (response *SetFlagResponse) {
-    response = &SetFlagResponse{
+func NewSetDefaultPolicyVersionResponse() (response *SetDefaultPolicyVersionResponse) {
+    response = &SetDefaultPolicyVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// 设置用户的登录保护和敏感操作校验方式
-func (c *Client) SetFlag(request *SetFlagRequest) (response *SetFlagResponse, err error) {
+// 本接口（SetDefaultPolicyVersion）可用于设置生效的策略版本。
+func (c *Client) SetDefaultPolicyVersion(request *SetDefaultPolicyVersionRequest) (response *SetDefaultPolicyVersionResponse, err error) {
     if request == nil {
-        request = NewSetFlagRequest()
+        request = NewSetDefaultPolicyVersionRequest()
     }
-    response = NewSetFlagResponse()
+    response = NewSetDefaultPolicyVersionResponse()
     err = c.Send(request, response)
     return
 }
@@ -1034,11 +1234,37 @@ func NewUpdatePolicyResponse() (response *UpdatePolicyResponse) {
 }
 
 // 本接口（UpdatePolicy ）可用于更新策略。
+// 如果已存在策略版本，本接口会直接更新策略的默认版本，不会创建新版本，如果不存在任何策略版本，则直接创建一个默认版本。
 func (c *Client) UpdatePolicy(request *UpdatePolicyRequest) (response *UpdatePolicyResponse, err error) {
     if request == nil {
         request = NewUpdatePolicyRequest()
     }
     response = NewUpdatePolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateRoleConsoleLoginRequest() (request *UpdateRoleConsoleLoginRequest) {
+    request = &UpdateRoleConsoleLoginRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cam", APIVersion, "UpdateRoleConsoleLogin")
+    return
+}
+
+func NewUpdateRoleConsoleLoginResponse() (response *UpdateRoleConsoleLoginResponse) {
+    response = &UpdateRoleConsoleLoginResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（UpdateRoleConsoleLogin）用于修改角色是否可登录。
+func (c *Client) UpdateRoleConsoleLogin(request *UpdateRoleConsoleLoginRequest) (response *UpdateRoleConsoleLoginResponse, err error) {
+    if request == nil {
+        request = NewUpdateRoleConsoleLoginRequest()
+    }
+    response = NewUpdateRoleConsoleLoginResponse()
     err = c.Send(request, response)
     return
 }

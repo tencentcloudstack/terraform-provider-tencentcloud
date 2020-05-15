@@ -102,6 +102,8 @@ func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_placement_group.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
