@@ -34,7 +34,7 @@ func TestAccTencentCloudCdnDomain(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "domain", "test.zhaoshaona.com"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "service_type", "web"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "area", "mainland"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "full_url_cache", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "full_url_cache", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_type", "ip"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_list.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.server_name", "test.zhaoshaona.com"),
@@ -139,7 +139,7 @@ resource "tencentcloud_cdn_domain" "foo" {
   domain = "test.zhaoshaona.com"
   service_type = "web"
   area = "mainland"
-  full_url_cache = "off"
+  full_url_cache = false
 
   origin {
 	origin_type = "ip"
