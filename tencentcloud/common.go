@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"io/ioutil"
 	"log"
 	"os"
@@ -72,6 +73,17 @@ func logElapsed(mark ...string) func() {
 	startAt := time.Now()
 	return func() {
 		log.Printf("[DEBUG] [ELAPSED] %s elapsed %d ms\n", strings.Join(mark, " "), int64(time.Since(startAt)/time.Millisecond))
+	}
+}
+
+// for Provider produced inconsistent result after apply
+func inconsistentCheck(d *schema.ResourceData, meta interface{}) func() {
+	oldJson, _ := json.Marshal(d.State())
+	return func() {
+		newJson, _ := json.Marshal(d.State())
+		if !reflect.DeepEqual(oldJson, newJson) {
+			log.Printf("[Resource id %s data changes after reading old:%s, new:%s", d.Id(), oldJson, newJson)
+		}
 	}
 }
 

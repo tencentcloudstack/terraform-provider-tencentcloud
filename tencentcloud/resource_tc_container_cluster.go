@@ -480,6 +480,7 @@ func resourceTencentCloudContainerClusterCreate(d *schema.ResourceData, meta int
 
 func resourceTencentCloudContainerClusterRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_container_cluster.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

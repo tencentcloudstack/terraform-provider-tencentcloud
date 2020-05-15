@@ -188,6 +188,8 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interface{}) error {
 
 	defer logElapsed("resource.tencentcloud_kubernetes_scale_worker.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

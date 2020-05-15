@@ -150,7 +150,7 @@ type CreatePolicyGroupRequest struct {
 	// 策略组中的阈值告警规则
 	Conditions []*CreatePolicyGroupCondition `json:"Conditions,omitempty" name:"Conditions" list`
 
-	// 策略组中的时间告警规则
+	// 策略组中的事件告警规则
 	EventConditions []*CreatePolicyGroupEventCondition `json:"EventConditions,omitempty" name:"EventConditions" list`
 
 	// 是否为后端调用。当且仅当值为1时，后台拉取策略模版中的规则填充入Conditions以及EventConditions字段
@@ -352,10 +352,10 @@ func (r *DescribeAccidentEventListResponse) FromJsonString(s string) error {
 type DescribeBaseMetricsRequest struct {
 	*tchttp.BaseRequest
 
-	// 业务命名空间
+	// 业务命名空间，各个云产品的业务命名空间不同。如需获取业务命名空间，请前往各产品监控接口文档，例如云服务器的命名空间，可参见 [云服务器监控接口](https://cloud.tencent.com/document/api/248/30385)
 	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
 
-	// 指标名
+	// 指标名，各个云产品的指标名不同。如需获取指标名，请前往各产品监控接口文档，例如云服务器的指标名，可参见 [云服务器监控接口](https://cloud.tencent.com/document/api/248/30385)
 	MetricName *string `json:"MetricName,omitempty" name:"MetricName"`
 }
 
@@ -514,6 +514,9 @@ type DescribeBasicAlarmListRequest struct {
 
 	// 根据实例组ID过滤
 	InstanceGroupIds []*int64 `json:"InstanceGroupIds,omitempty" name:"InstanceGroupIds" list`
+
+	// 根据指标名过滤
+	MetricNames []*string `json:"MetricNames,omitempty" name:"MetricNames" list`
 }
 
 func (r *DescribeBasicAlarmListRequest) ToJsonString() string {
@@ -1537,6 +1540,57 @@ func (r *DescribeProductEventListResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeProductListRequest struct {
+	*tchttp.BaseRequest
+
+	// 固定传值monitor
+	Module *string `json:"Module,omitempty" name:"Module"`
+
+	// 排序方式：DESC/ASC（区分大小写），默认值DESC
+	Order *string `json:"Order,omitempty" name:"Order"`
+
+	// 分页查询的偏移量，默认值0
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 分页查询的每页数据量，默认值20
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeProductListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeProductListRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeProductListResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 产品信息列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		ProductList []*ProductSimple `json:"ProductList,omitempty" name:"ProductList" list`
+
+		// 产品总数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeProductListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeProductListResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type Dimension struct {
 
 	// 实例维度名称
@@ -1718,6 +1772,106 @@ func (r *ModifyAlarmReceiversResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyPolicyGroupCondition struct {
+
+	// 指标id
+	MetricId *int64 `json:"MetricId,omitempty" name:"MetricId"`
+
+	// 比较类型，1表示大于，2表示大于等于，3表示小于，4表示小于等于，5表示相等，6表示不相等
+	CalcType *int64 `json:"CalcType,omitempty" name:"CalcType"`
+
+	// 检测阈值
+	CalcValue *string `json:"CalcValue,omitempty" name:"CalcValue"`
+
+	// 检测指标的数据周期
+	CalcPeriod *int64 `json:"CalcPeriod,omitempty" name:"CalcPeriod"`
+
+	// 持续周期个数
+	ContinuePeriod *int64 `json:"ContinuePeriod,omitempty" name:"ContinuePeriod"`
+
+	// 告警发送收敛类型。0连续告警，1指数告警
+	AlarmNotifyType *int64 `json:"AlarmNotifyType,omitempty" name:"AlarmNotifyType"`
+
+	// 告警发送周期单位秒。<0 不触发, 0 只触发一次, >0 每隔triggerTime秒触发一次
+	AlarmNotifyPeriod *int64 `json:"AlarmNotifyPeriod,omitempty" name:"AlarmNotifyPeriod"`
+
+	// 规则id，不填表示新增，填写了ruleId表示在已存在的规则基础上进行修改
+	RuleId *int64 `json:"RuleId,omitempty" name:"RuleId"`
+}
+
+type ModifyPolicyGroupEventCondition struct {
+
+	// 事件id
+	EventId *int64 `json:"EventId,omitempty" name:"EventId"`
+
+	// 告警发送收敛类型。0连续告警，1指数告警
+	AlarmNotifyType *int64 `json:"AlarmNotifyType,omitempty" name:"AlarmNotifyType"`
+
+	// 告警发送周期单位秒。<0 不触发, 0 只触发一次, >0 每隔triggerTime秒触发一次
+	AlarmNotifyPeriod *int64 `json:"AlarmNotifyPeriod,omitempty" name:"AlarmNotifyPeriod"`
+
+	// 规则id，不填表示新增，填写了ruleId表示在已存在的规则基础上进行修改
+	RuleId *int64 `json:"RuleId,omitempty" name:"RuleId"`
+}
+
+type ModifyPolicyGroupRequest struct {
+	*tchttp.BaseRequest
+
+	// 固定值，为"monitor"
+	Module *string `json:"Module,omitempty" name:"Module"`
+
+	// 策略组id
+	GroupId *int64 `json:"GroupId,omitempty" name:"GroupId"`
+
+	// 告警类型
+	ViewName *string `json:"ViewName,omitempty" name:"ViewName"`
+
+	// 策略组名称
+	GroupName *string `json:"GroupName,omitempty" name:"GroupName"`
+
+	// 指标告警条件的且或关系，1表示且告警，所有指标告警条件都达到才告警，0表示或告警，任意指标告警条件达到都告警
+	IsUnionRule *int64 `json:"IsUnionRule,omitempty" name:"IsUnionRule"`
+
+	// 指标告警条件规则，不填表示删除已有的所有指标告警条件规则
+	Conditions []*ModifyPolicyGroupCondition `json:"Conditions,omitempty" name:"Conditions" list`
+
+	// 事件告警条件，不填表示删除已有的事件告警条件
+	EventConditions []*ModifyPolicyGroupEventCondition `json:"EventConditions,omitempty" name:"EventConditions" list`
+
+	// 模板策略组id
+	ConditionTempGroupId *int64 `json:"ConditionTempGroupId,omitempty" name:"ConditionTempGroupId"`
+}
+
+func (r *ModifyPolicyGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyPolicyGroupRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyPolicyGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 策略组id
+		GroupId *int64 `json:"GroupId,omitempty" name:"GroupId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyPolicyGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyPolicyGroupResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type PeriodsSt struct {
 
 	// 周期
@@ -1725,6 +1879,19 @@ type PeriodsSt struct {
 
 	// 统计方式
 	StatType []*string `json:"StatType,omitempty" name:"StatType" list`
+}
+
+type ProductSimple struct {
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
+
+	// 产品中文名称
+	ProductName *string `json:"ProductName,omitempty" name:"ProductName"`
+
+	// 产品英文名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProductEnName *string `json:"ProductEnName,omitempty" name:"ProductEnName"`
 }
 
 type PutMonitorDataRequest struct {
@@ -1782,9 +1949,9 @@ type ReceiverInfo struct {
 	NotifyWay []*string `json:"NotifyWay,omitempty" name:"NotifyWay" list`
 
 	// 接收人类型。“group” 或 “user”
-	ReceiverType []*string `json:"ReceiverType,omitempty" name:"ReceiverType" list`
+	ReceiverType *string `json:"ReceiverType,omitempty" name:"ReceiverType"`
 
-	// Id
+	// ReceiverId
 	Id *int64 `json:"Id,omitempty" name:"Id"`
 
 	// 电话告警通知时机。可选"OCCUR"(告警时通知),"RECOVER"(恢复时通知)

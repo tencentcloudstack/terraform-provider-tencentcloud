@@ -496,6 +496,7 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 
 func resourceTencentCloudDayuL7RuleRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dayu_l7_rule.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

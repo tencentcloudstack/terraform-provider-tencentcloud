@@ -594,6 +594,9 @@ type CreateDBInstanceHourRequest struct {
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间在当天内唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
 	ClientToken *string `json:"ClientToken,omitempty" name:"ClientToken"`
+
+	// 实例类型。支持值包括： "HA" - 高可用版实例， "BASIC" - 基础版实例。 不指定则默认为高可用版。
+	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
 }
 
 func (r *CreateDBInstanceHourRequest) ToJsonString() string {
@@ -709,6 +712,9 @@ type CreateDBInstanceRequest struct {
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间在当天内唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
 	ClientToken *string `json:"ClientToken,omitempty" name:"ClientToken"`
+
+	// 实例类型。支持值包括： "HA" - 高可用版实例， "BASIC" - 基础版实例。 不指定则默认为高可用版。
+	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
 }
 
 func (r *CreateDBInstanceRequest) ToJsonString() string {
@@ -1138,6 +1144,9 @@ type DescribeAccountsRequest struct {
 
 	// 单次请求返回的数量，默认值为20，最小值为1，最大值为100。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 匹配账号名的正则表达式，规则同 MySQL 官网。
+	AccountRegexp *string `json:"AccountRegexp,omitempty" name:"AccountRegexp"`
 }
 
 func (r *DescribeAccountsRequest) ToJsonString() string {
@@ -1779,6 +1788,57 @@ func (r *DescribeDBInstanceGTIDResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeDBInstanceInfoRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例 ID 。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeDBInstanceInfoRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDBInstanceInfoRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeDBInstanceInfoResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 实例 ID 。
+		InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+		// 实例名称。
+		InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+
+		// 是否开通加密，YES 已开通，NO 未开通。
+		Encryption *string `json:"Encryption,omitempty" name:"Encryption"`
+
+		// 加密使用的密钥 ID 。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		KeyId *string `json:"KeyId,omitempty" name:"KeyId"`
+
+		// 密钥所在地域。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		KeyRegion *string `json:"KeyRegion,omitempty" name:"KeyRegion"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeDBInstanceInfoResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDBInstanceInfoResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeDBInstanceRebootTimeRequest struct {
 	*tchttp.BaseRequest
 
@@ -2179,7 +2239,7 @@ type DescribeDatabasesRequest struct {
 	// 单次请求数量，默认值为20，最小值为1，最大值为100。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 匹配数据库库名的正则表达式，规则同 MySQL 官网
+	// 匹配数据库库名的正则表达式。
 	DatabaseRegexp *string `json:"DatabaseRegexp,omitempty" name:"DatabaseRegexp"`
 }
 
@@ -2697,7 +2757,57 @@ func (r *DescribeRollbackRangeTimeResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeSLowLogDataRequest struct {
+type DescribeRollbackTaskDetailRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例 ID。与云数据库控制台页面中显示的实例 ID 相同，可使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872)。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 异步任务 ID。
+	AsyncRequestId *string `json:"AsyncRequestId,omitempty" name:"AsyncRequestId"`
+
+	// 分页参数，每次请求返回的记录数。默认值为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 分页偏移量。默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+}
+
+func (r *DescribeRollbackTaskDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeRollbackTaskDetailRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeRollbackTaskDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 符合条件的记录总数。
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 回档任务详情。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Items []*RollbackTask `json:"Items,omitempty" name:"Items" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeRollbackTaskDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeRollbackTaskDetailResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeSlowLogDataRequest struct {
 	*tchttp.BaseRequest
 
 	// 实例 ID。
@@ -2731,16 +2841,16 @@ type DescribeSLowLogDataRequest struct {
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 }
 
-func (r *DescribeSLowLogDataRequest) ToJsonString() string {
+func (r *DescribeSlowLogDataRequest) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
-func (r *DescribeSLowLogDataRequest) FromJsonString(s string) error {
+func (r *DescribeSlowLogDataRequest) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
-type DescribeSLowLogDataResponse struct {
+type DescribeSlowLogDataResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
@@ -2756,12 +2866,12 @@ type DescribeSLowLogDataResponse struct {
 	} `json:"Response"`
 }
 
-func (r *DescribeSLowLogDataResponse) ToJsonString() string {
+func (r *DescribeSlowLogDataResponse) ToJsonString() string {
     b, _ := json.Marshal(r)
     return string(b)
 }
 
-func (r *DescribeSLowLogDataResponse) FromJsonString(s string) error {
+func (r *DescribeSlowLogDataResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3504,7 +3614,7 @@ type InstanceInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MasterInfo *MasterInfo `json:"MasterInfo,omitempty" name:"MasterInfo"`
 
-	// 实例类型，可能的返回值：“HA”-高可用版；“BASIC”-基础版
+	// 实例类型，可能的返回值：“HA”-高可用版；“FE”-金融版；“BASIC”-基础版
 	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
 
 	// 内核版本
@@ -4044,6 +4154,9 @@ type ModifyDBInstanceVipVportRequest struct {
 
 	// 子网统一 ID。
 	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
+
+	// 进行基础网络转 VPC 网络和 VPC 网络下的子网变更时，原网络中旧IP的回收时间，单位为小时，取值范围为0-168，默认值为24小时。
+	ReleaseDuration *int64 `json:"ReleaseDuration,omitempty" name:"ReleaseDuration"`
 }
 
 func (r *ModifyDBInstanceVipVportRequest) ToJsonString() string {
@@ -4059,7 +4172,8 @@ type ModifyDBInstanceVipVportResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 异步任务ID。
+		// 异步任务ID。(该返回字段目前已废弃)
+	// 注意：此字段可能返回 null，表示取不到有效值。
 		AsyncRequestId *string `json:"AsyncRequestId,omitempty" name:"AsyncRequestId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -4607,6 +4721,9 @@ type RenewDBInstanceRequest struct {
 
 	// 续费时长，单位：月，可选值包括 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
 	TimeSpan *int64 `json:"TimeSpan,omitempty" name:"TimeSpan"`
+
+	// 如果需要将按量计费实例续费为包年包月的实例，该入参的值需要指定为 "PREPAID" 。
+	ModifyPayType *string `json:"ModifyPayType,omitempty" name:"ModifyPayType"`
 }
 
 func (r *RenewDBInstanceRequest) ToJsonString() string {
@@ -4848,15 +4965,18 @@ type RoWeightValue struct {
 type RollbackDBName struct {
 
 	// 回档前的原数据库名
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DatabaseName *string `json:"DatabaseName,omitempty" name:"DatabaseName"`
 
 	// 回档后的新数据库名
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	NewDatabaseName *string `json:"NewDatabaseName,omitempty" name:"NewDatabaseName"`
 }
 
 type RollbackInstancesInfo struct {
 
 	// 云数据库实例ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 回档策略。可选值为：table、db、full；默认值为full。table - 急速回档模式，仅导入所选中表级别的备份和binlog，如有跨表操作，且关联表未被同时选中，将会导致回档失败，该模式下参数Databases必须为空；db - 快速模式，仅导入所选中库级别的备份和binlog，如有跨库操作，且关联库未被同时选中，将会导致回档失败；full - 普通回档模式，将导入整个实例的备份和binlog，速度较慢。
@@ -4866,28 +4986,56 @@ type RollbackInstancesInfo struct {
 	RollbackTime *string `json:"RollbackTime,omitempty" name:"RollbackTime"`
 
 	// 待回档的数据库信息，表示整库回档
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Databases []*RollbackDBName `json:"Databases,omitempty" name:"Databases" list`
 
 	// 待回档的数据库表信息，表示按表回档
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tables []*RollbackTables `json:"Tables,omitempty" name:"Tables" list`
 }
 
 type RollbackTableName struct {
 
 	// 回档前的原数据库表名
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	TableName *string `json:"TableName,omitempty" name:"TableName"`
 
 	// 回档后的新数据库表名
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	NewTableName *string `json:"NewTableName,omitempty" name:"NewTableName"`
 }
 
 type RollbackTables struct {
 
 	// 数据库名
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Database *string `json:"Database,omitempty" name:"Database"`
 
 	// 数据库表详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Table []*RollbackTableName `json:"Table,omitempty" name:"Table" list`
+}
+
+type RollbackTask struct {
+
+	// 任务执行信息描述。
+	Info *string `json:"Info,omitempty" name:"Info"`
+
+	// 任务执行结果。可能的取值：INITIAL - 初始化，RUNNING - 运行中，SUCCESS - 执行成功，FAILED - 执行失败，KILLED - 已终止，REMOVED - 已删除，PAUSED - 终止中。
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 任务执行进度。取值范围为[0, 100]。
+	Progress *int64 `json:"Progress,omitempty" name:"Progress"`
+
+	// 任务开始时间。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 任务结束时间。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 回档任务详情。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Detail []*RollbackInstancesInfo `json:"Detail,omitempty" name:"Detail" list`
 }
 
 type RollbackTimeRange struct {

@@ -356,6 +356,9 @@ type DelayDistribution struct {
 
 	// 大小
 	Size *int64 `json:"Size,omitempty" name:"Size"`
+
+	// 修改时间
+	Updatetime *int64 `json:"Updatetime,omitempty" name:"Updatetime"`
 }
 
 type DeleteInstanceAccountRequest struct {
@@ -974,7 +977,7 @@ type DescribeInstanceMonitorTookDistRequest struct {
 	// 时间；例如："20190219"
 	Date *string `json:"Date,omitempty" name:"Date"`
 
-	// 请求类型：1——string类型，2——所有类型
+	// 时间范围：1——实时，2——近30分钟，3——近6小时，4——近24小时
 	SpanType *int64 `json:"SpanType,omitempty" name:"SpanType"`
 }
 

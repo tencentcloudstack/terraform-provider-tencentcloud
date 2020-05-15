@@ -318,6 +318,31 @@ func (c *Client) DescribeProductEventList(request *DescribeProductEventListReque
     return
 }
 
+func NewDescribeProductListRequest() (request *DescribeProductListRequest) {
+    request = &DescribeProductListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("monitor", APIVersion, "DescribeProductList")
+    return
+}
+
+func NewDescribeProductListResponse() (response *DescribeProductListResponse) {
+    response = &DescribeProductListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询云监控产品列表
+func (c *Client) DescribeProductList(request *DescribeProductListRequest) (response *DescribeProductListResponse, err error) {
+    if request == nil {
+        request = NewDescribeProductListRequest()
+    }
+    response = NewDescribeProductListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetMonitorDataRequest() (request *GetMonitorDataRequest) {
     request = &GetMonitorDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -366,6 +391,31 @@ func (c *Client) ModifyAlarmReceivers(request *ModifyAlarmReceiversRequest) (res
         request = NewModifyAlarmReceiversRequest()
     }
     response = NewModifyAlarmReceiversResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyPolicyGroupRequest() (request *ModifyPolicyGroupRequest) {
+    request = &ModifyPolicyGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("monitor", APIVersion, "ModifyPolicyGroup")
+    return
+}
+
+func NewModifyPolicyGroupResponse() (response *ModifyPolicyGroupResponse) {
+    response = &ModifyPolicyGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 更新策略组
+func (c *Client) ModifyPolicyGroup(request *ModifyPolicyGroupRequest) (response *ModifyPolicyGroupResponse, err error) {
+    if request == nil {
+        request = NewModifyPolicyGroupRequest()
+    }
+    response = NewModifyPolicyGroupResponse()
     err = c.Send(request, response)
     return
 }

@@ -172,6 +172,8 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 
 func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cfs_file_system.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

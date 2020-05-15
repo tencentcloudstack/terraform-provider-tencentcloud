@@ -434,6 +434,8 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 
 func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cdn_domain.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	client := meta.(*TencentCloudClient).apiV3Conn

@@ -251,6 +251,7 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 
 func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tcaplus_idl.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
