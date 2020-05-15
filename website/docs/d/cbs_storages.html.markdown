@@ -38,9 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 * `storage_list` - A list of storage. Each element contains the following attributes:
   * `attached` - Indicates whether the CBS is mounted the CVM.
   * `availability_zone` - The zone of CBS.
+  * `charge_type` - Pay type of the CBS instance.
   * `create_time` - Creation time of CBS.
   * `encrypt` - Indicates whether CBS is encrypted.
   * `instance_id` - ID of the CVM instance that be mounted by this CBS.
+  * `prepaid_renew_flag` - The way that CBS instance will be renew automatically or not when it reach the end of the prepaid tenancy.
   * `project_id` - ID of the project.
   * `status` - Status of CBS.
   * `storage_id` - ID of CBS.

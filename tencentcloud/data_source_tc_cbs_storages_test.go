@@ -30,6 +30,7 @@ func TestAccTencentCloudCbsStoragesDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cbs_storages.storages", "storage_list.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cbs_storages.storages", "storage_list.0.status"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.tags.test", "tf"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cbs_storages.storages", "storage_list.0.charge_type"),
 				),
 			},
 		},

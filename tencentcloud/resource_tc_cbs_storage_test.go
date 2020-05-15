@@ -73,6 +73,64 @@ func TestAccTencentCloudCbsStorage_full(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCbsStorage_prepaid(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCbsStorageDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCbsStorage_prepaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_prepaid"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "storage_name", "tf-storage-prepaid"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "charge_type", "PREPAID"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "prepaid_renew_flag", "NOTIFY_AND_AUTO_RENEW"),
+				),
+			},
+			{
+				Config: testAccCbsStorage_prepaidupdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_prepaid"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "storage_name", "tf-storage-prepaid"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "charge_type", "PREPAID"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "prepaid_renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudCbsStorage_upgrade(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCbsStorageDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCbsStorage_upgrade,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_upgrade"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_upgrade", "storage_name", "tf-storage-upgrade"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_upgrade", "charge_type", "POSTPAID_BY_HOUR"),
+				),
+			},
+			{
+				Config: testAccCbsStorage_upgradeupdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_upgrade"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_upgrade", "storage_name", "tf-storage-upgrade"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_upgrade", "charge_type", "PREPAID"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckCbsStorageDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -155,5 +213,62 @@ resource "tencentcloud_cbs_storage" "storage_full" {
 	tags = {
 		test = "tf-test"
 	}
+}
+`
+
+const testAccCbsStorage_prepaid = `
+resource "tencentcloud_cbs_storage" "storage_prepaid" {
+	storage_type      = "CLOUD_PREMIUM"
+	storage_name      = "tf-storage-prepaid"
+	storage_size      = 50
+	availability_zone = "ap-guangzhou-3"
+	charge_type			= "PREPAID"
+	prepaid_renew_flag = "NOTIFY_AND_AUTO_RENEW"
+	prepaid_period = 1
+	project_id = 0
+	encrypt = false
+	tags = {
+		test = "tf"
+	}
+	force_delete = true
+}
+`
+const testAccCbsStorage_prepaidupdate = `
+resource "tencentcloud_cbs_storage" "storage_prepaid" {
+	storage_type      = "CLOUD_PREMIUM"
+	storage_name      = "tf-storage-prepaid"
+	storage_size      = 50
+	charge_type			= "PREPAID"
+	prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+	prepaid_period = 1
+	availability_zone = "ap-guangzhou-3"
+	project_id = 0
+	encrypt = false
+	tags = {
+		test = "tf"
+	}
+	force_delete = true
+}
+`
+
+const testAccCbsStorage_upgrade = `
+resource "tencentcloud_cbs_storage" "storage_upgrade" {
+	storage_type      = "CLOUD_PREMIUM"
+	storage_name      = "tf-storage-upgrade"
+	storage_size      = 50
+	availability_zone = "ap-guangzhou-3"
+}
+`
+
+const testAccCbsStorage_upgradeupdate = `
+resource "tencentcloud_cbs_storage" "storage_upgrade" {
+	storage_type      = "CLOUD_PREMIUM"
+	storage_name      = "tf-storage-upgrade"
+	storage_size      = 50
+	availability_zone = "ap-guangzhou-3"
+	charge_type			= "PREPAID"
+	prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+	prepaid_period = 1
+	force_delete = true
 }
 `
