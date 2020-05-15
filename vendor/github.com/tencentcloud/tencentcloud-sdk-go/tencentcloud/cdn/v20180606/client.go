@@ -327,6 +327,31 @@ func (c *Client) DescribeDomainsConfig(request *DescribeDomainsConfigRequest) (r
     return
 }
 
+func NewDescribeImageConfigRequest() (request *DescribeImageConfigRequest) {
+    request = &DescribeImageConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "DescribeImageConfig")
+    return
+}
+
+func NewDescribeImageConfigResponse() (response *DescribeImageConfigResponse) {
+    response = &DescribeImageConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取域名图片优化的当前配置，支持Webp、TPG、Guetzli 
+func (c *Client) DescribeImageConfig(request *DescribeImageConfigRequest) (response *DescribeImageConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeImageConfigRequest()
+    }
+    response = NewDescribeImageConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeIpStatusRequest() (request *DescribeIpStatusRequest) {
     request = &DescribeIpStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -342,8 +367,7 @@ func NewDescribeIpStatusResponse() (response *DescribeIpStatusResponse) {
     return
 }
 
-// DescribeIpStatus 用于查询域名所在加速平台的边缘节点、回源节点明细
-// 注意事项：接口尚未全量开放，未在内测名单中的账号不支持调用
+// DescribeIpStatus 用于查询域名所在加速平台的边缘节点、回源节点明细。注意事项：边缘节点（edge）尚未全量开放，未在内测名单中的账号不支持调用
 func (c *Client) DescribeIpStatus(request *DescribeIpStatusRequest) (response *DescribeIpStatusResponse, err error) {
     if request == nil {
         request = NewDescribeIpStatusRequest()
@@ -563,6 +587,31 @@ func (c *Client) DescribePushTasks(request *DescribePushTasksRequest) (response 
         request = NewDescribePushTasksRequest()
     }
     response = NewDescribePushTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeReportDataRequest() (request *DescribeReportDataRequest) {
+    request = &DescribeReportDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "DescribeReportData")
+    return
+}
+
+func NewDescribeReportDataResponse() (response *DescribeReportDataResponse) {
+    response = &DescribeReportDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeReportData 用于查询域名/项目维度的日/周/月报表数据。
+func (c *Client) DescribeReportData(request *DescribeReportDataRequest) (response *DescribeReportDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeReportDataRequest()
+    }
+    response = NewDescribeReportDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -1028,6 +1077,31 @@ func (c *Client) UpdateDomainConfig(request *UpdateDomainConfigRequest) (respons
         request = NewUpdateDomainConfigRequest()
     }
     response = NewUpdateDomainConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateImageConfigRequest() (request *UpdateImageConfigRequest) {
+    request = &UpdateImageConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "UpdateImageConfig")
+    return
+}
+
+func NewUpdateImageConfigResponse() (response *UpdateImageConfigResponse) {
+    response = &UpdateImageConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 更新控制台图片优化的相关配置，支持Webp、TPG、Guetzli 
+func (c *Client) UpdateImageConfig(request *UpdateImageConfigRequest) (response *UpdateImageConfigResponse, err error) {
+    if request == nil {
+        request = NewUpdateImageConfigRequest()
+    }
+    response = NewUpdateImageConfigResponse()
     err = c.Send(request, response)
     return
 }

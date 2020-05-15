@@ -151,6 +151,7 @@ func resourceTencentCloudAsLifecycleHookCreate(d *schema.ResourceData, meta inte
 
 func resourceTencentCloudAsLifecycleHookRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_lifecycle_hook.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

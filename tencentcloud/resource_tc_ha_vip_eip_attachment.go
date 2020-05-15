@@ -78,6 +78,7 @@ func resourceTencentCloudHaVipEipAttachmentCreate(d *schema.ResourceData, meta i
 
 func resourceTencentCloudHaVipEipAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ha_vip_eip_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

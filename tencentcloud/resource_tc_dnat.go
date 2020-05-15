@@ -161,6 +161,7 @@ func resourceTencentCloudDnatCreate(d *schema.ResourceData, meta interface{}) er
 
 func resourceTencentCloudDnatRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dnat.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	_, params, e := parseDnatId(d.Id())

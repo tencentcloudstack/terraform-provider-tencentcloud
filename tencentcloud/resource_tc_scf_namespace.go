@@ -92,6 +92,8 @@ func resourceTencentCloudScfNamespaceCreate(d *schema.ResourceData, m interface{
 
 func resourceTencentCloudScfNamespaceRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_scf_namespace.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

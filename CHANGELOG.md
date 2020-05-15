@@ -22,7 +22,7 @@ ENHANCEMENTS:
 * Data Source: `tencentcloud_instances` add new output argument `instance_charge_type_prepaid_renew_flag`.
 * Data Source: `tencentcloud_cbs_storages` add new output argument `prepaid_renew_flag`.
 * Data Source: `tencentcloud_cbs_storages` add new output argument `charge_type`.
-
+* Resource: `tencentcloud_cdn_domain` add new argument `full_url_cache`([#405](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/405)).
 
 DEPRECATED:
 

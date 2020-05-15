@@ -83,6 +83,7 @@ func resourceTencentCloudRedisBackupConfigCreate(d *schema.ResourceData, meta in
 
 func resourceTencentCloudRedisBackupConfigRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_backup_config.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

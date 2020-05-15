@@ -840,6 +840,31 @@ func (c *Client) DescribeDBInstanceGTID(request *DescribeDBInstanceGTIDRequest) 
     return
 }
 
+func NewDescribeDBInstanceInfoRequest() (request *DescribeDBInstanceInfoRequest) {
+    request = &DescribeDBInstanceInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeDBInstanceInfo")
+    return
+}
+
+func NewDescribeDBInstanceInfoResponse() (response *DescribeDBInstanceInfoResponse) {
+    response = &DescribeDBInstanceInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询实例基本信息（实例 ID ，实例名称，是否开通加密 ）
+func (c *Client) DescribeDBInstanceInfo(request *DescribeDBInstanceInfoRequest) (response *DescribeDBInstanceInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBInstanceInfoRequest()
+    }
+    response = NewDescribeDBInstanceInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBInstanceRebootTimeRequest() (request *DescribeDBInstanceRebootTimeRequest) {
     request = &DescribeDBInstanceRebootTimeRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1317,27 +1342,52 @@ func (c *Client) DescribeRollbackRangeTime(request *DescribeRollbackRangeTimeReq
     return
 }
 
-func NewDescribeSLowLogDataRequest() (request *DescribeSLowLogDataRequest) {
-    request = &DescribeSLowLogDataRequest{
+func NewDescribeRollbackTaskDetailRequest() (request *DescribeRollbackTaskDetailRequest) {
+    request = &DescribeRollbackTaskDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("cdb", APIVersion, "DescribeSLowLogData")
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeRollbackTaskDetail")
     return
 }
 
-func NewDescribeSLowLogDataResponse() (response *DescribeSLowLogDataResponse) {
-    response = &DescribeSLowLogDataResponse{
+func NewDescribeRollbackTaskDetailResponse() (response *DescribeRollbackTaskDetailResponse) {
+    response = &DescribeRollbackTaskDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeRollbackTaskDetail)用于查询云数据库实例回档任务详情。
+func (c *Client) DescribeRollbackTaskDetail(request *DescribeRollbackTaskDetailRequest) (response *DescribeRollbackTaskDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeRollbackTaskDetailRequest()
+    }
+    response = NewDescribeRollbackTaskDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSlowLogDataRequest() (request *DescribeSlowLogDataRequest) {
+    request = &DescribeSlowLogDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeSlowLogData")
+    return
+}
+
+func NewDescribeSlowLogDataResponse() (response *DescribeSlowLogDataResponse) {
+    response = &DescribeSlowLogDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
 // 条件检索实例的慢日志。只允许查看一个月之内的慢日志
-func (c *Client) DescribeSLowLogData(request *DescribeSLowLogDataRequest) (response *DescribeSLowLogDataResponse, err error) {
+func (c *Client) DescribeSlowLogData(request *DescribeSlowLogDataRequest) (response *DescribeSlowLogDataResponse, err error) {
     if request == nil {
-        request = NewDescribeSLowLogDataRequest()
+        request = NewDescribeSlowLogDataRequest()
     }
-    response = NewDescribeSLowLogDataResponse()
+    response = NewDescribeSlowLogDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -2116,7 +2166,7 @@ func NewRenewDBInstanceResponse() (response *RenewDBInstanceResponse) {
     return
 }
 
-// 本接口(RenewDBInstance)用于续费云数据库实例，仅支持付费模式为包年包月的实例。按量计费实例不需要续费。
+// 本接口(RenewDBInstance)用于续费云数据库实例，支持付费模式为包年包月的实例。按量计费实例可通过该接口续费为包年包月的实例。
 func (c *Client) RenewDBInstance(request *RenewDBInstanceRequest) (response *RenewDBInstanceResponse, err error) {
     if request == nil {
         request = NewRenewDBInstanceRequest()

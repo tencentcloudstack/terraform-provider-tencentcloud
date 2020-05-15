@@ -298,6 +298,8 @@ func resourceTencentCloudGaapHttpDomainCreate(d *schema.ResourceData, m interfac
 
 func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_domain.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 

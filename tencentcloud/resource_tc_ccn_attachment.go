@@ -170,6 +170,7 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 
 func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ccn_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)

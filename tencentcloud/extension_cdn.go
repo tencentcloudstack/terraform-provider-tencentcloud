@@ -28,6 +28,8 @@ const (
 
 	CDN_SERVICE_NAME         = "cdn"
 	CDN_RESOURCE_NAME_DOMAIN = "domain"
+
+	CDN_HOST_NOT_FOUND = "ResourceNotFound.CdnHostNotExists"
 )
 
 var CDN_SERVICE_TYPE = []string{

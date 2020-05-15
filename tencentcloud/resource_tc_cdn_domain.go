@@ -8,6 +8,7 @@ resource "tencentcloud_cdn_domain" "foo" {
   domain = "xxxx.com"
   service_type = "web"
   area = "mainland"
+  full_url_cache = false
 
   origin {
     origin_type = "ip"
@@ -87,6 +88,12 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_AREA),
 				Description:  "Domain name acceleration region.  Valid values are `mainland`, `overseas` and `global`.",
+			},
+			"full_url_cache": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Whether to enable full-path cache. Default value is `true`.",
 			},
 			"origin": {
 				Type:        schema.TypeList,
@@ -287,6 +294,13 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("area"); ok {
 		request.Area = helper.String(v.(string))
 	}
+	fullUrlCache := d.Get("full_url_cache").(bool)
+	request.CacheKey = &cdn.CacheKey{}
+	if fullUrlCache {
+		request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_ON)
+	} else {
+		request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_OFF)
+	}
 
 	// origin
 	origins := d.Get("origin").([]interface{})
@@ -420,6 +434,8 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 
 func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cdn_domain.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 	client := meta.(*TencentCloudClient).apiV3Conn
@@ -452,6 +468,11 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("status", domainConfig.Status)
 	_ = d.Set("create_time", domainConfig.CreateTime)
 	_ = d.Set("cname", domainConfig.Cname)
+	if *domainConfig.CacheKey.FullUrlCache == CDN_SWITCH_OFF {
+		_ = d.Set("full_url_cache", false)
+	} else {
+		_ = d.Set("full_url_cache", true)
+	}
 
 	origins := make([]map[string]interface{}, 0, 1)
 	origin := make(map[string]interface{}, 8)
@@ -529,6 +550,16 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("area") {
 		request.Area = helper.String(d.Get("area").(string))
 		updateAttrs = append(updateAttrs, "area")
+	}
+	if d.HasChange("full_url_cache") {
+		fullUrlCache := d.Get("full_url_cache").(bool)
+		request.CacheKey = &cdn.CacheKey{}
+		if fullUrlCache {
+			request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_ON)
+		} else {
+			request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_OFF)
+		}
+		updateAttrs = append(updateAttrs, "full_url_cache")
 	}
 	if d.HasChange("origin") {
 		updateAttrs = append(updateAttrs, "origin")
