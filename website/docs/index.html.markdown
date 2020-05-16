@@ -13,7 +13,7 @@ The provider needs to be configured with the proper credentials before it can be
 
 Use the navigation on the left to read about the available resources.
 
--> **Note:** From version 1.9.0 (June 18, 2019), the provider start to support Terraform 0.12.x.
+-> **Note:** Terraform 0.12.x support began with provider version 1.9.0 (June 18, 2019), 
 
 ## Example Usage
 
