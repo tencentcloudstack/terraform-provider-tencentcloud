@@ -787,7 +787,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 
-		time.Sleep(3 * readRetryTimeout)
+		time.Sleep(readRetryTimeout)
 		d.SetPartial("instance_charge_type_prepaid_renew_flag")
 	}
 
