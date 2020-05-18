@@ -134,6 +134,16 @@ func dataSourceTencentCloudCbsStorages() *schema.Resource {
 							Computed:    true,
 							Description: "The available tags within this CBS.",
 						},
+						"prepaid_renew_flag": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The way that CBS instance will be renew automatically or not when it reach the end of the prepaid tenancy.",
+						},
+						"charge_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Pay type of the CBS instance.",
+						},
 					},
 				},
 			},
@@ -180,18 +190,20 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 		storageList := make([]map[string]interface{}, 0, len(storages))
 		for _, storage := range storages {
 			mapping := map[string]interface{}{
-				"storage_id":        *storage.DiskId,
-				"storage_name":      *storage.DiskName,
-				"storage_usage":     *storage.DiskUsage,
-				"storage_type":      *storage.DiskType,
-				"availability_zone": *storage.Placement.Zone,
-				"project_id":        *storage.Placement.ProjectId,
-				"storage_size":      *storage.DiskSize,
-				"attached":          *storage.Attached,
-				"instance_id":       *storage.InstanceId,
-				"encrypt":           *storage.Encrypt,
-				"create_time":       *storage.CreateTime,
-				"status":            *storage.DiskState,
+				"storage_id":         storage.DiskId,
+				"storage_name":       storage.DiskName,
+				"storage_usage":      storage.DiskUsage,
+				"storage_type":       storage.DiskType,
+				"availability_zone":  storage.Placement.Zone,
+				"project_id":         storage.Placement.ProjectId,
+				"storage_size":       storage.DiskSize,
+				"attached":           storage.Attached,
+				"instance_id":        storage.InstanceId,
+				"encrypt":            storage.Encrypt,
+				"create_time":        storage.CreateTime,
+				"status":             storage.DiskState,
+				"prepaid_renew_flag": storage.RenewFlag,
+				"charge_type":        storage.DiskChargeType,
 			}
 			if storage.Tags != nil {
 				tags := make(map[string]interface{}, len(storage.Tags))

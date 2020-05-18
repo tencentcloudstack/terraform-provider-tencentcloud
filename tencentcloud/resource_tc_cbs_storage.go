@@ -32,6 +32,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -64,10 +65,32 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Description:  "Volume of CBS, and unit is GB. If storage type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].",
 			},
 			"period": {
+				Deprecated:   "It has been deprecated from version 1.33.0. Set `prepaid_period` instead.",
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateIntegerInRange(1, 36),
 				Description:  "The purchased usage period of CBS, and value range [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].",
+			},
+			"charge_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      CBS_CHARGE_TYPE_POSTPAID,
+				ValidateFunc: validateAllowedStringValue(CBS_CHARGE_TYPE),
+				Description:  "The charge type of CBS instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`, The default is `POSTPAID_BY_HOUR`.",
+			},
+			"prepaid_period": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedIntValue(CBS_PREPAID_PERIOD),
+				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.",
+			},
+			"prepaid_renew_flag": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue(CBS_PREPAID_RENEW_FLAG),
+				Description:  "When enabled, the CBS instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when charge_type is set to `PREPAID`.",
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,
@@ -103,6 +126,12 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "The available tags within this CBS.",
+			},
+			"force_delete": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicate whether to delete CBS instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.",
 			},
 
 			// computed
@@ -156,7 +185,24 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 			request.Tags = append(request.Tags, &tag)
 		}
 	}
-	request.DiskChargeType = helper.String("POSTPAID_BY_HOUR")
+
+	chargeType := d.Get("charge_type").(string)
+	request.DiskChargeType = &chargeType
+
+	if chargeType == CBS_CHARGE_TYPE_PREPAID {
+		request.DiskChargePrepaid = &cbs.DiskChargePrepaid{}
+
+		if period, ok := d.GetOk("prepaid_period"); ok {
+			periodInt64 := uint64(period.(int))
+			request.DiskChargePrepaid.Period = &periodInt64
+		} else {
+			return fmt.Errorf("CBS instance charge type prepaid period can not be empty when charge type is %s",
+				chargeType)
+		}
+		if renewFlag, ok := d.GetOk("prepaid_renew_flag"); ok {
+			request.DiskChargePrepaid.RenewFlag = helper.String(renewFlag.(string))
+		}
+	}
 
 	storageId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -237,6 +283,12 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("tags", flattenCbsTagsMapping(storage.Tags))
 	_ = d.Set("storage_status", storage.DiskState)
 	_ = d.Set("attached", storage.Attached)
+	_ = d.Set("charge_type", storage.DiskChargeType)
+	_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
+
+	if *storage.DiskChargeType == CBS_CHARGE_TYPE_PREPAID {
+		_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
+	}
 
 	return nil
 }
@@ -246,6 +298,14 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
+
+	//only support update prepaid_period when upgrade chargeType
+	if d.HasChange("prepaid_period") && (!d.HasChange("charge_type") && d.Get("charge_type").(string) == CBS_CHARGE_TYPE_PREPAID) {
+		return fmt.Errorf("tencentcloud_cbs_storage renew is not support yet")
+	}
+	if d.HasChange("charge_type") && d.Get("charge_type").(string) != CBS_CHARGE_TYPE_PREPAID {
+		return fmt.Errorf("tencentcloud_cbs_storage do not support downgrade instance")
+	}
 
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -371,6 +431,58 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		}
 		d.SetPartial("tags")
 	}
+	//charge type
+	//not support renew
+	chargeType := d.Get("charge_type").(string)
+	renewFlag := d.Get("prepaid_renew_flag").(string)
+	period := d.Get("prepaid_period").(int)
+
+	if d.HasChange("charge_type") {
+		//only support postpaid to prepaid
+		err := cbsService.ModifyDiskChargeType(ctx, storageId, chargeType, renewFlag, period)
+		if err != nil {
+			return err
+		}
+
+		//check charge Type
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			storage, e := cbsService.DescribeDiskById(ctx, storageId)
+			if e != nil {
+				return retryError(e)
+			}
+			if storage != nil && *storage.DiskState == CBS_STORAGE_STATUS_EXPANDING {
+				return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update cbs failed, reason:%s\n ", logId, err.Error())
+			return err
+		}
+
+		d.SetPartial("charge_type")
+	} else {
+
+		//only renew and change flag
+		if d.HasChange("prepaid_renew_flag") {
+			//check
+
+			if chargeType != CBS_CHARGE_TYPE_PREPAID {
+				return fmt.Errorf("tencentcloud_cbs_storage update on prepaid_period or prepaid_renew_flag is only supported with charge type PREPAID")
+			}
+
+			//renew api
+			err := cbsService.ModifyDisksRenewFlag(ctx, storageId, renewFlag)
+			if err != nil {
+				return err
+			}
+
+			//to pay order wait
+			time.Sleep(readRetryTimeout)
+			d.SetPartial("prepaid_renew_flag")
+
+		}
+	}
 
 	d.Partial(false)
 
@@ -384,6 +496,9 @@ func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	storageId := d.Id()
+	//check is force delete or not
+	forceDelete := d.Get("force_delete").(bool)
+	notExist := false
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -400,5 +515,61 @@ func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface
 		return err
 	}
 
+	//check exist
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		storage, errRet := cbsService.DescribeDiskById(ctx, storageId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if storage == nil {
+			notExist = true
+			return nil
+		}
+		if *storage.DiskState == CBS_STORAGE_STATUS_TORECYCLE {
+			//in recycling
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("cbs instance status is %s, retry...", *storage.DiskState))
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if notExist || !forceDelete {
+		return nil
+	}
+
+	//exist in recycle
+
+	//delete again
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		errRet := cbsService.DeleteDiskById(ctx, storageId)
+		//when state is terminating, do not delete but check exist
+		if errRet != nil {
+			return retryError(errRet)
+		}
+
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	//describe and check not exist
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		storage, errRet := cbsService.DescribeDiskById(ctx, storageId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if storage == nil {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("cbs instance status is %s, retry...", *storage.DiskState))
+	})
+
+	if err != nil {
+		return err
+	}
 	return nil
 }
