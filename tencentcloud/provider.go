@@ -15,6 +15,17 @@ provider "tencentcloud" {
   secret_key = var.secret_key
   region     = var.region
 }
+
+#Configure the TencentCloud Provider with STS
+provider "tencentcloud" {
+  secret_id  = var.secret_id
+  secret_key = var.secret_key
+  region     = var.region
+  assume_role_arn = var.assume_role_arn
+  assume_role_session_name	= var.assume_role_session_name
+  assume_role_session_duration = var.assume_role_session_duration
+  assume_role_policy = var.assume_role_policy
+}
 ```
 
 Resources List
@@ -349,17 +360,26 @@ VPN
 package tencentcloud
 
 import (
+	"fmt"
+	"net/url"
 	"os"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 const (
-	PROVIDER_SECRET_ID      = "TENCENTCLOUD_SECRET_ID"
-	PROVIDER_SECRET_KEY     = "TENCENTCLOUD_SECRET_KEY"
-	PROVIDER_SECURITY_TOKEN = "TENCENTCLOUD_SECURITY_TOKEN"
-	PROVIDER_REGION         = "TENCENTCLOUD_REGION"
+	PROVIDER_SECRET_ID                    = "TENCENTCLOUD_SECRET_ID"
+	PROVIDER_SECRET_KEY                   = "TENCENTCLOUD_SECRET_KEY"
+	PROVIDER_SECURITY_TOKEN               = "TENCENTCLOUD_SECURITY_TOKEN"
+	PROVIDER_REGION                       = "TENCENTCLOUD_REGION"
+	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
+	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
+	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
 )
 
 func Provider() terraform.ResourceProvider {
@@ -391,6 +411,32 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_REGION, nil),
 				Description:  "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
 				InputDefault: "ap-guangzhou",
+			},
+			"assume_role_arn": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
+				Description: "The ARN of the role to assume. If provided, terraform will attempt to assume this role using the supplied credentials. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
+			},
+			"assume_role_session_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, nil),
+				Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`",
+			},
+			"assume_role_session_duration": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_DURATION, nil),
+				InputDefault: "7200",
+				ValidateFunc: validateIntegerInRange(0, 43200),
+				Description:  "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`",
+			},
+
+			"assume_role_policy": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "A more restrictive policy when making the AssumeRole call.",
 			},
 		},
 
@@ -612,27 +658,97 @@ func Provider() terraform.ResourceProvider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	secretId, ok := d.GetOk("secret_id")
+
+	secretIdInterface, ok := d.GetOk("secret_id")
 	if !ok {
-		secretId = os.Getenv(PROVIDER_SECRET_ID)
+		secretIdInterface = os.Getenv(PROVIDER_SECRET_ID)
 	}
-	secretKey, ok := d.GetOk("secret_key")
+	secretKeyInterface, ok := d.GetOk("secret_key")
 	if !ok {
-		secretKey = os.Getenv(PROVIDER_SECRET_KEY)
+		secretKeyInterface = os.Getenv(PROVIDER_SECRET_KEY)
 	}
-	securityToken, ok := d.GetOk("security_token")
+	securityTokenInterface, ok := d.GetOk("security_token")
 	if !ok {
-		securityToken = os.Getenv(PROVIDER_SECURITY_TOKEN)
+		securityTokenInterface = os.Getenv(PROVIDER_SECURITY_TOKEN)
 	}
-	region, ok := d.GetOk("region")
+	secretId := secretIdInterface.(string)
+	secretKey := secretKeyInterface.(string)
+	securityToken := securityTokenInterface.(string)
+
+	regionInterface, ok := d.GetOk("region")
 	if !ok {
-		region = os.Getenv(PROVIDER_REGION)
+		regionInterface = os.Getenv(PROVIDER_REGION)
 	}
+	region := regionInterface.(string)
+
+	//assume arn
+	assumeRoleArn, ok := d.GetOk("assume_role_arn")
+	if !ok {
+		assumeRoleArn = os.Getenv(PROVIDER_ASSUME_ROLE_ARN)
+	}
+	if assumeRoleArn != "" {
+		checkFields := map[string]string{
+			"assume_role_session_name":     PROVIDER_ASSUME_ROLE_SESSION_NAME,
+			"assume_role_session_duration": PROVIDER_ASSUME_ROLE_SESSION_DURATION,
+		}
+		for field, constField := range checkFields {
+			temp, ok := d.GetOk(field)
+			if !ok {
+				temp = os.Getenv(constField)
+			}
+			if temp == "" {
+				return nil, fmt.Errorf("%s is null when applying STS credentials", field)
+			}
+		}
+		assumeRoleSessionName := d.Get("assume_role_session_name").(string)
+		assumeRoleSessionDuration := d.Get("assume_role_session_duration").(int)
+
+		//applying STS credentials
+		request := sts.NewAssumeRoleRequest()
+		request.RoleArn = helper.String(assumeRoleArn.(string))
+		request.RoleSessionName = helper.String(assumeRoleSessionName)
+		request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
+
+		assumeRolePolicy, ok := d.GetOk("assume_role_policy")
+		if ok {
+			//urlencode policy
+			request.Policy = helper.String(url.QueryEscape(assumeRolePolicy.(string)))
+		}
+
+		//send request
+		credential := common.NewTokenCredential(
+			secretId,
+			secretKey,
+			securityToken,
+		)
+		cpf := profile.NewClientProfile()
+		// all request use method POST
+		cpf.HttpProfile.ReqMethod = "POST"
+		// request timeout
+		cpf.HttpProfile.ReqTimeout = 300
+		// default language
+		cpf.Language = "en-US"
+
+		client, err := sts.NewClient(credential, region, cpf)
+		if err != nil {
+			return nil, err
+		}
+		response, err := client.AssumeRole(request)
+		if err != nil {
+			return nil, err
+		}
+
+		//set assume role
+		secretId = *response.Response.Credentials.TmpSecretId
+		secretKey = *response.Response.Credentials.TmpSecretKey
+		securityToken = *response.Response.Credentials.Token
+	}
+
 	config := Config{
-		SecretId:      secretId.(string),
-		SecretKey:     secretKey.(string),
-		SecurityToken: securityToken.(string),
-		Region:        region.(string),
+		SecretId:      secretId,
+		SecretKey:     secretKey,
+		SecurityToken: securityToken,
+		Region:        region,
 	}
 	return config.Client()
 }
