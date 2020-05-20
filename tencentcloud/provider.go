@@ -21,10 +21,12 @@ provider "tencentcloud" {
   secret_id  = var.secret_id
   secret_key = var.secret_key
   region     = var.region
-  assume_role_arn = var.assume_role_arn
-  assume_role_session_name	= var.assume_role_session_name
-  assume_role_session_duration = var.assume_role_session_duration
-  assume_role_policy = var.assume_role_policy
+  assume_role  {
+   role_arn = var.assume_role_arn
+   session_name	= var.session_name
+   session_duration = var.session_duration
+   policy = var.policy
+ }
 }
 ```
 
@@ -360,9 +362,9 @@ VPN
 package tencentcloud
 
 import (
-	"fmt"
 	"net/url"
 	"os"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -370,6 +372,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 const (
@@ -412,31 +415,39 @@ func Provider() terraform.ResourceProvider {
 				Description:  "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
 				InputDefault: "ap-guangzhou",
 			},
-			"assume_role_arn": {
-				Type:        schema.TypeString,
+			"assume_role": {
+				Type:        schema.TypeSet,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
-				Description: "The ARN of the role to assume. If provided, terraform will attempt to assume this role using the supplied credentials. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
-			},
-			"assume_role_session_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, nil),
-				Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`",
-			},
-			"assume_role_session_duration": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_DURATION, nil),
-				InputDefault: "7200",
-				ValidateFunc: validateIntegerInRange(0, 43200),
-				Description:  "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`",
-			},
-
-			"assume_role_policy": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "A more restrictive policy when making the AssumeRole call.",
+				MaxItems:    1,
+				Description: "The `assume_role` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"role_arn": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
+						},
+						"session_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, nil),
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
+						},
+						"session_duration": {
+							Type:         schema.TypeInt,
+							Required:     true,
+							InputDefault: "7200",
+							ValidateFunc: validateIntegerInRange(0, 43200),
+							Description:  "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
+						},
+						"policy": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "A more restrictive policy when making the AssumeRole call. Its content must not contains `principal` elements. Notice: more syntax references, please refer to: [policies syntax logic](https://intl.cloud.tencent.com/document/product/598/10603).",
+						},
+					},
+				},
 			},
 		},
 
@@ -658,61 +669,40 @@ func Provider() terraform.ResourceProvider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-
-	secretIdInterface, ok := d.GetOk("secret_id")
-	if !ok {
-		secretIdInterface = os.Getenv(PROVIDER_SECRET_ID)
-	}
-	secretKeyInterface, ok := d.GetOk("secret_key")
-	if !ok {
-		secretKeyInterface = os.Getenv(PROVIDER_SECRET_KEY)
-	}
-	securityTokenInterface, ok := d.GetOk("security_token")
-	if !ok {
-		securityTokenInterface = os.Getenv(PROVIDER_SECURITY_TOKEN)
-	}
-	secretId := secretIdInterface.(string)
-	secretKey := secretKeyInterface.(string)
-	securityToken := securityTokenInterface.(string)
-
-	regionInterface, ok := d.GetOk("region")
-	if !ok {
-		regionInterface = os.Getenv(PROVIDER_REGION)
-	}
-	region := regionInterface.(string)
+	secretId := d.Get("secret_id").(string)
+	secretKey := d.Get("secret_key").(string)
+	securityToken := d.Get("security_token").(string)
+	region := d.Get("region").(string)
 
 	//assume arn
-	assumeRoleArn, ok := d.GetOk("assume_role_arn")
-	if !ok {
-		assumeRoleArn = os.Getenv(PROVIDER_ASSUME_ROLE_ARN)
-	}
-	if assumeRoleArn != "" {
-		checkFields := map[string]string{
-			"assume_role_session_name":     PROVIDER_ASSUME_ROLE_SESSION_NAME,
-			"assume_role_session_duration": PROVIDER_ASSUME_ROLE_SESSION_DURATION,
-		}
-		for field, constField := range checkFields {
-			temp, ok := d.GetOk(field)
-			if !ok {
-				temp = os.Getenv(constField)
+	assumeRoleList := d.Get("assume_role").(*schema.Set).List()
+	if len(assumeRoleList) == 1 {
+		assumeRole := assumeRoleList[0].(map[string]interface{})
+		assumeRoleArn := assumeRole["role_arn"].(string)
+		assumeRoleSessionName := assumeRole["session_name"].(string)
+		assumeRoleSessionDuration := assumeRole["session_duration"].(int)
+		assumeRolePolicy := assumeRole["policy"].(string)
+		if assumeRoleSessionDuration == 0 {
+			var err error
+			if duration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); duration != "" {
+				assumeRoleSessionDuration, err = strconv.Atoi(duration)
+				if err != nil {
+					return nil, err
+				}
+				if assumeRoleSessionDuration == 0 {
+					assumeRoleSessionDuration = 7200
+				}
 			}
-			if temp == "" {
-				return nil, fmt.Errorf("%s is null when applying STS credentials", field)
-			}
 		}
-		assumeRoleSessionName := d.Get("assume_role_session_name").(string)
-		assumeRoleSessionDuration := d.Get("assume_role_session_duration").(int)
-
 		//applying STS credentials
 		request := sts.NewAssumeRoleRequest()
-		request.RoleArn = helper.String(assumeRoleArn.(string))
+		request.RoleArn = helper.String(assumeRoleArn)
 		request.RoleSessionName = helper.String(assumeRoleSessionName)
 		request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
 
-		assumeRolePolicy, ok := d.GetOk("assume_role_policy")
-		if ok {
+		if assumeRolePolicy != "" {
 			//urlencode policy
-			request.Policy = helper.String(url.QueryEscape(assumeRolePolicy.(string)))
+			request.Policy = helper.String(url.QueryEscape(assumeRolePolicy))
 		}
 
 		//send request
@@ -733,6 +723,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
+		ratelimit.Check(request.GetAction())
 		response, err := client.AssumeRole(request)
 		if err != nil {
 			return nil, err
@@ -750,5 +741,6 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		SecurityToken: securityToken,
 		Region:        region,
 	}
+
 	return config.Client()
 }
