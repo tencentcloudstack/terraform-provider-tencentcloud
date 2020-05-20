@@ -369,10 +369,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	con "github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
 const (
@@ -705,19 +705,13 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			request.Policy = helper.String(url.QueryEscape(assumeRolePolicy))
 		}
 
+		cpf := con.NewTencentCloudClientProfile(300)
 		//send request
 		credential := common.NewTokenCredential(
 			secretId,
 			secretKey,
 			securityToken,
 		)
-		cpf := profile.NewClientProfile()
-		// all request use method POST
-		cpf.HttpProfile.ReqMethod = "POST"
-		// request timeout
-		cpf.HttpProfile.ReqTimeout = 300
-		// default language
-		cpf.Language = "en-US"
 
 		client, err := sts.NewClient(credential, region, cpf)
 		if err != nil {
