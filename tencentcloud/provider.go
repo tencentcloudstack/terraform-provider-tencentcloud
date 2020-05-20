@@ -370,9 +370,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
+	con "github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	con "github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
 const (
