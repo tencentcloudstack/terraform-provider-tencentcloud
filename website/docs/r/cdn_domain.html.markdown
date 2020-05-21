@@ -54,8 +54,7 @@ The following arguments are supported:
 
 The `client_certificate_config` object supports the following:
 
-* `certificate_name` - (Required) Client certificate name.
-* `certificate_content` - (Optional) Client Certificate PEM format, requires Base64 encoding.
+* `certificate_content` - (Required) Client Certificate PEM format, requires Base64 encoding.
 
 The `https_config` object supports the following:
 
@@ -82,7 +81,6 @@ The `server_certificate_config` object supports the following:
 
 * `certificate_content` - (Optional) Server certificate information. This is required when uploading an external certificate, which should contain the complete certificate chain.
 * `certificate_id` - (Optional) Server certificate ID.
-* `certificate_name` - (Optional) Server certificate name.
 * `message` - (Optional) Certificate remarks.
 * `private_key` - (Optional) Server key information. This is required when uploading an external certificate.
 
