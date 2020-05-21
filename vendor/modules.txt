@@ -425,6 +425,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525

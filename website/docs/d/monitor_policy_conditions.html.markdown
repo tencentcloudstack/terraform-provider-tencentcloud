@@ -23,7 +23,7 @@ data "tencentcloud_monitor_policy_conditions" "monitor_policy_conditions" {
 
 The following arguments are supported:
 
-* `name` - (Optional) Name of the policy name, support partial matching. eg:`Cloud Virtual Machine`,`Virtual`,`Cloud Load Banlancer-Private CLB Listener`.
+* `name` - (Optional) Name of the policy name, support partial matching, eg:`Cloud Virtual Machine`,`Virtual`,`Cloud Load Banlancer-Private CLB Listener`.
 * `result_output_file` - (Optional) Used to store results.
 
 ## Attributes Reference
@@ -65,7 +65,7 @@ In addition to all arguments above, the following attributes are exported:
     * `stat_type_p60` - Data aggregation mode, cycle of 60 seconds.
     * `stat_type_p86400` - Data aggregation mode, cycle of 86400 seconds.
   * `name` - Name of this policy name.
-  * `policy_view_name` - Policy view name. eg:`cvm_device`,`BANDWIDTHPACKAGE`. refer to `data.tencentcloud_monitor_policy_conditions(policy_view_name)`.
+  * `policy_view_name` - Policy view name, eg:`cvm_device`,`BANDWIDTHPACKAGE`, refer to `data.tencentcloud_monitor_policy_conditions(policy_view_name)`.
   * `support_regions` - Support regions of this policy view.
 
 

@@ -25,7 +25,7 @@ data "tencentcloud_monitor_product_event" "cvm_event_data" {
 The following arguments are supported:
 
 * `dimensions` - (Optional) Dimensional composition of instance objects.
-* `end_time` - (Optional) End timestamp for this query. eg:`1588232111`. Default start time is `now-3000`.
+* `end_time` - (Optional) End timestamp for this query, eg:`1588232111`. Default start time is `now-3000`.
 * `event_name` - (Optional) Event name filtering, such as `guest_reboot` indicates that the machine restart.
 * `instance_id` - (Optional) Affect objects, such as `ins-19708ino`.
 * `is_alarm_config` - (Optional) Alarm status configuration filter, 1means configured, 0(default) means not configured.
@@ -33,7 +33,7 @@ The following arguments are supported:
 * `project_id` - (Optional) Project ID filter.
 * `region_list` - (Optional) Region filter, such as `gz`.
 * `result_output_file` - (Optional) Used to store results.
-* `start_time` - (Optional) Start timestamp for this query. eg:`1588230000`. Default start time is `now-3600`.
+* `start_time` - (Optional) Start timestamp for this query, eg:`1588230000`. Default start time is `now-3600`.
 * `status` - (Optional) Event status filter, value range `-`,`alarm`,`recover`, indicating recovered, unrecovered and stateless.
 * `type` - (Optional) Event type filtering, with value range `abnormal`,`status_change`, indicating state change and abnormal events.
 
