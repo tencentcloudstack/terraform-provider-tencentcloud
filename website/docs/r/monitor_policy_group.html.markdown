@@ -63,11 +63,11 @@ The following arguments are supported:
 
 The `conditions` object supports the following:
 
-* `alarm_notify_period` - (Required) Alarm sending cycle per second.<0 does not fire, 0 only fires once, and >0 fires every triggerTime second.
+* `alarm_notify_period` - (Required) Alarm sending cycle per second. <0 does not fire, 0 only fires once, and >0 fires every triggerTime second.
 * `alarm_notify_type` - (Required) Alarm sending convergence type. 0 continuous alarm, 1 index alarm.
-* `metric_id` - (Required) Id of the metric.refer to `data.tencentcloud_monitor_policy_conditions(metric_id)`.
+* `metric_id` - (Required) Id of the metric, refer to `data.tencentcloud_monitor_policy_conditions(metric_id)`.
 * `calc_period` - (Optional) Data aggregation cycle (unit of second), if the metric has a default value can not be filled, refer to `data.tencentcloud_monitor_policy_conditions(period_keys)`.
-* `calc_type` - (Optional) Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell. refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.
+* `calc_type` - (Optional) Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.
 * `calc_value` - (Optional) Threshold value, refer to `data.tencentcloud_monitor_policy_conditions(calc_value_*)`.
 * `continue_period` - (Optional) The rule triggers an alert that lasts for several detection cycles, refer to `data.tencentcloud_monitor_policy_conditions(period_num_keys)`.
 

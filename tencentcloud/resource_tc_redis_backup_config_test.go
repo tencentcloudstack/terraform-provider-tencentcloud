@@ -95,6 +95,7 @@ func testAccRedisBackupConfigUpdate() string {
 	return fmt.Sprintf(`
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
+  type_id           = 2 
   password          = "test12345789"
   mem_size          = 8192
   name              = "terrform_test"
@@ -110,6 +111,7 @@ func testAccRedisBackupConfig() string {
 	return fmt.Sprintf(`
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
+  type_id           = 2 
   password          = "test12345789"
   mem_size          = 8192
   name              = "terrform_test"

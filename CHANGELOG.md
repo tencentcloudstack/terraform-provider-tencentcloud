@@ -1,4 +1,15 @@
-## 1.34.0 (Unreleased)
+## 1.33.1 (Unreleased)
+
+ENHANCEMENTS: 
+Resource: `tencentcloud_redis_instance` add new argument `type_id`,`redis_shard_num`,`redis_replicas_num`
+Data Source: `tencentcloud_redis_instances` add new argument  `type_id`,`redis_shard_num`,`redis_replicas_num`
+Data Source: `tencentcloud_redis_zone_config` add output argument `type_id` and new output argument  `type_id`,`redis_shard_nums`,`redis_replicas_nums`
+
+DEPRECATED:
+* Resource: `tencentcloud_redis_instance`: optional argument `type` is no longer supported, replace by `type_id`.
+* Data Source: `tencentcloud_redis_instances`: output argument `type` is no longer supported, replace by `type_id`
+* Data Source: `tencentcloud_redis_zone_config`: output argument `type` is no longer supported, replace by `type_id`
+
 ## 1.33.0 (May 18, 2020)
 
 FEATURES:

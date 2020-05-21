@@ -13,13 +13,18 @@ Provides a resource to create a Redis instance and set its attributes.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_redis_instance" "redis_instance_test" {
-  availability_zone = "ap-hongkong-3"
-  type              = "master_slave_redis"
-  password          = "test12345789"
-  mem_size          = 8192
-  name              = "terrform_test"
-  port              = 6379
+data "tencentcloud_redis_zone_config" "zone" {
+}
+
+resource "tencentcloud_redis_instance" "redis_instance_test_2" {
+  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
+  type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
+  password           = "test12345789"
+  mem_size           = 8192
+  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
+  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
+  name               = "terrform_test"
+  port               = 6379
 }
 ```
 
@@ -33,10 +38,13 @@ The following arguments are supported:
 * `name` - (Optional) Instance name.
 * `port` - (Optional, ForceNew) The port used to access a redis instance. The default value is 6379. And this value can't be changed after creation, or the Redis instance will be recreated.
 * `project_id` - (Optional) Specifies which project the instance should belong to.
+* `redis_replicas_num` - (Optional, ForceNew) The number of instance copies. This is not required for standalone and master slave versions.
+* `redis_shard_num` - (Optional, ForceNew) The number of instance shard. This is not required for standalone and master slave versions.
 * `security_groups` - (Optional, ForceNew) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 * `subnet_id` - (Optional, ForceNew) Specifies which subnet the instance should belong to.
 * `tags` - (Optional) Instance tags.
-* `type` - (Optional, ForceNew) Instance type. Available values: `cluster_ckv`,`cluster_redis5.0`,`cluster_redis`,`master_slave_ckv`,`master_slave_redis5.0`,`master_slave_redis`,`standalone_redis`, specific region support specific types, need to refer data `tencentcloud_redis_zone_config`.
+* `type_id` - (Optional, ForceNew) Instance type. Refer to `data.tencentcloud_redis_zone_config.list.type_id` get available values.
+* `type` - (Optional, ForceNew, **Deprecated**) It has been deprecated from version 1.33.1. Please use 'type_id' instead. Instance type. Available values: `cluster_ckv`,`cluster_redis5.0`,`cluster_redis`,`master_slave_ckv`,`master_slave_redis5.0`,`master_slave_redis`,`standalone_redis`, specific region support specific types, need to refer data `tencentcloud_redis_zone_config`.
 * `vpc_id` - (Optional, ForceNew) ID of the vpc with which the instance is to be associated.
 
 ## Attributes Reference
