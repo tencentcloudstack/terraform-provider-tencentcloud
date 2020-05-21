@@ -86,7 +86,7 @@ func resourceTencentCloudRedisBackupConfigRead(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -120,7 +120,7 @@ func resourceTencentCloudRedisBackupConfigUpdate(d *schema.ResourceData, meta in
 	}
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -160,7 +160,7 @@ func resourceTencentCloudRedisBackupConfigDelete(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_redis_backup_config.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 

@@ -164,7 +164,7 @@ func dataSourceTencentCloudDayuL4RulesRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("data_source.tencentcloud_dayu_l4_rules.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DayuService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

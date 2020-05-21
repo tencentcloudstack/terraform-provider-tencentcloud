@@ -302,7 +302,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbId := d.Id()
 	clbService := ClbService{
@@ -467,7 +467,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbId := d.Id()
 	clbService := ClbService{
@@ -490,7 +490,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 
 func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	flag = false
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

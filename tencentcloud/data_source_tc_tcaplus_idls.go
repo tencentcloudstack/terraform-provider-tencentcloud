@@ -56,7 +56,7 @@ func dataSourceTencentCloudTcaplusIdlsRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("data_source.tencentcloud_tcaplus_idls.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TcaplusService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

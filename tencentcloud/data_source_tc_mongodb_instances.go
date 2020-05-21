@@ -163,7 +163,7 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 	defer logElapsed("data_source.tencentcloud_mongodb_instances.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := ""
 	clusterType := -1

@@ -3,11 +3,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"log"
 	"strconv"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 func TestAccTencentCloudMonitorPolicyGroupResource(t *testing.T) {
@@ -87,7 +88,7 @@ func testAccCheckMonitorPolicyGroupDestroy(s *terraform.State) error {
 		}
 
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
@@ -131,7 +132,7 @@ func testAccCheckMonitorPolicyGroupExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("id [%d] is broken", groupId)
 		}
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 

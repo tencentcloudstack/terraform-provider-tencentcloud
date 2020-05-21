@@ -200,7 +200,7 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_cos_bucket_object.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
@@ -235,7 +235,7 @@ func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_cos_bucket_object.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	fields := []string{
 		"cache_control",
@@ -274,7 +274,7 @@ func resourceTencentCloudCosBucketObjectDelete(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_cos_bucket_object.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)

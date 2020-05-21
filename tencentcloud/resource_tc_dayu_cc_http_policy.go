@@ -191,7 +191,7 @@ func resourceTencentCloudDayuCCHttpPolicyCreate(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_dayu_cc_http_policy.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	resourceId := d.Get("resource_id").(string)
 	resourceType := d.Get("resource_type").(string)
@@ -268,7 +268,7 @@ func resourceTencentCloudDayuCCHttpPolicyRead(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
@@ -322,7 +322,7 @@ func resourceTencentCloudDayuCCHttpPolicyUpdate(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_dayu_cc_http_policy.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
@@ -398,7 +398,7 @@ func resourceTencentCloudDayuCCHttpPolicyDelete(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_dayu_cc_http_policy.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {

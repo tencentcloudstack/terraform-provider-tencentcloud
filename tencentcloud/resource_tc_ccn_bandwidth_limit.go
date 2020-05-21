@@ -65,7 +65,7 @@ func resourceTencentCloudCcnBandwidthLimitCreate(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_ccn_bandwidth_limit.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -98,7 +98,7 @@ func resourceTencentCloudCcnBandwidthLimitUpdate(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_ccn_bandwidth_limit.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -128,7 +128,7 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

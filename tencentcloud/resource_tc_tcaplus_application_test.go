@@ -69,7 +69,7 @@ func testAccCheckTcaplusApplicationDestroy(s *terraform.State) error {
 			continue
 		}
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
@@ -96,7 +96,7 @@ func testAccCheckTcaplusApplicationExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("resource %s is not found", n)
 		}
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 

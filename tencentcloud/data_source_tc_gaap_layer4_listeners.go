@@ -162,7 +162,7 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 func dataSourceTencentCloudGaapLayer4ListenersRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("data_source.tencentcloud_gaap_layer4_listeners.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	protocol := d.Get("protocol").(string)
 

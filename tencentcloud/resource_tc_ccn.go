@@ -85,7 +85,7 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_ccn.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -111,7 +111,7 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -144,7 +144,7 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_ccn.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -180,7 +180,7 @@ func resourceTencentCloudCcnDelete(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_ccn.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {

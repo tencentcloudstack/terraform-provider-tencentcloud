@@ -816,7 +816,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		basic            ClusterBasicSetting
@@ -1085,7 +1085,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	info, has, err := service.DescribeCluster(ctx, d.Id())
@@ -1212,7 +1212,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -1484,7 +1484,7 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

@@ -73,7 +73,7 @@ func resourceTencentCloudTcaplusZoneCreate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_tcaplus_zone.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -94,7 +94,7 @@ func resourceTencentCloudTcaplusZoneRead(d *schema.ResourceData, meta interface{
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -131,7 +131,7 @@ func resourceTencentCloudTcaplusZoneUpdate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_tcaplus_zone.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -157,7 +157,7 @@ func resourceTencentCloudTcaplusZoneDelete(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_tcaplus_zone.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 

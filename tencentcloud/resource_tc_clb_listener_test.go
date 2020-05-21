@@ -168,7 +168,7 @@ func TestAccTencentCloudClbListener_tcpssl(t *testing.T) {
 
 func testAccCheckClbListenerDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbService := ClbService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -190,7 +190,7 @@ func testAccCheckClbListenerDestroy(s *terraform.State) error {
 func testAccCheckClbListenerExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {

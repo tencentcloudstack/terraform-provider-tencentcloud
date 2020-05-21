@@ -109,7 +109,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbId := d.Get("clb_id").(string)
 	targetListenerId := d.Get("target_listener_id").(string)
@@ -294,7 +294,7 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	rewriteId := d.Id()
 	isAutoRewrite := false
@@ -340,7 +340,7 @@ func resourceTencentCloudClbRedirectionDelete(d *schema.ResourceData, meta inter
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbId := d.Id()
 	clbService := ClbService{

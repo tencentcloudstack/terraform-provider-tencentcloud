@@ -123,7 +123,7 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_ccn_attachment.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -173,7 +173,7 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -268,7 +268,7 @@ func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_ccn_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

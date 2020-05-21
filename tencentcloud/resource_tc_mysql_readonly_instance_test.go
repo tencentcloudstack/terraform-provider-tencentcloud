@@ -77,7 +77,7 @@ func TestAccTencentCloudMysqlReadonlyInstance(t *testing.T) {
 
 func testAccCheckMysqlReadonlyInstanceDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
@@ -102,7 +102,7 @@ func testAccCheckMysqlReadonlyInstanceDestroy(s *terraform.State) error {
 func testAccCheckMysqlInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {

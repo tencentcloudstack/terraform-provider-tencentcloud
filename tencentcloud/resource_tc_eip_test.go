@@ -126,7 +126,7 @@ func TestAccTencentCloudEip_bandwidth(t *testing.T) {
 func testAccCheckEipExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -161,7 +161,7 @@ func testAccCheckEipExists(n string) resource.TestCheckFunc {
 
 func testAccCheckEipDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 	}

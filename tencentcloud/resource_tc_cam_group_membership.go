@@ -76,7 +76,7 @@ func resourceTencentCloudCamGroupMembershipCreate(d *schema.ResourceData, meta i
 	d.SetId(groupId)
 
 	//get really instance then read
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -105,7 +105,7 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupId := d.Id()
 	camService := CamService{
@@ -200,7 +200,7 @@ func resourceTencentCloudCamGroupMembershipDelete(d *schema.ResourceData, meta i
 
 func getUidFromName(name string, meta interface{}) (uid *uint64, errRet error) {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

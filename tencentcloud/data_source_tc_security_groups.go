@@ -125,7 +125,7 @@ func dataSourceTencentCloudSecurityGroupsRead(d *schema.ResourceData, m interfac
 	defer logElapsed("data_source.tencentcloud_security_groups.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := m.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}

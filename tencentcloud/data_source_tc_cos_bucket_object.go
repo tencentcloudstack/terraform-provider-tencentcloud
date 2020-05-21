@@ -86,7 +86,7 @@ func dataSourceTencentCloudCosBucketObjectsRead(d *schema.ResourceData, meta int
 	defer logElapsed("data_source.tencentcloud_cos_bucket_object.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)

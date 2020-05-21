@@ -116,7 +116,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_eip.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -208,7 +208,7 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -251,7 +251,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_eip.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -292,7 +292,7 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_eip.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}

@@ -124,7 +124,7 @@ func dataSourceTencentCloudSslCertificates() *schema.Resource {
 func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("data_source.tencentcloud_ssl_certificates.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		name     *string

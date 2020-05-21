@@ -86,7 +86,7 @@ func dataSourceTencentCloudDayuDdosPolicyAttachmentsRead(d *schema.ResourceData,
 	defer logElapsed("data_source.tencentcloud_dayu_ddos_policy_attachments.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	resourceId := d.Get("resource_id").(string)
 	resourceType := d.Get("resource_type").(string)

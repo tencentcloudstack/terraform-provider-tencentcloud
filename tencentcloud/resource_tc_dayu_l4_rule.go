@@ -187,7 +187,7 @@ func resourceTencentCloudDayuL4RuleCreate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_dayu_l4_rule.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	resourceId := d.Get("resource_id").(string)
 	resourceType := d.Get("resource_type").(string)
@@ -315,7 +315,7 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_dayu_l4_rule.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
@@ -476,7 +476,7 @@ func resourceTencentCloudDayuL4RuleRead(d *schema.ResourceData, meta interface{}
 	defer logElapsed("resource.tencentcloud_dayu_l4_rule.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
@@ -535,7 +535,7 @@ func resourceTencentCloudDayuL4RuleDelete(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_dayu_l4_rule.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {

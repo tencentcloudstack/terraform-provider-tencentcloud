@@ -162,7 +162,7 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 	defer logElapsed("data_source.tencentcloud_kubernetes_clusters.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TkeService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

@@ -366,7 +366,7 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	configurationId := d.Id()
 	asService := AsService{
@@ -557,7 +557,7 @@ func resourceTencentCloudAsScalingConfigDelete(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_as_scaling_config.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	configurationId := d.Id()
 	asService := AsService{

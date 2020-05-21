@@ -174,7 +174,7 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_tcaplus_idl.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -254,7 +254,7 @@ func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -308,7 +308,7 @@ func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudTcaplusIdlDelete(d *schema.ResourceData, meta interface{}) error {
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 

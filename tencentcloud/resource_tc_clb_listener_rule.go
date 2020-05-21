@@ -169,7 +169,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	listenerId := d.Get("listener_id").(string)
 	clbId := d.Get("clb_id").(string)
 	protocol := ""
@@ -290,7 +290,7 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	locationId := d.Id()
 	listenerId := d.Get("listener_id").(string)
 	clbId := d.Get("clb_id").(string)
@@ -361,7 +361,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	listenerId := d.Get("listener_id").(string)
 	clbId := d.Get("clb_id").(string)
 	protocol := ""
@@ -461,7 +461,7 @@ func resourceTencentCloudClbListenerRuleDelete(d *schema.ResourceData, meta inte
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	locationId := d.Id()
 	listenerId := d.Get("listener_id").(string)
 	clbId := d.Get("clb_id").(string)

@@ -93,7 +93,7 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 	defer logElapsed("data_source.tencentcloud_image.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

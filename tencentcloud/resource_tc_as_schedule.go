@@ -134,7 +134,7 @@ func resourceTencentCloudAsScheduleRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	scheduledActionId := d.Id()
 	asService := AsService{
@@ -219,7 +219,7 @@ func resourceTencentCloudAsScheduleDelete(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_as_schedule.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	scheduledActionId := d.Id()
 	asService := AsService{

@@ -220,7 +220,7 @@ func resourceTencentCloudDayuDdosPolicyCaseCreate(d *schema.ResourceData, meta i
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_case.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := dayu.NewCreateDDoSPolicyCaseRequest()
 	resourceType := d.Get("resource_type").(string)
@@ -324,7 +324,7 @@ func resourceTencentCloudDayuDdosPolicyCaseRead(d *schema.ResourceData, meta int
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
@@ -432,7 +432,7 @@ func resourceTencentCloudDayuDdosPolicyCaseUpdate(d *schema.ResourceData, meta i
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_case.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
@@ -539,7 +539,7 @@ func resourceTencentCloudDayuDdosPolicyCaseDelete(d *schema.ResourceData, meta i
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_case.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {

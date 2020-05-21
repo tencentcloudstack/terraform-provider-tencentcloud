@@ -153,7 +153,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_cbs_storage.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -249,7 +249,7 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	storageId := d.Id()
 	cbsService := CbsService{
@@ -297,7 +297,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_cbs_storage.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	//only support update prepaid_period when upgrade chargeType
 	if d.HasChange("prepaid_period") && (!d.HasChange("charge_type") && d.Get("charge_type").(string) == CBS_CHARGE_TYPE_PREPAID) {
@@ -493,7 +493,7 @@ func resourceTencentCloudCbsStorageDelete(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_cbs_storage.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	storageId := d.Id()
 	//check is force delete or not

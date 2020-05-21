@@ -69,7 +69,7 @@ func dataSourceTencentCloudGaapSecurityPolices() *schema.Resource {
 func dataSourceTencentCloudGaapSecurityPoliciesRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("data_source.tencentcloud_gaap_security_policies.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Get("id").(string)
 

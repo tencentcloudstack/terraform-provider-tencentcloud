@@ -123,7 +123,7 @@ func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("data_source.tencentcloud_cam_policies.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]interface{})
 	if v, ok := d.GetOk("policy_id"); ok {

@@ -99,7 +99,7 @@ func resourceTencentCloudVpcRouteTableCreate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_route_table.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -142,7 +142,7 @@ func resourceTencentCloudVpcRouteTableRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -204,7 +204,7 @@ func resourceTencentCloudVpcRouteTableUpdate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_route_table.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -246,7 +246,7 @@ func resourceTencentCloudVpcRouteTableDelete(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_route_table.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

@@ -58,7 +58,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentCreate(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_attachment.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	resourceId := d.Get("resource_id").(string)
 	policyId := d.Get("policy_id").(string)
@@ -126,7 +126,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentRead(d *schema.ResourceData, me
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
@@ -169,7 +169,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentDelete(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {

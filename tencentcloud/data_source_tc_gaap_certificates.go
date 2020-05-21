@@ -110,7 +110,7 @@ func dataSourceTencentCloudGaapCertificates() *schema.Resource {
 func dataSourceTencentCloudGaapCertificatesRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("data_source.tencentcloud_gaap_certificates.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		id              *string

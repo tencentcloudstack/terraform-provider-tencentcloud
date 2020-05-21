@@ -174,7 +174,7 @@ func dataSourceTencentCloudGaapProxies() *schema.Resource {
 func dataSourceTencentCloudGaapProxiesRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("data_source.tencentcloud_gaap_proxies.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		ids              []string

@@ -74,7 +74,7 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_mysql_account.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -126,7 +126,7 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -187,7 +187,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_mysql_account.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -274,7 +274,7 @@ func resourceTencentCloudMysqlAccountDelete(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_mysql_account.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 

@@ -108,7 +108,7 @@ func dataSourceTencentCloudCamUserPolicyAttachmentsRead(d *schema.ResourceData, 
 	defer logElapsed("data_source.tencentcloud_cam_user_policy_attachments.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]interface{})
 	userId := d.Get("user_id").(string)

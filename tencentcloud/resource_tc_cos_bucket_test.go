@@ -20,7 +20,7 @@ func init() {
 
 func testSweepCosBuckets(region string) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	sharedClient, err := sharedClientForRegion(region)
 	if err != nil {
@@ -264,7 +264,7 @@ func TestAccTencentCloudCosBucket_website(t *testing.T) {
 func testAccCheckCosBucketExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -284,7 +284,7 @@ func testAccCheckCosBucketExists(n string) resource.TestCheckFunc {
 
 func testAccCheckCosBucketDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	cosService := CosService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,

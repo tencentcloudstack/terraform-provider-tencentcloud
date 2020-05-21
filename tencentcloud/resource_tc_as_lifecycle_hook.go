@@ -154,7 +154,7 @@ func resourceTencentCloudAsLifecycleHookRead(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	lifecycleHookId := d.Id()
 	asService := AsService{
@@ -252,7 +252,7 @@ func resourceTencentCloudAsLifecycleHookDelete(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_as_lifecycle_hook.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	lifecycleHookId := d.Id()
 	asService := AsService{

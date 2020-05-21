@@ -142,7 +142,7 @@ func dataSourceTencentCloudVpcInstancesRead(d *schema.ResourceData, meta interfa
 	defer logElapsed("data_source.tencentcloud_vpc_instances.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

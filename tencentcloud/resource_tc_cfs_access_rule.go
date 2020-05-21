@@ -112,7 +112,7 @@ func resourceTencentCloudCfsAccessRuleRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	ruleId := d.Id()
 	groupId := d.Get("access_group_id").(string)
@@ -191,7 +191,7 @@ func resourceTencentCloudCfsAccessRuleUpdate(d *schema.ResourceData, meta interf
 func resourceTencentCloudCfsAccessRuleDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cfs_access_rule.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cfsService := CfsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}

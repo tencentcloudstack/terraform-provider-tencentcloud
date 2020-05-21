@@ -176,7 +176,7 @@ func resourceTencentCloudTcaplusTableCreate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tcaplus_table.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -249,7 +249,7 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tcaplus_table.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -341,7 +341,7 @@ func resourceTencentCloudTcaplusTableRead(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_tcaplus_table.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -392,7 +392,7 @@ func resourceTencentCloudTcaplusTableDelete(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tcaplus_table.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 	applicationId := d.Get("app_id").(string)

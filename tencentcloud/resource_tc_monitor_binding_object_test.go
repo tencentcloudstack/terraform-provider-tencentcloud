@@ -46,7 +46,7 @@ func testAccCheckMonitorBindingObjectDestroy(s *terraform.State) error {
 		}
 
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
@@ -90,7 +90,7 @@ func testAccCheckMonitorBindingObjectExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("id [%d] is broken", groupId)
 		}
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
