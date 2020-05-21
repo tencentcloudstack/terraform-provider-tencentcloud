@@ -55,7 +55,7 @@ In addition to all arguments above, the following attributes are exported:
   * `restrict_state` - Restrict state of VPN gateway, valid values are `PRETECIVELY_ISOLATED`, `NORMAL`.
   * `state` - State of the VPN gateway, valid values are `PENDING`, `DELETING`, `AVAILABLE`.
   * `tags` - A list of tags used to associate different resources.
-  * `type` - Type of gateway instance, valid values are `IPSEC`, `SSL`.
+  * `type` - Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`.
   * `vpc_id` - ID of the VPC.
   * `zone` - Zone of the VPN gateway.
 

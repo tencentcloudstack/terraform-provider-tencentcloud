@@ -37,3 +37,28 @@ resource tencentcloud_ccn_bandwidth_limit limit1 {
   region          = var.other_region
   bandwidth_limit = 500
 }
+
+resource tencentcloud_vpn_gateway ccn_vpngw {
+  name      = "ci-temp-ccn-vpngw"
+  vpc_id    = ""
+  bandwidth = 5
+  zone      = var.availability_zone
+  type      = "CCN"
+
+  tags = {
+    test = "ccn-vpngw-test"
+  }
+}
+
+resource tencentcloud_ccn vpngw_ccn_main {
+  name        = "ci-temp-test-vpngw-ccn"
+  description = "ci-temp-test-vpngw-ccn-des"
+  qos         = "AG"
+}
+
+resource tencentcloud_ccn_attachment vpngw_ccn_attachment {
+  ccn_id          = tencentcloud_ccn.vpngw_ccn_main.id
+  instance_type   = "VPNGW"
+  instance_id     = tencentcloud_vpn_gateway.ccn_vpngw.id
+  instance_region = var.region
+}

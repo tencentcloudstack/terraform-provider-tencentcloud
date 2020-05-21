@@ -58,6 +58,7 @@ The following arguments are supported:
 * `prepaid_period` - (Optional) Period of instance to be prepaid. Valid values are 1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36 and unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.
 * `prepaid_renew_flag` - (Optional) Flag indicates whether to renew or not, valid values are `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`. This para can only be set to take effect in create operation.
 * `tags` - (Optional) A list of tags used to associate different resources.
+* `type` - (Optional) Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`.
 
 ## Attributes Reference
 
@@ -71,7 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 * `public_ip_address` - Public ip of the VPN gateway.
 * `restrict_state` - Restrict state of gateway, valid values are `PRETECIVELY_ISOLATED`, `NORMAL`.
 * `state` - State of the VPN gateway, valid values are `PENDING`, `DELETING`, `AVAILABLE`.
-* `type` - Type of gateway instance, valid values are `IPSEC`, `SSL`.
 
 
 ## Import

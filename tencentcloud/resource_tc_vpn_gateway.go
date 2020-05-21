@@ -96,7 +96,8 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Type of gateway instance, valid values are `IPSEC`, `SSL`.",
+				Optional:    true,
+				Description: "Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`.",
 			},
 			"state": {
 				Type:        schema.TypeString,
@@ -184,6 +185,9 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 		request.InstanceChargePrepaid = &preChargePara
 	}
 	request.InstanceChargeType = &chargeType
+	if v, ok := d.GetOk("type"); ok {
+		request.Type = helper.String(v.(string))
+	}
 	var response *vpc.CreateVpnGatewayResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateVpnGateway(request)
@@ -290,19 +294,19 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 
 	gateway := response.Response.VpnGatewaySet[0]
 
-	_ = d.Set("name", *gateway.VpnGatewayName)
-	_ = d.Set("public_ip_address", *gateway.PublicIpAddress)
+	_ = d.Set("name", gateway.VpnGatewayName)
+	_ = d.Set("public_ip_address", gateway.PublicIpAddress)
 	_ = d.Set("bandwidth", int(*gateway.InternetMaxBandwidthOut))
-	_ = d.Set("type", *gateway.Type)
-	_ = d.Set("create_time", *gateway.CreatedTime)
-	_ = d.Set("state", *gateway.State)
-	_ = d.Set("prepaid_renew_flag", *gateway.RenewFlag)
-	_ = d.Set("charge_type", *gateway.InstanceChargeType)
-	_ = d.Set("expired_time", *gateway.ExpiredTime)
-	_ = d.Set("is_address_blocked", *gateway.IsAddressBlocked)
-	_ = d.Set("new_purchase_plan", *gateway.NewPurchasePlan)
-	_ = d.Set("restrict_state", *gateway.RestrictState)
-	_ = d.Set("zone", *gateway.Zone)
+	_ = d.Set("type", gateway.Type)
+	_ = d.Set("create_time", gateway.CreatedTime)
+	_ = d.Set("state", gateway.State)
+	_ = d.Set("prepaid_renew_flag", gateway.RenewFlag)
+	_ = d.Set("charge_type", gateway.InstanceChargeType)
+	_ = d.Set("expired_time", gateway.ExpiredTime)
+	_ = d.Set("is_address_blocked", gateway.IsAddressBlocked)
+	_ = d.Set("new_purchase_plan", gateway.NewPurchasePlan)
+	_ = d.Set("restrict_state", gateway.RestrictState)
+	_ = d.Set("zone", gateway.Zone)
 
 	//tags
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -325,9 +329,15 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	d.Partial(true)
 	gatewayId := d.Id()
 
-	//renew
-	if d.HasChange("prepaid_period") || d.HasChange("prepaid_renew_flag") {
-		return fmt.Errorf("Do not support renew operation in update operation. Please renew the instance on controller web page.")
+	unsupportedUpdateFields := []string{
+		"prepaid_period",
+		"prepaid_renew_flag",
+		"type",
+	}
+	for _, field := range unsupportedUpdateFields {
+		if d.HasChange(field) {
+			return fmt.Errorf("Template resource_tc_vpn_gateway update on %s is not supportted yet. Please renew it on controller web page.", field)
+		}
 	}
 
 	if d.HasChange("name") || d.HasChange("charge_type") {
@@ -416,13 +426,14 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 
 	gatewayId := d.Id()
 
-	//prepaid instances can not be deleted
+	//prepaid instances or instances which attached to ccn can not be deleted
 	//to get expire_time of the VPN gateway
 	//to get the status of gateway
-	chargeRequest := vpc.NewDescribeVpnGatewaysRequest()
-	chargeRequest.VpnGatewayIds = []*string{&gatewayId}
-	chargeErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(chargeRequest)
+	//to get the type and networkinstanceid of gateway
+	vpngwRequest := vpc.NewDescribeVpnGatewaysRequest()
+	vpngwRequest.VpnGatewayIds = []*string{&gatewayId}
+	vpngwErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(vpngwRequest)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -440,16 +451,17 @@ func resourceTencentCloudVpnGatewayDelete(d *schema.ResourceData, meta interface
 					if time.Until(t) > 0 {
 						return resource.NonRetryableError(fmt.Errorf("Delete operation is unsupport when VPN gateway is not expired."))
 					}
-					return nil
 				}
-				return nil
+			}
+			if *result.Response.VpnGatewaySet[0].Type == GATE_WAY_TYPE_CCN && *result.Response.VpnGatewaySet[0].NetworkInstanceId != "" {
+				return resource.NonRetryableError(fmt.Errorf("Delete operation is unsupported when VPN gateway is attached to CCN instance."))
 			}
 			return nil
 		}
 	})
-	if chargeErr != nil {
-		log.Printf("[CRITAL]%s describe VPN gateway failed, reason:%s\n", logId, chargeErr.Error())
-		return chargeErr
+	if vpngwErr != nil {
+		log.Printf("[CRITAL]%s describe VPN gateway failed, reason:%s\n", logId, vpngwErr.Error())
+		return vpngwErr
 	}
 
 	//check the vpn gateway is not related with any tunnel
