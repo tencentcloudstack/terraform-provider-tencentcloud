@@ -2,9 +2,13 @@
 
 ENHANCEMENTS: 
 
-* Resource: `tencentcloud_redis_instance` add new argument `type_id`, `redis_shard_num`, `redis_replicas_num`.
-* Data Source: `tencentcloud_redis_instances` add new argument `type_id`, `redis_shard_num`, `redis_replicas_num`.
-* Data Source: `tencentcloud_redis_zone_config` add output argument `type_id` and new output argument `type_id`, `redis_shard_nums`, `redis_replicas_nums`.
+* Data Source: `tencentcloud_redis_instances` add new argument `type_id`, `redis_shard_num`, `redis_replicas_num`
+* Data Source: `tencentcloud_redis_zone_config` add output argument `type_id` and new output argument `type_id`, `redis_shard_nums`, `redis_replicas_nums`
+* Data Source: `tencentcloud_ccn_instances` add new type `VPNGW` for field `instance_type`
+* Data Source: `tencentcloud_vpn_gateways` add new type `CCN` for field `type`
+* Resource: `tencentcloud_redis_instance` add new argument `type_id`, `redis_shard_num`, `redis_replicas_num`
+* Resource: `tencentcloud_ccn_attachment` add new type `CNN_INSTANCE_TYPE_VPNGW` for field `instance_type`
+* Resource: `tencentcloud_vpn_gateway` add new type `CCN` for field `type`
 
 BUG FIXES:
 
