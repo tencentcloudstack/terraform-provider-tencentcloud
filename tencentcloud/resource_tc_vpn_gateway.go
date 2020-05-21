@@ -97,7 +97,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Optional:    true,
-				Description: "Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`.",
+				Description: "Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`. Note: CCN type is only for whitelist customer now.",
 			},
 			"state": {
 				Type:        schema.TypeString,
