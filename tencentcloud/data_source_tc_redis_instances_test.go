@@ -47,7 +47,7 @@ func testAccTencentCloudRedisInstancesDataSourceConfig() string {
 	return `
 resource "tencentcloud_redis_instance" "redis_instance_test" {
   availability_zone = "ap-guangzhou-3"
-  type              = "master_slave_redis"
+  type_id           = 2
   password          = "test12345789"
   mem_size          = 8192
   name              = "terraform_test"

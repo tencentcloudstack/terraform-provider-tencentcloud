@@ -21,19 +21,22 @@ type RedisService struct {
 }
 
 type TencentCloudRedisDetail struct {
-	RedisId    string
-	Name       string
-	Zone       string
-	ProjectId  int64
-	Type       string
-	MemSize    int64
-	Status     string
-	VpcId      string
-	SubnetId   string
-	Ip         string
-	Port       int64
-	CreateTime string
-	Tags       map[string]string
+	RedisId          string
+	Name             string
+	Zone             string
+	ProjectId        int64
+	TypeId           int64
+	Type             string
+	MemSize          int64
+	Status           string
+	VpcId            string
+	SubnetId         string
+	Ip               string
+	Port             int64
+	RedisShardNum    int64
+	RedisReplicasNum int64
+	CreateTime       string
+	Tags             map[string]string
 }
 
 func (me *RedisService) fullZoneId() (errRet error) {
@@ -161,11 +164,7 @@ needMoreItems:
 			continue
 		}
 		var instance TencentCloudRedisDetail
-		if REDIS_NAMES[*item.Type] == "" {
-			instance.Type = "unknown"
-		} else {
-			instance.Type = REDIS_NAMES[*item.Type]
-		}
+		instance.Type = REDIS_NAMES[*item.Type]
 		if REDIS_STATUS[*item.Status] == "" {
 			instance.Status = "unknown"
 		} else {
@@ -189,6 +188,13 @@ needMoreItems:
 		instance.SubnetId = *item.UniqSubnetId
 		instance.VpcId = *item.UniqVpcId
 
+		instance.TypeId = *item.Type
+		if item.RedisReplicasNum != nil {
+			instance.RedisReplicasNum = *item.RedisReplicasNum
+		}
+		if item.RedisShardNum != nil {
+			instance.RedisShardNum = *item.RedisShardNum
+		}
 		instance.Tags = make(map[string]string, len(item.InstanceTags))
 		for _, tag := range item.InstanceTags {
 			if tag.TagKey == nil {
@@ -215,9 +221,11 @@ needMoreItems:
 }
 
 func (me *RedisService) CreateInstances(ctx context.Context,
-	zoneName, typeId, password, vpcId, subnetId, redisName string,
+	zoneName string, typeId int64, password, vpcId, subnetId, redisName string,
 	memSize, projectId, port int64,
-	securityGroups []string) (dealId string, errRet error) {
+	securityGroups []string,
+	redisShardNum,
+	redisReplicasNum int) (dealId string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := redis.NewCreateInstancesRequest()
@@ -235,20 +243,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 		return
 	}
 	request.ZoneId = helper.Int64Uint64(intZoneId)
-
-	// type
-	var intTypeId uint64
-	for id, name := range REDIS_NAMES {
-		if typeId == name {
-			intTypeId = uint64(id)
-			break
-		}
-	}
-	if intTypeId == 0 {
-		errRet = fmt.Errorf("redis not supports this type %s now", typeId)
-		return
-	}
-	request.TypeId = &intTypeId
+	request.TypeId = helper.Int64Uint64(typeId)
 
 	// vpc
 	if (vpcId == "" && subnetId != "") || (vpcId != "" && subnetId == "") {
@@ -281,7 +276,12 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	request.BillingMode = &billingMode
 	request.GoodsNum = &goodsNum
 	request.Period = &period
-
+	if redisShardNum > 0 {
+		request.RedisShardNum = helper.IntInt64(redisShardNum)
+	}
+	if redisReplicasNum > 0 {
+		request.RedisReplicasNum = helper.IntInt64(redisReplicasNum)
+	}
 	if redisName != "" {
 		request.InstanceName = &redisName
 	}

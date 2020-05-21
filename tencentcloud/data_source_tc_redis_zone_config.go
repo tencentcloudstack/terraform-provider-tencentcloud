@@ -31,6 +31,12 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 				Optional:    true,
 				Description: "Name of a region. If this value is not set, the current region getting from provider's configuration will be used.",
 			},
+			"type_id": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateIntegerMin(2),
+				Description:  "Instance type id.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -48,9 +54,15 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 							Computed:    true,
 							Description: "ID of available zone.",
 						},
+						"type_id": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Instance type. Which redis type supports in this zone.",
+						},
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
+							Deprecated:  "It has been deprecated from version 1.33.1. Please use 'type_id' instead.",
 							Description: "Instance type. Available values: master_slave_redis, master_slave_ckv, cluster_ckv, cluster_redis and standalone_redis.",
 						},
 						"version": {
@@ -63,6 +75,18 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeInt},
 							Computed:    true,
 							Description: "The memory volume of an available instance(in MB).",
+						},
+						"redis_shard_nums": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeInt},
+							Description: "The support numbers of instance shard.",
+						},
+						"redis_replicas_nums": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeInt},
+							Description: "The support numbers of instance copies.",
 						},
 					},
 				},
@@ -85,6 +109,8 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 	} else {
 		log.Printf("[INFO]%s region is not set,so we use [%s] from env\n ", logId, region)
 	}
+
+	typeId := int64(d.Get("type_id").(int))
 
 	sellConfigures, err := service.DescribeRedisZoneConfig(ctx)
 	if err != nil {
@@ -110,18 +136,19 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 			if *products.PayMode != "0" {
 				continue
 			}
-			//this products sale out.
-			if *products.Saleout {
-				continue
-			}
-			//not support this type now .
-			if REDIS_NAMES[*products.Type] == "" {
+
+			if typeId != 0 && typeId != *products.Type {
 				continue
 			}
 
 			zoneConfigures := map[string]interface{}{}
 			zoneConfigures["zone"] = zoneName
 			zoneConfigures["version"] = *products.Version
+			zoneConfigures["type_id"] = products.Type
+			//this products sale out.
+			if *products.Saleout {
+				continue
+			}
 
 			memSizes := make([]int64, 0, len(products.TotalSize))
 
@@ -136,6 +163,27 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 			zoneConfigures["mem_sizes"] = memSizes
 			zoneConfigures["type"] = REDIS_NAMES[*products.Type]
 
+			var redisShardNums []int64
+			var redisReplicasNums []int64
+
+			for _, v := range products.ShardNum {
+				int64Value, err := strconv.ParseInt(*v, 10, 64)
+				if err != nil {
+					return fmt.Errorf("api[DescribeRedisZoneConfig]return error `redis_shard_nums`,%s", err.Error())
+				}
+				redisShardNums = append(redisShardNums, int64Value)
+			}
+			zoneConfigures["redis_shard_nums"] = redisShardNums
+
+			for _, v := range products.ReplicaNum {
+				int64Value, err := strconv.ParseInt(*v, 10, 64)
+				if err != nil {
+					return fmt.Errorf("api[DescribeRedisZoneConfig]return error `redis_replicas_nums`,%s", err.Error())
+				}
+				redisReplicasNums = append(redisReplicasNums, int64Value)
+			}
+			zoneConfigures["redis_replicas_nums"] = redisReplicasNums
+
 			allZonesConfigs = append(allZonesConfigs, zoneConfigures)
 		}
 	}
@@ -144,7 +192,12 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 		log.Printf("[CRITAL]%s provider set  redis zoneConfigs fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	d.SetId("redis_zoneconfig" + region)
+
+	id := "redis_zoneconfig" + region
+	if typeId != 0 {
+		id += fmt.Sprintf("%d", typeId)
+	}
+	d.SetId(id)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 

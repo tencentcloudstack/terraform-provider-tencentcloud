@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-const ReqClient = "Terraform-v1.24.1"
+const ReqClient = "Terraform-v1.33.1"
 
 type LogRoundTripper struct {
 }
@@ -27,19 +27,20 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	if errRet != nil {
 		return
 	}
-
+	var headName = "X-TC-Action"
 	request.Header.Set("X-TC-RequestClient", ReqClient)
-	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header["X-TC-Action"]))
+	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header[headName]))
 	requestBody, errRet := ioutil.ReadAll(bodyReader)
 	if errRet != nil {
 		return
 	}
 	inBytes = append(inBytes, requestBody...)
 
+	headName = "X-TC-Region"
 	appendMessage := []byte(fmt.Sprintf(
 		", (host %+v, region:%+v)",
 		request.Header["Host"],
-		request.Header["X-TC-Region"],
+		request.Header[headName],
 	))
 
 	inBytes = append(inBytes, appendMessage...)

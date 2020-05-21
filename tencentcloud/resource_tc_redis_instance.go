@@ -4,13 +4,18 @@ Provides a resource to create a Redis instance and set its attributes.
 Example Usage
 
 ```hcl
-resource "tencentcloud_redis_instance" "redis_instance_test"{
-  availability_zone = "ap-hongkong-3"
-  type              = "master_slave_redis"
-  password          = "test12345789"
-  mem_size          = 8192
-  name              = "terrform_test"
-  port              = 6379
+data "tencentcloud_redis_zone_config" "zone" {
+}
+
+resource "tencentcloud_redis_instance" "redis_instance_test_2" {
+  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
+  type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
+  password           = "test12345789"
+  mem_size           = 8192
+  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
+  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
+  name               = "terrform_test"
+  port               = 6379
 }
 ```
 
@@ -70,11 +75,31 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Instance name.",
 			},
+			"type_id": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateIntegerMin(2),
+				Description:  "Instance type. Refer to `data.tencentcloud_redis_zone_config.list.type_id` get available values.",
+			},
+			"redis_shard_num": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     1,
+				Description: "The number of instance shard. This is not required for standalone and master slave versions.",
+			},
+			"redis_replicas_num": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     1,
+				Description: "The number of instance copies. This is not required for standalone and master slave versions.",
+			},
 			"type": {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Optional: true,
-				Default:  REDIS_NAMES[REDIS_VERSION_MASTER_SLAVE_REDIS],
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
 					for _, name := range REDIS_NAMES {
@@ -85,6 +110,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 					errors = append(errors, fmt.Errorf("this redis type %s not support now.", value))
 					return
 				},
+				Deprecated:  "It has been deprecated from version 1.33.1. Please use 'type_id' instead.",
 				Description: "Instance type. Available values: " + typeStr + ", specific region support specific types, need to refer data `tencentcloud_redis_zone_config`.",
 			},
 			"password": {
@@ -178,6 +204,9 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	availabilityZone := d.Get("availability_zone").(string)
 	redisName := d.Get("name").(string)
 	redisType := d.Get("type").(string)
+	typeId := int64(d.Get("type_id").(int))
+	redisShardNum := d.Get("redis_shard_num").(int)
+	redisReplicasNum := d.Get("redis_replicas_num").(int)
 	password := d.Get("password").(string)
 	memSize := d.Get("mem_size").(int)
 	vpcId := d.Get("vpc_id").(string)
@@ -193,6 +222,75 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	if (typeId == 0 && redisType == "") || (typeId != 0 && redisType != "") {
+		return fmt.Errorf("`type_id` and `type` set one item and only one item")
+	}
+
+	for id, name := range REDIS_NAMES {
+		if redisType == name {
+			typeId = id
+			break
+		}
+	}
+
+	sellConfigures, err := redisService.DescribeRedisZoneConfig(ctx)
+	if err != nil {
+		return fmt.Errorf("api[DescribeRedisZoneConfig]fail, return %s", err.Error())
+	}
+	var regionItem *redis.RegionConf
+	var zoneItem *redis.ZoneCapacityConf
+	var redisItem *redis.ProductConf
+	for _, regionItem = range sellConfigures {
+		if *regionItem.RegionId == region {
+			break
+		}
+	}
+	if regionItem == nil {
+		return fmt.Errorf("all redis in this region `%s` be sold out", region)
+	}
+	for _, zones := range regionItem.ZoneSet {
+		if *zones.IsSaleout {
+			continue
+		}
+		if *zones.ZoneName == availabilityZone {
+			zoneItem = zones
+			break
+		}
+	}
+	if zoneItem == nil {
+		return fmt.Errorf("all redis in this zone `%s` be sold out", availabilityZone)
+	}
+
+	for _, reds := range zoneItem.ProductSet {
+		if *reds.Type == typeId {
+			redisItem = reds
+			break
+		}
+	}
+	if redisItem == nil {
+		return fmt.Errorf("redis type_id `%d` be sold out or this type_id is not supports", typeId)
+	}
+	var redisShardNums []string
+	var redisReplicasNums []string
+	var numErrors []string
+	for _, v := range redisItem.ShardNum {
+		redisShardNums = append(redisShardNums, *v)
+	}
+	for _, v := range redisItem.ReplicaNum {
+		redisReplicasNums = append(redisReplicasNums, *v)
+	}
+	if !IsContains(redisShardNums, fmt.Sprintf("%d", redisShardNum)) {
+		numErrors = append(numErrors, fmt.Sprintf("redis_shard_num : %s", strings.Join(redisShardNums, ",")))
+	}
+
+	if !IsContains(redisReplicasNums, fmt.Sprintf("%d", redisReplicasNum)) {
+		numErrors = append(numErrors, fmt.Sprintf(" redis_replicas_num : %s", strings.Join(redisReplicasNums, ",")))
+	}
+
+	if len(numErrors) > 0 {
+		return fmt.Errorf("redis type_id `%d` only supports %s", typeId, strings.Join(numErrors, ","))
+	}
+
 	requestSecurityGroup := make([]string, 0, len(securityGroups))
 
 	for _, v := range securityGroups {
@@ -201,7 +299,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 
 	dealId, err := redisService.CreateInstances(ctx,
 		availabilityZone,
-		redisType,
+		typeId,
 		password,
 		vpcId,
 		subnetId,
@@ -209,7 +307,9 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		int64(memSize),
 		int64(projectId),
 		int64(port),
-		requestSecurityGroup)
+		requestSecurityGroup,
+		redisShardNum,
+		redisReplicasNum)
 
 	if err != nil {
 		return err
@@ -303,26 +403,35 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
-	_ = d.Set("availability_zone", zoneName)
-
-	typeName := REDIS_NAMES[*info.Type]
-	if typeName == "" {
-		err = fmt.Errorf("redis read unkwnow type %d", *info.Type)
-		log.Printf("[CRITAL]%s redis read type name error, reason:%s\n", logId, err.Error())
-		return err
+	//not set field type_id
+	if d.Get("type_id").(int) == 0 {
+		typeName := REDIS_NAMES[*info.Type]
+		if typeName == "" {
+			err = fmt.Errorf("redis read unkwnow type %d", *info.Type)
+			log.Printf("[CRITAL]%s redis read type name error, reason:%s\n", logId, err.Error())
+			return err
+		}
+		_ = d.Set("type", typeName)
+	} else {
+		_ = d.Set("type_id", info.Type)
 	}
-	_ = d.Set("type", typeName)
 
+	if d.Get("redis_shard_num").(int) != 0 {
+		_ = d.Set("redis_shard_num", info.RedisShardNum)
+	}
+
+	if d.Get("redis_replicas_num").(int) != 0 {
+		_ = d.Set("redis_replicas_num", info.RedisReplicasNum)
+	}
+
+	_ = d.Set("availability_zone", zoneName)
 	_ = d.Set("mem_size", int64(*info.Size))
-
 	_ = d.Set("vpc_id", *info.UniqVpcId)
 	_ = d.Set("subnet_id", *info.UniqSubnetId)
-
 	_ = d.Set("project_id", *info.ProjectId)
 	_ = d.Set("port", *info.Port)
 	_ = d.Set("ip", *info.WanIp)
 	_ = d.Set("create_time", *info.Createtime)
-
 	if d.Get("vpc_id").(string) != "" {
 		securityGroups, err := service.DescribeInstanceSecurityGroup(ctx, d.Id())
 		if err != nil {
