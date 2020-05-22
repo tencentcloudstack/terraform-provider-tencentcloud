@@ -13,23 +13,23 @@ Use this resource to create tcaplus idl file
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_tcaplus_application" "test" {
+resource "tencentcloud_tcaplus_cluster" "test" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_tcaplus_app_test"
+  cluster_name             = "tf_tcaplus_cluster_test"
   vpc_id                   = "vpc-7k6gzox6"
   subnet_id                = "subnet-akwgvfa3"
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_zone" "zone" {
-  app_id    = tencentcloud_tcaplus_application.test.id
-  zone_name = "tf_test_zone_name"
+resource "tencentcloud_tcaplus_group" "group" {
+  cluster_id = tencentcloud_tcaplus_cluster.test.id
+  group_name = "tf_test_group_name"
 }
 
 resource "tencentcloud_tcaplus_idl" "main" {
-  app_id        = tencentcloud_tcaplus_application.test.id
-  zone_id       = tencentcloud_tcaplus_zone.zone.id
+  cluster_id    = tencentcloud_tcaplus_cluster.test.id
+  group_id      = tencentcloud_tcaplus_group.group.id
   file_name     = "tf_idl_test"
   file_type     = "PROTO"
   file_ext_type = "proto"
@@ -67,12 +67,12 @@ resource "tencentcloud_tcaplus_idl" "main" {
 
 The following arguments are supported:
 
-* `app_id` - (Required, ForceNew) Application id of the idl belongs..
+* `cluster_id` - (Required, ForceNew) Cluster id of the idl belongs..
 * `file_content` - (Required, ForceNew) Idl file content.
 * `file_ext_type` - (Required, ForceNew) File ext type of this idl file. if `file_type` is PROTO  `file_ext_type` must be 'proto',if `file_type` is TDR  `file_ext_type` must be 'xml',if `file_type` is MIX  `file_ext_type` must be 'xml' or 'proto'.
 * `file_name` - (Required, ForceNew) Name of this idl file.
 * `file_type` - (Required, ForceNew) Type of this idl file, Valid values are PROTO,TDR,MIX.
-* `zone_id` - (Required, ForceNew) Zone of this idl belongs.
+* `group_id` - (Required, ForceNew) Group of this idl belongs.
 
 ## Attributes Reference
 

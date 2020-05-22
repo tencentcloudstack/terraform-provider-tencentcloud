@@ -5,29 +5,29 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tcaplus_tables" "null" {
-  app_id = "19162256624"
+  cluster_id = "19162256624"
 }
 
-data "tencentcloud_tcaplus_tables" "zone" {
-  app_id  = "19162256624"
-  zone_id = "19162256624:3"
+data "tencentcloud_tcaplus_tables" "group" {
+  cluster_id  = "19162256624"
+  group_id    = "19162256624:3"
 }
 
 data "tencentcloud_tcaplus_tables" "name" {
-  app_id     = "19162256624"
-  zone_id    = "19162256624:3"
-  table_name = "guagua"
+  cluster_id     = "19162256624"
+  group_id       = "19162256624:3"
+  table_name     = "guagua"
 }
 
 data "tencentcloud_tcaplus_tables" "id" {
-  app_id   = "19162256624"
-  table_id =  "tcaplus-faa65eb7"
+  cluster_id   = "19162256624"
+  table_id     = "tcaplus-faa65eb7"
 }
 data "tencentcloud_tcaplus_tables" "all" {
-  app_id     = "19162256624"
-  zone_id    = "19162256624:3"
-  table_id   = "tcaplus-faa65eb7"
-  table_name = "guagua"
+  cluster_id     = "19162256624"
+  group_id       = "19162256624:3"
+  table_id       = "tcaplus-faa65eb7"
+  table_name     = "guagua"
 }
 ```
 */
@@ -46,15 +46,15 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTcaplusTablesRead,
 		Schema: map[string]*schema.Schema{
-			"app_id": {
+			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the tcapplus application to be query.",
+				Description: "Id of the tcaplus cluster to be query.",
 			},
-			"zone_id": {
+			"group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Zone id to be query.",
+				Description: "Group id to be query.",
 			},
 			"table_id": {
 				Type:        schema.TypeString,
@@ -74,13 +74,13 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of tcaplus zones. Each element contains the following attributes.",
+				Description: "A list of tcaplus groups. Each element contains the following attributes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"zone_id": {
+						"group_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Zone of this table belongs.",
+							Description: "Group of this table belongs.",
 						},
 						"table_id": {
 							Type:        schema.TypeString,
@@ -130,7 +130,7 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the tcapplus table.",
+							Description: "Create time of the tcaplus table.",
 						},
 						"error": {
 							Type:        schema.TypeString,
@@ -164,22 +164,22 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	applicationId := d.Get("app_id").(string)
-	zoneId := d.Get("zone_id").(string)
+	clusterId := d.Get("cluster_id").(string)
+	groupId := d.Get("group_id").(string)
 	tableId := d.Get("table_id").(string)
 	tableName := d.Get("table_name").(string)
 
-	apps, err := service.DescribeTables(ctx, applicationId, zoneId, tableId, tableName)
+	tables, err := service.DescribeTables(ctx, clusterId, groupId, tableId, tableName)
 	if err != nil {
-		apps, err = service.DescribeTables(ctx, applicationId, zoneId, tableId, tableName)
+		tables, err = service.DescribeTables(ctx, clusterId, groupId, tableId, tableName)
 	}
 	if err != nil {
 		return err
 	}
 
-	list := make([]map[string]interface{}, 0, len(apps))
+	list := make([]map[string]interface{}, 0, len(tables))
 
-	for _, tableInfo := range apps {
+	for _, tableInfo := range tables {
 
 		listItem := make(map[string]interface{})
 
@@ -187,7 +187,7 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 			idlFile := tableInfo.IdlFiles[0]
 
 			var tcaplusIdlId TcaplusIdlId
-			tcaplusIdlId.ApplicationId = applicationId
+			tcaplusIdlId.ClusterId = clusterId
 			tcaplusIdlId.FileName = *idlFile.FileName
 			tcaplusIdlId.FileType = *idlFile.FileType
 
@@ -208,7 +208,7 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 			listItem["error"] = ""
 		}
 		if tableInfo.TableGroupId != nil {
-			listItem["zone_id"] = fmt.Sprintf("%s:%s", applicationId, *tableInfo.TableGroupId)
+			listItem["group_id"] = fmt.Sprintf("%s:%s", clusterId, *tableInfo.TableGroupId)
 		}
 		if tableInfo.TableInstanceId != nil {
 			listItem["table_id"] = *tableInfo.TableInstanceId
@@ -246,7 +246,7 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 		list = append(list, listItem)
 	}
 
-	d.SetId("table." + applicationId + "." + zoneId + "." + tableId + "." + tableName)
+	d.SetId("table." + clusterId + "." + groupId + "." + tableId + "." + tableName)
 	if e := d.Set("list", list); e != nil {
 		log.Printf("[CRITAL]%s provider set list fail, reason:%s\n", logId, e.Error())
 		return e

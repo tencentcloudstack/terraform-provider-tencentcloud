@@ -1,21 +1,21 @@
 /*
-Use this resource to create tcaplus zone
+Use this resource to create tcaplus table group
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_tcaplus_application" "test" {
+resource "tencentcloud_tcaplus_cluster" "test" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_tcaplus_app_test"
+  cluster_name             = "tf_tcaplus_cluster_test"
   vpc_id                   = "vpc-7k6gzox6"
   subnet_id                = "subnet-akwgvfa3"
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_zone" "zone" {
-  app_id = tencentcloud_tcaplus_application.test.id
-  zone_name      = "tf_test_zone_name"
+resource "tencentcloud_tcaplus_group" "group" {
+  cluster_id = tencentcloud_tcaplus_cluster.test.id
+  group_name      = "tf_test_group_name"
 }
 ```
 */
@@ -30,24 +30,24 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func resourceTencentCloudTcaplusZone() *schema.Resource {
+func resourceTencentCloudTcaplusGroup() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTcaplusZoneCreate,
-		Read:   resourceTencentCloudTcaplusZoneRead,
-		Update: resourceTencentCloudTcaplusZoneUpdate,
-		Delete: resourceTencentCloudTcaplusZoneDelete,
+		Create: resourceTencentCloudTcaplusGroupCreate,
+		Read:   resourceTencentCloudTcaplusGroupRead,
+		Update: resourceTencentCloudTcaplusGroupUpdate,
+		Delete: resourceTencentCloudTcaplusGroupDelete,
 		Schema: map[string]*schema.Schema{
-			"app_id": {
+			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Application of the tcapplus zone belongs.",
+				Description: "Cluster of the tcaplus group belongs.",
 			},
-			"zone_name": {
+			"group_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 30),
-				Description:  "Name of the tcapplus zone. length should between 1 and 30.",
+				Description:  "Name of the tcaplus group. length should between 1 and 30.",
 			},
 			// Computed values.
 			"table_count": {
@@ -63,14 +63,14 @@ func resourceTencentCloudTcaplusZone() *schema.Resource {
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the tcapplus zone.",
+				Description: "Create time of the tcaplus group.",
 			},
 		},
 	}
 }
 
-func resourceTencentCloudTcaplusZoneCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_zone.create")()
+func resourceTencentCloudTcaplusGroupCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_group.create")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -78,19 +78,19 @@ func resourceTencentCloudTcaplusZoneCreate(d *schema.ResourceData, meta interfac
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		applicationId = d.Get("app_id").(string)
-		zoneName      = d.Get("zone_name").(string)
+		clusterId = d.Get("cluster_id").(string)
+		groupName = d.Get("group_name").(string)
 	)
-	zoneId, err := tcaplusService.CreateZone(ctx, applicationId, zoneName)
+	groupId, err := tcaplusService.CreateGroup(ctx, clusterId, groupName)
 	if err != nil {
 		return err
 	}
-	d.SetId(fmt.Sprintf("%s:%s", applicationId, zoneId))
-	return resourceTencentCloudTcaplusZoneRead(d, meta)
+	d.SetId(fmt.Sprintf("%s:%s", clusterId, groupId))
+	return resourceTencentCloudTcaplusGroupRead(d, meta)
 }
 
-func resourceTencentCloudTcaplusZoneRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_zone.read")()
+func resourceTencentCloudTcaplusGroupRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_group.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -98,13 +98,13 @@ func resourceTencentCloudTcaplusZoneRead(d *schema.ResourceData, meta interface{
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	applicationId := d.Get("app_id").(string)
-	zoneId := d.Id()
+	clusterId := d.Get("cluster_id").(string)
+	groupId := d.Id()
 
-	info, has, err := tcaplusService.DescribeZone(ctx, applicationId, zoneId)
+	info, has, err := tcaplusService.DescribeGroup(ctx, clusterId, groupId)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			info, has, err = tcaplusService.DescribeZone(ctx, applicationId, zoneId)
+			info, has, err = tcaplusService.DescribeGroup(ctx, clusterId, groupId)
 			if err != nil {
 				return retryError(err)
 			}
@@ -119,7 +119,7 @@ func resourceTencentCloudTcaplusZoneRead(d *schema.ResourceData, meta interface{
 		return nil
 	}
 
-	_ = d.Set("zone_name", info.TableGroupName)
+	_ = d.Set("group_name", info.TableGroupName)
 	_ = d.Set("table_count", int(*info.TableCount))
 	_ = d.Set("total_size", int(*info.TotalSize))
 	_ = d.Set("create_time", info.CreatedTime)
@@ -127,20 +127,20 @@ func resourceTencentCloudTcaplusZoneRead(d *schema.ResourceData, meta interface{
 	return nil
 }
 
-func resourceTencentCloudTcaplusZoneUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_zone.update")()
+func resourceTencentCloudTcaplusGroupUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_group.update")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	applicationId := d.Get("app_id").(string)
-	zoneId := d.Id()
+	clusterId := d.Get("cluster_id").(string)
+	groupId := d.Id()
 
-	if d.HasChange("zone_name") {
+	if d.HasChange("group_name") {
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			err := tcaplusService.ModifyZoneName(ctx, applicationId, zoneId, d.Get("zone_name").(string))
+			err := tcaplusService.ModifyGroupName(ctx, clusterId, groupId, d.Get("group_name").(string))
 			if err != nil {
 				return retryError(err)
 			}
@@ -150,24 +150,24 @@ func resourceTencentCloudTcaplusZoneUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 	}
-	return resourceTencentCloudTcaplusZoneRead(d, meta)
+	return resourceTencentCloudTcaplusGroupRead(d, meta)
 }
 
-func resourceTencentCloudTcaplusZoneDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_zone.delete")()
+func resourceTencentCloudTcaplusGroupDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_group.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	applicationId := d.Get("app_id").(string)
-	zoneId := d.Id()
+	clusterId := d.Get("cluster_id").(string)
+	groupId := d.Id()
 
-	err := tcaplusService.DeleteZone(ctx, applicationId, zoneId)
+	err := tcaplusService.DeleteGroup(ctx, clusterId, groupId)
 	if err != nil {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = tcaplusService.DeleteZone(ctx, applicationId, zoneId)
+			err = tcaplusService.DeleteGroup(ctx, clusterId, groupId)
 			if err != nil {
 				return retryError(err)
 			}
@@ -179,15 +179,15 @@ func resourceTencentCloudTcaplusZoneDelete(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	_, has, err := tcaplusService.DescribeZone(ctx, applicationId, zoneId)
+	_, has, err := tcaplusService.DescribeGroup(ctx, clusterId, groupId)
 	if err != nil || has {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, has, err = tcaplusService.DescribeZone(ctx, applicationId, zoneId)
+			_, has, err = tcaplusService.DescribeGroup(ctx, clusterId, groupId)
 			if err != nil {
 				return retryError(err)
 			}
 			if has {
-				err = fmt.Errorf("delete zone fail, zone still exist from sdk DescribeZones")
+				err = fmt.Errorf("delete group fail, group still exist from sdk DescribeGroup")
 				return resource.RetryableError(err)
 			}
 			return nil
@@ -199,6 +199,6 @@ func resourceTencentCloudTcaplusZoneDelete(d *schema.ResourceData, meta interfac
 	if !has {
 		return nil
 	} else {
-		return errors.New("delete zone fail, zone still exist from sdk DescribeZones")
+		return errors.New("delete group fail, group still exist from sdk DescribeGroup")
 	}
 }

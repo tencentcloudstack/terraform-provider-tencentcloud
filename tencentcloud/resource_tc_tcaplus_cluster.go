@@ -1,14 +1,14 @@
 /*
-Use this resource to create tcaplus application
+Use this resource to create tcaplus cluster
 
 ~> **NOTE:** tcaplus now only supports the following regions:ap-shanghai,ap-hongkong,na-siliconvalley,ap-singapore,ap-seoul,ap-tokyo,eu-frankfurt
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_tcaplus_application" "test" {
+resource "tencentcloud_tcaplus_cluster" "test" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_tcaplus_app_test"
+  cluster_name             = "tf_tcaplus_cluster_test"
   vpc_id                   = "vpc-7k6gzox6"
   subnet_id                = "subnet-akwgvfa3"
   password                 = "1qaA2k1wgvfa3ZZZ"
@@ -18,10 +18,10 @@ resource "tencentcloud_tcaplus_application" "test" {
 
 Import
 
-tcaplus application can be imported using the id, e.g.
+tcaplus cluster can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_tcaplus_application.test 26655801
+$ terraform import tencentcloud_tcaplus_cluster.test 26655801
 ```
 
 ```
@@ -40,12 +40,12 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-func resourceTencentCloudTcaplusApplication() *schema.Resource {
+func resourceTencentCloudTcaplusCluster() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTcaplusApplicationCreate,
-		Read:   resourceTencentCloudTcaplusApplicationRead,
-		Update: resourceTencentCloudTcaplusApplicationUpdate,
-		Delete: resourceTencentCloudTcaplusApplicationDelete,
+		Create: resourceTencentCloudTcaplusClusterCreate,
+		Read:   resourceTencentCloudTcaplusClusterRead,
+		Update: resourceTencentCloudTcaplusClusterUpdate,
+		Delete: resourceTencentCloudTcaplusClusterDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -56,25 +56,25 @@ func resourceTencentCloudTcaplusApplication() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_IDL_TYPES),
-				Description:  "Idl type of the tcapplus application.Valid values are " + strings.Join(TCAPLUS_IDL_TYPES, ",") + ".",
+				Description:  "Idl type of the tcaplus cluster.Valid values are " + strings.Join(TCAPLUS_IDL_TYPES, ",") + ".",
 			},
-			"app_name": {
+			"cluster_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 30),
-				Description:  "Name of the tcapplus application. length should between 1 and 30.",
+				Description:  "Name of the tcaplus cluster. length should between 1 and 30.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "VPC id of the tcapplus application.",
+				Description: "VPC id of the tcaplus cluster.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Subnet id of the tcapplus application.",
+				Description: "Subnet id of the tcaplus cluster.",
 			},
 			"password": {
 				Type:      schema.TypeString,
@@ -109,7 +109,7 @@ func resourceTencentCloudTcaplusApplication() *schema.Resource {
 					}
 					return
 				},
-				Description: "Password of the tcapplus application. length should between 12 and 16,a-z and 0-9 and A-Z must contain.",
+				Description: "Password of the tcaplus cluster. length should between 12 and 16,a-z and 0-9 and A-Z must contain.",
 			},
 			"old_password_expire_last": {
 				Type:         schema.TypeInt,
@@ -123,32 +123,32 @@ func resourceTencentCloudTcaplusApplication() *schema.Resource {
 			"network_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Network type of the tcapplus application.",
+				Description: "Network type of the tcaplus cluster.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the tcapplus application.",
+				Description: "Create time of the tcaplus cluster.",
 			},
 			"password_status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Password status of the tcapplus application.`unmodifiable` means:can not change password now,`modifiable` means:can change password now.",
+				Description: "Password status of the tcaplus cluster.`unmodifiable` means:can not change password now,`modifiable` means:can change password now.",
 			},
 			"api_access_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Access id of the tcapplus application.For TcaplusDB SDK connect.",
+				Description: "Access id of the tcaplus cluster.For TcaplusDB SDK connect.",
 			},
 			"api_access_ip": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Access ip of the tcapplus application.For TcaplusDB SDK connect.",
+				Description: "Access ip of the tcaplus cluster.For TcaplusDB SDK connect.",
 			},
 			"api_access_port": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Access port of the tcapplus application.For TcaplusDB SDK connect.",
+				Description: "Access port of the tcaplus cluster.For TcaplusDB SDK connect.",
 			},
 			"old_password_expire_time": {
 				Type:        schema.TypeString,
@@ -159,9 +159,9 @@ func resourceTencentCloudTcaplusApplication() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudTcaplusApplicationCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudTcaplusClusterCreate(d *schema.ResourceData, meta interface{}) error {
 
-	defer logElapsed("resource.tencentcloud_tcaplus_application.create")()
+	defer logElapsed("resource.tencentcloud_tcaplus_cluster.create")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -169,18 +169,18 @@ func resourceTencentCloudTcaplusApplicationCreate(d *schema.ResourceData, meta i
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		idlType  = d.Get("idl_type").(string)
-		appName  = d.Get("app_name").(string)
-		vpcId    = d.Get("vpc_id").(string)
-		subnetId = d.Get("subnet_id").(string)
-		password = d.Get("password").(string)
+		idlType     = d.Get("idl_type").(string)
+		clusterName = d.Get("cluster_name").(string)
+		vpcId       = d.Get("vpc_id").(string)
+		subnetId    = d.Get("subnet_id").(string)
+		password    = d.Get("password").(string)
 	)
 
-	var applicationId string
+	var clusterId string
 	var inErr, outErr error
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		applicationId, inErr = tcaplusService.CreateApp(ctx, idlType, appName, vpcId, subnetId, password)
+		clusterId, inErr = tcaplusService.CreateCluster(ctx, idlType, clusterName, vpcId, subnetId, password)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -189,13 +189,13 @@ func resourceTencentCloudTcaplusApplicationCreate(d *schema.ResourceData, meta i
 	if outErr != nil {
 		return outErr
 	}
-	d.SetId(applicationId)
+	d.SetId(clusterId)
 	time.Sleep(3 * time.Second)
-	return resourceTencentCloudTcaplusApplicationRead(d, meta)
+	return resourceTencentCloudTcaplusClusterRead(d, meta)
 }
 
-func resourceTencentCloudTcaplusApplicationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_application.read")()
+func resourceTencentCloudTcaplusClusterRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_cluster.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -203,10 +203,10 @@ func resourceTencentCloudTcaplusApplicationRead(d *schema.ResourceData, meta int
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	appInfo, has, err := tcaplusService.DescribeApp(ctx, d.Id())
+	clusterInfo, has, err := tcaplusService.DescribeCluster(ctx, d.Id())
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			appInfo, has, err = tcaplusService.DescribeApp(ctx, d.Id())
+			clusterInfo, has, err = tcaplusService.DescribeCluster(ctx, d.Id())
 			if err != nil {
 				return retryError(err)
 			}
@@ -220,28 +220,28 @@ func resourceTencentCloudTcaplusApplicationRead(d *schema.ResourceData, meta int
 		d.SetId("")
 		return nil
 	}
-	_ = d.Set("idl_type", appInfo.IdlType)
-	_ = d.Set("app_name", appInfo.ClusterName)
-	_ = d.Set("vpc_id", appInfo.VpcId)
-	_ = d.Set("subnet_id", appInfo.SubnetId)
-	_ = d.Set("network_type", appInfo.NetworkType)
-	_ = d.Set("create_time", appInfo.CreatedTime)
-	_ = d.Set("password_status", appInfo.PasswordStatus)
-	_ = d.Set("api_access_id", appInfo.ApiAccessId)
-	_ = d.Set("api_access_ip", appInfo.ApiAccessIp)
-	_ = d.Set("api_access_port", appInfo.ApiAccessPort)
+	_ = d.Set("idl_type", clusterInfo.IdlType)
+	_ = d.Set("cluster_name", clusterInfo.ClusterName)
+	_ = d.Set("vpc_id", clusterInfo.VpcId)
+	_ = d.Set("subnet_id", clusterInfo.SubnetId)
+	_ = d.Set("network_type", clusterInfo.NetworkType)
+	_ = d.Set("create_time", clusterInfo.CreatedTime)
+	_ = d.Set("password_status", clusterInfo.PasswordStatus)
+	_ = d.Set("api_access_id", clusterInfo.ApiAccessId)
+	_ = d.Set("api_access_ip", clusterInfo.ApiAccessIp)
+	_ = d.Set("api_access_port", clusterInfo.ApiAccessPort)
 
-	if appInfo.OldPasswordExpireTime == nil || *appInfo.OldPasswordExpireTime == "" {
+	if clusterInfo.OldPasswordExpireTime == nil || *clusterInfo.OldPasswordExpireTime == "" {
 		_ = d.Set("old_password_expire_time", "-")
 	} else {
-		_ = d.Set("old_password_expire_time", appInfo.OldPasswordExpireTime)
+		_ = d.Set("old_password_expire_time", clusterInfo.OldPasswordExpireTime)
 	}
 
 	return nil
 }
 
-func resourceTencentCloudTcaplusApplicationUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_application.update")()
+func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_clusterupdate")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -250,9 +250,9 @@ func resourceTencentCloudTcaplusApplicationUpdate(d *schema.ResourceData, meta i
 
 	d.Partial(true)
 
-	if d.HasChange("app_name") {
+	if d.HasChange("cluster_name") {
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			err := tcaplusService.ModifyAppName(ctx, d.Id(), d.Get("app_name").(string))
+			err := tcaplusService.ModifyClusterName(ctx, d.Id(), d.Get("cluster_name").(string))
 			if err != nil {
 				return retryError(err)
 			}
@@ -261,13 +261,13 @@ func resourceTencentCloudTcaplusApplicationUpdate(d *schema.ResourceData, meta i
 		if err != nil {
 			return err
 		}
-		d.SetPartial("app_name")
+		d.SetPartial("cluster_name")
 	}
 
 	if d.HasChange("password") {
 		oldPwd, newPwd := d.GetChange("password")
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			err := tcaplusService.ModifyAppPassword(ctx, d.Id(),
+			err := tcaplusService.ModifyClusterPassword(ctx, d.Id(),
 				oldPwd.(string),
 				newPwd.(string),
 				int64(d.Get("old_password_expire_last").(int)))
@@ -293,22 +293,22 @@ func resourceTencentCloudTcaplusApplicationUpdate(d *schema.ResourceData, meta i
 	}
 	d.Partial(false)
 
-	return resourceTencentCloudTcaplusApplicationRead(d, meta)
+	return resourceTencentCloudTcaplusClusterRead(d, meta)
 }
 
-func resourceTencentCloudTcaplusApplicationDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_application.delete")()
+func resourceTencentCloudTcaplusClusterDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcaplus_cluster.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	_, err := tcaplusService.DeleteApp(ctx, d.Id())
+	_, err := tcaplusService.DeleteCluster(ctx, d.Id())
 
 	if err != nil {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			_, err = tcaplusService.DeleteApp(ctx, d.Id())
+			_, err = tcaplusService.DeleteCluster(ctx, d.Id())
 			if err != nil {
 				return retryError(err)
 			}
@@ -320,16 +320,16 @@ func resourceTencentCloudTcaplusApplicationDelete(d *schema.ResourceData, meta i
 		return err
 	}
 
-	_, has, err := tcaplusService.DescribeApp(ctx, d.Id())
+	_, has, err := tcaplusService.DescribeCluster(ctx, d.Id())
 	if err != nil || has {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, has, err = tcaplusService.DescribeApp(ctx, d.Id())
+			_, has, err = tcaplusService.DescribeCluster(ctx, d.Id())
 			if err != nil {
 				return retryError(err)
 			}
 
 			if has {
-				err = fmt.Errorf("delete application fail, application still exist from sdk DescribeApps")
+				err = fmt.Errorf("delete cluster fail, cluster still exist from sdk DescribeClusters")
 				return resource.RetryableError(err)
 			}
 
@@ -342,6 +342,6 @@ func resourceTencentCloudTcaplusApplicationDelete(d *schema.ResourceData, meta i
 	if !has {
 		return nil
 	} else {
-		return errors.New("delete application fail, application still exist from sdk DescribeApps")
+		return errors.New("delete cluster fail, cluster still exist from sdk DescribeClusters")
 	}
 }

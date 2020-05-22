@@ -14,7 +14,7 @@ Use this data source to query tcaplus idl files
 
 ```hcl
 data "tencentcloud_tcaplus_idls" "id_test" {
-  app_id = "19162256624"
+  cluster_id = "19162256624"
 }
 ```
 
@@ -22,7 +22,7 @@ data "tencentcloud_tcaplus_idls" "id_test" {
 
 The following arguments are supported:
 
-* `app_id` - (Required) Id of the tcapplus application to be query.
+* `cluster_id` - (Required) Id of the tcaplus cluster to be query.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference
