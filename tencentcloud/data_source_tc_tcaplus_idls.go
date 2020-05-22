@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tcaplus_idls" "id_test" {
-   app_id    = "19162256624"
+  app_id = "19162256624"
 }
 ```
 */

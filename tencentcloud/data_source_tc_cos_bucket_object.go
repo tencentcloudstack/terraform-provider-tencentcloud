@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cos_bucket_object" "mycos" {
-    bucket = "mycos-test-1258798060"
-    key    = "hello-world.py"
-    result_output_file  = "TFresults"
+  bucket             = "mycos-test-1258798060"
+  key                = "hello-world.py"
+  result_output_file = "TFresults"
 }
 ```
 */

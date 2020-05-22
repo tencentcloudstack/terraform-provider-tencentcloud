@@ -37,9 +37,9 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
   }
 
   realserver_bind_set {
-    id     = tencentcloud_gaap_realserver.bar.id
-    ip     = tencentcloud_gaap_realserver.bar.ip
-    port   = 80
+    id   = tencentcloud_gaap_realserver.bar.id
+    ip   = tencentcloud_gaap_realserver.bar.ip
+    port = 80
   }
 }
 ```

@@ -5,17 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_scaling_policy" "scaling_policy" {
-	scaling_group_id = "asg-n32ymck2"
-	policy_name = "tf-as-scaling-policy"
-	adjustment_type = "EXACT_CAPACITY"
-	adjustment_value = 0
-	comparison_operator = "GREATER_THAN"
-	metric_name = "CPU_UTILIZATION"
-	threshold = 80
-	period = 300
-	continuous_time = 10
-	statistic = "AVERAGE"
-	cooldown = 360
+  scaling_group_id    = "asg-n32ymck2"
+  policy_name         = "tf-as-scaling-policy"
+  adjustment_type     = "EXACT_CAPACITY"
+  adjustment_value    = 0
+  comparison_operator = "GREATER_THAN"
+  metric_name         = "CPU_UTILIZATION"
+  threshold           = 80
+  period              = 300
+  continuous_time     = 10
+  statistic           = "AVERAGE"
+  cooldown            = 360
 }
 ```
 */

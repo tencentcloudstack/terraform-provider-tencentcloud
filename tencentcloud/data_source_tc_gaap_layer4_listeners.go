@@ -24,7 +24,7 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
   realserver_type = "IP"
   proxy_id        = tencentcloud_gaap_proxy.foo.id
   health_check    = true
-  interval      = 5
+  interval        = 5
   connect_timeout = 2
 
   realserver_bind_set {

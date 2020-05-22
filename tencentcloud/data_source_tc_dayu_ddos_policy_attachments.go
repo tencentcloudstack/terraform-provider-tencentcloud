@@ -8,7 +8,7 @@ data "tencentcloud_dayu_ddos_policy_attachments" "foo_type" {
   resource_type = tencentcloud_dayu_ddos_policy_attachment.dayu_ddos_policy_attachment.resource_type
 }
 data "tencentcloud_dayu_ddos_policy_attachments" "foo_resource" {
-  resource_id = tencentcloud_dayu_ddos_policy_attachment.dayu_ddos_policy_attachment.resource_id
+  resource_id   = tencentcloud_dayu_ddos_policy_attachment.dayu_ddos_policy_attachment.resource_id
   resource_type = tencentcloud_dayu_ddos_policy_attachment.dayu_ddos_policy_attachment.resource_type
 }
 data "tencentcloud_dayu_ddos_policy_attachments" "foo_policy" {

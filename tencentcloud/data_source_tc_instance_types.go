@@ -6,8 +6,8 @@ Example Usage
 ```hcl
 data "tencentcloud_instance_types" "foo" {
   availability_zone = "ap-guangzhou-2"
-  cpu_core_count = 2
-  memory_size = 4
+  cpu_core_count    = 2
+  memory_size       = 4
 }
 ```
 */

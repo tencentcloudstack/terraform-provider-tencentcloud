@@ -21,7 +21,7 @@ data "tencentcloud_tcaplus_tables" "name" {
 
 data "tencentcloud_tcaplus_tables" "id" {
   app_id   = "19162256624"
-  table_id =  "tcaplus-faa65eb7"
+  table_id = "tcaplus-faa65eb7"
 }
 data "tencentcloud_tcaplus_tables" "all" {
   app_id     = "19162256624"

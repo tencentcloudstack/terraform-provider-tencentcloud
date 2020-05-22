@@ -103,12 +103,12 @@ provider "tencentcloud" {
   secret_id  = var.secret_id
   secret_key = var.secret_key
   region     = var.region
-  assume_role  {
-   role_arn = var.assume_role_arn
-   session_name	= var.session_name
-   session_duration = var.session_duration
-   policy = var.policy
- }
+  assume_role {
+    role_arn         = var.assume_role_arn
+    session_name     = var.session_name
+    session_duration = var.session_duration
+    policy           = var.policy
+  }
 }
 ```
 

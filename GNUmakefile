@@ -90,6 +90,7 @@ tools:
 	GO111MODULE=on go install github.com/bflad/tfproviderlint/cmd/tfproviderlint
 	GO111MODULE=on go install github.com/client9/misspell/cmd/misspell
 	GO111MODULE=on go install github.com/golangci/golangci-lint/cmd/golangci-lint
+	GO111MODULE=on go install github.com/katbyte/terrafmt
 
 test-compile:
 	@if [ "$(TEST)" = "./..." ]; then \
@@ -134,7 +135,20 @@ endif
 
 website-lint:
 	@echo "==> Checking website against linters..."
-	@misspell -error -source=text website/
+	@misspell -error -source=text website/ || (echo; \
+		echo "Unexpected mispelling found in website files."; \
+		echo "To automatically fix the misspelling, run 'make website-lint-fix' and commit the changes."; \
+		exit 1)
+	@terrafmt diff ./website --check --pattern '*.markdown' --quiet || (echo; \
+		echo "Unexpected differences in website HCL formatting."; \
+		echo "To see the full differences, run: terrafmt diff ./website --pattern '*.markdown'"; \
+		echo "To automatically fix the formatting, run 'make website-lint-fix' and commit the changes."; \
+		exit 1)
+
+website-lint-fix:
+	@echo "==> Applying automatic website linter fixes..."
+	@misspell -w -source=text website/
+	@terrafmt fmt ./website --pattern '*.markdown'
 
 website-test:
 ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))

@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_redis_zone_config" "redislab" {
-    region             = "ap-hongkong"
-    result_output_file = "/temp/mytestpath"
+  region             = "ap-hongkong"
+  result_output_file = "/temp/mytestpath"
 }
 ```
 */

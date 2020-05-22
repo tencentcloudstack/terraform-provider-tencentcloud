@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_account" "default" {
-  mysql_id = "my-test-database"
-  name = "tf_account"
-  password = "********"
+  mysql_id    = "my-test-database"
+  name        = "tf_account"
+  password    = "********"
   description = "My test account"
 }
 ```

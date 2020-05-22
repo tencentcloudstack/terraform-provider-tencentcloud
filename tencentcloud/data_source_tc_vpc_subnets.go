@@ -17,8 +17,8 @@ resource "tencentcloud_subnet" "subnet" {
   availability_zone = var.availability_zone
   name              = "guagua_vpc_subnet_test"
   vpc_id            = tencentcloud_vpc.foo.id
-  cidr_block        =  "10.0.20.0/28"
-  is_multicast      =  false
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
 
   tags = {
     "test" = "test"

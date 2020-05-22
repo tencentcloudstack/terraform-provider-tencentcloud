@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cfs_access_group" "foo" {
-  name = "test_access_group"
+  name        = "test_access_group"
   description = "test"
 }
 ```

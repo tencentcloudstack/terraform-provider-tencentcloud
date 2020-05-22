@@ -14,8 +14,8 @@ resource "tencentcloud_tcaplus_application" "test" {
 }
 
 resource "tencentcloud_tcaplus_zone" "zone" {
-  app_id = tencentcloud_tcaplus_application.test.id
-  zone_name      = "tf_test_zone_name"
+  app_id    = tencentcloud_tcaplus_application.test.id
+  zone_name = "tf_test_zone_name"
 }
 ```
 */

@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_cam_group_membership" "foo" {
   group_id = tencentcloud_cam_group.foo.id
-  user_ids = [tencentcloud_cam_user.foo.id,tencentcloud_cam_user.bar.id]
+  user_ids = [tencentcloud_cam_user.foo.id, tencentcloud_cam_user.bar.id]
 }
 ```
 

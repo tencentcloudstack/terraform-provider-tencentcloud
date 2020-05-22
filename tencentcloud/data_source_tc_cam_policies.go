@@ -6,13 +6,13 @@ Example Usage
 ```hcl
 # query by policy_id
 data "tencentcloud_cam_policies" "foo" {
-  policy_id   = tencentcloud_cam_policy.foo.id
+  policy_id = tencentcloud_cam_policy.foo.id
 }
 
 # query by policy_id and name
 data "tencentcloud_cam_policies" "bar" {
-  policy_id   = tencentcloud_cam_policy.foo.id
-  name        = "tf-auto-test"
+  policy_id = tencentcloud_cam_policy.foo.id
+  name      = "tf-auto-test"
 }
 ```
 */

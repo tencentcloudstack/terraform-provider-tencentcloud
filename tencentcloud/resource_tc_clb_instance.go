@@ -7,11 +7,11 @@ INTERNAL CLB
 
 ```hcl
 resource "tencentcloud_clb_instance" "internal_clb" {
-  network_type              = "INTERNAL"
-  clb_name                  = "myclb"
-  project_id                = 0
-  vpc_id                    = "vpc-7007ll7q"
-  subnet_id                 = "subnet-12rastkr"
+  network_type = "INTERNAL"
+  clb_name     = "myclb"
+  project_id   = 0
+  vpc_id       = "vpc-7007ll7q"
+  subnet_id    = "subnet-12rastkr"
 
   tags = {
     test = "tf"

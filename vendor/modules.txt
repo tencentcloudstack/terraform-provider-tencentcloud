@@ -14,6 +14,8 @@ github.com/Djarvur/go-err113
 github.com/OpenPeeDeeP/depguard
 # github.com/agext/levenshtein v1.2.3
 github.com/agext/levenshtein
+# github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883
+github.com/andreyvit/diff
 # github.com/apparentlymart/go-cidr v1.0.1
 github.com/apparentlymart/go-cidr/cidr
 # github.com/apparentlymart/go-textseg v1.0.0
@@ -302,6 +304,8 @@ github.com/google/go-cmp/cmp/internal/value
 github.com/google/uuid
 # github.com/googleapis/gax-go/v2 v2.0.5
 github.com/googleapis/gax-go/v2
+# github.com/gookit/color v1.2.4
+github.com/gookit/color
 # github.com/gostaticanalysis/analysisutil v0.0.0-20190318220348-4088753ea4d3
 github.com/gostaticanalysis/analysisutil
 # github.com/hashicorp/errwrap v1.0.0
@@ -349,6 +353,10 @@ github.com/hashicorp/hcl/v2/hclparse
 github.com/hashicorp/hcl/v2/hclsyntax
 github.com/hashicorp/hcl/v2/hclwrite
 github.com/hashicorp/hcl/v2/json
+# github.com/hashicorp/hcl2 v0.0.0-20191002203319-fb75b3253c80
+github.com/hashicorp/hcl2/hcl
+github.com/hashicorp/hcl2/hcl/hclsyntax
+github.com/hashicorp/hcl2/hclwrite
 # github.com/hashicorp/logutils v1.0.0
 github.com/hashicorp/logutils
 # github.com/hashicorp/terraform-config-inspect v0.0.0-20191115094559-17f92b0546e8
@@ -415,6 +423,15 @@ github.com/jingyugao/rowserrcheck/passes/rowserr
 github.com/jirfag/go-printf-func-name/pkg/analyzer
 # github.com/jmespath/go-jmespath v0.3.0
 github.com/jmespath/go-jmespath
+# github.com/katbyte/terrafmt v0.2.0
+github.com/katbyte/terrafmt
+github.com/katbyte/terrafmt/cli
+github.com/katbyte/terrafmt/lib/blocks
+github.com/katbyte/terrafmt/lib/common
+github.com/katbyte/terrafmt/lib/fmtverbs
+github.com/katbyte/terrafmt/lib/format
+github.com/katbyte/terrafmt/lib/upgrade012
+github.com/katbyte/terrafmt/lib/version
 # github.com/kisielk/gotool v1.0.0
 github.com/kisielk/gotool
 github.com/kisielk/gotool/internal/load
@@ -476,6 +493,8 @@ github.com/ryancurrah/gomodguard
 # github.com/securego/gosec/v2 v2.3.0
 github.com/securego/gosec/v2
 github.com/securego/gosec/v2/rules
+# github.com/sergi/go-diff v1.0.0
+github.com/sergi/go-diff/diffmatchpatch
 # github.com/sirupsen/logrus v1.4.2
 github.com/sirupsen/logrus
 # github.com/sourcegraph/go-diff v0.5.1

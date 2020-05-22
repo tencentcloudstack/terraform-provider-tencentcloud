@@ -5,18 +5,18 @@ Example Usage
 
 ```hcl
 # query by nat gateway id
-data "tencentcloud_dnats" "foo"{
-	nat_id = "nat-xfaq1"
+data "tencentcloud_dnats" "foo" {
+  nat_id = "nat-xfaq1"
 }
 
 # query by vpc id
-data "tencentcloud_dnats" "foo"{
-	vpc_id = "vpc-xfqag"
+data "tencentcloud_dnats" "foo" {
+  vpc_id = "vpc-xfqag"
 }
 
 # query by elastic ip
-data "tencentcloud_dnats" "foo"{
-	elastic_ip = "123.207.115.136"
+data "tencentcloud_dnats" "foo" {
+  elastic_ip = "123.207.115.136"
 }
 ```
 */

@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mysql_zone_config" "mysql" {
-  region = "ap-guangzhou"
+  region             = "ap-guangzhou"
   result_output_file = "mytestpath"
 }
 ```

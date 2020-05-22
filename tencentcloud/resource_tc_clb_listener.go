@@ -7,10 +7,10 @@ HTTP Listener
 
 ```hcl
 resource "tencentcloud_clb_listener" "HTTP_listener" {
-  clb_id                     = "lb-0lh5au7v"
-  listener_name              = "test_listener"
-  port                       = 80
-  protocol                   = "HTTP"
+  clb_id        = "lb-0lh5au7v"
+  listener_name = "test_listener"
+  port          = 80
+  protocol      = "HTTP"
 }
 ```
 
@@ -36,14 +36,14 @@ HTTPS Listener
 
 ```hcl
 resource "tencentcloud_clb_listener" "HTTPS_listener" {
-  clb_id                     = "lb-0lh5au7v"
-  listener_name              = "test_listener"
-  port                       = "80"
-  protocol                   = "HTTPS"
-  certificate_ssl_mode       = "MUTUAL"
-  certificate_id             = "VjANRdz8"
-  certificate_ca_id          = "VfqO4zkB"
-  sni_switch                 = true
+  clb_id               = "lb-0lh5au7v"
+  listener_name        = "test_listener"
+  port                 = "80"
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "MUTUAL"
+  certificate_id       = "VjANRdz8"
+  certificate_ca_id    = "VfqO4zkB"
+  sni_switch           = true
 }
 ```
 

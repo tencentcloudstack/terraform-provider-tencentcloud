@@ -14,17 +14,17 @@ resource "tencentcloud_tcaplus_application" "test" {
 }
 
 resource "tencentcloud_tcaplus_zone" "zone" {
-  app_id         = tencentcloud_tcaplus_application.test.id
-  zone_name      = "tf_test_zone_name"
+  app_id    = tencentcloud_tcaplus_application.test.id
+  zone_name = "tf_test_zone_name"
 }
 
 resource "tencentcloud_tcaplus_idl" "main" {
-  app_id         = tencentcloud_tcaplus_application.test.id
-  zone_id        = tencentcloud_tcaplus_zone.zone.id
-  file_name      = "tf_idl_test"
-  file_type      = "PROTO"
-  file_ext_type  = "proto"
-  file_content   = <<EOF
+  app_id        = tencentcloud_tcaplus_application.test.id
+  zone_id       = tencentcloud_tcaplus_zone.zone.id
+  file_name     = "tf_idl_test"
+  file_type     = "PROTO"
+  file_ext_type = "proto"
+  file_content  = <<EOF
     syntax = "proto2";
     package myTcaplusTable;
     import "tcaplusservice.optionv1.proto";

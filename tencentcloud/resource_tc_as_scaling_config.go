@@ -5,29 +5,29 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "launch-configuration"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
-	project_id = 0
-	system_disk_type = "CLOUD_PREMIUM"
-	system_disk_size = "50"
+  configuration_name = "launch-configuration"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
+  project_id         = 0
+  system_disk_type   = "CLOUD_PREMIUM"
+  system_disk_size   = "50"
 
-	data_disk {
-		disk_type = "CLOUD_PREMIUM"
-		disk_size = 50
-	}
+  data_disk {
+    disk_type = "CLOUD_PREMIUM"
+    disk_size = 50
+  }
 
-	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
-	internet_max_bandwidth_out = 10
-	public_ip_assigned = true
-	password = "test123#"
-	enhanced_security_service = false
-	enhanced_monitor_service = false
-	user_data = "dGVzdA=="
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 10
+  public_ip_assigned         = true
+  password                   = "test123#"
+  enhanced_security_service  = false
+  enhanced_monitor_service   = false
+  user_data                  = "dGVzdA=="
 
-	instance_tags = {
-		tag = "as"
-	}
+  instance_tags = {
+    tag = "as"
+  }
 }
 ```
 
@@ -35,7 +35,7 @@ Import
 
 AutoScaling Configuration can be imported using the id, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_as_scaling_config.scaling_config asc-n32ymck2
 ```
 */

@@ -40,7 +40,7 @@ In addition to all arguments above, the following attributes are exported:
 
 Redis  backup config can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_redis_backup_config.redisconfig redis-id
 ```
 

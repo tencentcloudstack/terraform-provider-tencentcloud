@@ -18,11 +18,11 @@ resource "tencentcloud_dc_gateway" "ccn_main" {
 }
 
 #You need to sleep for a few seconds because there is a cache on the server
-data "tencentcloud_dc_gateway_instances" "name_select"{
+data "tencentcloud_dc_gateway_instances" "name_select" {
   name = tencentcloud_dc_gateway.ccn_main.name
 }
 
-data "tencentcloud_dc_gateway_instances"  "id_select" {
+data "tencentcloud_dc_gateway_instances" "id_select" {
   dcg_id = tencentcloud_dc_gateway.ccn_main.id
 }
 ```

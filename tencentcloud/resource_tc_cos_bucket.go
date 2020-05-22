@@ -50,12 +50,12 @@ resource "tencentcloud_cos_bucket" "mycos" {
   acl    = "public-read-write"
 
   lifecycle_rules {
-	filter_prefix = "path1/"
+    filter_prefix = "path1/"
 
     transition {
       date          = "2019-06-01"
       storage_class = "STANDARD_IA"
-	}
+    }
 
     expiration {
       days = 90

@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_redis_backup_config" "redislab" {
-  redis_id       = "crs-7yl0q0dd"
-  backup_time    = "04:00-05:00"
-  backup_period  = ["Monday"]
+  redis_id      = "crs-7yl0q0dd"
+  backup_time   = "04:00-05:00"
+  backup_period = ["Monday"]
 }
 ```
 
@@ -15,7 +15,7 @@ Import
 
 Redis  backup config can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_redis_backup_config.redisconfig redis-id
 ```
 */

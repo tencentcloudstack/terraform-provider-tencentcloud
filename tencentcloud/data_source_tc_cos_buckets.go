@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cos_buckets" "cos_buckets" {
-	bucket_prefix = "tf-bucket-"
-    result_output_file = "mytestpath"
+  bucket_prefix      = "tf-bucket-"
+  result_output_file = "mytestpath"
 }
 ```
 */

@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mysql_parameter_list" "mysql" {
-  mysql_id = "my-test-database"
-  engine_version = "5.5"
+  mysql_id           = "my-test-database"
+  engine_version     = "5.5"
   result_output_file = "mytestpath"
 }
 ```

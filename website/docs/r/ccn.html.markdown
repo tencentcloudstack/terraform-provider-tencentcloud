@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 
 Ccn instance can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_ccn.test ccn-id
 ```
 

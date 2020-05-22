@@ -5,14 +5,14 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_schedule" "schedule" {
-	scaling_group_id = "sg-12af45"
-	schedule_action_name = "tf-as-schedule"
-	max_size = 10
-	min_size = 0
-	desired_capacity = 0
-	start_time = "2019-01-01T00:00:00+08:00"
-	end_time = "2019-12-01T00:00:00+08:00"
-	recurrence = "0 0 * * *"
+  scaling_group_id     = "sg-12af45"
+  schedule_action_name = "tf-as-schedule"
+  max_size             = 10
+  min_size             = 0
+  desired_capacity     = 0
+  start_time           = "2019-01-01T00:00:00+08:00"
+  end_time             = "2019-12-01T00:00:00+08:00"
+  recurrence           = "0 0 * * *"
 }
 ```
 */

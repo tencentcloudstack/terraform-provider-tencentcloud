@@ -6,12 +6,12 @@ Example Usage
 ```hcl
 # query by name
 data "tencentcloud_cam_users" "foo" {
-  name      = "cam-user-test"
+  name = "cam-user-test"
 }
 
 # query by email
 data "tencentcloud_cam_users" "bar" {
-  email     = "hello@test.com"
+  email = "hello@test.com"
 }
 
 # query by phone

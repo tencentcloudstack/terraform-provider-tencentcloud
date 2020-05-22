@@ -82,7 +82,7 @@ In addition to all arguments above, the following attributes are exported:
 
 AutoScaling Configuration can be imported using the id, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_as_scaling_config.scaling_config asc-n32ymck2
 ```
 

@@ -11,7 +11,7 @@ data "tencentcloud_cam_groups" "foo" {
 
 # query by name
 data "tencentcloud_cam_groups" "bar" {
-  name   = "cam-group-test"
+  name = "cam-group-test"
 }
 ```
 */

@@ -9,7 +9,7 @@ resource "tencentcloud_vpn_customer_gateway" "foo" {
   public_ip_address = "1.1.1.1"
 
   tags = {
-	  tag = "test"
+    tag = "test"
   }
 }
 ```

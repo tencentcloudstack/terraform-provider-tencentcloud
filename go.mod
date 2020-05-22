@@ -12,6 +12,7 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
 	github.com/hashicorp/hcl/v2 v2.5.1
 	github.com/hashicorp/terraform-plugin-sdk v1.13.0
+	github.com/katbyte/terrafmt v0.2.0
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pkg/errors v0.9.1
