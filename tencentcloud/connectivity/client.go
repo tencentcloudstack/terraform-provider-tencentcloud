@@ -72,8 +72,8 @@ func NewTencentCloudClient(secretId, secretKey, securityToken, region string) *T
 	}
 }
 
-// newTencentCloudClientProfile returns a new ClientProfile
-func newTencentCloudClientProfile(timeout int) *profile.ClientProfile {
+// NewTencentCloudClientProfile returns a new ClientProfile
+func NewTencentCloudClientProfile(timeout int) *profile.ClientProfile {
 	cpf := profile.NewClientProfile()
 
 	// all request use method POST
@@ -118,7 +118,7 @@ func (me *TencentCloudClient) UseMysqlClient() *cdb.Client {
 		return me.mysqlConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.mysqlConn, _ = cdb.NewClient(me.Credential, me.Region, cpf)
 	me.mysqlConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -131,7 +131,7 @@ func (me *TencentCloudClient) UseRedisClient() *redis.Client {
 		return me.redisConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.redisConn, _ = redis.NewClient(me.Credential, me.Region, cpf)
 	me.redisConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -144,7 +144,7 @@ func (me *TencentCloudClient) UseAsClient() *as.Client {
 		return me.asConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.asConn, _ = as.NewClient(me.Credential, me.Region, cpf)
 	me.asConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -157,7 +157,7 @@ func (me *TencentCloudClient) UseVpcClient() *vpc.Client {
 		return me.vpcConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.vpcConn, _ = vpc.NewClient(me.Credential, me.Region, cpf)
 	me.vpcConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -170,7 +170,7 @@ func (me *TencentCloudClient) UseCbsClient() *cbs.Client {
 		return me.cbsConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.cbsConn, _ = cbs.NewClient(me.Credential, me.Region, cpf)
 	me.cbsConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -183,7 +183,7 @@ func (me *TencentCloudClient) UseDcClient() *dc.Client {
 		return me.dcConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.dcConn, _ = dc.NewClient(me.Credential, me.Region, cpf)
 	me.dcConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -196,7 +196,7 @@ func (me *TencentCloudClient) UseMongodbClient() *mongodb.Client {
 		return me.mongodbConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.mongodbConn, _ = mongodb.NewClient(me.Credential, me.Region, cpf)
 	me.mongodbConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -209,7 +209,7 @@ func (me *TencentCloudClient) UseClbClient() *clb.Client {
 		return me.clbConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.clbConn, _ = clb.NewClient(me.Credential, me.Region, cpf)
 	me.clbConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -222,7 +222,7 @@ func (me *TencentCloudClient) UseCvmClient() *cvm.Client {
 		return me.cvmConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.cvmConn, _ = cvm.NewClient(me.Credential, me.Region, cpf)
 	me.cvmConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -235,7 +235,7 @@ func (me *TencentCloudClient) UseTagClient() *tag.Client {
 		return me.tagConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.tagConn, _ = tag.NewClient(me.Credential, me.Region, cpf)
 	me.tagConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -248,7 +248,7 @@ func (me *TencentCloudClient) UseTkeClient() *tke.Client {
 		return me.tkeConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.tkeConn, _ = tke.NewClient(me.Credential, me.Region, cpf)
 	me.tkeConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -261,7 +261,7 @@ func (me *TencentCloudClient) UseGaapClient() *gaap.Client {
 		return me.gaapConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.gaapConn, _ = gaap.NewClient(me.Credential, me.Region, cpf)
 	me.gaapConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -274,7 +274,7 @@ func (me *TencentCloudClient) UseSslClient() *ssl.Client {
 		return me.sslConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.sslConn, _ = ssl.NewClient(me.Credential, me.Region, cpf)
 	me.sslConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -287,7 +287,7 @@ func (me *TencentCloudClient) UseCamClient() *cam.Client {
 		return me.camConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.camConn, _ = cam.NewClient(me.Credential, me.Region, cpf)
 	me.camConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -300,7 +300,7 @@ func (me *TencentCloudClient) UseCfsClient() *cfs.Client {
 		return me.cfsConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.cfsConn, _ = cfs.NewClient(me.Credential, me.Region, cpf)
 	me.cfsConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -313,7 +313,7 @@ func (me *TencentCloudClient) UseScfClient() *scf.Client {
 		return me.scfConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.scfConn, _ = scf.NewClient(me.Credential, me.Region, cpf)
 	me.scfConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -326,7 +326,7 @@ func (me *TencentCloudClient) UseTcaplusClient() *tcaplusdb.Client {
 		return me.tcaplusConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.tcaplusConn, _ = tcaplusdb.NewClient(me.Credential, me.Region, cpf)
 	me.tcaplusConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -339,7 +339,7 @@ func (me *TencentCloudClient) UseDayuClient() *dayu.Client {
 		return me.dayuConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.dayuConn, _ = dayu.NewClient(me.Credential, me.Region, cpf)
 	me.dayuConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -352,7 +352,7 @@ func (me *TencentCloudClient) UseCdnClient() *cdn.Client {
 		return me.cdnConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.cdnConn, _ = cdn.NewClient(me.Credential, me.Region, cpf)
 	me.cdnConn.WithHttpTransport(&LogRoundTripper{})
 
@@ -365,7 +365,7 @@ func (me *TencentCloudClient) UseMonitorClient() *monitor.Client {
 		return me.monitorConn
 	}
 
-	cpf := newTencentCloudClientProfile(300)
+	cpf := NewTencentCloudClientProfile(300)
 	me.monitorConn, _ = monitor.NewClient(me.Credential, me.Region, cpf)
 	me.monitorConn.WithHttpTransport(&LogRoundTripper{})
 

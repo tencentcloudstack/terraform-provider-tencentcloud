@@ -15,6 +15,19 @@ provider "tencentcloud" {
   secret_key = var.secret_key
   region     = var.region
 }
+
+#Configure the TencentCloud Provider with STS
+provider "tencentcloud" {
+  secret_id  = var.secret_id
+  secret_key = var.secret_key
+  region     = var.region
+  assume_role  {
+   role_arn = var.assume_role_arn
+   session_name	= var.session_name
+   session_duration = var.session_duration
+   policy = var.policy
+ }
+}
 ```
 
 Resources List
@@ -349,17 +362,27 @@ VPN
 package tencentcloud
 
 import (
+	"net/url"
 	"os"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
+	con "github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 const (
-	PROVIDER_SECRET_ID      = "TENCENTCLOUD_SECRET_ID"
-	PROVIDER_SECRET_KEY     = "TENCENTCLOUD_SECRET_KEY"
-	PROVIDER_SECURITY_TOKEN = "TENCENTCLOUD_SECURITY_TOKEN"
-	PROVIDER_REGION         = "TENCENTCLOUD_REGION"
+	PROVIDER_SECRET_ID                    = "TENCENTCLOUD_SECRET_ID"
+	PROVIDER_SECRET_KEY                   = "TENCENTCLOUD_SECRET_KEY"
+	PROVIDER_SECURITY_TOKEN               = "TENCENTCLOUD_SECURITY_TOKEN"
+	PROVIDER_REGION                       = "TENCENTCLOUD_REGION"
+	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
+	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
+	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
 )
 
 func Provider() terraform.ResourceProvider {
@@ -391,6 +414,40 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_REGION, nil),
 				Description:  "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
 				InputDefault: "ap-guangzhou",
+			},
+			"assume_role": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "The `assume_role` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"role_arn": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
+						},
+						"session_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, nil),
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
+						},
+						"session_duration": {
+							Type:         schema.TypeInt,
+							Required:     true,
+							InputDefault: "7200",
+							ValidateFunc: validateIntegerInRange(0, 43200),
+							Description:  "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
+						},
+						"policy": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "A more restrictive policy when making the AssumeRole call. Its content must not contains `principal` elements. Notice: more syntax references, please refer to: [policies syntax logic](https://intl.cloud.tencent.com/document/product/598/10603).",
+						},
+					},
+				},
 			},
 		},
 
@@ -612,27 +669,72 @@ func Provider() terraform.ResourceProvider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	secretId, ok := d.GetOk("secret_id")
-	if !ok {
-		secretId = os.Getenv(PROVIDER_SECRET_ID)
+	secretId := d.Get("secret_id").(string)
+	secretKey := d.Get("secret_key").(string)
+	securityToken := d.Get("security_token").(string)
+	region := d.Get("region").(string)
+
+	//assume arn
+	assumeRoleList := d.Get("assume_role").(*schema.Set).List()
+	if len(assumeRoleList) == 1 {
+		assumeRole := assumeRoleList[0].(map[string]interface{})
+		assumeRoleArn := assumeRole["role_arn"].(string)
+		assumeRoleSessionName := assumeRole["session_name"].(string)
+		assumeRoleSessionDuration := assumeRole["session_duration"].(int)
+		assumeRolePolicy := assumeRole["policy"].(string)
+		if assumeRoleSessionDuration == 0 {
+			var err error
+			if duration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); duration != "" {
+				assumeRoleSessionDuration, err = strconv.Atoi(duration)
+				if err != nil {
+					return nil, err
+				}
+				if assumeRoleSessionDuration == 0 {
+					assumeRoleSessionDuration = 7200
+				}
+			}
+		}
+		//applying STS credentials
+		request := sts.NewAssumeRoleRequest()
+		request.RoleArn = helper.String(assumeRoleArn)
+		request.RoleSessionName = helper.String(assumeRoleSessionName)
+		request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
+
+		if assumeRolePolicy != "" {
+			//urlencode policy
+			request.Policy = helper.String(url.QueryEscape(assumeRolePolicy))
+		}
+
+		cpf := con.NewTencentCloudClientProfile(300)
+		//send request
+		credential := common.NewTokenCredential(
+			secretId,
+			secretKey,
+			securityToken,
+		)
+
+		client, err := sts.NewClient(credential, region, cpf)
+		if err != nil {
+			return nil, err
+		}
+		ratelimit.Check(request.GetAction())
+		response, err := client.AssumeRole(request)
+		if err != nil {
+			return nil, err
+		}
+
+		//set assume role
+		secretId = *response.Response.Credentials.TmpSecretId
+		secretKey = *response.Response.Credentials.TmpSecretKey
+		securityToken = *response.Response.Credentials.Token
 	}
-	secretKey, ok := d.GetOk("secret_key")
-	if !ok {
-		secretKey = os.Getenv(PROVIDER_SECRET_KEY)
-	}
-	securityToken, ok := d.GetOk("security_token")
-	if !ok {
-		securityToken = os.Getenv(PROVIDER_SECURITY_TOKEN)
-	}
-	region, ok := d.GetOk("region")
-	if !ok {
-		region = os.Getenv(PROVIDER_REGION)
-	}
+
 	config := Config{
-		SecretId:      secretId.(string),
-		SecretKey:     secretKey.(string),
-		SecurityToken: securityToken.(string),
-		Region:        region.(string),
+		SecretId:      secretId,
+		SecretKey:     secretKey,
+		SecurityToken: securityToken,
+		Region:        region,
 	}
+
 	return config.Client()
 }
