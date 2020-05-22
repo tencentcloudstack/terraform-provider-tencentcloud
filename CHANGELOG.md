@@ -15,7 +15,14 @@ BUG FIXES:
 * Resource: `tencentcloud_cdn_domain` fix `https_config` inconsistency after apply([#413](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/413)).
 
 DEPRECATED:
-
+* Data Source: `tencentcloud_tcaplus_applications` replace by `tencentcloud_tcaplus_clusters`,optional arguments `app_id` and `app_name` are no longer supported, replace by `cluster_id` and `cluster_name`
+* Data Source: `tencentcloud_tcaplus_zones` replace by `tencentcloud_tcaplus_groups`,optional arguments `app_id`,`zone_id` and `zone_name` are no longer supported, replace by `cluster_id`,`group_id` and `cluster_name`
+* Data Source: `tencentcloud_tcaplus_tables` optional arguments `app_id` and `zone_id` are no longer supported, replace by `cluster_id` and `group_id`
+* Data Source: `tencentcloud_tcaplus_idls`: optional argument `app_id` is no longer supported, replace by `cluster_id`.
+* Resource: `tencentcloud_tcaplus_application` replace by `tencentcloud_tcaplus_cluster`,input argument `app_name` is no longer supported, replace by `cluster_name`
+* Resource: `tencentcloud_tcaplus_zone` replace by `tencentcloud_tcaplus_group`, input arguments `app_id` and `zone_name` are no longer supported, replace by `cluster_id` and `group_name`
+* Resource: `tencentcloud_tcaplus_idl` input arguments `app_id` and `zone_id` are no longer supported, replace by `cluster_id` and `group_id`
+* Resource: `tencentcloud_tcaplus_table` input arguments `app_id`and `zone_id` are no longer supported, replace by `cluster_id` and `group_id`
 * Resource: `tencentcloud_redis_instance`: optional argument `type` is no longer supported, replace by `type_id`.
 * Data Source: `tencentcloud_redis_instances`: output argument `type` is no longer supported, replace by `type_id`.
 * Data Source: `tencentcloud_redis_zone_config`: output argument `type` is no longer supported, replace by `type_id`.
