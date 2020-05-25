@@ -9,51 +9,51 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-var testTcaplusZoneResourceName = "tencentcloud_tcaplus_zone"
-var testTcaplusZoneResourceNameResourceKey = testTcaplusZoneResourceName + ".test_zone"
+var testTcaplusGroupResourceName = "tencentcloud_tcaplus_group"
+var testTcaplusGroupResourceNameResourceKey = testTcaplusGroupResourceName + ".test_group"
 
-func TestAccTencentCloudTcaplusZoneResource(t *testing.T) {
+func TestAccTencentCloudTcaplusGroupResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckTcaplusZoneDestroy,
+		CheckDestroy: testAccCheckTcaplusGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTcaplusZone,
+				Config: testAccTcaplusGroup,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTcaplusZoneExists(testTcaplusZoneResourceNameResourceKey),
-					resource.TestCheckResourceAttrSet(testTcaplusZoneResourceNameResourceKey, "total_size"),
-					resource.TestCheckResourceAttrSet(testTcaplusZoneResourceNameResourceKey, "create_time"),
-					resource.TestCheckResourceAttr(testTcaplusZoneResourceNameResourceKey, "zone_name", "tf_test_zone_name_guagua"),
-					resource.TestCheckResourceAttr(testTcaplusZoneResourceNameResourceKey, "table_count", "0"),
+					testAccCheckTcaplusGroupExists(testTcaplusGroupResourceNameResourceKey),
+					resource.TestCheckResourceAttrSet(testTcaplusGroupResourceNameResourceKey, "total_size"),
+					resource.TestCheckResourceAttrSet(testTcaplusGroupResourceNameResourceKey, "create_time"),
+					resource.TestCheckResourceAttr(testTcaplusGroupResourceNameResourceKey, "group_name", "tf_test_group_name_guagua"),
+					resource.TestCheckResourceAttr(testTcaplusGroupResourceNameResourceKey, "table_count", "0"),
 				),
 			},
 			{
-				Config: testAccTcaplusZoneUpdate,
+				Config: testAccTcaplusGroupUpdate,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckTcaplusZoneExists(testTcaplusZoneResourceNameResourceKey),
-					resource.TestCheckResourceAttrSet(testTcaplusZoneResourceNameResourceKey, "total_size"),
-					resource.TestCheckResourceAttrSet(testTcaplusZoneResourceNameResourceKey, "create_time"),
-					resource.TestCheckResourceAttr(testTcaplusZoneResourceNameResourceKey, "zone_name", "tf_test_zone_name_guagua_2"),
-					resource.TestCheckResourceAttr(testTcaplusZoneResourceNameResourceKey, "table_count", "0"),
+					testAccCheckTcaplusGroupExists(testTcaplusGroupResourceNameResourceKey),
+					resource.TestCheckResourceAttrSet(testTcaplusGroupResourceNameResourceKey, "total_size"),
+					resource.TestCheckResourceAttrSet(testTcaplusGroupResourceNameResourceKey, "create_time"),
+					resource.TestCheckResourceAttr(testTcaplusGroupResourceNameResourceKey, "group_name", "tf_test_group_name_guagua_2"),
+					resource.TestCheckResourceAttr(testTcaplusGroupResourceNameResourceKey, "table_count", "0"),
 				),
 			},
 		},
 	})
 }
-func testAccCheckTcaplusZoneDestroy(s *terraform.State) error {
+func testAccCheckTcaplusGroupDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != testTcaplusZoneResourceName {
+		if rs.Type != testTcaplusGroupResourceName {
 			continue
 		}
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		_, has, err := service.DescribeZone(ctx, rs.Primary.Attributes["app_id"], rs.Primary.ID)
+		_, has, err := service.DescribeGroup(ctx, rs.Primary.Attributes["cluster_id"], rs.Primary.ID)
 
 		if err != nil {
-			_, has, err = service.DescribeZone(ctx, rs.Primary.Attributes["app_id"], rs.Primary.ID)
+			_, has, err = service.DescribeGroup(ctx, rs.Primary.Attributes["cluster_id"], rs.Primary.ID)
 		}
 
 		if err != nil {
@@ -62,12 +62,12 @@ func testAccCheckTcaplusZoneDestroy(s *terraform.State) error {
 		if !has {
 			return nil
 		}
-		return fmt.Errorf("delete tcaplus zone %s fail, still on server", rs.Primary.ID)
+		return fmt.Errorf("delete tcaplus group %s fail, still on server", rs.Primary.ID)
 	}
 	return nil
 }
 
-func testAccCheckTcaplusZoneExists(n string) resource.TestCheckFunc {
+func testAccCheckTcaplusGroupExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -77,10 +77,10 @@ func testAccCheckTcaplusZoneExists(n string) resource.TestCheckFunc {
 		ctx := context.WithValue(context.TODO(), "logId", logId)
 		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		_, has, err := service.DescribeZone(ctx, rs.Primary.Attributes["app_id"], rs.Primary.ID)
+		_, has, err := service.DescribeGroup(ctx, rs.Primary.Attributes["cluster_id"], rs.Primary.ID)
 
 		if err != nil {
-			_, has, err = service.DescribeZone(ctx, rs.Primary.Attributes["app_id"], rs.Primary.ID)
+			_, has, err = service.DescribeGroup(ctx, rs.Primary.Attributes["cluster_id"], rs.Primary.ID)
 		}
 
 		if err != nil {
@@ -89,52 +89,35 @@ func testAccCheckTcaplusZoneExists(n string) resource.TestCheckFunc {
 		if has {
 			return nil
 		}
-		return fmt.Errorf("tcaplus zone %s not found on server", rs.Primary.ID)
+		return fmt.Errorf("tcaplus group %s not found on server", rs.Primary.ID)
 	}
 }
 
-const testAccTcaplusZoneBasic = `variable "availability_zone" {
+const testAccTcaplusGroupBasic = `variable "availability_zone" {
   default = "ap-shanghai-2"
 }
-variable "instance_name" {
-  default = "` + defaultInsName + `"
+data "tencentcloud_vpc_subnets" "vpc" {
+    is_default        = true
+    availability_zone = var.availability_zone
 }
-variable "vpc_cidr" {
-  default = "` + defaultVpcCidr + `"
-}
-variable "subnet_cidr" {
-  default = "` + defaultSubnetCidr + `"
-}
-
-resource "tencentcloud_vpc" "foo" {
-  name       = var.instance_name
-  cidr_block = var.vpc_cidr
-}
-resource "tencentcloud_subnet" "subnet" {
-  name              = var.instance_name
-  vpc_id            = tencentcloud_vpc.foo.id
-  availability_zone = var.availability_zone
-  cidr_block        = var.subnet_cidr
-  is_multicast      = false
-}
-resource "tencentcloud_tcaplus_application" "test_app" {
+resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_guagua_zone"
-  vpc_id                   = tencentcloud_vpc.foo.id
-  subnet_id                = tencentcloud_subnet.subnet.id
+  cluster_name             = "tf_guagua_group"
+  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }`
 
-const testAccTcaplusZone = testAccTcaplusZoneBasic + `
-resource "tencentcloud_tcaplus_zone" "test_zone" {
-  app_id    = tencentcloud_tcaplus_application.test_app.id
-  zone_name = "tf_test_zone_name_guagua"
+const testAccTcaplusGroup = testAccTcaplusGroupBasic + `
+resource "tencentcloud_tcaplus_group" "test_group" {
+  cluster_id    = tencentcloud_tcaplus_cluster.test_cluster.id
+  group_name    = "tf_test_group_name_guagua"
 }
 `
-const testAccTcaplusZoneUpdate = testAccTcaplusZoneBasic + `
-resource "tencentcloud_tcaplus_zone" "test_zone" {
-  app_id    = tencentcloud_tcaplus_application.test_app.id
-  zone_name = "tf_test_zone_name_guagua_2"
+const testAccTcaplusGroupUpdate = testAccTcaplusGroupBasic + `
+resource "tencentcloud_tcaplus_group" "test_group" {
+  cluster_id    = tencentcloud_tcaplus_cluster.test_cluster.id
+  group_name    = "tf_test_group_name_guagua_2"
 }
 `

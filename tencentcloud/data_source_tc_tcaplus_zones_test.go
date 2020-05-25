@@ -6,74 +6,56 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-var testDataTcaplusZonesName = "data.tencentcloud_tcaplus_zones.id_test"
+var testDataTcaplusGroupsName = "data.tencentcloud_tcaplus_groups.id_test"
 
-func TestAccTencentCloudDataTcaplusZones(t *testing.T) {
+func TestAccTencentCloudDataTcaplusGroups(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckTcaplusZoneDestroy,
+		CheckDestroy: testAccCheckTcaplusGroupDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudDataTcaplusZonesBaic,
+				Config: testAccTencentCloudDataTcaplusGroupsBaic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckTcaplusZoneExists("tencentcloud_tcaplus_zone.test_zone"),
-					resource.TestCheckResourceAttrSet(testDataTcaplusZonesName, "app_id"),
-					resource.TestCheckResourceAttrSet(testDataTcaplusZonesName, "zone_id"),
-					resource.TestCheckResourceAttr(testDataTcaplusZonesName, "list.#", "1"),
-					resource.TestCheckResourceAttr(testDataTcaplusZonesName, "list.0.zone_name", "tf_test_zone_name_guagua"),
-					resource.TestCheckResourceAttr(testDataTcaplusZonesName, "list.0.table_count", "0"),
-					resource.TestCheckResourceAttrSet(testDataTcaplusZonesName, "list.0.zone_id"),
-					resource.TestCheckResourceAttrSet(testDataTcaplusZonesName, "list.0.total_size"),
-					resource.TestCheckResourceAttrSet(testDataTcaplusZonesName, "list.0.create_time"),
+					testAccCheckTcaplusGroupExists("tencentcloud_tcaplus_group.test_group"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "cluster_id"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "group_id"),
+					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.#", "1"),
+					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.0.group_name", "tf_test_group_name_guagua"),
+					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.0.table_count", "0"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.group_id"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.total_size"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.create_time"),
 				),
 			},
 		},
 	})
 }
 
-const testAccTencentCloudDataTcaplusZonesBaic = `
+const testAccTencentCloudDataTcaplusGroupsBaic = `
 variable "availability_zone" {
 default = "ap-shanghai-2"
 }
 
-variable "instance_name" {
-default = "` + defaultInsName + `"
+data "tencentcloud_vpc_subnets" "vpc" {
+    is_default        = true
+    availability_zone = var.availability_zone
 }
-variable "vpc_cidr" {
-default = "` + defaultVpcCidr + `"
-}
-variable "subnet_cidr" {
-default = "` + defaultSubnetCidr + `"
-}
-
-resource "tencentcloud_vpc" "foo" {
-name       = var.instance_name
-cidr_block = var.vpc_cidr
-}
-
-resource "tencentcloud_subnet" "subnet" {
-name              = var.instance_name
-vpc_id            = tencentcloud_vpc.foo.id
-availability_zone = var.availability_zone
-cidr_block        = var.subnet_cidr
-is_multicast      = false
-}
-resource "tencentcloud_tcaplus_application" "test_app" {
+resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_tcaplus_data_guagua"
-  vpc_id                   = tencentcloud_vpc.foo.id
-  subnet_id                = tencentcloud_subnet.subnet.id
+  cluster_name             = "tf_tcaplus_data_guagua"
+  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
-resource "tencentcloud_tcaplus_zone" "test_zone" {
-  app_id    = tencentcloud_tcaplus_application.test_app.id
-  zone_name = "tf_test_zone_name_guagua"
+resource "tencentcloud_tcaplus_group" "test_group" {
+  cluster_id  = tencentcloud_tcaplus_cluster.test_cluster.id
+  group_name  = "tf_test_group_name_guagua"
 }
 
-data "tencentcloud_tcaplus_zones" "id_test" {
-   app_id    = tencentcloud_tcaplus_application.test_app.id
-   zone_id   = tencentcloud_tcaplus_zone.test_zone.id
+data "tencentcloud_tcaplus_groups" "id_test" {
+   cluster_id    = tencentcloud_tcaplus_cluster.test_cluster.id
+   group_id      = tencentcloud_tcaplus_group.test_group.id
 }
 `

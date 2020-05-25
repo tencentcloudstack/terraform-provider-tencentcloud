@@ -9,63 +9,61 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-var testTcaplusApplicationResourceName = "tencentcloud_tcaplus_application"
-var testTcaplusApplicationResourceKey = testTcaplusApplicationResourceName + ".test_app"
+var testTcaplusClusterResourceName = "tencentcloud_tcaplus_cluster"
+var testTcaplusClusterResourceKey = testTcaplusClusterResourceName + ".test_cluster"
 
-func TestAccTencentCloudTcaplusApplicationResource(t *testing.T) {
+func TestAccTencentCloudTcaplusClusterResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckTcaplusApplicationDestroy,
+		CheckDestroy: testAccCheckTcaplusClusterDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTcaplusApplication,
+				Config: testAccTcaplusCluster,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTcaplusApplicationExists(testTcaplusApplicationResourceKey),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "network_type"),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "create_time"),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "password_status"),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "api_access_id"),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "api_access_ip"),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "api_access_port"),
-
-					resource.TestCheckResourceAttr(testTcaplusApplicationResourceKey, "idl_type", "PROTO"),
-					resource.TestCheckResourceAttr(testTcaplusApplicationResourceKey, "app_name", "tf_te1_guagua"),
-					resource.TestCheckResourceAttr(testTcaplusApplicationResourceKey, "password", "1qaA2k1wgvfa3ZZZ"),
-					resource.TestCheckResourceAttr(testTcaplusApplicationResourceKey, "old_password_expire_last", "3600"),
+					testAccCheckTcaplusClusterExists(testTcaplusClusterResourceKey),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "network_type"),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "create_time"),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "password_status"),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "api_access_id"),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "api_access_ip"),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "api_access_port"),
+					resource.TestCheckResourceAttr(testTcaplusClusterResourceKey, "idl_type", "PROTO"),
+					resource.TestCheckResourceAttr(testTcaplusClusterResourceKey, "cluster_name", "tf_te1_guagua"),
+					resource.TestCheckResourceAttr(testTcaplusClusterResourceKey, "old_password_expire_last", "3600"),
 				),
 			},
 			{
-				ResourceName:            testTcaplusApplicationResourceKey,
+				ResourceName:            testTcaplusClusterResourceKey,
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"old_password_expire_last", "password"},
 			},
 
 			{
-				Config: testAccTcaplusApplicationUpdate,
+				Config: testAccTcaplusClusterUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTcaplusApplicationExists(testTcaplusApplicationResourceKey),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "network_type"),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "create_time"),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "password_status"),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "api_access_id"),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "api_access_ip"),
-					resource.TestCheckResourceAttrSet(testTcaplusApplicationResourceKey, "api_access_port"),
+					testAccCheckTcaplusClusterExists(testTcaplusClusterResourceKey),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "network_type"),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "create_time"),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "password_status"),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "api_access_id"),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "api_access_ip"),
+					resource.TestCheckResourceAttrSet(testTcaplusClusterResourceKey, "api_access_port"),
 
-					resource.TestCheckResourceAttr(testTcaplusApplicationResourceKey, "idl_type", "PROTO"),
-					resource.TestCheckResourceAttr(testTcaplusApplicationResourceKey, "app_name", "tf_te1_guagua_2"),
-					resource.TestCheckResourceAttr(testTcaplusApplicationResourceKey, "password", "aQQ2345677888"),
-					resource.TestCheckResourceAttr(testTcaplusApplicationResourceKey, "old_password_expire_last", "300"),
+					resource.TestCheckResourceAttr(testTcaplusClusterResourceKey, "idl_type", "PROTO"),
+					resource.TestCheckResourceAttr(testTcaplusClusterResourceKey, "cluster_name", "tf_te1_guagua_2"),
+					resource.TestCheckResourceAttr(testTcaplusClusterResourceKey, "password", "aQQ2345677888"),
+					resource.TestCheckResourceAttr(testTcaplusClusterResourceKey, "old_password_expire_last", "300"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckTcaplusApplicationDestroy(s *terraform.State) error {
+func testAccCheckTcaplusClusterDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != testTcaplusApplicationResourceName {
+		if rs.Type != testTcaplusClusterResourceName {
 			continue
 		}
 		logId := getLogId(contextNil)
@@ -73,9 +71,9 @@ func testAccCheckTcaplusApplicationDestroy(s *terraform.State) error {
 
 		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		_, has, err := service.DescribeApp(ctx, rs.Primary.ID)
+		_, has, err := service.DescribeCluster(ctx, rs.Primary.ID)
 		if err != nil {
-			_, has, err = service.DescribeApp(ctx, rs.Primary.ID)
+			_, has, err = service.DescribeCluster(ctx, rs.Primary.ID)
 		}
 		if err != nil {
 			return err
@@ -83,13 +81,13 @@ func testAccCheckTcaplusApplicationDestroy(s *terraform.State) error {
 		if !has {
 			return nil
 		} else {
-			return fmt.Errorf("delete tcaplus application %s fail, still on server", rs.Primary.ID)
+			return fmt.Errorf("delete tcaplus cluster %s fail, still on server", rs.Primary.ID)
 		}
 	}
 	return nil
 }
 
-func testAccCheckTcaplusApplicationExists(n string) resource.TestCheckFunc {
+func testAccCheckTcaplusClusterExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -100,9 +98,9 @@ func testAccCheckTcaplusApplicationExists(n string) resource.TestCheckFunc {
 
 		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		_, has, err := service.DescribeApp(ctx, rs.Primary.ID)
+		_, has, err := service.DescribeCluster(ctx, rs.Primary.ID)
 		if err != nil {
-			_, has, err = service.DescribeApp(ctx, rs.Primary.ID)
+			_, has, err = service.DescribeCluster(ctx, rs.Primary.ID)
 		}
 		if err != nil {
 			return err
@@ -110,56 +108,39 @@ func testAccCheckTcaplusApplicationExists(n string) resource.TestCheckFunc {
 		if has {
 			return nil
 		} else {
-			return fmt.Errorf("tcaplus application %s not found on server", rs.Primary.ID)
+			return fmt.Errorf("tcaplus cluster %s not found on server", rs.Primary.ID)
 
 		}
 	}
 }
 
-const testAccTcaplusApplicationBaic = `
+const testAccTcaplusClusterBaic = `
 variable "availability_zone" {
 default = "ap-shanghai-2"
 }
 
-variable "instance_name" {
-default = "` + defaultInsName + `"
+data "tencentcloud_vpc_subnets" "vpc" {
+    is_default        = true
+    availability_zone = var.availability_zone
 }
-variable "vpc_cidr" {
-default = "` + defaultVpcCidr + `"
-}
-variable "subnet_cidr" {
-default = "` + defaultSubnetCidr + `"
-}
+`
 
-resource "tencentcloud_vpc" "foo" {
-name       = var.instance_name
-cidr_block = var.vpc_cidr
-}
-
-resource "tencentcloud_subnet" "subnet" {
-name              = var.instance_name
-vpc_id            = tencentcloud_vpc.foo.id
-availability_zone = var.availability_zone
-cidr_block        = var.subnet_cidr
-is_multicast      = false
-}`
-
-const testAccTcaplusApplication string = testAccTcaplusApplicationBaic + `
-resource "tencentcloud_tcaplus_application" "test_app" {
+const testAccTcaplusCluster string = testAccTcaplusClusterBaic + `
+resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_te1_guagua"
-  vpc_id                   = tencentcloud_vpc.foo.id
-  subnet_id                = tencentcloud_subnet.subnet.id
+  cluster_name             = "tf_te1_guagua"
+  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
 `
-const testAccTcaplusApplicationUpdate string = testAccTcaplusApplicationBaic + `
-resource "tencentcloud_tcaplus_application" "test_app" {
+const testAccTcaplusClusterUpdate string = testAccTcaplusClusterBaic + `
+resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_te1_guagua_2"
-  vpc_id                   = tencentcloud_vpc.foo.id
-  subnet_id                = tencentcloud_subnet.subnet.id
+  cluster_name             = "tf_te1_guagua_2"
+  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
   password                 = "aQQ2345677888"
   old_password_expire_last = 300
 }

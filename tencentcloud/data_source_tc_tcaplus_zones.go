@@ -1,24 +1,24 @@
 /*
-Use this data source to query tcaplus zones
+Use this data source to query tcaplus table groups
 
 Example Usage
 
 ```hcl
-data "tencentcloud_tcaplus_zones" "null" {
-  app_id = "19162256624"
+data "tencentcloud_tcaplus_groups" "null" {
+  cluster_id = "19162256624"
 }
-data "tencentcloud_tcaplus_zones" "id" {
-  app_id  = "19162256624"
-  zone_id = "19162256624:1"
+data "tencentcloud_tcaplus_groups" "id" {
+  cluster_id  = "19162256624"
+  group_id    = "19162256624:1"
 }
-data "tencentcloud_tcaplus_zones" "name" {
-  app_id    = "19162256624"
-  zone_name = "test"
+data "tencentcloud_tcaplus_groups" "name" {
+  cluster_id  = "19162256624"
+  group_name  = "test"
 }
-data "tencentcloud_tcaplus_zones" "all" {
-  app_id    = "19162256624"
-  zone_id   = "19162256624:1"
-  zone_name = "test"
+data "tencentcloud_tcaplus_groups" "all" {
+  cluster_id = "19162256624"
+  group_id   = "19162256624:1"
+  group_name = "test"
 }
 ```
 */
@@ -32,24 +32,24 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func dataSourceTencentCloudTcaplusZones() *schema.Resource {
+func dataSourceTencentCloudTcaplusGroups() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudTcaplusZonesRead,
+		Read: dataSourceTencentCloudTcaplusGroupsRead,
 		Schema: map[string]*schema.Schema{
-			"app_id": {
+			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the tcapplus application to be query.",
+				Description: "Id of the tcaplus cluster to be query.",
 			},
-			"zone_id": {
+			"group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Zone id to be query.",
+				Description: "Group id to be query.",
 			},
-			"zone_name": {
+			"group_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Zone name to be query.",
+				Description: "Group name to be query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -59,18 +59,18 @@ func dataSourceTencentCloudTcaplusZones() *schema.Resource {
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of tcaplus zones. Each element contains the following attributes.",
+				Description: "A list of tcaplus table groups. Each element contains the following attributes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"zone_name": {
+						"group_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the tcapplus zone.",
+							Description: "Name of the tcaplus group.",
 						},
-						"zone_id": {
+						"group_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the tcapplus zone.",
+							Description: "Id of the tcaplus group.",
 						},
 						"table_count": {
 							Type:        schema.TypeInt,
@@ -85,7 +85,7 @@ func dataSourceTencentCloudTcaplusZones() *schema.Resource {
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the tcapplus zone.",
+							Description: "Create time of the tcaplus group.",
 						},
 					},
 				},
@@ -94,8 +94,8 @@ func dataSourceTencentCloudTcaplusZones() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudTcaplusZonesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tcaplus_zones.read")()
+func dataSourceTencentCloudTcaplusGroupsRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_tcaplus_groups.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -104,32 +104,32 @@ func dataSourceTencentCloudTcaplusZonesRead(d *schema.ResourceData, meta interfa
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	applicationId := d.Get("app_id").(string)
-	zoneId := d.Get("zone_id").(string)
-	zoneName := d.Get("zone_name").(string)
+	clusterId := d.Get("cluster_id").(string)
+	groupId := d.Get("group_id").(string)
+	groupName := d.Get("group_name").(string)
 
-	apps, err := service.DescribeZones(ctx, applicationId, zoneId, zoneName)
+	groups, err := service.DescribeGroups(ctx, clusterId, groupId, groupName)
 	if err != nil {
-		apps, err = service.DescribeZones(ctx, applicationId, zoneId, zoneName)
+		groups, err = service.DescribeGroups(ctx, clusterId, groupId, groupName)
 	}
 
 	if err != nil {
 		return err
 	}
 
-	list := make([]map[string]interface{}, 0, len(apps))
+	list := make([]map[string]interface{}, 0, len(groups))
 
-	for _, app := range apps {
+	for _, group := range groups {
 		listItem := make(map[string]interface{})
-		listItem["zone_name"] = *app.TableGroupName
-		listItem["zone_id"] = fmt.Sprintf("%s:%s", applicationId, *app.TableGroupId)
-		listItem["table_count"] = *app.TableCount
-		listItem["total_size"] = *app.TotalSize
-		listItem["create_time"] = *app.CreatedTime
+		listItem["group_name"] = group.TableGroupName
+		listItem["group_id"] = fmt.Sprintf("%s:%s", clusterId, *group.TableGroupId)
+		listItem["table_count"] = group.TableCount
+		listItem["total_size"] = group.TotalSize
+		listItem["create_time"] = group.CreatedTime
 		list = append(list, listItem)
 	}
 
-	d.SetId("zone." + applicationId + "." + zoneId + "." + zoneName)
+	d.SetId("group." + clusterId + "." + groupId + "." + groupName)
 	if e := d.Set("list", list); e != nil {
 		log.Printf("[CRITAL]%s provider set list fail, reason:%s\n", logId, e.Error())
 		return e

@@ -1,19 +1,19 @@
 /*
 
-Use this data source to query tcaplus applications
+Use this data source to query tcaplus clusters
 
 Example Usage
 
 ```hcl
-data "tencentcloud_tcaplus_applications" "name" {
-  app_name = "app"
+data "tencentcloud_tcaplus_clusters" "name" {
+  cluster_name = "cluster"
 }
-data "tencentcloud_tcaplus_applications" "id" {
-  app_id = tencentcloud_tcaplus_application.test.id
+data "tencentcloud_tcaplus_clusters" "id" {
+  cluster_id = tencentcloud_tcaplus_cluster.test.id
 }
-data "tencentcloud_tcaplus_applications" "idname" {
-  app_id   = tencentcloud_tcaplus_application.test.id
-  app_name = "app"
+data "tencentcloud_tcaplus_clusters" "idname" {
+  cluster_id   = tencentcloud_tcaplus_cluster.test.id
+  cluster_name = "cluster"
 }
 ```
 */
@@ -26,19 +26,19 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func dataSourceTencentCloudTcaplusApplications() *schema.Resource {
+func dataSourceTencentCloudTcaplusClusters() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudTcaplusApplicationsRead,
+		Read: dataSourceTencentCloudTcaplusClustersRead,
 		Schema: map[string]*schema.Schema{
-			"app_name": {
+			"cluster_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of the tcapplus application to be query.",
+				Description: "Name of the tcaplus cluster to be query.",
 			},
-			"app_id": {
+			"cluster_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Id of the tcapplus application to be query.",
+				Description: "Id of the tcaplus cluster to be query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -48,68 +48,68 @@ func dataSourceTencentCloudTcaplusApplications() *schema.Resource {
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of tcaplus application. Each element contains the following attributes.",
+				Description: "A list of tcaplus cluster. Each element contains the following attributes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"app_name": {
+						"cluster_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the tcapplus application.",
+							Description: "Name of the tcaplus cluster.",
 						},
-						"app_id": {
+						"cluster_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the tcapplus application.",
+							Description: "Id of the tcaplus cluster.",
 						},
 						"idl_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Idl type of the tcapplus application.",
+							Description: "Idl type of the tcaplus cluster.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "VPC id of the tcapplus application.",
+							Description: "VPC id of the tcaplus cluster.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Subnet id of the tcapplus application.",
+							Description: "Subnet id of the tcaplus cluster.",
 						},
 						"password": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Password of the tcapplus application.",
+							Description: "Password of the tcaplus cluster.",
 						},
 						"network_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Network type of the tcapplus application.",
+							Description: "Network type of the tcaplus cluster.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the tcapplus application.",
+							Description: "Create time of the tcaplus cluster.",
 						},
 						"password_status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Password status of the tcapplus application.`unmodifiable` means:can not change password now,`modifiable` means:can change password now.",
+							Description: "Password status of the tcaplus cluster.`unmodifiable` means:can not change password now,`modifiable` means:can change password now.",
 						},
 						"api_access_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Access id of the tcapplus application.For TcaplusDB SDK connect.",
+							Description: "Access id of the tcaplus cluster.For TcaplusDB SDK connect.",
 						},
 						"api_access_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Access ip of the tcapplus application.For TcaplusDB SDK connect.",
+							Description: "Access ip of the tcaplus cluster.For TcaplusDB SDK connect.",
 						},
 						"api_access_port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Access port of the tcapplus application.For TcaplusDB SDK connect.",
+							Description: "Access port of the tcaplus cluster.For TcaplusDB SDK connect.",
 						},
 						"old_password_expire_time": {
 							Type:        schema.TypeString,
@@ -123,8 +123,8 @@ func dataSourceTencentCloudTcaplusApplications() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudTcaplusApplicationsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tcaplus_applications.read")()
+func dataSourceTencentCloudTcaplusClustersRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_tcaplus_clusters.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), "logId", logId)
@@ -133,39 +133,39 @@ func dataSourceTencentCloudTcaplusApplicationsRead(d *schema.ResourceData, meta 
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	applicationId := d.Get("app_id").(string)
-	applicationName := d.Get("app_name").(string)
+	clusterId := d.Get("cluster_id").(string)
+	clusterName := d.Get("cluster_name").(string)
 
-	apps, err := service.DescribeApps(ctx, applicationId, applicationName)
+	clusters, err := service.DescribeClusters(ctx, clusterId, clusterName)
 	if err != nil {
-		apps, err = service.DescribeApps(ctx, applicationId, applicationName)
+		clusters, err = service.DescribeClusters(ctx, clusterId, clusterName)
 	}
 
 	if err != nil {
 		return err
 	}
 
-	list := make([]map[string]interface{}, 0, len(apps))
+	list := make([]map[string]interface{}, 0, len(clusters))
 
-	for _, app := range apps {
+	for _, cluster := range clusters {
 		listItem := make(map[string]interface{})
-		listItem["app_name"] = *app.ClusterName
-		listItem["app_id"] = *app.ClusterId
-		listItem["idl_type"] = *app.IdlType
-		listItem["vpc_id"] = *app.VpcId
-		listItem["subnet_id"] = *app.SubnetId
-		listItem["password"] = *app.Password
-		listItem["network_type"] = *app.NetworkType
-		listItem["create_time"] = *app.CreatedTime
-		listItem["password_status"] = *app.PasswordStatus
-		listItem["api_access_id"] = *app.ApiAccessId
-		listItem["api_access_ip"] = *app.ApiAccessIp
-		listItem["api_access_port"] = *app.ApiAccessPort
-		listItem["old_password_expire_time"] = *app.OldPasswordExpireTime
+		listItem["cluster_name"] = cluster.ClusterName
+		listItem["cluster_id"] = cluster.ClusterId
+		listItem["idl_type"] = cluster.IdlType
+		listItem["vpc_id"] = cluster.VpcId
+		listItem["subnet_id"] = cluster.SubnetId
+		listItem["password"] = cluster.Password
+		listItem["network_type"] = cluster.NetworkType
+		listItem["create_time"] = cluster.CreatedTime
+		listItem["password_status"] = cluster.PasswordStatus
+		listItem["api_access_id"] = cluster.ApiAccessId
+		listItem["api_access_ip"] = cluster.ApiAccessIp
+		listItem["api_access_port"] = cluster.ApiAccessPort
+		listItem["old_password_expire_time"] = cluster.OldPasswordExpireTime
 		list = append(list, listItem)
 	}
 
-	d.SetId("app." + applicationId + "." + applicationName)
+	d.SetId("cluster." + clusterId + "." + clusterName)
 	if e := d.Set("list", list); e != nil {
 		log.Printf("[CRITAL]%s provider set list fail, reason:%s\n", logId, e.Error())
 		return e
