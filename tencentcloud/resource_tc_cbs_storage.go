@@ -443,7 +443,8 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-
+		//to pay order wait
+		time.Sleep(readRetryTimeout)
 		//check charge Type
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			storage, e := cbsService.DescribeDiskById(ctx, storageId)
