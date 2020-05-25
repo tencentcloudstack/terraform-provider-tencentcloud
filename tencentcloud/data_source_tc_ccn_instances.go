@@ -93,7 +93,7 @@ func dataSourceTencentCloudCcnInstances() *schema.Resource {
 									"instance_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Type of attached instance network, and available values include VPC, DIRECTCONNECT and BMVPC.",
+										Description: "Type of attached instance network, and available values include VPC, DIRECTCONNECT, BMVPC and VPNGW.",
 									},
 									"instance_region": {
 										Type:        schema.TypeString,

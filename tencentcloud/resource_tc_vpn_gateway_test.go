@@ -39,6 +39,17 @@ func TestAccTencentCloudVpnGateway_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_gateway.my_cgw", "state"),
 				),
 			},
+			{
+				Config: testAccCcnVpnGatewayConfig,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVpnGatewayExists("tencentcloud_vpn_gateway.my_ccn_cgw"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_gateway.my_ccn_cgw", "name", "terraform_ccn_vpngw_test"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_gateway.my_ccn_cgw", "bandwidth", "5"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_gateway.my_ccn_cgw", "charge_type", "POSTPAID_BY_HOUR"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_gateway.my_ccn_cgw", "tags.test", "tf-ccn-vpngw"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpn_gateway.my_ccn_cgw", "state"),
+				),
+			},
 		},
 	})
 }
@@ -163,5 +174,19 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
     test = "test"
   }
 }
+`
 
+const testAccCcnVpnGatewayConfig = `
+# Create VPNGW of CCN type
+resource "tencentcloud_vpn_gateway" "my_ccn_cgw" {
+  name      = "terraform_ccn_vpngw_test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  vpc_id    = ""
+  type      = "CCN"
+
+  tags = {
+    test = "tf-ccn-vpngw"
+  }
+}
 `

@@ -13,23 +13,23 @@ Use this resource to create tcaplus table
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_tcaplus_application" "test" {
+resource "tencentcloud_tcaplus_cluster" "test" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_tcaplus_app_test"
+  cluster_name             = "tf_tcaplus_cluster_test"
   vpc_id                   = "vpc-7k6gzox6"
   subnet_id                = "subnet-akwgvfa3"
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_zone" "zone" {
-  app_id    = tencentcloud_tcaplus_application.test.id
-  zone_name = "tf_test_zone_name"
+resource "tencentcloud_tcaplus_group" "group" {
+  cluster_id = tencentcloud_tcaplus_cluster.test.id
+  group_name = "tf_test_group_name"
 }
 
 resource "tencentcloud_tcaplus_idl" "main" {
-  app_id        = tencentcloud_tcaplus_application.test.id
-  zone_id       = tencentcloud_tcaplus_zone.zone.id
+  cluster_id    = tencentcloud_tcaplus_cluster.test.id
+  group_id      = tencentcloud_tcaplus_group.group.id
   file_name     = "tf_idl_test_2"
   file_type     = "PROTO"
   file_ext_type = "proto"
@@ -63,8 +63,8 @@ resource "tencentcloud_tcaplus_idl" "main" {
 }
 
 resource "tencentcloud_tcaplus_table" "table" {
-  app_id             = tencentcloud_tcaplus_application.test.id
-  zone_id            = tencentcloud_tcaplus_zone.zone.id
+  cluster_id         = tencentcloud_tcaplus_cluster.test.id
+  group_id           = tencentcloud_tcaplus_group.group.id
   table_name         = "tb_online"
   table_type         = "GENERIC"
   description        = "test"
@@ -80,7 +80,8 @@ resource "tencentcloud_tcaplus_table" "table" {
 
 The following arguments are supported:
 
-* `app_id` - (Required, ForceNew) Application of this table belongs.
+* `cluster_id` - (Required, ForceNew) Cluster of this table belongs.
+* `group_id` - (Required, ForceNew) Group of this table belongs.
 * `idl_id` - (Required) Idl file for this table.
 * `reserved_read_qps` - (Required, ForceNew) Table reserved read QPS.
 * `reserved_volume` - (Required, ForceNew) Table reserved capacity(GB).
@@ -88,7 +89,6 @@ The following arguments are supported:
 * `table_idl_type` - (Required) Type of this table idl, Valid values are PROTO,TDR.
 * `table_name` - (Required, ForceNew) Name of this table.
 * `table_type` - (Required, ForceNew) Type of this table, Valid values are GENERIC,LIST.
-* `zone_id` - (Required, ForceNew) Zone of this table belongs.
 * `description` - (Optional) Description of this table.
 
 ## Attributes Reference
@@ -96,7 +96,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `create_time` - Create time of the tcapplus table.
+* `create_time` - Create time of the tcaplus table.
 * `error` - Show if this table  create error.
 * `status` - Status of this table.
 * `table_size` - Size of this table.

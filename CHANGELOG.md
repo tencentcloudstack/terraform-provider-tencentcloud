@@ -1,14 +1,40 @@
-## 1.33.1 (Unreleased)
-
-ENHANCEMENTS: 
-Resource: `tencentcloud_redis_instance` add new argument `type_id`,`redis_shard_num`,`redis_replicas_num`
-Data Source: `tencentcloud_redis_instances` add new argument  `type_id`,`redis_shard_num`,`redis_replicas_num`
-Data Source: `tencentcloud_redis_zone_config` add output argument `type_id` and new output argument  `type_id`,`redis_shard_nums`,`redis_replicas_nums`
+## 1.34.0 (Unreleased)
+## 1.33.2 (May 25, 2020)
 
 DEPRECATED:
+* Data Source: `tencentcloud_tcaplus_applications` replace by `tencentcloud_tcaplus_clusters`,optional arguments `app_id` and `app_name` are no longer supported, replace by `cluster_id` and `cluster_name`
+* Data Source: `tencentcloud_tcaplus_zones` replace by `tencentcloud_tcaplus_groups`,optional arguments `app_id`,`zone_id` and `zone_name` are no longer supported, replace by `cluster_id`,`group_id` and `cluster_name`
+* Data Source: `tencentcloud_tcaplus_tables` optional arguments `app_id` and `zone_id` are no longer supported, replace by `cluster_id` and `group_id`
+* Data Source: `tencentcloud_tcaplus_idls`: optional argument `app_id` is no longer supported, replace by `cluster_id`.
+* Resource: `tencentcloud_tcaplus_application` replace by `tencentcloud_tcaplus_cluster`,input argument `app_name` is no longer supported, replace by `cluster_name`
+* Resource: `tencentcloud_tcaplus_zone` replace by `tencentcloud_tcaplus_group`, input arguments `app_id` and `zone_name` are no longer supported, replace by `cluster_id` and `group_name`
+* Resource: `tencentcloud_tcaplus_idl` input arguments `app_id` and `zone_id` are no longer supported, replace by `cluster_id` and `group_id`
+* Resource: `tencentcloud_tcaplus_table` input arguments `app_id`and `zone_id` are no longer supported, replace by `cluster_id` and `group_id`
 * Resource: `tencentcloud_redis_instance`: optional argument `type` is no longer supported, replace by `type_id`.
-* Data Source: `tencentcloud_redis_instances`: output argument `type` is no longer supported, replace by `type_id`
-* Data Source: `tencentcloud_redis_zone_config`: output argument `type` is no longer supported, replace by `type_id`
+* Data Source: `tencentcloud_redis_instances`: output argument `type` is no longer supported, replace by `type_id`.
+* Data Source: `tencentcloud_redis_zone_config`: output argument `type` is no longer supported, replace by `type_id`.
+
+## 1.33.1 (May 22, 2020)
+
+ENHANCEMENTS: 
+
+* Data Source: `tencentcloud_redis_instances` add new argument `type_id`, `redis_shard_num`, `redis_replicas_num`
+* Data Source: `tencentcloud_redis_zone_config` add output argument `type_id` and new output argument `type_id`, `redis_shard_nums`, `redis_replicas_nums`
+* Data Source: `tencentcloud_ccn_instances` add new type `VPNGW` for field `instance_type`
+* Data Source: `tencentcloud_vpn_gateways` add new type `CCN` for field `type`
+* Resource: `tencentcloud_redis_instance` add new argument `type_id`, `redis_shard_num`, `redis_replicas_num`
+* Resource: `tencentcloud_ccn_attachment` add new type `CNN_INSTANCE_TYPE_VPNGW` for field `instance_type`
+* Resource: `tencentcloud_vpn_gateway` add new type `CCN` for field `type`
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cdn_domain` fix `https_config` inconsistency after apply([#413](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/413)).
+
+DEPRECATED:
+
+* Resource: `tencentcloud_redis_instance`: optional argument `type` is no longer supported, replace by `type_id`.
+* Data Source: `tencentcloud_redis_instances`: output argument `type` is no longer supported, replace by `type_id`.
+* Data Source: `tencentcloud_redis_zone_config`: output argument `type` is no longer supported, replace by `type_id`.
 
 ## 1.33.0 (May 18, 2020)
 

@@ -23,7 +23,7 @@ func TestAccTencentCloudTcaplusIdlResource(t *testing.T) {
 				Config: testAccTcaplusIdl,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTcaplusIdlExists(testTcaplusIdlResourceNameResourceKey),
-					resource.TestCheckResourceAttrSet(testTcaplusIdlResourceNameResourceKey, "app_id"),
+					resource.TestCheckResourceAttrSet(testTcaplusIdlResourceNameResourceKey, "cluster_id"),
 					resource.TestCheckResourceAttr(testTcaplusIdlResourceNameResourceKey, "file_name", "tf_idl_test_guagua"),
 					resource.TestCheckResourceAttr(testTcaplusIdlResourceNameResourceKey, "file_type", "PROTO"),
 					resource.TestCheckResourceAttr(testTcaplusIdlResourceNameResourceKey, "file_ext_type", "proto"),
@@ -103,45 +103,30 @@ func testAccCheckTcaplusIdlExists(n string) resource.TestCheckFunc {
 const testAccTcaplusIdlBasic = `variable "availability_zone" {
   default = "ap-shanghai-2"
 }
-variable "instance_name" {
-  default = "` + defaultInsName + `"
-}
-variable "vpc_cidr" {
-  default = "` + defaultVpcCidr + `"
-}
-variable "subnet_cidr" {
-  default = "` + defaultSubnetCidr + `"
+
+data "tencentcloud_vpc_subnets" "vpc" {
+    is_default        = true
+    availability_zone = var.availability_zone
 }
 
-resource "tencentcloud_vpc" "foo" {
-  name       = var.instance_name
-  cidr_block = var.vpc_cidr
-}
-resource "tencentcloud_subnet" "subnet" {
-  name              = var.instance_name
-  vpc_id            = tencentcloud_vpc.foo.id
-  availability_zone = var.availability_zone
-  cidr_block        = var.subnet_cidr
-  is_multicast      = false
-}
-resource "tencentcloud_tcaplus_application" "test_app" {
+resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_tcaplus_app_test_guagua_idl"
-  vpc_id                   = tencentcloud_vpc.foo.id
-  subnet_id                = tencentcloud_subnet.subnet.id
+  cluster_name             = "tf_test_cluster"
+  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
-resource "tencentcloud_tcaplus_zone" "zone" {
-  app_id         = tencentcloud_tcaplus_application.test_app.id
-  zone_name      = "tf_test_zone_name"
+resource "tencentcloud_tcaplus_group" "group" {
+  cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
+  group_name     = "tf_test_group_name"
 }
 `
 
 const testAccTcaplusIdl = testAccTcaplusIdlBasic + `
 resource "tencentcloud_tcaplus_idl" "test_idl" {
-  app_id  = tencentcloud_tcaplus_application.test_app.id
-  zone_id = tencentcloud_tcaplus_zone.zone.id
+  cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
+  group_id       = tencentcloud_tcaplus_group.group.id
   file_name      = "tf_idl_test_guagua"
   file_type      = "PROTO"
   file_ext_type  = "proto"
