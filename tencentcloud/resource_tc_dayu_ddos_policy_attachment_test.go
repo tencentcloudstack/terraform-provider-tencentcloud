@@ -30,7 +30,7 @@ func TestAccTencentCloudDayuDdosPolicyAttachment_basic(t *testing.T) {
 
 func testAccCheckDayuDdosPolicyAttachmentDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	dayuService := DayuService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -60,7 +60,7 @@ func testAccCheckDayuDdosPolicyAttachmentDestroy(s *terraform.State) error {
 func testAccCheckDayuDdosPolicyAttachmentExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {

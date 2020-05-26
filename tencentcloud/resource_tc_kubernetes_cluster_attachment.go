@@ -156,7 +156,7 @@ func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tkeService := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 	cvmService := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -242,7 +242,7 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster_attachment.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tkeService := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 	cvmService := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}

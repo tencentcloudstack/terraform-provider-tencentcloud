@@ -14,17 +14,17 @@ resource "tencentcloud_tcaplus_cluster" "test" {
 }
 
 resource "tencentcloud_tcaplus_group" "group" {
-  cluster_id      = tencentcloud_tcaplus_cluster.test.id
-  group_name      = "tf_test_group_name"
+  cluster_id = tencentcloud_tcaplus_cluster.test.id
+  group_name = "tf_test_group_name"
 }
 
 resource "tencentcloud_tcaplus_idl" "main" {
-  cluster_id     = tencentcloud_tcaplus_cluster.test.id
-  group_id       = tencentcloud_tcaplus_group.group.id
-  file_name      = "tf_idl_test_2"
-  file_type      = "PROTO"
-  file_ext_type  = "proto"
-  file_content   = <<EOF
+  cluster_id    = tencentcloud_tcaplus_cluster.test.id
+  group_id      = tencentcloud_tcaplus_group.group.id
+  file_name     = "tf_idl_test_2"
+  file_type     = "PROTO"
+  file_ext_type = "proto"
+  file_content  = <<EOF
     syntax = "proto2";
     package myTcaplusTable;
     import "tcaplusservice.optionv1.proto";
@@ -176,7 +176,7 @@ func resourceTencentCloudTcaplusTableCreate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tcaplus_table.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -249,7 +249,7 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tcaplus_table.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -341,7 +341,7 @@ func resourceTencentCloudTcaplusTableRead(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_tcaplus_table.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -392,7 +392,7 @@ func resourceTencentCloudTcaplusTableDelete(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tcaplus_table.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 	clusterId := d.Get("cluster_id").(string)

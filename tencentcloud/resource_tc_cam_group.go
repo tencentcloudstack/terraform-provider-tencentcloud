@@ -107,7 +107,7 @@ func resourceTencentCloudCamGroupCreate(d *schema.ResourceData, meta interface{}
 	d.SetId(strconv.Itoa(int(*response.Response.GroupId)))
 
 	//get really instance then read
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	groupId := d.Id()
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -136,7 +136,7 @@ func resourceTencentCloudCamGroupRead(d *schema.ResourceData, meta interface{}) 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupId := d.Id()
 	camService := CamService{

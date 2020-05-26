@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_redis_backup_config" "redislab" {
-  redis_id       = "crs-7yl0q0dd"
-  backup_time    = "04:00-05:00"
-  backup_period  = ["Monday"]
+  redis_id      = "crs-7yl0q0dd"
+  backup_time   = "04:00-05:00"
+  backup_period = ["Monday"]
 }
 ```
 
@@ -15,7 +15,7 @@ Import
 
 Redis  backup config can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_redis_backup_config.redisconfig redis-id
 ```
 */
@@ -86,7 +86,7 @@ func resourceTencentCloudRedisBackupConfigRead(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -120,7 +120,7 @@ func resourceTencentCloudRedisBackupConfigUpdate(d *schema.ResourceData, meta in
 	}
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -160,7 +160,7 @@ func resourceTencentCloudRedisBackupConfigDelete(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_redis_backup_config.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 

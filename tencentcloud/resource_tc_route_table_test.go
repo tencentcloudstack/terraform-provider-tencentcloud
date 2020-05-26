@@ -113,7 +113,7 @@ func TestAccTencentCloudVpcV3RouteTableWithTags(t *testing.T) {
 func testAccCheckVpcRouteTableExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
@@ -135,7 +135,7 @@ func testAccCheckVpcRouteTableExists(r string) resource.TestCheckFunc {
 
 func testAccCheckVpcRouteTableDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {

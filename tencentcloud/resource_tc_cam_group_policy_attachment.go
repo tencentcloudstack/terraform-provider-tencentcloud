@@ -82,7 +82,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentCreate(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_cam_group_policy_attachment.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupId := d.Get("group_id").(string)
 	policyId := d.Get("policy_id").(string)
@@ -129,7 +129,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentRead(d *schema.ResourceData, me
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupPolicyAttachmentId := d.Id()
 
@@ -173,7 +173,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentDelete(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_cam_group_policy_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupPolicyAttachmentId := d.Id()
 

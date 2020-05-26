@@ -1,9 +1,9 @@
 package tencentcloud
 
 import (
-	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccBindingObjects(t *testing.T) {
@@ -22,10 +22,10 @@ func TestAccBindingObjects(t *testing.T) {
 }
 
 func testAccDataSourceBindingObjects() string {
-	return fmt.Sprintf(`data "tencentcloud_monitor_policy_groups" "name" {
+	return `data "tencentcloud_monitor_policy_groups" "name" {
 }
 
 data "tencentcloud_monitor_binding_objects" "objects" {
   group_id = data.tencentcloud_monitor_policy_groups.name.list[0].group_id
-}`)
+}`
 }

@@ -14,17 +14,17 @@ resource "tencentcloud_tcaplus_cluster" "test" {
 }
 
 resource "tencentcloud_tcaplus_group" "group" {
-  cluster_id     = tencentcloud_tcaplus_cluster.test.id
-  group_name      = "tf_test_group_name"
+  cluster_id = tencentcloud_tcaplus_cluster.test.id
+  group_name = "tf_test_group_name"
 }
 
 resource "tencentcloud_tcaplus_idl" "main" {
-  cluster_id     = tencentcloud_tcaplus_cluster.test.id
-  group_id        = tencentcloud_tcaplus_group.group.id
-  file_name      = "tf_idl_test"
-  file_type      = "PROTO"
-  file_ext_type  = "proto"
-  file_content   = <<EOF
+  cluster_id    = tencentcloud_tcaplus_cluster.test.id
+  group_id      = tencentcloud_tcaplus_group.group.id
+  file_name     = "tf_idl_test"
+  file_type     = "PROTO"
+  file_ext_type = "proto"
+  file_content  = <<EOF
     syntax = "proto2";
     package myTcaplusTable;
     import "tcaplusservice.optionv1.proto";
@@ -174,7 +174,7 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_tcaplus_idl.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -254,7 +254,7 @@ func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -308,7 +308,7 @@ func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudTcaplusIdlDelete(d *schema.ResourceData, meta interface{}) error {
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 

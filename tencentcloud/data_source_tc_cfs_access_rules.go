@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 data "tencentcloud_cfs_access_rules" "access_rules" {
   access_group_id = "pgroup-7nx89k7l"
-  access_rule_id = "rule-qcndbqzj"
+  access_rule_id  = "rule-qcndbqzj"
 }
 ```
 */
@@ -84,7 +84,7 @@ func dataSourceTencentCloudCfsAccessRules() *schema.Resource {
 func dataSourceTencentCloudCfsAccessRulesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_cfs_access_rules.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cfsService := CfsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}

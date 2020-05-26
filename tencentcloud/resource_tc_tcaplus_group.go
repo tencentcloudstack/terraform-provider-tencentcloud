@@ -15,7 +15,7 @@ resource "tencentcloud_tcaplus_cluster" "test" {
 
 resource "tencentcloud_tcaplus_group" "group" {
   cluster_id = tencentcloud_tcaplus_cluster.test.id
-  group_name      = "tf_test_group_name"
+  group_name = "tf_test_group_name"
 }
 ```
 */
@@ -73,7 +73,7 @@ func resourceTencentCloudTcaplusGroupCreate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tcaplus_group.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -94,7 +94,7 @@ func resourceTencentCloudTcaplusGroupRead(d *schema.ResourceData, meta interface
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -131,7 +131,7 @@ func resourceTencentCloudTcaplusGroupUpdate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tcaplus_group.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -157,7 +157,7 @@ func resourceTencentCloudTcaplusGroupDelete(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_tcaplus_group.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 

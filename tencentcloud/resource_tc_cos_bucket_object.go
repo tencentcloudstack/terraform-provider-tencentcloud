@@ -18,12 +18,12 @@ Uploading a content to a bucket
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
   bucket = "mycos-1258798060"
-  acl = "public-read"
+  acl    = "public-read"
 }
 
 resource "tencentcloud_cos_bucket_object" "myobject" {
-  bucket = tencentcloud_cos_bucket.mycos.bucket
-  key    = "new_object_key"
+  bucket  = tencentcloud_cos_bucket.mycos.bucket
+  key     = "new_object_key"
   content = "the content that you want to upload."
 }
 ```
@@ -200,7 +200,7 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_cos_bucket_object.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)
@@ -235,7 +235,7 @@ func resourceTencentCloudCosBucketObjectUpdate(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_cos_bucket_object.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	fields := []string{
 		"cache_control",
@@ -274,7 +274,7 @@ func resourceTencentCloudCosBucketObjectDelete(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_cos_bucket_object.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Get("bucket").(string)
 	key := d.Get("key").(string)

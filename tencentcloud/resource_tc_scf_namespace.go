@@ -73,7 +73,7 @@ func resourceTencentCloudScfNamespace() *schema.Resource {
 func resourceTencentCloudScfNamespaceCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_scf_namespace.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ScfService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -95,7 +95,7 @@ func resourceTencentCloudScfNamespaceRead(d *schema.ResourceData, m interface{})
 	defer inconsistentCheck(d, m)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ScfService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -124,7 +124,7 @@ func resourceTencentCloudScfNamespaceRead(d *schema.ResourceData, m interface{})
 func resourceTencentCloudScfNamespaceUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_scf_namespace.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ScfService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -139,7 +139,7 @@ func resourceTencentCloudScfNamespaceUpdate(d *schema.ResourceData, m interface{
 func resourceTencentCloudScfNamespaceDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_scf_namespace.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ScfService{client: m.(*TencentCloudClient).apiV3Conn}
 

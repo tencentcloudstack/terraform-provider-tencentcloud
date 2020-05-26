@@ -9,7 +9,7 @@ variable "availability_zone" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name = "ci-temp-test"
+  name       = "ci-temp-test"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -18,20 +18,20 @@ resource "tencentcloud_subnet" "foo" {
   name              = "terraform test subnet"
   cidr_block        = "10.0.12.0/24"
   availability_zone = var.availability_zone
-  route_table_id = tencentcloud_route_table.foo.id
+  route_table_id    = tencentcloud_route_table.foo.id
 }
 
 resource "tencentcloud_route_table" "foo" {
   vpc_id = tencentcloud_vpc.foo.id
-  name = "ci-temp-test-rt"
+  name   = "ci-temp-test-rt"
 }
 
 resource "tencentcloud_route_table_entry" "instance" {
-  route_table_id = tencentcloud_route_table.foo.id
-  destination_cidr_block     = "10.4.4.0/24"
-  next_type      = "EIP"
-  next_hub       = "0"
-  description    = "ci-test-route-table-entry"
+  route_table_id         = tencentcloud_route_table.foo.id
+  destination_cidr_block = "10.4.4.0/24"
+  next_type              = "EIP"
+  next_hub               = "0"
+  description            = "ci-test-route-table-entry"
 }
 ```
 */
@@ -95,7 +95,7 @@ func resourceTencentCloudVpcRouteEntryCreate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_route_table_entry.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -147,7 +147,7 @@ func resourceTencentCloudVpcRouteEntryRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -194,7 +194,7 @@ func resourceTencentCloudVpcRouteEntryDelete(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_route_table_entry.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

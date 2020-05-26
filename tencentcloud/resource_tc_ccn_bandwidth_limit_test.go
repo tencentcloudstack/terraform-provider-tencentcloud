@@ -43,7 +43,7 @@ func testAccCheckCcnBandwidthLimitDestroy(s *terraform.State) error {
 func testAccCheckCcnBandwidthLimitExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {

@@ -19,6 +19,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 )
@@ -76,7 +77,7 @@ func dataSourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta inte
 	defer logElapsed("data_source.tencentcloud_monitor_binding_objects.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}

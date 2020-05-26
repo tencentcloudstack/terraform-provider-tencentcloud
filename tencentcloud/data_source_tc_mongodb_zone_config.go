@@ -95,7 +95,7 @@ func dataSourceTencentCloudMongodbZoneConfigRead(d *schema.ResourceData, meta in
 	defer logElapsed("data_source.tencentcloud_mongodb_zone_config.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	zone := ""
 	if v, ok := d.GetOk("available_zone"); ok {

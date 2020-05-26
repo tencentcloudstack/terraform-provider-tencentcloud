@@ -41,12 +41,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"time"
 )
 
 func resourceTencentMonitorBindingAlarmReceiver() *schema.Resource {
@@ -127,7 +128,7 @@ func resourceTencentMonitorBindingAlarmReceiverCreate(d *schema.ResourceData, me
 
 	var (
 		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), "logId", logId)
+		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewModifyAlarmReceiversRequest()
 		groupId        = int64(d.Get("group_id").(int))
@@ -198,7 +199,7 @@ func resourceTencentMonitorBindingAlarmReceiverRead(d *schema.ResourceData, meta
 
 	var (
 		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), "logId", logId)
+		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		groupId        = int64(d.Get("group_id").(int))
 	)
@@ -234,7 +235,7 @@ func resourceTencentMonitorBindingAlarmReceiverUpdate(d *schema.ResourceData, me
 	defer logElapsed("resource.tencentcloud_monitor_binding_receiver.update")()
 	var (
 		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), "logId", logId)
+		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewModifyAlarmReceiversRequest()
 		groupId        = int64(d.Get("group_id").(int))
@@ -301,7 +302,7 @@ func resourceTencentMonitorBindingAlarmReceiverDelete(d *schema.ResourceData, me
 
 	var (
 		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), "logId", logId)
+		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewModifyAlarmReceiversRequest()
 		groupId        = int64(d.Get("group_id").(int))

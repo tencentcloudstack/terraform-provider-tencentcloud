@@ -6,13 +6,13 @@ Example Usage
 ```hcl
 data "tencentcloud_dayu_cc_http_policies" "id_test" {
   resource_type = tencentcloud_dayu_cc_http_policy.test_policy.resource_type
-  resource_id = tencentcloud_dayu_cc_http_policy.test_policy.resource_id
-  policy_id      = tencentcloud_dayu_cc_http_policy.test_policy.policy_id
+  resource_id   = tencentcloud_dayu_cc_http_policy.test_policy.resource_id
+  policy_id     = tencentcloud_dayu_cc_http_policy.test_policy.policy_id
 }
 data "tencentcloud_dayu_cc_http_policies" "name_test" {
   resource_type = tencentcloud_dayu_cc_http_policy.test_policy.resource_type
-  resource_id = tencentcloud_dayu_cc_http_policy.test_policy.resource_id
-  name      = tencentcloud_dayu_cc_http_policy.test_policy.name
+  resource_id   = tencentcloud_dayu_cc_http_policy.test_policy.resource_id
+  name          = tencentcloud_dayu_cc_http_policy.test_policy.name
 }
 ```
 */
@@ -151,7 +151,7 @@ func dataSourceTencentCloudDayuCCHttpPoliciesRead(d *schema.ResourceData, meta i
 	defer logElapsed("data_source.tencentcloud_dayu_cc_http_policies.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DayuService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

@@ -159,7 +159,7 @@ func resourceTencentCloudSecurityGroupRuleCreate(d *schema.ResourceData, m inter
 	defer logElapsed("resource.tencentcloud_security_group_rule.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -231,7 +231,7 @@ func resourceTencentCloudSecurityGroupRuleRead(d *schema.ResourceData, m interfa
 	defer inconsistentCheck(d, m)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -288,7 +288,7 @@ func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m inter
 	defer logElapsed("resource.tencentcloud_security_group_rule.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 

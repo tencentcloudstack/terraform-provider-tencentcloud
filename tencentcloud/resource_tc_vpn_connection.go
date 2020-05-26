@@ -275,7 +275,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_vpn_connection.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := vpc.NewCreateVpnConnectionRequest()
 	request.VpnConnectionName = helper.String(d.Get("name").(string))
@@ -479,7 +479,7 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	connectionId := d.Id()
 	request := vpc.NewDescribeVpnConnectionsRequest()
@@ -568,7 +568,7 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_vpn_connection.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	d.Partial(true)
 	connectionId := d.Id()

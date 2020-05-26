@@ -28,9 +28,10 @@ func TestAccTencentCloudCbsStorage_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cbs_storage.storage_basic",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_cbs_storage.storage_basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"force_delete"},
 			},
 		},
 	})
@@ -133,7 +134,7 @@ func TestAccTencentCloudCbsStorage_upgrade(t *testing.T) {
 
 func testAccCheckCbsStorageDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	cbsService := CbsService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -157,7 +158,7 @@ func testAccCheckCbsStorageDestroy(s *terraform.State) error {
 func testAccCheckStorageExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {

@@ -112,7 +112,7 @@ func TestAccTencentCloudCamUser_withoutKey(t *testing.T) {
 }
 func testAccCheckCamUserDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	camService := CamService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -133,7 +133,7 @@ func testAccCheckCamUserDestroy(s *terraform.State) error {
 func testAccCheckCamUserExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {

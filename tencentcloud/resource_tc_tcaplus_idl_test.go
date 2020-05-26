@@ -49,7 +49,7 @@ func testAccCheckTcaplusIdlDestroy(s *terraform.State) error {
 		}
 		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		var tcaplusIdlId TcaplusIdlId
 
@@ -79,7 +79,7 @@ func testAccCheckTcaplusIdlExists(n string) resource.TestCheckFunc {
 		}
 		service := TcaplusService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		var tcaplusIdlId TcaplusIdlId
 

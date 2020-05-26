@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 data "tencentcloud_reserved_instances" "instances" {
   availability_zone = "na-siliconvalley-1"
-  instance_type = "S2.MEDIUM8"
+  instance_type     = "S2.MEDIUM8"
 }
 ```
 */
@@ -100,7 +100,7 @@ func dataSourceTencentCloudReservedInstances() *schema.Resource {
 func dataSourceTencentCloudReservedInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_reserved_instances.read")
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}

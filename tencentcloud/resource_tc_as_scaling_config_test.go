@@ -93,7 +93,7 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 func testAccCheckAsScalingConfigExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -116,7 +116,7 @@ func testAccCheckAsScalingConfigExists(n string) resource.TestCheckFunc {
 
 func testAccCheckAsScalingConfigDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	asService := AsService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,

@@ -250,7 +250,7 @@ func resourceTencentCloudContainerClusterCreate(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_container_cluster.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 	cvmService := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -483,7 +483,7 @@ func resourceTencentCloudContainerClusterRead(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var info ClusterInfo
@@ -577,7 +577,7 @@ func resourceTencentCloudContainerClusterDelete(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_container_cluster.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {

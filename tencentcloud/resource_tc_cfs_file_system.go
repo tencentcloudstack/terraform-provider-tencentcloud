@@ -5,12 +5,12 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cfs_file_system" "foo" {
-  name = "test_file_system"
+  name              = "test_file_system"
   availability_zone = "ap-guangzhou-3"
-  access_group_id = "pgroup-7nx89k7l"
-  protocol = "NFS"
-  vpc_id = "vpc-ah9fbkap"
-  subnet_id = "subnet-9mu2t9iw"
+  access_group_id   = "pgroup-7nx89k7l"
+  protocol          = "NFS"
+  vpc_id            = "vpc-ah9fbkap"
+  subnet_id         = "subnet-9mu2t9iw"
 }
 ```
 
@@ -105,7 +105,7 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cfs_file_system.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cfsService := CfsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -175,7 +175,7 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	fsId := d.Id()
 	cfsService := CfsService{
@@ -232,7 +232,7 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cfs_file_system.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	fsId := d.Id()
 	cfsService := CfsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -276,7 +276,7 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 func resourceTencentCloudCfsFileSystemDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cfs_file_system.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	fsId := d.Id()
 	cfsService := CfsService{

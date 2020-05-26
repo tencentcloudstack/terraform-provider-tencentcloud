@@ -77,7 +77,7 @@ func resourceTencentCloudReservedInstance() *schema.Resource {
 func resourceTencentCloudReservedInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_reserved_instance.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	configId := d.Get("config_id").(string)
 	count := d.Get("instance_count").(int)
@@ -106,7 +106,7 @@ func resourceTencentCloudReservedInstanceRead(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	cvmService := CvmService{

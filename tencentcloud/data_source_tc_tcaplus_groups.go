@@ -8,12 +8,12 @@ data "tencentcloud_tcaplus_groups" "null" {
   cluster_id = "19162256624"
 }
 data "tencentcloud_tcaplus_groups" "id" {
-  cluster_id  = "19162256624"
-  group_id    = "19162256624:1"
+  cluster_id = "19162256624"
+  group_id   = "19162256624:1"
 }
 data "tencentcloud_tcaplus_groups" "name" {
-  cluster_id  = "19162256624"
-  group_name  = "test"
+  cluster_id = "19162256624"
+  group_name = "test"
 }
 data "tencentcloud_tcaplus_groups" "all" {
   cluster_id = "19162256624"
@@ -98,7 +98,7 @@ func dataSourceTencentCloudTcaplusGroupsRead(d *schema.ResourceData, meta interf
 	defer logElapsed("data_source.tencentcloud_tcaplus_groups.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TcaplusService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

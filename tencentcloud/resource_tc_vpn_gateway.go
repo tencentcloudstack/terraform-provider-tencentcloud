@@ -167,7 +167,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_vpn_gateway.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := vpc.NewCreateVpnGatewayRequest()
 	request.VpnGatewayName = helper.String(d.Get("name").(string))
@@ -257,7 +257,7 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	gatewayId := d.Id()
 	request := vpc.NewDescribeVpnGatewaysRequest()
@@ -324,7 +324,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_vpn_gateway.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	d.Partial(true)
 	gatewayId := d.Id()

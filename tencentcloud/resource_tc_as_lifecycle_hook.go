@@ -5,14 +5,14 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_lifecycle_hook" "lifecycle_hook" {
-	scaling_group_id = "sg-12af45"
-	lifecycle_hook_name = "tf-as-lifecycle-hook"
-	lifecycle_transition = "INSTANCE_LAUNCHING"
-	default_result = "CONTINUE"
-	heartbeat_timeout = 500
-	notification_metadata = "tf test"
-	notification_target_type = "CMQ_QUEUE"
-	notification_queue_name = "lifcyclehook"
+  scaling_group_id         = "sg-12af45"
+  lifecycle_hook_name      = "tf-as-lifecycle-hook"
+  lifecycle_transition     = "INSTANCE_LAUNCHING"
+  default_result           = "CONTINUE"
+  heartbeat_timeout        = 500
+  notification_metadata    = "tf test"
+  notification_target_type = "CMQ_QUEUE"
+  notification_queue_name  = "lifcyclehook"
 }
 ```
 */
@@ -154,7 +154,7 @@ func resourceTencentCloudAsLifecycleHookRead(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	lifecycleHookId := d.Id()
 	asService := AsService{
@@ -252,7 +252,7 @@ func resourceTencentCloudAsLifecycleHookDelete(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_as_lifecycle_hook.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	lifecycleHookId := d.Id()
 	asService := AsService{

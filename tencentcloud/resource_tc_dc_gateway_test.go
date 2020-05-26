@@ -64,7 +64,7 @@ func TestAccTencentCloudDcgV3InstancesBasic(t *testing.T) {
 func testAccTencentCloudCdgInstanceExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
@@ -89,7 +89,7 @@ func testAccTencentCloudCdgInstanceExists(r string) resource.TestCheckFunc {
 func testAccTencentCloudCdgInstanceDestroy(s *terraform.State) error {
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {

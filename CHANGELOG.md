@@ -1,4 +1,10 @@
-## 1.33.2 (Unreleased)
+## 1.34.0 (Unreleased)
+
+ENHANCEMENTS: 
+
+* upgrade terraform-plugin-sdk
+
+## 1.33.2 (May 25, 2020)
 
 DEPRECATED:
 * Data Source: `tencentcloud_tcaplus_applications` replace by `tencentcloud_tcaplus_clusters`,optional arguments `app_id` and `app_name` are no longer supported, replace by `cluster_id` and `cluster_name`

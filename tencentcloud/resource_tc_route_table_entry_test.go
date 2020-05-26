@@ -38,7 +38,7 @@ func TestAccTencentCloudVpcV3RouteEntryBasic(t *testing.T) {
 func testAccCheckVpcRouteEntryExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
@@ -81,7 +81,7 @@ func testAccCheckVpcRouteEntryExists(r string) resource.TestCheckFunc {
 
 func testAccCheckVpcRouteEntryDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {

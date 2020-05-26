@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_nat_gateway" "foo" {
-  name              = "test_nat_gateway"
-  vpc_id            = "vpc-4xxr2cy7"
-  bandwidth         = 100
-  max_concurrent    = 1000000
-  assigned_eip_set  = ["1.1.1.1"]
+  name             = "test_nat_gateway"
+  vpc_id           = "vpc-4xxr2cy7"
+  bandwidth        = 100
+  max_concurrent   = 1000000
+  assigned_eip_set = ["1.1.1.1"]
 }
 ```
 

@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 data "tencentcloud_kubernetes_clusters" "name" {
-  cluster_name ="terraform"
+  cluster_name = "terraform"
 }
 
 data "tencentcloud_kubernetes_clusters" "id" {
-  cluster_id ="cls-godovr32"
+  cluster_id = "cls-godovr32"
 }
 ```
 */
@@ -162,7 +162,7 @@ func dataSourceTencentCloudKubernetesClustersRead(d *schema.ResourceData, meta i
 	defer logElapsed("data_source.tencentcloud_kubernetes_clusters.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TkeService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

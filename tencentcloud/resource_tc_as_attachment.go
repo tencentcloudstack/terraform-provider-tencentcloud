@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_attachment" "attachment" {
-  scaling_group_id           = "sg-afasfa"
-  instance_ids               = ["ins-01", "ins-02"]
+  scaling_group_id = "sg-afasfa"
+  instance_ids     = ["ins-01", "ins-02"]
 }
 ```
 */
@@ -49,7 +49,7 @@ func resourceTencentCloudAsAttachmentCreate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_as_attachment.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	scalingGroupId := d.Get("scaling_group_id").(string)
 	instanceIds := helper.InterfacesStrings(d.Get("instance_ids").(*schema.Set).List())
@@ -70,7 +70,7 @@ func resourceTencentCloudAsAttachmentRead(d *schema.ResourceData, meta interface
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	scalingGroupId := d.Id()
 	asService := AsService{
@@ -100,7 +100,7 @@ func resourceTencentCloudAsAttachmentUpdate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_as_attachment.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	scalingGroupId := d.Id()
 	if d.HasChange("instance_ids") {
@@ -134,7 +134,7 @@ func resourceTencentCloudAsAttachmentDelete(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_as_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	scalingGroupId := d.Id()
 	asService := AsService{

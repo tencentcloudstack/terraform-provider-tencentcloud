@@ -147,7 +147,7 @@ func resourceTencentCloudSslCertificate() *schema.Resource {
 func resourceTencentCloudSslCertificateCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssl_certificate.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	name := d.Get("name").(string)
 	certType := d.Get("type").(string)
@@ -180,7 +180,7 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 	defer inconsistentCheck(d, m)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -250,7 +250,7 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 func resourceTencentCloudSslCertificateDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssl_certificate.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 

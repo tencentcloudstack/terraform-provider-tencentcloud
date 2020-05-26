@@ -383,7 +383,7 @@ func dataSourceTencentCloudDayuDdosPoliciesRead(d *schema.ResourceData, meta int
 	defer logElapsed("data_source.tencentcloud_dayu_ddos_policies.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DayuService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

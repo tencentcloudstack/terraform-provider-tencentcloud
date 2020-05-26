@@ -65,7 +65,7 @@ func dataSourceTencentCloudCamGroupMembershipsRead(d *schema.ResourceData, meta 
 	defer logElapsed("data_source.tencentcloud_cam_group_memberships.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupId := d.Get("group_id").(string)
 	camService := CamService{

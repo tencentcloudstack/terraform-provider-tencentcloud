@@ -5,23 +5,23 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cdn_domain" "foo" {
-  domain = "xxxx.com"
-  service_type = "web"
-  area = "mainland"
+  domain         = "xxxx.com"
+  service_type   = "web"
+  area           = "mainland"
   full_url_cache = false
 
   origin {
-    origin_type = "ip"
-    origin_list = ["127.0.0.1"]
+    origin_type          = "ip"
+    origin_list          = ["127.0.0.1"]
     origin_pull_protocol = "follow"
   }
 
   https_config {
-    https_switch = "off"
-    http2_switch = "off"
+    https_switch         = "off"
+    http2_switch         = "off"
     ocsp_stapling_switch = "off"
-    spdy_switch = "off"
-    verify_client = "off"
+    spdy_switch          = "off"
+    verify_client        = "off"
   }
 
   tags = {
@@ -302,7 +302,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cdn_domain.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cdnService := CdnService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -457,7 +457,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	client := meta.(*TencentCloudClient).apiV3Conn
 	region := client.Region
 	cdnService := CdnService{client: client}
@@ -578,7 +578,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cdn_domain.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	client := meta.(*TencentCloudClient).apiV3Conn
 	cdnService := CdnService{client: client}
 
@@ -750,7 +750,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cdn_domain.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	client := meta.(*TencentCloudClient).apiV3Conn
 	cdnService := CdnService{client: client}
 

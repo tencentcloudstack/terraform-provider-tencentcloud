@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_notification" "as_notification" {
-  scaling_group_id              = "sg-12af45"
-  notification_types            = ["SCALE_OUT_FAILED", "SCALE_IN_SUCCESSFUL", "SCALE_IN_FAILED", "REPLACE_UNHEALTHY_INSTANCE_FAILED"]
-  notification_user_group_ids   = ["76955"]
+  scaling_group_id            = "sg-12af45"
+  notification_types          = ["SCALE_OUT_FAILED", "SCALE_IN_SUCCESSFUL", "SCALE_IN_FAILED", "REPLACE_UNHEALTHY_INSTANCE_FAILED"]
+  notification_user_group_ids = ["76955"]
 }
 ```
 */
@@ -98,7 +98,7 @@ func resourceTencentCloudAsNotificationRead(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_as_notification.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	notificationId := d.Id()
 	asService := AsService{
@@ -163,7 +163,7 @@ func resourceTencentCloudAsNotificationDelete(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_as_notification.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	notificationId := d.Id()
 	asService := AsService{

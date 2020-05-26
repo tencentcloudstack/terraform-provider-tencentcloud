@@ -81,7 +81,7 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_key_pair.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -112,7 +112,7 @@ func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) e
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	keyId := d.Id()
 	cvmService := CvmService{
@@ -153,7 +153,7 @@ func resourceTencentCloudKeyPairUpdate(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_key_pair.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	keyId := d.Id()
 	cvmService := CvmService{
@@ -175,7 +175,7 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_key_pair.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	keyId := d.Id()
 	cvmService := CvmService{

@@ -113,7 +113,7 @@ func resourceTencentCloudCamRolePolicyAttachmentCreate(d *schema.ResourceData, m
 	d.SetId(roleId + "#" + strconv.Itoa(policyId))
 
 	//get really instance then read
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -141,7 +141,7 @@ func resourceTencentCloudCamRolePolicyAttachmentRead(d *schema.ResourceData, met
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	rolePolicyAttachmentId := d.Id()
 
@@ -185,7 +185,7 @@ func resourceTencentCloudCamRolePolicyAttachmentDelete(d *schema.ResourceData, m
 	defer logElapsed("resource.tencentcloud_cam_role_policy_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	rolePolicyAttachmentId := d.Id()
 

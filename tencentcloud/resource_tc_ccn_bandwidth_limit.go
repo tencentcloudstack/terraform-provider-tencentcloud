@@ -5,19 +5,19 @@ Example Usage
 
 ```hcl
 variable "other_region1" {
-    default = "ap-shanghai"
+  default = "ap-shanghai"
 }
 
-resource "tencentcloud_ccn" "main"{
-	name ="ci-temp-test-ccn"
-	description="ci-temp-test-ccn-des"
-	qos ="AG"
+resource "tencentcloud_ccn" "main" {
+  name        = "ci-temp-test-ccn"
+  description = "ci-temp-test-ccn-des"
+  qos         = "AG"
 }
 
 resource "tencentcloud_ccn_bandwidth_limit" "limit1" {
-	ccn_id =tencentcloud_ccn.main.id
-	region =var.other_region1
-	bandwidth_limit = 500
+  ccn_id          = tencentcloud_ccn.main.id
+  region          = var.other_region1
+  bandwidth_limit = 500
 }
 ```
 */
@@ -65,7 +65,7 @@ func resourceTencentCloudCcnBandwidthLimitCreate(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_ccn_bandwidth_limit.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -98,7 +98,7 @@ func resourceTencentCloudCcnBandwidthLimitUpdate(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_ccn_bandwidth_limit.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -128,7 +128,7 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

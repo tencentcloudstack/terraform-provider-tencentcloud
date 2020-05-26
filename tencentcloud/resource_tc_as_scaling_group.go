@@ -224,7 +224,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_as_scaling_group.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	request := as.NewCreateAutoScalingGroupRequest()
 
 	request.AutoScalingGroupName = helper.String(d.Get("scaling_group_name").(string))
@@ -365,7 +365,7 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	scalingGroupId := d.Id()
 	asService := AsService{
@@ -444,7 +444,7 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_as_scaling_group.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	tagService := TagService{client: client}
@@ -626,7 +626,7 @@ func resourceTencentCloudAsScalingGroupDelete(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_as_scaling_group.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	scalingGroupId := d.Id()
 	asService := AsService{

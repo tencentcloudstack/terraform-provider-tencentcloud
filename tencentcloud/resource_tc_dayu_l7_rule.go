@@ -7,21 +7,21 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dayu_l7_rule" "test_rule" {
-  resource_type         = "bgpip"
-  resource_id 			= "bgpip-00000294"
-  name					= "rule_test"
-  domain				= "zhaoshaona.com"
-  protocol				= "https"
-  switch				= true
-  source_type			= 2
-  source_list 			= ["1.1.1.1:80","2.2.2.2"]
-  ssl_id				= "%s"
-  health_check_switch	= true
-  health_check_code		= 31
-  health_check_interval = 30
-  health_check_method	= "GET"
-  health_check_path		= "/"
-  health_check_health_num = 5
+  resource_type             = "bgpip"
+  resource_id               = "bgpip-00000294"
+  name                      = "rule_test"
+  domain                    = "zhaoshaona.com"
+  protocol                  = "https"
+  switch                    = true
+  source_type               = 2
+  source_list               = ["1.1.1.1:80", "2.2.2.2"]
+  ssl_id                    = "%s"
+  health_check_switch       = true
+  health_check_code         = 31
+  health_check_interval     = 30
+  health_check_method       = "GET"
+  health_check_path         = "/"
+  health_check_health_num   = 5
   health_check_unhealth_num = 10
 }
 ```
@@ -173,7 +173,7 @@ func resourceTencentCloudDayuL7RuleCreate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_dayu_l7_rule.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	resourceId := d.Get("resource_id").(string)
 	resourceType := d.Get("resource_type").(string)
@@ -310,7 +310,7 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_dayu_l7_rule.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
@@ -499,7 +499,7 @@ func resourceTencentCloudDayuL7RuleRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
@@ -568,7 +568,7 @@ func resourceTencentCloudDayuL7RuleDelete(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_dayu_l7_rule.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
@@ -607,7 +607,7 @@ func checkL7RuleStatus(meta interface{}, resourceType string, resourceId string,
 	defer logElapsed("resource.tencentcloud_dayu_l7_rule.check_status")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 

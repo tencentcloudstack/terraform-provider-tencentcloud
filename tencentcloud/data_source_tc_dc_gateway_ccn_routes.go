@@ -28,7 +28,7 @@ resource "tencentcloud_dc_gateway_ccn_route" "route2" {
 }
 
 #You need to sleep for a few seconds because there is a cache on the server
-data "tencentcloud_dc_gateway_ccn_routes"  "test" {
+data "tencentcloud_dc_gateway_ccn_routes" "test" {
   dcg_id = tencentcloud_dc_gateway.ccn_main.id
 }
 ```
@@ -97,7 +97,7 @@ func dataSourceTencentCloudDcGatewayCCNRoutesRead(d *schema.ResourceData, meta i
 	defer logElapsed("data_source.tencentcloud_dc_gateway_ccn_routes.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
