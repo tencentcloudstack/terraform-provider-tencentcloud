@@ -32,7 +32,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -450,8 +449,8 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			if e != nil {
 				return retryError(e)
 			}
-			if storage != nil && *storage.DiskState == CBS_STORAGE_STATUS_EXPANDING {
-				return resource.RetryableError(fmt.Errorf("cbs storage status is %s", *storage.DiskState))
+			if storage != nil && (*storage.DiskState == CBS_STORAGE_STATUS_EXPANDING || *storage.DiskChargeType != CBS_CHARGE_TYPE_PREPAID) {
+				return resource.RetryableError(fmt.Errorf("cbs storage status is %s, charget type is %s", *storage.DiskState, *storage.DiskChargeType))
 			}
 			return nil
 		})
@@ -476,9 +475,21 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 			if err != nil {
 				return err
 			}
-
-			//to pay order wait
-			time.Sleep(readRetryTimeout)
+			//check renew flag
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				storage, e := cbsService.DescribeDiskById(ctx, storageId)
+				if e != nil {
+					return retryError(e)
+				}
+				if storage != nil && (*storage.DiskState == CBS_STORAGE_STATUS_EXPANDING || *storage.RenewFlag != renewFlag) {
+					return resource.RetryableError(fmt.Errorf("cbs storage status is %s, renew flag is %s", *storage.DiskState, *storage.RenewFlag))
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update cbs failed, reason:%s\n ", logId, err.Error())
+				return err
+			}
 			d.SetPartial("prepaid_renew_flag")
 
 		}

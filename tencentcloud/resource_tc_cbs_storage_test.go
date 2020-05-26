@@ -28,9 +28,10 @@ func TestAccTencentCloudCbsStorage_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cbs_storage.storage_basic",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_cbs_storage.storage_basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"force_delete"},
 			},
 		},
 	})
