@@ -37,9 +37,9 @@ resource "tencentcloud_gaap_layer4_listener" "foo" {
   }
 
   realserver_bind_set {
-    id     = tencentcloud_gaap_realserver.bar.id
-    ip     = tencentcloud_gaap_realserver.bar.ip
-    port   = 80
+    id   = tencentcloud_gaap_realserver.bar.id
+    ip   = tencentcloud_gaap_realserver.bar.ip
+    port = 80
   }
 }
 ```
@@ -190,7 +190,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 func resourceTencentCloudGaapLayer4ListenerCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer4_listener.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	protocol := d.Get("protocol").(string)
 	name := d.Get("name").(string)
@@ -274,7 +274,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 	defer inconsistentCheck(d, m)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -398,7 +398,7 @@ func resourceTencentCloudGaapLayer4ListenerRead(d *schema.ResourceData, m interf
 func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer4_listener.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	protocol := d.Get("protocol").(string)
@@ -494,7 +494,7 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 func resourceTencentCloudGaapLayer4ListenerDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_layer4_listener.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	protocol := d.Get("protocol").(string)

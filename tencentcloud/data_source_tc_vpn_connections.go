@@ -259,7 +259,7 @@ func dataSourceTencentCloudVpnConnectionsRead(d *schema.ResourceData, meta inter
 	defer logElapsed("data_source.tencentcloud_vpn_connections.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := meta.(*TencentCloudClient).apiV3Conn.Region

@@ -227,7 +227,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_rule.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	listenerId := d.Get("listener_id").(string)
 
@@ -303,7 +303,7 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 func resourceTencentCloudGaapHttpRuleRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_rule.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -358,7 +358,7 @@ func resourceTencentCloudGaapHttpRuleRead(d *schema.ResourceData, m interface{})
 func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_rule.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	listenerId := d.Get("listener_id").(string)
@@ -481,7 +481,7 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 func resourceTencentCloudGaapHttpRuleDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_http_rule.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	listenerId := d.Get("listener_id").(string)

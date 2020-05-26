@@ -7,11 +7,11 @@ INTERNAL CLB
 
 ```hcl
 resource "tencentcloud_clb_instance" "internal_clb" {
-  network_type              = "INTERNAL"
-  clb_name                  = "myclb"
-  project_id                = 0
-  vpc_id                    = "vpc-7007ll7q"
-  subnet_id                 = "subnet-12rastkr"
+  network_type = "INTERNAL"
+  clb_name     = "myclb"
+  project_id   = 0
+  vpc_id       = "vpc-7007ll7q"
+  subnet_id    = "subnet-12rastkr"
 
   tags = {
     test = "tf"
@@ -302,7 +302,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbId := d.Id()
 	clbService := ClbService{
@@ -467,7 +467,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbId := d.Id()
 	clbService := ClbService{
@@ -490,7 +490,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 
 func checkSameName(name string, meta interface{}) (flag bool, errRet error) {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	flag = false
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

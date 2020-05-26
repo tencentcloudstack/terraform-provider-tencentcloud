@@ -37,11 +37,11 @@ func TestAccTencentCloudMysqlParameterListDataSource(t *testing.T) {
 }
 
 func testAccMysqlParameterListDataSourceDefaultConfig() string {
-	return fmt.Sprintf(`
+	return `
 data "tencentcloud_mysql_parameter_list" "mysql_default" {
 	engine_version = "5.7"
 }
-	`)
+	`
 }
 
 func testAccMysqlParameterListDataSourceConfig(commonTestCase string) string {

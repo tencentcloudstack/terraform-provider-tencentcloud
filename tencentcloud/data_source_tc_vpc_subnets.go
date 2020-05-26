@@ -17,8 +17,8 @@ resource "tencentcloud_subnet" "subnet" {
   availability_zone = var.availability_zone
   name              = "guagua_vpc_subnet_test"
   vpc_id            = tencentcloud_vpc.foo.id
-  cidr_block        =  "10.0.20.0/28"
-  is_multicast      =  false
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
 
   tags = {
     "test" = "test"
@@ -180,7 +180,7 @@ func dataSourceTencentCloudVpcSubnetsRead(d *schema.ResourceData, meta interface
 	defer logElapsed("data_source.tencentcloud_vpc_subnets.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}

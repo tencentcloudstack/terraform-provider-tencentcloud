@@ -5,23 +5,23 @@ Example Usage
 
 ```hcl
 variable "other_region1" {
-    default = "ap-shanghai"
+  default = "ap-shanghai"
 }
 
-resource "tencentcloud_ccn" "main"{
-	name ="ci-temp-test-ccn"
-	description="ci-temp-test-ccn-des"
-	qos ="AG"
+resource "tencentcloud_ccn" "main" {
+  name        = "ci-temp-test-ccn"
+  description = "ci-temp-test-ccn-des"
+  qos         = "AG"
 }
 
 data "tencentcloud_ccn_bandwidth_limits" "limit" {
-	ccn_id =tencentcloud_ccn.main.id
+  ccn_id = tencentcloud_ccn.main.id
 }
 
 resource "tencentcloud_ccn_bandwidth_limit" "limit1" {
-	ccn_id =tencentcloud_ccn.main.id
-	region =var.other_region1
-	bandwidth_limit = 500
+  ccn_id          = tencentcloud_ccn.main.id
+  region          = var.other_region1
+  bandwidth_limit = 500
 }
 ```
 */
@@ -78,7 +78,7 @@ func dataSourceTencentCloudCcnBandwidthLimitsRead(d *schema.ResourceData, meta i
 	defer logElapsed("data_source.tencentcloud_ccn_bandwidth_limit.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

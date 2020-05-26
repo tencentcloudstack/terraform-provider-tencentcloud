@@ -18,29 +18,29 @@ variable "vpc_id" {
   default = "vpc-4h9v4mo3"
 }
 
-resource "tencentcloud_dcx"  "bgp_main" {
-    bandwidth = 900
-    dc_id = var.dc_id
-    dcg_id = var.dcg_id
-    name = "bgp_main"
-    network_type = "VPC"
-    route_type = "BGP"
-    vlan = 306
-    vpc_id = var.vpc_id
+resource "tencentcloud_dcx" "bgp_main" {
+  bandwidth    = 900
+  dc_id        = var.dc_id
+  dcg_id       = var.dcg_id
+  name         = "bgp_main"
+  network_type = "VPC"
+  route_type   = "BGP"
+  vlan         = 306
+  vpc_id       = var.vpc_id
 }
 
-resource "tencentcloud_dcx"  "static_main" {
-    bandwidth = 900
-    dc_id = var.dc_id
-    dcg_id = var.dcg_id
-    name = "static_main"
-    network_type = "VPC"
-    route_type = "STATIC"
-    vlan = 301
-    vpc_id = var.vpc_id
-	route_filter_prefixes =["10.10.10.101/32"]
-	tencent_address = "100.93.46.1/30"
-	customer_address = "100.93.46.2/30"
+resource "tencentcloud_dcx" "static_main" {
+  bandwidth             = 900
+  dc_id                 = var.dc_id
+  dcg_id                = var.dcg_id
+  name                  = "static_main"
+  network_type          = "VPC"
+  route_type            = "STATIC"
+  vlan                  = 301
+  vpc_id                = var.vpc_id
+  route_filter_prefixes = ["10.10.10.101/32"]
+  tencent_address       = "100.93.46.1/30"
+  customer_address      = "100.93.46.2/30"
 }
 ```
 */
@@ -178,7 +178,7 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_dcx.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -258,7 +258,7 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -323,7 +323,7 @@ func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_dcx.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -348,7 +348,7 @@ func resourceTencentCloudDcxInstanceDelete(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_dcx.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_vpc" "main" {
-    name="ci-vpc-instance-test"
-    cidr_block="10.0.0.0/16"
+  name       = "ci-vpc-instance-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_dc_gateway" "vpc_main" {
@@ -99,7 +99,7 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_dc_gateway.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -145,7 +145,7 @@ func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_dc_gateway.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -178,7 +178,7 @@ func resourceTencentCloudDcGatewayUpdate(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_dc_gateway.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	if d.HasChange("name") {
@@ -193,7 +193,7 @@ func resourceTencentCloudDcGatewayDelete(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_dc_gateway.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {

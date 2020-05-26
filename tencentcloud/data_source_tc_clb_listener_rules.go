@@ -175,7 +175,7 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	defer logElapsed("data_source.tencentcloud_clb_listener_rules.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	listenerId := d.Get("listener_id").(string)
 	clbId := d.Get("clb_id").(string)

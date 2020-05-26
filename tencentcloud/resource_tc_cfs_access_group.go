@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cfs_access_group" "foo" {
-  name = "test_access_group"
+  name        = "test_access_group"
   description = "test"
 }
 ```
@@ -67,7 +67,7 @@ func resourceTencentCloudCfsAccessGroup() *schema.Resource {
 func resourceTencentCloudCfsAccessGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cfs_access_group.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cfsService := CfsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -99,7 +99,7 @@ func resourceTencentCloudCfsAccessGroupRead(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cfsService := CfsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -165,7 +165,7 @@ func resourceTencentCloudCfsAccessGroupUpdate(d *schema.ResourceData, meta inter
 func resourceTencentCloudCfsAccessGroupDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cfs_access_group.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	cfsService := CfsService{

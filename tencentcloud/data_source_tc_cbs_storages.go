@@ -155,7 +155,7 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("data_source.tencentcloud_cbs_storages.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]string)
 	if v, ok := d.GetOk("storage_id"); ok {

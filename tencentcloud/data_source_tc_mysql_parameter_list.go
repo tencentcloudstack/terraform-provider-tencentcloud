@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mysql_parameter_list" "mysql" {
-  mysql_id = "my-test-database"
-  engine_version = "5.5"
+  mysql_id           = "my-test-database"
+  engine_version     = "5.5"
   result_output_file = "mytestpath"
 }
 ```
@@ -112,7 +112,7 @@ func dataSourceTencentMysqlParameterListRead(d *schema.ResourceData, meta interf
 	defer logElapsed("data_source.tencentcloud_mysql_parameter_list.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	mysqlService := MysqlService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}

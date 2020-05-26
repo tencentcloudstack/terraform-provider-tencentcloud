@@ -6,9 +6,9 @@ Example Usage
 ```hcl
 resource "tencentcloud_cfs_access_rule" "foo" {
   access_group_id = "pgroup-7nx89k7l"
-  auth_client_ip = "10.10.1.0/24"
-  priority = 1
-  rw_permission = "RO"
+  auth_client_ip  = "10.10.1.0/24"
+  priority        = 1
+  rw_permission   = "RO"
   user_permission = "root_squash"
 }
 ```
@@ -112,7 +112,7 @@ func resourceTencentCloudCfsAccessRuleRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	ruleId := d.Id()
 	groupId := d.Get("access_group_id").(string)
@@ -191,7 +191,7 @@ func resourceTencentCloudCfsAccessRuleUpdate(d *schema.ResourceData, meta interf
 func resourceTencentCloudCfsAccessRuleDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cfs_access_rule.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cfsService := CfsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}

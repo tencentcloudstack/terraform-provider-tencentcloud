@@ -38,13 +38,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"time"
 )
 
 func resourceTencentMonitorBindingObject() *schema.Resource {
@@ -98,7 +99,7 @@ func resourceTencentMonitorBindingObjectCreate(d *schema.ResourceData, meta inte
 
 	var (
 		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), "logId", logId)
+		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request        = monitor.NewBindingPolicyObjectRequest()
 		idSeeds        []string
@@ -178,7 +179,7 @@ func resourceTencentMonitorBindingObjectRead(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 	var (
 		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), "logId", logId)
+		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		groupId        = int64(d.Get("group_id").(int))
 	)
@@ -235,7 +236,7 @@ func resourceTencentMonitorBindingObjectDelete(d *schema.ResourceData, meta inte
 
 	var (
 		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), "logId", logId)
+		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		groupId        = int64(d.Get("group_id").(int))
 	)

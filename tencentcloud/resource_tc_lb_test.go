@@ -43,7 +43,7 @@ func TestAccTencentCloudLB_basic(t *testing.T) {
 
 func testAccCheckLBDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbService := ClbService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,

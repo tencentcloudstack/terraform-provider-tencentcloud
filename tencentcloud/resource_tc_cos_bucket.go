@@ -50,12 +50,12 @@ resource "tencentcloud_cos_bucket" "mycos" {
   acl    = "public-read-write"
 
   lifecycle_rules {
-	filter_prefix = "path1/"
+    filter_prefix = "path1/"
 
     transition {
       date          = "2019-06-01"
       storage_class = "STANDARD_IA"
-	}
+    }
 
     expiration {
       days = 90
@@ -268,7 +268,7 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_cos_bucket.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Get("bucket").(string)
 	acl := d.Get("acl").(string)
@@ -296,7 +296,7 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Id()
 	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -359,7 +359,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_cos_bucket.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn.UseCosClient()
 
@@ -421,7 +421,7 @@ func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_cos_bucket.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Id()
 	cosService := CosService{

@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mysql_backup_list" "default" {
-  mysql_id = "my-test-database"
-  max_number = 10
+  mysql_id           = "my-test-database"
+  max_number         = 10
   result_output_file = "mytestpath"
 }
 ```
@@ -103,7 +103,7 @@ func dataSourceTencentMysqlBackupListRead(d *schema.ResourceData, meta interface
 	defer logElapsed("data_source.tencentcloud_mysql_backup_list.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 

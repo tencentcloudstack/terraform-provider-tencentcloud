@@ -102,7 +102,7 @@ func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta inte
 	defer logElapsed("data_source.tencentcloud_clb_redirections.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]string)
 	params["clb_id"] = d.Get("clb_id").(string)

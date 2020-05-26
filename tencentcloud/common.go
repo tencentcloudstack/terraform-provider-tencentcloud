@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"io/ioutil"
 	"log"
 	"os"
@@ -15,6 +14,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
@@ -22,6 +22,10 @@ import (
 const FILED_SP = "#"
 
 var contextNil context.Context = nil
+
+type contextLogId string
+
+const logIdKey = contextLogId("logId")
 
 var logFirstTime = ""
 var logAtomicId int64 = 0
@@ -59,7 +63,7 @@ func init() {
 // getLogId get logId for trace, return a new logId if ctx is nil
 func getLogId(ctx context.Context) string {
 	if ctx != nil {
-		logId, ok := ctx.Value("logId").(string)
+		logId, ok := ctx.Value(logIdKey).(string)
 		if ok {
 			return logId
 		}

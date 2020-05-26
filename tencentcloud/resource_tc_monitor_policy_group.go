@@ -53,12 +53,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strconv"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"strconv"
 )
 
 func resourceTencentMonitorPolicyGroup() *schema.Resource {
@@ -395,7 +396,7 @@ func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -569,7 +570,7 @@ func resourceTencentMonitorPolicyGroupRead(d *schema.ResourceData, meta interfac
 func resourceTencentMonitorPolicyGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_policy_group.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		monitorService = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}

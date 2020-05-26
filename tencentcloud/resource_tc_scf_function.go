@@ -363,7 +363,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_scf_function.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := m.(*TencentCloudClient).apiV3Conn
 	scfService := ScfService{client: client}
@@ -540,7 +540,7 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 	defer inconsistentCheck(d, m)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ScfService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -637,7 +637,7 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_scf_function.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := m.(*TencentCloudClient).apiV3Conn
 	scfService := ScfService{client: client}
@@ -896,7 +896,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 func resourceTencentCloudScfFunctionDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_scf_function.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ScfService{client: m.(*TencentCloudClient).apiV3Conn}
 

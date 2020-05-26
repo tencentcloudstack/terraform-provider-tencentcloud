@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_as_scaling_configs" "as_configs" {
-    configuration_id   = "asc-oqio4yyj"
-    result_output_file = "my_test_path"
+  configuration_id   = "asc-oqio4yyj"
+  result_output_file = "my_test_path"
 }
 ```
 */
@@ -174,7 +174,7 @@ func dataSourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta inte
 	defer logElapsed("data_source.tencentcloud_as_scaling_configs.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	asService := AsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

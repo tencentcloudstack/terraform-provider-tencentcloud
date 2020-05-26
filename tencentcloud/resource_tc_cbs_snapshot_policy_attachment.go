@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cbs_snapshot_policy_attachment" "foo" {
-  storage_id = tencentcloud_cbs_storage.foo.id
+  storage_id         = tencentcloud_cbs_storage.foo.id
   snapshot_policy_id = tencentcloud_cbs_snapshot_policy.policy.id
 }
 ```
@@ -49,7 +49,7 @@ func resourceTencentCloudCbsSnapshotPolicyAttachment() *schema.Resource {
 func resourceTencentCloudCbsSnapshotPolicyAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy_attachment.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	storageId := d.Get("storage_id").(string)
 	policyId := d.Get("snapshot_policy_id").(string)
@@ -77,7 +77,7 @@ func resourceTencentCloudCbsSnapshotPolicyAttachmentRead(d *schema.ResourceData,
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	idSplit := strings.Split(id, FILED_SP)
@@ -115,7 +115,7 @@ func resourceTencentCloudCbsSnapshotPolicyAttachmentRead(d *schema.ResourceData,
 func resourceTencentCloudCbsSnapshotPolicyAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy_attachment.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	idSplit := strings.Split(id, FILED_SP)

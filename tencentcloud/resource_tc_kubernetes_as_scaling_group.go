@@ -203,7 +203,7 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Sensitive:     true,
 			ForceNew:      true,
 			ValidateFunc:  validateAsConfigPassword,
-			ConflictsWith: []string{"auto_scaling_config.key_ids"},
+			ConflictsWith: []string{"auto_scaling_config.0.key_ids"},
 			Description:   "Password to access.",
 		},
 		"key_ids": {
@@ -211,7 +211,7 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Optional:      true,
 			ForceNew:      true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
-			ConflictsWith: []string{"auto_scaling_config.password"},
+			ConflictsWith: []string{"auto_scaling_config.0.password"},
 			Description:   "ID list of keys.",
 		},
 		"security_group_ids": {
@@ -317,14 +317,14 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 			Optional:      true,
 			ForceNew:      true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
-			ConflictsWith: []string{"auto_scaling_group.forward_balancer_ids"},
+			ConflictsWith: []string{"auto_scaling_group.0.forward_balancer_ids"},
 			Description:   "ID list of traditional load balancers.",
 		},
 		"forward_balancer_ids": {
 			Type:          schema.TypeList,
 			Optional:      true,
 			ForceNew:      true,
-			ConflictsWith: []string{"auto_scaling_group.load_balancer_ids"},
+			ConflictsWith: []string{"auto_scaling_group.0.load_balancer_ids"},
 			Description:   "List of application load balancers, which can't be specified with load_balancer_ids together.",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
@@ -650,7 +650,7 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 
 	var (
 		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), "logId", logId)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
 		service = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 		items   = strings.Split(d.Id(), ":")
 	)
@@ -711,7 +711,7 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_kubernetes_as_scaling_group.create")()
 	var (
 		logId       = getLogId(contextNil)
-		ctx         = context.WithValue(context.TODO(), "logId", logId)
+		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
 		clusterId   = d.Get("cluster_id").(string)
 		groupParas  = d.Get("auto_scaling_group").([]interface{})
 		configParas = d.Get("auto_scaling_config").([]interface{})
@@ -763,7 +763,7 @@ func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interfa
 
 	var (
 		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), "logId", logId)
+		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
 		service   = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 		asService = AsService{client: meta.(*TencentCloudClient).apiV3Conn}
 		items     = strings.Split(d.Id(), ":")

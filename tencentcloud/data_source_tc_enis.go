@@ -188,7 +188,7 @@ func dataSourceTencentCloudEnis() *schema.Resource {
 func dataSourceTencentCloudEnisRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("data_source.tencentcloud_enis.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 

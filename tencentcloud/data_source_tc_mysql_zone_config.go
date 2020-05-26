@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mysql_zone_config" "mysql" {
-  region = "ap-guangzhou"
+  region             = "ap-guangzhou"
   result_output_file = "mytestpath"
 }
 ```
@@ -167,7 +167,7 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 	defer logElapsed("data_source.tencentcloud_mysql_zone_config.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := meta.(*TencentCloudClient).apiV3Conn.Region

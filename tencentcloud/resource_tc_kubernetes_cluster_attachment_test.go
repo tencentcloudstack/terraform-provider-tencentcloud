@@ -30,7 +30,7 @@ func TestAccTencentCloudTkeAttachResource(t *testing.T) {
 
 func testAccCheckTkeAttachDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TkeService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -83,7 +83,7 @@ func testAccCheckTkeAttachExists(n string) resource.TestCheckFunc {
 		}
 
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		instanceId, clusterId := "", ""
 

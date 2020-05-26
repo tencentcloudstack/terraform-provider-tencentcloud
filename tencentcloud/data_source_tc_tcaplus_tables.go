@@ -9,25 +9,25 @@ data "tencentcloud_tcaplus_tables" "null" {
 }
 
 data "tencentcloud_tcaplus_tables" "group" {
-  cluster_id  = "19162256624"
-  group_id    = "19162256624:3"
+  cluster_id = "19162256624"
+  group_id   = "19162256624:3"
 }
 
 data "tencentcloud_tcaplus_tables" "name" {
-  cluster_id     = "19162256624"
-  group_id       = "19162256624:3"
-  table_name     = "guagua"
+  cluster_id = "19162256624"
+  group_id   = "19162256624:3"
+  table_name = "guagua"
 }
 
 data "tencentcloud_tcaplus_tables" "id" {
-  cluster_id   = "19162256624"
-  table_id     = "tcaplus-faa65eb7"
+  cluster_id = "19162256624"
+  table_id   = "tcaplus-faa65eb7"
 }
 data "tencentcloud_tcaplus_tables" "all" {
-  cluster_id     = "19162256624"
-  group_id       = "19162256624:3"
-  table_id       = "tcaplus-faa65eb7"
-  table_name     = "guagua"
+  cluster_id = "19162256624"
+  group_id   = "19162256624:3"
+  table_id   = "tcaplus-faa65eb7"
+  table_name = "guagua"
 }
 ```
 */
@@ -158,7 +158,7 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 	defer logElapsed("data_source.tencentcloud_tcaplus_tables.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TcaplusService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

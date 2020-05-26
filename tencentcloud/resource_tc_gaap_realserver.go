@@ -85,7 +85,7 @@ func resourceTencentCloudGaapRealserver() *schema.Resource {
 func resourceTencentCloudGaapRealserverCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_realserver.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		addressIsSet bool
@@ -136,7 +136,7 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 	defer inconsistentCheck(d, m)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -198,7 +198,7 @@ func resourceTencentCloudGaapRealserverRead(d *schema.ResourceData, m interface{
 func resourceTencentCloudGaapRealserverUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_realserver.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -240,7 +240,7 @@ func resourceTencentCloudGaapRealserverUpdate(d *schema.ResourceData, m interfac
 func resourceTencentCloudGaapRealserverDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_realserver.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 

@@ -90,11 +90,11 @@ func TestAccTencentCloudCosBucketDataSource_full(t *testing.T) {
 func testAccCosBucketDataSource_basic(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_basic" {
-	bucket = "tf-baisc-%d-%s"
+  bucket = "tf-baisc-%d-%s"
 }
 
 data "tencentcloud_cos_buckets" "bucket_list" {
-	bucket_prefix = tencentcloud_cos_bucket.bucket_basic.bucket
+  bucket_prefix = tencentcloud_cos_bucket.bucket_basic.bucket
 }
 `, acctest.RandInt(), appid)
 }
@@ -110,7 +110,7 @@ resource "tencentcloud_cos_bucket" "bucket_basic" {
 }
 
 data "tencentcloud_cos_buckets" "bucket_list" {
-	tags = tencentcloud_cos_bucket.bucket_basic.tags
+  tags = tencentcloud_cos_bucket.bucket_basic.tags
 }
 `, acctest.RandInt(), appid)
 }

@@ -111,7 +111,7 @@ func dataSourceTencentCloudGaapRealservers() *schema.Resource {
 func dataSourceTencentCloudGaapRealserversRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("data_source.tencentcloud_gaap_realservers.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	projectId := d.Get("project_id").(int)
 

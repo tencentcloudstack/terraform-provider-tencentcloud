@@ -77,7 +77,7 @@ func resourceTencentCloudSecurityGroupCreate(d *schema.ResourceData, m interface
 	defer logElapsed("resource.tencentcloud_security_group.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := m.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -113,7 +113,7 @@ func resourceTencentCloudSecurityGroupRead(d *schema.ResourceData, m interface{}
 	defer logElapsed("resource.tencentcloud_security_group.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := m.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -154,7 +154,7 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 	defer logElapsed("resource.tencentcloud_security_group.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := m.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -212,7 +212,7 @@ func resourceTencentCloudSecurityGroupDelete(d *schema.ResourceData, m interface
 	defer logElapsed("resource.tencentcloud_security_group.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 

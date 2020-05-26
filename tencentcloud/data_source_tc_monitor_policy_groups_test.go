@@ -1,9 +1,9 @@
 package tencentcloud
 
 import (
-	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccMonitorPolicyGroups(t *testing.T) {
@@ -24,5 +24,5 @@ func TestAccMonitorPolicyGroups(t *testing.T) {
 }
 
 func testAccDataSourceMonitorPolicyGroups() string {
-	return fmt.Sprintf(`data "tencentcloud_monitor_policy_groups" "name" {}`)
+	return `data "tencentcloud_monitor_policy_groups" "name" {}`
 }

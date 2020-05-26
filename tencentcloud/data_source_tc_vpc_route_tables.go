@@ -180,7 +180,7 @@ func dataSourceTencentCloudVpcRouteTablesRead(d *schema.ResourceData, meta inter
 	defer logElapsed("data_source.tencentcloud_vpc_route_tables.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
