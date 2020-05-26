@@ -1,4 +1,9 @@
 ## 1.34.0 (Unreleased)
+
+ENHANCEMENTS: 
+
+* upgrade terraform-plugin-sdk
+
 ## 1.33.2 (May 25, 2020)
 
 DEPRECATED:
