@@ -201,11 +201,11 @@ Direct Connect Gateway(DCG)
 
   Resource
     tencentcloud_dc_gateway
-	tencentcloud_dc_gateway_ccn_route
+    tencentcloud_dc_gateway_ccn_route
 
 Elasticsearch
   Data Source
-	tencentcloud_elasticsearch_instances
+    tencentcloud_elasticsearch_instances
 
   Resource
     tencentcloud_elasticsearch_instance

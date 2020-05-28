@@ -1,5 +1,5 @@
 /*
-Provides a elasticsearch instance resource.
+Provides an elasticsearch instance resource.
 
 Example Usage
 
@@ -282,7 +282,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 					request.MultiZoneInfo = append(request.MultiZoneInfo, &info)
 				}
 			} else {
-				return fmt.Errorf("elasticsearch multi_zone_infos can not be enpty when deploy mode is %d", deployMode)
+				return fmt.Errorf("elasticsearch multi_zone_infos can not be empty when deploy mode is %d", deployMode)
 			}
 		}
 	}
@@ -415,7 +415,7 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 
 	nodeInfoList := make([]map[string]interface{}, 0, len(instance.NodeInfoList))
 	for _, item := range instance.NodeInfoList {
-		info := make(map[string]interface{}, 4)
+		info := make(map[string]interface{}, 5)
 		info["node_num"] = item.NodeNum
 		info["node_type"] = item.NodeType
 		info["type"] = item.Type
