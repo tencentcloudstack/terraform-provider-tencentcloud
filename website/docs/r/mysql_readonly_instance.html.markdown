@@ -39,10 +39,11 @@ The following arguments are supported:
 * `master_instance_id` - (Required, ForceNew) Indicates the master instance ID of recovery instances.
 * `mem_size` - (Required) Memory size (in MB).
 * `volume_size` - (Required) Disk size (in GB).
-* `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepay instance.
+* `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepaid instance.
+* `force_delete` - (Optional) Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
 * `intranet_port` - (Optional) Public access port, rang form 1024 to 65535 and default value is 3306.
 * `pay_type` - (Optional, ForceNew) Pay type of instance, 0: prepay, 1: postpay. NOTES: Only supported prepay instance.
-* `period` - (Optional) Period of instance. NOTES: Only supported prepay instance.
+* `period` - (Optional) Period of instance. NOTES: Only supported prepaid instance.
 * `security_groups` - (Optional) Security groups to use.
 * `subnet_id` - (Optional) Private network ID. If vpc_id is set, this value is required.
 * `tags` - (Optional) Instance tags.

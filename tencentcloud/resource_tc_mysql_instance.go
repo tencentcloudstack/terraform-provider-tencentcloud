@@ -71,14 +71,14 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:     true,
 			Default:      1,
 			ValidateFunc: validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
-			Description:  "Period of instance. NOTES: Only supported prepay instance.",
+			Description:  "Period of instance. NOTES: Only supported prepaid instance.",
 		},
 		"auto_renew_flag": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
-			Description:  "Auto renew flag. NOTES: Only supported prepay instance.",
+			Description:  "Auto renew flag. NOTES: Only supported prepaid instance.",
 		},
 		"intranet_port": {
 			Type:         schema.TypeInt,
@@ -126,6 +126,12 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Description: "Instance tags.",
 		},
 
+		"force_delete": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.",
+		},
 		// Computed values
 		"intranet_ip": {
 			Type:        schema.TypeString,
@@ -642,13 +648,13 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		*mysqlInfo.AutoRenew = MYSQL_RENEW_NOUSE
 	}
 	_ = d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
-	_ = d.Set("mem_size", *mysqlInfo.Memory)
-	_ = d.Set("volume_size", *mysqlInfo.Volume)
+	_ = d.Set("mem_size", mysqlInfo.Memory)
+	_ = d.Set("volume_size", mysqlInfo.Volume)
 	if d.Get("vpc_id").(string) != "" {
-		errRet = d.Set("vpc_id", *mysqlInfo.UniqVpcId)
+		errRet = d.Set("vpc_id", mysqlInfo.UniqVpcId)
 	}
 	if d.Get("subnet_id").(string) != "" {
-		errRet = d.Set("subnet_id", *mysqlInfo.UniqSubnetId)
+		errRet = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
 	}
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
@@ -683,7 +689,7 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		return
 	}
 
-	_ = d.Set("intranet_ip", *mysqlInfo.Vip)
+	_ = d.Set("intranet_ip", mysqlInfo.Vip)
 	_ = d.Set("intranet_port", int(*mysqlInfo.Vport))
 
 	if *mysqlInfo.CdbError != 0 {
@@ -691,8 +697,8 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	} else {
 		_ = d.Set("locked", 0)
 	}
-	_ = d.Set("status", *mysqlInfo.Status)
-	_ = d.Set("task_status", *mysqlInfo.TaskStatus)
+	_ = d.Set("status", mysqlInfo.Status)
+	_ = d.Set("task_status", mysqlInfo.TaskStatus)
 	return
 }
 
@@ -722,10 +728,10 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 			return nil
 		}
 		_ = d.Set("project_id", int(*mysqlInfo.ProjectId))
-		_ = d.Set("engine_version", *mysqlInfo.EngineVersion)
+		_ = d.Set("engine_version", mysqlInfo.EngineVersion)
 		if *mysqlInfo.WanStatus == 1 {
 			_ = d.Set("internet_service", 1)
-			_ = d.Set("internet_host", *mysqlInfo.WanDomain)
+			_ = d.Set("internet_host", mysqlInfo.WanDomain)
 			_ = d.Set("internet_port", int(*mysqlInfo.WanPort))
 		} else {
 			_ = d.Set("internet_service", 0)
@@ -763,7 +769,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 				log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, e.Error())
 				return resource.NonRetryableError(e)
 			}
-			_ = d.Set("availability_zone", *mysqlInfo.Zone)
+			_ = d.Set("availability_zone", mysqlInfo.Zone)
 			return nil
 		})
 		if err != nil {
@@ -1211,13 +1217,23 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
+		if err != nil {
+			//for the pay order wait
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
 
 	var hasDeleted = false
 
+	payType := d.Get("pay_type").(int)
+	forceDelete := d.Get("force_delete").(bool)
 	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
@@ -1246,6 +1262,10 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 	}
 	if err != nil {
 		return err
+	}
+
+	if payType == MysqlPayByMonth && !forceDelete {
+		return nil
 	}
 
 	err = mysqlService.OfflineIsolatedInstances(ctx, d.Id())

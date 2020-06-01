@@ -338,41 +338,38 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("api[DescribeDBInstances]fail, return %s", err.Error())
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 	instanceDetails := response.Response.Items
 	instanceList := make([]map[string]interface{}, 0, len(instanceDetails))
 	ids := make([]string, 0, len(instanceDetails))
 	for _, item := range instanceDetails {
 		mapping := map[string]interface{}{
-			"mysql_id":        *item.InstanceId,
-			"instance_name":   *item.InstanceName,
+			"mysql_id":        item.InstanceId,
+			"instance_name":   item.InstanceName,
 			"instance_role":   MYSQL_ROLE_MAP[*item.InstanceType],
-			"init_flag":       *item.InitFlag,
-			"status":          *item.Status,
-			"zone":            *item.Zone,
-			"auto_renew_flag": *item.AutoRenew,
-			"engine_version":  *item.EngineVersion,
-			"cpu_core_count":  *item.Cpu,
-			"memory_size":     *item.Memory,
-			"volume_size":     *item.Volume,
-			"internet_status": *item.WanStatus,
-			"internet_host":   *item.WanDomain,
-			"internet_port":   *item.WanPort,
-			"intranet_ip":     *item.Vip,
-			"intranet_port":   *item.Vport,
-			"project_id":      *item.ProjectId,
-			"vpc_id":          *item.UniqVpcId,
-			"subnet_id":       *item.UniqSubnetId,
-			"slave_sync_mode": *item.ProtectMode,
-			"device_type":     *item.DeviceType,
-			"pay_type":        *item.PayType,
-			"create_time":     *item.CreateTime,
-			"dead_line_time":  *item.DeadlineTime,
+			"init_flag":       item.InitFlag,
+			"status":          item.Status,
+			"zone":            item.Zone,
+			"auto_renew_flag": item.AutoRenew,
+			"engine_version":  item.EngineVersion,
+			"cpu_core_count":  item.Cpu,
+			"memory_size":     item.Memory,
+			"volume_size":     item.Volume,
+			"internet_status": item.WanStatus,
+			"internet_host":   item.WanDomain,
+			"internet_port":   item.WanPort,
+			"intranet_ip":     item.Vip,
+			"intranet_port":   item.Vport,
+			"project_id":      item.ProjectId,
+			"vpc_id":          item.UniqVpcId,
+			"subnet_id":       item.UniqSubnetId,
+			"slave_sync_mode": item.ProtectMode,
+			"device_type":     item.DeviceType,
+			"pay_type":        item.PayType,
+			"create_time":     item.CreateTime,
+			"dead_line_time":  item.DeadlineTime,
 		}
 		if item.MasterInfo != nil {
-			mapping["master_instance_id"] = *item.MasterInfo.InstanceId
+			mapping["master_instance_id"] = item.MasterInfo.InstanceId
 		} else {
 			mapping["master_instance_id"] = ""
 		}
