@@ -1,4 +1,7 @@
 ## 1.36.0 (Unreleased)
+
+* **New Data Source**: `tencentcloud_availability_regions`
+
 ## 1.35.0 (June 01, 2020)
 
 FEATURES:

@@ -31,8 +31,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `regions` - A list of regions will be exported and its every element contains the following attributes:
-  * `description` - The description of the region, like `Guangzhou Zone 3`.
-  * `name` - The name of the region, like `ap-guangzhou-3`.
+  * `description` - The description of the region, like `Guangzhou Region`.
+  * `name` - The name of the region, like `ap-guangzhou`.
   * `state` - The state of the region, indicate availability using `AVAILABLE` and `UNAVAILABLE` values.
 
 

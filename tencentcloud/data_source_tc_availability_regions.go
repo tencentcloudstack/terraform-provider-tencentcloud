@@ -52,12 +52,12 @@ func dataSourceTencentCloudAvailabilityRegions() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The name of the region, like `ap-guangzhou-3`.",
+							Description: "The name of the region, like `ap-guangzhou`.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The description of the region, like `Guangzhou Zone 3`.",
+							Description: "The description of the region, like `Guangzhou Region`.",
 						},
 						"state": {
 							Type:        schema.TypeString,

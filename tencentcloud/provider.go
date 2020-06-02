@@ -33,6 +33,7 @@ provider "tencentcloud" {
 Resources List
 
 Provider Data Sources
+  tencentcloud_availability_regions
   tencentcloud_availability_zones
 
 Anti-DDoS(Dayu)
