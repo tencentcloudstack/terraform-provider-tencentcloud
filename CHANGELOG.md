@@ -1,4 +1,10 @@
-## 1.36.0 (Unreleased)
+## 1.35.1 (Unreleased)
+
+ENHANCEMENTS: 
+
+* Resource: `tencentcloud_as_scaling_config`, `tencentcloud_eip` and `tencentcloud_kubernetes_cluster` remove the validate function of `internet_max_bandwidth_out`.
+* Resource: `tencentcloud_vpn_gateway` update available value of `bandwidth`.
+
 ## 1.35.0 (June 01, 2020)
 
 FEATURES:
