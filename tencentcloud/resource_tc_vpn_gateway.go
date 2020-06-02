@@ -82,11 +82,10 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Description: "ID of the VPC.",
 			},
 			"bandwidth": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      5,
-				ValidateFunc: validateAllowedIntValue([]int{5, 10, 20, 50, 100}),
-				Description:  "The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100. Default is 5. When charge type is `PREPAID`, bandwidth degradation operation is unsupported.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     5,
+				Description: "The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100,200,500,1000. Default is 5. When charge type is `PREPAID`, bandwidth degradation operation is unsupported.",
 			},
 			"public_ip_address": {
 				Type:        schema.TypeString,
