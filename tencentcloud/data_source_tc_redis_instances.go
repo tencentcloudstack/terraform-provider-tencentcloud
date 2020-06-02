@@ -148,6 +148,12 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Tags of an instance.",
 						},
+						// payment
+						"charge_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The charge type of instance. Valid values are `POSTPAID` and `PREPAID`.",
+						},
 					},
 				},
 			},
@@ -244,6 +250,8 @@ instanceLoop:
 		instanceDes["redis_shard_num"] = instance.RedisShardNum
 		instanceDes["redis_replicas_num"] = instance.RedisReplicasNum
 		instanceDes["type_id"] = instance.TypeId
+
+		instanceDes["charge_type"] = instance.BillingMode
 
 		instanceList = append(instanceList, instanceDes)
 	}

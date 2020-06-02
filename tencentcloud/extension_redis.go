@@ -70,3 +70,15 @@ const (
 
 //sdk redis not found error
 const RedisInstanceNotFound = "ResourceNotFound.InstanceNotExists"
+
+const (
+	REDIS_CHARGE_TYPE_POSTPAID = "POSTPAID"
+	REDIS_CHARGE_TYPE_PREPAID  = "PREPAID"
+)
+
+var REDIS_CHARGE_TYPE_ID = map[string]int64{
+	REDIS_CHARGE_TYPE_POSTPAID: 0,
+	REDIS_CHARGE_TYPE_PREPAID:  1,
+}
+
+var REDIS_PREPAID_PERIOD = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}

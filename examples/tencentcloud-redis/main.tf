@@ -26,3 +26,18 @@ data "tencentcloud_redis_instances" "redis-tags" {
   zone = var.availability_zone
   tags = tencentcloud_redis_instance.redis_instance_test.tags
 }
+
+resource "tencentcloud_redis_instance" "redis_instance_prepaid_test" {
+  availability_zone                   = var.availability_zone
+  type_id                             = 2
+  password                            = "test12345789"
+  mem_size                            = 8192
+  name                                = "terrform_pre_test"
+  port                                = 6379
+  charge_type                         = 1
+  prepaid_period                      = 1
+
+  tags = {
+    "test" = "prepaid test"
+  }
+}
