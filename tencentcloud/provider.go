@@ -203,6 +203,13 @@ Direct Connect Gateway(DCG)
     tencentcloud_dc_gateway
     tencentcloud_dc_gateway_ccn_route
 
+Elasticsearch
+  Data Source
+    tencentcloud_elasticsearch_instances
+
+  Resource
+    tencentcloud_elasticsearch_instance
+
 Global Application Acceleration(GAAP)
   Data Source
     tencentcloud_gaap_certificates
@@ -553,6 +560,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_binding_objects":      dataSourceTencentMonitorBindingObjects(),
 			"tencentcloud_monitor_policy_groups":        dataSourceTencentMonitorPolicyGroups(),
 			"tencentcloud_monitor_product_namespace":    dataSourceTencentMonitorProductNamespace(),
+			"tencentcloud_elasticsearch_instances":      dataSourceTencentCloudElasticsearchInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -662,6 +670,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_policy_group":           resourceTencentMonitorPolicyGroup(),
 			"tencentcloud_monitor_binding_object":         resourceTencentMonitorBindingObject(),
 			"tencentcloud_monitor_binding_receiver":       resourceTencentMonitorBindingAlarmReceiver(),
+			"tencentcloud_elasticsearch_instance":         resourceTencentCloudElasticsearchInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

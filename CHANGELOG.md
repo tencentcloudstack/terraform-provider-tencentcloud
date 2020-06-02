@@ -1,4 +1,12 @@
-## 1.34.0 (Unreleased)
+## 1.36.0 (Unreleased)
+## 1.35.0 (June 01, 2020)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_elasticsearch_instances`
+* **New Resource**: `tencentcloud_elasticsearch_instance`
+
+## 1.34.0 (May 28, 2020)
 
 ENHANCEMENTS: 
 
