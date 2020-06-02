@@ -324,11 +324,11 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 		}
 	}()
 	request.InstanceId = &redisId
-	ratelimit.Check(request.GetAction())
 
 	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 	var response *redis.DescribeInstancesResponse
 	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().DescribeInstances(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s CheckRedisCreateOk fail, reason:%s\n", logId, e.Error())
@@ -382,11 +382,11 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	}()
 
 	request.DealIds = []*string{&dealId}
-	ratelimit.Check(request.GetAction())
 
 	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 	var response *redis.DescribeInstanceDealDetailResponse
 	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().DescribeInstanceDealDetail(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s DescribeInstanceDealDetail fail, reason:%s\n", logId, e.Error())
@@ -545,10 +545,10 @@ func (me *RedisService) DestroyPrepaidInstance(ctx context.Context, redisId stri
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
 	// For prepaid instance, deal status synchronization will take some time so need to retry.
 	var response *redis.DestroyPrepaidInstanceResponse
 	err := resource.Retry(5*writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().DestroyPrepaidInstance(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s DestroyPrepaidInstance fail, reason:%s\n", logId, e.Error())
@@ -558,8 +558,6 @@ func (me *RedisService) DestroyPrepaidInstance(ctx context.Context, redisId stri
 		return nil
 	})
 	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 		dealId = *response.Response.DealId
 	} else {
 		errRet = err
@@ -579,10 +577,10 @@ func (me *RedisService) CleanUpInstance(ctx context.Context, redisId string) (ta
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
 	// Cleaning up action for prepaid instances needs to retry.
 	var response *redis.CleanUpInstanceResponse
 	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().CleanUpInstance(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s CleanUpInstance fail, reason:%s\n", logId, e.Error())

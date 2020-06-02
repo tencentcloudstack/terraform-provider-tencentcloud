@@ -192,7 +192,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Default:      REDIS_CHARGE_TYPE_POSTPAID,
-				ValidateFunc: validateAllowedStringValue([]string{"PREPAID", "POSTPAID"}),
+				ValidateFunc: validateAllowedStringValue([]string{REDIS_CHARGE_TYPE_POSTPAID, REDIS_CHARGE_TYPE_PREPAID}),
 				Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID`.Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.",
 			},
 			"prepaid_period": {
@@ -665,7 +665,7 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 			return resource.NonRetryableError(err)
 		}
 		if !has {
-			return resource.NonRetryableError(fmt.Errorf("Deleting ERROR: Redis instance do not exists."))
+			return nil
 		}
 		if online {
 			for k, v := range REDIS_CHARGE_TYPE_ID {
