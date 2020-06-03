@@ -706,34 +706,24 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 
 	forceDelete := d.Get("force_delete").(bool)
 	if chargeType == REDIS_CHARGE_TYPE_POSTPAID {
-		action := "DestroyPostpaidInstance"
+		forceDelete = true
 		taskId, err := service.DestroyPostpaidInstance(ctx, d.Id())
 		if err != nil {
-			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, action, err.Error())
+			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "DestroyPostpaidInstance", err.Error())
 			return err
 		}
-		if err = wait(action, taskId); err != nil {
-			return err
-		}
-
-		action = "CleanUpInstance"
-		taskId, err = service.CleanUpInstance(ctx, d.Id())
-		if err != nil {
-			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, action, err.Error())
+		if err = wait("DestroyPostpaidInstance", taskId); err != nil {
 			return err
 		}
 
-		return wait(action, taskId)
 	} else if chargeType == REDIS_CHARGE_TYPE_PREPAID {
-		action := "DestroyPrepaidInstance"
-		_, err := service.DestroyPrepaidInstance(ctx, d.Id())
-		if err != nil {
-			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, action, err.Error())
+		if _, err := service.DestroyPrepaidInstance(ctx, d.Id()); err != nil {
+			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "DestroyPrepaidInstance", err.Error())
 			return err
 		}
 
 		// Deal info only support create and renew and resize, need to check destroy status by describing api.
-		errDestroyChecking := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+		if errDestroyChecking := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
 			has, isolated, err := service.CheckRedisDestroyOk(ctx, d.Id())
 			if err != nil {
 				log.Printf("[CRITAL]%s CheckRedisDestroyOk fail, reason:%s\n", logId, err.Error())
@@ -743,25 +733,24 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 				return nil
 			}
 			return resource.RetryableError(fmt.Errorf("Instance is not ready to be destroyed."))
-		})
-		if errDestroyChecking != nil {
+		}); errDestroyChecking != nil {
 			log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errDestroyChecking.Error())
 			return errDestroyChecking
 		}
 
-		if forceDelete {
-			action = "CleanUpInstance"
-			taskId, err := service.CleanUpInstance(ctx, d.Id())
-			if err != nil {
-				log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, action, err.Error())
-				return err
-			}
-
-			return wait(action, taskId)
-		}
-
-		return nil
+	} else {
+		return fmt.Errorf("[CRITAL] none recognized charge type %s, redis deleting action fail.", chargeType)
 	}
 
-	return fmt.Errorf("[CRITAL] none recognized charge type %s, redis deleting action fail.", chargeType)
+	if forceDelete {
+		taskId, err := service.CleanUpInstance(ctx, d.Id())
+		if err != nil {
+			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "CleanUpInstance", err.Error())
+			return err
+		}
+
+		return wait("CleanUpInstance", taskId)
+	} else {
+		return nil
+	}
 }
