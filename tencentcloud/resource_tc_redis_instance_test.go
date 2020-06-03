@@ -118,7 +118,7 @@ func testAccTencentCloudRedisInstanceExists(r string) resource.TestCheckFunc {
 		}
 
 		service := RedisService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		has, _, _, err := service.CheckRedisCreateOk(ctx, rs.Primary.ID)
+		has, _, _, err := service.CheckRedisOnlineOk(ctx, rs.Primary.ID)
 		if has {
 			return nil
 		}
@@ -140,7 +140,7 @@ func testAccTencentCloudRedisInstanceDestroy(s *terraform.State) error {
 			continue
 		}
 		time.Sleep(5 * time.Second)
-		has, _, info, err := service.CheckRedisCreateOk(ctx, rs.Primary.ID)
+		has, _, info, err := service.CheckRedisOnlineOk(ctx, rs.Primary.ID)
 
 		if !has {
 			return nil

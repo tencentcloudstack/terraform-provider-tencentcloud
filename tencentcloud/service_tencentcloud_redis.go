@@ -186,12 +186,7 @@ needMoreItems:
 		instance.RedisId = *item.InstanceId
 		instance.SubnetId = *item.UniqSubnetId
 		instance.VpcId = *item.UniqVpcId
-		for k, v := range REDIS_CHARGE_TYPE_ID {
-			if v == *item.BillingMode {
-				instance.BillingMode = k
-				break
-			}
-		}
+		instance.BillingMode = REDIS_CHARGE_TYPE_NAME[*item.BillingMode]
 
 		instance.TypeId = *item.Type
 		if item.RedisReplicasNum != nil {
@@ -308,7 +303,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	return
 }
 
-func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) (has bool,
+func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string) (has bool,
 	online bool,
 	info *redis.InstanceSet,
 	errRet error) {
@@ -331,7 +326,7 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().DescribeInstances(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s CheckRedisCreateOk fail, reason:%s\n", logId, e.Error())
+			log.Printf("[CRITAL]%s CheckRedisOnlineOk fail, reason:%s\n", logId, e.Error())
 			return retryError(e)
 		}
 		response = result

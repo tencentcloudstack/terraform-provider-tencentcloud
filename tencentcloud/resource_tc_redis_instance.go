@@ -354,7 +354,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	}
 	var redisId = *instanceIds[0]
 	err = resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
-		has, online, _, err := redisService.CheckRedisCreateOk(ctx, redisId)
+		has, online, _, err := redisService.CheckRedisOnlineOk(ctx, redisId)
 		if err != nil {
 			return resource.NonRetryableError(err)
 		}
@@ -398,7 +398,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		e    error
 	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		has, _, info, e = service.CheckRedisCreateOk(ctx, d.Id())
+		has, _, info, e = service.CheckRedisOnlineOk(ctx, d.Id())
 		if info != nil {
 			if *info.Status == REDIS_STATUS_ISOLATE || *info.Status == REDIS_STATUS_TODELETE {
 				d.SetId("")
@@ -489,12 +489,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	}
 	_ = d.Set("tags", tags)
 
-	for k, v := range REDIS_CHARGE_TYPE_ID {
-		if v == *info.BillingMode {
-			_ = d.Set("charge_type", k)
-			break
-		}
-	}
+	_ = d.Set("charge_type", REDIS_CHARGE_TYPE_NAME[*info.BillingMode])
 	return nil
 }
 
@@ -556,7 +551,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 
 		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
-			_, _, info, err := redisService.CheckRedisCreateOk(ctx, redisId)
+			_, _, info, err := redisService.CheckRedisOnlineOk(ctx, redisId)
 
 			if info != nil {
 				status := REDIS_STATUS[*info.Status]
@@ -658,7 +653,7 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 	// Collect infos before deleting action
 	var chargeType string
 	errQuery := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
-		has, online, info, err := service.CheckRedisCreateOk(ctx, d.Id())
+		has, online, info, err := service.CheckRedisOnlineOk(ctx, d.Id())
 		if err != nil {
 			log.Printf("[CRITAL]%s redis querying before deleting fail, reason:%s\n", logId, err.Error())
 			return resource.NonRetryableError(err)
@@ -667,13 +662,8 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 			return nil
 		}
 		if online {
-			for k, v := range REDIS_CHARGE_TYPE_ID {
-				if v == *info.BillingMode {
-					chargeType = k
-					return nil
-				}
-			}
-			return resource.NonRetryableError(fmt.Errorf("Responsed BillingMode %d is incorrect.", *info.BillingMode))
+			chargeType = REDIS_CHARGE_TYPE_NAME[*info.BillingMode]
+			return nil
 		} else {
 			return resource.RetryableError(fmt.Errorf("Deleting ERROR: Creating redis task is processing."))
 		}
