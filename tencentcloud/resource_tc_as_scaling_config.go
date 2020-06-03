@@ -138,11 +138,10 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Description:  "Charge types for network traffic. Available values include `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 			},
 			"internet_max_bandwidth_out": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      0,
-				ValidateFunc: validateIntegerInRange(0, 100),
-				Description:  "Max bandwidth of Internet access in Mbps. Default is 0.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Max bandwidth of Internet access in Mbps. Default is 0.",
 			},
 			"public_ip_assigned": {
 				Type:        schema.TypeBool,

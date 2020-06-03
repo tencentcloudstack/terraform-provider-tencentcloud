@@ -9,6 +9,16 @@ DEPRECATED:
 * Resource: `tencentcloud_mysql_instance`: optional arguments `pay_type` and `period` are no longer supported, replace by `charge_type` and `prepaid_period`.
 * Resource: `tencentcloud_mysql_readonly_instance`: optional arguments `pay_type` and `period` are no longer supported, replace by `charge_type` and `prepaid_period`.
 
+FEATURES:
+
+* **New Data Source**: `tencentcloud_availability_regions`
+
+## 1.35.1 (June 02, 2020)
+
+ENHANCEMENTS: 
+
+* Resource: `tencentcloud_as_scaling_config`, `tencentcloud_eip` and `tencentcloud_kubernetes_cluster` remove the validate function of `internet_max_bandwidth_out`.
+* Resource: `tencentcloud_vpn_gateway` update available value of `bandwidth`.
 
 ## 1.35.0 (June 01, 2020)
 

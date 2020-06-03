@@ -85,11 +85,10 @@ func resourceTencentCloudEip() *schema.Resource {
 				Description:  "The charge type of eip, and available values include `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR` and `TRAFFIC_POSTPAID_BY_HOUR`.",
 			},
 			"internet_max_bandwidth_out": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: validateIntegerInRange(1, 1000),
-				Description:  "The bandwidth limit of eip, unit is Mbps, and the range is 1-1000.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The bandwidth limit of eip, unit is Mbps.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,

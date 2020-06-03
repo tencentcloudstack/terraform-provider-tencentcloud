@@ -312,12 +312,11 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Description:  "Charge types for network traffic. Available values include TRAFFIC_POSTPAID_BY_HOUR.",
 		},
 		"internet_max_bandwidth_out": {
-			Type:         schema.TypeInt,
-			ForceNew:     true,
-			Optional:     true,
-			Default:      0,
-			ValidateFunc: validateIntegerInRange(0, 100),
-			Description:  "Max bandwidth of Internet access in Mbps. Default is 0.",
+			Type:        schema.TypeInt,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     0,
+			Description: "Max bandwidth of Internet access in Mbps. Default is 0.",
 		},
 		"public_ip_assigned": {
 			Type:        schema.TypeBool,

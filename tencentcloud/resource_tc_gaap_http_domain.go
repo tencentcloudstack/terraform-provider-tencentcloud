@@ -338,9 +338,14 @@ func resourceTencentCloudGaapHttpDomainRead(d *schema.ResourceData, m interface{
 	}
 	_ = d.Set("certificate_id", httpDomain.CertificateId)
 
-	clientCertificateIds := make([]*string, 0, len(httpDomain.PolyClientCertificateAliasInfo))
-	for _, info := range httpDomain.PolyClientCertificateAliasInfo {
-		clientCertificateIds = append(clientCertificateIds, info.CertificateId)
+	var clientCertificateIds []*string
+	if httpDomain.PolyClientCertificateAliasInfo != nil {
+		clientCertificateIds = make([]*string, 0, len(httpDomain.PolyClientCertificateAliasInfo))
+		for _, info := range httpDomain.PolyClientCertificateAliasInfo {
+			clientCertificateIds = append(clientCertificateIds, info.CertificateId)
+		}
+	} else {
+		clientCertificateIds = []*string{helper.String("default")}
 	}
 
 	_ = d.Set("client_certificate_id", clientCertificateIds[0])
