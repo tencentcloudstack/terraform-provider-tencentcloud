@@ -45,7 +45,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `instance_list` - A list of instances. Each element contains the following attributes:
   * `auto_renew_flag` - Auto renew flag. NOTES: Only supported prepay instance.
-  * `charge_type` - Pay type of instance, ``PREPAID``: prepay, `POSTPAID`: postpay. NOTES: Only prepay is supported.
+  * `charge_type` - Pay type of instance.
   * `cpu_core_count` - CPU count.
   * `create_time` - The time at which a instance is created.
   * `dead_line_time` - Expire date of instance. NOTES: Only supported prepay instance.
@@ -63,7 +63,7 @@ In addition to all arguments above, the following attributes are exported:
   * `master_instance_id` - Indicates the master instance ID of recovery instances.
   * `memory_size` - Memory size (in MB).
   * `mysql_id` - Instance ID, such as cdb-c1nl9rpv. It is identical to the instance ID displayed in the database console page.
-  * `pay_type` - Pay type of instance, 0: prepay, 1: postpay. NOTES: Only prepay is supported.
+  * `pay_type` - Pay type of instance, 0: prepaid, 1: postpaid.
   * `project_id` - Project ID to which the current instance belongs.
   * `ro_instance_ids` - ID list of read-only type associated with the current instance.
   * `slave_sync_mode` - Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.

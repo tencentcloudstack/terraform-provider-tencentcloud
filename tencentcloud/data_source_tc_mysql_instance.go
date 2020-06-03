@@ -229,12 +229,12 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"pay_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Pay type of instance, 0: prepay, 1: postpay. NOTES: Only prepay is supported.",
+							Description: "Pay type of instance, 0: prepaid, 1: postpaid.",
 						},
 						"charge_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Pay type of instance, ``PREPAID``: prepay, `POSTPAID`: postpay. NOTES: Only prepay is supported.",
+							Description: "Pay type of instance.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
