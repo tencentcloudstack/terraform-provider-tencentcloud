@@ -117,16 +117,16 @@ resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
-resource "tencentcloud_tcaplus_group" "group" {
-  cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
-  group_name     = "tf_test_group_name"
+resource "tencentcloud_tcaplus_tablegroup" "group" {
+  cluster_id          = tencentcloud_tcaplus_cluster.test_cluster.id
+  tablegroup_name     = "tf_test_group_name"
 }
 `
 
 const testAccTcaplusIdl = testAccTcaplusIdlBasic + `
 resource "tencentcloud_tcaplus_idl" "test_idl" {
   cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
-  group_id       = tencentcloud_tcaplus_group.group.id
+  tablegroup_id  = tencentcloud_tcaplus_group.group.id
   file_name      = "tf_idl_test_guagua"
   file_type      = "PROTO"
   file_ext_type  = "proto"

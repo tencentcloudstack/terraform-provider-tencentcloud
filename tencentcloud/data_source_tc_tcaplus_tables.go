@@ -165,7 +165,7 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 	}
 
 	clusterId := d.Get("cluster_id").(string)
-	groupId := d.Get("group_id").(string)
+	groupId := d.Get("tablegroup_id").(string)
 	tableId := d.Get("table_id").(string)
 	tableName := d.Get("table_name").(string)
 
@@ -208,7 +208,7 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 			listItem["error"] = ""
 		}
 		if tableInfo.TableGroupId != nil {
-			listItem["group_id"] = fmt.Sprintf("%s:%s", clusterId, *tableInfo.TableGroupId)
+			listItem["tablegroup_id"] = fmt.Sprintf("%s:%s", clusterId, *tableInfo.TableGroupId)
 		}
 		if tableInfo.TableInstanceId != nil {
 			listItem["table_id"] = *tableInfo.TableInstanceId

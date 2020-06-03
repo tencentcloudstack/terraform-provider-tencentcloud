@@ -184,7 +184,7 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 	tcaplusIdlId.FileType = d.Get("file_type").(string)
 	tcaplusIdlId.FileExtType = d.Get("file_ext_type").(string)
 
-	groupId := d.Get("group_id").(string)
+	groupId := d.Get("tablegroup_id").(string)
 	fileContent := d.Get("file_content").(string)
 
 	items := strings.Split(groupId, ":")

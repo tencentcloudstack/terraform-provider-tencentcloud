@@ -185,7 +185,7 @@ func resourceTencentCloudTcaplusTableCreate(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("field `idl_id` is illegal,%s", err.Error())
 	}
 	clusterId := d.Get("cluster_id").(string)
-	groupId := d.Get("group_id").(string)
+	groupId := d.Get("tablegroup_id").(string)
 	tableName := d.Get("table_name").(string)
 	tableType := d.Get("table_type").(string)
 	description := d.Get("description").(string)
@@ -254,7 +254,7 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 
 	clusterId := d.Get("cluster_id").(string)
 
-	groupId := d.Get("group_id").(string)
+	groupId := d.Get("tablegroup_id").(string)
 	tableName := d.Get("table_name").(string)
 	tableId := d.Id()
 
@@ -368,7 +368,7 @@ func resourceTencentCloudTcaplusTableRead(d *schema.ResourceData, meta interface
 		return nil
 	}
 	_ = d.Set("cluster_id", tableInfo.ClusterId)
-	_ = d.Set("group_id", fmt.Sprintf("%s:%s", *tableInfo.ClusterId, *tableInfo.TableGroupId))
+	_ = d.Set("tablegroup_id", fmt.Sprintf("%s:%s", *tableInfo.ClusterId, *tableInfo.TableGroupId))
 	_ = d.Set("table_name", tableInfo.TableName)
 	_ = d.Set("table_type", tableInfo.TableType)
 	_ = d.Set("description", tableInfo.Memo)
@@ -395,7 +395,7 @@ func resourceTencentCloudTcaplusTableDelete(d *schema.ResourceData, meta interfa
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 	clusterId := d.Get("cluster_id").(string)
-	groupId := d.Get("group_id").(string)
+	groupId := d.Get("tablegroup_id").(string)
 	tableName := d.Get("table_name").(string)
 	instanceTableId := d.Id()
 

@@ -36,9 +36,9 @@ data "tencentcloud_vpc_subnets" "vpc" {
     availability_zone = var.availability_zone
 }
 
-resource "tencentcloud_tcaplus_group" "test_group" {
-  cluster_id    = tencentcloud_tcaplus_cluster.test_cluster.id
-  group_name    = "tf_test_group_name_guagua"
+resource "tencentcloud_tcaplus_tablegroup" "test_group" {
+  cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
+  tablegroup_name    = "tf_test_group_name_guagua"
 }
 
 resource "tencentcloud_tcaplus_cluster" "test_cluster" {
@@ -51,7 +51,7 @@ resource "tencentcloud_tcaplus_cluster" "test_cluster" {
 }
 resource "tencentcloud_tcaplus_idl" "test_idl" {
   cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
-  group_id       = tencentcloud_tcaplus_group.test_group.id
+  tablegroup_id  = tencentcloud_tcaplus_tablegroup.test_group.id
   file_name      = "tf_idl_test_guagua"
   file_type      = "PROTO"
   file_ext_type  = "proto"

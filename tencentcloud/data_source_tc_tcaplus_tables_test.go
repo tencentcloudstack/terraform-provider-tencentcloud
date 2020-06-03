@@ -21,7 +21,7 @@ func TestAccTencentCloudDataTcaplusTables(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testDataTcaplusTablesName, "cluster_id"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusTablesName, "table_id"),
 					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.#", "1"),
-					resource.TestCheckResourceAttrSet(testDataTcaplusTablesName, "list.0.group_id"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusTablesName, "list.0.tablegroup_id"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusTablesName, "list.0.table_id"),
 					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.0.table_name", "tb_online_guagua"),
 					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.0.table_type", "GENERIC"),
@@ -61,7 +61,7 @@ resource "tencentcloud_tcaplus_cluster" "test_cluster" {
 }
 resource "tencentcloud_tcaplus_idl" "test_idl" {
   cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
-  group_id       = tencentcloud_tcaplus_group.test_group.id
+  tablegroup_id  = tencentcloud_tcaplus_group.test_group.id
   file_name      = "tf_idl_test_guagua"
   file_type      = "PROTO"
   file_ext_type  = "proto"
@@ -96,7 +96,7 @@ resource "tencentcloud_tcaplus_idl" "test_idl" {
 
 resource "tencentcloud_tcaplus_table" "test_table" {
   cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
-  group_id           = tencentcloud_tcaplus_group.test_group.id
+  tablegroup_id      = tencentcloud_tcaplus_tablegroup.test_group.id
   table_name         = "tb_online_guagua"
   table_type         = "GENERIC"
   description        = "test"
@@ -107,9 +107,9 @@ resource "tencentcloud_tcaplus_table" "test_table" {
   reserved_volume    = 1
 }
 
-resource "tencentcloud_tcaplus_group" "test_group" {
-  cluster_id    = tencentcloud_tcaplus_cluster.test_cluster.id
-  group_name    = "tf_test_group_name_guagua"
+resource "tencentcloud_tcaplus_tablegroup" "test_group" {
+  cluster_id          = tencentcloud_tcaplus_cluster.test_cluster.id
+  tablegroup_name    = "tf_test_group_name_guagua"
 }
 
 data "tencentcloud_tcaplus_tables" "id_test" {
