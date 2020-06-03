@@ -315,11 +315,11 @@ TcaplusDB
     tencentcloud_tcaplus_clusters
     tencentcloud_tcaplus_idls
     tencentcloud_tcaplus_tables
-    tencentcloud_tcaplus_groups
+    tencentcloud_tcaplus_tablegroups
 
   Resource
     tencentcloud_tcaplus_cluster
-    tencentcloud_tcaplus_group
+    tencentcloud_tcaplus_tablegroup
     tencentcloud_tcaplus_idl
     tencentcloud_tcaplus_table
 

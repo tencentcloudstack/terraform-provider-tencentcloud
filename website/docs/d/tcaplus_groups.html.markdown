@@ -3,31 +3,31 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcaplus_groups"
 sidebar_current: "docs-tencentcloud-datasource-tcaplus_groups"
 description: |-
-  Use this data source to query tcaplus table groups
+  Use this data source to query table groups of the TcaplusDB cluster.
 ---
 
 # tencentcloud_tcaplus_groups
 
-Use this data source to query tcaplus table groups
+Use this data source to query table groups of the TcaplusDB cluster.
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_tcaplus_groups" "null" {
+data "tencentcloud_tcaplus_tablegroups" "null" {
   cluster_id = "19162256624"
 }
-data "tencentcloud_tcaplus_groups" "id" {
-  cluster_id = "19162256624"
-  group_id   = "19162256624:1"
+data "tencentcloud_tcaplus_tablegroups" "id" {
+  cluster_id    = "19162256624"
+  tablegroup_id = "19162256624:1"
 }
-data "tencentcloud_tcaplus_groups" "name" {
-  cluster_id = "19162256624"
-  group_name = "test"
+data "tencentcloud_tcaplus_tablegroups" "name" {
+  cluster_id      = "19162256624"
+  tablegroup_name = "test"
 }
-data "tencentcloud_tcaplus_groups" "all" {
-  cluster_id = "19162256624"
-  group_id   = "19162256624:1"
-  group_name = "test"
+data "tencentcloud_tcaplus_tablegroups" "all" {
+  cluster_id      = "19162256624"
+  tablegroup_id   = "19162256624:1"
+  tablegroup_name = "test"
 }
 ```
 
@@ -35,20 +35,20 @@ data "tencentcloud_tcaplus_groups" "all" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required) Id of the tcaplus cluster to be query.
-* `group_id` - (Optional) Group id to be query.
-* `group_name` - (Optional) Group name to be query.
-* `result_output_file` - (Optional) Used to save results.
+* `cluster_id` - (Required) Id of the TcaplusDB cluster to be query.
+* `result_output_file` - (Optional) File for saving results.
+* `tablegroup_id` - (Optional) Id of the table group to be query.
+* `tablegroup_name` - (Optional) Name of the table group to be query.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `list` - A list of tcaplus table groups. Each element contains the following attributes.
-  * `create_time` - Create time of the tcaplus group.
-  * `group_id` - Id of the tcaplus group.
-  * `group_name` - Name of the tcaplus group.
+* `list` - A list of table group. Each element contains the following attributes.
+  * `create_time` - Create time of the table group..
   * `table_count` - Number of tables.
-  * `total_size` - The total storage(MB).
+  * `tablegroup_id` - Id of the table group.
+  * `tablegroup_name` - Name of the table group.
+  * `total_size` - Total storage size (MB).
 
 

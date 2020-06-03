@@ -1,5 +1,5 @@
 /*
-Use this data source to query tcaplus tables
+Use this data source to query TcaplusDB tables.
 
 Example Usage
 
@@ -8,15 +8,15 @@ data "tencentcloud_tcaplus_tables" "null" {
   cluster_id = "19162256624"
 }
 
-data "tencentcloud_tcaplus_tables" "group" {
-  cluster_id = "19162256624"
-  group_id   = "19162256624:3"
+data "tencentcloud_tcaplus_tables" "tablegroup" {
+  cluster_id      = "19162256624"
+  tablegroup_id   = "19162256624:3"
 }
 
 data "tencentcloud_tcaplus_tables" "name" {
-  cluster_id = "19162256624"
-  group_id   = "19162256624:3"
-  table_name = "guagua"
+  cluster_id      = "19162256624"
+  tablegroup_id   = "19162256624:3"
+  table_name      = "guagua"
 }
 
 data "tencentcloud_tcaplus_tables" "id" {
@@ -24,10 +24,10 @@ data "tencentcloud_tcaplus_tables" "id" {
   table_id   = "tcaplus-faa65eb7"
 }
 data "tencentcloud_tcaplus_tables" "all" {
-  cluster_id = "19162256624"
-  group_id   = "19162256624:3"
-  table_id   = "tcaplus-faa65eb7"
-  table_name = "guagua"
+  cluster_id      = "19162256624"
+  tablegroup_id   = "19162256624:3"
+  table_id        = "tcaplus-faa65eb7"
+  table_name      = "guagua"
 }
 ```
 */
@@ -49,12 +49,12 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the tcaplus cluster to be query.",
+				Description: "Id of the TcaplusDB cluster to be query.",
 			},
-			"group_id": {
+			"tablegroup_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Group id to be query.",
+				Description: "Id of the table group to be query.",
 			},
 			"table_id": {
 				Type:        schema.TypeString,
@@ -69,83 +69,83 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used to save results.",
+				Description: "File for saving results.",
 			},
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of tcaplus groups. Each element contains the following attributes.",
+				Description: "A list of TcaplusDB tables. Each element contains the following attributes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"group_id": {
+						"tablegroup_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Group of this table belongs.",
+							Description: "Table group id of the TcaplusDB table.",
 						},
 						"table_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of this table.",
+							Description: "Id of the TcaplusDB table.",
 						},
 						"table_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of this table.",
+							Description: "Name of  the TcaplusDB table.",
 						},
 						"table_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of this table.",
+							Description: "Type of the TcaplusDB table.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Description of this table.",
+							Description: "Description of the TcaplusDB table.",
 						},
 						"idl_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Idl file id for this table.",
+							Description: "IDL file id of the TcaplusDB table.",
 						},
 						"table_idl_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of this table idl.",
+							Description: "IDL type of  the TcaplusDB table.",
 						},
-						"reserved_read_qps": {
+						"reserved_read_cu": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Table reserved read QPS.",
+							Description: "Reserved read capacity units of the TcaplusDB table.",
 						},
-						"reserved_write_qps": {
+						"reserved_write_cu": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Table reserved write QPS.",
+							Description: "Reserved write capacity units of the TcaplusDB table.",
 						},
 						"reserved_volume": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Table reserved capacity(GB).",
+							Description: "Reserved storage capacity of the TcaplusDB table (unit:GB).",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the tcaplus table.",
+							Description: "Create time of the TcaplusDB table.",
 						},
 						"error": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Show if this table  create error.",
+							Description: "Error message for creating TcaplusDB table.",
 						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Status of this table.",
+							Description: "Status of the TcaplusDB table.",
 						},
 						"table_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Size of this table.",
+							Description: "Size of the TcaplusDB table.",
 						},
 					},
 				},

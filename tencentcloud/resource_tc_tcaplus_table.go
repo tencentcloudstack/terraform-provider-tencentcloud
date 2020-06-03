@@ -1,5 +1,5 @@
 /*
-Use this resource to create tcaplus table
+Use this resource to create TcaplusDB table.
 
 Example Usage
 
@@ -13,14 +13,14 @@ resource "tencentcloud_tcaplus_cluster" "test" {
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_group" "group" {
-  cluster_id = tencentcloud_tcaplus_cluster.test.id
-  group_name = "tf_test_group_name"
+resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
+  cluster_id      = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_name = "tf_test_group_name"
 }
 
 resource "tencentcloud_tcaplus_idl" "main" {
   cluster_id    = tencentcloud_tcaplus_cluster.test.id
-  group_id      = tencentcloud_tcaplus_group.group.id
+  tablegroup_id = tencentcloud_tcaplus_tablegroup.tablegroup.id
   file_name     = "tf_idl_test_2"
   file_type     = "PROTO"
   file_ext_type = "proto"
@@ -55,14 +55,14 @@ resource "tencentcloud_tcaplus_idl" "main" {
 
 resource "tencentcloud_tcaplus_table" "table" {
   cluster_id         = tencentcloud_tcaplus_cluster.test.id
-  group_id           = tencentcloud_tcaplus_group.group.id
+  tablegroup_id      = tencentcloud_tcaplus_tablegroup.tablegroup.id
   table_name         = "tb_online"
   table_type         = "GENERIC"
   description        = "test"
   idl_id             = tencentcloud_tcaplus_idl.main.id
   table_idl_type     = "PROTO"
-  reserved_read_qps  = 1000
-  reserved_write_qps = 20
+  reserved_read_cu   = 1000
+  reserved_write_cu  = 20
   reserved_volume    = 1
 }
 ```
@@ -73,7 +73,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -91,81 +90,81 @@ func resourceTencentCloudTcaplusTable() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Cluster of this table belongs.",
+				Description: "ID of the TcaplusDB cluster to which the table belongs.",
 			},
-			"group_id": {
+			"tablegroup_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Group of this table belongs.",
+				Description: "ID of the table group to which the table belongs.",
 			},
 			"table_name": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Name of this table.",
+				Description: "Name of the TcaplusDB table.",
 			},
 			"table_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_TABLE_TYPES),
-				Description:  "Type of this table, Valid values are " + strings.Join(TCAPLUS_TABLE_TYPES, ",") + ".",
+				Description:  "Type of the TcaplusDB table. Valid values are GENERIC and LIST.",
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Description of this table.",
+				Description: "Description of the TcaplusDB table.",
 			},
 			"idl_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Idl file for this table.",
+				Description: "ID of the IDL File.",
 			},
 			"table_idl_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_TABLE_IDL_TYPES),
-				Description:  "Type of this table idl, Valid values are " + strings.Join(TCAPLUS_TABLE_IDL_TYPES, ",") + ".",
+				Description:  "IDL type of the TcaplusDB table. Valid values are PROTO and TDR.",
 			},
-			"reserved_read_qps": {
+			"reserved_read_cu": {
 				Type:        schema.TypeInt,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Table reserved read QPS.",
+				Description: "Reserved read capacity units of the TcaplusDB table.",
 			},
-			"reserved_write_qps": {
+			"reserved_write_cu": {
 				Type:        schema.TypeInt,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Table reserved write QPS.",
+				Description: "Reserved write capacity units of the TcaplusDB table.",
 			},
 			"reserved_volume": {
 				Type:        schema.TypeInt,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Table reserved capacity(GB).",
+				Description: "Reserved storage capacity of the TcaplusDB table (unit: GB).",
 			},
 			// Computed values.
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the tcaplus table.",
+				Description: "Create time of the TcaplusDB table.",
 			},
 			"error": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Show if this table  create error.",
+				Description: "Error messages for creating TcaplusDB table.",
 			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Status of this table.",
+				Description: "Status of the TcaplusDB table.",
 			},
 			"table_size": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Size of this table.",
+				Description: "Size of the TcaplusDB table.",
 			},
 		},
 	}

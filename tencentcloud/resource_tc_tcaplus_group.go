@@ -1,5 +1,5 @@
 /*
-Use this resource to create tcaplus table group
+Use this resource to create TcaplusDB table group.
 
 Example Usage
 
@@ -13,9 +13,9 @@ resource "tencentcloud_tcaplus_cluster" "test" {
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_group" "group" {
-  cluster_id = tencentcloud_tcaplus_cluster.test.id
-  group_name = "tf_test_group_name"
+resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
+  cluster_id      = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_name = "tf_test_group_name"
 }
 ```
 */
@@ -41,13 +41,13 @@ func resourceTencentCloudTcaplusGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Cluster of the tcaplus group belongs.",
+				Description: "Id of the TcaplusDB cluster to which the table group belongs.",
 			},
-			"group_name": {
+			"tablegroup_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 30),
-				Description:  "Name of the tcaplus group. length should between 1 and 30.",
+				Description:  "Name of the TcaplusDB table group. Name length should be between 1 and 30.",
 			},
 			// Computed values.
 			"table_count": {
@@ -58,12 +58,12 @@ func resourceTencentCloudTcaplusGroup() *schema.Resource {
 			"total_size": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "The total storage(MB).",
+				Description: "Total storage size (MB).",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the tcaplus group.",
+				Description: "Create time of the TcaplusDB table group.",
 			},
 		},
 	}

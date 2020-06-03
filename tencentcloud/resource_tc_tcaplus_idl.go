@@ -1,5 +1,5 @@
 /*
-Use this resource to create tcaplus idl file
+Use this resource to create TcaplusDB IDL file.
 
 Example Usage
 
@@ -13,14 +13,14 @@ resource "tencentcloud_tcaplus_cluster" "test" {
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_group" "group" {
-  cluster_id = tencentcloud_tcaplus_cluster.test.id
-  group_name = "tf_test_group_name"
+resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
+  cluster_id      = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_name = "tf_test_group_name"
 }
 
 resource "tencentcloud_tcaplus_idl" "main" {
   cluster_id    = tencentcloud_tcaplus_cluster.test.id
-  group_id      = tencentcloud_tcaplus_group.group.id
+  tablegroup_id = tencentcloud_tcaplus_tablegroup.tablegroup.id
   file_name     = "tf_idl_test"
   file_type     = "PROTO"
   file_ext_type = "proto"
@@ -86,82 +86,82 @@ func resourceTencentCloudTcaplusIdl() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Cluster id of the idl belongs..",
+				Description: "Id of the TcaplusDB cluster to which the table group belongs.",
 			},
-			"group_id": {
+			"tablegroup_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Group of this idl belongs.",
+				Description: "Id of the table group to which the IDL file belongs.",
 			},
 			"file_name": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Name of this idl file.",
+				Description: "Name of the IDL file.",
 			},
 			"file_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_IDL_TYPES),
-				Description:  "Type of this idl file, Valid values are " + strings.Join(TCAPLUS_IDL_TYPES, ",") + ".",
+				Description:  "Type of the IDL file. Valid values are PROTO and TDR.",
 			},
 			"file_ext_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_FILE_EXT_TYPES),
-				Description:  "File ext type of this idl file. if `file_type` is PROTO  `file_ext_type` must be 'proto',if `file_type` is TDR  `file_ext_type` must be 'xml',if `file_type` is MIX  `file_ext_type` must be 'xml' or 'proto'.",
+				Description:  "File ext type of the IDL file. If `file_type` is `PROTO`, `file_ext_type` must be 'proto'; If `file_type` is `TDR`, `file_ext_type` must be 'xml'.",
 			},
 			"file_content": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Idl file content.",
+				Description: "IDL file content of the TcaplusDB table.",
 			},
 
 			// Computed values.
 			"table_infos": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Table infos in this idl.",
+				Description: "Table info of the IDL.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"error": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Show if this table  error.",
+							Description: "Error messages for creating IDL file.",
 						},
 						"table_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of this table.",
+							Description: "Name of the TcaplusDB table.",
 						},
 						"key_fields": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Key fields of this table.",
+							Description: "Primary key fields of the TcaplusDB table.",
 						},
 						"sum_key_field_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Key fields size of this table.",
+							Description: "Total size of primary key field of the TcaplusDB table.",
 						},
 						"value_fields": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Value fields of this table.",
+							Description: "Non-primary key fields of the TcaplusDB table.",
 						},
 						"sum_value_field_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Value fields size of this table.",
+							Description: "Total size of non-primary key fields of the TcaplusDB table.",
 						},
 						"index_key_set": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Index key set of this table.",
+							Description: "Index key set of the TcaplusDB table.",
 						},
 					},
 				},

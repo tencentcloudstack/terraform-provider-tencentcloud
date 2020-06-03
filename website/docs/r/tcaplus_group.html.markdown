@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcaplus_group"
 sidebar_current: "docs-tencentcloud-resource-tcaplus_group"
 description: |-
-  Use this resource to create tcaplus table group
+  Use this resource to create TcaplusDB table group.
 ---
 
 # tencentcloud_tcaplus_group
 
-Use this resource to create tcaplus table group
+Use this resource to create TcaplusDB table group.
 
 ## Example Usage
 
@@ -22,9 +22,9 @@ resource "tencentcloud_tcaplus_cluster" "test" {
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_group" "group" {
-  cluster_id = tencentcloud_tcaplus_cluster.test.id
-  group_name = "tf_test_group_name"
+resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
+  cluster_id      = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_name = "tf_test_group_name"
 }
 ```
 
@@ -32,16 +32,16 @@ resource "tencentcloud_tcaplus_group" "group" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, ForceNew) Cluster of the tcaplus group belongs.
-* `group_name` - (Required) Name of the tcaplus group. length should between 1 and 30.
+* `cluster_id` - (Required, ForceNew) Id of the TcaplusDB cluster to which the table group belongs.
+* `tablegroup_name` - (Required) Name of the TcaplusDB table group. Name length should be between 1 and 30.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `create_time` - Create time of the tcaplus group.
+* `create_time` - Create time of the TcaplusDB table group.
 * `table_count` - Number of tables.
-* `total_size` - The total storage(MB).
+* `total_size` - Total storage size (MB).
 
 
