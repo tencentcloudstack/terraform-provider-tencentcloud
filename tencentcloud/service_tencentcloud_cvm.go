@@ -595,6 +595,25 @@ func (me *CvmService) DeletePlacementGroup(ctx context.Context, placementId stri
 	return nil
 }
 
+func (me *CvmService) DescribeRegions(ctx context.Context) (zones []*cvm.RegionInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeRegionsRequest()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DescribeRegions(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	zones = response.Response.RegionSet
+	return
+}
+
 func (me *CvmService) DescribeZones(ctx context.Context) (zones []*cvm.ZoneInfo, errRet error) {
 	logId := getLogId(ctx)
 	request := cvm.NewDescribeZonesRequest()

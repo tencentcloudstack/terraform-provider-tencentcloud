@@ -49,6 +49,10 @@ variable "instance_name_update" {
   default = "` + defaultInsNameUpdate + `"
 }
 
+variable "availability_region" {
+  default = "` + defaultRegion + `"
+}
+
 variable "availability_zone" {
   default = "` + defaultAZone + `"
 }

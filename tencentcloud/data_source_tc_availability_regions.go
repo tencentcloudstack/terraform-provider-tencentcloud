@@ -1,11 +1,11 @@
 /*
-Use this data source to get the available zones in current region. By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
+Use this data source to get the available regions. By default only `AVAILABLE` regions will be returned, but `UNAVAILABLE` regions can also be fetched when `include_unavailable` is specified.
 
 Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "my_favourite_zone" {
-  name = "ap-guangzhou-3"
+data "tencentcloud_availability_regions" "my_favourite_region" {
+  name = "ap-guangzhou"
 }
 ```
 */
@@ -21,20 +21,20 @@ import (
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
+func dataSourceTencentCloudAvailabilityRegions() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudAvailabilityZonesRead,
+		Read: dataSourceTencentCloudAvailabilityRegionsRead,
 
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "When specified, only the zone with the exactly name match will be returned.",
+				Description: "When specified, only the region with the exactly name match will be returned.",
 			},
 			"include_unavailable": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "A bool variable indicates that the query will include `UNAVAILABLE` zones.",
+				Description: "A bool variable indicates that the query will include `UNAVAILABLE` regions.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -43,31 +43,26 @@ func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
 			},
 
 			// Computed values.
-			"zones": {
+			"regions": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of zones will be exported and its every element contains the following attributes:",
+				Description: "A list of regions will be exported and its every element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "An internal id for the zone, like `200003`, usually not so useful.",
-						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The name of the zone, like `ap-guangzhou-3`.",
+							Description: "The name of the region, like `ap-guangzhou`.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The description of the zone, like `Guangzhou Zone 3`.",
+							Description: "The description of the region, like `Guangzhou Region`.",
 						},
 						"state": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The state of the zone, indicate availability using `AVAILABLE` and `UNAVAILABLE` values.",
+							Description: "The state of the region, indicate availability using `AVAILABLE` and `UNAVAILABLE` values.",
 						},
 					},
 				},
@@ -76,8 +71,8 @@ func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_availability_zones.read")()
+func dataSourceTencentCloudAvailabilityRegionsRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_availability_regions.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -94,10 +89,10 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 		includeUnavailable = v.(bool)
 	}
 
-	var zones []*cvm.ZoneInfo
+	var regions []*cvm.RegionInfo
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		zones, errRet = cvmService.DescribeZones(ctx)
+		regions, errRet = cvmService.DescribeRegions(ctx)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
@@ -107,35 +102,34 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 		return err
 	}
 
-	zoneList := make([]map[string]interface{}, 0, len(zones))
-	ids := make([]string, 0, len(zones))
-	for _, zone := range zones {
-		if name != "" && name != *zone.Zone {
+	regionList := make([]map[string]interface{}, 0, len(regions))
+	ids := make([]string, 0, len(regions))
+	for _, region := range regions {
+		if name != "" && name != *region.Region {
 			continue
 		}
-		if !includeUnavailable && *zone.ZoneState == ZONE_STATE_UNAVAILABLE {
+		if !includeUnavailable && *region.RegionState == ZONE_STATE_UNAVAILABLE {
 			continue
 		}
 		mapping := map[string]interface{}{
-			"id":          zone.ZoneId,
-			"name":        zone.Zone,
-			"description": zone.ZoneName,
-			"state":       zone.ZoneState,
+			"name":        region.Region,
+			"description": region.RegionName,
+			"state":       region.RegionState,
 		}
-		zoneList = append(zoneList, mapping)
-		ids = append(ids, *zone.ZoneId)
+		regionList = append(regionList, mapping)
+		ids = append(ids, *region.Region)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	err = d.Set("zones", zoneList)
+	err = d.Set("regions", regionList)
 	if err != nil {
-		log.Printf("[CRITAL]%s provider set zones list fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set regions list fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), zoneList); err != nil {
+		if err := writeToFile(output.(string), regionList); err != nil {
 			return err
 		}
 	}
