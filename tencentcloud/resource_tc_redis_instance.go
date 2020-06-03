@@ -716,7 +716,7 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 			return err
 		}
 
-	} else if chargeType == REDIS_CHARGE_TYPE_PREPAID {
+	} else {
 		if _, err := service.DestroyPrepaidInstance(ctx, d.Id()); err != nil {
 			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "DestroyPrepaidInstance", err.Error())
 			return err
@@ -737,9 +737,6 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errDestroyChecking.Error())
 			return errDestroyChecking
 		}
-
-	} else {
-		return fmt.Errorf("[CRITAL] none recognized charge type %s, redis deleting action fail.", chargeType)
 	}
 
 	if forceDelete {
