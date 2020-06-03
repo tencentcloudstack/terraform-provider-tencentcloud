@@ -1206,7 +1206,7 @@ func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	if d.HasChange("period") || d.HasChange("prepaid_period") {
-		return fmt.Errorf("After the initialization of the field[%s] to set does not make sense", "period")
+		return fmt.Errorf("After the initialization of the field[%s] to set does not make sense", "period or prepaid_period")
 	}
 	return nil
 }
