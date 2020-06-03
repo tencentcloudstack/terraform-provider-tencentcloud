@@ -4,14 +4,17 @@ FEATURES:
 
 * **New Data Source**: `tencentcloud_availability_regions`
 
+ENHANCEMENTS: 
+
+* Data Source: `tencentcloud_redis_instances` add new argument `charge_type` to support prepaid type.
+* Resource: `tencentcloud_redis_instance` add new argument `charge_type`, `prepaid_period` and `force_delete` to support prepaid type.
+
 ## 1.35.1 (June 02, 2020)
 
 ENHANCEMENTS: 
 
 * Resource: `tencentcloud_as_scaling_config`, `tencentcloud_eip` and `tencentcloud_kubernetes_cluster` remove the validate function of `internet_max_bandwidth_out`.
 * Resource: `tencentcloud_vpn_gateway` update available value of `bandwidth`.
-* Data Source: `tencentcloud_redis_instances` add new argument `charge_type` to support prepaid type.
-* Resource: `tencentcloud_redis_instance` add new argument `charge_type`, `prepaid_period` and `force_delete` to support prepaid type.
 
 ## 1.35.0 (June 01, 2020)
 

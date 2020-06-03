@@ -193,13 +193,13 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      REDIS_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: validateAllowedStringValue([]string{REDIS_CHARGE_TYPE_POSTPAID, REDIS_CHARGE_TYPE_PREPAID}),
-				Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID`.Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.",
+				Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.",
 			},
 			"prepaid_period": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateAllowedIntValue(REDIS_PREPAID_PERIOD),
-				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.",
+				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.",
 			},
 			"force_delete": {
 				Type:        schema.TypeBool,
@@ -656,10 +656,9 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	// Collect infos before deleting action
-	redisId := d.Id()
 	var chargeType string
 	errQuery := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
-		has, online, info, err := service.CheckRedisCreateOk(ctx, redisId)
+		has, online, info, err := service.CheckRedisCreateOk(ctx, d.Id())
 		if err != nil {
 			log.Printf("[CRITAL]%s redis querying before deleting fail, reason:%s\n", logId, err.Error())
 			return resource.NonRetryableError(err)
@@ -675,8 +674,9 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 				}
 			}
 			return resource.NonRetryableError(fmt.Errorf("Responsed BillingMode %d is incorrect.", *info.BillingMode))
+		} else {
+			return resource.RetryableError(fmt.Errorf("Deleting ERROR: Creating redis task is processing."))
 		}
-		return resource.RetryableError(fmt.Errorf("Deleting ERROR: Creating redis task is processing."))
 	})
 	if errQuery != nil {
 		log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errQuery.Error())
@@ -742,7 +742,22 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 			return err
 		}
 
-		// Deal info only support create and renew and resize, so no need to check destroy status.
+		// Deal info only support create and renew and resize, need to check destroy status by describing api.
+		errDestroyChecking := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+			has, isolated, err := service.CheckRedisDestroyOk(ctx, d.Id())
+			if err != nil {
+				log.Printf("[CRITAL]%s CheckRedisDestroyOk fail, reason:%s\n", logId, err.Error())
+				return resource.NonRetryableError(err)
+			}
+			if !has || isolated {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("Instance is not ready to be destroyed."))
+		})
+		if errDestroyChecking != nil {
+			log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errDestroyChecking.Error())
+			return errDestroyChecking
+		}
 
 		if forceDelete {
 			action = "CleanUpInstance"
@@ -758,6 +773,5 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 		return nil
 	}
 
-	log.Printf("[CRITAL] none recognized charge type %s, redis deleting action fail.", chargeType)
-	return fmt.Errorf("None recognized charge type, redis deleting action fail.")
+	return fmt.Errorf("[CRITAL] none recognized charge type %s, redis deleting action fail.", chargeType)
 }

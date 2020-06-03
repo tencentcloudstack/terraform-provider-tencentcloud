@@ -370,6 +370,62 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 	return
 }
 
+func (me *RedisService) CheckRedisDestroyOk(ctx context.Context, redisId string) (has bool,
+	isolated bool,
+	errRet error) {
+
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeInstancesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &redisId
+
+	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
+	var response *redis.DescribeInstancesResponse
+	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeInstances(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s CheckRedisDestroyOk fail, reason:%s\n", logId, e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.InstanceSet) == 0 {
+		has = false
+		return
+	}
+
+	if len(response.Response.InstanceSet) != 1 {
+		errRet = fmt.Errorf("redis DescribeInstances one id get %d redis info", len(response.Response.InstanceSet))
+		return
+	}
+
+	has = true
+
+	info := response.Response.InstanceSet[0]
+	if *info.Status == REDIS_STATUS_ISOLATE {
+		isolated = true
+		return
+	} else {
+		isolated = false
+		return
+	}
+}
+
 func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId string) (done bool, redisId string, errRet error) {
 	logId := getLogId(ctx)
 	request := redis.NewDescribeInstanceDealDetailRequest()
@@ -589,10 +645,7 @@ func (me *RedisService) CleanUpInstance(ctx context.Context, redisId string) (ta
 		response = result
 		return nil
 	})
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	} else {
+	if err != nil {
 		errRet = err
 		return
 	}

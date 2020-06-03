@@ -152,7 +152,7 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 						"charge_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The charge type of instance. Valid values are `POSTPAID` and `PREPAID`.",
+							Description: "The charge type of instance. Valid values are `POSTPAID` and `PREPAID`. Default value is `POSTPAID`.",
 						},
 					},
 				},
@@ -229,30 +229,23 @@ instanceLoop:
 		}
 
 		var instanceDes = make(map[string]interface{})
-
 		instanceDes["redis_id"] = instance.RedisId
 		instanceDes["name"] = instance.Name
 		instanceDes["zone"] = instance.Zone
-
 		instanceDes["project_id"] = instance.ProjectId
 		instanceDes["type"] = instance.Type
 		instanceDes["mem_size"] = instance.MemSize
-
 		instanceDes["status"] = instance.Status
 		instanceDes["vpc_id"] = instance.VpcId
 		instanceDes["subnet_id"] = instance.SubnetId
-
 		instanceDes["ip"] = instance.Ip
 		instanceDes["port"] = instance.Port
 		instanceDes["create_time"] = instance.CreateTime
-
 		instanceDes["tags"] = instance.Tags
 		instanceDes["redis_shard_num"] = instance.RedisShardNum
 		instanceDes["redis_replicas_num"] = instance.RedisReplicasNum
 		instanceDes["type_id"] = instance.TypeId
-
 		instanceDes["charge_type"] = instance.BillingMode
-
 		instanceList = append(instanceList, instanceDes)
 	}
 
