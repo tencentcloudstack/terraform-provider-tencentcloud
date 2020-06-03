@@ -48,6 +48,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func TencentMsyqlBasicInfo() map[string]*schema.Schema {
@@ -59,19 +60,40 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Description:  "The name of a mysql instance.",
 		},
 		"pay_type": {
-			Type:         schema.TypeInt,
-			ForceNew:     true,
-			Optional:     true,
-			ValidateFunc: validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
-			Default:      MysqlPayByUse,
-			Description:  "Pay type of instance, 0: prepay, 1: postpay. NOTES: Only supported prepay instance.",
+			Type:          schema.TypeInt,
+			Deprecated:    "It has been deprecated from version 1.36.0.",
+			ForceNew:      true,
+			Optional:      true,
+			ValidateFunc:  validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
+			ConflictsWith: []string{"charge_type", "prepaid_period"},
+			//Default:      MysqlPayByUse,
+			Description: "Pay type of instance, 0: prepaid, 1: postpaid.",
+		},
+		"charge_type": {
+			Type:          schema.TypeString,
+			ForceNew:      true,
+			Optional:      true,
+			ValidateFunc:  validateAllowedStringValue([]string{MYSQL_CHARGE_TYPE_PREPAID, MYSQL_CHARGE_TYPE_POSTPAID}),
+			ConflictsWith: []string{"pay_type", "period"},
+			Default:       MYSQL_CHARGE_TYPE_POSTPAID,
+			Description:   "Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
 		},
 		"period": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			Default:      1,
-			ValidateFunc: validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
-			Description:  "Period of instance. NOTES: Only supported prepaid instance.",
+			Type:          schema.TypeInt,
+			Deprecated:    "It has been deprecated from version 1.36.0.",
+			Optional:      true,
+			Default:       1,
+			ConflictsWith: []string{"charge_type", "prepaid_period"},
+			ValidateFunc:  validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
+			Description:   "Period of instance. NOTES: Only supported prepaid instance.",
+		},
+		"prepaid_period": {
+			Type:          schema.TypeInt,
+			Optional:      true,
+			Default:       1,
+			ConflictsWith: []string{"pay_type", "period"},
+			ValidateFunc:  validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
+			Description:   "Period of instance. NOTES: Only supported prepaid instance.",
 		},
 		"auto_renew_flag": {
 			Type:         schema.TypeInt,
@@ -466,8 +488,15 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 
 	request := cdb.NewCreateDBInstanceRequest()
 
-	period := int64(d.Get("period").(int))
-	request.Period = &period
+	_, oldOk := d.GetOkExists("pay_type")
+	var period int
+	if !oldOk {
+		period = d.Get("prepaid_period").(int)
+	} else {
+		period = d.Get("period").(int)
+	}
+
+	request.Period = helper.IntInt64(period)
 
 	autoRenewFlag := int64(d.Get("auto_renew_flag").(int))
 	request.AutoRenewFlag = &autoRenewFlag
@@ -532,7 +561,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 
 	if payType == MysqlPayByMonth {
 		err := mysqlCreateInstancePayByMonth(ctx, d, meta)
@@ -635,12 +664,23 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		return
 	}
 	_ = d.Set("instance_name", *mysqlInfo.InstanceName)
-	_ = d.Set("pay_type", int(*mysqlInfo.PayType))
+
+	_, oldOk := d.GetOkExists("pay_type")
+	var periodKey string
+	if oldOk {
+		_ = d.Set("pay_type", int(*mysqlInfo.PayType))
+		periodKey = "period"
+	} else {
+		periodKey = "prepaid_period"
+
+		_ = d.Set("charge_type", MYSQL_CHARGE_TYPE[int(*mysqlInfo.PayType)])
+
+	}
 
 	if int(*mysqlInfo.PayType) == MysqlPayByMonth {
-		tempInt, _ := d.Get("period").(int)
+		tempInt, _ := d.Get(periodKey).(int)
 		if tempInt == 0 {
-			_ = d.Set("period", 1)
+			_ = d.Set(periodKey, 1)
 		}
 	}
 
@@ -1165,7 +1205,7 @@ func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		d.SetPartial("auto_renew_flag")
 	}
 
-	if d.HasChange("period") {
+	if d.HasChange("period") || d.HasChange("prepaid_period") {
 		return fmt.Errorf("After the initialization of the field[%s] to set does not make sense", "period")
 	}
 	return nil
@@ -1187,7 +1227,7 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 
 	d.Partial(true)
 	if payType == MysqlPayByMonth {
@@ -1232,7 +1272,7 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 
 	var hasDeleted = false
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 	forceDelete := d.Get("force_delete").(bool)
 	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
@@ -1293,4 +1333,18 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 		}
 	})
 	return err
+}
+
+func getPayType(d *schema.ResourceData) (payType interface{}) {
+	chargeType := d.Get("charge_type")
+	payType, oldOk := d.GetOkExists("pay_type")
+
+	if !oldOk {
+		if chargeType == MYSQL_CHARGE_TYPE_PREPAID {
+			payType = MysqlPayByMonth
+		} else {
+			payType = MysqlPayByUse
+		}
+	}
+	return
 }

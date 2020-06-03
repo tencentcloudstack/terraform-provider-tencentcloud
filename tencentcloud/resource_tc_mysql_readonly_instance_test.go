@@ -102,6 +102,7 @@ func TestAccTencentCloudReadonlyMysqlPrepaid(t *testing.T) {
 				Config: testAccMysqlReadonlyInstancePrepaid_update(mysqlInstanceHighPerformancePrepaidTestCase, 1),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "pay_type", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly_prepaid", "auto_renew_flag", "1"),
 				),
 			},

@@ -50,8 +50,15 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 			"pay_type": {
 				Type:         schema.TypeInt,
 				Optional:     true,
+				Deprecated:   "It has been deprecated from version 1.36.0.",
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Description:  "Pay type of instance, 0: prepay, 1: postpay. NOTES: Only prepay is supported.",
+				Description:  "Pay type of instance, 0: prepay, 1: postpay.",
+			},
+			"charge_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateAllowedStringValue([]string{MYSQL_CHARGE_TYPE_PREPAID, MYSQL_CHARGE_TYPE_POSTPAID}),
+				Description:  "Pay type of instance, valid values are `PREPAID` and `POSTPAID`.",
 			},
 			"instance_name": {
 				Type:        schema.TypeString,
@@ -224,6 +231,11 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 							Computed:    true,
 							Description: "Pay type of instance, 0: prepay, 1: postpay. NOTES: Only prepay is supported.",
 						},
+						"charge_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Pay type of instance, ``PREPAID``: prepay, `POSTPAID`: postpay. NOTES: Only prepay is supported.",
+						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -293,6 +305,16 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 	}
 	if payType, ok := d.GetOk("pay_type"); ok {
 		payTypeValue := uint64(payType.(int))
+		request.PayTypes = []*uint64{&payTypeValue}
+	}
+	if chargeType, ok := d.GetOk("charge_type"); ok {
+		var payType int
+		if chargeType == MYSQL_CHARGE_TYPE_PREPAID {
+			payType = MysqlPayByMonth
+		} else {
+			payType = MysqlPayByUse
+		}
+		payTypeValue := uint64(payType)
 		request.PayTypes = []*uint64{&payTypeValue}
 	}
 	if instanceName, ok := d.GetOk("instance_name"); ok {
@@ -367,6 +389,7 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 			"pay_type":        item.PayType,
 			"create_time":     item.CreateTime,
 			"dead_line_time":  item.DeadlineTime,
+			"charge_type":     MYSQL_CHARGE_TYPE[int(*item.PayType)],
 		}
 		if item.MasterInfo != nil {
 			mapping["master_instance_id"] = item.MasterInfo.InstanceId

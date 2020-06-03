@@ -156,7 +156,7 @@ func TestAccTencentCloudMysqlPrepaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "availability_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "first_slave_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "auto_renew_flag", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "pay_type", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "charge_type", "PREPAID"),
 				),
 			},
 			// update auto_renew_flag
@@ -237,7 +237,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
 func testAccMysqlMasterInstance_prepaid() string {
 	return `
 resource "tencentcloud_mysql_instance" "prepaid" {
-  pay_type          = 0
+  charge_type 		= "PREPAID"
   mem_size          = 1000
   volume_size       = 50
   instance_name     = "testAccMysqlPrepaid"
@@ -253,7 +253,7 @@ resource "tencentcloud_mysql_instance" "prepaid" {
 func testAccMysqlMasterInstance_prepaidupdate() string {
 	return `
 resource "tencentcloud_mysql_instance" "prepaid" {
-  pay_type          = 0
+  charge_type 		= "PREPAID"
   mem_size          = 1000
   volume_size       = 50
   auto_renew_flag	= 1

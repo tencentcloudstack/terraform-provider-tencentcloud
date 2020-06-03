@@ -186,7 +186,7 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 	if payType == MysqlPayByMonth {
 		err := mysqlCreateReadonlyInstancePayByMonth(ctx, d, meta)
 		if err != nil {
@@ -265,7 +265,7 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 
 	d.Partial(true)
 
@@ -310,7 +310,7 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 	}
 
 	var hasDeleted = false
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 	forceDelete := d.Get("force_delete").(bool)
 
 	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
