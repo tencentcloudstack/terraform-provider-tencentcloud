@@ -33,6 +33,7 @@ provider "tencentcloud" {
 Resources List
 
 Provider Data Sources
+  tencentcloud_availability_regions
   tencentcloud_availability_zones
 
 Anti-DDoS(Dayu)
@@ -202,6 +203,13 @@ Direct Connect Gateway(DCG)
   Resource
     tencentcloud_dc_gateway
     tencentcloud_dc_gateway_ccn_route
+
+Elasticsearch
+  Data Source
+    tencentcloud_elasticsearch_instances
+
+  Resource
+    tencentcloud_elasticsearch_instance
 
 Global Application Acceleration(GAAP)
   Data Source
@@ -452,6 +460,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
+			"tencentcloud_availability_regions":         dataSourceTencentCloudAvailabilityRegions(),
 			"tencentcloud_availability_zones":           dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_instances":                    dataSourceTencentCloudInstances(),
 			"tencentcloud_reserved_instances":           dataSourceTencentCloudReservedInstances(),
@@ -553,6 +562,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_binding_objects":      dataSourceTencentMonitorBindingObjects(),
 			"tencentcloud_monitor_policy_groups":        dataSourceTencentMonitorPolicyGroups(),
 			"tencentcloud_monitor_product_namespace":    dataSourceTencentMonitorProductNamespace(),
+			"tencentcloud_elasticsearch_instances":      dataSourceTencentCloudElasticsearchInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -662,6 +672,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_policy_group":           resourceTencentMonitorPolicyGroup(),
 			"tencentcloud_monitor_binding_object":         resourceTencentMonitorBindingObject(),
 			"tencentcloud_monitor_binding_receiver":       resourceTencentMonitorBindingAlarmReceiver(),
+			"tencentcloud_elasticsearch_instance":         resourceTencentCloudElasticsearchInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

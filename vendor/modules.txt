@@ -12,7 +12,7 @@ github.com/BurntSushi/toml
 github.com/Djarvur/go-err113
 # github.com/OpenPeeDeeP/depguard v1.0.1
 github.com/OpenPeeDeeP/depguard
-# github.com/agext/levenshtein v1.2.3
+# github.com/agext/levenshtein v1.2.2
 github.com/agext/levenshtein
 # github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883
 github.com/andreyvit/diff
@@ -24,7 +24,7 @@ github.com/apparentlymart/go-textseg/textseg
 github.com/apparentlymart/go-textseg/v12/textseg
 # github.com/armon/go-radix v1.0.0
 github.com/armon/go-radix
-# github.com/aws/aws-sdk-go v1.31.2
+# github.com/aws/aws-sdk-go v1.31.8
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/arn
 github.com/aws/aws-sdk-go/aws/awserr
@@ -54,6 +54,7 @@ github.com/aws/aws-sdk-go/internal/sdkuri
 github.com/aws/aws-sdk-go/internal/shareddefaults
 github.com/aws/aws-sdk-go/internal/strings
 github.com/aws/aws-sdk-go/internal/sync/singleflight
+github.com/aws/aws-sdk-go/private/checksum
 github.com/aws/aws-sdk-go/private/protocol
 github.com/aws/aws-sdk-go/private/protocol/eventstream
 github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi
@@ -521,7 +522,7 @@ github.com/stretchr/testify/mock
 github.com/subosito/gotenv
 # github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2
 github.com/tdakkota/asciicheck
-# github.com/tencentcloud/tencentcloud-sdk-go v3.0.176+incompatible
+# github.com/tencentcloud/tencentcloud-sdk-go v3.0.182+incompatible
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
@@ -536,6 +537,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
@@ -571,7 +573,7 @@ github.com/vmihailenco/msgpack
 github.com/vmihailenco/msgpack/codes
 # github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 github.com/yangwenmai/ratelimit/simpleratelimit
-# github.com/zclconf/go-cty v1.3.1
+# github.com/zclconf/go-cty v1.2.1
 github.com/zclconf/go-cty/cty
 github.com/zclconf/go-cty/cty/convert
 github.com/zclconf/go-cty/cty/function
@@ -636,8 +638,9 @@ golang.org/x/oauth2/google
 golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
-# golang.org/x/sys v0.0.0-20200406155108-e3b113bbe6a4
+# golang.org/x/sys v0.0.0-20200523222454-059865788121
 golang.org/x/sys/cpu
+golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/secure/bidirule
