@@ -33,6 +33,7 @@ provider "tencentcloud" {
 Resources List
 
 Provider Data Sources
+  tencentcloud_availability_regions
   tencentcloud_availability_zones
 
 Anti-DDoS(Dayu)
@@ -459,6 +460,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
+			"tencentcloud_availability_regions":         dataSourceTencentCloudAvailabilityRegions(),
 			"tencentcloud_availability_zones":           dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_instances":                    dataSourceTencentCloudInstances(),
 			"tencentcloud_reserved_instances":           dataSourceTencentCloudReservedInstances(),
