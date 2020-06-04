@@ -6,10 +6,9 @@ import (
 	"log"
 	"testing"
 
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 var testTkeScaleWorkerResourceName = "tencentcloud_kubernetes_scale_worker"
