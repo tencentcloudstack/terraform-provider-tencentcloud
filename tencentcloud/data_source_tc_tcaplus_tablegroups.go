@@ -32,9 +32,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func dataSourceTencentCloudTcaplusGroups() *schema.Resource {
+func dataSourceTencentCloudTcaplusTableGroups() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudTcaplusGroupsRead,
+		Read: dataSourceTencentCloudTcaplusTableGroupsRead,
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
@@ -94,7 +94,7 @@ func dataSourceTencentCloudTcaplusGroups() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudTcaplusGroupsRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceTencentCloudTcaplusTableGroupsRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_tcaplus_tablegroups.read")()
 
 	logId := getLogId(contextNil)

@@ -126,7 +126,7 @@ resource "tencentcloud_tcaplus_tablegroup" "group" {
 const testAccTcaplusIdl = testAccTcaplusIdlBasic + `
 resource "tencentcloud_tcaplus_idl" "test_idl" {
   cluster_id     = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_id  = tencentcloud_tcaplus_group.group.id
+  tablegroup_id  = tencentcloud_tcaplus_tablegroup.group.id
   file_name      = "tf_idl_test_guagua"
   file_type      = "PROTO"
   file_ext_type  = "proto"

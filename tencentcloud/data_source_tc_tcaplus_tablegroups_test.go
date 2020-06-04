@@ -17,7 +17,7 @@ func TestAccTencentCloudDataTcaplusGroups(t *testing.T) {
 			{
 				Config: testAccTencentCloudDataTcaplusGroupsBaic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckTcaplusGroupExists("tencentcloud_tcaplus_group.test_group"),
+					testAccCheckTcaplusGroupExists("tencentcloud_tcaplus_tablegroup.test_group"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "cluster_id"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "tablegroup_id"),
 					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.#", "1"),
@@ -56,6 +56,6 @@ resource "tencentcloud_tcaplus_tablegroup" "test_group" {
 
 data "tencentcloud_tcaplus_groups" "id_test" {
    cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
-   tablegroup_id      = tencentcloud_tcaplus_group.test_group.id
+   tablegroup_id      = tencentcloud_tcaplus_tablegroup.test_group.id
 }
 `

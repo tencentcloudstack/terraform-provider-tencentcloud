@@ -1,12 +1,12 @@
 ---
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_tcaplus_groups"
-sidebar_current: "docs-tencentcloud-datasource-tcaplus_groups"
+page_title: "TencentCloud: tencentcloud_tcaplus_tablegroups"
+sidebar_current: "docs-tencentcloud-datasource-tcaplus_tablegroups"
 description: |-
   Use this data source to query table groups of the TcaplusDB cluster.
 ---
 
-# tencentcloud_tcaplus_groups
+# tencentcloud_tcaplus_tablegroups
 
 Use this data source to query table groups of the TcaplusDB cluster.
 

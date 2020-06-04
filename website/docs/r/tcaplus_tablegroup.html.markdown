@@ -1,12 +1,12 @@
 ---
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_tcaplus_group"
-sidebar_current: "docs-tencentcloud-resource-tcaplus_group"
+page_title: "TencentCloud: tencentcloud_tcaplus_tablegroup"
+sidebar_current: "docs-tencentcloud-resource-tcaplus_tablegroup"
 description: |-
   Use this resource to create TcaplusDB table group.
 ---
 
-# tencentcloud_tcaplus_group
+# tencentcloud_tcaplus_tablegroup
 
 Use this resource to create TcaplusDB table group.
 

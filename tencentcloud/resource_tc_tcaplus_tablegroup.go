@@ -154,7 +154,7 @@ func resourceTencentCloudTcaplusTableGroupUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudTcaplusTableGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcaplus_group.delete")()
+	defer logElapsed("resource.tencentcloud_tcaplus_tablegroup.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

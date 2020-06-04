@@ -553,7 +553,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_scf_namespaces":               dataSourceTencentCloudScfNamespaces(),
 			"tencentcloud_scf_logs":                     dataSourceTencentCloudScfLogs(),
 			"tencentcloud_tcaplus_clusters":             dataSourceTencentCloudTcaplusClusters(),
-			"tencentcloud_tcaplus_groups":               dataSourceTencentCloudTcaplusGroups(),
+			"tencentcloud_tcaplus_tablegroups":          dataSourceTencentCloudTcaplusTableGroups(),
 			"tencentcloud_tcaplus_tables":               dataSourceTencentCloudTcaplusTables(),
 			"tencentcloud_tcaplus_idls":                 dataSourceTencentCloudTcaplusIdls(),
 			"tencentcloud_monitor_policy_conditions":    dataSourceTencentMonitorPolicyConditions(),
