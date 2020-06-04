@@ -13,6 +13,11 @@ FEATURES:
 
 * **New Data Source**: `tencentcloud_availability_regions`
 
+ENHANCEMENTS: 
+
+* Data Source: `tencentcloud_redis_instances` add new argument `charge_type` to support prepaid type.
+* Resource: `tencentcloud_redis_instance` add new argument `charge_type`, `prepaid_period` and `force_delete` to support prepaid type.
+
 ## 1.35.1 (June 02, 2020)
 
 ENHANCEMENTS: 
