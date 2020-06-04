@@ -1,5 +1,14 @@
 ## 1.36.0 (Unreleased)
 
+ENHANCEMENTS:
+* Resource: `tencentcloud_mysql_instance` add new argument `force_delete` to support soft deletion.
+* Resource: `tencentcloud_mysql_readonly_instance` add new argument `force_delete` to support soft deletion.
+
+DEPRECATED:
+* Data Source: `tencentcloud_mysql_instances`: optional argument `pay_type` is no longer supported, replace by `charge_type`.
+* Resource: `tencentcloud_mysql_instance`: optional arguments `pay_type` and `period` are no longer supported, replace by `charge_type` and `prepaid_period`.
+* Resource: `tencentcloud_mysql_readonly_instance`: optional arguments `pay_type` and `period` are no longer supported, replace by `charge_type` and `prepaid_period`.
+
 FEATURES:
 
 * **New Data Source**: `tencentcloud_availability_regions`
