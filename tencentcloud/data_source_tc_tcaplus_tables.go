@@ -226,10 +226,10 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 			listItem["table_idl_type"] = *tableInfo.TableIdlType
 		}
 		if tableInfo.ReservedReadQps != nil {
-			listItem["reserved_read_qps"] = *tableInfo.ReservedReadQps
+			listItem["reserved_read_cu"] = *tableInfo.ReservedReadQps
 		}
 		if tableInfo.ReservedWriteQps != nil {
-			listItem["reserved_write_qps"] = *tableInfo.ReservedWriteQps
+			listItem["reserved_write_cu"] = *tableInfo.ReservedWriteQps
 		}
 		if tableInfo.ReservedVolume != nil {
 			listItem["reserved_volume"] = *tableInfo.ReservedVolume

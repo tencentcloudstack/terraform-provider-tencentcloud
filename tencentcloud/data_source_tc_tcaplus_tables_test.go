@@ -28,8 +28,8 @@ func TestAccTencentCloudDataTcaplusTables(t *testing.T) {
 					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.0.description", "test"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusTablesName, "list.0.idl_id"),
 					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.0.table_idl_type", "PROTO"),
-					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.0.reserved_read_qps", "1000"),
-					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.0.reserved_write_qps", "20"),
+					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.0.reserved_read_cu", "1000"),
+					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.0.reserved_write_cu", "20"),
 					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.0.reserved_volume", "1"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusTablesName, "list.0.create_time"),
 					resource.TestCheckResourceAttr(testDataTcaplusTablesName, "list.0.error", ""),
@@ -102,8 +102,8 @@ resource "tencentcloud_tcaplus_table" "test_table" {
   description        = "test"
   idl_id             = tencentcloud_tcaplus_idl.test_idl.id
   table_idl_type     = "PROTO"
-  reserved_read_qps  = 1000
-  reserved_write_qps = 20
+  reserved_read_cu   = 1000
+  reserved_write_cu  = 20
   reserved_volume    = 1
 }
 

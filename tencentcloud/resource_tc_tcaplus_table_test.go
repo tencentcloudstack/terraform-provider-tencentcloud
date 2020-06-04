@@ -32,8 +32,8 @@ func TestAccTencentCloudTcaplusTableResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "table_type", "GENERIC"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "description", "test"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "table_idl_type", "PROTO"),
-					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_read_qps", "1000"),
-					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_write_qps", "20"),
+					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_read_cu", "1000"),
+					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_write_cu", "20"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_volume", "1"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "error", ""),
 				),
@@ -52,8 +52,8 @@ func TestAccTencentCloudTcaplusTableResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "table_type", "GENERIC"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "description", "test_desc"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "table_idl_type", "PROTO"),
-					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_read_qps", "1000"),
-					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_write_qps", "20"),
+					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_read_cu", "1000"),
+					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_write_cu", "20"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "reserved_volume", "1"),
 					resource.TestCheckResourceAttr(testTcaplusTableResourceNameResourceKey, "error", ""),
 				),
@@ -212,8 +212,8 @@ resource "tencentcloud_tcaplus_table" "test_table" {
   description        = "test"
   idl_id             = tencentcloud_tcaplus_idl.test_idl.id
   table_idl_type     = "PROTO"
-  reserved_read_qps  = 1000
-  reserved_write_qps = 20
+  reserved_read_cu   = 1000
+  reserved_write_cu  = 20
   reserved_volume    = 1
 }
 `
@@ -226,8 +226,8 @@ resource "tencentcloud_tcaplus_table" "test_table" {
   description        = "test_desc"
   idl_id             = tencentcloud_tcaplus_idl.test_idl_2.id
   table_idl_type     = "PROTO"
-  reserved_read_qps  = 1000
-  reserved_write_qps = 20
+  reserved_read_cu  = 1000
+  reserved_write_cu = 20
   reserved_volume    = 1
 }
 `

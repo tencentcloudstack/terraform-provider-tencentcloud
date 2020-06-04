@@ -86,7 +86,7 @@ func resourceTencentCloudTcaplusTableGroupCreate(d *schema.ResourceData, meta in
 		return err
 	}
 	d.SetId(fmt.Sprintf("%s:%s", clusterId, groupId))
-	return resourceTencentCloudTcaplusGroupRead(d, meta)
+	return resourceTencentCloudTcaplusTableGroupRead(d, meta)
 }
 
 func resourceTencentCloudTcaplusTableGroupRead(d *schema.ResourceData, meta interface{}) error {

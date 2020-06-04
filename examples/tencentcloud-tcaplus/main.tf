@@ -1,21 +1,13 @@
-resource "tencentcloud_vpc" "foo" {
-  name       = var.instance_name
-  cidr_block = var.vpc_cidr
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  name              = var.instance_name
-  vpc_id            = tencentcloud_vpc.foo.id
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
   availability_zone = var.availability_zone
-  cidr_block        = var.subnet_cidr
-  is_multicast      = false
 }
 
 resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   idl_type                 = "PROTO"
   cluster_name             = "tf_tcaplus_g_table"
-  vpc_id                   = tencentcloud_vpc.foo.id
-  subnet_id                = tencentcloud_subnet.subnet.id
+  vpc_id                   = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_id                = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
@@ -61,14 +53,14 @@ resource "tencentcloud_tcaplus_tablegroup" "test_tablegroup" {
 }
 
 resource "tencentcloud_tcaplus_table" "test_table" {
-  cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
-  tablegroup_id      = tencentcloud_tcaplus_tablegroup.test_tablegroup.id
-  table_name         = "tb_online_guagua"
-  table_type         = "GENERIC"
-  description        = "test"
-  idl_id             = tencentcloud_tcaplus_idl.test_idl.id
-  table_idl_type     = "PROTO"
-  reserved_read_qps  = 1000
-  reserved_write_qps = 20
-  reserved_volume    = 1
+  cluster_id        = tencentcloud_tcaplus_cluster.test_cluster.id
+  tablegroup_id     = tencentcloud_tcaplus_tablegroup.test_tablegroup.id
+  table_name        = "tb_online_guagua"
+  table_type        = "GENERIC"
+  description       = "test"
+  idl_id            = tencentcloud_tcaplus_idl.test_idl.id
+  table_idl_type    = "PROTO"
+  reserved_read_cu  = 1000
+  reserved_write_cu = 20
+  reserved_volume   = 1
 }

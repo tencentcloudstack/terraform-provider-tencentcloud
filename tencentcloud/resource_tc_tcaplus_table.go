@@ -190,8 +190,8 @@ func resourceTencentCloudTcaplusTableCreate(d *schema.ResourceData, meta interfa
 	tableType := d.Get("table_type").(string)
 	description := d.Get("description").(string)
 	tableIdlType := d.Get("table_idl_type").(string)
-	reservedReadQps := int64(d.Get("reserved_read_qps").(int))
-	reservedWriteQps := int64(d.Get("reserved_write_qps").(int))
+	reservedReadQps := int64(d.Get("reserved_read_cu").(int))
+	reservedWriteQps := int64(d.Get("reserved_write_cu").(int))
 	reservedVolume := int64(d.Get("reserved_volume").(int))
 
 	taskId, tableInstanceId, err := tcaplusService.CreateTables(ctx,
@@ -373,8 +373,8 @@ func resourceTencentCloudTcaplusTableRead(d *schema.ResourceData, meta interface
 	_ = d.Set("table_type", tableInfo.TableType)
 	_ = d.Set("description", tableInfo.Memo)
 	_ = d.Set("table_idl_type", tableInfo.TableIdlType)
-	_ = d.Set("reserved_read_qps", tableInfo.ReservedReadQps)
-	_ = d.Set("reserved_write_qps", tableInfo.ReservedWriteQps)
+	_ = d.Set("reserved_read_cu", tableInfo.ReservedReadQps)
+	_ = d.Set("reserved_write_cu", tableInfo.ReservedWriteQps)
 	_ = d.Set("reserved_volume", tableInfo.ReservedVolume)
 	_ = d.Set("create_time", tableInfo.CreatedTime)
 	if tableInfo.Error != nil && tableInfo.Error.Message != nil {
