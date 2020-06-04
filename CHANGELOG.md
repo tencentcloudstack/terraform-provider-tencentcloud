@@ -4,6 +4,10 @@ FEATURES:
 
 * **New Data Source**: `tencentcloud_availability_regions`
 
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix `allocate_public_ip` inconsistency when eip is attached to the cvm.
+
 ## 1.35.1 (June 02, 2020)
 
 ENHANCEMENTS: 
