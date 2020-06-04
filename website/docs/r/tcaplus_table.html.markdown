@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcaplus_table"
 sidebar_current: "docs-tencentcloud-resource-tcaplus_table"
 description: |-
-  Use this resource to create tcaplus table
+  Use this resource to create TcaplusDB table.
 ---
 
 # tencentcloud_tcaplus_table
 
-Use this resource to create tcaplus table
+Use this resource to create TcaplusDB table.
 
 ## Example Usage
 
@@ -22,14 +22,14 @@ resource "tencentcloud_tcaplus_cluster" "test" {
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_group" "group" {
-  cluster_id = tencentcloud_tcaplus_cluster.test.id
-  group_name = "tf_test_group_name"
+resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
+  cluster_id      = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_name = "tf_test_group_name"
 }
 
 resource "tencentcloud_tcaplus_idl" "main" {
   cluster_id    = tencentcloud_tcaplus_cluster.test.id
-  group_id      = tencentcloud_tcaplus_group.group.id
+  tablegroup_id = tencentcloud_tcaplus_tablegroup.tablegroup.id
   file_name     = "tf_idl_test_2"
   file_type     = "PROTO"
   file_ext_type = "proto"
@@ -63,16 +63,16 @@ resource "tencentcloud_tcaplus_idl" "main" {
 }
 
 resource "tencentcloud_tcaplus_table" "table" {
-  cluster_id         = tencentcloud_tcaplus_cluster.test.id
-  group_id           = tencentcloud_tcaplus_group.group.id
-  table_name         = "tb_online"
-  table_type         = "GENERIC"
-  description        = "test"
-  idl_id             = tencentcloud_tcaplus_idl.main.id
-  table_idl_type     = "PROTO"
-  reserved_read_qps  = 1000
-  reserved_write_qps = 20
-  reserved_volume    = 1
+  cluster_id        = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_id     = tencentcloud_tcaplus_tablegroup.tablegroup.id
+  table_name        = "tb_online"
+  table_type        = "GENERIC"
+  description       = "test"
+  idl_id            = tencentcloud_tcaplus_idl.main.id
+  table_idl_type    = "PROTO"
+  reserved_read_cu  = 1000
+  reserved_write_cu = 20
+  reserved_volume   = 1
 }
 ```
 
@@ -80,25 +80,25 @@ resource "tencentcloud_tcaplus_table" "table" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, ForceNew) Cluster of this table belongs.
-* `group_id` - (Required, ForceNew) Group of this table belongs.
-* `idl_id` - (Required) Idl file for this table.
-* `reserved_read_qps` - (Required, ForceNew) Table reserved read QPS.
-* `reserved_volume` - (Required, ForceNew) Table reserved capacity(GB).
-* `reserved_write_qps` - (Required, ForceNew) Table reserved write QPS.
-* `table_idl_type` - (Required) Type of this table idl, Valid values are PROTO,TDR.
-* `table_name` - (Required, ForceNew) Name of this table.
-* `table_type` - (Required, ForceNew) Type of this table, Valid values are GENERIC,LIST.
-* `description` - (Optional) Description of this table.
+* `cluster_id` - (Required, ForceNew) ID of the TcaplusDB cluster to which the table belongs.
+* `idl_id` - (Required) ID of the IDL File.
+* `reserved_read_cu` - (Required, ForceNew) Reserved read capacity units of the TcaplusDB table.
+* `reserved_volume` - (Required, ForceNew) Reserved storage capacity of the TcaplusDB table (unit: GB).
+* `reserved_write_cu` - (Required, ForceNew) Reserved write capacity units of the TcaplusDB table.
+* `table_idl_type` - (Required) IDL type of the TcaplusDB table. Valid values are PROTO and TDR.
+* `table_name` - (Required, ForceNew) Name of the TcaplusDB table.
+* `table_type` - (Required, ForceNew) Type of the TcaplusDB table. Valid values are GENERIC and LIST.
+* `tablegroup_id` - (Required, ForceNew) ID of the table group to which the table belongs.
+* `description` - (Optional) Description of the TcaplusDB table.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `create_time` - Create time of the tcaplus table.
-* `error` - Show if this table  create error.
-* `status` - Status of this table.
-* `table_size` - Size of this table.
+* `create_time` - Create time of the TcaplusDB table.
+* `error` - Error messages for creating TcaplusDB table.
+* `status` - Status of the TcaplusDB table.
+* `table_size` - Size of the TcaplusDB table.
 
 

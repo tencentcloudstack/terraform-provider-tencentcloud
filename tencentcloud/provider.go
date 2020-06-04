@@ -315,11 +315,11 @@ TcaplusDB
     tencentcloud_tcaplus_clusters
     tencentcloud_tcaplus_idls
     tencentcloud_tcaplus_tables
-    tencentcloud_tcaplus_groups
+    tencentcloud_tcaplus_tablegroups
 
   Resource
     tencentcloud_tcaplus_cluster
-    tencentcloud_tcaplus_group
+    tencentcloud_tcaplus_tablegroup
     tencentcloud_tcaplus_idl
     tencentcloud_tcaplus_table
 
@@ -553,7 +553,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_scf_namespaces":               dataSourceTencentCloudScfNamespaces(),
 			"tencentcloud_scf_logs":                     dataSourceTencentCloudScfLogs(),
 			"tencentcloud_tcaplus_clusters":             dataSourceTencentCloudTcaplusClusters(),
-			"tencentcloud_tcaplus_groups":               dataSourceTencentCloudTcaplusGroups(),
+			"tencentcloud_tcaplus_tablegroups":          dataSourceTencentCloudTcaplusTableGroups(),
 			"tencentcloud_tcaplus_tables":               dataSourceTencentCloudTcaplusTables(),
 			"tencentcloud_tcaplus_idls":                 dataSourceTencentCloudTcaplusIdls(),
 			"tencentcloud_monitor_policy_conditions":    dataSourceTencentMonitorPolicyConditions(),
@@ -665,7 +665,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_scf_function":                   resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_namespace":                  resourceTencentCloudScfNamespace(),
 			"tencentcloud_tcaplus_cluster":                resourceTencentCloudTcaplusCluster(),
-			"tencentcloud_tcaplus_group":                  resourceTencentCloudTcaplusGroup(),
+			"tencentcloud_tcaplus_tablegroup":             resourceTencentCloudTcaplusTableGroup(),
 			"tencentcloud_tcaplus_idl":                    resourceTencentCloudTcaplusIdl(),
 			"tencentcloud_tcaplus_table":                  resourceTencentCloudTcaplusTable(),
 			"tencentcloud_cdn_domain":                     resourceTencentCloudCdnDomain(),

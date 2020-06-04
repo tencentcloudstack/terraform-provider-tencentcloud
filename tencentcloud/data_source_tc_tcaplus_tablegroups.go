@@ -1,24 +1,24 @@
 /*
-Use this data source to query tcaplus table groups
+Use this data source to query table groups of the TcaplusDB cluster.
 
 Example Usage
 
 ```hcl
-data "tencentcloud_tcaplus_groups" "null" {
+data "tencentcloud_tcaplus_tablegroups" "null" {
   cluster_id = "19162256624"
 }
-data "tencentcloud_tcaplus_groups" "id" {
-  cluster_id = "19162256624"
-  group_id   = "19162256624:1"
+data "tencentcloud_tcaplus_tablegroups" "id" {
+  cluster_id      = "19162256624"
+  tablegroup_id   = "19162256624:1"
 }
-data "tencentcloud_tcaplus_groups" "name" {
-  cluster_id = "19162256624"
-  group_name = "test"
+data "tencentcloud_tcaplus_tablegroups" "name" {
+  cluster_id      = "19162256624"
+  tablegroup_name = "test"
 }
-data "tencentcloud_tcaplus_groups" "all" {
-  cluster_id = "19162256624"
-  group_id   = "19162256624:1"
-  group_name = "test"
+data "tencentcloud_tcaplus_tablegroups" "all" {
+  cluster_id      = "19162256624"
+  tablegroup_id   = "19162256624:1"
+  tablegroup_name = "test"
 }
 ```
 */
@@ -32,45 +32,45 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func dataSourceTencentCloudTcaplusGroups() *schema.Resource {
+func dataSourceTencentCloudTcaplusTableGroups() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudTcaplusGroupsRead,
+		Read: dataSourceTencentCloudTcaplusTableGroupsRead,
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the tcaplus cluster to be query.",
+				Description: "Id of the TcaplusDB cluster to be query.",
 			},
-			"group_id": {
+			"tablegroup_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Group id to be query.",
+				Description: "Id of the table group to be query.",
 			},
-			"group_name": {
+			"tablegroup_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Group name to be query.",
+				Description: "Name of the table group to be query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used to save results.",
+				Description: "File for saving results.",
 			},
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of tcaplus table groups. Each element contains the following attributes.",
+				Description: "A list of table group. Each element contains the following attributes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"group_name": {
+						"tablegroup_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the tcaplus group.",
+							Description: "Name of the table group.",
 						},
-						"group_id": {
+						"tablegroup_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the tcaplus group.",
+							Description: "Id of the table group.",
 						},
 						"table_count": {
 							Type:        schema.TypeInt,
@@ -80,12 +80,12 @@ func dataSourceTencentCloudTcaplusGroups() *schema.Resource {
 						"total_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The total storage(MB).",
+							Description: "Total storage size (MB).",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the tcaplus group.",
+							Description: "Create time of the table group..",
 						},
 					},
 				},
@@ -94,8 +94,8 @@ func dataSourceTencentCloudTcaplusGroups() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudTcaplusGroupsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tcaplus_groups.read")()
+func dataSourceTencentCloudTcaplusTableGroupsRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_tcaplus_tablegroups.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -105,8 +105,8 @@ func dataSourceTencentCloudTcaplusGroupsRead(d *schema.ResourceData, meta interf
 	}
 
 	clusterId := d.Get("cluster_id").(string)
-	groupId := d.Get("group_id").(string)
-	groupName := d.Get("group_name").(string)
+	groupId := d.Get("tablegroup_id").(string)
+	groupName := d.Get("tablegroup_name").(string)
 
 	groups, err := service.DescribeGroups(ctx, clusterId, groupId, groupName)
 	if err != nil {
@@ -121,8 +121,8 @@ func dataSourceTencentCloudTcaplusGroupsRead(d *schema.ResourceData, meta interf
 
 	for _, group := range groups {
 		listItem := make(map[string]interface{})
-		listItem["group_name"] = group.TableGroupName
-		listItem["group_id"] = fmt.Sprintf("%s:%s", clusterId, *group.TableGroupId)
+		listItem["tablegroup_name"] = group.TableGroupName
+		listItem["tablegroup_id"] = fmt.Sprintf("%s:%s", clusterId, *group.TableGroupId)
 		listItem["table_count"] = group.TableCount
 		listItem["total_size"] = group.TotalSize
 		listItem["create_time"] = group.CreatedTime

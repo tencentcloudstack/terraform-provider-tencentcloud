@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-var testDataTcaplusGroupsName = "data.tencentcloud_tcaplus_groups.id_test"
+var testDataTcaplusGroupsName = "data.tencentcloud_tcaplus_tablegroups.id_test"
 
 func TestAccTencentCloudDataTcaplusGroups(t *testing.T) {
 	resource.Test(t, resource.TestCase{
@@ -17,13 +17,13 @@ func TestAccTencentCloudDataTcaplusGroups(t *testing.T) {
 			{
 				Config: testAccTencentCloudDataTcaplusGroupsBaic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckTcaplusGroupExists("tencentcloud_tcaplus_group.test_group"),
+					testAccCheckTcaplusGroupExists("tencentcloud_tcaplus_tablegroup.test_group"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "cluster_id"),
-					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "group_id"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "tablegroup_id"),
 					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.#", "1"),
-					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.0.group_name", "tf_test_group_name_guagua"),
+					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.0.tablegroup_name", "tf_test_group_name_guagua"),
 					resource.TestCheckResourceAttr(testDataTcaplusGroupsName, "list.0.table_count", "0"),
-					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.group_id"),
+					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.tablegroup_id"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.total_size"),
 					resource.TestCheckResourceAttrSet(testDataTcaplusGroupsName, "list.0.create_time"),
 				),
@@ -49,13 +49,13 @@ resource "tencentcloud_tcaplus_cluster" "test_cluster" {
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
-resource "tencentcloud_tcaplus_group" "test_group" {
-  cluster_id  = tencentcloud_tcaplus_cluster.test_cluster.id
-  group_name  = "tf_test_group_name_guagua"
+resource "tencentcloud_tcaplus_tablegroup" "test_group" {
+  cluster_id       = tencentcloud_tcaplus_cluster.test_cluster.id
+  tablegroup_name  = "tf_test_group_name_guagua"
 }
 
-data "tencentcloud_tcaplus_groups" "id_test" {
-   cluster_id    = tencentcloud_tcaplus_cluster.test_cluster.id
-   group_id      = tencentcloud_tcaplus_group.test_group.id
+data "tencentcloud_tcaplus_tablegroups" "id_test" {
+   cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
+   tablegroup_id      = tencentcloud_tcaplus_tablegroup.test_group.id
 }
 `

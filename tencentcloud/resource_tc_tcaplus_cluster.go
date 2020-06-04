@@ -1,7 +1,7 @@
 /*
-Use this resource to create tcaplus cluster
+Use this resource to create TcaplusDB cluster.
 
-~> **NOTE:** tcaplus now only supports the following regions:ap-shanghai,ap-hongkong,na-siliconvalley,ap-singapore,ap-seoul,ap-tokyo,eu-frankfurt
+~> **NOTE:** TcaplusDB now only supports the following regions: `ap-shanghai,ap-hongkong,na-siliconvalley,ap-singapore,ap-seoul,ap-tokyo,eu-frankfurt, and na-ashburn`.
 
 Example Usage
 
@@ -24,7 +24,6 @@ tcaplus cluster can be imported using the id, e.g.
 $ terraform import tencentcloud_tcaplus_cluster.test 26655801
 ```
 
-```
 */
 package tencentcloud
 
@@ -32,7 +31,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -56,25 +54,25 @@ func resourceTencentCloudTcaplusCluster() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_IDL_TYPES),
-				Description:  "Idl type of the tcaplus cluster.Valid values are " + strings.Join(TCAPLUS_IDL_TYPES, ",") + ".",
+				Description:  "IDL type of the TcaplusDB cluster. Valid values are PROTO and TDR.",
 			},
 			"cluster_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 30),
-				Description:  "Name of the tcaplus cluster. length should between 1 and 30.",
+				Description:  "Name of the TcaplusDB cluster. Name length should be between 1 and 30.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "VPC id of the tcaplus cluster.",
+				Description: "VPC id of the TcaplusDB cluster.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Subnet id of the tcaplus cluster.",
+				Description: "Subnet id of the TcaplusDB cluster.",
 			},
 			"password": {
 				Type:      schema.TypeString,
@@ -109,51 +107,51 @@ func resourceTencentCloudTcaplusCluster() *schema.Resource {
 					}
 					return
 				},
-				Description: "Password of the tcaplus cluster. length should between 12 and 16,a-z and 0-9 and A-Z must contain.",
+				Description: "Password of the TcaplusDB cluster. Password length should be between 12 and 16. The password must be a *mix* of uppercase letters (A-Z), lowercase *letters* (a-z) and *numbers* (0-9).",
 			},
 			"old_password_expire_last": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      3600,
 				ValidateFunc: validateIntegerMin(300),
-				Description:  "Old password expected expiration seconds after change password,must >= 300.",
+				Description:  "Expiration time of old password after password update, unit: second.",
 			},
 
 			// Computed values.
 			"network_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Network type of the tcaplus cluster.",
+				Description: "Network type of the TcaplusDB cluster.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the tcaplus cluster.",
+				Description: "Create time of the TcaplusDB cluster.",
 			},
 			"password_status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Password status of the tcaplus cluster.`unmodifiable` means:can not change password now,`modifiable` means:can change password now.",
+				Description: "Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, which means the password can not be changed in this moment; `modifiable`, which means the password can be changed in this moment.",
 			},
 			"api_access_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Access id of the tcaplus cluster.For TcaplusDB SDK connect.",
+				Description: "Access id of the TcaplusDB cluster.For TcaplusDB SDK connect.",
 			},
 			"api_access_ip": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Access ip of the tcaplus cluster.For TcaplusDB SDK connect.",
+				Description: "Access ip of the TcaplusDB cluster.For TcaplusDB SDK connect.",
 			},
 			"api_access_port": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Access port of the tcaplus cluster.For TcaplusDB SDK connect.",
+				Description: "Access port of the TcaplusDB cluster.For TcaplusDB SDK connect.",
 			},
 			"old_password_expire_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "This field will display the old password expiration time,if password_status is `unmodifiable` means the old password has not yet expired, otherwise `-`.",
+				Description: "Expiration time of the old password. If `password_status` is `unmodifiable`, it means the old password has not yet expired.",
 			},
 		},
 	}

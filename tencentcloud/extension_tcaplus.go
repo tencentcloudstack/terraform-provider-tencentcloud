@@ -9,7 +9,6 @@ const (
 var TCAPLUS_IDL_TYPES = []string{
 	TCAPLUS_IDL_TYPE_PROTO,
 	TCAPLUS_IDL_TYPE_TDR,
-	TCAPLUS_IDL_TYPE_MIX,
 }
 
 const (
