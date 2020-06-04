@@ -38,6 +38,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `instance_list` - A list of redis instance. Each element contains the following attributes:
+  * `charge_type` - The charge type of instance. Valid values are `POSTPAID` and `PREPAID`. Default value is `POSTPAID`.
   * `create_time` - The time when the instance is created.
   * `ip` - IP address of an instance.
   * `mem_size` - Memory size in MB.

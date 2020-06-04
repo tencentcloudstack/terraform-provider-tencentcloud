@@ -48,6 +48,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func TencentMsyqlBasicInfo() map[string]*schema.Schema {
@@ -59,26 +60,47 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Description:  "The name of a mysql instance.",
 		},
 		"pay_type": {
-			Type:         schema.TypeInt,
-			ForceNew:     true,
-			Optional:     true,
-			ValidateFunc: validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
-			Default:      MysqlPayByUse,
-			Description:  "Pay type of instance, 0: prepay, 1: postpay. NOTES: Only supported prepay instance.",
+			Type:          schema.TypeInt,
+			Deprecated:    "It has been deprecated from version 1.36.0.",
+			ForceNew:      true,
+			Optional:      true,
+			ValidateFunc:  validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
+			ConflictsWith: []string{"charge_type", "prepaid_period"},
+			//Default:      MysqlPayByUse,
+			Description: "Pay type of instance, 0: prepaid, 1: postpaid.",
+		},
+		"charge_type": {
+			Type:          schema.TypeString,
+			ForceNew:      true,
+			Optional:      true,
+			ValidateFunc:  validateAllowedStringValue([]string{MYSQL_CHARGE_TYPE_PREPAID, MYSQL_CHARGE_TYPE_POSTPAID}),
+			ConflictsWith: []string{"pay_type", "period"},
+			Default:       MYSQL_CHARGE_TYPE_POSTPAID,
+			Description:   "Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
 		},
 		"period": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			Default:      1,
-			ValidateFunc: validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
-			Description:  "Period of instance. NOTES: Only supported prepay instance.",
+			Type:          schema.TypeInt,
+			Deprecated:    "It has been deprecated from version 1.36.0.",
+			Optional:      true,
+			Default:       1,
+			ConflictsWith: []string{"charge_type", "prepaid_period"},
+			ValidateFunc:  validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
+			Description:   "Period of instance. NOTES: Only supported prepaid instance.",
+		},
+		"prepaid_period": {
+			Type:          schema.TypeInt,
+			Optional:      true,
+			Default:       1,
+			ConflictsWith: []string{"pay_type", "period"},
+			ValidateFunc:  validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
+			Description:   "Period of instance. NOTES: Only supported prepaid instance.",
 		},
 		"auto_renew_flag": {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
-			Description:  "Auto renew flag. NOTES: Only supported prepay instance.",
+			Description:  "Auto renew flag. NOTES: Only supported prepaid instance.",
 		},
 		"intranet_port": {
 			Type:         schema.TypeInt,
@@ -126,6 +148,12 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Description: "Instance tags.",
 		},
 
+		"force_delete": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.",
+		},
 		// Computed values
 		"intranet_ip": {
 			Type:        schema.TypeString,
@@ -460,8 +488,15 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 
 	request := cdb.NewCreateDBInstanceRequest()
 
-	period := int64(d.Get("period").(int))
-	request.Period = &period
+	_, oldOk := d.GetOkExists("pay_type")
+	var period int
+	if !oldOk {
+		period = d.Get("prepaid_period").(int)
+	} else {
+		period = d.Get("period").(int)
+	}
+
+	request.Period = helper.IntInt64(period)
 
 	autoRenewFlag := int64(d.Get("auto_renew_flag").(int))
 	request.AutoRenewFlag = &autoRenewFlag
@@ -526,7 +561,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 
 	if payType == MysqlPayByMonth {
 		err := mysqlCreateInstancePayByMonth(ctx, d, meta)
@@ -629,12 +664,23 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		return
 	}
 	_ = d.Set("instance_name", *mysqlInfo.InstanceName)
-	_ = d.Set("pay_type", int(*mysqlInfo.PayType))
+
+	_, oldOk := d.GetOkExists("pay_type")
+	var periodKey string
+	if oldOk {
+		_ = d.Set("pay_type", int(*mysqlInfo.PayType))
+		periodKey = "period"
+	} else {
+		periodKey = "prepaid_period"
+
+		_ = d.Set("charge_type", MYSQL_CHARGE_TYPE[int(*mysqlInfo.PayType)])
+
+	}
 
 	if int(*mysqlInfo.PayType) == MysqlPayByMonth {
-		tempInt, _ := d.Get("period").(int)
+		tempInt, _ := d.Get(periodKey).(int)
 		if tempInt == 0 {
-			_ = d.Set("period", 1)
+			_ = d.Set(periodKey, 1)
 		}
 	}
 
@@ -642,13 +688,13 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		*mysqlInfo.AutoRenew = MYSQL_RENEW_NOUSE
 	}
 	_ = d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
-	_ = d.Set("mem_size", *mysqlInfo.Memory)
-	_ = d.Set("volume_size", *mysqlInfo.Volume)
+	_ = d.Set("mem_size", mysqlInfo.Memory)
+	_ = d.Set("volume_size", mysqlInfo.Volume)
 	if d.Get("vpc_id").(string) != "" {
-		errRet = d.Set("vpc_id", *mysqlInfo.UniqVpcId)
+		errRet = d.Set("vpc_id", mysqlInfo.UniqVpcId)
 	}
 	if d.Get("subnet_id").(string) != "" {
-		errRet = d.Set("subnet_id", *mysqlInfo.UniqSubnetId)
+		errRet = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
 	}
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
@@ -683,7 +729,7 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		return
 	}
 
-	_ = d.Set("intranet_ip", *mysqlInfo.Vip)
+	_ = d.Set("intranet_ip", mysqlInfo.Vip)
 	_ = d.Set("intranet_port", int(*mysqlInfo.Vport))
 
 	if *mysqlInfo.CdbError != 0 {
@@ -691,8 +737,8 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	} else {
 		_ = d.Set("locked", 0)
 	}
-	_ = d.Set("status", *mysqlInfo.Status)
-	_ = d.Set("task_status", *mysqlInfo.TaskStatus)
+	_ = d.Set("status", mysqlInfo.Status)
+	_ = d.Set("task_status", mysqlInfo.TaskStatus)
 	return
 }
 
@@ -722,10 +768,10 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 			return nil
 		}
 		_ = d.Set("project_id", int(*mysqlInfo.ProjectId))
-		_ = d.Set("engine_version", *mysqlInfo.EngineVersion)
+		_ = d.Set("engine_version", mysqlInfo.EngineVersion)
 		if *mysqlInfo.WanStatus == 1 {
 			_ = d.Set("internet_service", 1)
-			_ = d.Set("internet_host", *mysqlInfo.WanDomain)
+			_ = d.Set("internet_host", mysqlInfo.WanDomain)
 			_ = d.Set("internet_port", int(*mysqlInfo.WanPort))
 		} else {
 			_ = d.Set("internet_service", 0)
@@ -763,7 +809,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 				log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, e.Error())
 				return resource.NonRetryableError(e)
 			}
-			_ = d.Set("availability_zone", *mysqlInfo.Zone)
+			_ = d.Set("availability_zone", mysqlInfo.Zone)
 			return nil
 		})
 		if err != nil {
@@ -1159,8 +1205,8 @@ func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		d.SetPartial("auto_renew_flag")
 	}
 
-	if d.HasChange("period") {
-		return fmt.Errorf("After the initialization of the field[%s] to set does not make sense", "period")
+	if d.HasChange("period") || d.HasChange("prepaid_period") {
+		return fmt.Errorf("After the initialization of the field[%s] to set does not make sense", "period or prepaid_period")
 	}
 	return nil
 }
@@ -1181,7 +1227,7 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 
 	d.Partial(true)
 	if payType == MysqlPayByMonth {
@@ -1211,13 +1257,23 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
+		if err != nil {
+			//for the pay order wait
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
 
 	var hasDeleted = false
 
+	payType := getPayType(d).(int)
+	forceDelete := d.Get("force_delete").(bool)
 	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
@@ -1248,6 +1304,10 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 		return err
 	}
 
+	if payType == MysqlPayByMonth && !forceDelete {
+		return nil
+	}
+
 	err = mysqlService.OfflineIsolatedInstances(ctx, d.Id())
 	if err != nil {
 		return err
@@ -1273,4 +1333,18 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 		}
 	})
 	return err
+}
+
+func getPayType(d *schema.ResourceData) (payType interface{}) {
+	chargeType := d.Get("charge_type")
+	payType, oldOk := d.GetOkExists("pay_type")
+
+	if !oldOk {
+		if chargeType == MYSQL_CHARGE_TYPE_PREPAID {
+			payType = MysqlPayByMonth
+		} else {
+			payType = MysqlPayByUse
+		}
+	}
+	return
 }

@@ -3,16 +3,14 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-	"time"
-
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"log"
+	"strconv"
 )
 
 type RedisService struct {
@@ -37,6 +35,7 @@ type TencentCloudRedisDetail struct {
 	RedisReplicasNum int64
 	CreateTime       string
 	Tags             map[string]string
+	BillingMode      string
 }
 
 func (me *RedisService) fullZoneId() (errRet error) {
@@ -187,6 +186,7 @@ needMoreItems:
 		instance.RedisId = *item.InstanceId
 		instance.SubnetId = *item.UniqSubnetId
 		instance.VpcId = *item.UniqVpcId
+		instance.BillingMode = REDIS_CHARGE_TYPE_NAME[*item.BillingMode]
 
 		instance.TypeId = *item.Type
 		if item.RedisReplicasNum != nil {
@@ -225,7 +225,7 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	memSize, projectId, port int64,
 	securityGroups []string,
 	redisShardNum,
-	redisReplicasNum int) (dealId string, errRet error) {
+	redisReplicasNum int, chargeTypeID int64, chargePeriod uint64) (instanceIds []*string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := redis.NewCreateInstancesRequest()
@@ -265,17 +265,15 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 	}
 
 	var (
-		vport       = uint64(port)
-		umemSize    = uint64(memSize)
-		billingMode int64
-		goodsNum    uint64 = 1
-		period      uint64 = 1
+		vport           = uint64(port)
+		umemSize        = uint64(memSize)
+		goodsNum uint64 = 1
 	)
 	request.VPort = &vport
 	request.MemSize = &umemSize
-	request.BillingMode = &billingMode
+	request.BillingMode = &chargeTypeID
 	request.GoodsNum = &goodsNum
-	request.Period = &period
+	request.Period = &chargePeriod
 	if redisShardNum > 0 {
 		request.RedisShardNum = helper.IntInt64(redisShardNum)
 	}
@@ -301,11 +299,11 @@ func (me *RedisService) CreateInstances(ctx context.Context,
 		return
 	}
 	log.Println(response.ToJsonString())
-	dealId = *response.Response.DealId
+	instanceIds = response.Response.InstanceIds
 	return
 }
 
-func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) (has bool,
+func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string) (has bool,
 	online bool,
 	info *redis.InstanceSet,
 	errRet error) {
@@ -321,32 +319,19 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 		}
 	}()
 	request.InstanceId = &redisId
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().DescribeInstances(request)
 
 	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
-	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-			time.Sleep(time.Second)
-			ratelimit.Check(request.GetAction())
-			response, err = me.client.UseRedisClient().DescribeInstances(request)
+	var response *redis.DescribeInstancesResponse
+	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeInstances(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s CheckRedisOnlineOk fail, reason:%s\n", logId, e.Error())
+			return retryError(e)
 		}
-	}
-	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-			time.Sleep(3 * time.Second)
-			ratelimit.Check(request.GetAction())
-			response, err = me.client.UseRedisClient().DescribeInstances(request)
-		}
-	}
-
-	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-			time.Sleep(5 * time.Second)
-			ratelimit.Check(request.GetAction())
-			response, err = me.client.UseRedisClient().DescribeInstances(request)
-		}
-	}
+		response = result
+		return nil
+	})
 
 	if err != nil {
 		errRet = err
@@ -380,6 +365,62 @@ func (me *RedisService) CheckRedisCreateOk(ctx context.Context, redisId string) 
 	return
 }
 
+func (me *RedisService) CheckRedisDestroyOk(ctx context.Context, redisId string) (has bool,
+	isolated bool,
+	errRet error) {
+
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeInstancesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &redisId
+
+	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
+	var response *redis.DescribeInstancesResponse
+	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeInstances(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s CheckRedisDestroyOk fail, reason:%s\n", logId, e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.InstanceSet) == 0 {
+		has = false
+		return
+	}
+
+	if len(response.Response.InstanceSet) != 1 {
+		errRet = fmt.Errorf("redis DescribeInstances one id get %d redis info", len(response.Response.InstanceSet))
+		return
+	}
+
+	has = true
+
+	info := response.Response.InstanceSet[0]
+	if *info.Status == REDIS_STATUS_ISOLATE {
+		isolated = true
+		return
+	} else {
+		isolated = false
+		return
+	}
+}
+
 func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId string) (done bool, redisId string, errRet error) {
 	logId := getLogId(ctx)
 	request := redis.NewDescribeInstanceDealDetailRequest()
@@ -392,34 +433,19 @@ func (me *RedisService) DescribeInstanceDealDetail(ctx context.Context, dealId s
 	}()
 
 	request.DealIds = []*string{&dealId}
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().DescribeInstanceDealDetail(request)
 
 	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
-
-	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-			time.Sleep(time.Second)
-			ratelimit.Check(request.GetAction())
-			response, err = me.client.UseRedisClient().DescribeInstanceDealDetail(request)
+	var response *redis.DescribeInstanceDealDetailResponse
+	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeInstanceDealDetail(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s DescribeInstanceDealDetail fail, reason:%s\n", logId, e.Error())
+			return retryError(e)
 		}
-	}
-
-	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-			time.Sleep(3 * time.Second)
-			ratelimit.Check(request.GetAction())
-			response, err = me.client.UseRedisClient().DescribeInstanceDealDetail(request)
-		}
-	}
-
-	if err != nil {
-		if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-			time.Sleep(5 * time.Second)
-			ratelimit.Check(request.GetAction())
-			response, err = me.client.UseRedisClient().DescribeInstanceDealDetail(request)
-		}
-	}
+		response = result
+		return nil
+	})
 
 	if err != nil {
 		errRet = err
@@ -560,6 +586,38 @@ func (me *RedisService) DestroyPostpaidInstance(ctx context.Context, redisId str
 	return
 }
 
+func (me *RedisService) DestroyPrepaidInstance(ctx context.Context, redisId string) (dealId string, errRet error) {
+	logId := getLogId(ctx)
+	request := redis.NewDestroyPrepaidInstanceRequest()
+	request.InstanceId = &redisId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	// For prepaid instance, deal status synchronization will take some time so need to retry.
+	var response *redis.DestroyPrepaidInstanceResponse
+	err := resource.Retry(5*writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DestroyPrepaidInstance(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s DestroyPrepaidInstance fail, reason:%s\n", logId, e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err == nil {
+		dealId = *response.Response.DealId
+	} else {
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *RedisService) CleanUpInstance(ctx context.Context, redisId string) (taskId int64, errRet error) {
 	logId := getLogId(ctx)
 	request := redis.NewCleanUpInstanceRequest()
@@ -570,12 +628,19 @@ func (me *RedisService) CleanUpInstance(ctx context.Context, redisId string) (ta
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseRedisClient().CleanUpInstance(request)
-	if err == nil {
-		log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	} else {
+	// Cleaning up action for prepaid instances needs to retry.
+	var response *redis.CleanUpInstanceResponse
+	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().CleanUpInstance(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s CleanUpInstance fail, reason:%s\n", logId, e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
 		errRet = err
 		return
 	}
