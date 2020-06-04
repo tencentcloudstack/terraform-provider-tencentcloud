@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-var testDataTcaplusGroupsName = "data.tencentcloud_tcaplus_groups.id_test"
+var testDataTcaplusGroupsName = "data.tencentcloud_tcaplus_tablegroups.id_test"
 
 func TestAccTencentCloudDataTcaplusGroups(t *testing.T) {
 	resource.Test(t, resource.TestCase{
@@ -54,7 +54,7 @@ resource "tencentcloud_tcaplus_tablegroup" "test_group" {
   tablegroup_name  = "tf_test_group_name_guagua"
 }
 
-data "tencentcloud_tcaplus_groups" "id_test" {
+data "tencentcloud_tcaplus_tablegroups" "id_test" {
    cluster_id         = tencentcloud_tcaplus_cluster.test_cluster.id
    tablegroup_id      = tencentcloud_tcaplus_tablegroup.test_group.id
 }
