@@ -64,7 +64,7 @@ data "tencentcloud_vpn_connections" "example" {
   id = tencentcloud_vpn_connection.example.id
 }
 
-# The example below shows how to create a vpng gateway in ccn type if it is needed. Then could be used when creating
+# The example below shows how to create a vpn gateway in ccn type if it is needed. Then could be used when creating
 # vpn tunnel in the usual way.
 resource tencentcloud_vpn_gateway ccn_vpngw_example {
   name      = "ccn-vpngw-example"

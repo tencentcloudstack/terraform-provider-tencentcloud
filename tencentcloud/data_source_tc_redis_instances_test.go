@@ -25,6 +25,7 @@ func TestAccTencentCloudRedisInstancesDataSource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_instances.redis", "instance_list.0.ip"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_instances.redis", "instance_list.0.port"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_instances.redis", "instance_list.0.create_time"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_instances.redis", "instance_list.0.charge_type"),
 
 					resource.TestMatchResourceAttr("data.tencentcloud_redis_instances.redis-tags", "instance_list.#", regexp.MustCompile(`^[1-9]\d*$`)),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_instances.redis-tags", "instance_list.0.name"),

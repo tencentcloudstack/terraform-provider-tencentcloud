@@ -52,15 +52,18 @@ The following arguments are supported:
 * `mem_size` - (Required) Memory size (in MB).
 * `root_password` - (Required) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
 * `volume_size` - (Required) Disk size (in GB).
-* `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepay instance.
+* `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepaid instance.
 * `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
+* `charge_type` - (Optional, ForceNew) Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.
 * `engine_version` - (Optional, ForceNew) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7, and default is 5.7.
 * `first_slave_zone` - (Optional, ForceNew) Zone information about first slave instance.
+* `force_delete` - (Optional) Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
 * `internet_service` - (Optional) Indicates whether to enable the access to an instance from public network: 0 - No, 1 - Yes.
 * `intranet_port` - (Optional) Public access port, rang form 1024 to 65535 and default value is 3306.
 * `parameters` - (Optional) List of parameters to use.
-* `pay_type` - (Optional, ForceNew) Pay type of instance, 0: prepay, 1: postpay. NOTES: Only supported prepay instance.
-* `period` - (Optional) Period of instance. NOTES: Only supported prepay instance.
+* `pay_type` - (Optional, ForceNew, **Deprecated**) It has been deprecated from version 1.36.0. Pay type of instance, 0: prepaid, 1: postpaid.
+* `period` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Period of instance. NOTES: Only supported prepaid instance.
+* `prepaid_period` - (Optional) Period of instance. NOTES: Only supported prepaid instance.
 * `project_id` - (Optional) Project ID, default value is 0.
 * `second_slave_zone` - (Optional, ForceNew) Zone information about second slave instance.
 * `security_groups` - (Optional) Security groups to use.

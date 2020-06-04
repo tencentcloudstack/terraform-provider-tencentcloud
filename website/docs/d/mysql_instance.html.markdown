@@ -23,6 +23,7 @@ data "tencentcloud_mysql_instance" "database" {
 
 The following arguments are supported:
 
+* `charge_type` - (Optional) Pay type of instance, valid values are `PREPAID` and `POSTPAID`.
 * `engine_version` - (Optional) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.
 * `init_flag` - (Optional) Initialization mark. Available values: 0 - Uninitialized; 1 - Initialized.
 * `instance_name` - (Optional) Name of mysql instance.
@@ -30,7 +31,7 @@ The following arguments are supported:
 * `limit` - (Optional) Number of results returned for a single request. Default is 20, and maximum is 2000.
 * `mysql_id` - (Optional) Instance ID, such as cdb-c1nl9rpv. It is identical to the instance ID displayed in the database console page.
 * `offset` - (Optional) Record offset. Default is 0.
-* `pay_type` - (Optional) Pay type of instance, 0: prepay, 1: postpay. NOTES: Only prepay is supported.
+* `pay_type` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Pay type of instance, 0: prepay, 1: postpay.
 * `result_output_file` - (Optional) Used to store results.
 * `security_group_id` - (Optional) Security groups ID of instance.
 * `status` - (Optional) Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.
@@ -44,6 +45,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `instance_list` - A list of instances. Each element contains the following attributes:
   * `auto_renew_flag` - Auto renew flag. NOTES: Only supported prepay instance.
+  * `charge_type` - Pay type of instance.
   * `cpu_core_count` - CPU count.
   * `create_time` - The time at which a instance is created.
   * `dead_line_time` - Expire date of instance. NOTES: Only supported prepay instance.
@@ -61,7 +63,7 @@ In addition to all arguments above, the following attributes are exported:
   * `master_instance_id` - Indicates the master instance ID of recovery instances.
   * `memory_size` - Memory size (in MB).
   * `mysql_id` - Instance ID, such as cdb-c1nl9rpv. It is identical to the instance ID displayed in the database console page.
-  * `pay_type` - Pay type of instance, 0: prepay, 1: postpay. NOTES: Only prepay is supported.
+  * `pay_type` - Pay type of instance, 0: prepaid, 1: postpaid.
   * `project_id` - Project ID to which the current instance belongs.
   * `ro_instance_ids` - ID list of read-only type associated with the current instance.
   * `slave_sync_mode` - Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
