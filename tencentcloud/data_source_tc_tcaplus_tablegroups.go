@@ -105,8 +105,8 @@ func dataSourceTencentCloudTcaplusTableGroupsRead(d *schema.ResourceData, meta i
 	}
 
 	clusterId := d.Get("cluster_id").(string)
-	groupId := d.Get("group_id").(string)
-	groupName := d.Get("group_name").(string)
+	groupId := d.Get("tablegroup_id").(string)
+	groupName := d.Get("tablegroup_name").(string)
 
 	groups, err := service.DescribeGroups(ctx, clusterId, groupId, groupName)
 	if err != nil {
@@ -121,8 +121,8 @@ func dataSourceTencentCloudTcaplusTableGroupsRead(d *schema.ResourceData, meta i
 
 	for _, group := range groups {
 		listItem := make(map[string]interface{})
-		listItem["group_name"] = group.TableGroupName
-		listItem["group_id"] = fmt.Sprintf("%s:%s", clusterId, *group.TableGroupId)
+		listItem["tablegroup_name"] = group.TableGroupName
+		listItem["tablegroup_id"] = fmt.Sprintf("%s:%s", clusterId, *group.TableGroupId)
 		listItem["table_count"] = group.TableCount
 		listItem["total_size"] = group.TotalSize
 		listItem["create_time"] = group.CreatedTime
