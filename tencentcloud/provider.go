@@ -378,7 +378,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
-	con "github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -388,10 +388,16 @@ const (
 	PROVIDER_SECRET_KEY                   = "TENCENTCLOUD_SECRET_KEY"
 	PROVIDER_SECURITY_TOKEN               = "TENCENTCLOUD_SECURITY_TOKEN"
 	PROVIDER_REGION                       = "TENCENTCLOUD_REGION"
+	PROVIDER_PROTOCOL                     = "TENCENTCLOUD_PROTOCOL"
+	PROVIDER_DOMAIN                       = "TENCENTCLOUD_DOMAIN"
 	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
 	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
 	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
 )
+
+type TencentCloudClient struct {
+	apiV3Conn *connectivity.TencentCloudClient
+}
 
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
@@ -422,6 +428,19 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_REGION, nil),
 				Description:  "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
 				InputDefault: "ap-guangzhou",
+			},
+			"protocol": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_PROTOCOL, "HTTPS"),
+				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
+				Description:  "The protocol of the API request. Valid values: `HTTP` and `HTTPS`. Default is `HTTPS`.",
+			},
+			"domain": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_DOMAIN, nil),
+				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
 			},
 			"assume_role": {
 				Type:        schema.TypeSet,
@@ -684,8 +703,23 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	secretKey := d.Get("secret_key").(string)
 	securityToken := d.Get("security_token").(string)
 	region := d.Get("region").(string)
+	protocol := d.Get("protocol").(string)
+	domain := d.Get("domain").(string)
 
-	//assume arn
+	// standard client
+	var tcClient TencentCloudClient
+	tcClient.apiV3Conn = &connectivity.TencentCloudClient{
+		Credential: common.NewTokenCredential(
+			secretId,
+			secretKey,
+			securityToken,
+		),
+		Region:   region,
+		Protocol: protocol,
+		Domain:   domain,
+	}
+
+	// assume role client
 	assumeRoleList := d.Get("assume_role").(*schema.Set).List()
 	if len(assumeRoleList) == 1 {
 		assumeRole := assumeRoleList[0].(map[string]interface{})
@@ -705,47 +739,26 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 				}
 			}
 		}
-		//applying STS credentials
+		// applying STS credentials
 		request := sts.NewAssumeRoleRequest()
 		request.RoleArn = helper.String(assumeRoleArn)
 		request.RoleSessionName = helper.String(assumeRoleSessionName)
 		request.DurationSeconds = helper.IntUint64(assumeRoleSessionDuration)
-
 		if assumeRolePolicy != "" {
-			//urlencode policy
 			request.Policy = helper.String(url.QueryEscape(assumeRolePolicy))
 		}
-
-		cpf := con.NewTencentCloudClientProfile(300)
-		//send request
-		credential := common.NewTokenCredential(
-			secretId,
-			secretKey,
-			securityToken,
-		)
-
-		client, err := sts.NewClient(credential, region, cpf)
-		if err != nil {
-			return nil, err
-		}
 		ratelimit.Check(request.GetAction())
-		response, err := client.AssumeRole(request)
+		response, err := tcClient.apiV3Conn.UseStsClient().AssumeRole(request)
 		if err != nil {
 			return nil, err
 		}
-
-		//set assume role
-		secretId = *response.Response.Credentials.TmpSecretId
-		secretKey = *response.Response.Credentials.TmpSecretKey
-		securityToken = *response.Response.Credentials.Token
+		// using STS credentials
+		tcClient.apiV3Conn.Credential = common.NewTokenCredential(
+			*response.Response.Credentials.TmpSecretId,
+			*response.Response.Credentials.TmpSecretKey,
+			*response.Response.Credentials.Token,
+		)
 	}
 
-	config := Config{
-		SecretId:      secretId,
-		SecretKey:     secretKey,
-		SecurityToken: securityToken,
-		Region:        region,
-	}
-
-	return config.Client()
+	return &tcClient, nil
 }
