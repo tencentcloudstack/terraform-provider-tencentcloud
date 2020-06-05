@@ -93,7 +93,7 @@ func (me *TencentCloudClient) UseCosClient() *s3.S3 {
 	resolver := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
 		if service == endpoints.S3ServiceID {
 			return endpoints.ResolvedEndpoint{
-				URL:           fmt.Sprintf("http://cos.%s.myqcloud.com", region),
+				URL:           fmt.Sprintf("https://cos.%s.myqcloud.com", region),
 				SigningRegion: region,
 			}, nil
 		}

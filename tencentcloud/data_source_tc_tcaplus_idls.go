@@ -1,5 +1,5 @@
 /*
-Use this data source to query tcaplus idl files
+Use this data source to query  IDL information of the TcaplusDB table.
 
 Example Usage
 
@@ -27,23 +27,23 @@ func dataSourceTencentCloudTcaplusIdls() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the tcaplus cluster to be query.",
+				Description: "Id of the TcaplusDB cluster to be query.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used to save results.",
+				Description: "File for saving results.",
 			},
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of tcaplus idls. Each element contains the following attributes.",
+				Description: "A list of TcaplusDB table IDL. Each element contains the following attributes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"idl_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of this idl.",
+							Description: "Id of the IDL.",
 						},
 					},
 				},

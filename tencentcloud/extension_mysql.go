@@ -88,6 +88,16 @@ var (
 )
 
 const (
+	MYSQL_CHARGE_TYPE_PREPAID  = "PREPAID"
+	MYSQL_CHARGE_TYPE_POSTPAID = "POSTPAID"
+)
+
+var MYSQL_CHARGE_TYPE = map[int]string{
+	MysqlPayByMonth: MYSQL_CHARGE_TYPE_PREPAID,
+	MysqlPayByUse:   MYSQL_CHARGE_TYPE_POSTPAID,
+}
+
+const (
 	MysqlInstanceIdNotFound  = "InvalidParameter.InstanceNotFound"
 	MysqlInstanceIdNotFound2 = "InvalidParameter"
 	MysqlInstanceIdNotFound3 = "InternalError.DatabaseAccessError"

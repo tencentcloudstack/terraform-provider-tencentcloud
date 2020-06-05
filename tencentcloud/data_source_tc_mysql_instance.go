@@ -50,8 +50,15 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 			"pay_type": {
 				Type:         schema.TypeInt,
 				Optional:     true,
+				Deprecated:   "It has been deprecated from version 1.36.0.",
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Description:  "Pay type of instance, 0: prepay, 1: postpay. NOTES: Only prepay is supported.",
+				Description:  "Pay type of instance, 0: prepay, 1: postpay.",
+			},
+			"charge_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateAllowedStringValue([]string{MYSQL_CHARGE_TYPE_PREPAID, MYSQL_CHARGE_TYPE_POSTPAID}),
+				Description:  "Pay type of instance, valid values are `PREPAID` and `POSTPAID`.",
 			},
 			"instance_name": {
 				Type:        schema.TypeString,
@@ -222,7 +229,12 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 						"pay_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Pay type of instance, 0: prepay, 1: postpay. NOTES: Only prepay is supported.",
+							Description: "Pay type of instance, 0: prepaid, 1: postpaid.",
+						},
+						"charge_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Pay type of instance.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -295,6 +307,16 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 		payTypeValue := uint64(payType.(int))
 		request.PayTypes = []*uint64{&payTypeValue}
 	}
+	if chargeType, ok := d.GetOk("charge_type"); ok {
+		var payType int
+		if chargeType == MYSQL_CHARGE_TYPE_PREPAID {
+			payType = MysqlPayByMonth
+		} else {
+			payType = MysqlPayByUse
+		}
+		payTypeValue := uint64(payType)
+		request.PayTypes = []*uint64{&payTypeValue}
+	}
 	if instanceName, ok := d.GetOk("instance_name"); ok {
 		instanceNameValue := instanceName.(string)
 		request.InstanceNames = []*string{&instanceNameValue}
@@ -338,41 +360,39 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 		return fmt.Errorf("api[DescribeDBInstances]fail, return %s", err.Error())
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 	instanceDetails := response.Response.Items
 	instanceList := make([]map[string]interface{}, 0, len(instanceDetails))
 	ids := make([]string, 0, len(instanceDetails))
 	for _, item := range instanceDetails {
 		mapping := map[string]interface{}{
-			"mysql_id":        *item.InstanceId,
-			"instance_name":   *item.InstanceName,
+			"mysql_id":        item.InstanceId,
+			"instance_name":   item.InstanceName,
 			"instance_role":   MYSQL_ROLE_MAP[*item.InstanceType],
-			"init_flag":       *item.InitFlag,
-			"status":          *item.Status,
-			"zone":            *item.Zone,
-			"auto_renew_flag": *item.AutoRenew,
-			"engine_version":  *item.EngineVersion,
-			"cpu_core_count":  *item.Cpu,
-			"memory_size":     *item.Memory,
-			"volume_size":     *item.Volume,
-			"internet_status": *item.WanStatus,
-			"internet_host":   *item.WanDomain,
-			"internet_port":   *item.WanPort,
-			"intranet_ip":     *item.Vip,
-			"intranet_port":   *item.Vport,
-			"project_id":      *item.ProjectId,
-			"vpc_id":          *item.UniqVpcId,
-			"subnet_id":       *item.UniqSubnetId,
-			"slave_sync_mode": *item.ProtectMode,
-			"device_type":     *item.DeviceType,
-			"pay_type":        *item.PayType,
-			"create_time":     *item.CreateTime,
-			"dead_line_time":  *item.DeadlineTime,
+			"init_flag":       item.InitFlag,
+			"status":          item.Status,
+			"zone":            item.Zone,
+			"auto_renew_flag": item.AutoRenew,
+			"engine_version":  item.EngineVersion,
+			"cpu_core_count":  item.Cpu,
+			"memory_size":     item.Memory,
+			"volume_size":     item.Volume,
+			"internet_status": item.WanStatus,
+			"internet_host":   item.WanDomain,
+			"internet_port":   item.WanPort,
+			"intranet_ip":     item.Vip,
+			"intranet_port":   item.Vport,
+			"project_id":      item.ProjectId,
+			"vpc_id":          item.UniqVpcId,
+			"subnet_id":       item.UniqSubnetId,
+			"slave_sync_mode": item.ProtectMode,
+			"device_type":     item.DeviceType,
+			"pay_type":        item.PayType,
+			"create_time":     item.CreateTime,
+			"dead_line_time":  item.DeadlineTime,
+			"charge_type":     MYSQL_CHARGE_TYPE[int(*item.PayType)],
 		}
 		if item.MasterInfo != nil {
-			mapping["master_instance_id"] = *item.MasterInfo.InstanceId
+			mapping["master_instance_id"] = item.MasterInfo.InstanceId
 		} else {
 			mapping["master_instance_id"] = ""
 		}

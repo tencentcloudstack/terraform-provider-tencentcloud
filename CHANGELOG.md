@@ -4,6 +4,26 @@ FEATURES:
 
 * **New Data Source**: `tencentcloud_availability_regions`
 
+ENHANCEMENTS: 
+
+* Data Source: `tencentcloud_redis_instances` add new argument `charge_type` to support prepaid type.
+* Resource: `tencentcloud_redis_instance` add new argument `charge_type`, `prepaid_period` and `force_delete` to support prepaid type.
+* Resource: `tencentcloud_mysql_instance` add new argument `force_delete` to support soft deletion.
+* Resource: `tencentcloud_mysql_readonly_instance` add new argument `force_delete` to support soft deletion.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix `allocate_public_ip` inconsistency when eip is attached to the cvm.
+
+DEPRECATED:
+* Data Source: `tencentcloud_mysql_instances`: optional argument `pay_type` is no longer supported, replace by `charge_type`.
+* Resource: `tencentcloud_mysql_instance`: optional arguments `pay_type` and `period` are no longer supported, replace by `charge_type` and `prepaid_period`.
+* Resource: `tencentcloud_mysql_readonly_instance`: optional arguments `pay_type` and `period` are no longer supported, replace by `charge_type` and `prepaid_period`.
+* Resource: `tencentcloud_tcaplus_group` replace by `tencentcloud_tcaplus_tablegroup`
+* Data Source: `tencentcloud_tcaplus_groups` replace by `tencentcloud_tcaplus_tablegroups`
+* Resource: `tencentcloud_tcaplus_tablegroup`,`tencentcloud_tcaplus_idl` and `tencentcloud_tcaplus_table`  arguments `group_id`/`group_name`  replace by `tablegroup_id`/`tablegroup_name`
+* Data Source: `tencentcloud_tcaplus_groups`,`tencentcloud_tcaplus_idls` and `tencentcloud_tcaplus_tables` arguments `group_id`/`group_name`  replace by `tablegroup_id`/`tablegroup_name`
+
 ## 1.35.1 (June 02, 2020)
 
 ENHANCEMENTS: 
