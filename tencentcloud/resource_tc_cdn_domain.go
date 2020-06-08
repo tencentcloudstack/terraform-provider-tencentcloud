@@ -567,8 +567,8 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("https_config", httpsConfigs)
 
 	tags, errRet := tagService.DescribeResourceTags(ctx, CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
-	if err != nil {
-		return nil
+	if errRet != nil {
+		return errRet
 	}
 	_ = d.Set("tags", tags)
 
