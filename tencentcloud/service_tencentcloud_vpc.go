@@ -239,8 +239,6 @@ getMoreData:
 		ratelimit.Check(request.GetAction())
 		result, err := me.client.UseVpcClient().DescribeVpcs(request)
 		if err != nil {
-			log.Printf("[DEBUG]%s api[%s] , request body [%s], response body[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			return retryError(err, InternalError)
 		}
 		response = result
