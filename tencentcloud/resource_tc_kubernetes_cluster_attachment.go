@@ -10,11 +10,11 @@ variable "availability_zone" {
 }
 
 variable "cluster_cidr" {
-  default = "172.31.0.0/16"
+  default = "172.16.0.0/16"
 }
 
 variable "default_instance_type" {
-  default = "SA1.LARGE8"
+  default = "S1.SMALL1"
 }
 
 data "tencentcloud_images" "default" {
@@ -84,6 +84,11 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
   cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
   instance_id = tencentcloud_instance.foo.id
   password    = "Lo4wbdit"
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2"
+  }
 }
 ```
 */
@@ -91,6 +96,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -140,6 +146,12 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Computed:    true,
 			Description: "A list of security group ids after attach to cluster.",
+		},
+		"labels": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Labels of tke attachment exits cvm.",
 		},
 	}
 
@@ -235,6 +247,44 @@ func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta i
 		_ = d.Set("key_ids", instance.LoginSettings.KeyIds)
 	}
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecurityGroupIds))
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, clusterAsGroupSet, err := tkeService.DescribeClusterAsGroups(ctx, clusterId)
+
+		if err != nil {
+			return retryError(err)
+		}
+
+		if len(clusterAsGroupSet) == 0 {
+			d.Set("labels", "")
+			return nil
+		}
+
+		var labelsMap = map[string]string{}
+		for _, value := range clusterAsGroupSet {
+			labels := value.Labels
+
+			if len(labels) == 0 {
+				d.Set("labels", "")
+				return nil
+			}
+
+			for _, v := range labels {
+				labelsMap[*v.Name] = *v.Value
+			}
+
+		}
+
+		marshal, _ := json.Marshal(labelsMap)
+		_ = d.Set("labels", string(marshal))
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -268,6 +318,26 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 
 	if loginSettingsNumbers != 1 {
 		return fmt.Errorf("parameters `key_ids` and `password` must set and only set one")
+	}
+
+	request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
+
+	labels := make([]*tke.Label, 0)
+	if v, ok := d.GetOk("labels"); ok {
+		vlabels := v.(map[string]interface{})
+
+		for key, value := range vlabels {
+			keyTmp, valueTmp := key, value
+
+			valueResult, ok := valueTmp.(string)
+			if !ok {
+				continue
+			}
+
+			labels = append(labels, &tke.Label{Name: &keyTmp, Value: &valueResult})
+		}
+
+		request.InstanceAdvancedSettings.Labels = labels
 	}
 
 	/*cvm has been  attached*/

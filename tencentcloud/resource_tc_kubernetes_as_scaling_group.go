@@ -30,7 +30,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
 
   auto_scaling_config {
     configuration_name = "tf-guagua-as-config"
-    instance_type      = "SN3ne.8XLARGE64"
+    instance_type      = "S1.SMALL1"
     project_id         = 0
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
@@ -52,6 +52,11 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
     }
 
   }
+
+  labels = {
+    "test1" = "test1",
+    "test1" = "test2"
+  }
 }
 ```
 */
@@ -59,6 +64,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -66,6 +72,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -100,6 +107,12 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 					Schema: kubernetesAsScalingConfigPara(),
 				},
 				Description: "Auto scaling config parameters.",
+			},
+			"labels": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Labels of kubernetes AS Group.",
 			},
 		},
 	}
@@ -702,6 +715,44 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 	if number == 0 {
 		return nil
 	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, clusterAsGroupSet, err := service.DescribeClusterAsGroups(ctx, clusterId)
+
+		if err != nil {
+			return retryError(err)
+		}
+
+		if len(clusterAsGroupSet) == 0 {
+			d.Set("labels", "")
+			return nil
+		}
+
+		var labelsMap = map[string]string{}
+		for _, value := range clusterAsGroupSet {
+			labels := value.Labels
+
+			if len(labels) == 0 {
+				d.Set("labels", "")
+				return nil
+			}
+
+			for _, v := range labels {
+				labelsMap[*v.Name] = *v.Value
+			}
+
+		}
+
+		marshal, _ := json.Marshal(labelsMap)
+		d.Set("labels", string(marshal))
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -730,9 +781,25 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
+	labels := make([]*tke.Label, 0)
+	if v, ok := d.GetOk("labels"); ok {
+		vlabels := v.(map[string]interface{})
+
+		for key, value := range vlabels {
+			keyTmp, valueTmp := key, value
+
+			valueResult, ok := valueTmp.(string)
+			if !ok {
+				continue
+			}
+
+			labels = append(labels, &tke.Label{Name: &keyTmp, Value: &valueResult})
+		}
+	}
+
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	asGroupId, err := service.CreateClusterAsGroup(ctx, clusterId, groupParaStr, configParaStr)
+	asGroupId, err := service.CreateClusterAsGroup(ctx, clusterId, groupParaStr, configParaStr, labels)
 	if err != nil {
 		return err
 	}

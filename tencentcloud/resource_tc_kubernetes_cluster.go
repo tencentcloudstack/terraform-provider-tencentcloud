@@ -17,13 +17,13 @@ variable "subnet" {
 }
 
 variable "default_instance_type" {
-  default = "SA1.LARGE8"
+  default = "S1.SMALL1"
 }
 
 #examples for MANAGED_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = var.vpc
-  cluster_cidr            = "10.1.0.0/16"
+  cluster_cidr            = "10.31.0.0/16"
   cluster_max_pod_num     = 32
   cluster_name            = "test"
   cluster_desc            = "test cluster desc"
@@ -49,6 +49,11 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     password                  = "ZZXXccvv1212"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2"
   }
 
   cluster_deploy_type = "MANAGED_CLUSTER"
@@ -107,6 +112,11 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
     password                  = "ZZXXccvv1212"
   }
 
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2"
+  }
+
   cluster_deploy_type = "INDEPENDENT_CLUSTER"
 }
 ```
@@ -115,6 +125,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math"
@@ -126,6 +137,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -589,6 +601,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			},
 			Description: "An information list of cvm within the 'WORKER' clusters. Each element contains the following attributes:",
 		},
+		"labels": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Labels of tke cluster.",
+		},
 	}
 
 	for k, v := range tkeSecurityInfo() {
@@ -943,6 +961,24 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	tags := helper.GetTags(d, "tags")
 
+	labels := make([]*tke.Label, 0)
+	if v, ok := d.GetOk("labels"); ok {
+		vlabels := v.(map[string]interface{})
+
+		for key, value := range vlabels {
+			keyTmp, valueTmp := key, value
+
+			valueResult, ok := valueTmp.(string)
+			if !ok {
+				continue
+			}
+
+			labels = append(labels, &tke.Label{Name: &keyTmp, Value: &valueResult})
+		}
+
+		iAdvanced.Labels = labels
+	}
+
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags)
@@ -1205,6 +1241,44 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	} else {
 		_ = d.Set("cluster_intranet", true)
 	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, clusterAsGroupSet, err := service.DescribeClusterAsGroups(ctx, d.Id())
+
+		if err != nil {
+			return retryError(err)
+		}
+
+		if len(clusterAsGroupSet) == 0 {
+			d.Set("labels", "")
+			return nil
+		}
+
+		var labelsMap = map[string]string{}
+		for _, value := range clusterAsGroupSet {
+			labels := value.Labels
+
+			if len(labels) == 0 {
+				d.Set("labels", "")
+				return nil
+			}
+
+			for _, v := range labels {
+				labelsMap[*v.Name] = *v.Value
+			}
+
+		}
+
+		marshal, _ := json.Marshal(labelsMap)
+		d.Set("labels", string(marshal))
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

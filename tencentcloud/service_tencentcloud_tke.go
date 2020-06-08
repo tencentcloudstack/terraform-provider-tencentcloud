@@ -41,6 +41,7 @@ type InstanceAdvancedSettings struct {
 	DockerGraphPath string
 	UserScript      string
 	Unschedulable   int64
+	Labels          []*tke.Label
 }
 
 type ClusterCidrSettings struct {
@@ -474,7 +475,7 @@ func (me *TkeService) DescribeClusterSecurity(ctx context.Context, id string) (r
 	return me.client.UseTkeClient().DescribeClusterSecurity(request)
 }
 
-func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string) (asGroupId string, errRet error) {
+func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string, labels []*tke.Label) (asGroupId string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := tke.NewCreateClusterAsGroupRequest()
@@ -487,6 +488,10 @@ func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, c
 	request.ClusterId = &id
 	request.AutoScalingGroupPara = &groupPara
 	request.LaunchConfigurePara = &configPara
+
+	if len(labels) > 0 {
+		request.Labels = labels
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().CreateClusterAsGroup(request)
@@ -501,6 +506,31 @@ func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, c
 	}
 
 	asGroupId = *response.Response.AutoScalingGroupId
+	return
+}
+
+func (me *TkeService) DescribeClusterAsGroups(ctx context.Context, id string) (totalCount *uint64, clusterAsGroupSet []*tke.ClusterAsGroup, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeClusterAsGroupsRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+
+	ratelimit.Check(request.GetAction())
+	response, errRet := me.client.UseTkeClient().DescribeClusterAsGroups(request)
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeClusterAsGroups return nil response")
+		return
+	}
+
+	totalCount = response.Response.TotalCount
+	clusterAsGroupSet = response.Response.ClusterAsGroupSet
+
 	return
 }
 

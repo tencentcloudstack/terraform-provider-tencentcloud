@@ -22,6 +22,8 @@ func TestAccTencentCloudTkeAttachResource(t *testing.T) {
 					testAccCheckTkeAttachExists("tencentcloud_kubernetes_cluster_attachment.test_attach"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "cluster_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_attachment.test_attach", "instance_id"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "labels.test1", "test1"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_attachment.test_attach", "labels.test2", "test2"),
 				),
 			},
 		},
@@ -131,11 +133,11 @@ variable "availability_zone" {
 }
 
 variable "cluster_cidr" {
-  default = "172.31.0.0/16"
+  default = "172.16.0.0/16"
 }
 
 variable "default_instance_type" {
-  default = "SA1.LARGE8"
+  default = "S1.SMALL1"
 }
 
 data "tencentcloud_images" "default" {
@@ -166,11 +168,13 @@ resource "tencentcloud_instance" "foo" {
   instance_type     = var.default_instance_type
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
+  vpc_id            = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_id         = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = "10.1.0.0/16"
+  cluster_cidr            = "10.31.0.0/16"
   cluster_max_pod_num     = 32
   cluster_name            = "keep"
   cluster_desc            = "test cluster desc"
@@ -205,6 +209,11 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
   cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
   instance_id = tencentcloud_instance.foo.id
   password    = "Lo4wbdit"
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2"
+  }
 }
 `
 }

@@ -18,11 +18,11 @@ variable "availability_zone" {
 }
 
 variable "cluster_cidr" {
-  default = "172.31.0.0/16"
+  default = "172.16.0.0/16"
 }
 
 variable "default_instance_type" {
-  default = "SA1.LARGE8"
+  default = "S1.SMALL1"
 }
 
 data "tencentcloud_images" "default" {
@@ -91,6 +91,11 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
   cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
   instance_id = tencentcloud_instance.foo.id
   password    = "Lo4wbdit"
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2"
+  }
 }
 ```
 
@@ -101,6 +106,7 @@ The following arguments are supported:
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
 * `instance_id` - (Required, ForceNew) ID of the CVM instance, this cvm will reinstall the system.
 * `key_ids` - (Optional, ForceNew) The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.
+* `labels` - (Optional, ForceNew) Labels of tke attachment exits cvm.
 * `password` - (Optional, ForceNew) Password to access, should be set if `key_ids` not set.
 
 ## Attributes Reference

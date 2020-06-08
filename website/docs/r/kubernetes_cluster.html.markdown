@@ -26,13 +26,13 @@ variable "subnet" {
 }
 
 variable "default_instance_type" {
-  default = "SA1.LARGE8"
+  default = "S1.SMALL1"
 }
 
 #examples for MANAGED_CLUSTER cluster
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                  = var.vpc
-  cluster_cidr            = "10.1.0.0/16"
+  cluster_cidr            = "10.31.0.0/16"
   cluster_max_pod_num     = 32
   cluster_name            = "test"
   cluster_desc            = "test cluster desc"
@@ -58,6 +58,11 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     password                  = "ZZXXccvv1212"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2"
   }
 
   cluster_deploy_type = "MANAGED_CLUSTER"
@@ -116,6 +121,11 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
     password                  = "ZZXXccvv1212"
   }
 
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2"
+  }
+
   cluster_deploy_type = "INDEPENDENT_CLUSTER"
 }
 ```
@@ -140,6 +150,7 @@ The following arguments are supported:
 * `cluster_version` - (Optional, ForceNew) Version of the cluster, Default is '1.10.5'.
 * `container_runtime` - (Optional, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.
 * `ignore_cluster_cidr_conflict` - (Optional, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
+* `labels` - (Optional, ForceNew) Labels of tke cluster.
 * `managed_cluster_internet_security_policies` - (Optional) Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
 * `master_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'MASTER_ETCD' service, and create <=7 units for common users.
 * `project_id` - (Optional, ForceNew) Project ID, default value is 0.
