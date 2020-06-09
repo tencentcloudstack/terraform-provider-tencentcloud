@@ -716,7 +716,8 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 	}
 
 	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		_, clusterAsGroupSet, err := service.DescribeClusterAsGroups(ctx, clusterId)
+		groupId := []*string{&asGroupId}
+		_, clusterAsGroupSet, err := service.DescribeClusterAsGroupsByGroupId(ctx, clusterId, groupId)
 
 		if err != nil {
 			return retryError(err)
@@ -778,13 +779,11 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("labels"); ok {
 		vlabels := v.(map[string]interface{})
 		for key, value := range vlabels {
-			keyTmp, valueTmp := key, value
-
-			valueResult, ok := valueTmp.(string)
+			valueResult, ok := value.(string)
 			if !ok {
 				continue
 			}
-			labels = append(labels, &tke.Label{Name: helper.String(keyTmp), Value: helper.String(valueResult)})
+			labels = append(labels, &tke.Label{Name: helper.String(key), Value: helper.String(valueResult)})
 		}
 	}
 

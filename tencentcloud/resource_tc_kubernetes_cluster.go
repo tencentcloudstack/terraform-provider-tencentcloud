@@ -964,14 +964,13 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	if v, ok := d.GetOk("labels"); ok {
 		vlabels := v.(map[string]interface{})
 		for key, value := range vlabels {
-			keyTmp, valueTmp := key, value
-
-			valueResult, ok := valueTmp.(string)
+			valueResult, ok := value.(string)
 			if !ok {
 				continue
 			}
-			labels = append(labels, &tke.Label{Name: helper.String(keyTmp), Value: helper.String(valueResult)})
+			labels = append(labels, &tke.Label{Name: helper.String(key), Value: helper.String(valueResult)})
 		}
+
 		iAdvanced.Labels = labels
 	}
 

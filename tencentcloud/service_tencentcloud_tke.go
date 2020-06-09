@@ -513,7 +513,7 @@ func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, c
 	return
 }
 
-func (me *TkeService) DescribeClusterAsGroups(ctx context.Context, id string) (totalCount *uint64, clusterAsGroupSet []*tke.ClusterAsGroup, errRet error) {
+func (me *TkeService) DescribeClusterAsGroupsByGroupId(ctx context.Context, id string, groupId []*string) (totalCount *uint64, clusterAsGroupSet []*tke.ClusterAsGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDescribeClusterAsGroupsRequest()
 
@@ -523,12 +523,15 @@ func (me *TkeService) DescribeClusterAsGroups(ctx context.Context, id string) (t
 		}
 	}()
 	request.ClusterId = &id
+	if len(groupId) > 0 {
+		request.AutoScalingGroupIds = groupId
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, errRet := me.client.UseTkeClient().DescribeClusterAsGroups(request)
 
 	if response == nil || response.Response == nil {
-		errRet = fmt.Errorf("DescribeClusterAsGroups return nil response")
+		errRet = fmt.Errorf("DescribeClusterAsGroupsByGroupId return nil response")
 		return
 	}
 
