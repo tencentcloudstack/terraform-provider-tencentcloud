@@ -1,4 +1,5 @@
-## 1.36.0 (Unreleased)
+## 1.37.0 (Unreleased)
+## 1.36.0 (June 08, 2020)
 
 FEATURES:
 

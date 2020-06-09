@@ -598,7 +598,7 @@ func resourceTencentCloudDayuDdosPolicyUpdate(d *schema.ResourceData, meta inter
 		d.SetPartial("name")
 	}
 
-	if d.HasChange("watermark_filters") || d.HasChange("white_ips") || d.HasChange(("black_ips")) || d.HasChange("packet_filters") || d.HasChange("port_filters") || d.HasChange("drop_options") {
+	if d.HasChange("watermark_filters") || d.HasChange("white_ips") || d.HasChange("black_ips") || d.HasChange("packet_filters") || d.HasChange("port_filters") || d.HasChange("drop_options") {
 
 		//set DDosPolicyDropOption
 		dropMapping := d.Get("drop_options").([]interface{})
