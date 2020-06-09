@@ -37,7 +37,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   labels = {
     "test1" = "test1",
-    "test2" = "test2"
+    "test2" = "test2",
   }
 }
 
@@ -96,7 +96,7 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
 
   labels = {
     "test1" = "test1",
-    "test2" = "test2"
+    "test2" = "test2",
   }
 
   cluster_deploy_type = "INDEPENDENT_CLUSTER"
@@ -181,6 +181,6 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
 
   labels = {
     "test1" = "test1",
-    "test2" = "test2"
+    "test2" = "test2",
   }
 }

@@ -323,6 +323,10 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
 	request.InstanceAdvancedSettings.Unschedulable = &iAdvanced.Unschedulable
 
+	if len(iAdvanced.Labels) > 0 {
+		request.InstanceAdvancedSettings.Labels = iAdvanced.Labels
+	}
+
 	request.RunInstancesForNode = []*tke.RunInstancesForNode{}
 
 	if len(cvms.Master) != 0 {

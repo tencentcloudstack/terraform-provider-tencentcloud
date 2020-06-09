@@ -53,7 +53,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   labels = {
     "test1" = "test1",
-    "test2" = "test2"
+    "test2" = "test2",
   }
 
   cluster_deploy_type = "MANAGED_CLUSTER"
@@ -114,7 +114,7 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
 
   labels = {
     "test1" = "test1",
-    "test2" = "test2"
+    "test2" = "test2",
   }
 
   cluster_deploy_type = "INDEPENDENT_CLUSTER"
@@ -125,7 +125,6 @@ package tencentcloud
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"math"
@@ -964,7 +963,6 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	labels := make([]*tke.Label, 0)
 	if v, ok := d.GetOk("labels"); ok {
 		vlabels := v.(map[string]interface{})
-
 		for key, value := range vlabels {
 			keyTmp, valueTmp := key, value
 
@@ -972,10 +970,8 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 			if !ok {
 				continue
 			}
-
-			labels = append(labels, &tke.Label{Name: &keyTmp, Value: &valueResult})
+			labels = append(labels, &tke.Label{Name: helper.String(keyTmp), Value: helper.String(valueResult)})
 		}
-
 		iAdvanced.Labels = labels
 	}
 
@@ -1160,7 +1156,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 
 	_, workers, err := service.DescribeClusterInstances(ctx, d.Id())
 	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			_, workers, err = service.DescribeClusterInstances(ctx, d.Id())
 
 			if e, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -1240,43 +1236,6 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("cluster_intranet", false)
 	} else {
 		_ = d.Set("cluster_intranet", true)
-	}
-
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, clusterAsGroupSet, err := service.DescribeClusterAsGroups(ctx, d.Id())
-
-		if err != nil {
-			return retryError(err)
-		}
-
-		if len(clusterAsGroupSet) == 0 {
-			d.Set("labels", "")
-			return nil
-		}
-
-		var labelsMap = map[string]string{}
-		for _, value := range clusterAsGroupSet {
-			labels := value.Labels
-
-			if len(labels) == 0 {
-				d.Set("labels", "")
-				return nil
-			}
-
-			for _, v := range labels {
-				labelsMap[*v.Name] = *v.Value
-			}
-
-		}
-
-		marshal, _ := json.Marshal(labelsMap)
-		d.Set("labels", string(marshal))
-
-		return nil
-	})
-
-	if err != nil {
-		return err
 	}
 
 	return nil

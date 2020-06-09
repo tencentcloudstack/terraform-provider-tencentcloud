@@ -87,7 +87,7 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
 
   labels = {
     "test1" = "test1",
-    "test2" = "test2"
+    "test2" = "test2",
   }
 }
 ```
@@ -96,7 +96,6 @@ package tencentcloud
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -247,44 +246,6 @@ func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta i
 		_ = d.Set("key_ids", instance.LoginSettings.KeyIds)
 	}
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecurityGroupIds))
-
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, clusterAsGroupSet, err := tkeService.DescribeClusterAsGroups(ctx, clusterId)
-
-		if err != nil {
-			return retryError(err)
-		}
-
-		if len(clusterAsGroupSet) == 0 {
-			d.Set("labels", "")
-			return nil
-		}
-
-		var labelsMap = map[string]string{}
-		for _, value := range clusterAsGroupSet {
-			labels := value.Labels
-
-			if len(labels) == 0 {
-				d.Set("labels", "")
-				return nil
-			}
-
-			for _, v := range labels {
-				labelsMap[*v.Name] = *v.Value
-			}
-
-		}
-
-		marshal, _ := json.Marshal(labelsMap)
-		_ = d.Set("labels", string(marshal))
-
-		return nil
-	})
-
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -325,7 +286,6 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 	labels := make([]*tke.Label, 0)
 	if v, ok := d.GetOk("labels"); ok {
 		vlabels := v.(map[string]interface{})
-
 		for key, value := range vlabels {
 			keyTmp, valueTmp := key, value
 
@@ -333,8 +293,7 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 			if !ok {
 				continue
 			}
-
-			labels = append(labels, &tke.Label{Name: &keyTmp, Value: &valueResult})
+			labels = append(labels, &tke.Label{Name: helper.String(keyTmp), Value: helper.String(valueResult)})
 		}
 
 		request.InstanceAdvancedSettings.Labels = labels

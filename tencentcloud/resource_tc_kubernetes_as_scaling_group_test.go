@@ -204,7 +204,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
 
   labels = {
     "test1" = "test1",
-    "test2" = "test2"
+    "test2" = "test2",
   }
 }
 
