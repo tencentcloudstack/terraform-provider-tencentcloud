@@ -71,6 +71,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -714,8 +715,9 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 		return nil
 	}
 
+	var clusterAsGroupSet *tke.ClusterAsGroup
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		clusterAsGroupSet, err := service.DescribeClusterAsGroupsByGroupId(ctx, clusterId, asGroupId)
+		clusterAsGroupSet, err = service.DescribeClusterAsGroupsByGroupId(ctx, clusterId, asGroupId)
 		if err != nil {
 			return retryError(err)
 		}
@@ -727,17 +729,16 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 		labels := clusterAsGroupSet.Labels
 		var labelsMap = make(map[string]string, len(labels))
 
-		if len(labels) == 0 {
-			d.Set("labels", labelsMap)
-			return nil
-		}
-
 		for _, v := range labels {
 			labelsMap[*v.Name] = *v.Value
 		}
 		d.Set("labels", labelsMap)
 		return nil
 	})
+
+	if clusterAsGroupSet == nil {
+		d.SetId("")
+	}
 
 	return err
 }
@@ -767,7 +768,7 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	labels := helper.GetLabels(d, "labels")
+	labels := GetTkeLabels(d, "labels")
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 

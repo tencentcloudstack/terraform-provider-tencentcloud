@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 )
 
 // Generates a hash for the set hash function used by the IDs
@@ -39,16 +38,6 @@ func GetTags(d *schema.ResourceData, k string) map[string]string {
 		}
 	}
 	return tags
-}
-
-func GetLabels(d *schema.ResourceData, k string) []*tke.Label {
-	labels := make([]*tke.Label, 0)
-	if raw, ok := d.GetOk(k); ok {
-		for k, v := range raw.(map[string]interface{}) {
-			labels = append(labels, &tke.Label{Name: String(k), Value: String(v.(string))})
-		}
-	}
-	return labels
 }
 
 func BuildToken() string {

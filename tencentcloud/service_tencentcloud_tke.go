@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -524,7 +525,7 @@ func (me *TkeService) DescribeClusterAsGroupsByGroupId(ctx context.Context, id s
 	response, err := me.client.UseTkeClient().DescribeClusterAsGroups(request)
 
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), err.Error())
 		errRet = err
 		return
 	}
@@ -749,4 +750,14 @@ func (me *TkeService) DescribeImages(ctx context.Context) (imageIds []string, er
 		imageIds = append(imageIds, *image.ImageId)
 	}
 	return
+}
+
+func GetTkeLabels(d *schema.ResourceData, k string) []*tke.Label {
+	labels := make([]*tke.Label, 0)
+	if raw, ok := d.GetOk(k); ok {
+		for k, v := range raw.(map[string]interface{}) {
+			labels = append(labels, &tke.Label{Name: helper.String(k), Value: helper.String(v.(string))})
+		}
+	}
+	return labels
 }

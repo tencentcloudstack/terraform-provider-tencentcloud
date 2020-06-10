@@ -959,8 +959,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	tags := helper.GetTags(d, "tags")
 
-	labels := helper.GetLabels(d, "labels")
-	iAdvanced.Labels = labels
+	iAdvanced.Labels = GetTkeLabels(d, "labels")
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
