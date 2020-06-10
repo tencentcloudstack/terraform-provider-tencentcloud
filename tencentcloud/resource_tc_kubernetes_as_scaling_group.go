@@ -715,29 +715,24 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 		return nil
 	}
 
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		groupId := []*string{&asGroupId}
-		_, clusterAsGroupSet, err := service.DescribeClusterAsGroupsByGroupId(ctx, clusterId, groupId)
-
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		clusterAsGroupSet, err := service.DescribeClusterAsGroupsByGroupId(ctx, clusterId, asGroupId)
 		if err != nil {
 			return retryError(err)
 		}
 
-		var labelsMap = map[string]string{}
-		if len(clusterAsGroupSet) == 0 {
-			d.Set("labels", labelsMap)
+		if clusterAsGroupSet == nil {
 			return nil
 		}
 
-		for _, value := range clusterAsGroupSet {
-			labels := value.Labels
-			if len(labels) == 0 {
-				continue
-			}
+		labels := clusterAsGroupSet.Labels
+		if len(labels) == 0 {
+			return nil
+		}
 
-			for _, v := range labels {
-				labelsMap[*v.Name] = *v.Value
-			}
+		var labelsMap = map[string]string{}
+		for _, v := range labels {
+			labelsMap[*v.Name] = *v.Value
 		}
 		d.Set("labels", labelsMap)
 		return nil
@@ -746,7 +741,6 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 

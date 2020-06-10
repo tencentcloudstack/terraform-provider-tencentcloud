@@ -513,31 +513,25 @@ func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, c
 	return
 }
 
-func (me *TkeService) DescribeClusterAsGroupsByGroupId(ctx context.Context, id string, groupId []*string) (totalCount *uint64, clusterAsGroupSet []*tke.ClusterAsGroup, errRet error) {
+func (me *TkeService) DescribeClusterAsGroupsByGroupId(ctx context.Context, id string, groupId string) (clusterAsGroupSet *tke.ClusterAsGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDescribeClusterAsGroupsRequest()
 
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
-		}
-	}()
 	request.ClusterId = &id
-	if len(groupId) > 0 {
-		request.AutoScalingGroupIds = groupId
-	}
+	request.AutoScalingGroupIds = []*string{&groupId}
 
 	ratelimit.Check(request.GetAction())
-	response, errRet := me.client.UseTkeClient().DescribeClusterAsGroups(request)
+	response, err := me.client.UseTkeClient().DescribeClusterAsGroups(request)
 
-	if response == nil || response.Response == nil {
-		errRet = fmt.Errorf("DescribeClusterAsGroupsByGroupId return nil response")
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		errRet = err
 		return
 	}
 
-	totalCount = response.Response.TotalCount
-	clusterAsGroupSet = response.Response.ClusterAsGroupSet
-
+	if len(response.Response.ClusterAsGroupSet) > 0 {
+		clusterAsGroupSet = response.Response.ClusterAsGroupSet[0]
+	}
 	return
 }
 
