@@ -136,7 +136,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -604,7 +603,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Type:        schema.TypeMap,
 			Optional:    true,
 			ForceNew:    true,
-			Description: "Labels of tke cluster.",
+			Description: "Labels of tke cluster nodes.",
 		},
 	}
 
@@ -960,19 +959,8 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	tags := helper.GetTags(d, "tags")
 
-	labels := make([]*tke.Label, 0)
-	if v, ok := d.GetOk("labels"); ok {
-		vlabels := v.(map[string]interface{})
-		for key, value := range vlabels {
-			valueResult, ok := value.(string)
-			if !ok {
-				continue
-			}
-			labels = append(labels, &tke.Label{Name: helper.String(key), Value: helper.String(valueResult)})
-		}
-
-		iAdvanced.Labels = labels
-	}
+	labels := helper.GetLabels(d, "labels")
+	iAdvanced.Labels = labels
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 

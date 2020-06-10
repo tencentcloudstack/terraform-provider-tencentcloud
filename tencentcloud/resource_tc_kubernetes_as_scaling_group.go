@@ -71,7 +71,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -111,7 +110,7 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Labels of kubernetes AS Group.",
+				Description: "Labels of kubernetes AS Group created nodes.",
 			},
 		},
 	}
@@ -726,11 +725,13 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 		}
 
 		labels := clusterAsGroupSet.Labels
+		var labelsMap = make(map[string]string, len(labels))
+
 		if len(labels) == 0 {
+			d.Set("labels", labelsMap)
 			return nil
 		}
 
-		var labelsMap = map[string]string{}
 		for _, v := range labels {
 			labelsMap[*v.Name] = *v.Value
 		}
@@ -738,10 +739,7 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 		return nil
 	})
 
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interface{}) error {
@@ -769,17 +767,7 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	labels := make([]*tke.Label, 0)
-	if v, ok := d.GetOk("labels"); ok {
-		vlabels := v.(map[string]interface{})
-		for key, value := range vlabels {
-			valueResult, ok := value.(string)
-			if !ok {
-				continue
-			}
-			labels = append(labels, &tke.Label{Name: helper.String(key), Value: helper.String(valueResult)})
-		}
-	}
+	labels := helper.GetLabels(d, "labels")
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 

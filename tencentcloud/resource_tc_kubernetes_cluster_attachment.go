@@ -283,19 +283,8 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 
 	request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
 
-	labels := make([]*tke.Label, 0)
-	if v, ok := d.GetOk("labels"); ok {
-		vlabels := v.(map[string]interface{})
-		for key, value := range vlabels {
-			valueResult, ok := value.(string)
-			if !ok {
-				continue
-			}
-			labels = append(labels, &tke.Label{Name: helper.String(key), Value: helper.String(valueResult)})
-		}
-
-		request.InstanceAdvancedSettings.Labels = labels
-	}
+	labels := helper.GetLabels(d, "labels")
+	request.InstanceAdvancedSettings.Labels = labels
 
 	/*cvm has been  attached*/
 	var err error

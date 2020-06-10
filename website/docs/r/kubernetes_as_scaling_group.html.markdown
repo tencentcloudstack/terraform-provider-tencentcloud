@@ -74,7 +74,7 @@ The following arguments are supported:
 * `auto_scaling_config` - (Required, ForceNew) Auto scaling config parameters.
 * `auto_scaling_group` - (Required, ForceNew) Auto scaling group parameters.
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
-* `labels` - (Optional, ForceNew) Labels of kubernetes AS Group.
+* `labels` - (Optional, ForceNew) Labels of kubernetes AS Group created nodes.
 
 The `auto_scaling_config` object supports the following:
 
