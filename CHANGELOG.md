@@ -1,4 +1,10 @@
 ## 1.37.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource： `tencentcloud_kubernetes_cluster` add new argument `labels`.
+* Resource： `tencentcloud_kubernetes_as_scaling_group` add new argument `labels`.
+
 ## 1.36.0 (June 08, 2020)
 
 FEATURES:
