@@ -10,11 +10,11 @@ variable "availability_zone" {
 }
 
 variable "cluster_cidr" {
-  default = "172.31.0.0/16"
+  default = "172.16.0.0/16"
 }
 
 variable "default_instance_type" {
-  default = "SA1.LARGE8"
+  default = "S1.SMALL1"
 }
 
 data "tencentcloud_images" "default" {
@@ -84,6 +84,11 @@ resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
   cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
   instance_id = tencentcloud_instance.foo.id
   password    = "Lo4wbdit"
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
 }
 ```
 */
@@ -140,6 +145,12 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Computed:    true,
 			Description: "A list of security group ids after attach to cluster.",
+		},
+		"labels": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Labels of tke attachment exits cvm.",
 		},
 	}
 
@@ -269,6 +280,10 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 	if loginSettingsNumbers != 1 {
 		return fmt.Errorf("parameters `key_ids` and `password` must set and only set one")
 	}
+
+	request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
+
+	request.InstanceAdvancedSettings.Labels = GetTkeLabels(d, "labels")
 
 	/*cvm has been  attached*/
 	var err error

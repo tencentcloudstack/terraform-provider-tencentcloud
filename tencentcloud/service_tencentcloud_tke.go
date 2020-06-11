@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -41,6 +42,7 @@ type InstanceAdvancedSettings struct {
 	DockerGraphPath string
 	UserScript      string
 	Unschedulable   int64
+	Labels          []*tke.Label
 }
 
 type ClusterCidrSettings struct {
@@ -322,6 +324,10 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
 	request.InstanceAdvancedSettings.Unschedulable = &iAdvanced.Unschedulable
 
+	if len(iAdvanced.Labels) > 0 {
+		request.InstanceAdvancedSettings.Labels = iAdvanced.Labels
+	}
+
 	request.RunInstancesForNode = []*tke.RunInstancesForNode{}
 
 	if len(cvms.Master) != 0 {
@@ -474,7 +480,7 @@ func (me *TkeService) DescribeClusterSecurity(ctx context.Context, id string) (r
 	return me.client.UseTkeClient().DescribeClusterSecurity(request)
 }
 
-func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string) (asGroupId string, errRet error) {
+func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string, labels []*tke.Label) (asGroupId string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := tke.NewCreateClusterAsGroupRequest()
@@ -487,6 +493,10 @@ func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, c
 	request.ClusterId = &id
 	request.AutoScalingGroupPara = &groupPara
 	request.LaunchConfigurePara = &configPara
+
+	if len(labels) > 0 {
+		request.Labels = labels
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().CreateClusterAsGroup(request)
@@ -501,6 +511,28 @@ func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, c
 	}
 
 	asGroupId = *response.Response.AutoScalingGroupId
+	return
+}
+
+func (me *TkeService) DescribeClusterAsGroupsByGroupId(ctx context.Context, id string, groupId string) (clusterAsGroupSet *tke.ClusterAsGroup, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeClusterAsGroupsRequest()
+
+	request.ClusterId = &id
+	request.AutoScalingGroupIds = []*string{&groupId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterAsGroups(request)
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), err.Error())
+		errRet = err
+		return
+	}
+
+	if len(response.Response.ClusterAsGroupSet) > 0 {
+		clusterAsGroupSet = response.Response.ClusterAsGroupSet[0]
+	}
 	return
 }
 
@@ -718,4 +750,14 @@ func (me *TkeService) DescribeImages(ctx context.Context) (imageIds []string, er
 		imageIds = append(imageIds, *image.ImageId)
 	}
 	return
+}
+
+func GetTkeLabels(d *schema.ResourceData, k string) []*tke.Label {
+	labels := make([]*tke.Label, 0)
+	if raw, ok := d.GetOk(k); ok {
+		for k, v := range raw.(map[string]interface{}) {
+			labels = append(labels, &tke.Label{Name: helper.String(k), Value: helper.String(v.(string))})
+		}
+	}
+	return labels
 }

@@ -23,7 +23,7 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 				Config: testAccTkeCluster("test", "test"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
-					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "172.31.0.0/16"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "10.31.0.0/16"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_max_pod_num", "32"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc"),
@@ -36,6 +36,8 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "tags.test", "test"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "security_policy.#", "2"),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "cluster_external_endpoint"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test1", "test1"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test2", "test2"),
 				),
 			},
 			{
@@ -138,11 +140,11 @@ variable "availability_zone" {
 }
 
 variable "cluster_cidr" {
-  default = "172.31.0.0/16"
+  default = "10.31.0.0/16"
 }
 
 variable "default_instance_type" {
-  default = "SA1.LARGE8"
+  default = "S1.SMALL1"
 }
 
 data "tencentcloud_vpc_subnets" "vpc" {
@@ -185,6 +187,11 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   tags = {
     "%s" = "%s"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
   }
 }
 `, key, value,

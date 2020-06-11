@@ -37,7 +37,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
 
   auto_scaling_config {
     configuration_name = "tf-guagua-as-config"
-    instance_type      = "SN3ne.8XLARGE64"
+    instance_type      = "S1.SMALL1"
     project_id         = 0
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
@@ -59,6 +59,11 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
     }
 
   }
+
+  labels = {
+    "test1" = "test1",
+    "test1" = "test2",
+  }
 }
 ```
 
@@ -69,6 +74,7 @@ The following arguments are supported:
 * `auto_scaling_config` - (Required, ForceNew) Auto scaling config parameters.
 * `auto_scaling_group` - (Required, ForceNew) Auto scaling group parameters.
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
+* `labels` - (Optional, ForceNew) Labels of kubernetes AS Group created nodes.
 
 The `auto_scaling_config` object supports the following:
 

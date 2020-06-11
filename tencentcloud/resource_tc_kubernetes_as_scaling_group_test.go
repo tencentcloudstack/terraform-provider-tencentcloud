@@ -26,6 +26,8 @@ func TestAccTencentCloudTkeAsResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeClusterAsResourceKey, "cluster_id"),
 					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "auto_scaling_group.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "auto_scaling_config.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "labels.test1", "test1"),
+					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "labels.test2", "test2"),
 				),
 			},
 		},
@@ -116,7 +118,7 @@ data "tencentcloud_vpc_subnets" "vpc" {
 }
 
 variable "default_instance_type" {
-  default = "SN3ne.8XLARGE64"
+  default = "S1.SMALL1"
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
@@ -198,6 +200,11 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
       tag = "as"
     }
 
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
   }
 }
 
