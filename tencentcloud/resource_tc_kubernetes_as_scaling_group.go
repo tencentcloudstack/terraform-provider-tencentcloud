@@ -736,11 +736,14 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 		return nil
 	})
 
+	if err != nil {
+		return err
+	}
+
 	if clusterAsGroupSet == nil {
 		d.SetId("")
 	}
-
-	return err
+	return nil
 }
 
 func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interface{}) error {
