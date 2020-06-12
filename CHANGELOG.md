@@ -1,4 +1,4 @@
-## 1.36.1 (Unreleased)
+## 1.36.1 (June 12, 2020)
 
 ENHANCEMENTS:
 
