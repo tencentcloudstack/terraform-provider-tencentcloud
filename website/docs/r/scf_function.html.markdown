@@ -44,7 +44,7 @@ The following arguments are supported:
 * `role` - (Optional) Role of the SCF function.
 * `subnet_id` - (Optional) Subnet id of the SCF function.
 * `tags` - (Optional) Tags of the SCF function.
-* `timeout` - (Optional) Timeout of the SCF function, unit is second. Default `3`. Available value is 1-300.
+* `timeout` - (Optional) Timeout of the SCF function, unit is second. Default `3`. Available value is 1-900.
 * `triggers` - (Optional) Trigger list of the SCF function, note that if you modify the trigger list, all existing triggers will be deleted, and then create triggers in the new list. Each element contains the following attributes:
 * `vpc_id` - (Optional) VPC id of the SCF function.
 * `zip_file` - (Optional) Zip file of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.

@@ -230,7 +230,7 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 		return err
 	}
 	_ = d.Set("project_id", projectId)
-	_ = d.Set("cert", certificate.Cert)
+	_ = d.Set("cert", strings.TrimRight(*certificate.Cert, "\n"))
 	_ = d.Set("product_zh_name", certificate.ProductZhName)
 	_ = d.Set("domain", certificate.Domain)
 	_ = d.Set("status", certificate.Status)
