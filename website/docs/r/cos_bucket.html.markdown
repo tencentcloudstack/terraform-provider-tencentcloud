@@ -80,8 +80,10 @@ The following arguments are supported:
 * `bucket` - (Required, ForceNew) The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
 * `acl` - (Optional) The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.
 * `cors_rules` - (Optional) A rule of Cross-Origin Resource Sharing (documented below).
+* `encryption_algorithm` - (Optional) The server-side encryption algorithm to use. Valid value is `AES256`.
 * `lifecycle_rules` - (Optional) A configuration of object lifecycle management (documented below).
 * `tags` - (Optional) The tags of a bucket.
+* `versioning_enable` - (Optional) Enable bucket versioning.
 * `website` - (Optional) A website object(documented below).
 
 The `cors_rules` object supports the following:

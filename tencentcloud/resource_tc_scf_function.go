@@ -132,8 +132,8 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      3,
-				ValidateFunc: validateIntegerInRange(1, 300),
-				Description:  "Timeout of the SCF function, unit is second. Default `3`. Available value is 1-300.",
+				ValidateFunc: validateIntegerInRange(1, 900),
+				Description:  "Timeout of the SCF function, unit is second. Default `3`. Available value is 1-900.",
 			},
 			"environment": {
 				Type:        schema.TypeMap,

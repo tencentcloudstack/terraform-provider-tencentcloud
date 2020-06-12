@@ -80,6 +80,8 @@ func TestAccTencentCloudCosBucket_basic(t *testing.T) {
 				Config: testAccCosBucket_basicUpdate(appid),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "encryption_algorithm", "AES256"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "versioning_enable", "true"),
 				),
 			},
 			{
@@ -314,8 +316,10 @@ resource "tencentcloud_cos_bucket" "bucket_basic" {
 func testAccCosBucket_basicUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_basic" {
-  bucket = "tf-bucket-basic-%s"
-  acl    = "private"
+  bucket               = "tf-bucket-basic-%s"
+  acl                  = "private"
+  encryption_algorithm = "AES256"
+  versioning_enable    = true
 }
 `, appid)
 }

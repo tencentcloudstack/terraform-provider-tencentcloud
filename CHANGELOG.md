@@ -1,9 +1,10 @@
-## 1.37.0 (Unreleased)
+## 1.36.1 (Unreleased)
 
 ENHANCEMENTS:
 
-* Resource： `tencentcloud_kubernetes_cluster` add new argument `labels`.
-* Resource： `tencentcloud_kubernetes_as_scaling_group` add new argument `labels`.
+* Resource: `tencentcloud_kubernetes_cluster` add new argument `labels`.
+* Resource: `tencentcloud_kubernetes_as_scaling_group` add new argument `labels`.
+* Resource: `tencentcloud_cos_bucket` add new arguments `encryption_algorithm` and `versioning_enable`.
 
 ## 1.36.0 (June 08, 2020)
 
