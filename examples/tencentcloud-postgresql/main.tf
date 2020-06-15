@@ -1,8 +1,3 @@
-
-provider "tencentcloud" {
-  region = "ap-guangzhou"
-}
-
 resource "tencentcloud_vpc" "foo" {
   name       = "example"
   cidr_block = "10.0.0.0/16"
