@@ -406,6 +406,8 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		d.SetPartial("root_password")
 	}
 
+	d.Partial(false)
+
 	return resourceTencentCloudPostgresqlInstanceRead(d, meta)
 }
 
@@ -477,7 +479,6 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("storage", instance.DBInstanceStorage)
 
 	//ignore spec_code
-
 	return nil
 }
 
