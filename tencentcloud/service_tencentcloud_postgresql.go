@@ -76,8 +76,7 @@ func (me *PostgresqlService) InitPostgresqlInstance(ctx context.Context, instanc
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UsePostgresqlClient().InitDBInstances(request)
 	if err != nil {
-		errRet = err
-		return
+		return err
 	}
 	if response == nil || response.Response == nil {
 		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
@@ -297,11 +296,7 @@ func (me *PostgresqlService) ModifyPostgresqlInstanceName(ctx context.Context, i
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().ModifyDBInstanceName(request)
-	if err != nil {
-		errRet = err
-	}
-
-	return
+	return err
 }
 
 func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, instanceId string, memory int, storage int) (errRet error) {
@@ -318,11 +313,7 @@ func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, inst
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().UpgradeDBInstance(request)
-	if err != nil {
-		errRet = err
-	}
-
-	return
+	return err
 }
 
 func (me *PostgresqlService) ModifyPostgresqlInstanceProjectId(ctx context.Context, instanceId string, projectId int) (errRet error) {
@@ -338,10 +329,7 @@ func (me *PostgresqlService) ModifyPostgresqlInstanceProjectId(ctx context.Conte
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().ModifyDBInstancesProject(request)
-	if err != nil {
-		errRet = err
-	}
-	return
+	return err
 }
 
 func (me *PostgresqlService) SetPostgresqlInstanceAutoRenewFlag(ctx context.Context, instanceId string, autoRenewFlag int) (errRet error) {
@@ -357,10 +345,7 @@ func (me *PostgresqlService) SetPostgresqlInstanceAutoRenewFlag(ctx context.Cont
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().SetAutoRenewFlag(request)
-	if err != nil {
-		errRet = err
-	}
-	return
+	return err
 }
 
 func (me *PostgresqlService) DeletePostgresqlInstance(ctx context.Context, instanceId string) (errRet error) {
@@ -375,10 +360,7 @@ func (me *PostgresqlService) DeletePostgresqlInstance(ctx context.Context, insta
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().DestroyDBInstance(request)
-	if err != nil {
-		errRet = err
-	}
-	return
+	return err
 }
 
 func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Context, instanceId string, password string) (errRet error) {
@@ -395,10 +377,7 @@ func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Conte
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().ResetAccountPassword(request)
-	if err != nil {
-		errRet = err
-	}
-	return
+	return err
 }
 
 func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instanceId string) error {
