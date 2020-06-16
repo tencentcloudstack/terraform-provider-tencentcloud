@@ -284,7 +284,7 @@ Monitor
     tencentcloud_monitor_binding_object
     tencentcloud_monitor_binding_receiver
 
-Postgresql
+PostgreSQL
   Data Source
 	tencentcloud_postgresql_instances
 	tencentcloud_postgresql_specinfos
