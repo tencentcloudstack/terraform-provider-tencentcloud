@@ -24,7 +24,7 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "name", "tf_postsql_instance"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "postpaid"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "vpc_id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "subnet_id"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "memory", "2"),
@@ -35,6 +35,8 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "public_access_switch", "false"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "root_password", "1qaA2k1wgvfa3ZZZ"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "availability_zone"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_ip"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_port"),
 				),
 			},
 			{
@@ -50,7 +52,7 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "name", "tf_postsql_instance_update"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "postpaid"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "vpc_id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "subnet_id"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "memory", "4"),
@@ -61,6 +63,10 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "public_access_switch", "true"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "root_password", "1qaA2k1wgvfa3ZZZZ"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "availability_zone"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_ip"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_port"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "public_access_host"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "public_access_port"),
 				),
 			},
 		},
@@ -127,7 +133,7 @@ const testAccPostgresqlInstance string = testAccPostgresqlInstanceBasic + `
 resource "tencentcloud_postgresql_instance" "test" {
   name = "tf_postsql_instance"
   availability_zone = var.availability_zone
-  charge_type = "postpaid"
+  charge_type = "POSTPAID_BY_HOUR"
   vpc_id                   = "` + defaultVpcId + `"
   subnet_id = "subnet-pyio7yog"
   engine_version		= "9.3.5"
@@ -144,7 +150,7 @@ const testAccPostgresqlInstanceUpdate string = testAccPostgresqlInstanceBasic + 
 resource "tencentcloud_postgresql_instance" "test" {
   name = "tf_postsql_instance_update"
   availability_zone = var.availability_zone
-  charge_type = "postpaid"
+  charge_type = "POSTPAID_BY_HOUR"
   vpc_id                   = "` + defaultVpcId + `"
   subnet_id = "subnet-pyio7yog"
   engine_version		= "9.3.5"

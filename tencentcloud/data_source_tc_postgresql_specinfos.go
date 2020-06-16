@@ -4,7 +4,7 @@ Use this data source to get the available product configs of the postgresql inst
 Example Usage
 
 ```hcl
-data "tencentcloud_postgresql_speccodes" "foo"{
+data "tencentcloud_postgresql_specinfos" "foo"{
 	availability_zone = "ap-shanghai-2"
 }
 ```
@@ -18,9 +18,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
-func dataSourceTencentCloudPostgresqlSpeccodes() *schema.Resource {
+func dataSourceTencentCloudPostgresqlSpecinfos() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudPostgresqlSpeccodesRead,
+		Read: dataSourceTencentCloudPostgresqlSpecinfosRead,
 		Schema: map[string]*schema.Schema{
 			"availability_zone": {
 				Type:        schema.TypeString,
@@ -46,7 +46,7 @@ func dataSourceTencentCloudPostgresqlSpeccodes() *schema.Resource {
 						"memory": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Memory size(in GB).",
+							Description: "Memory size(in MB).",
 						},
 						"storage_min": {
 							Type:        schema.TypeInt,
@@ -85,8 +85,8 @@ func dataSourceTencentCloudPostgresqlSpeccodes() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudPostgresqlSpeccodesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_postgresql_speccodes.read")()
+func dataSourceTencentCloudPostgresqlSpecinfosRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_postgresql_specinfos.read")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -95,12 +95,11 @@ func dataSourceTencentCloudPostgresqlSpeccodesRead(d *schema.ResourceData, meta 
 	}
 
 	zone := d.Get("availability_zone").(string)
-	speccodes, err := service.DescribeSpecCodes(ctx, zone)
+	speccodes, err := service.DescribeSpecinfos(ctx, zone)
 	if err != nil {
-		speccodes, err = service.DescribeSpecCodes(ctx, zone)
+		speccodes, err = service.DescribeSpecinfos(ctx, zone)
 	}
 	if err != nil {
-		log.Printf("err %+v", err)
 		return err
 	}
 
@@ -108,14 +107,14 @@ func dataSourceTencentCloudPostgresqlSpeccodesRead(d *schema.ResourceData, meta 
 
 	for _, v := range speccodes {
 		listItem := make(map[string]interface{})
-		listItem["id"] = *v.SpecCode
-		listItem["memory"] = int(*v.Memory)
-		listItem["storage_min"] = int(*v.MinStorage)
-		listItem["storage_max"] = int(*v.MaxStorage)
-		listItem["cpu_number"] = int(*v.Cpu)
-		listItem["qps"] = int(*v.Qps)
-		listItem["version"] = *v.Version
-		listItem["version_name"] = *v.VersionName
+		listItem["id"] = v.SpecCode
+		listItem["memory"] = v.Memory
+		listItem["storage_min"] = v.MinStorage
+		listItem["storage_max"] = v.MaxStorage
+		listItem["cpu_number"] = v.Cpu
+		listItem["qps"] = v.Qps
+		listItem["version"] = v.Version
+		listItem["version_name"] = v.VersionName
 		list = append(list, listItem)
 	}
 	d.SetId("speccode." + zone)

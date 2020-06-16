@@ -101,7 +101,7 @@ func dataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 						"memory": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Memory size (in GB).",
+							Description: "Memory size (in MB).",
 						},
 						"project_id": {
 							Type:        schema.TypeInt,
@@ -121,7 +121,27 @@ func dataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 						"public_access_host": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "host for public access.",
+							Description: "Host for public access.",
+						},
+						"public_access_port": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Port for public access.",
+						},
+						"private_access_ip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Ip address for private access.",
+						},
+						"private_access_port": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Port for private access.",
+						},
+						"charset": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Charset of the postgresql instance.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -136,7 +156,7 @@ func dataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 }
 
 func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_postgresql_instances.read")
+	defer logElapsed("data_source.tencentcloud_postgresql_instances.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -169,27 +189,37 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 
 	for _, v := range instanceList {
 		listItem := make(map[string]interface{})
-		listItem["id"] = *v.DBInstanceId
-		listItem["name"] = *v.DBInstanceName
-		listItem["charge_type"] = *v.PayType
-		listItem["auto_renew_flag"] = int(*v.AutoRenew)
-		listItem["project_id"] = int(*v.ProjectId)
-		listItem["storage"] = int(*v.DBInstanceStorage)
-		listItem["memory"] = int(*v.DBInstanceMemory)
-		listItem["availability_zone"] = *v.Zone
-		listItem["create_time"] = *v.CreateTime
-		listItem["vpc_id"] = *v.VpcId
-		listItem["subnet_id"] = *v.SubnetId
-		listItem["engine_version"] = *v.DBVersion
+		listItem["id"] = v.DBInstanceId
+		listItem["name"] = v.DBInstanceName
+		listItem["auto_renew_flag"] = v.AutoRenew
+		listItem["project_id"] = v.ProjectId
+		listItem["storage"] = v.DBInstanceStorage
+		listItem["memory"] = v.DBInstanceMemory
+		listItem["availability_zone"] = v.Zone
+		listItem["create_time"] = v.CreateTime
+		listItem["vpc_id"] = v.VpcId
+		listItem["subnet_id"] = v.SubnetId
+		listItem["engine_version"] = v.DBVersion
 		listItem["public_access_switch"] = false
+		listItem["charset"] = v.DBCharset
 		listItem["public_access_host"] = ""
 		for _, netInfo := range v.DBInstanceNetInfo {
 			if *netInfo.NetType == "public" {
-				if *netInfo.Status == "open" {
+				if *netInfo.Status == "opened" || *netInfo.Status == "1" {
 					listItem["public_access_switch"] = true
 				}
-				listItem["public_access_host"] = *netInfo.Address
+				listItem["public_access_host"] = netInfo.Address
+				listItem["public_access_port"] = netInfo.Port
 			}
+			if *netInfo.NetType == "private" {
+				listItem["private_access_ip"] = netInfo.Ip
+				listItem["private_access_port"] = netInfo.Port
+			}
+		}
+		if *v.PayType == POSTGRESQL_PAYTYPE_PREPAID {
+			listItem["charge_type"] = COMMON_PAYTYPE_PREPAID
+		} else {
+			listItem["charge_type"] = COMMON_PAYTYPE_POSTPAID
 		}
 		list = append(list, listItem)
 		ids = append(ids, *v.DBInstanceId)

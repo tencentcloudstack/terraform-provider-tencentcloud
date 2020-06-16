@@ -583,7 +583,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_product_namespace":    dataSourceTencentMonitorProductNamespace(),
 			"tencentcloud_elasticsearch_instances":      dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":         dataSourceTencentCloudPostgresqlInstances(),
-			"tencentcloud_postgresql_speccodes":         dataSourceTencentCloudPostgresqlSpeccodes(),
+			"tencentcloud_postgresql_specinfos":         dataSourceTencentCloudPostgresqlSpecinfos(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

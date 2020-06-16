@@ -7,7 +7,7 @@ Example Usage
 resource "tencentcloud_postgresql_instance" "foo" {
   name = "example"
   availability_zone = var.availability_zone
-  charge_type = "postpaid"
+  charge_type = "POSTPAID_BY_HOUR"
   vpc_id      = "vpc-409mvdvv"
   subnet_id = "subnet-nf9n81ps"
   engine_version		= "9.3.5"
@@ -62,7 +62,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Default:      POSTGRESQL_PAYTYPE_POSTPAID,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(POSTGRESQL_PAYTYPE),
-				Description:  "Pay type of the postgresql instance. For now, only `POSTPAID` is valid.",
+				Description:  "Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.",
 			},
 			"engine_version": {
 				Type:         schema.TypeString,
@@ -112,7 +112,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Required:    true,
-				Description: "The id of specification of the postgresql instance, like `cdb.pg.z1.2g`, which can be queried with data source `tencentcloud_postgresql_speccodes`.",
+				Description: "The id of specification of the postgresql instance, like `cdb.pg.z1.2g`, which can be queried with data source `tencentcloud_postgresql_specinfos`.",
 			},
 			"root_password": {
 				Type:         schema.TypeString,
@@ -142,19 +142,19 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Description: "Host for public access.",
 			},
 			"public_access_port": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Port for public access.",
 			},
-			"inner_access_ip": {
+			"private_access_ip": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Ip for inner access.",
+				Description: "Ip for private access.",
 			},
-			"inner_access_port": {
-				Type:        schema.TypeString,
+			"private_access_port": {
+				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Port for inner access.",
+				Description: "Port for private access.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -166,7 +166,6 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 }
 
 func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-
 	defer logElapsed("resource.tencentcloud_postgresql_instance.create")()
 
 	logId := getLogId(contextNil)
@@ -188,6 +187,12 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	var period = 1
 	//the sdk asks to set value with 1 when paytype is postpaid
+
+	if payType == COMMON_PAYTYPE_PREPAID {
+		payType = POSTGRESQL_PAYTYPE_PREPAID
+	} else {
+		payType = POSTGRESQL_PAYTYPE_POSTPAID
+	}
 
 	var instanceId string
 	var outErr, inErr error
@@ -220,6 +225,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	if err != nil {
 		return err
 	}
+	d.SetId(instanceId)
 
 	var (
 		password = d.Get("root_password").(string)
@@ -258,24 +264,23 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	//set name
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		err := postgresqlService.ModifyPostgresqlInstanceName(ctx, instanceId, d.Get("name").(string))
-		if err != nil {
-			return retryError(err)
+	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		inErr := postgresqlService.ModifyPostgresqlInstanceName(ctx, instanceId, d.Get("name").(string))
+		if inErr != nil {
+			return retryError(inErr)
 		}
 		return nil
 	})
-	if err != nil {
-		return err
+	if outErr != nil {
+		return outErr
 	}
 
 	//check creation done
-	err = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
-	if err != nil {
-		return err
+	checkErr := postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	if checkErr != nil {
+		return checkErr
 	}
 
-	d.SetId(instanceId)
 	return resourceTencentCloudPostgresqlInstanceRead(d, meta)
 }
 
@@ -289,23 +294,24 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	instanceId := d.Id()
 	d.Partial(true)
 
+	var outErr, inErr, checkErr error
 	//update name
 	if d.HasChange("name") {
 		name := d.Get("name").(string)
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err := postgresqlService.ModifyPostgresqlInstanceName(ctx, instanceId, name)
-			if err != nil {
-				return retryError(err)
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr = postgresqlService.ModifyPostgresqlInstanceName(ctx, instanceId, name)
+			if inErr != nil {
+				return retryError(inErr)
 			}
 			return nil
 		})
-		if err != nil {
-			return err
+		if outErr != nil {
+			return outErr
 		}
 		//check update public service done
-		err = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
-		if err != nil {
-			return err
+		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+		if checkErr != nil {
+			return checkErr
 		}
 		d.SetPartial("name")
 	}
@@ -314,20 +320,20 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	if d.HasChange("memory") || d.HasChange("storage") {
 		memory := d.Get("memory").(int)
 		storage := d.Get("storage").(int)
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err := postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage)
-			if err != nil {
-				return retryError(err)
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr = postgresqlService.UpgradePostgresqlInstance(ctx, instanceId, memory, storage)
+			if inErr != nil {
+				return retryError(inErr)
 			}
 			return nil
 		})
-		if err != nil {
-			return err
+		if outErr != nil {
+			return outErr
 		}
 		//check update public service done
-		err = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
-		if err != nil {
-			return err
+		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+		if checkErr != nil {
+			return checkErr
 		}
 		d.SetPartial("memory")
 		d.SetPartial("storage")
@@ -336,21 +342,21 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	//update project id
 	if d.HasChange("project_id") {
 		projectId := d.Get("project_id").(int)
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err := postgresqlService.ModifyPostgresqlInstanceProjectId(ctx, instanceId, projectId)
-			if err != nil {
-				return retryError(err)
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr = postgresqlService.ModifyPostgresqlInstanceProjectId(ctx, instanceId, projectId)
+			if inErr != nil {
+				return retryError(inErr)
 			}
 			return nil
 		})
-		if err != nil {
-			return err
+		if outErr != nil {
+			return outErr
 		}
 
 		//check update project id done
-		err = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
-		if err != nil {
-			return err
+		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+		if checkErr != nil {
+			return checkErr
 		}
 		d.SetPartial("project_id")
 	}
@@ -361,20 +367,20 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if v, ok := d.GetOkExists("public_access_switch"); ok {
 			public_access_switch = v.(bool)
 		}
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err := postgresqlService.ModifyPublicService(ctx, public_access_switch, instanceId)
-			if err != nil {
-				return retryError(err)
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr = postgresqlService.ModifyPublicService(ctx, public_access_switch, instanceId)
+			if inErr != nil {
+				return retryError(inErr)
 			}
 			return nil
 		})
-		if err != nil {
-			return err
+		if outErr != nil {
+			return outErr
 		}
 		//check update public service done
-		err = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
-		if err != nil {
-			return err
+		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+		if checkErr != nil {
+			return checkErr
 		}
 		d.SetPartial("public_access_switch")
 	}
@@ -382,20 +388,20 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	//update root password
 	if d.HasChange("root_password") {
 		//to avoid other updating process conflicts with updating password, set the password updating with the last step, there is no way to figure out whether changing password is done
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err := postgresqlService.SetPostgresqlInstanceRootPassword(ctx, instanceId, d.Get("root_password").(string))
-			if err != nil {
-				return retryError(err)
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr = postgresqlService.SetPostgresqlInstanceRootPassword(ctx, instanceId, d.Get("root_password").(string))
+			if inErr != nil {
+				return retryError(inErr)
 			}
 			return nil
 		})
-		if err != nil {
-			return err
+		if outErr != nil {
+			return outErr
 		}
 		//check update password done
-		err = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
-		if err != nil {
-			return err
+		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+		if checkErr != nil {
+			return checkErr
 		}
 		d.SetPartial("root_password")
 	}
@@ -410,19 +416,20 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	var outErr, inErr error
 	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
-	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			instance, has, err = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
-			if err != nil {
-				return retryError(err)
+	instance, has, outErr := postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+	if outErr != nil {
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			instance, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+			if inErr != nil {
+				return retryError(inErr)
 			}
 			return nil
 		})
 	}
-	if err != nil {
-		return err
+	if outErr != nil {
+		return outErr
 	}
 	if !has {
 		d.SetId("")
@@ -435,27 +442,33 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("engine_version", instance.DBVersion)
 	_ = d.Set("name", instance.DBInstanceName)
-	_ = d.Set("charge_type", instance.PayType)
 	_ = d.Set("charset", instance.DBCharset)
 
+	if *instance.PayType == POSTGRESQL_PAYTYPE_PREPAID {
+		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
+	} else {
+		_ = d.Set("charge_type", COMMON_PAYTYPE_POSTPAID)
+	}
 	//net status
 	public_access_switch := false
 	if len(instance.DBInstanceNetInfo) > 0 {
 		for _, v := range instance.DBInstanceNetInfo {
+
 			if *v.NetType == "public" {
-				if *v.Status == "opened" {
+				//both 1 and opened used in SDK
+				if *v.Status == "opened" || *v.Status == "1" {
 					public_access_switch = true
 				}
 				_ = d.Set("public_access_host", v.Address)
 				_ = d.Set("public_access_port", v.Port)
 			}
-			if *v.NetType == "inner" {
-				_ = d.Set("inner_access_ip", v.Ip)
-				_ = d.Set("inner_access_port", v.Port)
+			if *v.NetType == "private" {
+				_ = d.Set("private_access_ip", v.Ip)
+				_ = d.Set("private_access_port", v.Port)
 			}
 		}
 	}
-	_ = d.Set("public_access_host", public_access_switch)
+	_ = d.Set("public_access_switch", public_access_switch)
 
 	//computed
 	_ = d.Set("create_time", instance.CreateTime)
@@ -477,45 +490,46 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 	instanceId := d.Id()
 	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
+	var outErr, inErr, checkErr error
 	//check status
-	err := postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
 
-	if err != nil {
-		return err
+	if checkErr != nil {
+		return checkErr
 	}
 
-	err = postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
+	outErr = postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
 
-	if err != nil {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err = postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
-			if err != nil {
-				return retryError(err)
+	if outErr != nil {
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr = postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
+			if inErr != nil {
+				return retryError(inErr)
 			}
 			return nil
 		})
 	}
 
-	if err != nil {
-		return err
+	if outErr != nil {
+		return outErr
 	}
 
-	_, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
-	if err != nil || has {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, has, err = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
-			if err != nil {
-				return retryError(err)
+	_, has, outErr := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
+	if outErr != nil || has {
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			_, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+			if inErr != nil {
+				return retryError(inErr)
 			}
 			if has {
-				err = fmt.Errorf("delete postgresql instance %s fail, instance still exists from SDK DescribePostgresqlInstanceById", instanceId)
-				return resource.RetryableError(err)
+				inErr = fmt.Errorf("delete postgresql instance %s fail, instance still exists from SDK DescribePostgresqlInstanceById", instanceId)
+				return resource.RetryableError(inErr)
 			}
 			return nil
 		})
 	}
-	if err != nil {
-		return err
+	if outErr != nil {
+		return outErr
 	}
 	return nil
 }

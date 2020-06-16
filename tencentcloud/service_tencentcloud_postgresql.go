@@ -27,17 +27,17 @@ func (me *PostgresqlService) CreatePostgresqlInstance(ctx context.Context, name 
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.Name = helper.String(name)
-	request.DBVersion = helper.String(dbVersion)
-	request.InstanceChargeType = helper.String(chargeType)
-	request.SpecCode = helper.String(specCode)
+	request.Name = &name
+	request.DBVersion = &dbVersion
+	request.InstanceChargeType = &chargeType
+	request.SpecCode = &specCode
 	request.AutoRenewFlag = helper.IntInt64(autoRenewFlag)
 	request.ProjectId = helper.Int64(int64(projectId))
 	request.Period = helper.Int64Uint64(int64(period))
-	request.SubnetId = helper.String(subnetId)
-	request.VpcId = helper.String(vpcId)
+	request.SubnetId = &subnetId
+	request.VpcId = &vpcId
 	request.Storage = helper.IntUint64(storage)
-	request.Zone = helper.String(zone)
+	request.Zone = &zone
 	request.InstanceCount = helper.Int64Uint64(1)
 
 	ratelimit.Check(request.GetAction())
@@ -68,9 +68,9 @@ func (me *PostgresqlService) InitPostgresqlInstance(ctx context.Context, instanc
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.Charset = helper.String(charset)
+	request.Charset = &charset
 	request.AdminName = helper.String("root")
-	request.AdminPassword = helper.String(password)
+	request.AdminPassword = &password
 	request.DBInstanceIdSet = []*string{&instanceId}
 
 	ratelimit.Check(request.GetAction())
@@ -91,7 +91,7 @@ func (me *PostgresqlService) InitPostgresqlInstance(ctx context.Context, instanc
 	return
 }
 
-func (me *PostgresqlService) DescribeSpecCodes(ctx context.Context, zone string) (specCodeList []*postgresql.SpecItemInfo, errRet error) {
+func (me *PostgresqlService) DescribeSpecinfos(ctx context.Context, zone string) (specCodeList []*postgresql.SpecItemInfo, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewDescribeProductConfigRequest()
 	defer func() {
@@ -99,7 +99,7 @@ func (me *PostgresqlService) DescribeSpecCodes(ctx context.Context, zone string)
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.Zone = helper.String(zone)
+	request.Zone = &zone
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UsePostgresqlClient().DescribeProductConfig(request)
@@ -107,8 +107,9 @@ func (me *PostgresqlService) DescribeSpecCodes(ctx context.Context, zone string)
 		errRet = err
 		return
 	}
-	if response == nil || response.Response == nil {
+	if response == nil || response.Response == nil || len(response.Response.SpecInfoList) == 0 {
 		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
 	}
 
 	specCodeList = response.Response.SpecInfoList[0].SpecItemInfoList
@@ -125,7 +126,7 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 
 	if openInternet {
 		request := postgresql.NewOpenDBExtranetAccessRequest()
-		request.DBInstanceId = helper.String(instanceId)
+		request.DBInstanceId = &instanceId
 		ratelimit.Check(request.GetAction())
 
 		response, err := me.client.UsePostgresqlClient().OpenDBExtranetAccess(request)
@@ -137,82 +138,79 @@ func (me *PostgresqlService) ModifyPublicService(ctx context.Context, openIntern
 			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 		}
 
-		/*
-			time.Sleep(10 * time.Second)
-
-			//get instance internet status
+		//check open or not
+		err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 			instance, has, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
 			if err != nil {
-				return err
-			}
-			if !has {
-				errRet = fmt.Errorf("describe postgresql instance error %s", instanceId)
-				return
-			}
-			for _, v := range instance.DBInstanceNetInfo {
-				if *v.NetType == "public" {
-					if *v.Status == "opening" { //const
-
-						//sleep and retry
-					} else if *v.Status == "opened" {
-						return nil
-					} else {
-						err = fmt.Errorf("open public accress failed ,instance Id %s,  status %s", instanceId, *v.Status)
-						return err
+				return retryError(err)
+			} else if has {
+				if len(instance.DBInstanceNetInfo) > 0 {
+					for _, v := range instance.DBInstanceNetInfo {
+						if *v.NetType == "public" {
+							if *v.Status == "opened" || *v.Status == "1" {
+								return nil
+							} else if *v.Status == "opening" || *v.Status == "initing" || *v.Status == "3" || *v.Status == "0" {
+								return resource.RetryableError(fmt.Errorf("status %s, postgresql instance %s waiting", *v.Status, instanceId))
+							} else {
+								return resource.NonRetryableError(fmt.Errorf("status %s, postgresql instance %s open public service fail", *v.Status, instanceId))
+							}
+						}
 					}
+					//there is no public service yet
+					return resource.RetryableError(fmt.Errorf("cannot find public status, postgresql instance %s watiting", instanceId))
 				} else {
-					continue
+					return resource.NonRetryableError(fmt.Errorf("illegal net info of postgresql instance %s", instanceId))
 				}
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("check postgresql instance %s fail, instance is not exist", instanceId))
 			}
-			//get no public access
-			err = fmt.Errorf("There is no public access with posgresql instance %s", instanceId)
+		})
+		if err != nil {
 			return err
-		*/
+		}
 
 	} else {
 		request := postgresql.NewCloseDBExtranetAccessRequest()
-		request.DBInstanceId = helper.String(instanceId)
+		request.DBInstanceId = &instanceId
 		ratelimit.Check(request.GetAction())
 
 		response, err := me.client.UsePostgresqlClient().CloseDBExtranetAccess(request)
 		if err != nil {
-			errRet = err
-			return
+			return err
 		}
 		if response == nil || response.Response == nil {
 			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 		}
-
-		/*
-			time.Sleep(10 * time.Second)
-			//get instance internet status
+		//check close or not
+		err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 			instance, has, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
 			if err != nil {
-				return err
-			}
-			if !has {
-				errRet = fmt.Errorf("describe postgresql instance error %s", instanceId)
-				return
-			}
-			for _, v := range instance.DBInstanceNetInfo {
-				if *v.NetType == "public" {
-					if *v.Status == "closing" { //const
-						//sleep and retry
-					} else if *v.Status == "closed" {
-						return nil
-					} else {
-						err = fmt.Errorf("close public accress failed ,instance Id %s,  status %s", instanceId, *v.Status)
-						return err
+				return retryError(err)
+			} else if has {
+				if len(instance.DBInstanceNetInfo) > 0 {
+					for _, v := range instance.DBInstanceNetInfo {
+						if *v.NetType == "public" {
+							if *v.Status == "closed" || *v.Status == "2" {
+								return nil
+							} else if *v.Status == "closing" || *v.Status == "4" {
+								return resource.RetryableError(fmt.Errorf("status %s, postgresql instance %s waiting", *v.Status, instanceId))
+							} else {
+								return resource.NonRetryableError(fmt.Errorf("status %s, postgresql instance %s open public service fail", *v.Status, instanceId))
+							}
+						}
 					}
+					//there is no public service
+					return nil
 				} else {
-					continue
+					return resource.NonRetryableError(fmt.Errorf("illegal net info of postgresql instance %s", instanceId))
 				}
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("check postgresql instance %s fail, instance is not exist", instanceId))
 			}
-			//get no public access
-			err = fmt.Errorf("There is no public access with posgresql instance %s", instanceId)
+		})
+		if err != nil {
 			return err
-
-		*/
+		}
 	}
 	return
 }
@@ -225,7 +223,7 @@ func (me *PostgresqlService) DescribePostgresqlInstanceById(ctx context.Context,
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.DBInstanceId = helper.String(instanceId)
+	request.DBInstanceId = &instanceId
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceAttribute(request)
@@ -294,8 +292,8 @@ func (me *PostgresqlService) ModifyPostgresqlInstanceName(ctx context.Context, i
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.DBInstanceId = helper.String(instanceId)
-	request.InstanceName = helper.String(name)
+	request.DBInstanceId = &instanceId
+	request.InstanceName = &name
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().ModifyDBInstanceName(request)
@@ -314,7 +312,7 @@ func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, inst
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.DBInstanceId = helper.String(instanceId)
+	request.DBInstanceId = &instanceId
 	request.Storage = helper.IntInt64(storage)
 	request.Memory = helper.IntInt64(memory)
 
@@ -373,7 +371,7 @@ func (me *PostgresqlService) DeletePostgresqlInstance(ctx context.Context, insta
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.DBInstanceId = helper.String(instanceId)
+	request.DBInstanceId = &instanceId
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().DestroyDBInstance(request)
@@ -391,9 +389,9 @@ func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Conte
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.DBInstanceId = helper.String(instanceId)
+	request.DBInstanceId = &instanceId
 	request.UserName = helper.String("root")
-	request.Password = helper.String(password)
+	request.Password = &password
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().ResetAccountPassword(request)
@@ -412,7 +410,7 @@ func (me *PostgresqlService) CheckDBInstanceStatus(ctx context.Context, instance
 		} else if has && *instance.DBInstanceStatus == POSTGRESQL_STAUTS_RUNNING {
 			return nil
 		} else if !has {
-			return resource.NonRetryableError(fmt.Errorf("check postgresql instance fail"))
+			return resource.NonRetryableError(fmt.Errorf("check postgresql instance %s fail", instanceId))
 		} else {
 			return resource.RetryableError(fmt.Errorf("checking postgresql instance %s , status %s ", instanceId, *instance.DBInstanceStatus))
 		}

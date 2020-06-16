@@ -14,7 +14,7 @@ resource "tencentcloud_subnet" "foo" {
 resource "tencentcloud_postgresql_instance" "example" {
   name              = "tf_postsql_instance_111"
   availability_zone = var.availability_zone
-  charge_type       = "postpaid"
+  charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.foo.id
   subnet_id         = tencentcloud_subnet.foo.id
   engine_version    = "9.3.5"
@@ -38,6 +38,6 @@ data "tencentcloud_postgresql_instances" "charge_example" {
   name = tencentcloud_postgresql_instance.example.name
 }
 
-data "tencentcloud_postgresql_speccodes" "example" {
+data "tencentcloud_postgresql_specinfos" "example" {
   availability_zone = var.availability_zone
 }
