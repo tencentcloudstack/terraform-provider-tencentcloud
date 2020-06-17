@@ -35,12 +35,12 @@ func dataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of the postgresql instance to be queey.",
+				Description: "Name of the postgresql instance to be query.",
 			},
 			"id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of the postgresql instance to be query.",
+				Description: "ID of the postgresql instance to be query.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,

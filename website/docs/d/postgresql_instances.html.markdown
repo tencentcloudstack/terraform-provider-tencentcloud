@@ -30,8 +30,8 @@ data "tencentcloud_postgresql_instances" "id" {
 
 The following arguments are supported:
 
-* `id` - (Optional) Name of the postgresql instance to be query.
-* `name` - (Optional) Name of the postgresql instance to be queey.
+* `id` - (Optional) ID of the postgresql instance to be query.
+* `name` - (Optional) Name of the postgresql instance to be query.
 * `project_id` - (Optional) Project id of the postgresql instance to be query.
 * `result_output_file` - (Optional) Used to save results.
 
