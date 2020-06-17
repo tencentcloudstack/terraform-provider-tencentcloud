@@ -203,6 +203,7 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 		listItem["public_access_switch"] = false
 		listItem["charset"] = v.DBCharset
 		listItem["public_access_host"] = ""
+
 		for _, netInfo := range v.DBInstanceNetInfo {
 			if *netInfo.NetType == "public" {
 				if *netInfo.Status == "opened" || *netInfo.Status == "1" {
@@ -211,12 +212,13 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 				listItem["public_access_host"] = netInfo.Address
 				listItem["public_access_port"] = netInfo.Port
 			}
-			if *netInfo.NetType == "private" {
+			if (*netInfo.NetType == "private" || *netInfo.NetType == "inner") && *netInfo.Ip != "" {
 				listItem["private_access_ip"] = netInfo.Ip
 				listItem["private_access_port"] = netInfo.Port
 			}
 		}
-		if *v.PayType == POSTGRESQL_PAYTYPE_PREPAID {
+
+		if *v.PayType == POSTGRESQL_PAYTYPE_PREPAID || *v.PayType == COMMON_PAYTYPE_PREPAID {
 			listItem["charge_type"] = COMMON_PAYTYPE_PREPAID
 		} else {
 			listItem["charge_type"] = COMMON_PAYTYPE_POSTPAID

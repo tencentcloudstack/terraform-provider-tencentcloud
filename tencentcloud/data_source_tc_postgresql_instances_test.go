@@ -45,9 +45,7 @@ default = "ap-guangzhou-2"
 resource "tencentcloud_postgresql_instance" "test" {
 name = "tf_postsql_instance"
 availability_zone = var.availability_zone
-charge_type = "postpaid"
-vpc_id                   = "` + defaultVpcId + `"
-subnet_id = "subnet-pyio7yog"
+charge_type = "POSTPAID_BY_HOUR"
 engine_version		= "9.3.5"
 root_password                 = "1qaA2k1wgvfa3ZZZ"
 charset = "UTF8"

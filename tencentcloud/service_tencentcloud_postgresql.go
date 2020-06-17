@@ -81,11 +81,6 @@ func (me *PostgresqlService) InitPostgresqlInstance(ctx context.Context, instanc
 	if response == nil || response.Response == nil {
 		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 	}
-	if len(response.Response.DBInstanceIdSet) == 0 {
-		errRet = errors.New("TencentCloud SDK returns empty postgresql instance ID")
-	} else if len(response.Response.DBInstanceIdSet) > 1 {
-		errRet = errors.New("TencentCloud SDK returns more than one postgresql instance ID")
-	}
 
 	return
 }

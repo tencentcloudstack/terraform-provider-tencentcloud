@@ -57,7 +57,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 			"charge_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				Default:      POSTGRESQL_PAYTYPE_POSTPAID,
+				Default:      COMMON_PAYTYPE_POSTPAID,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(POSTGRESQL_PAYTYPE),
 				Description:  "Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.",
@@ -186,11 +186,14 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	var period = 1
 	//the sdk asks to set value with 1 when paytype is postpaid
 
-	if payType == COMMON_PAYTYPE_PREPAID {
-		payType = POSTGRESQL_PAYTYPE_PREPAID
-	} else {
-		payType = POSTGRESQL_PAYTYPE_POSTPAID
-	}
+	/*
+		if payType == COMMON_PAYTYPE_PREPAID {
+			payType = POSTGRESQL_PAYTYPE_PREPAID
+		} else {
+			payType = POSTGRESQL_PAYTYPE_POSTPAID
+		}
+
+	*/
 
 	var instanceId string
 	var outErr, inErr error
@@ -443,12 +446,14 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("engine_version", instance.DBVersion)
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("charset", instance.DBCharset)
+	_ = d.Set("charge_type", instance.PayType)
 
-	if *instance.PayType == POSTGRESQL_PAYTYPE_PREPAID {
+	if *instance.PayType == POSTGRESQL_PAYTYPE_PREPAID || *instance.PayType == COMMON_PAYTYPE_PREPAID {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
 	} else {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_POSTPAID)
 	}
+
 	//net status
 	public_access_switch := false
 	if len(instance.DBInstanceNetInfo) > 0 {
@@ -462,7 +467,8 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 				_ = d.Set("public_access_host", v.Address)
 				_ = d.Set("public_access_port", v.Port)
 			}
-			if *v.NetType == "private" {
+			//private or inner will not appear at same time, private for instance with vpc
+			if (*v.NetType == "private" || *v.NetType == "inner") && *v.Ip != "" {
 				_ = d.Set("private_access_ip", v.Ip)
 				_ = d.Set("private_access_port", v.Port)
 			}
