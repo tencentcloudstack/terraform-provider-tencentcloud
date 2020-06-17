@@ -26,8 +26,6 @@ postgresql instance can be imported using the id, e.g.
 ```
 $ terraform import tencentcloud_postgresql_instance.foo postgres-cda1iex1
 ```
-
-```
 */
 package tencentcloud
 
