@@ -61,7 +61,7 @@ func dataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the postgresql instance.",
+							Description: "ID of the postgresql instance.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -81,7 +81,7 @@ func dataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 						"engine_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Version of the postgresql db engine.",
+							Description: "Version of the postgresql database engine.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,

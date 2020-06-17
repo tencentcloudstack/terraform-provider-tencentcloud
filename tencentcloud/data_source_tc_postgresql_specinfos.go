@@ -56,9 +56,9 @@ func dataSourceTencentCloudPostgresqlSpecinfos() *schema.Resource {
 						"storage_max": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The max volume size(in GB).",
+							Description: "The maximum volume size(in GB).",
 						},
-						"cpu_number": {
+						"cpu": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "The CPU number of the postgresql instance.",
@@ -111,7 +111,7 @@ func dataSourceTencentCloudPostgresqlSpecinfosRead(d *schema.ResourceData, meta 
 		listItem["memory"] = v.Memory
 		listItem["storage_min"] = v.MinStorage
 		listItem["storage_max"] = v.MaxStorage
-		listItem["cpu_number"] = v.Cpu
+		listItem["cpu"] = v.Cpu
 		listItem["qps"] = v.Qps
 		listItem["version"] = v.Version
 		listItem["version_name"] = v.VersionName

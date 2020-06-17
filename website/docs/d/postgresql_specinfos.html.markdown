@@ -30,11 +30,11 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list of zones will be exported and its every element contains the following attributes:
-  * `cpu_number` - The CPU number of the postgresql instance.
+  * `cpu` - The CPU number of the postgresql instance.
   * `id` - Id of the speccode of the postgresql instance. This parameter is used as `spec_code` for the creation of postgresql instance.
   * `memory` - Memory size(in MB).
   * `qps` - The QPS of the postgresql instance.
-  * `storage_max` - The max volume size(in GB).
+  * `storage_max` - The maximum volume size(in GB).
   * `storage_min` - The minimum volume size(in GB).
   * `version_name` - The version name of the postgresql instance.
   * `version` - The version of the postgresql instance.

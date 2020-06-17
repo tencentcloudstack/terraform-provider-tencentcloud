@@ -68,7 +68,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(POSTSQL_DB_VERSION),
 				Default:      POSTSQL_DB_VERSION[len(POSTSQL_DB_VERSION)-1],
-				Description:  "Version of the postgresql engine. Allowed values are `9.3.5`, `9.5.4`, `10.4`.",
+				Description:  "Version of the postgresql database engine. Allowed values are `9.3.5`, `9.5.4`, `10.4`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,

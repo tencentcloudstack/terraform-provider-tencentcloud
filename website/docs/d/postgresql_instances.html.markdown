@@ -45,8 +45,8 @@ In addition to all arguments above, the following attributes are exported:
   * `charge_type` - Pay type of the postgresql instance.
   * `charset` - Charset of the postgresql instance.
   * `create_time` - Create time of the postgresql instance.
-  * `engine_version` - Version of the postgresql db engine.
-  * `id` - Id of the postgresql instance.
+  * `engine_version` - Version of the postgresql database engine.
+  * `id` - ID of the postgresql instance.
   * `memory` - Memory size (in MB).
   * `name` - Name of the postgresql instance.
   * `private_access_ip` - Ip address for private access.

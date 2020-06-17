@@ -25,7 +25,7 @@ The following arguments are supported:
 * `availability_zone` - (Optional, ForceNew) Availability zone.
 * `charge_type` - (Optional, ForceNew) Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.
 * `charset` - (Optional, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
-* `engine_version` - (Optional, ForceNew) Version of the postgresql engine. Allowed values are `9.3.5`, `9.5.4`, `10.4`.
+* `engine_version` - (Optional, ForceNew) Version of the postgresql database engine. Allowed values are `9.3.5`, `9.5.4`, `10.4`.
 * `memory` - (Optional) Memory size (in MB).
 * `project_id` - (Optional) Project ID, default value is 0.
 * `public_access_switch` - (Optional) Indicates whether to enable the access to an instance from public network or not.
