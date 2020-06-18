@@ -67,7 +67,7 @@ type TencentCloudClient struct {
 	monitorConn   *monitor.Client
 	esConn        *es.Client
 	sqlserverConn *sqlserver.Client
-  postgreConn *postgre.Client
+	postgreConn   *postgre.Client
 }
 
 // NewClientProfile returns a new ClientProfile
