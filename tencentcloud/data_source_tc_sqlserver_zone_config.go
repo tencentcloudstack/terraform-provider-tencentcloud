@@ -62,12 +62,12 @@ func dataSourceTencentSqlserverZoneConfig() *schema.Resource {
 									"db_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Database version information. Valid values: 2008R2 (SQL Server 2008 Enterprise), 2012SP3 (SQL Server 2012 Enterprise), 2016SP1 (SQL Server 2016 Enterprise), 201602 (SQL Server 2016 Standard), 2017 (SQL Server 2017 Enterprise).",
+										Description: "Database version information. Valid values: `2008R2 (SQL Server 2008 Enterprise)`, `2012SP3 (SQL Server 2012 Enterprise)`, `2016SP1 (SQL Server 2016 Enterprise)`, `201602 (SQL Server 2016 Standard)`, `2017 (SQL Server 2017 Enterprise)`.",
 									},
 									"db_version_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Version name corresponding to the db_version field.",
+										Description: "Version name corresponding to the `db_version` field.",
 									},
 									"memory": {
 										Type:        schema.TypeInt,
@@ -97,7 +97,7 @@ func dataSourceTencentSqlserverZoneConfig() *schema.Resource {
 									"charge_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Billing mode under this specification. Invalid values are POSTPAID_BY_HOUR, PREPAID and ALL, means both POSTPAID_BY_HOUR and PREPAID.",
+										Description: "Billing mode under this specification. Valid values are `POSTPAID_BY_HOUR`, `PREPAID` and `ALL` which means both POSTPAID_BY_HOUR and PREPAID.",
 									},
 								},
 							},
