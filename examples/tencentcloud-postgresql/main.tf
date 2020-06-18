@@ -20,7 +20,6 @@ resource "tencentcloud_postgresql_instance" "example" {
   engine_version    = "9.3.5"
   root_password     = "1qaA2k1wgvfa3ZZZ"
   charset           = "UTF8"
-  spec_code         = "cdb.pg.z1.2g"
   project_id        = 0
   memory            = 2
   storage           = 10
@@ -34,7 +33,7 @@ data "tencentcloud_postgresql_instances" "project_example" {
   project_id = 0
 }
 
-data "tencentcloud_postgresql_instances" "charge_example" {
+data "tencentcloud_postgresql_instances" "name_example" {
   name = tencentcloud_postgresql_instance.example.name
 }
 

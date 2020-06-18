@@ -12,7 +12,21 @@ Use this resource to create postgresql instance
 
 ## Example Usage
 
-
+```hcl
+resource "tencentcloud_postgresql_instance" "foo" {
+  name              = "example"
+  availability_zone = var.availability_zone
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = "vpc-409mvdvv"
+  subnet_id         = "subnet-nf9n81ps"
+  engine_version    = "9.3.5"
+  root_password     = "1qaA2k1wgvfa3ZZZ"
+  charset           = "UTF8"
+  project_id        = 0
+  memory            = 2
+  storage           = 100
+}
+```
 
 ## Argument Reference
 

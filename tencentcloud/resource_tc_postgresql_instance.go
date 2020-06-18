@@ -13,11 +13,11 @@ resource "tencentcloud_postgresql_instance" "foo" {
   engine_version		= "9.3.5"
   root_password                 = "1qaA2k1wgvfa3ZZZ"
   charset = "UTF8"
-  spec_code = "cdb.pg.z1.2g"
   project_id = 0
   memory = 2
   storage = 100
 }
+```
 
 Import
 
