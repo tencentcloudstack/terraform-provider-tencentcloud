@@ -27,6 +27,7 @@ import (
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
+	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
@@ -42,30 +43,31 @@ type TencentCloudClient struct {
 	Protocol   string
 	Domain     string
 
-	cosConn     *s3.S3
-	mysqlConn   *cdb.Client
-	redisConn   *redis.Client
-	asConn      *as.Client
-	vpcConn     *vpc.Client
-	cbsConn     *cbs.Client
-	cvmConn     *cvm.Client
-	clbConn     *clb.Client
-	dayuConn    *dayu.Client
-	dcConn      *dc.Client
-	tagConn     *tag.Client
-	mongodbConn *mongodb.Client
-	tkeConn     *tke.Client
-	camConn     *cam.Client
-	stsConn     *sts.Client
-	gaapConn    *gaap.Client
-	sslConn     *ssl.Client
-	cfsConn     *cfs.Client
-	scfConn     *scf.Client
-	tcaplusConn *tcaplusdb.Client
-	cdnConn     *cdn.Client
-	monitorConn *monitor.Client
-	esConn      *es.Client
-	postgreConn *postgre.Client
+	cosConn       *s3.S3
+	mysqlConn     *cdb.Client
+	redisConn     *redis.Client
+	asConn        *as.Client
+	vpcConn       *vpc.Client
+	cbsConn       *cbs.Client
+	cvmConn       *cvm.Client
+	clbConn       *clb.Client
+	dayuConn      *dayu.Client
+	dcConn        *dc.Client
+	tagConn       *tag.Client
+	mongodbConn   *mongodb.Client
+	tkeConn       *tke.Client
+	camConn       *cam.Client
+	stsConn       *sts.Client
+	gaapConn      *gaap.Client
+	sslConn       *ssl.Client
+	cfsConn       *cfs.Client
+	scfConn       *scf.Client
+	tcaplusConn   *tcaplusdb.Client
+	cdnConn       *cdn.Client
+	monitorConn   *monitor.Client
+	esConn        *es.Client
+	sqlserverConn *sqlserver.Client
+  postgreConn *postgre.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -412,4 +414,17 @@ func (me *TencentCloudClient) UsePostgresqlClient() *postgre.Client {
 	me.postgreConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.postgreConn
+}
+
+// UseSqlserverClient returns sqlserver client for service
+func (me *TencentCloudClient) UseSqlserverClient() *sqlserver.Client {
+	if me.sqlserverConn != nil {
+		return me.sqlserverConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.sqlserverConn, _ = sqlserver.NewClient(me.Credential, me.Region, cpf)
+	me.sqlserverConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.sqlserverConn
 }

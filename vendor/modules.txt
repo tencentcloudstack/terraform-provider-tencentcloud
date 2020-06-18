@@ -544,6 +544,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823

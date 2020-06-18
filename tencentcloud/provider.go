@@ -311,6 +311,10 @@ Serverless Cloud Function(SCF)
     tencentcloud_scf_function
     tencentcloud_scf_namespace
 
+SQLServer
+  Data Source
+    tencentcloud_sqlserver_zone_config
+
 SSL Certificates
   Data Source
     tencentcloud_ssl_certificates
@@ -592,6 +596,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_elasticsearch_instances":      dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":         dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":         dataSourceTencentCloudPostgresqlSpecinfos(),
+			"tencentcloud_sqlserver_zone_config":        dataSourceTencentSqlserverZoneConfig(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
