@@ -18,15 +18,14 @@ Use this resource to create postgresql instance
 
 The following arguments are supported:
 
+* `memory` - (Required) Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.
 * `name` - (Required) Name of the postgresql instance.
 * `root_password` - (Required) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
-* `spec_code` - (Required, ForceNew) The id of specification of the postgresql instance, like `cdb.pg.z1.2g`, which can be queried with data source `tencentcloud_postgresql_specinfos`.
-* `storage` - (Required) Disk size (in GB). Allowed value is range from 10 to 1000, and the value must be a multiple of 10.
+* `storage` - (Required) Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_postgresql_specinfos` provides.
 * `availability_zone` - (Optional, ForceNew) Availability zone.
 * `charge_type` - (Optional, ForceNew) Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.
 * `charset` - (Optional, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
 * `engine_version` - (Optional, ForceNew) Version of the postgresql database engine. Allowed values are `9.3.5`, `9.5.4`, `10.4`.
-* `memory` - (Optional) Memory size (in MB).
 * `project_id` - (Optional) Project ID, default value is 0.
 * `public_access_switch` - (Optional) Indicates whether to enable the access to an instance from public network or not.
 * `subnet_id` - (Optional, ForceNew) ID of subnet.

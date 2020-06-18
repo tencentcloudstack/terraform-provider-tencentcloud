@@ -27,9 +27,8 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "vpc_id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "subnet_id"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "memory", "2"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "memory", "4"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "storage", "100"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "spec_code", "cdb.pg.z1.2g"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "project_id", "0"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "create_time"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "public_access_switch", "false"),
@@ -57,7 +56,6 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "subnet_id"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "memory", "4"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "storage", "250"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "spec_code", "cdb.pg.z1.2g"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "create_time"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "project_id", "1154137"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "public_access_switch", "true"),
@@ -138,10 +136,9 @@ resource "tencentcloud_postgresql_instance" "test" {
   subnet_id = "subnet-pyio7yog"
   engine_version		= "9.3.5"
   root_password                 = "1qaA2k1wgvfa3ZZZ"
-  charset = "UTF8"
-  spec_code = "cdb.pg.z1.2g"
+  charset = "LATIN1"
   project_id = 0
-  memory = 2
+  memory = 4
   storage = 100
 }
 `
@@ -155,8 +152,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   subnet_id = "subnet-pyio7yog"
   engine_version		= "9.3.5"
   root_password                 = "1qaA2k1wgvfa3ZZZZ"
-  charset = "UTF8"
-  spec_code = "cdb.pg.z1.2g"
+  charset = "LATIN1"
   project_id = 1154137
   public_access_switch = true
   memory = 4

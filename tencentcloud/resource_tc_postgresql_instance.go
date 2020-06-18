@@ -85,13 +85,12 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 			"storage": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Disk size (in GB). Allowed value is range from 10 to 1000, and the value must be a multiple of 10.",
+				Description: "Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_postgresql_specinfos` provides.",
 			},
 			"memory": {
 				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "Memory size (in MB).",
+				Required:    true,
+				Description: "Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -105,12 +104,6 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Availability zone.",
-			},
-			"spec_code": {
-				Type:        schema.TypeString,
-				ForceNew:    true,
-				Required:    true,
-				Description: "The id of specification of the postgresql instance, like `cdb.pg.z1.2g`, which can be queried with data source `tencentcloud_postgresql_specinfos`.",
 			},
 			"root_password": {
 				Type:         schema.TypeString,
@@ -175,28 +168,41 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		name      = d.Get("name").(string)
 		dbVersion = d.Get("engine_version").(string)
 		payType   = d.Get("charge_type").(string)
-		specCode  = d.Get("spec_code").(string)
 		projectId = d.Get("project_id").(int)
 		subnetId  = d.Get("subnet_id").(string)
 		vpcId     = d.Get("vpc_id").(string)
 		zone      = d.Get("availability_zone").(string)
 		storage   = d.Get("storage").(int)
+		memory    = d.Get("memory").(int)
 	)
 
 	var period = 1
 	//the sdk asks to set value with 1 when paytype is postpaid
 
-	/*
-		if payType == COMMON_PAYTYPE_PREPAID {
-			payType = POSTGRESQL_PAYTYPE_PREPAID
-		} else {
-			payType = POSTGRESQL_PAYTYPE_POSTPAID
-		}
-
-	*/
-
-	var instanceId string
+	var instanceId, specCode string
 	var outErr, inErr error
+
+	//get speccode with engine_version and memory
+	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone)
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		for _, info := range speccodes {
+			if *info.Version == dbVersion && int(*info.Memory) == 1024*memory {
+				specCode = *info.SpecCode
+				break
+			}
+		}
+		return nil
+	})
+	if outErr != nil {
+		return outErr
+	}
+
+	if specCode == "" {
+		return fmt.Errorf("there is no legal speccode matched with engine_version %s and memory %d matched, please check again", dbVersion, memory)
+	}
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		instanceId, inErr = postgresqlService.CreatePostgresqlInstance(ctx, name, dbVersion, payType, specCode, 0, projectId, period, subnetId, vpcId, zone, storage)
@@ -215,6 +221,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		if err != nil {
 			return retryError(err)
 		} else if has && *instance.DBInstanceStatus == "init" {
+			memory = int(*instance.DBInstanceMemory)
 			return nil
 		} else if !has {
 			return resource.NonRetryableError(fmt.Errorf("create postgresql instance fail"))
