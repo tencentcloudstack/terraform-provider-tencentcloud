@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"log"
 
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
@@ -23,8 +24,18 @@ func (me *SqlserverService) DescribeZones(ctx context.Context) (zoneInfoList []*
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseSqlserverClient().DescribeZones(request)
+
+	var response *sqlserver.DescribeZonesResponse
+	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseSqlserverClient().DescribeZones(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s DescribeZones fail, reason:%s\n", logId, e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
@@ -46,8 +57,18 @@ func (me *SqlserverService) DescribeProductConfig(ctx context.Context, zone stri
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseSqlserverClient().DescribeProductConfig(request)
+
+	var response *sqlserver.DescribeProductConfigResponse
+	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseSqlserverClient().DescribeProductConfig(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s DescribeProductConfig fail, reason:%s\n", logId, e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return

@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_sqlserver_zone_config"
 sidebar_current: "docs-tencentcloud-datasource-sqlserver_zone_config"
 description: |-
-  Use this data source to query purchasable specification configuration for each availability zone in this specific region. And a maximum of 20 requests can be initiated per second for this query.
+  Use this data source to query purchasable specification configuration for each availability zone in this specific region.
 ---
 
 # tencentcloud_sqlserver_zone_config
 
-Use this data source to query purchasable specification configuration for each availability zone in this specific region. And a maximum of 20 requests can be initiated per second for this query.
+Use this data source to query purchasable specification configuration for each availability zone in this specific region.
 
 ## Example Usage
 
@@ -30,7 +30,7 @@ In addition to all arguments above, the following attributes are exported:
 * `zone_list` - A list of availability zones. Each element contains the following attributes:
   * `availability_zone` - Alphabet ID of availability zone.
   * `specinfo_list` - A list of specinfo configurations for the specific availability zone. Each element contains the following attributes:
-    * `charge_type` - Billing mode under this specification. POST: pay-as-you-go, PRE: pay-before-you-go, ALL: both POST and PRE.
+    * `charge_type` - Billing mode under this specification. Invalid values are POSTPAID_BY_HOUR, PREPAID and ALL, means both POSTPAID_BY_HOUR and PREPAID.
     * `cpu` - Number of CPU cores.
     * `db_version_name` - Version name corresponding to the db_version field.
     * `db_version` - Database version information. Valid values: 2008R2 (SQL Server 2008 Enterprise), 2012SP3 (SQL Server 2012 Enterprise), 2016SP1 (SQL Server 2016 Enterprise), 201602 (SQL Server 2016 Standard), 2017 (SQL Server 2017 Enterprise).

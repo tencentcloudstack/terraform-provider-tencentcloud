@@ -1,5 +1,5 @@
 /*
-Use this data source to query purchasable specification configuration for each availability zone in this specific region. And a maximum of 20 requests can be initiated per second for this query.
+Use this data source to query purchasable specification configuration for each availability zone in this specific region.
 
 Example Usage
 
@@ -97,7 +97,7 @@ func dataSourceTencentSqlserverZoneConfig() *schema.Resource {
 									"charge_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Billing mode under this specification. POST: pay-as-you-go, PRE: pay-before-you-go, ALL: both POST and PRE.",
+										Description: "Billing mode under this specification. Invalid values are POSTPAID_BY_HOUR, PREPAID and ALL, means both POSTPAID_BY_HOUR and PREPAID.",
 									},
 								},
 							},
@@ -152,7 +152,7 @@ func dataSourceTencentSqlserverZoneConfigRead(d *schema.ResourceData, meta inter
 			specinfoConfig["min_storage_size"] = specinfoItem.MinStorage
 			specinfoConfig["max_storage_size"] = specinfoItem.MaxStorage
 			specinfoConfig["qps"] = specinfoItem.QPS
-			specinfoConfig["charge_type"] = specinfoItem.PayModeStatus
+			specinfoConfig["charge_type"] = SQLSERVER_CHARGE_TYPE_NAME[*specinfoItem.PayModeStatus]
 
 			specinfoConfigs = append(specinfoConfigs, specinfoConfig)
 		}
