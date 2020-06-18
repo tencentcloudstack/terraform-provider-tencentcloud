@@ -1,4 +1,9 @@
 ## 1.37.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_sqlserver_zone_config`
+
 ## 1.36.1 (June 12, 2020)
 
 ENHANCEMENTS:
