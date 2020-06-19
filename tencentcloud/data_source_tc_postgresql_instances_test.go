@@ -26,7 +26,7 @@ func TestAccTencentCloudDataPostgresqlInstances(t *testing.T) {
 					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.engine_version", "9.3.5"),
 					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.project_id", "0"),
 					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.memory", "2"),
-					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.storage", "100"),
+					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.storage", "10"),
 					resource.TestCheckResourceAttrSet(testDataPostgresqlInstancesName, "instance_list.0.private_access_ip"),
 					resource.TestCheckResourceAttrSet(testDataPostgresqlInstancesName, "instance_list.0.private_access_port"),
 					resource.TestCheckResourceAttrSet(testDataPostgresqlInstancesName, "instance_list.0.public_access_switch"),
@@ -51,7 +51,7 @@ root_password                 = "1qaA2k1wgvfa3ZZZ"
 charset = "UTF8"
 project_id = 0
 memory = 2
-storage = 100
+storage = 10
 }
 
 data "tencentcloud_postgresql_instances" "id_test"{

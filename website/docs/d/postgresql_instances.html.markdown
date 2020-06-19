@@ -47,15 +47,15 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - Create time of the postgresql instance.
   * `engine_version` - Version of the postgresql database engine.
   * `id` - ID of the postgresql instance.
-  * `memory` - Memory size (in MB).
+  * `memory` - Memory size(in GB).
   * `name` - Name of the postgresql instance.
-  * `private_access_ip` - Ip address for private access.
+  * `private_access_ip` - IP address for private access.
   * `private_access_port` - Port for private access.
-  * `project_id` - Project ID, default value is 0.
+  * `project_id` - Project id, default value is 0.
   * `public_access_host` - Host for public access.
   * `public_access_port` - Port for public access.
   * `public_access_switch` - Indicates whether to enable the access to an instance from public network or not.
-  * `storage` - Disk size (in GB).
+  * `storage` - Volume size(in GB).
   * `subnet_id` - ID of subnet.
   * `vpc_id` - ID of VPC.
 

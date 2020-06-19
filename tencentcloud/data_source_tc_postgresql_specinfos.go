@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_postgresql_specinfos" "foo"{
-	availability_zone = "ap-shanghai-2"
+  availability_zone = "ap-shanghai-2"
 }
 ```
 */
@@ -41,12 +41,12 @@ func dataSourceTencentCloudPostgresqlSpecinfos() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of the speccode of the postgresql instance. This parameter is used as `spec_code` for the creation of postgresql instance.",
+							Description: "ID of the postgresql instance speccode.",
 						},
 						"memory": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Memory size(in MB).",
+							Description: "Memory size(in GB).",
 						},
 						"storage_min": {
 							Type:        schema.TypeInt,
@@ -68,15 +68,15 @@ func dataSourceTencentCloudPostgresqlSpecinfos() *schema.Resource {
 							Computed:    true,
 							Description: "The QPS of the postgresql instance.",
 						},
-						"version": {
+						"engine_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The version of the postgresql instance.",
+							Description: "Version of the postgresql database engine.",
 						},
-						"version_name": {
+						"engine_version_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The version name of the postgresql instance.",
+							Description: "Version name of the postgresql database engine.",
 						},
 					},
 				},
@@ -87,6 +87,7 @@ func dataSourceTencentCloudPostgresqlSpecinfos() *schema.Resource {
 
 func dataSourceTencentCloudPostgresqlSpecinfosRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_postgresql_specinfos.read")()
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -104,27 +105,29 @@ func dataSourceTencentCloudPostgresqlSpecinfosRead(d *schema.ResourceData, meta 
 	}
 
 	list := make([]map[string]interface{}, 0, len(speccodes))
-
 	for _, v := range speccodes {
 		listItem := make(map[string]interface{})
 		listItem["id"] = v.SpecCode
-		listItem["memory"] = v.Memory
+		listItem["memory"] = *v.Memory / 1024
 		listItem["storage_min"] = v.MinStorage
 		listItem["storage_max"] = v.MaxStorage
 		listItem["cpu"] = v.Cpu
 		listItem["qps"] = v.Qps
-		listItem["version"] = v.Version
-		listItem["version_name"] = v.VersionName
+		listItem["engine_version"] = v.Version
+		listItem["engine_version_name"] = v.VersionName
 		list = append(list, listItem)
 	}
+
 	d.SetId("speccode." + zone)
 	if e := d.Set("list", list); e != nil {
 		log.Printf("[CRITAL]%s provider set list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
+
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		return writeToFile(output.(string), list)
 	}
+
 	return nil
 }

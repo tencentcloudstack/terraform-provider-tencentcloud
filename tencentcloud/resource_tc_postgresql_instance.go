@@ -1,5 +1,5 @@
 /*
-Use this resource to create postgresql instance
+Use this resource to create postgresql instance.
 
 Example Usage
 
@@ -15,7 +15,7 @@ resource "tencentcloud_postgresql_instance" "foo" {
   charset = "UTF8"
   project_id = 0
   memory = 2
-  storage = 100
+  storage = 10
 }
 ```
 
@@ -85,18 +85,18 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 			"storage": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_postgresql_specinfos` provides.",
+				Description: "Volume size(in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_postgresql_specinfos` provides.",
 			},
 			"memory": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.",
+				Description: "Memory size(in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
-				Description: "Project ID, default value is 0.",
+				Description: "Project id, default value is 0.",
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,
@@ -140,7 +140,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 			"private_access_ip": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Ip for private access.",
+				Description: "IP for private access.",
 			},
 			"private_access_port": {
 				Type:        schema.TypeInt,
@@ -420,7 +420,6 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta interface{}) error {
-
 	defer logElapsed("resource.tencentcloud_postgresql_instance.read")()
 
 	logId := getLogId(contextNil)
@@ -505,13 +504,11 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 	var outErr, inErr, checkErr error
 	//check status
 	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
-
 	if checkErr != nil {
 		return checkErr
 	}
 
 	outErr = postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
-
 	if outErr != nil {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			inErr = postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
@@ -543,5 +540,6 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 	if outErr != nil {
 		return outErr
 	}
+
 	return nil
 }
