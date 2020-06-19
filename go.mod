@@ -10,12 +10,12 @@ require (
 	github.com/fatih/color v1.9.0
 	github.com/golangci/golangci-lint v1.27.0
 	github.com/hashicorp/hcl/v2 v2.6.0
-	github.com/hashicorp/terraform-plugin-sdk v1.13.1
+	github.com/hashicorp/terraform-plugin-sdk v1.14.0
 	github.com/katbyte/terrafmt v0.2.0
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pkg/errors v0.9.1
-	github.com/tencentcloud/tencentcloud-sdk-go v3.0.189+incompatible
+	github.com/tencentcloud/tencentcloud-sdk-go v3.0.196+incompatible
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	github.com/zclconf/go-cty v1.4.2 // indirect
 	golang.org/x/sys v0.0.0-20200523222454-059865788121 // indirect
