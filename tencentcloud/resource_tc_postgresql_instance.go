@@ -5,17 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_postgresql_instance" "foo" {
-  name = "example"
+  name              = "example"
   availability_zone = var.availability_zone
-  charge_type = "POSTPAID_BY_HOUR"
-  vpc_id      = "vpc-409mvdvv"
-  subnet_id = "subnet-nf9n81ps"
-  engine_version		= "9.3.5"
-  root_password                 = "1qaA2k1wgvfa3ZZZ"
-  charset = "UTF8"
-  project_id = 0
-  memory = 2
-  storage = 10
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = "vpc-409mvdvv"
+  subnet_id         = "subnet-nf9n81ps"
+  engine_version    = "9.3.5"
+  root_password     = "1qaA2k1wgvfa3ZZZ"
+  charset           = "UTF8"
+  project_id        = 0
+  memory            = 2
+  storage           = 10
 }
 ```
 
@@ -32,6 +32,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -63,12 +64,11 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Description:  "Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.",
 			},
 			"engine_version": {
-				Type:         schema.TypeString,
-				ForceNew:     true,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(POSTSQL_DB_VERSION),
-				Default:      POSTSQL_DB_VERSION[len(POSTSQL_DB_VERSION)-1],
-				Description:  "Version of the postgresql database engine. Allowed values are `9.3.5`, `9.5.4`, `10.4`.",
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Default:     POSTSQL_DB_VERSION[len(POSTSQL_DB_VERSION)-1],
+				Description: "Version of the postgresql database engine. Allowed values are `9.3.5`, `9.5.4`, `10.4`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -179,19 +179,30 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	var period = 1
 	//the sdk asks to set value with 1 when paytype is postpaid
 
-	var instanceId, specCode string
+	var instanceId, specVersion, specCode string
 	var outErr, inErr error
+	var allowVersion, allowMemory []string
 
 	//get speccode with engine_version and memory
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		speccodes, inErr := postgresqlService.DescribeSpecinfos(ctx, zone)
 		if inErr != nil {
 			return retryError(inErr)
 		}
 		for _, info := range speccodes {
-			if *info.Version == dbVersion && int(*info.Memory) == 1024*memory {
-				specCode = *info.SpecCode
-				break
+			if !IsContains(allowVersion, *info.Version) {
+				allowVersion = append(allowVersion, *info.Version)
+			}
+			if *info.Version == dbVersion {
+				specVersion = *info.Version
+				memoryString := fmt.Sprintf("%d", int(*info.Memory)/1024)
+				if !IsContains(allowMemory, memoryString) {
+					allowMemory = append(allowMemory, memoryString)
+				}
+				if int(*info.Memory)/1024 == memory {
+					specCode = *info.SpecCode
+					break
+				}
 			}
 		}
 		return nil
@@ -200,8 +211,12 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return outErr
 	}
 
+	if specVersion == "" {
+		return fmt.Errorf(`The "engine_version" value: "%s" is invalid, Valid values are one of: "%s"`, dbVersion, strings.Join(allowVersion, `", "`))
+	}
+
 	if specCode == "" {
-		return fmt.Errorf("there is no legal speccode matched with engine_version %s and memory %d matched, please check again", dbVersion, memory)
+		return fmt.Errorf(`The "memory" value: %d is invalid, Valid values are one of: %s`, memory, strings.Join(allowMemory, `, `))
 	}
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {

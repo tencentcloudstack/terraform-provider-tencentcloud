@@ -5,16 +5,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_elasticsearch_instance" "foo" {
-  instance_name = "tf-test"
+  instance_name     = "tf-test"
   availability_zone = "ap-guangzhou-3"
-  version = "7.5.1"
-  vpc_id = var.vpc_id
-  subnet_id = var.subnet_id
-  password = "Test12345"
-  license_type = "oss"
+  version           = "7.5.1"
+  vpc_id            = var.vpc_id
+  subnet_id         = var.subnet_id
+  password          = "Test12345"
+  license_type      = "oss"
 
   node_info_list {
-    node_num = 2
+    node_num  = 2
     node_type = "ES.S1.SMALL2"
   }
 

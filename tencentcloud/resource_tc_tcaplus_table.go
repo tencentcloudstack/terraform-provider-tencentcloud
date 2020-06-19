@@ -54,16 +54,16 @@ resource "tencentcloud_tcaplus_idl" "main" {
 }
 
 resource "tencentcloud_tcaplus_table" "table" {
-  cluster_id         = tencentcloud_tcaplus_cluster.test.id
-  tablegroup_id      = tencentcloud_tcaplus_tablegroup.tablegroup.id
-  table_name         = "tb_online"
-  table_type         = "GENERIC"
-  description        = "test"
-  idl_id             = tencentcloud_tcaplus_idl.main.id
-  table_idl_type     = "PROTO"
-  reserved_read_cu   = 1000
-  reserved_write_cu  = 20
-  reserved_volume    = 1
+  cluster_id        = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_id     = tencentcloud_tcaplus_tablegroup.tablegroup.id
+  table_name        = "tb_online"
+  table_type        = "GENERIC"
+  description       = "test"
+  idl_id            = tencentcloud_tcaplus_idl.main.id
+  table_idl_type    = "PROTO"
+  reserved_read_cu  = 1000
+  reserved_write_cu = 20
+  reserved_volume   = 1
 }
 ```
 */
