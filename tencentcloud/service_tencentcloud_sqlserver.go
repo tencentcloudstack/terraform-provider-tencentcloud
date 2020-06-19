@@ -2,7 +2,12 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/pkg/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"log"
 
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
@@ -76,5 +81,274 @@ func (me *SqlserverService) DescribeProductConfig(ctx context.Context, zone stri
 	if response != nil && response.Response != nil {
 		specInfoList = response.Response.SpecInfoList
 	}
+	return
+}
+
+func (me *SqlserverService) CreateSqlserverInstance(ctx context.Context, dbVersion string, chargeType string, memory int, autoRenewFlag int, projectId int, period int, subnetId string, vpcId string, zone string, storage int) (instanceId string, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewCreateDBInstancesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.DBVersion = &dbVersion
+	request.InstanceChargeType = &chargeType
+	request.Memory = helper.IntInt64(memory)
+	request.Storage = helper.IntInt64(storage)
+	request.SubnetId = &subnetId
+	request.VpcId = &vpcId
+	request.AutoRenewFlag = helper.IntInt64(autoRenewFlag)
+	if projectId != 0 {
+		request.ProjectId = helper.IntInt64(projectId)
+	}
+
+	//request.Period = helper.IntInt64(period)
+	request.GoodsNum = helper.IntInt64(1)
+	request.Zone = &zone
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().CreateDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+	if len(response.Response.DealNames) == 0 {
+		errRet = errors.New("TencentCloud SDK returns empty postgresql ID")
+		return
+	} else if len(response.Response.DealNames) > 1 {
+		errRet = errors.New("TencentCloud SDK returns more than one postgresql ID")
+		return
+	}
+
+	dealId := *response.Response.DealNames[0]
+	instanceId, err = me.GetInfoFromDeal(ctx, dealId)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func (me *SqlserverService) ModifySqlserverInstanceName(ctx context.Context, instanceId string, name string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewModifyDBInstanceNameRequest()
+	request.InstanceId = &instanceId
+	request.InstanceName = &name
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().ModifyDBInstanceName(request)
+	return err
+}
+
+func (me *SqlserverService) ModifySqlserverInstanceProjectId(ctx context.Context, instanceId string, projectId int) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewModifyDBInstanceProjectRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+	request.ProjectId = helper.IntInt64(projectId)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().ModifyDBInstanceProject(request)
+	return err
+}
+
+func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instanceId string, memory int, storage int) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewUpgradeDBInstanceRequest()
+	request.InstanceId = &instanceId
+	request.Memory = helper.IntInt64(memory)
+	request.Storage = helper.IntInt64(storage)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().UpgradeDBInstance(request)
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+	if err != nil {
+		return err
+	}
+
+	//check status not expanding
+	errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, has, err := me.DescribeSqlserverInstanceById(ctx, instanceId)
+		if err != nil {
+			return resource.NonRetryableError(errors.WithStack(err))
+		}
+		if !has {
+			return resource.NonRetryableError(fmt.Errorf("cannot find sqlserver instance %s", instanceId))
+		}
+		if int(*instance.Status) == 9 {
+			return resource.RetryableError(fmt.Errorf("expanding , sql server instance ID %s, status %d.... ", instanceId, *instance.Status))
+		} else {
+			return nil
+		}
+	})
+
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverInstance(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewTerminateDBInstanceRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().TerminateDBInstance(request)
+	return err
+}
+
+func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, instanceId string, projectId int, vpcId string, subnetId string, netType int) (instanceList []*sqlserver.DBInstance, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeDBInstancesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	if instanceId != "" {
+		request.InstanceIdSet = []*string{&instanceId}
+	}
+	if projectId != -1 {
+		request.ProjectId = helper.IntUint64(projectId)
+	}
+	if subnetId != "" && netType != 0 {
+		request.SubnetId = &subnetId
+	}
+	if vpcId != "" && netType != 0 {
+		request.VpcId = &vpcId
+	}
+	if netType == 0 {
+		//basic network
+		request.VpcId = helper.String("")
+		request.SubnetId = helper.String("")
+	}
+	var offset, limit int64 = 0, 20
+
+	request.Offset = &offset
+	request.Limit = &limit
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		}
+		instanceList = append(instanceList, response.Response.DBInstances...)
+		if len(response.Response.DBInstances) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *SqlserverService) DescribeSqlserverInstanceById(ctx context.Context, instanceId string) (instance *sqlserver.DBInstance, has bool, errRet error) {
+	instanceList, err := me.DescribeSqlserverInstances(ctx, instanceId, -1, "", "", 1)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if len(instanceList) == 0 {
+		return
+	} else if len(instanceList) > 1 {
+		errRet = fmt.Errorf("[DescribeDBInstances]SDK returns more than one instance with instanceId %s", instanceId)
+	}
+
+	instance = instanceList[0]
+	if instance != nil && *instance.Status != 8 && *instance.Status != 4 && *instance.Status != 6 {
+		has = true
+	}
+	return
+}
+
+func (me *SqlserverService) GetInfoFromDeal(ctx context.Context, dealId string) (instanceId string, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeOrdersRequest()
+	request.DealNames = []*string{&dealId}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeOrders(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+	if len(response.Response.Deals) == 0 {
+		errRet = errors.New("TencentCloud SDK returns empty deal")
+		return
+	} else if len(response.Response.Deals) > 1 {
+		errRet = errors.New("TencentCloud SDK returns more than one deal")
+		return
+	}
+	instanceId = *response.Response.Deals[0].InstanceIdSet[0]
+	flowId := *response.Response.Deals[0].FlowId
+	err = me.WaitForTaskFinish(ctx, flowId)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func (me *SqlserverService) WaitForTaskFinish(ctx context.Context, flowId int64) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeFlowStatusRequest()
+	request.FlowId = &flowId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		taskResponse, err := me.client.UseSqlserverClient().DescribeFlowStatus(request)
+		if err != nil {
+			return resource.NonRetryableError(errors.WithStack(err))
+		}
+		if *taskResponse.Response.Status == int64(SQLSERVER_TASK_RUNNING) {
+			return resource.RetryableError(errors.WithStack(fmt.Errorf("SQLSERVER task status is %d(expanding), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+		} else if *taskResponse.Response.Status == int64(SQLSERVER_TASK_FAIL) {
+			return resource.NonRetryableError(errors.WithStack(fmt.Errorf("SQLSERVER task status is %d(failed), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+		}
+		return nil
+	})
 	return
 }
