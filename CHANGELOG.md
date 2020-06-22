@@ -6,6 +6,10 @@ FEATURES:
 * **New Data Source**: `tencentcloud_postgresql_speccodes`
 * **New Data Source**: `tencentcloud_sqlserver_zone_config`
 
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mongodb_instance` support more machine type.
+
 ## 1.36.1 (June 12, 2020)
 
 ENHANCEMENTS:

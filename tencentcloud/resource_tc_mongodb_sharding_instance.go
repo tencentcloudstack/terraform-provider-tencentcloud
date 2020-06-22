@@ -16,7 +16,7 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   vpc_id          = "vpc-mz3efvbw"
   subnet_id       = "subnet-lk0svi3p"
   project_id      = 0
-  password        = "mypassword"
+  password        = "password1234"
 }
 ```
 
@@ -87,18 +87,26 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 				Description:  "Disk size. The minimum value is 25, and unit is GB.",
 			},
 			"engine_version": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(MONGODB_ENGINE_VERSION),
-				Description:  "Version of the Mongodb, and available values include MONGO_3_WT, MONGO_3_ROCKS and MONGO_36_WT.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Version of the Mongodb, and available values include `MONGO_3_WT`, `MONGO_3_ROCKS` and `MONGO_36_WT`.",
 			},
 			"machine_type": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(MONGODB_MACHINE_TYPE),
-				Description:  "Type of Mongodb instance, and available values include GIO and TGIO.",
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+					if (olds == MONGODB_MACHINE_TYPE_GIO && news == MONGODB_MACHINE_TYPE_HIO) ||
+						(olds == MONGODB_MACHINE_TYPE_HIO && news == MONGODB_MACHINE_TYPE_GIO) {
+						return true
+					} else if (olds == MONGODB_MACHINE_TYPE_TGIO && news == MONGODB_MACHINE_TYPE_HIO10G) ||
+						(olds == MONGODB_MACHINE_TYPE_HIO10G && news == MONGODB_MACHINE_TYPE_TGIO) {
+						return true
+					}
+					return olds == news
+				},
+				Description: "Type of Mongodb instance, and available values include `GIO`(or `HIO`) and `TGIO`(or `HIO10G`).",
 			},
 			"available_zone": {
 				Type:        schema.TypeString,
@@ -195,6 +203,14 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 	request.EngineVersion = helper.String(d.Get("engine_version").(string))
 	request.Machine = helper.String(d.Get("machine_type").(string))
 	request.Zone = helper.String(d.Get("available_zone").(string))
+	machine := d.Get("machine_type").(string)
+	if machine == MONGODB_MACHINE_TYPE_HIO {
+		request.Machine = helper.String(MONGODB_MACHINE_TYPE_GIO)
+	} else if machine == MONGODB_MACHINE_TYPE_HIO10G {
+		request.Machine = helper.String(MONGODB_MACHINE_TYPE_TGIO)
+	} else {
+		request.Machine = &machine
+	}
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = helper.String(v.(string))
 	}
