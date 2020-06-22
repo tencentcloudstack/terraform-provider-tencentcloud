@@ -31,6 +31,8 @@ const (
 
 	CDN_HOST_NOT_FOUND      = "ResourceNotFound.CdnHostNotExists"
 	CDN_DOMAIN_CONFIG_ERROE = "FailedOperation.CdnConfigError"
+
+	CDN_DATASOURCE_NAME_DOMAIN = "domain"
 )
 
 var CDN_SERVICE_TYPE = []string{
@@ -67,4 +69,10 @@ var CDN_AREA = []string{
 var CDN_SWITCH = []string{
 	CDN_SWITCH_OFF,
 	CDN_SWITCH_ON,
+}
+
+var CDN_HTTPS_SWITCH = []string{
+	CDN_DOMAIN_STATUS_ONLINE,
+	CDN_DOMAIN_STATUS_OFFLINE,
+	CDN_DOMAIN_STATUS_PROCESSING,
 }

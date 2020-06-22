@@ -524,6 +524,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cos_bucket_object":            dataSourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_buckets":                  dataSourceTencentCloudCosBuckets(),
 			"tencentcloud_cfs_file_systems":             dataSourceTencentCloudCfsFileSystems(),
+			"tencentcloud_cdn_domains":                  dataSourceTencentCloudCdnDomains(),
 			"tencentcloud_cfs_access_groups":            dataSourceTencentCloudCfsAccessGroups(),
 			"tencentcloud_cfs_access_rules":             dataSourceTencentCloudCfsAccessRules(),
 			"tencentcloud_redis_zone_config":            dataSourceTencentRedisZoneConfig(),

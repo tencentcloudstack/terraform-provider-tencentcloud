@@ -88,3 +88,38 @@ func (me *CdnService) StartDomain(ctx context.Context, domain string) error {
 	}
 	return nil
 }
+
+func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context, filterMap map[string]interface{}) (domainConfig *cdn.DetailDomain, errRet error) {
+	logId := getLogId(ctx)
+	request := cdn.NewDescribeDomainsConfigRequest()
+	request.Filters = make([]*cdn.DomainFilter, 0, len(filterMap))
+
+	for k, v := range filterMap {
+		value := v.(string)
+
+		filter := &cdn.DomainFilter{
+			Name:  helper.String(UnderlineToHump(k)),
+			Value: []*string{&value},
+		}
+		request.Filters = append(request.Filters, filter)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCdnClient().DescribeDomainsConfig(request)
+	if err != nil {
+		if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+			if sdkErr.Code == CDN_HOST_NOT_FOUND {
+				return
+			}
+		}
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Domains) > 0 {
+		domainConfig = response.Response.Domains[0]
+	}
+	return
+}
