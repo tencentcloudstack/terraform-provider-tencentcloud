@@ -24,8 +24,8 @@ func TestAccTencentCloudPostgresqlSpecinfos_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_specinfos.foo", "list.0.storage_max"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_specinfos.foo", "list.0.cpu"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_specinfos.foo", "list.0.qps"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_specinfos.foo", "list.0.version"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_specinfos.foo", "list.0.version_name"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_specinfos.foo", "list.0.engine_version"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_specinfos.foo", "list.0.engine_version_name"),
 				),
 			},
 		},
@@ -34,6 +34,6 @@ func TestAccTencentCloudPostgresqlSpecinfos_basic(t *testing.T) {
 
 const testAccTencentCloudPostgresqlSpecinfosConfigBasic = `
 data "tencentcloud_postgresql_specinfos" "foo"{
-	availability_zone = "ap-guangzhou-3"
+  availability_zone = "ap-guangzhou-3"
 }
 `
