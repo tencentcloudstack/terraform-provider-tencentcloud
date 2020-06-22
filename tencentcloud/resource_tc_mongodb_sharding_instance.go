@@ -201,7 +201,6 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 	request.Memory = helper.IntUint64(d.Get("memory").(int))
 	request.Volume = helper.IntUint64(d.Get("volume").(int))
 	request.EngineVersion = helper.String(d.Get("engine_version").(string))
-	request.Machine = helper.String(d.Get("machine_type").(string))
 	request.Zone = helper.String(d.Get("available_zone").(string))
 	machine := d.Get("machine_type").(string)
 	if machine == MONGODB_MACHINE_TYPE_HIO {
