@@ -307,6 +307,9 @@ SQLServer
   Data Source
     tencentcloud_sqlserver_zone_config
 
+  Resource
+    tencentcloud_sqlserver_db
+
 SSL Certificates
   Data Source
     tencentcloud_ssl_certificates
@@ -697,6 +700,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_binding_object":         resourceTencentMonitorBindingObject(),
 			"tencentcloud_monitor_binding_receiver":       resourceTencentMonitorBindingAlarmReceiver(),
 			"tencentcloud_elasticsearch_instance":         resourceTencentCloudElasticsearchInstance(),
+			"tencentcloud_sqlserver_db":                   resourceTencentCloudSqlserverDB(),
 		},
 
 		ConfigureFunc: providerConfigure,
