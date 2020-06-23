@@ -239,14 +239,11 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 		log.Printf("[CRITAL]%s describeDomainsConfigByFilters fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	if domainConfigs == nil {
-		return nil
-	}
 
 	cdnDomainList := make([]map[string]interface{}, 0, len(domainConfigs))
 	for _, detailDomain := range domainConfigs {
 		var fullUrlCache bool
-		if detailDomain.CacheKey!=nil && *detailDomain.CacheKey.FullUrlCache == CDN_SWITCH_ON {
+		if detailDomain.CacheKey != nil && *detailDomain.CacheKey.FullUrlCache == CDN_SWITCH_ON {
 			fullUrlCache = true
 		}
 
