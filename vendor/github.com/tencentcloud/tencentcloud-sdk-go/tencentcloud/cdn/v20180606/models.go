@@ -456,10 +456,6 @@ type CacheKey struct {
 	// 是否使用自定义字符串作为CacheKey的一部分
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CacheTag *CacheTagKey `json:"CacheTag,omitempty" name:"CacheTag"`
-
-	// 缓存是否忽略大小写
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CaseSensitive *string `json:"CaseSensitive,omitempty" name:"CaseSensitive"`
 }
 
 type CacheOptResult struct {
@@ -1465,7 +1461,8 @@ type DescribeOriginDataRequest struct {
 	Domains []*string `json:"Domains,omitempty" name:"Domains" list`
 
 	// 指定要查询的项目 ID，[前往查看项目 ID](https://console.cloud.tencent.com/project)
-	// 未填充域名情况下，指定项目查询，若填充了具体域名信息，以域名为主
+	// 未填充域名情况下，指定项目查询，最多可一次性查询 30 个加速域名明细
+	// 若填充了具体域名信息，以域名为主
 	Project *int64 `json:"Project,omitempty" name:"Project"`
 
 	// 时间粒度，支持以下几种模式：
@@ -2502,20 +2499,6 @@ type HeaderKey struct {
 	Value *string `json:"Value,omitempty" name:"Value"`
 }
 
-type Hsts struct {
-
-	// 是否开启，on或off。
-	Switch *string `json:"Switch,omitempty" name:"Switch"`
-
-	// MaxAge数值。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MaxAge *int64 `json:"MaxAge,omitempty" name:"MaxAge"`
-
-	// 是否包含子域名，on或off。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IncludeSubDomains *string `json:"IncludeSubDomains,omitempty" name:"IncludeSubDomains"`
-}
-
 type HttpHeaderPathRule struct {
 
 	// http 头部设置方式
@@ -2603,15 +2586,6 @@ type Https struct {
 	// failed：部署失败
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SslStatus *string `json:"SslStatus,omitempty" name:"SslStatus"`
-
-	// TLS版本列表，支持填写以下值：
-	// TLSv1.0, TLSv1.1, TLSv1.2
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TlsVersion []*string `json:"TlsVersion,omitempty" name:"TlsVersion" list`
-
-	// Hsts配置
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Hsts *Hsts `json:"Hsts,omitempty" name:"Hsts"`
 }
 
 type ImageOptimization struct {

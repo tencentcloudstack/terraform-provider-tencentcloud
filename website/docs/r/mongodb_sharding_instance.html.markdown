@@ -25,7 +25,7 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   vpc_id          = "vpc-mz3efvbw"
   subnet_id       = "subnet-lk0svi3p"
   project_id      = 0
-  password        = "mypassword"
+  password        = "password1234"
 }
 ```
 
@@ -34,9 +34,9 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
 The following arguments are supported:
 
 * `available_zone` - (Required, ForceNew) The available zone of the Mongodb.
-* `engine_version` - (Required, ForceNew) Version of the Mongodb, and available values include MONGO_3_WT, MONGO_3_ROCKS and MONGO_36_WT.
+* `engine_version` - (Required, ForceNew) Version of the Mongodb, and available values include `MONGO_3_WT`, `MONGO_3_ROCKS` and `MONGO_36_WT`.
 * `instance_name` - (Required) Name of the Mongodb instance.
-* `machine_type` - (Required, ForceNew) Type of Mongodb instance, and available values include GIO and TGIO.
+* `machine_type` - (Required, ForceNew) Type of Mongodb instance, and available values include `GIO`(or `HIO`) and `TGIO`(or `HIO10G`).
 * `memory` - (Required) Memory size. The minimum value is 2, and unit is GB.
 * `nodes_per_shard` - (Required, ForceNew) Number of nodes per shard, at least 3(one master and two slaves).
 * `password` - (Required) Password of this Mongodb account.
