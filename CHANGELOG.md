@@ -1,4 +1,4 @@
-## 1.37.0 (Unreleased)
+## 1.37.0 (June 23, 2020)
 
 FEATURES:
 * **New Resource**: `tencentcloud_postgresql_instance`
