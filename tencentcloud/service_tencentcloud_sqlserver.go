@@ -2,9 +2,9 @@ package tencentcloud
 
 import (
 	"context"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
