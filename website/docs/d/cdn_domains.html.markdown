@@ -18,7 +18,6 @@ data "tencentcloud_cdn_domains" "foo" {
   service_type         = "web"
   full_url_cache       = false
   origin_pull_protocol = "follow"
-  status               = "online"
   https_switch         = "on"
 }
 ```
@@ -27,20 +26,20 @@ data "tencentcloud_cdn_domains" "foo" {
 
 The following arguments are supported:
 
-* `domain` - (Optional) Name of the acceleration domain.
+* `domain` - (Optional) Acceleration domain name.
 * `full_url_cache` - (Optional) Whether to enable full-path cache.
 * `https_switch` - (Optional) HTTPS configuration. The available value include `on`, `off` and `processing`.
 * `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. The available value include `http`, `https` and `follow`.
 * `result_output_file` - (Optional) Used to save results.
-* `service_type` - (Optional) Service type of Acceleration domain name. The available value include `web`, `download` and `media`.
+* `service_type` - (Optional) Service type of acceleration domain name. The available value include `web`, `download` and `media`.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `cdn_domain_list` - Information list of cdn domain.
-  * `area` - Domain name acceleration region.
-  * `domain` - Name of the acceleration domain.
+* `domain_list` - An information list of cdn domain. Each element contains the following attributes:
+  * `area` - Acceleration region.
+  * `domain` - Acceleration domain name.
   * `full_url_cache` - Whether to enable full-path cache.
   * `https_config` - HTTPS acceleration configuration. It's a list and consist of at most one item.
     * `http2_switch` - HTTP2 configuration switch.
@@ -48,7 +47,7 @@ In addition to all arguments above, the following attributes are exported:
     * `ocsp_stapling_switch` - OCSP configuration switch.
     * `spdy_switch` - Spdy configuration switch.
     * `verify_client` - Client certificate authentication feature.
-  * `origin` - Origin server configuration. It's a list and consist of at most one item.
+  * `origin` - Origin server configuration.
     * `backup_origin_list` - Backup origin server list.
     * `backup_origin_type` - Backup origin server type.
     * `backup_server_name` - Host header used when accessing the backup origin server. If left empty, the ServerName of master origin server will be used by default.
@@ -58,7 +57,7 @@ In addition to all arguments above, the following attributes are exported:
     * `origin_type` - Master origin server type.
     * `server_name` - Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
   * `project_id` - The project CDN belongs to.
-  * `service_type` - Service type of Acceleration domain name.
+  * `service_type` - Service type of acceleration domain name.
   * `tags` - Tags of cdn domain.
 
 

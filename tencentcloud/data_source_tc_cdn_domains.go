@@ -9,7 +9,6 @@ data "tencentcloud_cdn_domains" "foo" {
   service_type   	   = "web"
   full_url_cache 	   = false
   origin_pull_protocol = "follow"
-  status			   = "online"
   https_switch		   = "on"
 }
 ```
@@ -32,13 +31,13 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 			"domain": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Name of the acceleration domain.",
+				Description: "Acceleration domain name.",
 			},
 			"service_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_SERVICE_TYPE),
-				Description:  "Service type of Acceleration domain name. The available value include `web`, `download` and `media`.",
+				Description:  "Service type of acceleration domain name. The available value include `web`, `download` and `media`.",
 			},
 			"full_url_cache": {
 				Type:        schema.TypeBool,
@@ -46,7 +45,7 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 				Description: "Whether to enable full-path cache.",
 			},
 			"origin_pull_protocol": {
-				Type:         schema.TypeBool,
+				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_ORIGIN_PULL_PROTOCOL),
 				Description:  "Origin-pull protocol configuration. The available value include `http`, `https` and `follow`.",
@@ -62,29 +61,29 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 				Optional:    true,
 				Description: "Used to save results.",
 			},
-			"cdn_domain_list": {
+			"domain_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Information list of cdn domain.",
+				Description: "An information list of cdn domain. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"domain": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the acceleration domain.",
+							Description: "Acceleration domain name.",
 						},
 						"service_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Service type of Acceleration domain name.",
+							Description: "Service type of acceleration domain name.",
 						},
 						"area": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Domain name acceleration region.",
+							Description: "Acceleration region.",
 						},
 						"project_id": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "The project CDN belongs to.",
 						},
@@ -96,7 +95,7 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 						"origin": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Origin server configuration. It's a list and consist of at most one item.",
+							Description: "Origin server configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"origin_type": {
@@ -203,17 +202,17 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 
 	var domainFilterMap = make(map[string]interface{}, 5)
 
-	if v, ok := d.GetOk(CDN_DATASOURCE_NAME_DOMAIN); ok {
-		domainFilterMap[CDN_DATASOURCE_NAME_DOMAIN] = v.(string)
+	if v, ok := d.GetOk("domain"); ok {
+		domainFilterMap["domain"] = v.(string)
 	}
 	if v, ok := d.GetOk("service_type"); ok {
 		domainFilterMap["service_type"] = v.(string)
 	}
-	if v, ok := d.GetOk("status"); ok {
-		domainFilterMap["status"] = v.(string)
-	}
 	if v, ok := d.GetOk("https_switch"); ok {
 		domainFilterMap["https_switch"] = v.(string)
+	}
+	if v, ok := d.GetOk("origin_pull_protocol"); ok {
+		domainFilterMap["origin_pull_protocol"] = v.(string)
 	}
 	if v, ok := d.GetOk("full_url_cache"); ok {
 		var value string
@@ -226,14 +225,10 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 		domainFilterMap["full_url_cache"] = value
 	}
 
-	if len(domainFilterMap) == 0 {
-		return nil
-	}
-
-	var domainConfig *cdn.DetailDomain
+	var domainConfigs []*cdn.DetailDomain
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		domainConfig, errRet = cdnService.DescribeDomainsConfigByFilters(ctx, domainFilterMap)
+		domainConfigs, errRet = cdnService.DescribeDomainsConfigByFilters(ctx, domainFilterMap)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
@@ -244,49 +239,67 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 		log.Printf("[CRITAL]%s describeDomainsConfigByFilters fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	if domainConfig == nil {
+	if domainConfigs == nil {
 		return nil
 	}
 
-	domain := domainFilterMap[CDN_DATASOURCE_NAME_DOMAIN]
-	_ = d.Set(CDN_DATASOURCE_NAME_DOMAIN, domain)
-	_ = d.Set("service_type", domainConfig.ServiceType)
-	_ = d.Set("project_id", domainConfig.ProjectId)
-	_ = d.Set("area", domainConfig.Area)
-	_ = d.Set("status", domainConfig.Status)
+	cdnDomainList := make([]map[string]interface{}, 0, len(domainConfigs))
+	for _, detailDomain := range domainConfigs {
+		var fullUrlCache bool
+		if detailDomain.CacheKey!=nil && *detailDomain.CacheKey.FullUrlCache == CDN_SWITCH_ON {
+			fullUrlCache = true
+		}
 
-	if *domainConfig.CacheKey.FullUrlCache == CDN_SWITCH_OFF {
-		_ = d.Set("full_url_cache", false)
-	} else {
-		_ = d.Set("full_url_cache", true)
+		origins := make([]map[string]interface{}, 0, 1)
+		origin := make(map[string]interface{}, 8)
+		origin["origin_type"] = detailDomain.Origin.OriginType
+		origin["origin_list"] = detailDomain.Origin.Origins
+		origin["backup_origin_type"] = detailDomain.Origin.BackupOriginType
+		origin["backup_origin_list"] = detailDomain.Origin.BackupOrigins
+		origin["backup_server_name"] = detailDomain.Origin.BackupServerName
+		origin["server_name"] = detailDomain.Origin.ServerName
+		origin["cos_private_access"] = detailDomain.Origin.CosPrivateAccess
+		origin["origin_pull_protocol"] = detailDomain.Origin.OriginPullProtocol
+		origins = append(origins, origin)
+
+		httpsconfigs := make([]map[string]interface{}, 0, 1)
+		httpsConfig := make(map[string]interface{}, 7)
+		httpsConfig["https_switch"] = detailDomain.Https.Switch
+		httpsConfig["http2_switch"] = detailDomain.Https.Http2
+		httpsConfig["ocsp_stapling_switch"] = detailDomain.Https.OcspStapling
+		httpsConfig["spdy_switch"] = detailDomain.Https.Spdy
+		httpsConfig["verify_client"] = detailDomain.Https.VerifyClient
+		httpsconfigs = append(httpsconfigs, httpsConfig)
+
+		tags, errRet := tagService.DescribeResourceTags(ctx, CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, *detailDomain.Domain)
+		if errRet != nil {
+			return errRet
+		}
+
+		mapping := map[string]interface{}{
+			"domain":         detailDomain.Domain,
+			"service_type":   detailDomain.ServiceType,
+			"area":           detailDomain.Area,
+			"project_id":     detailDomain.ProjectId,
+			"full_url_cache": fullUrlCache,
+			"origin":         origins,
+			"https_config":   httpsconfigs,
+			"tags":           tags,
+		}
+
+		cdnDomainList = append(cdnDomainList, mapping)
 	}
 
-	origins := make([]map[string]interface{}, 0, 1)
-	origin := make(map[string]interface{}, 8)
-	origin["origin_type"] = domainConfig.Origin.OriginType
-	origin["origin_list"] = domainConfig.Origin.Origins
-	origin["server_name"] = domainConfig.Origin.ServerName
-	origin["cos_private_access"] = domainConfig.Origin.CosPrivateAccess
-	origin["origin_pull_protocol"] = domainConfig.Origin.OriginPullProtocol
-	origin["backup_origin_type"] = domainConfig.Origin.BackupOriginType
-	origin["backup_origin_list"] = domainConfig.Origin.BackupOrigins
-	origin["backup_server_name"] = domainConfig.Origin.BackupServerName
-	origins = append(origins, origin)
-	_ = d.Set("origin", origins)
-
-	httpsConfig := make(map[string]interface{}, 7)
-	httpsConfig["https_switch"] = domainConfig.Https.Switch
-	httpsConfig["http2_switch"] = domainConfig.Https.Http2
-	httpsConfig["ocsp_stapling_switch"] = domainConfig.Https.OcspStapling
-	httpsConfig["spdy_switch"] = domainConfig.Https.Spdy
-	httpsConfig["verify_client"] = domainConfig.Https.VerifyClient
-	_ = d.Set("https_config", httpsConfig)
-
-	tags, errRet := tagService.DescribeResourceTags(ctx, CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain.(string))
-	if errRet != nil {
-		return errRet
+	err = d.Set("domain_list", cdnDomainList)
+	if err != nil {
+		log.Printf("[CRITAL]%s provider set cdn domain list fail, reason:%s\n ", logId, err.Error())
+		return err
 	}
-	_ = d.Set("tags", tags)
-
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if err := writeToFile(output.(string), cdnDomainList); err != nil {
+			return err
+		}
+	}
 	return nil
 }

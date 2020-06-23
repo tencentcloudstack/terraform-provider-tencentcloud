@@ -71,6 +71,9 @@ Auto Scaling(AS)
     tencentcloud_as_notification
 
 CDN
+  Data Source
+    tencentcloud_cdn_domains
+
   Resource
 	tencentcloud_cdn_domain
 

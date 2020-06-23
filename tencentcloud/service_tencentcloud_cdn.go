@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"log"
+	"strings"
 
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -89,7 +90,7 @@ func (me *CdnService) StartDomain(ctx context.Context, domain string) error {
 	return nil
 }
 
-func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context, filterMap map[string]interface{}) (domainConfig *cdn.DetailDomain, errRet error) {
+func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context, filterMap map[string]interface{}) (domainConfig []*cdn.DetailDomain, errRet error) {
 	logId := getLogId(ctx)
 	request := cdn.NewDescribeDomainsConfigRequest()
 	request.Filters = make([]*cdn.DomainFilter, 0, len(filterMap))
@@ -98,7 +99,7 @@ func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context, filter
 		value := v.(string)
 
 		filter := &cdn.DomainFilter{
-			Name:  helper.String(UnderlineToHump(k)),
+			Name:  helper.String(underlineToHump([]byte(k))),
 			Value: []*string{&value},
 		}
 		request.Filters = append(request.Filters, filter)
@@ -119,7 +120,24 @@ func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context, filter
 	}
 
 	if len(response.Response.Domains) > 0 {
-		domainConfig = response.Response.Domains[0]
+		domainConfig = response.Response.Domains
 	}
+	return
+}
+
+func underlineToHump(underline []byte) (humpValue string) {
+	lenUnderLine := len(underline)
+	for i := 0; i < lenUnderLine; i++ {
+		if string(underline[i]) == "_" {
+			if i+1 < lenUnderLine {
+				humpValue += strings.ToUpper(string(underline[i+1]))
+				i++
+			}
+			continue
+		}
+
+		humpValue += string(underline[i])
+	}
+
 	return
 }

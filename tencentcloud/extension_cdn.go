@@ -31,8 +31,6 @@ const (
 
 	CDN_HOST_NOT_FOUND      = "ResourceNotFound.CdnHostNotExists"
 	CDN_DOMAIN_CONFIG_ERROE = "FailedOperation.CdnConfigError"
-
-	CDN_DATASOURCE_NAME_DOMAIN = "domain"
 )
 
 var CDN_SERVICE_TYPE = []string{

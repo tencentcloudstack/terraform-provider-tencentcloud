@@ -240,31 +240,3 @@ func IsContains(array interface{}, value interface{}) bool {
 		return reflect.DeepEqual(array, value)
 	}
 }
-
-func UnderlineToHump(underline string) (humpValue string) {
-	if len(underline) == 0 {
-		return ""
-	}
-
-	splitResult := strings.Split(underline, "_")
-	if len(splitResult) == 0 {
-		return ""
-	}
-
-	if len(splitResult) == 1 {
-		return underline
-	}
-
-	for flag, v := range splitResult {
-		if len(v) == 0 {
-			continue
-		}
-		if flag == 0 {
-			humpValue += v
-			continue
-		}
-		humpValue += strings.ToUpper(v[:1]) + v[1:]
-	}
-
-	return
-}
