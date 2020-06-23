@@ -39,6 +39,8 @@ In addition to all arguments above, the following attributes are exported:
 
 * `domain_list` - An information list of cdn domain. Each element contains the following attributes:
   * `area` - Acceleration region.
+  * `cname` - CNAME address of domain name.
+  * `create_time` - Domain name creation time.
   * `domain` - Acceleration domain name.
   * `full_url_cache` - Whether to enable full-path cache.
   * `https_config` - HTTPS acceleration configuration. It's a list and consist of at most one item.
@@ -57,7 +59,10 @@ In addition to all arguments above, the following attributes are exported:
     * `origin_type` - Master origin server type.
     * `server_name` - Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
   * `project_id` - The project CDN belongs to.
+  * `resource_id` - Domain name ID.
   * `service_type` - Service type of acceleration domain name.
+  * `status` - Acceleration service status.
   * `tags` - Tags of cdn domain.
+  * `update_time` - Last modified time of domain name.
 
 

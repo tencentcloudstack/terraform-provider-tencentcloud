@@ -67,10 +67,35 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 				Description: "An information list of cdn domain. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"resource_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Domain name ID.",
+						},
 						"domain": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Acceleration domain name.",
+						},
+						"cname": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "CNAME address of domain name.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Acceleration service status.",
+						},
+						"create_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Domain name creation time.",
+						},
+						"update_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Last modified time of domain name.",
 						},
 						"service_type": {
 							Type:        schema.TypeString,
@@ -260,13 +285,15 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 		origins = append(origins, origin)
 
 		httpsconfigs := make([]map[string]interface{}, 0, 1)
-		httpsConfig := make(map[string]interface{}, 7)
-		httpsConfig["https_switch"] = detailDomain.Https.Switch
-		httpsConfig["http2_switch"] = detailDomain.Https.Http2
-		httpsConfig["ocsp_stapling_switch"] = detailDomain.Https.OcspStapling
-		httpsConfig["spdy_switch"] = detailDomain.Https.Spdy
-		httpsConfig["verify_client"] = detailDomain.Https.VerifyClient
-		httpsconfigs = append(httpsconfigs, httpsConfig)
+		if detailDomain.Https != nil {
+			httpsConfig := make(map[string]interface{}, 7)
+			httpsConfig["https_switch"] = detailDomain.Https.Switch
+			httpsConfig["http2_switch"] = detailDomain.Https.Http2
+			httpsConfig["ocsp_stapling_switch"] = detailDomain.Https.OcspStapling
+			httpsConfig["spdy_switch"] = detailDomain.Https.Spdy
+			httpsConfig["verify_client"] = detailDomain.Https.VerifyClient
+			httpsconfigs = append(httpsconfigs, httpsConfig)
+		}
 
 		tags, errRet := tagService.DescribeResourceTags(ctx, CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, *detailDomain.Domain)
 		if errRet != nil {
@@ -274,7 +301,12 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 		}
 
 		mapping := map[string]interface{}{
+			"resource_id":    detailDomain.ResourceId,
 			"domain":         detailDomain.Domain,
+			"cname":          detailDomain.Cname,
+			"status":         detailDomain.Status,
+			"create_time":    detailDomain.CreateTime,
+			"update_time":    detailDomain.UpdateTime,
 			"service_type":   detailDomain.ServiceType,
 			"area":           detailDomain.Area,
 			"project_id":     detailDomain.ProjectId,
