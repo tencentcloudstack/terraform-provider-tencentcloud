@@ -1,8 +1,20 @@
-## 1.37.0 (Unreleased)
+## 1.38.0 (Unreleased)
 
 FEATURES:
 
 * **New Data Source**: `tencentcloud_cdn_domains` 
+
+## 1.37.0 (June 23, 2020)
+
+FEATURES:
+* **New Resource**: `tencentcloud_postgresql_instance`
+* **New Data Source**: `tencentcloud_postgresql_instances`
+* **New Data Source**: `tencentcloud_postgresql_speccodes`
+* **New Data Source**: `tencentcloud_sqlserver_zone_config`
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mongodb_instance` support more machine type.
 
 ## 1.36.1 (June 12, 2020)
 
