@@ -54,4 +54,3 @@ var SQLSERVER_DB_STATUS = map[int64]string{
 	SQLSERVER_DB_MODIFYING: "modifying",
 	SQLSERVER_DB_DELETING:  "deleting",
 }
-

@@ -120,13 +120,13 @@ func testAccCheckSqlserverInstanceExists(n string) resource.TestCheckFunc {
 
 const testAccSqlserverInstanceBasic = `
 variable "availability_zone"{
-default = "ap-guangzhou-2"
+  default = "ap-guangzhou-2"
 }
 `
 
 const testAccSqlserverInstance string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
-  name = "tf_postsql_instance"
+  name = "tf_sqlserver_instance"
   availability_zone = var.availability_zone
   charge_type = "POSTPAID_BY_HOUR"
   vpc_id                   = "` + defaultVpcId + `"
@@ -139,7 +139,7 @@ resource "tencentcloud_sqlserver_instance" "test" {
 
 const testAccSqlserverInstanceUpdate string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
-  name = "tf_postsql_instance_update"
+  name = "tf_sqlserver_instance_update"
   availability_zone = var.availability_zone
   charge_type = "POSTPAID_BY_HOUR"
   vpc_id                   = "` + defaultVpcId + `"

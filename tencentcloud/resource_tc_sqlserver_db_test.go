@@ -16,15 +16,14 @@ func TestAccTencentCloudSqlserverDB_basic_and_update(t *testing.T) {
 		CheckDestroy: testAccCheckSqlserverDBDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSqlserverDB_basic(),
+				Config: testAccSqlserverDB_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckSqlserverDBExists("tencentcloud_sqlserver_db.mysqlserver_db"),
-					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "instance_id", "mssql-3cdq7kx5"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "name", "testAccSqlserverDB"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "charset", "Chinese_PRC_BIN"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "remark", "testACC-remark"),
 					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_db.mysqlserver_db", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_db.mysqlserver_db", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_db.mysqlserver_db", "instance_id"),
 				),
 				Destroy: false,
 			},
@@ -34,7 +33,7 @@ func TestAccTencentCloudSqlserverDB_basic_and_update(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccSqlserverDB_basic_update_remark(),
+				Config: testAccSqlserverDB_basic_update_remark,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckSqlserverDBExists("tencentcloud_sqlserver_db.mysqlserver_db"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "remark", "testACC-remark_update"),
@@ -89,22 +88,18 @@ func testAccCheckSqlserverDBExists(n string) resource.TestCheckFunc {
 	}
 }
 
-func testAccSqlserverDB_basic() string {
-	return `
+const testAccSqlserverDB_basic = testAccSqlserverInstance + `
 resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
-  instance_id = "mssql-3cdq7kx5"
+  instance_id = tencentcloud_sqlserver_instance.test.id
   name        = "testAccSqlserverDB"
   charset     = "Chinese_PRC_BIN"
   remark      = "testACC-remark"
 }`
-}
 
-func testAccSqlserverDB_basic_update_remark() string {
-	return `
+const testAccSqlserverDB_basic_update_remark = testAccSqlserverInstance + `
 resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
-  instance_id = "mssql-3cdq7kx5"
+  instance_id = tencentcloud_sqlserver_instance.test.id
   name        = "testAccSqlserverDB"
   charset     = "Chinese_PRC_BIN"
   remark      = "testACC-remark_update"
 }`
-}

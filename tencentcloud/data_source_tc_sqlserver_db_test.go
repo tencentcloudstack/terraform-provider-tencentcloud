@@ -27,16 +27,9 @@ func TestAccDataSourceTencentCloudSqlserverDB_basic(t *testing.T) {
 	})
 }
 
-const TestAccDataSourceTencentCloudSqlserverDB = `
-resource "tencentcloud_sqlserver_db" "foo" {
-  instance_id = "mssql-3cdq7kx5"
-  name = "testAccDatasourceSqlserverDB"
-  charset = "Chinese_PRC_BIN"
-  remark = "test-remark"
-}
-
+const TestAccDataSourceTencentCloudSqlserverDB = testAccSqlserverDB_basic + `
 data "tencentcloud_sqlserver_db" "foo" {
-  instance_id = tencentcloud_sqlserver_db.foo.instance_id
-  name        = tencentcloud_sqlserver_db.foo.name
+  instance_id = tencentcloud_sqlserver_db.mysqlserver_db.instance_id
+  name        = tencentcloud_sqlserver_db.mysqlserver_db.name
 }
 `
