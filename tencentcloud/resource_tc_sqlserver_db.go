@@ -1,5 +1,5 @@
 /*
-Provides a SQLServer DB resource to database belongs to SQLServer instance.
+Provides a SQLServer DB resource belongs to SQLServer instance.
 
 Example Usage
 
@@ -17,6 +17,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
@@ -27,17 +28,22 @@ func resourceTencentCloudSqlserverDB() *schema.Resource {
 		Read:   resourceTencentCloudSqlserverDBRead,
 		Update: resourceTencentCloudSqlserverDBUpdate,
 		Delete: resourceTencentCloudSqlserverDBDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "SQL server instance ID which DB belongs to.",
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Name of DB. The DataBase name must be unique and must be composed of numbers, letters and underlines, and the first one can not be underline.",
+				ForceNew:    true,
+				Description: "Name of SQLServer DB. The DataBase name must be unique and must be composed of numbers, letters and underlines, and the first one can not be underline.",
 			},
 			"charset": {
 				Type:         schema.TypeString,
@@ -61,7 +67,7 @@ func resourceTencentCloudSqlserverDB() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Database status. Valid values are `creating`, `running`, `modifying`, `dropping`.",
+				Description: "Database status could be `creating`, `running`, `modifying` which means changing the remark, and `deleting`.",
 			},
 		},
 	}
@@ -92,6 +98,7 @@ func resourceTencentCloudSqlserverDBCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
+	d.SetId(instanceID + FILED_SP + dbName)
 	return resourceTencentCloudSqlserverDBRead(d, meta)
 }
 
@@ -101,9 +108,8 @@ func resourceTencentCloudSqlserverDBRead(d *schema.ResourceData, meta interface{
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-	instanceId := d.Get("instance_id").(string)
-	name := d.Get("name").(string)
-	dbInfo, has, err := sqlserverService.DescribeDBDetailsByName(ctx, instanceId, name)
+	id := d.Id()
+	dbInfo, has, err := sqlserverService.DescribeDBDetailsById(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -111,12 +117,19 @@ func resourceTencentCloudSqlserverDBRead(d *schema.ResourceData, meta interface{
 		d.SetId("")
 		return nil
 	}
-	_ = d.Set("charset", *dbInfo.Charset)
-	_ = d.Set("remark", *dbInfo.Remark)
-	_ = d.Set("create_time", *dbInfo.CreateTime)
+	idItem := strings.Split(id, FILED_SP)
+	if len(idItem) < 2 {
+		return fmt.Errorf("broken ID of SQLServer DB")
+	}
+	instanceId := idItem[0]
+	dbName := idItem[1]
+	_ = d.Set("instance_id", instanceId)
+	_ = d.Set("name", dbName)
+	_ = d.Set("charset", dbInfo.Charset)
+	_ = d.Set("remark", dbInfo.Remark)
+	_ = d.Set("create_time", dbInfo.CreateTime)
 	_ = d.Set("status", SQLSERVER_DB_STATUS[*dbInfo.Status])
 
-	d.SetId(name)
 	return nil
 }
 
@@ -129,19 +142,10 @@ func resourceTencentCloudSqlserverDBUpdate(d *schema.ResourceData, meta interfac
 	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 	instanceId := d.Get("instance_id").(string)
 
-	if d.HasChange("name") {
-		oldValue, newValue := d.GetChange("name")
-		if err := sqlserverService.ModifySqlserverDBName(ctx, instanceId, oldValue.(string), newValue.(string)); err != nil {
-			return err
-		}
-		d.SetPartial("name")
-	}
-
 	if d.HasChange("remark") {
 		if err := sqlserverService.ModifySqlserverDBRemark(ctx, instanceId, d.Get("name").(string), d.Get("remark").(string)); err != nil {
 			return err
 		}
-		d.SetPartial("remark")
 	}
 
 	return nil
@@ -158,7 +162,15 @@ func resourceTencentCloudSqlserverDBDelete(d *schema.ResourceData, meta interfac
 	name := d.Get("name").(string)
 
 	// precheck before delete
-	_, has, err := sqlserverService.DescribeDBDetailsByName(ctx, instanceId, name)
+	_, has, err := sqlserverService.DescribeSqlserverInstanceById(ctx, instanceId)
+	if err != nil {
+		return fmt.Errorf("[CRITAL]%s DescribeSqlserverInstanceById when deleting SQLServer DB fail, reason:%s\n", logId, err)
+	}
+	if !has {
+		return nil
+	}
+	id := d.Id()
+	_, has, err = sqlserverService.DescribeDBDetailsById(ctx, id)
 	if err != nil {
 		return err
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/pkg/errors"
@@ -34,7 +35,7 @@ func (me *SqlserverService) DescribeZones(ctx context.Context) (zoneInfoList []*
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseSqlserverClient().DescribeZones(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s DescribeZones fail, reason:%s\n", logId, e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
 			return retryError(e)
 		}
 		response = result
@@ -67,7 +68,7 @@ func (me *SqlserverService) DescribeProductConfig(ctx context.Context, zone stri
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseSqlserverClient().DescribeProductConfig(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s DescribeProductConfig fail, reason:%s\n", logId, e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
 			return retryError(e)
 		}
 		response = result
@@ -202,11 +203,11 @@ func (me *SqlserverService) CreateSqlserverDB(ctx context.Context, instanceID st
 	}()
 
 	var response *sqlserver.CreateDBResponse
-	err := resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseSqlserverClient().CreateDB(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s CreateDB fail, reason:%s\n", logId, e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
 			return retryError(e)
 		}
 		response = result
@@ -246,7 +247,7 @@ func (me *SqlserverService) DescribeDBsOfInstance(ctx context.Context, instanceI
 			ratelimit.Check(request.GetAction())
 			result, e := me.client.UseSqlserverClient().DescribeDBs(request)
 			if e != nil {
-				log.Printf("[CRITAL]%s DescribeDBs fail, reason:%s\n", logId, e.Error())
+				log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
 				return retryError(e)
 			}
 			response = result
@@ -257,7 +258,7 @@ func (me *SqlserverService) DescribeDBsOfInstance(ctx context.Context, instanceI
 			return
 		}
 		if response == nil || response.Response == nil {
-			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+			errRet = fmt.Errorf("TencentCloud SDK return nil response for api[%s]", request.GetAction())
 			return
 		}
 		if len(response.Response.DBInstances) == 0 {
@@ -274,7 +275,15 @@ func (me *SqlserverService) DescribeDBsOfInstance(ctx context.Context, instanceI
 	}
 }
 
-func (me *SqlserverService) DescribeDBDetailsByName(ctx context.Context, instanceId string, dbName string) (dbInfo *sqlserver.DBDetail, has bool, errRet error) {
+func (me *SqlserverService) DescribeDBDetailsById(ctx context.Context, dbId string) (dbInfo *sqlserver.DBDetail, has bool, errRet error) {
+	idItem := strings.Split(dbId, FILED_SP)
+	if len(idItem) < 2 {
+		errRet = fmt.Errorf("broken ID of SQLServer DB")
+		return
+	}
+	instanceId := idItem[0]
+	dbName := idItem[1]
+
 	instanceDBList, err := me.DescribeDBsOfInstance(ctx, instanceId)
 	if err != nil {
 		errRet = err
@@ -287,7 +296,7 @@ func (me *SqlserverService) DescribeDBDetailsByName(ctx context.Context, instanc
 	for _, dbDetail := range instanceDBList {
 		if *dbDetail.Name == dbName {
 			dbInfo = dbDetail
-			if *dbDetail.Status != SQLSERVER_DB_DROPPING {
+			if *dbDetail.Status != SQLSERVER_DB_DELETING {
 				has = true
 			}
 			break
@@ -296,49 +305,11 @@ func (me *SqlserverService) DescribeDBDetailsByName(ctx context.Context, instanc
 	return
 }
 
-func (me *SqlserverService) ModifySqlserverDBName(ctx context.Context, instanceId string, oldName string, newName string) (errRet error) {
-	logId := getLogId(ctx)
-	request := sqlserver.NewModifyDBNameRequest()
-	request.InstanceId = &instanceId
-	request.OldDBName = &oldName
-	request.NewDBName = &newName
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
-		}
-	}()
-
-	var response *sqlserver.ModifyDBNameResponse
-	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		result, e := me.client.UseSqlserverClient().ModifyDBName(request)
-		if e != nil {
-			log.Printf("[CRITAL]%s DescribeDBs fail, reason:%s\n", logId, e.Error())
-			return retryError(e)
-		}
-		response = result
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-
-	if response != nil && response.Response != nil {
-		return me.WaitForTaskFinish(ctx, *response.Response.FlowId)
-	}
-	return
-}
-
-func (me *SqlserverService) ModifySqlserverDBRemark(ctx context.Context, instanceId string, dbname string, remark string) (errRet error) {
+func (me *SqlserverService) ModifySqlserverDBRemark(ctx context.Context, instanceId string, dbName string, remark string) (errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewModifyDBRemarkRequest()
 	request.InstanceId = &instanceId
-	var dbRemarkList []*sqlserver.DBRemark
-	var dbRemark sqlserver.DBRemark
-	dbRemark.Name = &dbname
-	dbRemark.Remark = &remark
-	dbRemarkList = append(dbRemarkList, &dbRemark)
-	request.DBRemarks = dbRemarkList
+	request.DBRemarks = []*sqlserver.DBRemark{{Name: &dbName, Remark: &remark}}
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
@@ -349,7 +320,7 @@ func (me *SqlserverService) ModifySqlserverDBRemark(ctx context.Context, instanc
 		ratelimit.Check(request.GetAction())
 		_, e := me.client.UseSqlserverClient().ModifyDBRemark(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s DescribeDBs fail, reason:%s\n", logId, e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
 			return retryError(e)
 		}
 		return nil
@@ -373,11 +344,11 @@ func (me *SqlserverService) DeleteSqlserverDB(ctx context.Context, instanceId st
 	}()
 
 	var response *sqlserver.DeleteDBResponse
-	err := resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseSqlserverClient().DeleteDB(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s DescribeDBs fail, reason:%s\n", logId, e.Error())
+			log.Printf("[CRITAL]%s %s fail, reason:%s\n", logId, request.GetAction(), e.Error())
 			return retryError(e)
 		}
 		response = result
