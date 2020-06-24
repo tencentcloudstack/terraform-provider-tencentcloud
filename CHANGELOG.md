@@ -1,7 +1,9 @@
 ## 1.37.0 (Unreleased)
 
 FEATURES:
-
+* **New Resource**: `tencentcloud_postgresql_instance`
+* **New Data Source**: `tencentcloud_postgresql_instances`
+* **New Data Source**: `tencentcloud_postgresql_speccodes`
 * **New Data Source**: `tencentcloud_sqlserver_zone_config`
 
 ## 1.36.1 (June 12, 2020)
