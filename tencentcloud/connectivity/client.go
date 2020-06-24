@@ -24,6 +24,7 @@ import (
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
@@ -66,6 +67,7 @@ type TencentCloudClient struct {
 	monitorConn   *monitor.Client
 	esConn        *es.Client
 	sqlserverConn *sqlserver.Client
+	postgreConn   *postgre.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -399,6 +401,19 @@ func (me *TencentCloudClient) UseEsClient() *es.Client {
 	me.esConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.esConn
+}
+
+// UsePostgreClient returns postgresql client for service
+func (me *TencentCloudClient) UsePostgresqlClient() *postgre.Client {
+	if me.postgreConn != nil {
+		return me.postgreConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.postgreConn, _ = postgre.NewClient(me.Credential, me.Region, cpf)
+	me.postgreConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.postgreConn
 }
 
 // UseSqlserverClient returns sqlserver client for service

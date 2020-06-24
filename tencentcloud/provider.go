@@ -284,6 +284,14 @@ Monitor
     tencentcloud_monitor_binding_object
     tencentcloud_monitor_binding_receiver
 
+PostgreSQL
+  Data Source
+	tencentcloud_postgresql_instances
+	tencentcloud_postgresql_specinfos
+
+  Resource
+	tencentcloud_postgresql_instance
+
 Redis
   Data Source
     tencentcloud_redis_zone_config
@@ -309,7 +317,9 @@ SQLServer
     tencentcloud_sqlserver_db
 
   Resource
+	  tencentcloud_sqlserver_instance
     tencentcloud_sqlserver_db
+
 
 SSL Certificates
   Data Source
@@ -590,6 +600,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_policy_groups":        dataSourceTencentMonitorPolicyGroups(),
 			"tencentcloud_monitor_product_namespace":    dataSourceTencentMonitorProductNamespace(),
 			"tencentcloud_elasticsearch_instances":      dataSourceTencentCloudElasticsearchInstances(),
+			"tencentcloud_postgresql_instances":         dataSourceTencentCloudPostgresqlInstances(),
+			"tencentcloud_postgresql_specinfos":         dataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_sqlserver_zone_config":        dataSourceTencentSqlserverZoneConfig(),
 			"tencentcloud_sqlserver_db":                 dataSourceTencentSqlserverDB(),
 		},
@@ -703,6 +715,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_binding_receiver":       resourceTencentMonitorBindingAlarmReceiver(),
 			"tencentcloud_elasticsearch_instance":         resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_sqlserver_db":                   resourceTencentCloudSqlserverDB(),
+			"tencentcloud_postgresql_instance":            resourceTencentCloudPostgresqlInstance(),
+			"tencentcloud_sqlserver_instance":             resourceTencentCloudSqlserverInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
