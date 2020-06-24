@@ -37,7 +37,7 @@ func resourceTencentCloudSqlserverDB() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "SQL server instance ID which DB belongs to.",
+				Description: "SQLServer instance ID which DB belongs to.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -67,7 +67,7 @@ func resourceTencentCloudSqlserverDB() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Database status could be `creating`, `running`, `modifying` which means changing the remark, and `deleting`.",
+				Description: "Database status, could be `creating`, `running`, `modifying` which means changing the remark, and `deleting`.",
 			},
 		},
 	}
@@ -81,24 +81,24 @@ func resourceTencentCloudSqlserverDBCreate(d *schema.ResourceData, meta interfac
 
 	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	instanceID := d.Get("instance_id").(string)
-	_, has, err := sqlserverService.DescribeSqlserverInstanceById(ctx, instanceID)
+	instanceId := d.Get("instance_id").(string)
+	_, has, err := sqlserverService.DescribeSqlserverInstanceById(ctx, instanceId)
 	if err != nil {
 		return fmt.Errorf("[CRITAL]%s DescribeSqlserverInstanceById fail, reason:%s\n", logId, err)
 	}
 	if !has {
-		return fmt.Errorf("[CRITAL]%s Sqlserver instance %s dose not exist for DB creation", logId, instanceID)
+		return fmt.Errorf("[CRITAL]%s SQLServer instance %s dose not exist for DB creation", logId, instanceId)
 	}
 
 	dbName := d.Get("name").(string)
 	charset := d.Get("charset").(string)
 	remark := d.Get("remark").(string)
 
-	if err := sqlserverService.CreateSqlserverDB(ctx, instanceID, dbName, charset, remark); err != nil {
+	if err := sqlserverService.CreateSqlserverDB(ctx, instanceId, dbName, charset, remark); err != nil {
 		return err
 	}
 
-	d.SetId(instanceID + FILED_SP + dbName)
+	d.SetId(instanceId + FILED_SP + dbName)
 	return resourceTencentCloudSqlserverDBRead(d, meta)
 }
 

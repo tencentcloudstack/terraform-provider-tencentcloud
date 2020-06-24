@@ -1,4 +1,4 @@
-data "tencentcloud_sqlserver_zone_config" "mysqlserver" {
+data "tencentcloud_sqlserver_zone_config" "foo" {
 }
 
 resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
