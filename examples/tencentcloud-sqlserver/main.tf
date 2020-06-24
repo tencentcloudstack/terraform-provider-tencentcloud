@@ -25,3 +25,9 @@ resource "tencentcloud_sqlserver_instance" "example" {
   memory            = 2
   storage           = 10
 }
+
+resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
+  instance_id = tencentcloud_sqlserver_instance.example.id
+  name = "db_brickzzhang_update"
+  charset = "Chinese_PRC_BIN"
+  remark = "test-remark-update"

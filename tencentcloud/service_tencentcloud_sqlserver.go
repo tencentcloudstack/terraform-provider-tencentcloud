@@ -3,13 +3,15 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/pkg/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-
-	"log"
-
+  "github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/pkg/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -18,6 +20,7 @@ import (
 type SqlserverService struct {
 	client *connectivity.TencentCloudClient
 }
+
 
 func (me *SqlserverService) DescribeZones(ctx context.Context) (zoneInfoList []*sqlserver.ZoneInfo, errRet error) {
 	logId := getLogId(ctx)
@@ -350,5 +353,189 @@ func (me *SqlserverService) WaitForTaskFinish(ctx context.Context, flowId int64)
 		}
 		return nil
 	})
+	return
+}
+  func (me *SqlserverService) CreateSqlserverDB(ctx context.Context, instanceID string, dbname string, charset string, remark string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewCreateDBRequest()
+
+	// set instance id
+	request.InstanceId = &instanceID
+	// set DBs
+	var dbCreateInfo = sqlserver.DBCreateInfo{
+		DBName:  &dbname,
+		Charset: &charset,
+		Remark:  &remark,
+	}
+	var dbInfoList []*sqlserver.DBCreateInfo
+	dbInfoList = append(dbInfoList, &dbCreateInfo)
+	request.DBs = dbInfoList
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *sqlserver.CreateDBResponse
+	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseSqlserverClient().CreateDB(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response != nil && response.Response != nil {
+		return me.WaitForTaskFinish(ctx, *response.Response.FlowId)
+	}
+	return
+}
+
+func (me *SqlserverService) DescribeDBsOfInstance(ctx context.Context, instanceId string) (instanceDBList []*sqlserver.DBDetail, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeDBsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	if instanceId != "" {
+		request.InstanceIdSet = []*string{&instanceId}
+	}
+	var offset, limit uint64 = SQLSERVER_DEFAULT_OFFSET, SQLSERVER_DEFAULT_LIMIT
+
+	request.Offset = &offset
+	request.Limit = &limit
+
+	for {
+		var response *sqlserver.DescribeDBsResponse
+		err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseSqlserverClient().DescribeDBs(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+				return retryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response for api[%s]", request.GetAction())
+			return
+		}
+		if len(response.Response.DBInstances) == 0 {
+			return
+		} else if len(response.Response.DBInstances) > 1 {
+			errRet = fmt.Errorf("[CRITAL]%s api[%s] returned multiple DB lists for one instance", logId, request.GetAction())
+			return
+		}
+		instanceDBList = append(instanceDBList, response.Response.DBInstances[0].DBDetails...)
+		if len(response.Response.DBInstances) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *SqlserverService) DescribeDBDetailsById(ctx context.Context, dbId string) (dbInfo *sqlserver.DBDetail, has bool, errRet error) {
+	idItem := strings.Split(dbId, FILED_SP)
+	if len(idItem) < 2 {
+		errRet = fmt.Errorf("broken ID of SQLServer DB")
+		return
+	}
+	instanceId := idItem[0]
+	dbName := idItem[1]
+
+	instanceDBList, err := me.DescribeDBsOfInstance(ctx, instanceId)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if len(instanceDBList) == 0 {
+		return
+	}
+
+	for _, dbDetail := range instanceDBList {
+		if *dbDetail.Name == dbName {
+			dbInfo = dbDetail
+			if *dbDetail.Status != SQLSERVER_DB_DELETING {
+				has = true
+			}
+			break
+		}
+	}
+	return
+}
+
+func (me *SqlserverService) ModifySqlserverDBRemark(ctx context.Context, instanceId string, dbName string, remark string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewModifyDBRemarkRequest()
+	request.InstanceId = &instanceId
+	request.DBRemarks = []*sqlserver.DBRemark{{Name: &dbName, Remark: &remark}}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, e := me.client.UseSqlserverClient().ModifyDBRemark(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			return retryError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverDB(ctx context.Context, instanceId string, name string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDeleteDBRequest()
+	request.InstanceId = &instanceId
+	request.Names = []*string{&name}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	var response *sqlserver.DeleteDBResponse
+	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseSqlserverClient().DeleteDB(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s %s fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			return retryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	if response != nil && response.Response != nil {
+		return me.WaitForTaskFinish(ctx, *response.Response.FlowId)
+	}
 	return
 }
