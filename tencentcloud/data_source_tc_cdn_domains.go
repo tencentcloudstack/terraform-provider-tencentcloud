@@ -22,6 +22,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCdnDomains() *schema.Resource {
@@ -266,6 +267,7 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 	}
 
 	cdnDomainList := make([]map[string]interface{}, 0, len(domainConfigs))
+	ids := make([]string, 0, len(domainConfigs))
 	for _, detailDomain := range domainConfigs {
 		var fullUrlCache bool
 		if detailDomain.CacheKey != nil && *detailDomain.CacheKey.FullUrlCache == CDN_SWITCH_ON {
@@ -317,8 +319,10 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 		}
 
 		cdnDomainList = append(cdnDomainList, mapping)
+		ids = append(ids, *detailDomain.ResourceId)
 	}
 
+	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("domain_list", cdnDomainList)
 	if err != nil {
 		log.Printf("[CRITAL]%s provider set cdn domain list fail, reason:%s\n ", logId, err.Error())
