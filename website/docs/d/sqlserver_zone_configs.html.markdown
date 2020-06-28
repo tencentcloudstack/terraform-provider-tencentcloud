@@ -1,19 +1,19 @@
 ---
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_sqlserver_zone_config"
-sidebar_current: "docs-tencentcloud-datasource-sqlserver_zone_config"
+page_title: "TencentCloud: tencentcloud_sqlserver_zone_configs"
+sidebar_current: "docs-tencentcloud-datasource-sqlserver_zone_configs"
 description: |-
   Use this data source to query purchasable specification configuration for each availability zone in this specific region.
 ---
 
-# tencentcloud_sqlserver_zone_config
+# tencentcloud_sqlserver_zone_configs
 
 Use this data source to query purchasable specification configuration for each availability zone in this specific region.
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_zone_config" "mysqlserver" {
+data "tencentcloud_sqlserver_zone_configs" "mysqlserver" {
 }
 ```
 

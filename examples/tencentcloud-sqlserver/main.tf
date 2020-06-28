@@ -1,4 +1,4 @@
-data "tencentcloud_sqlserver_zone_config" "mysqlserver" {
+data "tencentcloud_sqlserver_zone_configs" "foo" {
 }
 
 resource "tencentcloud_vpc" "foo" {
@@ -26,8 +26,13 @@ resource "tencentcloud_sqlserver_instance" "example" {
   storage           = 10
 }
 
-resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
+resource "tencentcloud_sqlserver_db" "example" {
   instance_id = tencentcloud_sqlserver_instance.example.id
-  name = "db_brickzzhang_update"
+  name = "example"
   charset = "Chinese_PRC_BIN"
-  remark = "test-remark-update"
+  remark = "test-remark"
+}
+
+data "tencentcloud_sqlserver_db" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
+}

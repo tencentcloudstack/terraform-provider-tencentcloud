@@ -4,9 +4,38 @@ Provides a SQLServer DB resource belongs to SQLServer instance.
 Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
-  instance_id = "mssql-XXXXXX"
-  name = "sqlserver_db_terraform"
+variable "availability_zone"{
+  default = "ap-guangzhou-2"
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name       = "example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "foo" {
+  name              = "example"
+  availability_zone = var.availability_zone
+  vpc_id            = tencentcloud_vpc.foo.id
+  cidr_block        = "10.0.0.0/24"
+  is_multicast      = false
+}
+
+resource "tencentcloud_sqlserver_instance" "example" {
+  name              = "example"
+  availability_zone = var.availability_zone
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.foo.id
+  subnet_id         = tencentcloud_subnet.foo.id
+  engine_version    = "2008R2"
+  project_id        = 0
+  memory            = 2
+  storage           = 10
+}
+
+resource "tencentcloud_sqlserver_db" "example" {
+  instance_id = tencentcloud_sqlserver_instance.example.id
+  name = "example"
   charset = "Chinese_PRC_BIN"
   remark = "test-remark"
 }
@@ -37,7 +66,7 @@ func resourceTencentCloudSqlserverDB() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "SQL server instance ID which DB belongs to.",
+				Description: "SQLServer instance ID which DB belongs to.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -67,7 +96,7 @@ func resourceTencentCloudSqlserverDB() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Database status could be `creating`, `running`, `modifying` which means changing the remark, and `deleting`.",
+				Description: "Database status, could be `creating`, `running`, `modifying` which means changing the remark, and `deleting`.",
 			},
 		},
 	}
@@ -81,24 +110,24 @@ func resourceTencentCloudSqlserverDBCreate(d *schema.ResourceData, meta interfac
 
 	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	instanceID := d.Get("instance_id").(string)
-	_, has, err := sqlserverService.DescribeSqlserverInstanceById(ctx, instanceID)
+	instanceId := d.Get("instance_id").(string)
+	_, has, err := sqlserverService.DescribeSqlserverInstanceById(ctx, instanceId)
 	if err != nil {
 		return fmt.Errorf("[CRITAL]%s DescribeSqlserverInstanceById fail, reason:%s\n", logId, err)
 	}
 	if !has {
-		return fmt.Errorf("[CRITAL]%s Sqlserver instance %s dose not exist for DB creation", logId, instanceID)
+		return fmt.Errorf("[CRITAL]%s SQLServer instance %s dose not exist for DB creation", logId, instanceId)
 	}
 
 	dbName := d.Get("name").(string)
 	charset := d.Get("charset").(string)
 	remark := d.Get("remark").(string)
 
-	if err := sqlserverService.CreateSqlserverDB(ctx, instanceID, dbName, charset, remark); err != nil {
+	if err := sqlserverService.CreateSqlserverDB(ctx, instanceId, dbName, charset, remark); err != nil {
 		return err
 	}
 
-	d.SetId(instanceID + FILED_SP + dbName)
+	d.SetId(instanceId + FILED_SP + dbName)
 	return resourceTencentCloudSqlserverDBRead(d, meta)
 }
 

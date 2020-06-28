@@ -313,10 +313,11 @@ Serverless Cloud Function(SCF)
 
 SQLServer
   Data Source
-    tencentcloud_sqlserver_zone_config
+    tencentcloud_sqlserver_zone_configs
+    tencentcloud_sqlserver_dbs
 
   Resource
-	  tencentcloud_sqlserver_instance
+	tencentcloud_sqlserver_instance
     tencentcloud_sqlserver_db
 
 
@@ -601,7 +602,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_elasticsearch_instances":      dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":         dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":         dataSourceTencentCloudPostgresqlSpecinfos(),
-			"tencentcloud_sqlserver_zone_config":        dataSourceTencentSqlserverZoneConfig(),
+			"tencentcloud_sqlserver_zone_configs":       dataSourceTencentSqlserverZoneConfigs(),
+			"tencentcloud_sqlserver_dbs":                dataSourceTencentSqlserverDBs(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

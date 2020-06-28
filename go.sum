@@ -456,6 +456,8 @@ github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2 h1:Xr9gkxfOP0K
 github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2/go.mod h1:yHp0ai0Z9gUljN3o0xMhYJnH/IcvkdTBOX2fmJ93JEM=
 github.com/tencentcloud/tencentcloud-sdk-go v3.0.187+incompatible h1:9hr93p945INwxa67N68EUJuIkUE2iGnMq/YZ6x3JHik=
 github.com/tencentcloud/tencentcloud-sdk-go v3.0.187+incompatible/go.mod h1:0PfYow01SHPMhKY31xa+EFz2RStxIqj6JFAJS+IkCi4=
+github.com/tencentcloud/tencentcloud-sdk-go v3.0.189+incompatible h1:eLVHwxLW2HFvr48l5sqROircYlq6Lp39EXhyCkK6Jlw=
+github.com/tencentcloud/tencentcloud-sdk-go v3.0.189+incompatible/go.mod h1:0PfYow01SHPMhKY31xa+EFz2RStxIqj6JFAJS+IkCi4=
 github.com/tencentcloud/tencentcloud-sdk-go v3.0.191+incompatible h1:cycv0fIQDSo9sjWkupzKnKMc+ZT8cKAfoq2WX3b8ozk=
 github.com/tencentcloud/tencentcloud-sdk-go v3.0.191+incompatible/go.mod h1:0PfYow01SHPMhKY31xa+EFz2RStxIqj6JFAJS+IkCi4=
 github.com/tetafro/godot v0.3.7 h1:+mecr7RKrUKB5UQ1gwqEMn13sDKTyDR8KNIquB9mm+8=
