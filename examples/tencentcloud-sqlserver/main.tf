@@ -1,4 +1,4 @@
-data "tencentcloud_sqlserver_zone_config" "foo" {
+data "tencentcloud_sqlserver_zone_configs" "foo" {
 }
 
 resource "tencentcloud_vpc" "foo" {
@@ -35,5 +35,4 @@ resource "tencentcloud_sqlserver_db" "example" {
 
 data "tencentcloud_sqlserver_db" "example" {
   instance_id = tencentcloud_sqlserver_db.example.instance_id
-  name        = tencentcloud_sqlserver_db.example.name
 }
