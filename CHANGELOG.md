@@ -1,4 +1,9 @@
 ## 1.38.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_cdn_domains` 
+
 ## 1.37.0 (June 23, 2020)
 
 FEATURES:
