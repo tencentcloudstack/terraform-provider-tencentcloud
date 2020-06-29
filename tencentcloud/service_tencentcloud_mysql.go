@@ -49,15 +49,14 @@ func (me *MysqlService) DescribeBackupsByMysqlId(ctx context.Context,
 	request := cdb.NewDescribeBackupsRequest()
 	request.InstanceId = &mysqlId
 
+	var offset, limit int64 = 0, 50
 needMoreItems:
-	var limit int64 = 50
-	if leftNumber < limit {
-		limit = leftNumber
-	}
 	if leftNumber <= 0 {
 		return
 	}
-	var offset int64 = 0
+	if leftNumber < limit {
+		limit = leftNumber
+	}
 	request.Limit = &limit
 	request.Offset = &offset
 	defer func() {
