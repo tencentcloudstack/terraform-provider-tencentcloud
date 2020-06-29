@@ -2,7 +2,11 @@
 
 FEATURES:
 
-* **New Data Source**: `tencentcloud_cdn_domains` 
+* **New Data Source**: `tencentcloud_cdn_domains`
+
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_http_domain` fix a condition for setting client certificate ids([#454](https://github.com/terraform-providers/terraform-provider-tencentcloud/pull/454)).
 
 ## 1.37.0 (June 23, 2020)
 
