@@ -34,12 +34,6 @@ func TestAccTencentCloudCdnDomains(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "tags.test", "world"),
 				),
 			},
-			{
-				ResourceName:            "tencentcloud_cdn_domain.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"https_config"},
-			},
 		},
 	})
 }

@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"context"
 	"log"
-	"strings"
 
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -90,20 +89,34 @@ func (me *CdnService) StartDomain(ctx context.Context, domain string) error {
 	return nil
 }
 
-func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context, filterMap map[string]interface{}) (domainConfig []*cdn.DetailDomain, errRet error) {
+func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context,
+	filterMap map[string]interface{},
+	leftNumber int64) (domainConfig []*cdn.DetailDomain, errRet error) {
+
 	logId := getLogId(ctx)
 	request := cdn.NewDescribeDomainsConfigRequest()
 	request.Filters = make([]*cdn.DomainFilter, 0, len(filterMap))
 
 	for k, v := range filterMap {
 		value := v.(string)
-
 		filter := &cdn.DomainFilter{
-			Name:  helper.String(underlineToHump([]byte(k))),
+			Name:  helper.String(k),
 			Value: []*string{&value},
 		}
 		request.Filters = append(request.Filters, filter)
 	}
+
+	var offset, limit int64 = 0, 100
+needMoreDomains:
+	if leftNumber <= 0 {
+		return
+	}
+	if leftNumber < limit {
+		limit = leftNumber
+	}
+
+	request.Limit = &limit
+	request.Offset = &offset
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCdnClient().DescribeDomainsConfig(request)
@@ -119,25 +132,16 @@ func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context, filter
 		return
 	}
 
+	totalCount := *response.Response.TotalNumber
+	leftNumber = leftNumber - limit
+	offset += limit
+
 	if len(response.Response.Domains) > 0 {
-		domainConfig = response.Response.Domains
-	}
-	return
-}
-
-func underlineToHump(underline []byte) (humpValue string) {
-	lenUnderLine := len(underline)
-	for i := 0; i < lenUnderLine; i++ {
-		if string(underline[i]) == "_" {
-			if i+1 < lenUnderLine {
-				humpValue += strings.ToUpper(string(underline[i+1]))
-				i++
-			}
-			continue
-		}
-
-		humpValue += string(underline[i])
+		domainConfig = append(domainConfig, response.Response.Domains...)
 	}
 
+	if leftNumber > 0 && totalCount-offset > 0 {
+		goto needMoreDomains
+	}
 	return
 }

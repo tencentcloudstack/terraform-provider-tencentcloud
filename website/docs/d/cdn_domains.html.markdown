@@ -29,6 +29,7 @@ The following arguments are supported:
 * `domain` - (Optional) Acceleration domain name.
 * `full_url_cache` - (Optional) Whether to enable full-path cache.
 * `https_switch` - (Optional) HTTPS configuration. The available value include `on`, `off` and `processing`.
+* `offset` - (Optional) Record offset. Default is 10.
 * `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. The available value include `http`, `https` and `follow`.
 * `result_output_file` - (Optional) Used to save results.
 * `service_type` - (Optional) Service type of acceleration domain name. The available value include `web`, `download` and `media`.
@@ -49,6 +50,7 @@ In addition to all arguments above, the following attributes are exported:
     * `ocsp_stapling_switch` - OCSP configuration switch.
     * `spdy_switch` - Spdy configuration switch.
     * `verify_client` - Client certificate authentication feature.
+  * `id` - Domain name ID.
   * `origin` - Origin server configuration.
     * `backup_origin_list` - Backup origin server list.
     * `backup_origin_type` - Backup origin server type.
@@ -59,7 +61,6 @@ In addition to all arguments above, the following attributes are exported:
     * `origin_type` - Master origin server type.
     * `server_name` - Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
   * `project_id` - The project CDN belongs to.
-  * `resource_id` - Domain name ID.
   * `service_type` - Service type of acceleration domain name.
   * `status` - Acceleration service status.
   * `tags` - Tags of cdn domain.

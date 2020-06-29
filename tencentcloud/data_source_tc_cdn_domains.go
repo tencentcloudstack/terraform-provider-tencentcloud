@@ -57,6 +57,13 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue(CDN_HTTPS_SWITCH),
 				Description:  "HTTPS configuration. The available value include `on`, `off` and `processing`.",
 			},
+			"offset": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      10,
+				ValidateFunc: validateIntegerInRange(1, 10000),
+				Description:  "Record offset. Default is 10.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -68,7 +75,7 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 				Description: "An information list of cdn domain. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"resource_id": {
+						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Domain name ID.",
@@ -226,21 +233,21 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 	cdnService := CdnService{client: client}
 	tagService := TagService{client: client}
 
+	offset, _ := d.Get("offset").(int)
 	var domainFilterMap = make(map[string]interface{}, 5)
-
 	if v, ok := d.GetOk("domain"); ok {
 		domainFilterMap["domain"] = v.(string)
 	}
 	if v, ok := d.GetOk("service_type"); ok {
-		domainFilterMap["service_type"] = v.(string)
+		domainFilterMap["serviceType"] = v.(string)
 	}
 	if v, ok := d.GetOk("https_switch"); ok {
-		domainFilterMap["https_switch"] = v.(string)
+		domainFilterMap["httpsSwitch"] = v.(string)
 	}
 	if v, ok := d.GetOk("origin_pull_protocol"); ok {
-		domainFilterMap["origin_pull_protocol"] = v.(string)
+		domainFilterMap["originPullProtocol"] = v.(string)
 	}
-	if v, ok := d.GetOk("full_url_cache"); ok {
+	if v, ok := d.GetOkExists("full_url_cache"); ok {
 		var value string
 		if v.(bool) {
 			value = "on"
@@ -248,13 +255,13 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 			value = "off"
 		}
 
-		domainFilterMap["full_url_cache"] = value
+		domainFilterMap["fullUrlCache"] = value
 	}
 
 	var domainConfigs []*cdn.DetailDomain
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		domainConfigs, errRet = cdnService.DescribeDomainsConfigByFilters(ctx, domainFilterMap)
+		domainConfigs, errRet = cdnService.DescribeDomainsConfigByFilters(ctx, domainFilterMap, int64(offset))
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
@@ -303,7 +310,7 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 		}
 
 		mapping := map[string]interface{}{
-			"resource_id":    detailDomain.ResourceId,
+			"id":             detailDomain.ResourceId,
 			"domain":         detailDomain.Domain,
 			"cname":          detailDomain.Cname,
 			"status":         detailDomain.Status,
