@@ -71,6 +71,9 @@ Auto Scaling(AS)
     tencentcloud_as_notification
 
 CDN
+  Data Source
+    tencentcloud_cdn_domains
+
   Resource
 	tencentcloud_cdn_domain
 
@@ -591,6 +594,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cam_user_policy_attachments":      dataSourceTencentCloudCamUserPolicyAttachments(),
 			"tencentcloud_cam_group_policy_attachments":     dataSourceTencentCloudCamGroupPolicyAttachments(),
 			"tencentcloud_cam_saml_providers":               dataSourceTencentCloudCamSAMLProviders(),
+			"tencentcloud_cdn_domains":                      dataSourceTencentCloudCdnDomains(),
 			"tencentcloud_scf_functions":                    dataSourceTencentCloudScfFunctions(),
 			"tencentcloud_scf_namespaces":                   dataSourceTencentCloudScfNamespaces(),
 			"tencentcloud_scf_logs":                         dataSourceTencentCloudScfLogs(),

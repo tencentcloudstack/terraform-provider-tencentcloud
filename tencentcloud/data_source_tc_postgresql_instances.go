@@ -4,15 +4,15 @@ Use this data source to query postgresql instances
 Example Usage
 
 ```hcl
-data "tencentcloud_postgresql_instances" "name"{
-	name = "test"
+data "tencentcloud_postgresql_instances" "name" {
+  name = "test"
 }
 
-data "tencentcloud_postgresql_instances" "project"{
+data "tencentcloud_postgresql_instances" "project" {
   project_id = 0
 }
 
-data "tencentcloud_postgresql_instances" "id"{
+data "tencentcloud_postgresql_instances" "id" {
   id = "postgres-h9t4fde1"
 }
 ```
@@ -96,17 +96,17 @@ func dataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 						"storage": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Disk size (in GB).",
+							Description: "Volume size(in GB).",
 						},
 						"memory": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Memory size (in MB).",
+							Description: "Memory size(in GB).",
 						},
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Project ID, default value is 0.",
+							Description: "Project id, default value is 0.",
 						},
 						"availability_zone": {
 							Type:        schema.TypeString,
@@ -131,7 +131,7 @@ func dataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 						"private_access_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Ip address for private access.",
+							Description: "IP address for private access.",
 						},
 						"private_access_port": {
 							Type:        schema.TypeInt,
@@ -175,7 +175,6 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 	}
 
 	instanceList, err := service.DescribePostgresqlInstances(ctx, filter)
-
 	if err != nil {
 		instanceList, err = service.DescribePostgresqlInstances(ctx, filter)
 	}
@@ -232,9 +231,11 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 		log.Printf("[CRITAL]%s provider set list fail, reason:%s\n", logId, e.Error())
 		return e
 	}
+
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		return writeToFile(output.(string), list)
 	}
+
 	return nil
 }

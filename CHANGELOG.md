@@ -1,10 +1,43 @@
-## 1.37.0 (Unreleased)
+## 1.39.0 (Unreleased)
+
+FEATURES:
+* **New Resource**: `tencentcloud_sqlserver_instance`
+* **New Resource**: `tencentcloud_sqlserver_db`
+* **New Resource**: `tencentcloud_sqlserver_account`
+* **New Resource**: `tencentcloud_sqlserver_db_account_attachment`
+* **New Data Source**: `tencentcloud_sqlserver_instances`
+* **New Data Source**: `tencentcloud_sqlserver_dbs`
+* **New Data Source**: `tencentcloud_sqlserver_accounts`
+* **New Data Source**: `tencentcloud_sqlserver_db_account_attachment`
+* **New Data Source**: `tencentcloud_sqlserver_backups`
+
+## 1.38.1 (June 30, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cos_bucket` fix creation failure.
+
+## 1.38.0 (June 29, 2020)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_cdn_domains`
+
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_http_domain` fix a condition for setting client certificate ids([#454](https://github.com/terraform-providers/terraform-provider-tencentcloud/pull/454)).
+
+## 1.37.0 (June 23, 2020)
 
 FEATURES:
 * **New Resource**: `tencentcloud_postgresql_instance`
 * **New Data Source**: `tencentcloud_postgresql_instances`
 * **New Data Source**: `tencentcloud_postgresql_speccodes`
 * **New Data Source**: `tencentcloud_sqlserver_zone_config`
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mongodb_instance` support more machine type.
 
 ## 1.36.1 (June 12, 2020)
 
