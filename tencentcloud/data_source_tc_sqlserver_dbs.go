@@ -1,47 +1,11 @@
 /*
-Use this data source to query DB resources for the specific SQLServer instance.
+Use this data source to query DB resources for the specific SQL Server instance.
 
 Example Usage
 
 ```hcl
-variable "availability_zone"{
-  default = "ap-guangzhou-2"
-}
-
-resource "tencentcloud_vpc" "foo" {
-  name       = "example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "foo" {
-  name              = "example"
-  availability_zone = var.availability_zone
-  vpc_id            = tencentcloud_vpc.foo.id
-  cidr_block        = "10.0.0.0/24"
-  is_multicast      = false
-}
-
-resource "tencentcloud_sqlserver_instance" "example" {
-  name              = "example"
-  availability_zone = var.availability_zone
-  charge_type       = "POSTPAID_BY_HOUR"
-  vpc_id            = tencentcloud_vpc.foo.id
-  subnet_id         = tencentcloud_subnet.foo.id
-  engine_version    = "2008R2"
-  project_id        = 0
-  memory            = 2
-  storage           = 10
-}
-
-resource "tencentcloud_sqlserver_db" "example" {
-  instance_id = tencentcloud_sqlserver_instance.example.id
-  name = "example"
-  charset = "Chinese_PRC_BIN"
-  remark = "test-remark"
-}
-
 data "tencentcloud_sqlserver_db" "example" {
-  instance_id = tencentcloud_sqlserver_db.example.instance_id
+  instance_id = "mssql-3cdq7kx5"
 }
 ```
 */
@@ -76,6 +40,11 @@ func dataSourceTencentSqlserverDBs() *schema.Resource {
 				Description: "A list of dbs belong to the specific instance. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"instance_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "SQLServer instance ID which DB belongs to.",
+						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -122,7 +91,7 @@ func dataSourceTencentSqlserverDBRead(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("[CRITAL]%s DescribeSqlserverInstanceById fail, reason:%s\n", logId, err)
 	}
 	if !has {
-		return fmt.Errorf("[CRITAL]%s SQLServer instance %s dose not exist", logId, instanceId)
+		return fmt.Errorf("[CRITAL]%s SQL Server instance %s dose not exist", logId, instanceId)
 	}
 	_ = d.Set("instance_id", instanceId)
 

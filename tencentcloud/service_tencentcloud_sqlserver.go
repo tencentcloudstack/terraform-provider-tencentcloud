@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/pkg/errors"
+	SDKErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -30,7 +31,7 @@ func (me *SqlserverService) DescribeZones(ctx context.Context) (zoneInfoList []*
 	}()
 
 	var response *sqlserver.DescribeZonesResponse
-	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseSqlserverClient().DescribeZones(request)
 		if e != nil {
@@ -63,7 +64,7 @@ func (me *SqlserverService) DescribeProductConfig(ctx context.Context, zone stri
 	}()
 
 	var response *sqlserver.DescribeProductConfigResponse
-	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseSqlserverClient().DescribeProductConfig(request)
 		if e != nil {
@@ -83,12 +84,12 @@ func (me *SqlserverService) DescribeProductConfig(ctx context.Context, zone stri
 	return
 }
 
-func (me *SqlserverService) CreateSqlserverInstance(ctx context.Context, dbVersion string, chargeType string, memory int, autoRenewFlag int, projectId int, period int, subnetId string, vpcId string, zone string, storage int) (instanceId string, errRet error) {
+func (me *SqlserverService) CreateSqlserverInstance(ctx context.Context, dbVersion string, chargeType string, memory int, autoRenewFlag int, projectId int, subnetId string, vpcId string, zone string, storage int) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewCreateDBInstancesRequest()
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
@@ -103,7 +104,6 @@ func (me *SqlserverService) CreateSqlserverInstance(ctx context.Context, dbVersi
 		request.ProjectId = helper.IntInt64(projectId)
 	}
 
-	//request.Period = helper.IntInt64(period)
 	request.GoodsNum = helper.IntInt64(1)
 	request.Zone = &zone
 
@@ -118,10 +118,10 @@ func (me *SqlserverService) CreateSqlserverInstance(ctx context.Context, dbVersi
 		return
 	}
 	if len(response.Response.DealNames) == 0 {
-		errRet = errors.New("TencentCloud SDK returns empty postgresql ID")
+		errRet = fmt.Errorf("TencentCloud SDK returns empty SQL Server ID")
 		return
 	} else if len(response.Response.DealNames) > 1 {
-		errRet = errors.New("TencentCloud SDK returns more than one postgresql ID")
+		errRet = fmt.Errorf("TencentCloud SDK returns more than one SQL Server ID")
 		return
 	}
 
@@ -140,7 +140,7 @@ func (me *SqlserverService) ModifySqlserverInstanceName(ctx context.Context, ins
 	request.InstanceName = &name
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
@@ -156,7 +156,7 @@ func (me *SqlserverService) ModifySqlserverInstanceProjectId(ctx context.Context
 	request.ProjectId = helper.IntInt64(projectId)
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
@@ -173,7 +173,7 @@ func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instan
 	request.Storage = helper.IntInt64(storage)
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
@@ -194,10 +194,10 @@ func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instan
 			return resource.NonRetryableError(errors.WithStack(err))
 		}
 		if !has {
-			return resource.NonRetryableError(fmt.Errorf("cannot find sqlserver instance %s", instanceId))
+			return resource.NonRetryableError(fmt.Errorf("cannot find SQL Server instance %s", instanceId))
 		}
 		if int(*instance.Status) == 9 {
-			return resource.RetryableError(fmt.Errorf("expanding , sql server instance ID %s, status %d.... ", instanceId, *instance.Status))
+			return resource.RetryableError(fmt.Errorf("expanding , SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
 		} else {
 			return nil
 		}
@@ -212,7 +212,7 @@ func (me *SqlserverService) DeleteSqlserverInstance(ctx context.Context, instanc
 	request.InstanceIdSet = []*string{&instanceId}
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
@@ -226,7 +226,7 @@ func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, inst
 	request := sqlserver.NewDescribeDBInstancesRequest()
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
@@ -236,13 +236,14 @@ func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, inst
 	if projectId != -1 {
 		request.ProjectId = helper.IntUint64(projectId)
 	}
-	if subnetId != "" && netType != 0 {
+	if subnetId != "" && netType != BASIC_NETWORK {
 		request.SubnetId = &subnetId
 	}
-	if vpcId != "" && netType != 0 {
+	if vpcId != "" && netType != BASIC_NETWORK {
 		request.VpcId = &vpcId
 	}
-	if netType == 0 {
+
+	if netType == BASIC_NETWORK {
 		//basic network
 		request.VpcId = helper.String("")
 		request.SubnetId = helper.String("")
@@ -261,6 +262,7 @@ func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, inst
 		}
 		if response == nil || response.Response == nil {
 			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+			return
 		}
 		instanceList = append(instanceList, response.Response.DBInstances...)
 		if len(response.Response.DBInstances) < int(limit) {
@@ -289,13 +291,350 @@ func (me *SqlserverService) DescribeSqlserverInstanceById(ctx context.Context, i
 	return
 }
 
+func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instanceId string, startTime string, endTime string) (backupList []*sqlserver.Backup, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeBackupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	request.StartTime = &startTime
+	request.EndTime = &endTime
+
+	var offset, limit int64 = 0, 20
+
+	request.Offset = &offset
+	request.Limit = &limit
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseSqlserverClient().DescribeBackups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+			return
+		}
+		backupList = append(backupList, response.Response.Backups...)
+		if len(response.Response.Backups) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *SqlserverService) CreateSqlserverAccount(ctx context.Context, instanceId string, userName string, password string, remark string, isAdmin bool) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewCreateAccountRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	account := sqlserver.AccountCreateInfo{UserName: &userName, Password: &password, IsAdmin: &isAdmin, Remark: &remark}
+	request.Accounts = []*sqlserver.AccountCreateInfo{&account}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().CreateAccount(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	flowId := *response.Response.FlowId
+	err = me.WaitForTaskFinish(ctx, flowId)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverAccounts(ctx context.Context, instanceId string) (accounts []*sqlserver.AccountDetail, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeAccountsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+
+	var offset, limit uint64 = 0, 20
+
+	request.Offset = &offset
+	request.Limit = &limit
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseSqlserverClient().DescribeAccounts(request)
+		if err != nil {
+			ee, ok := err.(*SDKErrors.TencentCloudSDKError)
+			if !ok || ee.Code != "ResourceNotFound.InstanceNotFound" {
+				errRet = err
+				return
+			}
+
+			return
+
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+			return
+		}
+		accounts = append(accounts, response.Response.Accounts...)
+		if len(response.Response.Accounts) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *SqlserverService) DescribeSqlserverAccountById(ctx context.Context, instanceId string, userName string) (account *sqlserver.AccountDetail, has bool, errRet error) {
+	accountList, err := me.DescribeSqlserverAccounts(ctx, instanceId)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if len(accountList) == 0 {
+		return
+	}
+
+	for _, v := range accountList {
+		if *v.Name == userName {
+			account = v
+			has = true
+			return
+		}
+	}
+	return
+}
+
+func (me *SqlserverService) ModifySqlserverAccountRemark(ctx context.Context, instanceId string, userName string, remark string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewModifyAccountRemarkRequest()
+	request.InstanceId = &instanceId
+	request.Accounts = []*sqlserver.AccountRemark{{UserName: &userName, Remark: &remark}}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().ModifyAccountRemark(request)
+	return err
+}
+
+func (me *SqlserverService) ResetSqlserverAccountPassword(ctx context.Context, instanceId string, userName string, password string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewResetAccountPasswordRequest()
+	request.InstanceId = &instanceId
+	request.Accounts = []*sqlserver.AccountPassword{{UserName: &userName, Password: &password}}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().ResetAccountPassword(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	//check status not resetting
+	errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, has, err := me.DescribeSqlserverAccountById(ctx, instanceId, userName)
+		if err != nil {
+			return resource.NonRetryableError(errors.WithStack(err))
+		}
+		if !has {
+			return resource.NonRetryableError(fmt.Errorf("cannot find SQL Server account %s%s%s", instanceId, FILED_SP, userName))
+		}
+		if int(*instance.Status) == 4 {
+			return resource.RetryableError(fmt.Errorf("resetting , SQL Server instance ID %s, name %s, status %d.... ", instanceId, userName, *instance.Status))
+		} else {
+			return nil
+		}
+	})
+
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverAccount(ctx context.Context, instanceId string, userName string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDeleteAccountRequest()
+	request.UserNames = []*string{&userName}
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().DeleteAccount(request)
+	if err != nil {
+		ee, ok := err.(*SDKErrors.TencentCloudSDKError)
+		if !ok || ee.Code != "ResourceNotFound.InstanceNotFound" {
+			errRet = err
+			return
+		}
+		return
+	}
+
+	//check status not deleting
+	errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, has, err := me.DescribeSqlserverAccountById(ctx, instanceId, userName)
+		if err != nil {
+			return resource.NonRetryableError(errors.WithStack(err))
+		}
+		if !has {
+			return nil
+		}
+		if int(*instance.Status) == -1 {
+			return resource.RetryableError(fmt.Errorf("deleting , SQL Server instance ID %s, name %s, status %d.... ", instanceId, userName, *instance.Status))
+		} else {
+			return resource.NonRetryableError(fmt.Errorf("invalid, SQL Server instance ID %s, name %s, status %d...", instanceId, userName, *instance.Status))
+		}
+	})
+
+	return
+}
+
+func (me *SqlserverService) ModifyAccountDBAttachment(ctx context.Context, instanceId, accountName, dbName, privilege string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewModifyAccountPrivilegeRequest()
+	request.InstanceId = &instanceId
+	request.Accounts = []*sqlserver.AccountPrivilegeModifyInfo{{UserName: &accountName, DBPrivileges: []*sqlserver.DBPrivilegeModifyInfo{{DBName: &dbName, Privilege: &privilege}}}}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	//check account exists
+	_, has, err := me.DescribeSqlserverAccountById(ctx, instanceId, accountName)
+
+	if err != nil {
+		return err
+	}
+
+	if !has {
+		return fmt.Errorf("SQL Server account %s , instance ID %s is not exist", accountName, instanceId)
+	}
+
+	//check db exists
+	_, has, err = me.DescribeDBDetailsById(ctx, fmt.Sprintf("%s%s%s", instanceId, FILED_SP, dbName))
+	if err != nil {
+		return err
+	}
+
+	if !has {
+		return fmt.Errorf("SQL Server DB %s , instance ID %s is not exist", dbName, instanceId)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().ModifyAccountPrivilege(request)
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	if err != nil {
+		return err
+	}
+
+	flowId := int64(*response.Response.FlowId)
+	err = me.WaitForTaskFinish(ctx, flowId)
+	return err
+}
+
+func (me *SqlserverService) DescribeAccountDBAttachments(ctx context.Context, instanceId, accountName, dbName string) (attachments []map[string]string, errRet error) {
+
+	if accountName != "" {
+		//check account exists
+		accounts, has, err := me.DescribeSqlserverAccountById(ctx, instanceId, accountName)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if !has {
+			return
+		}
+
+		for _, v := range accounts.Dbs {
+
+			if (dbName != "" && *v.DBName == dbName) || dbName == "" {
+				mapping := make(map[string]string)
+				mapping["db_name"] = *v.DBName
+				mapping["account_name"] = accountName
+				mapping["privilege"] = *v.Privilege
+				attachments = append(attachments, mapping)
+			}
+		}
+		return
+	} else {
+		dbInfos, err := me.DescribeDBsOfInstance(ctx, instanceId)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if len(dbInfos) == 0 {
+			return
+		}
+		for _, v := range dbInfos {
+			if (dbName != "" && *v.Name == dbName) || dbName == "" {
+				for _, vv := range v.Accounts {
+					mapping := make(map[string]string)
+					mapping["db_name"] = *v.Name
+					mapping["account_name"] = *vv.UserName
+					mapping["privilege"] = *vv.Privilege
+					attachments = append(attachments, mapping)
+				}
+			}
+		}
+		return
+	}
+}
+
+func (me *SqlserverService) DescribeAccountDBAttachmentById(ctx context.Context, instanceId, accountName, dbName string) (attachment map[string]string, has bool, errRet error) {
+	attachments, err := me.DescribeAccountDBAttachments(ctx, instanceId, accountName, dbName)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(attachments) == 0 {
+		return
+	}
+
+	attachment = attachments[0]
+	has = true
+	return
+}
+
 func (me *SqlserverService) GetInfoFromDeal(ctx context.Context, dealId string) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewDescribeOrdersRequest()
 	request.DealNames = []*string{&dealId}
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
@@ -306,14 +645,14 @@ func (me *SqlserverService) GetInfoFromDeal(ctx context.Context, dealId string) 
 		return
 	}
 	if response == nil || response.Response == nil {
-		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		errRet = fmt.Errorf("TencentCloud SDK returns nil response, %s", request.GetAction())
 		return
 	}
 	if len(response.Response.Deals) == 0 {
-		errRet = errors.New("TencentCloud SDK returns empty deal")
+		errRet = fmt.Errorf("TencentCloud SDK returns empty deal")
 		return
 	} else if len(response.Response.Deals) > 1 {
-		errRet = errors.New("TencentCloud SDK returns more than one deal")
+		errRet = fmt.Errorf("TencentCloud SDK returns more than one deal")
 		return
 	}
 	instanceId = *response.Response.Deals[0].InstanceIdSet[0]
@@ -336,9 +675,10 @@ func (me *SqlserverService) WaitForTaskFinish(ctx context.Context, flowId int64)
 				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	ratelimit.Check(request.GetAction())
+
 	errRet = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		taskResponse, err := me.client.UseSqlserverClient().DescribeFlowStatus(request)
+		ratelimit.Check(request.GetAction())
 		if err != nil {
 			return resource.NonRetryableError(errors.WithStack(err))
 		}
@@ -376,7 +716,7 @@ func (me *SqlserverService) CreateSqlserverDB(ctx context.Context, instanceID st
 	}()
 
 	var response *sqlserver.CreateDBResponse
-	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseSqlserverClient().CreateDB(request)
 		if e != nil {
@@ -391,7 +731,7 @@ func (me *SqlserverService) CreateSqlserverDB(ctx context.Context, instanceID st
 		return
 	}
 
-	if response != nil && response.Response != nil {
+	if response != nil && response.Response != nil && *response.Response.FlowId != 0 {
 		return me.WaitForTaskFinish(ctx, *response.Response.FlowId)
 	}
 	return
@@ -402,7 +742,7 @@ func (me *SqlserverService) DescribeDBsOfInstance(ctx context.Context, instanceI
 	request := sqlserver.NewDescribeDBsRequest()
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
@@ -416,7 +756,7 @@ func (me *SqlserverService) DescribeDBsOfInstance(ctx context.Context, instanceI
 
 	for {
 		var response *sqlserver.DescribeDBsResponse
-		err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			result, e := me.client.UseSqlserverClient().DescribeDBs(request)
 			if e != nil {
@@ -431,7 +771,7 @@ func (me *SqlserverService) DescribeDBsOfInstance(ctx context.Context, instanceI
 			return
 		}
 		if response == nil || response.Response == nil {
-			errRet = fmt.Errorf("TencentCloud SDK return nil response for api[%s]", request.GetAction())
+			errRet = fmt.Errorf("TencentCloud SDK returns nil response for api[%s]", request.GetAction())
 			return
 		}
 		if len(response.Response.DBInstances) == 0 {
@@ -451,7 +791,7 @@ func (me *SqlserverService) DescribeDBsOfInstance(ctx context.Context, instanceI
 func (me *SqlserverService) DescribeDBDetailsById(ctx context.Context, dbId string) (dbInfo *sqlserver.DBDetail, has bool, errRet error) {
 	idItem := strings.Split(dbId, FILED_SP)
 	if len(idItem) < 2 {
-		errRet = fmt.Errorf("broken ID of SQLServer DB")
+		errRet = fmt.Errorf("broken ID of SQLServer DB %s", dbId)
 		return
 	}
 	instanceId := idItem[0]
@@ -485,11 +825,11 @@ func (me *SqlserverService) ModifySqlserverDBRemark(ctx context.Context, instanc
 	request.DBRemarks = []*sqlserver.DBRemark{{Name: &dbName, Remark: &remark}}
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
-	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, e := me.client.UseSqlserverClient().ModifyDBRemark(request)
 		if e != nil {
@@ -512,12 +852,12 @@ func (me *SqlserverService) DeleteSqlserverDB(ctx context.Context, instanceId st
 	request.Names = []*string{&name}
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
 	var response *sqlserver.DeleteDBResponse
-	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseSqlserverClient().DeleteDB(request)
 		if e != nil {

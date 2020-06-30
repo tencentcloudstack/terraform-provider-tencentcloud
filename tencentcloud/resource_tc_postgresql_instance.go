@@ -63,12 +63,11 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Description:  "Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.",
 			},
 			"engine_version": {
-				Type:         schema.TypeString,
-				ForceNew:     true,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(POSTSQL_DB_VERSION),
-				Default:      POSTSQL_DB_VERSION[len(POSTSQL_DB_VERSION)-1],
-				Description:  "Version of the postgresql database engine. Allowed values are `9.3.5`, `9.5.4`, `10.4`.",
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Default:     "9.3.5",
+				Description: "Version of the postgresql database engine. Allowed values are `9.3.5`, `9.5.4`, `10.4`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -273,7 +272,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	//set name
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr := postgresqlService.ModifyPostgresqlInstanceName(ctx, instanceId, d.Get("name").(string))
+		inErr := postgresqlService.ModifyPostgresqlInstanceName(ctx, instanceId, name)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -316,7 +315,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if outErr != nil {
 			return outErr
 		}
-		//check update public service done
+		//check update name done
 		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
 		if checkErr != nil {
 			return checkErr
@@ -338,7 +337,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if outErr != nil {
 			return outErr
 		}
-		//check update public service done
+		//check update storage and memory done
 		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
 		if checkErr != nil {
 			return checkErr
@@ -453,7 +452,6 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("engine_version", instance.DBVersion)
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("charset", instance.DBCharset)
-	_ = d.Set("charge_type", instance.PayType)
 
 	if *instance.PayType == POSTGRESQL_PAYTYPE_PREPAID || *instance.PayType == COMMON_PAYTYPE_PREPAID {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
@@ -502,12 +500,23 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 	instanceId := d.Id()
 	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var outErr, inErr, checkErr error
-	//check status
-	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	var outErr, inErr error
+	var has bool
 
-	if checkErr != nil {
-		return checkErr
+	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		return nil
+	})
+
+	if outErr != nil {
+		return outErr
+	}
+
+	if !has {
+		return nil
 	}
 
 	outErr = postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
@@ -526,20 +535,18 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 		return outErr
 	}
 
-	_, has, outErr := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
-	if outErr != nil || has {
-		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
-			if inErr != nil {
-				return retryError(inErr)
-			}
-			if has {
-				inErr = fmt.Errorf("delete postgresql instance %s fail, instance still exists from SDK DescribePostgresqlInstanceById", instanceId)
-				return resource.RetryableError(inErr)
-			}
-			return nil
-		})
-	}
+	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, has, inErr = postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		if has {
+			inErr = fmt.Errorf("delete postgresql instance %s fail, instance still exists from SDK DescribePostgresqlInstanceById", instanceId)
+			return resource.RetryableError(inErr)
+		}
+		return nil
+	})
+
 	if outErr != nil {
 		return outErr
 	}

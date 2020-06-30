@@ -1,5 +1,5 @@
 /*
-Use this resource to create sqlserver instance
+Use this resource to create SQL Server instance
 
 Example Usage
 
@@ -49,7 +49,7 @@ func resourceTencentCloudSqlserverInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateStringLengthInRange(1, 60),
-				Description:  "Name of the sqlserver instance.",
+				Description:  "Name of the SQL Server instance.",
 			},
 			"charge_type": {
 				Type:         schema.TypeString,
@@ -57,14 +57,14 @@ func resourceTencentCloudSqlserverInstance() *schema.Resource {
 				Default:      COMMON_PAYTYPE_POSTPAID,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(POSTGRESQL_PAYTYPE),
-				Description:  "Pay type of the sqlserver instance. For now, only `POSTPAID_BY_HOUR` is valid.",
+				Description:  "Pay type of the SQL Server instance. For now, only `POSTPAID_BY_HOUR` is valid.",
 			},
 			"engine_version": {
 				Type:        schema.TypeString,
 				ForceNew:    true,
 				Optional:    true,
 				Default:     "2008R2",
-				Description: "Version of the sqlserver database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
+				Description: "Version of the SQL Server database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -121,12 +121,12 @@ func resourceTencentCloudSqlserverInstance() *schema.Resource {
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the sqlserver instance.",
+				Description: "Create time of the SQL Server instance.",
 			},
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Status of the sqlserver instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
+				Description: "Status of the SQL Server instance. 1 for applying, 2 for running, 3 for running with limit, 4 for isolated, 5 for recycling, 6 for recycled, 7 for running with task, 8 for off-line, 9 for expanding, 10 for migrating, 11 for readonly, 12 for rebooting.",
 			},
 		},
 	}
@@ -152,9 +152,6 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 		memory    = d.Get("memory").(int)
 	)
 
-	var period = 1
-	//the sdk asks to set value with 1 when paytype is postpaid
-
 	if payType == COMMON_PAYTYPE_POSTPAID {
 		payType = "POSTPAID"
 	}
@@ -162,7 +159,7 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 	var outErr, inErr error
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		instanceId, inErr = sqlserverService.CreateSqlserverInstance(ctx, dbVersion, payType, memory, 0, projectId, period, subnetId, vpcId, zone, storage)
+		instanceId, inErr = sqlserverService.CreateSqlserverInstance(ctx, dbVersion, payType, memory, 0, projectId, subnetId, vpcId, zone, storage)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -284,7 +281,7 @@ func resourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
-	_ = d.Set("project_id", int(*instance.ProjectId))
+	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("availability_zone", instance.Zone)
 	_ = d.Set("vpc_id", instance.UniqVpcId)
 	_ = d.Set("subnet_id", instance.UniqSubnetId)
@@ -361,7 +358,7 @@ func resourceTencentCLoudSqlserverInstanceDelete(d *schema.ResourceData, meta in
 			return retryError(inErr)
 		}
 		if has {
-			inErr = fmt.Errorf("delete sqlserver instance %s fail, instance still exists from SDK DescribeSqlserverInstanceById", instanceId)
+			inErr = fmt.Errorf("delete SQL Server instance %s fail, instance still exists from SDK DescribeSqlserverInstanceById", instanceId)
 			return resource.RetryableError(inErr)
 		}
 		return nil

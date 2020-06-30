@@ -1,44 +1,23 @@
 /*
-Provides a SQLServer DB resource belongs to SQLServer instance.
+Provides a SQL Server DB resource belongs to SQL Server instance.
 
 Example Usage
 
 ```hcl
-variable "availability_zone"{
-  default = "ap-guangzhou-2"
-}
-
-resource "tencentcloud_vpc" "foo" {
-  name       = "example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "foo" {
-  name              = "example"
-  availability_zone = var.availability_zone
-  vpc_id            = tencentcloud_vpc.foo.id
-  cidr_block        = "10.0.0.0/24"
-  is_multicast      = false
-}
-
-resource "tencentcloud_sqlserver_instance" "example" {
-  name              = "example"
-  availability_zone = var.availability_zone
-  charge_type       = "POSTPAID_BY_HOUR"
-  vpc_id            = tencentcloud_vpc.foo.id
-  subnet_id         = tencentcloud_subnet.foo.id
-  engine_version    = "2008R2"
-  project_id        = 0
-  memory            = 2
-  storage           = 10
-}
-
 resource "tencentcloud_sqlserver_db" "example" {
   instance_id = tencentcloud_sqlserver_instance.example.id
   name = "example"
   charset = "Chinese_PRC_BIN"
   remark = "test-remark"
 }
+```
+
+Import
+
+sqlserver account can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_sqlserver_db.foo mssql-3cdq7kx5#db_name
 ```
 */
 package tencentcloud
@@ -72,15 +51,14 @@ func resourceTencentCloudSqlserverDB() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Name of SQLServer DB. The DataBase name must be unique and must be composed of numbers, letters and underlines, and the first one can not be underline.",
+				Description: "Name of SQL Server DB. The DataBase name must be unique and must be composed of numbers, letters and underlines, and the first one can not be underline.",
 			},
 			"charset": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      "Chinese_PRC_CI_AS",
-				ForceNew:     true,
-				Description:  "Character set DB uses. Valid values: `Chinese_PRC_CI_AS`, `Chinese_PRC_CS_AS`, `Chinese_PRC_BIN`, `Chinese_Taiwan_Stroke_CI_AS`, `SQL_Latin1_General_CP1_CI_AS`, and `SQL_Latin1_General_CP1_CS_AS`. Default value is `Chinese_PRC_CI_AS`.",
-				ValidateFunc: validateAllowedStringValue(SQLSERVER_CHARSET_LIST),
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "Chinese_PRC_CI_AS",
+				ForceNew:    true,
+				Description: "Character set DB uses. Valid values: `Chinese_PRC_CI_AS`, `Chinese_PRC_CS_AS`, `Chinese_PRC_BIN`, `Chinese_Taiwan_Stroke_CI_AS`, `SQL_Latin1_General_CP1_CI_AS`, and `SQL_Latin1_General_CP1_CS_AS`. Default value is `Chinese_PRC_CI_AS`.",
 			},
 			"remark": {
 				Type:        schema.TypeString,
@@ -116,7 +94,7 @@ func resourceTencentCloudSqlserverDBCreate(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("[CRITAL]%s DescribeSqlserverInstanceById fail, reason:%s\n", logId, err)
 	}
 	if !has {
-		return fmt.Errorf("[CRITAL]%s SQLServer instance %s dose not exist for DB creation", logId, instanceId)
+		return fmt.Errorf("[CRITAL]%s SQL Server instance %s dose not exist for DB creation", logId, instanceId)
 	}
 
 	dbName := d.Get("name").(string)
@@ -148,7 +126,7 @@ func resourceTencentCloudSqlserverDBRead(d *schema.ResourceData, meta interface{
 	}
 	idItem := strings.Split(id, FILED_SP)
 	if len(idItem) < 2 {
-		return fmt.Errorf("broken ID of SQLServer DB")
+		return fmt.Errorf("broken ID %s of SQL Server DB", id)
 	}
 	instanceId := idItem[0]
 	dbName := idItem[1]
@@ -193,7 +171,7 @@ func resourceTencentCloudSqlserverDBDelete(d *schema.ResourceData, meta interfac
 	// precheck before delete
 	_, has, err := sqlserverService.DescribeSqlserverInstanceById(ctx, instanceId)
 	if err != nil {
-		return fmt.Errorf("[CRITAL]%s DescribeSqlserverInstanceById when deleting SQLServer DB fail, reason:%s\n", logId, err)
+		return fmt.Errorf("[CRITAL]%s DescribeSqlserverInstanceById when deleting SQL Server DB fail, reason:%s\n", logId, err)
 	}
 	if !has {
 		return nil

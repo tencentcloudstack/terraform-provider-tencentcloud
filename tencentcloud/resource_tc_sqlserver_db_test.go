@@ -53,7 +53,7 @@ func testAccCheckSqlserverDBDestroy(s *terraform.State) error {
 		}
 		_, has, err := sqlserverService.DescribeDBDetailsById(ctx, rs.Primary.ID)
 		if has {
-			return fmt.Errorf("SQLServer DB still exists")
+			return fmt.Errorf("SQL Server DB still exists")
 		}
 		if err != nil {
 			return err
@@ -69,16 +69,16 @@ func testAccCheckSqlserverDBExists(n string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("SQLServer DB %s is not found", n)
+			return fmt.Errorf("SQL Server DB %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("SQLServer DB id is not set")
+			return fmt.Errorf("SQL Server DB id is not set")
 		}
 
 		sqlserverService := SqlserverService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		_, has, err := sqlserverService.DescribeDBDetailsById(ctx, rs.Primary.ID)
 		if !has {
-			return fmt.Errorf("SQLServer DB %s is not found", rs.Primary.ID)
+			return fmt.Errorf("SQL Server DB %s is not found", rs.Primary.ID)
 		}
 		if err != nil {
 			return err

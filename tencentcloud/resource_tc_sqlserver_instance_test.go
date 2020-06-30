@@ -23,7 +23,7 @@ func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverInstanceExists(testSqlserverInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "id"),
-					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "name", "tf_postsql_instance"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "name", "tf_sqlserver_instance"),
 					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vpc_id"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "subnet_id"),
@@ -49,7 +49,7 @@ func TestAccTencentCloudSqlserverInstanceResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverInstanceExists(testSqlserverInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "id"),
-					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "name", "tf_postsql_instance_update"),
+					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "name", "tf_sqlserver_instance_update"),
 					resource.TestCheckResourceAttr(testSqlserverInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "vpc_id"),
 					resource.TestCheckResourceAttrSet(testSqlserverInstanceResourceKey, "subnet_id"),
@@ -86,7 +86,7 @@ func testAccCheckSqlserverInstanceDestroy(s *terraform.State) error {
 			if err != nil {
 				return err
 			}
-			return fmt.Errorf("delete sqlserver instance %s fail", rs.Primary.ID)
+			return fmt.Errorf("delete SQL Server instance %s fail", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -113,7 +113,7 @@ func testAccCheckSqlserverInstanceExists(n string) resource.TestCheckFunc {
 		if has {
 			return nil
 		} else {
-			return fmt.Errorf("sqlserver instance %s is not found", rs.Primary.ID)
+			return fmt.Errorf("SQL Server instance %s is not found", rs.Primary.ID)
 		}
 	}
 }
