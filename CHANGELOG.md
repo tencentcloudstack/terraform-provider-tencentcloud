@@ -1,4 +1,9 @@
-## 1.39.0 (Unreleased)
+## 1.38.1 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cos_bucket` fix creation failure.
+
 ## 1.38.0 (June 29, 2020)
 
 FEATURES:

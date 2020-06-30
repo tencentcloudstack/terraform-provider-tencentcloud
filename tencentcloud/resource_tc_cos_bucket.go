@@ -395,11 +395,6 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 
 	d.Partial(true)
 
-	err := resourceTencentCloudCosBucketEncryptionUpdate(ctx, client, d)
-	if err != nil {
-		return err
-	}
-
 	if d.HasChange("acl") {
 		err := resourceTencentCloudCosBucketAclUpdate(ctx, client, d)
 		if err != nil {
