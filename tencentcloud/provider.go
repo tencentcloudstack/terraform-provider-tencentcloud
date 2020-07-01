@@ -327,7 +327,7 @@ SQLServer
 	tencentcloud_sqlserver_instance
     tencentcloud_sqlserver_db
 	tencentcloud_sqlserver_account
-	tencentcloud_sqlserver_db_account_attachment
+	tencentcloud_sqlserver_account_db_attachment
 
 SSL Certificates
   Data Source

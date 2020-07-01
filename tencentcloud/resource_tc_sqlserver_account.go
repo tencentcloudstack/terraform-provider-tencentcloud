@@ -5,17 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sqlserver_account" "foo" {
-  name = "example"
-  availability_zone = var.availability_zone
-  charge_type = "POSTPAID_BY_HOUR"
-  vpc_id      = "vpc-409mvdvv"
-  subnet_id = "subnet-nf9n81ps"
-  engine_version		= "9.3.5"
-  root_password                 = "1qaA2k1wgvfa3ZZZ"
-  charset = "UTF8"
-  project_id = 0
-  memory = 2
-  storage = 100
+  instance_id = tencentcloud_sqlserver_instance.example.id
+  name = "tf_sqlserver_account"
+  password = "test1233"
+  remark = "testt"
 }
 ```
 
@@ -24,7 +17,7 @@ Import
 SQL Server account can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_account.foo postgres-cda1iex1
+$ terraform import tencentcloud_sqlserver_account.foo mssql-3cdq7kx5#tf_sqlserver_account
 ```
 */
 package tencentcloud
