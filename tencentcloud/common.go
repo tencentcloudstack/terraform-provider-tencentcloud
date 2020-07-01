@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
@@ -21,6 +22,10 @@ import (
 const FILED_SP = "#"
 
 var contextNil context.Context = nil
+
+type contextLogId string
+
+const logIdKey = contextLogId("logId")
 
 var logFirstTime = ""
 var logAtomicId int64 = 0
@@ -58,7 +63,7 @@ func init() {
 // getLogId get logId for trace, return a new logId if ctx is nil
 func getLogId(ctx context.Context) string {
 	if ctx != nil {
-		logId, ok := ctx.Value("logId").(string)
+		logId, ok := ctx.Value(logIdKey).(string)
 		if ok {
 			return logId
 		}
@@ -72,6 +77,17 @@ func logElapsed(mark ...string) func() {
 	startAt := time.Now()
 	return func() {
 		log.Printf("[DEBUG] [ELAPSED] %s elapsed %d ms\n", strings.Join(mark, " "), int64(time.Since(startAt)/time.Millisecond))
+	}
+}
+
+// for Provider produced inconsistent result after apply
+func inconsistentCheck(d *schema.ResourceData, meta interface{}) func() {
+	oldJson, _ := json.Marshal(d.State())
+	return func() {
+		newJson, _ := json.Marshal(d.State())
+		if !reflect.DeepEqual(oldJson, newJson) {
+			log.Printf("[Resource id %s data changes after reading old:%s, new:%s", d.Id(), oldJson, newJson)
+		}
 	}
 }
 

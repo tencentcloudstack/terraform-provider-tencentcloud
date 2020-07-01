@@ -6,8 +6,8 @@ Example Usage
 ```hcl
 data "tencentcloud_instance_types" "foo" {
   availability_zone = "ap-guangzhou-2"
-  cpu_core_count = 2
-  memory_size = 4
+  cpu_core_count    = 2
+  memory_size       = 4
 }
 ```
 */
@@ -124,7 +124,7 @@ func dataSourceInstanceTypes() *schema.Resource {
 func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_instance_types.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -140,7 +140,7 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			instanceTypes, errRet = cvmService.DescribeInstanceTypes(ctx, zone)
 			if errRet != nil {
-				return retryError(errRet, "InternalError")
+				return retryError(errRet, InternalError)
 			}
 			return nil
 		})
@@ -160,7 +160,7 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			instanceTypes, errRet = cvmService.DescribeInstanceTypesByFilter(ctx, filterMap)
 			if errRet != nil {
-				return retryError(errRet, "InternalError")
+				return retryError(errRet, InternalError)
 			}
 			return nil
 		})

@@ -899,12 +899,19 @@ func (me *CamService) DescribeGroupById(ctx context.Context, groupId string) (ca
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
-
+		if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			errCode := ee.GetCode()
+			//check if read empty
+			if strings.Contains(errCode, "ResourceNotFound") {
+				return
+			}
+		}
 		errRet = err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	camInstance = response
 	return
 }
 

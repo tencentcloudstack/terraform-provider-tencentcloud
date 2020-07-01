@@ -49,7 +49,7 @@ func resourceTencentCloudCbsStorageAttachmentCreate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_cbs_storage_attachment.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	storageId := d.Get("storage_id").(string)
 	instanceId := d.Get("instance_id").(string)
@@ -99,9 +99,10 @@ func resourceTencentCloudCbsStorageAttachmentCreate(d *schema.ResourceData, meta
 
 func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_storage_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	storageId := d.Id()
 	cbsService := CbsService{
@@ -136,7 +137,7 @@ func resourceTencentCloudCbsStorageAttachmentDelete(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_cbs_storage_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	storageId := d.Id()
 	cbsService := CbsService{

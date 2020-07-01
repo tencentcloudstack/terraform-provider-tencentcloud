@@ -77,8 +77,6 @@ func dataSourceTencentCloudClbServerAttachments() *schema.Resource {
 						"targets": {
 							Type:        schema.TypeSet,
 							Computed:    true,
-							MinItems:    1,
-							MaxItems:    100,
 							Description: "Information of the backends to be attached.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -111,7 +109,7 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 	defer logElapsed("data_source.tencentcloud_clb_attachments.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]string)
 	clbId := d.Get("clb_id").(string)

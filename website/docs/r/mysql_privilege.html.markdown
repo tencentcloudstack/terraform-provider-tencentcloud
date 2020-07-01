@@ -72,6 +72,7 @@ The following arguments are supported:
 * `account_name` - (Required, ForceNew) Account name.the forbidden value is:root,mysql.sys,tencentroot.
 * `global` - (Required) Global privileges. available values for Privileges:SELECT,INSERT,UPDATE,DELETE,CREATE,PROCESS,DROP,REFERENCES,INDEX,ALTER,SHOW DATABASES,CREATE TEMPORARY TABLES,LOCK TABLES,EXECUTE,CREATE VIEW,SHOW VIEW,CREATE ROUTINE,ALTER ROUTINE,EVENT,TRIGGER.
 * `mysql_id` - (Required, ForceNew) Instance ID.
+* `account_host` - (Optional, ForceNew) Account host, default is `%`.
 * `column` - (Optional) Column privileges list.
 * `database` - (Optional) Database privileges list.
 * `table` - (Optional) Table privileges list.
@@ -93,5 +94,12 @@ The `table` object supports the following:
 * `database_name` - (Required) Database name.
 * `privileges` - (Required) Table privilege.available values for Privileges:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,REFERENCES,INDEX,ALTER,CREATE VIEW,SHOW VIEW,TRIGGER.
 * `table_name` - (Required) Table name.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
 
 

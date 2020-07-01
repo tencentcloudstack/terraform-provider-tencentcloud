@@ -22,6 +22,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -81,7 +82,7 @@ func resourceTencentCloudCamUserPolicyAttachmentCreate(d *schema.ResourceData, m
 	defer logElapsed("resource.tencentcloud_cam_user_policy_attachment.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	userId := d.Get("user_id").(string)
 	policyId := d.Get("policy_id").(string)
@@ -102,16 +103,34 @@ func resourceTencentCloudCamUserPolicyAttachmentCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(userId + "#" + policyId)
-	time.Sleep(3 * time.Second)
 
+	//get really instance then read
+
+	userPolicyAttachmentId := d.Id()
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, e := camService.DescribeUserPolicyAttachmentById(ctx, userPolicyAttachmentId)
+		if e != nil {
+			return retryError(e)
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM user policy attachment failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamUserPolicyAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudCamUserPolicyAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_user_policy_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	userPolicyAttachmentId := d.Id()
 
@@ -155,7 +174,7 @@ func resourceTencentCloudCamUserPolicyAttachmentDelete(d *schema.ResourceData, m
 	defer logElapsed("resource.tencentcloud_cam_user_policy_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	userPolicyAttachmentId := d.Id()
 

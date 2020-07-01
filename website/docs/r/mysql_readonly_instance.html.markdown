@@ -39,10 +39,13 @@ The following arguments are supported:
 * `master_instance_id` - (Required, ForceNew) Indicates the master instance ID of recovery instances.
 * `mem_size` - (Required) Memory size (in MB).
 * `volume_size` - (Required) Disk size (in GB).
-* `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepay instance.
+* `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepaid instance.
+* `charge_type` - (Optional, ForceNew) Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.
+* `force_delete` - (Optional) Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
 * `intranet_port` - (Optional) Public access port, rang form 1024 to 65535 and default value is 3306.
-* `pay_type` - (Optional, ForceNew) Pay type of instance, 0: prepay, 1: postpay. NOTES: Only supported prepay instance.
-* `period` - (Optional) Period of instance. NOTES: Only supported prepay instance.
+* `pay_type` - (Optional, ForceNew, **Deprecated**) It has been deprecated from version 1.36.0. Pay type of instance, 0: prepaid, 1: postpaid.
+* `period` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Period of instance. NOTES: Only supported prepaid instance.
+* `prepaid_period` - (Optional) Period of instance. NOTES: Only supported prepaid instance.
 * `security_groups` - (Optional) Security groups to use.
 * `subnet_id` - (Optional) Private network ID. If vpc_id is set, this value is required.
 * `tags` - (Optional) Instance tags.
@@ -52,6 +55,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `intranet_ip` - instance intranet IP.
 * `locked` - Indicates whether the instance is locked. 0 - No; 1 - Yes.
 * `status` - Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.

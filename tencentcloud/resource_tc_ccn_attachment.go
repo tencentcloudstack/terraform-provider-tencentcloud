@@ -5,27 +5,43 @@ Example Usage
 
 ```hcl
 variable "region" {
-    default = "ap-guangzhou"
+  default = "ap-guangzhou"
 }
 
-resource  "tencentcloud_vpc"   "vpc"  {
-    name = "ci-temp-test-vpc"
-    cidr_block = "10.0.0.0/16"
-    dns_servers=["119.29.29.29","8.8.8.8"]
-    is_multicast=false
+variable "otheruin" {
+  default = "123353"
 }
 
-resource "tencentcloud_ccn" "main"{
-	name ="ci-temp-test-ccn"
-	description="ci-temp-test-ccn-des"
-	qos ="AG"
+variable "otherccn" {
+  default = "ccn-151ssaga"
 }
 
-resource "tencentcloud_ccn_attachment" "attachment"{
-	ccn_id = tencentcloud_ccn.main.id
-	instance_type ="VPC"
-	instance_id =tencentcloud_vpc.vpc.id
-	instance_region=var.region
+resource "tencentcloud_vpc" "vpc" {
+  name         = "ci-temp-test-vpc"
+  cidr_block   = "10.0.0.0/16"
+  dns_servers  = ["119.29.29.29", "8.8.8.8"]
+  is_multicast = false
+}
+
+resource "tencentcloud_ccn" "main" {
+  name        = "ci-temp-test-ccn"
+  description = "ci-temp-test-ccn-des"
+  qos         = "AG"
+}
+
+resource "tencentcloud_ccn_attachment" "attachment" {
+  ccn_id          = tencentcloud_ccn.main.id
+  instance_type   = "VPC"
+  instance_id     = tencentcloud_vpc.vpc.id
+  instance_region = var.region
+}
+
+resource "tencentcloud_ccn_attachment" "other_account" {
+  ccn_id          = var.otherccn
+  instance_type   = "VPC"
+  instance_id     = tencentcloud_vpc.vpc.id
+  instance_region = var.region
+  ccn_uin         = var.otheruin
 }
 ```
 */
@@ -57,9 +73,9 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 			"instance_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue([]string{CNN_INSTANCE_TYPE_VPC, CNN_INSTANCE_TYPE_DIRECTCONNECT, CNN_INSTANCE_TYPE_BMVPC}),
+				ValidateFunc: validateAllowedStringValue([]string{CNN_INSTANCE_TYPE_VPC, CNN_INSTANCE_TYPE_DIRECTCONNECT, CNN_INSTANCE_TYPE_BMVPC, CNN_INSTANCE_TYPE_VPNGW}),
 				ForceNew:     true,
-				Description:  "Type of attached instance network, and available values include VPC, DIRECTCONNECT and BMVPC.",
+				Description:  "Type of attached instance network, and available values include VPC, DIRECTCONNECT, BMVPC and VPNGW. Note: VPNGW type is only for whitelist customer now.",
 			},
 			"instance_region": {
 				Type:        schema.TypeString,
@@ -73,7 +89,13 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 				ForceNew:    true,
 				Description: "ID of instance is attached.",
 			},
-
+			"ccn_uin": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Uin of the ccn attached. Default is ``, which means the uin of this account. This parameter is used with case when attaching ccn of other account to the instance of this account. For now only support instance type `VPC`.",
+			},
 			// Computed values
 			"state": {
 				Type:        schema.TypeString,
@@ -101,7 +123,7 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_ccn_attachment.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -110,26 +132,34 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 		instanceType   = d.Get("instance_type").(string)
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
+		ccnUin         = ""
 	)
 
 	if len(ccnId) < 4 || len(instanceRegion) < 3 || len(instanceId) < 3 {
 		return fmt.Errorf("param ccn_id or instance_region or instance_id  error")
 	}
 
-	_, has, err := service.DescribeCcn(ctx, ccnId)
-	if err != nil {
-		return err
-	}
-	if has == 0 {
-		return fmt.Errorf("ccn[%s] doesn't exist", ccnId)
+	if v, ok := d.GetOk("ccn_uin"); ok {
+		ccnUin = v.(string)
+		if ccnUin != "" && instanceType != CNN_INSTANCE_TYPE_VPC {
+			return fmt.Errorf("Other ccn account attachment %s only support instance type of `VPC`.", ccnId)
+		}
+	} else {
+		_, has, err := service.DescribeCcn(ctx, ccnId)
+		if err != nil {
+			return err
+		}
+		if has == 0 {
+			return fmt.Errorf("ccn[%s] doesn't exist", ccnId)
+		}
 	}
 
-	if err := service.AttachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId); err != nil {
+	if err := service.AttachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId, ccnUin); err != nil {
 		return err
 	}
 
 	m := md5.New()
-	_, err = m.Write([]byte(ccnId + instanceType + instanceRegion + instanceId))
+	_, err := m.Write([]byte(ccnId + instanceType + instanceRegion + instanceId))
 	if err != nil {
 		return err
 	}
@@ -140,11 +170,52 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 
 func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ccn_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	if v, ok := d.GetOk("ccn_uin"); ok {
+		ccnUin := v.(string)
+		ccnId := d.Get("ccn_id").(string)
+		instanceType := d.Get("instance_type").(string)
+		instanceRegion := d.Get("instance_region").(string)
+		instanceId := d.Get("instance_id").(string)
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			infos, e := service.DescribeCcnAttachmentsByInstance(ctx, instanceType, instanceId, instanceRegion)
+			if e != nil {
+				return retryError(e)
+			}
+
+			if len(infos) == 0 {
+				d.SetId("")
+				return nil
+			}
+			findFlag := false
+			for _, info := range infos {
+				if *info.CcnUin == ccnUin && *info.CcnId == ccnId {
+					_ = d.Set("state", strings.ToUpper(*info.State))
+					_ = d.Set("attached_time", info.AttachedTime)
+					_ = d.Set("cidr_block", info.CidrBlock)
+					findFlag = true
+					break
+				}
+			}
+			if !findFlag {
+				d.SetId("")
+				return nil
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+		return nil
+	}
 
 	var (
 		ccnId          = d.Get("ccn_id").(string)
@@ -181,6 +252,7 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 			d.SetId("")
 			return nil
 		}
+
 		_ = d.Set("state", strings.ToUpper(info.state))
 		_ = d.Set("attached_time", info.attachedTime)
 		_ = d.Set("cidr_block", info.cidrBlock)
@@ -196,7 +268,7 @@ func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_ccn_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -12,10 +13,10 @@ func TestAccDataSourceTencentCloudScfLogs_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: scfFunctionCodeEmbed("main.py", TestAccDataSourceTencentCloudScfLogs),
+				Config: scfFunctionCodeEmbed("first.zip", TestAccDataSourceTencentCloudScfLogs),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_scf_logs.foo"),
-					resource.TestCheckResourceAttr("data.tencentcloud_scf_logs.foo", "function_name", "ci-test-function"),
+					resource.TestMatchResourceAttr("data.tencentcloud_scf_logs.foo", "function_name", regexp.MustCompile(`ci-test-function`)),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_logs.foo", "logs.#"),
 				),
 			},
@@ -29,10 +30,10 @@ func TestAccDataSourceTencentCloudScfLogs_allArgWithoutReqId(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: scfFunctionCodeEmbed("main.py", TestAccDataSourceTencentCloudScfLogsAllArgWithoutReqId),
+				Config: scfFunctionCodeEmbed("first.zip", TestAccDataSourceTencentCloudScfLogsAllArgWithoutReqId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_scf_logs.foo"),
-					resource.TestCheckResourceAttr("data.tencentcloud_scf_logs.foo", "function_name", "ci-test-function"),
+					resource.TestMatchResourceAttr("data.tencentcloud_scf_logs.foo", "function_name", regexp.MustCompile(`ci-test-function`)),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_logs.foo", "offset", "0"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_logs.foo", "limit", "100"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_logs.foo", "order", "desc"),
@@ -50,8 +51,8 @@ func TestAccDataSourceTencentCloudScfLogs_allArgWithoutReqId(t *testing.T) {
 
 const TestAccDataSourceTencentCloudScfLogs = `
 resource "tencentcloud_scf_function" "foo" {
-  name    = "ci-test-function"
-  handler = "main.do_it"
+  name    = "%s"
+  handler = "first.do_it_first"
   runtime = "Python3.6"
 
   zip_file = "%s"
@@ -64,8 +65,8 @@ data "tencentcloud_scf_logs" "foo" {
 
 const TestAccDataSourceTencentCloudScfLogsAllArgWithoutReqId = `
 resource "tencentcloud_scf_function" "foo" {
-  name    = "ci-test-function"
-  handler = "main.do_it"
+  name    = "%s"
+  handler = "first.do_it_first"
   runtime = "Python3.6"
 
   zip_file = "%s"

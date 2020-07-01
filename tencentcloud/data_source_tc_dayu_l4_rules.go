@@ -6,13 +6,13 @@ Example Usage
 ```hcl
 data "tencentcloud_dayu_l4_rules" "name_test" {
   resource_type = tencentcloud_dayu_l4_rule.test_rule.resource_type
-  resource_id      = tencentcloud_dayu_l4_rule.test_rule.resource_id
-  name		= tencentcloud_dayu_l4_rule.test_rule.name
+  resource_id   = tencentcloud_dayu_l4_rule.test_rule.resource_id
+  name          = tencentcloud_dayu_l4_rule.test_rule.name
 }
 data "tencentcloud_dayu_l4_rules" "id_test" {
   resource_type = tencentcloud_dayu_l4_rule.test_rule.resource_type
-  resource_id      = tencentcloud_dayu_l4_rule.test_rule.resource_id
-  rule_id		= tencentcloud_dayu_l4_rule.test_rule.rule_id
+  resource_id   = tencentcloud_dayu_l4_rule.test_rule.resource_id
+  rule_id       = tencentcloud_dayu_l4_rule.test_rule.rule_id
 }
 ```
 */
@@ -164,7 +164,7 @@ func dataSourceTencentCloudDayuL4RulesRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("data_source.tencentcloud_dayu_l4_rules.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DayuService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

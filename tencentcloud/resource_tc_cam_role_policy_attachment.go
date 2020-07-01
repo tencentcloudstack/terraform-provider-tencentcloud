@@ -22,6 +22,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -110,16 +111,37 @@ func resourceTencentCloudCamRolePolicyAttachmentCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(roleId + "#" + strconv.Itoa(policyId))
-	time.Sleep(3 * time.Second)
 
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	rolePolicyAttachmentId := d.Id()
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, e := camService.DescribeRolePolicyAttachmentById(ctx, rolePolicyAttachmentId)
+		if e != nil {
+			return retryError(e)
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM role policy attachment failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamRolePolicyAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudCamRolePolicyAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_role_policy_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	rolePolicyAttachmentId := d.Id()
 
@@ -163,7 +185,7 @@ func resourceTencentCloudCamRolePolicyAttachmentDelete(d *schema.ResourceData, m
 	defer logElapsed("resource.tencentcloud_cam_role_policy_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	rolePolicyAttachmentId := d.Id()
 

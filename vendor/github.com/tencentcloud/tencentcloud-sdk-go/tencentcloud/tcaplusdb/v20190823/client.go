@@ -83,7 +83,7 @@ func NewCompareIdlFilesResponse() (response *CompareIdlFilesResponse) {
     return
 }
 
-// 选中目标表，上传并校验改表文件，返回是否允许修改表结构
+// 选中目标表格，上传并校验改表文件，返回是否允许修改表格结构的结果。
 func (c *Client) CompareIdlFiles(request *CompareIdlFilesRequest) (response *CompareIdlFilesResponse, err error) {
     if request == nil {
         request = NewCompareIdlFilesRequest()
@@ -93,27 +93,77 @@ func (c *Client) CompareIdlFiles(request *CompareIdlFilesRequest) (response *Com
     return
 }
 
-func NewCreateAppRequest() (request *CreateAppRequest) {
-    request = &CreateAppRequest{
+func NewCreateBackupRequest() (request *CreateBackupRequest) {
+    request = &CreateBackupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("tcaplusdb", APIVersion, "CreateApp")
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "CreateBackup")
     return
 }
 
-func NewCreateAppResponse() (response *CreateAppResponse) {
-    response = &CreateAppResponse{
+func NewCreateBackupResponse() (response *CreateBackupResponse) {
+    response = &CreateBackupResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// 本接口用于创建TcaplusDB应用
-func (c *Client) CreateApp(request *CreateAppRequest) (response *CreateAppResponse, err error) {
+// 用户创建备份任务
+func (c *Client) CreateBackup(request *CreateBackupRequest) (response *CreateBackupResponse, err error) {
     if request == nil {
-        request = NewCreateAppRequest()
+        request = NewCreateBackupRequest()
     }
-    response = NewCreateAppResponse()
+    response = NewCreateBackupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateClusterRequest() (request *CreateClusterRequest) {
+    request = &CreateClusterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "CreateCluster")
+    return
+}
+
+func NewCreateClusterResponse() (response *CreateClusterResponse) {
+    response = &CreateClusterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口用于创建TcaplusDB集群
+func (c *Client) CreateCluster(request *CreateClusterRequest) (response *CreateClusterResponse, err error) {
+    if request == nil {
+        request = NewCreateClusterRequest()
+    }
+    response = NewCreateClusterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateTableGroupRequest() (request *CreateTableGroupRequest) {
+    request = &CreateTableGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "CreateTableGroup")
+    return
+}
+
+func NewCreateTableGroupResponse() (response *CreateTableGroupResponse) {
+    response = &CreateTableGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 在TcaplusDB集群下创建表格组
+func (c *Client) CreateTableGroup(request *CreateTableGroupRequest) (response *CreateTableGroupResponse, err error) {
+    if request == nil {
+        request = NewCreateTableGroupRequest()
+    }
+    response = NewCreateTableGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -133,7 +183,7 @@ func NewCreateTablesResponse() (response *CreateTablesResponse) {
     return
 }
 
-// 根据选择的IDL文件列表，批量创建表
+// 根据选择的IDL文件列表，批量创建表格
 func (c *Client) CreateTables(request *CreateTablesRequest) (response *CreateTablesResponse, err error) {
     if request == nil {
         request = NewCreateTablesRequest()
@@ -143,52 +193,27 @@ func (c *Client) CreateTables(request *CreateTablesRequest) (response *CreateTab
     return
 }
 
-func NewCreateZoneRequest() (request *CreateZoneRequest) {
-    request = &CreateZoneRequest{
+func NewDeleteClusterRequest() (request *DeleteClusterRequest) {
+    request = &DeleteClusterRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("tcaplusdb", APIVersion, "CreateZone")
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DeleteCluster")
     return
 }
 
-func NewCreateZoneResponse() (response *CreateZoneResponse) {
-    response = &CreateZoneResponse{
+func NewDeleteClusterResponse() (response *DeleteClusterResponse) {
+    response = &DeleteClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// 在TcaplusDB应用下创建大区
-func (c *Client) CreateZone(request *CreateZoneRequest) (response *CreateZoneResponse, err error) {
+// 删除TcaplusDB集群，必须在集群所属所有资源（包括表格组，表）都已经释放的情况下才会成功。
+func (c *Client) DeleteCluster(request *DeleteClusterRequest) (response *DeleteClusterResponse, err error) {
     if request == nil {
-        request = NewCreateZoneRequest()
+        request = NewDeleteClusterRequest()
     }
-    response = NewCreateZoneResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDeleteAppRequest() (request *DeleteAppRequest) {
-    request = &DeleteAppRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DeleteApp")
-    return
-}
-
-func NewDeleteAppResponse() (response *DeleteAppResponse) {
-    response = &DeleteAppResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// 删除TcaplusDB应用实例，必须在应用实例所属所有资源（包括大区，表）都已经释放的情况下才会成功。
-func (c *Client) DeleteApp(request *DeleteAppRequest) (response *DeleteAppResponse, err error) {
-    if request == nil {
-        request = NewDeleteAppRequest()
-    }
-    response = NewDeleteAppResponse()
+    response = NewDeleteClusterResponse()
     err = c.Send(request, response)
     return
 }
@@ -208,12 +233,37 @@ func NewDeleteIdlFilesResponse() (response *DeleteIdlFilesResponse) {
     return
 }
 
-// 指定应用ID和待删除IDL文件的信息，删除目标文件，如果文件正在被表关联则删除失败。
+// 指定集群ID和待删除IDL文件的信息，删除目标文件，如果文件正在被表关联则删除失败。
 func (c *Client) DeleteIdlFiles(request *DeleteIdlFilesRequest) (response *DeleteIdlFilesResponse, err error) {
     if request == nil {
         request = NewDeleteIdlFilesRequest()
     }
     response = NewDeleteIdlFilesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteTableGroupRequest() (request *DeleteTableGroupRequest) {
+    request = &DeleteTableGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DeleteTableGroup")
+    return
+}
+
+func NewDeleteTableGroupResponse() (response *DeleteTableGroupResponse) {
+    response = &DeleteTableGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除表格组
+func (c *Client) DeleteTableGroup(request *DeleteTableGroupRequest) (response *DeleteTableGroupResponse, err error) {
+    if request == nil {
+        request = NewDeleteTableGroupRequest()
+    }
+    response = NewDeleteTableGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -233,7 +283,7 @@ func NewDeleteTablesResponse() (response *DeleteTablesResponse) {
     return
 }
 
-// 根据指定的表信息删除目标表
+// 删除指定的表,第一次调用此接口代表将表移动至回收站，再次调用代表将此表格从回收站中彻底删除。
 func (c *Client) DeleteTables(request *DeleteTablesRequest) (response *DeleteTablesResponse, err error) {
     if request == nil {
         request = NewDeleteTablesRequest()
@@ -243,52 +293,52 @@ func (c *Client) DeleteTables(request *DeleteTablesRequest) (response *DeleteTab
     return
 }
 
-func NewDeleteZoneRequest() (request *DeleteZoneRequest) {
-    request = &DeleteZoneRequest{
+func NewDescribeClusterTagsRequest() (request *DescribeClusterTagsRequest) {
+    request = &DescribeClusterTagsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DeleteZone")
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DescribeClusterTags")
     return
 }
 
-func NewDeleteZoneResponse() (response *DeleteZoneResponse) {
-    response = &DeleteZoneResponse{
+func NewDescribeClusterTagsResponse() (response *DescribeClusterTagsResponse) {
+    response = &DescribeClusterTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// 删除大区
-func (c *Client) DeleteZone(request *DeleteZoneRequest) (response *DeleteZoneResponse, err error) {
+// 获取集群关联的标签列表
+func (c *Client) DescribeClusterTags(request *DescribeClusterTagsRequest) (response *DescribeClusterTagsResponse, err error) {
     if request == nil {
-        request = NewDeleteZoneRequest()
+        request = NewDescribeClusterTagsRequest()
     }
-    response = NewDeleteZoneResponse()
+    response = NewDescribeClusterTagsResponse()
     err = c.Send(request, response)
     return
 }
 
-func NewDescribeAppsRequest() (request *DescribeAppsRequest) {
-    request = &DescribeAppsRequest{
+func NewDescribeClustersRequest() (request *DescribeClustersRequest) {
+    request = &DescribeClustersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DescribeApps")
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DescribeClusters")
     return
 }
 
-func NewDescribeAppsResponse() (response *DescribeAppsResponse) {
-    response = &DescribeAppsResponse{
+func NewDescribeClustersResponse() (response *DescribeClustersResponse) {
+    response = &DescribeClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// 查询TcaplusDB应用列表，包含应用详细信息。
-func (c *Client) DescribeApps(request *DescribeAppsRequest) (response *DescribeAppsResponse, err error) {
+// 查询TcaplusDB集群列表，包含集群详细信息。
+func (c *Client) DescribeClusters(request *DescribeClustersRequest) (response *DescribeClustersResponse, err error) {
     if request == nil {
-        request = NewDescribeAppsRequest()
+        request = NewDescribeClustersRequest()
     }
-    response = NewDescribeAppsResponse()
+    response = NewDescribeClustersResponse()
     err = c.Send(request, response)
     return
 }
@@ -339,6 +389,81 @@ func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *Des
         request = NewDescribeRegionsRequest()
     }
     response = NewDescribeRegionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTableGroupTagsRequest() (request *DescribeTableGroupTagsRequest) {
+    request = &DescribeTableGroupTagsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DescribeTableGroupTags")
+    return
+}
+
+func NewDescribeTableGroupTagsResponse() (response *DescribeTableGroupTagsResponse) {
+    response = &DescribeTableGroupTagsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取表格组关联的标签列表
+func (c *Client) DescribeTableGroupTags(request *DescribeTableGroupTagsRequest) (response *DescribeTableGroupTagsResponse, err error) {
+    if request == nil {
+        request = NewDescribeTableGroupTagsRequest()
+    }
+    response = NewDescribeTableGroupTagsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTableGroupsRequest() (request *DescribeTableGroupsRequest) {
+    request = &DescribeTableGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DescribeTableGroups")
+    return
+}
+
+func NewDescribeTableGroupsResponse() (response *DescribeTableGroupsResponse) {
+    response = &DescribeTableGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询表格组列表
+func (c *Client) DescribeTableGroups(request *DescribeTableGroupsRequest) (response *DescribeTableGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeTableGroupsRequest()
+    }
+    response = NewDescribeTableGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTableTagsRequest() (request *DescribeTableTagsRequest) {
+    request = &DescribeTableTagsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DescribeTableTags")
+    return
+}
+
+func NewDescribeTableTagsResponse() (response *DescribeTableTagsResponse) {
+    response = &DescribeTableTagsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取表格标签
+func (c *Client) DescribeTableTags(request *DescribeTableTagsRequest) (response *DescribeTableTagsResponse, err error) {
+    if request == nil {
+        request = NewDescribeTableTagsRequest()
+    }
+    response = NewDescribeTableTagsResponse()
     err = c.Send(request, response)
     return
 }
@@ -443,77 +568,127 @@ func (c *Client) DescribeUinInWhitelist(request *DescribeUinInWhitelistRequest) 
     return
 }
 
-func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
-    request = &DescribeZonesRequest{
+func NewModifyClusterNameRequest() (request *ModifyClusterNameRequest) {
+    request = &ModifyClusterNameRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("tcaplusdb", APIVersion, "DescribeZones")
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "ModifyClusterName")
     return
 }
 
-func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
-    response = &DescribeZonesResponse{
+func NewModifyClusterNameResponse() (response *ModifyClusterNameResponse) {
+    response = &ModifyClusterNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// 查询大区列表
-func (c *Client) DescribeZones(request *DescribeZonesRequest) (response *DescribeZonesResponse, err error) {
+// 修改指定的集群名称
+func (c *Client) ModifyClusterName(request *ModifyClusterNameRequest) (response *ModifyClusterNameResponse, err error) {
     if request == nil {
-        request = NewDescribeZonesRequest()
+        request = NewModifyClusterNameRequest()
     }
-    response = NewDescribeZonesResponse()
+    response = NewModifyClusterNameResponse()
     err = c.Send(request, response)
     return
 }
 
-func NewModifyAppNameRequest() (request *ModifyAppNameRequest) {
-    request = &ModifyAppNameRequest{
+func NewModifyClusterPasswordRequest() (request *ModifyClusterPasswordRequest) {
+    request = &ModifyClusterPasswordRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("tcaplusdb", APIVersion, "ModifyAppName")
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "ModifyClusterPassword")
     return
 }
 
-func NewModifyAppNameResponse() (response *ModifyAppNameResponse) {
-    response = &ModifyAppNameResponse{
+func NewModifyClusterPasswordResponse() (response *ModifyClusterPasswordResponse) {
+    response = &ModifyClusterPasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// 修改指定的应用名称
-func (c *Client) ModifyAppName(request *ModifyAppNameRequest) (response *ModifyAppNameResponse, err error) {
+// 修改指定集群的密码，后台将在旧密码失效之前同时支持TcaplusDB SDK使用旧密码和新密码访问数据库。在旧密码失效之前不能提交新的密码修改请求，在旧密码失效之后不能提交修改旧密码过期时间的请求。
+func (c *Client) ModifyClusterPassword(request *ModifyClusterPasswordRequest) (response *ModifyClusterPasswordResponse, err error) {
     if request == nil {
-        request = NewModifyAppNameRequest()
+        request = NewModifyClusterPasswordRequest()
     }
-    response = NewModifyAppNameResponse()
+    response = NewModifyClusterPasswordResponse()
     err = c.Send(request, response)
     return
 }
 
-func NewModifyAppPasswordRequest() (request *ModifyAppPasswordRequest) {
-    request = &ModifyAppPasswordRequest{
+func NewModifyClusterTagsRequest() (request *ModifyClusterTagsRequest) {
+    request = &ModifyClusterTagsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("tcaplusdb", APIVersion, "ModifyAppPassword")
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "ModifyClusterTags")
     return
 }
 
-func NewModifyAppPasswordResponse() (response *ModifyAppPasswordResponse) {
-    response = &ModifyAppPasswordResponse{
+func NewModifyClusterTagsResponse() (response *ModifyClusterTagsResponse) {
+    response = &ModifyClusterTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// 修改指定AppInstanceId的实例密码，后台将在旧密码失效之前同时支持TcaplusDB SDK使用旧密码和新密码访问数据库。在旧密码失效之前不能提交新的密码修改请求，在旧密码失效之后不能提交修改旧密码过期时间的请求。
-func (c *Client) ModifyAppPassword(request *ModifyAppPasswordRequest) (response *ModifyAppPasswordResponse, err error) {
+// 修改集群标签
+func (c *Client) ModifyClusterTags(request *ModifyClusterTagsRequest) (response *ModifyClusterTagsResponse, err error) {
     if request == nil {
-        request = NewModifyAppPasswordRequest()
+        request = NewModifyClusterTagsRequest()
     }
-    response = NewModifyAppPasswordResponse()
+    response = NewModifyClusterTagsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyTableGroupNameRequest() (request *ModifyTableGroupNameRequest) {
+    request = &ModifyTableGroupNameRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "ModifyTableGroupName")
+    return
+}
+
+func NewModifyTableGroupNameResponse() (response *ModifyTableGroupNameResponse) {
+    response = &ModifyTableGroupNameResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 修改TcaplusDB表格组名称
+func (c *Client) ModifyTableGroupName(request *ModifyTableGroupNameRequest) (response *ModifyTableGroupNameResponse, err error) {
+    if request == nil {
+        request = NewModifyTableGroupNameRequest()
+    }
+    response = NewModifyTableGroupNameResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyTableGroupTagsRequest() (request *ModifyTableGroupTagsRequest) {
+    request = &ModifyTableGroupTagsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "ModifyTableGroupTags")
+    return
+}
+
+func NewModifyTableGroupTagsResponse() (response *ModifyTableGroupTagsResponse) {
+    response = &ModifyTableGroupTagsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 修改表格组标签
+func (c *Client) ModifyTableGroupTags(request *ModifyTableGroupTagsRequest) (response *ModifyTableGroupTagsResponse, err error) {
+    if request == nil {
+        request = NewModifyTableGroupTagsRequest()
+    }
+    response = NewModifyTableGroupTagsResponse()
     err = c.Send(request, response)
     return
 }
@@ -558,12 +733,37 @@ func NewModifyTableQuotasResponse() (response *ModifyTableQuotasResponse) {
     return
 }
 
-// 表扩缩容
+// 表格扩缩容
 func (c *Client) ModifyTableQuotas(request *ModifyTableQuotasRequest) (response *ModifyTableQuotasResponse, err error) {
     if request == nil {
         request = NewModifyTableQuotasRequest()
     }
     response = NewModifyTableQuotasResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyTableTagsRequest() (request *ModifyTableTagsRequest) {
+    request = &ModifyTableTagsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("tcaplusdb", APIVersion, "ModifyTableTags")
+    return
+}
+
+func NewModifyTableTagsResponse() (response *ModifyTableTagsResponse) {
+    response = &ModifyTableTagsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 修改表格标签
+func (c *Client) ModifyTableTags(request *ModifyTableTagsRequest) (response *ModifyTableTagsResponse, err error) {
+    if request == nil {
+        request = NewModifyTableTagsRequest()
+    }
+    response = NewModifyTableTagsResponse()
     err = c.Send(request, response)
     return
 }
@@ -589,31 +789,6 @@ func (c *Client) ModifyTables(request *ModifyTablesRequest) (response *ModifyTab
         request = NewModifyTablesRequest()
     }
     response = NewModifyTablesResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewModifyZoneNameRequest() (request *ModifyZoneNameRequest) {
-    request = &ModifyZoneNameRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    request.Init().WithApiInfo("tcaplusdb", APIVersion, "ModifyZoneName")
-    return
-}
-
-func NewModifyZoneNameResponse() (response *ModifyZoneNameResponse) {
-    response = &ModifyZoneNameResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// 修改TcaplusDB大区名称
-func (c *Client) ModifyZoneName(request *ModifyZoneNameRequest) (response *ModifyZoneNameResponse, err error) {
-    if request == nil {
-        request = NewModifyZoneNameRequest()
-    }
-    response = NewModifyZoneNameResponse()
     err = c.Send(request, response)
     return
 }
@@ -658,7 +833,7 @@ func NewRollbackTablesResponse() (response *RollbackTablesResponse) {
     return
 }
 
-// 表数据回档
+// 表格数据回档
 func (c *Client) RollbackTables(request *RollbackTablesRequest) (response *RollbackTablesResponse, err error) {
     if request == nil {
         request = NewRollbackTablesRequest()
@@ -683,7 +858,7 @@ func NewVerifyIdlFilesResponse() (response *VerifyIdlFilesResponse) {
     return
 }
 
-// 上传并校验加表文件，返回校验合法的表定义
+// 上传并校验创建表格文件，返回校验合法的表格定义
 func (c *Client) VerifyIdlFiles(request *VerifyIdlFilesRequest) (response *VerifyIdlFilesResponse, err error) {
     if request == nil {
         request = NewVerifyIdlFilesRequest()

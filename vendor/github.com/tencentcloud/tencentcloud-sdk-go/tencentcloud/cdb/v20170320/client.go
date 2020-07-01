@@ -93,6 +93,31 @@ func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest
     return
 }
 
+func NewBalanceRoGroupLoadRequest() (request *BalanceRoGroupLoadRequest) {
+    request = &BalanceRoGroupLoadRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "BalanceRoGroupLoad")
+    return
+}
+
+func NewBalanceRoGroupLoadResponse() (response *BalanceRoGroupLoadResponse) {
+    response = &BalanceRoGroupLoadResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(BalanceRoGroupLoad)用于重新均衡 RO 组内实例的负载。注意，RO 组内 RO 实例会有一次数据库连接瞬断，请确保应用程序能重连数据库，谨慎操作。
+func (c *Client) BalanceRoGroupLoad(request *BalanceRoGroupLoadRequest) (response *BalanceRoGroupLoadResponse, err error) {
+    if request == nil {
+        request = NewBalanceRoGroupLoadRequest()
+    }
+    response = NewBalanceRoGroupLoadResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCloseWanServiceRequest() (request *CloseWanServiceRequest) {
     request = &CloseWanServiceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -139,6 +164,81 @@ func (c *Client) CreateAccounts(request *CreateAccountsRequest) (response *Creat
         request = NewCreateAccountsRequest()
     }
     response = NewCreateAccountsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAuditLogFileRequest() (request *CreateAuditLogFileRequest) {
+    request = &CreateAuditLogFileRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "CreateAuditLogFile")
+    return
+}
+
+func NewCreateAuditLogFileResponse() (response *CreateAuditLogFileResponse) {
+    response = &CreateAuditLogFileResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(CreateAuditLogFile)用于创建云数据库实例的审计日志文件。
+func (c *Client) CreateAuditLogFile(request *CreateAuditLogFileRequest) (response *CreateAuditLogFileResponse, err error) {
+    if request == nil {
+        request = NewCreateAuditLogFileRequest()
+    }
+    response = NewCreateAuditLogFileResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAuditPolicyRequest() (request *CreateAuditPolicyRequest) {
+    request = &CreateAuditPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "CreateAuditPolicy")
+    return
+}
+
+func NewCreateAuditPolicyResponse() (response *CreateAuditPolicyResponse) {
+    response = &CreateAuditPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(CreateAuditPolicy)用于创建云数据库实例的审计策略，即将审计规则绑定到具体的云数据库实例上。
+func (c *Client) CreateAuditPolicy(request *CreateAuditPolicyRequest) (response *CreateAuditPolicyResponse, err error) {
+    if request == nil {
+        request = NewCreateAuditPolicyRequest()
+    }
+    response = NewCreateAuditPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAuditRuleRequest() (request *CreateAuditRuleRequest) {
+    request = &CreateAuditRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "CreateAuditRule")
+    return
+}
+
+func NewCreateAuditRuleResponse() (response *CreateAuditRuleResponse) {
+    response = &CreateAuditRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(CreateAuditRule)用于创建用户在当前地域的审计规则。
+func (c *Client) CreateAuditRule(request *CreateAuditRuleRequest) (response *CreateAuditRuleResponse, err error) {
+    if request == nil {
+        request = NewCreateAuditRuleRequest()
+    }
+    response = NewCreateAuditRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -276,7 +376,7 @@ func NewCreateDeployGroupResponse() (response *CreateDeployGroupResponse) {
     return
 }
 
-// 创建放置实例的置放群组
+// 本接口(CreateDeployGroup)用于创建放置实例的置放群组
 func (c *Client) CreateDeployGroup(request *CreateDeployGroupRequest) (response *CreateDeployGroupResponse, err error) {
     if request == nil {
         request = NewCreateDeployGroupRequest()
@@ -336,6 +436,81 @@ func (c *Client) DeleteAccounts(request *DeleteAccountsRequest) (response *Delet
     return
 }
 
+func NewDeleteAuditLogFileRequest() (request *DeleteAuditLogFileRequest) {
+    request = &DeleteAuditLogFileRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DeleteAuditLogFile")
+    return
+}
+
+func NewDeleteAuditLogFileResponse() (response *DeleteAuditLogFileResponse) {
+    response = &DeleteAuditLogFileResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DeleteAuditLogFile)用于删除云数据库实例的审计日志文件。
+func (c *Client) DeleteAuditLogFile(request *DeleteAuditLogFileRequest) (response *DeleteAuditLogFileResponse, err error) {
+    if request == nil {
+        request = NewDeleteAuditLogFileRequest()
+    }
+    response = NewDeleteAuditLogFileResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteAuditPolicyRequest() (request *DeleteAuditPolicyRequest) {
+    request = &DeleteAuditPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DeleteAuditPolicy")
+    return
+}
+
+func NewDeleteAuditPolicyResponse() (response *DeleteAuditPolicyResponse) {
+    response = &DeleteAuditPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DeleteAuditPolicy)用于删除用户的审计策略。
+func (c *Client) DeleteAuditPolicy(request *DeleteAuditPolicyRequest) (response *DeleteAuditPolicyResponse, err error) {
+    if request == nil {
+        request = NewDeleteAuditPolicyRequest()
+    }
+    response = NewDeleteAuditPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteAuditRuleRequest() (request *DeleteAuditRuleRequest) {
+    request = &DeleteAuditRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DeleteAuditRule")
+    return
+}
+
+func NewDeleteAuditRuleResponse() (response *DeleteAuditRuleResponse) {
+    response = &DeleteAuditRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DeleteAuditRule)用于删除用户的审计规则。
+func (c *Client) DeleteAuditRule(request *DeleteAuditRuleRequest) (response *DeleteAuditRuleResponse, err error) {
+    if request == nil {
+        request = NewDeleteAuditRuleRequest()
+    }
+    response = NewDeleteAuditRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteBackupRequest() (request *DeleteBackupRequest) {
     request = &DeleteBackupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -351,7 +526,7 @@ func NewDeleteBackupResponse() (response *DeleteBackupResponse) {
     return
 }
 
-// 本接口(DeleteBackup)用于删除数据库备份。
+// 本接口(DeleteBackup)用于删除数据库备份。本接口只支持删除手动发起的备份。
 func (c *Client) DeleteBackup(request *DeleteBackupRequest) (response *DeleteBackupResponse, err error) {
     if request == nil {
         request = NewDeleteBackupRequest()
@@ -511,6 +686,106 @@ func (c *Client) DescribeAsyncRequestInfo(request *DescribeAsyncRequestInfoReque
     return
 }
 
+func NewDescribeAuditConfigRequest() (request *DescribeAuditConfigRequest) {
+    request = &DescribeAuditConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeAuditConfig")
+    return
+}
+
+func NewDescribeAuditConfigResponse() (response *DescribeAuditConfigResponse) {
+    response = &DescribeAuditConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeAuditConfig)用于查询云数据库审计策略的服务配置，包括审计日志保存时长等。
+func (c *Client) DescribeAuditConfig(request *DescribeAuditConfigRequest) (response *DescribeAuditConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditConfigRequest()
+    }
+    response = NewDescribeAuditConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAuditLogFilesRequest() (request *DescribeAuditLogFilesRequest) {
+    request = &DescribeAuditLogFilesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeAuditLogFiles")
+    return
+}
+
+func NewDescribeAuditLogFilesResponse() (response *DescribeAuditLogFilesResponse) {
+    response = &DescribeAuditLogFilesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeAuditLogFiles)用于查询云数据库实例的审计日志文件。
+func (c *Client) DescribeAuditLogFiles(request *DescribeAuditLogFilesRequest) (response *DescribeAuditLogFilesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditLogFilesRequest()
+    }
+    response = NewDescribeAuditLogFilesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAuditPoliciesRequest() (request *DescribeAuditPoliciesRequest) {
+    request = &DescribeAuditPoliciesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeAuditPolicies")
+    return
+}
+
+func NewDescribeAuditPoliciesResponse() (response *DescribeAuditPoliciesResponse) {
+    response = &DescribeAuditPoliciesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeAuditPolicies)用于查询云数据库实例的审计策略。
+func (c *Client) DescribeAuditPolicies(request *DescribeAuditPoliciesRequest) (response *DescribeAuditPoliciesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditPoliciesRequest()
+    }
+    response = NewDescribeAuditPoliciesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAuditRulesRequest() (request *DescribeAuditRulesRequest) {
+    request = &DescribeAuditRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeAuditRules")
+    return
+}
+
+func NewDescribeAuditRulesResponse() (response *DescribeAuditRulesResponse) {
+    response = &DescribeAuditRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeAuditRules)用于查询用户在当前地域的审计规则。
+func (c *Client) DescribeAuditRules(request *DescribeAuditRulesRequest) (response *DescribeAuditRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditRulesRequest()
+    }
+    response = NewDescribeAuditRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeBackupConfigRequest() (request *DescribeBackupConfigRequest) {
     request = &DescribeBackupConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -559,6 +834,56 @@ func (c *Client) DescribeBackupDatabases(request *DescribeBackupDatabasesRequest
         request = NewDescribeBackupDatabasesRequest()
     }
     response = NewDescribeBackupDatabasesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBackupOverviewRequest() (request *DescribeBackupOverviewRequest) {
+    request = &DescribeBackupOverviewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeBackupOverview")
+    return
+}
+
+func NewDescribeBackupOverviewResponse() (response *DescribeBackupOverviewResponse) {
+    response = &DescribeBackupOverviewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeBackupOverview)用于查询用户的备份概览。返回用户当前备份总个数、备份总的占用容量、赠送的免费容量、计费容量（容量单位为字节）。
+func (c *Client) DescribeBackupOverview(request *DescribeBackupOverviewRequest) (response *DescribeBackupOverviewResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupOverviewRequest()
+    }
+    response = NewDescribeBackupOverviewResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBackupSummariesRequest() (request *DescribeBackupSummariesRequest) {
+    request = &DescribeBackupSummariesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeBackupSummaries")
+    return
+}
+
+func NewDescribeBackupSummariesResponse() (response *DescribeBackupSummariesResponse) {
+    response = &DescribeBackupSummariesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeBackupSummaries)用于查询备份的统计情况，返回以实例为维度的备份占用容量，以及每个实例的数据备份和日志备份的个数和容量（容量单位为字节）。
+func (c *Client) DescribeBackupSummaries(request *DescribeBackupSummariesRequest) (response *DescribeBackupSummariesResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupSummariesRequest()
+    }
+    response = NewDescribeBackupSummariesResponse()
     err = c.Send(request, response)
     return
 }
@@ -615,6 +940,31 @@ func (c *Client) DescribeBackups(request *DescribeBackupsRequest) (response *Des
     return
 }
 
+func NewDescribeBinlogBackupOverviewRequest() (request *DescribeBinlogBackupOverviewRequest) {
+    request = &DescribeBinlogBackupOverviewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeBinlogBackupOverview")
+    return
+}
+
+func NewDescribeBinlogBackupOverviewResponse() (response *DescribeBinlogBackupOverviewResponse) {
+    response = &DescribeBinlogBackupOverviewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeBinlogBackupOverview)用于查询用户在当前地域总的日志备份概览。
+func (c *Client) DescribeBinlogBackupOverview(request *DescribeBinlogBackupOverviewRequest) (response *DescribeBinlogBackupOverviewResponse, err error) {
+    if request == nil {
+        request = NewDescribeBinlogBackupOverviewRequest()
+    }
+    response = NewDescribeBinlogBackupOverviewResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeBinlogsRequest() (request *DescribeBinlogsRequest) {
     request = &DescribeBinlogsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -630,7 +980,7 @@ func NewDescribeBinlogsResponse() (response *DescribeBinlogsResponse) {
     return
 }
 
-// 本接口(DescribeBinlogs)用于查询云数据库实例的二进制数据。
+// 本接口(DescribeBinlogs)用于查询云数据库实例的 binlog 文件列表。
 func (c *Client) DescribeBinlogs(request *DescribeBinlogsRequest) (response *DescribeBinlogsResponse, err error) {
     if request == nil {
         request = NewDescribeBinlogsRequest()
@@ -736,6 +1086,31 @@ func (c *Client) DescribeDBInstanceGTID(request *DescribeDBInstanceGTIDRequest) 
         request = NewDescribeDBInstanceGTIDRequest()
     }
     response = NewDescribeDBInstanceGTIDResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBInstanceInfoRequest() (request *DescribeDBInstanceInfoRequest) {
+    request = &DescribeDBInstanceInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeDBInstanceInfo")
+    return
+}
+
+func NewDescribeDBInstanceInfoResponse() (response *DescribeDBInstanceInfoResponse) {
+    response = &DescribeDBInstanceInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询实例基本信息（实例 ID ，实例名称，是否开通加密 ）
+func (c *Client) DescribeDBInstanceInfo(request *DescribeDBInstanceInfoRequest) (response *DescribeDBInstanceInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBInstanceInfoRequest()
+    }
+    response = NewDescribeDBInstanceInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -892,6 +1267,31 @@ func (c *Client) DescribeDBZoneConfig(request *DescribeDBZoneConfigRequest) (res
     return
 }
 
+func NewDescribeDataBackupOverviewRequest() (request *DescribeDataBackupOverviewRequest) {
+    request = &DescribeDataBackupOverviewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeDataBackupOverview")
+    return
+}
+
+func NewDescribeDataBackupOverviewResponse() (response *DescribeDataBackupOverviewResponse) {
+    response = &DescribeDataBackupOverviewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeDataBackupOverview)用于查询用户在当前地域总的数据备份概览。
+func (c *Client) DescribeDataBackupOverview(request *DescribeDataBackupOverviewRequest) (response *DescribeDataBackupOverviewResponse, err error) {
+    if request == nil {
+        request = NewDescribeDataBackupOverviewRequest()
+    }
+    response = NewDescribeDataBackupOverviewResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDatabasesRequest() (request *DescribeDatabasesRequest) {
     request = &DescribeDatabasesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -957,7 +1357,7 @@ func NewDescribeDeployGroupListResponse() (response *DescribeDeployGroupListResp
     return
 }
 
-// 根据置放群组 ID 或置放群组名称查询置放群组列表
+// 本接口(DescribeDeployGroupList)用于查询用户的置放群组列表，可以指定置放群组 ID 或置放群组名称。
 func (c *Client) DescribeDeployGroupList(request *DescribeDeployGroupListRequest) (response *DescribeDeployGroupListResponse, err error) {
     if request == nil {
         request = NewDescribeDeployGroupListRequest()
@@ -988,6 +1388,31 @@ func (c *Client) DescribeDeviceMonitorInfo(request *DescribeDeviceMonitorInfoReq
         request = NewDescribeDeviceMonitorInfoRequest()
     }
     response = NewDescribeDeviceMonitorInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeErrorLogDataRequest() (request *DescribeErrorLogDataRequest) {
+    request = &DescribeErrorLogDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeErrorLogData")
+    return
+}
+
+func NewDescribeErrorLogDataResponse() (response *DescribeErrorLogDataResponse) {
+    response = &DescribeErrorLogDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 根据检索条件查询实例错误日志详情。只能查询一个月之内的错误日志。
+func (c *Client) DescribeErrorLogData(request *DescribeErrorLogDataRequest) (response *DescribeErrorLogDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeErrorLogDataRequest()
+    }
+    response = NewDescribeErrorLogDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -1117,6 +1542,31 @@ func (c *Client) DescribeProjectSecurityGroups(request *DescribeProjectSecurityG
     return
 }
 
+func NewDescribeRoGroupsRequest() (request *DescribeRoGroupsRequest) {
+    request = &DescribeRoGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeRoGroups")
+    return
+}
+
+func NewDescribeRoGroupsResponse() (response *DescribeRoGroupsResponse) {
+    response = &DescribeRoGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeRoGroups)用于查询云数据库实例的所有的RO组的信息。
+func (c *Client) DescribeRoGroups(request *DescribeRoGroupsRequest) (response *DescribeRoGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeRoGroupsRequest()
+    }
+    response = NewDescribeRoGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRollbackRangeTimeRequest() (request *DescribeRollbackRangeTimeRequest) {
     request = &DescribeRollbackRangeTimeRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1138,6 +1588,56 @@ func (c *Client) DescribeRollbackRangeTime(request *DescribeRollbackRangeTimeReq
         request = NewDescribeRollbackRangeTimeRequest()
     }
     response = NewDescribeRollbackRangeTimeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRollbackTaskDetailRequest() (request *DescribeRollbackTaskDetailRequest) {
+    request = &DescribeRollbackTaskDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeRollbackTaskDetail")
+    return
+}
+
+func NewDescribeRollbackTaskDetailResponse() (response *DescribeRollbackTaskDetailResponse) {
+    response = &DescribeRollbackTaskDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeRollbackTaskDetail)用于查询云数据库实例回档任务详情。
+func (c *Client) DescribeRollbackTaskDetail(request *DescribeRollbackTaskDetailRequest) (response *DescribeRollbackTaskDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeRollbackTaskDetailRequest()
+    }
+    response = NewDescribeRollbackTaskDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSlowLogDataRequest() (request *DescribeSlowLogDataRequest) {
+    request = &DescribeSlowLogDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeSlowLogData")
+    return
+}
+
+func NewDescribeSlowLogDataResponse() (response *DescribeSlowLogDataResponse) {
+    response = &DescribeSlowLogDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 条件检索实例的慢日志。只允许查看一个月之内的慢日志
+func (c *Client) DescribeSlowLogData(request *DescribeSlowLogDataRequest) (response *DescribeSlowLogDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeSlowLogDataRequest()
+    }
+    response = NewDescribeSlowLogDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -1495,6 +1995,56 @@ func (c *Client) ModifyAccountPrivileges(request *ModifyAccountPrivilegesRequest
     return
 }
 
+func NewModifyAuditConfigRequest() (request *ModifyAuditConfigRequest) {
+    request = &ModifyAuditConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyAuditConfig")
+    return
+}
+
+func NewModifyAuditConfigResponse() (response *ModifyAuditConfigResponse) {
+    response = &ModifyAuditConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(ModifyAuditConfig)用于修改云数据库审计策略的服务配置，包括审计日志保存时长等。
+func (c *Client) ModifyAuditConfig(request *ModifyAuditConfigRequest) (response *ModifyAuditConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyAuditConfigRequest()
+    }
+    response = NewModifyAuditConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyAuditRuleRequest() (request *ModifyAuditRuleRequest) {
+    request = &ModifyAuditRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyAuditRule")
+    return
+}
+
+func NewModifyAuditRuleResponse() (response *ModifyAuditRuleResponse) {
+    response = &ModifyAuditRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(ModifyAuditRule)用于修改用户的审计规则。
+func (c *Client) ModifyAuditRule(request *ModifyAuditRuleRequest) (response *ModifyAuditRuleResponse, err error) {
+    if request == nil {
+        request = NewModifyAuditRuleRequest()
+    }
+    response = NewModifyAuditRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyAutoRenewFlagRequest() (request *ModifyAutoRenewFlagRequest) {
     request = &ModifyAutoRenewFlagRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1745,6 +2295,31 @@ func (c *Client) ModifyParamTemplate(request *ModifyParamTemplateRequest) (respo
     return
 }
 
+func NewModifyRoGroupInfoRequest() (request *ModifyRoGroupInfoRequest) {
+    request = &ModifyRoGroupInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyRoGroupInfo")
+    return
+}
+
+func NewModifyRoGroupInfoResponse() (response *ModifyRoGroupInfoResponse) {
+    response = &ModifyRoGroupInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（ModifyRoGroupInfo）用于更新云数据库只读组的信息。包括设置实例延迟超限剔除策略，设置只读实例读权重等。
+func (c *Client) ModifyRoGroupInfo(request *ModifyRoGroupInfoRequest) (response *ModifyRoGroupInfoResponse, err error) {
+    if request == nil {
+        request = NewModifyRoGroupInfoRequest()
+    }
+    response = NewModifyRoGroupInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyTimeWindowRequest() (request *ModifyTimeWindowRequest) {
     request = &ModifyTimeWindowRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1851,6 +2426,31 @@ func (c *Client) OpenWanService(request *OpenWanServiceRequest) (response *OpenW
     return
 }
 
+func NewReleaseIsolatedDBInstancesRequest() (request *ReleaseIsolatedDBInstancesRequest) {
+    request = &ReleaseIsolatedDBInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "ReleaseIsolatedDBInstances")
+    return
+}
+
+func NewReleaseIsolatedDBInstancesResponse() (response *ReleaseIsolatedDBInstancesResponse) {
+    response = &ReleaseIsolatedDBInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（ReleaseIsolatedDBInstances）用于恢复已隔离云数据库实例。
+func (c *Client) ReleaseIsolatedDBInstances(request *ReleaseIsolatedDBInstancesRequest) (response *ReleaseIsolatedDBInstancesResponse, err error) {
+    if request == nil {
+        request = NewReleaseIsolatedDBInstancesRequest()
+    }
+    response = NewReleaseIsolatedDBInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewRenewDBInstanceRequest() (request *RenewDBInstanceRequest) {
     request = &RenewDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1866,7 +2466,7 @@ func NewRenewDBInstanceResponse() (response *RenewDBInstanceResponse) {
     return
 }
 
-// 本接口(RenewDBInstance)用于续费云数据库实例，仅支持付费模式为包年包月的实例。按量计费实例不需要续费。
+// 本接口(RenewDBInstance)用于续费云数据库实例，支持付费模式为包年包月的实例。按量计费实例可通过该接口续费为包年包月的实例。
 func (c *Client) RenewDBInstance(request *RenewDBInstanceRequest) (response *RenewDBInstanceResponse, err error) {
     if request == nil {
         request = NewRenewDBInstanceRequest()

@@ -4,13 +4,18 @@ Provides a resource to create a Redis instance and set its attributes.
 Example Usage
 
 ```hcl
-resource "tencentcloud_redis_instance" "redis_instance_test"{
-  availability_zone = "ap-hongkong-3"
-  type              = "master_slave_redis"
-  password          = "test12345789"
-  mem_size          = 8192
-  name              = "terrform_test"
-  port              = 6379
+data "tencentcloud_redis_zone_config" "zone" {
+}
+
+resource "tencentcloud_redis_instance" "redis_instance_test_2" {
+  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
+  type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
+  password           = "test12345789"
+  mem_size           = 8192
+  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
+  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
+  name               = "terrform_test"
+  port               = 6379
 }
 ```
 
@@ -29,6 +34,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
@@ -40,6 +46,13 @@ import (
 )
 
 func resourceTencentCloudRedisInstance() *schema.Resource {
+	types := []string{}
+	for _, v := range REDIS_NAMES {
+		types = append(types, "`"+v+"`")
+	}
+	sort.Strings(types)
+	typeStr := strings.Trim(strings.Join(types, ","), ",")
+
 	return &schema.Resource{
 		Create: resourceTencentCloudRedisInstanceCreate,
 		Read:   resourceTencentCloudRedisInstanceRead,
@@ -62,11 +75,31 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Instance name.",
 			},
+			"type_id": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ForceNew:     true,
+				ValidateFunc: validateIntegerMin(2),
+				Description:  "Instance type. Refer to `data.tencentcloud_redis_zone_config.list.type_id` get available values.",
+			},
+			"redis_shard_num": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     1,
+				Description: "The number of instance shard. This is not required for standalone and master slave versions.",
+			},
+			"redis_replicas_num": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     1,
+				Description: "The number of instance copies. This is not required for standalone and master slave versions.",
+			},
 			"type": {
 				Type:     schema.TypeString,
 				ForceNew: true,
 				Optional: true,
-				Default:  REDIS_NAMES[REDIS_VERSION_MASTER_SLAVE_REDIS],
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
 					for _, name := range REDIS_NAMES {
@@ -77,7 +110,8 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 					errors = append(errors, fmt.Errorf("this redis type %s not support now.", value))
 					return
 				},
-				Description: "Instance type. Available values: master_slave_redis.",
+				Deprecated:  "It has been deprecated from version 1.33.1. Please use 'type_id' instead.",
+				Description: "Instance type. Available values: " + typeStr + ", specific region support specific types, need to refer data `tencentcloud_redis_zone_config`.",
 			},
 			"password": {
 				Type:         schema.TypeString,
@@ -152,6 +186,27 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Computed:    true,
 				Description: "The time when the instance was created.",
 			},
+			// payment
+			"charge_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      REDIS_CHARGE_TYPE_POSTPAID,
+				ValidateFunc: validateAllowedStringValue([]string{REDIS_CHARGE_TYPE_POSTPAID, REDIS_CHARGE_TYPE_PREPAID}),
+				Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.",
+			},
+			"prepaid_period": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateAllowedIntValue(REDIS_PREPAID_PERIOD),
+				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.",
+			},
+			"force_delete": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicate whether to delete Redis instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for PREPAID instance.",
+			},
 		},
 	}
 }
@@ -160,7 +215,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_redis_instance.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	redisService := RedisService{client: client}
@@ -170,6 +225,9 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	availabilityZone := d.Get("availability_zone").(string)
 	redisName := d.Get("name").(string)
 	redisType := d.Get("type").(string)
+	typeId := int64(d.Get("type_id").(int))
+	redisShardNum := d.Get("redis_shard_num").(int)
+	redisReplicasNum := d.Get("redis_replicas_num").(int)
 	password := d.Get("password").(string)
 	memSize := d.Get("mem_size").(int)
 	vpcId := d.Get("vpc_id").(string)
@@ -178,11 +236,90 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	projectId := d.Get("project_id").(int)
 	port := d.Get("port").(int)
 	tags := helper.GetTags(d, "tags")
+	chargeType := d.Get("charge_type").(string)
+	chargeTypeID := REDIS_CHARGE_TYPE_ID[chargeType]
+	var chargePeriod uint64 = 1
+	if chargeType == REDIS_CHARGE_TYPE_PREPAID {
+		if period, ok := d.GetOk("prepaid_period"); ok {
+			chargePeriod = uint64(period.(int))
+		} else {
+			return fmt.Errorf("instance charge type prepaid period can not be empty when charge type is %s", chargeType)
+		}
+	}
 
 	if availabilityZone != "" {
 		if !strings.Contains(availabilityZone, region) {
 			return fmt.Errorf("zone[%s] not in region[%s]", availabilityZone, region)
 		}
+	}
+
+	if (typeId == 0 && redisType == "") || (typeId != 0 && redisType != "") {
+		return fmt.Errorf("`type_id` and `type` set one item and only one item")
+	}
+
+	for id, name := range REDIS_NAMES {
+		if redisType == name {
+			typeId = id
+			break
+		}
+	}
+
+	sellConfigures, err := redisService.DescribeRedisZoneConfig(ctx)
+	if err != nil {
+		return fmt.Errorf("api[DescribeRedisZoneConfig]fail, return %s", err.Error())
+	}
+	var regionItem *redis.RegionConf
+	var zoneItem *redis.ZoneCapacityConf
+	var redisItem *redis.ProductConf
+	for _, regionItem = range sellConfigures {
+		if *regionItem.RegionId == region {
+			break
+		}
+	}
+	if regionItem == nil {
+		return fmt.Errorf("all redis in this region `%s` be sold out", region)
+	}
+	for _, zones := range regionItem.ZoneSet {
+		if *zones.IsSaleout {
+			continue
+		}
+		if *zones.ZoneName == availabilityZone {
+			zoneItem = zones
+			break
+		}
+	}
+	if zoneItem == nil {
+		return fmt.Errorf("all redis in this zone `%s` be sold out", availabilityZone)
+	}
+
+	for _, reds := range zoneItem.ProductSet {
+		if *reds.Type == typeId {
+			redisItem = reds
+			break
+		}
+	}
+	if redisItem == nil {
+		return fmt.Errorf("redis type_id `%d` be sold out or this type_id is not supports", typeId)
+	}
+	var redisShardNums []string
+	var redisReplicasNums []string
+	var numErrors []string
+	for _, v := range redisItem.ShardNum {
+		redisShardNums = append(redisShardNums, *v)
+	}
+	for _, v := range redisItem.ReplicaNum {
+		redisReplicasNums = append(redisReplicasNums, *v)
+	}
+	if !IsContains(redisShardNums, fmt.Sprintf("%d", redisShardNum)) {
+		numErrors = append(numErrors, fmt.Sprintf("redis_shard_num : %s", strings.Join(redisShardNums, ",")))
+	}
+
+	if !IsContains(redisReplicasNums, fmt.Sprintf("%d", redisReplicasNum)) {
+		numErrors = append(numErrors, fmt.Sprintf(" redis_replicas_num : %s", strings.Join(redisReplicasNums, ",")))
+	}
+
+	if len(numErrors) > 0 {
+		return fmt.Errorf("redis type_id `%d` only supports %s", typeId, strings.Join(numErrors, ","))
 	}
 
 	requestSecurityGroup := make([]string, 0, len(securityGroups))
@@ -191,9 +328,9 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		requestSecurityGroup = append(requestSecurityGroup, v.(string))
 	}
 
-	dealId, err := redisService.CreateInstances(ctx,
+	instanceIds, err := redisService.CreateInstances(ctx,
 		availabilityZone,
-		redisType,
+		typeId,
 		password,
 		vpcId,
 		subnetId,
@@ -201,18 +338,23 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		int64(memSize),
 		int64(projectId),
 		int64(port),
-		requestSecurityGroup)
+		requestSecurityGroup,
+		redisShardNum,
+		redisReplicasNum,
+		chargeTypeID,
+		chargePeriod,
+	)
 
 	if err != nil {
 		return err
 	}
 
-	if dealId == "" {
+	if len(instanceIds) == 0 {
 		return fmt.Errorf("redis api CreateInstances return empty redis id")
 	}
-	var redisId = dealId
+	var redisId = *instanceIds[0]
 	err = resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
-		has, online, _, err := redisService.CheckRedisCreateOk(ctx, dealId)
+		has, online, _, err := redisService.CheckRedisOnlineOk(ctx, redisId)
 		if err != nil {
 			return resource.NonRetryableError(err)
 		}
@@ -243,9 +385,10 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 
 func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 	var onlineHas = true
@@ -255,7 +398,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		e    error
 	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		has, _, info, e = service.CheckRedisCreateOk(ctx, d.Id())
+		has, _, info, e = service.CheckRedisOnlineOk(ctx, d.Id())
 		if info != nil {
 			if *info.Status == REDIS_STATUS_ISOLATE || *info.Status == REDIS_STATUS_TODELETE {
 				d.SetId("")
@@ -294,26 +437,35 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
-	_ = d.Set("availability_zone", zoneName)
-
-	typeName := REDIS_NAMES[*info.Type]
-	if typeName == "" {
-		err = fmt.Errorf("redis read unkwnow type %d", *info.Type)
-		log.Printf("[CRITAL]%s redis read type name error, reason:%s\n", logId, err.Error())
-		return err
+	//not set field type_id
+	if d.Get("type_id").(int) == 0 {
+		typeName := REDIS_NAMES[*info.Type]
+		if typeName == "" {
+			err = fmt.Errorf("redis read unkwnow type %d", *info.Type)
+			log.Printf("[CRITAL]%s redis read type name error, reason:%s\n", logId, err.Error())
+			return err
+		}
+		_ = d.Set("type", typeName)
+	} else {
+		_ = d.Set("type_id", info.Type)
 	}
-	_ = d.Set("type", typeName)
 
+	if d.Get("redis_shard_num").(int) != 0 {
+		_ = d.Set("redis_shard_num", info.RedisShardNum)
+	}
+
+	if d.Get("redis_replicas_num").(int) != 0 {
+		_ = d.Set("redis_replicas_num", info.RedisReplicasNum)
+	}
+
+	_ = d.Set("availability_zone", zoneName)
 	_ = d.Set("mem_size", int64(*info.Size))
-
 	_ = d.Set("vpc_id", *info.UniqVpcId)
 	_ = d.Set("subnet_id", *info.UniqSubnetId)
-
 	_ = d.Set("project_id", *info.ProjectId)
 	_ = d.Set("port", *info.Port)
 	_ = d.Set("ip", *info.WanIp)
 	_ = d.Set("create_time", *info.Createtime)
-
 	if d.Get("vpc_id").(string) != "" {
 		securityGroups, err := service.DescribeInstanceSecurityGroup(ctx, d.Id())
 		if err != nil {
@@ -337,6 +489,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	}
 	_ = d.Set("tags", tags)
 
+	_ = d.Set("charge_type", REDIS_CHARGE_TYPE_NAME[*info.BillingMode])
 	return nil
 }
 
@@ -344,7 +497,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_redis_instance.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -354,6 +507,15 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 	region := client.Region
 
 	d.Partial(true)
+
+	unsupportedUpdateFields := []string{
+		"prepaid_period",
+	}
+	for _, field := range unsupportedUpdateFields {
+		if d.HasChange(field) {
+			return fmt.Errorf("tencentcloud_redis_instance update on %s is not support yet", field)
+		}
+	}
 
 	// name\mem_size\password\project_id
 
@@ -389,7 +551,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 
 		err = resource.Retry(4*readRetryTimeout, func() *resource.RetryError {
-			_, _, info, err := redisService.CheckRedisCreateOk(ctx, redisId)
+			_, _, info, err := redisService.CheckRedisOnlineOk(ctx, redisId)
 
 			if info != nil {
 				status := REDIS_STATUS[*info.Status]
@@ -484,14 +646,44 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_redis_instance.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var wait = func(action string, taskId int64) (errRet error) {
+	// Collect infos before deleting action
+	var chargeType string
+	errQuery := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+		has, online, info, err := service.CheckRedisOnlineOk(ctx, d.Id())
+		if err != nil {
+			log.Printf("[CRITAL]%s redis querying before deleting fail, reason:%s\n", logId, err.Error())
+			return resource.NonRetryableError(err)
+		}
+		if !has {
+			return nil
+		}
+		if online {
+			chargeType = REDIS_CHARGE_TYPE_NAME[*info.BillingMode]
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("Deleting ERROR: Creating redis task is processing."))
+		}
+	})
+	if errQuery != nil {
+		log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errQuery.Error())
+		return errQuery
+	}
+
+	var wait = func(action string, taskInfo interface{}) (errRet error) {
 
 		errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			ok, err := service.DescribeTaskInfo(ctx, d.Id(), taskId)
+			var ok bool
+			var err error
+			switch v := taskInfo.(type) {
+			case int64:
+				ok, err = service.DescribeTaskInfo(ctx, d.Id(), v)
+			case string:
+				ok, _, err = service.DescribeInstanceDealDetail(ctx, v)
+			}
 			if err != nil {
 				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
 					return resource.RetryableError(err)
@@ -512,22 +704,50 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 		return errRet
 	}
 
-	action := "DestroyPostpaidInstance"
-	taskId, err := service.DestroyPostpaidInstance(ctx, d.Id())
-	if err != nil {
-		log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, action, err.Error())
-		return err
-	}
-	if err = wait(action, taskId); err != nil {
-		return err
+	forceDelete := d.Get("force_delete").(bool)
+	if chargeType == REDIS_CHARGE_TYPE_POSTPAID {
+		forceDelete = true
+		taskId, err := service.DestroyPostpaidInstance(ctx, d.Id())
+		if err != nil {
+			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "DestroyPostpaidInstance", err.Error())
+			return err
+		}
+		if err = wait("DestroyPostpaidInstance", taskId); err != nil {
+			return err
+		}
+
+	} else {
+		if _, err := service.DestroyPrepaidInstance(ctx, d.Id()); err != nil {
+			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "DestroyPrepaidInstance", err.Error())
+			return err
+		}
+
+		// Deal info only support create and renew and resize, need to check destroy status by describing api.
+		if errDestroyChecking := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+			has, isolated, err := service.CheckRedisDestroyOk(ctx, d.Id())
+			if err != nil {
+				log.Printf("[CRITAL]%s CheckRedisDestroyOk fail, reason:%s\n", logId, err.Error())
+				return resource.NonRetryableError(err)
+			}
+			if !has || isolated {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("Instance is not ready to be destroyed."))
+		}); errDestroyChecking != nil {
+			log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errDestroyChecking.Error())
+			return errDestroyChecking
+		}
 	}
 
-	action = "CleanUpInstance"
-	taskId, err = service.CleanUpInstance(ctx, d.Id())
-	if err != nil {
-		log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, action, err.Error())
-		return err
-	}
+	if forceDelete {
+		taskId, err := service.CleanUpInstance(ctx, d.Id())
+		if err != nil {
+			log.Printf("[CRITAL]%s redis %s fail, reason:%s\n", logId, "CleanUpInstance", err.Error())
+			return err
+		}
 
-	return wait(action, taskId)
+		return wait("CleanUpInstance", taskId)
+	} else {
+		return nil
+	}
 }

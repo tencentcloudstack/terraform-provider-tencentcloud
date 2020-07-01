@@ -6,10 +6,9 @@ import (
 	"log"
 	"testing"
 
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 var testTkeScaleWorkerResourceName = "tencentcloud_kubernetes_scale_worker"
@@ -47,7 +46,7 @@ func testAccCheckTkeScaleWorkerDestroy(s *terraform.State) error {
 			return fmt.Errorf("miss worker_instances_list.0.instance_id[%s] or cluster_id[%s]", instanceId, clusterId)
 		}
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
@@ -97,7 +96,7 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 		}
 
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 

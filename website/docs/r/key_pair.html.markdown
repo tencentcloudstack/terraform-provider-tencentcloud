@@ -27,6 +27,13 @@ The following arguments are supported:
 * `public_key` - (Required, ForceNew) You can import an existing public key and using TencentCloud key pair to manage it.
 * `project_id` - (Optional, ForceNew) Specifys to which project the key pair belongs.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

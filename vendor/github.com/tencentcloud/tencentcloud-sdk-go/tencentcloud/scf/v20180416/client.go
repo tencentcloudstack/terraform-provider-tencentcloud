@@ -74,6 +74,32 @@ func (c *Client) CopyFunction(request *CopyFunctionRequest) (response *CopyFunct
     return
 }
 
+func NewCreateAliasRequest() (request *CreateAliasRequest) {
+    request = &CreateAliasRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "CreateAlias")
+    return
+}
+
+func NewCreateAliasResponse() (response *CreateAliasResponse) {
+    response = &CreateAliasResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 为某个函数版本创建一个别名，您可以使用别名来标记特定的函数版本，如DEV/RELEASE版本，也可以随时修改别名指向的版本。
+// 一个别名必须指向一个主版本，此外还可以同时指向一个附加版本。调用函数时指定特定的别名，则请求会被发送到别名指向的版本上，您可以配置请求发送到主版本和附加版本的比例。
+func (c *Client) CreateAlias(request *CreateAliasRequest) (response *CreateAliasResponse, err error) {
+    if request == nil {
+        request = NewCreateAliasRequest()
+    }
+    response = NewCreateAliasResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateFunctionRequest() (request *CreateFunctionRequest) {
     request = &CreateFunctionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -149,6 +175,31 @@ func (c *Client) CreateTrigger(request *CreateTriggerRequest) (response *CreateT
     return
 }
 
+func NewDeleteAliasRequest() (request *DeleteAliasRequest) {
+    request = &DeleteAliasRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "DeleteAlias")
+    return
+}
+
+func NewDeleteAliasResponse() (response *DeleteAliasResponse) {
+    response = &DeleteAliasResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除一个函数版本的别名
+func (c *Client) DeleteAlias(request *DeleteAliasRequest) (response *DeleteAliasResponse, err error) {
+    if request == nil {
+        request = NewDeleteAliasRequest()
+    }
+    response = NewDeleteAliasResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteFunctionRequest() (request *DeleteFunctionRequest) {
     request = &DeleteFunctionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -170,6 +221,31 @@ func (c *Client) DeleteFunction(request *DeleteFunctionRequest) (response *Delet
         request = NewDeleteFunctionRequest()
     }
     response = NewDeleteFunctionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteLayerVersionRequest() (request *DeleteLayerVersionRequest) {
+    request = &DeleteLayerVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "DeleteLayerVersion")
+    return
+}
+
+func NewDeleteLayerVersionResponse() (response *DeleteLayerVersionResponse) {
+    response = &DeleteLayerVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除指定层的指定版本，被删除的版本无法再关联到函数上，但不会影响正在引用这个层的函数。
+func (c *Client) DeleteLayerVersion(request *DeleteLayerVersionRequest) (response *DeleteLayerVersionResponse, err error) {
+    if request == nil {
+        request = NewDeleteLayerVersionRequest()
+    }
+    response = NewDeleteLayerVersionResponse()
     err = c.Send(request, response)
     return
 }
@@ -220,6 +296,31 @@ func (c *Client) DeleteTrigger(request *DeleteTriggerRequest) (response *DeleteT
         request = NewDeleteTriggerRequest()
     }
     response = NewDeleteTriggerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetAliasRequest() (request *GetAliasRequest) {
+    request = &GetAliasRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "GetAlias")
+    return
+}
+
+func NewGetAliasResponse() (response *GetAliasResponse) {
+    response = &GetAliasResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取别名的详细信息，包括名称、描述、版本、路由信息等。
+func (c *Client) GetAlias(request *GetAliasRequest) (response *GetAliasResponse, err error) {
+    if request == nil {
+        request = NewGetAliasRequest()
+    }
+    response = NewGetAliasResponse()
     err = c.Send(request, response)
     return
 }
@@ -299,6 +400,31 @@ func (c *Client) GetFunctionLogs(request *GetFunctionLogsRequest) (response *Get
     return
 }
 
+func NewGetLayerVersionRequest() (request *GetLayerVersionRequest) {
+    request = &GetLayerVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "GetLayerVersion")
+    return
+}
+
+func NewGetLayerVersionResponse() (response *GetLayerVersionResponse) {
+    response = &GetLayerVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取层版本详细信息，包括用于下载层中文件的链接。
+func (c *Client) GetLayerVersion(request *GetLayerVersionRequest) (response *GetLayerVersionResponse, err error) {
+    if request == nil {
+        request = NewGetLayerVersionRequest()
+    }
+    response = NewGetLayerVersionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewInvokeRequest() (request *InvokeRequest) {
     request = &InvokeRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -320,6 +446,31 @@ func (c *Client) Invoke(request *InvokeRequest) (response *InvokeResponse, err e
         request = NewInvokeRequest()
     }
     response = NewInvokeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListAliasesRequest() (request *ListAliasesRequest) {
+    request = &ListAliasesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "ListAliases")
+    return
+}
+
+func NewListAliasesResponse() (response *ListAliasesResponse) {
+    response = &ListAliasesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 返回一个函数下的全部别名，可以根据特定函数版本过滤。
+func (c *Client) ListAliases(request *ListAliasesRequest) (response *ListAliasesResponse, err error) {
+    if request == nil {
+        request = NewListAliasesRequest()
+    }
+    response = NewListAliasesResponse()
     err = c.Send(request, response)
     return
 }
@@ -349,6 +500,56 @@ func (c *Client) ListFunctions(request *ListFunctionsRequest) (response *ListFun
     return
 }
 
+func NewListLayerVersionsRequest() (request *ListLayerVersionsRequest) {
+    request = &ListLayerVersionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "ListLayerVersions")
+    return
+}
+
+func NewListLayerVersionsResponse() (response *ListLayerVersionsResponse) {
+    response = &ListLayerVersionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 返回指定层的全部版本的信息
+func (c *Client) ListLayerVersions(request *ListLayerVersionsRequest) (response *ListLayerVersionsResponse, err error) {
+    if request == nil {
+        request = NewListLayerVersionsRequest()
+    }
+    response = NewListLayerVersionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListLayersRequest() (request *ListLayersRequest) {
+    request = &ListLayersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "ListLayers")
+    return
+}
+
+func NewListLayersResponse() (response *ListLayersResponse) {
+    response = &ListLayersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 返回全部层的列表，其中包含了每个层最新版本的信息，可以通过适配运行时进行过滤。
+func (c *Client) ListLayers(request *ListLayersRequest) (response *ListLayersResponse, err error) {
+    if request == nil {
+        request = NewListLayersRequest()
+    }
+    response = NewListLayersResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewListNamespacesRequest() (request *ListNamespacesRequest) {
     request = &ListNamespacesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -370,6 +571,31 @@ func (c *Client) ListNamespaces(request *ListNamespacesRequest) (response *ListN
         request = NewListNamespacesRequest()
     }
     response = NewListNamespacesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListTriggersRequest() (request *ListTriggersRequest) {
+    request = &ListTriggersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "ListTriggers")
+    return
+}
+
+func NewListTriggersResponse() (response *ListTriggersResponse) {
+    response = &ListTriggersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取函数触发器列表
+func (c *Client) ListTriggers(request *ListTriggersRequest) (response *ListTriggersResponse, err error) {
+    if request == nil {
+        request = NewListTriggersRequest()
+    }
+    response = NewListTriggersResponse()
     err = c.Send(request, response)
     return
 }
@@ -399,6 +625,31 @@ func (c *Client) ListVersionByFunction(request *ListVersionByFunctionRequest) (r
     return
 }
 
+func NewPublishLayerVersionRequest() (request *PublishLayerVersionRequest) {
+    request = &PublishLayerVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "PublishLayerVersion")
+    return
+}
+
+func NewPublishLayerVersionResponse() (response *PublishLayerVersionResponse) {
+    response = &PublishLayerVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 使用给定的zip文件或cos对象创建一个层的新版本，每次使用相同的层的名称调用本接口，都会生成一个新版本。
+func (c *Client) PublishLayerVersion(request *PublishLayerVersionRequest) (response *PublishLayerVersionResponse, err error) {
+    if request == nil {
+        request = NewPublishLayerVersionRequest()
+    }
+    response = NewPublishLayerVersionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewPublishVersionRequest() (request *PublishVersionRequest) {
     request = &PublishVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -420,6 +671,31 @@ func (c *Client) PublishVersion(request *PublishVersionRequest) (response *Publi
         request = NewPublishVersionRequest()
     }
     response = NewPublishVersionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateAliasRequest() (request *UpdateAliasRequest) {
+    request = &UpdateAliasRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("scf", APIVersion, "UpdateAlias")
+    return
+}
+
+func NewUpdateAliasResponse() (response *UpdateAliasResponse) {
+    response = &UpdateAliasResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 更新别名的配置
+func (c *Client) UpdateAlias(request *UpdateAliasRequest) (response *UpdateAliasResponse, err error) {
+    if request == nil {
+        request = NewUpdateAliasRequest()
+    }
+    response = NewUpdateAliasResponse()
     err = c.Send(request, response)
     return
 }

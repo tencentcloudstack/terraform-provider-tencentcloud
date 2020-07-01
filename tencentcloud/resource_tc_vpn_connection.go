@@ -275,7 +275,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_vpn_connection.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := vpc.NewCreateVpnConnectionRequest()
 	request.VpnConnectionName = helper.String(d.Get("name").(string))
@@ -410,7 +410,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, idRequest.GetAction(), idRequest.ToJsonString(), e.Error())
-				return retryError(e, "InternalError")
+				return retryError(e, InternalError)
 			} else {
 				if len(result.Response.VpnConnectionSet) == 0 || *result.Response.VpnConnectionSet[0].VpnConnectionId == "" {
 					return resource.RetryableError(fmt.Errorf("Id is creating, wait..."))
@@ -476,9 +476,10 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 
 func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpn_connection.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	connectionId := d.Id()
 	request := vpc.NewDescribeVpnConnectionsRequest()
@@ -567,7 +568,7 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_vpn_connection.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	d.Partial(true)
 	connectionId := d.Id()

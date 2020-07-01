@@ -20,7 +20,7 @@ func init() {
 
 func testSweepCosBuckets(region string) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	sharedClient, err := sharedClientForRegion(region)
 	if err != nil {
@@ -80,6 +80,8 @@ func TestAccTencentCloudCosBucket_basic(t *testing.T) {
 				Config: testAccCosBucket_basicUpdate(appid),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "encryption_algorithm", "AES256"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "versioning_enable", "true"),
 				),
 			},
 			{
@@ -264,7 +266,7 @@ func TestAccTencentCloudCosBucket_website(t *testing.T) {
 func testAccCheckCosBucketExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -284,7 +286,7 @@ func testAccCheckCosBucketExists(n string) resource.TestCheckFunc {
 
 func testAccCheckCosBucketDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	cosService := CosService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -305,8 +307,8 @@ func testAccCheckCosBucketDestroy(s *terraform.State) error {
 func testAccCosBucket_basic(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_basic" {
-	bucket = "tf-bucket-basic-%s"
-	acl    = "public-read"
+  bucket = "tf-bucket-basic-%s"
+  acl    = "public-read"
 }
 `, appid)
 }
@@ -314,8 +316,10 @@ resource "tencentcloud_cos_bucket" "bucket_basic" {
 func testAccCosBucket_basicUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_basic" {
-	bucket = "tf-bucket-basic-%s"
-	acl    = "private"
+  bucket               = "tf-bucket-basic-%s"
+  acl                  = "private"
+  encryption_algorithm = "AES256"
+  versioning_enable    = true
 }
 `, appid)
 }
@@ -358,16 +362,16 @@ resource "tencentcloud_cos_bucket" "bucket_tags" {
 func testAccCosBucket_cors(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_cors" {
-	bucket = "tf-bucket-cors-%s"
-	acl    = "public-read"
+  bucket = "tf-bucket-cors-%s"
+  acl    = "public-read"
 
-	cors_rules {
-		allowed_headers = ["*"]
-		allowed_methods = ["GET","POST"]
-		allowed_origins = ["https://www.test.com"]
-		expose_headers  = ["x-cos-test"]
-		max_age_seconds = 300
-	}
+  cors_rules {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "POST"]
+    allowed_origins = ["https://www.test.com"]
+    expose_headers  = ["x-cos-test"]
+    max_age_seconds = 300
+  }
 }
 `, appid)
 }
@@ -375,15 +379,15 @@ resource "tencentcloud_cos_bucket" "bucket_cors" {
 func testAccCosBucket_corsUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_cors" {
-	bucket = "tf-bucket-cors-%s"
-	acl    = "public-read"
-	cors_rules {
-		allowed_headers = ["*"]
-		allowed_methods = ["GET","POST","PUT"]
-		allowed_origins = ["https://www.example.com"]
-		expose_headers  = ["x-cos-test"]
-		max_age_seconds = 100
-	}
+  bucket = "tf-bucket-cors-%s"
+  acl    = "public-read"
+  cors_rules {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "POST", "PUT"]
+    allowed_origins = ["https://www.example.com"]
+    expose_headers  = ["x-cos-test"]
+    max_age_seconds = 100
+  }
 }
 `, appid)
 }
@@ -391,22 +395,22 @@ resource "tencentcloud_cos_bucket" "bucket_cors" {
 func testAccBucket_lifecycle(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
-	bucket = "tf-bucket-lifecycle-%s"
-	acl    = "public-read"
-	lifecycle_rules {
-		filter_prefix = "test/"
-		expiration {
-			days = 365
-		}
-		transition {
-			days          = 30
-			storage_class = "STANDARD_IA"
-		}
-		transition {
-			days          = 60
-			storage_class = "ARCHIVE"
-		}
-	}
+  bucket = "tf-bucket-lifecycle-%s"
+  acl    = "public-read"
+  lifecycle_rules {
+    filter_prefix = "test/"
+    expiration {
+      days = 365
+    }
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+    transition {
+      days          = 60
+      storage_class = "ARCHIVE"
+    }
+  }
 }
 `, appid)
 }
@@ -414,22 +418,22 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
 func testAccBucket_lifecycleUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
-	bucket = "tf-bucket-lifecycle-%s"
-	acl    = "public-read"
-	lifecycle_rules {
-		filter_prefix = "test/"
-		expiration {
-			days = 300
-		}
-		transition {
-			days          = 30
-			storage_class = "STANDARD_IA"
-		}
-		transition {
-			days          = 90
-			storage_class = "ARCHIVE"
-		}
-	}
+  bucket = "tf-bucket-lifecycle-%s"
+  acl    = "public-read"
+  lifecycle_rules {
+    filter_prefix = "test/"
+    expiration {
+      days = 300
+    }
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+    transition {
+      days          = 90
+      storage_class = "ARCHIVE"
+    }
+  }
 }
 `, appid)
 }
@@ -437,12 +441,12 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
 func testAccBucket_website(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_website" {
-	bucket = "tf-bucket-website-%s"
-	acl    = "public-read"
-	website {
-		index_document = "index.html"
-		error_document = "error.html"
-	}
+  bucket = "tf-bucket-website-%s"
+  acl    = "public-read"
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
 }
 `, appid)
 }
@@ -450,12 +454,12 @@ resource "tencentcloud_cos_bucket" "bucket_website" {
 func testAccBucket_websiteUpdate(appid string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cos_bucket" "bucket_website" {
-	bucket = "tf-bucket-website-%s"
-	acl    = "public-read"
-	website {
-		index_document = "testindex.html"
-		error_document = "testerror.html"
-	}
+  bucket = "tf-bucket-website-%s"
+  acl    = "public-read"
+  website {
+    index_document = "testindex.html"
+    error_document = "testerror.html"
+  }
 }
 `, appid)
 }

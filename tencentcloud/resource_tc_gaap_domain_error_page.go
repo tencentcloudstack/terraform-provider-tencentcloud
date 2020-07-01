@@ -100,7 +100,7 @@ func resourceTencentCloudGaapDomainErrorPageInfo() *schema.Resource {
 func resourceTencentCloudGaapDomainErrorPageInfoCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_domain_error_page.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -142,8 +142,10 @@ func resourceTencentCloudGaapDomainErrorPageInfoCreate(d *schema.ResourceData, m
 
 func resourceTencentCloudGaapDomainErrorPageInfoRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_domain_error_page.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -182,7 +184,7 @@ func resourceTencentCloudGaapDomainErrorPageInfoRead(d *schema.ResourceData, m i
 func resourceTencentCloudGaapDomainErrorPageInfoDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_domain_error_page.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 

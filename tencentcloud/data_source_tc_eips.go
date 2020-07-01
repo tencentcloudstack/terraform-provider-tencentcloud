@@ -113,7 +113,7 @@ func dataSourceTencentCloudEips() *schema.Resource {
 func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_eips.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -138,7 +138,7 @@ func dataSourceTencentCloudEipsRead(d *schema.ResourceData, meta interface{}) er
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		eips, errRet = vpcService.DescribeEipByFilter(ctx, filter)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

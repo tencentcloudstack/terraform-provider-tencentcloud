@@ -97,6 +97,7 @@ The `rule_list` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Create time of the CC self-define http policy.
 * `policy_id` - Id of the CC self-define http policy.
 

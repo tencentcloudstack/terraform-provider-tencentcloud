@@ -1,14 +1,6 @@
 package tencentcloud
 
 const (
-	SCF_RUNTIME_PY27    = "Python2.7"
-	SCF_RUNTIME_PY36    = "Python3.6"
-	SCF_RUNTIME_NODE610 = "Nodejs6.10"
-	SCF_RUNTIME_PHP5    = "PHP5"
-	SCF_RUNTIME_PHP7    = "PHP7"
-	SCF_RUNTIME_GO1     = "Golang1"
-	SCF_RUNTIME_JAVA8   = "Java8"
-
 	SCF_FUNCTION_TYPE_EVENT = "Event"
 
 	SCF_FUNCTION_STATUS_ACTIVE         = "Active"
@@ -26,8 +18,6 @@ const (
 	SCF_TRIGGER_TYPE_TIMER       = "timer"
 	SCF_TRIGGER_TYPE_CKAFKA      = "ckafka"
 	SCF_TRIGGER_TYPE_API_GATEWAY = "apigw"
-
-	SCF_TRIGGER_COS_NAME_SUFFIX = ".cos.ap-guangzhou.myqcloud.com"
 
 	SCF_LOGS_ORDER_BY_FUNCTION_NAME = "function_name"
 	SCF_LOGS_ORDER_BY_DERATION      = "duration"
@@ -50,16 +40,6 @@ const (
 )
 
 var (
-	SCF_RUNTIMES = []string{
-		SCF_RUNTIME_PY27,
-		SCF_RUNTIME_PY36,
-		SCF_RUNTIME_NODE610,
-		SCF_RUNTIME_PHP5,
-		SCF_RUNTIME_PHP7,
-		SCF_RUNTIME_GO1,
-		SCF_RUNTIME_JAVA8,
-	}
-
 	SCF_FUNCTIONS_NOT_FOUND_SET = []string{
 		"ResourceNotFound.Function",
 		"ResourceNotFound.FunctionName",

@@ -35,6 +35,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `begin_time` - Beginning time of the SSL certificate.
 * `create_time` - Creation time of the SSL certificate.
 * `domain` - Primary domain of the SSL certificate.

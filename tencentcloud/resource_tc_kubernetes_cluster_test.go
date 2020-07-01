@@ -23,7 +23,7 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 				Config: testAccTkeCluster("test", "test"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
-					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "172.31.0.0/16"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "10.31.0.0/16"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_max_pod_num", "32"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc"),
@@ -34,6 +34,10 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "user_name"),
 					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "password"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "tags.test", "test"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "security_policy.#", "2"),
+					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "cluster_external_endpoint"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test1", "test1"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test2", "test2"),
 				),
 			},
 			{
@@ -50,7 +54,7 @@ func TestAccTencentCloudTkeResource(t *testing.T) {
 
 func testAccCheckTkeDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TkeService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -99,7 +103,7 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 		}
 
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		service := TkeService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -131,59 +135,65 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 
 func testAccTkeCluster(key, value string) string {
 	return fmt.Sprintf(`
-	variable "availability_zone" {
-	  default = "ap-guangzhou-3"
-	}
-	
-	variable "cluster_cidr" {
-	  default = "172.31.0.0/16"
-	}
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
 
-	variable "default_instance_type" {
-	  default = "SA1.LARGE8"
-	}
+variable "cluster_cidr" {
+  default = "10.31.0.0/16"
+}
 
-	data "tencentcloud_vpc_subnets" "vpc" {
-      is_default        = true
-      availability_zone = var.availability_zone
+variable "default_instance_type" {
+  default = "S1.SMALL1"
+}
+
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
+  availability_zone = var.availability_zone
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  cluster_cidr                               = var.cluster_cidr
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_internet                           = true
+  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
     }
 
-	resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-	  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-	  cluster_cidr            = var.cluster_cidr
-	  cluster_max_pod_num     = 32
-	  cluster_name            = "test"
-	  cluster_desc            = "test cluster desc"
-	  cluster_max_service_num = 32
-	
-	  worker_config {
-	    count                      = 1
-	    availability_zone          = var.availability_zone
-	    instance_type              = var.default_instance_type
-	    system_disk_type           = "CLOUD_SSD"
-	    system_disk_size           = 60
-	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-	    internet_max_bandwidth_out = 100
-	    public_ip_assigned         = true
-	    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-	
-	    data_disk {
-	      disk_type = "CLOUD_PREMIUM"
-	      disk_size = 50
-	    }
-	
-	    enhanced_security_service = false
-	    enhanced_monitor_service  = false
-	    user_data                 = "dGVzdA=="
-	    password                  = "ZZXXccvv1212"
-	  }
-	
-	  cluster_deploy_type = "MANAGED_CLUSTER"
-	
-	  tags = {
-	    "%s" = "%s"
-	  }
-	}
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+
+  tags = {
+    "%s" = "%s"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+}
 `, key, value,
 	)
 }

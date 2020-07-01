@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mysql_zone_config" "mysql" {
-  region = "ap-guangzhou"
+  region             = "ap-guangzhou"
   result_output_file = "mytestpath"
 }
 ```
@@ -20,7 +20,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
 func TencentMysqlSellType() map[string]*schema.Schema {
@@ -142,10 +141,9 @@ func dataSourceTencentMysqlZoneConfig() *schema.Resource {
 		Read: dataSourceTencentMysqlZoneConfigRead,
 		Schema: map[string]*schema.Schema{
 			"region": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(connectivity.MysqlSupportedRegions),
-				Description:  "Region parameter, which is used to identify the region to which the data you want to work with belongs.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Region parameter, which is used to identify the region to which the data you want to work with belongs.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -169,7 +167,7 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 	defer logElapsed("data_source.tencentcloud_mysql_zone_config.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := meta.(*TencentCloudClient).apiV3Conn.Region

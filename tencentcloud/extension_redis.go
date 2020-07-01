@@ -2,19 +2,23 @@ package tencentcloud
 
 //redis version  https://cloud.tencent.com/document/api/239/20022#ProductConf
 const (
-	REDIS_VERSION_MASTER_SLAVE_REDIS = 2
-	REDIS_VERSION_MASTER_SLAVE_CKV   = 3
-	REDIS_VERSION_CLUSTER_CKV        = 4
-	REDIS_VERSION_STANDALONE_REDIS   = 5
-	REDIS_VERSION_CLUSTER_REDIS      = 7
+	REDIS_VERSION_MASTER_SLAVE_REDIS  = 2
+	REDIS_VERSION_MASTER_SLAVE_CKV    = 3
+	REDIS_VERSION_CLUSTER_CKV         = 4
+	REDIS_VERSION_STANDALONE_REDIS    = 5
+	REDIS_VERSION_CLUSTER_REDIS       = 7
+	REDIS_VERSION_MASTER_SLAVE_REDIS5 = 8
+	REDIS_VERSION_CLUSTER_REDIS5      = 9
 )
 
 var REDIS_NAMES = map[int64]string{
-	REDIS_VERSION_MASTER_SLAVE_REDIS: "master_slave_redis",
-	REDIS_VERSION_MASTER_SLAVE_CKV:   "master_slave_ckv",
-	REDIS_VERSION_CLUSTER_REDIS:      "cluster_redis",
-	REDIS_VERSION_CLUSTER_CKV:        "cluster_ckv",
-	REDIS_VERSION_STANDALONE_REDIS:   "standalone_redis",
+	REDIS_VERSION_MASTER_SLAVE_REDIS:  "master_slave_redis",
+	REDIS_VERSION_MASTER_SLAVE_CKV:    "master_slave_ckv",
+	REDIS_VERSION_CLUSTER_REDIS:       "cluster_redis",
+	REDIS_VERSION_CLUSTER_CKV:         "cluster_ckv",
+	REDIS_VERSION_STANDALONE_REDIS:    "standalone_redis",
+	REDIS_VERSION_MASTER_SLAVE_REDIS5: "master_slave_redis5.0",
+	REDIS_VERSION_CLUSTER_REDIS5:      "cluster_redis5.0",
 }
 
 //redis status  https://cloud.tencent.com/document/product/239/20018
@@ -66,3 +70,20 @@ const (
 
 //sdk redis not found error
 const RedisInstanceNotFound = "ResourceNotFound.InstanceNotExists"
+
+const (
+	REDIS_CHARGE_TYPE_POSTPAID = "POSTPAID"
+	REDIS_CHARGE_TYPE_PREPAID  = "PREPAID"
+)
+
+var REDIS_CHARGE_TYPE_ID = map[string]int64{
+	REDIS_CHARGE_TYPE_POSTPAID: 0,
+	REDIS_CHARGE_TYPE_PREPAID:  1,
+}
+
+var REDIS_CHARGE_TYPE_NAME = map[int64]string{
+	0: REDIS_CHARGE_TYPE_POSTPAID,
+	1: REDIS_CHARGE_TYPE_PREPAID,
+}
+
+var REDIS_PREPAID_PERIOD = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}

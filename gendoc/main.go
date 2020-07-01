@@ -250,6 +250,10 @@ func genDoc(dtype, fpath, name string, resource *schema.Resource) {
 		data["arguments"] += "\n" + strings.Join(subStruct, "\n")
 	}
 	data["attributes"] = strings.Join(attributes, "\n")
+	if dtype == "resource" {
+		idAttribute := "* `id` - ID of the resource.\n"
+		data["attributes"] = idAttribute + data["attributes"]
+	}
 
 	filename = filepath.Join(docRoot, dtype[:1], fmt.Sprintf("%s.html.markdown", data["resource"]))
 

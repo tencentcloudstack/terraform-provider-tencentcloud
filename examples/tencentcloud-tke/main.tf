@@ -34,6 +34,11 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   tags = {
     "test" = "test"
   }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
 }
 
 #examples for INDEPENDENT_CLUSTER  cluster
@@ -87,6 +92,11 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     password                  = "ZZXXccvv1212"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
   }
 
   cluster_deploy_type = "INDEPENDENT_CLUSTER"
@@ -167,5 +177,10 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
       tag = "as"
     }
 
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
   }
 }

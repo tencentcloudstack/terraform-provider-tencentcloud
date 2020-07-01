@@ -76,7 +76,7 @@ func resourceTencentCloudPlacementGroup() *schema.Resource {
 func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_placement_group.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -102,8 +102,10 @@ func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_placement_group.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	placementId := d.Id()
 	cvmService := CvmService{
@@ -114,7 +116,7 @@ func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interfa
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		placement, errRet = cvmService.DescribePlacementGroupById(ctx, placementId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})
@@ -138,7 +140,7 @@ func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interfa
 func resourceTencentCloudPlacementGroupUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_placement_group.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	placementId := d.Id()
 	cvmService := CvmService{
@@ -164,7 +166,7 @@ func resourceTencentCloudPlacementGroupUpdate(d *schema.ResourceData, meta inter
 func resourceTencentCloudPlacementGroupDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_placement_group.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	placementId := d.Id()
 	cvmService := CvmService{

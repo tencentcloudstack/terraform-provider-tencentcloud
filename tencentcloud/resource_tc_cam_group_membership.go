@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_cam_group_membership" "foo" {
   group_id = tencentcloud_cam_group.foo.id
-  user_ids = [tencentcloud_cam_user.foo.id,tencentcloud_cam_user.bar.id]
+  user_ids = [tencentcloud_cam_user.foo.id, tencentcloud_cam_user.bar.id]
 }
 ```
 
@@ -22,6 +22,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -73,15 +74,38 @@ func resourceTencentCloudCamGroupMembershipCreate(d *schema.ResourceData, meta i
 		return err
 	}
 	d.SetId(groupId)
-	time.Sleep(3 * time.Second)
 
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, e := camService.DescribeGroupMembershipById(ctx, groupId)
+		if e != nil {
+			return retryError(e)
+		}
+		if len(instance) == 0 {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM group membership failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamGroupMembershipRead(d, meta)
 }
 
 func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_group_membership.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupId := d.Id()
 	camService := CamService{
@@ -105,9 +129,24 @@ func resourceTencentCloudCamGroupMembershipRead(d *schema.ResourceData, meta int
 		d.SetId("")
 		return nil
 	}
-
+	//this may cause problems when there are members in two dimensions array
+	//need to read state of the tfstate file to clear the relationships
+	//in this situation, import action is not supported
+	stateMembers := d.Get("user_ids").(*schema.Set)
+	if stateMembers.Len() != 0 {
+		//the old state exist
+		//create a new membership with state
+		exactMembers := make([]*string, 0)
+		for _, v := range members {
+			if stateMembers.Contains(*v) {
+				exactMembers = append(exactMembers, v)
+			}
+		}
+		_ = d.Set("user_ids", exactMembers)
+	} else {
+		_ = d.Set("user_ids", members)
+	}
 	_ = d.Set("group_id", groupId)
-	_ = d.Set("user_ids", members)
 
 	return nil
 }
@@ -161,7 +200,7 @@ func resourceTencentCloudCamGroupMembershipDelete(d *schema.ResourceData, meta i
 
 func getUidFromName(name string, meta interface{}) (uid *uint64, errRet error) {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	camService := CamService{
 		client: meta.(*TencentCloudClient).apiV3Conn,

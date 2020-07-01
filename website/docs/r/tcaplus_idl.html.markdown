@@ -3,32 +3,33 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcaplus_idl"
 sidebar_current: "docs-tencentcloud-resource-tcaplus_idl"
 description: |-
-  Use this resource to create tcaplus idl file
+  Use this resource to create TcaplusDB IDL file.
 ---
 
 # tencentcloud_tcaplus_idl
 
-Use this resource to create tcaplus idl file
+Use this resource to create TcaplusDB IDL file.
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_tcaplus_application" "test" {
+resource "tencentcloud_tcaplus_cluster" "test" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_tcaplus_app_test"
+  cluster_name             = "tf_tcaplus_cluster_test"
   vpc_id                   = "vpc-7k6gzox6"
   subnet_id                = "subnet-akwgvfa3"
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_zone" "zone" {
-  app_id    = tencentcloud_tcaplus_application.test.id
-  zone_name = "tf_test_zone_name"
+resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
+  cluster_id      = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_name = "tf_test_group_name"
 }
 
 resource "tencentcloud_tcaplus_idl" "main" {
-  app_id        = tencentcloud_tcaplus_application.test.id
+  cluster_id    = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_id = tencentcloud_tcaplus_tablegroup.tablegroup.id
   file_name     = "tf_idl_test"
   file_type     = "PROTO"
   file_ext_type = "proto"
@@ -66,23 +67,25 @@ resource "tencentcloud_tcaplus_idl" "main" {
 
 The following arguments are supported:
 
-* `app_id` - (Required, ForceNew) Application id of the idl belongs..
-* `file_content` - (Required, ForceNew) Idl file content.
-* `file_ext_type` - (Required, ForceNew) File ext type of this idl file. if `file_type` is PROTO  `file_ext_type` must be 'proto',if `file_type` is TDR  `file_ext_type` must be 'xml',if `file_type` is MIX  `file_ext_type` must be 'xml' or 'proto'.
-* `file_name` - (Required, ForceNew) Name of this idl file.
-* `file_type` - (Required, ForceNew) Type of this idl file, Valid values are PROTO,TDR,MIX.
+* `cluster_id` - (Required, ForceNew) Id of the TcaplusDB cluster to which the table group belongs.
+* `file_content` - (Required, ForceNew) IDL file content of the TcaplusDB table.
+* `file_ext_type` - (Required, ForceNew) File ext type of the IDL file. If `file_type` is `PROTO`, `file_ext_type` must be 'proto'; If `file_type` is `TDR`, `file_ext_type` must be 'xml'.
+* `file_name` - (Required, ForceNew) Name of the IDL file.
+* `file_type` - (Required, ForceNew) Type of the IDL file. Valid values are PROTO and TDR.
+* `tablegroup_id` - (Required, ForceNew) Id of the table group to which the IDL file belongs.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
-* `table_infos` - Table infos in this idl.
-  * `error` - Show if this table  error.
-  * `index_key_set` - Index key set of this table.
-  * `key_fields` - Key fields of this table.
-  * `sum_key_field_size` - Key fields size of this table.
-  * `sum_value_field_size` - Value fields size of this table.
-  * `table_name` - Name of this table.
-  * `value_fields` - Value fields of this table.
+* `id` - ID of the resource.
+* `table_infos` - Table info of the IDL.
+  * `error` - Error messages for creating IDL file.
+  * `index_key_set` - Index key set of the TcaplusDB table.
+  * `key_fields` - Primary key fields of the TcaplusDB table.
+  * `sum_key_field_size` - Total size of primary key field of the TcaplusDB table.
+  * `sum_value_field_size` - Total size of non-primary key fields of the TcaplusDB table.
+  * `table_name` - Name of the TcaplusDB table.
+  * `value_fields` - Non-primary key fields of the TcaplusDB table.
 
 

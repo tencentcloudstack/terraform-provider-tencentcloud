@@ -85,7 +85,9 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -169,6 +171,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"instance_charge_type_prepaid_renew_flag": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
 				Description:  "When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
 			},
@@ -292,7 +295,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 							Optional:    true,
 							Default:     true,
 							ForceNew:    true,
-							Description: "Decides whether the disk is deleted with instance(only applied to cloud disk), default to true.",
+							Description: "Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `POSTPAID_BY_HOUR` instance), default is true.",
 						},
 					},
 				},
@@ -342,7 +345,12 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:    true,
 				Description: "A mapping of tags to assign to the resource. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).",
 			},
-
+			"force_delete": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be permanently deleted instead of staying in recycle bin. Note: only works for `PREPAID` instance.",
+			},
 			// Computed values.
 			"instance_status": {
 				Type:        schema.TypeString,
@@ -371,7 +379,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_instance.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -445,19 +453,17 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// vpc
-	request.VirtualPrivateCloud = &cvm.VirtualPrivateCloud{}
 	if v, ok := d.GetOk("vpc_id"); ok {
+		request.VirtualPrivateCloud = &cvm.VirtualPrivateCloud{}
 		request.VirtualPrivateCloud.VpcId = helper.String(v.(string))
-	} else {
-		request.VirtualPrivateCloud.VpcId = helper.String("DEFAULT")
-	}
-	if v, ok := d.GetOk("subnet_id"); ok {
-		request.VirtualPrivateCloud.SubnetId = helper.String(v.(string))
-	} else {
-		request.VirtualPrivateCloud.SubnetId = helper.String("DEFAULT")
-	}
-	if v, ok := d.GetOk("private_ip"); ok {
-		request.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
+
+		if v, ok = d.GetOk("subnet_id"); ok {
+			request.VirtualPrivateCloud.SubnetId = helper.String(v.(string))
+		}
+
+		if v, ok = d.GetOk("private_ip"); ok {
+			request.VirtualPrivateCloud.PrivateIpAddresses = []*string{helper.String(v.(string))}
+		}
 	}
 
 	if v, ok := d.GetOk("security_groups"); ok {
@@ -580,7 +586,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 			return nil
@@ -601,7 +607,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
-				return retryError(errRet, "InternalError")
+				return retryError(errRet, InternalError)
 			}
 			if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
 				return nil
@@ -618,20 +624,31 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Id()
+	forceDelete := false
+	if v, ok := d.GetOkExists("force_delete"); ok {
+		forceDelete = v.(bool)
+		_ = d.Set("force_delete", forceDelete)
+	}
+
+	client := meta.(*TencentCloudClient).apiV3Conn
 	cvmService := CvmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: client,
+	}
+	tkeService := TkeService{
+		client: client,
 	}
 	var instance *cvm.Instance
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instance, errRet = cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})
@@ -643,7 +660,23 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		return nil
 	}
 
-	_ = d.Set("image_id", instance.ImageId)
+	var tkeImages []string
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		tkeImages, errRet = tkeService.DescribeImages(ctx)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if d.Get("image_id").(string) == "" || !IsContains(tkeImages, *instance.ImageId) {
+		_ = d.Set("image_id", instance.ImageId)
+	}
+
 	_ = d.Set("availability_zone", instance.Placement.Zone)
 	_ = d.Set("instance_name", instance.InstanceName)
 	_ = d.Set("instance_type", instance.InstanceType)
@@ -661,6 +694,28 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("instance_status", instance.InstanceState)
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
+
+	if len(instance.PublicIpAddresses) > 0 {
+		vpcService := VpcService{client: client}
+		filter := map[string][]string{
+			"address-ip": {*instance.PublicIpAddresses[0]},
+		}
+		var eips []*vpc.Address
+		var errRet error
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			eips, errRet = vpcService.DescribeEipByFilter(ctx, filter)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		_ = d.Set("allocate_public_ip", len(eips) < 1)
+	} else {
+		_ = d.Set("allocate_public_ip", false)
+	}
 
 	// as attachment add tencentcloud:autoscaling:auto-scaling-group-id tag automatically
 	// we should remove this tag, otherwise it will cause terraform state change
@@ -701,7 +756,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	defer logElapsed("resource.tencentcloud_instance.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	instanceId := d.Id()
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -711,12 +766,51 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 	unsupportedUpdateFields := []string{
 		"instance_charge_type_prepaid_period",
-		"instance_charge_type_prepaid_renew_flag",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
 			return fmt.Errorf("tencentcloud_cvm_instance update on %s is not support yet", field)
 		}
+	}
+
+	if d.HasChange("instance_charge_type_prepaid_renew_flag") {
+		//check
+		chargeType := d.Get("instance_charge_type").(string)
+		if chargeType != CVM_CHARGE_TYPE_PREPAID {
+			return fmt.Errorf("tencentcloud_cvm_instance update on instance_charge_type_prepaid_period or instance_charge_type_prepaid_renew_flag is only supported with charge type PREPAID")
+		}
+
+		//renew api
+		err := cvmService.ModifyRenewParam(ctx, instanceId, d.Get("instance_charge_type_prepaid_renew_flag").(string))
+		if err != nil {
+			return err
+		}
+
+		//check success
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance != nil && instance.LatestOperationState != nil {
+				if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_SUCCESS {
+					return nil
+				} else if *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_FAILED {
+					return resource.NonRetryableError(fmt.Errorf("update instance %s prepaid charge type failed", instanceId))
+				} else {
+					return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+				}
+			} else {
+				return resource.RetryableError(fmt.Errorf("cvm instance %s returns nil status", instanceId))
+			}
+
+		})
+		if err != nil {
+			return err
+		}
+
+		time.Sleep(readRetryTimeout)
+		d.SetPartial("instance_charge_type_prepaid_renew_flag")
 	}
 
 	if d.HasChange("instance_name") {
@@ -760,7 +854,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 				if errRet != nil {
-					return retryError(errRet, "InternalError")
+					return retryError(errRet, InternalError)
 				}
 				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 					return nil
@@ -778,7 +872,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 				if errRet != nil {
-					return retryError(errRet, "InternalError")
+					return retryError(errRet, InternalError)
 				}
 				if instance != nil && *instance.InstanceState == CVM_STATUS_STOPPED {
 					return nil
@@ -803,7 +897,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
-				return retryError(errRet, "InternalError")
+				return retryError(errRet, InternalError)
 			}
 			// Modifying instance type need restart the instance
 			// so status of CVM must be running when running flag is true
@@ -824,10 +918,20 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 		d.SetPartial("password")
-		// just wait, 95% change password will be reset
-		// waiting for status changed is not work
-		// a little stupid, but it's ok for now
-		time.Sleep(1 * time.Minute)
+		time.Sleep(10 * time.Second)
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("private_ip") {
@@ -873,9 +977,12 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	defer logElapsed("resource.tencentcloud_instance.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Id()
+	//check is force delete or not
+	forceDelete := d.Get("force_delete").(bool)
+
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -890,19 +997,72 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
+	//check recycling
+	notExist := false
+
+	//check exist
 	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
+		}
+		if instance == nil {
+			notExist = true
+			return nil
+		}
+		if *instance.InstanceState == CVM_STATUS_SHUTDOWN {
+			//in recycling
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if notExist || !forceDelete {
+		return nil
+	}
+
+	//exist in recycle
+
+	//delete again
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		errRet := cvmService.DeleteInstance(ctx, instanceId)
+		//when state is terminating, do not delete but check exist
+		if errRet != nil {
+			//check InvalidInstanceState.Terminating
+			ee, ok := errRet.(*errors.TencentCloudSDKError)
+			if !ok {
+				return retryError(errRet)
+			}
+			if ee.Code == "InvalidInstanceState.Terminating" {
+				return nil
+			}
+			return retryError(errRet, "OperationDenied.InstanceOperationInProgress")
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	//describe and check not exist
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
 		}
 		if instance == nil {
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 	})
+
 	if err != nil {
 		return err
 	}
-
 	return nil
+
 }

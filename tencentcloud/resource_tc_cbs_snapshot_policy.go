@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cbs_snapshot_policy" "snapshot_policy" {
-  snapshot_policy_name  = "mysnapshotpolicyname"
-  repeat_weekdays = [1, 4]
-  repeat_hours = [1]
-  retention_days = 7
+  snapshot_policy_name = "mysnapshotpolicyname"
+  repeat_weekdays      = [1, 4]
+  repeat_hours         = [1]
+  retention_days       = 7
 }
 ```
 
@@ -127,9 +127,10 @@ func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta in
 
 func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	policyId := d.Id()
 	cbsService := CbsService{
@@ -215,7 +216,7 @@ func resourceTencentCloudCbsSnapshotPolicyDelete(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	policyId := d.Id()
 	cbsService := CbsService{

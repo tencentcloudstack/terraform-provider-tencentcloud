@@ -28,12 +28,19 @@ The following arguments are supported:
 * `backup_time` - (Required) Specifys what time the backup action should take place.
 * `redis_id` - (Required, ForceNew) ID of a Redis instance to which the policy will be applied.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 
 Redis  backup config can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_redis_backup_config.redisconfig redis-id
 ```
 

@@ -43,6 +43,32 @@ func NewClient(credential *common.Credential, region string, clientProfile *prof
 }
 
 
+func NewAssociateTargetGroupsRequest() (request *AssociateTargetGroupsRequest) {
+    request = &AssociateTargetGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "AssociateTargetGroups")
+    return
+}
+
+func NewAssociateTargetGroupsResponse() (response *AssociateTargetGroupsResponse) {
+    response = &AssociateTargetGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(AssociateTargetGroups)用来将目标组绑定到负载均衡的监听器（四层协议）或转发规则（七层协议）上。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+func (c *Client) AssociateTargetGroups(request *AssociateTargetGroupsRequest) (response *AssociateTargetGroupsResponse, err error) {
+    if request == nil {
+        request = NewAssociateTargetGroupsRequest()
+    }
+    response = NewAssociateTargetGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAutoRewriteRequest() (request *AutoRewriteRequest) {
     request = &AutoRewriteRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -198,6 +224,31 @@ func (c *Client) CreateLoadBalancer(request *CreateLoadBalancerRequest) (respons
     return
 }
 
+func NewCreateLoadBalancerSnatIpsRequest() (request *CreateLoadBalancerSnatIpsRequest) {
+    request = &CreateLoadBalancerSnatIpsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "CreateLoadBalancerSnatIps")
+    return
+}
+
+func NewCreateLoadBalancerSnatIpsResponse() (response *CreateLoadBalancerSnatIpsResponse) {
+    response = &CreateLoadBalancerSnatIpsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 针对SnatPro负载均衡，这个接口用于添加SnatIp，如果负载均衡没有开启SnatPro，添加SnatIp后会自动开启
+func (c *Client) CreateLoadBalancerSnatIps(request *CreateLoadBalancerSnatIpsRequest) (response *CreateLoadBalancerSnatIpsResponse, err error) {
+    if request == nil {
+        request = NewCreateLoadBalancerSnatIpsRequest()
+    }
+    response = NewCreateLoadBalancerSnatIpsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateRuleRequest() (request *CreateRuleRequest) {
     request = &CreateRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -220,6 +271,31 @@ func (c *Client) CreateRule(request *CreateRuleRequest) (response *CreateRuleRes
         request = NewCreateRuleRequest()
     }
     response = NewCreateRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateTargetGroupRequest() (request *CreateTargetGroupRequest) {
+    request = &CreateTargetGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "CreateTargetGroup")
+    return
+}
+
+func NewCreateTargetGroupResponse() (response *CreateTargetGroupResponse) {
+    response = &CreateTargetGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建目标组。该功能正在内测中，如需使用，请通过[工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1)。
+func (c *Client) CreateTargetGroup(request *CreateTargetGroupRequest) (response *CreateTargetGroupResponse, err error) {
+    if request == nil {
+        request = NewCreateTargetGroupRequest()
+    }
+    response = NewCreateTargetGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -265,13 +341,64 @@ func NewDeleteLoadBalancerResponse() (response *DeleteLoadBalancerResponse) {
     return
 }
 
-// DeleteLoadBalancer 接口用以删除指定的一个或多个负载均衡实例。
+// DeleteLoadBalancer 接口用以删除指定的一个或多个负载均衡实例。成功删除后，会把负载均衡实例下的监听器、转发规则一起删除，并把后端服务解绑。
 // 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
 func (c *Client) DeleteLoadBalancer(request *DeleteLoadBalancerRequest) (response *DeleteLoadBalancerResponse, err error) {
     if request == nil {
         request = NewDeleteLoadBalancerRequest()
     }
     response = NewDeleteLoadBalancerResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteLoadBalancerListenersRequest() (request *DeleteLoadBalancerListenersRequest) {
+    request = &DeleteLoadBalancerListenersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DeleteLoadBalancerListeners")
+    return
+}
+
+func NewDeleteLoadBalancerListenersResponse() (response *DeleteLoadBalancerListenersResponse) {
+    response = &DeleteLoadBalancerListenersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 该接口支持删除负载均衡的多个监听器。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+func (c *Client) DeleteLoadBalancerListeners(request *DeleteLoadBalancerListenersRequest) (response *DeleteLoadBalancerListenersResponse, err error) {
+    if request == nil {
+        request = NewDeleteLoadBalancerListenersRequest()
+    }
+    response = NewDeleteLoadBalancerListenersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteLoadBalancerSnatIpsRequest() (request *DeleteLoadBalancerSnatIpsRequest) {
+    request = &DeleteLoadBalancerSnatIpsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DeleteLoadBalancerSnatIps")
+    return
+}
+
+func NewDeleteLoadBalancerSnatIpsResponse() (response *DeleteLoadBalancerSnatIpsResponse) {
+    response = &DeleteLoadBalancerSnatIpsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 对于SnatPro的负载均衡，这个接口用于删除SnatIp
+func (c *Client) DeleteLoadBalancerSnatIps(request *DeleteLoadBalancerSnatIpsRequest) (response *DeleteLoadBalancerSnatIpsResponse, err error) {
+    if request == nil {
+        request = NewDeleteLoadBalancerSnatIpsRequest()
+    }
+    response = NewDeleteLoadBalancerSnatIpsResponse()
     err = c.Send(request, response)
     return
 }
@@ -324,6 +451,57 @@ func (c *Client) DeleteRule(request *DeleteRuleRequest) (response *DeleteRuleRes
         request = NewDeleteRuleRequest()
     }
     response = NewDeleteRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteTargetGroupsRequest() (request *DeleteTargetGroupsRequest) {
+    request = &DeleteTargetGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DeleteTargetGroups")
+    return
+}
+
+func NewDeleteTargetGroupsResponse() (response *DeleteTargetGroupsResponse) {
+    response = &DeleteTargetGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除目标组
+func (c *Client) DeleteTargetGroups(request *DeleteTargetGroupsRequest) (response *DeleteTargetGroupsResponse, err error) {
+    if request == nil {
+        request = NewDeleteTargetGroupsRequest()
+    }
+    response = NewDeleteTargetGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeregisterTargetGroupInstancesRequest() (request *DeregisterTargetGroupInstancesRequest) {
+    request = &DeregisterTargetGroupInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DeregisterTargetGroupInstances")
+    return
+}
+
+func NewDeregisterTargetGroupInstancesResponse() (response *DeregisterTargetGroupInstancesResponse) {
+    response = &DeregisterTargetGroupInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 将服务器从目标组中解绑。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+func (c *Client) DeregisterTargetGroupInstances(request *DeregisterTargetGroupInstancesRequest) (response *DeregisterTargetGroupInstancesResponse, err error) {
+    if request == nil {
+        request = NewDeregisterTargetGroupInstancesRequest()
+    }
+    response = NewDeregisterTargetGroupInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -545,12 +723,37 @@ func NewDescribeListenersResponse() (response *DescribeListenersResponse) {
     return
 }
 
-// DescribeListeners 接口可根据负载均衡器 ID，监听器的协议或端口作为过滤条件获取监听器列表。如果不指定任何过滤条件，默认返该负载均衡器下的默认数据长度（20 个）的监听器。
+// DescribeListeners 接口可根据负载均衡器 ID，监听器的协议或端口作为过滤条件获取监听器列表。如果不指定任何过滤条件，则返回该负载均衡实例下的所有监听器。
 func (c *Client) DescribeListeners(request *DescribeListenersRequest) (response *DescribeListenersResponse, err error) {
     if request == nil {
         request = NewDescribeListenersRequest()
     }
     response = NewDescribeListenersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLoadBalancerListByCertIdRequest() (request *DescribeLoadBalancerListByCertIdRequest) {
+    request = &DescribeLoadBalancerListByCertIdRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DescribeLoadBalancerListByCertId")
+    return
+}
+
+func NewDescribeLoadBalancerListByCertIdResponse() (response *DescribeLoadBalancerListByCertIdResponse) {
+    response = &DescribeLoadBalancerListByCertIdResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 根据证书ID查询其在一个地域中所关联到负载均衡实例列表
+func (c *Client) DescribeLoadBalancerListByCertId(request *DescribeLoadBalancerListByCertIdRequest) (response *DescribeLoadBalancerListByCertIdResponse, err error) {
+    if request == nil {
+        request = NewDescribeLoadBalancerListByCertIdRequest()
+    }
+    response = NewDescribeLoadBalancerListByCertIdResponse()
     err = c.Send(request, response)
     return
 }
@@ -570,7 +773,7 @@ func NewDescribeLoadBalancersResponse() (response *DescribeLoadBalancersResponse
     return
 }
 
-// 查询负载均衡实例列表
+// 查询一个地域的负载均衡实例列表
 func (c *Client) DescribeLoadBalancers(request *DescribeLoadBalancersRequest) (response *DescribeLoadBalancersResponse, err error) {
     if request == nil {
         request = NewDescribeLoadBalancersRequest()
@@ -601,6 +804,81 @@ func (c *Client) DescribeRewrite(request *DescribeRewriteRequest) (response *Des
         request = NewDescribeRewriteRequest()
     }
     response = NewDescribeRewriteResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTargetGroupInstancesRequest() (request *DescribeTargetGroupInstancesRequest) {
+    request = &DescribeTargetGroupInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DescribeTargetGroupInstances")
+    return
+}
+
+func NewDescribeTargetGroupInstancesResponse() (response *DescribeTargetGroupInstancesResponse) {
+    response = &DescribeTargetGroupInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取目标组绑定的服务器信息
+func (c *Client) DescribeTargetGroupInstances(request *DescribeTargetGroupInstancesRequest) (response *DescribeTargetGroupInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeTargetGroupInstancesRequest()
+    }
+    response = NewDescribeTargetGroupInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTargetGroupListRequest() (request *DescribeTargetGroupListRequest) {
+    request = &DescribeTargetGroupListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DescribeTargetGroupList")
+    return
+}
+
+func NewDescribeTargetGroupListResponse() (response *DescribeTargetGroupListResponse) {
+    response = &DescribeTargetGroupListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取目标组列表
+func (c *Client) DescribeTargetGroupList(request *DescribeTargetGroupListRequest) (response *DescribeTargetGroupListResponse, err error) {
+    if request == nil {
+        request = NewDescribeTargetGroupListRequest()
+    }
+    response = NewDescribeTargetGroupListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeTargetGroupsRequest() (request *DescribeTargetGroupsRequest) {
+    request = &DescribeTargetGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DescribeTargetGroups")
+    return
+}
+
+func NewDescribeTargetGroupsResponse() (response *DescribeTargetGroupsResponse) {
+    response = &DescribeTargetGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询目标组信息
+func (c *Client) DescribeTargetGroups(request *DescribeTargetGroupsRequest) (response *DescribeTargetGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeTargetGroupsRequest()
+    }
+    response = NewDescribeTargetGroupsResponse()
     err = c.Send(request, response)
     return
 }
@@ -676,6 +954,32 @@ func (c *Client) DescribeTaskStatus(request *DescribeTaskStatusRequest) (respons
         request = NewDescribeTaskStatusRequest()
     }
     response = NewDescribeTaskStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDisassociateTargetGroupsRequest() (request *DisassociateTargetGroupsRequest) {
+    request = &DisassociateTargetGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DisassociateTargetGroups")
+    return
+}
+
+func NewDisassociateTargetGroupsResponse() (response *DisassociateTargetGroupsResponse) {
+    response = &DisassociateTargetGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 解除规则的目标组关联关系。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+func (c *Client) DisassociateTargetGroups(request *DisassociateTargetGroupsRequest) (response *DisassociateTargetGroupsResponse, err error) {
+    if request == nil {
+        request = NewDisassociateTargetGroupsRequest()
+    }
+    response = NewDisassociateTargetGroupsResponse()
     err = c.Send(request, response)
     return
 }
@@ -861,6 +1165,83 @@ func (c *Client) ModifyRule(request *ModifyRuleRequest) (response *ModifyRuleRes
     return
 }
 
+func NewModifyTargetGroupAttributeRequest() (request *ModifyTargetGroupAttributeRequest) {
+    request = &ModifyTargetGroupAttributeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "ModifyTargetGroupAttribute")
+    return
+}
+
+func NewModifyTargetGroupAttributeResponse() (response *ModifyTargetGroupAttributeResponse) {
+    response = &ModifyTargetGroupAttributeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 修改目标组的名称或者默认端口属性
+func (c *Client) ModifyTargetGroupAttribute(request *ModifyTargetGroupAttributeRequest) (response *ModifyTargetGroupAttributeResponse, err error) {
+    if request == nil {
+        request = NewModifyTargetGroupAttributeRequest()
+    }
+    response = NewModifyTargetGroupAttributeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyTargetGroupInstancesPortRequest() (request *ModifyTargetGroupInstancesPortRequest) {
+    request = &ModifyTargetGroupInstancesPortRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "ModifyTargetGroupInstancesPort")
+    return
+}
+
+func NewModifyTargetGroupInstancesPortResponse() (response *ModifyTargetGroupInstancesPortResponse) {
+    response = &ModifyTargetGroupInstancesPortResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 批量修改目标组服务器端口。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+func (c *Client) ModifyTargetGroupInstancesPort(request *ModifyTargetGroupInstancesPortRequest) (response *ModifyTargetGroupInstancesPortResponse, err error) {
+    if request == nil {
+        request = NewModifyTargetGroupInstancesPortRequest()
+    }
+    response = NewModifyTargetGroupInstancesPortResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyTargetGroupInstancesWeightRequest() (request *ModifyTargetGroupInstancesWeightRequest) {
+    request = &ModifyTargetGroupInstancesWeightRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "ModifyTargetGroupInstancesWeight")
+    return
+}
+
+func NewModifyTargetGroupInstancesWeightResponse() (response *ModifyTargetGroupInstancesWeightResponse) {
+    response = &ModifyTargetGroupInstancesWeightResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 批量修改目标组的服务器权重。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+func (c *Client) ModifyTargetGroupInstancesWeight(request *ModifyTargetGroupInstancesWeightRequest) (response *ModifyTargetGroupInstancesWeightResponse, err error) {
+    if request == nil {
+        request = NewModifyTargetGroupInstancesWeightRequest()
+    }
+    response = NewModifyTargetGroupInstancesWeightResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyTargetPortRequest() (request *ModifyTargetPortRequest) {
     request = &ModifyTargetPortRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -909,6 +1290,32 @@ func (c *Client) ModifyTargetWeight(request *ModifyTargetWeightRequest) (respons
         request = NewModifyTargetWeightRequest()
     }
     response = NewModifyTargetWeightResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRegisterTargetGroupInstancesRequest() (request *RegisterTargetGroupInstancesRequest) {
+    request = &RegisterTargetGroupInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "RegisterTargetGroupInstances")
+    return
+}
+
+func NewRegisterTargetGroupInstancesResponse() (response *RegisterTargetGroupInstancesResponse) {
+    response = &RegisterTargetGroupInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 注册服务器到目标组。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+func (c *Client) RegisterTargetGroupInstances(request *RegisterTargetGroupInstancesRequest) (response *RegisterTargetGroupInstancesResponse, err error) {
+    if request == nil {
+        request = NewRegisterTargetGroupInstancesRequest()
+    }
+    response = NewRegisterTargetGroupInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -989,6 +1396,31 @@ func (c *Client) ReplaceCertForLoadBalancers(request *ReplaceCertForLoadBalancer
         request = NewReplaceCertForLoadBalancersRequest()
     }
     response = NewReplaceCertForLoadBalancersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSetLoadBalancerClsLogRequest() (request *SetLoadBalancerClsLogRequest) {
+    request = &SetLoadBalancerClsLogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "SetLoadBalancerClsLog")
+    return
+}
+
+func NewSetLoadBalancerClsLogResponse() (response *SetLoadBalancerClsLogResponse) {
+    response = &SetLoadBalancerClsLogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 增加、删除、更新负载均衡的日志服务(CLS)主题
+func (c *Client) SetLoadBalancerClsLog(request *SetLoadBalancerClsLogRequest) (response *SetLoadBalancerClsLogResponse, err error) {
+    if request == nil {
+        request = NewSetLoadBalancerClsLogRequest()
+    }
+    response = NewSetLoadBalancerClsLogResponse()
     err = c.Send(request, response)
     return
 }

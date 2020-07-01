@@ -221,6 +221,11 @@ func dataSourceTencentCloudInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Expired time of the instance.",
 						},
+						"instance_charge_type_prepaid_renew_flag": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The way that CVM instance will be renew automatically or not when it reach the end of the prepaid tenancy.",
+						},
 					},
 				},
 			},
@@ -231,7 +236,7 @@ func dataSourceTencentCloudInstances() *schema.Resource {
 func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_instances.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -261,7 +266,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		instances, errRet = cvmService.DescribeInstanceByFilter(ctx, filter)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})
@@ -295,6 +300,7 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 			"tags":                       flattenCvmTagsMapping(instance.Tags),
 			"create_time":                instance.CreatedTime,
 			"expired_time":               instance.ExpiredTime,
+			"instance_charge_type_prepaid_renew_flag": instance.RenewFlag,
 		}
 		if len(instance.PublicIpAddresses) > 0 {
 			mapping["public_ip"] = *instance.PublicIpAddresses[0]

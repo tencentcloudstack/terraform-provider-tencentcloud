@@ -1,4 +1,265 @@
-## 1.30.2 (Unreleased)
+## 1.39.0 (Unreleased)
+## 1.38.1 (June 30, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cos_bucket` fix creation failure.
+
+## 1.38.0 (June 29, 2020)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_cdn_domains`
+
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_http_domain` fix a condition for setting client certificate ids([#454](https://github.com/terraform-providers/terraform-provider-tencentcloud/pull/454)).
+
+## 1.37.0 (June 23, 2020)
+
+FEATURES:
+* **New Resource**: `tencentcloud_postgresql_instance`
+* **New Data Source**: `tencentcloud_postgresql_instances`
+* **New Data Source**: `tencentcloud_postgresql_speccodes`
+* **New Data Source**: `tencentcloud_sqlserver_zone_config`
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mongodb_instance` support more machine type.
+
+## 1.36.1 (June 12, 2020)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_cluster` add new argument `labels`.
+* Resource: `tencentcloud_kubernetes_as_scaling_group` add new argument `labels`.
+* Resource: `tencentcloud_cos_bucket` add new arguments `encryption_algorithm` and `versioning_enable`.
+
+## 1.36.0 (June 08, 2020)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_availability_regions`
+
+ENHANCEMENTS: 
+
+* Data Source: `tencentcloud_redis_instances` add new argument `charge_type` to support prepaid type.
+* Resource: `tencentcloud_redis_instance` add new argument `charge_type`, `prepaid_period` and `force_delete` to support prepaid type.
+* Resource: `tencentcloud_mysql_instance` add new argument `force_delete` to support soft deletion.
+* Resource: `tencentcloud_mysql_readonly_instance` add new argument `force_delete` to support soft deletion.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix `allocate_public_ip` inconsistency when eip is attached to the cvm.
+
+DEPRECATED:
+* Data Source: `tencentcloud_mysql_instances`: optional argument `pay_type` is no longer supported, replace by `charge_type`.
+* Resource: `tencentcloud_mysql_instance`: optional arguments `pay_type` and `period` are no longer supported, replace by `charge_type` and `prepaid_period`.
+* Resource: `tencentcloud_mysql_readonly_instance`: optional arguments `pay_type` and `period` are no longer supported, replace by `charge_type` and `prepaid_period`.
+* Resource: `tencentcloud_tcaplus_group` replace by `tencentcloud_tcaplus_tablegroup`
+* Data Source: `tencentcloud_tcaplus_groups` replace by `tencentcloud_tcaplus_tablegroups`
+* Resource: `tencentcloud_tcaplus_tablegroup`,`tencentcloud_tcaplus_idl` and `tencentcloud_tcaplus_table`  arguments `group_id`/`group_name`  replace by `tablegroup_id`/`tablegroup_name`
+* Data Source: `tencentcloud_tcaplus_groups`,`tencentcloud_tcaplus_idls` and `tencentcloud_tcaplus_tables` arguments `group_id`/`group_name`  replace by `tablegroup_id`/`tablegroup_name`
+
+## 1.35.1 (June 02, 2020)
+
+ENHANCEMENTS: 
+
+* Resource: `tencentcloud_as_scaling_config`, `tencentcloud_eip` and `tencentcloud_kubernetes_cluster` remove the validate function of `internet_max_bandwidth_out`.
+* Resource: `tencentcloud_vpn_gateway` update available value of `bandwidth`.
+
+## 1.35.0 (June 01, 2020)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_elasticsearch_instances`
+* **New Resource**: `tencentcloud_elasticsearch_instance`
+
+## 1.34.0 (May 28, 2020)
+
+ENHANCEMENTS: 
+
+* upgrade terraform-plugin-sdk
+
+## 1.33.2 (May 25, 2020)
+
+DEPRECATED:
+* Data Source: `tencentcloud_tcaplus_applications` replace by `tencentcloud_tcaplus_clusters`,optional arguments `app_id` and `app_name` are no longer supported, replace by `cluster_id` and `cluster_name`
+* Data Source: `tencentcloud_tcaplus_zones` replace by `tencentcloud_tcaplus_groups`,optional arguments `app_id`,`zone_id` and `zone_name` are no longer supported, replace by `cluster_id`,`group_id` and `cluster_name`
+* Data Source: `tencentcloud_tcaplus_tables` optional arguments `app_id` and `zone_id` are no longer supported, replace by `cluster_id` and `group_id`
+* Data Source: `tencentcloud_tcaplus_idls`: optional argument `app_id` is no longer supported, replace by `cluster_id`.
+* Resource: `tencentcloud_tcaplus_application` replace by `tencentcloud_tcaplus_cluster`,input argument `app_name` is no longer supported, replace by `cluster_name`
+* Resource: `tencentcloud_tcaplus_zone` replace by `tencentcloud_tcaplus_group`, input arguments `app_id` and `zone_name` are no longer supported, replace by `cluster_id` and `group_name`
+* Resource: `tencentcloud_tcaplus_idl` input arguments `app_id` and `zone_id` are no longer supported, replace by `cluster_id` and `group_id`
+* Resource: `tencentcloud_tcaplus_table` input arguments `app_id`and `zone_id` are no longer supported, replace by `cluster_id` and `group_id`
+* Resource: `tencentcloud_redis_instance`: optional argument `type` is no longer supported, replace by `type_id`.
+* Data Source: `tencentcloud_redis_instances`: output argument `type` is no longer supported, replace by `type_id`.
+* Data Source: `tencentcloud_redis_zone_config`: output argument `type` is no longer supported, replace by `type_id`.
+
+## 1.33.1 (May 22, 2020)
+
+ENHANCEMENTS: 
+
+* Data Source: `tencentcloud_redis_instances` add new argument `type_id`, `redis_shard_num`, `redis_replicas_num`
+* Data Source: `tencentcloud_redis_zone_config` add output argument `type_id` and new output argument `type_id`, `redis_shard_nums`, `redis_replicas_nums`
+* Data Source: `tencentcloud_ccn_instances` add new type `VPNGW` for field `instance_type`
+* Data Source: `tencentcloud_vpn_gateways` add new type `CCN` for field `type`
+* Resource: `tencentcloud_redis_instance` add new argument `type_id`, `redis_shard_num`, `redis_replicas_num`
+* Resource: `tencentcloud_ccn_attachment` add new type `CNN_INSTANCE_TYPE_VPNGW` for field `instance_type`
+* Resource: `tencentcloud_vpn_gateway` add new type `CCN` for field `type`
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cdn_domain` fix `https_config` inconsistency after apply([#413](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/413)).
+
+DEPRECATED:
+
+* Resource: `tencentcloud_redis_instance`: optional argument `type` is no longer supported, replace by `type_id`.
+* Data Source: `tencentcloud_redis_instances`: output argument `type` is no longer supported, replace by `type_id`.
+* Data Source: `tencentcloud_redis_zone_config`: output argument `type` is no longer supported, replace by `type_id`.
+
+## 1.33.0 (May 18, 2020)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_monitor_policy_conditions`
+* **New Data Source**: `tencentcloud_monitor_data`
+* **New Data Source**: `tencentcloud_monitor_product_event`
+* **New Data Source**: `tencentcloud_monitor_binding_objects`
+* **New Data Source**: `tencentcloud_monitor_policy_groups`
+* **New Data Source**: `tencentcloud_monitor_product_namespace`
+* **New Resource**: `tencentcloud_monitor_policy_group`
+* **New Resource**: `tencentcloud_monitor_binding_object`
+* **New Resource**: `tencentcloud_monitor_binding_receiver`
+
+ENHANCEMENTS: 
+
+* Data Source: `tencentcloud_instances` add new output argument `instance_charge_type_prepaid_renew_flag`.
+* Data Source: `tencentcloud_cbs_storages` add new output argument `prepaid_renew_flag`.
+* Data Source: `tencentcloud_cbs_storages` add new output argument `charge_type`.
+* Resource: `tencentcloud_instance` support update with argument `instance_charge_type_prepaid_renew_flag`.
+* Resource: `tencentcloud_cbs_storage` add new argument `force_delete`.
+* Resource: `tencentcloud_cbs_storage` add new argument `charge_type`.
+* Resource: `tencentcloud_cbs_storage` add new argument `prepaid_renew_flag`.
+* Resource: `tencentcloud_cdn_domain` add new argument `full_url_cache`([#405](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/405)).
+
+DEPRECATED:
+
+* Resource: `tencentcloud_cbs_storage`: optional argument `period` is no longer supported.
+
+## 1.32.1 (April 30, 2020)
+
+ENHANCEMENTS: 
+
+* Resource: `tencentcloud_ccn_attachment` add new argument `ccn_uin`.
+* Resource: `tencentcloud_instance` add new argument `force_delete`.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_scf_function` fix update `zip_file`.
+
+## 1.32.0 (April 20, 2020)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_kubernetes_cluster_attachment`([#285](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/285)).
+
+ENHANCEMENTS: 
+
+* Resource: `tencentcloud_cdn_domain` add new attribute `cname`([#395](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/395)).
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cos_bucket_object` mark the object as destroyed when the object not exist.
+
+## 1.31.2 (April 17, 2020)
+
+ENHANCEMENTS: 
+
+* Resource: `tencentcloud_cbs_storage` support modify `tags`.
+
+## 1.31.1 (April 14, 2020)
+
+BUG FIXES: 
+
+* Resource: `tencentcloud_keypair` fix bug when trying to destroy resources containing CVM and key pair([#375](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/375)).
+* Resource: `tencentcloud_clb_attachment` fix bug when trying to destroy multiple attachments in the array. 
+* Resource: `tencentcloud_cam_group_membership` fix bug when trying to destroy multiple users in the array. 
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mysql_account` add new argument `host`([#372](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/372)).
+* Resource: `tencentcloud_mysql_account_privilege` add new argument `account_host`([#372](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/372)).
+* Resource: `tencentcloud_mysql_privilege` add new argument `account_host`([#372](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/372)).
+* Resource: `tencentcloud_mysql_readonly_instance` check master monitor data before create([#379](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/379)).
+* Resource: `tencentcloud_tcaplus_application` remove the pull password from server. 
+* Resource: `tencentcloud_instance` support import `allocate_public_ip`([#382](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/382)).
+* Resource: `tencentcloud_redis_instance` add two redis types.
+* Data Source: `tencentcloud_vpc_instances` add new argument `cidr_block`,`tag_key` ([#378](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/378)).
+* Data Source: `tencentcloud_vpc_route_tables` add new argument `tag_key`,`vpc_id`,`association_main` ([#378](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/378)).
+* Data Source: `tencentcloud_vpc_subnets` add new argument `cidr_block`,`tag_key`,`is_remote_vpc_snat` ([#378](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/378)).
+* Data Source: `tencentcloud_mysql_zone_config` and `tencentcloud_redis_zone_config` remove region check.
+
+## 1.31.0 (April 07, 2020)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_cdn_domain`
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_cam_users` add new argument `user_id`.
+* Resource: `tencentcloud_vpc` add retry logic.
+
+BUG FIXES: 
+
+* Resource: `tencentcloud_instance` fix timeout error when modify password.
+
+## 1.30.7 (March 31, 2020)
+
+BUG FIXES: 
+
+* Resource: `tencentcloud_kubernetes_as_scaling_group` set a value to argument `key_ids` cause error .
+
+## 1.30.6 (March 30, 2020)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_tcaplus_idl` add new argument `zone_id`. 
+* Resource: `tencentcloud_cam_user` add new argument `force_delete`.([#354](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/354))
+* Data Source: `tencentcloud_vpc_subnets` add new argument `vpc_id`. 
+
+## 1.30.5 (March 19, 2020)
+
+BUG FIXES: 
+
+* Resource: `tencentcloud_key_pair` will be replaced when `public_key` contains comment.
+* Resource: `tencentcloud_scf_function` upload local file error.
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_scf_function` runtime support nodejs8.9 and nodejs10.15. 
+
+## 1.30.4 (March 10, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_cam_policy` fix read nil issue when the resource is not exist.([#344](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/#344)).
+* Resource: `tencentcloud_key_pair` will be replaced when the end of `public_key` contains spaces([#343](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/343)).
+* Resource: `tencentcloud_scf_function` fix trigger does not support cos_region.
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_cluster` add new attributes `cluster_os_type`,`cluster_internet`,`cluster_intranet`,`managed_cluster_internet_security_policies` and `cluster_intranet_subnet_id`.
+
+
+## 1.30.3 (February 24, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix that classic network does not support([#339](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/339)).
+
+## 1.30.2 (February 17, 2020)
 
 ENHANCEMENTS:
 

@@ -93,7 +93,7 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 	defer logElapsed("data_source.tencentcloud_image.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -117,7 +117,7 @@ func dataSourceTencentCloudImageRead(d *schema.ResourceData, meta interface{}) e
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		images, errRet = cvmService.DescribeImagesByFilter(ctx, filter)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

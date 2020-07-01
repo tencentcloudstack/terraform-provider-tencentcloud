@@ -20,7 +20,7 @@ func init() {
 
 func testSweepCvmInstance(region string) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	sharedClient, err := sharedClientForRegion(region)
 	if err != nil {
@@ -86,7 +86,7 @@ func TestAccTencentCloudInstanceBasic(t *testing.T) {
 				ResourceName:            id,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "hostname", "password", "allocate_public_ip"},
+				ImportStateVerifyIgnore: []string{"disable_monitor_service", "disable_security_service", "hostname", "password", "force_delete"},
 			},
 		},
 	})
@@ -424,10 +424,37 @@ func TestAccTencentCloudInstanceWithSpotpaid(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstanceWithPrepaidChargeType(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstancePrepaidRenew,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_renew_flag", "NOTIFY_AND_AUTO_RENEW"),
+				),
+			}, {
+				Config: testAccTencentCloudInstancePrepaidRenewUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -462,7 +489,7 @@ func testAccCheckTencentCloudInstanceExists(n string) resource.TestCheckFunc {
 
 func testAccCheckInstanceDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 	}
@@ -736,5 +763,35 @@ resource "tencentcloud_instance" "foo" {
   instance_charge_type = "SPOTPAID"
   spot_instance_type   = "ONE-TIME"
   spot_max_price       = "0.5"
+}
+`
+
+const testAccTencentCloudInstancePrepaidRenew = defaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name        = var.instance_name
+  availability_zone    = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id             = data.tencentcloud_images.default.images.0.image_id
+  instance_type        = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  hostname             = var.instance_name
+  system_disk_type     = "CLOUD_PREMIUM"
+  instance_charge_type = "PREPAID"
+  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_AUTO_RENEW"
+  instance_charge_type_prepaid_period = 1
+  force_delete = true
+}
+`
+
+const testAccTencentCloudInstancePrepaidRenewUpdate = defaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+  instance_name        = var.instance_name
+  availability_zone    = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id             = data.tencentcloud_images.default.images.0.image_id
+  instance_type        = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  hostname             = var.instance_name
+  system_disk_type     = "CLOUD_PREMIUM"
+  instance_charge_type = "PREPAID"
+  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+  instance_charge_type_prepaid_period = 1
+  force_delete = true
 }
 `

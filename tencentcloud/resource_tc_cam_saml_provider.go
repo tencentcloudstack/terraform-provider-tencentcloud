@@ -22,6 +22,7 @@ $ terraform import tencentcloud_cam_saml_provider.foo cam-SAML-provider-test
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strings"
@@ -97,6 +98,13 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().CreateSAMLProvider(request)
 		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "IdentityNameInUse") {
+					return resource.NonRetryableError(e)
+				}
+			}
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 			return retryError(e)
@@ -117,22 +125,47 @@ func resourceTencentCloudCamSAMLProviderCreate(d *schema.ResourceData, meta inte
 
 	d.SetId(d.Get("name").(string))
 	_ = d.Set("provider_arn", *response.Response.ProviderArn)
-	time.Sleep(3 * time.Second)
+
+	//get really instance then read
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	samlProviderId := d.Id()
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, e := camService.DescribeSAMLProviderById(ctx, samlProviderId)
+		if e != nil {
+			return retryError(e)
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM SAML provider failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	time.Sleep(10 * time.Second)
 
 	return resourceTencentCloudCamSAMLProviderRead(d, meta)
 }
 
 func resourceTencentCloudCamSAMLProviderRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_saml_provider.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	SAMLProviderId := d.Id()
-	request := cam.NewGetSAMLProviderRequest()
-	request.Name = &SAMLProviderId
+	samlProviderId := d.Id()
+	camService := CamService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
 	var instance *cam.GetSAMLProviderResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().GetSAMLProvider(request)
+		result, e := camService.DescribeSAMLProviderById(ctx, samlProviderId)
 		if e != nil {
 			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				errCode := ee.GetCode()

@@ -26,4 +26,11 @@ The following arguments are supported:
 * `instance_id` - (Required, ForceNew) ID of the CVM instance.
 * `storage_id` - (Required, ForceNew) ID of the mounted CBS.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

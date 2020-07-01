@@ -121,7 +121,7 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_subnet.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -207,9 +207,10 @@ func resourceTencentCloudVpcSubnetCreate(d *schema.ResourceData, meta interface{
 
 func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_subnet.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -222,7 +223,7 @@ func resourceTencentCloudVpcSubnetRead(d *schema.ResourceData, meta interface{})
 		e    error
 	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		info, has, e = vpcService.DescribeSubnet(ctx, id)
+		info, has, e = vpcService.DescribeSubnet(ctx, id, nil, "", "")
 		if e != nil {
 			return retryError(e)
 		}
@@ -269,7 +270,7 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_subnet.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -348,7 +349,7 @@ func resourceTencentCloudVpcSubnetDelete(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_subnet.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

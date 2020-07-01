@@ -54,4 +54,11 @@ The following arguments are supported:
 * `route_table_id` - (Required, ForceNew) ID of routing table to which this entry belongs.
 * `description` - (Optional, ForceNew) Description of the routing table entry.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cfs_file_systems" "file_systems" {
-  file_system_id = "cfs-6hgquxmj"
-  name = "test"
+  file_system_id    = "cfs-6hgquxmj"
+  name              = "test"
   availability_zone = "ap-guangzhou-3"
 }
 ```
@@ -125,7 +125,7 @@ func dataSourceTencentCloudCfsFileSystems() *schema.Resource {
 func dataSourceTencentCloudCfsFileSystemsRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_cfs_file_systems.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cfsService := CfsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -156,7 +156,7 @@ func dataSourceTencentCloudCfsFileSystemsRead(d *schema.ResourceData, meta inter
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		fileSystems, errRet = cfsService.DescribeFileSystem(ctx, fileSystemId, vpcId, subnetId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

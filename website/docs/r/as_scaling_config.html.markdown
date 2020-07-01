@@ -73,6 +73,7 @@ The `data_disk` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - The time when the launch configuration was created.
 * `status` - Current statues of a launch configuration.
 
@@ -81,7 +82,7 @@ In addition to all arguments above, the following attributes are exported:
 
 AutoScaling Configuration can be imported using the id, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_as_scaling_config.scaling_config asc-n32ymck2
 ```
 

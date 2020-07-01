@@ -7,9 +7,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_account_privilege" "default" {
-  mysql_id = "my-test-database"
-  account_name= "tf_account"
-  privileges = ["SELECT"]
+  mysql_id       = "my-test-database"
+  account_name   = "tf_account"
+  privileges     = ["SELECT"]
   database_names = ["instance.name"]
 }
 ```
@@ -28,11 +28,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 type resourceTencentCloudMysqlAccountPrivilegeId struct {
 	MysqlId     string
 	AccountName string
+	AccountHost string `json:"AccountHost,omitempty"`
 }
 
 func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
@@ -56,6 +58,13 @@ func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
 				ForceNew:    true,
 				Required:    true,
 				Description: "Account name.",
+			},
+			"account_host": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Default:     MYSQL_DEFAULT_ACCOUNT_HOST,
+				Description: "Account host, default is `%`.",
 			},
 			"privileges": {
 				Optional:    true,
@@ -86,9 +95,14 @@ func resourceTencentCloudMysqlAccountPrivilegeCreate(d *schema.ResourceData, met
 	var (
 		mysqlId     = d.Get("mysql_id").(string)
 		accountName = d.Get("account_name").(string)
+		accountHost = d.Get("account_host").(string)
 		privilegeId = resourceTencentCloudMysqlAccountPrivilegeId{MysqlId: mysqlId,
 			AccountName: accountName}
 	)
+
+	if accountHost != MYSQL_DEFAULT_ACCOUNT_HOST {
+		privilegeId.AccountHost = accountHost
+	}
 
 	privilegeIdStr, _ := json.Marshal(privilegeId)
 
@@ -99,9 +113,10 @@ func resourceTencentCloudMysqlAccountPrivilegeCreate(d *schema.ResourceData, met
 
 func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_account_privilege.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var privilegeId resourceTencentCloudMysqlAccountPrivilegeId
 
@@ -110,6 +125,11 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 		log.Printf("[CRITAL]%s %s\n ", logId, err.Error())
 		return err
 	}
+
+	if privilegeId.AccountHost == "" {
+		privilegeId.AccountHost = MYSQL_DEFAULT_ACCOUNT_HOST
+	}
+
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	//check if the account is delete
@@ -126,7 +146,7 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 			return retryError(e)
 		}
 		for _, account := range accountInfos {
-			if *account.User == privilegeId.AccountName {
+			if *account.User == privilegeId.AccountName && *account.Host == privilegeId.AccountHost {
 				accountInfo = account
 				break
 			}
@@ -151,16 +171,33 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 	}
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		privileges, e := mysqlService.DescribeAccountPrivileges(ctx, privilegeId.MysqlId,
-			privilegeId.AccountName, dbNames)
+		privileges, e := mysqlService.DescribeAccountPrivileges(ctx,
+			privilegeId.MysqlId,
+			privilegeId.AccountName,
+			privilegeId.AccountHost,
+			dbNames)
 
 		if e != nil {
-			if mysqlService.NotFoundMysqlInstance(e) {
-				d.SetId("")
-				onlineHas = false
-				return nil
+			if sdkErr, ok := e.(*sdkError.TencentCloudSDKError); ok {
+				if sdkErr.Code == MysqlInstanceIdNotFound {
+					onlineHas = false
+				}
+				if sdkErr.Code == "InvalidParameter" && strings.Contains(sdkErr.GetMessage(), "instance not found") {
+					onlineHas = false
+				}
+				if sdkErr.Code == "InternalError.TaskError" && strings.Contains(sdkErr.Message, "User does not exist") {
+					onlineHas = false
+				}
+				if !onlineHas {
+					return nil
+				}
 			}
 			return retryError(e)
+		}
+
+		if !onlineHas {
+			d.SetId("")
+			return nil
 		}
 
 		var finalPrivileges = make([]string, 0, len(privileges))
@@ -184,6 +221,9 @@ func resourceTencentCloudMysqlAccountPrivilegeRead(d *schema.ResourceData, meta 
 	if err != nil {
 		return fmt.Errorf("Describe mysql acounts privilege fails, reaseon %s", err.Error())
 	}
+	_ = d.Set("account_name", privilegeId.AccountName)
+	_ = d.Set("account_host", privilegeId.AccountHost)
+	_ = d.Set("mysql_id", privilegeId.MysqlId)
 	return nil
 }
 
@@ -191,7 +231,7 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_mysql_account_privilege.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -201,6 +241,10 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 		err = fmt.Errorf("Local data[terraform.tfstate] corruption,can not got old account privilege id")
 		log.Printf("[CRITAL]%s %s\n ", logId, err.Error())
 		return err
+	}
+
+	if privilegeId.AccountHost == "" {
+		privilegeId.AccountHost = MYSQL_DEFAULT_ACCOUNT_HOST
 	}
 
 	if d.HasChange("privileges") || d.HasChange("database_names") {
@@ -220,7 +264,13 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 			dbNames = append(dbNames, v.(string))
 		}
 
-		asyncRequestId, err := mysqlService.ModifyAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, dbNames, upperPrivileges)
+		asyncRequestId, err := mysqlService.ModifyAccountPrivileges(ctx,
+			privilegeId.MysqlId,
+			privilegeId.AccountName,
+			privilegeId.AccountHost,
+			dbNames,
+			upperPrivileges)
+
 		if err != nil {
 			return err
 		}
@@ -260,7 +310,7 @@ func resourceTencentCloudMysqlAccountPrivilegeDelete(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_mysql_account_privilege.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -272,6 +322,10 @@ func resourceTencentCloudMysqlAccountPrivilegeDelete(d *schema.ResourceData, met
 		return err
 	}
 
+	if privilegeId.AccountHost == "" {
+		privilegeId.AccountHost = MYSQL_DEFAULT_ACCOUNT_HOST
+	}
+
 	upperPrivileges := []string{MYSQL_DATABASE_MUST_PRIVILEGE}
 
 	dbNames := make([]string, 0, d.Get("database_names").(*schema.Set).Len())
@@ -279,7 +333,13 @@ func resourceTencentCloudMysqlAccountPrivilegeDelete(d *schema.ResourceData, met
 		dbNames = append(dbNames, v.(string))
 	}
 
-	asyncRequestId, err := mysqlService.ModifyAccountPrivileges(ctx, privilegeId.MysqlId, privilegeId.AccountName, dbNames, upperPrivileges)
+	asyncRequestId, err := mysqlService.ModifyAccountPrivileges(ctx,
+		privilegeId.MysqlId,
+		privilegeId.AccountName,
+		privilegeId.AccountHost,
+		dbNames,
+		upperPrivileges)
+
 	if err != nil {
 		return err
 	}

@@ -8,7 +8,7 @@ data "tencentcloud_dayu_ddos_policy_attachments" "foo_type" {
   resource_type = tencentcloud_dayu_ddos_policy_attachment.dayu_ddos_policy_attachment.resource_type
 }
 data "tencentcloud_dayu_ddos_policy_attachments" "foo_resource" {
-  resource_id = tencentcloud_dayu_ddos_policy_attachment.dayu_ddos_policy_attachment.resource_id
+  resource_id   = tencentcloud_dayu_ddos_policy_attachment.dayu_ddos_policy_attachment.resource_id
   resource_type = tencentcloud_dayu_ddos_policy_attachment.dayu_ddos_policy_attachment.resource_type
 }
 data "tencentcloud_dayu_ddos_policy_attachments" "foo_policy" {
@@ -86,7 +86,7 @@ func dataSourceTencentCloudDayuDdosPolicyAttachmentsRead(d *schema.ResourceData,
 	defer logElapsed("data_source.tencentcloud_dayu_ddos_policy_attachments.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	resourceId := d.Get("resource_id").(string)
 	resourceType := d.Get("resource_type").(string)

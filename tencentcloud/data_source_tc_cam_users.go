@@ -6,12 +6,12 @@ Example Usage
 ```hcl
 # query by name
 data "tencentcloud_cam_users" "foo" {
-  name      = "cam-user-test"
+  name = "cam-user-test"
 }
 
 # query by email
 data "tencentcloud_cam_users" "bar" {
-  email     = "hello@test.com"
+  email = "hello@test.com"
 }
 
 # query by phone
@@ -88,6 +88,11 @@ func dataSourceTencentCloudCamUsers() *schema.Resource {
 				Description: "A list of CAM users. Each element contains the following attributes:",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"user_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Id of CAM user. Its value equals to `name` argument.",
+						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -139,7 +144,7 @@ func dataSourceTencentCloudCamUsersRead(d *schema.ResourceData, meta interface{}
 	defer logElapsed("data_source.tencentcloud_cam_users.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]interface{})
 	if v, ok := d.GetOk("name"); ok {
@@ -199,6 +204,7 @@ func dataSourceTencentCloudCamUsersRead(d *schema.ResourceData, meta interface{}
 			"phone_num":    *user.PhoneNum,
 			"country_code": *user.CountryCode,
 			"email":        *user.Email,
+			"user_id":      *user.Name,
 		}
 		if int(*user.ConsoleLogin) == 1 {
 			mapping["console_login"] = true

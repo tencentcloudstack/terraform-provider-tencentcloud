@@ -84,13 +84,13 @@ func dataSourceTencentCloudSubnetRead(d *schema.ResourceData, meta interface{}) 
 	defer logElapsed("data_source.tencentcloud_subnet.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	vpcId := d.Get("vpc_id").(string)
 	subnetId := d.Get("subnet_id").(string)
 
-	infos, err := vpcService.DescribeSubnets(ctx, subnetId, vpcId, "", "", map[string]string{}, nil)
+	infos, err := vpcService.DescribeSubnets(ctx, subnetId, vpcId, "", "", map[string]string{}, nil, nil, "", "")
 	if err != nil {
 		return err
 	}

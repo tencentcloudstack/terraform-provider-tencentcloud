@@ -29,6 +29,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - SCF namespace creation time.
 * `modify_time` - SCF namespace last modified time.
 * `type` - SCF namespace type.

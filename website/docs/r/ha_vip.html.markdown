@@ -34,6 +34,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `address_ip` - EIP that is associated.
 * `create_time` - Create time of the HA VIP.
 * `instance_id` - Instance id that is associated.

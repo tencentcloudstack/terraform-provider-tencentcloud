@@ -210,9 +210,10 @@ func resourceTencentCloudContainerClusterInstancesUpdate(d *schema.ResourceData,
 
 func resourceTencentCloudContainerClusterInstancesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_container_cluster_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var workers []InstanceInfo
@@ -289,7 +290,7 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 	defer logElapsed("resource.tencentcloud_container_cluster_instance.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 	cvmService := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -303,7 +304,7 @@ func resourceTencentCloudContainerClusterInstancesCreate(d *schema.ResourceData,
 			var e error
 			zones, e = cvmService.DescribeZones(ctx)
 			if e != nil {
-				return retryError(e, "InternalError")
+				return retryError(e, InternalError)
 			}
 			return nil
 		})
@@ -504,7 +505,7 @@ func resourceTencentCloudContainerClusterInstancesDelete(d *schema.ResourceData,
 	defer logElapsed("resource.tencentcloud_container_cluster_instance.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var workers []InstanceInfo

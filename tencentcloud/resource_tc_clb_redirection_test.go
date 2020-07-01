@@ -53,7 +53,7 @@ func TestAccTencentCloudClbRedirection_auto(t *testing.T) {
 
 func testAccCheckClbRedirectionDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	clbService := ClbService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -74,7 +74,7 @@ func testAccCheckClbRedirectionDestroy(s *terraform.State) error {
 func testAccCheckClbRedirectionExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {

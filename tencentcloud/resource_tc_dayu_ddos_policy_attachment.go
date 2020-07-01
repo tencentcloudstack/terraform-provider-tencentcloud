@@ -6,8 +6,8 @@ Example Usage
 ```hcl
 resource "tencentcloud_dayu_ddos_policy_attachment" "dayu_ddos_policy_attachment_basic" {
   resource_type = tencentcloud_dayu_ddos_policy.test_policy.resource_type
-  resource_id = "bgpip-00000294"
-  policy_id = tencentcloud_dayu_ddos_policy.test_policy.policy_id
+  resource_id   = "bgpip-00000294"
+  policy_id     = tencentcloud_dayu_ddos_policy.test_policy.policy_id
 }
 ```
 */
@@ -58,7 +58,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentCreate(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_attachment.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	resourceId := d.Get("resource_id").(string)
 	policyId := d.Get("policy_id").(string)
@@ -123,9 +123,10 @@ func resourceTencentCloudDayuDdosPolicyAttachmentCreate(d *schema.ResourceData, 
 
 func resourceTencentCloudDayuDdosPolicyAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {
@@ -168,7 +169,7 @@ func resourceTencentCloudDayuDdosPolicyAttachmentDelete(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 3 {

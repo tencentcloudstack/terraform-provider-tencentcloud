@@ -224,7 +224,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_as_scaling_group.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	request := as.NewCreateAutoScalingGroupRequest()
 
 	request.AutoScalingGroupName = helper.String(d.Get("scaling_group_name").(string))
@@ -346,7 +346,7 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		scalingGroup, _, errRet := asService.DescribeAutoScalingGroupById(ctx, id)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if scalingGroup != nil && *scalingGroup.InActivityStatus == SCALING_GROUP_NOT_IN_ACTIVITY_STATUS {
 			return nil
@@ -362,9 +362,10 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_group.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	scalingGroupId := d.Id()
 	asService := AsService{
@@ -443,7 +444,7 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_as_scaling_group.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	tagService := TagService{client: client}
@@ -625,7 +626,7 @@ func resourceTencentCloudAsScalingGroupDelete(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_as_scaling_group.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	scalingGroupId := d.Id()
 	asService := AsService{

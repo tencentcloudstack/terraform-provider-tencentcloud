@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 data "tencentcloud_clb_instances" "foo" {
-    clb_id             = "lb-k2zjp9lv"
-    network_type       = "OPEN"
-    clb_name           = "myclb"
-    project_id         = 0
-    result_output_file = "mytestpath"
+  clb_id             = "lb-k2zjp9lv"
+  network_type       = "OPEN"
+  clb_name           = "myclb"
+  project_id         = 0
+  result_output_file = "mytestpath"
 }
 ```
 */
@@ -145,7 +145,7 @@ func dataSourceTencentCloudClbInstancesRead(d *schema.ResourceData, meta interfa
 	defer logElapsed("data_source.tencentcloud_clb_instances.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]interface{})
 	if v, ok := d.GetOk("clb_id"); ok {

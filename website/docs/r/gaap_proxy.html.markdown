@@ -43,6 +43,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Creation time of the GAAP proxy.
 * `domain` - Access domain of the GAAP proxy.
 * `forward_ip` - Forwarding IP of the GAAP proxy.

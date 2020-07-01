@@ -1,5 +1,5 @@
 /*
-Use this data source to get the available zones in the current region. By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
+Use this data source to get the available zones in current region. By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
 
 Example Usage
 
@@ -29,7 +29,7 @@ func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "When specified, only the zone with the exactly name match will return.",
+				Description: "When specified, only the zone with the exactly name match will be returned.",
 			},
 			"include_unavailable": {
 				Type:        schema.TypeBool,
@@ -52,22 +52,22 @@ func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "An internal id for the zone, like `200003`, usually not so useful for end user.",
+							Description: "An internal id for the zone, like `200003`, usually not so useful.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The english name for the zone, like `ap-guangzhou-3`.",
+							Description: "The name of the zone, like `ap-guangzhou-3`.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The description for the zone, unfortunately only Chinese characters at this stage.",
+							Description: "The description of the zone, like `Guangzhou Zone 3`.",
 						},
 						"state": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The state for the zone, indicate availability using `AVAILABLE` and `UNAVAILABLE` values.",
+							Description: "The state of the zone, indicate availability using `AVAILABLE` and `UNAVAILABLE` values.",
 						},
 					},
 				},
@@ -78,8 +78,9 @@ func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
 
 func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_availability_zones.read")()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -98,7 +99,7 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		zones, errRet = cvmService.DescribeZones(ctx)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})
@@ -115,7 +116,6 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 		if !includeUnavailable && *zone.ZoneState == ZONE_STATE_UNAVAILABLE {
 			continue
 		}
-
 		mapping := map[string]interface{}{
 			"id":          zone.ZoneId,
 			"name":        zone.Zone,
@@ -129,7 +129,7 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("zones", zoneList)
 	if err != nil {
-		log.Printf("[CRITAL]%s provider set zone list fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set zones list fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
@@ -139,5 +139,6 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 			return err
 		}
 	}
+
 	return nil
 }

@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 # query by group_id
 data "tencentcloud_cam_group_policy_attachments" "foo" {
-  group_id  = tencentcloud_cam_group.foo.id
+  group_id = tencentcloud_cam_group.foo.id
 }
 
 # query by group_id and policy_id
@@ -108,7 +108,7 @@ func dataSourceTencentCloudCamGroupPolicyAttachmentsRead(d *schema.ResourceData,
 	defer logElapsed("data_source.tencentcloud_cam_group_policy_attachments.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]interface{})
 	groupId := d.Get("group_id").(string)

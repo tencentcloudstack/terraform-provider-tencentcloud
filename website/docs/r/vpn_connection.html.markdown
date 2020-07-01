@@ -82,6 +82,7 @@ The `security_group_policy` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Create time of the VPN connection.
 * `encrypt_proto` - Encrypt proto of the VPN connection.
 * `net_status` - Net status of the VPN connection, values are `AVAILABLE`.

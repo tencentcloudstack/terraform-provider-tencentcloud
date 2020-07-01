@@ -121,7 +121,7 @@ func testAccCheckDayuCCHttpPolicyDestroy(s *terraform.State) error {
 			continue
 		}
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		items := strings.Split(rs.Primary.ID, FILED_SP)
 		if len(items) < 3 {
@@ -156,7 +156,7 @@ func testAccCheckDayuCCHttpPolicyExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("resource %s is not found", n)
 		}
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		items := strings.Split(rs.Primary.ID, FILED_SP)
 		if len(items) < 3 {

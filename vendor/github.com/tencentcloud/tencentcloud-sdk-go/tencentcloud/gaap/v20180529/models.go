@@ -20,6 +20,18 @@ import (
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
+type AccessConfiguration struct {
+
+	// 加速地域。
+	AccessRegion *string `json:"AccessRegion,omitempty" name:"AccessRegion"`
+
+	// 通道带宽上限，单位：Mbps。
+	Bandwidth *uint64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+
+	// 通道并发量上限，表示同时在线的连接数，单位：万。
+	Concurrent *uint64 `json:"Concurrent,omitempty" name:"Concurrent"`
+}
+
 type AccessRegionDetial struct {
 
 	// 区域ID
@@ -148,8 +160,8 @@ type BindRealServer struct {
 	RealServerWeight *int64 `json:"RealServerWeight,omitempty" name:"RealServerWeight"`
 
 	// 源站健康检查状态，其中：
-	// 0，正常；
-	// 1，异常。
+	// 0表示正常；
+	// 1表示异常。
 	// 未开启健康检查状态时，该状态始终为正常。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RealServerStatus *int64 `json:"RealServerStatus,omitempty" name:"RealServerStatus"`
@@ -319,6 +331,9 @@ type CheckProxyCreateRequest struct {
 
 	// 通道并发量上限，表示同时在线的连接数，单位：万。
 	Concurrent *uint64 `json:"Concurrent,omitempty" name:"Concurrent"`
+
+	// 如果在通道组下创建通道，需要填写通道组的ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 }
 
 func (r *CheckProxyCreateRequest) ToJsonString() string {
@@ -398,11 +413,54 @@ func (r *CloseProxiesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type CloseProxyGroupRequest struct {
+	*tchttp.BaseRequest
+
+	// 通道组的实例 ID。
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+}
+
+func (r *CloseProxyGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CloseProxyGroupRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CloseProxyGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 非运行状态下的通道实例ID列表，不可开启。
+		InvalidStatusInstanceSet []*string `json:"InvalidStatusInstanceSet,omitempty" name:"InvalidStatusInstanceSet" list`
+
+		// 开启操作失败的通道实例ID列表。
+		OperationFailedInstanceSet []*string `json:"OperationFailedInstanceSet,omitempty" name:"OperationFailedInstanceSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CloseProxyGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CloseProxyGroupResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type CloseSecurityPolicyRequest struct {
 	*tchttp.BaseRequest
 
 	// 通道ID
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
+
+	// 安全组策略ID
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 }
 
 func (r *CloseSecurityPolicyRequest) ToJsonString() string {
@@ -621,8 +679,11 @@ type CreateHTTPListenerRequest struct {
 	// 监听器端口，基于同种传输层协议（TCP 或 UDP）的监听器，端口不可重复
 	Port *uint64 `json:"Port,omitempty" name:"Port"`
 
-	// 通道ID
+	// 通道ID，与GroupId不能同时设置，对应为通道创建监听器
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
+
+	// 通道组ID，与ProxyId不能同时设置，对应为通道组创建监听器
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 }
 
 func (r *CreateHTTPListenerRequest) ToJsonString() string {
@@ -670,7 +731,7 @@ type CreateHTTPSListenerRequest struct {
 	// 加速通道转发到源站的协议类型：HTTP | HTTPS
 	ForwardProtocol *string `json:"ForwardProtocol,omitempty" name:"ForwardProtocol"`
 
-	// 通道ID
+	// 通道ID，与GroupId之间只能设置一个。表示创建通道的监听器。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 
 	// 认证类型，其中：
@@ -684,6 +745,9 @@ type CreateHTTPSListenerRequest struct {
 
 	// 新的客户端多CA证书ID，仅当双向认证时设置该参数或设置ClientCertificateId参数
 	PolyClientCertificateIds []*string `json:"PolyClientCertificateIds,omitempty" name:"PolyClientCertificateIds" list`
+
+	// 通道组ID，与ProxyId之间只能设置一个。表示创建通道组的监听器。
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 }
 
 func (r *CreateHTTPSListenerRequest) ToJsonString() string {
@@ -767,6 +831,9 @@ type CreateProxyGroupRequest struct {
 
 	// 标签列表
 	TagSet []*TagPair `json:"TagSet,omitempty" name:"TagSet" list`
+
+	// 加速地域列表，包括加速地域名，及该地域对应的带宽和并发配置。
+	AccessRegionSet []*AccessConfiguration `json:"AccessRegionSet,omitempty" name:"AccessRegionSet" list`
 }
 
 func (r *CreateProxyGroupRequest) ToJsonString() string {
@@ -833,6 +900,9 @@ type CreateProxyRequest struct {
 	// 被复制的通道ID。只有处于运行中状态的通道可以被复制。
 	// 当设置该参数时，表示复制该通道。
 	ClonedProxyId *string `json:"ClonedProxyId,omitempty" name:"ClonedProxyId"`
+
+	// 计费方式 (0:按带宽计费，1:按流量计费 默认按带宽计费）
+	BillingType *int64 `json:"BillingType,omitempty" name:"BillingType"`
 }
 
 func (r *CreateProxyRequest) ToJsonString() string {
@@ -930,11 +1000,14 @@ func (r *CreateRuleResponse) FromJsonString(s string) error {
 type CreateSecurityPolicyRequest struct {
 	*tchttp.BaseRequest
 
+	// 默认策略：ACCEPT或DROP
+	DefaultAction *string `json:"DefaultAction,omitempty" name:"DefaultAction"`
+
 	// 加速通道ID
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 
-	// 默认策略：ACCEPT或DROP
-	DefaultAction *string `json:"DefaultAction,omitempty" name:"DefaultAction"`
+	// 通道组ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 }
 
 func (r *CreateSecurityPolicyRequest) ToJsonString() string {
@@ -1292,6 +1365,12 @@ type DeleteProxyGroupRequest struct {
 
 	// 需要删除的通道组ID。
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+
+	// 强制删除标识。其中：
+	// 0，不强制删除，
+	// 1，强制删除。
+	// 默认为0，当通道组中存在通道或通道组中存在监听器/规则绑定了源站时，且Force为0时，该操作会返回失败。
+	Force *uint64 `json:"Force,omitempty" name:"Force"`
 }
 
 func (r *DeleteProxyGroupRequest) ToJsonString() string {
@@ -1670,6 +1749,44 @@ func (r *DescribeDestRegionsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeDomainErrorPageInfoByIdsRequest struct {
+	*tchttp.BaseRequest
+
+	// 定制错误ID列表,最多支持10个
+	ErrorPageIds []*string `json:"ErrorPageIds,omitempty" name:"ErrorPageIds" list`
+}
+
+func (r *DescribeDomainErrorPageInfoByIdsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDomainErrorPageInfoByIdsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeDomainErrorPageInfoByIdsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 定制错误响应配置集
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		ErrorPageSet []*DomainErrorPageInfo `json:"ErrorPageSet,omitempty" name:"ErrorPageSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeDomainErrorPageInfoByIdsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDomainErrorPageInfoByIdsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeDomainErrorPageInfoRequest struct {
 	*tchttp.BaseRequest
 
@@ -1820,6 +1937,9 @@ type DescribeHTTPListenersRequest struct {
 
 	// 过滤条件，支持按照端口或监听器名称进行模糊查询，该参数不能与ListenerName和Port同时使用
 	SearchValue *string `json:"SearchValue,omitempty" name:"SearchValue"`
+
+	// 通道组ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 }
 
 func (r *DescribeHTTPListenersRequest) ToJsonString() string {
@@ -1878,6 +1998,9 @@ type DescribeHTTPSListenersRequest struct {
 
 	// 过滤条件，支持按照端口或监听器名称进行模糊查询
 	SearchValue *string `json:"SearchValue,omitempty" name:"SearchValue"`
+
+	// 过滤条件，通道组ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 }
 
 func (r *DescribeHTTPSListenersRequest) ToJsonString() string {
@@ -2781,6 +2904,7 @@ type DescribeSecurityPolicyDetailResponse struct {
 	Response *struct {
 
 		// 通道ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
 		ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
 
 		// 安全策略状态：
@@ -3082,6 +3206,10 @@ type DomainErrorPageInfo struct {
 	// 设置的响应体(不包括 HTTP头)
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Body *string `json:"Body,omitempty" name:"Body"`
+
+	// 规则状态,0为成功
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitempty" name:"Status"`
 }
 
 type DomainRuleSet struct {
@@ -3198,15 +3326,15 @@ type HTTPListener struct {
 	// 监听器创建时间，Unix时间戳
 	CreateTime *uint64 `json:"CreateTime,omitempty" name:"CreateTime"`
 
-	// 监听器协议
+	// 监听器协议， HTTP表示HTTP，HTTPS表示HTTPS，此结构取值HTTP
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
 	// 监听器状态，其中：
-	// 0， 运行中；
-	// 1， 创建中；
-	// 2，销毁中；
-	// 3，源站调整中；
-	// 4，配置变更中。
+	// 0表示运行中；
+	// 1表示创建中；
+	// 2表示销毁中；
+	// 3表示源站调整中；
+	// 4表示配置变更中。
 	ListenerStatus *uint64 `json:"ListenerStatus,omitempty" name:"ListenerStatus"`
 }
 
@@ -3221,15 +3349,15 @@ type HTTPSListener struct {
 	// 监听器端口
 	Port *uint64 `json:"Port,omitempty" name:"Port"`
 
-	// 监听器协议， 值为：HTTP
+	// 监听器协议， HTTP表示HTTP，HTTPS表示HTTPS，此结构取值HTTPS
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
 	// 监听器状态，其中：
-	// 0， 运行中；
-	// 1， 创建中；
-	// 2，销毁中；
-	// 3，源站调整中；
-	// 4，配置变更中。
+	// 0表示运行中；
+	// 1表示创建中；
+	// 2表示销毁中；
+	// 3表示源站调整中；
+	// 4表示配置变更中。
 	ListenerStatus *uint64 `json:"ListenerStatus,omitempty" name:"ListenerStatus"`
 
 	// 监听器服务器SSL证书ID
@@ -3250,8 +3378,8 @@ type HTTPSListener struct {
 	ClientCertificateId *string `json:"ClientCertificateId,omitempty" name:"ClientCertificateId"`
 
 	// 监听器认证方式。其中，
-	// 0，单向认证；
-	// 1，双向认证。
+	// 0表示单向认证；
+	// 1表示双向认证。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AuthType *int64 `json:"AuthType,omitempty" name:"AuthType"`
 
@@ -3293,6 +3421,9 @@ type InquiryPriceCreateProxyRequest struct {
 
 	// （新参数）通道并发量上限，表示同时在线的连接数，单位：万。
 	Concurrent *int64 `json:"Concurrent,omitempty" name:"Concurrent"`
+
+	// 计费方式，0表示按带宽计费，1表示按流量计费。默认按带宽计费
+	BillingType *int64 `json:"BillingType,omitempty" name:"BillingType"`
 }
 
 func (r *InquiryPriceCreateProxyRequest) ToJsonString() string {
@@ -3312,6 +3443,7 @@ type InquiryPriceCreateProxyResponse struct {
 		ProxyDailyPrice *float64 `json:"ProxyDailyPrice,omitempty" name:"ProxyDailyPrice"`
 
 		// 通道带宽费用梯度价格。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 		BandwidthUnitPrice []*BandwidthPriceGradient `json:"BandwidthUnitPrice,omitempty" name:"BandwidthUnitPrice" list`
 
 		// 通道基础费用折扣价格，单位：元/天。
@@ -3319,6 +3451,14 @@ type InquiryPriceCreateProxyResponse struct {
 
 		// 价格使用的货币，支持人民币，美元等。
 		Currency *string `json:"Currency,omitempty" name:"Currency"`
+
+		// 通道的流量费用价格，单位: 元/GB
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		FlowUnitPrice *float64 `json:"FlowUnitPrice,omitempty" name:"FlowUnitPrice"`
+
+		// 通道的流量费用折扣价格，单位:元/GB
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		DiscountFlowUnitPrice *float64 `json:"DiscountFlowUnitPrice,omitempty" name:"DiscountFlowUnitPrice"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -3743,6 +3883,9 @@ type ModifyProxyConfigurationRequest struct {
 
 	// （新参数）通道的实例ID。
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
+
+	// 计费方式 (0:按带宽计费，1:按流量计费 默认按带宽计费）
+	BillingType *int64 `json:"BillingType,omitempty" name:"BillingType"`
 }
 
 func (r *ModifyProxyConfigurationRequest) ToJsonString() string {
@@ -3780,6 +3923,9 @@ type ModifyProxyGroupAttributeRequest struct {
 
 	// 修改后的通道组名称：不超过30个字符，超过部分会被截断。
 	GroupName *string `json:"GroupName,omitempty" name:"GroupName"`
+
+	// 项目ID
+	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
 }
 
 func (r *ModifyProxyGroupAttributeRequest) ToJsonString() string {
@@ -4114,11 +4260,54 @@ func (r *OpenProxiesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type OpenProxyGroupRequest struct {
+	*tchttp.BaseRequest
+
+	// 通道组实例 ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+}
+
+func (r *OpenProxyGroupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *OpenProxyGroupRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type OpenProxyGroupResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 非关闭状态下的通道实例ID列表，不可开启。
+		InvalidStatusInstanceSet []*string `json:"InvalidStatusInstanceSet,omitempty" name:"InvalidStatusInstanceSet" list`
+
+		// 开启操作失败的通道实例ID列表。
+		OperationFailedInstanceSet []*string `json:"OperationFailedInstanceSet,omitempty" name:"OperationFailedInstanceSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *OpenProxyGroupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *OpenProxyGroupResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type OpenSecurityPolicyRequest struct {
 	*tchttp.BaseRequest
 
 	// 需开启安全策略的通道ID
 	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
+
+	// 安全策略ID
+	PolicyId *string `json:"PolicyId,omitempty" name:"PolicyId"`
 }
 
 func (r *OpenSecurityPolicyRequest) ToJsonString() string {
@@ -4163,10 +4352,10 @@ type ProxyGroupDetail struct {
 	ProxyNum *int64 `json:"ProxyNum,omitempty" name:"ProxyNum"`
 
 	// 通道组状态：
-	// 0 正常运行
-	// 1 创建中
-	// 4 销毁中
-	// 11 迁移中
+	// 0表示正常运行；
+	// 1表示创建中；
+	// 4表示销毁中；
+	// 11表示迁移中；
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
 	// 归属Uin
@@ -4220,14 +4409,22 @@ type ProxyGroupInfo struct {
 
 	// 通道组状态。
 	// 其中，
-	// 0，运行中；
-	// 1，创建中；
-	// 4，销毁中；
-	// 11，通道迁移中。
+	// RUNNING表示运行中；
+	// CREATING表示创建中；
+	// DESTROYING表示销毁中；
+	// MOVING表示通道迁移中。
 	Status *string `json:"Status,omitempty" name:"Status"`
 
 	// 标签列表。
 	TagSet []*TagPair `json:"TagSet,omitempty" name:"TagSet" list`
+
+	// 通道组版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Version *string `json:"Version,omitempty" name:"Version"`
+
+	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *uint64 `json:"CreateTime,omitempty" name:"CreateTime"`
 }
 
 type ProxyIdDict struct {
@@ -4264,17 +4461,17 @@ type ProxyInfo struct {
 	Concurrent *int64 `json:"Concurrent,omitempty" name:"Concurrent"`
 
 	// 通道状态。其中：
-	// RUNNING，运行中；
-	// CREATING，创建中；
-	// DESTROYING，销毁中；
-	// OPENING，开启中；
-	// CLOSING，关闭中；
-	// CLOSED，已关闭；
-	// ADJUSTING，配置变更中；
-	// ISOLATING，隔离中（欠费触发）；
-	// ISOLATED，已隔离（欠费触发）；
-	// CLONING，复制中；
-	// UNKNOWN，未知状态。
+	// RUNNING表示运行中；
+	// CREATING表示创建中；
+	// DESTROYING表示销毁中；
+	// OPENING表示开启中；
+	// CLOSING表示关闭中；
+	// CLOSED表示已关闭；
+	// ADJUSTING表示配置变更中；
+	// ISOLATING表示隔离中；
+	// ISOLATED表示已隔离；
+	// CLONING表示复制中；
+	// UNKNOWN表示未知状态。
 	Status *string `json:"Status,omitempty" name:"Status"`
 
 	// 接入域名。
@@ -4322,6 +4519,18 @@ type ProxyInfo struct {
 	// 是否支持安全组配置
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SupportSecurity *int64 `json:"SupportSecurity,omitempty" name:"SupportSecurity"`
+
+	// 计费类型: 0表示按带宽计费  1表示按流量计费。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BillingType *int64 `json:"BillingType,omitempty" name:"BillingType"`
+
+	// 关联了解析的域名列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RelatedGlobalDomains []*string `json:"RelatedGlobalDomains,omitempty" name:"RelatedGlobalDomains" list`
+
+	// 配置变更时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ModifyConfigTime *uint64 `json:"ModifyConfigTime,omitempty" name:"ModifyConfigTime"`
 }
 
 type ProxySimpleInfo struct {
@@ -4343,16 +4552,16 @@ type ProxyStatus struct {
 
 	// 通道状态。
 	// 其中：
-	// RUNNING，运行中；
-	// CREATING，创建中；
-	// DESTROYING，销毁中；
-	// OPENING，开启中；
-	// CLOSING，关闭中；
-	// CLOSED，已关闭；
-	// ADJUSTING，配置变更中；
-	// ISOLATING，隔离中；
-	// ISOLATED，已隔离；
-	// UNKNOWN，未知状态。
+	// RUNNING表示运行中；
+	// CREATING表示创建中；
+	// DESTROYING表示销毁中；
+	// OPENING表示开启中；
+	// CLOSING表示关闭中；
+	// CLOSED表示已关闭；
+	// ADJUSTING表示配置变更中；
+	// ISOLATING表示隔离中；
+	// ISOLATED表示已隔离；
+	// UNKNOWN表示未知状态。
 	Status *string `json:"Status,omitempty" name:"Status"`
 }
 
@@ -4391,7 +4600,7 @@ type RealServerStatus struct {
 	// 源站ID。
 	RealServerId *string `json:"RealServerId,omitempty" name:"RealServerId"`
 
-	// 0: 未被绑定 1：被规则或者监听器绑定。
+	// 0表示未被绑定 1表示被规则或者监听器绑定。
 	BindStatus *int64 `json:"BindStatus,omitempty" name:"BindStatus"`
 
 	// 绑定此源站的通道ID，没有绑定时为空字符串。
@@ -4483,10 +4692,10 @@ type RuleInfo struct {
 	// 转发源站策略
 	Scheduler *string `json:"Scheduler,omitempty" name:"Scheduler"`
 
-	// 是否开启健康检查标志，1开启，0关闭
+	// 是否开启健康检查标志，1表示开启，0表示关闭
 	HealthCheck *uint64 `json:"HealthCheck,omitempty" name:"HealthCheck"`
 
-	// 规则状态，0运行中，1创建中，2销毁中，3绑定解绑源站中，4配置更新中
+	// 规则状态，0表示运行中，1表示创建中，2表示销毁中，3表示绑定解绑源站中，4表示配置更新中
 	RuleStatus *uint64 `json:"RuleStatus,omitempty" name:"RuleStatus"`
 
 	// 健康检查相关参数
@@ -4495,7 +4704,7 @@ type RuleInfo struct {
 	// 已绑定的源站相关信息
 	RealServerSet []*BindRealServer `json:"RealServerSet,omitempty" name:"RealServerSet" list`
 
-	// 源站的服务状态，0：异常，1：正常。
+	// 源站的服务状态，0表示异常，1表示正常。
 	// 未开启健康检查时，该状态始终未正常。
 	// 只要有一个源站健康状态为异常时，该状态为异常，具体源站的状态请查看RealServerSet。
 	BindStatus *uint64 `json:"BindStatus,omitempty" name:"BindStatus"`
@@ -4656,17 +4865,17 @@ type TCPListener struct {
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
 	// 监听器状态，其中：
-	// 0， 运行中；
-	// 1， 创建中；
-	// 2，销毁中；
-	// 3，源站调整中；
-	// 4，配置变更中。
+	// 0表示运行中；
+	// 1表示创建中；
+	// 2表示销毁中；
+	// 3表示源站调整中；
+	// 4表示配置变更中。
 	ListenerStatus *uint64 `json:"ListenerStatus,omitempty" name:"ListenerStatus"`
 
 	// 监听器源站访问策略，其中：
-	// rr，轮询；
-	// wrr，加权轮询；
-	// lc，最小连接数。
+	// rr表示轮询；
+	// wrr表示加权轮询；
+	// lc表示最小连接数。
 	Scheduler *string `json:"Scheduler,omitempty" name:"Scheduler"`
 
 	// 源站健康检查响应超时时间，单位：秒
@@ -4676,13 +4885,13 @@ type TCPListener struct {
 	DelayLoop *uint64 `json:"DelayLoop,omitempty" name:"DelayLoop"`
 
 	// 监听器是否开启健康检查，其中：
-	// 0，关闭；
-	// 1，开启
+	// 0表示关闭；
+	// 1表示开启
 	HealthCheck *uint64 `json:"HealthCheck,omitempty" name:"HealthCheck"`
 
 	// 监听器绑定的源站状态， 其中：
-	// 0，异常；
-	// 1，正常。
+	// 0表示异常；
+	// 1表示正常。
 	BindStatus *uint64 `json:"BindStatus,omitempty" name:"BindStatus"`
 
 	// 监听器绑定的源站信息
@@ -4736,17 +4945,17 @@ type UDPListener struct {
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
 	// 监听器状态，其中：
-	// 0， 运行中；
-	// 1， 创建中；
-	// 2，销毁中；
-	// 3，源站调整中；
-	// 4，配置变更中。
+	// 0表示运行中；
+	// 1表示创建中；
+	// 2表示销毁中；
+	// 3表示源站调整中；
+	// 4表示配置变更中。
 	ListenerStatus *uint64 `json:"ListenerStatus,omitempty" name:"ListenerStatus"`
 
 	// 监听器源站访问策略
 	Scheduler *string `json:"Scheduler,omitempty" name:"Scheduler"`
 
-	// 监听器绑定源站状态， 0正常，1IP异常，2域名解析异常
+	// 监听器绑定源站状态， 0表示正常，1表示IP异常，2表示域名解析异常
 	BindStatus *uint64 `json:"BindStatus,omitempty" name:"BindStatus"`
 
 	// 监听器绑定的源站信息

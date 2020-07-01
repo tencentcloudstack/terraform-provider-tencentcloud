@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_cbs_snapshot" "snapshot" {
   snapshot_name = "unnamed"
-  storage_id   = "disk-kdt0sq6m"
+  storage_id    = "disk-kdt0sq6m"
 }
 ```
 
@@ -86,7 +86,7 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_cbs_snapshot.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	storageId := d.Get("storage_id").(string)
 	snapshotName := d.Get("snapshot_name").(string)
@@ -136,9 +136,10 @@ func resourceTencentCloudCbsSnapshotCreate(d *schema.ResourceData, meta interfac
 
 func resourceTencentCloudCbsSnapshotRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cbs_snapshot.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	snapshotId := d.Id()
 	cbsService := CbsService{
@@ -177,7 +178,7 @@ func resourceTencentCloudCbsSnapshotUpdate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_cbs_snapshot.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	snapshotId := d.Id()
 
@@ -206,7 +207,7 @@ func resourceTencentCloudCbsSnapshotDelete(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_cbs_snapshot.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	snapshotId := d.Id()
 	cbsService := CbsService{

@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
 func TestMain(m *testing.M) {
@@ -13,23 +15,33 @@ func TestMain(m *testing.M) {
 }
 
 func sharedClientForRegion(region string) (interface{}, error) {
-	var secretId, secretKey string
-	if secretId = os.Getenv("TENCENTCLOUD_SECRET_ID"); secretId == "" {
-		return nil, fmt.Errorf("TENCENTCLOUD_SECRET_ID can not be empty")
-	}
-	if secretKey = os.Getenv("TENCENTCLOUD_SECRET_KEY"); secretKey == "" {
-		return nil, fmt.Errorf("TENCENTCLOUD_SECRET_KEY can not be empty")
+	var secretId string
+	if secretId = os.Getenv(PROVIDER_SECRET_ID); secretId == "" {
+		return nil, fmt.Errorf("%s can not be empty", PROVIDER_SECRET_ID)
 	}
 
-	config := Config{
-		SecretId:  secretId,
-		SecretKey: secretKey,
-		Region:    region,
+	var secretKey string
+	if secretKey = os.Getenv(PROVIDER_SECRET_KEY); secretKey == "" {
+		return nil, fmt.Errorf("%s can not be empty", PROVIDER_SECRET_KEY)
 	}
 
-	client, err := config.Client()
-	if err != nil {
-		return nil, err
+	securityToken := os.Getenv(PROVIDER_SECURITY_TOKEN)
+	protocol := os.Getenv(PROVIDER_PROTOCOL)
+	domain := os.Getenv(PROVIDER_DOMAIN)
+
+	client := &connectivity.TencentCloudClient{
+		Credential: common.NewTokenCredential(
+			secretId,
+			secretKey,
+			securityToken,
+		),
+		Region:   region,
+		Protocol: protocol,
+		Domain:   domain,
 	}
-	return client, nil
+
+	var tcClient TencentCloudClient
+	tcClient.apiV3Conn = client
+
+	return &tcClient, nil
 }

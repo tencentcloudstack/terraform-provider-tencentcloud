@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/hashicorp/hcl/v2"
+	"github.com/hashicorp/hcl/v2/ext/customdecode"
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/convert"
 	"github.com/zclconf/go-cty/cty/function"
@@ -259,6 +260,20 @@ func (e *FunctionCallExpr) Value(ctx *hcl.EvalContext) (cty.Value, hcl.Diagnosti
 		}
 
 		switch {
+		case expandVal.Type().Equals(cty.DynamicPseudoType):
+			if expandVal.IsNull() {
+				diags = append(diags, &hcl.Diagnostic{
+					Severity:    hcl.DiagError,
+					Summary:     "Invalid expanding argument value",
+					Detail:      "The expanding argument (indicated by ...) must not be null.",
+					Subject:     expandExpr.Range().Ptr(),
+					Context:     e.Range().Ptr(),
+					Expression:  expandExpr,
+					EvalContext: ctx,
+				})
+				return cty.DynamicVal, diags
+			}
+			return cty.DynamicVal, diags
 		case expandVal.Type().IsTupleType() || expandVal.Type().IsListType() || expandVal.Type().IsSetType():
 			if expandVal.IsNull() {
 				diags = append(diags, &hcl.Diagnostic{
@@ -350,26 +365,38 @@ func (e *FunctionCallExpr) Value(ctx *hcl.EvalContext) (cty.Value, hcl.Diagnosti
 			param = varParam
 		}
 
-		val, argDiags := argExpr.Value(ctx)
-		if len(argDiags) > 0 {
+		var val cty.Value
+		if decodeFn := customdecode.CustomExpressionDecoderForType(param.Type); decodeFn != nil {
+			var argDiags hcl.Diagnostics
+			val, argDiags = decodeFn(argExpr, ctx)
 			diags = append(diags, argDiags...)
-		}
+			if val == cty.NilVal {
+				val = cty.UnknownVal(param.Type)
+			}
+		} else {
+			var argDiags hcl.Diagnostics
+			val, argDiags = argExpr.Value(ctx)
+			if len(argDiags) > 0 {
+				diags = append(diags, argDiags...)
+			}
 
-		// Try to convert our value to the parameter type
-		val, err := convert.Convert(val, param.Type)
-		if err != nil {
-			diags = append(diags, &hcl.Diagnostic{
-				Severity: hcl.DiagError,
-				Summary:  "Invalid function argument",
-				Detail: fmt.Sprintf(
-					"Invalid value for %q parameter: %s.",
-					param.Name, err,
-				),
-				Subject:     argExpr.StartRange().Ptr(),
-				Context:     e.Range().Ptr(),
-				Expression:  argExpr,
-				EvalContext: ctx,
-			})
+			// Try to convert our value to the parameter type
+			var err error
+			val, err = convert.Convert(val, param.Type)
+			if err != nil {
+				diags = append(diags, &hcl.Diagnostic{
+					Severity: hcl.DiagError,
+					Summary:  "Invalid function argument",
+					Detail: fmt.Sprintf(
+						"Invalid value for %q parameter: %s.",
+						param.Name, err,
+					),
+					Subject:     argExpr.StartRange().Ptr(),
+					Context:     e.Range().Ptr(),
+					Expression:  argExpr,
+					EvalContext: ctx,
+				})
+			}
 		}
 
 		argVals[i] = val
@@ -393,22 +420,39 @@ func (e *FunctionCallExpr) Value(ctx *hcl.EvalContext) (cty.Value, hcl.Diagnosti
 			} else {
 				param = varParam
 			}
-			argExpr := e.Args[i]
 
-			// TODO: we should also unpick a PathError here and show the
-			// path to the deep value where the error was detected.
-			diags = append(diags, &hcl.Diagnostic{
-				Severity: hcl.DiagError,
-				Summary:  "Invalid function argument",
-				Detail: fmt.Sprintf(
-					"Invalid value for %q parameter: %s.",
-					param.Name, err,
-				),
-				Subject:     argExpr.StartRange().Ptr(),
-				Context:     e.Range().Ptr(),
-				Expression:  argExpr,
-				EvalContext: ctx,
-			})
+			// this can happen if an argument is (incorrectly) null.
+			if i > len(e.Args)-1 {
+				diags = append(diags, &hcl.Diagnostic{
+					Severity: hcl.DiagError,
+					Summary:  "Invalid function argument",
+					Detail: fmt.Sprintf(
+						"Invalid value for %q parameter: %s.",
+						param.Name, err,
+					),
+					Subject:     args[len(params)].StartRange().Ptr(),
+					Context:     e.Range().Ptr(),
+					Expression:  e,
+					EvalContext: ctx,
+				})
+			} else {
+				argExpr := e.Args[i]
+
+				// TODO: we should also unpick a PathError here and show the
+				// path to the deep value where the error was detected.
+				diags = append(diags, &hcl.Diagnostic{
+					Severity: hcl.DiagError,
+					Summary:  "Invalid function argument",
+					Detail: fmt.Sprintf(
+						"Invalid value for %q parameter: %s.",
+						param.Name, err,
+					),
+					Subject:     argExpr.StartRange().Ptr(),
+					Context:     e.Range().Ptr(),
+					Expression:  argExpr,
+					EvalContext: ctx,
+				})
+			}
 
 		default:
 			diags = append(diags, &hcl.Diagnostic{
@@ -615,8 +659,9 @@ type IndexExpr struct {
 	Collection Expression
 	Key        Expression
 
-	SrcRange  hcl.Range
-	OpenRange hcl.Range
+	SrcRange     hcl.Range
+	OpenRange    hcl.Range
+	BracketRange hcl.Range
 }
 
 func (e *IndexExpr) walkChildNodes(w internalWalkFunc) {
@@ -631,7 +676,7 @@ func (e *IndexExpr) Value(ctx *hcl.EvalContext) (cty.Value, hcl.Diagnostics) {
 	diags = append(diags, collDiags...)
 	diags = append(diags, keyDiags...)
 
-	val, indexDiags := hcl.Index(coll, key, &e.SrcRange)
+	val, indexDiags := hcl.Index(coll, key, &e.BracketRange)
 	setDiagEvalContext(indexDiags, e, ctx)
 	diags = append(diags, indexDiags...)
 	return val, diags

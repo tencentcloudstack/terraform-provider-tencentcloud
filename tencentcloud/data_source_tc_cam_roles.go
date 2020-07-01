@@ -6,12 +6,12 @@ Example Usage
 ```hcl
 # query by role_id
 data "tencentcloud_cam_roles" "foo" {
-  role_id     = tencentcloud_cam_role.foo.id
+  role_id = tencentcloud_cam_role.foo.id
 }
 
 # query by name
 data "tencentcloud_cam_roles" "bar" {
-  name        = "cam-role-test"
+  name = "cam-role-test"
 }
 ```
 */
@@ -104,7 +104,7 @@ func dataSourceTencentCloudCamRolesRead(d *schema.ResourceData, meta interface{}
 	defer logElapsed("data_source.tencentcloud_cam_roles.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]interface{})
 	if v, ok := d.GetOk("role_id"); ok {

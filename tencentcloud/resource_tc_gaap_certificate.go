@@ -100,7 +100,7 @@ func resourceTencentCloudGaapCertificate() *schema.Resource {
 func resourceTencentCloudGaapCertificateCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_certificate.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	certificateType := gaapCertificateStringMap[d.Get("type").(string)]
 
@@ -127,8 +127,10 @@ func resourceTencentCloudGaapCertificateCreate(d *schema.ResourceData, m interfa
 
 func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_certificate.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -178,7 +180,7 @@ func resourceTencentCloudGaapCertificateRead(d *schema.ResourceData, m interface
 func resourceTencentCloudGaapCertificateUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_certificate.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	name := d.Get("name").(string)
@@ -195,7 +197,7 @@ func resourceTencentCloudGaapCertificateUpdate(d *schema.ResourceData, m interfa
 func resourceTencentCloudGaapCertificateDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_certificate.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 

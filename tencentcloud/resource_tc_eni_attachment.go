@@ -109,7 +109,7 @@ func resourceTencentCloudEniAttachment() *schema.Resource {
 func resourceTencentCloudEniAttachmentCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_eni_attachment.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	eniId := d.Get("eni_id").(string)
 	cvmId := d.Get("instance_id").(string)
@@ -127,8 +127,10 @@ func resourceTencentCloudEniAttachmentCreate(d *schema.ResourceData, m interface
 
 func resourceTencentCloudEniAttachmentRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_eni_attachment.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	split := strings.Split(id, "+")
@@ -168,7 +170,7 @@ func resourceTencentCloudEniAttachmentRead(d *schema.ResourceData, m interface{}
 func resourceTencentCloudEniAttachmentDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_eni_attachment.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	split := strings.Split(id, "+")

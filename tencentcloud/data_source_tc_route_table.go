@@ -108,7 +108,7 @@ func dataSourceTencentCloudRouteTableRead(d *schema.ResourceData, meta interface
 	defer logElapsed("data_source.tencentcloud_route_table.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
@@ -128,7 +128,7 @@ func dataSourceTencentCloudRouteTableRead(d *schema.ResourceData, meta interface
 		}
 	}
 
-	var infos, err = service.DescribeRouteTables(ctx, routeTableId, name, "", map[string]string{})
+	var infos, err = service.DescribeRouteTables(ctx, routeTableId, name, "", map[string]string{}, nil, "")
 	if err != nil {
 		return err
 	}

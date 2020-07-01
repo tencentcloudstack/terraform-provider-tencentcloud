@@ -99,7 +99,7 @@ func dataSourceTencentCloudKeyPairs() *schema.Resource {
 func dataSourceTencentCloudKeyPairsRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_key_pairs.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -133,7 +133,7 @@ func dataSourceTencentCloudKeyPairsRead(d *schema.ResourceData, meta interface{}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		keyPairs, errRet = cvmService.DescribeKeyPairByFilter(ctx, keyId, name, projectId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

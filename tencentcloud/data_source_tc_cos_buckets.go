@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cos_buckets" "cos_buckets" {
-	bucket_prefix = "tf-bucket-"
-    result_output_file = "mytestpath"
+  bucket_prefix      = "tf-bucket-"
+  result_output_file = "mytestpath"
 }
 ```
 */
@@ -184,7 +184,7 @@ func dataSourceTencentCloudCosBucketsRead(d *schema.ResourceData, meta interface
 	defer logElapsed("data_source.tencentcloud_cos_buckets.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
 

@@ -30,7 +30,7 @@ func TestAccTencentCloudCfsAccessRule(t *testing.T) {
 
 func testAccCheckCfsAccessRuleDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cfsService := CfsService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 	}
@@ -63,7 +63,7 @@ func testAccCheckCfsAccessRuleDestroy(s *terraform.State) error {
 func testAccCheckCfsAccessRuleExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {

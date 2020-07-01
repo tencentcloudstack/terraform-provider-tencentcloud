@@ -26,7 +26,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
@@ -264,7 +263,7 @@ func dataSourceTencentCloudScfFunctions() *schema.Resource {
 func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("data_source.tencentcloud_scf_functions.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ScfService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -363,9 +362,6 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 					continue
 				}
 				*trigger.TriggerDesc = data.Cron
-
-			case SCF_TRIGGER_TYPE_COS:
-				*trigger.TriggerName = strings.Replace(*trigger.TriggerName, SCF_TRIGGER_COS_NAME_SUFFIX, "", -1)
 			}
 
 			triggers = append(triggers, map[string]interface{}{

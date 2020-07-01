@@ -115,7 +115,7 @@ func TestAccTencentCloudVpcV3WithTags(t *testing.T) {
 func testAccCheckVpcExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
@@ -123,7 +123,7 @@ func testAccCheckVpcExists(r string) resource.TestCheckFunc {
 		}
 
 		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		_, has, err := service.DescribeVpc(ctx, rs.Primary.ID)
+		_, has, err := service.DescribeVpc(ctx, rs.Primary.ID, "", "")
 		if err != nil {
 			return err
 		}
@@ -137,7 +137,7 @@ func testAccCheckVpcExists(r string) resource.TestCheckFunc {
 
 func testAccCheckVpcDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
@@ -145,7 +145,7 @@ func testAccCheckVpcDestroy(s *terraform.State) error {
 			continue
 		}
 		time.Sleep(5 * time.Second)
-		_, has, err := service.DescribeVpc(ctx, rs.Primary.ID)
+		_, has, err := service.DescribeVpc(ctx, rs.Primary.ID, "", "")
 		if err != nil {
 			return err
 		}

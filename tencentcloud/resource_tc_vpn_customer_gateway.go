@@ -9,7 +9,7 @@ resource "tencentcloud_vpn_customer_gateway" "foo" {
   public_ip_address = "1.1.1.1"
 
   tags = {
-	  tag = "test"
+    tag = "test"
   }
 }
 ```
@@ -78,7 +78,7 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 	defer logElapsed("resource.tencentcloud_vpn_customer_gateway.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := vpc.NewCreateCustomerGatewayRequest()
 	request.CustomerGatewayName = helper.String(d.Get("name").(string))
@@ -144,9 +144,10 @@ func resourceTencentCloudVpnCustomerGatewayCreate(d *schema.ResourceData, meta i
 
 func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpn_customer_gateway.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	customerGatewayId := d.Id()
 	request := vpc.NewDescribeCustomerGatewaysRequest()
@@ -203,7 +204,7 @@ func resourceTencentCloudVpnCustomerGatewayUpdate(d *schema.ResourceData, meta i
 	defer logElapsed("resource.tencentcloud_vpn_customer_gateway.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	d.Partial(true)
 	customerGatewayId := d.Id()

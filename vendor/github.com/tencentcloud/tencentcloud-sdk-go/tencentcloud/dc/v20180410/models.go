@@ -220,6 +220,9 @@ type CreateDirectConnectTunnelRequest struct {
 
 	// CustomerAddress，用户侧互联 IP
 	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+
+	// TencentBackupAddress，腾讯侧备用互联 IP
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
 }
 
 func (r *CreateDirectConnectTunnelRequest) ToJsonString() string {
@@ -556,17 +559,36 @@ type DirectConnect struct {
 	// 报障联系电话。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitempty" name:"FaultReportContactNumber"`
+
+	// 标签键值对
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSet []*Tag `json:"TagSet,omitempty" name:"TagSet" list`
+
+	// 物理专线的接入点类型。
+	AccessPointType *string `json:"AccessPointType,omitempty" name:"AccessPointType"`
+
+	// IDC所在城市
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IdcCity *string `json:"IdcCity,omitempty" name:"IdcCity"`
+
+	// 计费状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ChargeState *string `json:"ChargeState,omitempty" name:"ChargeState"`
+
+	// 物理专线开通时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 }
 
 type DirectConnectTunnel struct {
 
-	// 专线通道ID
+	// 专用通道ID
 	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
 
 	// 物理专线ID
 	DirectConnectId *string `json:"DirectConnectId,omitempty" name:"DirectConnectId"`
 
-	// 专线通道状态
+	// 专用通道状态
 	// AVAILABLE:就绪或者已连接
 	// PENDING:申请中
 	// ALLOCATING:配置中
@@ -581,14 +603,14 @@ type DirectConnectTunnel struct {
 	// 物理专线的拥有者，开发商账号 ID
 	DirectConnectOwnerAccount *string `json:"DirectConnectOwnerAccount,omitempty" name:"DirectConnectOwnerAccount"`
 
-	// 专线通道的拥有者，开发商账号 ID
+	// 专用通道的拥有者，开发商账号 ID
 	OwnerAccount *string `json:"OwnerAccount,omitempty" name:"OwnerAccount"`
 
 	// 网络类型，分别为VPC、BMVPC、CCN
 	//  VPC：私有网络 ，BMVPC：黑石网络，CCN：云联网
 	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
 
-	// VPC地域
+	// VPC地域对应的网络名，如ap-guangzhou
 	NetworkRegion *string `json:"NetworkRegion,omitempty" name:"NetworkRegion"`
 
 	// 私有网络统一 ID 或者黑石网络统一 ID
@@ -606,7 +628,7 @@ type DirectConnectTunnel struct {
 	// 用户侧网段地址
 	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitempty" name:"RouteFilterPrefixes" list`
 
-	// 专线通道的Vlan
+	// 专用通道的Vlan
 	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
 
 	// TencentAddress，腾讯侧互联 IP
@@ -615,14 +637,53 @@ type DirectConnectTunnel struct {
 	// CustomerAddress，用户侧互联 IP
 	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
 
-	// 专线通道名称
+	// 专用通道名称
 	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitempty" name:"DirectConnectTunnelName"`
 
-	// 专线通道创建时间
+	// 专用通道创建时间
 	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
 
-	// 专线通道带宽值
+	// 专用通道带宽值
 	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+
+	// 专用通道标签值
+	TagSet []*Tag `json:"TagSet,omitempty" name:"TagSet" list`
+
+	// 关联的网络自定义探测ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NetDetectId *string `json:"NetDetectId,omitempty" name:"NetDetectId"`
+
+	// BGP community开关
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitempty" name:"EnableBGPCommunity"`
+
+	// 是否为Nat通道
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NatType *int64 `json:"NatType,omitempty" name:"NatType"`
+
+	// VPC地域简码，如gz、cd
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcRegion *string `json:"VpcRegion,omitempty" name:"VpcRegion"`
+
+	// 是否开启BFD
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BfdEnable *int64 `json:"BfdEnable,omitempty" name:"BfdEnable"`
+
+	// 专用通道接入点类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AccessPointType *string `json:"AccessPointType,omitempty" name:"AccessPointType"`
+
+	// 专线网关名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DirectConnectGatewayName *string `json:"DirectConnectGatewayName,omitempty" name:"DirectConnectGatewayName"`
+
+	// VPC名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcName *string `json:"VpcName,omitempty" name:"VpcName"`
+
+	// TencentBackupAddress，腾讯侧备用互联 IP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
 }
 
 type Filter struct {
@@ -721,6 +782,9 @@ type ModifyDirectConnectTunnelAttributeRequest struct {
 
 	// 专用通道带宽值，单位为M。
 	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+
+	// 腾讯侧备用互联IP
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
 }
 
 func (r *ModifyDirectConnectTunnelAttributeRequest) ToJsonString() string {
@@ -788,4 +852,15 @@ type RouteFilterPrefix struct {
 
 	// 用户侧网段地址
 	Cidr *string `json:"Cidr,omitempty" name:"Cidr"`
+}
+
+type Tag struct {
+
+	// 标签键
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// 标签值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitempty" name:"Value"`
 }

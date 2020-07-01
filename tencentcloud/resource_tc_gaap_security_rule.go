@@ -114,7 +114,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 func resourceTencentCloudGaapSecurityRuleCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_security_rule.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	policyId := d.Get("policy_id").(string)
 	cidrIp := d.Get("cidr_ip").(string)
@@ -142,7 +142,7 @@ func resourceTencentCloudGaapSecurityRuleCreate(d *schema.ResourceData, m interf
 func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_security_rule.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -171,7 +171,7 @@ func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interfac
 func resourceTencentCloudGaapSecurityRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_security_rule.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	policyId := d.Get("policy_id").(string)
@@ -193,7 +193,7 @@ func resourceTencentCloudGaapSecurityRuleUpdate(d *schema.ResourceData, m interf
 func resourceTencentCloudGaapSecurityRuleDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_security_rule.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	policyId := d.Get("policy_id").(string)

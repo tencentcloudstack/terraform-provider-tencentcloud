@@ -163,7 +163,7 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	defer clbActionMu.Unlock()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	attachmentId := d.Id()
 
@@ -176,7 +176,6 @@ func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta 
 	listenerId := items[1]
 	clbId := items[2]
 
-	//firstly see if listener and location exists
 	request := clb.NewDeregisterTargetsRequest()
 	request.ListenerId = &listenerId
 	request.LoadBalancerId = helper.String(clbId)
@@ -208,6 +207,7 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_clb_attachment.remove")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	attachmentId := d.Id()
 	items := strings.Split(attachmentId, "#")
 	if len(items) < 3 {
@@ -224,31 +224,23 @@ func resourceTencentCloudClbServerAttachementRemove(d *schema.ResourceData, meta
 		request.LocationId = helper.String(locationId)
 	}
 
-	for _, inst_ := range remove {
-		inst := inst_.(map[string]interface{})
-		request.Targets = append(request.Targets, clbNewTarget(inst["instance_id"], inst["port"], inst["weight"]))
+	clbService := ClbService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		requestId := ""
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().DeregisterTargets(request)
+		e := clbService.DeleteAttachmentById(ctx, clbId, listenerId, locationId, remove)
 		if e != nil {
 			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-			requestId = *response.Response.RequestId
-			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-			if retryErr != nil {
-				return resource.NonRetryableError(errors.WithStack(retryErr))
-			}
 		}
+
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s remove CLB attachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s reason[%+v]", logId, err)
 		return err
 	}
+
 	return nil
 }
 
@@ -329,9 +321,10 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 
 func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), "#")
 	locationId := items[0]
@@ -365,17 +358,40 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	_ = d.Set("listener_id", listenerId)
 	_ = d.Set("protocol_type", instance.Protocol)
 
+	var onlineTargets []*clb.Backend
 	if *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTP || *instance.Protocol == CLB_LISTENER_PROTOCOL_HTTPS {
 		_ = d.Set("rule_id", locationId)
 		if len(instance.Rules) > 0 {
 			for _, loc := range instance.Rules {
 				if locationId == "" || locationId == *loc.LocationId {
-					_ = d.Set("targets", flattenBackendList(loc.Targets))
+					onlineTargets = loc.Targets
 				}
 			}
 		}
 	} else if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
-		_ = d.Set("targets", flattenBackendList(instance.Targets))
+		onlineTargets = instance.Targets
+	}
+
+	//this may cause problems when there are members in two dimensions array
+	//need to read state of the tfstate file to clear the relationships
+	//in this situation, import action is not supported
+	stateTargets := d.Get("targets").(*schema.Set)
+	if stateTargets.Len() != 0 {
+		//the old state exist
+		//create a new attachment with state
+		exactTargets := make([]*clb.Backend, 0)
+		for _, v := range onlineTargets {
+			if stateTargets.Contains(map[string]interface{}{
+				"weight":      int(*v.Weight),
+				"port":        int(*v.Port),
+				"instance_id": *v.InstanceId,
+			}) {
+				exactTargets = append(exactTargets, v)
+			}
+		}
+		_ = d.Set("targets", flattenBackendList(exactTargets))
+	} else {
+		_ = d.Set("targets", flattenBackendList(onlineTargets))
 	}
 
 	return nil

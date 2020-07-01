@@ -4,10 +4,10 @@ Provides a resource to create a CCN instance.
 Example Usage
 
 ```hcl
-resource "tencentcloud_ccn" "main"{
-	name ="ci-temp-test-ccn"
-	description="ci-temp-test-ccn-des"
-	qos ="AG"
+resource "tencentcloud_ccn" "main" {
+  name        = "ci-temp-test-ccn"
+  description = "ci-temp-test-ccn-des"
+  qos         = "AG"
 }
 ```
 
@@ -15,7 +15,7 @@ Import
 
 Ccn instance can be imported, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_ccn.test ccn-id
 ```
 */
@@ -85,7 +85,7 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_ccn.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -108,9 +108,10 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 
 func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ccn.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -143,7 +144,7 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_ccn.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -179,7 +180,7 @@ func resourceTencentCloudCcnDelete(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_ccn.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {

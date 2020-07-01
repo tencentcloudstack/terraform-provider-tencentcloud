@@ -80,7 +80,7 @@ func resourceTencentCloudSecurityGroupLiteRule() *schema.Resource {
 func resourceTencentCloudSecurityGroupLiteRuleCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_security_group_lite_rule.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
@@ -124,8 +124,10 @@ func resourceTencentCloudSecurityGroupLiteRuleCreate(d *schema.ResourceData, m i
 
 func resourceTencentCloudSecurityGroupLiteRuleRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_security_group_lite_rule.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -161,7 +163,7 @@ func resourceTencentCloudSecurityGroupLiteRuleRead(d *schema.ResourceData, m int
 func resourceTencentCloudSecurityGroupLiteRuleUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_security_group_lite_rule.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -204,7 +206,7 @@ func resourceTencentCloudSecurityGroupLiteRuleUpdate(d *schema.ResourceData, m i
 func resourceTencentCloudSecurityGroupLiteRuleDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_security_group_lite_rule.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 

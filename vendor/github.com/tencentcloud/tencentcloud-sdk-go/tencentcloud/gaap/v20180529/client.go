@@ -169,6 +169,31 @@ func (c *Client) CloseProxies(request *CloseProxiesRequest) (response *CloseProx
     return
 }
 
+func NewCloseProxyGroupRequest() (request *CloseProxyGroupRequest) {
+    request = &CloseProxyGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("gaap", APIVersion, "CloseProxyGroup")
+    return
+}
+
+func NewCloseProxyGroupResponse() (response *CloseProxyGroupResponse) {
+    response = &CloseProxyGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（CloseProxyGroup）用于关闭通道组。通道组关闭后，不再产生流量，但每天仍然收取通道基础配置费用。
+func (c *Client) CloseProxyGroup(request *CloseProxyGroupRequest) (response *CloseProxyGroupResponse, err error) {
+    if request == nil {
+        request = NewCloseProxyGroupRequest()
+    }
+    response = NewCloseProxyGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCloseSecurityPolicyRequest() (request *CloseSecurityPolicyRequest) {
     request = &CloseSecurityPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -891,6 +916,31 @@ func (c *Client) DescribeDomainErrorPageInfo(request *DescribeDomainErrorPageInf
         request = NewDescribeDomainErrorPageInfoRequest()
     }
     response = NewDescribeDomainErrorPageInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDomainErrorPageInfoByIdsRequest() (request *DescribeDomainErrorPageInfoByIdsRequest) {
+    request = &DescribeDomainErrorPageInfoByIdsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("gaap", APIVersion, "DescribeDomainErrorPageInfoByIds")
+    return
+}
+
+func NewDescribeDomainErrorPageInfoByIdsResponse() (response *DescribeDomainErrorPageInfoByIdsResponse) {
+    response = &DescribeDomainErrorPageInfoByIdsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 根据定制错误ID查询错误响应
+func (c *Client) DescribeDomainErrorPageInfoByIds(request *DescribeDomainErrorPageInfoByIdsRequest) (response *DescribeDomainErrorPageInfoByIdsResponse, err error) {
+    if request == nil {
+        request = NewDescribeDomainErrorPageInfoByIdsRequest()
+    }
+    response = NewDescribeDomainErrorPageInfoByIdsResponse()
     err = c.Send(request, response)
     return
 }
@@ -1992,6 +2042,31 @@ func (c *Client) OpenProxies(request *OpenProxiesRequest) (response *OpenProxies
         request = NewOpenProxiesRequest()
     }
     response = NewOpenProxiesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewOpenProxyGroupRequest() (request *OpenProxyGroupRequest) {
+    request = &OpenProxyGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("gaap", APIVersion, "OpenProxyGroup")
+    return
+}
+
+func NewOpenProxyGroupResponse() (response *OpenProxyGroupResponse) {
+    response = &OpenProxyGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 该接口（OpenProxyGroup）用于开启一条通道组中的所有通道
+func (c *Client) OpenProxyGroup(request *OpenProxyGroupRequest) (response *OpenProxyGroupResponse, err error) {
+    if request == nil {
+        request = NewOpenProxyGroupRequest()
+    }
+    response = NewOpenProxyGroupResponse()
     err = c.Send(request, response)
     return
 }

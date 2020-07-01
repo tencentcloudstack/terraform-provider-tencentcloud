@@ -28,11 +28,12 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
@@ -139,13 +140,38 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_mysql_readonly_instance.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	// the mysql master instance must have a backup before creating a read-only instance
 	masterInstanceId := d.Get("master_instance_id").(string)
+
+	monitor := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+
 	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		can, err := monitor.CheckCanCreateMysqlROInstance(ctx, masterInstanceId)
+
+		if err != nil {
+			sdkErr, ok := err.(*sdkError.TencentCloudSDKError)
+			if ok {
+				if sdkErr.Code == "InvalidParameterValue" && strings.Contains(sdkErr.Message, "No objects found") {
+					return nil
+				}
+			}
+			return resource.NonRetryableError(err)
+		}
+		if can {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("waiting master report RealCapacity to monitor too long"))
+	})
+
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		backups, err := mysqlService.DescribeBackupsByMysqlId(ctx, masterInstanceId, 10)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -160,7 +186,7 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 	if payType == MysqlPayByMonth {
 		err := mysqlCreateReadonlyInstancePayByMonth(ctx, d, meta)
 		if err != nil {
@@ -206,9 +232,10 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 
 func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_readonly_instance.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, e := tencentMsyqlBasicInfoRead(ctx, d, meta, false)
@@ -236,16 +263,11 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_mysql_readonly_instance.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	payType := d.Get("pay_type").(int)
+	payType := getPayType(d).(int)
 
 	d.Partial(true)
-
-	err := mysqlAllInstanceRoleUpdate(ctx, d, meta)
-	if err != nil {
-		return err
-	}
 
 	if payType == MysqlPayByMonth {
 		if d.HasChange("auto_renew_flag") {
@@ -257,6 +279,10 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 			d.SetPartial("auto_renew_flag")
 		}
 	}
+	err := mysqlAllInstanceRoleUpdate(ctx, d, meta)
+	if err != nil {
+		return err
+	}
 
 	d.Partial(false)
 
@@ -267,20 +293,31 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_mysql_readonly_instance.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
+		if err != nil {
+			//for the pay order wait
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
+
 	var hasDeleted = false
+	payType := getPayType(d).(int)
+	forceDelete := d.Get("force_delete").(bool)
 
 	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, d.Id())
 
 		if err != nil {
-			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+			if _, ok := err.(*sdkError.TencentCloudSDKError); !ok {
 				return resource.RetryableError(err)
 			} else {
 				return resource.NonRetryableError(err)
@@ -306,11 +343,13 @@ func resourceTencentCloudMysqlReadonlyInstanceDelete(d *schema.ResourceData, met
 	if err != nil {
 		return err
 	}
+	if payType == MysqlPayByMonth && !forceDelete {
+		return nil
+	}
 
 	err = mysqlService.OfflineIsolatedInstances(ctx, d.Id())
 	if err == nil {
 		log.Printf("[WARN]this mysql is readonly instance, it is released asynchronously, and the bound resource is not now fully released now\n")
 	}
-
 	return err
 }

@@ -4,18 +4,18 @@ Use this data source to query detailed information of CCN instances.
 Example Usage
 
 ```hcl
-resource "tencentcloud_ccn" "main"{
-	name ="ci-temp-test-ccn"
-	description="ci-temp-test-ccn-des"
-	qos ="AG"
+resource "tencentcloud_ccn" "main" {
+  name        = "ci-temp-test-ccn"
+  description = "ci-temp-test-ccn-des"
+  qos         = "AG"
 }
 
-data "tencentcloud_ccn_instances" "id_instances"{
-	ccn_id = tencentcloud_ccn.main.id
+data "tencentcloud_ccn_instances" "id_instances" {
+  ccn_id = tencentcloud_ccn.main.id
 }
 
-data "tencentcloud_ccn_instances" "name_instances"{
-	name = tencentcloud_ccn.main.name
+data "tencentcloud_ccn_instances" "name_instances" {
+  name = tencentcloud_ccn.main.name
 }
 ```
 */
@@ -93,7 +93,7 @@ func dataSourceTencentCloudCcnInstances() *schema.Resource {
 									"instance_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Type of attached instance network, and available values include VPC, DIRECTCONNECT and BMVPC.",
+										Description: "Type of attached instance network, and available values include VPC, DIRECTCONNECT, BMVPC and VPNGW.",
 									},
 									"instance_region": {
 										Type:        schema.TypeString,
@@ -142,7 +142,7 @@ func dataSourceTencentCloudCcnInstancesRead(d *schema.ResourceData, meta interfa
 	defer logElapsed("data_source.tencentcloud_ccn_instances.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

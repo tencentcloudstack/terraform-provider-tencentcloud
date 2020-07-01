@@ -1,33 +1,33 @@
 /*
-Use this data source to query tcaplus tables
+Use this data source to query TcaplusDB tables.
 
 Example Usage
 
 ```hcl
 data "tencentcloud_tcaplus_tables" "null" {
-  app_id = "19162256624"
+  cluster_id = "19162256624"
 }
 
-data "tencentcloud_tcaplus_tables" "zone" {
-  app_id  = "19162256624"
-  zone_id = "19162256624:3"
+data "tencentcloud_tcaplus_tables" "tablegroup" {
+  cluster_id    = "19162256624"
+  tablegroup_id = "19162256624:3"
 }
 
 data "tencentcloud_tcaplus_tables" "name" {
-  app_id     = "19162256624"
-  zone_id    = "19162256624:3"
-  table_name = "guagua"
+  cluster_id    = "19162256624"
+  tablegroup_id = "19162256624:3"
+  table_name    = "guagua"
 }
 
 data "tencentcloud_tcaplus_tables" "id" {
-  app_id   = "19162256624"
-  table_id =  "tcaplus-faa65eb7"
+  cluster_id = "19162256624"
+  table_id   = "tcaplus-faa65eb7"
 }
 data "tencentcloud_tcaplus_tables" "all" {
-  app_id     = "19162256624"
-  zone_id    = "19162256624:3"
-  table_id   = "tcaplus-faa65eb7"
-  table_name = "guagua"
+  cluster_id    = "19162256624"
+  tablegroup_id = "19162256624:3"
+  table_id      = "tcaplus-faa65eb7"
+  table_name    = "guagua"
 }
 ```
 */
@@ -46,15 +46,15 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTcaplusTablesRead,
 		Schema: map[string]*schema.Schema{
-			"app_id": {
+			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Id of the tcapplus application to be query.",
+				Description: "Id of the TcaplusDB cluster to be query.",
 			},
-			"zone_id": {
+			"tablegroup_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Zone id to be query.",
+				Description: "Id of the table group to be query.",
 			},
 			"table_id": {
 				Type:        schema.TypeString,
@@ -69,83 +69,83 @@ func dataSourceTencentCloudTcaplusTables() *schema.Resource {
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Used to save results.",
+				Description: "File for saving results.",
 			},
 			"list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "A list of tcaplus zones. Each element contains the following attributes.",
+				Description: "A list of TcaplusDB tables. Each element contains the following attributes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"zone_id": {
+						"tablegroup_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Zone of this table belongs.",
+							Description: "Table group id of the TcaplusDB table.",
 						},
 						"table_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Id of this table.",
+							Description: "Id of the TcaplusDB table.",
 						},
 						"table_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of this table.",
+							Description: "Name of  the TcaplusDB table.",
 						},
 						"table_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of this table.",
+							Description: "Type of the TcaplusDB table.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Description of this table.",
+							Description: "Description of the TcaplusDB table.",
 						},
 						"idl_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Idl file id for this table.",
+							Description: "IDL file id of the TcaplusDB table.",
 						},
 						"table_idl_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of this table idl.",
+							Description: "IDL type of  the TcaplusDB table.",
 						},
-						"reserved_read_qps": {
+						"reserved_read_cu": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Table reserved read QPS.",
+							Description: "Reserved read capacity units of the TcaplusDB table.",
 						},
-						"reserved_write_qps": {
+						"reserved_write_cu": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Table reserved write QPS.",
+							Description: "Reserved write capacity units of the TcaplusDB table.",
 						},
 						"reserved_volume": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Table reserved capacity(GB).",
+							Description: "Reserved storage capacity of the TcaplusDB table (unit:GB).",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the tcapplus table.",
+							Description: "Create time of the TcaplusDB table.",
 						},
 						"error": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Show if this table  create error.",
+							Description: "Error message for creating TcaplusDB table.",
 						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Status of this table.",
+							Description: "Status of the TcaplusDB table.",
 						},
 						"table_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Size of this table.",
+							Description: "Size of the TcaplusDB table.",
 						},
 					},
 				},
@@ -158,28 +158,28 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 	defer logElapsed("data_source.tencentcloud_tcaplus_tables.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TcaplusService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	applicationId := d.Get("app_id").(string)
-	zoneId := d.Get("zone_id").(string)
+	clusterId := d.Get("cluster_id").(string)
+	groupId := d.Get("tablegroup_id").(string)
 	tableId := d.Get("table_id").(string)
 	tableName := d.Get("table_name").(string)
 
-	apps, err := service.DescribeTables(ctx, applicationId, zoneId, tableId, tableName)
+	tables, err := service.DescribeTables(ctx, clusterId, groupId, tableId, tableName)
 	if err != nil {
-		apps, err = service.DescribeTables(ctx, applicationId, zoneId, tableId, tableName)
+		tables, err = service.DescribeTables(ctx, clusterId, groupId, tableId, tableName)
 	}
 	if err != nil {
 		return err
 	}
 
-	list := make([]map[string]interface{}, 0, len(apps))
+	list := make([]map[string]interface{}, 0, len(tables))
 
-	for _, tableInfo := range apps {
+	for _, tableInfo := range tables {
 
 		listItem := make(map[string]interface{})
 
@@ -187,7 +187,7 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 			idlFile := tableInfo.IdlFiles[0]
 
 			var tcaplusIdlId TcaplusIdlId
-			tcaplusIdlId.ApplicationId = applicationId
+			tcaplusIdlId.ClusterId = clusterId
 			tcaplusIdlId.FileName = *idlFile.FileName
 			tcaplusIdlId.FileType = *idlFile.FileType
 
@@ -207,8 +207,8 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 		} else {
 			listItem["error"] = ""
 		}
-		if tableInfo.LogicZoneId != nil {
-			listItem["zone_id"] = fmt.Sprintf("%s:%s", applicationId, *tableInfo.LogicZoneId)
+		if tableInfo.TableGroupId != nil {
+			listItem["tablegroup_id"] = fmt.Sprintf("%s:%s", clusterId, *tableInfo.TableGroupId)
 		}
 		if tableInfo.TableInstanceId != nil {
 			listItem["table_id"] = *tableInfo.TableInstanceId
@@ -226,10 +226,10 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 			listItem["table_idl_type"] = *tableInfo.TableIdlType
 		}
 		if tableInfo.ReservedReadQps != nil {
-			listItem["reserved_read_qps"] = *tableInfo.ReservedReadQps
+			listItem["reserved_read_cu"] = *tableInfo.ReservedReadQps
 		}
 		if tableInfo.ReservedWriteQps != nil {
-			listItem["reserved_write_qps"] = *tableInfo.ReservedWriteQps
+			listItem["reserved_write_cu"] = *tableInfo.ReservedWriteQps
 		}
 		if tableInfo.ReservedVolume != nil {
 			listItem["reserved_volume"] = *tableInfo.ReservedVolume
@@ -246,7 +246,7 @@ func dataSourceTencentCloudTcaplusTablesRead(d *schema.ResourceData, meta interf
 		list = append(list, listItem)
 	}
 
-	d.SetId("table." + applicationId + "." + zoneId + "." + tableId + "." + tableName)
+	d.SetId("table." + clusterId + "." + groupId + "." + tableId + "." + tableName)
 	if e := d.Set("list", list); e != nil {
 		log.Printf("[CRITAL]%s provider set list fail, reason:%s\n", logId, e.Error())
 		return e

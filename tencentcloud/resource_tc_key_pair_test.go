@@ -35,7 +35,7 @@ func TestAccTencentCloudKeyPair(t *testing.T) {
 func testAccCheckKeyPairExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -69,7 +69,7 @@ func testAccCheckKeyPairExists(n string) resource.TestCheckFunc {
 
 func testAccCheckKeyPairDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 	}

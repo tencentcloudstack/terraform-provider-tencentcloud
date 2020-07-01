@@ -30,7 +30,7 @@ The following arguments are supported:
 
 * `handler` - (Required) Handler of the SCF function. The format of name is `<filename>.<method_name>`, and it supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
 * `name` - (Required, ForceNew) Name of the SCF function. Name supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
-* `runtime` - (Required) Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.
+* `runtime` - (Required) Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.
 * `cls_logset_id` - (Optional) cls logset id of the SCF function.
 * `cls_topic_id` - (Optional) cls topic id of the SCF function.
 * `cos_bucket_name` - (Optional) Cos bucket name of the SCF function, such as `cos-1234567890`, conflict with `zip_file`.
@@ -44,21 +44,23 @@ The following arguments are supported:
 * `role` - (Optional) Role of the SCF function.
 * `subnet_id` - (Optional) Subnet id of the SCF function.
 * `tags` - (Optional) Tags of the SCF function.
-* `timeout` - (Optional) Timeout of the SCF function, unit is second. Default `3`. Available value is 1-300.
+* `timeout` - (Optional) Timeout of the SCF function, unit is second. Default `3`. Available value is 1-900.
 * `triggers` - (Optional) Trigger list of the SCF function, note that if you modify the trigger list, all existing triggers will be deleted, and then create triggers in the new list. Each element contains the following attributes:
 * `vpc_id` - (Optional) VPC id of the SCF function.
-* `zip_file` - (Optional) Zip file of the SCF function, content is encoded by base64, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.
+* `zip_file` - (Optional) Zip file of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`.
 
 The `triggers` object supports the following:
 
-* `name` - (Required) name of the SCF function trigger, if `type` is `ckafka`, the format of name must be `<ckafkaInstanceId>-<topicId>`; if `type` is `cos`, the name is cos bucket id, other In any case, it can be combined arbitrarily. It can only contain English letters, numbers, connectors and underscores. The maximum length is 100.
+* `name` - (Required) Name of the SCF function trigger, if `type` is `ckafka`, the format of name must be `<ckafkaInstanceId>-<topicId>`; if `type` is `cos`, the name is cos bucket id, other In any case, it can be combined arbitrarily. It can only contain English letters, numbers, connectors and underscores. The maximum length is 100.
 * `trigger_desc` - (Required) TriggerDesc of the SCF function trigger, parameter format of `timer` is linux cron expression; parameter of `cos` type is json string `{"event":"cos:ObjectCreated:*","filter":{"Prefix":"","Suffix":""}}`, where `event` is the cos event trigger, `Prefix` is the corresponding file prefix filter condition, `Suffix` is the suffix filter condition, if not need filter condition can not pass; `cmq` type does not pass this parameter; `ckafka` type parameter format is json string `{"maxMsgNum":"1","offset":"latest"}`; `apigw` type parameter format is json string `{"api":{"authRequired":"FALSE","requestConfig":{"method":"ANY"},"isIntegratedResponse":"FALSE"},"service":{"serviceId":"service-dqzh68sg"},"release":{"environmentName":"test"}}`.
 * `type` - (Required) Type of the SCF function trigger, support `cos`, `cmq`, `timer`, `ckafka`, `apigw`.
+* `cos_region` - (Optional) Region of cos bucket. if `type` is `cos`, `cos_region` is required.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `code_error` - SCF function code error message.
 * `code_result` - SCF function code is correct.
 * `code_size` - SCF function code size, unit is M.

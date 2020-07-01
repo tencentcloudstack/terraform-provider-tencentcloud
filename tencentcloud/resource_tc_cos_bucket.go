@@ -50,12 +50,12 @@ resource "tencentcloud_cos_bucket" "mycos" {
   acl    = "public-read-write"
 
   lifecycle_rules {
-	filter_prefix = "path1/"
+    filter_prefix = "path1/"
 
     transition {
       date          = "2019-06-01"
       storage_class = "STANDARD_IA"
-	}
+    }
 
     expiration {
       days = 90
@@ -131,6 +131,17 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 					s3.ObjectCannedACLPublicReadWrite,
 				}),
 				Description: "The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.",
+			},
+			"encryption_algorithm": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The server-side encryption algorithm to use. Valid value is `AES256`.",
+			},
+			"versioning_enable": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Enable bucket versioning.",
 			},
 			"cors_rules": {
 				Type:        schema.TypeList,
@@ -268,7 +279,7 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_cos_bucket.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Get("bucket").(string)
 	acl := d.Get("acl").(string)
@@ -293,9 +304,10 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 
 func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cos_bucket.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Id()
 	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -343,13 +355,32 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("setting website error: %v", err)
 	}
 
+	// read the encryption algorithm
+	encryption, err := cosService.GetBucketEncryption(ctx, bucket)
+	if err != nil {
+		return err
+	}
+	if err = d.Set("encryption_algorithm", encryption); err != nil {
+		return fmt.Errorf("setting encryption error: %v", err)
+	}
+
+	// read the versioning
+	versioning, err := cosService.GetBucketVersioning(ctx, bucket)
+	if err != nil {
+		return err
+	}
+	if err = d.Set("versioning_enable", versioning); err != nil {
+		return fmt.Errorf("setting versioning_enable error: %v", err)
+	}
+
 	// read the tags
 	tags, err := cosService.GetBucketTags(ctx, bucket)
 	if err != nil {
 		return fmt.Errorf("get tags failed: %v", err)
 	}
-
-	_ = d.Set("tags", tags)
+	if len(tags) > 0 {
+		_ = d.Set("tags", tags)
+	}
 
 	return nil
 }
@@ -358,7 +389,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_cos_bucket.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn.UseCosClient()
 
@@ -396,6 +427,22 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		d.SetPartial("website")
 	}
 
+	if d.HasChange("encryption_algorithm") {
+		err := resourceTencentCloudCosBucketEncryptionUpdate(ctx, client, d)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("encryption_algorithm")
+	}
+
+	if d.HasChange("versioning_enable") {
+		err := resourceTencentCloudCosBucketVersioningUpdate(ctx, client, d)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("versioning_enable")
+	}
+
 	if d.HasChange("tags") {
 		bucket := d.Id()
 
@@ -420,7 +467,7 @@ func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{
 	defer logElapsed("resource.tencentcloud_cos_bucket.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	bucket := d.Id()
 	cosService := CosService{
@@ -434,6 +481,80 @@ func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{
 	// wait for update cache
 	// if not, head bucket may be successful
 	time.Sleep(3 * time.Second)
+
+	return nil
+}
+
+func resourceTencentCloudCosBucketEncryptionUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+	logId := getLogId(ctx)
+
+	bucket := d.Get("bucket").(string)
+	encryption := d.Get("encryption_algorithm").(string)
+	if encryption == "" {
+		request := s3.DeleteBucketEncryptionInput{
+			Bucket: aws.String(bucket),
+		}
+		response, err := client.DeleteBucketEncryption(&request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete bucket encryption", request.String(), err.Error())
+			return fmt.Errorf("cos delete bucket error: %s, bucket: %s", err.Error(), bucket)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, "delete bucket encryption", request.String(), response.String())
+
+		return nil
+	}
+
+	request := s3.PutBucketEncryptionInput{
+		Bucket: aws.String(bucket),
+	}
+	request.ServerSideEncryptionConfiguration = &s3.ServerSideEncryptionConfiguration{}
+	rules := make([]*s3.ServerSideEncryptionRule, 0)
+	defaultRule := &s3.ServerSideEncryptionByDefault{
+		SSEAlgorithm: aws.String(encryption),
+	}
+	rule := &s3.ServerSideEncryptionRule{
+		ApplyServerSideEncryptionByDefault: defaultRule,
+	}
+	rules = append(rules, rule)
+	request.ServerSideEncryptionConfiguration.Rules = rules
+
+	response, err := client.PutBucketEncryption(&request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "put bucket encryption", request.String(), err.Error())
+		return fmt.Errorf("cos put bucket encryption error: %s, bucket: %s", err.Error(), bucket)
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "put bucket encryption", request.String(), response.String())
+
+	return nil
+}
+
+func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+	logId := getLogId(ctx)
+
+	bucket := d.Get("bucket").(string)
+	versioning := d.Get("versioning_enable").(bool)
+	status := "Suspended"
+	if versioning {
+		status = "Enabled"
+	}
+	request := s3.PutBucketVersioningInput{
+		Bucket: aws.String(bucket),
+		VersioningConfiguration: &s3.VersioningConfiguration{
+			Status: aws.String(status),
+		},
+	}
+	response, err := client.PutBucketVersioning(&request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "put bucket encryption", request.String(), err.Error())
+		return fmt.Errorf("cos put bucket encryption error: %s, bucket: %s", err.Error(), bucket)
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "put bucket encryption", request.String(), response.String())
 
 	return nil
 }

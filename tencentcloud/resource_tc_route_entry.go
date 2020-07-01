@@ -126,7 +126,7 @@ func resourceTencentCloudRouteEntryCreate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_route_entry.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	vpcId := d.Get("vpc_id").(string)
@@ -167,9 +167,10 @@ func resourceTencentCloudRouteEntryCreate(d *schema.ResourceData, meta interface
 
 func resourceTencentCloudRouteEntryRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_route_entry.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	route, ok := routeIdDecode(d.Id())
@@ -228,7 +229,7 @@ func resourceTencentCloudRouteEntryDelete(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_route_entry.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	route, ok := routeIdDecode(d.Id())

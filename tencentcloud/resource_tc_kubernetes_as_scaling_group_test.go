@@ -26,6 +26,8 @@ func TestAccTencentCloudTkeAsResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeClusterAsResourceKey, "cluster_id"),
 					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "auto_scaling_group.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "auto_scaling_config.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "labels.test1", "test1"),
+					resource.TestCheckResourceAttr(testTkeClusterAsResourceKey, "labels.test2", "test2"),
 				),
 			},
 		},
@@ -34,7 +36,7 @@ func TestAccTencentCloudTkeAsResource(t *testing.T) {
 
 func testAccCheckTkeAsDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := AsService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -68,7 +70,7 @@ func testAccCheckTkeAsDestroy(s *terraform.State) error {
 func testAccCheckTkeAsExists(s *terraform.State) error {
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := AsService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -101,8 +103,7 @@ func testAccCheckTkeAsExists(s *terraform.State) error {
 }
 
 func testAccTkeAsCluster() string {
-	return fmt.Sprintf(`
-
+	return `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -117,7 +118,7 @@ data "tencentcloud_vpc_subnets" "vpc" {
 }
 
 variable "default_instance_type" {
-  default = "SN3ne.8XLARGE64"
+  default = "S1.SMALL1"
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
@@ -200,8 +201,12 @@ resource "tencentcloud_kubernetes_as_scaling_group" "as_test" {
     }
 
   }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
 }
 
-`,
-	)
+`
 }

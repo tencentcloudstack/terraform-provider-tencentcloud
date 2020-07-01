@@ -10,6 +10,8 @@ func Uint(i uint) *uint { return &i }
 
 func Int64(i int64) *int64 { return &i }
 
+func Float64(i float64) *float64 { return &i }
+
 func Uint64(i uint64) *uint64 { return &i }
 
 func IntInt64(i int) *int64 {
@@ -53,6 +55,22 @@ func InterfacesStrings(configured []interface{}) []string {
 	vs := make([]string, 0, len(configured))
 	for _, v := range configured {
 		vs = append(vs, v.(string))
+	}
+	return vs
+}
+
+func InterfacesStringsPoint(configured []interface{}) []*string {
+	vs := make([]*string, 0, len(configured))
+	for _, v := range configured {
+		vs = append(vs, String(v.(string)))
+	}
+	return vs
+}
+
+func InterfacesIntInt64Point(configured []interface{}) []*int64 {
+	vs := make([]*int64, 0, len(configured))
+	for _, v := range configured {
+		vs = append(vs, IntInt64(v.(int)))
 	}
 	return vs
 }

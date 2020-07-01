@@ -47,6 +47,46 @@ type Account struct {
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 }
 
+type AssociateSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb 等。
+	Product *string `json:"Product,omitempty" name:"Product"`
+
+	// 要绑定的安全组ID，类似sg-efil73jd。
+	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
+
+	// 被绑定的实例ID，类似ins-lesecurk，支持指定多个实例。
+	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds" list`
+}
+
+func (r *AssociateSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *AssociateSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type AssociateSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *AssociateSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *AssociateSecurityGroupsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type BigKeyInfo struct {
 
 	// 所属的database
@@ -83,7 +123,7 @@ type BigKeyTypeInfo struct {
 type CleanUpInstanceRequest struct {
 	*tchttp.BaseRequest
 
-	// 实例Id
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
@@ -100,7 +140,7 @@ type CleanUpInstanceResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 任务Id
+		// 任务ID
 		TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -120,7 +160,7 @@ func (r *CleanUpInstanceResponse) FromJsonString(s string) error {
 type ClearInstanceRequest struct {
 	*tchttp.BaseRequest
 
-	// 实例Id
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// redis的实例密码（免密实例不需要传密码，非免密实例必传）
@@ -140,7 +180,7 @@ type ClearInstanceResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 任务Id
+		// 任务ID
 		TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -181,7 +221,7 @@ type CreateInstanceAccountRequest struct {
 	// 路由策略：填写master或者replication，表示主节点或者从节点
 	ReadonlyPolicy []*string `json:"ReadonlyPolicy,omitempty" name:"ReadonlyPolicy" list`
 
-	// 读写策略：填写r、w、rw，表示只读、只写、读写
+	// 读写策略：填写r、rw，表示只读、读写
 	Privilege *string `json:"Privilege,omitempty" name:"Privilege"`
 
 	// 子账号描述信息
@@ -221,10 +261,10 @@ func (r *CreateInstanceAccountResponse) FromJsonString(s string) error {
 type CreateInstancesRequest struct {
 	*tchttp.BaseRequest
 
-	// 实例所属的可用区id
+	// 实例所属的可用区ID
 	ZoneId *uint64 `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 实例类型：2 – Redis2.8主从版，3 – Redis3.2主从版(CKV主从版)，4 – Redis3.2集群版(CKV集群版)，5-Redis2.8单机版，6 – Redis4.0主从版，7 – Redis4.0集群版，
+	// 实例类型：2 – Redis2.8内存版（标准架构），3 – Redis3.2内存版（标准架构），4 – CKV 3.2内存版(标准架构)，6 – Redis4.0内存版（标准架构），7 – Redis4.0内存版（集群架构），8 – Redis5.0内存版（标准架构），9 – Redis5.0内存版（集群架构），
 	TypeId *uint64 `json:"TypeId,omitempty" name:"TypeId"`
 
 	// 实例容量，单位MB， 取值大小以 查询售卖规格接口返回的规格为准
@@ -239,7 +279,7 @@ type CreateInstancesRequest struct {
 	// 付费方式:0-按量计费，1-包年包月。
 	BillingMode *int64 `json:"BillingMode,omitempty" name:"BillingMode"`
 
-	// 实例密码，密码规则：1.长度为8-16个字符；2:至少包含字母、数字和字符!@^*()中的两种（创建免密实例时，可不传入该字段，该字段内容会忽略）
+	// 实例密码，8-30个字符，至少包含小写字母、大写字母、数字和字符 ()`~!@#$%^&*-+=_|{}[]:;<>,.?/ 中的2种，不能以"/"开头。
 	Password *string `json:"Password,omitempty" name:"Password"`
 
 	// 私有网络ID，如果不传则默认选择基础网络，请使用私有网络列表查询，如：vpc-sad23jfdfk
@@ -257,22 +297,22 @@ type CreateInstancesRequest struct {
 	// 安全组id数组
 	SecurityGroupIdList []*string `json:"SecurityGroupIdList,omitempty" name:"SecurityGroupIdList" list`
 
-	// 用户自定义的端口 不填则默认为6379
+	// 用户自定义的端口 不填则默认为6379，范围[1024,65535]
 	VPort *uint64 `json:"VPort,omitempty" name:"VPort"`
 
-	// 实例分片数量，Redis2.8主从版、CKV主从版和Redis2.8单机版、Redis4.0主从版不需要填写
+	// 实例分片数量，购买标准版实例不需要填写，集群版分片数量范围[3,5,8,12,16,24,32,64,96,128]
 	RedisShardNum *int64 `json:"RedisShardNum,omitempty" name:"RedisShardNum"`
 
-	// 实例副本数量，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写
+	// 实例副本数量，Redis 2.8标准版、CKV标准版只支持1副本，4.0、5.0标准版和集群版支持1-5个副本。
 	RedisReplicasNum *int64 `json:"RedisReplicasNum,omitempty" name:"RedisReplicasNum"`
 
-	// 是否支持副本只读，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写
+	// 是否支持副本只读，Redis 2.8标准版、CKV标准版不支持副本只读，开启副本只读，实例将自动读写分离，写请求路由到主节点，读请求路由到副本节点，如需开启副本只读建议副本数>=2.
 	ReplicasReadonly *bool `json:"ReplicasReadonly,omitempty" name:"ReplicasReadonly"`
 
-	// 实例名称
+	// 实例名称，长度小于60的中文/英文/数字/"-"/"_"
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
-	// 是否支持免密，true-免密实例，false-非免密实例，默认为非免密实例
+	// 是否支持免密，true-免密实例，false-非免密实例，默认为非免密实例，仅VPC网络的实例支持免密码访问。
 	NoAuth *bool `json:"NoAuth,omitempty" name:"NoAuth"`
 }
 
@@ -289,7 +329,7 @@ type CreateInstancesResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 交易的Id
+		// 交易的ID
 		DealId *string `json:"DealId,omitempty" name:"DealId"`
 
 		// 实例ID(该字段灰度中，部分地域不可见)
@@ -316,6 +356,9 @@ type DelayDistribution struct {
 
 	// 大小
 	Size *int64 `json:"Size,omitempty" name:"Size"`
+
+	// 修改时间
+	Updatetime *int64 `json:"Updatetime,omitempty" name:"Updatetime"`
 }
 
 type DeleteInstanceAccountRequest struct {
@@ -404,10 +447,10 @@ func (r *DescribeAutoBackupConfigResponse) FromJsonString(s string) error {
 type DescribeBackupUrlRequest struct {
 	*tchttp.BaseRequest
 
-	// 实例Id
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 备份Id，通过DescribeInstanceBackups接口可查
+	// 备份ID，通过DescribeInstanceBackups接口可查
 	BackupId *string `json:"BackupId,omitempty" name:"BackupId"`
 }
 
@@ -441,6 +484,46 @@ func (r *DescribeBackupUrlResponse) ToJsonString() string {
 }
 
 func (r *DescribeBackupUrlResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeDBSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb 等。
+	Product *string `json:"Product,omitempty" name:"Product"`
+
+	// 实例ID，格式如：cdb-c1nl9rpv或者cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeDBSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDBSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeDBSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 安全组规则
+		Groups []*SecurityGroup `json:"Groups,omitempty" name:"Groups" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeDBSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDBSecurityGroupsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -575,7 +658,7 @@ type DescribeInstanceDTSInfoResponse struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		JobName *string `json:"JobName,omitempty" name:"JobName"`
 
-		// 状态
+		// 任务状态,取值为：1-创建中(Creating),3-校验中(Checking)4-校验通过(CheckPass),5-校验不通过（CheckNotPass）,7-任务运行(Running),8-准备完成（ReadyComplete）,9-任务成功（Success）,10-任务失败（Failed）,11-撤销中（Stopping）,12-完成中（Completing）
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		Status *int64 `json:"Status,omitempty" name:"Status"`
 
@@ -894,7 +977,7 @@ type DescribeInstanceMonitorTookDistRequest struct {
 	// 时间；例如："20190219"
 	Date *string `json:"Date,omitempty" name:"Date"`
 
-	// 请求类型：1——string类型，2——所有类型
+	// 时间范围：1——实时，2——近30分钟，3——近6小时，4——近24小时
 	SpanType *int64 `json:"SpanType,omitempty" name:"SpanType"`
 }
 
@@ -1240,11 +1323,14 @@ type DescribeInstancesRequest struct {
 	// 计费模式：postpaid-按量计费；prepaid-包年包月
 	BillingMode *string `json:"BillingMode,omitempty" name:"BillingMode"`
 
-	// 实例类型：1-Redis老集群版；2-Redis 2.8主从版；3-CKV主从版；4-CKV集群版；5-Redis 2.8单机版；6-Redis 4.0主从版；7-Redis 4.0集群版
+	// 实例类型：1-Redis老集群版；2-Redis 2.8主从版；3-CKV主从版；4-CKV集群版；5-Redis 2.8单机版；6-Redis 4.0主从版；7-Redis 4.0集群版；8 – Redis5.0主从版，9 – Redis5.0集群版，
 	Type *int64 `json:"Type,omitempty" name:"Type"`
 
 	// 搜索关键词：支持实例Id、实例名称、完整IP
 	SearchKeys []*string `json:"SearchKeys,omitempty" name:"SearchKeys" list`
+
+	// 内部参数，用户可忽略
+	TypeList []*int64 `json:"TypeList,omitempty" name:"TypeList" list`
 }
 
 func (r *DescribeInstancesRequest) ToJsonString() string {
@@ -1351,6 +1437,58 @@ func (r *DescribeProjectSecurityGroupResponse) ToJsonString() string {
 }
 
 func (r *DescribeProjectSecurityGroupResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeProjectSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb
+	Product *string `json:"Product,omitempty" name:"Product"`
+
+	// 项目Id。
+	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 偏移量。
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 拉取数量限制。
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 搜索条件，支持安全组id或者安全组名称。
+	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
+}
+
+func (r *DescribeProjectSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeProjectSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeProjectSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 安全组规则。
+		Groups []*SecurityGroup `json:"Groups,omitempty" name:"Groups" list`
+
+		// 符合条件的安全组总数量。
+		Total *uint64 `json:"Total,omitempty" name:"Total"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeProjectSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeProjectSecurityGroupsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1525,7 +1663,7 @@ func (r *DescribeTaskListResponse) FromJsonString(s string) error {
 type DestroyPostpaidInstanceRequest struct {
 	*tchttp.BaseRequest
 
-	// 实例Id
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
@@ -1562,7 +1700,7 @@ func (r *DestroyPostpaidInstanceResponse) FromJsonString(s string) error {
 type DestroyPrepaidInstanceRequest struct {
 	*tchttp.BaseRequest
 
-	// 实例Id
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
@@ -1633,6 +1771,46 @@ func (r *DisableReplicaReadonlyResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DisassociateSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb 等。
+	Product *string `json:"Product,omitempty" name:"Product"`
+
+	// 安全组Id。
+	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
+
+	// 实例ID列表，一个或者多个实例Id组成的数组。
+	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds" list`
+}
+
+func (r *DisassociateSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DisassociateSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DisassociateSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DisassociateSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DisassociateSecurityGroupsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type EnableReplicaReadonlyRequest struct {
 	*tchttp.BaseRequest
 
@@ -1683,6 +1861,183 @@ type HotKeyInfo struct {
 
 	// 数量
 	Count *int64 `json:"Count,omitempty" name:"Count"`
+}
+
+type Inbound struct {
+
+	// 策略，ACCEPT或者DROP。
+	Action *string `json:"Action,omitempty" name:"Action"`
+
+	// 地址组id代表的地址集合。
+	AddressModule *string `json:"AddressModule,omitempty" name:"AddressModule"`
+
+	// 来源Ip或Ip段，例如192.168.0.0/16。
+	CidrIp *string `json:"CidrIp,omitempty" name:"CidrIp"`
+
+	// 描述。
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+
+	// 网络协议，支持udp、tcp等。
+	IpProtocol *string `json:"IpProtocol,omitempty" name:"IpProtocol"`
+
+	// 端口。
+	PortRange *string `json:"PortRange,omitempty" name:"PortRange"`
+
+	// 服务组id代表的协议和端口集合。
+	ServiceModule *string `json:"ServiceModule,omitempty" name:"ServiceModule"`
+
+	// 安全组id代表的地址集合。
+	Id *string `json:"Id,omitempty" name:"Id"`
+}
+
+type InquiryPriceCreateInstanceRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例所属的可用区id
+	ZoneId *uint64 `json:"ZoneId,omitempty" name:"ZoneId"`
+
+	// 实例类型：2 – Redis2.8主从版，3 – Redis3.2主从版(CKV主从版)，4 – Redis3.2集群版(CKV集群版)，5-Redis2.8单机版，6 – Redis4.0主从版，7 – Redis4.0集群版，
+	TypeId *uint64 `json:"TypeId,omitempty" name:"TypeId"`
+
+	// 实例容量，单位MB， 取值大小以 查询售卖规格接口返回的规格为准
+	MemSize *uint64 `json:"MemSize,omitempty" name:"MemSize"`
+
+	// 实例数量，单次购买实例数量以 查询售卖规格接口返回的规格为准
+	GoodsNum *uint64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// 购买时长，在创建包年包月实例的时候需要填写，按量计费实例填1即可，单位：月，取值范围 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]
+	Period *uint64 `json:"Period,omitempty" name:"Period"`
+
+	// 付费方式:0-按量计费，1-包年包月。
+	BillingMode *int64 `json:"BillingMode,omitempty" name:"BillingMode"`
+
+	// 实例分片数量，Redis2.8主从版、CKV主从版和Redis2.8单机版、Redis4.0主从版不需要填写
+	RedisShardNum *int64 `json:"RedisShardNum,omitempty" name:"RedisShardNum"`
+
+	// 实例副本数量，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写
+	RedisReplicasNum *int64 `json:"RedisReplicasNum,omitempty" name:"RedisReplicasNum"`
+
+	// 是否支持副本只读，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写
+	ReplicasReadonly *bool `json:"ReplicasReadonly,omitempty" name:"ReplicasReadonly"`
+}
+
+func (r *InquiryPriceCreateInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *InquiryPriceCreateInstanceRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type InquiryPriceCreateInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 价格，单位：分
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Price *float64 `json:"Price,omitempty" name:"Price"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *InquiryPriceCreateInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *InquiryPriceCreateInstanceResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type InquiryPriceRenewInstanceRequest struct {
+	*tchttp.BaseRequest
+
+	// 购买时长，单位：月
+	Period *uint64 `json:"Period,omitempty" name:"Period"`
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *InquiryPriceRenewInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *InquiryPriceRenewInstanceRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type InquiryPriceRenewInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 价格，单位：分
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Price *float64 `json:"Price,omitempty" name:"Price"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *InquiryPriceRenewInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *InquiryPriceRenewInstanceResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type InquiryPriceUpgradeInstanceRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 分片大小 单位 MB
+	MemSize *uint64 `json:"MemSize,omitempty" name:"MemSize"`
+
+	// 分片数量，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写
+	RedisShardNum *uint64 `json:"RedisShardNum,omitempty" name:"RedisShardNum"`
+
+	// 副本数量，Redis2.8主从版、CKV主从版和Redis2.8单机版不需要填写
+	RedisReplicasNum *uint64 `json:"RedisReplicasNum,omitempty" name:"RedisReplicasNum"`
+}
+
+func (r *InquiryPriceUpgradeInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *InquiryPriceUpgradeInstanceRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type InquiryPriceUpgradeInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 价格，单位：分
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Price *float64 `json:"Price,omitempty" name:"Price"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *InquiryPriceUpgradeInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *InquiryPriceUpgradeInstanceResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
 }
 
 type InstanceClusterNode struct {
@@ -1835,7 +2190,7 @@ type InstanceMultiParam struct {
 	Tips *string `json:"Tips,omitempty" name:"Tips"`
 
 	// 参数说明
-	EnumValue *string `json:"EnumValue,omitempty" name:"EnumValue"`
+	EnumValue []*string `json:"EnumValue,omitempty" name:"EnumValue" list`
 
 	// 参数状态, 1: 修改中， 2：修改完成
 	Status *int64 `json:"Status,omitempty" name:"Status"`
@@ -1998,6 +2353,34 @@ type InstanceSet struct {
 	// 是否为免密实例，true-免密实例；false-非免密实例
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NoAuth *bool `json:"NoAuth,omitempty" name:"NoAuth"`
+
+	// 客户端连接数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClientLimit *int64 `json:"ClientLimit,omitempty" name:"ClientLimit"`
+
+	// DTS状态（内部参数，用户可忽略）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DtsStatus *int64 `json:"DtsStatus,omitempty" name:"DtsStatus"`
+
+	// 分片带宽上限，单位MB
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NetLimit *int64 `json:"NetLimit,omitempty" name:"NetLimit"`
+
+	// 免密实例标识（内部参数，用户可忽略）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PasswordFree *int64 `json:"PasswordFree,omitempty" name:"PasswordFree"`
+
+	// 实例只读标识（内部参数，用户可忽略）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReadOnly *int64 `json:"ReadOnly,omitempty" name:"ReadOnly"`
+
+	// 内部参数，用户可忽略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Vip6 *string `json:"Vip6,omitempty" name:"Vip6"`
+
+	// 内部参数，用户可忽略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RemainBandwidthDuration *string `json:"RemainBandwidthDuration,omitempty" name:"RemainBandwidthDuration"`
 }
 
 type InstanceSlowlogDetail struct {
@@ -2189,6 +2572,46 @@ func (r *ModifyAutoBackupConfigResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyDBInstanceSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb 等。
+	Product *string `json:"Product,omitempty" name:"Product"`
+
+	// 要修改的安全组ID列表，一个或者多个安全组Id组成的数组。
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds" list`
+
+	// 实例ID，格式如：cdb-c1nl9rpv或者cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *ModifyDBInstanceSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyDBInstanceSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyDBInstanceSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyDBInstanceSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyDBInstanceSecurityGroupsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type ModifyInstanceAccountRequest struct {
 	*tchttp.BaseRequest
 
@@ -2247,7 +2670,7 @@ func (r *ModifyInstanceAccountResponse) FromJsonString(s string) error {
 type ModifyInstanceParamsRequest struct {
 	*tchttp.BaseRequest
 
-	// 实例Id
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 实例修改的参数列表
@@ -2294,15 +2717,24 @@ type ModifyInstanceRequest struct {
 	Operation *string `json:"Operation,omitempty" name:"Operation"`
 
 	// 实例Id
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds" list`
 
 	// 实例的新名称
-	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+	InstanceNames []*string `json:"InstanceNames,omitempty" name:"InstanceNames" list`
 
 	// 项目Id
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 自动续费标识。0 - 默认状态（手动续费）；1 - 自动续费；2 - 明确不自动续费
+	AutoRenews []*int64 `json:"AutoRenews,omitempty" name:"AutoRenews" list`
+
+	// 已经废弃
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 已经废弃
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+
+	// 已经废弃
 	AutoRenew *int64 `json:"AutoRenew,omitempty" name:"AutoRenew"`
 }
 
@@ -2389,6 +2821,33 @@ func (r *ModifyNetworkConfigResponse) ToJsonString() string {
 
 func (r *ModifyNetworkConfigResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
+}
+
+type Outbound struct {
+
+	// 策略，ACCEPT或者DROP。
+	Action *string `json:"Action,omitempty" name:"Action"`
+
+	// 地址组id代表的地址集合。
+	AddressModule *string `json:"AddressModule,omitempty" name:"AddressModule"`
+
+	// 来源Ip或Ip段，例如192.168.0.0/16。
+	CidrIp *string `json:"CidrIp,omitempty" name:"CidrIp"`
+
+	// 描述。
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+
+	// 网络协议，支持udp、tcp等。
+	IpProtocol *string `json:"IpProtocol,omitempty" name:"IpProtocol"`
+
+	// 端口。
+	PortRange *string `json:"PortRange,omitempty" name:"PortRange"`
+
+	// 服务组id代表的协议和端口集合。
+	ServiceModule *string `json:"ServiceModule,omitempty" name:"ServiceModule"`
+
+	// 安全组id代表的地址集合。
+	Id *string `json:"Id,omitempty" name:"Id"`
 }
 
 type ProductConf struct {
@@ -2495,7 +2954,7 @@ type RenewInstanceResponse struct {
 	*tchttp.BaseResponse
 	Response *struct {
 
-		// 交易Id
+		// 交易ID
 		DealId *string `json:"DealId,omitempty" name:"DealId"`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -2596,6 +3055,30 @@ func (r *RestoreInstanceResponse) ToJsonString() string {
 
 func (r *RestoreInstanceResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
+}
+
+type SecurityGroup struct {
+
+	// 创建时间，时间格式：yyyy-mm-dd hh:mm:ss。
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 项目ID。
+	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 安全组ID。
+	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
+
+	// 安全组名称。
+	SecurityGroupName *string `json:"SecurityGroupName,omitempty" name:"SecurityGroupName"`
+
+	// 安全组备注。
+	SecurityGroupRemark *string `json:"SecurityGroupRemark,omitempty" name:"SecurityGroupRemark"`
+
+	// 出站规则。
+	Outbound []*Outbound `json:"Outbound,omitempty" name:"Outbound" list`
+
+	// 入站规则。
+	Inbound []*Inbound `json:"Inbound,omitempty" name:"Inbound" list`
 }
 
 type SecurityGroupDetail struct {
@@ -2825,7 +3308,7 @@ type TradeDealDetail struct {
 type UpgradeInstanceRequest struct {
 	*tchttp.BaseRequest
 
-	// 实例Id
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 分片大小 单位 MB

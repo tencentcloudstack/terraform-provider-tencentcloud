@@ -48,9 +48,22 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 				Description:  "The key pair's name. It is the only in one TencentCloud account.",
 			},
 			"public_key": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				StateFunc: func(v interface{}) string {
+					switch value := v.(type) {
+					case string:
+						publicKey := value
+						split := strings.Split(value, " ")
+						if len(split) > 2 {
+							publicKey = strings.Join(split[0:2], " ")
+						}
+						return strings.TrimSpace(publicKey)
+					default:
+						return ""
+					}
+				},
 				Description: "You can import an existing public key and using TencentCloud key pair to manage it.",
 			},
 			"project_id": {
@@ -68,7 +81,7 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_key_pair.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -96,9 +109,10 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 
 func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_key_pair.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	keyId := d.Id()
 	cvmService := CvmService{
@@ -109,7 +123,7 @@ func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) e
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		keyPair, errRet = cvmService.DescribeKeyPairById(ctx, keyId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})
@@ -126,7 +140,9 @@ func resourceTencentCloudKeyPairRead(d *schema.ResourceData, meta interface{}) e
 	if keyPair.PublicKey != nil {
 		publicKey := *keyPair.PublicKey
 		split := strings.Split(publicKey, " ")
-		publicKey = strings.Join(split[0:len(split)-1], " ")
+		if len(split) > 2 {
+			publicKey = strings.Join(split[0:2], " ")
+		}
 		_ = d.Set("public_key", publicKey)
 	}
 
@@ -137,7 +153,7 @@ func resourceTencentCloudKeyPairUpdate(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_key_pair.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	keyId := d.Id()
 	cvmService := CvmService{
@@ -159,7 +175,7 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_key_pair.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	keyId := d.Id()
 	cvmService := CvmService{
@@ -171,7 +187,7 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		keyPair, errRet = cvmService.DescribeKeyPairById(ctx, keyId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		return nil
 	})
@@ -204,7 +220,7 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		errRet := cvmService.DeleteKeyPair(ctx, keyId)
 		if errRet != nil {
-			return retryError(errRet, "InvalidKeyPair")
+			return retryError(errRet, KYE_PAIR_INVALID_ERROR, KEY_PAIR_NOT_SUPPORT_ERROR)
 		}
 		return nil
 	})

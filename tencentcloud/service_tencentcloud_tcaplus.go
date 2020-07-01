@@ -21,9 +21,9 @@ type TcaplusService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *TcaplusService) CreateApp(ctx context.Context, idlType, appName, vpcId, subnetId, password string) (applicationId string, errRet error) {
+func (me *TcaplusService) CreateCluster(ctx context.Context, idlType, clusterName, vpcId, subnetId, password string) (id string, errRet error) {
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewCreateAppRequest()
+	request := tcaplusdb.NewCreateClusterRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
@@ -33,9 +33,9 @@ func (me *TcaplusService) CreateApp(ctx context.Context, idlType, appName, vpcId
 	request.VpcId = &vpcId
 	request.SubnetId = &subnetId
 	request.IdlType = &idlType
-	request.AppName = &appName
+	request.ClusterName = &clusterName
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTcaplusClient().CreateApp(request)
+	response, err := me.client.UseTcaplusClient().CreateCluster(request)
 	if err != nil {
 		errRet = err
 		return
@@ -44,19 +44,19 @@ func (me *TcaplusService) CreateApp(ctx context.Context, idlType, appName, vpcId
 		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
 		return
 	}
-	if response.Response.ApplicationId == nil || *response.Response.ApplicationId == "" {
-		errRet = errors.New("TencentCloud SDK  return empty applicationId")
+	if response.Response.ClusterId == nil || *response.Response.ClusterId == "" {
+		errRet = errors.New("TencentCloud SDK  return empty cluster id")
 		return
 	}
-	applicationId = *response.Response.ApplicationId
+	id = *response.Response.ClusterId
 	return
 }
 
-func (me *TcaplusService) DescribeApps(ctx context.Context, applicationId string, applicationName string) (appInfos []*tcaplusdb.AppInfo, errRet error) {
+func (me *TcaplusService) DescribeClusters(ctx context.Context, clusterId string, clusterName string) (clusterInfos []*tcaplusdb.ClusterInfo, errRet error) {
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewDescribeAppsRequest()
+	request := tcaplusdb.NewDescribeClustersRequest()
 
-	appInfos = make([]*tcaplusdb.AppInfo, 0, 100)
+	clusterInfos = make([]*tcaplusdb.ClusterInfo, 0, 100)
 
 	defer func() {
 		if errRet != nil {
@@ -64,15 +64,15 @@ func (me *TcaplusService) DescribeApps(ctx context.Context, applicationId string
 		}
 	}()
 
-	if applicationId != "" {
-		request.ApplicationIds = []*string{&applicationId}
+	if clusterId != "" {
+		request.ClusterIds = []*string{&clusterId}
 	}
 
-	if applicationName != "" {
+	if clusterName != "" {
 		request.Filters = []*tcaplusdb.Filter{
 			{
-				Name:  helper.String("AppName"),
-				Value: &applicationName,
+				Name:  helper.String("ClusterName"),
+				Value: &clusterName,
 			},
 		}
 	}
@@ -82,7 +82,7 @@ func (me *TcaplusService) DescribeApps(ctx context.Context, applicationId string
 	request.Offset = &offset
 	for {
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseTcaplusClient().DescribeApps(request)
+		response, err := me.client.UseTcaplusClient().DescribeClusters(request)
 		if err != nil {
 			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
 				if sdkErr.Code == "ResourceNotFound" {
@@ -97,25 +97,25 @@ func (me *TcaplusService) DescribeApps(ctx context.Context, applicationId string
 			errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
 			return
 		}
-		appInfos = append(appInfos, response.Response.Apps...)
-		if len(response.Response.Apps) < int(limit) {
+		clusterInfos = append(clusterInfos, response.Response.Clusters...)
+		if len(response.Response.Clusters) < int(limit) {
 			return
 		}
 		offset += limit
 	}
 }
 
-func (me *TcaplusService) DescribeApp(ctx context.Context, applicationId string) (appInfo tcaplusdb.AppInfo, has bool, errRet error) {
+func (me *TcaplusService) DescribeCluster(ctx context.Context, id string) (clusterInfo tcaplusdb.ClusterInfo, has bool, errRet error) {
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewDescribeAppsRequest()
+	request := tcaplusdb.NewDescribeClustersRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.ApplicationIds = []*string{&applicationId}
+	request.ClusterIds = []*string{&id}
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTcaplusClient().DescribeApps(request)
+	response, err := me.client.UseTcaplusClient().DescribeClusters(request)
 	if err != nil {
 		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
 			if sdkErr.Code == "ResourceNotFound" {
@@ -131,32 +131,32 @@ func (me *TcaplusService) DescribeApp(ctx context.Context, applicationId string)
 		return
 	}
 	has = true
-	if len(response.Response.Apps) == 0 {
+	if len(response.Response.Clusters) == 0 {
 		has = false
 		return
 	}
-	if len(response.Response.Apps) != 1 {
-		errRet = fmt.Errorf("TencentCloud SDK return %d appInfo with one applicationId %s",
-			len(response.Response.Apps), applicationId)
+	if len(response.Response.Clusters) != 1 {
+		errRet = fmt.Errorf("TencentCloud SDK return %d clusterInfo with one cluster id %s",
+			len(response.Response.Clusters), id)
 		return
 	}
-	appInfo = *response.Response.Apps[0]
+	clusterInfo = *response.Response.Clusters[0]
 	return
 }
 
-func (me *TcaplusService) DeleteApp(ctx context.Context, applicationId string) (taskId string, errRet error) {
+func (me *TcaplusService) DeleteCluster(ctx context.Context, id string) (taskId string, errRet error) {
 
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewDeleteAppRequest()
+	request := tcaplusdb.NewDeleteClusterRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.ApplicationId = &applicationId
+	request.ClusterId = &id
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTcaplusClient().DeleteApp(request)
+	response, err := me.client.UseTcaplusClient().DeleteCluster(request)
 	if err != nil {
 		errRet = err
 		return
@@ -174,19 +174,19 @@ func (me *TcaplusService) DeleteApp(ctx context.Context, applicationId string) (
 	return
 }
 
-func (me *TcaplusService) ModifyAppName(ctx context.Context, applicationId string, applicationName string) (errRet error) {
+func (me *TcaplusService) ModifyClusterName(ctx context.Context, id string, clusterName string) (errRet error) {
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewModifyAppNameRequest()
+	request := tcaplusdb.NewModifyClusterNameRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.ApplicationId = &applicationId
-	request.AppName = helper.String(url.QueryEscape(applicationName))
+	request.ClusterId = &id
+	request.ClusterName = helper.String(url.QueryEscape(clusterName))
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTcaplusClient().ModifyAppName(request)
+	response, err := me.client.UseTcaplusClient().ModifyClusterName(request)
 	if err != nil {
 		errRet = err
 		return
@@ -197,16 +197,16 @@ func (me *TcaplusService) ModifyAppName(ctx context.Context, applicationId strin
 	return
 }
 
-func (me *TcaplusService) ModifyAppPassword(ctx context.Context, applicationId string, oldPassword, newPassword string, oldPasswordExpireLast int64) (errRet error) {
+func (me *TcaplusService) ModifyClusterPassword(ctx context.Context, id string, oldPassword, newPassword string, oldPasswordExpireLast int64) (errRet error) {
 
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewModifyAppPasswordRequest()
+	request := tcaplusdb.NewModifyClusterPasswordRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.ApplicationId = &applicationId
+	request.ClusterId = &id
 	request.OldPassword = &oldPassword
 	request.NewPassword = &newPassword
 	request.Mode = helper.String("1")
@@ -215,14 +215,14 @@ func (me *TcaplusService) ModifyAppPassword(ctx context.Context, applicationId s
 		expireTime := time.Now().Add(time.Second * time.Duration(oldPasswordExpireLast))
 		loc, err := time.LoadLocation("Asia/Shanghai")
 		if err != nil {
-			errRet = fmt.Errorf("Get Asia/Shanghai time zone fail,%s", err.Error())
+			errRet = fmt.Errorf("Get Asia/Shanghai time group fail,%s", err.Error())
 			return
 		}
 		ex := expireTime.In(loc).Format("2006-01-02 15:04:05")
 		request.OldPasswordExpireTime = &ex
 	}
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTcaplusClient().ModifyAppPassword(request)
+	response, err := me.client.UseTcaplusClient().ModifyClusterPassword(request)
 	if err != nil {
 		errRet = err
 		return
@@ -233,7 +233,7 @@ func (me *TcaplusService) ModifyAppPassword(ctx context.Context, applicationId s
 	return
 }
 
-func (me *TcaplusService) DescribeTask(ctx context.Context, applicationId string, taskId string) (taskInfo tcaplusdb.TaskInfo, has bool, errRet error) {
+func (me *TcaplusService) DescribeTask(ctx context.Context, clusterId string, taskId string) (taskInfo tcaplusdb.TaskInfoNew, has bool, errRet error) {
 	logId := getLogId(ctx)
 	request := tcaplusdb.NewDescribeTasksRequest()
 	defer func() {
@@ -241,7 +241,7 @@ func (me *TcaplusService) DescribeTask(ctx context.Context, applicationId string
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.ApplicationIds = []*string{&applicationId}
+	request.ClusterIds = []*string{&clusterId}
 	request.TaskIds = []*string{&taskId}
 	ratelimit.Check(request.GetAction())
 
@@ -267,18 +267,18 @@ func (me *TcaplusService) DescribeTask(ctx context.Context, applicationId string
 	return
 }
 
-func (me *TcaplusService) CreateZone(ctx context.Context, applicationId string, zoneName string) (zoneId string, errRet error) {
+func (me *TcaplusService) CreateGroup(ctx context.Context, id string, groupName string) (groupId string, errRet error) {
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewCreateZoneRequest()
+	request := tcaplusdb.NewCreateTableGroupRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.ZoneName = &zoneName
-	request.ApplicationId = &applicationId
+	request.TableGroupName = &groupName
+	request.ClusterId = &id
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTcaplusClient().CreateZone(request)
+	response, err := me.client.UseTcaplusClient().CreateTableGroup(request)
 	if err != nil {
 		errRet = err
 		return
@@ -287,46 +287,46 @@ func (me *TcaplusService) CreateZone(ctx context.Context, applicationId string, 
 		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
 		return
 	}
-	if response.Response.LogicZoneId == nil || *response.Response.LogicZoneId == "" {
-		errRet = errors.New("TencentCloud SDK  return empty applicationId")
+	if response.Response.TableGroupId == nil || *response.Response.TableGroupId == "" {
+		errRet = errors.New("TencentCloud SDK  return empty table group id")
 		return
 	}
-	zoneId = *response.Response.LogicZoneId
+	groupId = *response.Response.TableGroupId
 	return
 }
 
-func (me *TcaplusService) DescribeZones(ctx context.Context, applicationId string, zoneId, zoneName string) (infos []*tcaplusdb.ZoneInfo, errRet error) {
+func (me *TcaplusService) DescribeGroups(ctx context.Context, clusterId string, groupId, groupName string) (infos []*tcaplusdb.TableGroupInfo, errRet error) {
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewDescribeZonesRequest()
+	request := tcaplusdb.NewDescribeTableGroupsRequest()
 
-	infos = make([]*tcaplusdb.ZoneInfo, 0, 100)
+	infos = make([]*tcaplusdb.TableGroupInfo, 0, 100)
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
-	if zoneId != "" {
-		items := strings.Split(zoneId, ":")
+	if groupId != "" {
+		items := strings.Split(groupId, ":")
 		if len(items) != 2 {
-			errRet = fmt.Errorf("zone id is broken,%s", zoneId)
+			errRet = fmt.Errorf("group id is broken,%s", groupId)
 			return
 		}
-		zoneId = items[1]
+		groupId = items[1]
 	}
 
 	var offset, limit int64 = 0, 20
 
-	request.ApplicationId = &applicationId
-	if zoneId != "" {
-		request.LogicZoneIds = []*string{&zoneId}
+	request.ClusterId = &clusterId
+	if groupId != "" {
+		request.TableGroupIds = []*string{&groupId}
 	}
 
-	if zoneName != "" {
+	if groupName != "" {
 		request.Filters = []*tcaplusdb.Filter{
 			{
-				Name:  helper.String("ZoneName"),
-				Value: &zoneName,
+				Name:  helper.String("GroupName"),
+				Value: &groupName,
 			},
 		}
 	}
@@ -335,7 +335,7 @@ func (me *TcaplusService) DescribeZones(ctx context.Context, applicationId strin
 
 	for {
 		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseTcaplusClient().DescribeZones(request)
+		response, err := me.client.UseTcaplusClient().DescribeTableGroups(request)
 
 		if err != nil {
 			if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
@@ -351,8 +351,8 @@ func (me *TcaplusService) DescribeZones(ctx context.Context, applicationId strin
 			errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
 			return
 		}
-		infos = append(infos, response.Response.Zones...)
-		if len(response.Response.Zones) < int(limit) {
+		infos = append(infos, response.Response.TableGroups...)
+		if len(response.Response.TableGroups) < int(limit) {
 			return
 		}
 		offset += limit
@@ -360,26 +360,26 @@ func (me *TcaplusService) DescribeZones(ctx context.Context, applicationId strin
 
 }
 
-func (me *TcaplusService) DescribeZone(ctx context.Context, applicationId string, zoneId string) (info tcaplusdb.ZoneInfo, has bool, errRet error) {
+func (me *TcaplusService) DescribeGroup(ctx context.Context, id string, groupId string) (info tcaplusdb.TableGroupInfo, has bool, errRet error) {
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewDescribeZonesRequest()
+	request := tcaplusdb.NewDescribeTableGroupsRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
-	items := strings.Split(zoneId, ":")
+	items := strings.Split(groupId, ":")
 	if len(items) != 2 {
-		errRet = fmt.Errorf("zone id is broken,%s", zoneId)
+		errRet = fmt.Errorf("group id is broken,%s", groupId)
 		return
 	}
-	zoneId = items[1]
+	groupId = items[1]
 
-	request.ApplicationId = &applicationId
-	request.LogicZoneIds = []*string{&zoneId}
+	request.ClusterId = &id
+	request.TableGroupIds = []*string{&groupId}
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTcaplusClient().DescribeZones(request)
+	response, err := me.client.UseTcaplusClient().DescribeTableGroups(request)
 	if err != nil {
 		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
 			if sdkErr.Code == "ResourceNotFound" {
@@ -395,40 +395,40 @@ func (me *TcaplusService) DescribeZone(ctx context.Context, applicationId string
 		return
 	}
 	has = true
-	if len(response.Response.Zones) == 0 {
+	if len(response.Response.TableGroups) == 0 {
 		has = false
 		return
 	}
-	if len(response.Response.Zones) != 1 {
-		errRet = fmt.Errorf("TencentCloud SDK return %d zone info with one zoneId %s",
-			len(response.Response.Zones), applicationId)
+	if len(response.Response.TableGroups) != 1 {
+		errRet = fmt.Errorf("TencentCloud SDK return %d group info with one group id %s",
+			len(response.Response.TableGroups), groupId)
 		return
 	}
-	info = *response.Response.Zones[0]
+	info = *response.Response.TableGroups[0]
 	return
 }
 
-func (me *TcaplusService) DeleteZone(ctx context.Context, applicationId string, zoneId string) (errRet error) {
+func (me *TcaplusService) DeleteGroup(ctx context.Context, clusterId string, groupId string) (errRet error) {
 
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewDeleteZoneRequest()
+	request := tcaplusdb.NewDeleteTableGroupRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
-	items := strings.Split(zoneId, ":")
+	items := strings.Split(groupId, ":")
 	if len(items) != 2 {
-		errRet = fmt.Errorf("zone id is broken,%s", zoneId)
+		errRet = fmt.Errorf("group id is broken,%s", groupId)
 		return
 	}
-	zoneId = items[1]
+	groupId = items[1]
 
-	request.ApplicationId = &applicationId
-	request.LogicZoneId = &zoneId
+	request.ClusterId = &clusterId
+	request.TableGroupId = &groupId
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTcaplusClient().DeleteZone(request)
+	response, err := me.client.UseTcaplusClient().DeleteTableGroup(request)
 	if err != nil {
 		errRet = err
 		return
@@ -440,26 +440,26 @@ func (me *TcaplusService) DeleteZone(ctx context.Context, applicationId string, 
 	return
 }
 
-func (me *TcaplusService) ModifyZoneName(ctx context.Context, applicationId string, zoneId, zoneName string) (errRet error) {
+func (me *TcaplusService) ModifyGroupName(ctx context.Context, id string, groupId, groupName string) (errRet error) {
 	logId := getLogId(ctx)
-	request := tcaplusdb.NewModifyZoneNameRequest()
+	request := tcaplusdb.NewModifyTableGroupNameRequest()
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	items := strings.Split(zoneId, ":")
+	items := strings.Split(groupId, ":")
 	if len(items) != 2 {
-		errRet = fmt.Errorf("zone id is broken,%s", zoneId)
+		errRet = fmt.Errorf("group id is broken,%s", groupId)
 		return
 	}
-	zoneId = items[1]
+	groupId = items[1]
 
-	request.ApplicationId = &applicationId
-	request.LogicZoneId = &zoneId
-	request.ZoneName = &zoneName
+	request.ClusterId = &id
+	request.TableGroupId = &groupId
+	request.TableGroupName = &groupName
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTcaplusClient().ModifyZoneName(request)
+	response, err := me.client.UseTcaplusClient().ModifyTableGroupName(request)
 	if err != nil {
 		errRet = err
 		return
@@ -481,7 +481,7 @@ func (me *TcaplusService) DeleteIdlFiles(ctx context.Context, tid TcaplusIdlId) 
 		}
 	}()
 
-	request.ApplicationId = &tid.ApplicationId
+	request.ClusterId = &tid.ClusterId
 	request.IdlFiles = []*tcaplusdb.IdlFileInfo{
 		{
 			FileName:    &tid.FileName,
@@ -504,7 +504,7 @@ func (me *TcaplusService) DeleteIdlFiles(ctx context.Context, tid TcaplusIdlId) 
 	return
 }
 
-func (me *TcaplusService) DesOldIdlFiles(ctx context.Context, tid TcaplusIdlId) (tableInfos []*tcaplusdb.ParsedTableInfo, errRet error) {
+func (me *TcaplusService) DesOldIdlFiles(ctx context.Context, tid TcaplusIdlId) (tableInfos []*tcaplusdb.ParsedTableInfoNew, errRet error) {
 	logId := getLogId(ctx)
 	request := tcaplusdb.NewVerifyIdlFilesRequest()
 
@@ -514,7 +514,7 @@ func (me *TcaplusService) DesOldIdlFiles(ctx context.Context, tid TcaplusIdlId) 
 		}
 	}()
 
-	request.ApplicationId = &tid.ApplicationId
+	request.ClusterId = &tid.ClusterId
 	request.ExistingIdlFiles = []*tcaplusdb.IdlFileInfo{
 		{
 			FileName:    &tid.FileName,
@@ -545,7 +545,7 @@ func (me *TcaplusService) DesOldIdlFiles(ctx context.Context, tid TcaplusIdlId) 
 	return
 }
 
-func (me *TcaplusService) VerifyIdlFiles(ctx context.Context, tid TcaplusIdlId, fileContent string) (idlId int64, tableInfos []*tcaplusdb.ParsedTableInfo, errRet error) {
+func (me *TcaplusService) VerifyIdlFiles(ctx context.Context, tid TcaplusIdlId, groupId string, fileContent string) (idlId int64, tableInfos []*tcaplusdb.ParsedTableInfoNew, errRet error) {
 	logId := getLogId(ctx)
 	request := tcaplusdb.NewVerifyIdlFilesRequest()
 
@@ -555,8 +555,8 @@ func (me *TcaplusService) VerifyIdlFiles(ctx context.Context, tid TcaplusIdlId, 
 		}
 	}()
 
-	request.ApplicationId = &tid.ApplicationId
-
+	request.ClusterId = &tid.ClusterId
+	request.TableGroupId = &groupId
 	request.NewIdlFiles = []*tcaplusdb.IdlFileInfo{
 		{
 			FileName:    &tid.FileName,
@@ -596,8 +596,8 @@ func (me *TcaplusService) VerifyIdlFiles(ctx context.Context, tid TcaplusIdlId, 
 }
 
 func (me *TcaplusService) CreateTables(ctx context.Context, tid TcaplusIdlId,
-	applicationId,
-	zoneId,
+	clusterId,
+	groupId,
 	tableName,
 	tableType,
 	description,
@@ -615,14 +615,14 @@ func (me *TcaplusService) CreateTables(ctx context.Context, tid TcaplusIdlId,
 		}
 	}()
 
-	items := strings.Split(zoneId, ":")
+	items := strings.Split(groupId, ":")
 	if len(items) != 2 {
-		errRet = fmt.Errorf("zone id is broken,%s", zoneId)
+		errRet = fmt.Errorf("group id is broken,%s", groupId)
 		return
 	}
-	zoneId = items[1]
+	groupId = items[1]
 
-	request.ApplicationId = &applicationId
+	request.ClusterId = &clusterId
 	request.IdlFiles = []*tcaplusdb.IdlFileInfo{
 		{
 			FileName:    &tid.FileName,
@@ -632,13 +632,13 @@ func (me *TcaplusService) CreateTables(ctx context.Context, tid TcaplusIdlId,
 			FileId:      &tid.FileId,
 		},
 	}
-	request.SelectedTables = []*tcaplusdb.SelectedTableInfo{
+	request.SelectedTables = []*tcaplusdb.SelectedTableInfoNew{
 		{
 			TableIdlType:     &tableIdlType,
 			ReservedReadQps:  &reservedReadQps,
 			ReservedWriteQps: &reservedWriteQps,
 			ReservedVolume:   &reservedVolume,
-			LogicZoneId:      &zoneId,
+			TableGroupId:     &groupId,
 			TableName:        &tableName,
 			TableType:        &tableType,
 			Memo:             &description,
@@ -675,31 +675,31 @@ func (me *TcaplusService) CreateTables(ctx context.Context, tid TcaplusIdlId,
 	tableInstanceId = *response.Response.TableResults[0].TableInstanceId
 	return
 }
-func (me *TcaplusService) DescribeTables(ctx context.Context, applicationId string, zoneId, tableId, tableName string) (infos []*tcaplusdb.TableInfo, errRet error) {
+func (me *TcaplusService) DescribeTables(ctx context.Context, clusterId string, groupId, tableId, tableName string) (infos []*tcaplusdb.TableInfoNew, errRet error) {
 	logId := getLogId(ctx)
 	request := tcaplusdb.NewDescribeTablesRequest()
 
-	infos = make([]*tcaplusdb.TableInfo, 0, 100)
+	infos = make([]*tcaplusdb.TableInfoNew, 0, 100)
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
 
-	if zoneId != "" {
-		items := strings.Split(zoneId, ":")
+	if groupId != "" {
+		items := strings.Split(groupId, ":")
 		if len(items) != 2 {
-			errRet = fmt.Errorf("zone id is broken,%s", zoneId)
+			errRet = fmt.Errorf("group id is broken,%s", groupId)
 			return
 		}
-		zoneId = items[1]
+		groupId = items[1]
 	}
 
 	var offset, limit int64 = 0, 20
 
-	request.ApplicationId = &applicationId
-	if zoneId != "" {
-		request.LogicZoneIds = []*string{&zoneId}
+	request.ClusterId = &clusterId
+	if groupId != "" {
+		request.TableGroupIds = []*string{&groupId}
 	}
 
 	if tableId != "" {
@@ -752,7 +752,7 @@ func (me *TcaplusService) DescribeTables(ctx context.Context, applicationId stri
 	}
 }
 
-func (me *TcaplusService) DescribeTable(ctx context.Context, applicationId, tableInstanceId string) (tableInfo tcaplusdb.TableInfo, has bool, errRet error) {
+func (me *TcaplusService) DescribeTable(ctx context.Context, clusterId, tableInstanceId string) (tableInfo tcaplusdb.TableInfoNew, has bool, errRet error) {
 
 	logId := getLogId(ctx)
 	request := tcaplusdb.NewDescribeTablesRequest()
@@ -762,7 +762,7 @@ func (me *TcaplusService) DescribeTable(ctx context.Context, applicationId, tabl
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	request.ApplicationId = &applicationId
+	request.ClusterId = &clusterId
 	request.Filters = []*tcaplusdb.Filter{
 		{
 			Name:  helper.String("TableInstanceId"),
@@ -803,7 +803,7 @@ func (me *TcaplusService) DescribeTable(ctx context.Context, applicationId, tabl
 
 }
 
-func (me *TcaplusService) DeleteTable(ctx context.Context, applicationId, zoneId, tableInstanceId, tableName string) (taskId string, errRet error) {
+func (me *TcaplusService) DeleteTable(ctx context.Context, clusterId, groupId, tableInstanceId, tableName string) (taskId string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := tcaplusdb.NewDeleteTablesRequest()
@@ -814,18 +814,18 @@ func (me *TcaplusService) DeleteTable(ctx context.Context, applicationId, zoneId
 		}
 	}()
 
-	items := strings.Split(zoneId, ":")
+	items := strings.Split(groupId, ":")
 	if len(items) != 2 {
-		errRet = fmt.Errorf("zone id is broken,%s", zoneId)
+		errRet = fmt.Errorf("group id is broken,%s", groupId)
 		return
 	}
-	zoneId = items[1]
+	groupId = items[1]
 
-	request.ApplicationId = &applicationId
-	request.SelectedTables = []*tcaplusdb.SelectedTableInfo{
+	request.ClusterId = &clusterId
+	request.SelectedTables = []*tcaplusdb.SelectedTableInfoNew{
 		{
 			TableInstanceId: &tableInstanceId,
-			LogicZoneId:     &zoneId,
+			TableGroupId:    &groupId,
 			TableName:       &tableName,
 		},
 	}
@@ -850,7 +850,7 @@ func (me *TcaplusService) DeleteTable(ctx context.Context, applicationId, zoneId
 	return
 }
 
-func (me *TcaplusService) ModifyTableMemo(ctx context.Context, applicationId, zoneId, tableInstanceId, tableName, newDesc string) (errRet error) {
+func (me *TcaplusService) ModifyTableMemo(ctx context.Context, clusterId, groupId, tableInstanceId, tableName, newDesc string) (errRet error) {
 
 	logId := getLogId(ctx)
 	request := tcaplusdb.NewModifyTableMemosRequest()
@@ -860,17 +860,17 @@ func (me *TcaplusService) ModifyTableMemo(ctx context.Context, applicationId, zo
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	items := strings.Split(zoneId, ":")
+	items := strings.Split(groupId, ":")
 	if len(items) != 2 {
-		errRet = fmt.Errorf("zone id is broken,%s", zoneId)
+		errRet = fmt.Errorf("group id is broken,%s", groupId)
 		return
 	}
-	zoneId = items[1]
+	groupId = items[1]
 
-	request.ApplicationId = &applicationId
-	request.TableMemos = []*tcaplusdb.SelectedTableInfo{
+	request.ClusterId = &clusterId
+	request.TableMemos = []*tcaplusdb.SelectedTableInfoNew{
 		{
-			LogicZoneId:     &zoneId,
+			TableGroupId:    &groupId,
 			TableName:       &tableName,
 			TableInstanceId: &tableInstanceId,
 			Memo:            &newDesc,
@@ -900,8 +900,8 @@ func (me *TcaplusService) ModifyTableMemo(ctx context.Context, applicationId, zo
 }
 
 func (me *TcaplusService) ModifyTables(ctx context.Context, tid TcaplusIdlId,
-	applicationId,
-	zoneId,
+	clusterId,
+	groupId,
 	tableInstanceId,
 	tableName,
 	tableIdType string) (taskId string, errRet error) {
@@ -915,14 +915,14 @@ func (me *TcaplusService) ModifyTables(ctx context.Context, tid TcaplusIdlId,
 		}
 	}()
 
-	items := strings.Split(zoneId, ":")
+	items := strings.Split(groupId, ":")
 	if len(items) != 2 {
-		errRet = fmt.Errorf("zone id is broken,%s", zoneId)
+		errRet = fmt.Errorf("group id is broken,%s", groupId)
 		return
 	}
-	zoneId = items[1]
+	groupId = items[1]
 
-	request.ApplicationId = &applicationId
+	request.ClusterId = &clusterId
 	request.IdlFiles = []*tcaplusdb.IdlFileInfo{
 		{
 			FileName:    &tid.FileName,
@@ -932,10 +932,10 @@ func (me *TcaplusService) ModifyTables(ctx context.Context, tid TcaplusIdlId,
 			FileId:      &tid.FileId,
 		},
 	}
-	request.SelectedTables = []*tcaplusdb.SelectedTableInfo{
+	request.SelectedTables = []*tcaplusdb.SelectedTableInfoNew{
 		{
 			TableInstanceId: &tableInstanceId,
-			LogicZoneId:     &zoneId,
+			TableGroupId:    &groupId,
 			TableName:       &tableName,
 			TableIdlType:    &tableIdType,
 		},
@@ -963,7 +963,7 @@ func (me *TcaplusService) ModifyTables(ctx context.Context, tid TcaplusIdlId,
 	return
 }
 
-func (me *TcaplusService) DescribeIdlFileInfos(ctx context.Context, applicationId string) (infos []*tcaplusdb.IdlFileInfo, errRet error) {
+func (me *TcaplusService) DescribeIdlFileInfos(ctx context.Context, clusterId string) (infos []*tcaplusdb.IdlFileInfo, errRet error) {
 
 	logId := getLogId(ctx)
 	request := tcaplusdb.NewDescribeIdlFileInfosRequest()
@@ -977,7 +977,7 @@ func (me *TcaplusService) DescribeIdlFileInfos(ctx context.Context, applicationI
 
 	var offset, limit int64 = 0, 20
 
-	request.ApplicationId = &applicationId
+	request.ClusterId = &clusterId
 
 	request.Offset = &offset
 	request.Limit = &limit

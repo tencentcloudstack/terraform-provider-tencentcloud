@@ -29,5 +29,13 @@ The following arguments are supported:
 * `name` - (Required, ForceNew) Account name.
 * `password` - (Required) Operation password.
 * `description` - (Optional) Database description.
+* `host` - (Optional, ForceNew) Account host, default is `%`.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
 
 

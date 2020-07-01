@@ -53,16 +53,18 @@ The following arguments are supported:
 * `name` - (Required) Name of the VPN gateway. The length of character is limited to 1-60.
 * `vpc_id` - (Required, ForceNew) ID of the VPC.
 * `zone` - (Required, ForceNew) Zone of the VPN gateway.
-* `bandwidth` - (Optional) The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100. Default is 5. When charge type is `PREPAID`, bandwidth degradation operation is unsupported.
+* `bandwidth` - (Optional) The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100,200,500,1000. Default is 5. When charge type is `PREPAID`, bandwidth degradation operation is unsupported.
 * `charge_type` - (Optional) Charge Type of the VPN gateway, valid values are `PREPAID`, `POSTPAID_BY_HOUR` and default is `POSTPAID_BY_HOUR`.
 * `prepaid_period` - (Optional) Period of instance to be prepaid. Valid values are 1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36 and unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.
 * `prepaid_renew_flag` - (Optional) Flag indicates whether to renew or not, valid values are `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`. This para can only be set to take effect in create operation.
 * `tags` - (Optional) A list of tags used to associate different resources.
+* `type` - (Optional) Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`. Note: CCN type is only for whitelist customer now.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - Create time of the VPN gateway.
 * `expired_time` - Expired time of the VPN gateway when charge type is `PREPAID`.
 * `is_address_blocked` - Indicates whether ip address is blocked.
@@ -70,7 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 * `public_ip_address` - Public ip of the VPN gateway.
 * `restrict_state` - Restrict state of gateway, valid values are `PRETECIVELY_ISOLATED`, `NORMAL`.
 * `state` - State of the VPN gateway, valid values are `PENDING`, `DELETING`, `AVAILABLE`.
-* `type` - Type of gateway instance, valid values are `IPSEC`, `SSL`.
 
 
 ## Import

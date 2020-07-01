@@ -72,7 +72,7 @@ func dataSourceTencentCloudVpcRead(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("data_source.tencentcloud_vpc.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
@@ -92,7 +92,7 @@ func dataSourceTencentCloudVpcRead(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 
-	var vpcInfos, err = service.DescribeVpcs(ctx, vpcId, name, map[string]string{}, nil)
+	var vpcInfos, err = service.DescribeVpcs(ctx, vpcId, name, map[string]string{}, nil, "", "")
 	if err != nil {
 		return err
 	}

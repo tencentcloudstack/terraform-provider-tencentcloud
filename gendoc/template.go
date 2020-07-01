@@ -53,14 +53,14 @@ In addition to all arguments above, the following attributes are exported:
                         <li>
                             <a href="/docs/providers/{{$.cloud_mark}}/d/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
                         </li>{{end}}{{else}}
-                        <li>
+                        {{ if .DataSources }}<li>
                             <a href="#">Data Sources</a>
                             <ul class="nav nav-auto-expand">{{range $Resource := .DataSources}}
                                 <li>
                                     <a href="/docs/providers/{{$.cloud_mark}}/d/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
                                 </li>{{end}}
                             </ul>
-                        </li>
+                        </li>{{ end }}
                         <li>
                             <a href="#">Resources</a>
                             <ul class="nav nav-auto-expand">{{range $Resource := .Resources}}

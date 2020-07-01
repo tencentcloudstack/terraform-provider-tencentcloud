@@ -5,63 +5,63 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dayu_ddos_policy" "test_policy" {
-  resource_type         = "bgpip"
-  name                  = "tf_test_policy"
-  black_ips = ["1.1.1.1"]
-  white_ips = ["2.2.2.2]
+  resource_type = "bgpip"
+  name          = "tf_test_policy"
+  black_ips     = ["1.1.1.1"]
+  white_ips     = ["2.2.2.2"]
 
-  drop_options{
-    drop_tcp  = true
-	drop_udp  = true
-	drop_icmp  = true
-	drop_other  = true
-	drop_abroad  = true
-	check_sync_conn = true
-	s_new_limit = 100
-	d_new_limit = 100
-	s_conn_limit = 100
-	d_conn_limit = 100
-	tcp_mbps_limit = 100
-	udp_mbps_limit = 100
-	icmp_mbps_limit = 100
-	other_mbps_limit = 100
-	bad_conn_threshold = 100
-	null_conn_enable = true
-	conn_timeout = 500
-	syn_rate = 50
-	syn_limit = 100
+  drop_options {
+    drop_tcp           = true
+    drop_udp           = true
+    drop_icmp          = true
+    drop_other         = true
+    drop_abroad        = true
+    check_sync_conn    = true
+    s_new_limit        = 100
+    d_new_limit        = 100
+    s_conn_limit       = 100
+    d_conn_limit       = 100
+    tcp_mbps_limit     = 100
+    udp_mbps_limit     = 100
+    icmp_mbps_limit    = 100
+    other_mbps_limit   = 100
+    bad_conn_threshold = 100
+    null_conn_enable   = true
+    conn_timeout       = 500
+    syn_rate           = 50
+    syn_limit          = 100
   }
 
-  port_limits{
-	start_port = "2000"
-	end_port = "2500"
-	protocol = "all"
-  	action = "drop"
-	kind = 1
+  port_limits {
+    start_port = "2000"
+    end_port   = "2500"
+    protocol   = "all"
+    action     = "drop"
+    kind       = 1
   }
 
-  packet_filters{
-	protocol = "tcp"
-	action = "drop"
-	d_start_port = 1000
-	d_end_port = 1500
-	s_start_port = 2000
-	s_end_port = 2500
-	pkt_length_max = 1400
-	pkt_length_min = 1000
-	is_include = true
-	match_begin = "begin_l5"
-	match_type = "pcre"
-	depth = 1000
-	offset = 500
+  packet_filters {
+    protocol       = "tcp"
+    action         = "drop"
+    d_start_port   = 1000
+    d_end_port     = 1500
+    s_start_port   = 2000
+    s_end_port     = 2500
+    pkt_length_max = 1400
+    pkt_length_min = 1000
+    is_include     = true
+    match_begin    = "begin_l5"
+    match_type     = "pcre"
+    depth          = 1000
+    offset         = 500
   }
 
-  watermark_filters{
-  	tcp_port_list = ["2000-3000", "3500-4000"]
-	udp_port_list = ["5000-6000"]
-	offset = 50
-	auto_remove = true
-	open_switch = true
+  watermark_filters {
+    tcp_port_list = ["2000-3000", "3500-4000"]
+    udp_port_list = ["5000-6000"]
+    offset        = 50
+    auto_remove   = true
+    open_switch   = true
   }
 }
 ```
@@ -463,7 +463,7 @@ func resourceTencentCloudDayuDdosPolicyCreate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	resourceType := d.Get("resource_type").(string)
 	name := d.Get("name").(string)
@@ -524,7 +524,7 @@ func resourceTencentCloudDayuDdosPolicyRead(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
@@ -572,7 +572,7 @@ func resourceTencentCloudDayuDdosPolicyUpdate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
@@ -598,7 +598,7 @@ func resourceTencentCloudDayuDdosPolicyUpdate(d *schema.ResourceData, meta inter
 		d.SetPartial("name")
 	}
 
-	if d.HasChange("watermark_filters") || d.HasChange("white_ips") || d.HasChange(("black_ips")) || d.HasChange("packet_filters") || d.HasChange("port_filters") || d.HasChange("drop_options") {
+	if d.HasChange("watermark_filters") || d.HasChange("white_ips") || d.HasChange("black_ips") || d.HasChange("packet_filters") || d.HasChange("port_filters") || d.HasChange("drop_options") {
 
 		//set DDosPolicyDropOption
 		dropMapping := d.Get("drop_options").([]interface{})
@@ -658,7 +658,7 @@ func resourceTencentCloudDayuDdosPolicyDelete(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {

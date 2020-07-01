@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -15,6 +16,7 @@ import (
 type ClusterBasicSetting struct {
 	ClusterId          string
 	ClusterOs          string
+	ClusterOsType      string
 	ClusterVersion     string
 	ClusterName        string
 	ClusterDescription string
@@ -40,6 +42,7 @@ type InstanceAdvancedSettings struct {
 	DockerGraphPath string
 	UserScript      string
 	Unschedulable   int64
+	Labels          []*tke.Label
 }
 
 type ClusterCidrSettings struct {
@@ -297,6 +300,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterBasicSettings.VpcId = &basic.VpcId
 	request.ClusterBasicSettings.ClusterDescription = &basic.ClusterDescription
 	request.ClusterBasicSettings.ClusterName = &basic.ClusterName
+	request.ClusterBasicSettings.OsCustomizeType = &basic.ClusterOsType
 	for k, v := range tags {
 		if len(request.ClusterBasicSettings.TagSpecification) == 0 {
 			request.ClusterBasicSettings.TagSpecification = []*tke.TagSpecification{{
@@ -319,6 +323,10 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.InstanceAdvancedSettings.DockerGraphPath = &iAdvanced.DockerGraphPath
 	request.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
 	request.InstanceAdvancedSettings.Unschedulable = &iAdvanced.Unschedulable
+
+	if len(iAdvanced.Labels) > 0 {
+		request.InstanceAdvancedSettings.Labels = iAdvanced.Labels
+	}
 
 	request.RunInstancesForNode = []*tke.RunInstancesForNode{}
 
@@ -472,7 +480,7 @@ func (me *TkeService) DescribeClusterSecurity(ctx context.Context, id string) (r
 	return me.client.UseTkeClient().DescribeClusterSecurity(request)
 }
 
-func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string) (asGroupId string, errRet error) {
+func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string, labels []*tke.Label) (asGroupId string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := tke.NewCreateClusterAsGroupRequest()
@@ -485,6 +493,10 @@ func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, c
 	request.ClusterId = &id
 	request.AutoScalingGroupPara = &groupPara
 	request.LaunchConfigurePara = &configPara
+
+	if len(labels) > 0 {
+		request.Labels = labels
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().CreateClusterAsGroup(request)
@@ -499,6 +511,28 @@ func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, c
 	}
 
 	asGroupId = *response.Response.AutoScalingGroupId
+	return
+}
+
+func (me *TkeService) DescribeClusterAsGroupsByGroupId(ctx context.Context, id string, groupId string) (clusterAsGroupSet *tke.ClusterAsGroup, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeClusterAsGroupsRequest()
+
+	request.ClusterId = &id
+	request.AutoScalingGroupIds = []*string{&groupId}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterAsGroups(request)
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), err.Error())
+		errRet = err
+		return
+	}
+
+	if len(response.Response.ClusterAsGroupSet) > 0 {
+		clusterAsGroupSet = response.Response.ClusterAsGroupSet[0]
+	}
 	return
 }
 
@@ -521,4 +555,209 @@ func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId s
 		errRet = err
 	}
 	return
+}
+
+/*
+  for MANAGED_CLUSTER open internet access
+*/
+func (me *TkeService) CreateClusterEndpointVip(ctx context.Context, id string, securityPolicies []string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewCreateClusterEndpointVipRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	if len(securityPolicies) > 0 {
+		request.SecurityPolicies = make([]*string, 0, len(securityPolicies))
+		for _, v := range securityPolicies {
+			request.SecurityPolicies = append(request.SecurityPolicies, helper.String(v))
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().CreateClusterEndpointVip(request)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func (me *TkeService) DescribeClusterEndpointVipStatus(ctx context.Context, id string) (status string, message string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDescribeClusterEndpointVipStatusRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterEndpointVipStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response.Response == nil || response.Response.Status == nil {
+		errRet = fmt.Errorf("sdk DescribeClusterEndpointVipStatus return empty status")
+		return
+	}
+	status = *response.Response.Status
+	message = *response.Response.ErrorMsg
+	return
+}
+
+/*
+  for INDEPENDENT_CLUSTER open internet access
+*/
+func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId string, internet bool) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewCreateClusterEndpointRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+
+	request.IsExtranet = &internet
+
+	if subnetId != "" {
+		request.SubnetId = &subnetId
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().CreateClusterEndpoint(request)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func (me *TkeService) DescribeClusterEndpointStatus(ctx context.Context, id string) (status string, message string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDescribeClusterEndpointStatusRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterEndpointStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response.Response == nil || response.Response.Status == nil {
+		errRet = fmt.Errorf("sdk DescribeClusterEndpointStatus return empty status")
+		return
+	}
+	status = *response.Response.Status
+	message = status
+	return
+}
+
+func (me *TkeService) DeleteClusterEndpoint(ctx context.Context, id string, isInternet bool) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDeleteClusterEndpointRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.IsExtranet = &isInternet
+
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().DeleteClusterEndpoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TkeService) DeleteClusterEndpointVip(ctx context.Context, id string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDeleteClusterEndpointVipRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().DeleteClusterEndpointVip(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TkeService) ModifyClusterEndpointSP(ctx context.Context, id string, securityPolicies []string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewModifyClusterEndpointSPRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.SecurityPolicies = helper.Strings(securityPolicies)
+
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().ModifyClusterEndpointSP(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TkeService) DescribeImages(ctx context.Context) (imageIds []string, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeImagesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeImages(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	for _, image := range response.Response.ImageInstanceSet {
+		imageIds = append(imageIds, *image.ImageId)
+	}
+	return
+}
+
+func GetTkeLabels(d *schema.ResourceData, k string) []*tke.Label {
+	labels := make([]*tke.Label, 0)
+	if raw, ok := d.GetOk(k); ok {
+		for k, v := range raw.(map[string]interface{}) {
+			labels = append(labels, &tke.Label{Name: helper.String(k), Value: helper.String(v.(string))})
+		}
+	}
+	return labels
 }

@@ -46,7 +46,7 @@ In addition to all arguments above, the following attributes are exported:
     * `cidr_block` - A network address block of the instance that is attached.
     * `instance_id` - ID of instance is attached.
     * `instance_region` - The region that the instance locates at.
-    * `instance_type` - Type of attached instance network, and available values include VPC, DIRECTCONNECT and BMVPC.
+    * `instance_type` - Type of attached instance network, and available values include VPC, DIRECTCONNECT, BMVPC and VPNGW.
     * `state` - States of instance is attached, and available values include PENDING, ACTIVE, EXPIRED, REJECTED, DELETED, FAILED(asynchronous forced disassociation after 2 hours), ATTACHING, DETACHING and DETACHFAILED(asynchronous forced disassociation after 2 hours).
   * `ccn_id` - ID of the CCN.
   * `create_time` - Creation time of resource.

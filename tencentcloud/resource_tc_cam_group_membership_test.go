@@ -41,7 +41,7 @@ func TestAccTencentCloudCamGroupMembership_basic(t *testing.T) {
 
 func testAccCheckCamGroupMembershipDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	camService := CamService{
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -62,7 +62,7 @@ func testAccCheckCamGroupMembershipDestroy(s *terraform.State) error {
 func testAccCheckCamGroupMembershipExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), "logId", logId)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -101,6 +101,7 @@ resource "tencentcloud_cam_user" "foo" {
   phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
+  force_delete        = true
 }
 
 resource "tencentcloud_cam_group_membership" "group_membership_basic" {
@@ -125,6 +126,7 @@ resource "tencentcloud_cam_user" "user_basic" {
   phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
+  force_delete        = true
 }
 
 resource "tencentcloud_cam_group_membership" "group_membership_basic" {

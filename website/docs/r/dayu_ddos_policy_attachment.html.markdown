@@ -28,4 +28,11 @@ The following arguments are supported:
 * `resource_id` - (Required, ForceNew) Id of the attached resource.
 * `resource_type` - (Required, ForceNew) Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 

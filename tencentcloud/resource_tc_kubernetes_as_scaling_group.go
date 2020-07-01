@@ -30,7 +30,7 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
 
   auto_scaling_config {
     configuration_name = "tf-guagua-as-config"
-    instance_type      = "SN3ne.8XLARGE64"
+    instance_type      = "S1.SMALL1"
     project_id         = 0
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
@@ -52,6 +52,11 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
     }
 
   }
+
+  labels = {
+    "test1" = "test1",
+    "test1" = "test2",
+  }
 }
 ```
 */
@@ -66,6 +71,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -100,6 +106,12 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 					Schema: kubernetesAsScalingConfigPara(),
 				},
 				Description: "Auto scaling config parameters.",
+			},
+			"labels": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Labels of kubernetes AS Group created nodes.",
 			},
 		},
 	}
@@ -184,12 +196,11 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Description:  "Charge types for network traffic. Available values include `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 		},
 		"internet_max_bandwidth_out": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ForceNew:     true,
-			Default:      0,
-			ValidateFunc: validateIntegerInRange(0, 100),
-			Description:  "Max bandwidth of Internet access in Mbps. Default is 0.",
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     0,
+			Description: "Max bandwidth of Internet access in Mbps. Default is 0.",
 		},
 		"public_ip_assigned": {
 			Type:        schema.TypeBool,
@@ -203,7 +214,7 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Sensitive:     true,
 			ForceNew:      true,
 			ValidateFunc:  validateAsConfigPassword,
-			ConflictsWith: []string{"auto_scaling_config.key_ids"},
+			ConflictsWith: []string{"auto_scaling_config.0.key_ids"},
 			Description:   "Password to access.",
 		},
 		"key_ids": {
@@ -211,7 +222,7 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Optional:      true,
 			ForceNew:      true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
-			ConflictsWith: []string{"auto_scaling_config.password"},
+			ConflictsWith: []string{"auto_scaling_config.0.password"},
 			Description:   "ID list of keys.",
 		},
 		"security_group_ids": {
@@ -317,14 +328,14 @@ func kubernetesAsScalingGroupPara() map[string]*schema.Schema {
 			Optional:      true,
 			ForceNew:      true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
-			ConflictsWith: []string{"auto_scaling_group.forward_balancer_ids"},
+			ConflictsWith: []string{"auto_scaling_group.0.forward_balancer_ids"},
 			Description:   "ID list of traditional load balancers.",
 		},
 		"forward_balancer_ids": {
 			Type:          schema.TypeList,
 			Optional:      true,
 			ForceNew:      true,
-			ConflictsWith: []string{"auto_scaling_group.load_balancer_ids"},
+			ConflictsWith: []string{"auto_scaling_group.0.load_balancer_ids"},
 			Description:   "List of application load balancers, which can't be specified with load_balancer_ids together.",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
@@ -583,6 +594,10 @@ func kubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta inter
 		}
 	}
 
+	if request.LoginSettings.Password != nil && *request.LoginSettings.Password == "" {
+		request.LoginSettings.Password = nil
+	}
+
 	if request.LoginSettings.Password == nil && len(request.LoginSettings.KeyIds) == 0 {
 		errRet = fmt.Errorf("Parameters `key_ids` and `password` should be set one")
 		return result, errRet
@@ -646,7 +661,7 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 
 	var (
 		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), "logId", logId)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
 		service = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 		items   = strings.Split(d.Id(), ":")
 	)
@@ -699,6 +714,35 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 	if number == 0 {
 		return nil
 	}
+
+	var clusterAsGroupSet *tke.ClusterAsGroup
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		clusterAsGroupSet, err = service.DescribeClusterAsGroupsByGroupId(ctx, clusterId, asGroupId)
+		if err != nil {
+			return retryError(err)
+		}
+
+		if clusterAsGroupSet == nil {
+			return nil
+		}
+
+		labels := clusterAsGroupSet.Labels
+		var labelsMap = make(map[string]string, len(labels))
+
+		for _, v := range labels {
+			labelsMap[*v.Name] = *v.Value
+		}
+		d.Set("labels", labelsMap)
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if clusterAsGroupSet == nil {
+		d.SetId("")
+	}
 	return nil
 }
 
@@ -707,7 +751,7 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_kubernetes_as_scaling_group.create")()
 	var (
 		logId       = getLogId(contextNil)
-		ctx         = context.WithValue(context.TODO(), "logId", logId)
+		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
 		clusterId   = d.Get("cluster_id").(string)
 		groupParas  = d.Get("auto_scaling_group").([]interface{})
 		configParas = d.Get("auto_scaling_config").([]interface{})
@@ -727,9 +771,11 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
+	labels := GetTkeLabels(d, "labels")
+
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	asGroupId, err := service.CreateClusterAsGroup(ctx, clusterId, groupParaStr, configParaStr)
+	asGroupId, err := service.CreateClusterAsGroup(ctx, clusterId, groupParaStr, configParaStr, labels)
 	if err != nil {
 		return err
 	}
@@ -740,7 +786,7 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		scalingGroup, _, errRet := asService.DescribeAutoScalingGroupById(ctx, asGroupId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if scalingGroup != nil && *scalingGroup.InActivityStatus == SCALING_GROUP_NOT_IN_ACTIVITY_STATUS {
 			return nil
@@ -759,7 +805,7 @@ func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interfa
 
 	var (
 		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), "logId", logId)
+		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
 		service   = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 		asService = AsService{client: meta.(*TencentCloudClient).apiV3Conn}
 		items     = strings.Split(d.Id(), ":")
@@ -790,7 +836,7 @@ func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interfa
 	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		scalingGroup, _, errRet := asService.DescribeAutoScalingGroupById(ctx, asGroupId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if scalingGroup != nil && *scalingGroup.InActivityStatus == SCALING_GROUP_NOT_IN_ACTIVITY_STATUS {
 			return nil
@@ -813,7 +859,7 @@ func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interfa
 			}
 		}
 		if err != nil {
-			return retryError(err, "InternalError")
+			return retryError(err, InternalError)
 		}
 		return nil
 	})
@@ -830,7 +876,7 @@ func resourceKubernetesAsScalingGroupDelete(d *schema.ResourceData, meta interfa
 	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		_, has, errRet := asService.DescribeAutoScalingGroupById(ctx, asGroupId)
 		if errRet != nil {
-			return retryError(errRet, "InternalError")
+			return retryError(errRet, InternalError)
 		}
 		if has > 0 {
 			resource.RetryableError(fmt.Errorf("as group %s still alive", asGroupId))

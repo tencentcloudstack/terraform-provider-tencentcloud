@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/pkg/errors"
@@ -89,14 +90,18 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 		ratelimit.Check(request.GetAction())
 
 		if _, err := client.CreateFunction(request); err != nil {
-			return retryError(errors.WithStack(err), "InternalError")
+			e, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && strings.Contains(e.Code, "ResourceInUse") {
+				return resource.NonRetryableError(err)
+			}
+			return retryError(errors.WithStack(err))
 		}
 		return nil
 	}); err != nil {
 		return err
 	}
 
-	return waitScfFunctionReady(ctx, info.name, *info.namespace, client)
+	return nil
 }
 
 func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace string) (resp *scf.GetFunctionResponse, err error) {
@@ -119,7 +124,7 @@ func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace stri
 				}
 			}
 
-			return retryError(errors.WithStack(err), "InternalError")
+			return retryError(errors.WithStack(err), InternalError)
 		}
 
 		resp = response
@@ -193,7 +198,7 @@ func (me *ScfService) ModifyFunctionCode(ctx context.Context, info scfFunctionIn
 		ratelimit.Check(request.GetAction())
 
 		if _, err := client.UpdateFunctionCode(request); err != nil {
-			return retryError(errors.WithStack(err), "InternalError")
+			return retryError(errors.WithStack(err), InternalError)
 		}
 		return nil
 	}); err != nil {
@@ -258,7 +263,7 @@ func (me *ScfService) ModifyFunctionConfig(ctx context.Context, info scfFunction
 		ratelimit.Check(request.GetAction())
 
 		if _, err := client.UpdateFunctionConfiguration(request); err != nil {
-			return retryError(errors.WithStack(err), "InternalError")
+			return retryError(errors.WithStack(err), InternalError)
 		}
 		return nil
 	}); err != nil {
@@ -286,7 +291,7 @@ func (me *ScfService) DeleteFunction(ctx context.Context, name, namespace string
 					}
 				}
 			}
-			return retryError(errors.WithStack(err), "InternalError")
+			return retryError(errors.WithStack(err), InternalError)
 		}
 
 		return nil
@@ -312,7 +317,7 @@ func (me *ScfService) DeleteFunction(ctx context.Context, name, namespace string
 				}
 			}
 
-			return retryError(errors.WithStack(err), "InternalError")
+			return retryError(errors.WithStack(err), InternalError)
 		}
 	})
 }
@@ -557,7 +562,7 @@ func waitScfFunctionReady(ctx context.Context, name, namespace string, client *s
 
 		response, err := client.GetFunction(request)
 		if err != nil {
-			return retryError(errors.WithStack(err), "InternalError")
+			return retryError(errors.WithStack(err), InternalError)
 		}
 
 		switch *response.Response.Status {

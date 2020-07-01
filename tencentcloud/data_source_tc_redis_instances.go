@@ -87,10 +87,26 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 							Computed:    true,
 							Description: "ID of the project to which a redis instance belongs.",
 						},
+						"type_id": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Instance type. Refer to `data.tencentcloud_redis_zone_config.list.type_id` get available values.",
+						},
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
+							Deprecated:  "It has been deprecated from version 1.33.1. Please use 'type_id' instead.",
 							Description: "Instance type. Available values: master_slave_redis, master_slave_ckv, cluster_ckv, cluster_redis and standalone_redis.",
+						},
+						"redis_shard_num": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The number of instance shard.",
+						},
+						"redis_replicas_num": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The number of instance copies.",
 						},
 						"mem_size": {
 							Type:        schema.TypeInt,
@@ -132,6 +148,12 @@ func dataSourceTencentRedisInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Tags of an instance.",
 						},
+						// payment
+						"charge_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The charge type of instance. Valid values are `POSTPAID` and `PREPAID`. Default value is `POSTPAID`.",
+						},
 					},
 				},
 			},
@@ -143,7 +165,7 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 	defer logElapsed("data_source.tencentcloud_redis_instances.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	service := RedisService{client: client}
@@ -207,25 +229,23 @@ instanceLoop:
 		}
 
 		var instanceDes = make(map[string]interface{})
-
 		instanceDes["redis_id"] = instance.RedisId
 		instanceDes["name"] = instance.Name
 		instanceDes["zone"] = instance.Zone
-
 		instanceDes["project_id"] = instance.ProjectId
 		instanceDes["type"] = instance.Type
 		instanceDes["mem_size"] = instance.MemSize
-
 		instanceDes["status"] = instance.Status
 		instanceDes["vpc_id"] = instance.VpcId
 		instanceDes["subnet_id"] = instance.SubnetId
-
 		instanceDes["ip"] = instance.Ip
 		instanceDes["port"] = instance.Port
 		instanceDes["create_time"] = instance.CreateTime
-
 		instanceDes["tags"] = instance.Tags
-
+		instanceDes["redis_shard_num"] = instance.RedisShardNum
+		instanceDes["redis_replicas_num"] = instance.RedisReplicasNum
+		instanceDes["type_id"] = instance.TypeId
+		instanceDes["charge_type"] = instance.BillingMode
 		instanceList = append(instanceList, instanceDes)
 	}
 

@@ -107,7 +107,7 @@ func dataSourceTencentCloudVpnGateways() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of gateway instance, valid values are `IPSEC`, `SSL`.",
+							Description: "Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`.",
 						},
 						"state": {
 							Type:        schema.TypeString,
@@ -170,7 +170,7 @@ func dataSourceTencentCloudVpnGatewaysRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("data_source.tencentcloud_vpn_gateways.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := meta.(*TencentCloudClient).apiV3Conn.Region

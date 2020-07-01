@@ -19,6 +19,7 @@ func TestAccTencentCloudCamUsersDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.remark", "test"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.name", "cam-user-tests"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.user_id", "cam-user-tests"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.console_login", "true"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.phone_num", "12345678910"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cam_users.users", "user_list.0.country_code", "86"),
@@ -42,6 +43,7 @@ resource "tencentcloud_cam_user" "user" {
   phone_num           = "12345678910"
   country_code        = "86"
   email               = "1234@qq.com"
+  force_delete        = true
 }
   
 data "tencentcloud_cam_users" "users" {

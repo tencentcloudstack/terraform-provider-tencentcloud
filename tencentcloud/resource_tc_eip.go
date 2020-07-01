@@ -85,11 +85,10 @@ func resourceTencentCloudEip() *schema.Resource {
 				Description:  "The charge type of eip, and available values include `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR` and `TRAFFIC_POSTPAID_BY_HOUR`.",
 			},
 			"internet_max_bandwidth_out": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: validateIntegerInRange(1, 1000),
-				Description:  "The bandwidth limit of eip, unit is Mbps, and the range is 1-1000.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The bandwidth limit of eip, unit is Mbps.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -116,7 +115,7 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_eip.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -205,9 +204,10 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 
 func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -250,7 +250,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_eip.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	vpcService := VpcService{client: client}
@@ -291,7 +291,7 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	defer logElapsed("resource.tencentcloud_eip.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}

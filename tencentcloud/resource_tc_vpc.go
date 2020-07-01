@@ -7,7 +7,7 @@ Example Usage
 resource "tencentcloud_vpc" "foo" {
   name         = "ci-temp-test-updated"
   cidr_block   = "10.0.0.0/16"
-  dns_servers  = ["119.29.29.29","8.8.8.8"]
+  dns_servers  = ["119.29.29.29", "8.8.8.8"]
   is_multicast = false
 
   tags = {
@@ -103,7 +103,7 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_vpc.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -159,15 +159,16 @@ func resourceTencentCloudVpcInstanceCreate(d *schema.ResourceData, meta interfac
 
 func resourceTencentCloudVpcInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpc.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	id := d.Id()
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		info, has, e := service.DescribeVpc(ctx, id)
+		info, has, e := service.DescribeVpc(ctx, id, "", "")
 		if e != nil {
 			return retryError(e)
 		}
@@ -217,7 +218,7 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_vpc.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -305,7 +306,7 @@ func resourceTencentCloudVpcInstanceDelete(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_vpc.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 

@@ -96,7 +96,7 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kubernetes_scale_worker.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var cvms RunInstancesForNode
 	var iAdvanced InstanceAdvancedSettings
@@ -188,8 +188,10 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interface{}) error {
 
 	defer logElapsed("resource.tencentcloud_kubernetes_scale_worker.read")()
+	defer inconsistentCheck(d, meta)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -289,7 +291,7 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 
 	defer logElapsed("resource.tencentcloud_kubernetes_scale_worker.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -391,7 +393,7 @@ func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta inter
 			}
 
 			if err != nil {
-				return retryError(err, "InternalError")
+				return retryError(err, InternalError)
 			}
 			return nil
 		})

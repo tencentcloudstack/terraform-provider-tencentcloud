@@ -52,6 +52,13 @@ The following arguments are supported:
 * `realserver_certificate_id` - (Optional, **Deprecated**) It has been deprecated from version 1.28.0. Set `realserver_certificate_ids` instead. CA certificate ID of the realserver.
 * `realserver_certificate_ids` - (Optional) CA certificate ID list of the realserver.
 
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
 
 ## Import
 

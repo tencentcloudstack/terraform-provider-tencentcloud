@@ -49,6 +49,10 @@ variable "instance_name_update" {
   default = "` + defaultInsNameUpdate + `"
 }
 
+variable "availability_region" {
+  default = "` + defaultRegion + `"
+}
+
 variable "availability_zone" {
   default = "` + defaultAZone + `"
 }
@@ -121,5 +125,28 @@ resource "tencentcloud_mysql_instance" "default" {
   engine_version = "5.7"
   root_password = "0153Y474"
   availability_zone = var.availability_zone
+}
+`
+const mysqlInstanceHighPerformanceTestCase = defaultVpcVariable + `
+resource "tencentcloud_mysql_instance" "default" {
+  mem_size = 1000
+  volume_size = 50
+  instance_name = var.instance_name
+  engine_version = "5.7"
+  root_password = "0153Y474"
+  availability_zone = var.availability_zone
+}
+`
+
+const mysqlInstanceHighPerformancePrepaidTestCase = defaultVpcVariable + `
+resource "tencentcloud_mysql_instance" "default" {
+  mem_size = 1000
+  volume_size = 50
+  pay_type = 0
+  instance_name = var.instance_name
+  engine_version = "5.7"
+  root_password = "0153Y474"
+  availability_zone = var.availability_zone
+  force_delete = true
 }
 `

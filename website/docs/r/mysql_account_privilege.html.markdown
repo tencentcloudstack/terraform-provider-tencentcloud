@@ -30,6 +30,14 @@ The following arguments are supported:
 * `account_name` - (Required, ForceNew) Account name.
 * `database_names` - (Required) List of specified database name.
 * `mysql_id` - (Required, ForceNew) Instance ID.
+* `account_host` - (Optional, ForceNew) Account host, default is `%`.
 * `privileges` - (Optional) Database permissions. Available values for Privileges: "SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "DROP", "REFERENCES", "INDEX", "ALTER", "CREATE TEMPORARY TABLES", "LOCK TABLES","EXECUTE", "CREATE VIEW", "SHOW VIEW", "CREATE ROUTINE", "ALTER ROUTINE", "EVENT", and "TRIGGER".
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
 
 

@@ -25,16 +25,12 @@ func (me *CosService) HeadObject(ctx context.Context, bucket, key string) (info 
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
 	}
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "head object", request.String(), errRet.Error())
-		}
-	}()
 	ratelimit.Check("HeadObject")
 	response, err := me.client.UseCosClient().HeadObject(&request)
 	if err != nil {
-		errRet = fmt.Errorf("cos head object error: %s, bucket: %s, object: %s", err.Error(), bucket, key)
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "head object", request.String(), err.Error())
+		errRet = err
 		return
 	}
 
@@ -362,12 +358,12 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (webs
 	response, err := me.client.UseCosClient().GetBucketWebsite(&request)
 	if err != nil {
 		awsError, ok := err.(awserr.Error)
-		if !ok || awsError.Code() != "NoSuchWebsiteConfiguration" {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "get bucket website", request.String(), err.Error())
-			errRet = fmt.Errorf("cos get bucket website error: %s, bucket: %s", err.Error(), bucket)
+		if ok && awsError.Code() == "NoSuchWebsiteConfiguration" {
 			return
 		}
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "get bucket website", request.String(), err.Error())
+		errRet = fmt.Errorf("cos get bucket website error: %s, bucket: %s", err.Error(), bucket)
 		return
 	}
 
@@ -384,6 +380,65 @@ func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string) (webs
 	}
 	if len(website) > 0 {
 		websites = append(websites, website)
+	}
+
+	return
+}
+
+func (me *CosService) GetBucketEncryption(ctx context.Context, bucket string) (encryption string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := s3.GetBucketEncryptionInput{
+		Bucket: aws.String(bucket),
+	}
+	ratelimit.Check("GetBucketEncryption")
+	response, err := me.client.UseCosClient().GetBucketEncryption(&request)
+	if err != nil {
+		awsError, ok := err.(awserr.Error)
+		if ok && awsError.Code() == "NoSuchEncryptionConfiguration" {
+			return
+		}
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "get bucket encryption", request.String(), err.Error())
+		errRet = fmt.Errorf("cos get bucket encryption error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "get bucket encryption", request.String(), response.String())
+
+	if len(response.ServerSideEncryptionConfiguration.Rules) > 0 {
+		encryption = *response.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm
+	}
+	return
+}
+
+func (me *CosService) GetBucketVersioning(ctx context.Context, bucket string) (versioningEnable bool, errRet error) {
+	logId := getLogId(ctx)
+
+	request := s3.GetBucketVersioningInput{
+		Bucket: aws.String(bucket),
+	}
+	ratelimit.Check("GetBucketVersioning")
+	response, err := me.client.UseCosClient().GetBucketVersioning(&request)
+	if err != nil {
+		awsError, ok := err.(awserr.Error)
+		if ok && awsError.Code() == "NoSuchVersioningConfiguration" {
+			return
+		}
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "get bucket versioning", request.String(), err.Error())
+		errRet = fmt.Errorf("cos get bucket versioning error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "get bucket versioning", request.String(), response.String())
+
+	if response.Status == nil || *response.Status == "Suspended" {
+		versioningEnable = false
+	} else if *response.Status == "Enabled" {
+		versioningEnable = true
 	}
 
 	return

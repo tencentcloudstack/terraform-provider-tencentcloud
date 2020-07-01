@@ -5,29 +5,29 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_scaling_config" "launch_configuration" {
-	configuration_name = "launch-configuration"
-	image_id = "img-9qabwvbn"
-	instance_types = ["SA1.SMALL1"]
-	project_id = 0
-	system_disk_type = "CLOUD_PREMIUM"
-	system_disk_size = "50"
+  configuration_name = "launch-configuration"
+  image_id           = "img-9qabwvbn"
+  instance_types     = ["SA1.SMALL1"]
+  project_id         = 0
+  system_disk_type   = "CLOUD_PREMIUM"
+  system_disk_size   = "50"
 
-	data_disk {
-		disk_type = "CLOUD_PREMIUM"
-		disk_size = 50
-	}
+  data_disk {
+    disk_type = "CLOUD_PREMIUM"
+    disk_size = 50
+  }
 
-	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
-	internet_max_bandwidth_out = 10
-	public_ip_assigned = true
-	password = "test123#"
-	enhanced_security_service = false
-	enhanced_monitor_service = false
-	user_data = "dGVzdA=="
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+  internet_max_bandwidth_out = 10
+  public_ip_assigned         = true
+  password                   = "test123#"
+  enhanced_security_service  = false
+  enhanced_monitor_service   = false
+  user_data                  = "dGVzdA=="
 
-	instance_tags = {
-		tag = "as"
-	}
+  instance_tags = {
+    tag = "as"
+  }
 }
 ```
 
@@ -35,7 +35,7 @@ Import
 
 AutoScaling Configuration can be imported using the id, e.g.
 
-```hcl
+```
 $ terraform import tencentcloud_as_scaling_config.scaling_config asc-n32ymck2
 ```
 */
@@ -138,11 +138,10 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Description:  "Charge types for network traffic. Available values include `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 			},
 			"internet_max_bandwidth_out": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      0,
-				ValidateFunc: validateIntegerInRange(0, 100),
-				Description:  "Max bandwidth of Internet access in Mbps. Default is 0.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Max bandwidth of Internet access in Mbps. Default is 0.",
 			},
 			"public_ip_assigned": {
 				Type:        schema.TypeBool,
@@ -363,9 +362,10 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 
 func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_as_scaling_config.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	configurationId := d.Id()
 	asService := AsService{
@@ -556,7 +556,7 @@ func resourceTencentCloudAsScalingConfigDelete(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_as_scaling_config.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	configurationId := d.Id()
 	asService := AsService{

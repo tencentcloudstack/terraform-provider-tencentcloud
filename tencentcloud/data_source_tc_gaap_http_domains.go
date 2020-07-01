@@ -141,7 +141,7 @@ func dataSourceTencentCloudGaapHttpDomains() *schema.Resource {
 func dataSourceTencentCloudGaapHttpDomainsRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("data_source.tencentcloud_gaap_http_domains.read")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	listenerId := d.Get("listener_id").(string)
 	domain := d.Get("domain").(string)

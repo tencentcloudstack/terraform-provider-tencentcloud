@@ -1,29 +1,30 @@
 /*
-Use this resource to create tcaplus idl file
+Use this resource to create TcaplusDB IDL file.
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_tcaplus_application" "test" {
+resource "tencentcloud_tcaplus_cluster" "test" {
   idl_type                 = "PROTO"
-  app_name                 = "tf_tcaplus_app_test"
+  cluster_name             = "tf_tcaplus_cluster_test"
   vpc_id                   = "vpc-7k6gzox6"
   subnet_id                = "subnet-akwgvfa3"
   password                 = "1qaA2k1wgvfa3ZZZ"
   old_password_expire_last = 3600
 }
 
-resource "tencentcloud_tcaplus_zone" "zone" {
-  app_id         = tencentcloud_tcaplus_application.test.id
-  zone_name      = "tf_test_zone_name"
+resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
+  cluster_id      = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_name = "tf_test_group_name"
 }
 
 resource "tencentcloud_tcaplus_idl" "main" {
-  app_id         = tencentcloud_tcaplus_application.test.id
-  file_name      = "tf_idl_test"
-  file_type      = "PROTO"
-  file_ext_type  = "proto"
-  file_content   = <<EOF
+  cluster_id    = tencentcloud_tcaplus_cluster.test.id
+  tablegroup_id = tencentcloud_tcaplus_tablegroup.tablegroup.id
+  file_name     = "tf_idl_test"
+  file_type     = "PROTO"
+  file_ext_type = "proto"
+  file_content  = <<EOF
     syntax = "proto2";
     package myTcaplusTable;
     import "tcaplusservice.optionv1.proto";
@@ -67,12 +68,12 @@ import (
 )
 
 type TcaplusIdlId struct {
-	ApplicationId string
-	FileExtType   string
-	FileId        int64
-	FileName      string
-	FileSize      int64
-	FileType      string
+	ClusterId   string
+	FileExtType string
+	FileId      int64
+	FileName    string
+	FileSize    int64
+	FileType    string
 }
 
 func resourceTencentCloudTcaplusIdl() *schema.Resource {
@@ -81,80 +82,86 @@ func resourceTencentCloudTcaplusIdl() *schema.Resource {
 		Read:   resourceTencentCloudTcaplusIdlRead,
 		Delete: resourceTencentCloudTcaplusIdlDelete,
 		Schema: map[string]*schema.Schema{
-			"app_id": {
+			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Application id of the idl belongs..",
+				Description: "Id of the TcaplusDB cluster to which the table group belongs.",
+			},
+			"tablegroup_id": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Id of the table group to which the IDL file belongs.",
 			},
 			"file_name": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Name of this idl file.",
+				Description: "Name of the IDL file.",
 			},
 			"file_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_IDL_TYPES),
-				Description:  "Type of this idl file, Valid values are " + strings.Join(TCAPLUS_IDL_TYPES, ",") + ".",
+				Description:  "Type of the IDL file. Valid values are PROTO and TDR.",
 			},
 			"file_ext_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_FILE_EXT_TYPES),
-				Description:  "File ext type of this idl file. if `file_type` is PROTO  `file_ext_type` must be 'proto',if `file_type` is TDR  `file_ext_type` must be 'xml',if `file_type` is MIX  `file_ext_type` must be 'xml' or 'proto'.",
+				Description:  "File ext type of the IDL file. If `file_type` is `PROTO`, `file_ext_type` must be 'proto'; If `file_type` is `TDR`, `file_ext_type` must be 'xml'.",
 			},
 			"file_content": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Idl file content.",
+				Description: "IDL file content of the TcaplusDB table.",
 			},
 
 			// Computed values.
 			"table_infos": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Table infos in this idl.",
+				Description: "Table info of the IDL.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"error": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Show if this table  error.",
+							Description: "Error messages for creating IDL file.",
 						},
 						"table_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of this table.",
+							Description: "Name of the TcaplusDB table.",
 						},
 						"key_fields": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Key fields of this table.",
+							Description: "Primary key fields of the TcaplusDB table.",
 						},
 						"sum_key_field_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Key fields size of this table.",
+							Description: "Total size of primary key field of the TcaplusDB table.",
 						},
 						"value_fields": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Value fields of this table.",
+							Description: "Non-primary key fields of the TcaplusDB table.",
 						},
 						"sum_value_field_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Value fields size of this table.",
+							Description: "Total size of non-primary key fields of the TcaplusDB table.",
 						},
 						"index_key_set": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Index key set of this table.",
+							Description: "Index key set of the TcaplusDB table.",
 						},
 					},
 				},
@@ -167,17 +174,24 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_tcaplus_idl.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var tcaplusIdlId TcaplusIdlId
-	tcaplusIdlId.ApplicationId = d.Get("app_id").(string)
+	tcaplusIdlId.ClusterId = d.Get("cluster_id").(string)
 	tcaplusIdlId.FileName = d.Get("file_name").(string)
 	tcaplusIdlId.FileType = d.Get("file_type").(string)
 	tcaplusIdlId.FileExtType = d.Get("file_ext_type").(string)
 
+	groupId := d.Get("tablegroup_id").(string)
 	fileContent := d.Get("file_content").(string)
+
+	items := strings.Split(groupId, ":")
+	if len(items) != 2 {
+		return fmt.Errorf("group id is broken,%s", groupId)
+	}
+	groupId = items[1]
 
 	matchExtTypes := FileExtTypeMatch[tcaplusIdlId.FileType]
 	if matchExtTypes == nil || !matchExtTypes[tcaplusIdlId.FileExtType] {
@@ -187,10 +201,10 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 
 	tcaplusIdlId.FileSize = int64(len(fileContent))
 
-	idlId, parseTableInfos, err := tcaplusService.VerifyIdlFiles(ctx, tcaplusIdlId, fileContent)
+	idlId, parseTableInfos, err := tcaplusService.VerifyIdlFiles(ctx, tcaplusIdlId, groupId, fileContent)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			idlId, parseTableInfos, err = tcaplusService.VerifyIdlFiles(ctx, tcaplusIdlId, fileContent)
+			idlId, parseTableInfos, err = tcaplusService.VerifyIdlFiles(ctx, tcaplusIdlId, groupId, fileContent)
 			if err != nil {
 				return retryError(err)
 			}
@@ -237,9 +251,10 @@ func resourceTencentCloudTcaplusIdlCreate(d *schema.ResourceData, meta interface
 
 func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tcaplus_idl.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -293,7 +308,7 @@ func resourceTencentCloudTcaplusIdlRead(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudTcaplusIdlDelete(d *schema.ResourceData, meta interface{}) error {
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tcaplusService := TcaplusService{client: meta.(*TencentCloudClient).apiV3Conn}
 

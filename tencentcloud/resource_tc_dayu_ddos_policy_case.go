@@ -7,28 +7,28 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dayu_ddos_policy_case" "foo" {
-  resource_type         = "bgpip"
-  name                  = "tf_test_policy_case"
-  platform_types        = ["PC", "MOBILE"]
-  app_type              = "WEB"
-  app_protocols         = ["tcp", "udp"]
-  tcp_start_port		= "1000"
-  tcp_end_port          = "2000"
-  udp_start_port		= "3000"
-  udp_end_port			= "4000"
-  has_abroad			= "yes"
-  has_initiate_tcp		= "yes"
-  has_initiate_udp		= "yes"
-  peer_tcp_port			= "1111"
-  peer_udp_port			= "3333"
-  tcp_footprint		= "511"
-  udp_footprint		= "500"
-  web_api_urls			= ["abc.com", "test.cn/aaa.png"]
-  min_tcp_package_len	= "1000"
-  max_tcp_package_len	= "1200"
-  min_udp_package_len	= "1000"
-  max_udp_package_len	= "1200"
-  has_vpn				= "yes"
+  resource_type       = "bgpip"
+  name                = "tf_test_policy_case"
+  platform_types      = ["PC", "MOBILE"]
+  app_type            = "WEB"
+  app_protocols       = ["tcp", "udp"]
+  tcp_start_port      = "1000"
+  tcp_end_port        = "2000"
+  udp_start_port      = "3000"
+  udp_end_port        = "4000"
+  has_abroad          = "yes"
+  has_initiate_tcp    = "yes"
+  has_initiate_udp    = "yes"
+  peer_tcp_port       = "1111"
+  peer_udp_port       = "3333"
+  tcp_footprint       = "511"
+  udp_footprint       = "500"
+  web_api_urls        = ["abc.com", "test.cn/aaa.png"]
+  min_tcp_package_len = "1000"
+  max_tcp_package_len = "1200"
+  min_udp_package_len = "1000"
+  max_udp_package_len = "1200"
+  has_vpn             = "yes"
 }
 ```
 */
@@ -220,7 +220,7 @@ func resourceTencentCloudDayuDdosPolicyCaseCreate(d *schema.ResourceData, meta i
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_case.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := dayu.NewCreateDDoSPolicyCaseRequest()
 	resourceType := d.Get("resource_type").(string)
@@ -321,9 +321,10 @@ func resourceTencentCloudDayuDdosPolicyCaseCreate(d *schema.ResourceData, meta i
 
 func resourceTencentCloudDayuDdosPolicyCaseRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_case.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
@@ -431,7 +432,7 @@ func resourceTencentCloudDayuDdosPolicyCaseUpdate(d *schema.ResourceData, meta i
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_case.update")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
@@ -538,7 +539,7 @@ func resourceTencentCloudDayuDdosPolicyCaseDelete(d *schema.ResourceData, meta i
 	defer logElapsed("resource.tencentcloud_dayu_ddos_policy_case.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {

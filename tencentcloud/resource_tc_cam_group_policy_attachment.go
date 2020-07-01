@@ -22,6 +22,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -81,7 +82,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentCreate(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_cam_group_policy_attachment.create")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupId := d.Get("group_id").(string)
 	policyId := d.Get("policy_id").(string)
@@ -102,16 +103,33 @@ func resourceTencentCloudCamGroupPolicyAttachmentCreate(d *schema.ResourceData, 
 	}
 
 	d.SetId(groupId + "#" + policyId)
-	time.Sleep(3 * time.Second)
 
+	//get really instance then read
+	groupPolicyAttachmentId := d.Id()
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instance, e := camService.DescribeGroupPolicyAttachmentById(ctx, groupPolicyAttachmentId)
+		if e != nil {
+			return retryError(e)
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("creation not done"))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM group policy failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	time.Sleep(10 * time.Second)
 	return resourceTencentCloudCamGroupPolicyAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudCamGroupPolicyAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_group_policy_attachment.read")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupPolicyAttachmentId := d.Id()
 
@@ -155,7 +173,7 @@ func resourceTencentCloudCamGroupPolicyAttachmentDelete(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_cam_group_policy_attachment.delete")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupPolicyAttachmentId := d.Id()
 

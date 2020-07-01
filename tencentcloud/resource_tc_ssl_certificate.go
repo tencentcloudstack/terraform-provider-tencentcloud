@@ -147,7 +147,7 @@ func resourceTencentCloudSslCertificate() *schema.Resource {
 func resourceTencentCloudSslCertificateCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssl_certificate.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	name := d.Get("name").(string)
 	certType := d.Get("type").(string)
@@ -177,8 +177,10 @@ func resourceTencentCloudSslCertificateCreate(d *schema.ResourceData, m interfac
 
 func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssl_certificate.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -228,7 +230,7 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 		return err
 	}
 	_ = d.Set("project_id", projectId)
-	_ = d.Set("cert", certificate.Cert)
+	_ = d.Set("cert", strings.TrimRight(*certificate.Cert, "\n"))
 	_ = d.Set("product_zh_name", certificate.ProductZhName)
 	_ = d.Set("domain", certificate.Domain)
 	_ = d.Set("status", certificate.Status)
@@ -248,7 +250,7 @@ func resourceTencentCloudSslCertificateRead(d *schema.ResourceData, m interface{
 func resourceTencentCloudSslCertificateDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssl_certificate.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 

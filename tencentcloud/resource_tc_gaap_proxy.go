@@ -63,10 +63,9 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 				Description: "ID of the project within the GAAP proxy, '0' means is default project.",
 			},
 			"bandwidth": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				ValidateFunc: validateAllowedIntValue([]int{10, 20, 50, 100, 200, 500, 1000}),
-				Description:  "Maximum bandwidth of the GAAP proxy, unit is Mbps, the available values include `10`, `20`, `50`, `100`, `200`, `500` and `1000`.",
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "Maximum bandwidth of the GAAP proxy, unit is Mbps, the available values include `10`, `20`, `50`, `100`, `200`, `500` and `1000`.",
 			},
 			"concurrent": {
 				Type:         schema.TypeInt,
@@ -146,7 +145,7 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	name := d.Get("name").(string)
 	projectId := d.Get("project_id").(int)
@@ -177,8 +176,10 @@ func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) 
 
 func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -289,7 +290,7 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -373,7 +374,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 func resourceTencentCloudGaapProxyDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_gaap_proxy.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 	createTimeStr := d.Get("create_time").(string)

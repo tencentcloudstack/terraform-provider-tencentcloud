@@ -187,7 +187,7 @@ func resourceTencentCloudEni() *schema.Resource {
 func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_eni.create")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	name := d.Get("name").(string)
 	vpcId := d.Get("vpc_id").(string)
@@ -347,8 +347,10 @@ func resourceTencentCloudEniCreate(d *schema.ResourceData, m interface{}) error 
 
 func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_eni.read")()
+	defer inconsistentCheck(d, m)()
+
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -410,7 +412,7 @@ func resourceTencentCloudEniRead(d *schema.ResourceData, m interface{}) error {
 func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_eni.update")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
@@ -647,7 +649,7 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 func resourceTencentCloudEniDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_eni.delete")()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 

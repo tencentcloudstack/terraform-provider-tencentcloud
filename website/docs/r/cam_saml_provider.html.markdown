@@ -32,6 +32,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
+* `id` - ID of the resource.
 * `create_time` - The create time of the CAM SAML provider.
 * `provider_arn` - The arn of the CAM SAML provider.
 * `update_time` - The last update time of the CAM SAML provider.

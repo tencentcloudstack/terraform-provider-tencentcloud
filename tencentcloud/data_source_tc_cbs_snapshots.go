@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cbs_snapshots" "snapshots" {
-    snapshot_id        = "snap-f3io7adt"
-    result_output_file = "mytestpath"
+  snapshot_id        = "snap-f3io7adt"
+  result_output_file = "mytestpath"
 }
 ```
 */
@@ -129,7 +129,7 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 	defer logElapsed("data_source.tencentcloud_cbs_snapshots.read")()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), "logId", logId)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	params := make(map[string]string)
 	if v, ok := d.GetOk("snapshot_id"); ok {
