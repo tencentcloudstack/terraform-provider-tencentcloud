@@ -18,7 +18,7 @@ resource "tencentcloud_sqlserver_instance" "foo" {
 
 Import
 
-sqlserver instance can be imported using the id, e.g.
+SQL Server instance can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_sqlserver_instance.foo mssql-3cdq7kx5

@@ -14,7 +14,7 @@ resource "tencentcloud_sqlserver_db" "example" {
 
 Import
 
-sqlserver account can be imported using the id, e.g.
+SQL Server DB can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_sqlserver_db.foo mssql-3cdq7kx5#db_name

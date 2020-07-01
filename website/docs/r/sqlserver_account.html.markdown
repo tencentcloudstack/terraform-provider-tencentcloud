@@ -50,7 +50,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-sqlserver account can be imported using the id, e.g.
+SQL Server account can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_sqlserver_account.foo postgres-cda1iex1

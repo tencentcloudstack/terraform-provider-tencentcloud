@@ -1,5 +1,5 @@
 /*
-Use this resource to create sqlserver account DB attachment
+Use this resource to create SQL Server account DB attachment
 
 Example Usage
 
@@ -14,7 +14,7 @@ resource "tencentcloud_sqlserver_account_db_attachment" "foo" {
 
 Import
 
-sqlserver account can be imported using the id, e.g.
+SQL Server account DB attachment can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_sqlserver_account_db_attachment.foo mssql-3cdq7kx5#tf_sqlserver_account#test111
