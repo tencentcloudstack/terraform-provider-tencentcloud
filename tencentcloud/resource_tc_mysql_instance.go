@@ -78,18 +78,18 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
 				if (olds == "" && news == MYSQL_CHARGE_TYPE_POSTPAID) ||
 					(olds == MYSQL_CHARGE_TYPE_POSTPAID && news == "") {
-					if v, ok:= d.GetOkExists("pay_type"); ok&& v.(int) == MysqlPayByUse{
+					if v, ok := d.GetOkExists("pay_type"); ok && v.(int) == MysqlPayByUse {
 						return true
 					}
-				}else if(olds == ""&& news == MYSQL_CHARGE_TYPE_PREPAID) ||
-					(olds == MYSQL_CHARGE_TYPE_PREPAID && news == ""){
-					if v, ok:= d.GetOkExists("pay_type"); ok&& v.(int) == MysqlPayByMonth{
+				} else if (olds == "" && news == MYSQL_CHARGE_TYPE_PREPAID) ||
+					(olds == MYSQL_CHARGE_TYPE_PREPAID && news == "") {
+					if v, ok := d.GetOkExists("pay_type"); ok && v.(int) == MysqlPayByMonth {
 						return true
 					}
 				}
 				return olds == news
 			},
-			Description:   "Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
+			Description: "Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
 		},
 		"period": {
 			Type:          schema.TypeInt,
