@@ -598,6 +598,20 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
+	// Wait for the tags attached to the vm since tags attachment it's async while vm creation.
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cvm", "instance", tcClient.Region, instanceId)
+		err := tagService.ModifyTags(ctx, resourceName, tags, nil)
+		if err != nil {
+			// Since we have included the tags params in the creating cvm request,
+			// when the call returns success, we assume it's successful, regardless of this `ModifyTags` call failed.
+			// The next time user run terraform, the missing tags(if any) would be synced.
+			log.Printf("[WARN] sync cvm %s tags failed: %+v, ignore", instanceId, err)
+		}
+	}
+
 	if !(d.Get("running_flag").(bool)) {
 		err = cvmService.StopInstance(ctx, instanceId)
 		if err != nil {
