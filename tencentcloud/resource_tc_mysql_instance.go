@@ -62,7 +62,6 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"pay_type": {
 			Type:          schema.TypeInt,
 			Deprecated:    "It has been deprecated from version 1.36.0.",
-			ForceNew:      true,
 			Optional:      true,
 			ValidateFunc:  validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
 			ConflictsWith: []string{"charge_type", "prepaid_period"},
@@ -76,6 +75,20 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			ValidateFunc:  validateAllowedStringValue([]string{MYSQL_CHARGE_TYPE_PREPAID, MYSQL_CHARGE_TYPE_POSTPAID}),
 			ConflictsWith: []string{"pay_type", "period"},
 			Default:       MYSQL_CHARGE_TYPE_POSTPAID,
+			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+				if (olds == "" && news == MYSQL_CHARGE_TYPE_POSTPAID) ||
+					(olds == MYSQL_CHARGE_TYPE_POSTPAID && news == "") {
+					if v, ok:= d.GetOkExists("pay_type"); ok&& v.(int) == MysqlPayByUse{
+						return true
+					}
+				}else if(olds == ""&& news == MYSQL_CHARGE_TYPE_PREPAID) ||
+					(olds == MYSQL_CHARGE_TYPE_PREPAID && news == ""){
+					if v, ok:= d.GetOkExists("pay_type"); ok&& v.(int) == MysqlPayByMonth{
+						return true
+					}
+				}
+				return olds == news
+			},
 			Description:   "Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
 		},
 		"period": {
