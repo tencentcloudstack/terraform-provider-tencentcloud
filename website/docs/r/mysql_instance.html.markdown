@@ -16,9 +16,9 @@ Provides a mysql instance resource to create master database instances.
 
 ```hcl
 resource "tencentcloud_mysql_instance" "default" {
-  internet_service = 1
-  engine_version   = "5.7"
-
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
   root_password     = "********"
   slave_deploy_mode = 0
   first_slave_zone  = "ap-guangzhou-4"
