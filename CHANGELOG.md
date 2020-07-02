@@ -1,4 +1,9 @@
 ## 1.39.0 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_mysql_instance` fix auto-forcenew on `charge_type` and `pay_type` when upgrading terraform version. ([#459](https://github.com/terraform-providers/terraform-provider-tencentcloud/pull/459)).
+
 ## 1.38.1 (June 30, 2020)
 
 BUG FIXES:

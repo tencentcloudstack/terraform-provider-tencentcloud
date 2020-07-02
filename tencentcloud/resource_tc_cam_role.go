@@ -209,13 +209,6 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeRoleById(ctx, roleId)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				errCode := ee.GetCode()
-				//check if read empty
-				if strings.Contains(errCode, "ResourceNotFound") {
-					return nil
-				}
-			}
 			return retryError(e)
 		}
 		instance = result

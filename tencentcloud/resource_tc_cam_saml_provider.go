@@ -167,13 +167,6 @@ func resourceTencentCloudCamSAMLProviderRead(d *schema.ResourceData, meta interf
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := camService.DescribeSAMLProviderById(ctx, samlProviderId)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				errCode := ee.GetCode()
-				//check if read empty
-				if strings.Contains(errCode, "ResourceNotFound") {
-					return nil
-				}
-			}
 			return retryError(e)
 		}
 		instance = result
