@@ -9,7 +9,7 @@ Example Usage
 resource "tencentcloud_mysql_instance" "default" {
   internet_service = 1
   engine_version   = "5.7"
-
+  charge_type = "POSTPAID"
   root_password     = "********"
   slave_deploy_mode = 0
   first_slave_zone  = "ap-guangzhou-4"
@@ -62,11 +62,13 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"pay_type": {
 			Type:          schema.TypeInt,
 			Deprecated:    "It has been deprecated from version 1.36.0.",
-			ForceNew:      true,
 			Optional:      true,
 			ValidateFunc:  validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
 			ConflictsWith: []string{"charge_type", "prepaid_period"},
-			//Default:      MysqlPayByUse,
+			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+				return true
+			},
+			Default:     -1,
 			Description: "Pay type of instance, 0: prepaid, 1: postpaid.",
 		},
 		"charge_type": {
@@ -76,24 +78,44 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			ValidateFunc:  validateAllowedStringValue([]string{MYSQL_CHARGE_TYPE_PREPAID, MYSQL_CHARGE_TYPE_POSTPAID}),
 			ConflictsWith: []string{"pay_type", "period"},
 			Default:       MYSQL_CHARGE_TYPE_POSTPAID,
-			Description:   "Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
+			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+				if (olds == "" && news == MYSQL_CHARGE_TYPE_POSTPAID) ||
+					(olds == MYSQL_CHARGE_TYPE_POSTPAID && news == "") {
+					if v, ok := d.GetOkExists("pay_type"); ok && v.(int) == MysqlPayByUse {
+						return true
+					}
+				} else if (olds == "" && news == MYSQL_CHARGE_TYPE_PREPAID) ||
+					(olds == MYSQL_CHARGE_TYPE_PREPAID && news == "") {
+					if v, ok := d.GetOkExists("pay_type"); ok && v.(int) == MysqlPayByMonth {
+						return true
+					}
+				}
+				return olds == news
+			},
+			Description: "Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
 		},
 		"period": {
 			Type:          schema.TypeInt,
 			Deprecated:    "It has been deprecated from version 1.36.0.",
 			Optional:      true,
-			Default:       1,
+			Default:       -1,
 			ConflictsWith: []string{"charge_type", "prepaid_period"},
 			ValidateFunc:  validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
-			Description:   "Period of instance. NOTES: Only supported prepaid instance.",
+			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+				return true
+			},
+			Description: "Period of instance. NOTES: Only supported prepaid instance.",
 		},
 		"prepaid_period": {
 			Type:          schema.TypeInt,
 			Optional:      true,
 			Default:       1,
 			ConflictsWith: []string{"pay_type", "period"},
-			ValidateFunc:  validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
-			Description:   "Period of instance. NOTES: Only supported prepaid instance.",
+			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+				return true
+			},
+			ValidateFunc: validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
+			Description:  "Period of instance. NOTES: Only supported prepaid instance.",
 		},
 		"auto_renew_flag": {
 			Type:         schema.TypeInt,
@@ -488,9 +510,9 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 
 	request := cdb.NewCreateDBInstanceRequest()
 
-	_, oldOk := d.GetOkExists("pay_type")
+	payType, oldOk := d.GetOkExists("pay_type")
 	var period int
-	if !oldOk {
+	if !oldOk || payType == -1 {
 		period = d.Get("prepaid_period").(int)
 	} else {
 		period = d.Get("period").(int)
@@ -663,24 +685,16 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		d.SetId("")
 		return
 	}
+
 	_ = d.Set("instance_name", *mysqlInfo.InstanceName)
 
-	_, oldOk := d.GetOkExists("pay_type")
-	var periodKey string
-	if oldOk {
-		_ = d.Set("pay_type", int(*mysqlInfo.PayType))
-		periodKey = "period"
-	} else {
-		periodKey = "prepaid_period"
-
-		_ = d.Set("charge_type", MYSQL_CHARGE_TYPE[int(*mysqlInfo.PayType)])
-
-	}
-
+	_ = d.Set("charge_type", MYSQL_CHARGE_TYPE[int(*mysqlInfo.PayType)])
+	_ = d.Set("pay_type", -1)
+	_ = d.Set("period", -1)
 	if int(*mysqlInfo.PayType) == MysqlPayByMonth {
-		tempInt, _ := d.Get(periodKey).(int)
+		tempInt, _ := d.Get("prepaid_period").(int)
 		if tempInt == 0 {
-			_ = d.Set(periodKey, 1)
+			_ = d.Set("prepaid_period", 1)
 		}
 	}
 
@@ -1339,7 +1353,7 @@ func getPayType(d *schema.ResourceData) (payType interface{}) {
 	chargeType := d.Get("charge_type")
 	payType, oldOk := d.GetOkExists("pay_type")
 
-	if !oldOk {
+	if !oldOk || payType == -1 {
 		if chargeType == MYSQL_CHARGE_TYPE_PREPAID {
 			payType = MysqlPayByMonth
 		} else {
