@@ -1,4 +1,9 @@
-## 1.39.0 (Unreleased)
+## 1.38.2 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix `allocate_public_ip` inconsistency when eip is attached to the cvm.
+
 ## 1.38.1 (June 30, 2020)
 
 BUG FIXES:

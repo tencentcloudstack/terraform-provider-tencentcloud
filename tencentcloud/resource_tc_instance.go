@@ -87,7 +87,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
-	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -695,26 +694,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
 
-	if len(instance.PublicIpAddresses) > 0 {
-		vpcService := VpcService{client: client}
-		filter := map[string][]string{
-			"address-ip": {*instance.PublicIpAddresses[0]},
-		}
-		var eips []*vpc.Address
-		var errRet error
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			eips, errRet = vpcService.DescribeEipByFilter(ctx, filter)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
-		_ = d.Set("allocate_public_ip", len(eips) < 1)
-	} else {
-		_ = d.Set("allocate_public_ip", false)
+	if _, ok := d.GetOkExists("allocate_public_ip"); !ok {
+		_ = d.Set("allocate_public_ip", len(instance.PublicIpAddresses) > 0)
 	}
 
 	// as attachment add tencentcloud:autoscaling:auto-scaling-group-id tag automatically
