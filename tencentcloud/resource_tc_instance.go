@@ -540,23 +540,6 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.UserData = &userData
 	}
 
-	// tags
-	if v, ok := d.GetOk("tags"); ok {
-		tags := make([]*cvm.Tag, 0)
-		for key, value := range v.(map[string]interface{}) {
-			tag := &cvm.Tag{
-				Key:   helper.String(key),
-				Value: helper.String(value.(string)),
-			}
-			tags = append(tags, tag)
-		}
-		tagSpecification := &cvm.TagSpecification{
-			ResourceType: helper.String("instance"),
-			Tags:         tags,
-		}
-		request.TagSpecification = []*cvm.TagSpecification{tagSpecification}
-	}
-
 	instanceId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check("create")
@@ -595,6 +578,17 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if err != nil {
 		return err
+	}
+
+	// Wait for the tags attached to the vm since tags attachment it's async while vm creation.
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cvm", "instance", tcClient.Region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
+			return err
+		}
 	}
 
 	if !(d.Get("running_flag").(bool)) {
@@ -941,7 +935,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::cvm:%s:uin/:instance/%s", region, instanceId)
+		resourceName := BuildTagResourceName("cvm", "instance", region, instanceId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
