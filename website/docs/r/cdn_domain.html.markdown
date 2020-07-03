@@ -68,9 +68,9 @@ The `https_config` object supports the following:
 
 The `origin` object supports the following:
 
-* `origin_list` - (Required) Master origin server list. Valid values can be ip or doamin name. When modifying the origin server, you need to enter the corresponding `origin_type`.
+* `origin_list` - (Required) Master origin server list. Valid values can be ip or domain name. When modifying the origin server, you need to enter the corresponding `origin_type`.
 * `origin_type` - (Required) Master origin server type. Valid values are `domain`, `cos`, `ip`, `ipv6` and `ip_ipv6`.
-* `backup_origin_list` - (Optional) Backup origin server list. Valid values can be ip or doamin name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.
+* `backup_origin_list` - (Optional) Backup origin server list. Valid values can be ip or domain name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.
 * `backup_origin_type` - (Optional) Backup origin server type. Valid values are `domain` and `ip`.
 * `backup_server_name` - (Optional) Host header used when accessing the backup origin server. If left empty, the ServerName of master origin server will be used by default.
 * `cos_private_access` - (Optional) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`, and default value is `off`.

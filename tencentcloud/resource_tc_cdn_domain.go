@@ -113,7 +113,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:        schema.TypeList,
 							Required:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Master origin server list. Valid values can be ip or doamin name. When modifying the origin server, you need to enter the corresponding `origin_type`.",
+							Description: "Master origin server list. Valid values can be ip or domain name. When modifying the origin server, you need to enter the corresponding `origin_type`.",
 						},
 						"server_name": {
 							Type:        schema.TypeString,
@@ -143,7 +143,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Backup origin server list. Valid values can be ip or doamin name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.",
+							Description: "Backup origin server list. Valid values can be ip or domain name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.",
 						},
 						"backup_server_name": {
 							Type:        schema.TypeString,
