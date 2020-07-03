@@ -61,7 +61,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		},
 		"pay_type": {
 			Type:          schema.TypeInt,
-			Deprecated:    "It has been deprecated from version 1.36.0.",
+			Deprecated:    "It has been deprecated from version 1.36.0. Please use `charge_type` instead.",
 			Optional:      true,
 			ValidateFunc:  validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
 			ConflictsWith: []string{"charge_type", "prepaid_period"},
@@ -96,7 +96,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		},
 		"period": {
 			Type:          schema.TypeInt,
-			Deprecated:    "It has been deprecated from version 1.36.0.",
+			Deprecated:    "It has been deprecated from version 1.36.0. Please use `prepaid_period` instead.",
 			Optional:      true,
 			Default:       -1,
 			ConflictsWith: []string{"charge_type", "prepaid_period"},

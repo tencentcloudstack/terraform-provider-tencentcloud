@@ -50,7 +50,7 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 			"pay_type": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				Deprecated:   "It has been deprecated from version 1.36.0.",
+				Deprecated:   "It has been deprecated from version 1.36.0. Please use `charge_type` instead.",
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 				Description:  "Pay type of instance, 0: prepay, 1: postpay.",
 			},
