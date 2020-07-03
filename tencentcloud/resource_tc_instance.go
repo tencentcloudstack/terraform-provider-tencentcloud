@@ -542,12 +542,12 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 
 	// tags
-	if v, ok := d.GetOk("tags"); ok {
+	if tmpTags := helper.GetTags(d, "tags"); len(tmpTags) > 0 {
 		tags := make([]*cvm.Tag, 0)
-		for key, value := range v.(map[string]interface{}) {
+		for k, v := range tmpTags {
 			tag := &cvm.Tag{
-				Key:   helper.String(key),
-				Value: helper.String(value.(string)),
+				Key:   helper.String(k),
+				Value: helper.String(v),
 			}
 			tags = append(tags, tag)
 		}
@@ -974,7 +974,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::cvm:%s:uin/:instance/%s", region, instanceId)
+		resourceName := BuildTagResourceName("cvm", "instance", region, instanceId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
