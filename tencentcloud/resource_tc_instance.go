@@ -541,23 +541,6 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.UserData = &userData
 	}
 
-	// tags
-	if tmpTags := helper.GetTags(d, "tags"); len(tmpTags) > 0 {
-		tags := make([]*cvm.Tag, 0)
-		for k, v := range tmpTags {
-			tag := &cvm.Tag{
-				Key:   helper.String(k),
-				Value: helper.String(v),
-			}
-			tags = append(tags, tag)
-		}
-		tagSpecification := &cvm.TagSpecification{
-			ResourceType: helper.String("instance"),
-			Tags:         tags,
-		}
-		request.TagSpecification = []*cvm.TagSpecification{tagSpecification}
-	}
-
 	instanceId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check("create")
@@ -603,12 +586,9 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
 		resourceName := BuildTagResourceName("cvm", "instance", tcClient.Region, instanceId)
-		err := tagService.ModifyTags(ctx, resourceName, tags, nil)
-		if err != nil {
-			// Since we have included the tags params in the creating cvm request,
-			// when the call returns success, we assume it's successful, regardless of this `ModifyTags` call failed.
-			// The next time user run terraform, the missing tags(if any) would be synced.
-			log.Printf("[WARN] sync cvm %s tags failed: %+v, ignore", instanceId, err)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
+			return err
 		}
 	}
 
