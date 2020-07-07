@@ -108,6 +108,63 @@ import (
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
+func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"mount_target": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Mount target. Default is not mounting.",
+		},
+		"docker_graph_path": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     "/var/lib/docker",
+			Description: "Docker graph path. Default is `/var/lib/docker`.",
+		},
+		"data_disk": {
+			Type:        schema.TypeList,
+			ForceNew:    true,
+			Optional:    true,
+			MaxItems:    11,
+			Description: "Configurations of data disk.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"disk_type": {
+						Type:         schema.TypeString,
+						ForceNew:     true,
+						Optional:     true,
+						Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
+						ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
+						Description:  "Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.",
+					},
+					"disk_size": {
+						Type:        schema.TypeInt,
+						ForceNew:    true,
+						Optional:    true,
+						Default:     0,
+						Description: "Volume of disk in GB. Default is 0.",
+					},
+				},
+			},
+		},
+		"user_data": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "Base64-encoded User Data text, the length limit is 16KB.",
+		},
+		"is_schedule": {
+			Type:        schema.TypeBool,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     true,
+			Description: "Indicate to schedule the adding node or not. Default is true.",
+		},
+	}
+}
+
 func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 	schemaBody := map[string]*schema.Schema{
 		"cluster_id": {
@@ -138,7 +195,16 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.",
 		},
-
+		"worker_config": {
+			Type:     schema.TypeList,
+			ForceNew: true,
+			MaxItems: 1,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: TkeInstanceAdvancedSetting(),
+			},
+			Description: "Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.",
+		},
 		//compute
 		"security_groups": {
 			Type:        schema.TypeSet,
@@ -162,6 +228,43 @@ func resourceTencentCloudTkeClusterAttachment() *schema.Resource {
 	}
 }
 
+func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (setting tke.InstanceAdvancedSettings) {
+	setting = tke.InstanceAdvancedSettings{}
+	if v, ok := dMap["mount_target"]; ok {
+		setting.MountTarget = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["data_disk"]; ok {
+
+		dataDisks := v.([]interface{})
+		setting.DataDisks = make([]*tke.DataDisk, 0, len(dataDisks))
+
+		for _, d := range dataDisks {
+			var (
+				value    = d.(map[string]interface{})
+				diskType = value["disk_type"].(string)
+				diskSize = int64(value["disk_size"].(int))
+				dataDisk = tke.DataDisk{
+					DiskType: &diskType,
+					DiskSize: &diskSize,
+				}
+			)
+			setting.DataDisks = append(setting.DataDisks, &dataDisk)
+		}
+	}
+
+	setting.Unschedulable = helper.BoolToInt64Ptr(!dMap["is_schedule"].(bool))
+
+	if v, ok := dMap["user_data"]; ok {
+		setting.UserScript = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["docker_graph_path"]; ok {
+		setting.DockerGraphPath = helper.String(v.(string))
+	}
+
+	return setting
+}
 func resourceTencentCloudTkeClusterAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kubernetes_cluster_attachment.read")()
 	defer inconsistentCheck(d, meta)()
@@ -282,6 +385,14 @@ func resourceTencentCloudTkeClusterAttachmentCreate(d *schema.ResourceData, meta
 	}
 
 	request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
+	if workConfig, ok := d.GetOk("worker_config"); ok {
+		workConfigList := workConfig.([]interface{})
+		if len(workConfigList) == 1 {
+			workConfigPara := workConfigList[0].(map[string]interface{})
+			setting := tkeGetInstanceAdvancedPara(workConfigPara, meta)
+			request.InstanceAdvancedSettings = &setting
+		}
+	}
 
 	request.InstanceAdvancedSettings.Labels = GetTkeLabels(d, "labels")
 
