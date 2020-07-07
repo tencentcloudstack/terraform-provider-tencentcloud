@@ -100,3 +100,12 @@ func BoolToInt64Pointer(s bool) (i *uint64) {
 	i = &result
 	return
 }
+
+func BoolToInt64(s bool) (i *int64) {
+	result := int64(0)
+	if s {
+		result = int64(1)
+	}
+	i = &result
+	return
+}

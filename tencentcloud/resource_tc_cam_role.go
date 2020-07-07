@@ -25,6 +25,30 @@ EOF
 }
 ```
 
+Created with SAML provider
+
+```hcl
+resource "tencentcloud_cam_role" "boo" {
+  name          = "cam-role-test"
+  document      = <<EOF
+{
+  "version": "2.0",
+  "statement": [
+    {
+      "action": ["name/sts:AssumeRole"],
+      "effect": "allow",
+      "principal": {
+        "federated": ["qcs::cam::uin/3374997817:saml-provider/XXXX-oooo"]
+      }
+    }
+  ]
+}
+EOF
+  description   = "test"
+  console_login = true
+}
+```
+
 Import
 
 CAM role can be imported using the id, e.g.

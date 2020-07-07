@@ -1,4 +1,8 @@
 ## 1.39.0 (Unreleased)
+
+ENHANCEMENTS:
+* Resource: `tencentcloud_kubernetes_cluster_attachment` add new argument `worker_config` to support config with existing instances.
+
 ## 1.38.2 (July 03, 2020)
 
 BUG FIXES:
