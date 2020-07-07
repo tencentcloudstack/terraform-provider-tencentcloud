@@ -991,9 +991,8 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
-		tagService := TagService{
-			client: meta.(*TencentCloudClient).apiV3Conn,
-		}
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
 		resourceName := BuildTagResourceName("cdb", "instanceId", region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
