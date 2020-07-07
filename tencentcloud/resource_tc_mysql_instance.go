@@ -397,23 +397,6 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 			requestByUse.SecurityGroup = requestSecurityGroup
 		}
 	}
-
-	if tagsMap, ok := d.Get("tags").(map[string]interface{}); ok {
-		requestResourceTags := make([]*cdb.TagInfo, 0, len(tagsMap))
-		for k, v := range tagsMap {
-			key := k
-			value := v.(string)
-			var tagInfo cdb.TagInfo
-			tagInfo.TagKey = &key
-			tagInfo.TagValue = []*string{&value}
-			requestResourceTags = append(requestResourceTags, &tagInfo)
-		}
-		if okByMonth {
-			requestByMonth.ResourceTags = requestResourceTags
-		} else {
-			requestByUse.ResourceTags = requestResourceTags
-		}
-	}
 	return nil
 
 }
@@ -658,6 +641,16 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
+		log.Printf("[DEBUG]Mysql instance create, resourceName:%s\n", resourceName)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
 
@@ -733,11 +726,15 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		}
 		_ = d.Set("gtid", int(isGTIDOpen))
 	}
-	tags, err := mysqlService.DescribeTagsOfInstanceId(ctx, d.Id())
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "cdb", "instanceId", tcClient.Region, d.Id())
 	if err != nil {
 		errRet = err
 		return
 	}
+
 	if err := d.Set("tags", tags); err != nil {
 		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
 		return
@@ -993,25 +990,15 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
-		oldTags := oldValue.(map[string]interface{})
-		newTags := newValue.(map[string]interface{})
-
-		//set(oldTags-newTags) need delete
-		var deleteTags = make(map[string]string, len(oldTags))
-		for k, v := range oldTags {
-			if _, has := newTags[k]; !has {
-				deleteTags[k] = v.(string)
-			}
+		tagService := TagService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
-
-		//set newTags need modify
-		var modifytTags = make(map[string]string, len(newTags))
-		for k, v := range newTags {
-			modifytTags[k] = v.(string)
-		}
-
-		if err := mysqlService.ModifyInstanceTag(ctx, d.Id(), deleteTags, modifytTags); err != nil {
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("cdb", "instanceId", region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
 			return err
 		}
 		d.SetPartial("tags")
