@@ -25,7 +25,7 @@ resource "tencentcloud_cam_role" "foo" {
       "action": ["name/sts:AssumeRole"],
       "effect": "allow",
       "principal": {
-        "qcs": ["qcs::cam::uin/3374997817:uin/3374997817"]
+        "qcs": ["qcs::cam::uin/<your-account-id>:uin/<your-account-id>"]
       }
     }
   ]
@@ -49,7 +49,7 @@ resource "tencentcloud_cam_role" "boo" {
       "action": ["name/sts:AssumeRole", "name/sts:AssumeRoleWithWebIdentity"],
       "effect": "allow",
       "principal": {
-        "federated": ["qcs::cam::uin/3374997817:saml-provider/XXXX-oooo"]
+        "federated": ["qcs::cam::uin/<your-account-id>:saml-provider/<your-name>"]
       }
     }
   ]
