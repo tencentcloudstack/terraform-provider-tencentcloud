@@ -153,7 +153,7 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			ForceNew:    true,
 			Optional:    true,
-			Description: "Ase64-encoded User Data text, the length limit is 16KB.",
+			Description: "Base64-encoded User Data text, the length limit is 16KB.",
 		},
 		"is_schedule": {
 			Type:        schema.TypeBool,
@@ -253,7 +253,7 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 		}
 	}
 
-	setting.Unschedulable = helper.BoolToInt64(!dMap["is_schedule"].(bool))
+	setting.Unschedulable = helper.BoolToInt64Ptr(!dMap["is_schedule"].(bool))
 
 	if v, ok := dMap["user_data"]; ok {
 		setting.UserScript = helper.String(v.(string))

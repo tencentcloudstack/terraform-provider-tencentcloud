@@ -101,7 +101,7 @@ func BoolToInt64Pointer(s bool) (i *uint64) {
 	return
 }
 
-func BoolToInt64(s bool) (i *int64) {
+func BoolToInt64Ptr(s bool) (i *int64) {
 	result := int64(0)
 	if s {
 		result = int64(1)
