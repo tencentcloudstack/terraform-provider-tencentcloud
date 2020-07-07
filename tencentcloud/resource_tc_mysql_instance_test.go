@@ -45,7 +45,6 @@ func TestAccTencentCloudMysqlMasterInstance_basic_and_update(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql_master"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "instance_name", "testAccMysql"),
-					// resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "pay_type", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "mem_size", "1000"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "volume_size", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "intranet_port", "3360"),
