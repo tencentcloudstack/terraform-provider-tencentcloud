@@ -645,7 +645,6 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
 		resourceName := BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
-		log.Printf("[DEBUG]Mysql instance create, resourceName:%s\n", resourceName)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
