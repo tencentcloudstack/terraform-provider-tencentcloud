@@ -121,7 +121,7 @@ The `worker_config` object supports the following:
 * `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `is_schedule` - (Optional, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, ForceNew) Mount target. Default is not mounting.
-* `user_script` - (Optional, ForceNew) Ase64-encoded User Data text, the length limit is 16KB.
+* `user_data` - (Optional, ForceNew) Ase64-encoded User Data text, the length limit is 16KB.
 
 ## Attributes Reference
 

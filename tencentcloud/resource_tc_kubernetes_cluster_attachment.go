@@ -149,7 +149,7 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 				},
 			},
 		},
-		"user_script": {
+		"user_data": {
 			Type:        schema.TypeString,
 			ForceNew:    true,
 			Optional:    true,
@@ -255,7 +255,7 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 
 	setting.Unschedulable = helper.BoolToInt64(!dMap["is_schedule"].(bool))
 
-	if v, ok := dMap["user_script"]; ok {
+	if v, ok := dMap["user_data"]; ok {
 		setting.UserScript = helper.String(v.(string))
 	}
 
