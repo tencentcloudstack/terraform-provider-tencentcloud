@@ -21,7 +21,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -138,7 +137,7 @@ func dataSourceTencentCloudImages() *schema.Resource {
 							Description: "Whether support cloud-init.",
 						},
 						"snapshots": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "List of snapshot details.",
 							Elem: &schema.Resource{
@@ -311,41 +310,30 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	return nil
 }
 
-func imagesReadSnapshotByIds(ctx context.Context, cbsService CbsService, image *cvm.Image) (snapshotResults []map[string]interface{}, errSnap error) {
+func imagesReadSnapshotByIds(ctx context.Context, cbsService CbsService, image *cvm.Image) (snapshotResults []map[string]interface{}, errRet error) {
 	if len(image.SnapshotSet) == 0 {
 		return
 	}
 
-	snapshotSetMap := map[string]interface{}{}
 	snapshotByIds := make([]*string, 0, len(image.SnapshotSet))
 	for _, snapshot := range image.SnapshotSet {
 		snapshotByIds = append(snapshotByIds, snapshot.SnapshotId)
 	}
 
-	snapshots, errSnap := cbsService.DescribeSnapshotByIds(ctx, snapshotByIds)
-	if errSnap != nil {
+	snapshots, errRet := cbsService.DescribeSnapshotByIds(ctx, snapshotByIds)
+	if errRet != nil {
 		return
 	}
 
+	snapshotResults = make([]map[string]interface{}, 0, len(snapshots))
 	for _, snapshot := range snapshots {
-		snapshotSetMap[*snapshot.SnapshotId] = snapshot
-	}
+		snapshotMap := make(map[string]interface{}, 4)
+		snapshotMap["snapshot_id"] = snapshot.SnapshotId
+		snapshotMap["disk_usage"] = snapshot.DiskUsage
+		snapshotMap["disk_size"] = snapshot.DiskSize
+		snapshotMap["snapshot_name"] = snapshot.SnapshotName
 
-	snapshotSet := image.SnapshotSet
-	snapshotResults = make([]map[string]interface{}, 0, len(snapshotSet))
-	if len(snapshotSet) > 0 {
-		for _, snapshot := range snapshotSet {
-			snapshotMap := make(map[string]interface{}, 4)
-			id := snapshot.SnapshotId
-			snapshotMap["snapshot_id"] = *id
-			snapshotMap["disk_usage"] = snapshot.DiskUsage
-			snapshotMap["disk_size"] = snapshot.DiskSize
-
-			if v, ok := snapshotSetMap[*id]; ok {
-				snapshotMap["snapshot_name"] = v.(*cbs.Snapshot).SnapshotName
-			}
-			snapshotResults = append(snapshotResults, snapshotMap)
-		}
+		snapshotResults = append(snapshotResults, snapshotMap)
 	}
 
 	return
