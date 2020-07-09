@@ -2,6 +2,8 @@
 
 ENHANCEMENTS:
 * Resource: `tencentcloud_kubernetes_cluster_attachment` add new argument `worker_config` to support config with existing instances.
+* Resource: `tencentcloud_ccn` add new argument `tags` to support tags settings..
+* Resource `tencentcloud_cfs_file_system` add new argument `tags` to support tags settings.
 
 ## 1.38.2 (July 03, 2020)
 
