@@ -427,8 +427,7 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("cvm", "volume", region, d.Id())
+		resourceName := BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err

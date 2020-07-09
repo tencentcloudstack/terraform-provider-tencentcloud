@@ -196,6 +196,7 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 			return err
 		}
 	}
+	d.Partial(true)
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
@@ -203,14 +204,14 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("vpc", "ccn", region, d.Id())
+		resourceName := BuildTagResourceName("vpc", "ccn", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
 		}
 		d.SetPartial("tags")
 	}
+	d.Partial(false)
 	return resourceTencentCloudCcnRead(d, meta)
 }
 
