@@ -260,9 +260,6 @@ func (me *CbsService) DescribeSnapshotByIds(ctx context.Context, snapshotIdsPara
 			errRet = err
 			return
 		}
-		if len(response.Response.SnapshotSet) < 1 {
-			break
-		}
 
 		snapshots = append(snapshots, response.Response.SnapshotSet...)
 		if len(response.Response.SnapshotSet) < int(pageSize) {
