@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -239,8 +240,18 @@ func (me *CbsService) DescribeSnapshotByIds(ctx context.Context, snapshotIdsPara
 	for {
 		request.Offset = helper.IntUint64(offset)
 		request.Limit = helper.IntUint64(pageSize)
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseCbsClient().DescribeSnapshots(request)
+
+		var err error
+		var response *cbs.DescribeSnapshotsResponse
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err = me.client.UseCbsClient().DescribeSnapshots(request)
+			if err != nil {
+				return retryError(err, InternalError)
+			}
+			return nil
+		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -255,7 +266,6 @@ func (me *CbsService) DescribeSnapshotByIds(ctx context.Context, snapshotIdsPara
 		}
 
 		snapshots = append(snapshots, response.Response.SnapshotSet...)
-
 		if len(response.Response.SnapshotSet) < pageSize {
 			break
 		}

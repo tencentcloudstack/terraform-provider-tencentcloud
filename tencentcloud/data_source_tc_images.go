@@ -322,14 +322,7 @@ func imagesReadSnapshotByIds(ctx context.Context, cbsService CbsService, image *
 		snapshotByIds = append(snapshotByIds, snapshot.SnapshotId)
 	}
 
-	var snapshots []*cbs.Snapshot
-	errSnap = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		snapshots, errSnap = cbsService.DescribeSnapshotByIds(ctx, snapshotByIds)
-		if errSnap != nil {
-			return retryError(errSnap, InternalError)
-		}
-		return nil
-	})
+	snapshots, errSnap := cbsService.DescribeSnapshotByIds(ctx, snapshotByIds)
 	if errSnap != nil {
 		return
 	}
