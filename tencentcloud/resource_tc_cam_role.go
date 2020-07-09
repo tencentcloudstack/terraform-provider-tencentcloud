@@ -3,6 +3,8 @@ Provides a resource to create a CAM role.
 
 Example Usage
 
+Create normally
+
 ```hcl
 resource "tencentcloud_cam_role" "foo" {
   name          = "cam-role-test"
@@ -14,7 +16,31 @@ resource "tencentcloud_cam_role" "foo" {
       "action": ["name/sts:AssumeRole"],
       "effect": "allow",
       "principal": {
-        "qcs": ["qcs::cam::uin/3374997817:uin/3374997817"]
+        "qcs": ["qcs::cam::uin/<your-account-id>:uin/<your-account-id>"]
+      }
+    }
+  ]
+}
+EOF
+  description   = "test"
+  console_login = true
+}
+```
+
+Create with SAML provider
+
+```hcl
+resource "tencentcloud_cam_role" "boo" {
+  name          = "cam-role-test"
+  document      = <<EOF
+{
+  "version": "2.0",
+  "statement": [
+    {
+      "action": ["name/sts:AssumeRole", "name/sts:AssumeRoleWithWebIdentity"],
+      "effect": "allow",
+      "principal": {
+        "federated": ["qcs::cam::uin/<your-account-id>:saml-provider/<your-name>"]
       }
     }
   ]
