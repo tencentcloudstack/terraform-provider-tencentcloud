@@ -268,7 +268,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	imageList := make([]map[string]interface{}, 0, len(results))
 	ids := make([]string, 0, len(results))
 	for _, image := range results {
-		snapshots, err := imagesReadSnapshotByIds(image, cbsService, ctx)
+		snapshots, err := imagesReadSnapshotByIds(ctx, cbsService, image)
 		if err != nil {
 			return err
 		}
@@ -311,7 +311,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	return nil
 }
 
-func imagesReadSnapshotByIds(image *cvm.Image, cbsService CbsService, ctx context.Context) (snapshotResults []map[string]interface{}, errSnap error) {
+func imagesReadSnapshotByIds(ctx context.Context, cbsService CbsService, image *cvm.Image) (snapshotResults []map[string]interface{}, errSnap error) {
 	if len(image.SnapshotSet) == 0 {
 		return
 	}

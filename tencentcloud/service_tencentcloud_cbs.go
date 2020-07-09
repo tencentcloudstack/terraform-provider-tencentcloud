@@ -250,7 +250,7 @@ func (me *CbsService) DescribeSnapshotByIds(ctx context.Context, snapshotIdsPara
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.SnapshotSet) < 1 {
+		if len(response.Response.SnapshotSet) < 1 {
 			break
 		}
 
