@@ -45,12 +45,13 @@ func TestAccTencentCloudDataSourceImagesBase(t *testing.T) {
 
 const testAccTencentCloudDataSourceImagesBase = `
 data "tencentcloud_images" "foo" {
+	result_output_file = "data_source_tc_images_test.txt"
 }
 `
 
 const testAccTencentCloudDataSourceImagesBaseWithFilter = `
 data "tencentcloud_images" "foo" {
-	image_type = ["PUBLIC_IMAGE"]
+	image_type = ["PRIVATE_IMAGE"]
 }
 `
 
