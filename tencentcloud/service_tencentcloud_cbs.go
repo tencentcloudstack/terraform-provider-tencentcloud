@@ -226,6 +226,44 @@ func (me *CbsService) DescribeSnapshotById(ctx context.Context, snapshotId strin
 	return
 }
 
+func (me *CbsService) DescribeSnapshotByIds(ctx context.Context, snapshotIdsParam []*string) (snapshots []*cbs.Snapshot, errRet error) {
+	logId := getLogId(ctx)
+	request := cbs.NewDescribeSnapshotsRequest()
+	if len(snapshotIdsParam) == 0 {
+		return
+	}
+	request.SnapshotIds = snapshotIdsParam
+
+	offset := 0
+	pageSize := 100
+	for {
+		request.Offset = helper.IntUint64(offset)
+		request.Limit = helper.IntUint64(pageSize)
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCbsClient().DescribeSnapshots(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SnapshotSet) < 1 {
+			break
+		}
+
+		snapshots = append(snapshots, response.Response.SnapshotSet...)
+
+		if len(response.Response.SnapshotSet) < pageSize {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
 func (me *CbsService) DescribeSnapshotsByFilter(ctx context.Context, params map[string]string) (snapshots []*cbs.Snapshot, errRet error) {
 	logId := getLogId(ctx)
 	request := cbs.NewDescribeSnapshotsRequest()

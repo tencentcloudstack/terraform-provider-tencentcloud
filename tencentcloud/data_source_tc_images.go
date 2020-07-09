@@ -21,6 +21,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -136,6 +137,35 @@ func dataSourceTencentCloudImages() *schema.Resource {
 							Computed:    true,
 							Description: "Whether support cloud-init.",
 						},
+						"snapshots": {
+							Type:        schema.TypeSet,
+							Computed:    true,
+							Description: "List of snapshot details.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"snapshot_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Snapshot ID.",
+									},
+									"snapshot_name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Snapshot name, the user-defined snapshot alias.",
+									},
+									"disk_usage": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Type of the cloud disk used to create the snapshot.",
+									},
+									"disk_size": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Size of the cloud disk used to create the snapshot; unit: GB.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -150,6 +180,10 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	cvmService := CvmService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
@@ -234,6 +268,11 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	imageList := make([]map[string]interface{}, 0, len(results))
 	ids := make([]string, 0, len(results))
 	for _, image := range results {
+		snapshots, err := imagesReadSnapshotByIds(image, cbsService, ctx)
+		if err != nil {
+			return err
+		}
+
 		mapping := map[string]interface{}{
 			"image_id":           image.ImageId,
 			"os_name":            image.OsName,
@@ -249,6 +288,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 			"image_source":       image.ImageSource,
 			"sync_percent":       image.SyncPercent,
 			"support_cloud_init": image.IsSupportCloudinit,
+			"snapshots":          snapshots,
 		}
 		imageList = append(imageList, mapping)
 		ids = append(ids, *image.ImageId)
@@ -269,4 +309,51 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	return nil
+}
+
+func imagesReadSnapshotByIds(image *cvm.Image, cbsService CbsService, ctx context.Context) (snapshotResults []map[string]interface{}, errSnap error) {
+	if len(image.SnapshotSet) == 0 {
+		return
+	}
+
+	snapshotSetMap := map[string]interface{}{}
+	snapshotByIds := make([]*string, 0, len(image.SnapshotSet))
+	for _, snapshot := range image.SnapshotSet {
+		snapshotByIds = append(snapshotByIds, snapshot.SnapshotId)
+	}
+
+	var snapshots []*cbs.Snapshot
+	errSnap = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		snapshots, errSnap = cbsService.DescribeSnapshotByIds(ctx, snapshotByIds)
+		if errSnap != nil {
+			return retryError(errSnap, InternalError)
+		}
+		return nil
+	})
+	if errSnap != nil {
+		return
+	}
+
+	for _, snapshot := range snapshots {
+		snapshotSetMap[*snapshot.SnapshotId] = snapshot
+	}
+
+	snapshotSet := image.SnapshotSet
+	snapshotResults = make([]map[string]interface{}, 0, len(snapshotSet))
+	if len(snapshotSet) > 0 {
+		for _, snapshot := range snapshotSet {
+			snapshotMap := make(map[string]interface{}, 4)
+			id := snapshot.SnapshotId
+			snapshotMap["snapshot_id"] = *id
+			snapshotMap["disk_usage"] = snapshot.DiskUsage
+			snapshotMap["disk_size"] = snapshot.DiskSize
+
+			if v, ok := snapshotSetMap[*id]; ok {
+				snapshotMap["snapshot_name"] = v.(*cbs.Snapshot).SnapshotName
+			}
+			snapshotResults = append(snapshotResults, snapshotMap)
+		}
+	}
+
+	return
 }
