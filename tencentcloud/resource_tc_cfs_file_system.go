@@ -98,6 +98,11 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 				Computed:    true,
 				Description: "Create time of the file system.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Instance tags.",
+			},
 		},
 	}
 }
@@ -166,6 +171,14 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	if err != nil {
 		return err
 	}
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cfs", "filesystem", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudCfsFileSystemRead(d, meta)
 }
@@ -220,6 +233,18 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "cfs", "filesystem", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+
+	if err := d.Set("tags", tags); err != nil {
+		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
+		return err
+	}
+
 	if mountTarget != nil {
 		_ = d.Set("vpc_id", mountTarget.VpcId)
 		_ = d.Set("subnet_id", mountTarget.SubnetId)
@@ -266,6 +291,22 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 			return err
 		}
 		d.SetPartial("access_group_id")
+	}
+
+	if d.HasChange("tags") {
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("cfs", "filesystem", region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

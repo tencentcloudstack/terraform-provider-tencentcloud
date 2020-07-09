@@ -303,15 +303,6 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		for k, v := range tags {
-			request.Tags = append(request.Tags, &as.Tag{
-				Key:   helper.String(k),
-				Value: helper.String(v),
-			})
-		}
-	}
-
 	var id string
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -355,6 +346,15 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 	})
 	if err != nil {
 		return err
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("as", "auto-scaling-group", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudAsScalingGroupRead(d, meta)
@@ -431,11 +431,17 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("forward_balancer_ids", forwardLoadBalancers)
 	}
 
-	tags := make(map[string]string, len(scalingGroup.Tags))
-	for _, tag := range scalingGroup.Tags {
-		tags[*tag.Key] = *tag.Value
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "as", "auto-scaling-group", tcClient.Region, d.Id())
+	if err != nil {
+		return err
 	}
-	_ = d.Set("tags", tags)
+
+	if err := d.Set("tags", tags); err != nil {
+		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
+		return err
+	}
 
 	return nil
 }
@@ -606,14 +612,14 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	}
 
 	if d.HasChange("tags") {
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
-		resourceName := BuildTagResourceName("as", "auto-scaling-group", region, scalingGroupId)
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+		resourceName := BuildTagResourceName("as", "auto-scaling-group", region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
 			return err
 		}
-
 		d.SetPartial("tags")
 	}
 

@@ -31,7 +31,6 @@ package tencentcloud
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"sort"
@@ -235,7 +234,6 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	securityGroups := d.Get("security_groups").(*schema.Set).List()
 	projectId := d.Get("project_id").(int)
 	port := d.Get("port").(int)
-	tags := helper.GetTags(d, "tags")
 	chargeType := d.Get("charge_type").(string)
 	chargeTypeID := REDIS_CHARGE_TYPE_ID[chargeType]
 	var chargePeriod uint64 = 1
@@ -373,8 +371,8 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	}
 	d.SetId(redisId)
 
-	if len(tags) > 0 {
-		resourceName := BuildTagResourceName("redis", "instance", region, redisId)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("redis", "instance", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -476,18 +474,17 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	tags := make(map[string]string, len(info.InstanceTags))
-	for _, tag := range info.InstanceTags {
-		if tag.TagKey == nil {
-			return errors.New("redis tag key is nil")
-		}
-		if tag.TagValue == nil {
-			return errors.New("redis tag value is nil")
-		}
-
-		tags[*tag.TagKey] = *tag.TagValue
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "redis", "instance", tcClient.Region, d.Id())
+	if err != nil {
+		return err
 	}
-	_ = d.Set("tags", tags)
+
+	if err := d.Set("tags", tags); err != nil {
+		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
+		return err
+	}
 
 	_ = d.Set("charge_type", REDIS_CHARGE_TYPE_NAME[*info.BillingMode])
 	return nil

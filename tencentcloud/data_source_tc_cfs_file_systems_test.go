@@ -44,7 +44,7 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_cfs_access_group" "foo" {
-  name = "test_cfs_access_rule"
+	name = "test_cfs_access_rule"
 }
 
 resource "tencentcloud_cfs_file_system" "foo" {

@@ -173,18 +173,6 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	if _, ok := d.GetOk("encrypt"); ok {
 		request.Encrypt = helper.String("ENCRYPT")
 	}
-	if v, ok := d.GetOk("tags"); ok {
-		tags := v.(map[string]interface{})
-		request.Tags = make([]*cbs.Tag, 0, len(tags))
-		for key, value := range tags {
-			tag := cbs.Tag{
-				Key:   helper.String(key),
-				Value: helper.String(value.(string)),
-			}
-			request.Tags = append(request.Tags, &tag)
-		}
-	}
-
 	chargeType := d.Get("charge_type").(string)
 	request.DiskChargeType = &chargeType
 
@@ -239,6 +227,14 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	if err != nil {
 		return err
 	}
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cvm", "volume", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudCbsStorageRead(d, meta)
 }
@@ -279,7 +275,6 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("storage_name", storage.DiskName)
 	_ = d.Set("project_id", storage.Placement.ProjectId)
 	_ = d.Set("encrypt", storage.Encrypt)
-	_ = d.Set("tags", flattenCbsTagsMapping(storage.Tags))
 	_ = d.Set("storage_status", storage.DiskState)
 	_ = d.Set("attached", storage.Attached)
 	_ = d.Set("charge_type", storage.DiskChargeType)
@@ -287,6 +282,18 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 
 	if *storage.DiskChargeType == CBS_CHARGE_TYPE_PREPAID {
 		_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
+	}
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "cvm", "volume", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+
+	if err := d.Set("tags", tags); err != nil {
+		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
+		return err
 	}
 
 	return nil
@@ -417,13 +424,14 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("tags") {
-		oldInterface, newInterface := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldInterface.(map[string]interface{}), newInterface.(map[string]interface{}))
-		tagService := TagService{
-			client: meta.(*TencentCloudClient).apiV3Conn,
-		}
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::cvm:%s:uin/:volume/%s", region, storageId)
+		resourceName := BuildTagResourceName("cvm", "volume", region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err

@@ -27,6 +27,7 @@ The following arguments are supported:
 * `name` - (Required) Name of the CCN to be queried, and maximum length does not exceed 60 bytes.
 * `description` - (Optional) Description of CCN, and maximum length does not exceed 100 bytes.
 * `qos` - (Optional, ForceNew) Service quality of CCN, and the available value include 'PT', 'AU', 'AG'. The default is 'AU'.
+* `tags` - (Optional) Instance tag.
 
 ## Attributes Reference
 

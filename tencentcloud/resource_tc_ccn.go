@@ -24,10 +24,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudCcn() *schema.Resource {
@@ -77,6 +79,11 @@ func resourceTencentCloudCcn() *schema.Resource {
 				Computed:    true,
 				Description: "Creation time of resource.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Instance tag.",
+			},
 		},
 	}
 }
@@ -102,6 +109,15 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 	d.SetId(info.ccnId)
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("vpc", "ccn", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudCcnRead(d, meta)
 }
@@ -135,6 +151,17 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 		return nil
 	})
 	if err != nil {
+		return err
+	}
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "ccn", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+
+	if err := d.Set("tags", tags); err != nil {
+		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 	return nil
@@ -172,6 +199,21 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		if err := service.ModifyCcnAttribute(ctx, d.Id(), name, description); err != nil {
 			return err
 		}
+	}
+	if d.HasChange("tags") {
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("vpc", "ccn", region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("tags")
 	}
 	return resourceTencentCloudCcnRead(d, meta)
 }
