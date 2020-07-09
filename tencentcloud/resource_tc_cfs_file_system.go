@@ -240,10 +240,7 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	if err := d.Set("tags", tags); err != nil {
-		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
-		return err
-	}
+	_ = d.Set("tags", tags)
 
 	if mountTarget != nil {
 		_ = d.Set("vpc_id", mountTarget.VpcId)

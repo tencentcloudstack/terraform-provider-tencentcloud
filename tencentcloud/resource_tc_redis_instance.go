@@ -481,10 +481,7 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	if err := d.Set("tags", tags); err != nil {
-		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
-		return err
-	}
+	_ = d.Set("tags", tags)
 
 	_ = d.Set("charge_type", REDIS_CHARGE_TYPE_NAME[*info.BillingMode])
 	return nil

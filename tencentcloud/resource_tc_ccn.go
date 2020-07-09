@@ -24,7 +24,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -160,10 +159,7 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 		return err
 	}
 
-	if err := d.Set("tags", tags); err != nil {
-		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
-		return err
-	}
+	_ = d.Set("tags", tags)
 	return nil
 }
 

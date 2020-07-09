@@ -291,10 +291,7 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	if err := d.Set("tags", tags); err != nil {
-		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
-		return err
-	}
+	_ = d.Set("tags", tags)
 
 	return nil
 }
