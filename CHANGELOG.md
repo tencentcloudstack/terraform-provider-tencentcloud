@@ -1,6 +1,8 @@
 ## 1.39.0 (Unreleased)
 
 ENHANCEMENTS:
+
+* Data Source: `tencentcloud_images` supports list of snapshots.
 * Resource: `tencentcloud_kubernetes_cluster_attachment` add new argument `worker_config` to support config with existing instances.
 
 ## 1.38.2 (July 03, 2020)

@@ -228,21 +228,23 @@ func (me *CbsService) DescribeSnapshotById(ctx context.Context, snapshotId strin
 }
 
 func (me *CbsService) DescribeSnapshotByIds(ctx context.Context, snapshotIdsParam []*string) (snapshots []*cbs.Snapshot, errRet error) {
-	logId := getLogId(ctx)
-	request := cbs.NewDescribeSnapshotsRequest()
 	if len(snapshotIdsParam) == 0 {
 		return
 	}
+
+	var (
+		logId            = getLogId(ctx)
+		request          = cbs.NewDescribeSnapshotsRequest()
+		err              error
+		response         *cbs.DescribeSnapshotsResponse
+		offset, pageSize uint64 = 0, 100
+	)
 	request.SnapshotIds = snapshotIdsParam
 
-	offset := 0
-	pageSize := 100
 	for {
-		request.Offset = helper.IntUint64(offset)
-		request.Limit = helper.IntUint64(pageSize)
+		request.Offset = &offset
+		request.Limit = &pageSize
 
-		var err error
-		var response *cbs.DescribeSnapshotsResponse
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseCbsClient().DescribeSnapshots(request)
@@ -263,7 +265,7 @@ func (me *CbsService) DescribeSnapshotByIds(ctx context.Context, snapshotIdsPara
 		}
 
 		snapshots = append(snapshots, response.Response.SnapshotSet...)
-		if len(response.Response.SnapshotSet) < pageSize {
+		if len(response.Response.SnapshotSet) < int(pageSize) {
 			break
 		}
 		offset += pageSize
