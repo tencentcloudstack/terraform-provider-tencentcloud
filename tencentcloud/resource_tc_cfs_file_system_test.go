@@ -172,6 +172,7 @@ resource "tencentcloud_cfs_file_system" "foo" {
   protocol = "NFS"
   vpc_id = tencentcloud_vpc.vpc.id
   subnet_id = tencentcloud_subnet.subnet.id
+  
   tags = {
 	  test = "test-tf"
 	  role = "%s"
