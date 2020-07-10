@@ -297,8 +297,7 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := BuildTagResourceName("cfs", "filesystem", region, d.Id())
+		resourceName := BuildTagResourceName("cfs", "filesystem", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
