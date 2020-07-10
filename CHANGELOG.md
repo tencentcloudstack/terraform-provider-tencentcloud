@@ -5,6 +5,11 @@ ENHANCEMENTS:
 * Data Source: `tencentcloud_images` supports list of snapshots.
 * Resource: `tencentcloud_kubernetes_cluster_attachment` add new argument `worker_config` to support config with existing instances.
 
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_layer4_listener` fix error InvalidParameter when destroy resource.
+* Resource: `tencentcloud_gaap_layer7_listener` fix error InvalidParameter when destroy resource.
+
 ## 1.38.2 (July 03, 2020)
 
 BUG FIXES:

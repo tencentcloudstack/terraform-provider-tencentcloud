@@ -1012,6 +1012,18 @@ func (me *GaapService) DescribeTCPListeners(ctx context.Context, proxyId, listen
 			if err != nil {
 				count = 0
 
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					switch sdkError.Code {
+					case GAAPResourceNotFound:
+						return nil
+
+					case "InvalidParameter":
+						if sdkError.Message == "ListenerId" {
+							return nil
+						}
+					}
+				}
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -1066,6 +1078,18 @@ func (me *GaapService) DescribeUDPListeners(ctx context.Context, proxyId, id, na
 			response, err := me.client.UseGaapClient().DescribeUDPListeners(request)
 			if err != nil {
 				count = 0
+
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					switch sdkError.Code {
+					case GAAPResourceNotFound:
+						return nil
+
+					case "InvalidParameter":
+						if sdkError.Message == "ListenerId" {
+							return nil
+						}
+					}
+				}
 
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 					logId, request.GetAction(), request.ToJsonString(), err)
@@ -1224,6 +1248,18 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 
 			response, err := client.DescribeTCPListeners(describeRequest)
 			if err != nil {
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					switch sdkError.Code {
+					case GAAPResourceNotFound:
+						return nil
+
+					case "InvalidParameter":
+						if sdkError.Message == "ListenerId" {
+							return nil
+						}
+					}
+				}
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
 				return retryError(err, GAAPInternalError)
@@ -1250,6 +1286,18 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 
 			response, err := client.DescribeUDPListeners(describeRequest)
 			if err != nil {
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					switch sdkError.Code {
+					case GAAPResourceNotFound:
+						return nil
+
+					case "InvalidParameter":
+						if sdkError.Message == "ListenerId" {
+							return nil
+						}
+					}
+				}
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
 				return retryError(err, GAAPInternalError)
@@ -1790,6 +1838,18 @@ func (me *GaapService) DescribeHTTPListeners(
 			if err != nil {
 				count = 0
 
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					switch sdkError.Code {
+					case GAAPResourceNotFound:
+						return nil
+
+					case "InvalidParameter":
+						if sdkError.Message == "ListenerId" {
+							return nil
+						}
+					}
+				}
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return retryError(err)
@@ -1848,6 +1908,18 @@ func (me *GaapService) DescribeHTTPSListeners(
 			response, err := me.client.UseGaapClient().DescribeHTTPSListeners(request)
 			if err != nil {
 				count = 0
+
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					switch sdkError.Code {
+					case GAAPResourceNotFound:
+						return nil
+
+					case "InvalidParameter":
+						if sdkError.Message == "ListenerId" {
+							return nil
+						}
+					}
+				}
 
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, request.GetAction(), request.ToJsonString(), err)
@@ -1986,7 +2058,8 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 	switch protocol {
 	case "HTTP":
 		describeRequest := gaap.NewDescribeHTTPListenersRequest()
-		describeRequest.ProxyId = &proxyId
+		// don't set proxy id it may cause InternalError
+		//describeRequest.ProxyId = &proxyId
 		describeRequest.ListenerId = &id
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -1994,6 +2067,18 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 
 			response, err := client.DescribeHTTPListeners(describeRequest)
 			if err != nil {
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					switch sdkError.Code {
+					case GAAPResourceNotFound:
+						return nil
+
+					case "InvalidParameter":
+						if sdkError.Message == "ListenerId" {
+							return nil
+						}
+					}
+				}
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
 				return retryError(err, GAAPInternalError)
@@ -2013,7 +2098,8 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 
 	case "HTTPS":
 		describeRequest := gaap.NewDescribeHTTPSListenersRequest()
-		describeRequest.ProxyId = &proxyId
+		// don't set proxy id it may cause InternalError
+		//describeRequest.ProxyId = &proxyId
 		describeRequest.ListenerId = &id
 
 		if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -2021,6 +2107,18 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 
 			response, err := client.DescribeHTTPSListeners(describeRequest)
 			if err != nil {
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					switch sdkError.Code {
+					case GAAPResourceNotFound:
+						return nil
+
+					case "InvalidParameter":
+						if sdkError.Message == "ListenerId" {
+							return nil
+						}
+					}
+				}
+
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 					logId, describeRequest.GetAction(), describeRequest.ToJsonString(), err)
 				return retryError(err, GAAPInternalError)
