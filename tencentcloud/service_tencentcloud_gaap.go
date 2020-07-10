@@ -1013,14 +1013,8 @@ func (me *GaapService) DescribeTCPListeners(ctx context.Context, proxyId, listen
 				count = 0
 
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					switch sdkError.Code {
-					case GAAPResourceNotFound:
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
 						return nil
-
-					case "InvalidParameter":
-						if sdkError.Message == "ListenerId" {
-							return nil
-						}
 					}
 				}
 
@@ -1080,14 +1074,8 @@ func (me *GaapService) DescribeUDPListeners(ctx context.Context, proxyId, id, na
 				count = 0
 
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					switch sdkError.Code {
-					case GAAPResourceNotFound:
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
 						return nil
-
-					case "InvalidParameter":
-						if sdkError.Message == "ListenerId" {
-							return nil
-						}
 					}
 				}
 
@@ -1249,14 +1237,8 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 			response, err := client.DescribeTCPListeners(describeRequest)
 			if err != nil {
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					switch sdkError.Code {
-					case GAAPResourceNotFound:
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
 						return nil
-
-					case "InvalidParameter":
-						if sdkError.Message == "ListenerId" {
-							return nil
-						}
 					}
 				}
 
@@ -1287,14 +1269,8 @@ func (me *GaapService) DeleteLayer4Listener(ctx context.Context, id, proxyId, pr
 			response, err := client.DescribeUDPListeners(describeRequest)
 			if err != nil {
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					switch sdkError.Code {
-					case GAAPResourceNotFound:
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
 						return nil
-
-					case "InvalidParameter":
-						if sdkError.Message == "ListenerId" {
-							return nil
-						}
 					}
 				}
 
@@ -1839,14 +1815,8 @@ func (me *GaapService) DescribeHTTPListeners(
 				count = 0
 
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					switch sdkError.Code {
-					case GAAPResourceNotFound:
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
 						return nil
-
-					case "InvalidParameter":
-						if sdkError.Message == "ListenerId" {
-							return nil
-						}
 					}
 				}
 
@@ -1910,14 +1880,8 @@ func (me *GaapService) DescribeHTTPSListeners(
 				count = 0
 
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					switch sdkError.Code {
-					case GAAPResourceNotFound:
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
 						return nil
-
-					case "InvalidParameter":
-						if sdkError.Message == "ListenerId" {
-							return nil
-						}
 					}
 				}
 
@@ -2068,14 +2032,8 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 			response, err := client.DescribeHTTPListeners(describeRequest)
 			if err != nil {
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					switch sdkError.Code {
-					case GAAPResourceNotFound:
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
 						return nil
-
-					case "InvalidParameter":
-						if sdkError.Message == "ListenerId" {
-							return nil
-						}
 					}
 				}
 
@@ -2108,14 +2066,8 @@ func (me *GaapService) DeleteLayer7Listener(ctx context.Context, id, proxyId, pr
 			response, err := client.DescribeHTTPSListeners(describeRequest)
 			if err != nil {
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					switch sdkError.Code {
-					case GAAPResourceNotFound:
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
 						return nil
-
-					case "InvalidParameter":
-						if sdkError.Message == "ListenerId" {
-							return nil
-						}
 					}
 				}
 

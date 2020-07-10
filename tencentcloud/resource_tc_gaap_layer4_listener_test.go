@@ -293,14 +293,8 @@ func testAccCheckGaapLayer4ListenerDestroy(id *string, protocol string) resource
 			listeners, err := service.DescribeTCPListeners(context.TODO(), nil, id, nil, nil)
 			if err != nil {
 				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-					switch sdkError.Code {
-					case GAAPResourceNotFound:
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
 						return nil
-
-					case "InvalidParameter":
-						if sdkError.Message == "ListenerId" {
-							return nil
-						}
 					}
 				}
 
