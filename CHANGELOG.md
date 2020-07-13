@@ -1,5 +1,9 @@
 ## 1.39.0 (Unreleased)
 
+BUG FIXES:
+
+* Resource: `tencentcloud_cdn_domain` fix incorrect setting `server_certificate_config`,`client_certificate_config` caused the program to crash.
+
 ENHANCEMENTS:
 
 * Data Source: `tencentcloud_images` supports list of snapshots.
