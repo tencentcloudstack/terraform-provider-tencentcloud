@@ -1,20 +1,17 @@
-## 1.39.0 (Unreleased)
-
-BUG FIXES:
-
-* Resource: `tencentcloud_cdn_domain` fix incorrect setting `server_certificate_config`,`client_certificate_config` caused the program to crash.
+## 1.38.3 (Unreleased)
 
 ENHANCEMENTS:
 
 * Data Source: `tencentcloud_images` supports list of snapshots.
 * Resource: `tencentcloud_kubernetes_cluster_attachment` add new argument `worker_config` to support config with existing instances.
-* Resource: `tencentcloud_ccn` add new argument `tags` to support tags settings..
-* Resource `tencentcloud_cfs_file_system` add new argument `tags` to support tags settings.
+* Resource: `tencentcloud_ccn` add new argument `tags` to support tags settings.
+* Resource: `tencentcloud_cfs_file_system` add new argument `tags` to support tags settings.
 
 BUG FIXES:
 
 * Resource: `tencentcloud_gaap_layer4_listener` fix error InvalidParameter when destroy resource.
 * Resource: `tencentcloud_gaap_layer7_listener` fix error InvalidParameter when destroy resource.
+* Resource: `tencentcloud_cdn_domain` fix incorrect setting `server_certificate_config`, `client_certificate_config` caused the program to crash.
 
 ## 1.38.2 (July 03, 2020)
 
