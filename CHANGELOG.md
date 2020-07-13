@@ -1,3 +1,4 @@
+## 1.39.0 (Unreleased)
 ## 1.38.3 (July 13, 2020)
 
 ENHANCEMENTS:
