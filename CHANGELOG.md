@@ -11,6 +11,11 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_ccn` add new argument `tags` to support tags settings..
 * Resource `tencentcloud_cfs_file_system` add new argument `tags` to support tags settings.
 
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_layer4_listener` fix error InvalidParameter when destroy resource.
+* Resource: `tencentcloud_gaap_layer7_listener` fix error InvalidParameter when destroy resource.
+
 ## 1.38.2 (July 03, 2020)
 
 BUG FIXES:

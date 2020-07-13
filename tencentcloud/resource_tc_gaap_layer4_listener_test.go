@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func TestAccTencentCloudGaapLayer4Listener_basic(t *testing.T) {
@@ -291,6 +292,12 @@ func testAccCheckGaapLayer4ListenerDestroy(id *string, protocol string) resource
 		case "TCP":
 			listeners, err := service.DescribeTCPListeners(context.TODO(), nil, id, nil, nil)
 			if err != nil {
+				if sdkError, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkError.Code == GAAPResourceNotFound || (sdkError.Code == "InvalidParameter" && sdkError.Message == "ListenerId") {
+						return nil
+					}
+				}
+
 				return err
 			}
 			if len(listeners) > 0 {
