@@ -493,11 +493,3 @@ func (me *CbsService) ModifyDisksRenewFlag(ctx context.Context, storageId string
 	}
 	return nil
 }
-
-func flattenCbsTagsMapping(tags []*cbs.Tag) (mapping map[string]string) {
-	mapping = make(map[string]string)
-	for _, tag := range tags {
-		mapping[*tag.Key] = *tag.Value
-	}
-	return
-}

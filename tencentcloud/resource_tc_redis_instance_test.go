@@ -184,8 +184,9 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
+
   tags = {
-    "test" = "test"
+    test = "test"
   }
 }`
 }
@@ -201,8 +202,9 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
+
   tags = {
-    "abc" = "abc"
+    abc = "abc"
   }
 }`
 }
@@ -218,8 +220,9 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   port               = 6379
   redis_shard_num    = 1
   redis_replicas_num = 1
+  
   tags = {
-    "abc" = "abc"
+    abc = "abc"
   }
 }`
 }

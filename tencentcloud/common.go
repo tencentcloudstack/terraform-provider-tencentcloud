@@ -191,7 +191,7 @@ func CheckNil(object interface{}, fields map[string]string) (nilFields []string)
 	return
 }
 
-// BuildTagResourceName builds the Tencent Clould specific name of a resource description.
+// BuildTagResourceName builds the Tencent Cloud specific name of a resource description.
 // The format is `qcs:project_id:service_type:region:account:resource`.
 // For more information, go to https://cloud.tencent.com/document/product/598/10606.
 func BuildTagResourceName(serviceType, resourceType, region, id string) string {

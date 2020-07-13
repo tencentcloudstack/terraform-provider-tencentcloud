@@ -28,6 +28,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudCcn() *schema.Resource {
@@ -77,6 +78,11 @@ func resourceTencentCloudCcn() *schema.Resource {
 				Computed:    true,
 				Description: "Creation time of resource.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Instance tag.",
+			},
 		},
 	}
 }
@@ -102,6 +108,15 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 	d.SetId(info.ccnId)
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("vpc", "ccn", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudCcnRead(d, meta)
 }
@@ -137,6 +152,14 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 	if err != nil {
 		return err
 	}
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "ccn", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
 	return nil
 }
 
@@ -152,9 +175,11 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		name        = ""
 		description = ""
 		change      = false
+		changeList  = []string{}
 	)
 	if d.HasChange("name") {
 		name = d.Get("name").(string)
+		changeList = append(changeList, "name")
 		change = true
 	}
 
@@ -165,14 +190,35 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		if description == "" {
 			return fmt.Errorf("can not set description='' ")
 		}
+		changeList = append(changeList, "description")
 		change = true
 	}
 
+	d.Partial(true)
 	if change {
 		if err := service.ModifyCcnAttribute(ctx, d.Id(), name, description); err != nil {
 			return err
 		}
+		for _, val := range changeList {
+			d.SetPartial(val)
+		}
 	}
+
+	if d.HasChange("tags") {
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("vpc", "ccn", tcClient.Region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("tags")
+	}
+	d.Partial(false)
 	return resourceTencentCloudCcnRead(d, meta)
 }
 

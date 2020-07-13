@@ -25,6 +25,30 @@ func TestAccTencentCloudCfsFileSystem(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cfs_file_system.foo", "protocol", "NFS"),
 				),
 			},
+			// add tag
+			{
+				Config: testAccCfsMasterInstance_multiTags("master"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCfsFileSystemExists("tencentcloud_cfs_file_system.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_cfs_file_system.foo", "tags.role", "master"),
+				),
+			},
+			// update tag
+			{
+				Config: testAccCfsMasterInstance_multiTags("master-version2"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCfsFileSystemExists("tencentcloud_cfs_file_system.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_cfs_file_system.foo", "tags.role", "master-version2"),
+				),
+			},
+			// remove tag
+			{
+				Config: testAccCfsFileSystem,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCfsFileSystemExists("tencentcloud_cfs_file_system.foo"),
+					resource.TestCheckNoResourceAttr("tencentcloud_cfs_file_system.foo", "tags.role"),
+				),
+			},
 		},
 	})
 }
@@ -101,15 +125,15 @@ resource "tencentcloud_vpc" "vpc" {
   cidr_block = "10.2.0.0/16"
 }
 
+resource "tencentcloud_cfs_access_group" "foo" {
+	name = "test_cfs_access_rule"
+}
+
 resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
   name              = "test-cfs-subnet"
   cidr_block        = "10.2.11.0/24"
   availability_zone = "ap-guangzhou-3"
-}
-
-resource "tencentcloud_cfs_access_group" "foo" {
-  name = "test_cfs_access_rule"
 }
 
 resource "tencentcloud_cfs_file_system" "foo" {
@@ -121,3 +145,38 @@ resource "tencentcloud_cfs_file_system" "foo" {
   subnet_id = tencentcloud_subnet.subnet.id
 }
 `
+
+func testAccCfsMasterInstance_multiTags(value string) string {
+	return fmt.Sprintf(
+		`
+resource "tencentcloud_vpc" "vpc" {
+  name       = "test-cfs-vpc"
+  cidr_block = "10.2.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  name              = "test-cfs-subnet"
+  cidr_block        = "10.2.11.0/24"
+  availability_zone = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_cfs_access_group" "foo" {
+	name = "test_cfs_access_rule"
+}
+
+resource "tencentcloud_cfs_file_system" "foo" {
+  name = "test_cfs_file_system"
+  availability_zone = "ap-guangzhou-3"
+  access_group_id = tencentcloud_cfs_access_group.foo.id
+  protocol = "NFS"
+  vpc_id = tencentcloud_vpc.vpc.id
+  subnet_id = tencentcloud_subnet.subnet.id
+  
+  tags = {
+	  test = "test-tf"
+	  role = "%s"
+  }
+}
+`, value)
+}

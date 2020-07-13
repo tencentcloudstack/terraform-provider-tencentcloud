@@ -196,17 +196,6 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		}
 		request.SubnetId = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("tags"); ok {
-		tags := v.(map[string]interface{})
-		request.Tags = make([]*clb.TagInfo, 0, len(tags))
-		for key, value := range tags {
-			tag := clb.TagInfo{
-				TagKey:   helper.String(key),
-				TagValue: helper.String(value.(string)),
-			}
-			request.Tags = append(request.Tags, &tag)
-		}
-	}
 	clbId := ""
 	var response *clb.CreateLoadBalancerResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -294,6 +283,16 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			return err
 		}
 	}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("clb", "loadbalancerid", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudClbInstanceRead(d, meta)
 }
 
@@ -336,7 +335,15 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecureGroups))
-	_ = d.Set("tags", flattenClbTagsMapping(instance.Tags))
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "clb", "loadbalancerid", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
 	return nil
 }
 
@@ -454,6 +461,21 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 		d.SetPartial("security_groups")
+	}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if d.HasChange("tags") {
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("clb", "loadbalancerid", tcClient.Region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("tags")
 	}
 	d.Partial(false)
 
