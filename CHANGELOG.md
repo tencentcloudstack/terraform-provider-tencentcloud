@@ -1,4 +1,9 @@
 ## 1.39.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* upgrade terraform 0.13
+
 ## 1.38.3 (July 13, 2020)
 
 ENHANCEMENTS:
