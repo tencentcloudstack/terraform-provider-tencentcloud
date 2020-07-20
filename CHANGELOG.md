@@ -1,4 +1,6 @@
-## 1.39.0 (Unreleased)
+## 1.39.1 (Unreleased)
+
+## 1.39.0 (July 18, 2020)
 
 ENHANCEMENTS:
 
