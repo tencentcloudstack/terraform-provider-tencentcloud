@@ -179,7 +179,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 			},
 			"realservers": {
 				Type:     schema.TypeSet,
-				Required: true,
+				Optional: true,
 				Set: func(v interface{}) int {
 					m := v.(map[string]interface{})
 					return hashcode.String(fmt.Sprintf("%s-%s-%d-%d", m["id"].(string), m["ip"].(string), m["port"].(int), m["weight"].(int)))
@@ -268,22 +268,6 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 		return errors.New("health_check_status_codes can't be empty")
 	}
 
-	realserverSet := d.Get("realservers").(*schema.Set).List()
-	realservers := make([]gaapRealserverBind, 0, len(realserverSet))
-	for _, v := range realserverSet {
-		m := v.(map[string]interface{})
-		realservers = append(realservers, gaapRealserverBind{
-			id:     m["id"].(string),
-			ip:     m["ip"].(string),
-			port:   m["port"].(int),
-			weight: m["weight"].(int),
-		})
-	}
-
-	if len(realservers) == 0 {
-		return errors.New("realserver can't be empty")
-	}
-
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	id, err := service.CreateHttpRule(ctx, rule)
@@ -293,8 +277,23 @@ func resourceTencentCloudGaapHttpRuleCreate(d *schema.ResourceData, m interface{
 
 	d.SetId(id)
 
-	if err := service.BindHttpRuleRealservers(ctx, rule.listenerId, id, realservers); err != nil {
-		return err
+	if raw, ok := d.GetOk("realservers"); ok {
+		realserverSet := raw.(*schema.Set).List()
+		realservers := make([]gaapRealserverBind, 0, len(realserverSet))
+
+		for _, v := range realserverSet {
+			m := v.(map[string]interface{})
+			realservers = append(realservers, gaapRealserverBind{
+				id:     m["id"].(string),
+				ip:     m["ip"].(string),
+				port:   m["port"].(int),
+				weight: m["weight"].(int),
+			})
+		}
+
+		if err := service.BindHttpRuleRealservers(ctx, rule.listenerId, id, realservers); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudGaapHttpRuleRead(d, m)
@@ -427,7 +426,9 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 	}
 
 	var realservers []gaapRealserverBind
-	if d.HasChange("realservers") {
+	realserverUpdate := d.HasChange("realservers")
+
+	if realserverUpdate {
 		set := d.Get("realservers").(*schema.Set).List()
 		realservers = make([]gaapRealserverBind, 0, len(set))
 		for _, v := range set {
@@ -466,10 +467,11 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 		d.SetPartial("forward_host")
 	}
 
-	if len(realservers) > 0 {
+	if realserverUpdate {
 		if err := service.BindHttpRuleRealservers(ctx, listenerId, id, realservers); err != nil {
 			return err
 		}
+
 		d.SetPartial("realservers")
 	}
 
