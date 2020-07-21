@@ -5,6 +5,7 @@
 ENHANCEMENTS:
 
 * upgrade terraform 0.13
+* update readme to new repository
 
 ## 1.38.3 (July 13, 2020)
 

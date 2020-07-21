@@ -2,19 +2,19 @@
 
 ## Requirements
 
-* [Terraform](https://www.terraform.io/downloads.html) 0.12.x
+* [Terraform](https://www.terraform.io/downloads.html) 0.13.x
 * [Go](https://golang.org/doc/install) 1.13.x (to build the provider plugin)
 
 ## Usage
 
 ### Build from source code
 
-Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-tencentcloud`
+Clone repository to: `$GOPATH/src/github.com/tencentcloudstack/terraform-provider-tencentcloud`
 
 ```sh
-$ mkdir -p $GOPATH/src/github.com/terraform-providers
-$ cd $GOPATH/src/github.com/terraform-providers
-$ git clone https://github.com/terraform-providers/terraform-provider-tencentcloud
+$ mkdir -p $GOPATH/src/github.com/tencentcloudstack
+$ cd $GOPATH/src/github.com/tencentcloudstack
+$ git clone https://github.com/tencentcloudstack/terraform-provider-tencentcloud.git
 $ cd terraform-provider-tencentcloud
 $ go build .
 ```
