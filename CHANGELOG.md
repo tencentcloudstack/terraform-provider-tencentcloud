@@ -1,5 +1,9 @@
 ## 1.39.1 (Unreleased)
 
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_gaap_http_rule` argument `realservers` now is optional.
+
 ## 1.39.0 (July 18, 2020)
 
 ENHANCEMENTS:

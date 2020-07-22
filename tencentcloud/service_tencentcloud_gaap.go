@@ -2665,7 +2665,8 @@ func (me *GaapService) BindHttpRuleRealservers(ctx context.Context, listenerId, 
 
 	request := gaap.NewBindRuleRealServersRequest()
 	request.RuleId = &ruleId
-	request.RealServerBindSet = make([]*gaap.RealServerBindSetReq, 0, len(realservers))
+
+	// if realservers is nil, request.RealServerBindSet will bi nil and remove realserver binding
 	for _, realserver := range realservers {
 		request.RealServerBindSet = append(request.RealServerBindSet, &gaap.RealServerBindSetReq{
 			RealServerId:     helper.String(realserver.id),
