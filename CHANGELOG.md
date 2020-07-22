@@ -1,5 +1,9 @@
 ## 1.39.1 (Unreleased)
 
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_cluster` supports multiple `availability_zone`.
+
 ## 1.39.0 (July 18, 2020)
 
 ENHANCEMENTS:
