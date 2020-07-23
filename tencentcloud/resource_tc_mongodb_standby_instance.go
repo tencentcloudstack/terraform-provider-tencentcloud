@@ -1,20 +1,48 @@
 /*
-Provide a resource to create a Mongodb instance.
+Provide a resource to create a Mongodb standby instance.
 
 Example Usage
 
 ```hcl
+provider "tencentcloud" {
+  region = "ap-guangzhou"
+}
+
+provider "tencentcloud" {
+  alias  = "shanghai"
+  region = "ap-shanghai"
+}
+
 resource "tencentcloud_mongodb_instance" "mongodb" {
-  instance_name  = "mongodb"
+  instance_name  = "tf-mongodb-test"
   memory         = 4
   volume         = 100
-  engine_version = "MONGO_3_WT"
-  machine_type   = "GIO"
-  available_zone = "ap-guangzhou-2"
-  vpc_id         = "vpc-mz3efvbw"
-  subnet_id      = "subnet-lk0svi3p"
+  engine_version = "MONGO_40_WT"
+  machine_type   = "HIO10G"
+  available_zone = var.availability_zone
   project_id     = 0
-  password       = "password1234"
+  password       = "test1234"
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_mongodb_standby_instance" "mongodb" {
+  provider               = tencentcloud.shanghai
+  instance_name          = "tf-mongodb-standby-test"
+  memory                 = 4
+  volume                 = 100
+  available_zone         = "ap-shanghai-2"
+  project_id             = 0
+  father_instance_id     = tencentcloud_mongodb_instance.mongodb.id
+  father_instance_region = "ap-guangzhou"
+  charge_type            = "PREPAID"
+  prepaid_period         = 1
+
+  tags = {
+    "test" = "test"
+  }
 }
 ```
 
@@ -23,7 +51,7 @@ Import
 Mongodb instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_mongodb_instance.mongodb cmgo-41s6jwy4
+$ terraform import tencentcloud_mongodb_standby_instance.mongodb cmgo-41s6jwy4
 ```
 */
 package tencentcloud
@@ -42,47 +70,61 @@ import (
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMongodbInstance() *schema.Resource {
-	mongodbInstanceInfo := map[string]*schema.Schema{
-		"standby_instance_list": {
-			Type:        schema.TypeList,
+func resourceTencentCloudMongodbStandbyInstance() *schema.Resource {
+	mongodbStandbyInstanceInfo := map[string]*schema.Schema{
+		"father_instance_region": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Required:    true,
+			Description: "Indicates the region of father instance.",
+		},
+		"father_instance_id": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Required:    true,
+			Description: "Indicates the master instance ID of standby instances.",
+		},
+		"available_zone": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "The available zone of the Mongodb standby instance. NOTE: must not same with father instance's.",
+		},
+		// computed form master instance
+		"engine_version": {
+			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "List of standby instances' info.",
-			Elem: &schema.Resource{
-				Schema: map[string]*schema.Schema{
-					"standby_instance_id": {
-						Type:        schema.TypeString,
-						Computed:    true,
-						Description: "Indicates the ID of standby instance.",
-					},
-					"standby_instance_region": {
-						Type:        schema.TypeString,
-						Computed:    true,
-						Description: "Indicates the region of standby instance.",
-					},
-				},
-			},
+			Description: "Version of the Mongodb and must be same as the master's.",
+		},
+		"machine_type": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Type of Mongodb instance and must be same as the master's.",
 		},
 	}
 	basic := TencentMongodbBasicInfo()
+	conflictList := []string{"engine_version", "machine_type", "password", "available_zone"}
+	for _, item := range conflictList {
+		delete(basic, item)
+	}
 	for k, v := range basic {
-		mongodbInstanceInfo[k] = v
+		mongodbStandbyInstanceInfo[k] = v
 	}
 
 	return &schema.Resource{
-		Create: resourceTencentCloudMongodbInstanceCreate,
-		Read:   resourceTencentCloudMongodbInstanceRead,
-		Update: resourceTencentCloudMongodbInstanceUpdate,
-		Delete: resourceTencentCloudMongodbInstanceDelete,
+		Create: resourceTencentCloudMongodbStandbyInstanceCreate,
+		Read:   resourceTencentCloudMongodbStandbyInstanceRead,
+		Update: resourceTencentCloudMongodbStandbyInstanceUpdate,
+		Delete: resourceTencentCloudMongodbStandbyInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: mongodbInstanceInfo,
+		Schema: mongodbStandbyInstanceInfo,
 	}
 }
 
-func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) error {
+func mongodbAllStandbyInstanceReqSet(requestInter interface{}, d *schema.ResourceData, masterInfo map[string]string) error {
 	requestByMonth, okByMonth := requestInter.(*mongodb.CreateDBInstanceRequest)
 	requestByUse, _ := requestInter.(*mongodb.CreateDBInstanceHourRequest)
 
@@ -93,18 +135,12 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		clusterType           = MONGODB_CLUSTER_TYPE_REPLSET
 		memoryInterface       = d.Get("memory").(int)
 		volumeInterface       = d.Get("volume").(int)
-		mongoVersionInterface = d.Get("engine_version").(string)
+		mongoVersionInterface = masterInfo["engine_version"]
 		zoneInterface         = d.Get("available_zone").(string)
-		machine               = d.Get("machine_type").(string)
-		password              = d.Get("password").(string)
-		instanceType          = MONGO_INSTANCE_TYPE_FORMAL
+		machine               = masterInfo["machine_type"]
+		fatherId              = masterInfo["father_instance_id"]
+		instanceType          = MONGO_INSTANCE_TYPE_STANDBY
 	)
-
-	if machine == MONGODB_MACHINE_TYPE_GIO {
-		machine = MONGODB_MACHINE_TYPE_HIO
-	} else if machine == MONGODB_MACHINE_TYPE_TGIO {
-		machine = MONGODB_MACHINE_TYPE_HIO10G
-	}
 
 	if okByMonth {
 		if v, ok := d.GetOk("prepaid_period"); ok {
@@ -123,8 +159,8 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		requestByMonth.MongoVersion = &mongoVersionInterface
 		requestByMonth.Zone = &zoneInterface
 		requestByMonth.MachineCode = &machine
-		requestByMonth.Password = &password
 		requestByMonth.Clone = helper.IntInt64(instanceType)
+		requestByMonth.Father = &fatherId
 
 		if v, ok := d.GetOk("vpc_id"); ok {
 			requestByMonth.VpcId = helper.String(v.(string))
@@ -156,8 +192,8 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		requestByUse.MongoVersion = &mongoVersionInterface
 		requestByUse.Zone = &zoneInterface
 		requestByUse.MachineCode = &machine
-		requestByUse.Password = &password
 		requestByUse.Clone = helper.IntInt64(instanceType)
+		requestByUse.Father = &fatherId
 
 		if v, ok := d.GetOk("vpc_id"); ok {
 			requestByUse.VpcId = helper.String(v.(string))
@@ -184,11 +220,11 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 	return nil
 }
 
-func mongodbCreateInstanceByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+func mongodbCreateStandbyInstanceByUse(ctx context.Context, d *schema.ResourceData, meta interface{}, masterInfo map[string]string) error {
 	logId := getLogId(ctx)
 	request := mongodb.NewCreateDBInstanceHourRequest()
 
-	if err := mongodbAllInstanceReqSet(request, d); err != nil {
+	if err := mongodbAllStandbyInstanceReqSet(request, d, masterInfo); err != nil {
 		return err
 	}
 
@@ -210,18 +246,18 @@ func mongodbCreateInstanceByUse(ctx context.Context, d *schema.ResourceData, met
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.InstanceIds) < 1 {
-		return fmt.Errorf("mongodb instance id is nil")
+		return fmt.Errorf("mongodb standby instance id is nil")
 	}
 	d.SetId(*response.Response.InstanceIds[0])
 
 	return nil
 }
 
-func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+func mongodbCreateStandbyInstanceByMonth(ctx context.Context, d *schema.ResourceData, meta interface{}, masterInfo map[string]string) error {
 	logId := getLogId(ctx)
 	request := mongodb.NewCreateDBInstanceRequest()
 
-	if err := mongodbAllInstanceReqSet(request, d); err != nil {
+	if err := mongodbAllStandbyInstanceReqSet(request, d, masterInfo); err != nil {
 		return err
 	}
 
@@ -243,55 +279,85 @@ func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, m
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.InstanceIds) < 1 {
-		return fmt.Errorf("mongodb instance id is nil")
+		return fmt.Errorf("mongodb standby instance id is nil")
 	}
 	d.SetId(*response.Response.InstanceIds[0])
 
 	return nil
 }
 
-func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance.create")()
+func resourceTencentCloudMongodbStandbyInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mongodb_standby_instance.create")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn
+	client1 := helper.CopySelf(client)
 	mongodbService := MongodbService{client: client}
+	mongodbService1 := MongodbService{client: client1}
 	tagService := TagService{client: client}
 	region := client.Region
 
+	// collect info from master instance
+	var masterInfoMap = make(map[string]string, 3)
+	if _, ok := d.GetOk("father_instance_id"); !ok {
+		return fmt.Errorf("[CRITAL] father instance id must be specified for standby instance")
+	}
+	if _, ok := d.GetOk("father_instance_region"); !ok {
+		return fmt.Errorf("[CRITAL] father instance region must be specified for standby instance")
+	}
+	fatherRegion := d.Get("father_instance_region").(string)
+	mongodbService1.client.Region = fatherRegion
+	masterInfoMap["father_instance_id"] = d.Get("father_instance_id").(string)
+	masterInfo, has, err := mongodbService1.DescribeInstanceById(ctx, masterInfoMap["father_instance_id"])
+	if err != nil {
+		return err
+	}
+	if !has {
+		return fmt.Errorf("[CRITAL] father instance can't be found for creating mongodb standby instance")
+	}
+
+	masterInfoMap["machine_type"] = *masterInfo.MachineType
+	masterInfoMap["engine_version"] = *masterInfo.MongoVersion
+
+	// check available_zone info
+	if d.Get("available_zone").(string) == *masterInfo.Zone {
+		return fmt.Errorf("[CRITAL] standBy instance zoneId must not same with father instance's")
+	}
+
 	// check security group info
-	if d.Get("engine_version").(string) == MONGODB_ENGINE_VERSION_4_WT {
+	if *masterInfo.MongoVersion == MONGODB_ENGINE_VERSION_4_WT {
 		if _, ok := d.GetOk("security_groups"); ok {
 			return fmt.Errorf("[CRITAL] for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported")
 		}
 	}
 
-	chargeType := d.Get("charge_type")
+	chargeType := d.Get("charge_type").(string)
+
 	if chargeType == MONGODB_CHARGE_TYPE_POSTPAID {
 		_, ok := d.GetOk("prepaid_period")
 		_, ok1 := d.GetOk("auto_renew_flag")
 		if ok || ok1 {
-			return fmt.Errorf("prepaid_period and auto_renew_flag don't make sense for POSTPAID instance, please remove them from your template")
+			return fmt.Errorf("prepaid_period and auto_renew_flag don't make sense for POSTPAID mongodb standby instance, please remove them from your template")
 		}
-		if err := mongodbCreateInstanceByUse(ctx, d, meta); err != nil {
+		if err := mongodbCreateStandbyInstanceByUse(ctx, d, meta, masterInfoMap); err != nil {
 			return err
 		}
 	} else {
-		if err := mongodbCreateInstanceByMonth(ctx, d, meta); err != nil {
+		if err := mongodbCreateStandbyInstanceByMonth(ctx, d, meta, masterInfoMap); err != nil {
 			return err
 		}
 	}
 
 	instanceId := d.Id()
 
-	_, has, err := mongodbService.DescribeInstanceById(ctx, instanceId)
+	_, has, err = mongodbService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 	if !has {
-		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist\n", logId)
+		return fmt.Errorf("[CRITAL]%s creating mongodb standby instance failed, instance doesn't exist\n", logId)
 	}
 
 	// setting instance name
@@ -320,8 +386,8 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	return resourceTencentCloudMongodbInstanceRead(d, meta)
 }
 
-func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance.read")()
+func resourceTencentCloudMongodbStandbyInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mongodb_standby_instance.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -366,17 +432,7 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 		_ = d.Set("auto_renew_flag", *instance.AutoRenewFlag)
 	}
 
-	switch *instance.MachineType {
-	case MONGODB_MACHINE_TYPE_TGIO:
-		_ = d.Set("machine_type", MONGODB_MACHINE_TYPE_HIO10G)
-
-	case MONGODB_MACHINE_TYPE_GIO:
-		_ = d.Set("machine_type", MONGODB_MACHINE_TYPE_HIO)
-
-	default:
-		_ = d.Set("machine_type", *instance.MachineType)
-	}
-
+	_ = d.Set("machine_type", *instance.MachineType)
 	_ = d.Set("available_zone", instance.Zone)
 	_ = d.Set("vpc_id", instance.VpcId)
 	_ = d.Set("subnet_id", instance.SubnetId)
@@ -386,12 +442,11 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("create_time", instance.CreateTime)
 
-	// standby instance list
-	var standbyInsList []map[string]string
-	for _, v := range instance.StandbyInstances {
-		standbyInsList = append(standbyInsList, map[string]string{"standby_instance_id": *v.InstanceId, "standby_instance_region": *v.Region})
+	// info of master info
+	if instance.RelatedInstance != nil {
+		_ = d.Set("father_instance_id", instance.RelatedInstance.InstanceId)
+		_ = d.Set("father_instance_region", instance.RelatedInstance.Region)
 	}
-	_ = d.Set("standby_instance_list", standbyInsList)
 
 	tags := make(map[string]string, len(instance.Tags))
 	for _, tag := range instance.Tags {
@@ -409,8 +464,8 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	return nil
 }
 
-func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance.update")()
+func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mongodb_standby_instance.update")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -484,16 +539,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		d.SetPartial("project_id")
 	}
 
-	if d.HasChange("password") {
-		password := d.Get("password").(string)
-		err := mongodbService.ResetInstancePassword(ctx, instanceId, "mongouser", password)
-		if err != nil {
-			return err
-		}
-
-		d.SetPartial("password")
-	}
-
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
@@ -522,11 +567,11 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 
 	d.Partial(false)
 
-	return resourceTencentCloudMongodbInstanceRead(d, meta)
+	return resourceTencentCloudMongodbStandbyInstanceRead(d, meta)
 }
 
-func resourceTencentCloudMongodbInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance.delete")()
+func resourceTencentCloudMongodbStandbyInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mongodb_standby_instance.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

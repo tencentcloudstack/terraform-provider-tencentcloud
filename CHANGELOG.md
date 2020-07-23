@@ -1,9 +1,16 @@
-## 1.39.1 (Unreleased)
+## 1.40.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_mongodb_standby_instance`
 
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_gaap_http_rule` argument `realservers` now is optional.
 * Resource: `tencentcloud_kubernetes_cluster` supports multiple `availability_zone`.
+* Data Source: `tencentcloud_mongodb_instances` add new argument `charge_type` and `auto_renew_flag` to support prepaid type.
+* Resource: `tencentcloud_mongodb_instance` supports prepaid type, new mongodb SDK version `2019-07-25` and standby instance.
+* Resource: `tencentcloud_mongodb_sharding_instance` supports prepaid type, new mongodb SDK version `2019-07-25` and standby instance.
 
 
 ## 1.39.0 (July 18, 2020)

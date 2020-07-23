@@ -22,7 +22,7 @@ import (
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
-	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408"
+	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
