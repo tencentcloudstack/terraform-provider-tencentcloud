@@ -33,7 +33,6 @@ func TestAccTencentCloudMongodbStandbyInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "charge_type", MONGODB_CHARGE_TYPE_POSTPAID),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "prepaid_period"),
-					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "auto_renew_flag"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_standby_instance.mongodb", "father_instance_id"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "father_instance_region", "ap-guangzhou"),
 				),
@@ -52,7 +51,7 @@ func TestAccTencentCloudMongodbStandbyInstanceResource(t *testing.T) {
 				ResourceName:            "tencentcloud_mongodb_standby_instance.mongodb",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"security_groups"},
+				ImportStateVerifyIgnore: []string{"security_groups", "auto_renew_flag"},
 			},
 			{
 				Config: testAccMongodbStandbyInstancePrepaid,
@@ -127,7 +126,7 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   password       = "test1234"
 
   tags = {
-    "test" = "test"
+    test = "test"
   }
 }
 `
@@ -143,7 +142,7 @@ resource "tencentcloud_mongodb_standby_instance" "mongodb" {
   father_instance_region = "ap-guangzhou"
 
   tags = {
-    "test" = "test"
+    test = "test"
   }
 }
 `
@@ -159,7 +158,7 @@ resource "tencentcloud_mongodb_standby_instance" "mongodb" {
   father_instance_region = "ap-guangzhou"
 
   tags = {
-    "abc" = "abc"
+    abc = "abc"
   }
 }
 `
@@ -178,7 +177,7 @@ resource "tencentcloud_mongodb_standby_instance" "mongodb_prepaid" {
   father_instance_region = "ap-guangzhou"
 
   tags = {
-    "test" = "test-prepaid"
+    test = "test-prepaid"
   }
 }
 `
@@ -197,7 +196,7 @@ resource "tencentcloud_mongodb_standby_instance" "mongodb_prepaid" {
   father_instance_region = "ap-guangzhou"
 
   tags = {
-    "prepaid" = "prepaid"
+    prepaid = "prepaid"
   }
 }
 `

@@ -40,12 +40,12 @@ func (me *MongodbService) DescribeInstanceById(ctx context.Context, instanceId s
 		return resource.NonRetryableError(fmt.Errorf("response is null"))
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.InstanceDetails) == 0 || *response.Response.InstanceDetails[0].Status == MONGODB_INSTANCE_STATUS_EXPIRED {
@@ -66,12 +66,11 @@ func (me *MongodbService) ModifyInstanceName(ctx context.Context, instanceId, in
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().RenameInstance(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
+		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
@@ -83,29 +82,27 @@ func (me *MongodbService) ResetInstancePassword(ctx context.Context, instanceId,
 	request.UserName = &accountName
 	request.Password = &password
 	var response *mongodb.ResetDBInstancePasswordResponse
-	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().ResetDBInstancePassword(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
 			return resource.RetryableError(e)
 		}
 		response = result
 		return nil
 	})
 	if err != nil {
-		errRet = err
-		return
+		return err
 	}
 
 	if response != nil && response.Response != nil {
 		if err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId); err != nil {
-			errRet = err
-			return
+			return err
 		}
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
@@ -134,17 +131,16 @@ func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string
 					return resource.NonRetryableError(e)
 				}
 			}
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
 			return resource.NonRetryableError(e)
 		}
 		response = result
 		return nil
 	})
 	if err != nil {
-		errRet = err
-		return
+		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
@@ -157,12 +153,11 @@ func (me *MongodbService) ModifyProjectId(ctx context.Context, instanceId string
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().AssignProject(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
+		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return nil
 }
@@ -176,12 +171,12 @@ func (me *MongodbService) DescribeSpecInfo(ctx context.Context, zone string) (in
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMongodbClient().DescribeSpecInfo(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	infos = response.Response.SpecInfoList
@@ -215,12 +210,12 @@ func (me *MongodbService) DescribeInstancesByFilter(ctx context.Context, instanc
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseMongodbClient().DescribeDBInstances(request)
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if response == nil || len(response.Response.InstanceDetails) < 1 {
@@ -251,18 +246,17 @@ func (me *MongodbService) IsolateInstance(ctx context.Context, instanceId string
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().IsolateDBInstance(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
 			return retryError(e)
 		}
 		response = result
 		return nil
 	})
 	if err != nil {
-		errRet = err
-		return
+		return err
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return
 }
@@ -283,14 +277,13 @@ func (me *MongodbService) ModifyAutoRenewFlag(ctx context.Context, instanceId st
 		ratelimit.Check(request.GetAction())
 		_, e := me.client.UseMongodbClient().RenewDBInstances(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
 			return retryError(e)
 		}
 		return nil
 	})
 	if err != nil {
-		errRet = err
-		return
+		return err
 	}
 
 	return
@@ -300,11 +293,11 @@ func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId 
 	logId := getLogId(ctx)
 	request := mongodb.NewDescribeAsyncRequestInfoRequest()
 	request.AsyncRequestId = &asyncId
-	err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().DescribeAsyncRequestInfo(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
 			return resource.RetryableError(e)
 		}
 		if *result.Response.Status == MONGODB_TASK_FAILED {
@@ -316,8 +309,7 @@ func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId 
 		return nil
 	})
 	if err != nil {
-		errRet = err
-		return
+		return err
 	}
 
 	return nil

@@ -1,7 +1,5 @@
 package helper
 
-import "github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
-
 func Bool(i bool) *bool { return &i }
 
 func String(i string) *string { return &i }
@@ -110,9 +108,4 @@ func BoolToInt64Ptr(s bool) (i *int64) {
 	}
 	i = &result
 	return
-}
-
-func CopySelf(client *connectivity.TencentCloudClient) *connectivity.TencentCloudClient {
-	tmpClient := *client
-	return &tmpClient
 }

@@ -18,7 +18,7 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   password       = "test1234"
 
   tags = {
-    "test" = "test"
+    test = "test"
   }
 }
 
@@ -35,7 +35,7 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_sharding" {
   password        = "test1234"
 
   tags = {
-    "test" = "test"
+    test = "test"
   }
 }
 
@@ -43,7 +43,7 @@ data "tencentcloud_mongodb_instances" "mongodb_instances" {
   instance_id = tencentcloud_mongodb_instance.mongodb.id
 
   tags = {
-    "test" = "test"
+    test = "test"
   }
 }
 
@@ -60,6 +60,6 @@ resource "tencentcloud_mongodb_standby_instance" "mongodb" {
   prepaid_period         = 1
 
   tags = {
-    "test" = "test"
+    test = "test"
   }
 }

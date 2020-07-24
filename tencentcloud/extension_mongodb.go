@@ -41,8 +41,8 @@ const (
 )
 
 const (
-	MONGODB_CHARGE_TYPE_POSTPAID = "POSTPAID"
-	MONGODB_CHARGE_TYPE_PREPAID  = "PREPAID"
+	MONGODB_CHARGE_TYPE_POSTPAID = COMMON_PAYTYPE_POSTPAID
+	MONGODB_CHARGE_TYPE_PREPAID  = COMMON_PAYTYPE_PREPAID
 )
 
 var MONGODB_CHARGE_TYPE = map[uint64]string{
@@ -124,7 +124,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Optional:    true,
 			ForceNew:    true,
-			Description: "ID of the subnet within this VPC. The vaule is required if VpcId is set.",
+			Description: "ID of the subnet within this VPC. The value is required if `vpc_id` is set.",
 		},
 		"project_id": {
 			Type:        schema.TypeInt,
@@ -162,7 +162,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 			ForceNew:     true,
 			Default:      MONGODB_CHARGE_TYPE_POSTPAID,
 			ValidateFunc: validateAllowedStringValue([]string{MONGODB_CHARGE_TYPE_POSTPAID, MONGODB_CHARGE_TYPE_PREPAID}),
-			Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.",
+			Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.",
 		},
 		"prepaid_period": {
 			Type:         schema.TypeInt,
@@ -173,7 +173,8 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 		"auto_renew_flag": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			Description: "Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Note: only works for PREPAID instance. Only supports`0` and `1` for creation.",
+			Default:     0,
+			Description: "Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.",
 		},
 		// Computed
 		"status": {

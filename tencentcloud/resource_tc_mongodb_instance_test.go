@@ -33,7 +33,6 @@ func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "charge_type", MONGODB_CHARGE_TYPE_POSTPAID),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_instance.mongodb", "prepaid_period"),
-					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_instance.mongodb", "auto_renew_flag"),
 				),
 			},
 			{
@@ -50,7 +49,7 @@ func TestAccTencentCloudMongodbInstanceResource(t *testing.T) {
 				ResourceName:            "tencentcloud_mongodb_instance.mongodb",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"security_groups", "password"},
+				ImportStateVerifyIgnore: []string{"security_groups", "password", "auto_renew_flag"},
 			},
 			{
 				Config: testAccMongodbInstancePrepaid,
@@ -149,7 +148,7 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   password       = "test1234"
 
   tags = {
-    "test" = "test"
+    test = "test"
   }
 }
 `
@@ -166,7 +165,7 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   password       = "test1234update"
 
   tags = {
-    "abc" = "abc"
+    abc = "abc"
   }
 }
 `
@@ -186,7 +185,7 @@ resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   auto_renew_flag = 1
 
   tags = {
-    "test" = "test-prepaid"
+    test = "test-prepaid"
   }
 }
 `
@@ -206,7 +205,7 @@ resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   auto_renew_flag = 1
 
   tags = {
-    "prepaid" = "prepaid"
+    prepaid = "prepaid"
   }
 }
 `

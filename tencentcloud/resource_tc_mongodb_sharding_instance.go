@@ -35,6 +35,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"reflect"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -80,9 +82,6 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 }
 
 func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.ResourceData) error {
-	requestByMonth, okByMonth := requestInter.(*mongodb.CreateDBInstanceRequest)
-	requestByUse, _ := requestInter.(*mongodb.CreateDBInstanceHourRequest)
-
 	var (
 		replicateSetNum       = d.Get("shard_quantity").(int)
 		nodeNum               = d.Get("nodes_per_shard").(int)
@@ -95,6 +94,7 @@ func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.Resour
 		machine               = d.Get("machine_type").(string)
 		password              = d.Get("password").(string)
 		instanceType          = MONGO_INSTANCE_TYPE_FORMAL
+		projectId             = d.Get("project_id").(int)
 	)
 
 	if machine == MONGODB_MACHINE_TYPE_GIO {
@@ -103,79 +103,50 @@ func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.Resour
 		machine = MONGODB_MACHINE_TYPE_HIO10G
 	}
 
-	if okByMonth {
+	getType := reflect.TypeOf(requestInter)
+	value := reflect.ValueOf(requestInter).Elem()
+
+	for k, v := range map[string]interface{}{
+		"ReplicateSetNum": helper.IntUint64(replicateSetNum),
+		"NodeNum":         helper.IntUint64(nodeNum),
+		"GoodsNum":        helper.IntUint64(goodsNum),
+		"ClusterType":     &clusterType,
+		"Memory":          helper.IntUint64(memoryInterface),
+		"Volume":          helper.IntUint64(volumeInterface),
+		"MongoVersion":    &mongoVersionInterface,
+		"Zone":            &zoneInterface,
+		"MachineCode":     &machine,
+		"Password":        &password,
+		"Clone":           helper.IntInt64(instanceType),
+		"ProjectId":       helper.IntInt64(projectId),
+	} {
+		value.FieldByName(k).Set(reflect.ValueOf(v))
+	}
+
+	var okVpc, okSubnet bool
+	if v, ok := d.GetOk("vpc_id"); ok {
+		okVpc = ok
+		value.FieldByName("VpcId").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("subnet_id"); ok {
+		okSubnet = ok
+		value.FieldByName("SubnetId").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if (okVpc && !okSubnet) || (!okVpc && okSubnet) {
+		return fmt.Errorf("you have to set vpc_id and subnet_id both")
+	}
+	if v, ok := d.GetOk("security_groups"); ok {
+		sliceReflect := helper.InterfacesStringsPoint(v.(*schema.Set).List())
+		value.FieldByName("SecurityGroup").Set(reflect.ValueOf(sliceReflect))
+	}
+
+	if strings.Contains(getType.String(), "CreateDBInstanceRequest") {
 		if v, ok := d.GetOk("prepaid_period"); ok {
-			requestByMonth.Period = helper.IntUint64(v.(int))
+			value.FieldByName("Period").Set(reflect.ValueOf(helper.IntUint64(v.(int))))
 		} else {
 			return fmt.Errorf("prepaid_period must be specified for a PREPAID instance")
 		}
-		requestByMonth.AutoRenewFlag = helper.IntUint64(d.Get("auto_renew_flag").(int))
-
-		requestByMonth.ReplicateSetNum = helper.IntUint64(replicateSetNum)
-		requestByMonth.NodeNum = helper.IntUint64(nodeNum)
-		requestByMonth.GoodsNum = helper.IntUint64(goodsNum)
-		requestByMonth.ClusterType = &clusterType
-		requestByMonth.Memory = helper.IntUint64(memoryInterface)
-		requestByMonth.Volume = helper.IntUint64(volumeInterface)
-		requestByMonth.MongoVersion = &mongoVersionInterface
-		requestByMonth.Zone = &zoneInterface
-		requestByMonth.MachineCode = &machine
-		requestByMonth.Password = &password
-		requestByMonth.Clone = helper.IntInt64(instanceType)
-
-		if v, ok := d.GetOk("vpc_id"); ok {
-			requestByMonth.VpcId = helper.String(v.(string))
-		}
-		if v, ok := d.GetOk("subnet_id"); ok {
-			requestByMonth.SubnetId = helper.String(v.(string))
-		}
-		err := fmt.Errorf("you have to set vpc_id and subnet_id both")
-		if (requestByMonth.VpcId != nil && requestByMonth.SubnetId == nil) || (requestByMonth.VpcId == nil && requestByMonth.SubnetId != nil) {
-			return err
-		}
-		if v, ok := d.GetOk("project_id"); ok {
-			requestByMonth.ProjectId = helper.IntInt64(v.(int))
-		}
-		if v, ok := d.GetOk("security_groups"); ok {
-			securityGroups := v.(*schema.Set).List()
-			requestByMonth.SecurityGroup = make([]*string, 0, len(securityGroups))
-			for _, v := range securityGroups {
-				requestByMonth.SecurityGroup = append(requestByMonth.SecurityGroup, helper.String(v.(string)))
-			}
-		}
-	} else {
-		requestByUse.ReplicateSetNum = helper.IntUint64(replicateSetNum)
-		requestByUse.NodeNum = helper.IntUint64(nodeNum)
-		requestByUse.GoodsNum = helper.IntUint64(goodsNum)
-		requestByUse.ClusterType = &clusterType
-		requestByUse.Memory = helper.IntUint64(memoryInterface)
-		requestByUse.Volume = helper.IntUint64(volumeInterface)
-		requestByUse.MongoVersion = &mongoVersionInterface
-		requestByUse.Zone = &zoneInterface
-		requestByUse.MachineCode = &machine
-		requestByUse.Password = &password
-		requestByUse.Clone = helper.IntInt64(instanceType)
-
-		if v, ok := d.GetOk("vpc_id"); ok {
-			requestByUse.VpcId = helper.String(v.(string))
-		}
-		if v, ok := d.GetOk("subnet_id"); ok {
-			requestByUse.SubnetId = helper.String(v.(string))
-		}
-		err := fmt.Errorf("you have to set vpc_id and subnet_id both")
-		if (requestByUse.VpcId != nil && requestByUse.SubnetId == nil) || (requestByUse.VpcId == nil && requestByUse.SubnetId != nil) {
-			return err
-		}
-		if v, ok := d.GetOk("project_id"); ok {
-			requestByUse.ProjectId = helper.IntInt64(v.(int))
-		}
-		if v, ok := d.GetOk("security_groups"); ok {
-			securityGroups := v.(*schema.Set).List()
-			requestByUse.SecurityGroup = make([]*string, 0, len(securityGroups))
-			for _, v := range securityGroups {
-				requestByUse.SecurityGroup = append(requestByUse.SecurityGroup, helper.String(v.(string)))
-			}
-		}
+		value.FieldByName("AutoRenewFlag").Set(reflect.ValueOf(helper.IntUint64(d.Get("auto_renew_flag").(int))))
 	}
 
 	return nil
@@ -190,21 +161,19 @@ func mongodbCreateShardingInstanceByUse(ctx context.Context, d *schema.ResourceD
 	}
 
 	var response *mongodb.CreateDBInstanceHourResponse
-	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+	var err error
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstanceHour(request)
-		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
-			return retryError(e)
+		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstanceHour(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+			return retryError(err)
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.InstanceIds) < 1 {
 		return fmt.Errorf("mongodb instance id is nil")
@@ -223,21 +192,19 @@ func mongodbCreateShardingInstanceByMonth(ctx context.Context, d *schema.Resourc
 	}
 
 	var response *mongodb.CreateDBInstanceResponse
-	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+	var err error
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstance(request)
-		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
-			return retryError(e)
+		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstance(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+			return retryError(err)
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.InstanceIds) < 1 {
 		return fmt.Errorf("mongodb instance id is nil")
@@ -270,7 +237,7 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 		_, ok := d.GetOk("prepaid_period")
 		_, ok1 := d.GetOk("auto_renew_flag")
 		if ok || ok1 {
-			return fmt.Errorf("prepaid_period and auto_renew_flag don't make sense for POSTPAID instance, please remove them from your template")
+			return fmt.Errorf("prepaid_period and auto_renew_flag don't make sense for POSTPAID_BY_HOUR instance, please remove them from your template")
 		}
 		if err := mongodbCreateShardingInstanceByUse(ctx, d, meta); err != nil {
 			return err
@@ -305,7 +272,6 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 	if !has {
 		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist\n", logId)
 	}
-	d.SetId(instanceId)
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
@@ -421,12 +387,9 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	if d.HasChange("memory") || d.HasChange("volume") {
 		// precheck
-		if !(d.HasChange("memory") && d.HasChange("volume")) {
-			return fmt.Errorf("[CRITAL] updating memory and volume of mongodb instance failed, memory and volume must upgrade/downgrade at same time")
-		}
 		oldMemory, newMemory := d.GetChange("memory")
 		oldVolume, newVolume := d.GetChange("volume")
-		if (newMemory.(int)-oldMemory.(int))^(newVolume.(int)-oldVolume.(int)) < 0 {
+		if (newMemory.(int) >= oldMemory.(int) || newVolume.(int) >= oldVolume.(int)) && (newMemory.(int) <= oldMemory.(int) || newVolume.(int) <= oldVolume.(int)) {
 			return fmt.Errorf("[CRITAL] updating memory and volume of mongodb instance failed, memory and volume must upgrade/downgrade at same time")
 		}
 		memory := d.Get("memory").(int)
@@ -448,13 +411,13 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 
 			memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
 			volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
-			if d.Get("memory").(int) != int(memoryDes) || d.Get("volume").(int) != int(volumeDes) {
+			if memory != int(memoryDes) || volume != int(volumeDes) {
 				return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb sharding instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
 			}
 			return nil
 		})
 		if errUpdate != nil {
-			return fmt.Errorf("[CRITAL] updating mongodb sharding instance failed, memory and volume values don't change")
+			return errUpdate
 		}
 
 		d.SetPartial("memory")
