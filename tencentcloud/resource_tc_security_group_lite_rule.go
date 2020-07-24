@@ -1,7 +1,7 @@
 /*
 Provide a resource to create security group some lite rules quickly.
 
--> **NOTE:** It can't be used with tencentcloud_security_group_rule.
+-> **NOTE:** It can't be used with tencentcloud_security_group_rule, and don't create multi tencentcloud_security_group_rule resources, otherwise it may cause problems.
 
 Example Usage
 
@@ -113,7 +113,7 @@ func resourceTencentCloudSecurityGroupLiteRuleCreate(d *schema.ResourceData, m i
 		}
 	}
 
-	if err := service.AttachLiteRulesToSecurityGroup(ctx, sgId, ingress, egress); err != nil {
+	if err := service.AttachLiteRulesToSecurityGroup(ctx, sgId, ingress, egress, updateLiteRule, updateLiteRule); err != nil {
 		return err
 	}
 
@@ -170,34 +170,74 @@ func resourceTencentCloudSecurityGroupLiteRuleUpdate(d *schema.ResourceData, m i
 	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		ingress []VpcSecurityGroupLiteRule
-		egress  []VpcSecurityGroupLiteRule
+		ingress           []VpcSecurityGroupLiteRule
+		egress            []VpcSecurityGroupLiteRule
+		updateIngressKind = noModifyLiteRule
+		updateEgressKind  = noModifyLiteRule
 	)
 
-	if raw, ok := d.GetOk("ingress"); ok {
-		ingressStrs := helper.InterfacesStrings(raw.([]interface{}))
-		for _, ingressStr := range ingressStrs {
-			liteRule, err := parseRule(ingressStr)
-			if err != nil {
-				return err
+	if d.HasChange("ingress") {
+		if raw, ok := d.GetOk("ingress"); ok {
+			updateIngressKind = updateLiteRule
+
+			ingressStrs := helper.InterfacesStrings(raw.([]interface{}))
+			for _, ingressStr := range ingressStrs {
+				liteRule, err := parseRule(ingressStr)
+				if err != nil {
+					return err
+				}
+				ingress = append(ingress, liteRule)
 			}
-			ingress = append(ingress, liteRule)
+		} else {
+			updateIngressKind = deleteLiteRule
+
+			old, _ := d.GetChange("ingress")
+			ingressStrs := helper.InterfacesStrings(old.([]interface{}))
+			for _, ingressStr := range ingressStrs {
+				liteRule, err := parseRule(ingressStr)
+				if err != nil {
+					return err
+				}
+				ingress = append(ingress, liteRule)
+			}
 		}
 	}
 
-	if raw, ok := d.GetOk("egress"); ok {
-		egressStrs := helper.InterfacesStrings(raw.([]interface{}))
-		for _, egressStr := range egressStrs {
-			liteRule, err := parseRule(egressStr)
-			if err != nil {
-				return err
+	if d.HasChange("egress") {
+		if raw, ok := d.GetOk("egress"); ok {
+			updateEgressKind = updateLiteRule
+
+			egressStrs := helper.InterfacesStrings(raw.([]interface{}))
+			for _, egressStr := range egressStrs {
+				liteRule, err := parseRule(egressStr)
+				if err != nil {
+					return err
+				}
+				egress = append(egress, liteRule)
 			}
-			egress = append(egress, liteRule)
+		} else {
+			updateEgressKind = deleteLiteRule
+
+			old, _ := d.GetChange("egress")
+			egressStrs := helper.InterfacesStrings(old.([]interface{}))
+			for _, egressStr := range egressStrs {
+				liteRule, err := parseRule(egressStr)
+				if err != nil {
+					return err
+				}
+				egress = append(egress, liteRule)
+			}
 		}
 	}
 
-	if err := service.AttachLiteRulesToSecurityGroup(ctx, id, ingress, egress); err != nil {
-		return err
+	if updateIngressKind == deleteLiteRule && updateEgressKind == deleteLiteRule {
+		if err := service.DetachAllLiteRulesFromSecurityGroup(ctx, id); err != nil {
+			return err
+		}
+	} else {
+		if err := service.modifyLiteRulesInSecurityGroup(ctx, id, ingress, egress, updateIngressKind, updateEgressKind); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudSecurityGroupLiteRuleRead(d, m)

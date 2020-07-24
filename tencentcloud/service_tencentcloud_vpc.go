@@ -86,6 +86,14 @@ type VpcEniIP struct {
 	desc    *string
 }
 
+type liteRuleModifyKind int
+
+const (
+	noModifyLiteRule liteRuleModifyKind = iota + 1
+	updateLiteRule
+	deleteLiteRule
+)
+
 func (rule VpcSecurityGroupLiteRule) String() string {
 	if rule.nestedSecurityGroupId != "" {
 		return rule.nestedSecurityGroupId
@@ -1397,74 +1405,205 @@ func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *
 	return
 }
 
-func (me *VpcService) modifyLiteRulesInSecurityGroup(ctx context.Context, sgId string, ingress, egress []VpcSecurityGroupLiteRule) error {
+func (me *VpcService) modifyLiteRulesInSecurityGroup(
+	ctx context.Context,
+	sgId string,
+	ingress, egress []VpcSecurityGroupLiteRule,
+	ingressModifyKind, egressModifyKind liteRuleModifyKind,
+) error {
 	logId := getLogId(ctx)
 
-	request := vpc.NewModifySecurityGroupPoliciesRequest()
-	request.SecurityGroupId = &sgId
-	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+	switch {
+	case ingressModifyKind == updateLiteRule && egressModifyKind == updateLiteRule:
+		request := vpc.NewModifySecurityGroupPoliciesRequest()
+		request.SecurityGroupId = &sgId
+		request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
 
-	for _, in := range ingress {
-		policy := &vpc.SecurityGroupPolicy{
-			Protocol:  helper.String(in.protocol),
-			CidrBlock: helper.String(in.cidrIp),
-			Action:    helper.String(in.action),
+		for _, in := range ingress {
+			policy := &vpc.SecurityGroupPolicy{
+				Protocol:  helper.String(in.protocol),
+				CidrBlock: helper.String(in.cidrIp),
+				Action:    helper.String(in.action),
+			}
+
+			if in.port != "" {
+				policy.Port = helper.String(in.port)
+			}
+
+			request.SecurityGroupPolicySet.Ingress = append(request.SecurityGroupPolicySet.Ingress, policy)
 		}
 
-		if in.port != "" {
-			policy.Port = helper.String(in.port)
+		for _, eg := range egress {
+			policy := &vpc.SecurityGroupPolicy{
+				Protocol:  helper.String(eg.protocol),
+				CidrBlock: helper.String(eg.cidrIp),
+				Action:    helper.String(eg.action),
+			}
+
+			if eg.port != "" {
+				policy.Port = helper.String(eg.port)
+			}
+
+			request.SecurityGroupPolicySet.Egress = append(request.SecurityGroupPolicySet.Egress, policy)
 		}
 
-		request.SecurityGroupPolicySet.Ingress = append(request.SecurityGroupPolicySet.Ingress, policy)
+		return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
+			if _, err := me.client.UseVpcClient().ModifySecurityGroupPolicies(request); err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+					logId, request.GetAction(), request.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			return nil
+		})
+
+	case ingressModifyKind == deleteLiteRule:
+		if egressModifyKind == updateLiteRule {
+			request := vpc.NewModifySecurityGroupPoliciesRequest()
+			request.SecurityGroupId = &sgId
+			request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+			for _, eg := range egress {
+				policy := &vpc.SecurityGroupPolicy{
+					Protocol:  helper.String(eg.protocol),
+					CidrBlock: helper.String(eg.cidrIp),
+					Action:    helper.String(eg.action),
+				}
+
+				if eg.port != "" {
+					policy.Port = helper.String(eg.port)
+				}
+
+				request.SecurityGroupPolicySet.Egress = append(request.SecurityGroupPolicySet.Egress, policy)
+			}
+
+			if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				ratelimit.Check(request.GetAction())
+
+				if _, err := me.client.UseVpcClient().ModifySecurityGroupPolicies(request); err != nil {
+					log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+						logId, request.GetAction(), request.ToJsonString(), err)
+					return retryError(err)
+				}
+
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+
+		request := vpc.NewDeleteSecurityGroupPoliciesRequest()
+		request.SecurityGroupId = &sgId
+		request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+		for _, in := range ingress {
+			policy := &vpc.SecurityGroupPolicy{
+				Protocol:  helper.String(in.protocol),
+				CidrBlock: helper.String(in.cidrIp),
+				Action:    helper.String(in.action),
+			}
+
+			if in.port != "" {
+				policy.Port = helper.String(in.port)
+			}
+
+			request.SecurityGroupPolicySet.Ingress = append(request.SecurityGroupPolicySet.Ingress, policy)
+		}
+
+		return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
+			if _, err := me.client.UseVpcClient().DeleteSecurityGroupPolicies(request); err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+					logId, request.GetAction(), request.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			return nil
+		})
+
+	case egressModifyKind == deleteLiteRule:
+		if ingressModifyKind == updateLiteRule {
+			request := vpc.NewModifySecurityGroupPoliciesRequest()
+			request.SecurityGroupId = &sgId
+			request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+			for _, in := range ingress {
+				policy := &vpc.SecurityGroupPolicy{
+					Protocol:  helper.String(in.protocol),
+					CidrBlock: helper.String(in.cidrIp),
+					Action:    helper.String(in.action),
+				}
+
+				if in.port != "" {
+					policy.Port = helper.String(in.port)
+				}
+
+				request.SecurityGroupPolicySet.Ingress = append(request.SecurityGroupPolicySet.Ingress, policy)
+			}
+
+			if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				ratelimit.Check(request.GetAction())
+
+				if _, err := me.client.UseVpcClient().ModifySecurityGroupPolicies(request); err != nil {
+					log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+						logId, request.GetAction(), request.ToJsonString(), err)
+					return retryError(err)
+				}
+
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+
+		request := vpc.NewDeleteSecurityGroupPoliciesRequest()
+		request.SecurityGroupId = &sgId
+		request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+		for _, eg := range egress {
+			policy := &vpc.SecurityGroupPolicy{
+				Protocol:  helper.String(eg.protocol),
+				CidrBlock: helper.String(eg.cidrIp),
+				Action:    helper.String(eg.action),
+			}
+
+			if eg.port != "" {
+				policy.Port = helper.String(eg.port)
+			}
+
+			request.SecurityGroupPolicySet.Egress = append(request.SecurityGroupPolicySet.Egress, policy)
+		}
+
+		return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+
+			if _, err := me.client.UseVpcClient().DeleteSecurityGroupPolicies(request); err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+					logId, request.GetAction(), request.ToJsonString(), err)
+				return retryError(err)
+			}
+
+			return nil
+		})
 	}
 
-	for _, eg := range egress {
-		policy := &vpc.SecurityGroupPolicy{
-			Protocol:  helper.String(eg.protocol),
-			CidrBlock: helper.String(eg.cidrIp),
-			Action:    helper.String(eg.action),
-		}
+	// won't delete ingress and egress together in this method
 
-		if eg.port != "" {
-			policy.Port = helper.String(eg.port)
-		}
-
-		request.SecurityGroupPolicySet.Egress = append(request.SecurityGroupPolicySet.Egress, policy)
-	}
-
-	// delete all rules
-	if len(request.SecurityGroupPolicySet.Ingress) == 0 && len(request.SecurityGroupPolicySet.Egress) == 0 {
-		request.SecurityGroupPolicySet.Ingress = nil
-		request.SecurityGroupPolicySet.Egress = nil
-		// 0 means delete all rules
-		request.SecurityGroupPolicySet.Version = helper.String("0")
-	}
-
-	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-
-		if _, err := me.client.UseVpcClient().ModifySecurityGroupPolicies(request); err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
-				logId, request.GetAction(), request.ToJsonString(), err)
-			return retryError(err)
-		}
-
-		return nil
-	})
+	return nil
 }
 
-func (me *VpcService) AttachLiteRulesToSecurityGroup(ctx context.Context, sgId string, ingress, egress []VpcSecurityGroupLiteRule) error {
+func (me *VpcService) AttachLiteRulesToSecurityGroup(
+	ctx context.Context,
+	sgId string,
+	ingress, egress []VpcSecurityGroupLiteRule,
+	updateIngressKind, updateEgressKind liteRuleModifyKind,
+) error {
 	logId := getLogId(ctx)
 
-	// if we want to delete a direction rules, we must delete all and then attach we want rules again
-	if len(ingress) == 0 || len(egress) == 0 {
-		if err := me.DetachAllLiteRulesFromSecurityGroup(ctx, sgId); err != nil {
-			log.Printf("[CRITAL]%s attach lite rules to security group failed, reason: %v", logId, err)
-			return err
-		}
-	}
-
-	if err := me.modifyLiteRulesInSecurityGroup(ctx, sgId, ingress, egress); err != nil {
+	if err := me.modifyLiteRulesInSecurityGroup(ctx, sgId, ingress, egress, updateIngressKind, updateEgressKind); err != nil {
 		log.Printf("[CRITAL]%s attach lite rules to security group failed, reason: %v", logId, err)
 		return err
 	}
@@ -1552,12 +1691,23 @@ func (me *VpcService) DescribeSecurityGroupPolices(ctx context.Context, sgId str
 func (me *VpcService) DetachAllLiteRulesFromSecurityGroup(ctx context.Context, sgId string) error {
 	logId := getLogId(ctx)
 
-	if err := me.modifyLiteRulesInSecurityGroup(ctx, sgId, nil, nil); err != nil {
-		log.Printf("[CRITAL]%s detach all lite rules from security group failed, reason: %v", logId, err)
-		return err
+	request := vpc.NewModifySecurityGroupPoliciesRequest()
+	request.SecurityGroupId = &sgId
+	request.SecurityGroupPolicySet = &vpc.SecurityGroupPolicySet{
+		Version: helper.String(strconv.Itoa(0)),
 	}
 
-	return nil
+	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+
+		if _, err := me.client.UseVpcClient().ModifySecurityGroupPolicies(request); err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			return retryError(err)
+		}
+
+		return nil
+	})
 }
 
 type securityGroupRuleBasicInfo struct {

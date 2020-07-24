@@ -4,7 +4,7 @@ ENHANCEMENTS:
 
 * Resource: `tencentcloud_gaap_http_rule` argument `realservers` now is optional.
 * Resource: `tencentcloud_kubernetes_cluster` supports multiple `availability_zone`.
-
+* Resource: `tencentcloud_security_group_lite_rule` refine update process and doc.
 
 ## 1.39.0 (July 18, 2020)
 
