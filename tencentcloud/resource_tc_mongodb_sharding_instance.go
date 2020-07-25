@@ -39,11 +39,10 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
@@ -255,7 +254,7 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 	if !has {
-		return fmt.Errorf("[CRITAL]%s creating mongodb sharding instance failed, instance doesn't exist\n", logId)
+		return fmt.Errorf("[CRITAL]%s creating mongodb sharding instance failed, instance doesn't exist", logId)
 	}
 
 	// setting instance name
@@ -270,7 +269,7 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 	if !has {
-		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist\n", logId)
+		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist", logId)
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -406,7 +405,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 				return resource.NonRetryableError(e)
 			}
 			if !has {
-				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb sharding instance failed, instance doesn't exist\n", logId))
+				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb sharding instance failed, instance doesn't exist", logId))
 			}
 
 			memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)

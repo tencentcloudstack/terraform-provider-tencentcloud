@@ -257,7 +257,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 	if !has {
-		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist\n", logId)
+		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist", logId)
 	}
 
 	// setting instance name
@@ -272,7 +272,7 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 	if !has {
-		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist\n", logId)
+		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist", logId)
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -410,7 +410,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 				return resource.NonRetryableError(e)
 			}
 			if !has {
-				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb instance failed, instance doesn't exist\n", logId))
+				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb instance failed, instance doesn't exist", logId))
 			}
 
 			memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
