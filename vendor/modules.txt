@@ -523,7 +523,7 @@ github.com/stretchr/testify/mock
 github.com/subosito/gotenv
 # github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2
 github.com/tdakkota/asciicheck
-# github.com/tencentcloud/tencentcloud-sdk-go v3.0.196+incompatible
+# github.com/tencentcloud/tencentcloud-sdk-go v3.0.217+incompatible
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
@@ -540,7 +540,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20180408
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412

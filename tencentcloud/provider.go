@@ -257,6 +257,7 @@ MongoDB
   Resource
     tencentcloud_mongodb_instance
     tencentcloud_mongodb_sharding_instance
+    tencentcloud_mongodb_standby_instance
 
 MySQL
   Data Source
@@ -712,6 +713,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_binding_receiver":       resourceTencentMonitorBindingAlarmReceiver(),
 			"tencentcloud_elasticsearch_instance":         resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":            resourceTencentCloudPostgresqlInstance(),
+			"tencentcloud_mongodb_standby_instance":       resourceTencentCloudMongodbStandbyInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -152,6 +152,17 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Tags of the Mongodb instance.",
 						},
+						// payment
+						"charge_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The charge type of instance.",
+						},
+						"auto_renew_flag": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Auto renew flag.",
+						},
 					},
 				},
 			},
@@ -241,11 +252,11 @@ instancesLoop:
 		}
 
 		switch *mongo.MachineType {
-		case "HIO10G":
-			*mongo.MachineType = MONGODB_MACHINE_TYPE_TGIO
+		case MONGODB_MACHINE_TYPE_TGIO:
+			*mongo.MachineType = MONGODB_MACHINE_TYPE_HIO10G
 
-		case "HIO":
-			*mongo.MachineType = MONGODB_MACHINE_TYPE_GIO
+		case MONGODB_MACHINE_TYPE_GIO:
+			*mongo.MachineType = MONGODB_MACHINE_TYPE_HIO
 		}
 
 		clusterType := MONGODB_CLUSTER_TYPE_REPLSET
@@ -272,6 +283,10 @@ instancesLoop:
 			"machine_type":   mongo.MachineType,
 			"shard_quantity": mongo.ReplicationSetNum,
 			"tags":           respTags,
+			"charge_type":    MONGODB_CHARGE_TYPE[*mongo.PayMode],
+		}
+		if MONGODB_CHARGE_TYPE[*mongo.PayMode] == MONGODB_CHARGE_TYPE_PREPAID {
+			_ = d.Set("auto_renew_flag", *mongo.AutoRenewFlag)
 		}
 		instanceList = append(instanceList, instance)
 		ids = append(ids, *mongo.InstanceId)
