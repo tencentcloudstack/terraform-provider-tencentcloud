@@ -34,17 +34,20 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
 The following arguments are supported:
 
 * `available_zone` - (Required, ForceNew) The available zone of the Mongodb.
-* `engine_version` - (Required, ForceNew) Version of the Mongodb, and available values include `MONGO_3_WT`, `MONGO_3_ROCKS` and `MONGO_36_WT`.
+* `engine_version` - (Required, ForceNew) Version of the Mongodb, and available values include `MONGO_3_WT`, `MONGO_3_ROCKS`, `MONGO_36_WT` and `MONGO_40_WT`.
 * `instance_name` - (Required) Name of the Mongodb instance.
-* `machine_type` - (Required, ForceNew) Type of Mongodb instance, and available values include `GIO`(or `HIO`) and `TGIO`(or `HIO10G`).
-* `memory` - (Required) Memory size. The minimum value is 2, and unit is GB.
+* `machine_type` - (Required, ForceNew) Type of Mongodb instance, and available values include `HIO`(or `GIO` which will be deprecated) and `HIO10G`(or `TGIO` which will be deprecated).
+* `memory` - (Required) Memory size. The minimum value is 2, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `nodes_per_shard` - (Required, ForceNew) Number of nodes per shard, at least 3(one master and two slaves).
 * `password` - (Required) Password of this Mongodb account.
 * `shard_quantity` - (Required, ForceNew) Number of sharding.
-* `volume` - (Required) Disk size. The minimum value is 25, and unit is GB.
+* `volume` - (Required) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
+* `auto_renew_flag` - (Optional) Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.
+* `charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
+* `prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional) ID of the project which the instance belongs.
-* `security_groups` - (Optional) ID of the security group.
-* `subnet_id` - (Optional, ForceNew) ID of the subnet within this VPC. The vaule is required if VpcId is set.
+* `security_groups` - (Optional, ForceNew) ID of the security group. NOTE: for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported.
+* `subnet_id` - (Optional, ForceNew) ID of the subnet within this VPC. The value is required if `vpc_id` is set.
 * `tags` - (Optional) The tags of the Mongodb.
 * `vpc_id` - (Optional, ForceNew) ID of the VPC.
 
