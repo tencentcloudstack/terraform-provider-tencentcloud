@@ -10,7 +10,7 @@ description: |-
 
 Provide a resource to create security group some lite rules quickly.
 
--> **NOTE:** It can't be used with tencentcloud_security_group_rule, and don't create multi tencentcloud_security_group_rule resources, otherwise it may cause problems.
+-> **NOTE:** It can't be used with tencentcloud_security_group_rule, and don't create multiple tencentcloud_security_group_rule resources, otherwise it may cause problems.
 
 ## Example Usage
 
