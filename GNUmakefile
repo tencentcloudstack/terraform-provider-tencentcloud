@@ -131,6 +131,8 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), getting..."
 	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
 endif
+	ln -sf ../../../../ext/providers/tencentcloud/website/docs $(GOPATH)/src/github.com/hashicorp/terraform-website/content/source/docs/providers/tencentcloud
+	ln -sf ../../../ext/providers/tencentcloud/website/tencentcloud.erb $(GOPATH)/src/github.com/hashicorp/terraform-website/content/source/layouts/tencentcloud.erb
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 website-lint:
@@ -155,6 +157,8 @@ ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), getting..."
 	git clone https://$(WEBSITE_REPO) $(GOPATH)/src/$(WEBSITE_REPO)
 endif
+	ln -sf ../../../../ext/providers/tencentcloud/website/docs $(GOPATH)/src/github.com/hashicorp/terraform-website/content/source/docs/providers/tencentcloud
+	ln -sf ../../../ext/providers/tencentcloud/website/tencentcloud.erb $(GOPATH)/src/github.com/hashicorp/terraform-website/content/source/layouts/tencentcloud.erb
 	@$(MAKE) -C $(GOPATH)/src/$(WEBSITE_REPO) website-provider-test PROVIDER_PATH=$(shell pwd) PROVIDER_NAME=$(PKG_NAME)
 
 .PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test
