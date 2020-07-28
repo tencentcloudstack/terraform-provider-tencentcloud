@@ -29,4 +29,6 @@ matrix:
     - go: tip
 
 env:
-  global: GOFLAGS=-mod=vendor
+  global:
+    - GOFLAGS=-mod=vendor
+    - GO111MODULE=on
