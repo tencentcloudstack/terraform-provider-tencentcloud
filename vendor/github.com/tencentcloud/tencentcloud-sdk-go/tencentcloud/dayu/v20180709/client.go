@@ -468,6 +468,31 @@ func (c *Client) CreateNewL7Rules(request *CreateNewL7RulesRequest) (response *C
     return
 }
 
+func NewCreateNewL7RulesUploadRequest() (request *CreateNewL7RulesUploadRequest) {
+    request = &CreateNewL7RulesUploadRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("dayu", APIVersion, "CreateNewL7RulesUpload")
+    return
+}
+
+func NewCreateNewL7RulesUploadResponse() (response *CreateNewL7RulesUploadResponse) {
+    response = &CreateNewL7RulesUploadResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 批量上传7层转发规则
+func (c *Client) CreateNewL7RulesUpload(request *CreateNewL7RulesUploadRequest) (response *CreateNewL7RulesUploadResponse, err error) {
+    if request == nil {
+        request = NewCreateNewL7RulesUploadRequest()
+    }
+    response = NewCreateNewL7RulesUploadResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateUnblockIpRequest() (request *CreateUnblockIpRequest) {
     request = &CreateUnblockIpRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2664,6 +2689,56 @@ func (c *Client) ModifyNetReturnSwitch(request *ModifyNetReturnSwitchRequest) (r
         request = NewModifyNetReturnSwitchRequest()
     }
     response = NewModifyNetReturnSwitchResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyNewDomainRulesRequest() (request *ModifyNewDomainRulesRequest) {
+    request = &ModifyNewDomainRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("dayu", APIVersion, "ModifyNewDomainRules")
+    return
+}
+
+func NewModifyNewDomainRulesResponse() (response *ModifyNewDomainRulesResponse) {
+    response = &ModifyNewDomainRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 修改7层转发规则
+func (c *Client) ModifyNewDomainRules(request *ModifyNewDomainRulesRequest) (response *ModifyNewDomainRulesResponse, err error) {
+    if request == nil {
+        request = NewModifyNewDomainRulesRequest()
+    }
+    response = NewModifyNewDomainRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyNewL4RuleRequest() (request *ModifyNewL4RuleRequest) {
+    request = &ModifyNewL4RuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("dayu", APIVersion, "ModifyNewL4Rule")
+    return
+}
+
+func NewModifyNewL4RuleResponse() (response *ModifyNewL4RuleResponse) {
+    response = &ModifyNewL4RuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 修改4层转发规则
+func (c *Client) ModifyNewL4Rule(request *ModifyNewL4RuleRequest) (response *ModifyNewL4RuleResponse, err error) {
+    if request == nil {
+        request = NewModifyNewL4RuleRequest()
+    }
+    response = NewModifyNewL4RuleResponse()
     err = c.Send(request, response)
     return
 }
