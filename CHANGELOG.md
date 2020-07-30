@@ -13,6 +13,10 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_mongodb_sharding_instance` supports prepaid type, new mongodb SDK version `2019-07-25` and standby instance.
 * Resource: `tencentcloud_security_group_lite_rule` refine update process and doc.
 
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix set `key_name` error.
+
 ## 1.39.0 (July 18, 2020)
 
 ENHANCEMENTS:
