@@ -1,8 +1,6 @@
 /*
 Use this data source to query images.
-
 Example Usage
-
 ```hcl
 data "tencentcloud_images" "foo" {
   image_type = ["PUBLIC_IMAGE"]
@@ -136,6 +134,35 @@ func dataSourceTencentCloudImages() *schema.Resource {
 							Computed:    true,
 							Description: "Whether support cloud-init.",
 						},
+						"snapshots": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "List of snapshot details.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"snapshot_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Snapshot ID.",
+									},
+									"snapshot_name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Snapshot name, the user-defined snapshot alias.",
+									},
+									"disk_usage": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Type of the cloud disk used to create the snapshot.",
+									},
+									"disk_size": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Size of the cloud disk used to create the snapshot; unit: GB.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -150,6 +177,10 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	cvmService := CvmService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	cbsService := CbsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
@@ -234,6 +265,11 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	imageList := make([]map[string]interface{}, 0, len(results))
 	ids := make([]string, 0, len(results))
 	for _, image := range results {
+		snapshots, err := imagesReadSnapshotByIds(ctx, cbsService, image)
+		if err != nil {
+			return err
+		}
+
 		mapping := map[string]interface{}{
 			"image_id":           image.ImageId,
 			"os_name":            image.OsName,
@@ -249,6 +285,7 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 			"image_source":       image.ImageSource,
 			"sync_percent":       image.SyncPercent,
 			"support_cloud_init": image.IsSupportCloudinit,
+			"snapshots":          snapshots,
 		}
 		imageList = append(imageList, mapping)
 		ids = append(ids, *image.ImageId)
@@ -269,4 +306,33 @@ func dataSourceTencentCloudImagesRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	return nil
+}
+
+func imagesReadSnapshotByIds(ctx context.Context, cbsService CbsService, image *cvm.Image) (snapshotResults []map[string]interface{}, errRet error) {
+	if len(image.SnapshotSet) == 0 {
+		return
+	}
+
+	snapshotByIds := make([]*string, 0, len(image.SnapshotSet))
+	for _, snapshot := range image.SnapshotSet {
+		snapshotByIds = append(snapshotByIds, snapshot.SnapshotId)
+	}
+
+	snapshots, errRet := cbsService.DescribeSnapshotByIds(ctx, snapshotByIds)
+	if errRet != nil {
+		return
+	}
+
+	snapshotResults = make([]map[string]interface{}, 0, len(snapshots))
+	for _, snapshot := range snapshots {
+		snapshotMap := make(map[string]interface{}, 4)
+		snapshotMap["snapshot_id"] = snapshot.SnapshotId
+		snapshotMap["disk_usage"] = snapshot.DiskUsage
+		snapshotMap["disk_size"] = snapshot.DiskSize
+		snapshotMap["snapshot_name"] = snapshot.SnapshotName
+
+		snapshotResults = append(snapshotResults, snapshotMap)
+	}
+
+	return
 }
