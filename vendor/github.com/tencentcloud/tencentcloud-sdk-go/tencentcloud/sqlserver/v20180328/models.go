@@ -101,6 +101,43 @@ type AccountRemark struct {
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
 }
 
+type AssociateSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 安全组ID。
+	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
+
+	// 实例ID 列表，一个或者多个实例ID组成的数组。多个实例必须是同一个地域，同一个可用区，同一个项目下的。
+	InstanceIdSet []*string `json:"InstanceIdSet,omitempty" name:"InstanceIdSet" list`
+}
+
+func (r *AssociateSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *AssociateSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type AssociateSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *AssociateSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *AssociateSecurityGroupsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type Backup struct {
 
 	// 文件名
@@ -135,6 +172,43 @@ type Backup struct {
 
 	// 备份方式，0-定时备份；1-手动临时备份
 	BackupWay *int64 `json:"BackupWay,omitempty" name:"BackupWay"`
+}
+
+type CompleteExpansionRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，形如mssql-j8kv137v
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *CompleteExpansionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CompleteExpansionRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CompleteExpansionResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 流程ID，可通过接口DescribeFlowStatus查询立即切换升级任务的状态。
+		FlowId *uint64 `json:"FlowId,omitempty" name:"FlowId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CompleteExpansionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CompleteExpansionResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
 }
 
 type CreateAccountRequest struct {
@@ -220,6 +294,97 @@ func (r *CreateBackupResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateBasicDBInstancesRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例可用区，类似ap-guangzhou-1（广州一区）；实例可售卖区域可以通过接口DescribeZones获取
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 实例的CPU核心数
+	Cpu *uint64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 实例内存大小，单位GB
+	Memory *uint64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 实例磁盘大小，单位GB
+	Storage *uint64 `json:"Storage,omitempty" name:"Storage"`
+
+	// VPC子网ID，形如subnet-bdoe83fa
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// VPC网络ID，形如vpc-dsp338hz
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 购买实例的宿主机类型, CLOUD_PREMIUM-虚拟机高性能云盘，CLOUD_SSD-虚拟机SSD云盘
+	MachineType *string `json:"MachineType,omitempty" name:"MachineType"`
+
+	// 付费模式，取值支持 PREPAID（预付费），POSTPAID（后付费）。
+	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
+
+	// 项目ID
+	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 本次购买几个实例，默认值为1。取值不超过10
+	GoodsNum *uint64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// sqlserver版本，目前只支持：2008R2（SQL Server 2008 Enterprise），2012SP3（SQL Server 2012 Enterprise），2016SP1（SQL Server 2016 Enterprise），201602（SQL Server 2016 Standard），2017（SQL Server 2017 Enterprise），201202（SQL Server 2012 Standard），201402（SQL Server 2014 Standard），2014SP2（SQL Server 2014 Enterprise），201702（SQL Server 2017 Standard）版本。每个地域支持售卖的版本不同，可通过DescribeProductConfig接口来拉取每个地域可售卖的版本信息。不填，默认为版本2008R2。
+	DBVersion *string `json:"DBVersion,omitempty" name:"DBVersion"`
+
+	// 购买实例周期，默认取值为1，表示一个月。取值不超过48
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 安全组列表，填写形如sg-xxx的安全组ID
+	SecurityGroupList []*string `json:"SecurityGroupList,omitempty" name:"SecurityGroupList" list`
+
+	// 自动续费标志：0-正常续费  1-自动续费，默认为1自动续费。只在购买预付费实例时有效。
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
+
+	// 是否自动使用代金券；1 - 是，0 - 否，默认不使用
+	AutoVoucher *int64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 代金券ID数组，目前单个订单只能使用一张
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds" list`
+
+	// 可维护时间窗配置，以周为单位，表示周几允许维护，1-7分别代表周一到周末
+	Weekly []*int64 `json:"Weekly,omitempty" name:"Weekly" list`
+
+	// 可维护时间窗配置，每天可维护的开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 可维护时间窗配置，持续时间，单位：小时
+	Span *int64 `json:"Span,omitempty" name:"Span"`
+}
+
+func (r *CreateBasicDBInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateBasicDBInstancesRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateBasicDBInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 订单名称
+		DealName *string `json:"DealName,omitempty" name:"DealName"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateBasicDBInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateBasicDBInstancesResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type CreateDBInstancesRequest struct {
 	*tchttp.BaseRequest
 
@@ -261,6 +426,24 @@ type CreateDBInstancesRequest struct {
 
 	// 自动续费标志：0-正常续费  1-自动续费，默认为1自动续费。只在购买预付费实例时有效。
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
+
+	// 安全组列表，填写形如sg-xxx的安全组ID
+	SecurityGroupList []*string `json:"SecurityGroupList,omitempty" name:"SecurityGroupList" list`
+
+	// 可维护时间窗配置，以周为单位，表示周几允许维护，1-7分别代表周一到周末
+	Weekly []*int64 `json:"Weekly,omitempty" name:"Weekly" list`
+
+	// 可维护时间窗配置，每天可维护的开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 可维护时间窗配置，持续时间，单位：小时
+	Span *int64 `json:"Span,omitempty" name:"Span"`
+
+	// 购买高可用实例的类型：DUAL-双机高可用  CLUSTER-集群，默认值为DUAL
+	HAType *string `json:"HAType,omitempty" name:"HAType"`
+
+	// 是否跨可用区部署，默认值为false
+	MultiZones *bool `json:"MultiZones,omitempty" name:"MultiZones"`
 }
 
 func (r *CreateDBInstancesRequest) ToJsonString() string {
@@ -385,6 +568,143 @@ func (r *CreateMigrationResponse) ToJsonString() string {
 }
 
 func (r *CreateMigrationResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreatePublishSubscribeRequest struct {
+	*tchttp.BaseRequest
+
+	// 发布实例ID，形如mssql-j8kv137v
+	PublishInstanceId *string `json:"PublishInstanceId,omitempty" name:"PublishInstanceId"`
+
+	// 订阅实例ID，形如mssql-j8kv137v
+	SubscribeInstanceId *string `json:"SubscribeInstanceId,omitempty" name:"SubscribeInstanceId"`
+
+	// 数据库的订阅发布关系集合
+	DatabaseTupleSet []*DatabaseTuple `json:"DatabaseTupleSet,omitempty" name:"DatabaseTupleSet" list`
+
+	// 发布订阅的名称，默认值为：default_name
+	PublishSubscribeName *string `json:"PublishSubscribeName,omitempty" name:"PublishSubscribeName"`
+}
+
+func (r *CreatePublishSubscribeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreatePublishSubscribeRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreatePublishSubscribeResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 流程ID，可通过接口DescribeFlowStatus查询立即切换升级任务的状态。
+		FlowId *uint64 `json:"FlowId,omitempty" name:"FlowId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreatePublishSubscribeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreatePublishSubscribeResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateReadOnlyDBInstancesRequest struct {
+	*tchttp.BaseRequest
+
+	// 主实例ID，格式如：mssql-3l3fgqn7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例可用区，类似ap-guangzhou-1（广州一区）；实例可售卖区域可以通过接口DescribeZones获取
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 只读组类型选项，1-按照一个实例一个只读组的方式发货，2-新建只读组后发货，所有实例都在这个只读组下面， 3-发货的所有实例都在已有的只读组下面
+	ReadOnlyGroupType *int64 `json:"ReadOnlyGroupType,omitempty" name:"ReadOnlyGroupType"`
+
+	// 实例内存大小，单位GB
+	Memory *int64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 实例磁盘大小，单位GB
+	Storage *int64 `json:"Storage,omitempty" name:"Storage"`
+
+	// 0-默认不升级主实例，1-强制升级主实例完成ro部署；主实例为非集群版时需要填1，强制升级为集群版。填1 说明您已同意将主实例升级到集群版实例。
+	ReadOnlyGroupForcedUpgrade *int64 `json:"ReadOnlyGroupForcedUpgrade,omitempty" name:"ReadOnlyGroupForcedUpgrade"`
+
+	// ReadOnlyGroupType=3时必填,已存在的只读组ID
+	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
+
+	// ReadOnlyGroupType=2时必填，新建的只读组名称
+	ReadOnlyGroupName *string `json:"ReadOnlyGroupName,omitempty" name:"ReadOnlyGroupName"`
+
+	// ReadOnlyGroupType=2时必填，新建的只读组是否开启延迟剔除功能，1-开启，0-关闭。当只读副本与主实例延迟大于阈值后，自动剔除。
+	ReadOnlyGroupIsOfflineDelay *int64 `json:"ReadOnlyGroupIsOfflineDelay,omitempty" name:"ReadOnlyGroupIsOfflineDelay"`
+
+	// ReadOnlyGroupType=2 且 ReadOnlyGroupIsOfflineDelay=1时必填，新建的只读组延迟剔除的阈值。
+	ReadOnlyGroupMaxDelayTime *int64 `json:"ReadOnlyGroupMaxDelayTime,omitempty" name:"ReadOnlyGroupMaxDelayTime"`
+
+	// ReadOnlyGroupType=2 且 ReadOnlyGroupIsOfflineDelay=1时必填，新建的只读组延迟剔除后至少保留只读副本的个数。
+	ReadOnlyGroupMinInGroup *int64 `json:"ReadOnlyGroupMinInGroup,omitempty" name:"ReadOnlyGroupMinInGroup"`
+
+	// 付费模式，取值支持 PREPAID（预付费），POSTPAID（后付费）。
+	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
+
+	// 本次购买几个只读实例，默认值为1。
+	GoodsNum *int64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// VPC子网ID，形如subnet-bdoe83fa；SubnetId和VpcId需同时设置或者同时不设置
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// VPC网络ID，形如vpc-dsp338hz；SubnetId和VpcId需同时设置或者同时不设置
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 购买实例周期，默认取值为1，表示一个月。取值不超过48
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 安全组列表，填写形如sg-xxx的安全组ID
+	SecurityGroupList []*string `json:"SecurityGroupList,omitempty" name:"SecurityGroupList" list`
+
+	// 是否自动使用代金券；1 - 是，0 - 否，默认不使用
+	AutoVoucher *int64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 代金券ID数组，目前单个订单只能使用一张
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds" list`
+}
+
+func (r *CreateReadOnlyDBInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateReadOnlyDBInstancesRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateReadOnlyDBInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 订单名称数组
+		DealNames []*string `json:"DealNames,omitempty" name:"DealNames" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateReadOnlyDBInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateReadOnlyDBInstancesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -524,6 +844,22 @@ type DBInstance struct {
 
 	// 实例所属子网的唯一字符串ID，格式如： subnet-xxx，基础网络时为空字符串
 	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
+
+	// 实例隔离操作
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsolateOperator *string `json:"IsolateOperator,omitempty" name:"IsolateOperator"`
+
+	// 发布订阅标识，SUB-订阅实例，PUB-发布实例，空值-没有发布订阅的普通实例
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubFlag *string `json:"SubFlag,omitempty" name:"SubFlag"`
+
+	// 只读标识，RO-只读实例，MASTER-有RO实例的主实例，空值-没有只读组的非RO实例
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ROFlag *string `json:"ROFlag,omitempty" name:"ROFlag"`
+
+	// 容灾类型，MIRROR-镜像，ALWAYSON-AlwaysOn, SINGLE-单例
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HAFlag *string `json:"HAFlag,omitempty" name:"HAFlag"`
 }
 
 type DBPrivilege struct {
@@ -551,6 +887,30 @@ type DBRemark struct {
 
 	// 备注信息
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
+}
+
+type DatabaseTuple struct {
+
+	// 发布数据库名称
+	PublishDatabase *string `json:"PublishDatabase,omitempty" name:"PublishDatabase"`
+
+	// 订阅数据库名称
+	SubscribeDatabase *string `json:"SubscribeDatabase,omitempty" name:"SubscribeDatabase"`
+}
+
+type DatabaseTupleStatus struct {
+
+	// 发布数据库名称
+	PublishDatabase *string `json:"PublishDatabase,omitempty" name:"PublishDatabase"`
+
+	// 订阅数据库名称
+	SubscribeDatabase *string `json:"SubscribeDatabase,omitempty" name:"SubscribeDatabase"`
+
+	// 最近一次同步时间
+	LastSyncTime *string `json:"LastSyncTime,omitempty" name:"LastSyncTime"`
+
+	// 数据库之间的发布订阅状态 running，success，fail，unknow
+	Status *string `json:"Status,omitempty" name:"Status"`
 }
 
 type DbRollbackTimeInfo struct {
@@ -626,6 +986,40 @@ func (r *DeleteAccountResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DeleteDBInstanceRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，格式如：mssql-3l3fgqn7 或 mssqlro-3l3fgqn7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DeleteDBInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DeleteDBInstanceRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteDBInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteDBInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DeleteDBInstanceResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DeleteDBRequest struct {
 	*tchttp.BaseRequest
 
@@ -697,6 +1091,43 @@ func (r *DeleteMigrationResponse) ToJsonString() string {
 }
 
 func (r *DeleteMigrationResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DeletePublishSubscribeRequest struct {
+	*tchttp.BaseRequest
+
+	// 发布订阅ID，可通过DescribePublishSubscribe接口获得
+	PublishSubscribeId *uint64 `json:"PublishSubscribeId,omitempty" name:"PublishSubscribeId"`
+
+	// 待删除的数据库的订阅发布关系集合
+	DatabaseTupleSet []*DatabaseTuple `json:"DatabaseTupleSet,omitempty" name:"DatabaseTupleSet" list`
+}
+
+func (r *DeletePublishSubscribeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DeletePublishSubscribeRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DeletePublishSubscribeResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeletePublishSubscribeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DeletePublishSubscribeResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -874,6 +1305,43 @@ func (r *DescribeDBInstancesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeDBSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，格式如：mssql-c1nl9rpv或者mssqlro-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeDBSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDBSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeDBSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 安全组详情。
+		SecurityGroupSet []*SecurityGroup `json:"SecurityGroupSet,omitempty" name:"SecurityGroupSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeDBSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDBSecurityGroupsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeDBsRequest struct {
 	*tchttp.BaseRequest
 
@@ -954,6 +1422,49 @@ func (r *DescribeFlowStatusResponse) ToJsonString() string {
 }
 
 func (r *DescribeFlowStatusResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeMaintenanceSpanRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，形如mssql-k8voqdlz
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeMaintenanceSpanRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeMaintenanceSpanRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeMaintenanceSpanResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 以周为单位，表示周几允许维护，例如：[1,2,3,4,5,6,7]表示周一到周日均为可维护日。
+		Weekly []*int64 `json:"Weekly,omitempty" name:"Weekly" list`
+
+		// 每天可维护的开始时间，例如：10:24标识可维护时间窗10点24分开始。
+		StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+		// 每天可维护的持续时间，单位是h，例如：1 表示从可维护的开始时间起持续1小时。
+		Span *uint64 `json:"Span,omitempty" name:"Span"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeMaintenanceSpanResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeMaintenanceSpanResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1168,6 +1679,293 @@ func (r *DescribeProductConfigResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeProjectSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 项目ID。
+	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
+}
+
+func (r *DescribeProjectSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeProjectSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeProjectSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 安全组详情。
+		SecurityGroupSet []*SecurityGroup `json:"SecurityGroupSet,omitempty" name:"SecurityGroupSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeProjectSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeProjectSecurityGroupsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribePublishSubscribeRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，形如mssql-j8kv137v
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 订阅/发布实例ID，与InstanceId是发布实例还是订阅实例有关；当InstanceId为发布实例时，本字段按照订阅实例ID做筛选；当InstanceId为订阅实例时，本字段按照发布实例ID做筛选；
+	PubOrSubInstanceId *string `json:"PubOrSubInstanceId,omitempty" name:"PubOrSubInstanceId"`
+
+	// 订阅/发布实例内网IP，与InstanceId是发布实例还是订阅实例有关；当InstanceId为发布实例时，本字段按照订阅实例内网IP做筛选；当InstanceId为订阅实例时，本字段按照发布实例内网IP做筛选；
+	PubOrSubInstanceIp *string `json:"PubOrSubInstanceIp,omitempty" name:"PubOrSubInstanceIp"`
+
+	// 订阅发布ID，用于筛选
+	PublishSubscribeId *uint64 `json:"PublishSubscribeId,omitempty" name:"PublishSubscribeId"`
+
+	// 订阅发布名字，用于筛选
+	PublishSubscribeName *string `json:"PublishSubscribeName,omitempty" name:"PublishSubscribeName"`
+
+	// 发布库名字，用于筛选
+	PublishDBName *string `json:"PublishDBName,omitempty" name:"PublishDBName"`
+
+	// 订阅库名字，用于筛选
+	SubscribeDBName *string `json:"SubscribeDBName,omitempty" name:"SubscribeDBName"`
+
+	// 分页，页数
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 分页，页大小
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribePublishSubscribeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribePublishSubscribeRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribePublishSubscribeResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 总数
+		TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 发布订阅列表
+		PublishSubscribeSet []*PublishSubscribe `json:"PublishSubscribeSet,omitempty" name:"PublishSubscribeSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribePublishSubscribeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribePublishSubscribeResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeReadOnlyGroupByReadOnlyInstanceRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，格式如：mssqlro-3l3fgqn7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeReadOnlyGroupByReadOnlyInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeReadOnlyGroupByReadOnlyInstanceRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeReadOnlyGroupByReadOnlyInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 只读组ID
+		ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
+
+		// 只读组名称
+		ReadOnlyGroupName *string `json:"ReadOnlyGroupName,omitempty" name:"ReadOnlyGroupName"`
+
+		// 只读组的地域ID
+		RegionId *string `json:"RegionId,omitempty" name:"RegionId"`
+
+		// 只读组的可用区ID
+		ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
+
+		// 是否启动超时剔除功能 ,0-不开启剔除功能，1-开启剔除功能
+		IsOfflineDelay *int64 `json:"IsOfflineDelay,omitempty" name:"IsOfflineDelay"`
+
+		// 启动超时剔除功能后，使用的超时阈值，单位是秒
+		ReadOnlyMaxDelayTime *int64 `json:"ReadOnlyMaxDelayTime,omitempty" name:"ReadOnlyMaxDelayTime"`
+
+		// 启动超时剔除功能后，只读组至少保留的只读副本数
+		MinReadOnlyInGroup *int64 `json:"MinReadOnlyInGroup,omitempty" name:"MinReadOnlyInGroup"`
+
+		// 只读组vip
+		Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+		// 只读组vport
+		Vport *int64 `json:"Vport,omitempty" name:"Vport"`
+
+		// 只读组在私有网络ID
+		VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+		// 只读组在私有网络子网ID
+		SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+		// 主实例ID，形如mssql-sgeshe3th
+		MasterInstanceId *string `json:"MasterInstanceId,omitempty" name:"MasterInstanceId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeReadOnlyGroupByReadOnlyInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeReadOnlyGroupByReadOnlyInstanceResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeReadOnlyGroupDetailsRequest struct {
+	*tchttp.BaseRequest
+
+	// 主实例ID，格式如：mssql-3l3fgqn7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 只读组ID，格式如：mssqlrg-3l3fgqn7
+	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
+}
+
+func (r *DescribeReadOnlyGroupDetailsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeReadOnlyGroupDetailsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeReadOnlyGroupDetailsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 只读组ID
+		ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
+
+		// 只读组名称
+		ReadOnlyGroupName *string `json:"ReadOnlyGroupName,omitempty" name:"ReadOnlyGroupName"`
+
+		// 只读组的地域ID，与主实例相同
+		RegionId *string `json:"RegionId,omitempty" name:"RegionId"`
+
+		// 只读组的可用区ID，与主实例相同
+		ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
+
+		// 是否启动超时剔除功能，0-不开启剔除功能，1-开启剔除功能
+		IsOfflineDelay *int64 `json:"IsOfflineDelay,omitempty" name:"IsOfflineDelay"`
+
+		// 启动超时剔除功能后，使用的超时阈值
+		ReadOnlyMaxDelayTime *int64 `json:"ReadOnlyMaxDelayTime,omitempty" name:"ReadOnlyMaxDelayTime"`
+
+		// 启动超时剔除功能后，至少只读组保留的只读副本数
+		MinReadOnlyInGroup *int64 `json:"MinReadOnlyInGroup,omitempty" name:"MinReadOnlyInGroup"`
+
+		// 只读组vip
+		Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+		// 只读组vport
+		Vport *int64 `json:"Vport,omitempty" name:"Vport"`
+
+		// 只读组私有网络ID
+		VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+		// 只读组私有网络子网ID
+		SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+		// 只读实例副本集合
+		ReadOnlyInstanceSet []*ReadOnlyInstance `json:"ReadOnlyInstanceSet,omitempty" name:"ReadOnlyInstanceSet" list`
+
+		// 只读组状态: 1-申请成功运行中，5-申请中
+		Status *int64 `json:"Status,omitempty" name:"Status"`
+
+		// 主实例ID，形如mssql-sgeshe3th
+		MasterInstanceId *string `json:"MasterInstanceId,omitempty" name:"MasterInstanceId"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeReadOnlyGroupDetailsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeReadOnlyGroupDetailsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeReadOnlyGroupListRequest struct {
+	*tchttp.BaseRequest
+
+	// 主实例ID，格式如：mssql-3l3fgqn7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeReadOnlyGroupListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeReadOnlyGroupListRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeReadOnlyGroupListResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 只读组列表
+		ReadOnlyGroupSet []*ReadOnlyGroup `json:"ReadOnlyGroupSet,omitempty" name:"ReadOnlyGroupSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeReadOnlyGroupListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeReadOnlyGroupListResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeRegionsRequest struct {
 	*tchttp.BaseRequest
 }
@@ -1334,6 +2132,43 @@ func (r *DescribeZonesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DisassociateSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 安全组ID。
+	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
+
+	// 实例ID 列表，一个或者多个实例ID组成的数组。多个实例必须是同一个地域，同一个可用区，同一个项目下的。
+	InstanceIdSet []*string `json:"InstanceIdSet,omitempty" name:"InstanceIdSet" list`
+}
+
+func (r *DisassociateSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DisassociateSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DisassociateSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DisassociateSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DisassociateSecurityGroupsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type InquiryPriceCreateDBInstancesRequest struct {
 	*tchttp.BaseRequest
 
@@ -1357,6 +2192,15 @@ type InquiryPriceCreateDBInstancesRequest struct {
 
 	// sqlserver版本，目前只支持：2008R2（SQL Server 2008 Enterprise），2012SP3（SQL Server 2012 Enterprise），2016SP1（SQL Server 2016 Enterprise），201602（SQL Server 2016 Standard）2017（SQL Server 2017 Enterprise）版本。默认为2008R2版本
 	DBVersion *string `json:"DBVersion,omitempty" name:"DBVersion"`
+
+	// 预购买实例的CPU核心数
+	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 购买实例的类型 HA-高可用型(包括双机高可用，alwaysOn集群)，RO-只读副本，SI-基础版，默认取值HA
+	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// 购买实例的宿主机类型，PM-物理机, CLOUD_PREMIUM-虚拟机高性能云盘，CLOUD_SSD-虚拟机SSD云盘，默认取值PM
+	MachineType *string `json:"MachineType,omitempty" name:"MachineType"`
 }
 
 func (r *InquiryPriceCreateDBInstancesRequest) ToJsonString() string {
@@ -1449,6 +2293,9 @@ type InquiryPriceUpgradeDBInstanceRequest struct {
 
 	// 实例升级后的磁盘大小，单位GB，其值不能比当前实例磁盘小
 	Storage *int64 `json:"Storage,omitempty" name:"Storage"`
+
+	// 实例升级后的CPU核心数，其值不能比当前实例CPU小
+	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
 }
 
 func (r *InquiryPriceUpgradeDBInstanceRequest) ToJsonString() string {
@@ -1681,6 +2528,55 @@ func (r *ModifyAccountRemarkResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyBackupStrategyRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 备份类型，当前只支持按天备份，取值为daily
+	BackupType *string `json:"BackupType,omitempty" name:"BackupType"`
+
+	// 备份时间点，取值为0-23的整数
+	BackupTime *uint64 `json:"BackupTime,omitempty" name:"BackupTime"`
+
+	// BackupType取值为daily时，表示备份间隔天数。当前取值只能为1
+	BackupDay *uint64 `json:"BackupDay,omitempty" name:"BackupDay"`
+}
+
+func (r *ModifyBackupStrategyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyBackupStrategyRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyBackupStrategyResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 返回错误码
+		Errno *int64 `json:"Errno,omitempty" name:"Errno"`
+
+		// 返回错误信息
+		Msg *string `json:"Msg,omitempty" name:"Msg"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyBackupStrategyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyBackupStrategyResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type ModifyDBInstanceNameRequest struct {
 	*tchttp.BaseRequest
 
@@ -1795,6 +2691,43 @@ func (r *ModifyDBInstanceRenewFlagResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyDBInstanceSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例 ID，格式如：mssql-c1nl9rpv 或者 mssqlro-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 要修改的安全组 ID 列表，一个或者多个安全组 ID 组成的数组。
+	SecurityGroupIdSet []*string `json:"SecurityGroupIdSet,omitempty" name:"SecurityGroupIdSet" list`
+}
+
+func (r *ModifyDBInstanceSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyDBInstanceSecurityGroupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyDBInstanceSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyDBInstanceSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyDBInstanceSecurityGroupsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type ModifyDBNameRequest struct {
 	*tchttp.BaseRequest
 
@@ -1875,6 +2808,49 @@ func (r *ModifyDBRemarkResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyMaintenanceSpanRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，形如mssql-k8voqdlz
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 以周为单位，表示允许周几维护，例如：[1,2,3,4,5,6,7]表示周一到周日均为可维护日，本参数不填，则不修改此值。
+	Weekly []*int64 `json:"Weekly,omitempty" name:"Weekly" list`
+
+	// 每天可维护的开始时间，例如：10:24标识可维护时间窗10点24分开始，本参数不填，则不修改此值。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 每天可维护的持续时间，单位是h，例如：1 表示从可维护的开始时间起持续1小时，本参数不填，则不修改此值。
+	Span *uint64 `json:"Span,omitempty" name:"Span"`
+}
+
+func (r *ModifyMaintenanceSpanRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyMaintenanceSpanRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyMaintenanceSpanResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyMaintenanceSpanResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyMaintenanceSpanResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type ModifyMigrationRequest struct {
 	*tchttp.BaseRequest
 
@@ -1930,6 +2906,268 @@ func (r *ModifyMigrationResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type ModifyPublishSubscribeNameRequest struct {
+	*tchttp.BaseRequest
+
+	// 发布订阅ID
+	PublishSubscribeId *uint64 `json:"PublishSubscribeId,omitempty" name:"PublishSubscribeId"`
+
+	// 待修改的发布订阅名称
+	PublishSubscribeName *string `json:"PublishSubscribeName,omitempty" name:"PublishSubscribeName"`
+}
+
+func (r *ModifyPublishSubscribeNameRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyPublishSubscribeNameRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyPublishSubscribeNameResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyPublishSubscribeNameResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyPublishSubscribeNameResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyReadOnlyGroupDetailsRequest struct {
+	*tchttp.BaseRequest
+
+	// 主实例ID，格式如：mssql-3l3fgqn7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 只读组ID
+	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
+
+	// 只读组名称，不填此参数，则不修改
+	ReadOnlyGroupName *string `json:"ReadOnlyGroupName,omitempty" name:"ReadOnlyGroupName"`
+
+	// 是否启动超时剔除功能,0-不开启剔除功能，1-开启剔除功能，不填此参数，则不修改
+	IsOfflineDelay *int64 `json:"IsOfflineDelay,omitempty" name:"IsOfflineDelay"`
+
+	// 启动超时剔除功能后，使用的超时阈值，不填此参数，则不修改
+	ReadOnlyMaxDelayTime *int64 `json:"ReadOnlyMaxDelayTime,omitempty" name:"ReadOnlyMaxDelayTime"`
+
+	// 启动超时剔除功能后，只读组至少保留的只读副本数，不填此参数，则不修改
+	MinReadOnlyInGroup *int64 `json:"MinReadOnlyInGroup,omitempty" name:"MinReadOnlyInGroup"`
+
+	// 只读组实例权重修改集合，不填此参数，则不修改
+	WeightPairs []*ReadOnlyInstanceWeightPair `json:"WeightPairs,omitempty" name:"WeightPairs" list`
+
+	// 0-用户自定义权重（根据WeightPairs调整）,1-系统自动分配权重(WeightPairs无效)， 默认为0
+	AutoWeight *int64 `json:"AutoWeight,omitempty" name:"AutoWeight"`
+
+	// 0-不重新均衡负载，1-重新均衡负载，默认为0
+	BalanceWeight *int64 `json:"BalanceWeight,omitempty" name:"BalanceWeight"`
+}
+
+func (r *ModifyReadOnlyGroupDetailsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyReadOnlyGroupDetailsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyReadOnlyGroupDetailsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ModifyReadOnlyGroupDetailsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ModifyReadOnlyGroupDetailsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type PublishSubscribe struct {
+
+	// 发布订阅ID
+	Id *uint64 `json:"Id,omitempty" name:"Id"`
+
+	// 发布订阅名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 发布实例ID
+	PublishInstanceId *string `json:"PublishInstanceId,omitempty" name:"PublishInstanceId"`
+
+	// 发布实例名称
+	PublishInstanceName *string `json:"PublishInstanceName,omitempty" name:"PublishInstanceName"`
+
+	// 发布实例IP
+	PublishInstanceIp *string `json:"PublishInstanceIp,omitempty" name:"PublishInstanceIp"`
+
+	// 订阅实例ID
+	SubscribeInstanceId *string `json:"SubscribeInstanceId,omitempty" name:"SubscribeInstanceId"`
+
+	// 订阅实例名称
+	SubscribeInstanceName *string `json:"SubscribeInstanceName,omitempty" name:"SubscribeInstanceName"`
+
+	// 订阅实例IP
+	SubscribeInstanceIp *string `json:"SubscribeInstanceIp,omitempty" name:"SubscribeInstanceIp"`
+
+	// 数据库的订阅发布关系集合
+	DatabaseTupleSet []*DatabaseTupleStatus `json:"DatabaseTupleSet,omitempty" name:"DatabaseTupleSet" list`
+}
+
+type ReadOnlyGroup struct {
+
+	// 只读组ID
+	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
+
+	// 只读组名称
+	ReadOnlyGroupName *string `json:"ReadOnlyGroupName,omitempty" name:"ReadOnlyGroupName"`
+
+	// 只读组的地域ID，与主实例相同
+	RegionId *string `json:"RegionId,omitempty" name:"RegionId"`
+
+	// 只读组的可用区ID，与主实例相同
+	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
+
+	// 是否启动超时剔除功能，0-不开启剔除功能，1-开启剔除功能
+	IsOfflineDelay *int64 `json:"IsOfflineDelay,omitempty" name:"IsOfflineDelay"`
+
+	// 启动超时剔除功能后，使用的超时阈值
+	ReadOnlyMaxDelayTime *int64 `json:"ReadOnlyMaxDelayTime,omitempty" name:"ReadOnlyMaxDelayTime"`
+
+	// 启动超时剔除功能后，只读组至少保留的只读副本数
+	MinReadOnlyInGroup *int64 `json:"MinReadOnlyInGroup,omitempty" name:"MinReadOnlyInGroup"`
+
+	// 只读组vip
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// 只读组vport
+	Vport *int64 `json:"Vport,omitempty" name:"Vport"`
+
+	// 只读组私有网络ID
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 只读组私有网络子网ID
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 只读组状态: 1-申请成功运行中，5-申请中
+	Status *int64 `json:"Status,omitempty" name:"Status"`
+
+	// 主实例ID，形如mssql-sgeshe3th
+	MasterInstanceId *string `json:"MasterInstanceId,omitempty" name:"MasterInstanceId"`
+
+	// 只读实例副本集合
+	ReadOnlyInstanceSet []*ReadOnlyInstance `json:"ReadOnlyInstanceSet,omitempty" name:"ReadOnlyInstanceSet" list`
+}
+
+type ReadOnlyInstance struct {
+
+	// 只读副本ID，格式如：mssqlro-3l3fgqn7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 只读副本名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 只读副本唯一UID
+	Uid *string `json:"Uid,omitempty" name:"Uid"`
+
+	// 只读副本所在项目ID
+	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 只读副本状态。1：申请中 2：运行中 3：被延迟剔除 4：已隔离 5：回收中 6：已回收 7：任务执行中 8：已下线 9：实例扩容中 10：实例迁移中  12：重启中
+	Status *int64 `json:"Status,omitempty" name:"Status"`
+
+	// 只读副本创建时间
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 只读副本更新时间
+	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
+
+	// 只读副本内存大小，单位G
+	Memory *int64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 只读副本存储空间大小，单位G
+	Storage *int64 `json:"Storage,omitempty" name:"Storage"`
+
+	// 只读副本cpu核心数
+	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 只读副本版本代号
+	Version *string `json:"Version,omitempty" name:"Version"`
+
+	// 宿主机代号
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 只读副本模式，2-单机
+	Model *int64 `json:"Model,omitempty" name:"Model"`
+
+	// 只读副本计费模式，1-包年包月，0-按量计费
+	PayMode *int64 `json:"PayMode,omitempty" name:"PayMode"`
+
+	// 只读副本权重
+	Weight *int64 `json:"Weight,omitempty" name:"Weight"`
+
+	// 只读副本延迟时间，单位秒
+	DelayTime *string `json:"DelayTime,omitempty" name:"DelayTime"`
+
+	// 只读副本与主实例的同步状态。
+	// Init:初始化
+	// DeployReadOnlyInPorgress:部署副本进行中
+	// DeployReadOnlySuccess:部署副本成功
+	// DeployReadOnlyFail:部署副本失败
+	// DeployMasterDBInPorgress:主节点上加入副本数据库进行中
+	// DeployMasterDBSuccess:主节点上加入副本数据库成功
+	// DeployMasterDBFail:主节点上加入副本数据库进失败
+	// DeployReadOnlyDBInPorgress:副本还原加入数据库开始
+	// DeployReadOnlyDBSuccess:副本还原加入数据库成功
+	// DeployReadOnlyDBFail:副本还原加入数据库失败
+	// SyncDelay:同步延迟
+	// SyncFail:同步故障
+	// SyncExcluded:已剔除只读组
+	// SyncNormal:正常
+	SynStatus *string `json:"SynStatus,omitempty" name:"SynStatus"`
+
+	// 只读副本与主实例没有同步的库
+	DatabaseDifference *string `json:"DatabaseDifference,omitempty" name:"DatabaseDifference"`
+
+	// 只读副本与主实例没有同步的账户
+	AccountDifference *string `json:"AccountDifference,omitempty" name:"AccountDifference"`
+
+	// 只读副本计费开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 只读副本计费结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 只读副本隔离时间
+	IsolateTime *string `json:"IsolateTime,omitempty" name:"IsolateTime"`
+}
+
+type ReadOnlyInstanceWeightPair struct {
+
+	// 只读实例ID，格式如：mssqlro-3l3fgqn7
+	ReadOnlyInstanceId *string `json:"ReadOnlyInstanceId,omitempty" name:"ReadOnlyInstanceId"`
+
+	// 只读实例权重 ，范围是0-100
+	ReadOnlyWeight *int64 `json:"ReadOnlyWeight,omitempty" name:"ReadOnlyWeight"`
+}
+
 type RegionInfo struct {
 
 	// 地域英文ID，类似ap-guanghou
@@ -1943,6 +3181,43 @@ type RegionInfo struct {
 
 	// 该地域目前是否可以售卖，UNAVAILABLE-不可售卖；AVAILABLE-可售卖
 	RegionState *string `json:"RegionState,omitempty" name:"RegionState"`
+}
+
+type RemoveBackupsRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，形如mssql-j8kv137v
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 待删除的备份名称，备份名称可通过DescribeBackups接口的FileName字段获得。单次请求批量删除备份数不能超过10个。
+	BackupNames []*string `json:"BackupNames,omitempty" name:"BackupNames" list`
+}
+
+func (r *RemoveBackupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *RemoveBackupsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type RemoveBackupsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *RemoveBackupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *RemoveBackupsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
 }
 
 type RenewDBInstanceRequest struct {
@@ -1988,6 +3263,40 @@ func (r *RenewDBInstanceResponse) ToJsonString() string {
 }
 
 func (r *RenewDBInstanceResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type RenewPostpaidDBInstanceRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例ID，格式如：mssql-3l3fgqn7 或 mssqlro-3l3fgqn7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *RenewPostpaidDBInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *RenewPostpaidDBInstanceRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type RenewPostpaidDBInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *RenewPostpaidDBInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *RenewPostpaidDBInstanceResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2191,6 +3500,48 @@ func (r *RunMigrationResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type SecurityGroup struct {
+
+	// 项目ID
+	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 创建时间，时间格式：yyyy-mm-dd hh:mm:ss
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 入站规则
+	InboundSet []*SecurityGroupPolicy `json:"InboundSet,omitempty" name:"InboundSet" list`
+
+	// 出站规则
+	OutboundSet []*SecurityGroupPolicy `json:"OutboundSet,omitempty" name:"OutboundSet" list`
+
+	// 安全组ID
+	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
+
+	// 安全组名称
+	SecurityGroupName *string `json:"SecurityGroupName,omitempty" name:"SecurityGroupName"`
+
+	// 安全组备注
+	SecurityGroupRemark *string `json:"SecurityGroupRemark,omitempty" name:"SecurityGroupRemark"`
+}
+
+type SecurityGroupPolicy struct {
+
+	// 策略，ACCEPT 或者 DROP
+	Action *string `json:"Action,omitempty" name:"Action"`
+
+	// 目的 IP 或 IP 段，例如172.16.0.0/12
+	CidrIp *string `json:"CidrIp,omitempty" name:"CidrIp"`
+
+	// 端口或者端口范围
+	PortRange *string `json:"PortRange,omitempty" name:"PortRange"`
+
+	// 网络协议，支持 UDP、TCP等
+	IpProtocol *string `json:"IpProtocol,omitempty" name:"IpProtocol"`
+
+	// 规则限定的方向，OUTPUT-出战规则  INPUT-进站规则
+	Dir *string `json:"Dir,omitempty" name:"Dir"`
+}
+
 type SlowlogInfo struct {
 
 	// 慢查询日志文件唯一标识
@@ -2316,6 +3667,9 @@ type UpgradeDBInstanceRequest struct {
 
 	// 代金券ID，目前单个订单只能使用一张代金券
 	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds" list`
+
+	// 实例升级后的CPU核心数
+	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
 }
 
 func (r *UpgradeDBInstanceRequest) ToJsonString() string {

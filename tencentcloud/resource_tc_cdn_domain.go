@@ -113,7 +113,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:        schema.TypeList,
 							Required:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Master origin server list. Valid values can be ip or doamin name. When modifying the origin server, you need to enter the corresponding `origin_type`.",
+							Description: "Master origin server list. Valid values can be ip or domain name. When modifying the origin server, you need to enter the corresponding `origin_type`.",
 						},
 						"server_name": {
 							Type:        schema.TypeString,
@@ -143,7 +143,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:        schema.TypeList,
 							Optional:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Backup origin server list. Valid values can be ip or doamin name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.",
+							Description: "Backup origin server list. Valid values can be ip or domain name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.",
 						},
 						"backup_server_name": {
 							Type:        schema.TypeString,
@@ -374,7 +374,7 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 			request.Https.VerifyClient = helper.String(config["verify_client"].(string))
 			if v := config["server_certificate_config"]; len(v.([]interface{})) > 0 {
 				serverCerts := v.([]interface{})
-				if len(serverCerts) > 0 {
+				if len(serverCerts) > 0 && serverCerts[0] != nil {
 					serverCert := serverCerts[0].(map[string]interface{})
 					request.Https.CertInfo = &cdn.ServerCert{}
 					if v := serverCert["certificate_id"]; v.(string) != "" {
@@ -393,7 +393,7 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 			}
 			if v := config["client_certificate_config"]; len(v.([]interface{})) > 0 {
 				clientCerts := v.([]interface{})
-				if len(clientCerts) > 0 {
+				if len(clientCerts) > 0 && clientCerts[0] != nil {
 					clientCert := clientCerts[0].(map[string]interface{})
 					request.Https.ClientCertInfo = &cdn.ClientCert{}
 					if v := clientCert["certificate_content"]; v.(string) != "" {
@@ -663,7 +663,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			request.Https.VerifyClient = helper.String(config["verify_client"].(string))
 			if v := config["server_certificate_config"]; len(v.([]interface{})) > 0 {
 				serverCerts := v.([]interface{})
-				if len(serverCerts) > 0 {
+				if len(serverCerts) > 0 && serverCerts[0] != nil {
 					serverCert := serverCerts[0].(map[string]interface{})
 					request.Https.CertInfo = &cdn.ServerCert{}
 					if v := serverCert["certificate_id"]; v.(string) != "" {
@@ -682,7 +682,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			}
 			if v := config["client_certificate_config"]; len(v.([]interface{})) > 0 {
 				clientCerts := v.([]interface{})
-				if len(clientCerts) > 0 {
+				if len(clientCerts) > 0 && clientCerts[0] != nil {
 					clientCert := clientCerts[0].(map[string]interface{})
 					request.Https.ClientCertInfo = &cdn.ClientCert{}
 					if v := clientCert["certificate_content"]; v.(string) != "" {

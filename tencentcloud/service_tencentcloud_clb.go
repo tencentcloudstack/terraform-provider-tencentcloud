@@ -864,14 +864,6 @@ func waitForTaskFinish(requestId string, meta *clb.Client) (err error) {
 	return
 }
 
-func flattenClbTagsMapping(tags []*clb.TagInfo) (mapping map[string]string) {
-	mapping = make(map[string]string)
-	for _, tag := range tags {
-		mapping[*tag.TagKey] = *tag.TagValue
-	}
-	return
-}
-
 func flattenBackendList(list []*clb.Backend) (mapping []map[string]interface{}) {
 	result := make([]map[string]interface{}, 0, len(list))
 	for _, v := range list {

@@ -46,6 +46,11 @@ In addition to all arguments above, the following attributes are exported:
   * `image_type` - Type of the image.
   * `os_name` - OS name of the image.
   * `platform` - Platform of the image.
+  * `snapshots` - List of snapshot details.
+    * `disk_size` - Size of the cloud disk used to create the snapshot; unit: GB.
+    * `disk_usage` - Type of the cloud disk used to create the snapshot.
+    * `snapshot_id` - Snapshot ID.
+    * `snapshot_name` - Snapshot name, the user-defined snapshot alias.
   * `support_cloud_init` - Whether support cloud-init.
   * `sync_percent` - Sync percent of the image.
 

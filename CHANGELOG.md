@@ -1,15 +1,63 @@
-## 1.39.0 (Unreleased)
+## 1.40.1 (Unreleased)
 
 FEATURES:
+
 * **New Resource**: `tencentcloud_sqlserver_instance`
+* **New Resource**: `tencentcloud_sqlserver_readonly_instance`
 * **New Resource**: `tencentcloud_sqlserver_db`
 * **New Resource**: `tencentcloud_sqlserver_account`
 * **New Resource**: `tencentcloud_sqlserver_db_account_attachment`
-* **New Data Source**: `tencentcloud_sqlserver_instances`
-* **New Data Source**: `tencentcloud_sqlserver_dbs`
-* **New Data Source**: `tencentcloud_sqlserver_accounts`
-* **New Data Source**: `tencentcloud_sqlserver_db_account_attachment`
-* **New Data Source**: `tencentcloud_sqlserver_backups`
+* **New Data Source**: `tencentcloud_sqlserver_instance`
+* **New Data Source**: `tencentcloud_sqlserver_readonly_groups`
+* **New Data Source**: `tencentcloud_sqlserver_zone_configs`
+
+## 1.40.0 (July 31, 2020)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_mongodb_standby_instance`
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_gaap_http_rule` argument `realservers` now is optional.
+* Resource: `tencentcloud_kubernetes_cluster` supports multiple `availability_zone`.
+* Data Source: `tencentcloud_mongodb_instances` add new argument `charge_type` and `auto_renew_flag` to support prepaid type.
+* Resource: `tencentcloud_mongodb_instance` supports prepaid type, new mongodb SDK version `2019-07-25` and standby instance.
+* Resource: `tencentcloud_mongodb_sharding_instance` supports prepaid type, new mongodb SDK version `2019-07-25` and standby instance.
+* Resource: `tencentcloud_security_group_lite_rule` refine update process and doc.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix set `key_name` error.
+
+## 1.39.0 (July 18, 2020)
+
+ENHANCEMENTS:
+
+* upgrade terraform 0.13
+* update readme to new repository
+
+## 1.38.3 (July 13, 2020)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_images` supports list of snapshots.
+* Resource: `tencentcloud_kubernetes_cluster_attachment` add new argument `worker_config` to support config with existing instances.
+* Resource: `tencentcloud_ccn` add new argument `tags` to support tags settings.
+* Resource: `tencentcloud_cfs_file_system` add new argument `tags` to support tags settings.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_gaap_layer4_listener` fix error InvalidParameter when destroy resource.
+* Resource: `tencentcloud_gaap_layer7_listener` fix error InvalidParameter when destroy resource.
+* Resource: `tencentcloud_cdn_domain` fix incorrect setting `server_certificate_config`, `client_certificate_config` caused the program to crash.
+
+## 1.38.2 (July 03, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix `allocate_public_ip` inconsistency when eip is attached to the cvm.
+* Resource: `tencentcloud_mysql_instance` fix auto-forcenew on `charge_type` and `pay_type` when upgrading terraform version. ([#459](https://github.com/terraform-providers/terraform-provider-tencentcloud/pull/459)).
 
 ## 1.38.1 (June 30, 2020)
 

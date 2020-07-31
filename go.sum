@@ -250,8 +250,6 @@ github.com/hashicorp/terraform-json v0.4.0 h1:KNh29iNxozP5adfUFBJ4/fWd0Cu3taGgjH
 github.com/hashicorp/terraform-json v0.4.0/go.mod h1:eAbqb4w0pSlRmdvl8fOyHAi/+8jnkVYN28gJkSJrLhU=
 github.com/hashicorp/terraform-plugin-sdk v1.7.0 h1:B//oq0ZORG+EkVrIJy0uPGSonvmXqxSzXe8+GhknoW0=
 github.com/hashicorp/terraform-plugin-sdk v1.7.0/go.mod h1:OjgQmey5VxnPej/buEhe+YqKm0KNvV3QqU4hkqHqPCY=
-github.com/hashicorp/terraform-plugin-sdk v1.13.1 h1:kWq+V+4BMFKtzIuO8wb/k4SRGB/VVF8g468VSFmAnKM=
-github.com/hashicorp/terraform-plugin-sdk v1.13.1/go.mod h1:HiWIPD/T9HixIhQUwaSoDQxo4BLFdmiBi/Qz5gjB8Q0=
 github.com/hashicorp/terraform-plugin-sdk v1.14.0 h1:sUKcw7OHqDXhBarlHjv+/yMCr8eEb1lO8CGQ3pEEFiE=
 github.com/hashicorp/terraform-plugin-sdk v1.14.0/go.mod h1:t62Xy+m7Zjq5tA2vrs8Wuo/TQ0sc9Mx9MjXL3+7MHBQ=
 github.com/hashicorp/terraform-plugin-test v1.2.0 h1:AWFdqyfnOj04sxTdaAF57QqvW7XXrT8PseUHkbKsE8I=
@@ -460,8 +458,8 @@ github.com/subosito/gotenv v1.2.0 h1:Slr1R9HxAlEKefgq5jn9U+DnETlIUa6HfgEzj0g5d7s
 github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69rRypqCw=
 github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2 h1:Xr9gkxfOP0KQWXKNqmwe8vEeSUiUj4Rlee9CMVX2ZUQ=
 github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2/go.mod h1:yHp0ai0Z9gUljN3o0xMhYJnH/IcvkdTBOX2fmJ93JEM=
-github.com/tencentcloud/tencentcloud-sdk-go v3.0.196+incompatible h1:aKWXYPLQ9NARP0tBESEtTfRLes88LaI+4qm3TSRDCjk=
-github.com/tencentcloud/tencentcloud-sdk-go v3.0.196+incompatible/go.mod h1:0PfYow01SHPMhKY31xa+EFz2RStxIqj6JFAJS+IkCi4=
+github.com/tencentcloud/tencentcloud-sdk-go v3.0.221+incompatible h1:KfLv0pH+sYexx2FcvvPhek5kfiI14JB9JCTMkEWrNVE=
+github.com/tencentcloud/tencentcloud-sdk-go v3.0.221+incompatible/go.mod h1:0PfYow01SHPMhKY31xa+EFz2RStxIqj6JFAJS+IkCi4=
 github.com/tetafro/godot v0.3.7 h1:+mecr7RKrUKB5UQ1gwqEMn13sDKTyDR8KNIquB9mm+8=
 github.com/tetafro/godot v0.3.7/go.mod h1:/7NLHhv08H1+8DNj0MElpAACw1ajsCuf3TKNQxA5S+0=
 github.com/timakin/bodyclose v0.0.0-20190930140734-f7f2e9bca95e h1:RumXZ56IrCj4CL+g1b9OL/oH0QnsF976bC8xQFYUD5Q=

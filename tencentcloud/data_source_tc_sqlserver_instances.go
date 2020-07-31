@@ -84,6 +84,11 @@ func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Version of the SQL Server database engine. Allowed values are `2008R2`(SQL Server 2008 Enerprise), `2012SP3`(SQL Server 2012 Enterprise), `2016SP1` (SQL Server 2016 Enterprise), `201602`(SQL Server 2016 Standard) and `2017`(SQL Server 2017 Enterprise). Default is `2008R2`.",
 						},
+						"ha_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance type.",
+						},
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -109,23 +114,27 @@ func dataSourceTencentCloudSqlserverInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Project ID, default value is 0.",
 						},
+						"ro_flag": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Readonly flag. `RO` for readonly instance, `MASTER` for master instance,  `` for not readonly instance.",
+						},
 						"availability_zone": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Availability zone.",
 						},
-						//Computed values
 						"used_storage": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Used storage.",
 						},
-						"private_access_ip": {
+						"vip": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "IP for private access.",
 						},
-						"private_access_port": {
+						"vport": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Port for private access.",
@@ -199,10 +208,11 @@ func dataSourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta in
 		listItem["vpc_id"] = v.UniqVpcId
 		listItem["subnet_id"] = v.UniqSubnetId
 		listItem["engine_version"] = v.Version
-		listItem["private_access_ip"] = v.Vip
-		listItem["private_access_port"] = v.Vport
+		listItem["vip"] = v.Vip
+		listItem["vport"] = v.Vport
 		listItem["used_storage"] = v.UsedStorage
 		listItem["status"] = v.Status
+		listItem["ro_flag"] = v.ROFlag
 
 		if *v.PayMode == 1 {
 			listItem["charge_type"] = COMMON_PAYTYPE_PREPAID

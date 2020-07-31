@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/pkg/errors"
@@ -84,7 +85,7 @@ func (me *SqlserverService) DescribeProductConfig(ctx context.Context, zone stri
 	return
 }
 
-func (me *SqlserverService) CreateSqlserverInstance(ctx context.Context, dbVersion string, chargeType string, memory int, autoRenewFlag int, projectId int, subnetId string, vpcId string, zone string, storage int) (instanceId string, errRet error) {
+func (me *SqlserverService) CreateSqlserverInstance(ctx context.Context, dbVersion string, chargeType string, memory int, autoRenewFlag int, projectId int, subnetId string, vpcId string, zone string, storage int, weekSet []int, startTime string, timeSpan int, multiZones bool, haType string, securityGroups []string) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewCreateDBInstancesRequest()
 	defer func() {
@@ -99,9 +100,29 @@ func (me *SqlserverService) CreateSqlserverInstance(ctx context.Context, dbVersi
 	request.Storage = helper.IntInt64(storage)
 	request.SubnetId = &subnetId
 	request.VpcId = &vpcId
+	request.HAType = &haType
+	request.MultiZones = &multiZones
 	request.AutoRenewFlag = helper.IntInt64(autoRenewFlag)
 	if projectId != 0 {
 		request.ProjectId = helper.IntInt64(projectId)
+	}
+
+	if len(weekSet) > 0 {
+		request.Weekly = make([]*int64, 0)
+		for _, i := range weekSet {
+			request.Weekly = append(request.Weekly, helper.IntInt64(i))
+		}
+	}
+	if startTime != "" {
+		request.StartTime = &startTime
+	}
+	if timeSpan != 0 {
+		request.Span = helper.IntInt64(timeSpan)
+	}
+
+	request.SecurityGroupList = make([]*string, 0, len(securityGroups))
+	for _, v := range securityGroups {
+		request.SecurityGroupList = append(request.SecurityGroupList, &v)
 	}
 
 	request.GoodsNum = helper.IntInt64(1)
@@ -178,11 +199,7 @@ func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instan
 	}()
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseSqlserverClient().UpgradeDBInstance(request)
-	if response == nil || response.Response == nil {
-		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
-		return
-	}
+	_, err := me.client.UseSqlserverClient().UpgradeDBInstance(request)
 	if err != nil {
 		return err
 	}
@@ -206,7 +223,71 @@ func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instan
 	return
 }
 
-func (me *SqlserverService) DeleteSqlserverInstance(ctx context.Context, instanceId string) (errRet error) {
+func (me *SqlserverService) RemoveSecurityGroup(ctx context.Context, instanceId string, securityGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDisassociateSecurityGroupsRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+	request.SecurityGroupId = &securityGroupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().DisassociateSecurityGroups(request)
+
+	return err
+}
+
+func (me *SqlserverService) AddSecurityGroup(ctx context.Context, instanceId string, securityGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewAssociateSecurityGroupsRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+	request.SecurityGroupId = &securityGroupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().AssociateSecurityGroups(request)
+	time.Sleep(10 * time.Second)
+	return err
+}
+
+func (me *SqlserverService) ModifySqlserverInstanceMaintenanceSpan(ctx context.Context, instanceId string, weekSet []int, startTime string, timeSpan int) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewModifyMaintenanceSpanRequest()
+	request.InstanceId = &instanceId
+	if len(weekSet) > 0 {
+		request.Weekly = make([]*int64, 0)
+		for _, i := range weekSet {
+			request.Weekly = append(request.Weekly, helper.IntInt64(i))
+		}
+	}
+	if startTime != "" {
+		request.StartTime = &startTime
+	}
+	if timeSpan != 0 {
+		request.Span = helper.IntUint64(timeSpan)
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().ModifyMaintenanceSpan(request)
+
+	return err
+}
+
+func (me *SqlserverService) TerminateSqlserverInstance(ctx context.Context, instanceId string) (errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewTerminateDBInstanceRequest()
 	request.InstanceIdSet = []*string{&instanceId}
@@ -218,6 +299,21 @@ func (me *SqlserverService) DeleteSqlserverInstance(ctx context.Context, instanc
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseSqlserverClient().TerminateDBInstance(request)
+	return err
+}
+
+func (me *SqlserverService) DeleteSqlserverInstance(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDeleteDBInstanceRequest()
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseSqlserverClient().DeleteDBInstance(request)
 	return err
 }
 
@@ -291,6 +387,62 @@ func (me *SqlserverService) DescribeSqlserverInstanceById(ctx context.Context, i
 	return
 }
 
+func (me *SqlserverService) DescribeMaintenanceSpan(ctx context.Context, instanceId string) (weekSet []int, startTime string, timeSpan int, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeMaintenanceSpanRequest()
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeMaintenanceSpan(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	for _, v := range response.Response.Weekly {
+		weekSet = append(weekSet, int(*v))
+	}
+	startTime = *response.Response.StartTime
+	timeSpan = int(*response.Response.Span)
+
+	return
+}
+
+func (me *SqlserverService) DescribeInstanceSecurityGroups(ctx context.Context, instanceId string) (securityGroups []string, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeDBSecurityGroupsRequest()
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeDBSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+	securityGroups = make([]string, 0, len(response.Response.SecurityGroupSet))
+	for _, v := range response.Response.SecurityGroupSet {
+		securityGroups = append(securityGroups, *v.SecurityGroupId)
+	}
+
+	return
+}
+
 func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instanceId string, startTime string, endTime string) (backupList []*sqlserver.Backup, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewDescribeBackupsRequest()
@@ -326,6 +478,116 @@ func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instan
 		}
 		offset += limit
 	}
+}
+
+func (me *SqlserverService) DescribeReadonlyGroupList(ctx context.Context, instanceId string) (groupList []*sqlserver.ReadOnlyGroup, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeReadOnlyGroupListRequest()
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeReadOnlyGroupList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	groupList = response.Response.ReadOnlyGroupSet
+
+	return
+}
+
+func (me *SqlserverService) CreateSqlserverReadonlyInstance(ctx context.Context, masterInstanceId string, subnetId string, vpcId string, chargeType string, memory int, zone string, storage int, readonlyGroupType int, readonlyGroupId string, forceUpgrade bool, securityGroups []string) (instanceId string, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewCreateReadOnlyDBInstancesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &masterInstanceId
+	request.InstanceChargeType = &chargeType
+	request.Memory = helper.IntInt64(memory)
+	request.Storage = helper.IntInt64(storage)
+	request.SubnetId = &subnetId
+	request.VpcId = &vpcId
+	request.GoodsNum = helper.IntInt64(1)
+
+	request.ReadOnlyGroupType = helper.IntInt64(readonlyGroupType)
+	if readonlyGroupId != "" {
+		request.ReadOnlyGroupId = &readonlyGroupId
+	}
+
+	if forceUpgrade {
+		request.ReadOnlyGroupForcedUpgrade = helper.BoolToInt64Ptr(forceUpgrade)
+	}
+	request.GoodsNum = helper.IntInt64(1)
+	request.Zone = &zone
+	request.SecurityGroupList = make([]*string, 0, len(securityGroups))
+	for _, v := range securityGroups {
+		request.SecurityGroupList = append(request.SecurityGroupList, &v)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().CreateReadOnlyDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+	if len(response.Response.DealNames) == 0 {
+		errRet = fmt.Errorf("TencentCloud SDK returns empty SQL Server ID")
+		return
+	} else if len(response.Response.DealNames) > 1 {
+		errRet = fmt.Errorf("TencentCloud SDK returns more than one SQL Server ID")
+		return
+	}
+
+	dealId := *response.Response.DealNames[0]
+
+	instanceId, err = me.GetInfoFromDeal(ctx, dealId)
+
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func (me *SqlserverService) DescribeReadonlyGroupListByReadonlyInstanceId(ctx context.Context, instanceId string) (readonlyGroupId string, masterInstanceId string, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeReadOnlyGroupByReadOnlyInstanceRequest()
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeReadOnlyGroupByReadOnlyInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	readonlyGroupId = *response.Response.ReadOnlyGroupId
+	masterInstanceId = *response.Response.MasterInstanceId
+	return
 }
 
 func (me *SqlserverService) CreateSqlserverAccount(ctx context.Context, instanceId string, userName string, password string, remark string, isAdmin bool) (errRet error) {
@@ -676,14 +938,15 @@ func (me *SqlserverService) WaitForTaskFinish(ctx context.Context, flowId int64)
 		}
 	}()
 
-	errRet = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(4*writeRetryTimeout, func() *resource.RetryError {
 		taskResponse, err := me.client.UseSqlserverClient().DescribeFlowStatus(request)
+		log.Printf("This is the time out interface, thanks2")
 		ratelimit.Check(request.GetAction())
 		if err != nil {
 			return resource.NonRetryableError(errors.WithStack(err))
 		}
 		if *taskResponse.Response.Status == int64(SQLSERVER_TASK_RUNNING) {
-			return resource.RetryableError(errors.WithStack(fmt.Errorf("SQLSERVER task status is %d(expanding), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
+			return resource.RetryableError(errors.WithStack(fmt.Errorf("SQLSERVER task status is %d(task running), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
 		} else if *taskResponse.Response.Status == int64(SQLSERVER_TASK_FAIL) {
 			return resource.NonRetryableError(errors.WithStack(fmt.Errorf("SQLSERVER task status is %d(failed), requestId is %s", *taskResponse.Response.Status, *taskResponse.Response.RequestId)))
 		}

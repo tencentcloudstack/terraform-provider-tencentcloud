@@ -31,7 +31,7 @@ The following arguments are supported:
 * `limit` - (Optional) Number of results returned for a single request. Default is 20, and maximum is 2000.
 * `mysql_id` - (Optional) Instance ID, such as cdb-c1nl9rpv. It is identical to the instance ID displayed in the database console page.
 * `offset` - (Optional) Record offset. Default is 0.
-* `pay_type` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Pay type of instance, 0: prepay, 1: postpay.
+* `pay_type` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance, 0: prepay, 1: postpay.
 * `result_output_file` - (Optional) Used to store results.
 * `security_group_id` - (Optional) Security groups ID of instance.
 * `status` - (Optional) Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.

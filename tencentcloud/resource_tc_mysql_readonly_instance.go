@@ -34,6 +34,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
@@ -225,6 +226,16 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 	if err != nil {
 		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
 		return err
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
+		log.Printf("[DEBUG]Mysql instance create, resourceName:%s\n", resourceName)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudMysqlReadonlyInstanceRead(d, meta)

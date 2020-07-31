@@ -16,9 +16,9 @@ Provides a mysql instance resource to create master database instances.
 
 ```hcl
 resource "tencentcloud_mysql_instance" "default" {
-  internet_service = 1
-  engine_version   = "5.7"
-
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
   root_password     = "********"
   slave_deploy_mode = 0
   first_slave_zone  = "ap-guangzhou-4"
@@ -61,8 +61,8 @@ The following arguments are supported:
 * `internet_service` - (Optional) Indicates whether to enable the access to an instance from public network: 0 - No, 1 - Yes.
 * `intranet_port` - (Optional) Public access port, rang form 1024 to 65535 and default value is 3306.
 * `parameters` - (Optional) List of parameters to use.
-* `pay_type` - (Optional, ForceNew, **Deprecated**) It has been deprecated from version 1.36.0. Pay type of instance, 0: prepaid, 1: postpaid.
-* `period` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Period of instance. NOTES: Only supported prepaid instance.
+* `pay_type` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance, 0: prepaid, 1: postpaid.
+* `period` - (Optional, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
 * `prepaid_period` - (Optional) Period of instance. NOTES: Only supported prepaid instance.
 * `project_id` - (Optional) Project ID, default value is 0.
 * `second_slave_zone` - (Optional, ForceNew) Zone information about second slave instance.

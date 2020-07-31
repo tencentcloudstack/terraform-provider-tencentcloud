@@ -322,9 +322,11 @@ SQLServer
 	tencentcloud_sqlserver_accounts
 	tencentcloud_sqlserver_account_db_attachments
 	tencentcloud_sqlserver_backups
+  	tencentcloud_sqlserver_readonly_groups
 
   Resource
 	tencentcloud_sqlserver_instance
+	tencentcloud_sqlserver_readonly_instance
     tencentcloud_sqlserver_db
 	tencentcloud_sqlserver_account
 	tencentcloud_sqlserver_account_db_attachment
@@ -617,6 +619,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_sqlserver_dbs":                    dataSourceTencentSqlserverDBs(),
 			"tencentcloud_sqlserver_accounts":               dataSourceTencentCloudSqlserverAccounts(),
 			"tencentcloud_sqlserver_account_db_attachments": dataSourceTencentCloudSqlserverAccountDBAttachments(),
+			"tencentcloud_sqlserver_readonly_groups":        dataSourceTencentCloudSqlserverReadonlyGroups(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -732,6 +735,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_sqlserver_db":                    resourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":               resourceTencentCloudSqlserverAccount(),
 			"tencentcloud_sqlserver_account_db_attachment": resourceTencentCloudSqlserverAccountDBAttachment(),
+			"tencentcloud_sqlserver_readonly_instance":     resourceTencentCloudSqlserverReadonlyInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

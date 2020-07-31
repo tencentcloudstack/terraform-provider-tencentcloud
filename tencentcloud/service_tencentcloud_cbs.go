@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -222,6 +223,49 @@ func (me *CbsService) DescribeSnapshotById(ctx context.Context, snapshotId strin
 
 	if len(response.Response.SnapshotSet) > 0 {
 		snapshot = response.Response.SnapshotSet[0]
+	}
+	return
+}
+
+func (me *CbsService) DescribeSnapshotByIds(ctx context.Context, snapshotIdsParam []*string) (snapshots []*cbs.Snapshot, errRet error) {
+	if len(snapshotIdsParam) == 0 {
+		return
+	}
+
+	var (
+		logId            = getLogId(ctx)
+		request          = cbs.NewDescribeSnapshotsRequest()
+		err              error
+		response         *cbs.DescribeSnapshotsResponse
+		offset, pageSize uint64 = 0, 100
+	)
+	request.SnapshotIds = snapshotIdsParam
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err = me.client.UseCbsClient().DescribeSnapshots(request)
+			if err != nil {
+				return retryError(err, InternalError)
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+
+		snapshots = append(snapshots, response.Response.SnapshotSet...)
+		if len(response.Response.SnapshotSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
 	}
 	return
 }
@@ -448,12 +492,4 @@ func (me *CbsService) ModifyDisksRenewFlag(ctx context.Context, storageId string
 		return err
 	}
 	return nil
-}
-
-func flattenCbsTagsMapping(tags []*cbs.Tag) (mapping map[string]string) {
-	mapping = make(map[string]string)
-	for _, tag := range tags {
-		mapping[*tag.Key] = *tag.Value
-	}
-	return
 }

@@ -47,6 +47,20 @@ resource "tencentcloud_sqlserver_account_db_attachment" "example" {
   privilege    = "ReadWrite"
 }
 
+resource "tencentcloud_sqlserver_readonly_instance" "example" {
+  name = "example"
+  availability_zone = var.availability_zone
+  charge_type = "POSTPAID_BY_HOUR"
+  vpc_id                   = tencentcloud_vpc.foo.id
+  subnet_id = tencentcloud_subnet.foo.id
+  memory = 4
+  storage = 20
+  master_instance_id = tencentcloud_sqlserver_instance.test.id
+  readonly_group_type = 1
+  force_upgrade = true
+}
+
+
 data "tencentcloud_sqlserver_instances" "id_example" {
   id = tencentcloud_sqlserver_instance.example.id
 }
@@ -78,3 +92,8 @@ data "tencentcloud_sqlserver_backups" "example" {
   start_time  = "2020-06-30 00:00:00"
   end_time    = "2020-07-01 00:00:00"
 }
+
+data "tencentcloud_sqlserver_readonly_groups" "example"{
+	master_instance_id = tencentcloud_sqlserver_instance.example.id
+}
+

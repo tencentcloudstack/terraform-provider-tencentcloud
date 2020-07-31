@@ -35,6 +35,30 @@ func TestAccTencentCloudCcnV3Basic(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
+			// add tag
+			{
+				Config: testAccCcn_multiTags("master"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCcnExists(keyName),
+					resource.TestCheckResourceAttr(keyName, "tags.role", "master"),
+				),
+			},
+			// update tag
+			{
+				Config: testAccCcn_multiTags("master-version2"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCcnExists(keyName),
+					resource.TestCheckResourceAttr(keyName, "tags.role", "master-version2"),
+				),
+			},
+			// remove tag
+			{
+				Config: testAccCcnConfig,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCcnExists(keyName),
+					resource.TestCheckNoResourceAttr(keyName, "tags.role"),
+				),
+			},
 		},
 	})
 }
@@ -130,6 +154,20 @@ resource tencentcloud_ccn main {
   qos         = "AG"
 }
 `
+
+func testAccCcn_multiTags(value string) string {
+	return fmt.Sprintf(
+		`
+resource tencentcloud_ccn main {
+	name        = "ci-temp-test-ccn"
+	description = "ci-temp-test-ccn-des"
+	qos         = "AG"
+	tags = {
+		role = "%s"
+	}
+}
+`, value)
+}
 
 const testAccCcnConfigUpdate = `
 resource tencentcloud_ccn main {

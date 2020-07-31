@@ -90,6 +90,7 @@ func TestAccTencentCloudClbInstance_internal(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_internal", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_internal", "subnet_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "tags.test", "tf1"),
 				),
 			},
 			{

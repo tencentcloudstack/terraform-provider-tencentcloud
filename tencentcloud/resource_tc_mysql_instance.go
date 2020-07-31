@@ -9,7 +9,7 @@ Example Usage
 resource "tencentcloud_mysql_instance" "default" {
   internet_service = 1
   engine_version   = "5.7"
-
+  charge_type = "POSTPAID"
   root_password     = "********"
   slave_deploy_mode = 0
   first_slave_zone  = "ap-guangzhou-4"
@@ -61,12 +61,14 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		},
 		"pay_type": {
 			Type:          schema.TypeInt,
-			Deprecated:    "It has been deprecated from version 1.36.0.",
-			ForceNew:      true,
+			Deprecated:    "It has been deprecated from version 1.36.0. Please use `charge_type` instead.",
 			Optional:      true,
 			ValidateFunc:  validateAllowedIntValue([]int{MysqlPayByMonth, MysqlPayByUse}),
 			ConflictsWith: []string{"charge_type", "prepaid_period"},
-			//Default:      MysqlPayByUse,
+			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+				return true
+			},
+			Default:     -1,
 			Description: "Pay type of instance, 0: prepaid, 1: postpaid.",
 		},
 		"charge_type": {
@@ -76,24 +78,44 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			ValidateFunc:  validateAllowedStringValue([]string{MYSQL_CHARGE_TYPE_PREPAID, MYSQL_CHARGE_TYPE_POSTPAID}),
 			ConflictsWith: []string{"pay_type", "period"},
 			Default:       MYSQL_CHARGE_TYPE_POSTPAID,
-			Description:   "Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
+			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+				if (olds == "" && news == MYSQL_CHARGE_TYPE_POSTPAID) ||
+					(olds == MYSQL_CHARGE_TYPE_POSTPAID && news == "") {
+					if v, ok := d.GetOkExists("pay_type"); ok && v.(int) == MysqlPayByUse {
+						return true
+					}
+				} else if (olds == "" && news == MYSQL_CHARGE_TYPE_PREPAID) ||
+					(olds == MYSQL_CHARGE_TYPE_PREPAID && news == "") {
+					if v, ok := d.GetOkExists("pay_type"); ok && v.(int) == MysqlPayByMonth {
+						return true
+					}
+				}
+				return olds == news
+			},
+			Description: "Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
 		},
 		"period": {
 			Type:          schema.TypeInt,
-			Deprecated:    "It has been deprecated from version 1.36.0.",
+			Deprecated:    "It has been deprecated from version 1.36.0. Please use `prepaid_period` instead.",
 			Optional:      true,
-			Default:       1,
+			Default:       -1,
 			ConflictsWith: []string{"charge_type", "prepaid_period"},
 			ValidateFunc:  validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
-			Description:   "Period of instance. NOTES: Only supported prepaid instance.",
+			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+				return true
+			},
+			Description: "Period of instance. NOTES: Only supported prepaid instance.",
 		},
 		"prepaid_period": {
 			Type:          schema.TypeInt,
 			Optional:      true,
 			Default:       1,
 			ConflictsWith: []string{"pay_type", "period"},
-			ValidateFunc:  validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
-			Description:   "Period of instance. NOTES: Only supported prepaid instance.",
+			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
+				return true
+			},
+			ValidateFunc: validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
+			Description:  "Period of instance. NOTES: Only supported prepaid instance.",
 		},
 		"auto_renew_flag": {
 			Type:         schema.TypeInt,
@@ -375,23 +397,6 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 			requestByUse.SecurityGroup = requestSecurityGroup
 		}
 	}
-
-	if tagsMap, ok := d.Get("tags").(map[string]interface{}); ok {
-		requestResourceTags := make([]*cdb.TagInfo, 0, len(tagsMap))
-		for k, v := range tagsMap {
-			key := k
-			value := v.(string)
-			var tagInfo cdb.TagInfo
-			tagInfo.TagKey = &key
-			tagInfo.TagValue = []*string{&value}
-			requestResourceTags = append(requestResourceTags, &tagInfo)
-		}
-		if okByMonth {
-			requestByMonth.ResourceTags = requestResourceTags
-		} else {
-			requestByUse.ResourceTags = requestResourceTags
-		}
-	}
 	return nil
 
 }
@@ -488,9 +493,9 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 
 	request := cdb.NewCreateDBInstanceRequest()
 
-	_, oldOk := d.GetOkExists("pay_type")
+	payType, oldOk := d.GetOkExists("pay_type")
 	var period int
-	if !oldOk {
+	if !oldOk || payType == -1 {
 		period = d.Get("prepaid_period").(int)
 	} else {
 		period = d.Get("period").(int)
@@ -636,6 +641,15 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudMysqlInstanceRead(d, meta)
 }
 
@@ -663,24 +677,16 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		d.SetId("")
 		return
 	}
+
 	_ = d.Set("instance_name", *mysqlInfo.InstanceName)
 
-	_, oldOk := d.GetOkExists("pay_type")
-	var periodKey string
-	if oldOk {
-		_ = d.Set("pay_type", int(*mysqlInfo.PayType))
-		periodKey = "period"
-	} else {
-		periodKey = "prepaid_period"
-
-		_ = d.Set("charge_type", MYSQL_CHARGE_TYPE[int(*mysqlInfo.PayType)])
-
-	}
-
+	_ = d.Set("charge_type", MYSQL_CHARGE_TYPE[int(*mysqlInfo.PayType)])
+	_ = d.Set("pay_type", -1)
+	_ = d.Set("period", -1)
 	if int(*mysqlInfo.PayType) == MysqlPayByMonth {
-		tempInt, _ := d.Get(periodKey).(int)
+		tempInt, _ := d.Get("prepaid_period").(int)
 		if tempInt == 0 {
-			_ = d.Set(periodKey, 1)
+			_ = d.Set("prepaid_period", 1)
 		}
 	}
 
@@ -719,11 +725,15 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 		}
 		_ = d.Set("gtid", int(isGTIDOpen))
 	}
-	tags, err := mysqlService.DescribeTagsOfInstanceId(ctx, d.Id())
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "cdb", "instanceId", tcClient.Region, d.Id())
 	if err != nil {
 		errRet = err
 		return
 	}
+
 	if err := d.Set("tags", tags); err != nil {
 		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
 		return
@@ -979,25 +989,14 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
-		oldTags := oldValue.(map[string]interface{})
-		newTags := newValue.(map[string]interface{})
-
-		//set(oldTags-newTags) need delete
-		var deleteTags = make(map[string]string, len(oldTags))
-		for k, v := range oldTags {
-			if _, has := newTags[k]; !has {
-				deleteTags[k] = v.(string)
-			}
-		}
-
-		//set newTags need modify
-		var modifytTags = make(map[string]string, len(newTags))
-		for k, v := range newTags {
-			modifytTags[k] = v.(string)
-		}
-
-		if err := mysqlService.ModifyInstanceTag(ctx, d.Id(), deleteTags, modifytTags); err != nil {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := BuildTagResourceName("cdb", "instanceId", region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
 			return err
 		}
 		d.SetPartial("tags")
@@ -1339,7 +1338,7 @@ func getPayType(d *schema.ResourceData) (payType interface{}) {
 	chargeType := d.Get("charge_type")
 	payType, oldOk := d.GetOkExists("pay_type")
 
-	if !oldOk {
+	if !oldOk || payType == -1 {
 		if chargeType == MYSQL_CHARGE_TYPE_PREPAID {
 			payType = MysqlPayByMonth
 		} else {

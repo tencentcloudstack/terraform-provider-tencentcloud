@@ -108,6 +108,20 @@ The following arguments are supported:
 * `key_ids` - (Optional, ForceNew) The key pair to use for the instance, it looks like skey-16jig7tx, it should be set if `password` not set.
 * `labels` - (Optional, ForceNew) Labels of tke attachment exits cvm.
 * `password` - (Optional, ForceNew) Password to access, should be set if `key_ids` not set.
+* `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER', commonly used to attach existing instances.
+
+The `data_disk` object supports the following:
+
+* `disk_size` - (Optional, ForceNew) Volume of disk in GB. Default is 0.
+* `disk_type` - (Optional, ForceNew) Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.
+
+The `worker_config` object supports the following:
+
+* `data_disk` - (Optional, ForceNew) Configurations of data disk.
+* `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
+* `is_schedule` - (Optional, ForceNew) Indicate to schedule the adding node or not. Default is true.
+* `mount_target` - (Optional, ForceNew) Mount target. Default is not mounting.
+* `user_data` - (Optional, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
 
 ## Attributes Reference
 
