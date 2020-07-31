@@ -1,4 +1,4 @@
-## 1.40.0 (Unreleased)
+## 1.40.0 (July 31, 2020)
 
 FEATURES:
 
