@@ -11,6 +11,8 @@ import (
 )
 
 func TestAccTencentCloudSecurityGroupLiteRule_basic(t *testing.T) {
+	t.Parallel()
+
 	var liteRuleId string
 
 	resource.Test(t, resource.TestCase{
@@ -41,6 +43,8 @@ func TestAccTencentCloudSecurityGroupLiteRule_basic(t *testing.T) {
 }
 
 func TestAccTencentCloudSecurityGroupLiteRule_update(t *testing.T) {
+	t.Parallel()
+
 	var liteRuleId string
 
 	resource.Test(t, resource.TestCase{

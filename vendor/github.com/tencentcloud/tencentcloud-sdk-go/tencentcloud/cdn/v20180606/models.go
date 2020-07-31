@@ -20,6 +20,41 @@ import (
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
+type AccessControl struct {
+
+	// on | off 是否启用请求头部及请求url访问控制
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 请求头部及请求url访问规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AccessControlRules []*AccessControlRule `json:"AccessControlRules,omitempty" name:"AccessControlRules" list`
+
+	// 返回状态码
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReturnCode *int64 `json:"ReturnCode,omitempty" name:"ReturnCode"`
+}
+
+type AccessControlRule struct {
+
+	// requestHeader ：对请求头部进行访问控制
+	// url ： 对访问url进行访问控制
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
+
+	// 封禁内容
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleContent *string `json:"RuleContent,omitempty" name:"RuleContent"`
+
+	// on ：正则匹配
+	// off ：字面匹配
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Regex *string `json:"Regex,omitempty" name:"Regex"`
+
+	// RuleType为requestHeader时必填，否则不需要填
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleHeader *string `json:"RuleHeader,omitempty" name:"RuleHeader"`
+}
+
 type AddCdnDomainRequest struct {
 	*tchttp.BaseRequest
 
@@ -437,25 +472,29 @@ type CacheKey struct {
 	// off：关闭全路径缓存（即开启参数过滤）
 	FullUrlCache *string `json:"FullUrlCache,omitempty" name:"FullUrlCache"`
 
-	// 是否使用请求参数作为CacheKey的一部分
+	// 是否忽略大小写缓存
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IgnoreCase *string `json:"IgnoreCase,omitempty" name:"IgnoreCase"`
+
+	// CacheKey中包含请求参数
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	QueryString *QueryStringKey `json:"QueryString,omitempty" name:"QueryString"`
 
-	// 是否使用请求头部作为CacheKey的一部分
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Header *HeaderKey `json:"Header,omitempty" name:"Header"`
-
-	// 是否使用Cookie作为CacheKey的一部分
+	// CacheKey中包含Cookie
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Cookie *CookieKey `json:"Cookie,omitempty" name:"Cookie"`
 
-	// 是否使用请求协议作为CacheKey的一部分
+	// CacheKey中包含请求头部
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Scheme *SchemeKey `json:"Scheme,omitempty" name:"Scheme"`
+	Header *HeaderKey `json:"Header,omitempty" name:"Header"`
 
-	// 是否使用自定义字符串作为CacheKey的一部分
+	// CacheKey中包含自定义字符串
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CacheTag *CacheTagKey `json:"CacheTag,omitempty" name:"CacheTag"`
+
+	// CacheKey中包含请求协议
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Scheme *SchemeKey `json:"Scheme,omitempty" name:"Scheme"`
 }
 
 type CacheOptResult struct {
@@ -472,6 +511,7 @@ type CacheOptResult struct {
 type CacheTagKey struct {
 
 	// 是否使用CacheTag作为CacheKey的一部分
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
 	// 自定义CacheTag的值
@@ -662,9 +702,10 @@ type CompressionRule struct {
 type CookieKey struct {
 
 	// on | off 是否使用Cookie作为Cache的一部分
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// 使用的cookie 逗号分割
+	// 使用的cookie，';' 分割
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value *string `json:"Value,omitempty" name:"Value"`
 }
@@ -945,6 +986,7 @@ type DescribeCdnDataRequest struct {
 	// ipv4：指定查询 ipv4 对应指标
 	// ipv6：指定查询 ipv6 对应指标
 	// 指定IP协议查询时，不可同时指定省份、运营商查询
+	// 注意：非IPv6白名单用户不可指定ipv4、ipv6进行查询
 	IpProtocol *string `json:"IpProtocol,omitempty" name:"IpProtocol"`
 
 	// 指定服务地域查询，不填充表示查询中国境内CDN数据
@@ -1800,16 +1842,16 @@ func (r *DescribePushTasksResponse) FromJsonString(s string) error {
 type DescribeReportDataRequest struct {
 	*tchttp.BaseRequest
 
-	// 查询起始时间
+	// 查询起始时间：yyyy-MM-dd
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 查询结束时间
+	// 查询结束时间：yyyy-MM-dd
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
 	// 报表类型
 	// daily：日报表
-	// weekly：周报表
-	// monthly：月报表
+	// weekly：周报表（周一至周日）
+	// monthly：月报表（自然月）
 	ReportType *string `json:"ReportType,omitempty" name:"ReportType"`
 
 	// 域名加速区域
@@ -2142,6 +2184,10 @@ type DetailDomain struct {
 	// UA黑白名单配置
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UserAgentFilter *UserAgentFilter `json:"UserAgentFilter,omitempty" name:"UserAgentFilter"`
+
+	// 访问控制
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AccessControl *AccessControl `json:"AccessControl,omitempty" name:"AccessControl"`
 }
 
 type DisableCachesRequest struct {
@@ -2494,9 +2540,23 @@ type HeaderKey struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 
-	// 组成CacheKey的header 逗号分隔
+	// 组成CacheKey的header数组，';' 分割
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+type Hsts struct {
+
+	// 是否开启，on或off。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// MaxAge数值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxAge *int64 `json:"MaxAge,omitempty" name:"MaxAge"`
+
+	// 是否包含子域名，on或off。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IncludeSubDomains *string `json:"IncludeSubDomains,omitempty" name:"IncludeSubDomains"`
 }
 
 type HttpHeaderPathRule struct {
@@ -2586,6 +2646,10 @@ type Https struct {
 	// failed：部署失败
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SslStatus *string `json:"SslStatus,omitempty" name:"SslStatus"`
+
+	// Hsts配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Hsts *Hsts `json:"Hsts,omitempty" name:"Hsts"`
 }
 
 type ImageOptimization struct {
@@ -2769,13 +2833,13 @@ func (r *ListClsTopicDomainsResponse) FromJsonString(s string) error {
 type ListTopDataRequest struct {
 	*tchttp.BaseRequest
 
-	// 查询起始日期，如：2018-09-09
+	// 查询起始日期：yyyy-MM-dd HH:mm:ss
 	// 仅支持按天粒度的数据查询，取入参中的天信息作为起始日期
 	// 返回大于等于起始日期当天 00:00:00 点产生的数据
 	// 仅支持 90 天内数据查询
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 查询结束日期，如：2018-09-10
+	// 查询结束日期：yyyy-MM-dd HH:mm:ss
 	// 仅支持按天粒度的数据查询，取入参中的天信息作为结束日期
 	// 返回小于等于结束日期当天 23:59:59 产生的数据
 	// EndTime 需要大于等于 StartTime
@@ -3128,6 +3192,10 @@ type Origin struct {
 	// 回备源站时 Host 头部，不填充则默认为主源站的 ServerName
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupServerName *string `json:"BackupServerName,omitempty" name:"BackupServerName"`
+
+	// 回源路径
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BasePath *string `json:"BasePath,omitempty" name:"BasePath"`
 }
 
 type OriginPullOptimization struct {
@@ -3329,6 +3397,13 @@ type PurgeUrlsCacheRequest struct {
 
 	// URL 列表，需要包含协议头部 http:// 或 https://
 	Urls []*string `json:"Urls,omitempty" name:"Urls" list`
+
+	// 刷新区域
+	// 无此参数时，默认刷新加速域名所在加速区域
+	// 填充 mainland 时，仅刷新中国境内加速节点上缓存内容
+	// 填充 overseas 时，仅刷新中国境外加速节点上缓存内容
+	// 指定刷新区域时，需要与域名加速区域匹配
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *PurgeUrlsCacheRequest) ToJsonString() string {
@@ -3454,7 +3529,7 @@ type QueryStringKey struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Action *string `json:"Action,omitempty" name:"Action"`
 
-	// 使用/排除的url参数名
+	// 使用/排除的url参数数组，';' 分割
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value *string `json:"Value,omitempty" name:"Value"`
 }
@@ -3625,9 +3700,21 @@ type ResponseHeaderCache struct {
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
+type Revalidate struct {
+
+	// on | off 是否总是回源校验
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 只在特定请求路径回源站校验
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Path *string `json:"Path,omitempty" name:"Path"`
+}
+
 type SchemeKey struct {
 
 	// on | off 是否使用scheme作为cache key的一部分
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
 }
 
@@ -3761,7 +3848,7 @@ type SimpleCache struct {
 	// 强制缓存
 	// on：开启
 	// off：关闭
-	// 默认为关闭状态，开启后，源站发挥的 no-store、no-cache 资源，也将按照 CacheRules 规则进行缓存
+	// 默认为关闭状态，开启后，源站返回的 no-store、no-cache 资源，也将按照 CacheRules 规则进行缓存
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IgnoreCacheControl *string `json:"IgnoreCacheControl,omitempty" name:"IgnoreCacheControl"`
 
@@ -3778,6 +3865,10 @@ type SimpleCache struct {
 	// 默认为关闭状态
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CompareMaxAge *string `json:"CompareMaxAge,omitempty" name:"CompareMaxAge"`
+
+	// 总是回源站校验
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Revalidate *Revalidate `json:"Revalidate,omitempty" name:"Revalidate"`
 }
 
 type SimpleCacheRule struct {
@@ -3793,7 +3884,7 @@ type SimpleCacheRule struct {
 	// CacheType 对应类型下的匹配内容：
 	// all 时填充 *
 	// file 时填充后缀名，如 jpg、txt
-	// directory 时填充路径，如 /xxx/test/
+	// directory 时填充路径，如 /xxx/test
 	// path 时填充绝对路径，如 /xxx/test.html
 	// index 时填充 /
 	CacheContents []*string `json:"CacheContents,omitempty" name:"CacheContents" list`
@@ -4031,7 +4122,7 @@ type UpdateDomainConfigRequest struct {
 	// 域名
 	Domain *string `json:"Domain,omitempty" name:"Domain"`
 
-	// 项目 ID
+	// 项目 ID
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 源站配置
@@ -4124,6 +4215,9 @@ type UpdateDomainConfigRequest struct {
 
 	// 回源S3私有鉴权
 	AwsPrivateAccess *AwsPrivateAccess `json:"AwsPrivateAccess,omitempty" name:"AwsPrivateAccess"`
+
+	// UA黑白名单配置
+	UserAgentFilter *UserAgentFilter `json:"UserAgentFilter,omitempty" name:"UserAgentFilter"`
 }
 
 func (r *UpdateDomainConfigRequest) ToJsonString() string {

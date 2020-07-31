@@ -42,7 +42,6 @@ func NewClient(credential *common.Credential, region string, clientProfile *prof
     return
 }
 
-
 func NewAssociateSecurityGroupsRequest() (request *AssociateSecurityGroupsRequest) {
     request = &AssociateSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},

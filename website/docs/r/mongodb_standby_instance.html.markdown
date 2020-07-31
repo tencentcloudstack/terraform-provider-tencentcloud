@@ -1,29 +1,57 @@
 ---
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_mongodb_instance"
-sidebar_current: "docs-tencentcloud-resource-mongodb_instance"
+page_title: "TencentCloud: tencentcloud_mongodb_standby_instance"
+sidebar_current: "docs-tencentcloud-resource-mongodb_standby_instance"
 description: |-
-  Provide a resource to create a Mongodb instance.
+  Provide a resource to create a Mongodb standby instance.
 ---
 
-# tencentcloud_mongodb_instance
+# tencentcloud_mongodb_standby_instance
 
-Provide a resource to create a Mongodb instance.
+Provide a resource to create a Mongodb standby instance.
 
 ## Example Usage
 
 ```hcl
+provider "tencentcloud" {
+  region = "ap-guangzhou"
+}
+
+provider "tencentcloud" {
+  alias  = "shanghai"
+  region = "ap-shanghai"
+}
+
 resource "tencentcloud_mongodb_instance" "mongodb" {
-  instance_name  = "mongodb"
+  instance_name  = "tf-mongodb-test"
   memory         = 4
   volume         = 100
-  engine_version = "MONGO_3_WT"
-  machine_type   = "GIO"
-  available_zone = "ap-guangzhou-2"
-  vpc_id         = "vpc-mz3efvbw"
-  subnet_id      = "subnet-lk0svi3p"
+  engine_version = "MONGO_40_WT"
+  machine_type   = "HIO10G"
+  available_zone = var.availability_zone
   project_id     = 0
-  password       = "password1234"
+  password       = "test1234"
+
+  tags = {
+    test = "test"
+  }
+}
+
+resource "tencentcloud_mongodb_standby_instance" "mongodb" {
+  provider               = tencentcloud.shanghai
+  instance_name          = "tf-mongodb-standby-test"
+  memory                 = 4
+  volume                 = 100
+  available_zone         = "ap-shanghai-2"
+  project_id             = 0
+  father_instance_id     = tencentcloud_mongodb_instance.mongodb.id
+  father_instance_region = "ap-guangzhou"
+  charge_type            = "PREPAID"
+  prepaid_period         = 1
+
+  tags = {
+    test = "test"
+  }
 }
 ```
 
@@ -31,12 +59,11 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
 
 The following arguments are supported:
 
-* `available_zone` - (Required, ForceNew) The available zone of the Mongodb.
-* `engine_version` - (Required, ForceNew) Version of the Mongodb, and available values include `MONGO_3_WT`, `MONGO_3_ROCKS`, `MONGO_36_WT` and `MONGO_40_WT`.
+* `available_zone` - (Required, ForceNew) The available zone of the Mongodb standby instance. NOTE: must not same with father instance's.
+* `father_instance_id` - (Required, ForceNew) Indicates the master instance ID of standby instances.
+* `father_instance_region` - (Required, ForceNew) Indicates the region of father instance.
 * `instance_name` - (Required) Name of the Mongodb instance.
-* `machine_type` - (Required, ForceNew) Type of Mongodb instance, and available values include `HIO`(or `GIO` which will be deprecated) and `HIO10G`(or `TGIO` which will be deprecated).
 * `memory` - (Required) Memory size. The minimum value is 2, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
-* `password` - (Required) Password of this Mongodb account.
 * `volume` - (Required) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `auto_renew_flag` - (Optional) Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.
 * `charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
@@ -53,9 +80,8 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Creation time of the Mongodb instance.
-* `standby_instance_list` - List of standby instances' info.
-  * `standby_instance_id` - Indicates the ID of standby instance.
-  * `standby_instance_region` - Indicates the region of standby instance.
+* `engine_version` - Version of the Mongodb and must be same as the master's.
+* `machine_type` - Type of Mongodb instance and must be same as the master's.
 * `status` - Status of the Mongodb instance, and available values include pending initialization(expressed with 0),  processing(expressed with 1), running(expressed with 2) and expired(expressed with -2).
 * `vip` - IP of the Mongodb instance.
 * `vport` - IP port of the Mongodb instance.
@@ -66,6 +92,6 @@ In addition to all arguments above, the following attributes are exported:
 Mongodb instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_mongodb_instance.mongodb cmgo-41s6jwy4
+$ terraform import tencentcloud_mongodb_standby_instance.mongodb cmgo-41s6jwy4
 ```
 

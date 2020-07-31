@@ -34,7 +34,9 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `instance_list` - A list of instances. Each element contains the following attributes:
+  * `auto_renew_flag` - Auto renew flag.
   * `available_zone` - The available zone of the Mongodb.
+  * `charge_type` - The charge type of instance.
   * `cluster_type` - Type of Mongodb cluster.
   * `cpu` - Number of cpu's core.
   * `create_time` - Creation time of the Mongodb instance.

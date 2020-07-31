@@ -11,6 +11,7 @@ FEATURES:
 * **New Data Source**: `tencentcloud_sqlserver_readonly_groups`
 * **New Data Source**: `tencentcloud_sqlserver_zone_configs`
 
+
 ## 1.40.0 (July 31, 2020)
 
 FEATURES:
