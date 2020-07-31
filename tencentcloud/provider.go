@@ -730,7 +730,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_policy_group":            resourceTencentMonitorPolicyGroup(),
 			"tencentcloud_monitor_binding_object":          resourceTencentMonitorBindingObject(),
 			"tencentcloud_monitor_binding_receiver":        resourceTencentMonitorBindingAlarmReceiver(),
-      			"tencentcloud_mongodb_standby_instance":       resourceTencentCloudMongodbStandbyInstance(),
+			"tencentcloud_mongodb_standby_instance":        resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":          resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":             resourceTencentCloudPostgresqlInstance(),
 			"tencentcloud_sqlserver_instance":              resourceTencentCloudSqlserverInstance(),
@@ -767,8 +767,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	// assume role client
 	assumeRoleList := d.Get("assume_role").(*schema.Set).List()
-	if len(assumeRoleList) 
-  1 {
+	if len(assumeRoleList) == 1 {
 		assumeRole := assumeRoleList[0].(map[string]interface{})
 		assumeRoleArn := assumeRole["role_arn"].(string)
 		assumeRoleSessionName := assumeRole["session_name"].(string)
