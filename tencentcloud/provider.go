@@ -371,6 +371,7 @@ VPC
     tencentcloud_nat_gateway
     tencentcloud_ha_vip
     tencentcloud_ha_vip_eip_attachment
+	tencentcloud_vpc_acl_attachment
 
 VPN
   Data Source
@@ -615,6 +616,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cbs_storage_attachment":         resourceTencentCloudCbsStorageAttachment(),
 			"tencentcloud_cbs_snapshot_policy_attachment": resourceTencentCloudCbsSnapshotPolicyAttachment(),
 			"tencentcloud_vpc":                            resourceTencentCloudVpcInstance(),
+			"tencentcloud_vpc_acl_attachment":             resourceTencentCloudVpcAclAttachment(),
 			"tencentcloud_subnet":                         resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                    resourceTencentCloudRouteEntry(),
 			"tencentcloud_route_table_entry":              resourceTencentCloudVpcRouteEntry(),
