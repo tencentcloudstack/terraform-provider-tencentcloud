@@ -346,6 +346,7 @@ VPC
     tencentcloud_security_groups
     tencentcloud_subnet
     tencentcloud_vpc
+    tencentcloud_vpc_acls
     tencentcloud_vpc_instances
     tencentcloud_vpc_route_tables
     tencentcloud_vpc_subnets
@@ -360,6 +361,8 @@ VPC
     tencentcloud_eni
     tencentcloud_eni_attachment
     tencentcloud_vpc
+	tencentcloud_vpc_acl
+	tencentcloud_vpc_acl_attachment
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule
@@ -371,7 +374,6 @@ VPC
     tencentcloud_nat_gateway
     tencentcloud_ha_vip
     tencentcloud_ha_vip_eip_attachment
-	tencentcloud_vpc_acl_attachment
 
 VPN
   Data Source
@@ -510,6 +512,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc_subnets":                  dataSourceTencentCloudVpcSubnets(),
 			"tencentcloud_vpc_route_tables":             dataSourceTencentCloudVpcRouteTables(),
 			"tencentcloud_vpc":                          dataSourceTencentCloudVpc(),
+			"tencentcloud_vpc_acls":                     dataSourceTencentCloudVpcAcls(),
 			"tencentcloud_subnet":                       dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                  dataSourceTencentCloudRouteTable(),
 			"tencentcloud_eip":                          dataSourceTencentCloudEip(),
@@ -616,6 +619,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cbs_storage_attachment":         resourceTencentCloudCbsStorageAttachment(),
 			"tencentcloud_cbs_snapshot_policy_attachment": resourceTencentCloudCbsSnapshotPolicyAttachment(),
 			"tencentcloud_vpc":                            resourceTencentCloudVpcInstance(),
+			"tencentcloud_vpc_acl":                        resourceTencentCloudVpcACL(),
 			"tencentcloud_vpc_acl_attachment":             resourceTencentCloudVpcAclAttachment(),
 			"tencentcloud_subnet":                         resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                    resourceTencentCloudRouteEntry(),

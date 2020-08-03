@@ -716,7 +716,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("public_ip", instance.PublicIpAddresses[0])
 	}
 	if len(instance.LoginSettings.KeyIds) > 0 {
-		_ = d.Set("key_name", instance.LoginSettings.KeyIds)
+		_ = d.Set("key_name", instance.LoginSettings.KeyIds[0])
 	}
 	if *instance.InstanceState == CVM_STATUS_STOPPED {
 		_ = d.Set("running_flag", false)

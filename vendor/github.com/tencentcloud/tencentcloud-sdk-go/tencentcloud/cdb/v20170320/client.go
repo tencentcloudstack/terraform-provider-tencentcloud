@@ -411,6 +411,31 @@ func (c *Client) CreateParamTemplate(request *CreateParamTemplateRequest) (respo
     return
 }
 
+func NewCreateRoInstanceIpRequest() (request *CreateRoInstanceIpRequest) {
+    request = &CreateRoInstanceIpRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "CreateRoInstanceIp")
+    return
+}
+
+func NewCreateRoInstanceIpResponse() (response *CreateRoInstanceIpResponse) {
+    response = &CreateRoInstanceIpResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(CreateRoInstanceIp)用于创建云数据库只读实例的独立VIP。
+func (c *Client) CreateRoInstanceIp(request *CreateRoInstanceIpRequest) (response *CreateRoInstanceIpResponse, err error) {
+    if request == nil {
+        request = NewCreateRoInstanceIpRequest()
+    }
+    response = NewCreateRoInstanceIpResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteAccountsRequest() (request *DeleteAccountsRequest) {
     request = &DeleteAccountsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1563,6 +1588,31 @@ func (c *Client) DescribeRoGroups(request *DescribeRoGroupsRequest) (response *D
         request = NewDescribeRoGroupsRequest()
     }
     response = NewDescribeRoGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRoMinScaleRequest() (request *DescribeRoMinScaleRequest) {
+    request = &DescribeRoMinScaleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeRoMinScale")
+    return
+}
+
+func NewDescribeRoMinScaleResponse() (response *DescribeRoMinScaleResponse) {
+    response = &DescribeRoMinScaleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeRoMinScale)用于获取只读实例购买、升级时的最小规格。
+func (c *Client) DescribeRoMinScale(request *DescribeRoMinScaleRequest) (response *DescribeRoMinScaleResponse, err error) {
+    if request == nil {
+        request = NewDescribeRoMinScaleRequest()
+    }
+    response = NewDescribeRoMinScaleResponse()
     err = c.Send(request, response)
     return
 }

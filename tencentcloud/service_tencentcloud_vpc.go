@@ -80,6 +80,14 @@ type VpcSecurityGroupLiteRule struct {
 	nestedSecurityGroupId string // if rule is a nested security group, other attrs will be ignored
 }
 
+// acl rule
+type VpcACLRule struct {
+	action   string
+	cidrIp   string
+	port     string
+	protocol string
+}
+
 type VpcEniIP struct {
 	ip      net.IP
 	primary bool
@@ -2552,170 +2560,6 @@ func (me *VpcService) DescribeEniByFilters(
 	return me.describeEnis(ctx, nil, vpcId, subnetId, nil, cvmId, sgId, name, desc, ipv4, tags)
 }
 
-func (me *VpcService) AssociateAclSubnets(ctx context.Context, aclId string, subnetIds []string) (errRet error) {
-	var (
-		logId    = getLogId(ctx)
-		request  = vpc.NewAssociateNetworkAclSubnetsRequest()
-		response *vpc.CreateNetworkAclResponse
-		err      error
-		subIds   []*string
-	)
-	for _, i := range subnetIds {
-		subIds = append(subIds, &i)
-	}
-
-	request.NetworkAclId = &aclId
-	request.SubnetIds = subIds
-
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		response, err = me.client.UseVpcClient().AssociateNetworkAclSubnets(request)
-		if err != nil {
-			return retryError(err, InternalError)
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
-	}
-	return
-}
-
-func (me *VpcService) DescribeNetWorkAcls(ctx context.Context, aclID, vpcID, name string) (info []*vpc.NetworkAcl, errRet error) {
-	var (
-		logId            = getLogId(ctx)
-		request          = vpc.NewDescribeNetworkAclsRequest()
-		response         *vpc.DescribeNetworkAclsResponse
-		err              error
-		filters          []*vpc.Filter
-		offset, pageSize uint64 = 0, 100
-	)
-
-	if vpcID != "" {
-		filters = me.fillFilter(filters, "vpc-id", vpcID)
-	}
-	if aclID != "" {
-		filters = me.fillFilter(filters, "network-acl-id", aclID)
-	}
-	if name != "" {
-		filters = me.fillFilter(filters, "network-acl-name", name)
-	}
-
-	if len(filters) > 0 {
-		request.Filters = filters
-	}
-
-	for {
-		request.Offset = &offset
-		request.Limit = &pageSize
-
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			ratelimit.Check(request.GetAction())
-			response, err = me.client.UseVpcClient().DescribeNetworkAcls(request)
-			if err != nil {
-				return retryError(err, InternalError)
-			}
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			errRet = err
-			return
-		}
-
-		info = append(info, response.Response.NetworkAclSet...)
-		if len(response.Response.NetworkAclSet) < int(pageSize) {
-			break
-		}
-
-		offset += pageSize
-	}
-
-	return
-}
-
-func (me *VpcService) DescribeByAclId(ctx context.Context, attachmentAcl string) (errRet error) {
-	var (
-		logId   = getLogId(ctx)
-		request = vpc.NewDisassociateNetworkAclSubnetsRequest()
-		subIds  []string
-		aclId   string
-	)
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	if attachmentAcl == "" {
-		errRet = fmt.Errorf("DeleteRouteTable can not invoke by empty routeTableId.")
-		return
-	}
-
-	for i, v := range strings.Split(attachmentAcl, "#") {
-		if i == 0 {
-			aclId = v
-		} else {
-			subIds = append(subIds, v)
-		}
-	}
-	results, err := me.DescribeNetWorkAcls(ctx, aclId, "", "")
-	if err != nil {
-		return err
-	}
-	if len(results) < 1 && len(results[0].SubnetSet) < 1 {
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check: Acl id is not set")
-	}
-	return nil
-}
-
-func (me *VpcService) DeleteAclAttachment(ctx context.Context, attachmentAcl string) (errRet error) {
-
-	logId := getLogId(ctx)
-	request := vpc.NewDisassociateNetworkAclSubnetsRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	if attachmentAcl == "" {
-		errRet = fmt.Errorf("DeleteRouteTable can not invoke by empty routeTableId.")
-		return
-	}
-	var (
-		subIds []*string
-		aclId  string
-	)
-
-	for i, v := range strings.Split(attachmentAcl, "#") {
-		if i == 0 {
-			aclId = v
-		} else {
-			subIds = append(subIds, &v)
-		}
-	}
-	request.NetworkAclId = &aclId
-	request.SubnetIds = subIds
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseVpcClient().DisassociateNetworkAclSubnets(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return err
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	return nil
-}
-
 func (me *VpcService) DescribeHaVipEipById(ctx context.Context, haVipEipAttachmentId string) (eip string, haVip string, has bool, errRet error) {
 	logId := getLogId(ctx)
 	client := me.client.UseVpcClient()
@@ -2929,4 +2773,492 @@ func waitEniDetach(ctx context.Context, id string, client *vpc.Client) error {
 
 		return nil
 	})
+}
+
+//deal acl
+func parseACLRule(str string) (liteRule VpcACLRule, err error) {
+	split := strings.Split(str, "#")
+	if len(split) != 4 {
+		err = fmt.Errorf("invalid acl rule %s", str)
+		return
+	}
+
+	liteRule.action, liteRule.cidrIp, liteRule.port, liteRule.protocol = split[0], split[1], split[2], split[3]
+
+	switch liteRule.action {
+	default:
+		err = fmt.Errorf("invalid action %s, allow action is `ACCEPT` or `DROP`", liteRule.action)
+		return
+	case "ACCEPT", "DROP":
+	}
+
+	if net.ParseIP(liteRule.cidrIp) == nil {
+		if _, _, err = net.ParseCIDR(liteRule.cidrIp); err != nil {
+			err = fmt.Errorf("invalid cidr_ip %s, allow cidr_ip format is `8.8.8.8` or `10.0.1.0/24`", liteRule.cidrIp)
+			return
+		}
+	}
+
+	if liteRule.port != "ALL" && !regexp.MustCompile(`^(\d{1,5},)*\d{1,5}$|^\d{1,5}-\d{1,5}$`).MatchString(liteRule.port) {
+		err = fmt.Errorf("invalid port %s, allow port format is `ALL`, `53`, `80,443` or `80-90`", liteRule.port)
+		return
+	}
+
+	switch liteRule.protocol {
+	default:
+		err = fmt.Errorf("invalid protocol %s, allow protocol is `ALL`, `TCP`, `UDP` or `ICMP`", liteRule.protocol)
+		return
+
+	case "ALL", "ICMP":
+		if liteRule.port != "ALL" {
+			err = fmt.Errorf("when protocol is %s, port must be ALL", liteRule.protocol)
+			return
+		}
+
+		// when protocol is ALL or ICMP, port should be "" to avoid sdk error
+		liteRule.port = ""
+
+	case "TCP", "UDP":
+	}
+
+	return
+}
+
+func (me *VpcService) CreateVpcNetworkAcl(ctx context.Context, vpcID string, name string) (aclID string, errRet error) {
+	var (
+		logId    = getLogId(ctx)
+		request  = vpc.NewCreateNetworkAclRequest()
+		response *vpc.CreateNetworkAclResponse
+		err      error
+	)
+
+	request.VpcId = &vpcID
+	request.NetworkAclName = &name
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err = me.client.UseVpcClient().CreateNetworkAcl(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		errRet = err
+		return
+	}
+
+	aclID = *response.Response.NetworkAcl.NetworkAclId
+	return
+}
+
+func (me *VpcService) AttachRulesToACL(ctx context.Context, aclID string, ingressParm, egressParm []VpcACLRule) (errRet error) {
+	logId := getLogId(ctx)
+
+	if errRet = me.ModifyNetWorkAclRules(ctx, aclID, ingressParm, egressParm); errRet != nil {
+		log.Printf("[CRITAL]%s attach rules to acl failed, reason: %v", logId, errRet)
+	}
+	return
+}
+
+func (me *VpcService) ModifyNetWorkAclRules(ctx context.Context, aclID string, ingressParm, egressParm []VpcACLRule) (errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewModifyNetworkAclEntriesRequest()
+		err     error
+		ingress []*vpc.NetworkAclEntry
+		egress  []*vpc.NetworkAclEntry
+	)
+
+	for i := range ingressParm {
+		policy := &vpc.NetworkAclEntry{
+			Protocol:  &ingressParm[i].protocol,
+			CidrBlock: &ingressParm[i].cidrIp,
+			Action:    &ingressParm[i].action,
+		}
+
+		if ingressParm[i].port != "" {
+			policy.Port = &ingressParm[i].port
+		}
+
+		ingress = append(ingress, policy)
+	}
+
+	for i := range egressParm {
+		policy := &vpc.NetworkAclEntry{
+			Protocol:  &egressParm[i].protocol,
+			CidrBlock: &egressParm[i].cidrIp,
+			Action:    &egressParm[i].action,
+		}
+
+		if egressParm[i].port != "" {
+			policy.Port = &egressParm[i].port
+		}
+
+		egress = append(egress, policy)
+	}
+
+	request.NetworkAclId = &aclID
+	request.NetworkAclEntrySet = &vpc.NetworkAclEntrySet{
+		Ingress: ingress,
+		Egress:  egress,
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err = me.client.UseVpcClient().ModifyNetworkAclEntries(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeNetWorkByACLID(ctx context.Context, aclID string) (vpcID string, createTime string, has int, errRet error) {
+	results, err := me.DescribeNetWorkAcls(ctx, aclID, "", "")
+	if err != nil {
+		errRet = err
+		return
+	}
+	has = len(results)
+	if has == 0 {
+		return
+	}
+
+	info := results[0]
+	vpcID = *info.VpcId
+	createTime = *info.CreatedTime
+	return
+}
+
+func (me *VpcService) DeleteACLRulesByChoose(ctx context.Context, aclID string, ingressParam, egressParam []VpcACLRule, choose int8) (errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		err     error
+		request = vpc.NewModifyNetworkAclEntriesRequest()
+	)
+
+	request.NetworkAclId = &aclID
+
+	if choose == 0 { //all delete
+		request.NetworkAclEntrySet = &vpc.NetworkAclEntrySet{}
+	} else if choose == 1 { //modify ingress
+		for i := range ingressParam {
+			policy := &vpc.NetworkAclEntry{
+				Protocol:  &ingressParam[i].protocol,
+				CidrBlock: &ingressParam[i].cidrIp,
+				Action:    &ingressParam[i].action,
+			}
+
+			if ingressParam[i].port != "" {
+				policy.Port = &ingressParam[i].port
+			}
+
+			request.NetworkAclEntrySet.Ingress = append(request.NetworkAclEntrySet.Ingress, policy)
+		}
+
+	} else if choose == 2 { //modify egress
+		for i := range egressParam {
+			policy := &vpc.NetworkAclEntry{
+				Protocol:  &egressParam[i].protocol,
+				CidrBlock: &egressParam[i].cidrIp,
+				Action:    &egressParam[i].action,
+			}
+
+			if egressParam[i].port != "" {
+				policy.Port = &egressParam[i].port
+			}
+
+			request.NetworkAclEntrySet.Egress = append(request.NetworkAclEntrySet.Ingress, policy)
+		}
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err = me.client.UseVpcClient().ModifyNetworkAclEntries(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *VpcService) DeleteAcl(ctx context.Context, aclID string) (errRet error) {
+	var (
+		logId          = getLogId(ctx)
+		err            error
+		request        = vpc.NewDeleteNetworkAclRequest()
+		aclAndSubnetId string
+	)
+
+	// Disassociate Network Acl Subnets
+	info, errRet := me.DescribeNetWorkAcls(ctx, aclID, "", "")
+	if len(info) > 0 {
+		subnets := info[0].SubnetSet
+
+		if len(subnets) > 0 {
+			aclAndSubnetId += aclID
+			for i := range subnets {
+				aclAndSubnetId += "#" + *subnets[i].SubnetId
+			}
+
+			errRet = me.DeleteAclAttachment(ctx, aclAndSubnetId)
+			if errRet != nil {
+				return
+			}
+		}
+	}
+
+	//delete acl
+	request.NetworkAclId = &aclID
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err = me.client.UseVpcClient().DeleteNetworkAcl(request)
+
+		if err != nil {
+			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if !ok {
+				return retryError(err, InternalError)
+			}
+			if ee.Code == VPCNotFound {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+					logId, request.GetAction(), request.ToJsonString(), err)
+				return resource.NonRetryableError(err)
+			}
+			return retryError(err, InternalError)
+		}
+
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *VpcService) ModifyVpcNetworkAcl(ctx context.Context, id *string, name *string) (errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		err     error
+		request = vpc.NewModifyNetworkAclAttributeRequest()
+	)
+
+	request.NetworkAclId = id
+	request.NetworkAclName = name
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err = me.client.UseVpcClient().ModifyNetworkAclAttribute(request)
+		if err != nil {
+			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if !ok {
+				return retryError(err, InternalError)
+			}
+			if ee.Code == VPCNotFound {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+					logId, request.GetAction(), request.ToJsonString(), err)
+				return resource.NonRetryableError(err)
+			}
+			return retryError(err, InternalError)
+		}
+
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *VpcService) AssociateAclSubnets(ctx context.Context, aclId string, subnetIds []string) (errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewAssociateNetworkAclSubnetsRequest()
+		err     error
+		subIds  []*string
+	)
+
+	for _, i := range subnetIds {
+		subIds = append(subIds, &i)
+	}
+
+	request.NetworkAclId = &aclId
+	request.SubnetIds = subIds
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err = me.client.UseVpcClient().AssociateNetworkAclSubnets(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *VpcService) DescribeNetWorkAcls(ctx context.Context, aclID, vpcID, name string) (info []*vpc.NetworkAcl, errRet error) {
+	var (
+		logId            = getLogId(ctx)
+		request          = vpc.NewDescribeNetworkAclsRequest()
+		response         *vpc.DescribeNetworkAclsResponse
+		err              error
+		filters          []*vpc.Filter
+		offset, pageSize uint64 = 0, 100
+	)
+
+	if vpcID != "" {
+		filters = me.fillFilter(filters, "vpc-id", vpcID)
+	}
+	if aclID != "" {
+		filters = me.fillFilter(filters, "network-acl-id", aclID)
+	}
+	if name != "" {
+		filters = me.fillFilter(filters, "network-acl-name", name)
+	}
+
+	if len(filters) > 0 {
+		request.Filters = filters
+	}
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err = me.client.UseVpcClient().DescribeNetworkAcls(request)
+			if err != nil {
+				return retryError(err, InternalError)
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+
+		info = append(info, response.Response.NetworkAclSet...)
+		if len(response.Response.NetworkAclSet) < int(pageSize) {
+			break
+		}
+
+		offset += pageSize
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeByAclId(ctx context.Context, attachmentAcl string) (errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDisassociateNetworkAclSubnetsRequest()
+		subIds  []string
+		aclId   string
+	)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if attachmentAcl == "" {
+		errRet = fmt.Errorf("DeleteRouteTable can not invoke by empty routeTableId.")
+		return
+	}
+
+	for i, v := range strings.Split(attachmentAcl, "#") {
+		if i == 0 {
+			aclId = v
+		} else {
+			subIds = append(subIds, v)
+		}
+	}
+	results, err := me.DescribeNetWorkAcls(ctx, aclId, "", "")
+	if err != nil {
+		return err
+	}
+	if len(results) < 1 && len(results[0].SubnetSet) < 1 {
+		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check: Acl id is not set")
+	}
+	return nil
+}
+
+func (me *VpcService) DeleteAclAttachment(ctx context.Context, attachmentAcl string) (errRet error) {
+
+	logId := getLogId(ctx)
+	request := vpc.NewDisassociateNetworkAclSubnetsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if attachmentAcl == "" {
+		errRet = fmt.Errorf("DeleteRouteTable can not invoke by empty routeTableId.")
+		return
+	}
+	var (
+		subIds []*string
+		aclId  string
+	)
+
+	for i, v := range strings.Split(attachmentAcl, "#") {
+		if i == 0 {
+			aclId = v
+		} else {
+			subIds = append(subIds, &v)
+		}
+	}
+	request.NetworkAclId = &aclId
+	request.SubnetIds = subIds
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DisassociateNetworkAclSubnets(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return nil
 }

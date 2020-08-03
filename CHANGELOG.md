@@ -1,4 +1,12 @@
-## 1.40.0 (Unreleased)
+## 1.40.1 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_vpc_acls`
+* **New Resource**: `tencentcloud_vpc_acl`
+* **New Resource**: `tencentcloud_vpc_acl_attachment`
+
+## 1.40.0 (July 31, 2020)
 
 FEATURES:
 
@@ -12,6 +20,10 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_mongodb_instance` supports prepaid type, new mongodb SDK version `2019-07-25` and standby instance.
 * Resource: `tencentcloud_mongodb_sharding_instance` supports prepaid type, new mongodb SDK version `2019-07-25` and standby instance.
 * Resource: `tencentcloud_security_group_lite_rule` refine update process and doc.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix set `key_name` error.
 
 ## 1.39.0 (July 18, 2020)
 
