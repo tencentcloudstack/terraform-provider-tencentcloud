@@ -4,7 +4,7 @@ Use this data source to query DB resources for the specific SQL Server instance.
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_db" "example" {
+data "tencentcloud_sqlserver_dbs" "example" {
   instance_id = "mssql-3cdq7kx5"
 }
 ```
@@ -31,7 +31,7 @@ func dataSourceTencentSqlserverDBs() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "SQLServer instance ID which DB belongs to.",
+				Description: "SQL Server instance ID which DB belongs to.",
 			},
 			// Computed
 			"db_list": {
@@ -43,7 +43,7 @@ func dataSourceTencentSqlserverDBs() *schema.Resource {
 						"instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "SQLServer instance ID which DB belongs to.",
+							Description: "SQL Server instance ID which DB belongs to.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -53,7 +53,7 @@ func dataSourceTencentSqlserverDBs() *schema.Resource {
 						"charset": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Character set DB uses, could be `Chinese_PRC_CI_AS`, `Chinese_PRC_CS_AS`, `Chinese_PRC_BIN`, `Chinese_Taiwan_Stroke_CI_AS`, `SQL_Latin1_General_CP1_CI_AS`, and `SQL_Latin1_General_CP1_CS_AS`. Default value is `Chinese_PRC_CI_AS`.",
+							Description: "Character set DB uses, could be `Chinese_PRC_CI_AS`, `Chinese_PRC_CS_AS`, `Chinese_PRC_BIN`, `Chinese_Taiwan_Stroke_CI_AS`, `SQL_Latin1_General_CP1_CI_AS`, and `SQL_Latin1_General_CP1_CS_AS`.",
 						},
 						"remark": {
 							Type:        schema.TypeString,
@@ -78,7 +78,7 @@ func dataSourceTencentSqlserverDBs() *schema.Resource {
 }
 
 func dataSourceTencentSqlserverDBRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencent_sqlserver_db.read")()
+	defer logElapsed("data_source.tencent_sqlserver_dbs.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

@@ -77,13 +77,12 @@ func testAccCheckReadonlySqlserverInstanceDestroy(s *terraform.State) error {
 		service := SqlserverService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		_, has, err := service.DescribeSqlserverInstanceById(ctx, rs.Primary.ID)
-
+		if err != nil {
+			return err
+		}
 		if !has {
 			return nil
 		} else {
-			if err != nil {
-				return err
-			}
 			return fmt.Errorf("delete SQL Server instance %s fail", rs.Primary.ID)
 		}
 	}

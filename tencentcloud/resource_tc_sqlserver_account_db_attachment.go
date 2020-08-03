@@ -63,7 +63,7 @@ func resourceTencentCloudSqlserverAccountDBAttachment() *schema.Resource {
 			"privilege": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Privilege of the account on DB. Valid value are `READONLY`, `ReadWrite`.",
+				Description: "Privilege of the account on DB. Valid value are `ReadOnly`, `ReadWrite`.",
 			},
 		},
 	}
@@ -163,8 +163,6 @@ func resourceTencentCloudSqlserverAccountDBAttachmentUpdate(d *schema.ResourceDa
 		if outErr != nil {
 			return outErr
 		}
-
-		d.SetPartial("privilege")
 	}
 
 	return resourceTencentCloudSqlserverAccountDBAttachmentRead(d, meta)

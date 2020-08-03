@@ -1,4 +1,4 @@
-data "tencentcloud_sqlserver_zone_configs" "foo" {
+data "tencentcloud_sqlserver_zone_config" "foo" {
 }
 
 resource "tencentcloud_vpc" "foo" {
@@ -48,16 +48,16 @@ resource "tencentcloud_sqlserver_account_db_attachment" "example" {
 }
 
 resource "tencentcloud_sqlserver_readonly_instance" "example" {
-  name = "example"
-  availability_zone = var.availability_zone
-  charge_type = "POSTPAID_BY_HOUR"
-  vpc_id                   = tencentcloud_vpc.foo.id
-  subnet_id = tencentcloud_subnet.foo.id
-  memory = 4
-  storage = 20
-  master_instance_id = tencentcloud_sqlserver_instance.test.id
+  name                = "example"
+  availability_zone   = var.availability_zone
+  charge_type         = "POSTPAID_BY_HOUR"
+  vpc_id              = tencentcloud_vpc.foo.id
+  subnet_id           = tencentcloud_subnet.foo.id
+  memory              = 4
+  storage             = 20
+  master_instance_id  = tencentcloud_sqlserver_instance.test.id
   readonly_group_type = 1
-  force_upgrade = true
+  force_upgrade       = true
 }
 
 
@@ -93,7 +93,7 @@ data "tencentcloud_sqlserver_backups" "example" {
   end_time    = "2020-07-01 00:00:00"
 }
 
-data "tencentcloud_sqlserver_readonly_groups" "example"{
-	master_instance_id = tencentcloud_sqlserver_instance.example.id
+data "tencentcloud_sqlserver_readonly_groups" "example" {
+  master_instance_id = tencentcloud_sqlserver_instance.example.id
 }
 

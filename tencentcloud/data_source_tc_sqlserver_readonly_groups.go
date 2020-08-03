@@ -1,5 +1,5 @@
 /*
-Use this data source to query the list of SQL Server backups.
+Use this data source to query the list of SQL Server readonly groups.
 
 Example Usage
 

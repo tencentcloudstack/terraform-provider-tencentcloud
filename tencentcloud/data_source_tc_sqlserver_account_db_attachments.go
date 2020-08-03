@@ -4,18 +4,9 @@ Use this data source to query the list of SQL Server account DB privileges.
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_accounts" "account" {
-  instance_id           = "mssql-3cdq7kx5"
-  account_name = "myaccount"
-}
-
-data "tencentcloud_sqlserver_accounts" "db" {
-  instance_id           = "mssql-3cdq7kx5"
-  db_name = "mydb"
-}
-
-data "tencentcloud_sqlserver_accounts" "instance" {
-  instance_id           = "mssql-3cdq7kx5"
+data "tencentcloud_sqlserver_account_db_attachments" "test"{
+  instance_id = tencentcloud_sqlserver_instance.test.id
+  account_name = tencentcloud_sqlserver_account_db_attachment.test.account_name
 }
 ```
 */
@@ -49,7 +40,7 @@ func dataSourceTencentCloudSqlserverAccountDBAttachments() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "",
-				Description: "Name of the SQL Server account to be queried.",
+				Description: "Name of the DB to be queried.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -81,7 +72,7 @@ func dataSourceTencentCloudSqlserverAccountDBAttachments() *schema.Resource {
 						"privilege": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Privilege of the account on DB. Valid value are `READONLY`, `ReadWrite`.",
+							Description: "Privilege of the account on DB. Valid value are `ReadOnly`, `ReadWrite`.",
 						},
 					},
 				},
@@ -91,7 +82,7 @@ func dataSourceTencentCloudSqlserverAccountDBAttachments() *schema.Resource {
 }
 
 func dataSourceTencentSqlserverAccountDBAttachmentsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_sqlserver_backup_list.read")()
+	defer logElapsed("data_source.tencentcloud_sqlserver_account_db_attachments.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

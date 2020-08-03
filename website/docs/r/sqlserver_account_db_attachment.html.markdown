@@ -28,7 +28,7 @@ The following arguments are supported:
 * `account_name` - (Required, ForceNew) SQL Server account name.
 * `db_name` - (Required, ForceNew) SQL Server DB name.
 * `instance_id` - (Required, ForceNew) SQL Server instance ID that the account belongs to.
-* `privilege` - (Required) Privilege of the account on DB. Valid value are `READONLY`, `ReadWrite`.
+* `privilege` - (Required) Privilege of the account on DB. Valid value are `ReadOnly`, `ReadWrite`.
 
 ## Attributes Reference
 

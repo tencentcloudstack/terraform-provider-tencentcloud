@@ -90,7 +90,7 @@ func dataSourceTencentCloudSqlserverAccounts() *schema.Resource {
 }
 
 func dataSourceTencentSqlserverAccountsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_sqlserver_backup_list.read")()
+	defer logElapsed("data_source.tencentcloud_sqlserver_accounts.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

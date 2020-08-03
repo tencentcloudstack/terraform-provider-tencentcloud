@@ -614,7 +614,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_elasticsearch_instances":          dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":             dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":             dataSourceTencentCloudPostgresqlSpecinfos(),
-			"tencentcloud_sqlserver_zone_configs":           dataSourceTencentSqlserverZoneConfigs(),
+			"tencentcloud_sqlserver_zone_config":            dataSourceTencentSqlserverZoneConfig(),
 			"tencentcloud_sqlserver_instances":              dataSourceTencentCloudSqlserverInstances(),
 			"tencentcloud_sqlserver_backups":                dataSourceTencentCloudSqlserverBackups(),
 			"tencentcloud_sqlserver_dbs":                    dataSourceTencentSqlserverDBs(),

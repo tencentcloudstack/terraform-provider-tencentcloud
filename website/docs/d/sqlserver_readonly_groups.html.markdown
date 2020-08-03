@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_sqlserver_readonly_groups"
 sidebar_current: "docs-tencentcloud-datasource-sqlserver_readonly_groups"
 description: |-
-  Use this data source to query the list of SQL Server backups.
+  Use this data source to query the list of SQL Server readonly groups.
 ---
 
 # tencentcloud_sqlserver_readonly_groups
 
-Use this data source to query the list of SQL Server backups.
+Use this data source to query the list of SQL Server readonly groups.
 
 ## Example Usage
 

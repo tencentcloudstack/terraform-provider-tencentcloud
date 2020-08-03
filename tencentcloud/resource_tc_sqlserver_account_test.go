@@ -77,12 +77,13 @@ func testAccCheckSqlserverAccountDestroy(s *terraform.State) error {
 
 		_, has, err := service.DescribeSqlserverAccountById(ctx, instanceId, name)
 
+		if err != nil {
+			return err
+		}
+
 		if !has {
 			return nil
 		} else {
-			if err != nil {
-				return err
-			}
 			return fmt.Errorf("delete SQL Server account %s fail", rs.Primary.ID)
 		}
 	}

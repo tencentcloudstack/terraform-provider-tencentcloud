@@ -504,7 +504,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   port                        = 80
   proxy_id                    = "%s"
   certificate_id              = tencentcloud_gaap_certificate.foo.id
-  client_certificate_ids = [tencentcloud_gaap_certificate.bar.id]
+  client_certificate_ids      = [tencentcloud_gaap_certificate.bar.id]
   forward_protocol            = "HTTPS"
   auth_type                   = 1
 }

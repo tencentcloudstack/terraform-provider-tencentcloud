@@ -69,13 +69,12 @@ func testAccCheckSqlserverAccountDBAttachmentDestroy(s *terraform.State) error {
 		service := SqlserverService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		_, has, err := service.DescribeAccountDBAttachmentById(ctx, instanceId, accountName, dbName)
-
+		if err != nil {
+			return err
+		}
 		if !has {
 			return nil
 		} else {
-			if err != nil {
-				return err
-			}
 			return fmt.Errorf("delete SQL Server account %s fail", rs.Primary.ID)
 		}
 	}
