@@ -1,4 +1,9 @@
 ## 1.40.1 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_vpn_connection` fix mulit `security_group_policy` is not supported ([#487](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/487)).
+
 ## 1.40.0 (July 31, 2020)
 
 FEATURES:
