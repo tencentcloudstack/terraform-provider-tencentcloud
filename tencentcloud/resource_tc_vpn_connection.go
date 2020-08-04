@@ -290,9 +290,10 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	if len(sgps) < 1 {
 		return fmt.Errorf("Para `security_group_policy` should be set at least one.")
 	}
+
+	request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
 	for _, v := range sgps {
 		m := v.(map[string]interface{})
-		request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
 		var sgp vpc.SecurityPolicyDatabase
 		local := m["local_cidr_block"].(string)
 		sgp.LocalCidrBlock = &local
