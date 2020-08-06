@@ -225,12 +225,22 @@ LOOP:
 		infoMap["cluster_deploy_type"] = info.DeployType
 		infoMap["cluster_version"] = info.ClusterVersion
 		infoMap["cluster_ipvs"] = info.Ipvs
+		infoMap["cluster_as_enabled"] = info.AsEnabled
+		infoMap["node_name_type"] = info.NodeNameType
+		infoMap["cluster_extra_args"] = info.ExtraArgs
+		infoMap["network_type"] = info.NetworkType
+		infoMap["is_non_static_ip_mode"] = info.IsNonStaticIpMode
+		infoMap["deletion_protection"] = info.DeletionProtection
+		infoMap["kube_proxy_mode"] = info.KubeProxyMode
 		infoMap["vpc_id"] = info.VpcId
 		infoMap["project_id"] = info.ProjectId
 		infoMap["cluster_cidr"] = info.ClusterCidr
 		infoMap["ignore_cluster_cidr_conflict"] = info.IgnoreClusterCidrConflict
-		infoMap["cluster_max_pod_num"] = info.MaxClusterServiceNum
+		infoMap["cluster_max_pod_num"] = info.MaxNodePodNum
 		infoMap["cluster_max_service_num"] = info.MaxClusterServiceNum
+		infoMap["service_cidr"] = info.ServiceCIDR
+		infoMap["eni_subnet_ids"] = info.EniSubnetIds
+		infoMap["claim_expired_seconds"] = info.ClaimExpiredSeconds
 		infoMap["cluster_node_num"] = info.ClusterNodeNum
 		infoMap["tags"] = info.Tags
 

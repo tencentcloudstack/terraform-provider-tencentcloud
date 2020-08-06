@@ -414,6 +414,82 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Default:     true,
 			Description: "Indicates whether ipvs is enabled. Default is true.",
 		},
+		"cluster_as_enabled": {
+			Type:        schema.TypeBool,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     false,
+			Description: "Indicates whether to enable cluster node auto scaler.",
+		},
+		"cluster_extra_args": {
+			Type:     schema.TypeList,
+			ForceNew: true,
+			Optional: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"kube_apiserver": {
+						Type:        schema.TypeList,
+						ForceNew:    true,
+						Optional:    true,
+						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "The customized parameters for kube-apiserver.",
+					},
+					"kube_controller_manager": {
+						Type:        schema.TypeList,
+						ForceNew:    true,
+						Optional:    true,
+						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "The customized parameters for kube-controller-manager.",
+					},
+					"kube_scheduler": {
+						Type:        schema.TypeList,
+						ForceNew:    true,
+						Optional:    true,
+						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "The customized parameters for kube-scheduler.",
+					},
+				},
+			},
+			Description: "Customized parameters for master component,such as kube-apiserver, kube-controller-manager, kube-scheduler.",
+		},
+		"node_name_type": {
+			Type:         schema.TypeString,
+			ForceNew:     true,
+			Optional:     true,
+			Default:      "lan-ip",
+			Description:  "Node name type of Cluster, the available values include: 'lan-ip' and 'hostname', Default is 'lan-ip'.",
+			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_NODE_NAME_TYPE),
+		},
+		"network_type": {
+			Type:         schema.TypeString,
+			ForceNew:     true,
+			Optional:     true,
+			Default:      "GR",
+			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_NETWORK_TYPE),
+			Description:  "Cluster network type, GR or VPC-CNI. Default is GR.",
+		},
+		"is_non_static_ip_mode": {
+			Type:        schema.TypeBool,
+			ForceNew:    true,
+			Optional:    true,
+			Default:     false,
+			Description: "Indicates whether static ip mode is enabled. Default is false.",
+		},
+		"deletion_protection": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Indicates whether cluster deletion protection is enabled. Default is false.",
+		},
+		"kube_proxy_mode": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			Default:      "",
+			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_KUBE_PROXY_MODE),
+			Description: "Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set." +
+				"When set to kube-proxy-bpf, cluster version greater than 1.14 and with TKE-optimized kernel is required.",
+		},
 		"vpc_id": {
 			Type:         schema.TypeString,
 			ForceNew:     true,
@@ -456,10 +532,13 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"cluster_cidr": {
 			Type:        schema.TypeString,
 			ForceNew:    true,
-			Required:    true,
+			Optional:    true,
 			Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
 			ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 				value := v.(string)
+				if value == "" {
+					return
+				}
 				_, ipnet, err := net.ParseCIDR(value)
 				if err != nil {
 					errors = append(errors, fmt.Errorf("%q must contain a valid CIDR, got error parsing: %s", k, err))
@@ -473,8 +552,8 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					errors = append(errors, fmt.Errorf("%q must be a network segment", k))
 					return
 				}
-				if !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
-					errors = append(errors, fmt.Errorf("%q must in 10. | 192.168. | 172.[16-31]", k))
+				if !strings.HasPrefix(value, "9.") && !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
+					errors = append(errors, fmt.Errorf("%q must in 9. | 10. | 192.168. | 172.[16-31]", k))
 					return
 				}
 
@@ -482,7 +561,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					nextNo := strings.Split(value, ".")[1]
 					no, _ := strconv.ParseInt(nextNo, 10, 64)
 					if no < 16 || no > 31 {
-						errors = append(errors, fmt.Errorf("%q must in 10. | 192.168. | 172.[16-31]", k))
+						errors = append(errors, fmt.Errorf("%q must in 9.0 | 10. | 192.168. | 172.[16-31]", k))
 						return
 					}
 				}
@@ -529,6 +608,69 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				return
 			},
 			Description: "The maximum number of services in the cluster. Default is 256. Must be a multiple of 16.",
+		},
+		"service_cidr": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
+			ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+				value := v.(string)
+				if value == "" {
+					return
+				}
+				_, ipnet, err := net.ParseCIDR(value)
+				if err != nil {
+					errors = append(errors, fmt.Errorf("%q must contain a valid CIDR, got error parsing: %s", k, err))
+					return
+				}
+				if ipnet == nil || value != ipnet.String() {
+					errors = append(errors, fmt.Errorf("%q must contain a valid network CIDR, expected %q, got %q", k, ipnet, value))
+					return
+				}
+				if !strings.Contains(value, "/") {
+					errors = append(errors, fmt.Errorf("%q must be a network segment", k))
+					return
+				}
+				if !strings.HasPrefix(value, "9.") && !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
+					errors = append(errors, fmt.Errorf("%q must in 9. | 10. | 192.168. | 172.[16-31]", k))
+					return
+				}
+
+				if strings.HasPrefix(value, "172.") {
+					nextNo := strings.Split(value, ".")[1]
+					no, _ := strconv.ParseInt(nextNo, 10, 64)
+					if no < 16 || no > 31 {
+						errors = append(errors, fmt.Errorf("%q must in 9. | 10. | 192.168. | 172.[16-31]", k))
+						return
+					}
+				}
+				return
+			},
+		},
+		"eni_subnet_ids": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem:     &schema.Schema{Type: schema.TypeString},
+			Description: "Subnet Ids for cluster with VPC-CNI network mode." +
+				" This field can only set when field `network_type` is 'VPC-CNI'." +
+				" `eni_subnet_ids` can not empty once be set.",
+		},
+		"claim_expired_seconds": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  300,
+			Description: "Claim expired seconds to recycle ENI." +
+				" This field can only set when field `network_type` is 'VPC-CNI'." +
+				" `claim_expired_seconds` must greater or equal than 300 and less than 15768000.",
+			ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
+				value := v.(int)
+				if value < 300 || value > 15768000 {
+					errors = append(errors, fmt.Errorf("%q must greater or equal than 300 and less than 15768000", k))
+					return
+				}
+				return
+			},
 		},
 		"master_config": {
 			Type:     schema.TypeList,
@@ -864,27 +1006,75 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		basic.ClusterDescription = v.(string)
 	}
 
-	advanced.ContainerRuntime = d.Get("container_runtime").(string)
 	advanced.Ipvs = d.Get("cluster_ipvs").(bool)
+	advanced.AsEnabled = d.Get("cluster_as_enabled").(bool)
+	advanced.ContainerRuntime = d.Get("container_runtime").(string)
+	advanced.NodeNameType = d.Get("node_name_type").(string)
+	advanced.NetworkType = d.Get("network_type").(string)
+	advanced.IsNonStaticIpMode = d.Get("is_non_static_ip_mode").(bool)
+	advanced.DeletionProtection = d.Get("deletion_protection").(bool)
+	advanced.KubeProxyMode = d.Get("kube_proxy_mode").(string)
 
+	if extraArgs, ok := d.GetOk("cluster_extra_args"); ok {
+		extraArgList := extraArgs.([]interface{})
+		for index := range extraArgList {
+			extraArg := extraArgList[index].(map[string]interface{})
+			if apiserverArgs, exist := extraArg["kube_apiserver"]; exist {
+				args := apiserverArgs.([]interface{})
+				for index := range args {
+					advanced.ExtraArgs.KubeAPIServer = append(advanced.ExtraArgs.KubeAPIServer, args[index].(string))
+				}
+			}
+			if cmArgs, exist := extraArg["kube_controller_manager"]; exist {
+				args := cmArgs.([]interface{})
+				for index := range args {
+					advanced.ExtraArgs.KubeControllerManager = append(advanced.ExtraArgs.KubeControllerManager, args[index].(string))
+				}
+			}
+			if schedulerArgs, exist := extraArg["kube_scheduler"]; exist {
+				args := schedulerArgs.([]interface{})
+				for index := range args {
+					advanced.ExtraArgs.KubeScheduler = append(advanced.ExtraArgs.KubeScheduler, args[index].(string))
+				}
+			}
+		}
+	}
 	cidrSet.ClusterCidr = d.Get("cluster_cidr").(string)
 	cidrSet.IgnoreClusterCidrConflict = d.Get("ignore_cluster_cidr_conflict").(bool)
 	cidrSet.MaxClusterServiceNum = int64(d.Get("cluster_max_service_num").(int))
 	cidrSet.MaxNodePodNum = int64(d.Get("cluster_max_pod_num").(int))
+	cidrSet.ServiceCIDR = d.Get("service_cidr").(string)
+	cidrSet.ClaimExpiredSeconds = int64(d.Get("claim_expired_seconds").(int))
 
-	items := strings.Split(cidrSet.ClusterCidr, "/")
-	if len(items) != 2 {
-		return fmt.Errorf("`cluster_cidr` must be network segment ")
-	}
+	if advanced.NetworkType == TKE_CLUSTER_NETWORK_TYPE_VPC_CNI {
+		// VPC-CNI cluster need to set eni subnet and service cidr.
+		eniSubnetIdList := d.Get("eni_subnet_ids").([]interface{})
+		for index := range eniSubnetIdList {
+			subnetId := eniSubnetIdList[index].(string)
+			cidrSet.EniSubnetIds = append(cidrSet.EniSubnetIds, subnetId)
+		}
+		if cidrSet.ServiceCIDR == "" || len(cidrSet.EniSubnetIds) == 0 {
+			return fmt.Errorf("`service_cidr` must be set and `eni_subnet_ids` must be set when cluster `network_type` is VPC-CNI.")
+		}
+	} else {
+		// GR cluster
+		if cidrSet.ClusterCidr == "" {
+			return fmt.Errorf("`service_cidr` must be set when cluster `network_type` is GR")
+		}
+		items := strings.Split(cidrSet.ClusterCidr, "/")
+		if len(items) != 2 {
+			return fmt.Errorf("`cluster_cidr` must be network segment ")
+		}
 
-	bitNumber, err := strconv.ParseInt(items[1], 10, 64)
+		bitNumber, err := strconv.ParseInt(items[1], 10, 64)
 
-	if err != nil {
-		return fmt.Errorf("`cluster_cidr` must be network segment ")
-	}
+		if err != nil {
+			return fmt.Errorf("`cluster_cidr` must be network segment ")
+		}
 
-	if math.Pow(2, float64(32-bitNumber)) <= float64(cidrSet.MaxNodePodNum) {
-		return fmt.Errorf("`cluster_cidr` Network segment range is too small, can not cover cluster_max_service_num")
+		if math.Pow(2, float64(32-bitNumber)) <= float64(cidrSet.MaxNodePodNum) {
+			return fmt.Errorf("`cluster_cidr` Network segment range is too small, can not cover cluster_max_service_num")
+		}
 	}
 
 	if masters, ok := d.GetOk("master_config"); ok {
