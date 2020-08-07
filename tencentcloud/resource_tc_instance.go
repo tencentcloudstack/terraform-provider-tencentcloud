@@ -961,6 +961,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	cvmService := CvmService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		errRet := cvmService.DeleteInstance(ctx, instanceId)
 		if errRet != nil {
@@ -976,7 +977,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	notExist := false
 
 	//check exist
-	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
@@ -985,13 +986,12 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 			notExist = true
 			return nil
 		}
-		if *instance.InstanceState == CVM_STATUS_SHUTDOWN {
+		if *instance.InstanceState == CVM_STATUS_SHUTDOWN && *instance.LatestOperationState != CVM_LATEST_OPERATION_STATE_OPERATING {
 			//in recycling
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 	})
-
 	if err != nil {
 		return err
 	}
@@ -1000,9 +1000,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		return nil
 	}
 
-	//exist in recycle
-
-	//delete again
+	// exist in recycle, delete again
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		errRet := cvmService.DeleteInstance(ctx, instanceId)
 		//when state is terminating, do not delete but check exist
@@ -1024,7 +1022,7 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 	}
 
 	//describe and check not exist
-	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
@@ -1034,10 +1032,9 @@ func resourceTencentCloudInstanceDelete(d *schema.ResourceData, meta interface{}
 		}
 		return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
 	})
-
 	if err != nil {
 		return err
 	}
-	return nil
 
+	return nil
 }
