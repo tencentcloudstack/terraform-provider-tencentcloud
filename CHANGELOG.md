@@ -1,3 +1,9 @@
+## 1.40.2 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix accidentally fail to delete prepaid instance ([#485](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/485)).
+
 ## 1.40.1 (August 05, 2020)
 
 BUG FIXES:
