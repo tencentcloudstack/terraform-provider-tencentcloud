@@ -1,4 +1,4 @@
-## 1.40.2 (Unreleased)
+## 1.40.2 (August 08, 2020)
 
 BUG FIXES:
 
