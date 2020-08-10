@@ -16,7 +16,7 @@ func TestAccTencentCloudVpcAclAttachment_basic(t *testing.T) {
 		CheckDestroy: testVpcAclAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCamGroupPolicyAttachment_basic,
+				Config: testAclAttachment_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testVpcAclAttachmentExists("tencentcloud_vpc_acl_attachment.attachment"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc_acl_attachment.attachment", "id"),
@@ -65,9 +65,9 @@ func testVpcAclAttachmentExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCamGroupPolicyAttachment_basic = `
+const testAclAttachment_basic = `
 resource "tencentcloud_vpc" "foo" {
-  name       = "guagua_vpc_instance_test"
+  name       = "vpc_instance_test"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -76,8 +76,8 @@ data "tencentcloud_vpc_instances" "id_instances" {
 }
 
 resource "tencentcloud_vpc_acl" "foo" {  
-    vpc_id            	= data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
-    name  	= "test_acl_gogoowang"
+    vpc_id  = data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
+    name  	= "test_acl"
 	ingress = [
 		"ACCEPT#192.168.1.0/24#800#TCP",
 		"ACCEPT#192.168.1.0/24#800-900#TCP",

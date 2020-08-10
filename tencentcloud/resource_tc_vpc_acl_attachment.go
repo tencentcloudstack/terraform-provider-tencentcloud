@@ -3,11 +3,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"log"
 	"strings"
 	"time"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
 func resourceTencentCloudVpcAclAttachment() *schema.Resource {
@@ -118,11 +119,12 @@ func resourceTencentCloudVpcAclAttachmentRead(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudVpcAclAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_acl_attachment.delete")()
-
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	attachmentAcl := d.Id()
+	var (
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		service       = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		attachmentAcl = d.Id()
+	)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := service.DeleteAclAttachment(ctx, attachmentAcl)

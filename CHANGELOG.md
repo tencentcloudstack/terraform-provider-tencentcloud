@@ -1,4 +1,12 @@
-## 1.40.0 (Unreleased)
+## 1.40.1 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_vpc_acls`
+* **New Resource**: `tencentcloud_vpc_acl`
+* **New Resource**: `tencentcloud_vpc_acl_attachment`
+
+## 1.40.0 (July 31, 2020)
 
 FEATURES:
 
