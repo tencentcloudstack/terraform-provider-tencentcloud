@@ -1,3 +1,9 @@
+## 1.40.3 (Unreleased) 
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_kubernetes_clusters`add new attributes `cluster_as_enabled`,`node_name_type`,`cluster_extra_args`,`network_type`,`is_non_static_ip_mode`,`kube_proxy_mode`,`service_cidr`,`eni_subnet_ids`,`claim_expired_seconds` and `deletion_protection`.
+
 ## 1.40.2 (August 08, 2020)
 
 BUG FIXES:
