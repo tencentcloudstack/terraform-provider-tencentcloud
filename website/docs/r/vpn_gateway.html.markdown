@@ -51,7 +51,6 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 The following arguments are supported:
 
 * `name` - (Required) Name of the VPN gateway. The length of character is limited to 1-60.
-* `vpc_id` - (Required, ForceNew) ID of the VPC.
 * `zone` - (Required, ForceNew) Zone of the VPN gateway.
 * `bandwidth` - (Optional) The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100,200,500,1000. Default is 5. When charge type is `PREPAID`, bandwidth degradation operation is unsupported.
 * `charge_type` - (Optional) Charge Type of the VPN gateway, valid values are `PREPAID`, `POSTPAID_BY_HOUR` and default is `POSTPAID_BY_HOUR`.
@@ -59,6 +58,7 @@ The following arguments are supported:
 * `prepaid_renew_flag` - (Optional) Flag indicates whether to renew or not, valid values are `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`. This para can only be set to take effect in create operation.
 * `tags` - (Optional) A list of tags used to associate different resources.
 * `type` - (Optional) Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`. Note: CCN type is only for whitelist customer now.
+* `vpc_id` - (Optional, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense if vpn gateway is in `CCN` type.
 
 ## Attributes Reference
 
