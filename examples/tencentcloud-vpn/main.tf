@@ -68,7 +68,6 @@ data "tencentcloud_vpn_connections" "example" {
 # vpn tunnel in the usual way.
 resource tencentcloud_vpn_gateway ccn_vpngw_example {
   name      = "ccn-vpngw-example"
-  vpc_id    = ""
   bandwidth = 5
   zone      = var.availability_zone
   type      = "CCN"

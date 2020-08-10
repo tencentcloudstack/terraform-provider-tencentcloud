@@ -77,9 +77,9 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
-				Description: "ID of the VPC.",
+				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.",
 			},
 			"customer_gateway_id": {
 				Type:        schema.TypeString,
@@ -277,9 +277,46 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	// pre check vpn gateway id
+	requestVpngw := vpc.NewDescribeVpnGatewaysRequest()
+	requestVpngw.VpnGatewayIds = []*string{helper.String(d.Get("vpn_gateway_id").(string))}
+	var responseVpngw *vpc.DescribeVpnGatewaysResponse
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(requestVpngw)
+		if e != nil {
+			ee, ok := e.(*errors.TencentCloudSDKError)
+			if !ok {
+				return retryError(e)
+			}
+			if ee.Code == VPCNotFound {
+				return nil
+			} else {
+				return retryError(e)
+			}
+		}
+		responseVpngw = result
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	if len(responseVpngw.Response.VpnGatewaySet) < 1 {
+		return fmt.Errorf("[CRITAL] vpn_gateway_id %s doesn't exist", d.Get("vpn_gateway_id").(string))
+	}
+
+	gateway := responseVpngw.Response.VpnGatewaySet[0]
+
+	// create vpn connection
 	request := vpc.NewCreateVpnConnectionRequest()
 	request.VpnConnectionName = helper.String(d.Get("name").(string))
-	request.VpcId = helper.String(d.Get("vpc_id").(string))
+	if *gateway.Type != "CCN" {
+		if _, ok := d.GetOk("vpc_id"); !ok {
+			return fmt.Errorf("[CRITAL] vpc_id is required for this vpn connection which vpn gateway is in %s type", *gateway.Type)
+		}
+		request.VpcId = helper.String(d.Get("vpc_id").(string))
+	} else {
+		request.VpcId = helper.String("")
+	}
 	request.VpnGatewayId = helper.String(d.Get("vpn_gateway_id").(string))
 	request.CustomerGatewayId = helper.String(d.Get("customer_gateway_id").(string))
 	request.PreShareKey = helper.String(d.Get("pre_share_key").(string))
@@ -361,7 +398,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	request.IPSECOptionsSpecification = &ipsecOptionsSpecification
 
 	var response *vpc.CreateVpnConnectionResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateVpnConnection(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -389,7 +426,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		if v, ok := d.GetOk("vpn_gateway_id"); ok {
 			params["vpn-gateway-id"] = v.(string)
 		}
-		if v, ok := d.GetOk("vpc_id"); ok {
+		if v, ok := d.GetOk("vpc_id"); ok && *gateway.Type != "CCN" {
 			params["vpc-id"] = v.(string)
 		}
 		if v, ok := d.GetOk("customer_gateway_id"); ok {

@@ -1,3 +1,10 @@
+## 1.40.3 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_vpn_gateway` fix creation of instance when `vpc_id` is specified.
+* Resource: `tencentcloud_vpn_connection` fix creation of instance when `vpc_id` is specified.
+
 ## 1.40.2 (August 08, 2020)
 
 BUG FIXES:

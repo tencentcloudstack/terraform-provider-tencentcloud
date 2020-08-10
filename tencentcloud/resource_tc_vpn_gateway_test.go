@@ -182,7 +182,6 @@ resource "tencentcloud_vpn_gateway" "my_ccn_cgw" {
   name      = "terraform_ccn_vpngw_test"
   bandwidth = 5
   zone      = "ap-guangzhou-3"
-  vpc_id    = ""
   type      = "CCN"
 
   tags = {
