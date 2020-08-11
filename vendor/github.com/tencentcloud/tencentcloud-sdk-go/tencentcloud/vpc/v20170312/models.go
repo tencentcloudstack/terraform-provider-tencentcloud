@@ -660,6 +660,46 @@ func (r *AssociateDhcpIpWithAddressIpResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type AssociateDirectConnectGatewayNatGatewayRequest struct {
+	*tchttp.BaseRequest
+
+	// 专线网关ID。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// NAT网关ID。
+	NatGatewayId *string `json:"NatGatewayId,omitempty" name:"NatGatewayId"`
+
+	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
+}
+
+func (r *AssociateDirectConnectGatewayNatGatewayRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *AssociateDirectConnectGatewayNatGatewayRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type AssociateDirectConnectGatewayNatGatewayResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *AssociateDirectConnectGatewayNatGatewayResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *AssociateDirectConnectGatewayNatGatewayResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type AssociateNatGatewayAddressRequest struct {
 	*tchttp.BaseRequest
 
@@ -951,6 +991,9 @@ type CCN struct {
 
 	// 标签键值对。
 	TagSet []*Tag `json:"TagSet,omitempty" name:"TagSet" list`
+
+	// 是否支持云联网路由优先级的功能。False：不支持，True：支持。
+	RoutePriorityFlag *bool `json:"RoutePriorityFlag,omitempty" name:"RoutePriorityFlag"`
 }
 
 type CcnAttachedInstance struct {
@@ -996,6 +1039,9 @@ type CcnAttachedInstance struct {
 
 	// 云联网所属UIN（根账号）。
 	CcnUin *string `json:"CcnUin,omitempty" name:"CcnUin"`
+
+	// 关联实例所属的大地域，如: CHINA_MAINLAND
+	InstanceArea *string `json:"InstanceArea,omitempty" name:"InstanceArea"`
 }
 
 type CcnBandwidthInfo struct {
@@ -1088,6 +1134,18 @@ type CcnRoute struct {
 
 	// 关联实例所属UIN（根账号）
 	InstanceUin *string `json:"InstanceUin,omitempty" name:"InstanceUin"`
+
+	// 路由的扩展状态
+	ExtraState *string `json:"ExtraState,omitempty" name:"ExtraState"`
+
+	// 是否动态路由
+	IsBgp *bool `json:"IsBgp,omitempty" name:"IsBgp"`
+
+	// 路由优先级
+	RoutePriority *uint64 `json:"RoutePriority,omitempty" name:"RoutePriority"`
+
+	// 下一跳扩展名称（关联实例的扩展名称）
+	InstanceExtraName *string `json:"InstanceExtraName,omitempty" name:"InstanceExtraName"`
 }
 
 type CheckAssistantCidrRequest struct {
@@ -2015,6 +2073,9 @@ type CreateNatGatewayRequest struct {
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags" list`
+
+	// NAT网关所属子网
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 }
 
 func (r *CreateNatGatewayRequest) ToJsonString() string {
@@ -5148,6 +5209,7 @@ type DescribeNatGatewaysRequest struct {
 	// <li>nat-gateway-id - String - （过滤条件）协议端口模板实例ID，形如：`nat-123xx454`。</li>
 	// <li>vpc-id - String - （过滤条件）私有网络 唯一ID，形如：`vpc-123xx454`。</li>
 	// <li>nat-gateway-name - String - （过滤条件）协议端口模板实例ID，形如：`test_nat`。</li>
+	// <li>tag-key - String - （过滤条件）标签键，形如：`test-key`。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters" list`
 
 	// 偏移量，默认为0。
@@ -6611,6 +6673,10 @@ type DirectConnectGateway struct {
 
 	// 开启和关闭BGP的community属性。
 	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitempty" name:"EnableBGPCommunity"`
+
+	// 绑定的NAT网关ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NatGatewayId *string `json:"NatGatewayId,omitempty" name:"NatGatewayId"`
 }
 
 type DirectConnectGatewayCcnRoute struct {
@@ -6810,6 +6876,46 @@ func (r *DisassociateDhcpIpWithAddressIpResponse) ToJsonString() string {
 }
 
 func (r *DisassociateDhcpIpWithAddressIpResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DisassociateDirectConnectGatewayNatGatewayRequest struct {
+	*tchttp.BaseRequest
+
+	// 专线网关ID。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// NAT网关ID。
+	NatGatewayId *string `json:"NatGatewayId,omitempty" name:"NatGatewayId"`
+
+	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
+}
+
+func (r *DisassociateDirectConnectGatewayNatGatewayRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DisassociateDirectConnectGatewayNatGatewayRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DisassociateDirectConnectGatewayNatGatewayResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DisassociateDirectConnectGatewayNatGatewayResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DisassociateDirectConnectGatewayNatGatewayResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9240,6 +9346,14 @@ type NatGateway struct {
 
 	// NAT网关所在的可用区。
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 绑定的专线网关ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DirectConnectGatewayIds []*string `json:"DirectConnectGatewayIds,omitempty" name:"DirectConnectGatewayIds" list`
+
+	// 所属子网ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 }
 
 type NatGatewayAddress struct {
@@ -10432,10 +10546,10 @@ type SecurityGroupLimitSet struct {
 
 type SecurityGroupPolicy struct {
 
-	// 安全组规则索引号。
+	// 安全组规则索引号，值会随着安全组规则的变更动态变化。使用PolicyIndex时，请先调用`DescribeSecurityGroupPolicies`获取到规则的PolicyIndex，并且结合返回值中的Version一起使用处理规则。
 	PolicyIndex *int64 `json:"PolicyIndex,omitempty" name:"PolicyIndex"`
 
-	// 协议, 取值: TCP,UDP, ICMP。
+	// 协议, 取值: TCP,UDP,ICMP,ICMPv6,ALL。
 	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
 
 	// 端口(all, 离散port,  range)。

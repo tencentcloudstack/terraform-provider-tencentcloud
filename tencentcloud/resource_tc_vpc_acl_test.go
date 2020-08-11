@@ -21,9 +21,8 @@ func TestAccTencentCloudVpcAcl_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcACLExists("tencentcloud_vpc_acl.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "name", "test_acl"),
-
-					resource.TestCheckResourceAttrSet("tencentcloud_vpc_acl.foo", "ingress"),
-					resource.TestCheckResourceAttrSet("tencentcloud_vpc_acl.foo", "egress"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "ingress.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "egress.#", "2"),
 				),
 			},
 		},
@@ -50,7 +49,7 @@ func TestAccTencentCloudVpcAclRulesUpdate(t *testing.T) {
 				Config: testAccVpcACLConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcACLExists("tencentcloud_vpc_acl.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "name", "test_acl"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "name", "test_acl_update"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "ingress.0", "ACCEPT#192.168.1.0/24#800#TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "ingress.1", "ACCEPT#192.168.1.0/24#800-900#TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "egress.0", "ACCEPT#192.168.1.0/24#800#TCP"),
@@ -113,7 +112,7 @@ data "tencentcloud_vpc_instances" "default" {
 }
 
 resource "tencentcloud_vpc_acl" "foo" {  
-    vpc_id            	= data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
+    vpc_id  = data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
     name  	= "test_acl"
 	ingress = [
 		"ACCEPT#192.168.1.0/24#80#TCP",
@@ -132,7 +131,7 @@ data "tencentcloud_vpc_instances" "default" {
 
 resource "tencentcloud_vpc_acl" "foo" {  
     vpc_id            	= data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
-    name  	= "test_acl_gogoowang"
+    name  	= "test_acl_update"
 	ingress = [
 		"ACCEPT#192.168.1.0/24#800#TCP",
 		"ACCEPT#192.168.1.0/24#800-900#TCP",

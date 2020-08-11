@@ -7,11 +7,11 @@ Example Usage
 data "tencentcloud_vpc_instances" "foo" {
 }
 
-resource "tencentcloud_vpc_acl" "main" {
+resource "tencentcloud_vpc_acls" "main" {
   vpc_id            = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
 }
 
-resource "tencentcloud_vpc_acl" "main" {
+resource "tencentcloud_vpc_acls" "main" {
   name            	= "test_acl"
 }
 
@@ -84,7 +84,7 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 						"subnets": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "",
+							Description: "Subnets associated with the network ACL.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"vpc_id": {
@@ -95,7 +95,7 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 									"subnet_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Subnet instance `ID`",
+										Description: "Subnet instance `ID`.",
 									},
 									"subnet_name": {
 										Type:        schema.TypeString,
@@ -118,13 +118,13 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 						"ingress": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "",
+							Description: "Inbound rules of the network ACL.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"protocol": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Type of ip protocol. ",
+										Description: "Type of ip protocol.",
 									},
 									"port": {
 										Type:        schema.TypeString,
@@ -140,6 +140,11 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "An IP address network or segment.",
+									},
+									"description": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Rule description.",
 									},
 								},
 							},
@@ -147,13 +152,13 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 						"egress": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "",
+							Description: "Outbound rules of the network ACL.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"protocol": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Type of ip protocol. ",
+										Description: "Type of ip protocol.",
 									},
 									"port": {
 										Type:        schema.TypeString,
@@ -169,6 +174,11 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "An IP address network or segment.",
+									},
+									"description": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Rule description.",
 									},
 								},
 							},
@@ -181,7 +191,7 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 }
 
 func dataSourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_vpc_acl.read")()
+	defer logElapsed("data_source.tencentcloud_vpc_acls.read")()
 	var (
 		logId   = getLogId(contextNil)
 		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
@@ -225,15 +235,15 @@ func dataSourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) 
 		for i := range subnetInfo {
 			v := subnetInfo[i]
 			subnet := make(map[string]interface{}, 5)
-			subnet["vpc_id"] = *v.VpcId
-			subnet["subnet_id"] = *v.SubnetId
-			subnet["subnet_name"] = *v.SubnetName
-			subnet["cidr_block"] = *v.CidrBlock
+			subnet["vpc_id"] = v.VpcId
+			subnet["subnet_id"] = v.SubnetId
+			subnet["subnet_name"] = v.SubnetName
+			subnet["cidr_block"] = v.CidrBlock
 
-			tag := make(map[string]string, len(v.TagSet))
+			tag := make(map[string]interface{}, len(v.TagSet))
 			for t := range v.TagSet {
 				tagValue := v.TagSet[t]
-				tag[*tagValue.Key] = *tagValue.Value
+				tag[*tagValue.Key] = tagValue.Value
 			}
 			subnet["tags"] = tag
 
@@ -244,12 +254,12 @@ func dataSourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) 
 		ingress := make([]map[string]interface{}, 0, len(ingressInfo))
 		for i := range ingressInfo {
 			v := ingressInfo[i]
-			egressMap := make(map[string]interface{}, 4)
-			egressMap["protocol"] = *v.Protocol
-			egressMap["port"] = *v.Port
-			egressMap["cidr_block"] = *v.CidrBlock
-			egressMap["policy"] = *v.Action
-			egressMap["description"] = *v.Description
+			egressMap := make(map[string]interface{}, 5)
+			egressMap["protocol"] = v.Protocol
+			egressMap["port"] = v.Port
+			egressMap["cidr_block"] = v.CidrBlock
+			egressMap["policy"] = v.Action
+			egressMap["description"] = v.Description
 
 			ingress = append(ingress, egressMap)
 		}
@@ -258,12 +268,12 @@ func dataSourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) 
 		egress := make([]map[string]interface{}, 0, len(egressInfo))
 		for i := range egressInfo {
 			v := egressInfo[i]
-			egressMap := make(map[string]interface{}, 4)
-			egressMap["protocol"] = *v.Protocol
-			egressMap["port"] = *v.Port
-			egressMap["cidr_block"] = *v.CidrBlock
-			egressMap["policy"] = *v.Action
-			egressMap["description"] = *v.Description
+			egressMap := make(map[string]interface{}, 5)
+			egressMap["protocol"] = v.Protocol
+			egressMap["port"] = v.Port
+			egressMap["cidr_block"] = v.CidrBlock
+			egressMap["policy"] = v.Action
+			egressMap["description"] = v.Description
 
 			egress = append(egress, egressMap)
 		}

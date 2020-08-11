@@ -19,8 +19,7 @@ func TestAccTencentCloudVpcAclAttachment_basic(t *testing.T) {
 				Config: testAclAttachment_basic,
 				Check: resource.ComposeTestCheckFunc(
 					testVpcAclAttachmentExists("tencentcloud_vpc_acl_attachment.attachment"),
-					resource.TestCheckResourceAttrSet("tencentcloud_vpc_acl_attachment.attachment", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_vpc_acl_attachment.attachment", "subnet_ids"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpc_acl_attachment.attachment", "acl_id"),
 				),
 			},
 		},
@@ -66,17 +65,10 @@ func testVpcAclAttachmentExists(n string) resource.TestCheckFunc {
 }
 
 const testAclAttachment_basic = `
-resource "tencentcloud_vpc" "foo" {
-  name       = "vpc_instance_test"
-  cidr_block = "10.0.0.0/16"
-}
-
 data "tencentcloud_vpc_instances" "id_instances" {
-  vpc_id = tencentcloud_vpc.foo.id
 }
-
 resource "tencentcloud_vpc_acl" "foo" {  
-    vpc_id  = data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
+    vpc_id  = data.tencentcloud_vpc_instances.id_instances.instance_list.0.vpc_id
     name  	= "test_acl"
 	ingress = [
 		"ACCEPT#192.168.1.0/24#800#TCP",
@@ -88,7 +80,7 @@ resource "tencentcloud_vpc_acl" "foo" {
 	]
 }
 resource "tencentcloud_vpc_acl_attachment" "attachment"{
-		id = data.tencentcloud_source_vpc_acls.instances.
-		subnet_ids = data.tencentcloud_vpc_instances.id_instances.instance_list[*].subnet_ids
+		acl_id = tencentcloud_vpc_acl.foo.id
+		subnet_ids = data.tencentcloud_vpc_instances.id_instances.instance_list[0].subnet_ids
 }
 `

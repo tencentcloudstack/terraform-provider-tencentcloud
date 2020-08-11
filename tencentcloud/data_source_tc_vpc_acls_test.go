@@ -6,20 +6,16 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccDataSourceTencentCloudVpcACLBasic(t *testing.T) {
+func TestAccDataSourceTencentCloudVpcACL_Basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: TestAccDataSourceTencentCloudVpcACLInstances,
-
 				Check: resource.ComposeTestCheckFunc(
-					// id filter
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpc_acl.default"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vpc_acl.default", "name", "test_acl"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vpc_acl.default", "egress.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vpc_acl.default", "ingress.#", "1"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vpc_acls.default"),
+					resource.TestCheckResourceAttr("data.tencentcloud_vpc_acls.default", "name", "test_acl"),
 				),
 			},
 		},
@@ -41,7 +37,7 @@ resource "tencentcloud_vpc_acl" "foo" {
 	]
 }  
 
-data "tencentcloud_vpc_instances" "default" {
+data "tencentcloud_vpc_acls" "default" {
 	name = "test_acl"
 	result_output_file="data_source_tc_vpc_acls.txt"
 }

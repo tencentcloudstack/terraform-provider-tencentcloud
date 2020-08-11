@@ -1,3 +1,29 @@
+/*
+Provide a resource to attach an existing subnet to Network ACL.
+
+Example Usage
+
+```hcl
+data "tencentcloud_vpc_instances" "id_instances" {
+}
+resource "tencentcloud_vpc_acl" "foo" {
+    vpc_id  = data.tencentcloud_vpc_instances.id_instances.instance_list.0.vpc_id
+    name  	= "test_acl"
+	ingress = [
+		"ACCEPT#192.168.1.0/24#800#TCP",
+		"ACCEPT#192.168.1.0/24#800-900#TCP",
+	]
+	egress = [
+    	"ACCEPT#192.168.1.0/24#800#TCP",
+    	"ACCEPT#192.168.1.0/24#800-900#TCP",
+	]
+}
+
+resource "tencentcloud_vpc_acl_attachment" "attachment"{
+		acl_id = tencentcloud_vpc_acl.foo.id
+		subnet_ids = data.tencentcloud_vpc_instances.id_instances.instance_list[0].subnet_ids
+}
+*/
 package tencentcloud
 
 import (
@@ -9,6 +35,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudVpcAclAttachment() *schema.Resource {
@@ -21,7 +48,7 @@ func resourceTencentCloudVpcAclAttachment() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": {
+			"acl_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
@@ -51,14 +78,14 @@ func resourceTencentCloudVpcAclAttachmentCreate(d *schema.ResourceData, meta int
 		sub_id    string
 	)
 
-	if temp, ok := d.GetOk("id"); ok {
+	if temp, ok := d.GetOk("acl_id"); ok {
 		aclId = temp.(string)
 		if len(aclId) < 1 {
 			return fmt.Errorf("acl_id should be not empty string")
 		}
 	}
 	if temp, ok := d.GetOk("subnet_ids"); ok {
-		subnetIds = temp.([]string)
+		subnetIds = helper.InterfacesStrings(temp.([]interface{}))
 	}
 
 	err := service.AssociateAclSubnets(ctx, aclId, subnetIds)
@@ -126,14 +153,7 @@ func resourceTencentCloudVpcAclAttachmentDelete(d *schema.ResourceData, meta int
 		attachmentAcl = d.Id()
 	)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		e := service.DeleteAclAttachment(ctx, attachmentAcl)
-		if e != nil {
-			log.Printf("[CRITAL]%s reason[%s]\n", logId, e.Error())
-			return retryError(e)
-		}
-		return nil
-	})
+	err := service.DeleteAclAttachment(ctx, attachmentAcl)
 	if err != nil {
 		log.Printf("[CRITAL]%s delete acl attachment failed, reason:%s\n", logId, err.Error())
 		return err

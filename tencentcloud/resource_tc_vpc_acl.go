@@ -4,22 +4,21 @@ Provide a resource to create a VPC ACL instance.
 Example Usage
 
 ```hcl
-data "tencentcloud_vpc_instances" "foo" {
+data "tencentcloud_vpc_instances" "default" {
 }
 
-resource "resource_vpc_acl" "default" {
-    vpc_id            	= data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
-    network_acl_name  	= "test_acl"
-	ingress [
-		"ACCEPT#192.168.1.0/24#80#TCP",
-		"ACCEPT#192.168.1.0/24#80-90#TCP",
+resource "tencentcloud_vpc_acl" "foo" {
+    vpc_id  = data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
+    name  	= "test_acl_update"
+	ingress = [
+		"ACCEPT#192.168.1.0/24#800#TCP",
+		"ACCEPT#192.168.1.0/24#800-900#TCP",
 	]
-	egress [
-		"ACCEPT#192.168.1.0/24#80#TCP",
-		"ACCEPT#192.168.1.0/24#80-90#TCP",
+	egress = [
+    	"ACCEPT#192.168.1.0/24#800#TCP",
+    	"ACCEPT#192.168.1.0/24#800-900#TCP",
 	]
 }
-
 ```
 
 Import
@@ -78,11 +77,6 @@ func resourceTencentCloudVpcACL() *schema.Resource {
 			},
 
 			//compute
-			"acl_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "`ID` of the network ACL instance.",
-			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -173,7 +167,6 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 		return errRet
 	}
 
-	_ = d.Set("acl_id", id)
 	_ = d.Set("vpc_id", vpcID)
 	_ = d.Set("create_time", createTime)
 	return nil
@@ -311,5 +304,20 @@ func resourceTencentCloudVpcACLDelete(d *schema.ResourceData, meta interface{}) 
 		id      = d.Id()
 	)
 
-	return service.DeleteAcl(ctx, id)
+	err := service.DeleteAcl(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	_, _, has, err := service.DescribeNetWorkByACLID(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	if has > 0 {
+		return fmt.Errorf("[CRITAL]%s delete network acl : %s  failed\n", logId, id)
+	}
+
+	return nil
 }

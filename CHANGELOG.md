@@ -1,10 +1,22 @@
-## 1.40.1 (Unreleased)
+## 1.40.3 (Unreleased)
 
 FEATURES:
 
 * **New Data Source**: `tencentcloud_vpc_acls`
 * **New Resource**: `tencentcloud_vpc_acl`
 * **New Resource**: `tencentcloud_vpc_acl_attachment`
+
+## 1.40.2 (August 08, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix accidentally fail to delete prepaid instance ([#485](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/485)).
+
+## 1.40.1 (August 05, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_vpn_connection` fix mulit `security_group_policy` is not supported ([#487](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/487)).
 
 ## 1.40.0 (July 31, 2020)
 

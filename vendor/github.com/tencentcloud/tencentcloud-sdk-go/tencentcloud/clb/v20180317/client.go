@@ -171,6 +171,31 @@ func (c *Client) BatchRegisterTargets(request *BatchRegisterTargetsRequest) (res
     return
 }
 
+func NewCreateClsLogSetRequest() (request *CreateClsLogSetRequest) {
+    request = &CreateClsLogSetRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "CreateClsLogSet")
+    return
+}
+
+func NewCreateClsLogSetResponse() (response *CreateClsLogSetResponse) {
+    response = &CreateClsLogSetResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建clb专有日志集，此日志集用于存储clb的日志。
+func (c *Client) CreateClsLogSet(request *CreateClsLogSetRequest) (response *CreateClsLogSetResponse, err error) {
+    if request == nil {
+        request = NewCreateClsLogSetRequest()
+    }
+    response = NewCreateClsLogSetResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateListenerRequest() (request *CreateListenerRequest) {
     request = &CreateListenerRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -296,6 +321,31 @@ func (c *Client) CreateTargetGroup(request *CreateTargetGroupRequest) (response 
         request = NewCreateTargetGroupRequest()
     }
     response = NewCreateTargetGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateTopicRequest() (request *CreateTopicRequest) {
+    request = &CreateTopicRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "CreateTopic")
+    return
+}
+
+func NewCreateTopicResponse() (response *CreateTopicResponse) {
+    response = &CreateTopicResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建主题，默认开启全文索引和键值索引。如果不存在clb专有日志集，则创建失败。
+func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopicResponse, err error) {
+    if request == nil {
+        request = NewCreateTopicRequest()
+    }
+    response = NewCreateTopicResponse()
     err = c.Send(request, response)
     return
 }
@@ -708,6 +758,31 @@ func (c *Client) DescribeClassicalLBTargets(request *DescribeClassicalLBTargetsR
     return
 }
 
+func NewDescribeClsLogSetRequest() (request *DescribeClsLogSetRequest) {
+    request = &DescribeClsLogSetRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DescribeClsLogSet")
+    return
+}
+
+func NewDescribeClsLogSetResponse() (response *DescribeClsLogSetResponse) {
+    response = &DescribeClsLogSetResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取用户的clb独占日志集。
+func (c *Client) DescribeClsLogSet(request *DescribeClsLogSetRequest) (response *DescribeClsLogSetResponse, err error) {
+    if request == nil {
+        request = NewDescribeClsLogSetRequest()
+    }
+    response = NewDescribeClsLogSetResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeListenersRequest() (request *DescribeListenersRequest) {
     request = &DescribeListenersRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -779,6 +854,31 @@ func (c *Client) DescribeLoadBalancers(request *DescribeLoadBalancersRequest) (r
         request = NewDescribeLoadBalancersRequest()
     }
     response = NewDescribeLoadBalancersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLoadBalancersDetailRequest() (request *DescribeLoadBalancersDetailRequest) {
+    request = &DescribeLoadBalancersDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DescribeLoadBalancersDetail")
+    return
+}
+
+func NewDescribeLoadBalancersDetailResponse() (response *DescribeLoadBalancersDetailResponse) {
+    response = &DescribeLoadBalancersDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询负载均衡的详细信息，包括监听器，规则及后端目标。
+func (c *Client) DescribeLoadBalancersDetail(request *DescribeLoadBalancersDetailRequest) (response *DescribeLoadBalancersDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeLoadBalancersDetailRequest()
+    }
+    response = NewDescribeLoadBalancersDetailResponse()
     err = c.Send(request, response)
     return
 }
