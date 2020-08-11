@@ -112,10 +112,10 @@ func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context,
 		request.Filters = append(request.Filters, filter)
 	}
 
-	for {
-		request.Limit = &limit
-		request.Offset = &offset
+	request.Limit = &limit
+	request.Offset = &offset
 
+	for {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseCdnClient().DescribeDomainsConfig(request)
@@ -123,7 +123,7 @@ func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context,
 			if err != nil {
 				if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
 					if sdkErr.Code == CDN_HOST_NOT_FOUND {
-						return resource.NonRetryableError(err)
+						return nil
 					}
 				}
 				return retryError(err, InternalError)
