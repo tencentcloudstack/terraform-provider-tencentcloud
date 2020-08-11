@@ -16,11 +16,11 @@ Use this data source to query VPC Network ACL information.
 data "tencentcloud_vpc_instances" "foo" {
 }
 
-resource "tencentcloud_vpc_acls" "main" {
+data "tencentcloud_vpc_acls" "foo" {
   vpc_id = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
 }
 
-resource "tencentcloud_vpc_acls" "main" {
+data "tencentcloud_vpc_acls" "foo" {
   name = "test_acl"
 }
 ```

@@ -41,6 +41,59 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 }
 
+#examples for MANAGED_CLUSTER VPC-CNI network type cluster with customized master params
+resource "tencentcloud_kubernetes_cluster" "managed_vpc_cni_cluster" {
+  cluster_version         = "1.14.3"
+  vpc_id                  = var.vpc
+  cluster_max_pod_num     = 32
+  cluster_name            = "testvpccni"
+  cluster_desc            = "test vpc-cni cluster desc"
+  cluster_max_service_num = 32
+  service_cidr            = "192.168.128.0/24"
+  eni_subnet_ids          = ["subnet-hmmlszs7", "subnet-4o0v4e7j"]
+  claim_expired_seconds   = 300
+  network_type            = "VPC-CNI"
+  is_non_static_ip_mode   = true
+  cluster_extra_args {
+    kube_apiserver          = ["max-requests-inflight=450"]
+    kube_controller_manager = ["kube-api-burst=500", "kube-api-qps=200"]
+    kube_scheduler          = ["kube-api-burst=500", "kube-api-qps=200"]
+  }
+
+  worker_config {
+    count                      = 2
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = var.subnet
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+
+  tags = {
+    "test" = "test"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+}
+
 #examples for INDEPENDENT_CLUSTER  cluster
 resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
   vpc_id                  = var.vpc

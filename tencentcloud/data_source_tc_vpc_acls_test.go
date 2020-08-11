@@ -39,6 +39,5 @@ resource "tencentcloud_vpc_acl" "foo" {
 
 data "tencentcloud_vpc_acls" "default" {
 	name = "test_acl"
-	result_output_file="data_source_tc_vpc_acls.txt"
 }
 `
