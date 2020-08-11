@@ -31,11 +31,9 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudVpcAclAttachment() *schema.Resource {
@@ -49,19 +47,17 @@ func resourceTencentCloudVpcAclAttachment() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"acl_id": {
+				Type:         schema.TypeString,
+				Required:     true,
+				ForceNew:     true,
+				ValidateFunc: validateNotEmpty,
+				Description:  "Id of the attached ACL.",
+			},
+			"subnet_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of the attached ACL.",
-			},
-			"subnet_ids": {
-				Type:     schema.TypeList,
-				Required: true,
-				ForceNew: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "ID list of the Subnet instance ID.",
+				Description: " the Subnet instance ID.",
 			},
 		},
 	}
@@ -75,28 +71,23 @@ func resourceTencentCloudVpcAclAttachmentCreate(d *schema.ResourceData, meta int
 		service   = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 		aclId     string
 		subnetIds []string
-		sub_id    string
+		subnetId  string
 	)
 
 	if temp, ok := d.GetOk("acl_id"); ok {
 		aclId = temp.(string)
-		if len(aclId) < 1 {
-			return fmt.Errorf("acl_id should be not empty string")
-		}
 	}
-	if temp, ok := d.GetOk("subnet_ids"); ok {
-		subnetIds = helper.InterfacesStrings(temp.([]interface{}))
+	if temp, ok := d.GetOk("subnet_id"); ok {
+		subnetId = temp.(string)
 	}
+	subnetIds = append(subnetIds, subnetId)
 
 	err := service.AssociateAclSubnets(ctx, aclId, subnetIds)
 	if err != nil {
 		return err
 	}
 
-	for _, temp_id := range subnetIds {
-		sub_id = sub_id + "#" + temp_id
-	}
-	d.SetId(aclId + "#" + sub_id)
+	d.SetId(aclId + "#" + subnetId)
 
 	aclAttachmentId := d.Id()
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -110,7 +101,6 @@ func resourceTencentCloudVpcAclAttachmentCreate(d *schema.ResourceData, meta int
 		log.Printf("[CRITAL]%s read acl attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	time.Sleep(10 * time.Second)
 
 	return resourceTencentCloudVpcAclAttachmentRead(d, meta)
 }
@@ -158,6 +148,7 @@ func resourceTencentCloudVpcAclAttachmentDelete(d *schema.ResourceData, meta int
 		log.Printf("[CRITAL]%s delete acl attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+	d.SetId("")
 
 	return nil
 

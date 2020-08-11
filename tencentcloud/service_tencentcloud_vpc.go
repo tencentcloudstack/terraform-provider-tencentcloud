@@ -3221,11 +3221,8 @@ func (me *VpcService) DescribeByAclId(ctx context.Context, attachmentAcl string)
 		return
 	}
 
-	for i, v := range strings.Split(attachmentAcl, "#") {
-		if i == 0 {
-			aclId = v
-		}
-	}
+	aclId = strings.Split(attachmentAcl, "#")[0]
+
 	results, err := me.DescribeNetWorkAcls(ctx, aclId, "", "")
 	if err != nil {
 		return err
@@ -3241,25 +3238,16 @@ func (me *VpcService) DeleteAclAttachment(ctx context.Context, attachmentAcl str
 		logId   = getLogId(ctx)
 		request = vpc.NewDisassociateNetworkAclSubnetsRequest()
 		err     error
-
-		subIds []*string
-		aclId  string
 	)
 
 	if attachmentAcl == "" {
-		errRet = fmt.Errorf("DeleteRouteTable can not invoke by empty routeTableId.")
+		errRet = fmt.Errorf("DeleteRouteTable can not invoke by empty NetworkAclId.")
 		return
 	}
 
-	for i, v := range strings.Split(attachmentAcl, "#") {
-		if i == 0 {
-			aclId = v
-		} else {
-			subIds = append(subIds, &v)
-		}
-	}
-	request.NetworkAclId = &aclId
-	request.SubnetIds = subIds
+	items := strings.Split(attachmentAcl, "#")
+	request.NetworkAclId = &items[0]
+	request.SubnetIds = helper.Strings(items[1:])
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
