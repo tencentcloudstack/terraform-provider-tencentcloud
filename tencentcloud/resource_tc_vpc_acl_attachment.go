@@ -137,8 +137,8 @@ func resourceTencentCloudVpcAclAttachmentRead(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
-	if len(results) < 1 && len(results[0].SubnetSet) < 1 {
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check: CAM group policy attachment id is not set")
+	if len(results) > 0 && len(results[0].SubnetSet) < 1 {
+		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Read] check: acl attachment  is not creat")
 	}
 	return nil
 
