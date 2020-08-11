@@ -1,3 +1,9 @@
+## 1.40.4 (Unreleased)
+
+BUG FIXES:
+
+* Data Source: `tencentcloud_cdn_domains` remove parameter `offset`.
+
 ## 1.40.3 (August 11, 2020)
 
 ENHANCEMENTS:

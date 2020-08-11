@@ -19,7 +19,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -56,13 +55,6 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_HTTPS_SWITCH),
 				Description:  "HTTPS configuration. The available value include `on`, `off` and `processing`.",
-			},
-			"offset": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      10,
-				ValidateFunc: validateIntegerInRange(1, 10000),
-				Description:  "Record offset. Default is 10.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -224,16 +216,18 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 
 func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_cdn_domain.read")()
+	var (
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		domainConfigs []*cdn.DetailDomain
+		err           error
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		client     = meta.(*TencentCloudClient).apiV3Conn
+		region     = client.Region
+		cdnService = CdnService{client: client}
+		tagService = TagService{client: client}
+	)
 
-	client := meta.(*TencentCloudClient).apiV3Conn
-	region := client.Region
-	cdnService := CdnService{client: client}
-	tagService := TagService{client: client}
-
-	offset, _ := d.Get("offset").(int)
 	var domainFilterMap = make(map[string]interface{}, 5)
 	if v, ok := d.GetOk("domain"); ok {
 		domainFilterMap["domain"] = v.(string)
@@ -258,18 +252,9 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 		domainFilterMap["fullUrlCache"] = value
 	}
 
-	var domainConfigs []*cdn.DetailDomain
-	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		domainConfigs, errRet = cdnService.DescribeDomainsConfigByFilters(ctx, domainFilterMap, int64(offset))
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		return nil
-	})
-
+	domainConfigs, err = cdnService.DescribeDomainsConfigByFilters(ctx, domainFilterMap)
 	if err != nil {
-		log.Printf("[CRITAL]%s describeDomainsConfigByFilters fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s describeDomainsConfigByFilters fail, reason:%v\n ", logId, err)
 		return err
 	}
 
@@ -332,7 +317,7 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("domain_list", cdnDomainList)
 	if err != nil {
-		log.Printf("[CRITAL]%s provider set cdn domain list fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set cdn domain list fail, reason:%v\n ", logId, err)
 		return err
 	}
 	output, ok := d.GetOk("result_output_file")
