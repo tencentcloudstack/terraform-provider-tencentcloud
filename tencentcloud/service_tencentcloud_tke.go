@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -28,8 +29,21 @@ type ClusterBasicSetting struct {
 }
 
 type ClusterAdvancedSettings struct {
-	Ipvs             bool
-	ContainerRuntime string
+	Ipvs               bool
+	AsEnabled          bool
+	ContainerRuntime   string
+	NodeNameType       string
+	ExtraArgs          ClusterExtraArgs
+	NetworkType        string
+	IsNonStaticIpMode  bool
+	DeletionProtection bool
+	KubeProxyMode      string
+}
+
+type ClusterExtraArgs struct {
+	KubeAPIServer         []string
+	KubeControllerManager []string
+	KubeScheduler         []string
 }
 
 type RunInstancesForNode struct {
@@ -50,6 +64,9 @@ type ClusterCidrSettings struct {
 	IgnoreClusterCidrConflict bool
 	MaxNodePodNum             int64
 	MaxClusterServiceNum      int64
+	ServiceCIDR               string
+	EniSubnetIds              []string
+	ClaimExpiredSeconds       int64
 }
 
 type ClusterInfo struct {
@@ -316,7 +333,18 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 
 	request.ClusterAdvancedSettings = &tke.ClusterAdvancedSettings{}
 	request.ClusterAdvancedSettings.IPVS = &advanced.Ipvs
+	request.ClusterAdvancedSettings.AsEnabled = &advanced.AsEnabled
 	request.ClusterAdvancedSettings.ContainerRuntime = &advanced.ContainerRuntime
+	request.ClusterAdvancedSettings.NodeNameType = &advanced.NodeNameType
+	request.ClusterAdvancedSettings.ExtraArgs = &tke.ClusterExtraArgs{
+		KubeAPIServer:         common.StringPtrs(advanced.ExtraArgs.KubeAPIServer),
+		KubeControllerManager: common.StringPtrs(advanced.ExtraArgs.KubeControllerManager),
+		KubeScheduler:         common.StringPtrs(advanced.ExtraArgs.KubeScheduler),
+	}
+	request.ClusterAdvancedSettings.NetworkType = &advanced.NetworkType
+	request.ClusterAdvancedSettings.IsNonStaticIpMode = &advanced.IsNonStaticIpMode
+	request.ClusterAdvancedSettings.DeletionProtection = &advanced.DeletionProtection
+	request.ClusterAdvancedSettings.KubeProxyMode = &advanced.KubeProxyMode
 
 	request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
 	request.InstanceAdvancedSettings.MountTarget = &iAdvanced.MountTarget
@@ -362,6 +390,9 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterCIDRSettings.MaxClusterServiceNum = &maxClusterServiceNum
 	request.ClusterCIDRSettings.ClusterCIDR = &cidrSetting.ClusterCidr
 	request.ClusterCIDRSettings.IgnoreClusterCIDRConflict = &cidrSetting.IgnoreClusterCidrConflict
+	request.ClusterCIDRSettings.ServiceCIDR = &cidrSetting.ServiceCIDR
+	request.ClusterCIDRSettings.EniSubnetIds = common.StringPtrs(cidrSetting.EniSubnetIds)
+	request.ClusterCIDRSettings.ClaimExpiredSeconds = &cidrSetting.ClaimExpiredSeconds
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().CreateCluster(request)

@@ -105,10 +105,13 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
 The following arguments are supported:
 
-* `cluster_cidr` - (Required, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `vpc_id` - (Required, ForceNew) Vpc Id of the cluster.
+* `claim_expired_seconds` - (Optional) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
+* `cluster_as_enabled` - (Optional, ForceNew) Indicates whether to enable cluster node auto scaler.
+* `cluster_cidr` - (Optional, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `cluster_deploy_type` - (Optional, ForceNew) Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER', Default is 'MANAGED_CLUSTER'.
 * `cluster_desc` - (Optional, ForceNew) Description of the cluster.
+* `cluster_extra_args` - (Optional, ForceNew) Customized parameters for master component,such as kube-apiserver, kube-controller-manager, kube-scheduler.
 * `cluster_internet` - (Optional) Open internet access or not.
 * `cluster_intranet_subnet_id` - (Optional) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional) Open intranet access or not.
@@ -120,13 +123,26 @@ The following arguments are supported:
 * `cluster_os` - (Optional, ForceNew) Operating system of the cluster, the available values include: 'centos7.2x86_64','centos7.6x86_64','ubuntu16.04.1 LTSx86_64','ubuntu18.04.1 LTSx86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.
 * `cluster_version` - (Optional, ForceNew) Version of the cluster, Default is '1.10.5'.
 * `container_runtime` - (Optional, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.
+* `deletion_protection` - (Optional) Indicates whether cluster deletion protection is enabled. Default is false.
+* `eni_subnet_ids` - (Optional) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
 * `ignore_cluster_cidr_conflict` - (Optional, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
+* `is_non_static_ip_mode` - (Optional, ForceNew) Indicates whether static ip mode is enabled. Default is false.
+* `kube_proxy_mode` - (Optional) Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set.When set to kube-proxy-bpf, cluster version greater than 1.14 and with TKE-optimized kernel is required.
 * `labels` - (Optional, ForceNew) Labels of tke cluster nodes.
 * `managed_cluster_internet_security_policies` - (Optional) Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
 * `master_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'MASTER_ETCD' service, and create <=7 units for common users.
+* `network_type` - (Optional, ForceNew) Cluster network type, GR or VPC-CNI. Default is GR.
+* `node_name_type` - (Optional, ForceNew) Node name type of Cluster, the available values include: 'lan-ip' and 'hostname', Default is 'lan-ip'.
 * `project_id` - (Optional, ForceNew) Project ID, default value is 0.
+* `service_cidr` - (Optional, ForceNew) A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `tags` - (Optional) The tags of the cluster.
 * `worker_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.
+
+The `cluster_extra_args` object supports the following:
+
+* `kube_apiserver` - (Optional, ForceNew) The customized parameters for kube-apiserver.
+* `kube_controller_manager` - (Optional, ForceNew) The customized parameters for kube-controller-manager.
+* `kube_scheduler` - (Optional, ForceNew) The customized parameters for kube-scheduler.
 
 The `data_disk` object supports the following:
 

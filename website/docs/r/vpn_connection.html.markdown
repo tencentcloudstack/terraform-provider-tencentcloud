@@ -52,7 +52,6 @@ The following arguments are supported:
 * `name` - (Required) Name of the VPN connection. The length of character is limited to 1-60.
 * `pre_share_key` - (Required) Pre-shared key of the VPN connection.
 * `security_group_policy` - (Required) Security group policy of the VPN connection.
-* `vpc_id` - (Required, ForceNew) ID of the VPC.
 * `vpn_gateway_id` - (Required, ForceNew) ID of the VPN gateway.
 * `ike_dh_group_name` - (Optional) DH group name of the IKE operation specification, valid values are `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`. Default value is `GROUP1`.
 * `ike_exchange_mode` - (Optional) Exchange mode of the IKE operation specification, valid values are `AGGRESSIVE`, `MAIN`. Default value is `MAIN`.
@@ -72,6 +71,7 @@ The following arguments are supported:
 * `ipsec_sa_lifetime_seconds` - (Optional) SA lifetime of the IPSEC operation specification, unit is `second`. The value ranges from 180 to 604800. Default value is 3600 seconds.
 * `ipsec_sa_lifetime_traffic` - (Optional) SA lifetime of the IPSEC operation specification, unit is `KB`. The value should not be less then 2560. Default value is 1843200.
 * `tags` - (Optional) A list of tags used to associate different resources.
+* `vpc_id` - (Optional, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.
 
 The `security_group_policy` object supports the following:
 

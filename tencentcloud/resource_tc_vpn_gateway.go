@@ -77,9 +77,9 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
-				Description: "ID of the VPC.",
+				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense if vpn gateway is in `CCN` type.",
 			},
 			"bandwidth": {
 				Type:        schema.TypeInt,
@@ -174,7 +174,6 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	bandwidth64 := uint64(bandwidth)
 	request.InternetMaxBandwidthOut = &bandwidth64
 	request.Zone = helper.String(d.Get("zone").(string))
-	request.VpcId = helper.String(d.Get("vpc_id").(string))
 	chargeType := d.Get("charge_type").(string)
 	//only support change renew_flag when charge type is pre-paid
 	if chargeType == VPN_CHARGE_TYPE_PREPAID {
@@ -186,6 +185,19 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	request.InstanceChargeType = &chargeType
 	if v, ok := d.GetOk("type"); ok {
 		request.Type = helper.String(v.(string))
+		if v.(string) != "CCN" {
+			if _, ok := d.GetOk("vpc_id"); !ok {
+				return fmt.Errorf("[CRITAL] vpc_id is required for vpn gateway in %s type", v.(string))
+			}
+			request.VpcId = helper.String(d.Get("vpc_id").(string))
+		} else {
+			request.VpcId = helper.String("")
+		}
+	} else {
+		if _, ok := d.GetOk("vpc_id"); !ok {
+			return fmt.Errorf("[CRITAL] vpc_id is required for vpn gateway in %s type", v.(string))
+		}
+		request.VpcId = helper.String(d.Get("vpc_id").(string))
 	}
 	var response *vpc.CreateVpnGatewayResponse
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {

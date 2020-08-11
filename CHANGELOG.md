@@ -1,4 +1,4 @@
-## 1.40.1 (Unreleased)
+## 1.41.0 (Unreleased)
 
 FEATURES:
 
@@ -11,6 +11,29 @@ FEATURES:
 * **New Data Source**: `tencentcloud_sqlserver_readonly_groups`
 * **New Data Source**: `tencentcloud_sqlserver_zone_configs`
 
+## 1.40.3 (August 11, 2020)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_kubernetes_clusters`add new attributes `cluster_as_enabled`,`node_name_type`,`cluster_extra_args`,`network_type`,`is_non_static_ip_mode`,`kube_proxy_mode`,`service_cidr`,`eni_subnet_ids`,`claim_expired_seconds` and `deletion_protection`.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_vpn_gateway` fix creation of instance when `vpc_id` is specified.
+* Resource: `tencentcloud_vpn_connection` fix creation of instance when `vpc_id` is specified.
+* Resource: `tencentcloud_instance` fix `internet_charge_type` inconsistency when public ip is not allocated.
+
+## 1.40.2 (August 08, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_instance` fix accidentally fail to delete prepaid instance ([#485](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/485)).
+
+## 1.40.1 (August 05, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_vpn_connection` fix mulit `security_group_policy` is not supported ([#487](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/487)).
 
 ## 1.40.0 (July 31, 2020)
 

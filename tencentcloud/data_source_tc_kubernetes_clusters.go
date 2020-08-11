@@ -92,6 +92,79 @@ func tkeClusterInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "The maximum number of services in the cluster.",
 		},
+		"cluster_as_enabled": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Indicates whether to enable cluster node auto scaler.",
+		},
+		"node_name_type": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Node name type of Cluster.",
+		},
+		"cluster_extra_args": {
+			Type:     schema.TypeList,
+			Computed: true,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"kube_apiserver": {
+						Type:        schema.TypeList,
+						Computed:    true,
+						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "The customized parameters for kube-apiserver.",
+					},
+					"kube_controller_manager": {
+						Type:        schema.TypeList,
+						Computed:    true,
+						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "The customized parameters for kube-controller-manager.",
+					},
+					"kube_scheduler": {
+						Type:        schema.TypeList,
+						Computed:    true,
+						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "The customized parameters for kube-scheduler.",
+					},
+				},
+			},
+			Description: "Customized parameters for master component.",
+		},
+		"network_type": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Cluster network type.",
+		},
+		"is_non_static_ip_mode": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Indicates whether static ip mode is enabled.",
+		},
+		"kube_proxy_mode": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Cluster kube-proxy mode.",
+		},
+		"service_cidr": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "The network address block of the cluster.",
+		},
+		"eni_subnet_ids": {
+			Type:        schema.TypeList,
+			Computed:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "Subnet Ids for cluster with VPC-CNI network mode.",
+		},
+		"claim_expired_seconds": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "The expired seconds to recycle ENI.",
+		},
+		"deletion_protection": {
+			Type:        schema.TypeBool,
+			Computed:    true,
+			Description: "Indicates whether cluster deletion protection is enabled.",
+		},
 		"cluster_node_num": {
 			Type:        schema.TypeInt,
 			Computed:    true,
@@ -225,12 +298,27 @@ LOOP:
 		infoMap["cluster_deploy_type"] = info.DeployType
 		infoMap["cluster_version"] = info.ClusterVersion
 		infoMap["cluster_ipvs"] = info.Ipvs
+		infoMap["cluster_as_enabled"] = info.AsEnabled
+		infoMap["node_name_type"] = info.NodeNameType
+
+		infoMap["cluster_extra_args"] = []map[string]interface{}{{
+			"kube_apiserver":          info.ExtraArgs.KubeAPIServer,
+			"kube_controller_manager": info.ExtraArgs.KubeControllerManager,
+			"kube_scheduler":          info.ExtraArgs.KubeScheduler,
+		}}
+		infoMap["network_type"] = info.NetworkType
+		infoMap["is_non_static_ip_mode"] = info.IsNonStaticIpMode
+		infoMap["deletion_protection"] = info.DeletionProtection
+		infoMap["kube_proxy_mode"] = info.KubeProxyMode
 		infoMap["vpc_id"] = info.VpcId
 		infoMap["project_id"] = info.ProjectId
 		infoMap["cluster_cidr"] = info.ClusterCidr
 		infoMap["ignore_cluster_cidr_conflict"] = info.IgnoreClusterCidrConflict
-		infoMap["cluster_max_pod_num"] = info.MaxClusterServiceNum
+		infoMap["cluster_max_pod_num"] = info.MaxNodePodNum
 		infoMap["cluster_max_service_num"] = info.MaxClusterServiceNum
+		infoMap["service_cidr"] = info.ServiceCIDR
+		infoMap["eni_subnet_ids"] = info.EniSubnetIds
+		infoMap["claim_expired_seconds"] = info.ClaimExpiredSeconds
 		infoMap["cluster_node_num"] = info.ClusterNodeNum
 		infoMap["tags"] = info.Tags
 
