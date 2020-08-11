@@ -8,6 +8,7 @@ BUG FIXES:
 
 * Resource: `tencentcloud_vpn_gateway` fix creation of instance when `vpc_id` is specified.
 * Resource: `tencentcloud_vpn_connection` fix creation of instance when `vpc_id` is specified.
+* Resource: `tencentcloud_instance` fix `internet_charge_type` inconsistency when public ip is not allocated.
 
 ## 1.40.2 (August 08, 2020)
 
