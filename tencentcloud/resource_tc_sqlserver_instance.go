@@ -144,19 +144,20 @@ func resourceTencentCloudSqlserverInstance() *schema.Resource {
 		"maintenance_week_set": {
 			Type:        schema.TypeSet,
 			Optional:    true,
+			Computed:    true,
 			Elem:        &schema.Schema{Type: schema.TypeInt},
 			Description: "A list of integer indicates weekly maintenance. For example, [2,7] presents do weekly maintenance on every Tuesday and Sunday.",
 		},
 		"maintenance_start_time": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Default:     "",
+			Computed:    true,
 			Description: "Start time of the maintenance in one day, format like `HH:mm`.",
 		},
 		"maintenance_time_span": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			Default:     0,
+			Computed:    true,
 			Description: "The timespan of maintenance in one day, unit is hour.",
 		},
 		"project_id": {

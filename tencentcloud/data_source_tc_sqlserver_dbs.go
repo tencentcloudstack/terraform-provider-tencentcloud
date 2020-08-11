@@ -93,7 +93,6 @@ func dataSourceTencentSqlserverDBRead(d *schema.ResourceData, meta interface{}) 
 	if !has {
 		return fmt.Errorf("[CRITAL]%s SQL Server instance %s dose not exist", logId, instanceId)
 	}
-	_ = d.Set("instance_id", instanceId)
 
 	dbInfos, err := sqlserverService.DescribeDBsOfInstance(ctx, instanceId)
 	if err != nil {

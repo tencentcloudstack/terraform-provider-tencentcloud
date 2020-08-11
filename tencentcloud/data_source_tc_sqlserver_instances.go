@@ -164,25 +164,16 @@ func dataSourceTencentCloudSqlserverInstanceRead(d *schema.ResourceData, meta in
 
 	service := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	id := ""
-	if v, ok := d.GetOk("id"); ok {
-		id = v.(string)
-	}
+	id := d.Get("id").(string)
 
 	project_id := -1
 	if v, ok := d.GetOk("project_id"); ok {
 		project_id = v.(int)
 	}
 
-	vpc_id := ""
-	if v, ok := d.GetOk("vpc_id"); ok {
-		vpc_id = v.(string)
-	}
+	vpc_id := d.Get("vpc_id").(string)
 
-	subnet_id := ""
-	if v, ok := d.GetOk("subnet_id"); ok {
-		subnet_id = v.(string)
-	}
+	subnet_id := d.Get("subnet_id").(string)
 
 	instanceList, err := service.DescribeSqlserverInstances(ctx, id, project_id, vpc_id, subnet_id, 0)
 

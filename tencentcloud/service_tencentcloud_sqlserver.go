@@ -377,7 +377,7 @@ func (me *SqlserverService) DescribeSqlserverInstanceById(ctx context.Context, i
 	if len(instanceList) == 0 {
 		return
 	} else if len(instanceList) > 1 {
-		errRet = fmt.Errorf("[DescribeDBInstances]SDK returns more than one instance with instanceId %s", instanceId)
+		errRet = fmt.Errorf("[DescribeDBInstanceById]SDK returns more than one instance with instanceId %s", instanceId)
 	}
 
 	instance = instanceList[0]
