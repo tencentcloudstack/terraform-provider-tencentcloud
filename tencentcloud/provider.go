@@ -317,7 +317,7 @@ Serverless Cloud Function(SCF)
 
 SQLServer
   Data Source
-    tencentcloud_sqlserver_zone_configs
+    tencentcloud_sqlserver_zone_config
 	tencentcloud_sqlserver_instances
     tencentcloud_sqlserver_dbs
 	tencentcloud_sqlserver_accounts
