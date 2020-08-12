@@ -9,7 +9,6 @@ FEATURES:
 * **New Resource**: `tencentcloud_sqlserver_db_account_attachment`
 * **New Data Source**: `tencentcloud_sqlserver_instance`
 * **New Data Source**: `tencentcloud_sqlserver_readonly_groups`
-* **New Data Source**: `tencentcloud_sqlserver_zone_config`
 
 ## 1.40.3 (August 11, 2020)
 
