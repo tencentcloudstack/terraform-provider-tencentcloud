@@ -3227,7 +3227,7 @@ func (me *VpcService) DescribeByAclId(ctx context.Context, attachmentAcl string)
 	if err != nil {
 		return err
 	}
-	if len(results) < 1 && len(results[0].SubnetSet) < 1 {
+	if len(results) < 1 || len(results[0].SubnetSet) < 1 {
 		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check: Acl id is not set")
 	}
 	return nil

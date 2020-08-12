@@ -32,7 +32,6 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -73,7 +72,7 @@ func resourceTencentCloudVpcAclAttachmentCreate(d *schema.ResourceData, meta int
 	)
 
 	aclId := d.Get("acl_id").(string)
-	subnetId := d.Get("acl_id").(string)
+	subnetId := d.Get("subnet_id").(string)
 
 	subnetIds = append(subnetIds, subnetId)
 
@@ -83,19 +82,6 @@ func resourceTencentCloudVpcAclAttachmentCreate(d *schema.ResourceData, meta int
 	}
 
 	d.SetId(aclId + "#" + subnetId)
-
-	aclAttachmentId := d.Id()
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		e := service.DescribeByAclId(ctx, aclAttachmentId)
-		if e != nil {
-			return retryError(e)
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read acl attachment failed, reason:%s\n", logId, err.Error())
-		return err
-	}
 
 	return resourceTencentCloudVpcAclAttachmentRead(d, meta)
 }
