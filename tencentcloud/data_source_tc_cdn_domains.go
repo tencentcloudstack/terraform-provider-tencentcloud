@@ -254,7 +254,7 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 
 	domainConfigs, err = cdnService.DescribeDomainsConfigByFilters(ctx, domainFilterMap)
 	if err != nil {
-		log.Printf("[CRITAL]%s describeDomainsConfigByFilters fail, reason:%v\n ", logId, err)
+		log.Printf("[CRITAL]%s describeDomainsConfigByFilters fail, reason:%v ", logId, err)
 		return err
 	}
 
@@ -317,7 +317,7 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("domain_list", cdnDomainList)
 	if err != nil {
-		log.Printf("[CRITAL]%s provider set cdn domain list fail, reason:%v\n ", logId, err)
+		log.Printf("[CRITAL]%s provider set cdn domain list fail, reason:%v ", logId, err)
 		return err
 	}
 	output, ok := d.GetOk("result_output_file")

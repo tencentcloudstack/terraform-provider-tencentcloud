@@ -1,8 +1,8 @@
 ## 1.40.4 (Unreleased)
 
-BUG FIXES:
+DEPRECATED:
 
-* Data Source: `tencentcloud_cdn_domains` remove parameter `offset`.
+* Data Source: `tencentcloud_cdn_domains` optional argument `offset` is no longer supported.
 
 ## 1.40.3 (August 11, 2020)
 

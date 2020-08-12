@@ -132,7 +132,7 @@ func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context,
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 				logId, request.GetAction(), request.ToJsonString(), err)
 			errRet = err
 			return
