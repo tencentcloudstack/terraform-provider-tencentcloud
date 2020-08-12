@@ -93,18 +93,13 @@ func resourceTencentCloudVpcACLCreate(d *schema.ResourceData, meta interface{}) 
 		logId      = getLogId(contextNil)
 		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
 		vpcService = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-		vpcID      string
-		name       string
-		ingress    []VpcACLRule
-		egress     []VpcACLRule
+
+		ingress []VpcACLRule
+		egress  []VpcACLRule
+		vpcID   = d.Get("vpc_id").(string)
+		name    = d.Get("name").(string)
 	)
 
-	if temp, ok := d.GetOk("vpc_id"); ok {
-		vpcID = temp.(string)
-	}
-	if temp, ok := d.GetOk("name"); ok {
-		name = temp.(string)
-	}
 	if temp, ok := d.GetOk("ingress"); ok {
 		ingressStrs := helper.InterfacesStrings(temp.([]interface{}))
 		for _, ingressStr := range ingressStrs {
@@ -131,12 +126,11 @@ func resourceTencentCloudVpcACLCreate(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
+	d.SetId(aclID)
 	err = vpcService.AttachRulesToACL(ctx, aclID, ingress, egress)
 	if err != nil {
 		return err
 	}
-
-	d.SetId(aclID)
 
 	return resourceTencentCloudVpcACLRead(d, meta)
 }
@@ -152,7 +146,7 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 		id      = d.Id()
 	)
 
-	vpcID, createTime, has, err := service.DescribeNetWorkByACLID(ctx, id)
+	info, has, err := service.DescribeNetWorkByACLID(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -167,19 +161,38 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 		return errRet
 	}
 
-	_ = d.Set("vpc_id", vpcID)
-	_ = d.Set("create_time", createTime)
+	_ = d.Set("vpc_id", info.VpcId)
+	_ = d.Set("create_time", info.CreatedTime)
+	_ = d.Set("name", info.NetworkAclName)
+	egressList := make([]map[string]interface{}, 0, len(info.EgressEntries))
+	for i := range info.EgressEntries {
+		result := map[string]interface{}{
+			"protocol": info.EgressEntries[i].Protocol,
+			"port":     info.EgressEntries[i].Port,
+			"cidr_ip":  info.EgressEntries[i].CidrBlock,
+			"policy":   info.EgressEntries[i].Action,
+		}
+		egressList = append(egressList, result)
+	}
+
+	ingressList := make([]map[string]interface{}, 0, len(info.IngressEntries))
+	for i := range info.IngressEntries {
+		result := map[string]interface{}{
+			"protocol": info.IngressEntries[i].Protocol,
+			"port":     info.IngressEntries[i].Port,
+			"cidr_ip":  info.IngressEntries[i].CidrBlock,
+			"policy":   info.IngressEntries[i].Action,
+		}
+		ingressList = append(ingressList, result)
+	}
+	_ = d.Set("egress", egressList)
+	_ = d.Set("ingress", ingressList)
+
 	return nil
 }
 
 func resourceTencentCloudVpcACLUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpc_acl.update")()
-
-	const (
-		DeleteAll int8 = iota
-		DeleteIngress
-		DeleteEgress
-	)
 
 	var (
 		logId   = getLogId(contextNil)
@@ -187,12 +200,12 @@ func resourceTencentCloudVpcACLUpdate(d *schema.ResourceData, meta interface{}) 
 		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 		id      = d.Id()
 
-		name          *string
-		ingress       []VpcACLRule
-		egress        []VpcACLRule
-		deleteIngress bool
-		deleteEgress  bool
+		name    *string
+		ingress []VpcACLRule
+		egress  []VpcACLRule
 	)
+
+	d.Partial(true)
 
 	if d.HasChange("name") {
 		name = helper.String(d.Get("name").(string))
@@ -200,95 +213,59 @@ func resourceTencentCloudVpcACLUpdate(d *schema.ResourceData, meta interface{}) 
 		if err != nil {
 			return nil
 		}
+
+		d.SetPartial("name")
 	}
+
 	if d.HasChange("ingress") {
-		if raw, ok := d.GetOk("ingress"); ok {
-			oldIngress := helper.InterfacesStrings(raw.([]interface{}))
-			for _, ingressStr := range oldIngress {
-				liteRule, err := parseACLRule(ingressStr)
-				if err != nil {
-					return err
-				}
-				ingress = append(ingress, liteRule)
+		_, new := d.GetChange("ingress")
+		if len(new.([]interface{})) == 0 {
+			//del ingress
+			ingress = []VpcACLRule{
+				{
+					protocol: "all",
+					cidrIp:   "0.0.0.0/0",
+					action:   "DROP",
+				},
 			}
 		} else {
-			old, _ := d.GetChange("ingress")
-			oldIngress := helper.InterfacesStrings(old.([]interface{}))
-			for _, ingressStr := range oldIngress {
+			newIngress := helper.InterfacesStrings(new.([]interface{}))
+			for _, ingressStr := range newIngress {
 				liteRule, err := parseACLRule(ingressStr)
 				if err != nil {
 					return err
 				}
 				ingress = append(ingress, liteRule)
 			}
-
-			deleteIngress = true
 		}
 	}
 
 	if d.HasChange("egress") {
-		if raw, ok := d.GetOk("egress"); ok {
-			oldEgress := helper.InterfacesStrings(raw.([]interface{}))
-			for _, egressStr := range oldEgress {
-				liteRule, err := parseACLRule(egressStr)
-				if err != nil {
-					return err
-				}
-				egress = append(egress, liteRule)
+		_, new := d.GetChange("egress")
+		if len(new.([]interface{})) == 0 {
+			//del ingress
+			egress = []VpcACLRule{
+				{
+					protocol: "all",
+					cidrIp:   "0.0.0.0/0",
+					action:   "DROP",
+				},
 			}
 		} else {
-			old, _ := d.GetChange("egress")
-			oldEgress := helper.InterfacesStrings(old.([]interface{}))
-			for _, egressStr := range oldEgress {
+			newIngress := helper.InterfacesStrings(new.([]interface{}))
+			for _, egressStr := range newIngress {
 				liteRule, err := parseACLRule(egressStr)
 				if err != nil {
 					return err
 				}
 				egress = append(egress, liteRule)
 			}
-
-			deleteEgress = true
 		}
 	}
 
-	d.Partial(true)
-
-	if deleteIngress && deleteEgress {
-		if err := service.DeleteACLRulesByChoose(ctx, id, nil, nil, DeleteAll); err != nil {
-			return err
-		}
-
-		d.Partial(false)
-
-		return resourceTencentCloudVpcACLRead(d, meta)
+	if err := service.ModifyNetWorkAclRules(ctx, id, ingress, egress); err != nil {
+		return err
 	}
-
-	if deleteIngress {
-		if err := service.DeleteACLRulesByChoose(ctx, id, ingress, nil, DeleteIngress); err != nil {
-			return err
-		}
-
-		d.SetPartial("ingress")
-
-		ingress = nil
-	}
-
-	if deleteEgress {
-		if err := service.DeleteACLRulesByChoose(ctx, id, nil, egress, DeleteEgress); err != nil {
-			return err
-		}
-
-		d.SetPartial("egress")
-
-		egress = nil
-	}
-
-	if len(ingress) > 0 || len(egress) > 0 {
-		if err := service.ModifyNetWorkAclRules(ctx, id, ingress, egress); err != nil {
-			return err
-		}
-	}
-
 	d.Partial(false)
 
 	return resourceTencentCloudVpcACLRead(d, meta)
@@ -309,7 +286,7 @@ func resourceTencentCloudVpcACLDelete(d *schema.ResourceData, meta interface{}) 
 		return err
 	}
 
-	_, _, has, err := service.DescribeNetWorkByACLID(ctx, id)
+	_, has, err := service.DescribeNetWorkByACLID(ctx, id)
 
 	if err != nil {
 		return err

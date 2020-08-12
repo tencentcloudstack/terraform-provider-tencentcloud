@@ -29,7 +29,7 @@ data "tencentcloud_vpc_acls" "foo" {
 
 The following arguments are supported:
 
-* `id` - (Optional) `ID` of the network ACL instance.
+* `id` - (Optional) ID of the network ACL instance.
 * `name` - (Optional) Name of the network ACL.
 * `result_output_file` - (Optional) Used to save results.
 * `vpc_id` - (Optional) ID of the VPC instance.
@@ -46,7 +46,7 @@ In addition to all arguments above, the following attributes are exported:
     * `policy` - Rule policy of.
     * `port` - Range of the port.
     * `protocol` - Type of ip protocol.
-  * `id` - `ID` of the network ACL instance.
+  * `id` - ID of the network ACL instance.
   * `ingress` - Inbound rules of the network ACL.
     * `cidr_block` - An IP address network or segment.
     * `description` - Rule description.
@@ -55,11 +55,11 @@ In addition to all arguments above, the following attributes are exported:
     * `protocol` - Type of ip protocol.
   * `name` - Name of the network ACL.
   * `subnets` - Subnets associated with the network ACL.
-    * `cidr_block` - The `IPv4` `CIDR` of the subnet.
-    * `subnet_id` - Subnet instance `ID`.
+    * `cidr_block` - The IPv4 CIDR of the subnet.
+    * `subnet_id` - Subnet instance ID.
     * `subnet_name` - Subnet name.
     * `tags` - Tags of the subnet.
     * `vpc_id` - ID of the VPC instance.
-  * `vpc_id` - `ID` of the VPC instance.
+  * `vpc_id` - ID of the VPC instance.
 
 
