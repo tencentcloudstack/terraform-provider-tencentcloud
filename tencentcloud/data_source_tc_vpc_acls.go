@@ -124,7 +124,7 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 									"protocol": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Type of ip protocol.",
+										Description: "Type of IP protocol.",
 									},
 									"port": {
 										Type:        schema.TypeString,
@@ -134,7 +134,7 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 									"policy": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Rule policy of.",
+										Description: "Rule policy of Network ACL.",
 									},
 									"cidr_block": {
 										Type:        schema.TypeString,
@@ -158,7 +158,7 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 									"protocol": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Type of ip protocol.",
+										Description: "Type of IP protocol.",
 									},
 									"port": {
 										Type:        schema.TypeString,
@@ -168,7 +168,7 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 									"policy": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Rule policy of.",
+										Description: "Rule policy of Network ACL.",
 									},
 									"cidr_block": {
 										Type:        schema.TypeString,
@@ -275,7 +275,7 @@ func dataSourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("acl_list", aclList)
 	if err != nil {
-		log.Printf("[CRITAL]%s provider set acl list fail, reason:%v \n ", logId, err)
+		log.Printf("[CRITAL]%s provider set ACL list fail, reason:%v \n ", logId, err)
 		return err
 	}
 

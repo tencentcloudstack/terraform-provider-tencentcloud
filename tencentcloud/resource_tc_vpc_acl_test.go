@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"testing"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -119,7 +118,6 @@ func testAccCheckVpcACLDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_vpc_acl" {
 			continue
 		}
-		time.Sleep(5 * time.Second)
 		_, has, err := service.DescribeNetWorkByACLID(ctx, rs.Primary.ID)
 		if err != nil {
 			return err

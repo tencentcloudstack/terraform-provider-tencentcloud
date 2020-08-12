@@ -43,16 +43,16 @@ In addition to all arguments above, the following attributes are exported:
   * `egress` - Outbound rules of the network ACL.
     * `cidr_block` - An IP address network or segment.
     * `description` - Rule description.
-    * `policy` - Rule policy of.
+    * `policy` - Rule policy of Network ACL.
     * `port` - Range of the port.
-    * `protocol` - Type of ip protocol.
+    * `protocol` - Type of IP protocol.
   * `id` - ID of the network ACL instance.
   * `ingress` - Inbound rules of the network ACL.
     * `cidr_block` - An IP address network or segment.
     * `description` - Rule description.
-    * `policy` - Rule policy of.
+    * `policy` - Rule policy of Network ACL.
     * `port` - Range of the port.
-    * `protocol` - Type of ip protocol.
+    * `protocol` - Type of IP protocol.
   * `name` - Name of the network ACL.
   * `subnets` - Subnets associated with the network ACL.
     * `cidr_block` - The IPv4 CIDR of the subnet.

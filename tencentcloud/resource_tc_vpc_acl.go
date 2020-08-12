@@ -76,7 +76,6 @@ func resourceTencentCloudVpcACL() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Egress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80,443`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.",
 			},
-
 			//compute
 			"create_time": {
 				Type:        schema.TypeString,
@@ -151,12 +150,12 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 		return err
 	}
 	if has == 0 {
-		log.Printf("[WARN]%s %s\n", logId, "acl has been delete")
+		log.Printf("[WARN]%s %s\n", logId, "ACL has been delete")
 		d.SetId("")
 		return nil
 	}
 	if has != 1 {
-		errRet := fmt.Errorf("one acl_id read get %d acl info", has)
+		errRet := fmt.Errorf("one acl_id read get %d ACL info", has)
 		log.Printf("[CRITAL]%s %s\n", logId, errRet.Error())
 		return errRet
 	}
@@ -174,7 +173,7 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 			*info.EgressEntries[i].CidrBlock,
 			*info.EgressEntries[i].Port,
 			*info.EgressEntries[i].Protocol,
-		}, "#")
+		}, FILED_SP)
 		egressList = append(egressList, strings.ToUpper(result))
 	}
 
@@ -188,7 +187,7 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 			*info.IngressEntries[i].CidrBlock,
 			*info.IngressEntries[i].Port,
 			*info.IngressEntries[i].Protocol,
-		}, "#")
+		}, FILED_SP)
 		ingressList = append(ingressList, strings.ToUpper(result))
 	}
 	_ = d.Set("egress", egressList)
@@ -269,8 +268,12 @@ func resourceTencentCloudVpcACLUpdate(d *schema.ResourceData, meta interface{}) 
 		}
 	}
 
-	if err := service.ModifyNetWorkAclRules(ctx, id, ingress, egress); err != nil {
-		return err
+	if d.HasChange("egress") || d.HasChange("ingress") {
+		if err := service.ModifyNetWorkAclRules(ctx, id, ingress, egress); err != nil {
+			return err
+		}
+		d.SetPartial("ingress")
+		d.SetPartial("egress")
 	}
 	d.Partial(false)
 
@@ -293,14 +296,12 @@ func resourceTencentCloudVpcACLDelete(d *schema.ResourceData, meta interface{}) 
 	}
 
 	_, has, err := service.DescribeNetWorkByACLID(ctx, id)
-
 	if err != nil {
 		return err
 	}
 
 	if has > 0 {
-		return fmt.Errorf("[CRITAL]%s delete network acl : %s  failed\n", logId, id)
+		return fmt.Errorf("[CRITAL]%s delete network ACL : %s  failed\n", logId, id)
 	}
-
 	return nil
 }

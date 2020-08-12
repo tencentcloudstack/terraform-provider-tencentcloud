@@ -3155,7 +3155,7 @@ func (me *VpcService) DescribeNetWorkAcls(ctx context.Context, aclID, vpcID, nam
 	return
 }
 
-func (me *VpcService) DescribeByAclId(ctx context.Context, attachmentAcl string) (errRet error) {
+func (me *VpcService) DescribeByAclId(ctx context.Context, attachmentAcl string) (has bool, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = vpc.NewDisassociateNetworkAclSubnetsRequest()
@@ -3177,12 +3177,15 @@ func (me *VpcService) DescribeByAclId(ctx context.Context, attachmentAcl string)
 
 	results, err := me.DescribeNetWorkAcls(ctx, aclId, "", "")
 	if err != nil {
-		return err
+		errRet = err
+		return
 	}
 	if len(results) < 1 || len(results[0].SubnetSet) < 1 {
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check: Acl id is not set")
+		return
 	}
-	return nil
+
+	has = true
+	return
 }
 
 func (me *VpcService) DeleteAclAttachment(ctx context.Context, attachmentAcl string) (errRet error) {

@@ -50,7 +50,7 @@ func resourceTencentCloudVpcAclAttachment() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateNotEmpty,
-				Description:  "Id of the attached ACL.",
+				Description:  "ID of the attached ACL.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
@@ -81,7 +81,7 @@ func resourceTencentCloudVpcAclAttachmentCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
-	d.SetId(aclId + "#" + subnetId)
+	d.SetId(aclId + FILED_SP + subnetId)
 
 	return resourceTencentCloudVpcAclAttachmentRead(d, meta)
 }
@@ -98,19 +98,14 @@ func resourceTencentCloudVpcAclAttachmentRead(d *schema.ResourceData, meta inter
 		aclId        string
 	)
 
-	if attachmentId == "" {
-		return fmt.Errorf("attachmentId does not exist")
-	}
-
-	aclId = strings.Split(attachmentId, "#")[0]
-
+	aclId = strings.Split(attachmentId, FILED_SP)[0]
 	results, err := service.DescribeNetWorkAcls(ctx, aclId, "", "")
 	if err != nil {
 		return err
 	}
 	if len(results) > 0 && len(results[0].SubnetSet) < 1 {
 		d.SetId("")
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Read] check: acl attachment  is not create")
+		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Read] check: ACL attachment  is not exist")
 	}
 	return nil
 
@@ -127,10 +122,9 @@ func resourceTencentCloudVpcAclAttachmentDelete(d *schema.ResourceData, meta int
 
 	err := service.DeleteAclAttachment(ctx, attachmentAcl)
 	if err != nil {
-		log.Printf("[CRITAL]%s delete acl attachment failed, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s delete ACL attachment failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	d.SetId("")
 
 	return nil
 

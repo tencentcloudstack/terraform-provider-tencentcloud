@@ -35,9 +35,13 @@ func testVpcAclAttachmentDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_vpc_acl_attachment" {
 			continue
 		}
-		err := service.DescribeByAclId(ctx, rs.Primary.ID)
-		if err == nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Destroy] check: acl attachment still exists: %s", rs.Primary.ID)
+		has, err := service.DescribeByAclId(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+
+		if has {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Destroy] check: ACL attachment still exists: %s", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -56,9 +60,13 @@ func testVpcAclAttachmentExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check: id is not set")
 		}
-		err := service.DescribeByAclId(ctx, rs.Primary.ID)
+		has, err := service.DescribeByAclId(ctx, rs.Primary.ID)
 		if err != nil {
-			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check:  still exists: %s", rs.Primary.ID)
+			return err
+		}
+
+		if !has {
+			return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Exists] check: not exists: %s", rs.Primary.ID)
 		}
 		return nil
 	}
