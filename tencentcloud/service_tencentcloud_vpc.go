@@ -3217,7 +3217,7 @@ func (me *VpcService) DescribeByAclId(ctx context.Context, attachmentAcl string)
 	}()
 
 	if attachmentAcl == "" {
-		errRet = fmt.Errorf("DeleteRouteTable can not invoke by empty routeTableId.")
+		errRet = fmt.Errorf("DisassociateNetworkAclSubnets  can not invoke by empty routeTableId.")
 		return
 	}
 

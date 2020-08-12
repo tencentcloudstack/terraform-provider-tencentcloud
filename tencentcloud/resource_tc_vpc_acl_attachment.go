@@ -57,7 +57,7 @@ func resourceTencentCloudVpcAclAttachment() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: " the Subnet instance ID.",
+				Description: "The Subnet instance ID.",
 			},
 		},
 	}
@@ -69,17 +69,12 @@ func resourceTencentCloudVpcAclAttachmentCreate(d *schema.ResourceData, meta int
 		logId     = getLogId(contextNil)
 		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
 		service   = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-		aclId     string
 		subnetIds []string
-		subnetId  string
 	)
 
-	if temp, ok := d.GetOk("acl_id"); ok {
-		aclId = temp.(string)
-	}
-	if temp, ok := d.GetOk("subnet_id"); ok {
-		subnetId = temp.(string)
-	}
+	aclId := d.Get("acl_id").(string)
+	subnetId := d.Get("acl_id").(string)
+
 	subnetIds = append(subnetIds, subnetId)
 
 	err := service.AssociateAclSubnets(ctx, aclId, subnetIds)
