@@ -19,7 +19,7 @@ Provide a resource to attach an existing subnet to Network ACL.
 The following arguments are supported:
 
 * `acl_id` - (Required, ForceNew) Id of the attached ACL.
-* `subnet_ids` - (Required, ForceNew) ID list of the Subnet instance ID.
+* `subnet_id` - (Required, ForceNew) The Subnet instance ID.
 
 ## Attributes Reference
 

@@ -48,7 +48,7 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateNotEmpty,
-				Description:  "`ID` of the network ACL instance.",
+				Description:  "ID of the network ACL instance.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -64,12 +64,12 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "`ID` of the VPC instance.",
+							Description: "ID of the VPC instance.",
 						},
 						"id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "`ID` of the network ACL instance.",
+							Description: "ID of the network ACL instance.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -95,7 +95,7 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 									"subnet_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Subnet instance `ID`.",
+										Description: "Subnet instance ID.",
 									},
 									"subnet_name": {
 										Type:        schema.TypeString,
@@ -105,7 +105,7 @@ func dataSourceTencentCloudVpcAcls() *schema.Resource {
 									"cidr_block": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The `IPv4` `CIDR` of the subnet.",
+										Description: "The IPv4 CIDR of the subnet.",
 									},
 									"tags": {
 										Type:        schema.TypeMap,
@@ -254,13 +254,13 @@ func dataSourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) 
 		ingress := make([]map[string]interface{}, 0, len(ingressInfo))
 		for i := range ingressInfo {
 			v := ingressInfo[i]
-			egressMap := make(map[string]interface{}, 5)
-			egressMap["protocol"] = v.Protocol
-			egressMap["port"] = v.Port
-			egressMap["cidr_block"] = v.CidrBlock
-			egressMap["policy"] = v.Action
-			egressMap["description"] = v.Description
-
+			egressMap := map[string]interface{}{
+				"protocol":    v.Protocol,
+				"port":        v.Port,
+				"cidr_block":  v.CidrBlock,
+				"policy":      v.Action,
+				"description": v.Description,
+			}
 			ingress = append(ingress, egressMap)
 		}
 
@@ -268,13 +268,13 @@ func dataSourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) 
 		egress := make([]map[string]interface{}, 0, len(egressInfo))
 		for i := range egressInfo {
 			v := egressInfo[i]
-			egressMap := make(map[string]interface{}, 5)
-			egressMap["protocol"] = v.Protocol
-			egressMap["port"] = v.Port
-			egressMap["cidr_block"] = v.CidrBlock
-			egressMap["policy"] = v.Action
-			egressMap["description"] = v.Description
-
+			egressMap := map[string]interface{}{
+				"protocol":    v.Protocol,
+				"port":        v.Port,
+				"cidr_block":  v.CidrBlock,
+				"policy":      v.Action,
+				"description": v.Description,
+			}
 			egress = append(egress, egressMap)
 		}
 

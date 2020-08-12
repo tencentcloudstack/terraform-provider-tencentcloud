@@ -2845,7 +2845,7 @@ func (me *VpcService) CreateVpcNetworkAcl(ctx context.Context, vpcID string, nam
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
 		errRet = err
 		return
@@ -2917,7 +2917,7 @@ func (me *VpcService) ModifyNetWorkAclRules(ctx context.Context, aclID string, i
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
 		errRet = err
 		return
@@ -2926,18 +2926,11 @@ func (me *VpcService) ModifyNetWorkAclRules(ctx context.Context, aclID string, i
 	return
 }
 
-func (me *VpcService) DescribeNetWorkByACLID(ctx context.Context, aclID string) (vpcID string, createTime string, has int, errRet error) {
+func (me *VpcService) DescribeNetWorkByACLID(ctx context.Context, aclID string) (info *vpc.NetworkAcl, has int, errRet error) {
 	results, err := me.DescribeNetWorkAcls(ctx, aclID, "", "")
 	if err != nil {
-		ee, ok := err.(*sdkErrors.TencentCloudSDKError)
-		if !ok {
-			errRet = err
-			return
-		}
-		if ee.Code == VPCNotFound {
-			has = 0
-			return
-		}
+		errRet = err
+		return
 	}
 
 	has = len(results)
@@ -2945,69 +2938,7 @@ func (me *VpcService) DescribeNetWorkByACLID(ctx context.Context, aclID string) 
 		return
 	}
 
-	info := results[0]
-	vpcID = *info.VpcId
-	createTime = *info.CreatedTime
-	return
-}
-
-func (me *VpcService) DeleteACLRulesByChoose(ctx context.Context, aclID string, ingressParam, egressParam []VpcACLRule, choose int8) (errRet error) {
-	var (
-		logId   = getLogId(ctx)
-		err     error
-		request = vpc.NewModifyNetworkAclEntriesRequest()
-	)
-
-	request.NetworkAclId = &aclID
-
-	if choose == 0 { //all delete
-		request.NetworkAclEntrySet = &vpc.NetworkAclEntrySet{}
-	} else if choose == 1 { //modify ingress
-		for i := range ingressParam {
-			policy := &vpc.NetworkAclEntry{
-				Protocol:  &ingressParam[i].protocol,
-				CidrBlock: &ingressParam[i].cidrIp,
-				Action:    &ingressParam[i].action,
-			}
-
-			if ingressParam[i].port != "" {
-				policy.Port = &ingressParam[i].port
-			}
-
-			request.NetworkAclEntrySet.Ingress = append(request.NetworkAclEntrySet.Ingress, policy)
-		}
-
-	} else if choose == 2 { //modify egress
-		for i := range egressParam {
-			policy := &vpc.NetworkAclEntry{
-				Protocol:  &egressParam[i].protocol,
-				CidrBlock: &egressParam[i].cidrIp,
-				Action:    &egressParam[i].action,
-			}
-
-			if egressParam[i].port != "" {
-				policy.Port = &egressParam[i].port
-			}
-
-			request.NetworkAclEntrySet.Egress = append(request.NetworkAclEntrySet.Ingress, policy)
-		}
-	}
-
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		_, err = me.client.UseVpcClient().ModifyNetworkAclEntries(request)
-		if err != nil {
-			return retryError(err, InternalError)
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
-			logId, request.GetAction(), request.ToJsonString(), err)
-		errRet = err
-		return
-	}
-
+	info = results[0]
 	return
 }
 
@@ -3026,17 +2957,35 @@ func (me *VpcService) DeleteAcl(ctx context.Context, aclID string) (errRet error
 		return
 	}
 
-	aclIdAndSubnetIds := aclID
-	subnets := networkAcls[0].SubnetSet
-	if len(subnets) > 0 {
-		for i := range subnets {
-			aclIdAndSubnetIds += "#" + *(subnets[i].SubnetId)
-		}
+	if len(networkAcls) > 0 {
+		subnets := networkAcls[0].SubnetSet
+		if len(subnets) > 0 {
+			requestSubnet := vpc.NewDisassociateNetworkAclSubnetsRequest()
+			requestSubnet.NetworkAclId = &aclID
 
-		err = me.DeleteAclAttachment(ctx, aclIdAndSubnetIds)
-		if err != nil {
-			errRet = err
-			return
+			for i := range subnets {
+				requestSubnet.SubnetIds = append(requestSubnet.SubnetIds, subnets[i].SubnetId)
+			}
+
+			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				ratelimit.Check(request.GetAction())
+				_, err = me.client.UseVpcClient().DisassociateNetworkAclSubnets(requestSubnet)
+				if err != nil {
+					if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+						if ee.Code == VPCNotFound {
+							log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+								logId, request.GetAction(), request.ToJsonString(), err)
+							return nil
+						}
+					}
+					return retryError(err, InternalError)
+				}
+				return nil
+			})
+			if err != nil {
+				errRet = err
+				return
+			}
 		}
 	}
 
@@ -3052,9 +3001,9 @@ func (me *VpcService) DeleteAcl(ctx context.Context, aclID string) (errRet error
 				return retryError(err, InternalError)
 			}
 			if ee.Code == VPCNotFound {
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 					logId, request.GetAction(), request.ToJsonString(), err)
-				return resource.NonRetryableError(err)
+				return nil
 			}
 			return retryError(err, InternalError)
 		}
@@ -3062,7 +3011,7 @@ func (me *VpcService) DeleteAcl(ctx context.Context, aclID string) (errRet error
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
 		errRet = err
 		return
@@ -3090,7 +3039,7 @@ func (me *VpcService) ModifyVpcNetworkAcl(ctx context.Context, id *string, name 
 				return retryError(err, InternalError)
 			}
 			if ee.Code == VPCNotFound {
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 					logId, request.GetAction(), request.ToJsonString(), err)
 				return resource.NonRetryableError(err)
 			}
@@ -3100,7 +3049,7 @@ func (me *VpcService) ModifyVpcNetworkAcl(ctx context.Context, id *string, name 
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
 		errRet = err
 		return
@@ -3133,7 +3082,7 @@ func (me *VpcService) AssociateAclSubnets(ctx context.Context, aclId string, sub
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
 		errRet = err
 		return
@@ -3165,20 +3114,17 @@ func (me *VpcService) DescribeNetWorkAcls(ctx context.Context, aclID, vpcID, nam
 		request.Filters = filters
 	}
 
+	request.Offset = &offset
+	request.Limit = &pageSize
 	for {
-		request.Offset = &offset
-		request.Limit = &pageSize
-
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseVpcClient().DescribeNetworkAcls(request)
 			if err != nil {
-				ee, ok := err.(*sdkErrors.TencentCloudSDKError)
-				if !ok {
-					return retryError(err)
-				}
-				if ee.Code == VPCNotFound {
-					return resource.NonRetryableError(err)
+				if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+					if ee.Code == VPCNotFound {
+						return nil
+					}
 				}
 				return retryError(err, InternalError)
 			}
@@ -3186,9 +3132,12 @@ func (me *VpcService) DescribeNetWorkAcls(ctx context.Context, aclID, vpcID, nam
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 				logId, request.GetAction(), request.ToJsonString(), err)
 			errRet = err
+			return
+		}
+		if response.Response == nil {
 			return
 		}
 
@@ -3211,7 +3160,7 @@ func (me *VpcService) DescribeByAclId(ctx context.Context, attachmentAcl string)
 	)
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 				logId, request.GetAction(), request.ToJsonString(), errRet)
 		}
 	}()
@@ -3259,7 +3208,7 @@ func (me *VpcService) DeleteAclAttachment(ctx context.Context, attachmentAcl str
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]\n",
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
 			logId, request.GetAction(), request.ToJsonString(), err)
 		errRet = err
 		return
