@@ -109,6 +109,7 @@ func resourceTencentCloudVpcAclAttachmentRead(d *schema.ResourceData, meta inter
 		return err
 	}
 	if len(results) > 0 && len(results[0].SubnetSet) < 1 {
+		d.SetId("")
 		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Read] check: acl attachment  is not create")
 	}
 	return nil

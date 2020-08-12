@@ -35,6 +35,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -131,7 +132,6 @@ func resourceTencentCloudVpcACLCreate(d *schema.ResourceData, meta interface{}) 
 	if err != nil {
 		return err
 	}
-
 	return resourceTencentCloudVpcACLRead(d, meta)
 }
 
@@ -164,26 +164,32 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 	_ = d.Set("vpc_id", info.VpcId)
 	_ = d.Set("create_time", info.CreatedTime)
 	_ = d.Set("name", info.NetworkAclName)
-	egressList := make([]map[string]interface{}, 0, len(info.EgressEntries))
+	egressList := make([]string, 0, len(info.EgressEntries))
 	for i := range info.EgressEntries {
-		result := map[string]interface{}{
-			"protocol": info.EgressEntries[i].Protocol,
-			"port":     info.EgressEntries[i].Port,
-			"cidr_ip":  info.EgressEntries[i].CidrBlock,
-			"policy":   info.EgressEntries[i].Action,
+		if info.EgressEntries[i].Port == nil || *info.EgressEntries[i].Port == "" {
+			continue
 		}
-		egressList = append(egressList, result)
+		result := strings.Join([]string{
+			*info.EgressEntries[i].Action,
+			*info.EgressEntries[i].CidrBlock,
+			*info.EgressEntries[i].Port,
+			*info.EgressEntries[i].Protocol,
+		}, "#")
+		egressList = append(egressList, strings.ToUpper(result))
 	}
 
-	ingressList := make([]map[string]interface{}, 0, len(info.IngressEntries))
+	ingressList := make([]string, 0, len(info.IngressEntries))
 	for i := range info.IngressEntries {
-		result := map[string]interface{}{
-			"protocol": info.IngressEntries[i].Protocol,
-			"port":     info.IngressEntries[i].Port,
-			"cidr_ip":  info.IngressEntries[i].CidrBlock,
-			"policy":   info.IngressEntries[i].Action,
+		if info.IngressEntries[i].Port == nil || *info.IngressEntries[i].Port == "" {
+			continue
 		}
-		ingressList = append(ingressList, result)
+		result := strings.Join([]string{
+			*info.IngressEntries[i].Action,
+			*info.IngressEntries[i].CidrBlock,
+			*info.IngressEntries[i].Port,
+			*info.IngressEntries[i].Protocol,
+		}, "#")
+		ingressList = append(ingressList, strings.ToUpper(result))
 	}
 	_ = d.Set("egress", egressList)
 	_ = d.Set("ingress", ingressList)

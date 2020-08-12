@@ -197,29 +197,10 @@ func dataSourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) 
 		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
 		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-		vpcID string
-		name  string
-		id    string
+		vpcID = d.Get("vpc_id").(string)
+		name  = d.Get("name").(string)
+		id    = d.Get("id").(string)
 	)
-
-	if temp, ok := d.GetOk("vpc_id"); ok {
-		tempStr := temp.(string)
-		if tempStr != "" {
-			vpcID = tempStr
-		}
-	}
-	if temp, ok := d.GetOk("name"); ok {
-		tempStr := temp.(string)
-		if tempStr != "" {
-			name = tempStr
-		}
-	}
-	if temp, ok := d.GetOk("id"); ok {
-		tempStr := temp.(string)
-		if tempStr != "" {
-			id = tempStr
-		}
-	}
 
 	networkAcls, err := service.DescribeNetWorkAcls(ctx, id, vpcID, name)
 	if err != nil {

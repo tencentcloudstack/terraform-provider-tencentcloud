@@ -2858,6 +2858,9 @@ func (me *VpcService) CreateVpcNetworkAcl(ctx context.Context, vpcID string, nam
 func (me *VpcService) AttachRulesToACL(ctx context.Context, aclID string, ingressParm, egressParm []VpcACLRule) (errRet error) {
 	logId := getLogId(ctx)
 
+	if len(ingressParm) == 0 && len(egressParm) == 0 {
+		return
+	}
 	if errRet = me.ModifyNetWorkAclRules(ctx, aclID, ingressParm, egressParm); errRet != nil {
 		log.Printf("[CRITAL]%s attach rules to acl failed, reason: %v", logId, errRet)
 	}
