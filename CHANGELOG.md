@@ -10,6 +10,10 @@ FEATURES:
 * **New Data Source**: `tencentcloud_sqlserver_instance`
 * **New Data Source**: `tencentcloud_sqlserver_readonly_groups`
 
+DEPRECATED:
+
+* Data Source: `tencentcloud_cdn_domains` optional argument `offset` is no longer supported.
+
 ## 1.40.3 (August 11, 2020)
 
 ENHANCEMENTS:

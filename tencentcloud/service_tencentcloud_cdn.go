@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -90,11 +91,16 @@ func (me *CdnService) StartDomain(ctx context.Context, domain string) error {
 }
 
 func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context,
-	filterMap map[string]interface{},
-	leftNumber int64) (domainConfig []*cdn.DetailDomain, errRet error) {
+	filterMap map[string]interface{}) (domainConfig []*cdn.DetailDomain, errRet error) {
 
-	logId := getLogId(ctx)
-	request := cdn.NewDescribeDomainsConfigRequest()
+	var (
+		logId         = getLogId(ctx)
+		request       = cdn.NewDescribeDomainsConfigRequest()
+		err           error
+		offset, limit int64 = 0, 100
+		response      *cdn.DescribeDomainsConfigResponse
+	)
+
 	request.Filters = make([]*cdn.DomainFilter, 0, len(filterMap))
 
 	for k, v := range filterMap {
@@ -106,42 +112,37 @@ func (me *CdnService) DescribeDomainsConfigByFilters(ctx context.Context,
 		request.Filters = append(request.Filters, filter)
 	}
 
-	var offset, limit int64 = 0, 100
-needMoreDomains:
-	if leftNumber <= 0 {
-		return
-	}
-	if leftNumber < limit {
-		limit = leftNumber
-	}
-
 	request.Limit = &limit
 	request.Offset = &offset
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCdnClient().DescribeDomainsConfig(request)
-	if err != nil {
-		if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
-			if sdkErr.Code == CDN_HOST_NOT_FOUND {
-				return
+	for {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err = me.client.UseCdnClient().DescribeDomainsConfig(request)
+
+			if err != nil {
+				if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+					if sdkErr.Code == CDN_HOST_NOT_FOUND {
+						return nil
+					}
+				}
+				return retryError(err, InternalError)
 			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+				logId, request.GetAction(), request.ToJsonString(), err)
+			errRet = err
+			return
 		}
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
-	}
 
-	totalCount := *response.Response.TotalNumber
-	leftNumber = leftNumber - limit
-	offset += limit
-
-	if len(response.Response.Domains) > 0 {
 		domainConfig = append(domainConfig, response.Response.Domains...)
-	}
-
-	if leftNumber > 0 && totalCount-offset > 0 {
-		goto needMoreDomains
+		if len(response.Response.Domains) < int(limit) {
+			break
+		}
+		offset += limit
 	}
 	return
 }
