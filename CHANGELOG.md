@@ -1,4 +1,14 @@
-## 1.40.4 (Unreleased)
+## 1.41.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_sqlserver_instance`
+* **New Resource**: `tencentcloud_sqlserver_readonly_instance`
+* **New Resource**: `tencentcloud_sqlserver_db`
+* **New Resource**: `tencentcloud_sqlserver_account`
+* **New Resource**: `tencentcloud_sqlserver_db_account_attachment`
+* **New Data Source**: `tencentcloud_sqlserver_instance`
+* **New Data Source**: `tencentcloud_sqlserver_readonly_groups`
 
 DEPRECATED:
 

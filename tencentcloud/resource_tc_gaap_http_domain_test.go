@@ -512,7 +512,7 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id                 = tencentcloud_gaap_layer7_listener.foo.id
   domain                      = "www.qq.com"
-  client_certificate_ids      = [tencentcloud_gaap_certificate.client1.id]
+  client_certificate_ids = [tencentcloud_gaap_certificate.client1.id]
 }
 
 `, "<<EOF"+testAccGaapCertificateServerCert+"EOF", "<<EOF"+testAccGaapCertificateServerKey+"EOF",
