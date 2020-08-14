@@ -445,12 +445,6 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 	d.Partial(true)
 
 	if d.HasChange("memory") || d.HasChange("volume") {
-		// precheck
-		oldMemory, newMemory := d.GetChange("memory")
-		oldVolume, newVolume := d.GetChange("volume")
-		if (newMemory.(int) >= oldMemory.(int) || newVolume.(int) >= oldVolume.(int)) && (newMemory.(int) <= oldMemory.(int) || newVolume.(int) <= oldVolume.(int)) {
-			return fmt.Errorf("[CRITAL] updating memory and volume of mongodb instance failed, memory and volume must upgrade/downgrade at same time")
-		}
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
 		err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume)

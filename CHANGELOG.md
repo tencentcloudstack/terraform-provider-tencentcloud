@@ -21,6 +21,10 @@ DEPRECATED:
 
 * Data Source: `tencentcloud_cdn_domains` optional argument `offset` is no longer supported.
 
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mongodb_instance`, `tencentcloud_mongodb_sharding_instance` and `tencentcloud_mongodb_standby_instance` remove spec update validation.
+
 ## 1.40.3 (August 11, 2020)
 
 ENHANCEMENTS:
