@@ -13,7 +13,6 @@ FEATURES:
 * **New Data Source**: `tencentcloud_sqlserver_readonly_groups`
 * **New Data Source**: `tencentcloud_vpc_acls`
 
-
 ## 1.40.3 (August 11, 2020)
 
 ENHANCEMENTS:
