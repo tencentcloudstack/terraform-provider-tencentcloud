@@ -1,10 +1,18 @@
-## 1.40.4 (Unreleased)
+## 1.41.0 (Unreleased)
 
 FEATURES:
 
-* **New Data Source**: `tencentcloud_vpc_acls`
+* **New Resource**: `tencentcloud_sqlserver_instance`
+* **New Resource**: `tencentcloud_sqlserver_readonly_instance`
+* **New Resource**: `tencentcloud_sqlserver_db`
+* **New Resource**: `tencentcloud_sqlserver_account`
+* **New Resource**: `tencentcloud_sqlserver_db_account_attachment`
 * **New Resource**: `tencentcloud_vpc_acl`
 * **New Resource**: `tencentcloud_vpc_acl_attachment`
+* **New Data Source**: `tencentcloud_sqlserver_instance`
+* **New Data Source**: `tencentcloud_sqlserver_readonly_groups`
+* **New Data Source**: `tencentcloud_vpc_acls`
+
 
 ## 1.40.3 (August 11, 2020)
 
