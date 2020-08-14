@@ -77,6 +77,15 @@ CDN
   Resource
 	tencentcloud_cdn_domain
 
+Ckafka
+  Data Source
+    tencentcloud_ckafka_users
+    tencentcloud_ckafka_acls
+
+  Resource
+    tencentcloud_ckafka_user
+    tencentcloud_ckafka_acl
+
 Cloud Access Management(CAM)
   Data Source
     tencentcloud_cam_group_memberships
@@ -625,6 +634,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_sqlserver_accounts":               dataSourceTencentCloudSqlserverAccounts(),
 			"tencentcloud_sqlserver_account_db_attachments": dataSourceTencentCloudSqlserverAccountDBAttachments(),
 			"tencentcloud_sqlserver_readonly_groups":        dataSourceTencentCloudSqlserverReadonlyGroups(),
+			"tencentcloud_ckafka_users":                     dataSourceTencentCloudCkafkaUsers(),
+			"tencentcloud_ckafka_acls":                      dataSourceTencentCloudCkafkaAcls(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -744,6 +755,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_sqlserver_account":               resourceTencentCloudSqlserverAccount(),
 			"tencentcloud_sqlserver_account_db_attachment": resourceTencentCloudSqlserverAccountDBAttachment(),
 			"tencentcloud_sqlserver_readonly_instance":     resourceTencentCloudSqlserverReadonlyInstance(),
+			"tencentcloud_ckafka_user":                     resourceTencentCloudCkafkaUser(),
+			"tencentcloud_ckafka_acl":                      resourceTencentCloudCkafkaAcl(),
 		},
 
 		ConfigureFunc: providerConfigure,

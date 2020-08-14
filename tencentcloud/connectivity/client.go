@@ -14,6 +14,7 @@ import (
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -68,6 +69,7 @@ type TencentCloudClient struct {
 	esConn        *es.Client
 	sqlserverConn *sqlserver.Client
 	postgreConn   *postgre.Client
+	ckafkaConn    *ckafka.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -427,4 +429,17 @@ func (me *TencentCloudClient) UseSqlserverClient() *sqlserver.Client {
 	me.sqlserverConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.sqlserverConn
+}
+
+// UseCkafkaClient returns ckafka client for service
+func (me *TencentCloudClient) UseCkafkaClient() *ckafka.Client {
+	if me.ckafkaConn != nil {
+		return me.ckafkaConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.ckafkaConn, _ = ckafka.NewClient(me.Credential, me.Region, cpf)
+	me.ckafkaConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ckafkaConn
 }
