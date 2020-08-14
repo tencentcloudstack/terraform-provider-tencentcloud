@@ -7,8 +7,11 @@ FEATURES:
 * **New Resource**: `tencentcloud_sqlserver_db`
 * **New Resource**: `tencentcloud_sqlserver_account`
 * **New Resource**: `tencentcloud_sqlserver_db_account_attachment`
+* **New Resource**: `tencentcloud_vpc_acl`
+* **New Resource**: `tencentcloud_vpc_acl_attachment`
 * **New Data Source**: `tencentcloud_sqlserver_instance`
 * **New Data Source**: `tencentcloud_sqlserver_readonly_groups`
+* **New Data Source**: `tencentcloud_vpc_acls`
 
 DEPRECATED:
 

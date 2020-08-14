@@ -523,7 +523,7 @@ github.com/stretchr/testify/mock
 github.com/subosito/gotenv
 # github.com/tdakkota/asciicheck v0.0.0-20200416190851-d7f85be797a2
 github.com/tdakkota/asciicheck
-# github.com/tencentcloud/tencentcloud-sdk-go v3.0.221+incompatible
+# github.com/tencentcloud/tencentcloud-sdk-go v3.0.229+incompatible
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
