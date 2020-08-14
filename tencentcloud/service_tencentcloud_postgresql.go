@@ -239,7 +239,7 @@ func (me *PostgresqlService) DescribePostgresqlInstanceById(ctx context.Context,
 		return
 	}
 	instance = response.Response.DBInstance
-	if instance != nil {
+	if instance != nil && *instance.DBInstanceStatus != "isolated" && *instance.DBInstanceStatus != "recycled" && *instance.DBInstanceStatus != "offline" {
 		has = true
 	}
 	return
