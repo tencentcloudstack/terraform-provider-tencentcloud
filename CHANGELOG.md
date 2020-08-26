@@ -1,4 +1,10 @@
 ## 1.41.1 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_vpn_gateway` fix force new issue when apply repeatedly.
+* Resource: `tencentcloud_vpn_connection` fix force new issue when apply repeatedly.
+
 ## 1.41.0 (August 17, 2020)
 
 FEATURES:

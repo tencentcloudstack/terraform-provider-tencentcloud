@@ -191,6 +191,9 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 			}
 			request.VpcId = helper.String(d.Get("vpc_id").(string))
 		} else {
+			if _, ok := d.GetOk("vpc_id"); ok {
+				return fmt.Errorf("[CRITAL] vpc_id doesn't make sense when vpn gateway is in CCN type")
+			}
 			request.VpcId = helper.String("")
 		}
 	} else {

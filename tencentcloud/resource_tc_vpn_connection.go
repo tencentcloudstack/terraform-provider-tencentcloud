@@ -315,6 +315,9 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		}
 		request.VpcId = helper.String(d.Get("vpc_id").(string))
 	} else {
+		if _, ok := d.GetOk("vpc_id"); ok {
+			return fmt.Errorf("[CRITAL] vpc_id doesn't make sense when vpn gateway is in CCN type")
+		}
 		request.VpcId = helper.String("")
 	}
 	request.VpnGatewayId = helper.String(d.Get("vpn_gateway_id").(string))
@@ -545,7 +548,6 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 
 	connection := response.Response.VpnConnectionSet[0]
 	_ = d.Set("name", *connection.VpnConnectionName)
-	_ = d.Set("vpc_id", *connection.VpcId)
 	_ = d.Set("create_time", *connection.CreatedTime)
 	_ = d.Set("vpn_gateway_id", *connection.VpnGatewayId)
 	_ = d.Set("customer_gateway_id", *connection.CustomerGatewayId)
