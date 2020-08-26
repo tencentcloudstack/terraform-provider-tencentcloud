@@ -173,6 +173,7 @@ COS
   Data Source
     tencentcloud_cos_bucket_object
     tencentcloud_cos_buckets
+	tencentcloud_audit_cos_regions
 
   Resource
     tencentcloud_cos_bucket

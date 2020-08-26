@@ -30,7 +30,7 @@ func dataSourceTencentCloudAuditCosRegions() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "zh",
-				Description: "Site type. zh means China region, en means international region",
+				Description: "Site type. zh means China region, en means international region.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
@@ -40,18 +40,18 @@ func dataSourceTencentCloudAuditCosRegions() *schema.Resource {
 			"cos_region_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "List of available zones supported by cos",
+				Description: "List of available zones supported by cos.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cos_region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cos region",
+							Description: "cos region.",
 						},
 						"cos_region_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cos region description",
+							Description: "cos region description.",
 						},
 					},
 				},
@@ -94,7 +94,7 @@ func dataSourceTencentCloudAuditCosRegionsRead(d *schema.ResourceData, meta inte
 	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("cos_region_list", regionList)
 	if err != nil {
-		log.Printf("[CRITAL]%s provider set regions list fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s audit cos read regions list fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
