@@ -5,7 +5,6 @@ Example Usage
 
 ```hcl
 data "tencentcloud_audit_cos_region" "cos_region" {
-  website_type   = "zh"
 }
 ```
 */
@@ -26,12 +25,6 @@ func dataSourceTencentCloudAuditCosRegions() *schema.Resource {
 		Read: dataSourceTencentCloudAuditCosRegionsRead,
 
 		Schema: map[string]*schema.Schema{
-			"website_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "zh",
-				Description: "Site type. zh means China region, en means international region.",
-			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -46,12 +39,12 @@ func dataSourceTencentCloudAuditCosRegions() *schema.Resource {
 						"cos_region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cos region.",
+							Description: "Cos region.",
 						},
 						"cos_region_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cos region description.",
+							Description: "Cos region description.",
 						},
 					},
 				},

@@ -14,7 +14,6 @@ Use this data source to query the region list supported by the audit cmq.
 
 ```hcl
 data "tencentcloud_audit_cmq_region" "cmq_region" {
-  website_type = "zh"
 }
 ```
 
@@ -23,14 +22,13 @@ data "tencentcloud_audit_cmq_region" "cmq_region" {
 The following arguments are supported:
 
 * `result_output_file` - (Optional) Used to save results.
-* `website_type` - (Optional) Site type. zh means China region, en means international region.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `cmq_region_list` - List of available zones supported by cmq.
-  * `cmq_region_name` - cmq region description.
-  * `cmq_region` - cmq region.
+  * `cmq_region_name` - Cmq region description.
+  * `cmq_region` - Cmq region.
 
 
