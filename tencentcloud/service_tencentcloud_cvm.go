@@ -189,15 +189,12 @@ func (me *CvmService) ModifyInternetMaxBandwidthOut(ctx context.Context, instanc
 	}
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCvmClient().ResetInstancesInternetMaxBandwidth(request)
+	_, err := me.client.UseCvmClient().ResetInstancesInternetMaxBandwidth(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
 	return nil
 }
 

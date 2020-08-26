@@ -200,7 +200,6 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    false,
 				Description: "Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). This value does not need to be set when `allocate_public_ip` is false.",
 			},
 			"allocate_public_ip": {
@@ -953,7 +952,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 		d.SetPartial("internet_max_bandwidth_out")
-		time.Sleep(10 * time.Second)
 		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
