@@ -58,6 +58,7 @@ Anti-DDoS(Dayu)
 Audit
   Data Source
 	tencentcloud_audit_cos_regions
+	tencentcloud_audit_cmq_regions
 
 Auto Scaling(AS)
   Data Source
@@ -641,6 +642,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_users":                     dataSourceTencentCloudCkafkaUsers(),
 			"tencentcloud_ckafka_acls":                      dataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_audit_cos_regions":                dataSourceTencentCloudAuditCosRegions(),
+			"tencentcloud_audit_cmq_regions":                dataSourceTencentCloudAuditCmqRegions(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

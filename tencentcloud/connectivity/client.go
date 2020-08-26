@@ -16,7 +16,7 @@ import (
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
-	auditcos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
+	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -71,7 +71,7 @@ type TencentCloudClient struct {
 	sqlserverConn *sqlserver.Client
 	postgreConn   *postgre.Client
 	ckafkaConn    *ckafka.Client
-	auditcosConn  *auditcos.Client
+	auditConn     *audit.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -446,15 +446,15 @@ func (me *TencentCloudClient) UseCkafkaClient() *ckafka.Client {
 	return me.ckafkaConn
 }
 
-// UseAuditCosClient returns audit cos client for service
-func (me *TencentCloudClient) UseAuditCosClient() *auditcos.Client {
-	if me.auditcosConn != nil {
-		return me.auditcosConn
+// UseAuditClient returns audit client for service
+func (me *TencentCloudClient) UseAuditClient() *audit.Client {
+	if me.auditConn != nil {
+		return me.auditConn
 	}
 
 	cpf := me.NewClientProfile(300)
-	me.auditcosConn, _ = auditcos.NewClient(me.Credential, me.Region, cpf)
-	me.auditcosConn.WithHttpTransport(&LogRoundTripper{})
+	me.auditConn, _ = audit.NewClient(me.Credential, me.Region, cpf)
+	me.auditConn.WithHttpTransport(&LogRoundTripper{})
 
-	return me.auditcosConn
+	return me.auditConn
 }
