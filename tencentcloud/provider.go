@@ -55,6 +55,10 @@ Anti-DDoS(Dayu)
     tencentcloud_dayu_l4_rule
     tencentcloud_dayu_l7_rule
 
+Audit
+  Data Source
+	tencentcloud_audit_cos_regions
+
 Auto Scaling(AS)
   Data Source
     tencentcloud_as_scaling_configs
@@ -173,7 +177,6 @@ COS
   Data Source
     tencentcloud_cos_bucket_object
     tencentcloud_cos_buckets
-	tencentcloud_audit_cos_regions
 
   Resource
     tencentcloud_cos_bucket

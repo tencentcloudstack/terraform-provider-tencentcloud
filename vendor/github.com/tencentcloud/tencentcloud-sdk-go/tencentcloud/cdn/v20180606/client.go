@@ -243,6 +243,7 @@ func NewDescribeCdnIpResponse() (response *DescribeCdnIpResponse) {
 }
 
 // DescribeCdnIp 用于查询 CDN IP 归属。
+// （注意：此接口请求频率限制以 CDN 侧限制为准：200次/10分钟）
 func (c *Client) DescribeCdnIp(request *DescribeCdnIpRequest) (response *DescribeCdnIpResponse, err error) {
     if request == nil {
         request = NewDescribeCdnIpRequest()
@@ -273,6 +274,32 @@ func (c *Client) DescribeCertDomains(request *DescribeCertDomainsRequest) (respo
         request = NewDescribeCertDomainsRequest()
     }
     response = NewDescribeCertDomainsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDistrictIspDataRequest() (request *DescribeDistrictIspDataRequest) {
+    request = &DescribeDistrictIspDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "DescribeDistrictIspData")
+    return
+}
+
+func NewDescribeDistrictIspDataResponse() (response *DescribeDistrictIspDataResponse) {
+    response = &DescribeDistrictIspDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询指定域名的区域、运营商明细数据
+// 注意事项：接口尚未全量开放，未在内测名单中的账号不支持调用
+func (c *Client) DescribeDistrictIspData(request *DescribeDistrictIspDataRequest) (response *DescribeDistrictIspDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeDistrictIspDataRequest()
+    }
+    response = NewDescribeDistrictIspDataResponse()
     err = c.Send(request, response)
     return
 }

@@ -1,5 +1,5 @@
 /*
-Use this data source to query scaling configuration information.
+Use this data source to query the region list supported by the audit cos.
 
 Example Usage
 
@@ -17,7 +17,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	auditcos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -65,13 +65,14 @@ func dataSourceTencentCloudAuditCosRegionsRead(d *schema.ResourceData, meta inte
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cvmService := CvmService{
+	auditCosService := AuditCosService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	var regions []*cvm.RegionInfo
+
+	var regions []*auditcos.CosRegionInfo
 	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		regions, errRet = cvmService.DescribeRegions(ctx)
+		regions, errRet = auditCosService.DescribeRegions(ctx)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
@@ -85,11 +86,11 @@ func dataSourceTencentCloudAuditCosRegionsRead(d *schema.ResourceData, meta inte
 	ids := make([]string, 0, len(regions))
 	for _, region := range regions {
 		mapping := map[string]interface{}{
-			"cos_region":      region.Region,
-			"cos_region_name": region.RegionName,
+			"cos_region":      region.CosRegion,
+			"cos_region_name": region.CosRegionName,
 		}
 		regionList = append(regionList, mapping)
-		ids = append(ids, *region.Region)
+		ids = append(ids, *region.CosRegion)
 	}
 	d.SetId(helper.DataResourceIdsHash(ids))
 	err = d.Set("cos_region_list", regionList)

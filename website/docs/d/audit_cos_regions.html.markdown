@@ -3,12 +3,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_audit_cos_regions"
 sidebar_current: "docs-tencentcloud-datasource-audit_cos_regions"
 description: |-
-  Use this data source to query scaling configuration information.
+  Use this data source to query the region list supported by the audit cos.
 ---
 
 # tencentcloud_audit_cos_regions
 
-Use this data source to query scaling configuration information.
+Use this data source to query the region list supported by the audit cos.
 
 ## Example Usage
 

@@ -1179,10 +1179,82 @@ func (r *DescribeCertDomainsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeDistrictIspDataRequest struct {
+	*tchttp.BaseRequest
+
+	// 域名列表，最多支持20个域名
+	Domains []*string `json:"Domains,omitempty" name:"Domains" list`
+
+	// 查询起始时间，如：2018-09-04 10:40:00，返回结果大于等于指定时间
+	// 支持近 60 天内的数据查询，每次查询时间区间为 3 小时
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 查询结束时间，如：2018-09-04 10:40:00，返回结果小于等于指定时间
+	// 结束时间与起始时间区间最大为 3 小时
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 指定查询指标，支持:
+	// bandwidth：带宽，单位为 bps
+	// request：请求数，单位为 次
+	Metric *string `json:"Metric,omitempty" name:"Metric"`
+
+	// 指定省份查询，不填充表示查询所有省份
+	// 省份、国家/地区编码可以查看 [省份编码映射](https://cloud.tencent.com/document/product/228/6316#.E5.8C.BA.E5.9F.9F-.2F-.E8.BF.90.E8.90.A5.E5.95.86.E6.98.A0.E5.B0.84.E8.A1.A8)
+	Districts []*int64 `json:"Districts,omitempty" name:"Districts" list`
+
+	// 指定运营商查询，不填充表示查询所有运营商
+	// 运营商编码可以查看 [运营商编码映射](https://cloud.tencent.com/document/product/228/6316#.E5.8C.BA.E5.9F.9F-.2F-.E8.BF.90.E8.90.A5.E5.95.86.E6.98.A0.E5.B0.84.E8.A1.A8)
+	Isps []*int64 `json:"Isps,omitempty" name:"Isps" list`
+
+	// 指定协议查询，不填充表示查询所有协议
+	// all：所有协议
+	// http：指定查询 HTTP 对应指标
+	// https：指定查询 HTTPS 对应指标
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// 指定IP协议查询，不填充表示查询所有协议
+	// all：所有协议
+	// ipv4：指定查询 ipv4 对应指标
+	// ipv6：指定查询 ipv6 对应指标
+	// 指定IP协议查询时，不可同时指定省份、运营商查询
+	IpProtocol *string `json:"IpProtocol,omitempty" name:"IpProtocol"`
+}
+
+func (r *DescribeDistrictIspDataRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDistrictIspDataRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeDistrictIspDataResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 地区运营商数据明细
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Data []*DistrictIspInfo `json:"Data,omitempty" name:"Data" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeDistrictIspDataResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDistrictIspDataResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeDomainsConfigRequest struct {
 	*tchttp.BaseRequest
 
-	// 分页查询偏移量，默认为 0 （第一页）
+	// 分页查询偏移量，默认为 0
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
 	// 分页查询限制数目，默认为 100，最大可设置为 1000
@@ -2188,6 +2260,20 @@ type DetailDomain struct {
 	// 访问控制
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AccessControl *AccessControl `json:"AccessControl,omitempty" name:"AccessControl"`
+
+	// 是否支持高级配置项
+	// on：支持
+	// off：不支持
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Advance *string `json:"Advance,omitempty" name:"Advance"`
+
+	// URL重定向配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UrlRedirect *UrlRedirect `json:"UrlRedirect,omitempty" name:"UrlRedirect"`
+
+	// 访问端口配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AccessPort []*int64 `json:"AccessPort,omitempty" name:"AccessPort" list`
 }
 
 type DisableCachesRequest struct {
@@ -2267,6 +2353,45 @@ func (r *DisableClsLogTopicResponse) ToJsonString() string {
 
 func (r *DisableClsLogTopicResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
+}
+
+type DistrictIspInfo struct {
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议类型
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// IP协议类型
+	IpProtocol *string `json:"IpProtocol,omitempty" name:"IpProtocol"`
+
+	// 起始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 时间间隔，单位为分钟
+	Interval *uint64 `json:"Interval,omitempty" name:"Interval"`
+
+	// 指标名称
+	Metric *string `json:"Metric,omitempty" name:"Metric"`
+
+	// 地区ID
+	District *int64 `json:"District,omitempty" name:"District"`
+
+	// 运营商ID
+	Isp *int64 `json:"Isp,omitempty" name:"Isp"`
+
+	// 指标数据点
+	DataPoints []*uint64 `json:"DataPoints,omitempty" name:"DataPoints" list`
+
+	// 地区名称
+	DistrictName *string `json:"DistrictName,omitempty" name:"DistrictName"`
+
+	// 运营商名称
+	IspName *string `json:"IspName,omitempty" name:"IspName"`
 }
 
 type DomainAreaConfig struct {
@@ -3483,6 +3608,9 @@ type PushUrlsCacheRequest struct {
 	// global：预热全球节点
 	// 不填充情况下，默认为 mainland， URL 中域名必须在对应区域启用了加速服务才能提交对应区域的预热任务
 	Area *string `json:"Area,omitempty" name:"Area"`
+
+	// 填写"middle"或不填充时预热至中间层节点
+	Layer *string `json:"Layer,omitempty" name:"Layer"`
 }
 
 func (r *PushUrlsCacheRequest) ToJsonString() string {
@@ -4218,6 +4346,15 @@ type UpdateDomainConfigRequest struct {
 
 	// UA黑白名单配置
 	UserAgentFilter *UserAgentFilter `json:"UserAgentFilter,omitempty" name:"UserAgentFilter"`
+
+	// 访问控制
+	AccessControl *AccessControl `json:"AccessControl,omitempty" name:"AccessControl"`
+
+	// URL重定向配置
+	UrlRedirect *UrlRedirect `json:"UrlRedirect,omitempty" name:"UrlRedirect"`
+
+	// 访问端口配置
+	AccessPort []*int64 `json:"AccessPort,omitempty" name:"AccessPort" list`
 }
 
 func (r *UpdateDomainConfigRequest) ToJsonString() string {
@@ -4344,6 +4481,30 @@ type UrlRecord struct {
 	// 更新时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
+}
+
+type UrlRedirect struct {
+
+	// URL重定向配置开关
+	// on：开启
+	// off：关闭
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// URL重定向规则，当Switch为on时必填，规则数量最大为10个。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PathRules []*UrlRedirectRule `json:"PathRules,omitempty" name:"PathRules" list`
+}
+
+type UrlRedirectRule struct {
+
+	// 重定向状态码，301 | 302
+	RedirectStatusCode *int64 `json:"RedirectStatusCode,omitempty" name:"RedirectStatusCode"`
+
+	// 待匹配的Url模式，支持完全路径匹配和正则匹配，最大长度1024字符。
+	Pattern *string `json:"Pattern,omitempty" name:"Pattern"`
+
+	// 目标URL，必须以“/”开头，最大长度1024字符。
+	RedirectUrl *string `json:"RedirectUrl,omitempty" name:"RedirectUrl"`
 }
 
 type UserAgentFilter struct {
