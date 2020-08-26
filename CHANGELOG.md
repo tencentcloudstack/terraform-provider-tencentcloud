@@ -1,4 +1,10 @@
-## 1.41.1 (Unreleased)
+## 1.42.0 (Unreleased)
+
+FEATURES:
+
+* **New Data Source**: `tencentcloud_audit_cos_regions`
+* **New Data Source**: `tencentcloud_audit_cmq_regions`
+
 ## 1.41.0 (August 17, 2020)
 
 FEATURES:
