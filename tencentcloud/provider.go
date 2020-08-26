@@ -636,6 +636,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_sqlserver_readonly_groups":        dataSourceTencentCloudSqlserverReadonlyGroups(),
 			"tencentcloud_ckafka_users":                     dataSourceTencentCloudCkafkaUsers(),
 			"tencentcloud_ckafka_acls":                      dataSourceTencentCloudCkafkaAcls(),
+			"tencentcloud_audit_cos_regions":                dataSourceTencentCloudAuditCosRegions(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
