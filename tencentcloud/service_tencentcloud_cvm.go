@@ -179,6 +179,28 @@ func (me *CvmService) ModifyPassword(ctx context.Context, instanceId, password s
 	return nil
 }
 
+func (me *CvmService) ModifyInternetMaxBandwidthOut(ctx context.Context, instanceId, internetChargeType string, internetMaxBandWidthOut int64) error {
+	logId := getLogId(ctx)
+	request := cvm.NewResetInstancesInternetMaxBandwidthRequest()
+	request.InstanceIds = []*string{&instanceId}
+	request.InternetAccessible = &cvm.InternetAccessible{
+		InternetChargeType:      &internetChargeType,
+		InternetMaxBandwidthOut: &internetMaxBandWidthOut,
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().ResetInstancesInternetMaxBandwidth(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
 func (me *CvmService) ModifyVpc(ctx context.Context, instanceId, vpcId, subnetId, privateIp string) error {
 	logId := getLogId(ctx)
 	request := cvm.NewModifyInstancesVpcAttributeRequest()

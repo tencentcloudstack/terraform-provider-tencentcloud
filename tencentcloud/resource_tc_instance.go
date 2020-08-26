@@ -200,7 +200,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
+				ForceNew:    false,
 				Description: "Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). This value does not need to be set when `allocate_public_ip` is false.",
 			},
 			"allocate_public_ip": {
@@ -941,6 +941,33 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 		d.SetPartial("tags")
+	}
+
+	if d.HasChange("internet_max_bandwidth_out") {
+		if chargeType := d.Get("internet_charge_type").(string); chargeType != "TRAFFIC_POSTPAID_BY_HOUR" && chargeType != "BANDWIDTH_POSTPAID_BY_HOUR" && chargeType != "BANDWIDTH_PACKAGE" {
+			return fmt.Errorf("bad internet_charge_type.type should be in: TRAFFIC_POSTPAID_BY_HOUR BANDWIDTH_POSTPAID_BY_HOUR BANDWIDTH_PACKAGE")
+		}
+
+		err := cvmService.ModifyInternetMaxBandwidthOut(ctx, instanceId, d.Get("internet_charge_type").(string), d.Get("internet_max_bandwidth_out").(int64))
+		if err != nil {
+			return err
+		}
+		d.SetPartial("internet_max_bandwidth_out")
+		time.Sleep(10 * time.Second)
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
 	}
 
 	d.Partial(false)
