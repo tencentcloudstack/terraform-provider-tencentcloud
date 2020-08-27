@@ -131,7 +131,7 @@ func TestAccTencentCloudInstanceWithNetwork(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithNetwork("false"),
+				Config: testAccTencentCloudInstanceWithNetwork("false", 1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -140,10 +140,11 @@ func TestAccTencentCloudInstanceWithNetwork(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTencentCloudInstanceWithNetwork("true"),
+				Config: testAccTencentCloudInstanceWithNetwork("true", 5),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "internet_max_bandwidth_out", "5"),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttrSet(id, "public_ip"),
 				),
@@ -579,7 +580,7 @@ resource "tencentcloud_instance" "foo" {
 }
 `
 
-func testAccTencentCloudInstanceWithNetwork(hasPublicIp string) string {
+func testAccTencentCloudInstanceWithNetwork(hasPublicIp string, maxBandWidthOut int64) string {
 	return fmt.Sprintf(
 		defaultInstanceVariable+`
 resource "tencentcloud_instance" "foo" {
@@ -588,12 +589,12 @@ resource "tencentcloud_instance" "foo" {
   image_id                   = data.tencentcloud_images.default.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-  internet_max_bandwidth_out = 1
+  internet_max_bandwidth_out = %d
   allocate_public_ip         = %s
   system_disk_type           = "CLOUD_PREMIUM"
 }
 `,
-		hasPublicIp,
+		maxBandWidthOut, hasPublicIp,
 	)
 }
 
