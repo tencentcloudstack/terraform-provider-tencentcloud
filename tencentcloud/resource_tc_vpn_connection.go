@@ -85,12 +85,12 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 					}
 					return old == new
 				},
-				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and not allowed to be used for `CCN` vpn gateway.",
+				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.",
 			},
 			"is_ccn_type": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "Indicate whether is ccn type. Modification of this field only impacts force new login of `vpc_id`. If `is_ccn_type` is true, modification of `vpc_id` will be ignored.",
+				Description: "Indicate whether is ccn type. Modification of this field only impacts force new logic of `vpc_id`. If `is_ccn_type` is true, modification of `vpc_id` will be ignored.",
 			},
 			"customer_gateway_id": {
 				Type:        schema.TypeString,
