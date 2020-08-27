@@ -3221,3 +3221,39 @@ func (me *VpcService) DeleteAclAttachment(ctx context.Context, attachmentAcl str
 	}
 	return
 }
+
+func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (has bool, gateway *vpc.VpnGateway, err error) {
+	var (
+		logId    = getLogId(ctx)
+		request  = vpc.NewDescribeVpnGatewaysRequest()
+		response *vpc.DescribeVpnGatewaysResponse
+	)
+	request.VpnGatewayIds = []*string{&vpngwId}
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		response, err = me.client.UseVpcClient().DescribeVpnGateways(request)
+		if err != nil {
+			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if !ok {
+				return retryError(err)
+			}
+			if ee.Code == VPCNotFound {
+				return nil
+			} else {
+				return retryError(err)
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]", logId, request.GetAction(), request.ToJsonString(), err)
+		return
+	}
+	if len(response.Response.VpnGatewaySet) < 1 {
+		has = false
+		return
+	}
+
+	gateway = response.Response.VpnGatewaySet[0]
+	has = true
+	return
+}
