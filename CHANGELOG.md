@@ -7,7 +7,7 @@ BUG FIXES:
 
 ENHANCEMENTS:
 
-* Resource: `tencentcloud_instance` support for adjusting `internet_max_bandwidth_out` without forceNew when attribute `internet_charge_type` within `TRAFFIC_POSTPAID_BY_HOUR` `BANDWIDTH_POSTPAID_BY_HOUR` `BANDWIDTH_PACKAGE`.
+* Resource: `tencentcloud_instance` support for adjusting `internet_max_bandwidth_out` without forceNew when attribute `internet_charge_type` within `TRAFFIC_POSTPAID_BY_HOUR`,`BANDWIDTH_POSTPAID_BY_HOUR`,`BANDWIDTH_PACKAGE`.
 
 ## 1.41.0 (August 17, 2020)
 
