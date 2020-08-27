@@ -92,7 +92,7 @@ The following arguments are supported:
 * `instance_name` - (Optional) The name of the CVM. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.
 * `instance_type` - (Optional) The type of instance to start.
 * `internet_charge_type` - (Optional, ForceNew) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value does not need to be set when `allocate_public_ip` is false.
-* `internet_max_bandwidth_out` - (Optional, ForceNew) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). This value does not need to be set when `allocate_public_ip` is false.
+* `internet_max_bandwidth_out` - (Optional) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). This value does not need to be set when `allocate_public_ip` is false.
 * `key_name` - (Optional) The key pair to use for the instance, it looks like skey-16jig7tx.
 * `password` - (Optional) Password to an instance. In order to take effect new password, the instance will be restarted after modifying the password.
 * `placement_group_id` - (Optional, ForceNew) The id of a placement group.

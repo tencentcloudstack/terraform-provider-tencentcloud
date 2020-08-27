@@ -943,15 +943,17 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("internet_max_bandwidth_out") {
-		if chargeType := d.Get("internet_charge_type").(string); chargeType != "TRAFFIC_POSTPAID_BY_HOUR" && chargeType != "BANDWIDTH_POSTPAID_BY_HOUR" && chargeType != "BANDWIDTH_PACKAGE" {
-			return fmt.Errorf("bad internet_charge_type.type should be in: TRAFFIC_POSTPAID_BY_HOUR BANDWIDTH_POSTPAID_BY_HOUR BANDWIDTH_PACKAGE")
+		chargeType := d.Get("internet_charge_type").(string)
+		if chargeType != "TRAFFIC_POSTPAID_BY_HOUR" && chargeType != "BANDWIDTH_POSTPAID_BY_HOUR" && chargeType != "BANDWIDTH_PACKAGE" {
+			return fmt.Errorf("charge type should be one of `TRAFFIC_POSTPAID_BY_HOUR BANDWIDTH_POSTPAID_BY_HOUR BANDWIDTH_PACKAGE` when adjusting internet_max_bandwidth_out")
 		}
 
-		err := cvmService.ModifyInternetMaxBandwidthOut(ctx, instanceId, d.Get("internet_charge_type").(string), d.Get("internet_max_bandwidth_out").(int64))
+		err := cvmService.ModifyInternetMaxBandwidthOut(ctx, instanceId, chargeType, int64(d.Get("internet_max_bandwidth_out").(int)))
 		if err != nil {
 			return err
 		}
 		d.SetPartial("internet_max_bandwidth_out")
+		time.Sleep(1 * time.Second)
 		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 			if errRet != nil {
