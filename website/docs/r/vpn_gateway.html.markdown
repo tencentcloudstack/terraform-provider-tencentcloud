@@ -58,7 +58,7 @@ The following arguments are supported:
 * `prepaid_renew_flag` - (Optional) Flag indicates whether to renew or not, valid values are `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`. This para can only be set to take effect in create operation.
 * `tags` - (Optional) A list of tags used to associate different resources.
 * `type` - (Optional) Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`. Note: CCN type is only for whitelist customer now.
-* `vpc_id` - (Optional, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense if vpn gateway is in `CCN` type.
+* `vpc_id` - (Optional, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` type, and not allowed to be used if vpn gateway is in `CCN` type.
 
 ## Attributes Reference
 

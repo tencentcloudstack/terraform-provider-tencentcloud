@@ -76,10 +76,21 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Description:  "Name of the VPN connection. The length of character is limited to 1-60.",
 			},
 			"vpc_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.",
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					if v, ok := d.GetOk("is_ccn_type"); ok && v.(bool) {
+						return true
+					}
+					return old == new
+				},
+				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and not allowed to be used for `CCN` vpn gateway.",
+			},
+			"is_ccn_type": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicate whether is ccn type. Modification of this field only impacts force new login of `vpc_id`. If `is_ccn_type` is true, modification of `vpc_id` will be ignored.",
 			},
 			"customer_gateway_id": {
 				Type:        schema.TypeString,
@@ -274,37 +285,20 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpn_connection.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var (
+		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	)
 
 	// pre check vpn gateway id
-	requestVpngw := vpc.NewDescribeVpnGatewaysRequest()
-	requestVpngw.VpnGatewayIds = []*string{helper.String(d.Get("vpn_gateway_id").(string))}
-	var responseVpngw *vpc.DescribeVpnGatewaysResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(requestVpngw)
-		if e != nil {
-			ee, ok := e.(*errors.TencentCloudSDKError)
-			if !ok {
-				return retryError(e)
-			}
-			if ee.Code == VPCNotFound {
-				return nil
-			} else {
-				return retryError(e)
-			}
-		}
-		responseVpngw = result
-		return nil
-	})
+	has, gateway, err := service.DescribeVpngwById(ctx, d.Get("vpn_gateway_id").(string))
 	if err != nil {
 		return err
 	}
-	if len(responseVpngw.Response.VpnGatewaySet) < 1 {
+	if !has {
 		return fmt.Errorf("[CRITAL] vpn_gateway_id %s doesn't exist", d.Get("vpn_gateway_id").(string))
 	}
-
-	gateway := responseVpngw.Response.VpnGatewaySet[0]
 
 	// create vpn connection
 	request := vpc.NewCreateVpnConnectionRequest()
@@ -519,8 +513,11 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_vpn_connection.read")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var (
+		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	)
 
 	connectionId := d.Id()
 	request := vpc.NewDescribeVpnConnectionsRequest()
@@ -550,6 +547,22 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("name", *connection.VpnConnectionName)
 	_ = d.Set("create_time", *connection.CreatedTime)
 	_ = d.Set("vpn_gateway_id", *connection.VpnGatewayId)
+
+	// get vpngw type
+	has, gateway, err := service.DescribeVpngwById(ctx, d.Get("vpn_gateway_id").(string))
+	if err != nil {
+		log.Printf("[CRITAL]%s read vpn_geteway failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	if !has {
+		return fmt.Errorf("[CRITAL] vpn_gateway_id %s doesn't exist", d.Get("vpn_gateway_id").(string))
+	}
+
+	if *gateway.Type != "CCN" {
+		_ = d.Set("vpc_id", *connection.VpcId)
+	}
+
+	_ = d.Set("is_ccn_type", *gateway.Type == "CCN")
 	_ = d.Set("customer_gateway_id", *connection.CustomerGatewayId)
 	_ = d.Set("pre_share_key", *connection.PreShareKey)
 	//set up SPD

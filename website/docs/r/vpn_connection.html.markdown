@@ -71,7 +71,7 @@ The following arguments are supported:
 * `ipsec_sa_lifetime_seconds` - (Optional) SA lifetime of the IPSEC operation specification, unit is `second`. The value ranges from 180 to 604800. Default value is 3600 seconds.
 * `ipsec_sa_lifetime_traffic` - (Optional) SA lifetime of the IPSEC operation specification, unit is `KB`. The value should not be less then 2560. Default value is 1843200.
 * `tags` - (Optional) A list of tags used to associate different resources.
-* `vpc_id` - (Optional, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.
+* `vpc_id` - (Optional, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` type, and not allowed to be used for `CCN` vpn gateway.
 
 The `security_group_policy` object supports the following:
 
@@ -85,6 +85,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Create time of the VPN connection.
 * `encrypt_proto` - Encrypt proto of the VPN connection.
+* `is_ccn_type` - Indicate whether is ccn type. Modification of this field only impacts force new login of `vpc_id`. If `is_ccn_type` is true, modification of `vpc_id` will be ignored.
 * `net_status` - Net status of the VPN connection, values are `AVAILABLE`.
 * `route_type` - Route type of the VPN connection.
 * `state` - State of the connection, values are `PENDING`, `AVAILABLE`, `DELETING`.

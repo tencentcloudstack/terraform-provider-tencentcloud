@@ -76,10 +76,16 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Description:  "Name of the VPN gateway. The length of character is limited to 1-60.",
 			},
 			"vpc_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense if vpn gateway is in `CCN` type.",
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					if v, ok := d.GetOk("type"); ok && v.(string) == "CCN" {
+						return true
+					}
+					return old == new
+				},
+				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and not allowed to be used if vpn gateway is in `CCN` type.",
 			},
 			"bandwidth": {
 				Type:        schema.TypeInt,
@@ -270,43 +276,22 @@ func resourceTencentCloudVpnGatewayRead(d *schema.ResourceData, meta interface{}
 	defer logElapsed("resource.tencentcloud_vpn_gateway.read")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var (
+		logId     = getLogId(contextNil)
+		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
+		service   = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		gatewayId = d.Id()
+	)
 
-	gatewayId := d.Id()
-	request := vpc.NewDescribeVpnGatewaysRequest()
-	request.VpnGatewayIds = []*string{&gatewayId}
-	var response *vpc.DescribeVpnGatewaysResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(request)
-		if e != nil {
-			ee, ok := e.(*errors.TencentCloudSDKError)
-			if !ok {
-				return retryError(e)
-			}
-			if ee.Code == VPCNotFound {
-				log.Printf("[CRITAL]%s api[%s] success, request body [%s], reason[%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return nil
-			} else {
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return retryError(e)
-			}
-		}
-		response = result
-		return nil
-	})
+	has, gateway, err := service.DescribeVpngwById(ctx, gatewayId)
 	if err != nil {
 		log.Printf("[CRITAL]%s read VPN gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	if len(response.Response.VpnGatewaySet) < 1 {
+	if !has {
 		d.SetId("")
 		return nil
 	}
-
-	gateway := response.Response.VpnGatewaySet[0]
 
 	_ = d.Set("name", gateway.VpnGatewayName)
 	_ = d.Set("public_ip_address", gateway.PublicIpAddress)
