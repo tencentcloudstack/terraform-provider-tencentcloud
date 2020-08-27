@@ -27,7 +27,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `cmq_region_list` - List of available zones supported by cmq.
+* `audit_cmq_region_list` - List of available regions supported by audit cmq.
   * `cmq_region_name` - Cmq region description.
   * `cmq_region` - Cmq region.
 

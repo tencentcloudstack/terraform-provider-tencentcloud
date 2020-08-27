@@ -17,9 +17,9 @@ func TestAccTencentCloudAuditCmqRegionsDataSource(t *testing.T) {
 				Config: testAccTencentCloudAuditCmqRegionsDataSourceConfigWithWebsite,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_audit_cmq_regions.all"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_audit_cmq_regions.all", "cmq_region_list.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_audit_cmq_regions.all", "cmq_region_list.0.cmq_region"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_audit_cmq_regions.all", "cmq_region_list.0.cmq_region_name"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_audit_cmq_regions.all", "audit_cmq_region_list.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_audit_cmq_regions.all", "audit_cmq_region_list.0.cmq_region"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_audit_cmq_regions.all", "audit_cmq_region_list.0.cmq_region_name"),
 				),
 			},
 		},

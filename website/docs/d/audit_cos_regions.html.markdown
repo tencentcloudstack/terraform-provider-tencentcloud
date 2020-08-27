@@ -27,7 +27,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `cos_region_list` - List of available zones supported by cos.
+* `audit_cos_region_list` - List of available regions supported by audit cos.
   * `cos_region_name` - Cos region description.
   * `cos_region` - Cos region.
 

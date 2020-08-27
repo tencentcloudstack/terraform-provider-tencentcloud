@@ -30,10 +30,10 @@ func dataSourceTencentCloudAuditCmqRegions() *schema.Resource {
 				Optional:    true,
 				Description: "Used to save results.",
 			},
-			"cmq_region_list": {
+			"audit_cmq_region_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "List of available zones supported by cmq.",
+				Description: "List of available regions supported by audit cmq.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cmq_region": {
@@ -86,7 +86,7 @@ func dataSourceTencentCloudAuditCmqRegionsRead(d *schema.ResourceData, meta inte
 		ids = append(ids, *region.CmqRegion)
 	}
 	d.SetId(helper.DataResourceIdsHash(ids))
-	err = d.Set("cmq_region_list", regionList)
+	err = d.Set("audit_cmq_region_list", regionList)
 	if err != nil {
 		log.Printf("[CRITAL]%s audit cmq read regions list fail, reason:%s\n ", logId, err.Error())
 		return err

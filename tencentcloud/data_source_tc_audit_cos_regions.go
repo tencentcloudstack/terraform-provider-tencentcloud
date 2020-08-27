@@ -30,10 +30,10 @@ func dataSourceTencentCloudAuditCosRegions() *schema.Resource {
 				Optional:    true,
 				Description: "Used to save results.",
 			},
-			"cos_region_list": {
+			"audit_cos_region_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "List of available zones supported by cos.",
+				Description: "List of available regions supported by audit cos.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cos_region": {
@@ -86,7 +86,7 @@ func dataSourceTencentCloudAuditCosRegionsRead(d *schema.ResourceData, meta inte
 		ids = append(ids, *region.CosRegion)
 	}
 	d.SetId(helper.DataResourceIdsHash(ids))
-	err = d.Set("cos_region_list", regionList)
+	err = d.Set("audit_cos_region_list", regionList)
 	if err != nil {
 		log.Printf("[CRITAL]%s audit cos read regions list fail, reason:%s\n ", logId, err.Error())
 		return err
