@@ -110,7 +110,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Description: "Pre-shared key of the VPN connection.",
 			},
 			"security_group_policy": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Required:    true,
 				Description: "Security group policy of the VPN connection.",
 				Elem: &schema.Resource{
@@ -320,7 +320,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 
 	//set up  SecurityPolicyDatabases
 
-	sgps := d.Get("security_group_policy").([]interface{})
+	sgps := d.Get("security_group_policy").(*schema.Set).List()
 	if len(sgps) < 1 {
 		return fmt.Errorf("Para `security_group_policy` should be set at least one.")
 	}
@@ -639,13 +639,13 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 
 	//set up  SecurityPolicyDatabases
 	if d.HasChange("security_group_policy") {
-		sgps := d.Get("security_group_policy").([]interface{})
+		sgps := d.Get("security_group_policy").(*schema.Set).List()
 		if len(sgps) < 1 {
 			return fmt.Errorf("Para `security_group_policy` should be set at least one.")
 		}
+		request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
 		for _, v := range sgps {
 			m := v.(map[string]interface{})
-			request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
 			var sgp vpc.SecurityPolicyDatabase
 			local := m["local_cidr_block"].(string)
 			sgp.LocalCidrBlock = &local

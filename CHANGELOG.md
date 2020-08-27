@@ -1,4 +1,8 @@
 ## 1.41.2 (Unreleased)
+
+BUG FIXES:
+* Resource: `tencentcloud_vpn_connection` fix `security_group_policy` update issue when apply repeatedly.
+
 ## 1.41.1 (August 27, 2020)
 
 BUG FIXES:
