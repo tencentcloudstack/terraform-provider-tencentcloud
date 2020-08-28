@@ -54,6 +54,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -528,6 +529,10 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
+			if ok && ee.Code == VPCNotFound {
+				return nil
+			}
 			return retryError(e)
 		}
 
@@ -538,7 +543,7 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 		log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	if len(response.Response.VpnConnectionSet) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.VpnConnectionSet) < 1 {
 		d.SetId("")
 		return nil
 	}
