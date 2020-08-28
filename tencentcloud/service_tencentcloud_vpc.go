@@ -3248,7 +3248,7 @@ func (me *VpcService) DescribeVpngwById(ctx context.Context, vpngwId string) (ha
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]", logId, request.GetAction(), request.ToJsonString(), err)
 		return
 	}
-	if len(response.Response.VpnGatewaySet) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.VpnGatewaySet) < 1 {
 		has = false
 		return
 	}
