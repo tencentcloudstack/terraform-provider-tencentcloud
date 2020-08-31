@@ -54,6 +54,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -76,10 +77,21 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Description:  "Name of the VPN connection. The length of character is limited to 1-60.",
 			},
 			"vpc_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					if v, ok := d.GetOk("is_ccn_type"); ok && v.(bool) {
+						return true
+					}
+					return old == new
+				},
 				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.",
+			},
+			"is_ccn_type": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Indicate whether is ccn type. Modification of this field only impacts force new logic of `vpc_id`. If `is_ccn_type` is true, modification of `vpc_id` will be ignored.",
 			},
 			"customer_gateway_id": {
 				Type:        schema.TypeString,
@@ -99,7 +111,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Description: "Pre-shared key of the VPN connection.",
 			},
 			"security_group_policy": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Required:    true,
 				Description: "Security group policy of the VPN connection.",
 				Elem: &schema.Resource{
@@ -274,37 +286,20 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_vpn_connection.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var (
+		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	)
 
 	// pre check vpn gateway id
-	requestVpngw := vpc.NewDescribeVpnGatewaysRequest()
-	requestVpngw.VpnGatewayIds = []*string{helper.String(d.Get("vpn_gateway_id").(string))}
-	var responseVpngw *vpc.DescribeVpnGatewaysResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnGateways(requestVpngw)
-		if e != nil {
-			ee, ok := e.(*errors.TencentCloudSDKError)
-			if !ok {
-				return retryError(e)
-			}
-			if ee.Code == VPCNotFound {
-				return nil
-			} else {
-				return retryError(e)
-			}
-		}
-		responseVpngw = result
-		return nil
-	})
+	has, gateway, err := service.DescribeVpngwById(ctx, d.Get("vpn_gateway_id").(string))
 	if err != nil {
 		return err
 	}
-	if len(responseVpngw.Response.VpnGatewaySet) < 1 {
+	if !has {
 		return fmt.Errorf("[CRITAL] vpn_gateway_id %s doesn't exist", d.Get("vpn_gateway_id").(string))
 	}
-
-	gateway := responseVpngw.Response.VpnGatewaySet[0]
 
 	// create vpn connection
 	request := vpc.NewCreateVpnConnectionRequest()
@@ -315,6 +310,9 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 		}
 		request.VpcId = helper.String(d.Get("vpc_id").(string))
 	} else {
+		if _, ok := d.GetOk("vpc_id"); ok {
+			return fmt.Errorf("[CRITAL] vpc_id doesn't make sense when vpn gateway is in CCN type")
+		}
 		request.VpcId = helper.String("")
 	}
 	request.VpnGatewayId = helper.String(d.Get("vpn_gateway_id").(string))
@@ -323,7 +321,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 
 	//set up  SecurityPolicyDatabases
 
-	sgps := d.Get("security_group_policy").([]interface{})
+	sgps := d.Get("security_group_policy").(*schema.Set).List()
 	if len(sgps) < 1 {
 		return fmt.Errorf("Para `security_group_policy` should be set at least one.")
 	}
@@ -516,8 +514,11 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_vpn_connection.read")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var (
+		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	)
 
 	connectionId := d.Id()
 	request := vpc.NewDescribeVpnConnectionsRequest()
@@ -528,6 +529,10 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
+			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
+			if ok && ee.Code == VPCNotFound {
+				return nil
+			}
 			return retryError(e)
 		}
 
@@ -538,16 +543,31 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 		log.Printf("[CRITAL]%s read VPN connection failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	if len(response.Response.VpnConnectionSet) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.VpnConnectionSet) < 1 {
 		d.SetId("")
 		return nil
 	}
 
 	connection := response.Response.VpnConnectionSet[0]
 	_ = d.Set("name", *connection.VpnConnectionName)
-	_ = d.Set("vpc_id", *connection.VpcId)
 	_ = d.Set("create_time", *connection.CreatedTime)
 	_ = d.Set("vpn_gateway_id", *connection.VpnGatewayId)
+
+	// get vpngw type
+	has, gateway, err := service.DescribeVpngwById(ctx, d.Get("vpn_gateway_id").(string))
+	if err != nil {
+		log.Printf("[CRITAL]%s read vpn_geteway failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	if !has {
+		return fmt.Errorf("[CRITAL] vpn_gateway_id %s doesn't exist", d.Get("vpn_gateway_id").(string))
+	}
+
+	if *gateway.Type != "CCN" {
+		_ = d.Set("vpc_id", *connection.VpcId)
+	}
+
+	_ = d.Set("is_ccn_type", *gateway.Type == "CCN")
 	_ = d.Set("customer_gateway_id", *connection.CustomerGatewayId)
 	_ = d.Set("pre_share_key", *connection.PreShareKey)
 	//set up SPD
@@ -624,13 +644,13 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 
 	//set up  SecurityPolicyDatabases
 	if d.HasChange("security_group_policy") {
-		sgps := d.Get("security_group_policy").([]interface{})
+		sgps := d.Get("security_group_policy").(*schema.Set).List()
 		if len(sgps) < 1 {
 			return fmt.Errorf("Para `security_group_policy` should be set at least one.")
 		}
+		request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
 		for _, v := range sgps {
 			m := v.(map[string]interface{})
-			request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
 			var sgp vpc.SecurityPolicyDatabase
 			local := m["local_cidr_block"].(string)
 			sgp.LocalCidrBlock = &local

@@ -85,6 +85,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Create time of the VPN connection.
 * `encrypt_proto` - Encrypt proto of the VPN connection.
+* `is_ccn_type` - Indicate whether is ccn type. Modification of this field only impacts force new logic of `vpc_id`. If `is_ccn_type` is true, modification of `vpc_id` will be ignored.
 * `net_status` - Net status of the VPN connection, values are `AVAILABLE`.
 * `route_type` - Route type of the VPN connection.
 * `state` - State of the connection, values are `PENDING`, `AVAILABLE`, `DELETING`.
