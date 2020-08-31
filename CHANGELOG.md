@@ -1,4 +1,24 @@
-## 1.41.1 (Unreleased)
+## 1.41.3 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_ckafka_topic`
+* **New Data Source**: `tencentcloud_ckafka_topics`
+
+## 1.41.2 (August 28, 2020)
+
+BUG FIXES:
+* Resource: `tencentcloud_vpn_connection` fix `security_group_policy` update issue when apply repeatedly.
+* Resource: `tencentcloud_vpn_connection` fix inconsistent state when deleted on console.
+
+## 1.41.1 (August 27, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_vpn_gateway` fix force new issue when apply repeatedly.
+* Resource: `tencentcloud_vpn_connection` fix force new issue when apply repeatedly.
+* Resource: `tencentcloud_instance` support for adjusting `internet_max_bandwidth_out` without forceNew when attribute `internet_charge_type` within `TRAFFIC_POSTPAID_BY_HOUR`,`BANDWIDTH_POSTPAID_BY_HOUR`,`BANDWIDTH_PACKAGE` ([#498](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/498)).
+
 ## 1.41.0 (August 17, 2020)
 
 FEATURES:
