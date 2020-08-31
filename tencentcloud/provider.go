@@ -86,10 +86,12 @@ Ckafka
   Data Source
     tencentcloud_ckafka_users
     tencentcloud_ckafka_acls
+	tencentcloud_ckafka_topics
 
   Resource
     tencentcloud_ckafka_user
     tencentcloud_ckafka_acl
+	tencentcloud_ckafka_topic
 
 Cloud Access Management(CAM)
   Data Source
@@ -643,6 +645,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_acls":                      dataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_audit_cos_regions":                dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_cmq_regions":                dataSourceTencentCloudAuditCmqRegions(),
+			"tencentcloud_ckafka_topics":                    dataSourceTencentCloudCkafkaTopics(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -764,6 +767,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_sqlserver_readonly_instance":     resourceTencentCloudSqlserverReadonlyInstance(),
 			"tencentcloud_ckafka_user":                     resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                      resourceTencentCloudCkafkaAcl(),
+			"tencentcloud_ckafka_topic":                    resourceTencentCloudCkafkaTopic(),
 		},
 
 		ConfigureFunc: providerConfigure,
