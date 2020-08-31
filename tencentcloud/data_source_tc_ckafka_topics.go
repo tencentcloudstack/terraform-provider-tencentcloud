@@ -149,50 +149,6 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 							Computed:    true,
 							Description: "Number of bytes rolled by shard.",
 						},
-						//"config": {
-						//	Type:        schema.TypeList,
-						//	Computed:    true,
-						//	Description: "A list of instances. Each element contains the following attributes.",
-						//	Elem: &schema.Resource{
-						//		Schema: map[string]*schema.Schema{
-						//			"retention": {
-						//				Type:        schema.TypeInt,
-						//				Computed:    true,
-						//				Description: "Message can be selected. Retention time, unit ms, the current minimum value is 60000ms.",
-						//			},
-						//			"min_in_sync_replicas": {
-						//				Type:        schema.TypeInt,
-						//				Computed:    true,
-						//				Description: "Min number of sync replicas, Default is 1.",
-						//			},
-						//			"clean_up_policy": {
-						//				Type:        schema.TypeString,
-						//				Computed:    true,
-						//				Description: "Clear log policy, log clear mode, the default is delete. delete: logs are deleted according to the storage time, compact: logs are compressed according to the key, compact, delete: logs are compressed according to the key and will be deleted according to the storage time.",
-						//			},
-						//			"unclean_leader_election_enable": {
-						//				Type:        schema.TypeInt,
-						//				Computed:    true,
-						//				Description: "Whether to allow unsynchronized replicas to be selected as leader, false: not allowed, true: allowed, not allowed by default.",
-						//			},
-						//			"max_message_bytes": {
-						//				Type:        schema.TypeInt,
-						//				Computed:    true,
-						//				Description: "Max message bytes.",
-						//			},
-						//			"segment_ms": {
-						//				Type:        schema.TypeInt,
-						//				Computed:    true,
-						//				Description: "Segment scrolling time, in ms, the current minimum is 3600000ms.",
-						//			},
-						//			"segment_bytes": {
-						//				Type:        schema.TypeInt,
-						//				Computed:    true,
-						//				Description: "Number of bytes rolled by shard.",
-						//			},
-						//		},
-						//	},
-						//},
 					},
 				},
 			},
@@ -245,7 +201,6 @@ func dataSourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interfac
 			"max_message_bytes":              topic.Config.MaxMessageBytes,
 			"segment":                        topic.Config.SegmentMs,
 			"segment_bytes":                  topic.Config.SegmentBytes,
-			//"config":              configs,
 		}
 		resourceId := instanceId + FILED_SP + *topic.TopicName
 		instanceList = append(instanceList, instance)

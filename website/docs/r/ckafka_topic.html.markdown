@@ -63,9 +63,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-ckafka topic instance can be imported using the id, e.g.
+ckafka topic instance can be imported using the instance_id#topic_name, e.g.
 
 ```
-$ terraform import tencentcloud_ckafka_topic.foo ckafka-cda1iex1
+$ terraform import tencentcloud_ckafka_topic.foo ckafka-f9ife4zz#example
 ```
 
