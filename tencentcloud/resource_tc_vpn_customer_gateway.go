@@ -177,7 +177,7 @@ func resourceTencentCloudVpnCustomerGatewayRead(d *schema.ResourceData, meta int
 		log.Printf("[CRITAL]%s read VPN customer gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
-	if len(response.Response.CustomerGatewaySet) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.CustomerGatewaySet) < 1 {
 		d.SetId("")
 		return nil
 	}
