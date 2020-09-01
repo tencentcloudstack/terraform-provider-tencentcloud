@@ -1,5 +1,5 @@
 /*
-Use this data source to query detailed information of ckafka topic instances.
+Use this data source to query detailed information of ckafka topic.
 
 Example Usage
 
@@ -67,7 +67,7 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 						"topic_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-). The length range is from 1 to 64.",
+							Description: "Name of the CKafka topic.",
 						},
 						"partition_num": {
 							Type:        schema.TypeInt,
@@ -77,12 +77,12 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 						"replica_num": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "The number of replica, the maximum is 3.",
+							Description: "The number of replica.",
 						},
 						"note": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The subject note is a string of no more than 64 characters. It must start with a letter, and the remaining part can contain letters, numbers and dashes (-).",
+							Description: "Topic note description.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -117,17 +117,17 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 						"retention": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Message can be selected. Retention time, unit ms, the current minimum value is 60000ms.",
+							Description: "Message can be selected. Retention time, unit ms.",
 						},
 						"sync_replica_min_num": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Min number of sync replicas, Default is 1.",
+							Description: "Min number of sync replicas.",
 						},
 						"clean_up_policy": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Clear log policy, log clear mode, the default is delete. delete: logs are deleted according to the storage time, compact: logs are compressed according to the key, compact, delete: logs are compressed according to the key and will be deleted according to the storage time.",
+							Description: "Clear log policy, log clear mode. delete: logs are deleted according to the storage time, compact: logs are compressed according to the key, compact, delete: logs are compressed according to the key and will be deleted according to the storage time.",
 						},
 						"unclean_leader_election_enable": {
 							Type:        schema.TypeInt,
@@ -142,7 +142,7 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 						"segment": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Segment scrolling time, in ms, the current minimum is 3600000ms.",
+							Description: "Segment scrolling time, in ms.",
 						},
 						"segment_bytes": {
 							Type:        schema.TypeInt,
@@ -181,7 +181,6 @@ func dataSourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interfac
 	ids := make([]string, 0, len(topicDetails))
 
 	for _, topic := range topicDetails {
-		//configs := []*ckafka.Config{topic.Config}
 		instance := map[string]interface{}{
 			"topic_name":                     topic.TopicName,
 			"topic_id":                       topic.TopicId,

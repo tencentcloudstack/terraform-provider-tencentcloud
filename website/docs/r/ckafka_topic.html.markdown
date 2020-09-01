@@ -38,7 +38,7 @@ The following arguments are supported:
 * `partition_num` - (Required) The number of partition.
 * `replica_num` - (Required) The number of replica, the maximum is 3.
 * `topic_name` - (Required) Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-). The length range is from 1 to 64.
-* `clean_up_policy` - (Optional) Clear log policy, log clear mode, the default is delete. delete: logs are deleted according to the storage time, compact: logs are compressed according to the key, compact, delete: logs are compressed according to the key and will be deleted according to the storage time.
+* `clean_up_policy` - (Optional) Clear log policy, log clear mode, the default is `delete`. `delete`: logs are deleted according to the storage time, `compact`: logs are compressed according to the key, compact, delete: logs are compressed according to the key and will be deleted according to the storage time.
 * `enable_white_list` - (Optional) IP Whitelist switch, 1: open; 0: close.
 * `ip_white_list` - (Optional) Ip whitelist, quota limit, required when enableWhileList=1.
 * `max_message_bytes` - (Optional) Max message bytes.

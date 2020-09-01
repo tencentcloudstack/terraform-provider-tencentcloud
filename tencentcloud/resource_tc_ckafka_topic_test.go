@@ -8,7 +8,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 )
 
 func TestAccTencentCloudKafkaTopic(t *testing.T) {
@@ -22,7 +21,7 @@ func TestAccTencentCloudKafkaTopic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKafkaTopicInstanceExists("tencentcloud_ckafka_topic.kafka_topic"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "instance_id", "ckafka-f9ife4zz"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "topic_name", "topic-tf-test"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "topic_name", "ckafka-topic-tf-test"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "note", "this is test ckafka topic"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "replica_num", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "partition_num", "1"),
@@ -66,7 +65,6 @@ func testAccTencentCloudKafkaTopicDestory(s *terraform.State) error {
 		if r.Type != "tencentcloud_ckafka_topic" {
 			continue
 		}
-
 		split := strings.Split(r.Primary.ID, FILED_SP)
 		if len(split) < 2 {
 			continue
@@ -76,28 +74,19 @@ func testAccTencentCloudKafkaTopicDestory(s *terraform.State) error {
 		if err != nil {
 			return err
 		}
+		//ckafka does not exist
 		if !has {
-			return fmt.Errorf("ckafka %s is not exists", split[0])
+			return nil
 		}
 		//check ckafka topic
-		var topicinfo *ckafka.TopicDetail
-		outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			topic, _, err := ckafkcService.DescribeCkafkaTopicByName(ctx, split[0], split[1])
-			topicinfo = topic
-			if err != nil {
-				return nil
-			}
-			return nil
-		})
-		if outErr != nil {
-			return outErr
+		_, has, error := ckafkcService.DescribeCkafkaTopicByName(ctx, split[0], split[1])
+		if error != nil {
+			return error
 		}
-		if topicinfo == nil {
+		if !has {
 			return nil
 		}
-		if *topicinfo.TopicName == split[0] {
-			return fmt.Errorf("ckafka topic %s is still existing", split[1])
-		}
+		return fmt.Errorf("ckafka topic still exists: %s", r.Primary.ID)
 	}
 	return nil
 }
@@ -119,34 +108,31 @@ func testAccCheckKafkaTopicInstanceExists(n string) resource.TestCheckFunc {
 		}
 		split := strings.Split(rs.Primary.ID, FILED_SP)
 		if len(split) < 2 {
-			return fmt.Errorf("ckafka topic is not set")
+			return fmt.Errorf("ckafka topic is not set: %s", rs.Primary.ID)
 		}
-		var topicinfo *ckafka.TopicDetail
+		var exist bool
 		outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, _, inErr := ckafkcService.DescribeCkafkaTopicByName(ctx, split[0], split[1])
+			_, has, inErr := ckafkcService.DescribeCkafkaTopicByName(ctx, split[0], split[1])
 			if inErr != nil {
 				return retryError(inErr)
-
 			}
+			exist = has
 			return nil
 		})
 		if outErr != nil {
 			return outErr
 		}
-		if topicinfo == nil {
-			return nil
+		if !exist {
+			return fmt.Errorf("ckafka topic doesn't exist: %s", rs.Primary.ID)
 		}
-		if *topicinfo.TopicName == split[0] {
-			return fmt.Errorf("ckafka topic %s is still existing", split[1])
-		}
-		return fmt.Errorf("ckafka topic %s is not found", rs.Primary.ID)
+		return nil
 	}
 }
 
 const testAccKafkaTopicInstance = `
 resource "tencentcloud_ckafka_topic" "kafka_topic" {
 	instance_id						= "ckafka-f9ife4zz"
-	topic_name						= "topic-tf-test"
+	topic_name						= "ckafka-topic-tf-test"
 	note							= "this is test ckafka topic"
 	replica_num						= 2
 	partition_num					= 1
@@ -164,7 +150,7 @@ resource "tencentcloud_ckafka_topic" "kafka_topic" {
 const testAccKafkaTopicInstanceUpdate = `
 resource "tencentcloud_ckafka_topic" "kafka_topic" {
 	instance_id						= "ckafka-f9ife4zz"
-	topic_name						= "topic-tf-test"
+	topic_name						= "ckafka-topic-tf-test"
 	note							= "this is test topic_update"
 	replica_num						= 2
 	partition_num					= 1
