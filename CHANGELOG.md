@@ -1,4 +1,9 @@
 ## 1.41.3 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_vpc_acl_attachment` perfect example field `subnet_ids` to `subnet_id`.
+
 ## 1.41.2 (August 28, 2020)
 
 BUG FIXES:
