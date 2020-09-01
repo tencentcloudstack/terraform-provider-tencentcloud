@@ -81,12 +81,12 @@ Ckafka
   Data Source
     tencentcloud_ckafka_users
     tencentcloud_ckafka_acls
-	tencentcloud_ckafka_topics
+    tencentcloud_ckafka_topics
 
   Resource
     tencentcloud_ckafka_user
     tencentcloud_ckafka_acl
-	tencentcloud_ckafka_topic
+    tencentcloud_ckafka_topic
 
 Cloud Access Management(CAM)
   Data Source
