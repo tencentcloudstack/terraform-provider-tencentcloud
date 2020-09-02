@@ -3,6 +3,10 @@
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_vpc_acl_attachment` perfect example field `subnet_ids` to `subnet_id`([#505](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/505)).
+* Resource: `tencentcloud_cbs_storage_attachment` support import.
+* Resource: `tencentcloud_eip_association` support import.
+* Resource: `tencentcloud_route_table_entry` support import.
+* Resource: `tencentcloud_acl_attachment` support import.
 
 ## 1.41.2 (August 28, 2020)
 

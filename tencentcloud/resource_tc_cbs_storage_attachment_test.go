@@ -25,6 +25,11 @@ func TestAccTencentCloudCbsStorageAttachment(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cbs_storage_attachment.foo", "instance_id"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_cbs_storage_attachment.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

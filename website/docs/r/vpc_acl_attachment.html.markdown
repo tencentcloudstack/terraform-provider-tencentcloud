@@ -49,3 +49,11 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+Acl attachment can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_vpc_acl_attachment.attachment acl-eotx5qsg#subnet-91x0geu6
+```
+
