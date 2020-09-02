@@ -22,6 +22,11 @@ func TestAccTencentCloudVpcAclAttachment_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc_acl_attachment.attachment", "acl_id"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_vpc_acl_attachment.attachment",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

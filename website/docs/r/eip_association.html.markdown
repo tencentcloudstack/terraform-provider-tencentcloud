@@ -48,3 +48,11 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+Eip association can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_eip_association.bar eip-41s6jwy4::ins-34jwj3
+```
+

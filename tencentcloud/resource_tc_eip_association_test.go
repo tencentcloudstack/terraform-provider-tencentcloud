@@ -29,6 +29,11 @@ func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "status", "UNBIND"),
 				),
 			},
+			{
+				ResourceName:      id,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

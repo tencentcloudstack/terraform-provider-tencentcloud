@@ -24,6 +24,11 @@ func TestAccTencentCloudVpcAcl_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "egress.#", "2"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_vpc_acl.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

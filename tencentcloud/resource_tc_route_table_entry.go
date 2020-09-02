@@ -34,6 +34,14 @@ resource "tencentcloud_route_table_entry" "instance" {
   description            = "ci-test-route-table-entry"
 }
 ```
+
+Import
+
+Route table entry can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_route_table_entry.foo 83517.rtb-mlhpg09u
+```
 */
 package tencentcloud
 
@@ -53,6 +61,9 @@ func resourceTencentCloudVpcRouteEntry() *schema.Resource {
 		Create: resourceTencentCloudVpcRouteEntryCreate,
 		Read:   resourceTencentCloudVpcRouteEntryRead,
 		Delete: resourceTencentCloudVpcRouteEntryDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"route_table_id": {

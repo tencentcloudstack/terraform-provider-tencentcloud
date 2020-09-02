@@ -34,3 +34,11 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+CBS storage attachment can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_cbs_storage_attachment.attachment disk-41s6jwy4
+```
+

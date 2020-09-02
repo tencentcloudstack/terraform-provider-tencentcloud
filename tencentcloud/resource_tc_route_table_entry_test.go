@@ -31,6 +31,11 @@ func TestAccTencentCloudVpcV3RouteEntryBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.foo", "next_hub", "0"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_route_table_entry.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
