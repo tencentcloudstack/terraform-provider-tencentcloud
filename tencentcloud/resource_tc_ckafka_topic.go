@@ -217,6 +217,9 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 	request.ReplicaNum = helper.IntInt64(d.Get("replica_num").(int))
 	request.EnableWhiteList = helper.BoolToInt64Ptr(whiteListSwitch)
 	if whiteListSwitch {
+		if len(ipWhiteList) == 0 {
+			return fmt.Errorf("this Topic %s Create Failed, reason: ip whitelist switch is on, ip whitelist cannot be empty", topicName)
+		}
 		request.IpWhiteList = ipWhiteList
 	}
 	request.MinInsyncReplicas = &syncReplicaMinNum
@@ -249,8 +252,7 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
-
-	if len(ipWhiteList) > 0 {
+	if len(ipWhiteList) > 0 && whiteListSwitch {
 		err = ckafkcService.AddCkafkaTopicIpWhiteList(ctx, instanceId, topicName, ipWhiteList)
 		if err != nil {
 			return err
@@ -369,30 +371,33 @@ func resourceTencentCloudCkafkaTopicUpdate(d *schema.ResourceData, meta interfac
 	}
 	//update ip white List
 	if whiteListSwitch {
-		if d.HasChange("ip_white_list") {
-			oldInterface, newInterface := d.GetChange("ip_white_list")
-			oldIpWhiteListInterface := oldInterface.([]interface{})
-			newIpWhiteListInterface := newInterface.([]interface{})
-			var oldIpWhiteList, newIpWhiteList []*string
-			for _, value := range oldIpWhiteListInterface {
-				oldIpWhiteList = append(oldIpWhiteList, helper.String(value.(string)))
-			}
-			for _, value := range newIpWhiteListInterface {
-				newIpWhiteList = append(newIpWhiteList, helper.String(value.(string)))
-			}
+		oldInterface, newInterface := d.GetChange("ip_white_list")
+		oldIpWhiteListInterface := oldInterface.([]interface{})
+		newIpWhiteListInterface := newInterface.([]interface{})
+		var oldIpWhiteList, newIpWhiteList []*string
+		for _, value := range oldIpWhiteListInterface {
+			oldIpWhiteList = append(oldIpWhiteList, helper.String(value.(string)))
+		}
+		for _, value := range newIpWhiteListInterface {
+			newIpWhiteList = append(newIpWhiteList, helper.String(value.(string)))
+		}
+		if len(oldIpWhiteList) > 0 {
 			error := ckafkcService.RemoveCkafkaTopicIpWhiteList(ctx, instanceId, topicName, oldIpWhiteList)
 			if error != nil {
 				return fmt.Errorf("IP whitelist Modification failed, reason[%s]\n", error.Error())
 			}
-			error = ckafkcService.AddCkafkaTopicIpWhiteList(ctx, instanceId, topicName, newIpWhiteList)
-			if error != nil {
-				return fmt.Errorf("IP whitelist Modification failed, reason[%s]\n", error.Error())
-			}
+		}
+		if len(newIpWhiteList) == 0 {
+			return fmt.Errorf("this Topic %s Create Failed, reason: ip whitelist switch is on, ip whitelist cannot be empty", topicName)
+		}
+		error := ckafkcService.AddCkafkaTopicIpWhiteList(ctx, instanceId, topicName, newIpWhiteList)
+		if error != nil {
+			return fmt.Errorf("IP whitelist Modification failed, reason[%s]\n", error.Error())
 		}
 	} else {
 		//IP whiteList Switch not turned on, and the ip whitelist cannot be modified
 		if d.HasChange("ip_white_list") {
-			return fmt.Errorf("This Topic %s IP whitelist Modification failed, reason: The Ip Whitelist Switch is not turned on.", topicName)
+			return fmt.Errorf("this Topic %s IP whitelist Modification failed, reason: The Ip Whitelist Switch is not turned on", topicName)
 		}
 	}
 	err := ckafkcService.ModifyCkafkaTopicAttribute(ctx, request)

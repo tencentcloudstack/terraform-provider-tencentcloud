@@ -130,7 +130,7 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 							Description: "Clear log policy, log clear mode. delete: logs are deleted according to the storage time, compact: logs are compressed according to the key, compact, delete: logs are compressed according to the key and will be deleted according to the storage time.",
 						},
 						"unclean_leader_election_enable": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Whether to allow unsynchronized replicas to be selected as leader, false: not allowed, true: allowed, not allowed by default.",
 						},
@@ -181,6 +181,10 @@ func dataSourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interfac
 	ids := make([]string, 0, len(topicDetails))
 
 	for _, topic := range topicDetails {
+		uncleanLeaderElectionEnable := false
+		if *topic.Config.UncleanLeaderElectionEnable == int64(1) {
+			uncleanLeaderElectionEnable = true
+		}
 		instance := map[string]interface{}{
 			"topic_name":                     topic.TopicName,
 			"topic_id":                       topic.TopicId,
@@ -196,7 +200,7 @@ func dataSourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interfac
 			"retention":                      topic.Config.Retention,
 			"sync_replica_min_num":           topic.Config.MinInsyncReplicas,
 			"clean_up_policy":                topic.Config.CleanUpPolicy,
-			"unclean_leader_election_enable": topic.Config.UncleanLeaderElectionEnable,
+			"unclean_leader_election_enable": uncleanLeaderElectionEnable,
 			"max_message_bytes":              topic.Config.MaxMessageBytes,
 			"segment":                        topic.Config.SegmentMs,
 			"segment_bytes":                  topic.Config.SegmentBytes,

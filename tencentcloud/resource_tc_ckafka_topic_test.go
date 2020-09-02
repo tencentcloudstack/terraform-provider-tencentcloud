@@ -69,15 +69,6 @@ func testAccTencentCloudKafkaTopicDestory(s *terraform.State) error {
 		if len(split) < 2 {
 			continue
 		}
-		//check ckafka instance
-		has, err := ckafkcService.DescribeCkafkaById(ctx, split[0])
-		if err != nil {
-			return err
-		}
-		//ckafka does not exist
-		if !has {
-			return nil
-		}
 		//check ckafka topic
 		_, has, error := ckafkcService.DescribeCkafkaTopicByName(ctx, split[0], split[1])
 		if error != nil {

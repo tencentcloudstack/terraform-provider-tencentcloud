@@ -6,10 +6,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -455,7 +454,18 @@ func (me *CkafkaService) DescribeCkafkaTopics(ctx context.Context, instanceId st
 
 	request.Offset = &offset
 	request.Limit = &limit
-
+	//check ckafka exist
+	ckafkaExist, error := me.DescribeCkafkaById(ctx, instanceId)
+	if error != nil {
+		if sdkErr, ok := error.(*errors.TencentCloudSDKError); ok {
+			if sdkErr.Code == CkafkaInstanceNotFound {
+				return
+			}
+		}
+	}
+	if !ckafkaExist {
+		return
+	}
 	for {
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseCkafkaClient().DescribeTopicDetail(request)
@@ -489,6 +499,7 @@ func (me *CkafkaService) CreateCkafkaTopic(ctx context.Context, request *ckafka.
 	}
 	if response == nil || response.Response == nil || response.Response.Result == nil {
 		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
 	}
 	if *response.Response.Result.TopicId == "" {
 		errRet = fmt.Errorf("TencentCloud SDK returns empty ckafka topic ID, %s", request.GetAction())
@@ -500,18 +511,6 @@ func (me *CkafkaService) CreateCkafkaTopic(ctx context.Context, request *ckafka.
 
 func (me *CkafkaService) DescribeCkafkaTopicByName(ctx context.Context, instanceId string, topicName string) (topic *ckafka.TopicDetail, has bool, errRet error) {
 	var topicList []*ckafka.TopicDetail
-	//check ckafka exist
-	ckafkaExist, error := me.DescribeCkafkaById(ctx, instanceId)
-	if error != nil {
-		if sdkErr, ok := error.(*errors.TencentCloudSDKError); ok {
-			if sdkErr.Code == CkafkaInstanceNotFound {
-				return nil, false, error
-			}
-		}
-	}
-	if !ckafkaExist {
-		return nil, false, error
-	}
 	//check ckafka topic exist
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		list, err := me.DescribeCkafkaTopics(ctx, instanceId, topicName)
@@ -529,9 +528,7 @@ func (me *CkafkaService) DescribeCkafkaTopicByName(ctx context.Context, instance
 		if *v.TopicName == topicName {
 			has = true
 			topic = v
-			return
-		} else {
-			continue
+			break
 		}
 	}
 	return
@@ -556,6 +553,7 @@ func (me *CkafkaService) DescribeCkafkaTopicAttributes(ctx context.Context, inst
 	}
 	if response == nil || response.Response == nil || response.Response.Result == nil {
 		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
 	}
 	topicInfo = response.Response.Result
 	return
@@ -575,7 +573,7 @@ func (me *CkafkaService) AddCkafkaTopicIpWhiteList(ctx context.Context, instaneI
 	request.IpWhiteList = whiteIpList
 	ratelimit.Check(request.GetAction())
 	var response *ckafka.CreateTopicIpWhiteListResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		resp, e := me.client.UseCkafkaClient().CreateTopicIpWhiteList(request)
 		if e != nil {
 			return retryError(e)
@@ -583,14 +581,13 @@ func (me *CkafkaService) AddCkafkaTopicIpWhiteList(ctx context.Context, instaneI
 		response = resp
 		return nil
 	})
-	if err != nil {
-		errRet = err
+	if errRet != nil {
 		return
 	}
 	if response == nil || response.Response == nil || response.Response.Result == nil {
 		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 	}
-	return err
+	return errRet
 }
 
 func (me *CkafkaService) RemoveCkafkaTopicIpWhiteList(ctx context.Context, instaneId string, topicName string, whiteIpList []*string) (errRet error) {
@@ -607,7 +604,7 @@ func (me *CkafkaService) RemoveCkafkaTopicIpWhiteList(ctx context.Context, insta
 	request.IpWhiteList = whiteIpList
 	ratelimit.Check(request.GetAction())
 	var response *ckafka.DeleteTopicIpWhiteListResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		resp, e := me.client.UseCkafkaClient().DeleteTopicIpWhiteList(request)
 		if e != nil {
 			return retryError(e)
@@ -615,17 +612,15 @@ func (me *CkafkaService) RemoveCkafkaTopicIpWhiteList(ctx context.Context, insta
 		response = resp
 		return nil
 	})
-	if err != nil {
-		errRet = err
+	if errRet != nil {
 		return
 	}
 	if response == nil || response.Response == nil || response.Response.Result == nil {
 		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 	}
-	return err
+	return errRet
 }
 
-//get ckafka instance by instanceId.
 func (me *CkafkaService) DescribeCkafkaById(ctx context.Context, instanceId string) (has bool, errRet error) {
 	logId := getLogId(ctx)
 	request := ckafka.NewDescribeInstancesDetailRequest()
@@ -645,9 +640,7 @@ func (me *CkafkaService) DescribeCkafkaById(ctx context.Context, instanceId stri
 	for _, v := range resp.Response.Result.InstanceList {
 		if *v.InstanceId == instanceId {
 			has = true
-			return
-		} else {
-			continue
+			break
 		}
 	}
 	return
@@ -695,7 +688,7 @@ func (me *CkafkaService) DeleteCkafkaTopic(ctx context.Context, instanceId strin
 		if err != nil {
 			return retryError(err)
 		}
-		if topicList != nil || len(topicList) != 0 {
+		if len(topicList) != 0 {
 			errRet = fmt.Errorf("this Topic %s Delete Failed, timeout", name)
 		}
 		return nil
