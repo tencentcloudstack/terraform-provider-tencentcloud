@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/plugin"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud"
 )
 
 func main() {
