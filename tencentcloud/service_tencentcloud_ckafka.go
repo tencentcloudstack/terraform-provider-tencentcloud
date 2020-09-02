@@ -455,7 +455,7 @@ func (me *CkafkaService) DescribeCkafkaTopics(ctx context.Context, instanceId st
 	request.Offset = &offset
 	request.Limit = &limit
 	//check ckafka exist
-	ckafkaExist, error := me.DescribeCkafkaById(ctx, instanceId)
+	_, ckafkaExist, error := me.DescribeCkafkaById(ctx, instanceId)
 	if error != nil {
 		if sdkErr, ok := error.(*errors.TencentCloudSDKError); ok {
 			if sdkErr.Code == CkafkaInstanceNotFound {
@@ -621,7 +621,7 @@ func (me *CkafkaService) RemoveCkafkaTopicIpWhiteList(ctx context.Context, insta
 	return errRet
 }
 
-func (me *CkafkaService) DescribeCkafkaById(ctx context.Context, instanceId string) (has bool, errRet error) {
+func (me *CkafkaService) DescribeCkafkaById(ctx context.Context, instanceId string) (instance *ckafka.InstanceDetail, has bool, errRet error) {
 	logId := getLogId(ctx)
 	request := ckafka.NewDescribeInstancesDetailRequest()
 	defer func() {
@@ -634,12 +634,13 @@ func (me *CkafkaService) DescribeCkafkaById(ctx context.Context, instanceId stri
 	ratelimit.Check(request.GetAction())
 	resp, err := me.client.UseCkafkaClient().DescribeInstancesDetail(request)
 	if err != nil {
-		errRet = err
+		has = false
 		return
 	}
-	for _, v := range resp.Response.Result.InstanceList {
-		if *v.InstanceId == instanceId {
+	for _, cKafkaInstance := range resp.Response.Result.InstanceList {
+		if *cKafkaInstance.InstanceId == instanceId {
 			has = true
+			instance = cKafkaInstance
 			break
 		}
 	}
