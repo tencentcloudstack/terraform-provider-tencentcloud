@@ -74,7 +74,7 @@ func testVpcAclAttachmentExists(n string) resource.TestCheckFunc {
 
 const testAclAttachment_basic = `
 data "tencentcloud_vpc_instances" "id_instances" {
-	name = "acl_test"
+	name = "pulse-line-dev"
 }
 resource "tencentcloud_vpc_acl" "foo" {  
     vpc_id  = data.tencentcloud_vpc_instances.id_instances.instance_list.0.vpc_id

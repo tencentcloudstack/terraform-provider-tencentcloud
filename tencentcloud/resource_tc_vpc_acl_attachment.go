@@ -21,8 +21,9 @@ resource "tencentcloud_vpc_acl" "foo" {
 
 resource "tencentcloud_vpc_acl_attachment" "attachment"{
 		acl_id = tencentcloud_vpc_acl.foo.id
-		subnet_ids = data.tencentcloud_vpc_instances.id_instances.instance_list[0].subnet_ids
+		subnet_id = data.tencentcloud_vpc_instances.id_instances.instance_list[0].subnet_ids[0]
 }
+```
 */
 package tencentcloud
 

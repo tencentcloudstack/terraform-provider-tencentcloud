@@ -22,8 +22,8 @@ resource "tencentcloud_vpc_acl" "default" {
 }
 
 resource "tencentcloud_vpc_acl_attachment" "example" {
-  acl_id     = tencentcloud_vpc_acl.default.id
-  subnet_ids = data.tencentcloud_vpc_instances.default.instance_list[0].subnet_ids
+  acl_id    = tencentcloud_vpc_acl.default.id
+  subnet_id = data.tencentcloud_vpc_instances.default.instance_list[0].subnet_ids[0]
 }
 
 data "tencentcloud_vpc_acls" "default" {
