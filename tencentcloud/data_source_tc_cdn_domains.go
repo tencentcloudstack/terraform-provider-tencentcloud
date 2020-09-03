@@ -21,7 +21,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCdnDomains() *schema.Resource {

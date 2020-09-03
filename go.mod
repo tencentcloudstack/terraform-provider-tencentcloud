@@ -1,4 +1,4 @@
-module github.com/terraform-providers/terraform-provider-tencentcloud
+module github.com/tencentcloudstack/terraform-provider-tencentcloud
 
 go 1.13
 

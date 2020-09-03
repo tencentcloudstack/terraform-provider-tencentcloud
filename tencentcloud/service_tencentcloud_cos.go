@@ -9,9 +9,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type CosService struct {

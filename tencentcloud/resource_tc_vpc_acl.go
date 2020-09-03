@@ -38,7 +38,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudVpcACL() *schema.Resource {

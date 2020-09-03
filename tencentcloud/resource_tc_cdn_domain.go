@@ -50,8 +50,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func resourceTencentCloudCdnDomain() *schema.Resource {

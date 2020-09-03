@@ -67,8 +67,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func resourceTencentCloudMongodbStandbyInstance() *schema.Resource {

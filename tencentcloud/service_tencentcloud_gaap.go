@@ -12,9 +12,9 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type gaapRealserverBind struct {

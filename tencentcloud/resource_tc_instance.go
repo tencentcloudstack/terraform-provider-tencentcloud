@@ -87,8 +87,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func resourceTencentCloudInstance() *schema.Resource {
