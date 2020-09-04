@@ -710,8 +710,13 @@ func (me *CkafkaService) DeleteCkafkaTopic(ctx context.Context, instanceId strin
 	request.TopicName = &name
 
 	ratelimit.Check(request.GetAction())
-	_, errRet = me.client.UseCkafkaClient().DeleteTopic(request)
-
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseCkafkaClient().DeleteTopic(request)
+		if err != nil {
+			return retryError(err)
+		}
+		return nil
+	})
 	if errRet != nil {
 		return
 	}

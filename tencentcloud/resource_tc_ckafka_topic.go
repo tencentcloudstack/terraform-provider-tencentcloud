@@ -175,48 +175,31 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 		ckafkcService = CkafkaService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
-		request                                  = ckafka.NewCreateTopicRequest()
-		instanceId                               = d.Get("instance_id").(string)
-		topicName                                = d.Get("topic_name").(string)
-		cleanUpPolicy, note                      string
-		syncReplicaMinNum, uncleanLeaderElection int64
-		whiteListSwitch                          bool
-		ipWhiteLists                             = d.Get("ip_white_list").([]interface{})
-		ipWhiteList                              = make([]*string, 0, len(ipWhiteLists))
+		request               = ckafka.NewCreateTopicRequest()
+		instanceId            = d.Get("instance_id").(string)
+		topicName             = d.Get("topic_name").(string)
+		note                  string
+		ipWhiteLists          = d.Get("ip_white_list").([]interface{})
+		ipWhiteList           = make([]*string, 0, len(ipWhiteLists))
+		syncReplicaMinNum     = int64(d.Get("sync_replica_min_num").(int))
+		uncleanLeaderElection = d.Get("unclean_leader_election_enable").(bool)
+		cleanUpPolicy         = d.Get("clean_up_policy").(string)
+		whiteListSwitch       = d.Get("enable_white_list").(bool)
+		retention             = d.Get("retention").(int)
 	)
 	for _, value := range ipWhiteLists {
 		ipWhiteList = append(ipWhiteList, helper.String(value.(string)))
 	}
-	if v, ok := d.GetOk("sync_replica_min_num"); ok {
-		syncReplicaMinNum = int64(v.(int))
-		request.MinInsyncReplicas = &syncReplicaMinNum
-	}
-	if v, ok := d.GetOk("unclean_leader_election_enable"); ok {
-		uncleanLeaderElection = *helper.BoolToInt64Ptr(v.(bool))
-		request.UncleanLeaderElectionEnable = &uncleanLeaderElection
-	}
-	if v, ok := d.GetOk("enable_white_list"); ok {
-		whiteListSwitch = v.(bool)
-		request.EnableWhiteList = helper.BoolToInt64Ptr(whiteListSwitch)
-		if whiteListSwitch {
-			if len(ipWhiteList) == 0 {
-				return fmt.Errorf("this Topic %s Create Failed, reason: ip whitelist switch is on, ip whitelist cannot be empty", topicName)
-			}
-			request.IpWhiteList = ipWhiteList
+	request.EnableWhiteList = helper.BoolToInt64Ptr(whiteListSwitch)
+	if whiteListSwitch {
+		if len(ipWhiteList) == 0 {
+			return fmt.Errorf("this Topic %s Create Failed, reason: ip whitelist switch is on, ip whitelist cannot be empty", topicName)
 		}
-	}
-	if v, ok := d.GetOk("clean_up_policy"); ok {
-		cleanUpPolicy = v.(string)
-		request.CleanUpPolicy = &cleanUpPolicy
+		request.IpWhiteList = ipWhiteList
 	}
 	if v, ok := d.GetOk("note"); ok {
 		note = v.(string)
 		request.Note = &note
-	}
-	if v, ok := d.GetOk("retention"); ok {
-		if v.(int) != 0 {
-			request.RetentionMs = helper.IntInt64(v.(int))
-		}
 	}
 	if v, ok := d.GetOk("segment"); ok {
 		if v.(int) != 0 {
@@ -227,6 +210,10 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 	request.TopicName = &topicName
 	request.PartitionNum = helper.IntInt64(d.Get("partition_num").(int))
 	request.ReplicaNum = helper.IntInt64(d.Get("replica_num").(int))
+	request.MinInsyncReplicas = &syncReplicaMinNum
+	request.UncleanLeaderElectionEnable = helper.BoolToInt64Ptr(uncleanLeaderElection)
+	request.CleanUpPolicy = &cleanUpPolicy
+	request.RetentionMs = helper.IntInt64(retention)
 	//Before create topic,Check if kafka exists
 	_, has, error := ckafkcService.DescribeInstanceById(ctx, instanceId)
 	if error != nil {
@@ -332,19 +319,12 @@ func resourceTencentCloudCkafkaTopicUpdate(d *schema.ResourceData, meta interfac
 	instanceId := d.Get("instance_id").(string)
 	topicName := d.Get("topic_name").(string)
 	whiteListSwitch := d.Get("enable_white_list").(bool)
-	var cleanUpPolicy, note string
-	if v, ok := d.GetOk("clean_up_policy"); ok {
-		cleanUpPolicy = v.(string)
-		request.CleanUpPolicy = &cleanUpPolicy
-	}
+	cleanUpPolicy := d.Get("clean_up_policy").(string)
+	retention := d.Get("retention").(int)
+	var note string
 	if v, ok := d.GetOk("note"); ok {
 		note = v.(string)
 		request.Note = &note
-	}
-	if v, ok := d.GetOk("retention"); ok {
-		if v.(int) != 0 {
-			request.RetentionMs = helper.IntInt64(v.(int))
-		}
 	}
 	if v, ok := d.GetOk("segment"); ok {
 		if v.(int) != 0 {
@@ -356,6 +336,8 @@ func resourceTencentCloudCkafkaTopicUpdate(d *schema.ResourceData, meta interfac
 	request.EnableWhiteList = helper.BoolToInt64Ptr(whiteListSwitch)
 	request.MinInsyncReplicas = helper.IntInt64(d.Get("sync_replica_min_num").(int))
 	request.UncleanLeaderElectionEnable = helper.BoolToInt64Ptr(d.Get("unclean_leader_election_enable").(bool))
+	request.CleanUpPolicy = &cleanUpPolicy
+	request.RetentionMs = helper.IntInt64(retention)
 	if d.Get("max_message_bytes").(int) != 0 {
 		request.MaxMessageBytes = helper.IntInt64(d.Get("max_message_bytes").(int))
 	}

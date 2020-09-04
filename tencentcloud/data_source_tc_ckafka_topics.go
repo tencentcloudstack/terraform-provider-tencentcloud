@@ -176,7 +176,7 @@ func dataSourceTencentCloudCkafkaTopicsRead(d *schema.ResourceData, meta interfa
 	for _, topic := range topicDetails {
 		var uncleanLeaderElectionEnable bool
 		if topic.Config.UncleanLeaderElectionEnable != nil {
-			uncleanLeaderElectionEnable = *topic.Config.UncleanLeaderElectionEnable == 1
+			uncleanLeaderElectionEnable = *topic.Config.UncleanLeaderElectionEnable != 0
 		}
 		instance := map[string]interface{}{
 			"topic_name":                     topic.TopicName,
