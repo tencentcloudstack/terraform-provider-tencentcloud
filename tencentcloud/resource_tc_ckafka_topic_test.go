@@ -126,36 +126,36 @@ func testAccCheckKafkaTopicInstanceExists(n string) resource.TestCheckFunc {
 
 const testAccKafkaTopicInstance = `
 resource "tencentcloud_ckafka_topic" "kafka_topic" {
-	instance_id							= "ckafka-f9ife4zz"
-	topic_name							= "ckafka-topic-tf-test"
-	note								= "this is test ckafka topic"
-	replica_num							= 2
-	partition_num						= 2
-	enable_white_list					= true
-	ip_white_list						= ["192.168.1.1"]
-	clean_up_policy						= "delete"
-	sync_replica_min_num				= 1
-	unclean_leader_election_enable		= false
-	segment								= 3600000
-	retention							= 60000
-	max_message_bytes					= 0
+	instance_id                         = "ckafka-f9ife4zz"
+	topic_name                          = "ckafka-topic-tf-test"
+	note                                = "this is test ckafka topic"
+	replica_num                         = 2
+	partition_num                       = 2
+	enable_white_list                   = true
+	ip_white_list                       = ["192.168.1.1"]
+	clean_up_policy                     = "delete"
+	sync_replica_min_num                = 1
+	unclean_leader_election_enable      = false
+	segment                             = 3600000
+	retention                           = 60000
+	max_message_bytes                   = 0
 }
 `
 
 const testAccKafkaTopicInstanceUpdate = `
 resource "tencentcloud_ckafka_topic" "kafka_topic" {
-	instance_id							= "ckafka-f9ife4zz"
-	topic_name							= "ckafka-topic-tf-test"
-	note								= "this is test topic_update"
-	replica_num							= 2
-	partition_num						= 2
-	enable_white_list					= true
-	ip_white_list						= ["192.168.1.2"]
-	clean_up_policy						= "compact"
-	sync_replica_min_num				= 2
-	unclean_leader_election_enable		= true
-	segment								= 4000000
-	retention							= 70000
-	max_message_bytes					= 8388608
+	instance_id                         = "ckafka-f9ife4zz"
+	topic_name                          = "ckafka-topic-tf-test"
+	note                                = "this is test topic_update"
+	replica_num                         = 2
+	partition_num                       = 2
+	enable_white_list                   = true
+	ip_white_list                       = ["192.168.1.2"]
+	clean_up_policy                     = "compact"
+	sync_replica_min_num                = 2
+	unclean_leader_election_enable      = true
+	segment                             = 4000000
+	retention                           = 70000
+	max_message_bytes                   = 8388608
 }
 `
