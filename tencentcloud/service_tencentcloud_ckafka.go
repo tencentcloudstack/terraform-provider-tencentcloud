@@ -3,12 +3,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -378,6 +378,11 @@ func (me *CkafkaService) DescribeInstanceById(ctx context.Context, instanceId st
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseCkafkaClient().DescribeInstanceAttributes(request)
 		if err != nil {
+			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+				if sdkErr.Code == CkafkaInstanceNotFound {
+					return nil
+				}
+			}
 			return retryError(err)
 		}
 		return nil
@@ -452,13 +457,9 @@ func (me *CkafkaService) DescribeCkafkaTopics(ctx context.Context, instanceId st
 	request.Offset = &offset
 	request.Limit = &limit
 	//check ckafka exist
-	_, ckafkaExist, error := me.DescribeInstanceById(ctx, instanceId)
-	if error != nil {
-		if sdkErr, ok := error.(*errors.TencentCloudSDKError); ok {
-			if sdkErr.Code == CkafkaInstanceNotFound {
-				return
-			}
-		}
+	_, ckafkaExist, errRet := me.DescribeInstanceById(ctx, instanceId)
+	if errRet != nil {
+		return
 	}
 	if !ckafkaExist {
 		return
