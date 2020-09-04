@@ -9,15 +9,15 @@ resource "tencentcloud_ckafka_topic" "foo" {
 	topic_name						= "example"
 	note							= "topic note"
 	replica_num						= 2
-	partition_num					= 1
-	enable_white_list				= true
-	ip_white_list					= ["ip1","ip2"]
-	clean_up_policy					= "delete"
-	sync_replica_min_num			= 1
+	partition_num                   = 1
+	enable_white_list               = true
+	ip_white_list                   = ["ip1","ip2"]
+	clean_up_policy                 = "delete"
+	sync_replica_min_num            = 1
 	unclean_leader_election_enable	= false
 	segment							= 3600000
 	retention						= 60000
-	max_message_bytes				= 0
+	max_message_bytes               = 0
 }
 ```
 */

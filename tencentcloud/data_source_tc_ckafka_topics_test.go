@@ -45,13 +45,13 @@ resource "tencentcloud_ckafka_topic" "kafka_topic" {
 	instance_id						= "ckafka-f9ife4zz"
 	topic_name						= "ckafkaTopic-tf-test"
 	replica_num						= 2
-	partition_num					= 1
+	partition_num                   = 1
 	note							= "test topic"
-	enable_white_list           	= true
-	ip_white_list               	= ["192.168.1.1"]
-	clean_up_policy					= "delete"
-	sync_replica_min_num 			= 1
-	unclean_leader_election_enable	= false
+	enable_white_list               = true
+	ip_white_list                   = ["192.168.1.1"]
+	clean_up_policy                 = "delete"
+	sync_replica_min_num            = 1
+	unclean_leader_election_enable  = false
 	segment							= 3600000
 	retention						= 60000
 }
