@@ -1,29 +1,29 @@
 /*
-Use this resource to create ckafka topic instance.
+Use this resource to create ckafka topic.
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_ckafka_topic" "foo" {
-	instance_id						= "ckafka-f9ife4zz"
-	topic_name						= "example"
-	note							= "topic note"
-	replica_num						= 2
-	partition_num					= 1
-	enable_white_list				= 1
-	ip_white_list    				= ["ip1","ip2"]
-	clean_up_policy					= "delete"
-	sync_replica_min_num			= 1
+	instance_id                     = "ckafka-f9ife4zz"
+	topic_name                      = "example"
+	note                            = "topic note"
+	replica_num                     = 2
+	partition_num                   = 1
+	enable_white_list               = true
+	ip_white_list                   = ["ip1","ip2"]
+	clean_up_policy                 = "delete"
+	sync_replica_min_num            = 1
 	unclean_leader_election_enable  = false
-	segment							= 3600000
-	retention						= 60000
-	max_message_bytes				= 0
+	segment                         = 3600000
+	retention                       = 60000
+	max_message_bytes               = 0
 }
 ```
 
 Import
 
-ckafka topic instance can be imported using the instance_id#topic_name, e.g.
+ckafka topic can be imported using the instance_id#topic_name, e.g.
 
 ```
 $ terraform import tencentcloud_ckafka_topic.foo ckafka-f9ife4zz#example
@@ -41,9 +41,6 @@ import (
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
-
-//sdk ckafka not found error
-const CkafkaInstanceNotFound = "InvalidParameterValue.InstanceNotExist"
 
 func resourceTencentCloudCkafkaTopic() *schema.Resource {
 	return &schema.Resource{
@@ -65,6 +62,7 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 			"topic_name": {
 				Type:         schema.TypeString,
 				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validateStringLengthInRange(1, 64),
 				Description:  "Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-). The length range is from 1 to 64.",
 			},
@@ -81,15 +79,15 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 				Description:  "The number of replica, the maximum is 3.",
 			},
 			"enable_white_list": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     0,
-				Description: "IP Whitelist switch, 1: open; 0: close.",
+				Default:     false,
+				Description: "Whether to open the ip whitelist, true: open, false: close.",
 			},
 			"ip_white_list": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Ip whitelist, quota limit, required when enableWhileList=1.",
+				Description: "Ip whitelist, quota limit, required when enableWhileList=true.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"note": {
@@ -109,19 +107,19 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     1,
-				Description: "Min number of sync replicas,Default is 1.",
+				Description: "Min number of sync replicas, Default is 1.",
 			},
 			"clean_up_policy": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "delete",
-				Description: "Clear log policy, log clear mode, the default is `delete`. `delete`: logs are deleted according to the storage time, `compact`: logs are compressed according to the key, compact, delete: logs are compressed according to the key and will be deleted according to the storage time.",
+				Description: "Clear log policy, log clear mode, default is `delete`. `delete`: logs are deleted according to the storage time. `compact`: logs are compressed according to the key. `compact, delete`: logs are compressed according to the key and will be deleted according to the storage time.",
 			},
 			"unclean_leader_election_enable": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Whether to allow unsynchronized replicas to be selected as leader, false: not allowed, true: allowed, not allowed by default.",
+				Description: "Whether to allow unsynchronized replicas to be selected as leader, default is `false`, `true: `allowed, `false`: not allowed.",
 			},
 			"max_message_bytes": {
 				Type:         schema.TypeInt,
@@ -143,7 +141,7 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Create time of the topic instance.",
+				Description: "Create time of the CKafka topic.",
 			},
 			"forward_interval": {
 				Type:        schema.TypeInt,
@@ -158,7 +156,7 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 			"forward_status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Data backup cos status: 1 do not open data backup, 0 open data backup.",
+				Description: "Data backup cos status. 1: do not open data backup, 0: open data backup.",
 			},
 			"segment_bytes": {
 				Type:        schema.TypeInt,
@@ -171,24 +169,41 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 
 func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ckafka_topic.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ckafkcService := CkafkaService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
-
-	request := ckafka.NewCreateTopicRequest()
-	instanceId := d.Get("instance_id").(string)
-	topicName := d.Get("topic_name").(string)
-	syncReplicaMinNum := *helper.IntInt64(d.Get("sync_replica_min_num").(int))
-	uncleanLeaderElectionEnable := d.Get("unclean_leader_election_enable").(bool)
-	whiteListSwitchFlag := d.Get("enable_white_list").(int)
-	var cleanUpPolicy, note string
-	var whiteListSwitch bool
-	ipWhiteLists := d.Get("ip_white_list").([]interface{})
-	var ipWhiteList = make([]*string, 0, len(ipWhiteLists))
+	var (
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		ckafkcService = CkafkaService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		request                                  = ckafka.NewCreateTopicRequest()
+		instanceId                               = d.Get("instance_id").(string)
+		topicName                                = d.Get("topic_name").(string)
+		cleanUpPolicy, note                      string
+		syncReplicaMinNum, uncleanLeaderElection int64
+		whiteListSwitch                          bool
+		ipWhiteLists                             = d.Get("ip_white_list").([]interface{})
+		ipWhiteList                              = make([]*string, 0, len(ipWhiteLists))
+	)
 	for _, value := range ipWhiteLists {
 		ipWhiteList = append(ipWhiteList, helper.String(value.(string)))
+	}
+	if v, ok := d.GetOk("sync_replica_min_num"); ok {
+		syncReplicaMinNum = int64(v.(int))
+		request.MinInsyncReplicas = &syncReplicaMinNum
+	}
+	if v, ok := d.GetOk("unclean_leader_election_enable"); ok {
+		uncleanLeaderElection = *helper.BoolToInt64Ptr(v.(bool))
+		request.UncleanLeaderElectionEnable = &uncleanLeaderElection
+	}
+	if v, ok := d.GetOk("enable_white_list"); ok {
+		whiteListSwitch = v.(bool)
+		request.EnableWhiteList = helper.BoolToInt64Ptr(whiteListSwitch)
+		if whiteListSwitch {
+			if len(ipWhiteList) == 0 {
+				return fmt.Errorf("this Topic %s Create Failed, reason: ip whitelist switch is on, ip whitelist cannot be empty", topicName)
+			}
+			request.IpWhiteList = ipWhiteList
+		}
 	}
 	if v, ok := d.GetOk("clean_up_policy"); ok {
 		cleanUpPolicy = v.(string)
@@ -199,31 +214,19 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 		request.Note = &note
 	}
 	if v, ok := d.GetOk("retention"); ok {
-		if *helper.IntInt64(v.(int)) != 0 {
+		if v.(int) != 0 {
 			request.RetentionMs = helper.IntInt64(v.(int))
 		}
 	}
 	if v, ok := d.GetOk("segment"); ok {
-		if *helper.IntInt64(v.(int)) != 0 {
+		if v.(int) != 0 {
 			request.SegmentMs = helper.IntInt64(v.(int))
 		}
-	}
-	if whiteListSwitchFlag != 0 {
-		whiteListSwitch = true
 	}
 	request.InstanceId = &instanceId
 	request.TopicName = &topicName
 	request.PartitionNum = helper.IntInt64(d.Get("partition_num").(int))
 	request.ReplicaNum = helper.IntInt64(d.Get("replica_num").(int))
-	request.EnableWhiteList = helper.BoolToInt64Ptr(whiteListSwitch)
-	if whiteListSwitch {
-		if len(ipWhiteList) == 0 {
-			return fmt.Errorf("this Topic %s Create Failed, reason: ip whitelist switch is on, ip whitelist cannot be empty", topicName)
-		}
-		request.IpWhiteList = ipWhiteList
-	}
-	request.MinInsyncReplicas = &syncReplicaMinNum
-	request.UncleanLeaderElectionEnable = helper.BoolToInt64Ptr(uncleanLeaderElectionEnable)
 	//Before create topic,Check if kafka exists
 	_, has, error := ckafkcService.DescribeInstanceById(ctx, instanceId)
 	if error != nil {
@@ -232,13 +235,7 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 	if !has {
 		return fmt.Errorf("ckafka %s does not exist", instanceId)
 	}
-	errCreate := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, err := ckafkcService.CreateCkafkaTopic(ctx, request)
-		if err != nil {
-			return retryError(err)
-		}
-		return nil
-	})
+	errCreate := ckafkcService.CreateCkafkaTopic(ctx, request)
 	if errCreate != nil {
 		return errCreate
 	}
@@ -247,10 +244,7 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 	if !hasExist {
-		err = fmt.Errorf("this Topic %s Create Failed, timeout", topicName)
-	}
-	if err != nil {
-		return err
+		return fmt.Errorf("this Topic %s Create Failed", topicName)
 	}
 	if len(ipWhiteList) > 0 && whiteListSwitch {
 		err = ckafkcService.AddCkafkaTopicIpWhiteList(ctx, instanceId, topicName, ipWhiteList)
@@ -272,12 +266,14 @@ func resourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interface{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	items := strings.Split(d.Id(), FILED_SP)
+	if len(items) < 2 {
+		d.SetId("")
+		return nil
+	}
 	instanceId := items[0]
 	topicName := items[1]
-	//check ckafka topic exists
 	topicListInfo, hasExist, e := ckafkcService.DescribeCkafkaTopicByName(ctx, instanceId, topicName)
 	if e != nil {
-		d.SetId("")
 		return e
 	}
 	if !hasExist {
@@ -301,15 +297,11 @@ func resourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interface{
 	if errInfo != nil {
 		return fmt.Errorf("[API]Describe kafka topic fail,reason:%s", errInfo.Error())
 	}
-	uncleanLeaderElectionEnable := false
-	if *topicinfo.Config.UncleanLeaderElectionEnable == int64(1) {
-		uncleanLeaderElectionEnable = true
-	}
 	_ = d.Set("instance_id", instanceId)
 	_ = d.Set("note", topicinfo.Note)
 	_ = d.Set("ip_white_list", topicinfo.IpWhiteList)
 	_ = d.Set("ip_white_list_count", topicListInfo.IpWhiteListCount)
-	_ = d.Set("enable_white_list", topicinfo.EnableWhiteList)
+	_ = d.Set("enable_white_list", *topicinfo.EnableWhiteList == 1)
 	_ = d.Set("replica_num", topicListInfo.ReplicaNum)
 	_ = d.Set("create_time", topicinfo.CreateTime)
 	_ = d.Set("partition_num", topicinfo.PartitionNum)
@@ -323,7 +315,9 @@ func resourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("retention", topicinfo.Config.Retention)
 	_ = d.Set("segment_bytes", topicinfo.Config.SegmentBytes)
 	_ = d.Set("segment", topicinfo.Config.SegmentMs)
-	_ = d.Set("unclean_leader_election_enable", uncleanLeaderElectionEnable)
+	if topicinfo.Config.UncleanLeaderElectionEnable != nil {
+		_ = d.Set("unclean_leader_election_enable", *topicinfo.Config.UncleanLeaderElectionEnable == 1)
+	}
 	return nil
 }
 
@@ -337,9 +331,8 @@ func resourceTencentCloudCkafkaTopicUpdate(d *schema.ResourceData, meta interfac
 	request := ckafka.NewModifyTopicAttributesRequest()
 	instanceId := d.Get("instance_id").(string)
 	topicName := d.Get("topic_name").(string)
-	whiteListSwitchFlag := d.Get("enable_white_list").(int)
+	whiteListSwitch := d.Get("enable_white_list").(bool)
 	var cleanUpPolicy, note string
-	var whiteListSwitch bool
 	if v, ok := d.GetOk("clean_up_policy"); ok {
 		cleanUpPolicy = v.(string)
 		request.CleanUpPolicy = &cleanUpPolicy
@@ -349,27 +342,24 @@ func resourceTencentCloudCkafkaTopicUpdate(d *schema.ResourceData, meta interfac
 		request.Note = &note
 	}
 	if v, ok := d.GetOk("retention"); ok {
-		if *helper.IntInt64(v.(int)) != 0 {
+		if v.(int) != 0 {
 			request.RetentionMs = helper.IntInt64(v.(int))
 		}
 	}
 	if v, ok := d.GetOk("segment"); ok {
-		if *helper.IntInt64(v.(int)) != 0 {
+		if v.(int) != 0 {
 			request.SegmentMs = helper.IntInt64(v.(int))
 		}
-	}
-	if whiteListSwitchFlag != 0 {
-		whiteListSwitch = true
 	}
 	request.InstanceId = &instanceId
 	request.TopicName = &topicName
 	request.EnableWhiteList = helper.BoolToInt64Ptr(whiteListSwitch)
 	request.MinInsyncReplicas = helper.IntInt64(d.Get("sync_replica_min_num").(int))
 	request.UncleanLeaderElectionEnable = helper.BoolToInt64Ptr(d.Get("unclean_leader_election_enable").(bool))
-	if *helper.IntInt64(d.Get("max_message_bytes").(int)) != 0 {
+	if d.Get("max_message_bytes").(int) != 0 {
 		request.MaxMessageBytes = helper.IntInt64(d.Get("max_message_bytes").(int))
 	}
-	//update ip white List
+	//Update ip white List
 	if whiteListSwitch {
 		oldInterface, newInterface := d.GetChange("ip_white_list")
 		oldIpWhiteListInterface := oldInterface.([]interface{})
@@ -400,6 +390,18 @@ func resourceTencentCloudCkafkaTopicUpdate(d *schema.ResourceData, meta interfac
 			return fmt.Errorf("this Topic %s IP whitelist Modification failed, reason: The Ip Whitelist Switch is not turned on", topicName)
 		}
 	}
+	//Update partition num
+	oldPartitionNum, newPartitionNum := d.GetChange("partition_num")
+	if newPartitionNum.(int) < oldPartitionNum.(int) {
+		return fmt.Errorf("this Topic %s partition Modification failed, reason: The partitonNum must more than current partitionNum", topicName)
+	} else {
+		if newPartitionNum.(int) > oldPartitionNum.(int) {
+			err := ckafkcService.AddCkafkaTopicPartition(ctx, instanceId, topicName, int64(newPartitionNum.(int)))
+			if err != nil {
+				return err
+			}
+		}
+	}
 	err := ckafkcService.ModifyCkafkaTopicAttribute(ctx, request)
 	if err != nil {
 		return err
@@ -409,12 +411,10 @@ func resourceTencentCloudCkafkaTopicUpdate(d *schema.ResourceData, meta interfac
 		return errDes
 	}
 	if !has {
-		errDes = fmt.Errorf("this Topic %s Update Failed, timeout", topicName)
+		errDes = fmt.Errorf("this Topic %s Update Failed", topicName)
 		return errDes
 	}
 
-	resourceId := instanceId + FILED_SP + topicName
-	d.SetId(resourceId)
 	return resourceTencentCloudCkafkaTopicRead(d, meta)
 }
 
@@ -427,15 +427,6 @@ func resourceTencentCLoudCkafkaTopicDelete(d *schema.ResourceData, meta interfac
 	}
 	instanceId := d.Get("instance_id").(string)
 	topicName := d.Get("topic_name").(string)
-
-	//Check if topic exists
-	_, hasExist, e := ckafkcService.DescribeCkafkaTopicByName(ctx, instanceId, topicName)
-	if e != nil {
-		return e
-	}
-	if !hasExist {
-		return fmt.Errorf("ckafka %s, topic %s does not exist", instanceId, topicName)
-	}
 
 	err := ckafkcService.DeleteCkafkaTopic(ctx, instanceId, topicName)
 	if err != nil {

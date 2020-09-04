@@ -23,18 +23,17 @@ func TestAccTencentCloudCkafkaTopicDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.replica_num", "2"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.create_time"),
 					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.note", "test topic"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "enable_white_list", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "ip_white_list.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "ip_white_list.0", "192.168.1.1"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "clean_up_policy", "delete"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "sync_replica_min_num", "1"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ckafka_topic.kafka_topic", "unclean_leader_election_enable"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "segment", "3600000"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "retention", "60000"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.foo", "instance_list.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.foo", "instance_list.0.partition_num", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.foo", "instance_list.0.replica_num", "2"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_topics.foo", "instance_list.0.create_time"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.enable_white_list", "true"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.ip_white_list_count", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.clean_up_policy", "delete"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.sync_replica_min_num", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.unclean_leader_election_enable"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.segment", "3600000"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.kafka_topics", "instance_list.0.retention", "60000"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ckafka_topics.foo", "instance_list.#", "2"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_topics.foo", "instance_list.1.partition_num"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_topics.foo", "instance_list.1.replica_num"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_ckafka_topics.foo", "instance_list.1.create_time"),
 				),
 			},
 		},
@@ -48,7 +47,7 @@ resource "tencentcloud_ckafka_topic" "kafka_topic" {
 	replica_num						= 2
 	partition_num					= 1
 	note							= "test topic"
-	enable_white_list           	= 1
+	enable_white_list           	= true
 	ip_white_list               	= ["192.168.1.1"]
 	clean_up_policy					= "delete"
 	sync_replica_min_num 			= 1

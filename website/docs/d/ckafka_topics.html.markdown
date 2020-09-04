@@ -19,7 +19,7 @@ resource "tencentcloud_ckafka_topic" "foo" {
   note                           = "topic note"
   replica_num                    = 2
   partition_num                  = 1
-  enable_white_list              = 1
+  enable_white_list              = true
   ip_white_list                  = ["ip1", "ip2"]
   clean_up_policy                = "delete"
   sync_replica_min_num           = 1
@@ -43,15 +43,15 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `instance_list` - A list of instances. Each element contains the following attributes.
-  * `clean_up_policy` - Clear log policy, log clear mode. delete: logs are deleted according to the storage time, compact: logs are compressed according to the key, compact, delete: logs are compressed according to the key and will be deleted according to the storage time.
-  * `create_time` - Create time of the topic instance.
-  * `enable_white_list` - IP Whitelist switch, 1: open; 0: close.
+  * `clean_up_policy` - Clear log policy, log clear mode. `delete`: logs are deleted according to the storage time, `compact`: logs are compressed according to the key, `compact, delete`: logs are compressed according to the key and will be deleted according to the storage time.
+  * `create_time` - Create time of the CKafka topic.
+  * `enable_white_list` - Whether to open the IP Whitelist, true: open, false: close.
   * `forward_cos_bucket` - Data backup cos bucket: the bucket address that is dumped to cos.
   * `forward_interval` - Periodic frequency of data backup to cos.
-  * `forward_status` - Data backup cos status: 1 do not open data backup, 0 open data backup.
+  * `forward_status` - Data backup cos status. 1: do not open data backup, 0: open data backup.
   * `ip_white_list_count` - IP Whitelist count.
   * `max_message_bytes` - Max message bytes.
-  * `note` - Topic note description.
+  * `note` - CKafka topic note description.
   * `partition_num` - The number of partition.
   * `replica_num` - The number of replica.
   * `retention` - Message can be selected. Retention time, unit ms.
@@ -60,6 +60,6 @@ In addition to all arguments above, the following attributes are exported:
   * `sync_replica_min_num` - Min number of sync replicas.
   * `topic_id` - Id of the CKafka topic.
   * `topic_name` - Name of the CKafka topic.
-  * `unclean_leader_election_enable` - Whether to allow unsynchronized replicas to be selected as leader, false: not allowed, true: allowed, not allowed by default.
+  * `unclean_leader_election_enable` - Whether to allow unsynchronized replicas to be selected as leader, default is `false`, `true: `allowed, `false`: not allowed.
 
 

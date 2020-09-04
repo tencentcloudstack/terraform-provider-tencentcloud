@@ -10,11 +10,11 @@ resource "tencentcloud_ckafka_topic" "foo" {
 	note							= "topic note"
 	replica_num						= 2
 	partition_num					= 1
-	enable_white_list				= 1
-	ip_white_list    				= ["ip1","ip2"]
+	enable_white_list				= true
+	ip_white_list					= ["ip1","ip2"]
 	clean_up_policy					= "delete"
 	sync_replica_min_num			= 1
-	unclean_leader_election_enable  = false
+	unclean_leader_election_enable	= false
 	segment							= 3600000
 	retention						= 60000
 	max_message_bytes				= 0
@@ -33,7 +33,7 @@ import (
 
 func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudCkafkaTopicRead,
+		Read: dataSourceTencentCloudCkafkaTopicsRead,
 
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
@@ -52,7 +52,6 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 				Optional:    true,
 				Description: "Used to store results.",
 			},
-			// computed
 			"instance_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -82,17 +81,17 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 						"note": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Topic note description.",
+							Description: "CKafka topic note description.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Create time of the topic instance.",
+							Description: "Create time of the CKafka topic.",
 						},
 						"enable_white_list": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "IP Whitelist switch, 1: open; 0: close.",
+							Description: "Whether to open the IP Whitelist, true: open, false: close.",
 						},
 						"ip_white_list_count": {
 							Type:        schema.TypeInt,
@@ -112,7 +111,7 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 						"forward_status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Data backup cos status: 1 do not open data backup, 0 open data backup.",
+							Description: "Data backup cos status. 1: do not open data backup, 0: open data backup.",
 						},
 						"retention": {
 							Type:        schema.TypeInt,
@@ -127,12 +126,12 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 						"clean_up_policy": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Clear log policy, log clear mode. delete: logs are deleted according to the storage time, compact: logs are compressed according to the key, compact, delete: logs are compressed according to the key and will be deleted according to the storage time.",
+							Description: "Clear log policy, log clear mode. `delete`: logs are deleted according to the storage time, `compact`: logs are compressed according to the key, `compact, delete`: logs are compressed according to the key and will be deleted according to the storage time.",
 						},
 						"unclean_leader_election_enable": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Whether to allow unsynchronized replicas to be selected as leader, false: not allowed, true: allowed, not allowed by default.",
+							Description: "Whether to allow unsynchronized replicas to be selected as leader, default is `false`, `true: `allowed, `false`: not allowed.",
 						},
 						"max_message_bytes": {
 							Type:        schema.TypeInt,
@@ -156,19 +155,13 @@ func dataSourceTencentCloudCkafkaTopics() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ckafka_topic.read")()
+func dataSourceTencentCloudCkafkaTopicsRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_ckafka_topics.read")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	var instanceId, topicName string
-	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-	}
-	if v, ok := d.GetOk("topic_name"); ok {
-		topicName = v.(string)
-	}
+	instanceId := d.Get("instance_id").(string)
+	topicName := d.Get("topic_name").(string)
 	ckafkcService := CkafkaService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -181,9 +174,9 @@ func dataSourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interfac
 	ids := make([]string, 0, len(topicDetails))
 
 	for _, topic := range topicDetails {
-		uncleanLeaderElectionEnable := false
-		if *topic.Config.UncleanLeaderElectionEnable == int64(1) {
-			uncleanLeaderElectionEnable = true
+		var uncleanLeaderElectionEnable bool
+		if topic.Config.UncleanLeaderElectionEnable != nil {
+			uncleanLeaderElectionEnable = *topic.Config.UncleanLeaderElectionEnable == 1
 		}
 		instance := map[string]interface{}{
 			"topic_name":                     topic.TopicName,
@@ -212,7 +205,7 @@ func dataSourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interfac
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	if err = d.Set("instance_list", instanceList); err != nil {
-		log.Printf("[CRITAL]%s provider set ckafka topic instance list fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set ckafka topic list fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 

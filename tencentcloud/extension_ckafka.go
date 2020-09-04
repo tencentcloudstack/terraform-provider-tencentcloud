@@ -67,3 +67,6 @@ var CKAFKA_PERMISSION_TYPE_TO_STRING = map[int64]string{
 	2: "DENY",
 	3: "ALLOW",
 }
+
+//sdk ckafka not found error
+const CkafkaInstanceNotFound = "InvalidParameterValue.InstanceNotExist"
