@@ -1,4 +1,5 @@
 ---
+subcategory: "Provider Data Sources"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_availability_zones"
 sidebar_current: "docs-tencentcloud-datasource-availability_zones"

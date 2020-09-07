@@ -5,6 +5,10 @@ FEATURES:
 * **New Resource**: `tencentcloud_ckafka_topic`
 * **New Data Source**: `tencentcloud_ckafka_topics` 
 
+ENHANCEMENTS:
+
+* Doc: optimize document directory.
+
 ## 1.41.3 (September 3, 2020)
 
 ENHANCEMENTS:

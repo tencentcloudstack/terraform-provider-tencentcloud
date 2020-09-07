@@ -1,4 +1,5 @@
 ---
+subcategory: "Direct Connect Gateway(DCG)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dc_gateway"
 sidebar_current: "docs-tencentcloud-resource-dc_gateway"

@@ -1,4 +1,5 @@
 ---
+subcategory: "Direct Connect(DC)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dcx"
 sidebar_current: "docs-tencentcloud-resource-dcx"

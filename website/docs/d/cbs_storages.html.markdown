@@ -1,4 +1,5 @@
 ---
+subcategory: "Cloud Block Storage(CBS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cbs_storages"
 sidebar_current: "docs-tencentcloud-datasource-cbs_storages"

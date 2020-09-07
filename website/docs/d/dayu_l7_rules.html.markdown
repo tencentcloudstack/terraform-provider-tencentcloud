@@ -1,4 +1,5 @@
 ---
+subcategory: "Anti-DDoS(Dayu)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dayu_l7_rules"
 sidebar_current: "docs-tencentcloud-datasource-dayu_l7_rules"

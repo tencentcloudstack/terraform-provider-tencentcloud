@@ -1,4 +1,5 @@
 ---
+subcategory: "Direct Connect(DC)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dcx_instances"
 sidebar_current: "docs-tencentcloud-datasource-dcx_instances"

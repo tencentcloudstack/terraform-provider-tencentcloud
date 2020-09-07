@@ -1,4 +1,5 @@
 ---
+subcategory: "CDN"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cdn_domain"
 sidebar_current: "docs-tencentcloud-resource-cdn_domain"

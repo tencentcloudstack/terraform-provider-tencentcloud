@@ -1,4 +1,5 @@
 ---
+subcategory: "Cloud Block Storage(CBS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cbs_snapshot_policy_attachment"
 sidebar_current: "docs-tencentcloud-resource-cbs_snapshot_policy_attachment"

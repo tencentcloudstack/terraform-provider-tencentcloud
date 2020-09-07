@@ -40,22 +40,24 @@ func main() {
 	filePath := filepath.Dir(filename)
 	message("generating doc from: %s\n", filePath)
 
-	// document for DataSources
-	for k, v := range provider.DataSourcesMap {
-		genDoc("data_source", filePath, k, v)
-	}
-
-	// document for Resources
-	for k, v := range provider.ResourcesMap {
-		genDoc("resource", filePath, k, v)
-	}
-
 	// document for Index
-	genIdx(filePath)
+	products := genIdx(filePath)
+
+	for _, product := range products {
+		// document for DataSources
+		for _, dataSource := range product.DataSources {
+			genDoc(product.Name, "data_source", filePath, dataSource, provider.DataSourcesMap[dataSource])
+		}
+
+		// document for Resources
+		for _, resource := range product.Resources {
+			genDoc(product.Name, "resource", filePath, resource, provider.ResourcesMap[resource])
+		}
+	}
 }
 
 // genIdx generating index for resource
-func genIdx(filePath string) {
+func genIdx(filePath string) (prods []Product) {
 	filename := "provider.go"
 
 	message("[START]get description from file: %s\n", filename)
@@ -81,7 +83,7 @@ func genIdx(filePath string) {
 	doc := strings.TrimSpace(description[pos+16:])
 	// description = strings.TrimSpace(description[:pos])
 
-	prods, err := GetIndex(doc)
+	prods, err = GetIndex(doc)
 	if err != nil {
 		message("[FAIL!]: %s", err)
 		os.Exit(1)
@@ -111,11 +113,13 @@ func genIdx(filePath string) {
 	}
 
 	message("[SUCC.]write doc to file success: %s", filename)
+	return
 }
 
 // genDoc generating doc for data source and resource
-func genDoc(dtype, fpath, name string, resource *schema.Resource) {
+func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 	data := map[string]string{
+		"product":           product,
 		"name":              name,
 		"dtype":             strings.Replace(dtype, "_", "", -1),
 		"resource":          name[len(cloudMark)+1:],

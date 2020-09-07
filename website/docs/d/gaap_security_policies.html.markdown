@@ -1,4 +1,5 @@
 ---
+subcategory: "Global Application Acceleration(GAAP)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_gaap_security_policies"
 sidebar_current: "docs-tencentcloud-datasource-gaap_security_policies"

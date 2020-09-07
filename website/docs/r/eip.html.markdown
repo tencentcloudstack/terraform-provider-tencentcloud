@@ -1,4 +1,5 @@
 ---
+subcategory: "CVM"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_eip"
 sidebar_current: "docs-tencentcloud-resource-eip"

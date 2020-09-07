@@ -1,4 +1,5 @@
 ---
+subcategory: "CLB"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_clb_redirection"
 sidebar_current: "docs-tencentcloud-resource-clb_redirection"
