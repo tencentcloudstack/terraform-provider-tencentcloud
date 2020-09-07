@@ -6,10 +6,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
