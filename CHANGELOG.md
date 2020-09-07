@@ -5,6 +5,16 @@ FEATURES:
 * **New Resource**: `tencentcloud_ckafka_topic`
 * **New Data Source**: `tencentcloud_ckafka_topics` 
 
+## 1.41.3 (September 3, 2020)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_vpc_acl_attachment` perfect example field `subnet_ids` to `subnet_id`([#505](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/505)).
+* Resource: `tencentcloud_cbs_storage_attachment` support import.
+* Resource: `tencentcloud_eip_association` support import.
+* Resource: `tencentcloud_route_table_entry` support import.
+* Resource: `tencentcloud_acl_attachment` support import.
+
 ## 1.41.2 (August 28, 2020)
 
 BUG FIXES:
@@ -116,7 +126,7 @@ BUG FIXES:
 BUG FIXES:
 
 * Resource: `tencentcloud_instance` fix `allocate_public_ip` inconsistency when eip is attached to the cvm.
-* Resource: `tencentcloud_mysql_instance` fix auto-forcenew on `charge_type` and `pay_type` when upgrading terraform version. ([#459](https://github.com/terraform-providers/terraform-provider-tencentcloud/pull/459)).
+* Resource: `tencentcloud_mysql_instance` fix auto-forcenew on `charge_type` and `pay_type` when upgrading terraform version. ([#459](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/459)).
 
 ## 1.38.1 (June 30, 2020)
 
@@ -132,7 +142,7 @@ FEATURES:
 
 BUG FIXES:
 
-* Resource: `tencentcloud_gaap_http_domain` fix a condition for setting client certificate ids([#454](https://github.com/terraform-providers/terraform-provider-tencentcloud/pull/454)).
+* Resource: `tencentcloud_gaap_http_domain` fix a condition for setting client certificate ids([#454](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/454)).
 
 ## 1.37.0 (June 23, 2020)
 
@@ -229,7 +239,7 @@ ENHANCEMENTS:
 
 BUG FIXES:
 
-* Resource: `tencentcloud_cdn_domain` fix `https_config` inconsistency after apply([#413](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/413)).
+* Resource: `tencentcloud_cdn_domain` fix `https_config` inconsistency after apply([#413](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/413)).
 
 DEPRECATED:
 
@@ -260,7 +270,7 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_cbs_storage` add new argument `force_delete`.
 * Resource: `tencentcloud_cbs_storage` add new argument `charge_type`.
 * Resource: `tencentcloud_cbs_storage` add new argument `prepaid_renew_flag`.
-* Resource: `tencentcloud_cdn_domain` add new argument `full_url_cache`([#405](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/405)).
+* Resource: `tencentcloud_cdn_domain` add new argument `full_url_cache`([#405](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/405)).
 
 DEPRECATED:
 
@@ -281,11 +291,11 @@ BUG FIXES:
 
 FEATURES:
 
-* **New Resource**: `tencentcloud_kubernetes_cluster_attachment`([#285](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/285)).
+* **New Resource**: `tencentcloud_kubernetes_cluster_attachment`([#285](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/285)).
 
 ENHANCEMENTS: 
 
-* Resource: `tencentcloud_cdn_domain` add new attribute `cname`([#395](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/395)).
+* Resource: `tencentcloud_cdn_domain` add new attribute `cname`([#395](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/395)).
 
 BUG FIXES:
 
@@ -301,22 +311,22 @@ ENHANCEMENTS:
 
 BUG FIXES: 
 
-* Resource: `tencentcloud_keypair` fix bug when trying to destroy resources containing CVM and key pair([#375](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/375)).
+* Resource: `tencentcloud_keypair` fix bug when trying to destroy resources containing CVM and key pair([#375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/375)).
 * Resource: `tencentcloud_clb_attachment` fix bug when trying to destroy multiple attachments in the array. 
 * Resource: `tencentcloud_cam_group_membership` fix bug when trying to destroy multiple users in the array. 
 
 ENHANCEMENTS:
 
-* Resource: `tencentcloud_mysql_account` add new argument `host`([#372](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/372)).
-* Resource: `tencentcloud_mysql_account_privilege` add new argument `account_host`([#372](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/372)).
-* Resource: `tencentcloud_mysql_privilege` add new argument `account_host`([#372](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/372)).
-* Resource: `tencentcloud_mysql_readonly_instance` check master monitor data before create([#379](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/379)).
+* Resource: `tencentcloud_mysql_account` add new argument `host`([#372](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/372)).
+* Resource: `tencentcloud_mysql_account_privilege` add new argument `account_host`([#372](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/372)).
+* Resource: `tencentcloud_mysql_privilege` add new argument `account_host`([#372](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/372)).
+* Resource: `tencentcloud_mysql_readonly_instance` check master monitor data before create([#379](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/379)).
 * Resource: `tencentcloud_tcaplus_application` remove the pull password from server. 
-* Resource: `tencentcloud_instance` support import `allocate_public_ip`([#382](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/382)).
+* Resource: `tencentcloud_instance` support import `allocate_public_ip`([#382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/382)).
 * Resource: `tencentcloud_redis_instance` add two redis types.
-* Data Source: `tencentcloud_vpc_instances` add new argument `cidr_block`,`tag_key` ([#378](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/378)).
-* Data Source: `tencentcloud_vpc_route_tables` add new argument `tag_key`,`vpc_id`,`association_main` ([#378](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/378)).
-* Data Source: `tencentcloud_vpc_subnets` add new argument `cidr_block`,`tag_key`,`is_remote_vpc_snat` ([#378](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/378)).
+* Data Source: `tencentcloud_vpc_instances` add new argument `cidr_block`,`tag_key` ([#378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/378)).
+* Data Source: `tencentcloud_vpc_route_tables` add new argument `tag_key`,`vpc_id`,`association_main` ([#378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/378)).
+* Data Source: `tencentcloud_vpc_subnets` add new argument `cidr_block`,`tag_key`,`is_remote_vpc_snat` ([#378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/378)).
 * Data Source: `tencentcloud_mysql_zone_config` and `tencentcloud_redis_zone_config` remove region check.
 
 ## 1.31.0 (April 07, 2020)
@@ -345,7 +355,7 @@ BUG FIXES:
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_tcaplus_idl` add new argument `zone_id`. 
-* Resource: `tencentcloud_cam_user` add new argument `force_delete`.([#354](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/354))
+* Resource: `tencentcloud_cam_user` add new argument `force_delete`.([#354](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/354))
 * Data Source: `tencentcloud_vpc_subnets` add new argument `vpc_id`. 
 
 ## 1.30.5 (March 19, 2020)
@@ -363,8 +373,8 @@ ENHANCEMENTS:
 
 BUG FIXES:
 
-* Resource: `tencentcloud_cam_policy` fix read nil issue when the resource is not exist.([#344](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/#344)).
-* Resource: `tencentcloud_key_pair` will be replaced when the end of `public_key` contains spaces([#343](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/343)).
+* Resource: `tencentcloud_cam_policy` fix read nil issue when the resource is not exist.([#344](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/#344)).
+* Resource: `tencentcloud_key_pair` will be replaced when the end of `public_key` contains spaces([#343](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/343)).
 * Resource: `tencentcloud_scf_function` fix trigger does not support cos_region.
 
 ENHANCEMENTS:
@@ -376,7 +386,7 @@ ENHANCEMENTS:
 
 BUG FIXES:
 
-* Resource: `tencentcloud_instance` fix that classic network does not support([#339](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/339)).
+* Resource: `tencentcloud_instance` fix that classic network does not support([#339](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/339)).
 
 ## 1.30.2 (February 17, 2020)
 
@@ -421,17 +431,17 @@ BUG FIXES:
 
 * gaap: optimize gaap describe: when describe resource by id but get more than 1 resources, return error directly instead of using the first result 
 * Resource: `tencentcloud_eni_attachment` fix detach may failed.
-* Resource: `tencentcloud_instance` remove the tag that be added by as attachment automatically([#300](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/300)).
-* Resource: `tencentcloud_clb_listener` fix `sni_switch` type error([#297](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/297)).
-* Resource: `tencentcloud_vpn_gateway` shows argument `prepaid_renew_flag` has changed when applied again([#298](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/298)).
-* Resource: `tencentcloud_clb_instance` fix the bug that instance id is not set in state file([#303](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/303)).
-* Resource: `tencentcloud_vpn_gateway` that is postpaid charge type cannot be deleted normally([#312](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/312)).
+* Resource: `tencentcloud_instance` remove the tag that be added by as attachment automatically([#300](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/300)).
+* Resource: `tencentcloud_clb_listener` fix `sni_switch` type error([#297](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/297)).
+* Resource: `tencentcloud_vpn_gateway` shows argument `prepaid_renew_flag` has changed when applied again([#298](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/298)).
+* Resource: `tencentcloud_clb_instance` fix the bug that instance id is not set in state file([#303](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/303)).
+* Resource: `tencentcloud_vpn_gateway` that is postpaid charge type cannot be deleted normally([#312](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/312)).
 * Resource: `tencentcloud_vpn_gateway` add `InternalError` SDK error to triggering the retry process.
 * Resource: `tencentcloud_vpn_gateway` fix read nil issue when the resource is not exist.
 * Resource: `tencentcloud_clb_listener_rule` fix unclear error message of SSL type error.
 * Resource: `tencentcloud_ha_vip_attachment` fix read nil issue when the resource is not exist.
 * Data Source: `tencentcloud_security_group` fix `project_id` type error.
-* Data Source: `tencentcloud_security_groups` fix `project_id` filter not works([#303](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/314)).
+* Data Source: `tencentcloud_security_groups` fix `project_id` filter not works([#303](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/314)).
 
 ## 1.29.0 (January 06, 2020)
 
@@ -445,7 +455,7 @@ ENHANCEMENTS:
 * Data Source: `tencentcloud_vpc_subnets` add new optional argument `availability_zone`,`is_default`.
 
 BUG FIXES:
-* Resource: `tencentcloud_redis_instance` field security_groups are id list, not name list([#291](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/291)).
+* Resource: `tencentcloud_redis_instance` field security_groups are id list, not name list([#291](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/291)).
 
 ## 1.28.0 (December 25, 2019)
 
@@ -457,7 +467,7 @@ FEATURES:
 ENHANCEMENTS:
 
 * doc: rewrite website index
-* Resource: `tencentcloud_instance` support modifying instance type([#251](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/251)).
+* Resource: `tencentcloud_instance` support modifying instance type([#251](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/251)).
 * Resource: `tencentcloud_gaap_http_domain` add new optional argument `realserver_certificate_ids`.
 * Data Source: `tencentcloud_gaap_http_domains` add new output argument `realserver_certificate_ids`.
 
@@ -481,15 +491,15 @@ FEATURES:
 
 ENHANCEMENTS:
 
-* Resource: `tencentcloud_mongodb_instance` support more instance type([#241](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/241)).
-* Resource: `tencentcloud_kubernetes_cluster` support more instance type([#237](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/237)).
+* Resource: `tencentcloud_mongodb_instance` support more instance type([#241](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/241)).
+* Resource: `tencentcloud_kubernetes_cluster` support more instance type([#237](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/237)).
 
 BUG FIXES:
 
 * Fix bug that resource `tencentcloud_instance` delete error when instance launch failed.
 * Fix bug that resource `tencentcloud_security_group` read error when response is InternalError.
-* Fix bug that the type of `cluster_type` is wrong in data source `tencentcloud_mongodb_instances`([#242](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/242)).
-* Fix bug that resource `tencentcloud_eip` unattach error([#233](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/233)).
+* Fix bug that the type of `cluster_type` is wrong in data source `tencentcloud_mongodb_instances`([#242](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/242)).
+* Fix bug that resource `tencentcloud_eip` unattach error([#233](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/233)).
 * Fix bug that terraform read nil attachment resource when the attached resource of attachment resource is removed of resource CLB and CAM.
 * Fix doc example error of resource `tencentcloud_nat_gateway`.
 
@@ -501,8 +511,8 @@ DEPRECATED:
 
 FEATURES:
 
-* **New Resource**: `tencentcloud_mysql_privilege`([#223](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/223)).
-* **New Resource**: `tencentcloud_kubernetes_as_scaling_group`([#202](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/202)).
+* **New Resource**: `tencentcloud_mysql_privilege`([#223](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/223)).
+* **New Resource**: `tencentcloud_kubernetes_as_scaling_group`([#202](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/202)).
 
 ENHANCEMENTS:
 
@@ -524,7 +534,7 @@ DEPRECATED:
 
 BUG FIXES:
 
-* Fix bug that resource `tencentcloud_clb_listener` 's unchangeable `health_check_switch`([#235](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/235)).
+* Fix bug that resource `tencentcloud_clb_listener` 's unchangeable `health_check_switch`([#235](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/235)).
 * Fix bug that resource `tencentcloud_clb_instance` read nil and report error.
 * Fix example errors of resource `tencentcloud_cbs_snapshot_policy` and data source `tencentcloud_dnats`.
 
@@ -539,15 +549,15 @@ ENHANCEMENTS:
 * Optimized error message of validators.
 
 BUG FIXES:
-* Fixed bug that the type of `state` is incorrect in data source `tencentcloud_nat_gateways`([#226](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/226)).
-* Fixed bug that the value of `cluster_max_pod_num` is incorrect in resource `tencentcloud_kubernetes_cluster`([#228](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/228)).
+* Fixed bug that the type of `state` is incorrect in data source `tencentcloud_nat_gateways`([#226](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/226)).
+* Fixed bug that the value of `cluster_max_pod_num` is incorrect in resource `tencentcloud_kubernetes_cluster`([#228](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/228)).
 
 
 ## 1.25.0 (December 02, 2019)
 
 ENHANCEMENTS:
 
-* Resource: `tencentcloud_instance` support `SPOTPAID` instance. Thanks to @LipingMao ([#209](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/209)).
+* Resource: `tencentcloud_instance` support `SPOTPAID` instance. Thanks to @LipingMao ([#209](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/209)).
 * Resource: `tencentcloud_vpn_gateway` add argument `prepaid_renew_flag` and `prepaid_period` to support prepaid VPN gateway instance creation.
 
 BUG FIXES:
@@ -562,7 +572,7 @@ DEPRECATED:
 
 ENHANCEMENTS:
 
-* Resource: `tencentcloud_kubernetes_cluster` add support for `PREPAID` instance type. Thanks to @woodylic ([#204](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/204)).
+* Resource: `tencentcloud_kubernetes_cluster` add support for `PREPAID` instance type. Thanks to @woodylic ([#204](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/204)).
 * Resource: `tencentcloud_cos_bucket` add optional argument tags
 * Data Source: `tencentcloud_cos_buckets` add optional argument tags
 
@@ -850,10 +860,10 @@ ENHANCEMENTS:
 
 ENHANCEMENTS:
 
-* `tencentcloud_instance`: changed `image_id` property to ForceNew ([#78](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/78))
-* `tencentcloud_instance`: improved with retry ([#82](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/82))
-* `tencentcloud_cbs_storages`: improved with retry ([#82](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/82))
-* `tencentcloud_clb_instance`: bug fixed and improved with retry ([#37](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/37))
+* `tencentcloud_instance`: changed `image_id` property to ForceNew ([#78](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/78))
+* `tencentcloud_instance`: improved with retry ([#82](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/82))
+* `tencentcloud_cbs_storages`: improved with retry ([#82](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/82))
+* `tencentcloud_clb_instance`: bug fixed and improved with retry ([#37](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/37))
 
 ## 1.15.0 (August 07, 2019)
 
@@ -914,8 +924,8 @@ FEATURES:
 BUG FIXIES:
 
 * resource/tencentcloud_instance: fixed issue when data disks set as delete_with_instance not works.
-* resource/tencentcloud_instance: if managed public_ip manually, please don't define `allocate_public_ip` ([#62](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/62)).
-* resource/tencentcloud_eip_association: fixed issue when instances were manually deleted ([#60](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/60)).
+* resource/tencentcloud_instance: if managed public_ip manually, please don't define `allocate_public_ip` ([#62](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/62)).
+* resource/tencentcloud_eip_association: fixed issue when instances were manually deleted ([#60](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/60)).
 * resource/tencentcloud_mysql_readonly_instance:remove an unsupported property `gtid`
 
 ## 1.11.0 (July 02, 2019)
@@ -959,7 +969,7 @@ DEPRECATED:
 
 BUG FIXIES:
 
-* data/tencentcloud_instance: fixed vpc ip is in use error when re-creating with private ip ([#46](https://github.com/terraform-providers/terraform-provider-tencentcloud/issues/46)).
+* data/tencentcloud_instance: fixed vpc ip is in use error when re-creating with private ip ([#46](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/46)).
 
 ## 1.9.0 (June 18, 2019)
 

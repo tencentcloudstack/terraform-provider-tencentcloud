@@ -21,14 +21,22 @@ resource "tencentcloud_vpc_acl" "foo" {
 
 resource "tencentcloud_vpc_acl_attachment" "attachment"{
 		acl_id = tencentcloud_vpc_acl.foo.id
-		subnet_ids = data.tencentcloud_vpc_instances.id_instances.instance_list[0].subnet_ids
+		subnet_id = data.tencentcloud_vpc_instances.id_instances.instance_list[0].subnet_ids[0]
 }
+```
+
+Import
+
+Acl attachment can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_vpc_acl_attachment.attachment acl-eotx5qsg#subnet-91x0geu6
+```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
 
@@ -95,18 +103,27 @@ func resourceTencentCloudVpcAclAttachmentRead(d *schema.ResourceData, meta inter
 		ctx          = context.WithValue(context.TODO(), logIdKey, logId)
 		service      = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 		attachmentId = d.Id()
-		aclId        string
 	)
 
-	aclId = strings.Split(attachmentId, FILED_SP)[0]
+	idSplit := strings.Split(attachmentId, FILED_SP)
+	if len(idSplit) < 2 {
+		d.SetId("")
+		return nil
+	}
+	aclId := idSplit[0]
+	subnetId := idSplit[1]
 	results, err := service.DescribeNetWorkAcls(ctx, aclId, "", "")
 	if err != nil {
 		return err
 	}
-	if len(results) > 0 && len(results[0].SubnetSet) < 1 {
+	if len(results) < 1 || len(results[0].SubnetSet) < 1 {
 		d.SetId("")
-		return fmt.Errorf("[TECENT_TERRAFORM_CHECK][ACL attachment][Read] check: ACL attachment  is not exist")
+		return nil
 	}
+
+	_ = d.Set("acl_id", aclId)
+	_ = d.Set("subnet_id", subnetId)
+
 	return nil
 
 }

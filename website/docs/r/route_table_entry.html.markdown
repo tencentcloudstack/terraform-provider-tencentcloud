@@ -62,3 +62,11 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+Route table entry can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_route_table_entry.foo 83517.rtb-mlhpg09u
+```
+

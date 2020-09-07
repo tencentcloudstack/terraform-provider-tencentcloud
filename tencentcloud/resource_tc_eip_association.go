@@ -21,6 +21,14 @@ resource "tencentcloud_eip_association" "bar" {
   private_ip           = "10.0.1.22"
 }
 ```
+
+Import
+
+Eip association can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_eip_association.bar eip-41s6jwy4::ins-34jwj3
+```
 */
 package tencentcloud
 
@@ -33,7 +41,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
-	"github.com/terraform-providers/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func resourceTencentCloudEipAssociation() *schema.Resource {
@@ -41,6 +49,9 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 		Create: resourceTencentCloudEipAssociationCreate,
 		Read:   resourceTencentCloudEipAssociationRead,
 		Delete: resourceTencentCloudEipAssociationDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"eip_id": {

@@ -9,6 +9,14 @@ resource "tencentcloud_cbs_storage_attachment" "attachment" {
   instance_id = "ins-jqlegd42"
 }
 ```
+
+Import
+
+CBS storage attachment can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_cbs_storage_attachment.attachment disk-41s6jwy4
+```
 */
 package tencentcloud
 
@@ -27,6 +35,9 @@ func resourceTencentCloudCbsStorageAttachment() *schema.Resource {
 		Create: resourceTencentCloudCbsStorageAttachmentCreate,
 		Read:   resourceTencentCloudCbsStorageAttachmentRead,
 		Delete: resourceTencentCloudCbsStorageAttachmentDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"storage_id": {
