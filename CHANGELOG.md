@@ -1,4 +1,10 @@
-## 1.41.4 (Unreleased)
+## 1.42.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_ckafka_topic`
+* **New Data Source**: `tencentcloud_ckafka_topics` 
+
 ## 1.41.3 (September 3, 2020)
 
 ENHANCEMENTS:
