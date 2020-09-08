@@ -1,4 +1,5 @@
 ---
+subcategory: "CVM"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_reserved_instance_configs"
 sidebar_current: "docs-tencentcloud-datasource-reserved_instance_configs"

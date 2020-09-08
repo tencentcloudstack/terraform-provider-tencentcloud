@@ -7,6 +7,7 @@ FEATURES:
 
 ENHANCEMENTS:
 
+* Doc: optimize document directory.
 * Resource: `tencentcloud_mongodb_instance`, `tencentcloud_mongodb_sharding_instance` and `tencentcloud_mongodb_standby_instance` remove system reserved tag `project`.
 
 ## 1.41.3 (September 3, 2020)

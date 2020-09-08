@@ -1,4 +1,5 @@
 ---
+subcategory: "Redis"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_redis_backup_config"
 sidebar_current: "docs-tencentcloud-resource-redis_backup_config"

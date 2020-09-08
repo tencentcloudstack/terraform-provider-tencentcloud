@@ -1,4 +1,5 @@
 ---
+subcategory: "Cloud Access Management(CAM)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cam_saml_providers"
 sidebar_current: "docs-tencentcloud-datasource-cam_saml_providers"

@@ -1,4 +1,5 @@
 ---
+subcategory: "Global Application Acceleration(GAAP)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_gaap_realserver"
 sidebar_current: "docs-tencentcloud-resource-gaap_realserver"

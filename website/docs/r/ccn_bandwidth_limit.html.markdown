@@ -1,4 +1,5 @@
 ---
+subcategory: "Cloud Connect Network(CCN)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ccn_bandwidth_limit"
 sidebar_current: "docs-tencentcloud-resource-ccn_bandwidth_limit"

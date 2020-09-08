@@ -1,4 +1,5 @@
 ---
+subcategory: "SSL Certificates"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ssl_certificate"
 sidebar_current: "docs-tencentcloud-resource-ssl_certificate"

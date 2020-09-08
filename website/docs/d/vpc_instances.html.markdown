@@ -1,4 +1,5 @@
 ---
+subcategory: "VPC"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vpc_instances"
 sidebar_current: "docs-tencentcloud-datasource-vpc_instances"

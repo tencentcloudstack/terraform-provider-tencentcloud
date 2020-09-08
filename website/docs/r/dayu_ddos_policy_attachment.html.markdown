@@ -1,4 +1,5 @@
 ---
+subcategory: "Anti-DDoS(Dayu)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dayu_ddos_policy_attachment"
 sidebar_current: "docs-tencentcloud-resource-dayu_ddos_policy_attachment"

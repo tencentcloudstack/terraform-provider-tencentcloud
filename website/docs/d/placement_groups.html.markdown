@@ -1,4 +1,5 @@
 ---
+subcategory: "CVM"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_placement_groups"
 sidebar_current: "docs-tencentcloud-datasource-placement_groups"

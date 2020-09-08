@@ -1,4 +1,5 @@
 ---
+subcategory: "PostgreSQL"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_postgresql_specinfos"
 sidebar_current: "docs-tencentcloud-datasource-postgresql_specinfos"

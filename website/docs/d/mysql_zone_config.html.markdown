@@ -1,4 +1,5 @@
 ---
+subcategory: "MySQL"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_zone_config"
 sidebar_current: "docs-tencentcloud-datasource-mysql_zone_config"

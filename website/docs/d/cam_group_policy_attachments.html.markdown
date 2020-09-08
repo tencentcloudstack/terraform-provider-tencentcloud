@@ -1,4 +1,5 @@
 ---
+subcategory: "Cloud Access Management(CAM)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cam_group_policy_attachments"
 sidebar_current: "docs-tencentcloud-datasource-cam_group_policy_attachments"

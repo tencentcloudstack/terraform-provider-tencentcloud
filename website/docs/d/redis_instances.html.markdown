@@ -1,4 +1,5 @@
 ---
+subcategory: "Redis"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_redis_instances"
 sidebar_current: "docs-tencentcloud-datasource-redis_instances"

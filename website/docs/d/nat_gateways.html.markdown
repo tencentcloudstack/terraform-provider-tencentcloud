@@ -1,4 +1,5 @@
 ---
+subcategory: "VPC"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_nat_gateways"
 sidebar_current: "docs-tencentcloud-datasource-nat_gateways"
