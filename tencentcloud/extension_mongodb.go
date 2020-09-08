@@ -153,7 +153,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 		"tags": {
 			Type:        schema.TypeMap,
 			Optional:    true,
-			Description: "The tags of the Mongodb. Value `project` is system reserved and can't be used.",
+			Description: "The tags of the Mongodb. Key name `project` is system reserved and can't be used.",
 		},
 		// payment
 		"charge_type": {

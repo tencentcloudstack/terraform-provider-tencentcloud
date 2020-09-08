@@ -45,7 +45,7 @@ The following arguments are supported:
 * `project_id` - (Optional) ID of the project which the instance belongs.
 * `security_groups` - (Optional, ForceNew) ID of the security group. NOTE: for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported.
 * `subnet_id` - (Optional, ForceNew) ID of the subnet within this VPC. The value is required if `vpc_id` is set.
-* `tags` - (Optional) The tags of the Mongodb. Value `project` is system reserved and can't be used.
+* `tags` - (Optional) The tags of the Mongodb. Key name `project` is system reserved and can't be used.
 * `vpc_id` - (Optional, ForceNew) ID of the VPC.
 
 ## Attributes Reference
