@@ -366,6 +366,9 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 		if tag.TagValue == nil {
 			return errors.New("mongodb tag value is nil")
 		}
+		if *tag.TagKey == "project" {
+			continue
+		}
 
 		tags[*tag.TagKey] = *tag.TagValue
 	}
