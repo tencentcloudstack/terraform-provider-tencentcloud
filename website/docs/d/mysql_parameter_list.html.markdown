@@ -1,4 +1,5 @@
 ---
+subcategory: "MySQL"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_parameter_list"
 sidebar_current: "docs-tencentcloud-datasource-mysql_parameter_list"

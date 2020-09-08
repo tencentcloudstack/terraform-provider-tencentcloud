@@ -1,4 +1,5 @@
 ---
+subcategory: "TcaplusDB"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcaplus_tablegroup"
 sidebar_current: "docs-tencentcloud-resource-tcaplus_tablegroup"

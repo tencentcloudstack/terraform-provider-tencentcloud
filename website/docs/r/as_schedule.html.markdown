@@ -1,4 +1,5 @@
 ---
+subcategory: "Auto Scaling(AS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_as_schedule"
 sidebar_current: "docs-tencentcloud-resource-as_schedule"

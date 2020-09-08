@@ -1,4 +1,5 @@
 ---
+subcategory: "Elasticsearch"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_elasticsearch_instances"
 sidebar_current: "docs-tencentcloud-datasource-elasticsearch_instances"

@@ -1,4 +1,5 @@
 ---
+subcategory: "VPC"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ha_vip_eip_attachments"
 sidebar_current: "docs-tencentcloud-datasource-ha_vip_eip_attachments"

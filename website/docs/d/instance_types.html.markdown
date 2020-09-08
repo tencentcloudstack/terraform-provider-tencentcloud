@@ -1,4 +1,5 @@
 ---
+subcategory: "CVM"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_instance_types"
 sidebar_current: "docs-tencentcloud-datasource-instance_types"

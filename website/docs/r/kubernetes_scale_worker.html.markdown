@@ -1,4 +1,5 @@
 ---
+subcategory: "Kubernetes"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_scale_worker"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_scale_worker"

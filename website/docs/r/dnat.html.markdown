@@ -1,4 +1,5 @@
 ---
+subcategory: "VPC"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dnat"
 sidebar_current: "docs-tencentcloud-resource-dnat"

@@ -1,4 +1,5 @@
 ---
+subcategory: "CVM"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_instance"
 sidebar_current: "docs-tencentcloud-resource-instance"

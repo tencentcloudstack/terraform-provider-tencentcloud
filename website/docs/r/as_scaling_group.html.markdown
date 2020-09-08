@@ -1,4 +1,5 @@
 ---
+subcategory: "Auto Scaling(AS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_as_scaling_group"
 sidebar_current: "docs-tencentcloud-resource-as_scaling_group"

@@ -1,4 +1,5 @@
 ---
+subcategory: "Kubernetes"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_cluster"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_cluster"

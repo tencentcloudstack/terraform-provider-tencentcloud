@@ -1,4 +1,5 @@
 ---
+subcategory: "Ckafka"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ckafka_users"
 sidebar_current: "docs-tencentcloud-datasource-ckafka_users"

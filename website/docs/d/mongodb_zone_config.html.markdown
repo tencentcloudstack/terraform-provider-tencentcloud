@@ -1,4 +1,5 @@
 ---
+subcategory: "MongoDB"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mongodb_zone_config"
 sidebar_current: "docs-tencentcloud-datasource-mongodb_zone_config"
