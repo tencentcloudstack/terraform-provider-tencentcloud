@@ -1,4 +1,5 @@
 ---
+subcategory: "Kubernetes"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_as_scaling_group"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_as_scaling_group"

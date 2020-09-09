@@ -1,4 +1,5 @@
 ---
+subcategory: "MongoDB"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mongodb_instance"
 sidebar_current: "docs-tencentcloud-resource-mongodb_instance"
@@ -44,7 +45,7 @@ The following arguments are supported:
 * `project_id` - (Optional) ID of the project which the instance belongs.
 * `security_groups` - (Optional, ForceNew) ID of the security group. NOTE: for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported.
 * `subnet_id` - (Optional, ForceNew) ID of the subnet within this VPC. The value is required if `vpc_id` is set.
-* `tags` - (Optional) The tags of the Mongodb.
+* `tags` - (Optional) The tags of the Mongodb. Key name `project` is system reserved and can't be used.
 * `vpc_id` - (Optional, ForceNew) ID of the VPC.
 
 ## Attributes Reference

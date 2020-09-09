@@ -1,4 +1,5 @@
 ---
+subcategory: "VPC"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_route_table_entry"
 sidebar_current: "docs-tencentcloud-resource-route_table_entry"

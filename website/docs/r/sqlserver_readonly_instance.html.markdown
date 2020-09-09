@@ -1,4 +1,5 @@
 ---
+subcategory: "SQLServer"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_sqlserver_readonly_instance"
 sidebar_current: "docs-tencentcloud-resource-sqlserver_readonly_instance"

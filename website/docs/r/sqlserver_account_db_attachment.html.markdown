@@ -1,4 +1,5 @@
 ---
+subcategory: "SQLServer"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_sqlserver_account_db_attachment"
 sidebar_current: "docs-tencentcloud-resource-sqlserver_account_db_attachment"

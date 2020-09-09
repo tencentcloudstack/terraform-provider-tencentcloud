@@ -1,4 +1,5 @@
 ---
+subcategory: "MySQL"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_privilege"
 sidebar_current: "docs-tencentcloud-resource-mysql_privilege"

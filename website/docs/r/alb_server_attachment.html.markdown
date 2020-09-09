@@ -1,4 +1,5 @@
 ---
+subcategory: "CLB"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_alb_server_attachment"
 sidebar_current: "docs-tencentcloud-resource-alb_server_attachment"

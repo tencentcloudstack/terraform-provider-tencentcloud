@@ -1,4 +1,5 @@
 ---
+subcategory: "Serverless Cloud Function(SCF)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_scf_namespaces"
 sidebar_current: "docs-tencentcloud-datasource-scf_namespaces"

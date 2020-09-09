@@ -1,4 +1,5 @@
 ---
+subcategory: "Global Application Acceleration(GAAP)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_gaap_http_rules"
 sidebar_current: "docs-tencentcloud-datasource-gaap_http_rules"

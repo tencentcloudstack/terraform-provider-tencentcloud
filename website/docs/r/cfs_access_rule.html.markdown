@@ -1,4 +1,5 @@
 ---
+subcategory: "Cloud File Storage(CFS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cfs_access_rule"
 sidebar_current: "docs-tencentcloud-resource-cfs_access_rule"

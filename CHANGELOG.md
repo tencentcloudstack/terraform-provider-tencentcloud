@@ -1,9 +1,15 @@
-## 1.42.0 (Unreleased)
+## 1.42.1 (Unreleased)
+## 1.42.0 (September 8, 2020)
 
 FEATURES:
 
 * **New Resource**: `tencentcloud_ckafka_topic`
 * **New Data Source**: `tencentcloud_ckafka_topics` 
+
+ENHANCEMENTS:
+
+* Doc: optimize document directory.
+* Resource: `tencentcloud_mongodb_instance`, `tencentcloud_mongodb_sharding_instance` and `tencentcloud_mongodb_standby_instance` remove system reserved tag `project`.
 
 ## 1.41.3 (September 3, 2020)
 
