@@ -324,21 +324,21 @@ func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanc
 		}
 	}()
 	var response *mongodb.OfflineIsolatedDBInstanceResponse
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	var err error
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, e := me.client.UseMongodbClient().OfflineIsolatedDBInstance(request)
-		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+		response, err = me.client.UseMongodbClient().OfflineIsolatedDBInstance(request)
+		if err != nil {
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				if ee.Code == "InvalidParameterValue.LockFailed" {
-					return resource.RetryableError(e)
+					return resource.RetryableError(err)
 				} else {
-					return resource.NonRetryableError(e)
+					return resource.NonRetryableError(err)
 				}
 			}
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
-			return resource.NonRetryableError(e)
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+			return resource.NonRetryableError(err)
 		}
-		response = result
 		return nil
 	})
 	if err != nil {

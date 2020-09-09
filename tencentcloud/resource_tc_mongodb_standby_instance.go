@@ -558,23 +558,16 @@ func resourceTencentCloudMongodbStandbyInstanceDelete(d *schema.ResourceData, me
 	}
 	err = mongodbService.OfflineIsolatedDBInstance(ctx, instanceId)
 	if err != nil {
-		log.Printf("[CRITAL]%s mongodb %s fail, reason:%s\n", logId, "OfflineIsolatedDBInstance", err.Error())
+		log.Printf("[CRITAL]%s mongodb %s fail, reason:%s", logId, "OfflineIsolatedDBInstance", err.Error())
 		return err
 	}
 	//describe and check not exist
-	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
-		instance, _, errRet := mongodbService.DescribeInstanceById(ctx, instanceId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if instance == nil {
-			return nil
-		}
-		return resource.NonRetryableError(fmt.Errorf("after OfflineIsolatedDBInstance mongodb Status is %d", *instance.Status))
-	})
-	if err != nil {
-		return err
+	_, has, errRet := mongodbService.DescribeInstanceById(ctx, instanceId)
+	if errRet != nil {
+		return errRet
 	}
-
+	if !has {
+		return nil
+	}
 	return nil
 }
