@@ -569,5 +569,5 @@ func resourceTencentCloudMongodbStandbyInstanceDelete(d *schema.ResourceData, me
 	if !has {
 		return nil
 	}
-	return nil
+	return fmt.Errorf("[CRITAL]%s mongodb %s fail", logId, "OfflineIsolatedDBInstance")
 }
