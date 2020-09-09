@@ -313,3 +313,43 @@ func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId 
 
 	return nil
 }
+
+func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := mongodb.NewOfflineIsolatedDBInstanceRequest()
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	var response *mongodb.OfflineIsolatedDBInstanceResponse
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().OfflineIsolatedDBInstance(request)
+		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Code == "InvalidParameterValue.LockFailed" {
+					return resource.RetryableError(e)
+				} else {
+					return resource.NonRetryableError(e)
+				}
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
+			return resource.NonRetryableError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	if response != nil && response.Response != nil {
+		if err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId); err != nil {
+			return err
+		}
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return nil
+}
