@@ -1,10 +1,9 @@
 ## 1.42.1 (Unreleased)
 
-ENHANCEMENTS:
-
-* Resource: `tencentcloud_mongodb_instance` support mongodb postpaid force_delete.
-* Resource: `tencentcloud_mongodb_sharding_instance` support mongodb sharding postpaid force_delete.
-* Resource: `tencentcloud_mongodb_standby_instance` support mongodb standby postpaid force_delete.
+BUG FIXES:
+* Resource: `tencentcloud_mongodb_instance` Fix the error of releasing associated resources when destroying mongodb postpaid instance.
+* Resource: `tencentcloud_mongodb_sharding_instance` Fix the error of releasing associated resources when destroying mongodb postpaid sharding instance.
+* Resource: `tencentcloud_mongodb_standby_instance` Fix the error of releasing associated resources when destroying mongodb postpaid standby instance.
 
 ## 1.42.0 (September 8, 2020)
 
