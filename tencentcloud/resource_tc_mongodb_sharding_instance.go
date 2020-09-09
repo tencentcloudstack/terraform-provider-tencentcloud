@@ -506,6 +506,18 @@ func resourceMongodbShardingInstanceDelete(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
-
-	return nil
+	err = mongodbService.OfflineIsolatedDBInstance(ctx, instanceId)
+	if err != nil {
+		log.Printf("[CRITAL]%s mongodb %s fail, reason:%s", logId, "OfflineIsolatedDBInstance", err.Error())
+		return err
+	}
+	//describe and check not exist
+	_, has, errRet := mongodbService.DescribeInstanceById(ctx, instanceId)
+	if errRet != nil {
+		return errRet
+	}
+	if !has {
+		return nil
+	}
+	return fmt.Errorf("[CRITAL]%s mongodb %s fail", logId, "OfflineIsolatedDBInstance")
 }
