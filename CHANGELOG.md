@@ -1,4 +1,4 @@
-## 1.42.1 (Unreleased)
+## 1.42.1 (September 10, 2020)
 
 BUG FIXES:
 * Resource: `tencentcloud_mongodb_instance` Fix the error of releasing associated resources when destroying mongodb postpaid instance.
