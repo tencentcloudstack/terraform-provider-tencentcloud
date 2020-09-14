@@ -1,4 +1,4 @@
-## 1.42.2 (Unreleased)
+## 1.42.3 (Unreleased)
 
 FEATURES:
 
@@ -7,6 +7,11 @@ FEATURES:
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_instance` add new argument `data_disk_snapshot_id` to support data disk with `SnapshotId`([#469](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/469))
+
+## 1.42.2 (September 14, 2020)
+
+BUG FIXES:
+* Resource: `tencentcloud_instance` fix `key_name` update error([#515](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/515)).
 
 ## 1.42.1 (September 10, 2020)
 

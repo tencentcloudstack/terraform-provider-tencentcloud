@@ -478,6 +478,7 @@ func (me *CvmService) UnbindKeyPair(ctx context.Context, keyId string, instanceI
 	request := cvm.NewDisassociateInstancesKeyPairsRequest()
 	request.KeyIds = []*string{&keyId}
 	request.InstanceIds = instanceIds
+	request.ForceStop = helper.Bool(true)
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().DisassociateInstancesKeyPairs(request)
@@ -488,6 +489,24 @@ func (me *CvmService) UnbindKeyPair(ctx context.Context, keyId string, instanceI
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
+func (me *CvmService) BindKeyPair(ctx context.Context, keyId, instanceId string) error {
+	logId := getLogId(ctx)
+	request := cvm.NewAssociateInstancesKeyPairsRequest()
+	request.KeyIds = []*string{&keyId}
+	request.InstanceIds = []*string{&instanceId}
+	request.ForceStop = helper.Bool(true)
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseCvmClient().AssociateInstancesKeyPairs(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
 
 	return nil
 }
