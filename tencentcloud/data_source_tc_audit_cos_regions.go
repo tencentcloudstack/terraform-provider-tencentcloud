@@ -43,7 +43,7 @@ func dataSourceTencentCloudAuditCosRegions() *schema.Resource {
 						"cos_region_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Cos region description.",
+							Description: "Cos region chinese name.",
 						},
 					},
 				},

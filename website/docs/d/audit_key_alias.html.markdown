@@ -23,7 +23,7 @@ data "tencentcloud_audit_key_alias" "all" {
 
 The following arguments are supported:
 
-* `region` - (Required) Regions.
+* `region` - (Required) Region.
 * `result_output_file` - (Optional) Used to save results.
 
 ## Attributes Reference

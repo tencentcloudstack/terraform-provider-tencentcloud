@@ -29,7 +29,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `audit_cos_region_list` - List of available regions supported by audit cos.
-  * `cos_region_name` - Cos region description.
+  * `cos_region_name` - Cos region chinese name.
   * `cos_region` - Cos region.
 
 

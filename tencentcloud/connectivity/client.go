@@ -446,7 +446,7 @@ func (me *TencentCloudClient) UseCkafkaClient() *ckafka.Client {
 	return me.ckafkaConn
 }
 
-// UseCkafkaClient returns ckafka client for service
+// UseAuditClient returns audit client for service
 func (me *TencentCloudClient) UseAuditClient() *audit.Client {
 	if me.auditConn != nil {
 		return me.auditConn

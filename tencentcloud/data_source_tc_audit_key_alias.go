@@ -28,7 +28,7 @@ func dataSourceTencentCloudAuditKeyAlias() *schema.Resource {
 			"region": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Regions.",
+				Description: "Region.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
