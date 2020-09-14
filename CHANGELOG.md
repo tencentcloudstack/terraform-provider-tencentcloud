@@ -11,6 +11,7 @@ ENHANCEMENTS:
 ## 1.42.1 (September 10, 2020)
 
 BUG FIXES:
+
 * Resource: `tencentcloud_mongodb_instance` Fix the error of releasing associated resources when destroying mongodb postpaid instance.
 * Resource: `tencentcloud_mongodb_sharding_instance` Fix the error of releasing associated resources when destroying mongodb postpaid sharding instance.
 * Resource: `tencentcloud_mongodb_standby_instance` Fix the error of releasing associated resources when destroying mongodb postpaid standby instance.
