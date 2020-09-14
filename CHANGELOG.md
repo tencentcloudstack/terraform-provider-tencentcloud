@@ -1,4 +1,8 @@
 ## 1.42.2 (Unreleased)
+
+BUG FIXES:
+* Resource: `tencentcloud_instance` fix `key_name` update error([#515](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/515)).
+
 ## 1.42.1 (September 10, 2020)
 
 BUG FIXES:

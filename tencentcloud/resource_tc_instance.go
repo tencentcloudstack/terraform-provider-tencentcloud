@@ -716,6 +716,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 	if len(instance.LoginSettings.KeyIds) > 0 {
 		_ = d.Set("key_name", instance.LoginSettings.KeyIds[0])
+	} else {
+		_ = d.Set("key_name", "")
 	}
 	if *instance.InstanceState == CVM_STATUS_STOPPED {
 		_ = d.Set("running_flag", false)
@@ -906,6 +908,51 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
+	}
+
+	if d.HasChange("key_name") {
+		old, new := d.GetChange("key_name")
+		oldKeyId := old.(string)
+		keyId := new.(string)
+		err := cvmService.UnbindKeyPair(ctx, oldKeyId, []*string{&instanceId})
+		if err != nil {
+			return err
+		}
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		if keyId != "" {
+			err = cvmService.BindKeyPair(ctx, keyId, instanceId)
+			if err != nil {
+				return err
+			}
+			time.Sleep(10 * time.Second)
+			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return retryError(errRet, InternalError)
+				}
+				if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+					return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+		}
+		d.SetPartial("key_name")
 	}
 
 	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("private_ip") {
