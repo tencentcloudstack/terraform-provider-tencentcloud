@@ -1,4 +1,12 @@
 ## 1.42.2 (Unreleased)
+
+FEATURES:
+
+New Resource: tencentcloud_image
+ENHANCEMENTS:
+
+Resource: tencentcloud_instance add new argument data_disk_snapshot_id to support data disk with SnapshotId(#469)
+
 ## 1.42.1 (September 10, 2020)
 
 BUG FIXES:
