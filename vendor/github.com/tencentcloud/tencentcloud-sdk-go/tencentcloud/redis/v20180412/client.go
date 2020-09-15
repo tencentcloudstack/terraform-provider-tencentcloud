@@ -158,7 +158,7 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
     return
 }
 
-// 创建redis实例
+// 本接口(CreateInstances)用于创建redis实例。
 func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *CreateInstancesResponse, err error) {
     if request == nil {
         request = NewCreateInstancesRequest()
@@ -793,6 +793,31 @@ func (c *Client) DescribeProjectSecurityGroups(request *DescribeProjectSecurityG
     return
 }
 
+func NewDescribeProxySlowLogRequest() (request *DescribeProxySlowLogRequest) {
+    request = &DescribeProxySlowLogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeProxySlowLog")
+    return
+}
+
+func NewDescribeProxySlowLogResponse() (response *DescribeProxySlowLogResponse) {
+    response = &DescribeProxySlowLogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口（DescribeProxySlowLog）用于查询代理慢查询。
+func (c *Client) DescribeProxySlowLog(request *DescribeProxySlowLogRequest) (response *DescribeProxySlowLogResponse, err error) {
+    if request == nil {
+        request = NewDescribeProxySlowLogRequest()
+    }
+    response = NewDescribeProxySlowLogResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeSlowLogRequest() (request *DescribeSlowLogRequest) {
     request = &DescribeSlowLogRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1233,7 +1258,7 @@ func NewModifyInstanceParamsResponse() (response *ModifyInstanceParamsResponse) 
     return
 }
 
-// 修改实例参数
+// 本接口(ModifyInstanceParams)用于修改实例参数。
 func (c *Client) ModifyInstanceParams(request *ModifyInstanceParamsRequest) (response *ModifyInstanceParamsResponse, err error) {
     if request == nil {
         request = NewModifyInstanceParamsRequest()

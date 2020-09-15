@@ -201,6 +201,13 @@ CVM
     tencentcloud_placement_group
     tencentcloud_reserved_instance
 
+CynosDB
+  Data Source
+
+  Resource
+    tencentcloud_cynosdb_cluster
+	tencentcloud_cynosdb_readonly_instance
+
 Direct Connect(DC)
   Data Source
     tencentcloud_dc_instances
@@ -761,6 +768,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_user":                     resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                      resourceTencentCloudCkafkaAcl(),
 			"tencentcloud_ckafka_topic":                    resourceTencentCloudCkafkaTopic(),
+			"tencentcloud_cynosdb_cluster":                 resourceTencentCloudCynosdbCluster(),
+			"tencentcloud_cynosdb_readonly_instance":       resourceTencentCloudCynosdbReadonlyInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

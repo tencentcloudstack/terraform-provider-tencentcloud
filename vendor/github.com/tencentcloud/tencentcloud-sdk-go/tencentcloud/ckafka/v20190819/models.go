@@ -157,6 +157,30 @@ type ConsumerGroupTopic struct {
 	TopicName *string `json:"TopicName,omitempty" name:"TopicName"`
 }
 
+type ConsumerRecord struct {
+
+	// 主题名
+	Topic *string `json:"Topic,omitempty" name:"Topic"`
+
+	// 分区id
+	Partition *int64 `json:"Partition,omitempty" name:"Partition"`
+
+	// 位点
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 消息key
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// 消息value
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitempty" name:"Value"`
+
+	// 消息时间戳
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Timestamp *int64 `json:"Timestamp,omitempty" name:"Timestamp"`
+}
+
 type CreateAclRequest struct {
 	*tchttp.BaseRequest
 
@@ -1320,6 +1344,150 @@ func (r *DescribeUserResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type FetchMessageByOffsetRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 主题名
+	Topic *string `json:"Topic,omitempty" name:"Topic"`
+
+	// 分区id
+	Partition *int64 `json:"Partition,omitempty" name:"Partition"`
+
+	// 位点信息
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+}
+
+func (r *FetchMessageByOffsetRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *FetchMessageByOffsetRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type FetchMessageByOffsetResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 返回结果
+		Result *ConsumerRecord `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *FetchMessageByOffsetResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *FetchMessageByOffsetResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type FetchMessageListByOffsetRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 主题名
+	Topic *string `json:"Topic,omitempty" name:"Topic"`
+
+	// 分区id
+	Partition *int64 `json:"Partition,omitempty" name:"Partition"`
+
+	// 位点信息
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 最大查询条数，默认20
+	SinglePartitionRecordNumber *int64 `json:"SinglePartitionRecordNumber,omitempty" name:"SinglePartitionRecordNumber"`
+}
+
+func (r *FetchMessageListByOffsetRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *FetchMessageListByOffsetRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type FetchMessageListByOffsetResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 返回结果
+		Result []*ConsumerRecord `json:"Result,omitempty" name:"Result" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *FetchMessageListByOffsetResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *FetchMessageListByOffsetResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type FetchMessageListByTimestampRequest struct {
+	*tchttp.BaseRequest
+
+	// 实例Id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 主题名
+	Topic *string `json:"Topic,omitempty" name:"Topic"`
+
+	// 分区id
+	Partition *int64 `json:"Partition,omitempty" name:"Partition"`
+
+	// 查询开始时间，13位时间戳
+	StartTime *int64 `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 最大查询条数，默认20
+	SinglePartitionRecordNumber *int64 `json:"SinglePartitionRecordNumber,omitempty" name:"SinglePartitionRecordNumber"`
+}
+
+func (r *FetchMessageListByTimestampRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *FetchMessageListByTimestampRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type FetchMessageListByTimestampResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 返回结果
+		Result []*ConsumerRecord `json:"Result,omitempty" name:"Result" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *FetchMessageListByTimestampResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *FetchMessageListByTimestampResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type Filter struct {
 
 	// 需要过滤的字段。
@@ -1540,6 +1708,14 @@ type InstanceAttributesResponse struct {
 	// 售卖类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Cvm *int64 `json:"Cvm,omitempty" name:"Cvm"`
+
+	// 类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// 表示该实例支持的特性。FEATURE_SUBNET_ACL:表示acl策略支持设置子网。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Features []*string `json:"Features,omitempty" name:"Features" list`
 }
 
 type InstanceConfigDO struct {
@@ -1952,6 +2128,10 @@ type SubscribedInfo struct {
 	// 分区offset信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PartitionOffset []*PartitionOffset `json:"PartitionOffset,omitempty" name:"PartitionOffset" list`
+
+	// 订阅的主题ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicId *string `json:"TopicId,omitempty" name:"TopicId"`
 }
 
 type Tag struct {

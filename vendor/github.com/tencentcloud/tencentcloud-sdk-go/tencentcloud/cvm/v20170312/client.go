@@ -771,6 +771,31 @@ func (c *Client) DescribeReservedInstances(request *DescribeReservedInstancesReq
     return
 }
 
+func NewDescribeReservedInstancesConfigInfosRequest() (request *DescribeReservedInstancesConfigInfosRequest) {
+    request = &DescribeReservedInstancesConfigInfosRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cvm", APIVersion, "DescribeReservedInstancesConfigInfos")
+    return
+}
+
+func NewDescribeReservedInstancesConfigInfosResponse() (response *DescribeReservedInstancesConfigInfosResponse) {
+    response = &DescribeReservedInstancesConfigInfosResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(DescribeReservedInstancesConfigInfos)供用户列出可购买预留实例机型配置。预留实例当前只针对国际站白名单用户开放。
+func (c *Client) DescribeReservedInstancesConfigInfos(request *DescribeReservedInstancesConfigInfosRequest) (response *DescribeReservedInstancesConfigInfosResponse, err error) {
+    if request == nil {
+        request = NewDescribeReservedInstancesConfigInfosRequest()
+    }
+    response = NewDescribeReservedInstancesConfigInfosResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeReservedInstancesOfferingsRequest() (request *DescribeReservedInstancesOfferingsRequest) {
     request = &DescribeReservedInstancesOfferingsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -792,6 +817,31 @@ func (c *Client) DescribeReservedInstancesOfferings(request *DescribeReservedIns
         request = NewDescribeReservedInstancesOfferingsRequest()
     }
     response = NewDescribeReservedInstancesOfferingsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSpotTypeConfigRequest() (request *DescribeSpotTypeConfigRequest) {
+    request = &DescribeSpotTypeConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cvm", APIVersion, "DescribeSpotTypeConfig")
+    return
+}
+
+func NewDescribeSpotTypeConfigResponse() (response *DescribeSpotTypeConfigResponse) {
+    response = &DescribeSpotTypeConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询用户可购买的竞价机型信息列表
+func (c *Client) DescribeSpotTypeConfig(request *DescribeSpotTypeConfigRequest) (response *DescribeSpotTypeConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeSpotTypeConfigRequest()
+    }
+    response = NewDescribeSpotTypeConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -952,6 +1002,31 @@ func (c *Client) ImportKeyPair(request *ImportKeyPairRequest) (response *ImportK
         request = NewImportKeyPairRequest()
     }
     response = NewImportKeyPairResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInquirePricePurchaseReservedInstancesOfferingRequest() (request *InquirePricePurchaseReservedInstancesOfferingRequest) {
+    request = &InquirePricePurchaseReservedInstancesOfferingRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cvm", APIVersion, "InquirePricePurchaseReservedInstancesOffering")
+    return
+}
+
+func NewInquirePricePurchaseReservedInstancesOfferingResponse() (response *InquirePricePurchaseReservedInstancesOfferingResponse) {
+    response = &InquirePricePurchaseReservedInstancesOfferingResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口(InquirePricePurchaseReservedInstancesOffering)用于创建预留实例询价。本接口仅允许针对购买限制范围内的预留实例配置进行询价。预留实例当前只针对国际站白名单用户开放。
+func (c *Client) InquirePricePurchaseReservedInstancesOffering(request *InquirePricePurchaseReservedInstancesOfferingRequest) (response *InquirePricePurchaseReservedInstancesOfferingResponse, err error) {
+    if request == nil {
+        request = NewInquirePricePurchaseReservedInstancesOfferingRequest()
+    }
+    response = NewInquirePricePurchaseReservedInstancesOfferingResponse()
     err = c.Send(request, response)
     return
 }

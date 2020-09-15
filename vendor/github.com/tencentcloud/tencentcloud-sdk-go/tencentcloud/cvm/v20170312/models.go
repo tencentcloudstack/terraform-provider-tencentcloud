@@ -339,7 +339,7 @@ type DataDisk struct {
 	// 数据盘大小，单位：GB。最小调整步长为10G，不同数据盘类型取值范围不同，具体限制详见：[存储概述](https://cloud.tencent.com/document/product/213/4952)。默认值为0，表示不购买数据盘。更多限制详见产品文档。
 	DiskSize *int64 `json:"DiskSize,omitempty" name:"DiskSize"`
 
-	// 数据盘类型。数据盘类型限制详见[存储概述](https://cloud.tencent.com/document/product/213/4952)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><br>默认取值：LOCAL_BASIC。<br><br>该参数对`ResizeInstanceDisk`接口无效。
+	// 数据盘类型。数据盘类型限制详见[存储概述](https://cloud.tencent.com/document/product/213/4952)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><li>CLOUD_HSSD：增强型SSD云硬盘<br><br>默认取值：LOCAL_BASIC。<br><br>该参数对`ResizeInstanceDisk`接口无效。
 	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
 
 	// 数据盘ID。LOCAL_BASIC 和 LOCAL_SSD 类型没有ID，暂时不支持该参数。
@@ -998,12 +998,16 @@ type DescribeInstancesRequest struct {
 	// <p style="padding-left: 30px;">按照【<strong>子网ID</strong>】进行过滤。子网ID形如：subnet-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>instance-id</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>实例ID</strong>】进行过滤。实例ID形如：ins-xxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// <li><strong>uuid</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例UUID</strong>】进行过滤。实例UUID形如：xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>security-group-id</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>安全组ID</strong>】进行过滤。安全组ID形如: sg-8jlk3f3r。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>instance-name</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>实例名称</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>instance-charge-type</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>实例计费模式</strong>】进行过滤。(PREPAID：表示预付费，即包年包月 | POSTPAID_BY_HOUR：表示后付费，即按量计费 | CDHPAID：表示[CDH](https://cloud.tencent.com/document/product/416)付费，即只对[CDH](https://cloud.tencent.com/document/product/416)计费，不对[CDH](https://cloud.tencent.com/document/product/416)上的实例计费。)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
+	// <li><strong>instance-state</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>实例状态</strong>】进行过滤。状态类型详见[实例状态表](https://cloud.tencent.com/document/api/213/15753#InstanceStatus)</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>private-ip-address</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>实例主网卡的内网IP</strong>】进行过滤。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p>
 	// <li><strong>public-ip-address</strong></li>
@@ -1225,6 +1229,60 @@ func (r *DescribeRegionsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeReservedInstancesConfigInfosRequest struct {
+	*tchttp.BaseRequest
+
+	// zone
+	// 按照预留实例计费可购买的可用区进行过滤。形如：ap-guangzhou-1。
+	// 类型：String
+	// 必选：否
+	// 可选项：各地域可用区列表
+	// 
+	// product-description
+	// 按照预留实例计费的平台描述（即操作系统）进行过滤。形如：linux。
+	// 类型：String
+	// 必选：否
+	// 可选项：linux
+	// 
+	// duration
+	// 按照预留实例计费有效期，即预留实例计费购买时长进行过滤。形如：31536000。
+	// 类型：Integer
+	// 计量单位：秒
+	// 必选：否
+	// 可选项：31536000 (1年) | 94608000（3年）
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters" list`
+}
+
+func (r *DescribeReservedInstancesConfigInfosRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeReservedInstancesConfigInfosRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeReservedInstancesConfigInfosResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 预留实例静态配置信息列表。
+		ReservedInstanceConfigInfos []*ReservedInstanceConfigInfoItem `json:"ReservedInstanceConfigInfos,omitempty" name:"ReservedInstanceConfigInfos" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeReservedInstancesConfigInfosResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeReservedInstancesConfigInfosResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeReservedInstancesOfferingsRequest struct {
 	*tchttp.BaseRequest
 
@@ -1313,7 +1371,10 @@ type DescribeReservedInstancesRequest struct {
 	// <li><strong>duration</strong></li>
 	// <p style="padding-left: 30px;">按照预留实例计费【<strong>有效期</strong>】即预留实例计费购买时长进行过滤。形如：31536000。</p><p style="padding-left: 30px;">类型：Integer</p><p style="padding-left: 30px;">计量单位：秒</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：31536000 (1年) | 94608000（3年）</p>
 	// <li><strong>instance-type</strong></li>
-	// <p style="padding-left: 30px;">按照【<strong>预留实例计费类型</strong>】进行过滤。形如：S3.MEDIUM4。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/11518">预留实例计费类型列表</a></p>
+	// <p style="padding-left: 30px;">按照【<strong>预留实例规格</strong>】进行过滤。形如：S3.MEDIUM4。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/11518">预留实例规格列表</a></p>
+	// <li><strong>instance-family</strong></li>
+	// <p style="padding-left: 30px;">按照【<strong>预留实例类型</strong>】进行过滤。形如：S3。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：<a href="https://cloud.tencent.com/document/product/213/11518">预留实例类型列表</a></p>
+	// <li><strong>offering-type</strong></li>
 	// <li><strong>offering-type</strong></li>
 	// <p style="padding-left: 30px;">按照【<strong>付款类型</strong>】进行过滤。形如：All Upfront (预付全部费用)。</p><p style="padding-left: 30px;">类型：String</p><p style="padding-left: 30px;">必选：否</p><p style="padding-left: 30px;">可选项：All Upfront (预付全部费用)</p>
 	// <li><strong>product-description</strong></li>
@@ -1356,6 +1417,37 @@ func (r *DescribeReservedInstancesResponse) ToJsonString() string {
 }
 
 func (r *DescribeReservedInstancesResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeSpotTypeConfigRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeSpotTypeConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeSpotTypeConfigRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeSpotTypeConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeSpotTypeConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeSpotTypeConfigResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1810,6 +1902,55 @@ func (r *ImportKeyPairResponse) ToJsonString() string {
 }
 
 func (r *ImportKeyPairResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type InquirePricePurchaseReservedInstancesOfferingRequest struct {
+	*tchttp.BaseRequest
+
+	// 购买预留实例计费数量
+	InstanceCount *uint64 `json:"InstanceCount,omitempty" name:"InstanceCount"`
+
+	// 预留实例计费配置ID
+	ReservedInstancesOfferingId *string `json:"ReservedInstancesOfferingId,omitempty" name:"ReservedInstancesOfferingId"`
+
+	// 试运行
+	DryRun *bool `json:"DryRun,omitempty" name:"DryRun"`
+
+	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。<br>更多详细信息请参阅：如何保证幂等性
+	ClientToken *string `json:"ClientToken,omitempty" name:"ClientToken"`
+
+	// 预留实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>最多支持60个字符（包含模式串）。</li>
+	ReservedInstanceName *string `json:"ReservedInstanceName,omitempty" name:"ReservedInstanceName"`
+}
+
+func (r *InquirePricePurchaseReservedInstancesOfferingRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *InquirePricePurchaseReservedInstancesOfferingRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type InquirePricePurchaseReservedInstancesOfferingResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 该参数表示对应配置预留实例的价格。
+		Price *ReservedInstancePrice `json:"Price,omitempty" name:"Price"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *InquirePricePurchaseReservedInstancesOfferingResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *InquirePricePurchaseReservedInstancesOfferingResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3013,6 +3154,9 @@ type PurchaseReservedInstancesOfferingRequest struct {
 
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。<br>更多详细信息请参阅：如何保证幂等性
 	ClientToken *string `json:"ClientToken,omitempty" name:"ClientToken"`
+
+	// 预留实例显示名称。<br><li>不指定实例显示名称则默认显示‘未命名’。</li><li>最多支持60个字符（包含模式串）。</li>
+	ReservedInstanceName *string `json:"ReservedInstanceName,omitempty" name:"ReservedInstanceName"`
 }
 
 func (r *PurchaseReservedInstancesOfferingRequest) ToJsonString() string {
@@ -3174,13 +3318,126 @@ func (r *RenewInstancesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type ReservedInstanceConfigInfoItem struct {
+
+	// 实例规格。
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 实例规格名称。
+	TypeName *string `json:"TypeName,omitempty" name:"TypeName"`
+
+	// 优先级。
+	Order *int64 `json:"Order,omitempty" name:"Order"`
+
+	// 实例族信息列表。
+	InstanceFamilies []*ReservedInstanceFamilyItem `json:"InstanceFamilies,omitempty" name:"InstanceFamilies" list`
+}
+
+type ReservedInstanceFamilyItem struct {
+
+	// 实例族。
+	InstanceFamily *string `json:"InstanceFamily,omitempty" name:"InstanceFamily"`
+
+	// 优先级。
+	Order *int64 `json:"Order,omitempty" name:"Order"`
+
+	// 实例类型信息列表。
+	InstanceTypes []*ReservedInstanceTypeItem `json:"InstanceTypes,omitempty" name:"InstanceTypes" list`
+}
+
+type ReservedInstancePrice struct {
+
+	// 预支合计费用的原价，单位：元。
+	OriginalFixedPrice *float64 `json:"OriginalFixedPrice,omitempty" name:"OriginalFixedPrice"`
+
+	// 预支合计费用的折扣价，单位：元。
+	DiscountFixedPrice *float64 `json:"DiscountFixedPrice,omitempty" name:"DiscountFixedPrice"`
+
+	// 后续合计费用的原价，单位：元/小时
+	OriginalUsagePrice *float64 `json:"OriginalUsagePrice,omitempty" name:"OriginalUsagePrice"`
+
+	// 后续合计费用的折扣价，单位：元/小时
+	DiscountUsagePrice *float64 `json:"DiscountUsagePrice,omitempty" name:"DiscountUsagePrice"`
+}
+
+type ReservedInstancePriceItem struct {
+
+	// 付费类型，如："All Upfront","Partial Upfront","No Upfront"
+	OfferingType *string `json:"OfferingType,omitempty" name:"OfferingType"`
+
+	// 预支合计费用，单位：元。
+	FixedPrice *float64 `json:"FixedPrice,omitempty" name:"FixedPrice"`
+
+	// 后续合计费用，单位：元/小时
+	UsagePrice *float64 `json:"UsagePrice,omitempty" name:"UsagePrice"`
+
+	// 预留实例配置ID
+	ReservedInstancesOfferingId *string `json:"ReservedInstancesOfferingId,omitempty" name:"ReservedInstancesOfferingId"`
+
+	// 预留实例计费可购买的可用区。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 预留实例计费【有效期】即预留实例计费购买时长。形如：31536000。
+	// 计量单位：秒
+	Duration *uint64 `json:"Duration,omitempty" name:"Duration"`
+
+	// 预留实例计费的平台描述（即操作系统）。形如：linux。
+	// 返回项： linux 。
+	ProductDescription *string `json:"ProductDescription,omitempty" name:"ProductDescription"`
+}
+
+type ReservedInstanceTypeItem struct {
+
+	// 实例类型。
+	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// CPU核数。
+	Cpu *uint64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 内存大小。
+	Memory *uint64 `json:"Memory,omitempty" name:"Memory"`
+
+	// GPU核数。
+	Gpu *uint64 `json:"Gpu,omitempty" name:"Gpu"`
+
+	// FPGA核数。
+	Fpga *uint64 `json:"Fpga,omitempty" name:"Fpga"`
+
+	// 存储块数。
+	StorageBlock *uint64 `json:"StorageBlock,omitempty" name:"StorageBlock"`
+
+	// 网卡数。
+	NetworkCard *uint64 `json:"NetworkCard,omitempty" name:"NetworkCard"`
+
+	// 最大带宽。
+	MaxBandwidth *float64 `json:"MaxBandwidth,omitempty" name:"MaxBandwidth"`
+
+	// 主频。
+	Frequency *string `json:"Frequency,omitempty" name:"Frequency"`
+
+	// CPU型号名称。
+	CpuModelName *string `json:"CpuModelName,omitempty" name:"CpuModelName"`
+
+	// 包转发率。
+	Pps *uint64 `json:"Pps,omitempty" name:"Pps"`
+
+	// 外部信息。
+	Externals *Externals `json:"Externals,omitempty" name:"Externals"`
+
+	// 备注信息。
+	Remark *string `json:"Remark,omitempty" name:"Remark"`
+
+	// 预留实例配置价格信息。
+	Prices []*ReservedInstancePriceItem `json:"Prices,omitempty" name:"Prices" list`
+}
+
 type ReservedInstances struct {
 
 	// 已购买的预留实例计费ID。形如：650c138f-ae7e-4750-952a-96841d6e9fc1。
 	ReservedInstancesId *string `json:"ReservedInstancesId,omitempty" name:"ReservedInstancesId"`
 
-	// 预留实例计费的类型。形如：S3.MEDIUM4。
-	// 返回项：<a href="https://cloud.tencent.com/document/product/213/11518">预留实例计费类型列表</a>
+	// 预留实例计费的规格。形如：S3.MEDIUM4。
+	// 返回项：<a href="https://cloud.tencent.com/document/product/213/11518">预留实例计费规格列表</a>
 	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
 
 	// 预留实例计费可购买的可用区。形如：ap-guangzhou-1。
@@ -3215,6 +3472,10 @@ type ReservedInstances struct {
 	// 预留实例计费的付款类型。形如：All Upfront。
 	// 返回项： All Upfront (预付全部费用)。
 	OfferingType *string `json:"OfferingType,omitempty" name:"OfferingType"`
+
+	// 预留实例计费的类型。形如：S3。
+	// 返回项：<a href="https://cloud.tencent.com/document/product/213/11518">预留实例计费类型列表</a>
+	InstanceFamily *string `json:"InstanceFamily,omitempty" name:"InstanceFamily"`
 }
 
 type ReservedInstancesOffering struct {
@@ -3490,7 +3751,7 @@ type RunInstancesRequest struct {
 	InstanceChargePrepaid *InstanceChargePrepaid `json:"InstanceChargePrepaid,omitempty" name:"InstanceChargePrepaid"`
 
 	// 实例机型。不同实例机型指定了不同的资源规格。
-	// <br><li>对于付费模式为PREPAID或POSTPAID\_BY\_HOUR的实例创建，具体取值可通过调用接口[DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/api/213/15749)来获得最新的规格表或参见[实例规格](https://cloud.tencent.com/document/product/213/11518)描述。若不指定该参数，则默认机型为S1.SMALL1。<br><li>对于付费模式为CDHPAID的实例创建，该参数以"CDH_"为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。
+	// <br><li>对于付费模式为PREPAID或POSTPAID\_BY\_HOUR的实例创建，具体取值可通过调用接口[DescribeInstanceTypeConfigs](https://cloud.tencent.com/document/api/213/15749)来获得最新的规格表或参见[实例规格](https://cloud.tencent.com/document/product/213/11518)描述。若不指定该参数，则系统将根据当前地域的资源售卖情况动态指定默认机型。<br><li>对于付费模式为CDHPAID的实例创建，该参数以"CDH_"为前缀，根据CPU和内存配置生成，具体形式为：CDH_XCXG，例如对于创建CPU为1核，内存为1G大小的专用宿主机的实例，该参数应该为CDH_1C1G。
 	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
 
 	// 实例系统盘配置信息。若不指定该参数，则按照系统默认值进行分配。
@@ -3499,7 +3760,7 @@ type RunInstancesRequest struct {
 	// 实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。
 	DataDisks []*DataDisk `json:"DataDisks,omitempty" name:"DataDisks" list`
 
-	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，表示每个实例的主网卡IP，而且InstanceCount参数必须与私有网络IP的个数一致。
+	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。
 	VirtualPrivateCloud *VirtualPrivateCloud `json:"VirtualPrivateCloud,omitempty" name:"VirtualPrivateCloud"`
 
 	// 公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。
@@ -3759,7 +4020,7 @@ func (r *SyncImagesResponse) FromJsonString(s string) error {
 
 type SystemDisk struct {
 
-	// 系统盘类型。系统盘类型限制详见[存储概述](https://cloud.tencent.com/document/product/213/4952)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><br>默认取值：CLOUD_BASIC。
+	// 系统盘类型。系统盘类型限制详见[存储概述](https://cloud.tencent.com/document/product/213/4952)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><br>默认取值：当前有库存的硬盘类型。
 	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
 
 	// 系统盘ID。LOCAL_BASIC 和 LOCAL_SSD 类型没有ID。暂时不支持该参数。
@@ -3873,6 +4134,7 @@ type ZoneInfo struct {
 	// <li> ap-beijing-2 </li>
 	// <li> ap-beijing-3 </li>
 	// <li> ap-beijing-4 </li>
+	// <li> ap-beijing-5 </li>
 	// <li> na-siliconvalley-1 </li>
 	// <li> na-siliconvalley-2 </li>
 	// <li> eu-frankfurt-1 </li>

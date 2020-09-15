@@ -93,6 +93,56 @@ func (c *Client) CreateClsLogTopic(request *CreateClsLogTopicRequest) (response 
     return
 }
 
+func NewCreateScdnLogTaskRequest() (request *CreateScdnLogTaskRequest) {
+    request = &CreateScdnLogTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "CreateScdnLogTask")
+    return
+}
+
+func NewCreateScdnLogTaskResponse() (response *CreateScdnLogTaskResponse) {
+    response = &CreateScdnLogTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateScdnLogTask 用于创建事件日志任务
+func (c *Client) CreateScdnLogTask(request *CreateScdnLogTaskRequest) (response *CreateScdnLogTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateScdnLogTaskRequest()
+    }
+    response = NewCreateScdnLogTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateVerifyRecordRequest() (request *CreateVerifyRecordRequest) {
+    request = &CreateVerifyRecordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "CreateVerifyRecord")
+    return
+}
+
+func NewCreateVerifyRecordResponse() (response *CreateVerifyRecordResponse) {
+    response = &CreateVerifyRecordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 生成一条子域名解析，提示客户添加到域名解析上，用于泛域名及域名取回校验归属权
+func (c *Client) CreateVerifyRecord(request *CreateVerifyRecordRequest) (response *CreateVerifyRecordResponse, err error) {
+    if request == nil {
+        request = NewCreateVerifyRecordRequest()
+    }
+    response = NewCreateVerifyRecordResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteCdnDomainRequest() (request *DeleteCdnDomainRequest) {
     request = &DeleteCdnDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -243,6 +293,7 @@ func NewDescribeCdnIpResponse() (response *DescribeCdnIpResponse) {
 }
 
 // DescribeCdnIp 用于查询 CDN IP 归属。
+// （注意：此接口请求频率限制以 CDN 侧限制为准：200次/10分钟）
 func (c *Client) DescribeCdnIp(request *DescribeCdnIpRequest) (response *DescribeCdnIpResponse, err error) {
     if request == nil {
         request = NewDescribeCdnIpRequest()
@@ -273,6 +324,32 @@ func (c *Client) DescribeCertDomains(request *DescribeCertDomainsRequest) (respo
         request = NewDescribeCertDomainsRequest()
     }
     response = NewDescribeCertDomainsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDistrictIspDataRequest() (request *DescribeDistrictIspDataRequest) {
+    request = &DescribeDistrictIspDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "DescribeDistrictIspData")
+    return
+}
+
+func NewDescribeDistrictIspDataResponse() (response *DescribeDistrictIspDataResponse) {
+    response = &DescribeDistrictIspDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询指定域名的区域、运营商明细数据
+// 注意事项：接口尚未全量开放，未在内测名单中的账号不支持调用
+func (c *Client) DescribeDistrictIspData(request *DescribeDistrictIspDataRequest) (response *DescribeDistrictIspDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeDistrictIspDataRequest()
+    }
+    response = NewDescribeDistrictIspDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -612,6 +689,31 @@ func (c *Client) DescribeReportData(request *DescribeReportDataRequest) (respons
         request = NewDescribeReportDataRequest()
     }
     response = NewDescribeReportDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeScdnTopDataRequest() (request *DescribeScdnTopDataRequest) {
+    request = &DescribeScdnTopDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnTopData")
+    return
+}
+
+func NewDescribeScdnTopDataResponse() (response *DescribeScdnTopDataResponse) {
+    response = &DescribeScdnTopDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取SCDN的Top数据
+func (c *Client) DescribeScdnTopData(request *DescribeScdnTopDataRequest) (response *DescribeScdnTopDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeScdnTopDataRequest()
+    }
+    response = NewDescribeScdnTopDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -1127,6 +1229,31 @@ func (c *Client) UpdatePayType(request *UpdatePayTypeRequest) (response *UpdateP
         request = NewUpdatePayTypeRequest()
     }
     response = NewUpdatePayTypeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewVerifyDomainRecordRequest() (request *VerifyDomainRecordRequest) {
+    request = &VerifyDomainRecordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("cdn", APIVersion, "VerifyDomainRecord")
+    return
+}
+
+func NewVerifyDomainRecordResponse() (response *VerifyDomainRecordResponse) {
+    response = &VerifyDomainRecordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 验证域名解析值
+func (c *Client) VerifyDomainRecord(request *VerifyDomainRecordRequest) (response *VerifyDomainRecordResponse, err error) {
+    if request == nil {
+        request = NewVerifyDomainRecordRequest()
+    }
+    response = NewVerifyDomainRecordResponse()
     err = c.Send(request, response)
     return
 }

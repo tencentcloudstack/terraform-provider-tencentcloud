@@ -19,6 +19,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
@@ -70,6 +71,7 @@ type TencentCloudClient struct {
 	sqlserverConn *sqlserver.Client
 	postgreConn   *postgre.Client
 	ckafkaConn    *ckafka.Client
+	cynosConn     *cynosdb.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -442,4 +444,17 @@ func (me *TencentCloudClient) UseCkafkaClient() *ckafka.Client {
 	me.ckafkaConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.ckafkaConn
+}
+
+// UseCynosdbClient returns cynosdb client for service
+func (me *TencentCloudClient) UseCynosdbClient() *cynosdb.Client {
+	if me.cynosConn != nil {
+		return me.cynosConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.cynosConn, _ = cynosdb.NewClient(me.Credential, me.Region, cpf)
+	me.cynosConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cynosConn
 }

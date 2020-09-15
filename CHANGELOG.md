@@ -1,4 +1,9 @@
-## 1.42.3 (Unreleased)
+## 1.43.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_cynosdb_cluster`, `tencentcloud_cynosdb_readonly_instance`.
+
 ## 1.42.2 (September 14, 2020)
 
 BUG FIXES:

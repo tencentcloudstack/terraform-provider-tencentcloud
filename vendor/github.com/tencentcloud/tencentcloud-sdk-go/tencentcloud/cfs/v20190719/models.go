@@ -52,8 +52,11 @@ type AvailableType struct {
 	// 协议与售卖详情
 	Protocols []*AvailableProtoStatus `json:"Protocols,omitempty" name:"Protocols" list`
 
-	// 存储类型。可选值有 SD 标准型存储、HP性能型存储
+	// 存储类型。返回值中 SD 为标准型存储、HP 为性能型存储
 	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 是否支持预付费。返回值中 true 为支持、false 为不支持
+	Prepayment *bool `json:"Prepayment,omitempty" name:"Prepayment"`
 }
 
 type AvailableZone struct {
@@ -463,6 +466,43 @@ func (r *DescribeAvailableZoneInfoResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeCfsFileSystemClientsRequest struct {
+	*tchttp.BaseRequest
+
+	// 文件系统 ID。
+	FileSystemId *string `json:"FileSystemId,omitempty" name:"FileSystemId"`
+}
+
+func (r *DescribeCfsFileSystemClientsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeCfsFileSystemClientsRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeCfsFileSystemClientsResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 客户端列表
+		ClientList []*FileSystemClient `json:"ClientList,omitempty" name:"ClientList" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeCfsFileSystemClientsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeCfsFileSystemClientsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeCfsFileSystemsRequest struct {
 	*tchttp.BaseRequest
 
@@ -654,6 +694,27 @@ func (r *DescribeMountTargetsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type FileSystemClient struct {
+
+	// 文件系统IP地址
+	CfsVip *string `json:"CfsVip,omitempty" name:"CfsVip"`
+
+	// 客户端IP地址
+	ClientIp *string `json:"ClientIp,omitempty" name:"ClientIp"`
+
+	// 文件系统所属VPCID
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 可用区名称，例如ap-beijing-1，请参考 概览文档中的地域与可用区列表
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 可用区中文名称
+	ZoneName *string `json:"ZoneName,omitempty" name:"ZoneName"`
+
+	// 该文件系统被挂载到客户端上的路径信息
+	MountDirectory *string `json:"MountDirectory,omitempty" name:"MountDirectory"`
+}
+
 type FileSystemInfo struct {
 
 	// 创建时间
@@ -686,7 +747,7 @@ type FileSystemInfo struct {
 	// 文件系统存储类型
 	StorageType *string `json:"StorageType,omitempty" name:"StorageType"`
 
-	// 文件系统绑定的预付费存储包（暂未支持）
+	// 文件系统绑定的预付费存储包
 	StorageResourcePkg *string `json:"StorageResourcePkg,omitempty" name:"StorageResourcePkg"`
 
 	// 文件系统绑定的预付费带宽包（暂未支持）
@@ -706,6 +767,9 @@ type FileSystemInfo struct {
 
 	// 应用ID
 	AppId *int64 `json:"AppId,omitempty" name:"AppId"`
+
+	// 文件系统吞吐上限，吞吐上限是根据文件系统当前已使用存储量、绑定的存储资源包以及吞吐资源包一同确定
+	BandwidthLimit *float64 `json:"BandwidthLimit,omitempty" name:"BandwidthLimit"`
 }
 
 type MountInfo struct {
