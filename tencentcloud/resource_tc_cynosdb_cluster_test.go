@@ -32,7 +32,7 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_cpu_core", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_memory_size", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "tags.test", "test"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "force_delete", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "force_delete", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "rw_group_sg.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "ro_group_sg.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "project_id", "0"),
@@ -213,7 +213,7 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
     test = "test"
   }
 
-  force_delete = false
+  force_delete = true
 
   rw_group_sg = [
     "sg-nltpbqg1",
@@ -252,7 +252,7 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
     test = "test-update"
   }
 
-  force_delete = false
+  force_delete = true
 
   rw_group_sg = [
     "sg-cf1u18wb",
