@@ -102,7 +102,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Type:        schema.TypeInt,
 			Optional:    true,
 			Default:     0,
-			Description: "ID of the project.",
+			Description: "ID of the project. `0` by default.",
 		},
 		"available_zone": {
 			Type:        schema.TypeString,
@@ -246,12 +246,12 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 					"ip": {
 						Type:        schema.TypeString,
 						Computed:    true,
-						Description: "IP address for readonly connection.",
+						Description: "IP address for read-write connection.",
 					},
 					"port": {
 						Type:        schema.TypeInt,
 						Computed:    true,
-						Description: "Port number for readonly connection.",
+						Description: "Port number for read-write connection.",
 					},
 				},
 			},

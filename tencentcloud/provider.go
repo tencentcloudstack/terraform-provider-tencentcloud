@@ -206,7 +206,7 @@ CynosDB
 
   Resource
     tencentcloud_cynosdb_cluster
-	tencentcloud_cynosdb_readonly_instance
+    tencentcloud_cynosdb_readonly_instance
 
 Direct Connect(DC)
   Data Source

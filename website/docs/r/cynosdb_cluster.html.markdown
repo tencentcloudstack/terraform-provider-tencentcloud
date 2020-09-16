@@ -75,7 +75,7 @@ The following arguments are supported:
 * `instance_maintain_weekdays` - (Optional) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
 * `port` - (Optional) Port of CynosDB cluster.
 * `prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
-* `project_id` - (Optional) ID of the project.
+* `project_id` - (Optional) ID of the project. `0` by default.
 * `ro_group_sg` - (Optional) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional) IDs of security group for `rw_group`.
 * `tags` - (Optional) The tags of the CynosDB cluster.
@@ -100,8 +100,8 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_id` - ID of instance.
   * `instance_name` - Name of instance.
 * `rw_group_addr` - Read-write addresses. Each element contains the following attributes:
-  * `ip` - IP address for readonly connection.
-  * `port` - Port number for readonly connection.
+  * `ip` - IP address for read-write connection.
+  * `port` - Port number for read-write connection.
 * `rw_group_id` - Id of read-write instance group.
 * `rw_group_instances` - List of instances in the read-write instance group.
   * `instance_id` - ID of instance.
