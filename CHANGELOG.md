@@ -2,7 +2,10 @@
 
 FEATURES:
 
-* **New Resource**: `tencentcloud_cynosdb_cluster`, `tencentcloud_cynosdb_readonly_instance`.
+* **New Resource**: `tencentcloud_cynosdb_cluster`
+* **New Resource**: `tencentcloud_cynosdb_readonly_instance`.
+* **New Data Source**: `tencentcloud_cynosdb_clusters`
+* **New Data Source**: `tencentcloud_cynosdb_readonly_instances`.
 
 ## 1.42.2 (September 14, 2020)
 

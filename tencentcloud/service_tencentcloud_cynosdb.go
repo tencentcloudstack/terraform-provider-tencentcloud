@@ -22,14 +22,16 @@ func (me *CynosdbService) DescribeClusters(ctx context.Context, filters map[stri
 	logId := getLogId(ctx)
 	request := cynosdb.NewDescribeClustersRequest()
 
-	var queryFilter cynosdb.QueryFilter
-	queryFilter.Names = make([]*string, 0, len(filters))
-	queryFilter.Values = make([]*string, 0, len(filters))
+	queryFilters := make([]*cynosdb.QueryFilter, 0, len(filters))
+
 	for k, v := range filters {
-		queryFilter.Names = append(queryFilter.Names, helper.String(k))
-		queryFilter.Values = append(queryFilter.Names, helper.String(v))
+		filter := cynosdb.QueryFilter{
+			Names:  []*string{helper.String(k)},
+			Values: []*string{helper.String(v)},
+		}
+		queryFilters = append(queryFilters, &filter)
 	}
-	request.Filters = []*cynosdb.QueryFilter{&queryFilter}
+	request.Filters = queryFilters
 
 	offset := CYNOSDB_DEFAULT_OFFSET
 	pageSize := CYNOSDB_MAX_LIMIT
@@ -238,14 +240,16 @@ func (me *CynosdbService) DescribeInstances(ctx context.Context, filters map[str
 	logId := getLogId(ctx)
 	request := cynosdb.NewDescribeInstancesRequest()
 
-	var queryFilter cynosdb.QueryFilter
-	queryFilter.Names = make([]*string, 0, len(filters))
-	queryFilter.Values = make([]*string, 0, len(filters))
+	queryFilters := make([]*cynosdb.QueryFilter, 0, len(filters))
+
 	for k, v := range filters {
-		queryFilter.Names = append(queryFilter.Names, helper.String(k))
-		queryFilter.Values = append(queryFilter.Names, helper.String(v))
+		filter := cynosdb.QueryFilter{
+			Names:  []*string{helper.String(k)},
+			Values: []*string{helper.String(v)},
+		}
+		queryFilters = append(queryFilters, &filter)
 	}
-	request.Filters = []*cynosdb.QueryFilter{&queryFilter}
+	request.Filters = queryFilters
 
 	offset := CYNOSDB_DEFAULT_OFFSET
 	pageSize := CYNOSDB_MAX_LIMIT
