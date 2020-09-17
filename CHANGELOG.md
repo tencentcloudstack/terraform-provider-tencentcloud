@@ -7,6 +7,7 @@ FEATURES:
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_instance` add new argument `data_disk_snapshot_id` to support data disk with `SnapshotId`([#469](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/469))
+* Data Source: `tencentcloud_instances` support filter by tags.
 
 ## 1.42.2 (September 14, 2020)
 

@@ -29,6 +29,7 @@ The following arguments are supported:
 * `project_id` - (Optional) The project CVM belongs to.
 * `result_output_file` - (Optional) Used to save results.
 * `subnet_id` - (Optional) ID of a vpc subnetwork.
+* `tags` - (Optional) Tags of the instance.
 * `vpc_id` - (Optional) ID of the vpc to be queried.
 
 ## Attributes Reference

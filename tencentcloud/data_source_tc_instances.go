@@ -58,6 +58,11 @@ func dataSourceTencentCloudInstances() *schema.Resource {
 				Optional:    true,
 				Description: "ID of a vpc subnetwork.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of the instance.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -259,6 +264,11 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 	}
 	if v, ok := d.GetOk("subnet_id"); ok {
 		filter["subnet-id"] = v.(string)
+	}
+	if v, ok := d.GetOk("tags"); ok {
+		for key, value := range v.(map[string]interface{}) {
+			filter["tag:"+key] = value.(string)
+		}
 	}
 
 	var instances []*cvm.Instance
