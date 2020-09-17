@@ -13,7 +13,7 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   password                     = "cynos@123"
   instance_maintain_duration   = 7200
   instance_maintain_start_time = 10800
-  instance_maintain_weekdays   = [
+  instance_maintain_weekdays = [
     "Fri",
     "Mon",
     "Sat",
@@ -49,7 +49,7 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
 
   instance_maintain_duration   = 3600
   instance_maintain_start_time = 10800
-  instance_maintain_weekdays   = [
+  instance_maintain_weekdays = [
     "Fri",
     "Mon",
     "Sat",
@@ -59,3 +59,18 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
     "Tue",
   ]
 }
+
+data "tencentcloud_cynosdb_clusters" "foo" {
+  cluster_id   = "cynosdbmysql-dzj5l8gz"
+  project_id   = 0
+  db_type      = "MYSQL"
+  cluster_name = "test"
+}
+
+data "tencentcloud_cynosdb_instances" "foo" {
+  instance_id   = "cynosdbmysql-ins-0wln9u6w"
+  project_id    = 0
+  db_type       = "MYSQL"
+  instance_name = "test"
+}
+

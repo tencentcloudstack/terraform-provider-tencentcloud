@@ -203,6 +203,8 @@ CVM
 
 CynosDB
   Data Source
+	tencentcloud_cynosdb_clusters
+	tencentcloud_cynosdb_instances
 
   Resource
     tencentcloud_cynosdb_cluster
@@ -646,6 +648,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_users":                     dataSourceTencentCloudCkafkaUsers(),
 			"tencentcloud_ckafka_acls":                      dataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_ckafka_topics":                    dataSourceTencentCloudCkafkaTopics(),
+			"tencentcloud_cynosdb_clusters":                 dataSourceTencentCloudCynosdbClusters(),
+			"tencentcloud_cynosdb_instances":                dataSourceTencentCloudCynosdbInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
