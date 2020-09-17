@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_instances" "foo" {
-  instance_id         = "cynosdbmysql-ins-0wln9u6w"
-  project_id = 0
-  db_type = "MYSQL"
+  instance_id   = "cynosdbmysql-ins-0wln9u6w"
+  project_id    = 0
+  db_type       = "MYSQL"
   instance_name = "test"
 }
 ```
@@ -33,6 +33,11 @@ func dataSourceTencentCloudCynosdbInstances() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Type of CynosDB, and available values include `MYSQL`, `POSTGRESQL`.",
+			},
+			"cluster_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of the cluster.",
 			},
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -128,6 +133,10 @@ func dataSourceTencentCloudCynosdbInstancesRead(d *schema.ResourceData, meta int
 	if v, ok := d.GetOkExists("project_id"); ok {
 		params["ProjectId"] = fmt.Sprintf("%d", v.(int))
 	}
+	var clusterId string
+	if v, ok := d.GetOk("cluster_id"); ok {
+		clusterId = v.(string)
+	}
 
 	cynosdbService := CynosdbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
@@ -141,6 +150,10 @@ func dataSourceTencentCloudCynosdbInstancesRead(d *schema.ResourceData, meta int
 		ids := make([]string, 0, len(instances))
 		instanceList := make([]map[string]interface{}, 0, len(instances))
 		for _, instance := range instances {
+			if clusterId != "" && *instance.ClusterId != clusterId {
+				continue
+			}
+
 			mapping := map[string]interface{}{
 				"cluster_id":            instance.ClusterId,
 				"instance_id":           instance.InstanceId,

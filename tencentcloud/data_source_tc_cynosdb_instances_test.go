@@ -34,9 +34,10 @@ func TestAccTencentCloudCynosdbInstancesDataSource_full(t *testing.T) {
 func testAccCynosdbInstancestDataSource_full() string {
 	return testAccCynosdbReadonlyInstance + `
 data "tencentcloud_cynosdb_instances" "instances" {
-  instance_id         = tencentcloud_cynosdb_readonly_instance.foo.id
-  project_id = 0
-  db_type = "MYSQL"
+  instance_id   = tencentcloud_cynosdb_readonly_instance.foo.id
+  project_id    = 0
+  db_type       = "MYSQL"
+  cluster_id    = tencentcloud_cynosdb_readonly_instance.foo.cluster_id
   instance_name = "tf-cynosdb-readonly-instance"
 }`
 }

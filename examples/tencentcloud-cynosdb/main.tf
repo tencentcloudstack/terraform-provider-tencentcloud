@@ -13,7 +13,7 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   password                     = "cynos@123"
   instance_maintain_duration   = 7200
   instance_maintain_start_time = 10800
-  instance_maintain_weekdays = [
+  instance_maintain_weekdays   = [
     "Fri",
     "Mon",
     "Sat",
@@ -49,7 +49,7 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
 
   instance_maintain_duration   = 3600
   instance_maintain_start_time = 10800
-  instance_maintain_weekdays = [
+  instance_maintain_weekdays   = [
     "Fri",
     "Mon",
     "Sat",

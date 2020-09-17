@@ -39,9 +39,9 @@ func TestAccTencentCloudCynosdbClustersDataSource_full(t *testing.T) {
 func testAccCynosdbClusterstDataSource_full() string {
 	return testAccCynosdbCluster + `
 data "tencentcloud_cynosdb_clusters" "cluster_full" {
-  cluster_id         = tencentcloud_cynosdb_cluster.foo.id
-  project_id = 0
-  db_type = "MYSQL"
+  cluster_id   = tencentcloud_cynosdb_cluster.foo.id
+  project_id   = 0
+  db_type      = "MYSQL"
   cluster_name = "tf-cynosdb"
 }`
 }

@@ -26,6 +26,7 @@ data "tencentcloud_cynosdb_instances" "foo" {
 
 The following arguments are supported:
 
+* `cluster_id` - (Optional) ID of the cluster.
 * `db_type` - (Optional) Type of CynosDB, and available values include `MYSQL`, `POSTGRESQL`.
 * `instance_id` - (Optional) ID of the Cynosdb instance to be queried.
 * `instance_name` - (Optional) Name of the Cynosdb instance to be queried.
