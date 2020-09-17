@@ -1,7 +1,12 @@
 ## 1.42.3 (Unreleased)
 
+FEATURES:
+
+* **New Resource**: `tencentcloud_image`
+
 ENHANCEMENTS:
 
+* Resource: `tencentcloud_instance` add new argument `data_disk_snapshot_id` to support data disk with `SnapshotId`([#469](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/469))
 * Data Source: `tencentcloud_instances` support filter by tags.
 
 ## 1.42.2 (September 14, 2020)
@@ -12,6 +17,7 @@ BUG FIXES:
 ## 1.42.1 (September 10, 2020)
 
 BUG FIXES:
+
 * Resource: `tencentcloud_mongodb_instance` Fix the error of releasing associated resources when destroying mongodb postpaid instance.
 * Resource: `tencentcloud_mongodb_sharding_instance` Fix the error of releasing associated resources when destroying mongodb postpaid sharding instance.
 * Resource: `tencentcloud_mongodb_standby_instance` Fix the error of releasing associated resources when destroying mongodb postpaid standby instance.

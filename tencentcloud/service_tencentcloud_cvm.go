@@ -7,6 +7,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -812,6 +814,99 @@ func sortImages(images cvmImages) cvmImages {
 	sortedImages := images
 	sort.Sort(sort.Reverse(sortedImages))
 	return sortedImages
+}
+
+func (me *CvmService) ModifyImage(ctx context.Context, instanceId, imageName, imageDesc string) (errRet error) {
+	logId := getLogId(ctx)
+	var request = cvm.NewModifyImageAttributeRequest()
+	request.ImageId = helper.String(instanceId)
+	request.ImageName = helper.String(imageName)
+	request.ImageDescription = helper.String(imageDesc)
+
+	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, e := me.client.UseCvmClient().ModifyImageAttribute(request)
+		if e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Code == "InvalidImageId.Malformed" || ee.Code == "InvalidImageId.NotFound" ||
+					ee.Code == "InvalidImageName.Duplicate" || ee.Code == "InvalidParameter.ValueTooLarge" {
+					return resource.NonRetryableError(e)
+				}
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
+			return resource.RetryableError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (me *CvmService) DeleteImage(ctx context.Context, imageId string) error {
+	logId := getLogId(ctx)
+	request := cvm.NewDeleteImagesRequest()
+	request.ImageIds = []*string{&imageId}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseCvmClient().DeleteImages(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func (me *CvmService) DescribeImageById(ctx context.Context, keyId string, isDelete bool) (image *cvm.Image, has bool, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeImagesRequest()
+	request.ImageIds = []*string{&keyId}
+
+	var imgRsp *cvm.DescribeImagesResponse
+	err := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCvmClient().DescribeImages(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		if response != nil && response.Response != nil {
+			if len(response.Response.ImageSet) == 0 && !isDelete {
+				return resource.RetryableError(fmt.Errorf("iamge instance status is processing"))
+			}
+			if len(response.Response.ImageSet) > 0 {
+				if *response.Response.ImageSet[0].ImageState == "CREATEFAILED" {
+					return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s Create Image is failed", logId))
+				}
+				if *response.Response.ImageSet[0].ImageState != "NORMAL" {
+					return resource.RetryableError(fmt.Errorf("iamge instance status is processing"))
+				}
+			}
+
+			imgRsp = response
+			return nil
+		}
+		return resource.NonRetryableError(fmt.Errorf("response is null"))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	if imgRsp == nil {
+		return
+	}
+
+	if len(imgRsp.Response.ImageSet) > 0 && len(imgRsp.Response.ImageSet[0].SnapshotSet) != 0 {
+		has = true
+		image = imgRsp.Response.ImageSet[0]
+	}
+	return
 }
 
 func (me *CvmService) DescribeImagesByFilter(ctx context.Context, filters map[string][]string) (images []*cvm.Image, errRet error) {

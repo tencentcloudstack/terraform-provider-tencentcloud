@@ -112,8 +112,10 @@ func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
 					resource.TestCheckResourceAttr(id, "system_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_size", "100"),
+					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_snapshot_id", ""),
 					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_size", "100"),
+					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_snapshot_id", "snap-nvzu3dmh"),
 				),
 			},
 		},
@@ -563,16 +565,18 @@ resource "tencentcloud_instance" "foo" {
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 
   system_disk_type = "CLOUD_PREMIUM"
-  data_disks {
-    data_disk_type       = "CLOUD_PREMIUM"
-    data_disk_size       = 100
-    delete_with_instance = true
-  }
 
   data_disks {
-    data_disk_type       = "CLOUD_PREMIUM"
-    data_disk_size       = 100
-    delete_with_instance = true
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 100
+    delete_with_instance  = true
+  } 
+   
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 100
+    data_disk_snapshot_id = "snap-nvzu3dmh"
+    delete_with_instance  = true
   }
 
   disable_security_service = true
