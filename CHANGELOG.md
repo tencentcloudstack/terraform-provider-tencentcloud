@@ -1,4 +1,9 @@
 ## 1.42.3 (Unreleased)
+
+ENHANCEMENTS:
+
+* Data Source: `tencentcloud_instances` support filter by tags.
+
 ## 1.42.2 (September 14, 2020)
 
 BUG FIXES:
