@@ -55,6 +55,15 @@ Anti-DDoS(Dayu)
     tencentcloud_dayu_l4_rule
     tencentcloud_dayu_l7_rule
 
+Audit
+  Data Source
+	tencentcloud_audit_cos_regions
+	tencentcloud_audit_key_alias
+	tencentcloud_audits
+
+  Resource
+	tencentcloud_audit
+
 Auto Scaling(AS)
   Data Source
     tencentcloud_as_scaling_configs
@@ -640,6 +649,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_users":                     dataSourceTencentCloudCkafkaUsers(),
 			"tencentcloud_ckafka_acls":                      dataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_ckafka_topics":                    dataSourceTencentCloudCkafkaTopics(),
+			"tencentcloud_audit_cos_regions":                dataSourceTencentCloudAuditCosRegions(),
+			"tencentcloud_audit_key_alias":                  dataSourceTencentCloudAuditKeyAlias(),
+			"tencentcloud_audits":                           dataSourceTencentCloudAudits(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -762,6 +774,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_user":                     resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                      resourceTencentCloudCkafkaAcl(),
 			"tencentcloud_ckafka_topic":                    resourceTencentCloudCkafkaTopic(),
+			"tencentcloud_audit":                           resourceTencentCloudAudit(),
 			"tencentcloud_image":                           resourceTencentCloudImage(),
 		},
 

@@ -1,8 +1,12 @@
-## 1.42.3 (Unreleased)
+## 1.43.0 (Unreleased)
 
 FEATURES:
 
 * **New Resource**: `tencentcloud_image`
+* **New Resource**: `tencentcloud_audit`
+* **New Data Source**: `tencentcloud_audits` 
+* **New Data Source**: `tencentcloud_audit_cos_regions`
+* **New Data Source**: `tencentcloud_audit_key_alias`
 
 ENHANCEMENTS:
 

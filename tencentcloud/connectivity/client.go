@@ -16,6 +16,7 @@ import (
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -70,6 +71,7 @@ type TencentCloudClient struct {
 	sqlserverConn *sqlserver.Client
 	postgreConn   *postgre.Client
 	ckafkaConn    *ckafka.Client
+	auditConn     *audit.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -442,4 +444,17 @@ func (me *TencentCloudClient) UseCkafkaClient() *ckafka.Client {
 	me.ckafkaConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.ckafkaConn
+}
+
+// UseAuditClient returns audit client for service
+func (me *TencentCloudClient) UseAuditClient() *audit.Client {
+	if me.auditConn != nil {
+		return me.auditConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.auditConn, _ = audit.NewClient(me.Credential, me.Region, cpf)
+	me.auditConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.auditConn
 }
