@@ -209,6 +209,7 @@ CVM
     tencentcloud_key_pair
     tencentcloud_placement_group
     tencentcloud_reserved_instance
+    tencentcloud_image
 
 Direct Connect(DC)
   Data Source
@@ -774,6 +775,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_acl":                      resourceTencentCloudCkafkaAcl(),
 			"tencentcloud_ckafka_topic":                    resourceTencentCloudCkafkaTopic(),
 			"tencentcloud_audit":                           resourceTencentCloudAudit(),
+			"tencentcloud_image":                           resourceTencentCloudImage(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -282,11 +282,17 @@ func resourceTencentCloudInstance() *schema.Resource {
 							ValidateFunc: validateIntegerInRange(10, 16000),
 							Description:  "Size of the data disk, and unit is GB. If disk type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].",
 						},
+						"data_disk_snapshot_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Snapshot ID of the data disk. The selected data disk snapshot size must be smaller than the data disk size.",
+						},
 						"data_disk_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Data disk snapshot ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.",
+							Description: "Data disk ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.",
 						},
 						"delete_with_instance": {
 							Type:        schema.TypeBool,
@@ -495,6 +501,12 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				DiskType: &diskType,
 				DiskSize: &diskSize,
 			}
+			if v, ok := value["data_disk_snapshot_id"]; ok && v != nil {
+				snapshotId := v.(string)
+				if snapshotId != "" {
+					dataDisk.SnapshotId = helper.String(snapshotId)
+				}
+			}
 			if value["data_disk_id"] != "" {
 				dataDisk.DiskId = helper.String(value["data_disk_id"].(string))
 			}
@@ -697,14 +709,45 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	delete(tags, "tencentcloud:autoscaling:auto-scaling-group-id")
 	_ = d.Set("tags", tags)
 
+	//set data_disks
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
-	for _, disk := range instance.DataDisks {
-		dataDisk := make(map[string]interface{}, 4)
-		dataDisk["data_disk_type"] = disk.DiskType
-		dataDisk["data_disk_size"] = disk.DiskSize
-		dataDisk["data_disk_id"] = disk.DiskId
-		dataDisk["delete_with_instance"] = disk.DeleteWithInstance
-		dataDiskList = append(dataDiskList, dataDisk)
+	if v, ok := d.GetOk("data_disks"); ok {
+		// record the used disk id
+		usedDiskId := make(map[string]bool, len(instance.DataDisks))
+		for _, d := range v.([]interface{}) {
+			value := d.(map[string]interface{})
+			var (
+				snapshotId, diskId     string
+				deleteWithInstanceBool bool
+			)
+			diskType := value["data_disk_type"].(string)
+			diskSize := int64(value["data_disk_size"].(int))
+			if v, ok := value["data_disk_snapshot_id"]; ok && v != nil {
+				snapshotId = v.(string)
+			}
+			if deleteWithInstance, ok := value["delete_with_instance"]; ok {
+				deleteWithInstanceBool = deleteWithInstance.(bool)
+			}
+
+			// find the disk id value
+			for _, disk := range instance.DataDisks {
+				if diskType == *disk.DiskType && diskSize == *disk.DiskSize &&
+					deleteWithInstanceBool == *disk.DeleteWithInstance && !usedDiskId[*disk.DiskId] {
+
+					usedDiskId[*disk.DiskId] = true
+					diskId = *disk.DiskId
+					break
+				}
+			}
+
+			dataDisk := make(map[string]interface{}, 5)
+			dataDisk["data_disk_snapshot_id"] = snapshotId
+			dataDisk["data_disk_type"] = diskType
+			dataDisk["data_disk_size"] = diskSize
+			dataDisk["data_disk_id"] = diskId
+			dataDisk["delete_with_instance"] = deleteWithInstanceBool
+			dataDiskList = append(dataDiskList, dataDisk)
+		}
 	}
 	_ = d.Set("data_disks", dataDiskList)
 
@@ -716,6 +759,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 	if len(instance.LoginSettings.KeyIds) > 0 {
 		_ = d.Set("key_name", instance.LoginSettings.KeyIds[0])
+	} else {
+		_ = d.Set("key_name", "")
 	}
 	if *instance.InstanceState == CVM_STATUS_STOPPED {
 		_ = d.Set("running_flag", false)
@@ -906,6 +951,51 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
+	}
+
+	if d.HasChange("key_name") {
+		old, new := d.GetChange("key_name")
+		oldKeyId := old.(string)
+		keyId := new.(string)
+		err := cvmService.UnbindKeyPair(ctx, oldKeyId, []*string{&instanceId})
+		if err != nil {
+			return err
+		}
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+				return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		if keyId != "" {
+			err = cvmService.BindKeyPair(ctx, keyId, instanceId)
+			if err != nil {
+				return err
+			}
+			time.Sleep(10 * time.Second)
+			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+				if errRet != nil {
+					return retryError(errRet, InternalError)
+				}
+				if instance != nil && *instance.LatestOperationState == CVM_LATEST_OPERATION_STATE_OPERATING {
+					return resource.RetryableError(fmt.Errorf("cvm instance latest operetion status is %s, retry...", *instance.LatestOperationState))
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+		}
+		d.SetPartial("key_name")
 	}
 
 	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("private_ip") {

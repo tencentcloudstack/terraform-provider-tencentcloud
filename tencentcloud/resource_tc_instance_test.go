@@ -112,8 +112,10 @@ func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
 					resource.TestCheckResourceAttr(id, "system_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_size", "100"),
+					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_snapshot_id", ""),
 					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_size", "100"),
+					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_snapshot_id", "snap-nvzu3dmh"),
 				),
 			},
 		},
@@ -186,7 +188,7 @@ func TestAccTencentCloudInstanceWithKeyPair(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithKeyPair("tf_acc_test_key1"),
+				Config: testAccTencentCloudInstanceWithKeyPair("key_pair_0"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -195,7 +197,7 @@ func TestAccTencentCloudInstanceWithKeyPair(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTencentCloudInstanceWithKeyPair("tf_acc_test_key2"),
+				Config: testAccTencentCloudInstanceWithKeyPair("key_pair_1"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -563,16 +565,18 @@ resource "tencentcloud_instance" "foo" {
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 
   system_disk_type = "CLOUD_PREMIUM"
-  data_disks {
-    data_disk_type       = "CLOUD_PREMIUM"
-    data_disk_size       = 100
-    delete_with_instance = true
-  }
 
   data_disks {
-    data_disk_type       = "CLOUD_PREMIUM"
-    data_disk_size       = 100
-    delete_with_instance = true
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 100
+    delete_with_instance  = true
+  } 
+   
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 100
+    data_disk_snapshot_id = "snap-nvzu3dmh"
+    delete_with_instance  = true
   }
 
   disable_security_service = true
@@ -614,9 +618,14 @@ resource "tencentcloud_instance" "foo" {
 func testAccTencentCloudInstanceWithKeyPair(keyName string) string {
 	return fmt.Sprintf(
 		defaultInstanceVariable+`
-resource "tencentcloud_key_pair" "foo" {
-  key_name = "%s"
+resource "tencentcloud_key_pair" "key_pair_0" {
+  key_name = "key_pair_0"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
+}
+
+resource "tencentcloud_key_pair" "key_pair_1" {
+  key_name = "key_pair_1"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzwYE6KI8uULEvSNA2k1tlsLtMDe+x1Saw6yL3V1mk9NFws0K2BshYqsnP/BlYiGZv/Nld5xmGoA9LupOcUpyyGGSHZdBrMx1Dz9ajewe7kGowRWwwMAHTlzh9+iqeg/v6P5vW6EwK4hpGWgv06vGs3a8CzfbHu1YRbZAO/ysp3ymdL+vGvw/vzC0T+YwPMisn9wFD5FTlJ+Em6s9PzxqR/41t4YssmCwUV78ZoYL8CyB0emuB8wALvcXbdUVxMxpBEHd5U6ZP5+HPxU2WFbWqiFCuErLIZRuxFw8L/Ot+JOyNnadN1XU4crYDX5cML1i/ExXKVIDoBaLtgAJOpyeP"
 }
 
 resource "tencentcloud_instance" "foo" {
@@ -624,7 +633,7 @@ resource "tencentcloud_instance" "foo" {
   availability_zone = data.tencentcloud_availability_zones.default.zones.0.name
   image_id          = data.tencentcloud_images.default.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
-  key_name          = tencentcloud_key_pair.foo.id
+  key_name          = tencentcloud_key_pair.%s.id
   system_disk_type  = "CLOUD_PREMIUM"
 }
 `,
