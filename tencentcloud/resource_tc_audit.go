@@ -72,7 +72,7 @@ func resourceTencentCloudAudit() *schema.Resource {
 			"key_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Existing CMK unique key. This field can be get by data source `tencentcloud_audit_key_alias`.Caution: the region of the KMS must be as same as the `cos_region`.",
+				Description: "Existing CMK unique key. This field can be get by data source `tencentcloud_audit_key_alias`. Caution: the region of the KMS must be as same as the `cos_region`.",
 			},
 			"log_file_prefix": {
 				Type:        schema.TypeString,
@@ -96,15 +96,7 @@ func resourceTencentCloudAudit() *schema.Resource {
 
 func resourceTencentCloudAuditCreate(d *schema.ResourceData, meta interface{}) (errRet error) {
 	defer logElapsed("resource.tencentcloud_audit.create")()
-	logId := getLogId(contextNil)
 	request := audit.NewCreateAuditRequest()
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
 
 	name := d.Get("name").(string)
 	cosBucketName := d.Get("cos_bucket").(string)
@@ -140,15 +132,22 @@ func resourceTencentCloudAuditCreate(d *schema.ResourceData, meta interface{}) (
 	request.ReadWriteAttribute = helper.IntInt64(readWriteAttribute)
 	request.LogFilePrefix = &logFilePrefix
 
-	ratelimit.Check(request.GetAction())
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().CreateAudit(request)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().CreateAudit(request)
+		if err != nil {
+			return retryError(err)
+		}
+		if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
+			d.SetId(name)
+			return nil
+		} else {
+			return resource.NonRetryableError(fmt.Errorf("create audit %s failed", name))
+		}
+	})
+
 	if err != nil {
-		return err
-	}
-	if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
-		d.SetId(name)
-	} else {
-		return fmt.Errorf("create audit %s failed", name)
+		return nil
 	}
 
 	auditSwitch := d.Get("audit_switch").(bool)
@@ -168,12 +167,6 @@ func resourceTencentCloudAuditRead(d *schema.ResourceData, meta interface{}) (er
 	logId := getLogId(contextNil)
 	request := audit.NewDescribeAuditRequest()
 
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
 	auditId := d.Id()
 
 	request.AuditName = &auditId
@@ -200,12 +193,12 @@ func resourceTencentCloudAuditRead(d *schema.ResourceData, meta interface{}) (er
 		return nil
 	}
 
-	_ = d.Set("name", *response.Response.AuditName)
-	_ = d.Set("read_write_attribute", *response.Response.ReadWriteAttribute)
-	_ = d.Set("log_file_prefix", *response.Response.LogFilePrefix)
+	_ = d.Set("name", response.Response.AuditName)
+	_ = d.Set("read_write_attribute", response.Response.ReadWriteAttribute)
+	_ = d.Set("log_file_prefix", response.Response.LogFilePrefix)
 	_ = d.Set("enable_kms_encry", *response.Response.IsEnableKmsEncry > 0)
-	_ = d.Set("cos_region", *response.Response.CosRegion)
-	_ = d.Set("cos_bucket", *response.Response.CosBucketName)
+	_ = d.Set("cos_region", response.Response.CosRegion)
+	_ = d.Set("cos_bucket", response.Response.CosBucketName)
 	if *response.Response.IsEnableKmsEncry > 0 {
 		_ = d.Set("key_id", response.Response.KeyId)
 	}
@@ -270,17 +263,24 @@ func resourceTencentCloudAuditUpdate(d *schema.ResourceData, meta interface{}) (
 		request.ReadWriteAttribute = helper.IntInt64(readWriteAttribute)
 		request.LogFilePrefix = &logFilePrefix
 
-		ratelimit.Check(request.GetAction())
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().UpdateAudit(request)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().UpdateAudit(request)
+			if err != nil {
+				return retryError(err)
+			}
+			if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
+				return nil
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("update audit %s failed", name))
+			}
+		})
 		if err != nil {
+			log.Printf("[CRITAL]%s delete audit %s failed, reason:%s\n", logId, name, err.Error())
 			return err
 		}
-		if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
-			for _, attr := range attributeSet {
-				d.SetPartial(attr)
-			}
-		} else {
-			return fmt.Errorf("update audit %s failed", name)
+		for _, attr := range attributeSet {
+			d.SetPartial(attr)
 		}
 	}
 	if d.HasChange("audit_switch") {
@@ -303,12 +303,7 @@ func resourceTencentCloudAuditDelete(d *schema.ResourceData, meta interface{}) (
 
 	logId := getLogId(contextNil)
 	request := audit.NewDeleteAuditRequest()
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
+
 	auditId := d.Id()
 
 	request.AuditName = &auditId
@@ -331,28 +326,39 @@ func modifyAuditSwitch(auditname string, auditSwitch bool, meta interface{}) (er
 	if auditSwitch {
 		request := audit.NewStartLoggingRequest()
 		request.AuditName = &auditname
-		ratelimit.Check(request.GetAction())
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().StartLogging(request)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().StartLogging(request)
+			if err != nil {
+				return retryError(err)
+			}
+			if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
+				return nil
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("Start logging failed"))
+			}
+		})
 		if err != nil {
 			return err
-		}
-		if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
-			return nil
-		} else {
-			return fmt.Errorf("Start logging failed")
 		}
 	} else {
 		request := audit.NewStopLoggingRequest()
 		request.AuditName = &auditname
-		ratelimit.Check(request.GetAction())
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().StopLogging(request)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().StopLogging(request)
+			if err != nil {
+				return retryError(err)
+			}
+			if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
+				return nil
+			} else {
+				return resource.NonRetryableError(fmt.Errorf("Stop logging failed"))
+			}
+		})
 		if err != nil {
 			return err
 		}
-		if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
-			return nil
-		} else {
-			return fmt.Errorf("Stop logging failed")
-		}
 	}
+	return nil
 }

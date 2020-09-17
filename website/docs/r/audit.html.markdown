@@ -34,7 +34,7 @@ The following arguments are supported:
 * `name` - (Required, ForceNew) Name of audit. Valid length ranges from 3 to 128. Only alpha character or numbers or `_` supported.
 * `read_write_attribute` - (Required) Event attribute filter. 1 for readonly, 2 for writeonly, 3 for all.
 * `enable_kms_encry` - (Optional) Indicate whether the log is encrypt with KMS algorithm or not.
-* `key_id` - (Optional) Existing CMK unique key. This field can be get by data source `tencentcloud_audit_key_alias`.Caution: the region of the KMS must be as same as the `cos_region`.
+* `key_id` - (Optional) Existing CMK unique key. This field can be get by data source `tencentcloud_audit_key_alias`. Caution: the region of the KMS must be as same as the `cos_region`.
 * `log_file_prefix` - (Optional) The log file name prefix. The length ranges from 3 to 40. If not set, the account ID will be the log file prefix.
 
 ## Attributes Reference
