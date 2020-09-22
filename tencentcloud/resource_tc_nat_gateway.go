@@ -257,7 +257,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, concurrentReq.GetAction(), concurrentReq.ToJsonString(), e.Error())
-				return retryError(e)
+				return retryError(e, InternalError)
 			}
 			return nil
 		})

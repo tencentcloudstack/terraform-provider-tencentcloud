@@ -1,4 +1,4 @@
-## 1.43.0 (Unreleased)
+## 1.44.0 (Unreleased)
 
 FEATURES:
 
@@ -7,10 +7,19 @@ FEATURES:
 * **New Data Source**: `tencentcloud_cynosdb_clusters`
 * **New Data Source**: `tencentcloud_cynosdb_readonly_instances`.
 
-## 1.42.3 (Unreleased)
+## 1.43.0 (September 18, 2020)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_image`
+* **New Resource**: `tencentcloud_audit`
+* **New Data Source**: `tencentcloud_audits` 
+* **New Data Source**: `tencentcloud_audit_cos_regions`
+* **New Data Source**: `tencentcloud_audit_key_alias`
 
 ENHANCEMENTS:
 
+* Resource: `tencentcloud_instance` add new argument `data_disk_snapshot_id` to support data disk with `SnapshotId`([#469](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/469))
 * Data Source: `tencentcloud_instances` support filter by tags.
 
 ## 1.42.2 (September 14, 2020)
@@ -21,6 +30,7 @@ BUG FIXES:
 ## 1.42.1 (September 10, 2020)
 
 BUG FIXES:
+
 * Resource: `tencentcloud_mongodb_instance` Fix the error of releasing associated resources when destroying mongodb postpaid instance.
 * Resource: `tencentcloud_mongodb_sharding_instance` Fix the error of releasing associated resources when destroying mongodb postpaid sharding instance.
 * Resource: `tencentcloud_mongodb_standby_instance` Fix the error of releasing associated resources when destroying mongodb postpaid standby instance.
