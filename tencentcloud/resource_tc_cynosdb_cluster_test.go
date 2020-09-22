@@ -72,7 +72,7 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 				ResourceName:            "tencentcloud_cynosdb_cluster.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password", "auto_renew_flag", "force_delete", "storage_limit"},
+				ImportStateVerifyIgnore: []string{"password", "force_delete", "storage_limit"},
 			},
 			{
 				Config: testAccCynosdbClusterPrepaid,
@@ -132,7 +132,7 @@ func testAccCheckCynosdbClusterDestroy(s *terraform.State) error {
 			continue
 		}
 
-		_, has, err := cynosdbService.DescribeClusterById(ctx, rs.Primary.ID)
+		_, _, has, err := cynosdbService.DescribeClusterById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -159,7 +159,7 @@ func testAccCheckCynosdbClusterExists(n string) resource.TestCheckFunc {
 		cynosdbService := CynosdbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		_, has, err := cynosdbService.DescribeClusterById(ctx, rs.Primary.ID)
+		_, _, has, err := cynosdbService.DescribeClusterById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}

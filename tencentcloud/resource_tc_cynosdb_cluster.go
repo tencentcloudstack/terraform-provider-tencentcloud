@@ -120,9 +120,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 			} else {
 				return fmt.Errorf("prepaid period can not be empty when charge type is %s", CYNOSDB_CHARGE_TYPE_PREPAID)
 			}
-			if vv, ok := d.GetOk("auto_renew_flag"); ok {
-				request.AutoRenewFlag = helper.IntInt64(vv.(int))
-			}
+			request.AutoRenewFlag = helper.IntInt64(d.Get("auto_renew_flag").(int))
 		}
 	}
 	request.PayMode = &chargeType
@@ -149,7 +147,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	d.SetId(*response.Response.ClusterIds[0])
 	id := d.Id()
 
-	_, has, err := cynosdbService.DescribeClusterById(ctx, id)
+	_, _, has, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -166,7 +164,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	// set maintenance info
-	cluster, _, err := cynosdbService.DescribeClusterById(ctx, id)
+	_, cluster, _, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -251,7 +249,7 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	cynosdbService := CynosdbService{client: client}
-	cluster, has, err := cynosdbService.DescribeClusterById(ctx, id)
+	renewFlag, cluster, has, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -273,6 +271,7 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("cluster_status", cluster.Status)
 	_ = d.Set("create_time", cluster.CreateTime)
 	_ = d.Set("storage_used", *cluster.UsedStorage/1000/1000)
+	_ = d.Set("auto_renew_flag", renewFlag)
 
 	//tag
 	tagService := &TagService{client: client}

@@ -52,11 +52,13 @@ func resourceTencentCloudCynosdbReadonlyInstance() *schema.Resource {
 		"cluster_id": {
 			Type:        schema.TypeString,
 			Required:    true,
+			ForceNew:    true,
 			Description: "Cluster id which the readonly instance belongs to.",
 		},
 		"instance_name": {
 			Type:        schema.TypeString,
 			Required:    true,
+			ForceNew:    true,
 			Description: "Name of instance.",
 		},
 		"force_delete": {
@@ -195,17 +197,6 @@ func resourceTencentCloudCynosdbReadonlyInstanceUpdate(d *schema.ResourceData, m
 		client         = meta.(*TencentCloudClient).apiV3Conn
 		cynosdbService = CynosdbService{client: client}
 	)
-
-	// check unsupported field modification
-	unsupported := []string{
-		"cluster_id",
-		"instance_name",
-	}
-	for _, v := range unsupported {
-		if d.HasChange(v) {
-			return fmt.Errorf("[CRITAL] field %s is not allowed to be modified", v)
-		}
-	}
 
 	d.Partial(true)
 

@@ -59,7 +59,7 @@ func (me *CynosdbService) DescribeClusters(ctx context.Context, filters map[stri
 	return
 }
 
-func (me *CynosdbService) DescribeClusterById(ctx context.Context, clusterId string) (clusterInfo *cynosdb.CynosdbClusterDetail, has bool, errRet error) {
+func (me *CynosdbService) DescribeClusterById(ctx context.Context, clusterId string) (renewFlag int64, clusterInfo *cynosdb.CynosdbClusterDetail, has bool, errRet error) {
 	logId := getLogId(ctx)
 	request := cynosdb.NewDescribeClusterDetailRequest()
 	request.ClusterId = &clusterId
@@ -84,6 +84,7 @@ func (me *CynosdbService) DescribeClusterById(ctx context.Context, clusterId str
 			notExist = true
 			return nil
 		} else if *clusters[0].Status == CYNOSDB_STATUS_RUNNING {
+			renewFlag = *clusters[0].RenewFlag
 			return nil
 		} else {
 			return resource.RetryableError(fmt.Errorf("cynosdb cluster %s is still in processing", clusterId))

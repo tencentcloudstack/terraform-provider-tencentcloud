@@ -61,14 +61,14 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
 }
 
 data "tencentcloud_cynosdb_clusters" "foo" {
-  cluster_id   = "cynosdbmysql-dzj5l8gz"
+  cluster_id   = tencentcloud_cynosdb_cluster.foo.id
   project_id   = 0
   db_type      = "MYSQL"
   cluster_name = "test"
 }
 
 data "tencentcloud_cynosdb_instances" "foo" {
-  instance_id   = "cynosdbmysql-ins-0wln9u6w"
+  instance_id   = tencentcloud_cynosdb_readonly_instance.foo.id
   project_id    = 0
   db_type       = "MYSQL"
   instance_name = "test"

@@ -67,7 +67,7 @@ The following arguments are supported:
 * `storage_limit` - (Required) Storage limit of CynosDB cluster instance, unit in GB.
 * `subnet_id` - (Required) ID of the subnet within this VPC.
 * `vpc_id` - (Required) ID of the VPC.
-* `auto_renew_flag` - (Optional) Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Only works for PREPAID cluster.
+* `auto_renew_flag` - (Optional) Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.
 * `charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`.
 * `force_delete` - (Optional) Indicate whether to delete cluster instance directly or not. Default is false. If set true, the cluster and its `All RELATED INSTANCES` will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.
 * `instance_maintain_duration` - (Optional) Duration time for maintenance, unit in second. `3600` by default.
@@ -95,14 +95,14 @@ In addition to all arguments above, the following attributes are exported:
 * `ro_group_addr` - Readonly addresses. Each element contains the following attributes:
   * `ip` - IP address for readonly connection.
   * `port` - Port number for readonly connection.
-* `ro_group_id` - Id of read-only instance group.
+* `ro_group_id` - ID of read-only instance group.
 * `ro_group_instances` - List of instances in the read-only instance group.
   * `instance_id` - ID of instance.
   * `instance_name` - Name of instance.
 * `rw_group_addr` - Read-write addresses. Each element contains the following attributes:
   * `ip` - IP address for read-write connection.
   * `port` - Port number for read-write connection.
-* `rw_group_id` - Id of read-write instance group.
+* `rw_group_id` - ID of read-write instance group.
 * `rw_group_instances` - List of instances in the read-write instance group.
   * `instance_id` - ID of instance.
   * `instance_name` - Name of instance.

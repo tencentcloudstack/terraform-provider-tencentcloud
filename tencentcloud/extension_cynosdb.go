@@ -172,7 +172,8 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"auto_renew_flag": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			Description: "Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Only works for PREPAID cluster.",
+			Default:     0,
+			Description: "Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.",
 		},
 		"force_delete": {
 			Type:        schema.TypeBool,
@@ -210,7 +211,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"rw_group_id": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "Id of read-write instance group.",
+			Description: "ID of read-write instance group.",
 		},
 		"rw_group_instances": {
 			Type:        schema.TypeList,
@@ -260,7 +261,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"ro_group_id": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "Id of read-only instance group.",
+			Description: "ID of read-only instance group.",
 		},
 		"ro_group_instances": {
 			Type:        schema.TypeList,
