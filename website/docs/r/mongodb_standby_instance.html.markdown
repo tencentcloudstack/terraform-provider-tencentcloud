@@ -47,8 +47,6 @@ resource "tencentcloud_mongodb_standby_instance" "mongodb" {
   project_id             = 0
   father_instance_id     = tencentcloud_mongodb_instance.mongodb.id
   father_instance_region = "ap-guangzhou"
-  charge_type            = "PREPAID"
-  prepaid_period         = 1
 
   tags = {
     test = "test"
