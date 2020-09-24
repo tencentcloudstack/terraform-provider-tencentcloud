@@ -1,4 +1,8 @@
 ## 1.43.1 (Unreleased)
+
+* Resource: `tencentcloud_instance` add new argument `encrypt` to support data disk with encrypt
+* Resource: `tencentcloud_kubernetes_cluster` add new argument `cam_role_name` to support authorization with instances
+
 ## 1.43.0 (September 18, 2020)
 
 FEATURES:

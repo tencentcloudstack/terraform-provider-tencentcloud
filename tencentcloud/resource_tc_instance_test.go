@@ -570,6 +570,7 @@ resource "tencentcloud_instance" "foo" {
     data_disk_type        = "CLOUD_PREMIUM"
     data_disk_size        = 100
     delete_with_instance  = true
+	encrypt = true
   } 
    
   data_disks {

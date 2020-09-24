@@ -67,6 +67,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
     data_disk_size = 50
+    encrypt        = false
   }
 
   tags = {
@@ -119,6 +120,7 @@ The `data_disks` object supports the following:
 * `data_disk_id` - (Optional) Data disk ID used to initialize the data disk. When data disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
 * `data_disk_snapshot_id` - (Optional, ForceNew) Snapshot ID of the data disk. The selected data disk snapshot size must be smaller than the data disk size.
 * `delete_with_instance` - (Optional, ForceNew) Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `POSTPAID_BY_HOUR` instance), default is true.
+* `encrypt` - (Optional, ForceNew) Decides whether the disk is encrypted. Default is `false`.
 
 ## Attributes Reference
 

@@ -181,6 +181,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     password                  = "ZZXXccvv1212"
+	cam_role_name			= "CVM_QcsRole"
   }
 
   cluster_deploy_type = "MANAGED_CLUSTER"
