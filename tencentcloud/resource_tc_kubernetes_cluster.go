@@ -741,12 +741,7 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 
 	place.ProjectId = &projectId
 
-	configRegion := meta.(*TencentCloudClient).apiV3Conn.Region
 	if v, ok := dMap["availability_zone"]; ok {
-		if !strings.Contains(v.(string), configRegion) {
-			errRet = fmt.Errorf("availability_zone[%s] should in [%s]", v.(string), configRegion)
-			return
-		}
 		place.Zone = helper.String(v.(string))
 	}
 
