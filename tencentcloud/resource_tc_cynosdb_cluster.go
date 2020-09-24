@@ -397,17 +397,6 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		region         = client.Region
 	)
 
-	// check unsupported field modification
-	unsupported := []string{
-		"project_id", "vpc_id", "subnet_id", "port", "storage_limit", "cluster_name",
-		"password", "prepaid_period", "auto_renew_flag",
-	}
-	for _, v := range unsupported {
-		if d.HasChange(v) {
-			return fmt.Errorf("[CRITAL] field %s is not allowed to be modified", v)
-		}
-	}
-
 	d.Partial(true)
 
 	if d.HasChange("instance_cpu_core") || d.HasChange("instance_memory_size") {

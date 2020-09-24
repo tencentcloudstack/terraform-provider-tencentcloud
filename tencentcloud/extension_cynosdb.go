@@ -101,6 +101,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"project_id": {
 			Type:        schema.TypeInt,
 			Optional:    true,
+			ForceNew:    true,
 			Default:     0,
 			Description: "ID of the project. `0` by default.",
 		},
@@ -113,16 +114,19 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"vpc_id": {
 			Type:        schema.TypeString,
 			Required:    true,
+			ForceNew:    true,
 			Description: "ID of the VPC.",
 		},
 		"subnet_id": {
 			Type:        schema.TypeString,
 			Required:    true,
+			ForceNew:    true,
 			Description: "ID of the subnet within this VPC.",
 		},
 		"port": {
 			Type:        schema.TypeInt,
 			Optional:    true,
+			ForceNew:    true,
 			Default:     5432,
 			Description: "Port of CynosDB cluster.",
 		},
@@ -141,16 +145,19 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"storage_limit": {
 			Type:        schema.TypeInt,
 			Required:    true,
+			ForceNew:    true,
 			Description: "Storage limit of CynosDB cluster instance, unit in GB.",
 		},
 		"cluster_name": {
 			Type:        schema.TypeString,
 			Required:    true,
+			ForceNew:    true,
 			Description: "Name of CynosDB cluster.",
 		},
 		"password": {
 			Type:        schema.TypeString,
 			Required:    true,
+			ForceNew:    true,
 			Sensitive:   true,
 			Description: "Password of `root` account.",
 		},
@@ -166,12 +173,14 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"prepaid_period": {
 			Type:         schema.TypeInt,
 			Optional:     true,
+			ForceNew:     true,
 			ValidateFunc: validateAllowedIntValue(CYNOSDB_PREPAID_PERIOD),
 			Description:  "The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.",
 		},
 		"auto_renew_flag": {
 			Type:        schema.TypeInt,
 			Optional:    true,
+			ForceNew:    true,
 			Default:     0,
 			Description: "Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.",
 		},

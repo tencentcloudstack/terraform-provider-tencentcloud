@@ -58,24 +58,24 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
 The following arguments are supported:
 
 * `available_zone` - (Required, ForceNew) The available zone of the CynosDB Cluster.
-* `cluster_name` - (Required) Name of CynosDB cluster.
+* `cluster_name` - (Required, ForceNew) Name of CynosDB cluster.
 * `db_type` - (Required, ForceNew) Type of CynosDB, and available values include `MYSQL`.
 * `db_version` - (Required, ForceNew) Version of CynosDB, which is related to `db_type`. For `MYSQL`, available value is `5.7`.
 * `instance_cpu_core` - (Required) The number of CPU cores of read-write type instance in the CynosDB cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `instance_memory_size` - (Required) Memory capacity of read-write type instance, unit in GB. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
-* `password` - (Required) Password of `root` account.
-* `storage_limit` - (Required) Storage limit of CynosDB cluster instance, unit in GB.
-* `subnet_id` - (Required) ID of the subnet within this VPC.
-* `vpc_id` - (Required) ID of the VPC.
-* `auto_renew_flag` - (Optional) Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.
+* `password` - (Required, ForceNew) Password of `root` account.
+* `storage_limit` - (Required, ForceNew) Storage limit of CynosDB cluster instance, unit in GB.
+* `subnet_id` - (Required, ForceNew) ID of the subnet within this VPC.
+* `vpc_id` - (Required, ForceNew) ID of the VPC.
+* `auto_renew_flag` - (Optional, ForceNew) Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.
 * `charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`.
 * `force_delete` - (Optional) Indicate whether to delete cluster instance directly or not. Default is false. If set true, the cluster and its `All RELATED INSTANCES` will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.
 * `instance_maintain_duration` - (Optional) Duration time for maintenance, unit in second. `3600` by default.
 * `instance_maintain_start_time` - (Optional) Offset time from 00:00, unit in second. For example, 03:00am should be `10800`. `10800` by default.
 * `instance_maintain_weekdays` - (Optional) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
-* `port` - (Optional) Port of CynosDB cluster.
-* `prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
-* `project_id` - (Optional) ID of the project. `0` by default.
+* `port` - (Optional, ForceNew) Port of CynosDB cluster.
+* `prepaid_period` - (Optional, ForceNew) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
+* `project_id` - (Optional, ForceNew) ID of the project. `0` by default.
 * `ro_group_sg` - (Optional) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional) IDs of security group for `rw_group`.
 * `tags` - (Optional) The tags of the CynosDB cluster.

@@ -21,6 +21,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -163,56 +164,55 @@ func dataSourceTencentCloudCynosdbClustersRead(d *schema.ResourceData, meta inte
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		clusters, e := cynosdbService.DescribeClusters(ctx, params)
-		if e != nil {
-			return retryError(e)
+	var clusters []*cynosdb.CynosdbCluster
+	var err error
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		clusters, err = cynosdbService.DescribeClusters(ctx, params)
+		if err != nil {
+			return retryError(err)
 		}
-		ids := make([]string, 0, len(clusters))
-		clusterList := make([]map[string]interface{}, 0, len(clusters))
-		for _, cluster := range clusters {
-			if clusterType != "" && clusterType != *cluster.DbType {
-				continue
-			}
-			mapping := map[string]interface{}{
-				"cluster_id":      cluster.ClusterId,
-				"cluster_name":    cluster.ClusterName,
-				"cluster_limit":   cluster.StorageLimit,
-				"db_type":         cluster.DbType,
-				"available_zone":  cluster.Zone,
-				"project_id":      cluster.ProjectID,
-				"create_time":     cluster.CreateTime,
-				"cluster_status":  cluster.Status,
-				"auto_renew_flag": cluster.RenewFlag,
-				"port":            cluster.Vport,
-				"vpc_id":          cluster.VpcId,
-				"subnet_id":       cluster.SubnetId,
-				"db_version":      cluster.DbVersion,
-				"charge_type":     CYNOSDB_CHARGE_TYPE[*cluster.PayMode],
-			}
-
-			clusterList = append(clusterList, mapping)
-			ids = append(ids, *cluster.ClusterId)
-		}
-
-		d.SetId(helper.DataResourceIdsHash(ids))
-		if e = d.Set("cluster_list", clusterList); e != nil {
-			log.Printf("[CRITAL]%s provider set cluster list fail, reason:%s\n ", logId, e.Error())
-			return resource.NonRetryableError(e)
-		}
-
-		output, ok := d.GetOk("result_output_file")
-		if ok && output.(string) != "" {
-			if e := writeToFile(output.(string), clusterList); e != nil {
-				return resource.NonRetryableError(e)
-			}
-		}
-
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s read cynosdb clusters failed, reason:%s\n ", logId, err.Error())
 		return err
+	}
+
+	ids := make([]string, 0, len(clusters))
+	clusterList := make([]map[string]interface{}, 0, len(clusters))
+	for _, cluster := range clusters {
+		if clusterType != "" && clusterType != *cluster.DbType {
+			continue
+		}
+		mapping := map[string]interface{}{
+			"cluster_id":      cluster.ClusterId,
+			"cluster_name":    cluster.ClusterName,
+			"cluster_limit":   cluster.StorageLimit,
+			"db_type":         cluster.DbType,
+			"available_zone":  cluster.Zone,
+			"project_id":      cluster.ProjectID,
+			"create_time":     cluster.CreateTime,
+			"cluster_status":  cluster.Status,
+			"auto_renew_flag": cluster.RenewFlag,
+			"port":            cluster.Vport,
+			"vpc_id":          cluster.VpcId,
+			"subnet_id":       cluster.SubnetId,
+			"db_version":      cluster.DbVersion,
+			"charge_type":     CYNOSDB_CHARGE_TYPE[*cluster.PayMode],
+		}
+
+		clusterList = append(clusterList, mapping)
+		ids = append(ids, *cluster.ClusterId)
+	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
+	_ = d.Set("cluster_list", clusterList)
+
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if err = writeToFile(output.(string), clusterList); err != nil {
+			return err
+		}
 	}
 
 	return nil
