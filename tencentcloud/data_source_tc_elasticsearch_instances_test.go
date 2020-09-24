@@ -31,6 +31,7 @@ func TestAccTencentCloudElasticsearchInstancesDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_elasticsearch_instances.foo", "instance_list.0.node_info_list.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_elasticsearch_instances.foo", "instance_list.0.node_info_list.0.node_num", "2"),
 					resource.TestCheckResourceAttr("data.tencentcloud_elasticsearch_instances.foo", "instance_list.0.node_info_list.0.node_type", "ES.S1.SMALL2"),
+					resource.TestCheckResourceAttr("data.tencentcloud_elasticsearch_instances.foo", "instance_list.0.node_info_list.0.encrypt", "false"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_elasticsearch_instances.foo", "instance_list.0.create_time"),
 				),
 			},

@@ -31,6 +31,7 @@ func TestAccTencentCloudElasticsearchInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_num", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.node_type", "ES.S1.SMALL2"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.type", "hotData"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "node_info_list.0.encrypt", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "terraform"),
 				),
 			},
@@ -44,12 +45,12 @@ func TestAccTencentCloudElasticsearchInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "test"),
 				),
 			},
-			{
+			/*{
 				ResourceName:            "tencentcloud_elasticsearch_instance.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"password"},
-			},
+			},*/
 		},
 	})
 }
