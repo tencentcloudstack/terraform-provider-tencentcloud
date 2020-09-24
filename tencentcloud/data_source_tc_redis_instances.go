@@ -17,9 +17,7 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -182,9 +180,6 @@ func dataSourceTencentRedisInstancesRead(d *schema.ResourceData, meta interface{
 		tempStr := temp.(string)
 		if tempStr != "" {
 			zone = tempStr
-			if !strings.Contains(zone, region) {
-				return fmt.Errorf("zone[%s] not in region[%s]", zone, region)
-			}
 		}
 	}
 	if temp, ok := d.GetOk("search_key"); ok {
