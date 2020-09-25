@@ -1,4 +1,16 @@
-## 1.43.1 (Unreleased)
+## 1.44.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_cynosdb_cluster`
+* **New Resource**: `tencentcloud_cynosdb_readonly_instance`.
+* **New Data Source**: `tencentcloud_cynosdb_clusters`
+* **New Data Source**: `tencentcloud_cynosdb_readonly_instances`.
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mongodb_standby_instance` change example type to `POSTPAID`.
+
 ## 1.43.0 (September 18, 2020)
 
 FEATURES:

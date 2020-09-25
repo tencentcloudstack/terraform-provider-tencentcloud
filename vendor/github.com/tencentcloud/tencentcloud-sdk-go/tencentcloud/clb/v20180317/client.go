@@ -773,7 +773,7 @@ func NewDescribeClsLogSetResponse() (response *DescribeClsLogSetResponse) {
     return
 }
 
-// 获取用户的clb独占日志集。
+// 获取用户的clb专有日志集
 func (c *Client) DescribeClsLogSet(request *DescribeClsLogSetRequest) (response *DescribeClsLogSetResponse, err error) {
     if request == nil {
         request = NewDescribeClsLogSetRequest()
@@ -879,6 +879,31 @@ func (c *Client) DescribeLoadBalancersDetail(request *DescribeLoadBalancersDetai
         request = NewDescribeLoadBalancersDetailRequest()
     }
     response = NewDescribeLoadBalancersDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeQuotaRequest() (request *DescribeQuotaRequest) {
+    request = &DescribeQuotaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("clb", APIVersion, "DescribeQuota")
+    return
+}
+
+func NewDescribeQuotaResponse() (response *DescribeQuotaResponse) {
+    response = &DescribeQuotaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 查询用户当前地域下的各项配额
+func (c *Client) DescribeQuota(request *DescribeQuotaRequest) (response *DescribeQuotaResponse, err error) {
+    if request == nil {
+        request = NewDescribeQuotaRequest()
+    }
+    response = NewDescribeQuotaResponse()
     err = c.Send(request, response)
     return
 }

@@ -582,6 +582,12 @@ type CreateListenerRequest struct {
 
 	// 后端目标类型，NODE表示绑定普通节点，TARGETGROUP表示绑定目标组。
 	TargetType *string `json:"TargetType,omitempty" name:"TargetType"`
+
+	// 会话保持类型。不传或传NORMAL表示默认会话保持类型。QUIC_CID 表示根据Quic Connection ID做会话保持。QUIC_CID只支持UDP协议。
+	SessionType *string `json:"SessionType,omitempty" name:"SessionType"`
+
+	// 是否开启长连接，此参数仅适用于HTTP/HTTPS监听器
+	KeepaliveEnable *int64 `json:"KeepaliveEnable,omitempty" name:"KeepaliveEnable"`
 }
 
 func (r *CreateListenerRequest) ToJsonString() string {
@@ -1788,6 +1794,40 @@ func (r *DescribeLoadBalancersResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeQuotaRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *DescribeQuotaRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeQuotaRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeQuotaResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 配额列表
+		QuotaSet []*Quota `json:"QuotaSet,omitempty" name:"QuotaSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeQuotaResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeQuotaResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeRewriteRequest struct {
 	*tchttp.BaseRequest
 
@@ -2235,7 +2275,7 @@ type HealthCheck struct {
 type InternetAccessible struct {
 
 	// TRAFFIC_POSTPAID_BY_HOUR 按流量按小时后计费 ; BANDWIDTH_POSTPAID_BY_HOUR 按带宽按小时后计费;
-	// BANDWIDTH_PACKAGE 按带宽包计费（当前，只有指定运营商时才支持此种计费模式）
+	// BANDWIDTH_PACKAGE 按带宽包计费;
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
 
@@ -2313,6 +2353,14 @@ type Listener struct {
 	// 绑定的目标组基本信息；当监听器绑定目标组时，会返回该字段
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TargetGroup *BasicTargetGroupInfo `json:"TargetGroup,omitempty" name:"TargetGroup"`
+
+	// 会话保持类型。NORMAL表示默认会话保持类型。QUIC_CID 表示根据Quic Connection ID做会话保持。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SessionType *string `json:"SessionType,omitempty" name:"SessionType"`
+
+	// 是否开启长连接（本参数仅对于HTTP/HTTPS监听器有意义）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KeepaliveEnable *int64 `json:"KeepaliveEnable,omitempty" name:"KeepaliveEnable"`
 }
 
 type ListenerBackend struct {
@@ -2514,11 +2562,11 @@ type LoadBalancer struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IPv6Mode *string `json:"IPv6Mode,omitempty" name:"IPv6Mode"`
 
-	// 是否开启SnatPro
+	// 是否开启SnatPro。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnatPro *bool `json:"SnatPro,omitempty" name:"SnatPro"`
 
-	// 开启SnatPro负载均衡后，SnatIp列表
+	// 开启SnatPro负载均衡后，SnatIp列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SnatIps []*SnatIp `json:"SnatIps,omitempty" name:"SnatIps" list`
 
@@ -2537,6 +2585,14 @@ type LoadBalancer struct {
 	// IP类型是否是本地BGP
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalBgp *bool `json:"LocalBgp,omitempty" name:"LocalBgp"`
+
+	// 7层独占标签。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterTag *string `json:"ClusterTag,omitempty" name:"ClusterTag"`
+
+	// 开启IPv6FullChain负载均衡7层监听器支持混绑IPv4/IPv6目标功能。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MixIpTarget *bool `json:"MixIpTarget,omitempty" name:"MixIpTarget"`
 }
 
 type LoadBalancerDetail struct {
@@ -2902,6 +2958,9 @@ type ModifyListenerRequest struct {
 
 	// 是否开启SNI特性，此参数仅适用于HTTPS监听器。注意：未开启SNI的监听器可以开启SNI；已开启SNI的监听器不能关闭SNI
 	SniSwitch *int64 `json:"SniSwitch,omitempty" name:"SniSwitch"`
+
+	// 是否开启长连接，此参数仅适用于HTTP/HTTPS监听器
+	KeepaliveEnable *int64 `json:"KeepaliveEnable,omitempty" name:"KeepaliveEnable"`
 }
 
 func (r *ModifyListenerRequest) ToJsonString() string {
@@ -3264,6 +3323,24 @@ func (r *ModifyTargetWeightResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type Quota struct {
+
+	// 配额名称，取值范围：
+	// <li> TOTAL_OPEN_CLB_QUOTA: 用户当前地域下的公网LB配额 </li>
+	// <li> TOTAL_INTERNAL_CLB_QUOTA: 用户当前地域下的内网LB配额 </li>
+	// <li> TOTAL_LISTENER_QUOTA: 一个CLB下的监听器配额 </li>
+	// <li> TOTAL_LISTENER_RULE_QUOTA: 一个监听器下的转发规则配额 </li>
+	// <li> TOTAL_TARGET_BIND_QUOTA: 一条转发规则下绑定设备配额 </li>
+	QuotaId *string `json:"QuotaId,omitempty" name:"QuotaId"`
+
+	// 当前使用数量，为 null 时表示无意义。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QuotaCurrent *int64 `json:"QuotaCurrent,omitempty" name:"QuotaCurrent"`
+
+	// 配额数量。
+	QuotaLimit *int64 `json:"QuotaLimit,omitempty" name:"QuotaLimit"`
+}
+
 type RegisterTargetGroupInstancesRequest struct {
 	*tchttp.BaseRequest
 
@@ -3496,7 +3573,7 @@ type RuleInput struct {
 	// 会话保持时间。设置为0表示关闭会话保持，开启会话保持可取值30~3600，单位：秒。
 	SessionExpireTime *int64 `json:"SessionExpireTime,omitempty" name:"SessionExpireTime"`
 
-	// 健康检查信息
+	// 健康检查信息。详情请参见：[健康检查](https://cloud.tencent.com/document/product/214/6097)
 	HealthCheck *HealthCheck `json:"HealthCheck,omitempty" name:"HealthCheck"`
 
 	// 证书信息

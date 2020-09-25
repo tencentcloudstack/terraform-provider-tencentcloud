@@ -80,15 +80,18 @@ type CfsInsInfo struct {
 	// 远程挂载点
 	RemoteMountDir *string `json:"RemoteMountDir,omitempty" name:"RemoteMountDir"`
 
-	// 文件系统ip
+	// 文件系统ip，配置 cfs 时无需填写。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IpAddress *string `json:"IpAddress,omitempty" name:"IpAddress"`
 
-	// 文件系统所在的私有网络id
+	// 文件系统所在的私有网络id，配置 cfs 时无需填写。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MountVpcId *string `json:"MountVpcId,omitempty" name:"MountVpcId"`
 
-	// 文件系统所在私有网络的子网id
+	// 文件系统所在私有网络的子网id，配置 cfs 时无需填写。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MountSubnetId *string `json:"MountSubnetId,omitempty" name:"MountSubnetId"`
 }
@@ -271,7 +274,7 @@ type CreateFunctionRequest struct {
 	// 函数的环境变量
 	Environment *Environment `json:"Environment,omitempty" name:"Environment"`
 
-	// 函数运行环境，目前仅支持 Python2.7，Python3.6，Nodejs6.10，Nodejs8.9，Nodejs10.15，Nodejs12.16， PHP5， PHP7，Golang1 和 Java8，默认Python2.7
+	// 函数运行环境，目前仅支持 Python2.7，Python3.6，Nodejs6.10，Nodejs8.9，Nodejs10.15，Nodejs12.16， PHP5， PHP7，Golang1 ， Java8和CustomRuntime，默认Python2.7
 	Runtime *string `json:"Runtime,omitempty" name:"Runtime"`
 
 	// 函数的私有网络配置
@@ -306,6 +309,9 @@ type CreateFunctionRequest struct {
 
 	// 文件系统配置参数，用于云函数挂载文件系统
 	CfsConfig *CfsConfig `json:"CfsConfig,omitempty" name:"CfsConfig"`
+
+	// 函数初始化超时时间
+	InitTimeout *int64 `json:"InitTimeout,omitempty" name:"InitTimeout"`
 }
 
 func (r *CreateFunctionRequest) ToJsonString() string {
@@ -381,7 +387,7 @@ type CreateTriggerRequest struct {
 	// 新建触发器名称。如果是定时触发器，名称支持英文字母、数字、连接符和下划线，最长100个字符；如果是cos触发器，需要是对应cos存储桶适用于XML API的访问域名(例如:5401-5ff414-12345.cos.ap-shanghai.myqcloud.com);如果是其他触发器，见具体触发器绑定参数的说明
 	TriggerName *string `json:"TriggerName,omitempty" name:"TriggerName"`
 
-	// 触发器类型，目前支持 cos 、cmq、 timer、 ckafka类型
+	// 触发器类型，目前支持 cos 、cmq、 timer、 ckafka、apigw类型
 	Type *string `json:"Type,omitempty" name:"Type"`
 
 	// 触发器对应的参数，可见具体[触发器描述说明](https://cloud.tencent.com/document/product/583/39901)
@@ -487,6 +493,9 @@ type DeleteFunctionRequest struct {
 
 	// 函数所属命名空间
 	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
+
+	// 函数版本
+	Qualifier *string `json:"Qualifier,omitempty" name:"Qualifier"`
 }
 
 func (r *DeleteFunctionRequest) ToJsonString() string {
@@ -1044,7 +1053,7 @@ type GetFunctionResponse struct {
 		// 是否自动安装依赖
 		InstallDependency *string `json:"InstallDependency,omitempty" name:"InstallDependency"`
 
-		// 函数状态
+		// 函数状态，状态值及流转[参考说明](https://cloud.tencent.com/document/product/583/47175)
 		Status *string `json:"Status,omitempty" name:"Status"`
 
 		// 状态描述
@@ -1095,13 +1104,20 @@ type GetFunctionResponse struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		CfsConfig *CfsConfig `json:"CfsConfig,omitempty" name:"CfsConfig"`
 
-		// 函数的计费状态
+		// 函数的计费状态，状态值[参考此处](https://cloud.tencent.com/document/product/583/47175#.E5.87.BD.E6.95.B0.E8.AE.A1.E8.B4.B9.E7.8A.B6.E6.80.81)
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		AvailableStatus *string `json:"AvailableStatus,omitempty" name:"AvailableStatus"`
 
 		// 函数版本
 	// 注意：此字段可能返回 null，表示取不到有效值。
 		Qualifier *string `json:"Qualifier,omitempty" name:"Qualifier"`
+
+		// 函数初始化超时时间
+		InitTimeout *int64 `json:"InitTimeout,omitempty" name:"InitTimeout"`
+
+		// 函数状态失败原因
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		StatusReasons []*StatusReason `json:"StatusReasons,omitempty" name:"StatusReasons" list`
 
 		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1263,11 +1279,7 @@ type LayerVersionInfo struct {
 	// 层名称
 	LayerName *string `json:"LayerName,omitempty" name:"LayerName"`
 
-	// 层的具体版本当前状态，可能取值：
-	// Active 正常
-	// Publishing  发布中
-	// PublishFailed  发布失败
-	// Deleted 已删除
+	// 层的具体版本当前状态，状态值[参考此处](https://cloud.tencent.com/document/product/583/47175#.E5.B1.82.EF.BC.88layer.EF.BC.89.E7.8A.B6.E6.80.81)
 	Status *string `json:"Status,omitempty" name:"Status"`
 }
 
@@ -1443,10 +1455,10 @@ type ListLayersRequest struct {
 	// 适配的运行时
 	CompatibleRuntime *string `json:"CompatibleRuntime,omitempty" name:"CompatibleRuntime"`
 
-	// Offset
+	// 偏移位置
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// Limit
+	// 查询数目限制
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
 	// 查询key，模糊匹配名称
@@ -1866,6 +1878,15 @@ type RoutingConfig struct {
 	AddtionVersionMatchs []*VersionMatch `json:"AddtionVersionMatchs,omitempty" name:"AddtionVersionMatchs" list`
 }
 
+type StatusReason struct {
+
+	// 错误码
+	ErrorCode *string `json:"ErrorCode,omitempty" name:"ErrorCode"`
+
+	// 错误描述
+	ErrorMessage *string `json:"ErrorMessage,omitempty" name:"ErrorMessage"`
+}
+
 type Tag struct {
 
 	// 标签的key
@@ -2061,7 +2082,7 @@ type UpdateFunctionConfigurationRequest struct {
 	// 函数最长执行时间，单位为秒，可选值范 1-900 秒，默认为 3 秒
 	Timeout *int64 `json:"Timeout,omitempty" name:"Timeout"`
 
-	// 函数运行环境，目前仅支持 Python2.7，Python3.6，Nodejs6.10，Nodejs8.9，Nodejs10.15，Nodejs12.16，PHP5， PHP7，Golang1 和 Java8
+	// 函数运行环境，目前仅支持 Python2.7，Python3.6，Nodejs6.10，Nodejs8.9，Nodejs10.15，Nodejs12.16， PHP5， PHP7，Golang1 ， Java8和CustomRuntime
 	Runtime *string `json:"Runtime,omitempty" name:"Runtime"`
 
 	// 函数的环境变量
@@ -2099,6 +2120,9 @@ type UpdateFunctionConfigurationRequest struct {
 
 	// 文件系统配置入参，用于云函数绑定文件系统
 	CfsConfig *CfsConfig `json:"CfsConfig,omitempty" name:"CfsConfig"`
+
+	// 函数初始化执行超时时间，默认15秒
+	InitTimeout *int64 `json:"InitTimeout,omitempty" name:"InitTimeout"`
 }
 
 func (r *UpdateFunctionConfigurationRequest) ToJsonString() string {
