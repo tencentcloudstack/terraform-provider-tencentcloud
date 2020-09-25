@@ -245,12 +245,6 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if availabilityZone != "" {
-		if !strings.Contains(availabilityZone, region) {
-			return fmt.Errorf("zone[%s] not in region[%s]", availabilityZone, region)
-		}
-	}
-
 	if (typeId == 0 && redisType == "") || (typeId != 0 && redisType != "") {
 		return fmt.Errorf("`type_id` and `type` set one item and only one item")
 	}

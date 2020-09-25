@@ -1,5 +1,15 @@
-## 1.43.1 (Unreleased)
+## 1.44.0 (Unreleased)
 
+FEATURES:
+
+* **New Resource**: `tencentcloud_cynosdb_cluster`
+* **New Resource**: `tencentcloud_cynosdb_readonly_instance`.
+* **New Data Source**: `tencentcloud_cynosdb_clusters`
+* **New Data Source**: `tencentcloud_cynosdb_readonly_instances`.
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mongodb_standby_instance` change example type to `POSTPAID`.
 * Resource: `tencentcloud_instance` add new argument `encrypt` to support data disk with encrypt
 * Resource: `tencentcloud_elasticsearch` add new argument `encrypt` to support disk with encrypt
 * Resource: `tencentcloud_kubernetes_cluster` add new argument `cam_role_name` to support authorization with instances

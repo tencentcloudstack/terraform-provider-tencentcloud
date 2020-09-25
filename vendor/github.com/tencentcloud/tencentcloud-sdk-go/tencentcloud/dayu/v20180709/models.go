@@ -41,10 +41,10 @@ type BaradData struct {
 
 type BoundIpInfo struct {
 
-	// IP
+	// IP地址
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
-	// 绑定的产品分类，取值[public（CVM产品），bm（黑石产品），eni（弹性网卡），vpngw（VPN网关）， natgw（NAT网关），waf（Web应用安全产品），fpc（金融产品），gaap（GAAP产品）, other(托管IP)]
+	// 绑定的产品分类，取值[public（CVM、CLB产品），bm（黑石产品），eni（弹性网卡），vpngw（VPN网关）， natgw（NAT网关），waf（Web应用安全产品），fpc（金融产品），gaap（GAAP产品）, other(托管IP)]
 	BizType *string `json:"BizType,omitempty" name:"BizType"`
 
 	// 产品分类下的子类型，取值[cvm（CVM），lb（负载均衡器），eni（弹性网卡），vpngw（VPN），natgw（NAT），waf（WAF），fpc（金融），gaap（GAAP），other（托管IP），eip（黑石弹性IP）]
@@ -528,7 +528,7 @@ type CreateDDoSPolicyRequest struct {
 	// 端口禁用，当没有禁用端口时填空数组
 	PortLimits []*DDoSPolicyPortLimit `json:"PortLimits,omitempty" name:"PortLimits" list`
 
-	// IP黑白名单，当没有IP黑白名单时填空数组
+	// 请求源IP黑白名单，当没有IP黑白名单时填空数组
 	IpAllowDenys []*IpBlackWhite `json:"IpAllowDenys,omitempty" name:"IpAllowDenys" list`
 
 	// 报文过滤，当没有报文过滤时填空数组
@@ -2302,6 +2302,9 @@ type DescribeCCTrendRequest struct {
 
 	// 资源实例ID，当Business为basic时，此字段不用填写（因为基础防护没有资源实例）
 	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 域名，可选
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
 }
 
 func (r *DescribeCCTrendRequest) ToJsonString() string {
@@ -3451,7 +3454,7 @@ type DescribeDDoSTrendResponse struct {
 		// 统计结束时间
 		EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-		// 值数组
+		// 值数组，攻击流量带宽单位为Mbps，包速率单位为pps
 		Data []*uint64 `json:"Data,omitempty" name:"Data" list`
 
 		// 值个数

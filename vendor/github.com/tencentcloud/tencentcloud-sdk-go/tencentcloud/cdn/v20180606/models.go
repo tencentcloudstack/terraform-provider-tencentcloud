@@ -155,6 +155,9 @@ type AddCdnDomainRequest struct {
 
 	// 回源超时配置
 	OriginPullTimeout *OriginPullTimeout `json:"OriginPullTimeout,omitempty" name:"OriginPullTimeout"`
+
+	// 标签配置
+	Tag []*Tag `json:"Tag,omitempty" name:"Tag" list`
 }
 
 func (r *AddCdnDomainRequest) ToJsonString() string {
@@ -463,6 +466,69 @@ type Cache struct {
 	// 高级缓存过期时间配置（功能灰度中，尚未全量）
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AdvancedCache *AdvancedCache `json:"AdvancedCache,omitempty" name:"AdvancedCache"`
+
+	// 高级路径缓存配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleCache []*RuleCache `json:"RuleCache,omitempty" name:"RuleCache" list`
+}
+
+type CacheConfigCache struct {
+
+	// 缓存配置开关
+	// on：开启
+	// off：关闭
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 缓存过期时间设置
+	// 单位为秒，最大可设置为 365 天
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CacheTime *int64 `json:"CacheTime,omitempty" name:"CacheTime"`
+
+	// 高级缓存过期配置，开启时会对比源站返回的 max-age 值与 CacheRules 中设置的缓存过期时间，取最小值在节点进行缓存
+	// on：开启
+	// off：关闭
+	// 默认为关闭状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CompareMaxAge *string `json:"CompareMaxAge,omitempty" name:"CompareMaxAge"`
+
+	// 强制缓存
+	// on：开启
+	// off：关闭
+	// 默认为关闭状态，开启后，源站返回的 no-store、no-cache 资源，也将按照 CacheRules 规则进行缓存
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IgnoreCacheControl *string `json:"IgnoreCacheControl,omitempty" name:"IgnoreCacheControl"`
+
+	// 忽略源站的 Set-Cookie 头部
+	// on：开启
+	// off：关闭
+	// 默认为关闭状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IgnoreSetCookie *string `json:"IgnoreSetCookie,omitempty" name:"IgnoreSetCookie"`
+}
+
+type CacheConfigFollowOrigin struct {
+
+	// 遵循源站配置开关
+	// on：开启
+	// off：关闭
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+}
+
+type CacheConfigNoCache struct {
+
+	// 不缓存配置开关
+	// on：开启
+	// off：关闭
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// 总是回源站校验
+	// on：开启
+	// off：关闭
+	// 默认为关闭状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Revalidate *string `json:"Revalidate,omitempty" name:"Revalidate"`
 }
 
 type CacheKey struct {
@@ -495,6 +561,10 @@ type CacheKey struct {
 	// CacheKey中包含请求协议
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Scheme *SchemeKey `json:"Scheme,omitempty" name:"Scheme"`
+
+	// 分路径缓存键配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KeyRules []*KeyRule `json:"KeyRules,omitempty" name:"KeyRules" list`
 }
 
 type CacheOptResult struct {
@@ -694,7 +764,7 @@ type CompressionRule struct {
 
 	// 文件压缩算法
 	// gzip：指定 GZIP 压缩
-	// brotli：需要同时指定 GZIP 压缩才可启用
+	// brotli：指定Brotli压缩
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Algorithms []*string `json:"Algorithms,omitempty" name:"Algorithms" list`
 }
@@ -754,6 +824,130 @@ func (r *CreateClsLogTopicResponse) ToJsonString() string {
 }
 
 func (r *CreateClsLogTopicResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateScdnLogTaskRequest struct {
+	*tchttp.BaseRequest
+
+	// 防护类型
+	// Mode 映射如下：
+	//   waf = "Web攻击"
+	//   cc = "CC攻击"
+	Mode *string `json:"Mode,omitempty" name:"Mode"`
+
+	// 查询起始时间，如：2018-09-04 10:40:00，返回结果大于等于指定时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 查询结束时间，如：2018-09-04 10:40:00，返回结果小于等于指定时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 指定域名查询, 不填默认查询全部域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 指定攻击类型, 不填默认查询全部攻击类型
+	// AttackType 映射如下:
+	//   other = '未知类型'
+	//   malicious_scan = "恶意扫描"
+	//   sql_inject = "SQL注入攻击"
+	//   xss = "XSS攻击"
+	//   cmd_inject = "命令注入攻击"
+	//   ldap_inject = "LDAP注入攻击"
+	//   ssi_inject = "SSI注入攻击"
+	//   xml_inject = "XML注入攻击"
+	//   web_service = "WEB服务漏洞攻击"
+	//   web_app = "WEB应用漏洞攻击"
+	//   path_traversal = "路径跨越攻击"
+	//   illegal_access_core_file = "核心文件非法访问"
+	//   trojan_horse = "木马后门攻击"
+	//   csrf = "CSRF攻击"
+	//   malicious_file_upload= '恶意文件上传'
+	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
+
+	// 指定执行动作, 不填默认查询全部执行动作
+	// DefenceMode 映射如下：
+	//   observe = '观察模式'
+	//   intercept = '拦截模式'
+	DefenceMode *string `json:"DefenceMode,omitempty" name:"DefenceMode"`
+
+	// 不填为全部ip
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 指定域名查询, 与 Domain 参数同时有值时使用 Domains 参数，不填默认查询全部域名，指定域名查询时最多支持同时选择 5 个域名查询
+	Domains []*string `json:"Domains,omitempty" name:"Domains" list`
+}
+
+func (r *CreateScdnLogTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateScdnLogTaskRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateScdnLogTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 创建结果, 
+	// "0" -> 创建成功
+		Result *string `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateScdnLogTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateScdnLogTaskResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateVerifyRecordRequest struct {
+	*tchttp.BaseRequest
+
+	// 要取回的域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+}
+
+func (r *CreateVerifyRecordRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateVerifyRecordRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateVerifyRecordResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 子解析
+		SubDomain *string `json:"SubDomain,omitempty" name:"SubDomain"`
+
+		// 解析值
+		Record *string `json:"Record,omitempty" name:"Record"`
+
+		// 解析类型
+		RecordType *string `json:"RecordType,omitempty" name:"RecordType"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *CreateVerifyRecordResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *CreateVerifyRecordResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1179,10 +1373,82 @@ func (r *DescribeCertDomainsResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeDistrictIspDataRequest struct {
+	*tchttp.BaseRequest
+
+	// 域名列表，最多支持20个域名
+	Domains []*string `json:"Domains,omitempty" name:"Domains" list`
+
+	// 查询起始时间，如：2018-09-04 10:40:00，返回结果大于等于指定时间
+	// 支持近 60 天内的数据查询，每次查询时间区间为 3 小时
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 查询结束时间，如：2018-09-04 10:40:00，返回结果小于等于指定时间
+	// 结束时间与起始时间区间最大为 3 小时
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 指定查询指标，支持:
+	// bandwidth：带宽，单位为 bps
+	// request：请求数，单位为 次
+	Metric *string `json:"Metric,omitempty" name:"Metric"`
+
+	// 指定省份查询，不填充表示查询所有省份
+	// 省份、国家/地区编码可以查看 [省份编码映射](https://cloud.tencent.com/document/product/228/6316#.E5.8C.BA.E5.9F.9F-.2F-.E8.BF.90.E8.90.A5.E5.95.86.E6.98.A0.E5.B0.84.E8.A1.A8)
+	Districts []*int64 `json:"Districts,omitempty" name:"Districts" list`
+
+	// 指定运营商查询，不填充表示查询所有运营商
+	// 运营商编码可以查看 [运营商编码映射](https://cloud.tencent.com/document/product/228/6316#.E5.8C.BA.E5.9F.9F-.2F-.E8.BF.90.E8.90.A5.E5.95.86.E6.98.A0.E5.B0.84.E8.A1.A8)
+	Isps []*int64 `json:"Isps,omitempty" name:"Isps" list`
+
+	// 指定协议查询，不填充表示查询所有协议
+	// all：所有协议
+	// http：指定查询 HTTP 对应指标
+	// https：指定查询 HTTPS 对应指标
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// 指定IP协议查询，不填充表示查询所有协议
+	// all：所有协议
+	// ipv4：指定查询 ipv4 对应指标
+	// ipv6：指定查询 ipv6 对应指标
+	// 指定IP协议查询时，不可同时指定省份、运营商查询
+	IpProtocol *string `json:"IpProtocol,omitempty" name:"IpProtocol"`
+}
+
+func (r *DescribeDistrictIspDataRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDistrictIspDataRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeDistrictIspDataResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 地区运营商数据明细
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		Data []*DistrictIspInfo `json:"Data,omitempty" name:"Data" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeDistrictIspDataResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeDistrictIspDataResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeDomainsConfigRequest struct {
 	*tchttp.BaseRequest
 
-	// 分页查询偏移量，默认为 0 （第一页）
+	// 分页查询偏移量，默认为 0
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
 	// 分页查询限制数目，默认为 100，最大可设置为 1000
@@ -1902,6 +2168,102 @@ func (r *DescribeReportDataResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeScdnTopDataRequest struct {
+	*tchttp.BaseRequest
+
+	// 查询起始时间，如：2018-09-04 10:40:00，返回结果大于等于指定时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 查询结束时间，如：2018-09-04 10:40:00，返回结果小于等于指定时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 查询的SCDN TOP攻击数据类型：
+	// waf：Web 攻击防护TOP数据
+	Mode *string `json:"Mode,omitempty" name:"Mode"`
+
+	// 排序对象，支持以下几种形式：
+	// url：攻击目标 url 排序
+	// ip：攻击源 IP 排序
+	// attackType：攻击类型排序
+	Metric *string `json:"Metric,omitempty" name:"Metric"`
+
+	// 排序使用的指标名称：
+	// request：请求次数
+	Filter *string `json:"Filter,omitempty" name:"Filter"`
+
+	// 指定域名查询
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 指定攻击类型, 仅 Mode=waf 时有效
+	// 不填则查询所有攻击类型的数据总和
+	// AttackType 映射如下:
+	//   other = '未知类型'
+	//   malicious_scan = "恶意扫描"
+	//   sql_inject = "SQL注入攻击"
+	//   xss = "XSS攻击"
+	//   cmd_inject = "命令注入攻击"
+	//   ldap_inject = "LDAP注入攻击"
+	//   ssi_inject = "SSI注入攻击"
+	//   xml_inject = "XML注入攻击"
+	//   web_service = "WEB服务漏洞攻击"
+	//   web_app = "WEB应用漏洞攻击"
+	//   path_traversal = "路径跨越攻击"
+	//   illegal_access_core_file = "核心文件非法访问"
+	//   trojan_horse = "木马后门攻击"
+	//   csrf = "CSRF攻击"
+	//   malicious_file_upload= '恶意文件上传'
+	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
+
+	// 指定防御模式,仅 Mode=waf 时有效
+	// 不填则查询所有防御模式的数据总和
+	// DefenceMode 映射如下：
+	//   observe = '观察模式'
+	//   intercept = '拦截模式'
+	DefenceMode *string `json:"DefenceMode,omitempty" name:"DefenceMode"`
+}
+
+func (r *DescribeScdnTopDataRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeScdnTopDataRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeScdnTopDataResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// WAF 攻击类型统计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		TopTypeData []*ScdnTypeData `json:"TopTypeData,omitempty" name:"TopTypeData" list`
+
+		// TOP 攻击源 IP 统计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		TopIpData []*ScdnTopData `json:"TopIpData,omitempty" name:"TopIpData" list`
+
+		// 查询的SCDN类型，当前仅支持 waf
+		Mode *string `json:"Mode,omitempty" name:"Mode"`
+
+		// TOP URL 统计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+		TopUrlData []*ScdnTopUrlData `json:"TopUrlData,omitempty" name:"TopUrlData" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeScdnTopDataResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeScdnTopDataResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeTrafficPackagesRequest struct {
 	*tchttp.BaseRequest
 
@@ -2188,6 +2550,24 @@ type DetailDomain struct {
 	// 访问控制
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AccessControl *AccessControl `json:"AccessControl,omitempty" name:"AccessControl"`
+
+	// 是否支持高级配置项
+	// on：支持
+	// off：不支持
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Advance *string `json:"Advance,omitempty" name:"Advance"`
+
+	// URL重定向配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UrlRedirect *UrlRedirect `json:"UrlRedirect,omitempty" name:"UrlRedirect"`
+
+	// 访问端口配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AccessPort []*int64 `json:"AccessPort,omitempty" name:"AccessPort" list`
+
+	// 标签配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tag []*Tag `json:"Tag,omitempty" name:"Tag" list`
 }
 
 type DisableCachesRequest struct {
@@ -2267,6 +2647,45 @@ func (r *DisableClsLogTopicResponse) ToJsonString() string {
 
 func (r *DisableClsLogTopicResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
+}
+
+type DistrictIspInfo struct {
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 协议类型
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// IP协议类型
+	IpProtocol *string `json:"IpProtocol,omitempty" name:"IpProtocol"`
+
+	// 起始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 时间间隔，单位为分钟
+	Interval *uint64 `json:"Interval,omitempty" name:"Interval"`
+
+	// 指标名称
+	Metric *string `json:"Metric,omitempty" name:"Metric"`
+
+	// 地区ID
+	District *int64 `json:"District,omitempty" name:"District"`
+
+	// 运营商ID
+	Isp *int64 `json:"Isp,omitempty" name:"Isp"`
+
+	// 指标数据点
+	DataPoints []*uint64 `json:"DataPoints,omitempty" name:"DataPoints" list`
+
+	// 地区名称
+	DistrictName *string `json:"DistrictName,omitempty" name:"DistrictName"`
+
+	// 运营商名称
+	IspName *string `json:"IspName,omitempty" name:"IspName"`
 }
 
 type DomainAreaConfig struct {
@@ -2725,6 +3144,43 @@ type Ipv6 struct {
 	// 域名是否开启ipv6功能，on或off。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Switch *string `json:"Switch,omitempty" name:"Switch"`
+}
+
+type KeyRule struct {
+
+	// CacheType 对应类型下的匹配内容：
+	// file 时填充后缀名，如 jpg、txt
+	// directory 时填充路径，如 /xxx/test
+	// path 时填充绝对路径，如 /xxx/test.html
+	// index 时填充 /
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RulePaths []*string `json:"RulePaths,omitempty" name:"RulePaths" list`
+
+	// 规则类型：
+	// file：指定文件后缀生效
+	// directory：指定路径生效
+	// path：指定绝对路径生效
+	// index：首页
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
+
+	// 是否开启全路径缓存
+	// on：开启全路径缓存（即关闭参数过滤）
+	// off：关闭全路径缓存（即开启参数过滤）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FullUrlCache *string `json:"FullUrlCache,omitempty" name:"FullUrlCache"`
+
+	// 是否忽略大小写缓存
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IgnoreCase *string `json:"IgnoreCase,omitempty" name:"IgnoreCase"`
+
+	// CacheKey中包含请求参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QueryString *RuleQueryString `json:"QueryString,omitempty" name:"QueryString"`
+
+	// 路径缓存键标签，传 user
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleTag *string `json:"RuleTag,omitempty" name:"RuleTag"`
 }
 
 type ListClsLogTopicsRequest struct {
@@ -3483,6 +3939,9 @@ type PushUrlsCacheRequest struct {
 	// global：预热全球节点
 	// 不填充情况下，默认为 mainland， URL 中域名必须在对应区域启用了加速服务才能提交对应区域的预热任务
 	Area *string `json:"Area,omitempty" name:"Area"`
+
+	// 填写"middle"或不填充时预热至中间层节点
+	Layer *string `json:"Layer,omitempty" name:"Layer"`
 }
 
 func (r *PushUrlsCacheRequest) ToJsonString() string {
@@ -3709,6 +4168,100 @@ type Revalidate struct {
 	// 只在特定请求路径回源站校验
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Path *string `json:"Path,omitempty" name:"Path"`
+}
+
+type RuleCache struct {
+
+	// CacheType 对应类型下的匹配内容：
+	// all 时填充 *
+	// file 时填充后缀名，如 jpg、txt
+	// directory 时填充路径，如 /xxx/test
+	// path 时填充绝对路径，如 /xxx/test.html
+	// index 时填充 /
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RulePaths []*string `json:"RulePaths,omitempty" name:"RulePaths" list`
+
+	// 规则类型：
+	// all：所有文件生效
+	// file：指定文件后缀生效
+	// directory：指定路径生效
+	// path：指定绝对路径生效
+	// index：首页
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
+
+	// 缓存配置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CacheConfig *RuleCacheConfig `json:"CacheConfig,omitempty" name:"CacheConfig"`
+}
+
+type RuleCacheConfig struct {
+
+	// 缓存配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Cache *CacheConfigCache `json:"Cache,omitempty" name:"Cache"`
+
+	// 不缓存配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NoCache *CacheConfigNoCache `json:"NoCache,omitempty" name:"NoCache"`
+
+	// 遵循源站配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FollowOrigin *CacheConfigFollowOrigin `json:"FollowOrigin,omitempty" name:"FollowOrigin"`
+}
+
+type RuleQueryString struct {
+
+	// on | off CacheKey是否由QueryString组成
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// includeCustom 包含部分url参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Action *string `json:"Action,omitempty" name:"Action"`
+
+	// 使用/排除的url参数数组，';' 分割
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+type ScdnTopData struct {
+
+	// 时间
+	Time *string `json:"Time,omitempty" name:"Time"`
+
+	// 数值
+	Value *uint64 `json:"Value,omitempty" name:"Value"`
+
+	// 运营商
+	Isp *string `json:"Isp,omitempty" name:"Isp"`
+
+	// IP地址
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 区域
+	District *string `json:"District,omitempty" name:"District"`
+}
+
+type ScdnTopUrlData struct {
+
+	// Top数据的URL
+	Url *string `json:"Url,omitempty" name:"Url"`
+
+	// 数值
+	Value *uint64 `json:"Value,omitempty" name:"Value"`
+
+	// 时间
+	Time *string `json:"Time,omitempty" name:"Time"`
+}
+
+type ScdnTypeData struct {
+
+	// 攻击类型
+	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
+
+	// 攻击值
+	Value *uint64 `json:"Value,omitempty" name:"Value"`
 }
 
 type SchemeKey struct {
@@ -4022,6 +4575,17 @@ type SummarizedData struct {
 	Value *float64 `json:"Value,omitempty" name:"Value"`
 }
 
+type Tag struct {
+
+	// 标签键
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
+
+	// 标签值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagValue *string `json:"TagValue,omitempty" name:"TagValue"`
+}
+
 type TimestampData struct {
 
 	// 数据统计时间点，采用向前汇总模式
@@ -4218,6 +4782,15 @@ type UpdateDomainConfigRequest struct {
 
 	// UA黑白名单配置
 	UserAgentFilter *UserAgentFilter `json:"UserAgentFilter,omitempty" name:"UserAgentFilter"`
+
+	// 访问控制
+	AccessControl *AccessControl `json:"AccessControl,omitempty" name:"AccessControl"`
+
+	// URL重定向配置
+	UrlRedirect *UrlRedirect `json:"UrlRedirect,omitempty" name:"UrlRedirect"`
+
+	// 访问端口配置
+	AccessPort []*int64 `json:"AccessPort,omitempty" name:"AccessPort" list`
 }
 
 func (r *UpdateDomainConfigRequest) ToJsonString() string {
@@ -4346,6 +4919,30 @@ type UrlRecord struct {
 	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 }
 
+type UrlRedirect struct {
+
+	// URL重定向配置开关
+	// on：开启
+	// off：关闭
+	Switch *string `json:"Switch,omitempty" name:"Switch"`
+
+	// URL重定向规则，当Switch为on时必填，规则数量最大为10个。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PathRules []*UrlRedirectRule `json:"PathRules,omitempty" name:"PathRules" list`
+}
+
+type UrlRedirectRule struct {
+
+	// 重定向状态码，301 | 302
+	RedirectStatusCode *int64 `json:"RedirectStatusCode,omitempty" name:"RedirectStatusCode"`
+
+	// 待匹配的Url模式，支持完全路径匹配和正则匹配，最大长度1024字符。
+	Pattern *string `json:"Pattern,omitempty" name:"Pattern"`
+
+	// 目标URL，必须以“/”开头，最大长度1024字符。
+	RedirectUrl *string `json:"RedirectUrl,omitempty" name:"RedirectUrl"`
+}
+
 type UserAgentFilter struct {
 
 	// 开关，on或off
@@ -4378,6 +4975,43 @@ type UserAgentFilterRule struct {
 	// 黑名单或白名单，blacklist或whitelist
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FilterType *string `json:"FilterType,omitempty" name:"FilterType"`
+}
+
+type VerifyDomainRecordRequest struct {
+	*tchttp.BaseRequest
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+}
+
+func (r *VerifyDomainRecordRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *VerifyDomainRecordRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type VerifyDomainRecordResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 是否验证成功
+		Result *bool `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *VerifyDomainRecordResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *VerifyDomainRecordResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
 }
 
 type VideoSeek struct {

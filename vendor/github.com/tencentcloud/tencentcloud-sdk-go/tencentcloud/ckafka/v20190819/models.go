@@ -1540,6 +1540,14 @@ type InstanceAttributesResponse struct {
 	// 售卖类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Cvm *int64 `json:"Cvm,omitempty" name:"Cvm"`
+
+	// 类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// 表示该实例支持的特性。FEATURE_SUBNET_ACL:表示acl策略支持设置子网。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Features []*string `json:"Features,omitempty" name:"Features" list`
 }
 
 type InstanceConfigDO struct {
@@ -1952,6 +1960,10 @@ type SubscribedInfo struct {
 	// 分区offset信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PartitionOffset []*PartitionOffset `json:"PartitionOffset,omitempty" name:"PartitionOffset" list`
+
+	// 订阅的主题ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicId *string `json:"TopicId,omitempty" name:"TopicId"`
 }
 
 type Tag struct {

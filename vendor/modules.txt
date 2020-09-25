@@ -538,6 +538,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416

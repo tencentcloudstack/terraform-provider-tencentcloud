@@ -211,6 +211,15 @@ CVM
     tencentcloud_reserved_instance
     tencentcloud_image
 
+CynosDB
+  Data Source
+	tencentcloud_cynosdb_clusters
+	tencentcloud_cynosdb_instances
+
+  Resource
+    tencentcloud_cynosdb_cluster
+    tencentcloud_cynosdb_readonly_instance
+
 Direct Connect(DC)
   Data Source
     tencentcloud_dc_instances
@@ -652,6 +661,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_audit_cos_regions":                dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                  dataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                           dataSourceTencentCloudAudits(),
+			"tencentcloud_cynosdb_clusters":                 dataSourceTencentCloudCynosdbClusters(),
+			"tencentcloud_cynosdb_instances":                dataSourceTencentCloudCynosdbInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -776,6 +787,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_topic":                    resourceTencentCloudCkafkaTopic(),
 			"tencentcloud_audit":                           resourceTencentCloudAudit(),
 			"tencentcloud_image":                           resourceTencentCloudImage(),
+			"tencentcloud_cynosdb_cluster":                 resourceTencentCloudCynosdbCluster(),
+			"tencentcloud_cynosdb_readonly_instance":       resourceTencentCloudCynosdbReadonlyInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
