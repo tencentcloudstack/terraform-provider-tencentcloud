@@ -93,6 +93,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     password                  = "ZZXXccvv1212"
+    cam_role_name             = "CVM_QcsRole"
   }
 
   labels = {
@@ -156,6 +157,7 @@ The `master_config` object supports the following:
 * `instance_type` - (Required, ForceNew) Specified types of CVM instance.
 * `subnet_id` - (Required, ForceNew) Private network ID.
 * `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
+* `cam_role_name` - (Optional, ForceNew) CAM role name authorized to access.
 * `count` - (Optional, ForceNew) Number of cvm.
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
 * `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
@@ -179,6 +181,7 @@ The `worker_config` object supports the following:
 * `instance_type` - (Required, ForceNew) Specified types of CVM instance.
 * `subnet_id` - (Required, ForceNew) Private network ID.
 * `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
+* `cam_role_name` - (Optional, ForceNew) CAM role name authorized to access.
 * `count` - (Optional, ForceNew) Number of cvm.
 * `data_disk` - (Optional, ForceNew) Configurations of data disk.
 * `enhanced_monitor_service` - (Optional, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.

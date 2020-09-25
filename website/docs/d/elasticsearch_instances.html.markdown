@@ -51,6 +51,7 @@ In addition to all arguments above, the following attributes are exported:
   * `node_info_list` - Node information list, which describe the specification information of various types of nodes in the cluster.
     * `disk_size` - Node disk size.
     * `disk_type` - Node disk type.
+    * `encrypt` - Decides this disk encrypted or not.
     * `node_num` - Number of nodes.
     * `node_type` - Node specification.
     * `type` - Node type.

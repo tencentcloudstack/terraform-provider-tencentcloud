@@ -149,6 +149,11 @@ func dataSourceTencentCloudElasticsearchInstances() *schema.Resource {
 										Computed:    true,
 										Description: "Node disk size.",
 									},
+									"encrypt": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Decides this disk encrypted or not.",
+									},
 								},
 							},
 						},
@@ -271,6 +276,7 @@ func dataSourceTencentCloudElasticsearchInstancesRead(d *schema.ResourceData, me
 					"type":      v.Type,
 					"disk_type": v.DiskType,
 					"disk_size": v.DiskSize,
+					"encrypt":   *v.DiskEncrypt > 0,
 				}
 				infos = append(infos, info)
 			}

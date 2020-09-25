@@ -26,6 +26,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   node_info_list {
     node_num  = 2
     node_type = "ES.S1.SMALL2"
+    encrypt   = false
   }
 
   tags = {
@@ -65,6 +66,7 @@ The `node_info_list` object supports the following:
 * `node_type` - (Required) Node specification, and valid values refer to [document of tencentcloud](https://intl.cloud.tencent.com/document/product/845/18376).
 * `disk_size` - (Optional) Node disk size. Unit is GB, and default value is `100`.
 * `disk_type` - (Optional) Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`, and default value is `CLOUD_SSD`.
+* `encrypt` - (Optional) Decides to encrypt this disk or not.
 * `type` - (Optional) Node type. Valid values are `hotData`, `warmData` and `dedicatedMaster`, and default value is 'hotData`.
 
 ## Attributes Reference

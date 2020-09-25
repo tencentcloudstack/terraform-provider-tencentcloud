@@ -57,6 +57,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
     data_disk_size = 50
+	encrypt = false
   }
 
   tags = {
@@ -301,6 +302,13 @@ func resourceTencentCloudInstance() *schema.Resource {
 							ForceNew:    true,
 							Description: "Decides whether the disk is deleted with instance(only applied to `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM` disk with `POSTPAID_BY_HOUR` instance), default is true.",
 						},
+						"encrypt": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							ForceNew:    true,
+							Description: "Decides whether the disk is encrypted. Default is `false`.",
+						},
 					},
 				},
 			},
@@ -515,6 +523,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 				dataDisk.DeleteWithInstance = &deleteWithInstanceBool
 			}
 
+			if encrypt, ok := value["encrypt"]; ok {
+				encryptBool := encrypt.(bool)
+				dataDisk.Encrypt = &encryptBool
+			}
 			request.DataDisks = append(request.DataDisks, &dataDisk)
 		}
 	}
@@ -719,6 +731,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			var (
 				snapshotId, diskId     string
 				deleteWithInstanceBool bool
+				encryptBool            bool
 			)
 			diskType := value["data_disk_type"].(string)
 			diskSize := int64(value["data_disk_size"].(int))
@@ -728,7 +741,9 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			if deleteWithInstance, ok := value["delete_with_instance"]; ok {
 				deleteWithInstanceBool = deleteWithInstance.(bool)
 			}
-
+			if encrypt, ok := value["encrypt"]; ok {
+				encryptBool = encrypt.(bool)
+			}
 			// find the disk id value
 			for _, disk := range instance.DataDisks {
 				if diskType == *disk.DiskType && diskSize == *disk.DiskSize &&
@@ -746,6 +761,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 			dataDisk["data_disk_size"] = diskSize
 			dataDisk["data_disk_id"] = diskId
 			dataDisk["delete_with_instance"] = deleteWithInstanceBool
+			dataDisk["encrypt"] = encryptBool
 			dataDiskList = append(dataDiskList, dataDisk)
 		}
 	}

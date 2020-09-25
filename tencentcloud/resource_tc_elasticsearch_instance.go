@@ -16,6 +16,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   node_info_list {
     node_num  = 2
     node_type = "ES.S1.SMALL2"
+	encrypt = false
   }
 
   tags = {
@@ -83,7 +84,6 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
-				Sensitive:   true,
 				Required:    true,
 				ForceNew:    true,
 				Description: "The id of a VPC subnetwork.",
@@ -128,6 +128,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -188,6 +189,12 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 							Optional:    true,
 							Default:     100,
 							Description: "Node disk size. Unit is GB, and default value is `100`.",
+						},
+						"encrypt": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Decides to encrypt this disk or not.",
 						},
 					},
 				},
@@ -310,6 +317,9 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			if v := value["disk_size"].(int); v > 0 {
 				info.DiskSize = helper.IntUint64(v)
 			}
+			if v := value["encrypt"].(bool); v {
+				info.DiskEncrypt = helper.BoolToInt64Pointer(v)
+			}
 			request.NodeInfoList = append(request.NodeInfoList, &info)
 		}
 	}
@@ -421,6 +431,7 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 		info["type"] = item.Type
 		info["disk_type"] = item.DiskType
 		info["disk_size"] = item.DiskSize
+		info["encrypt"] = *item.DiskEncrypt > 0
 		nodeInfoList = append(nodeInfoList, info)
 	}
 	_ = d.Set("node_info_list", nodeInfoList)

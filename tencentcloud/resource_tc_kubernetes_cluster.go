@@ -83,6 +83,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     password                  = "ZZXXccvv1212"
+	cam_role_name			  = "CVM_QcsRole"
   }
 
   labels = {
@@ -347,6 +348,12 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:    true,
 			Optional:    true,
 			Description: "ase64-encoded User Data text, the length limit is 16KB.",
+		},
+		"cam_role_name": {
+			Type:        schema.TypeString,
+			ForceNew:    true,
+			Optional:    true,
+			Description: "CAM role name authorized to access.",
 		},
 	}
 }
@@ -784,6 +791,10 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 		}
 		request.SystemDisk.DiskSize = helper.Int64(int64(v.(int)))
 
+	}
+
+	if v, ok := dMap["cam_role_name"]; ok {
+		request.CamRoleName = helper.String(v.(string))
 	}
 
 	if v, ok := dMap["data_disk"]; ok {
