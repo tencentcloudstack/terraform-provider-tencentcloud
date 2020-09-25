@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudElasticsearchInstance(t *testing.T) {
+func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -45,12 +45,12 @@ func TestAccTencentCloudElasticsearchInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "test"),
 				),
 			},
-			/*{
+			{
 				ResourceName:            "tencentcloud_elasticsearch_instance.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"password"},
-			},*/
+			},
 		},
 	})
 }

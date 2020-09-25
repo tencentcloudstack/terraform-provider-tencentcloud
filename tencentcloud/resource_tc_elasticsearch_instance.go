@@ -84,7 +84,6 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
-				Sensitive:   true,
 				Required:    true,
 				ForceNew:    true,
 				Description: "The id of a VPC subnetwork.",
@@ -129,6 +128,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -431,7 +431,7 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 		info["type"] = item.Type
 		info["disk_type"] = item.DiskType
 		info["disk_size"] = item.DiskSize
-		info["encypt"] = *item.DiskEncrypt > 0
+		info["encrypt"] = *item.DiskEncrypt > 0
 		nodeInfoList = append(nodeInfoList, info)
 	}
 	_ = d.Set("node_info_list", nodeInfoList)
