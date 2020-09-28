@@ -1108,11 +1108,11 @@ func (me *SqlserverService) ModifySqlserverDBRemark(ctx context.Context, instanc
 	return
 }
 
-func (me *SqlserverService) DeleteSqlserverDB(ctx context.Context, instanceId string, name string) (errRet error) {
+func (me *SqlserverService) DeleteSqlserverDB(ctx context.Context, instanceId string, names []*string) (errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewDeleteDBRequest()
 	request.InstanceId = &instanceId
-	request.Names = []*string{&name}
+	request.Names = names
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
@@ -1137,5 +1137,197 @@ func (me *SqlserverService) DeleteSqlserverDB(ctx context.Context, instanceId st
 	if response != nil && response.Response != nil {
 		return me.WaitForTaskFinish(ctx, *response.Response.FlowId)
 	}
+	return
+}
+
+func (me *SqlserverService) CreateSqlserverPublishSubscribe(ctx context.Context, publishInstanceId, subscribeInstanceId, publishSubscribeName string, databaseTuples []interface{}) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewCreatePublishSubscribeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.PublishInstanceId = &publishInstanceId
+	request.SubscribeInstanceId = &subscribeInstanceId
+	request.PublishSubscribeName = &publishSubscribeName
+	for _, inst_ := range databaseTuples {
+		inst := inst_.(map[string]interface{})
+		request.DatabaseTupleSet = append(request.DatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["subscribe_database"]))
+	}
+
+	var response *sqlserver.CreatePublishSubscribeResponse
+	errRet = resource.Retry(2*writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet = me.client.UseSqlserverClient().CreatePublishSubscribe(request)
+		if errRet != nil {
+			if ee, ok := errRet.(*SDKErrors.TencentCloudSDKError); ok {
+				if ee.Code == INTERNALERROR_DBERROR || ee.Code == INSTANCE_STATUS_INVALID {
+					return resource.RetryableError(errRet)
+				} else {
+					return resource.NonRetryableError(errRet)
+				}
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return resource.NonRetryableError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	flowId := int64(*response.Response.FlowId)
+	err := me.WaitForTaskFinish(ctx, flowId)
+	if err != nil {
+		errRet = err
+	}
+	return
+}
+
+func sqlServerNewDatabaseTuple(publishDatabase, subscribeDatabase interface{}) *sqlserver.DatabaseTuple {
+	publish := publishDatabase.(string)
+	subscribe := subscribeDatabase.(string)
+	databaseTuple := sqlserver.DatabaseTuple{
+		PublishDatabase:   &publish,
+		SubscribeDatabase: &subscribe,
+	}
+	return &databaseTuple
+}
+
+func (me *SqlserverService) DescribeSqlserverPublishSubscribeById(ctx context.Context, publishInstanceId, subscribeInstanceId string) (instance *sqlserver.PublishSubscribe, has bool, errRet error) {
+	instanceList, err := me.DescribeSqlserverPublishSubscribes(ctx, publishInstanceId, subscribeInstanceId, "", "", "", "", 0)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(instanceList) == 0 {
+		return
+	}
+	instance = instanceList[0]
+	if instance != nil {
+		has = true
+	}
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverPublishSubscribes(ctx context.Context, instanceId, pubOrSubInstanceId, pubOrSubInstanceIp, publishSubscribeName, publishDBName, subscribeDBName string, publishSubscribeId uint64) (publishSubscribeList []*sqlserver.PublishSubscribe, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribePublishSubscribeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	if instanceId != "" {
+		request.InstanceId = &instanceId
+	}
+	if pubOrSubInstanceId != "" {
+		request.PubOrSubInstanceId = &pubOrSubInstanceId
+	}
+	if pubOrSubInstanceIp != "" {
+		request.PubOrSubInstanceIp = &pubOrSubInstanceIp
+	}
+	if publishSubscribeId != 0 {
+		request.PublishSubscribeId = &publishSubscribeId
+	}
+	if publishSubscribeName != "" {
+		request.PublishSubscribeName = &publishSubscribeName
+	}
+	if publishDBName != "" {
+		request.PublishDBName = &publishDBName
+	}
+	if subscribeDBName != "" {
+		request.SubscribeDBName = &subscribeDBName
+	}
+	var offset, limit uint64 = SQLSERVER_DEFAULT_OFFSET, SQLSERVER_DEFAULT_LIMIT
+	request.Offset = &offset
+	request.Limit = &limit
+	for {
+		ratelimit.Check(request.GetAction())
+		var response *sqlserver.DescribePublishSubscribeResponse
+		var err error
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err = me.client.UseSqlserverClient().DescribePublishSubscribe(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s DescribePublishSubscribe fail, reason:%s\n", logId, err.Error())
+				return retryError(err)
+			}
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil || response.Response.PublishSubscribeSet == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+			return
+		}
+		publishSubscribeList = append(publishSubscribeList, response.Response.PublishSubscribeSet...)
+		if len(response.Response.PublishSubscribeSet) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+	return
+}
+func (me *SqlserverService) ModifyPublishSubscribeName(ctx context.Context, id uint64, name string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewModifyPublishSubscribeNameRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.PublishSubscribeId = &id
+	request.PublishSubscribeName = &name
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, e := me.client.UseSqlserverClient().ModifyPublishSubscribeName(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			return retryError(e)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return errRet
+	}
+	return
+}
+
+func (me *SqlserverService) DeletePublishSubscribe(ctx context.Context, publishSubscribe *sqlserver.PublishSubscribe, deleteDatabaseTuples []*sqlserver.DatabaseTuple) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDeletePublishSubscribeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.PublishSubscribeId = publishSubscribe.Id
+	request.DatabaseTupleSet = deleteDatabaseTuples
+	var response *sqlserver.DeletePublishSubscribeResponse
+	var err error
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err = me.client.UseSqlserverClient().DeletePublishSubscribe(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s %s fail, reason:%s\n", logId, request.GetAction(), err.Error())
+			return retryError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return
 }

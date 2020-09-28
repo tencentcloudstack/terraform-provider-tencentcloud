@@ -71,3 +71,7 @@ const (
 	BASIC_NETWORK = 0
 	VPC_NEWORK    = 1
 )
+
+const INTERNALERROR_DBERROR = "InternalError.DBError"
+
+const INSTANCE_STATUS_INVALID = "ResourceUnavailable.InstanceStatusInvalid"

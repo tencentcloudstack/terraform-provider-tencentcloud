@@ -1,4 +1,10 @@
-## 1.44.1 (Unreleased)
+## 1.45.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_sqlserver_publish_subscribe`
+* **New Data Source**: `tencentcloud_sqlserver_publish_subscribes` 
+
 ## 1.44.0 (September 25, 2020)
 
 FEATURES:

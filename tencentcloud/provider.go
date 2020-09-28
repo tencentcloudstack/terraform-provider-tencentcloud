@@ -354,6 +354,7 @@ SQLServer
 	tencentcloud_sqlserver_account_db_attachments
 	tencentcloud_sqlserver_backups
   	tencentcloud_sqlserver_readonly_groups
+	tencentcloud_sqlserver_publish_subscribes
 
   Resource
 	tencentcloud_sqlserver_instance
@@ -361,6 +362,7 @@ SQLServer
     tencentcloud_sqlserver_db
 	tencentcloud_sqlserver_account
 	tencentcloud_sqlserver_account_db_attachment
+	tencentcloud_sqlserver_publish_subscribe
 
 SSL Certificates
   Data Source
@@ -663,6 +665,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_audits":                           dataSourceTencentCloudAudits(),
 			"tencentcloud_cynosdb_clusters":                 dataSourceTencentCloudCynosdbClusters(),
 			"tencentcloud_cynosdb_instances":                dataSourceTencentCloudCynosdbInstances(),
+			"tencentcloud_sqlserver_publish_subscribes":     dataSourceTencentSqlserverPublishSubscribes(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -789,6 +792,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_image":                           resourceTencentCloudImage(),
 			"tencentcloud_cynosdb_cluster":                 resourceTencentCloudCynosdbCluster(),
 			"tencentcloud_cynosdb_readonly_instance":       resourceTencentCloudCynosdbReadonlyInstance(),
+			"tencentcloud_sqlserver_publish_subscribe":     resourceTencentCloudSqlserverPublishSubscribe(),
 		},
 
 		ConfigureFunc: providerConfigure,
