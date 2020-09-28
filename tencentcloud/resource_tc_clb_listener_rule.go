@@ -158,6 +158,13 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
 				Description:  "Scheduling method of the CLB listener rules, and available values are 'WRR', 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 			},
+			"forward_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS", "TRPC"}),
+				Description:  "Forwarding protocol between the CLB instance and real server. Currently, HTTP/HTTPS/TRPC are supported.",
+			},
 		},
 	}
 }
@@ -204,6 +211,9 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	rule.Domain = helper.String(domain)
 	url := d.Get("url").(string)
 	rule.Url = helper.String(url)
+	if v, ok := d.GetOk("forward_type"); ok {
+		rule.ForwardType = helper.String(v.(string))
+	}
 	scheduler := ""
 	if v, ok := d.GetOk("scheduler"); ok {
 		if !(protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) {
@@ -326,6 +336,7 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	_ = d.Set("url", instance.Url)
 	_ = d.Set("scheduler", instance.Scheduler)
 	_ = d.Set("session_expire_time", instance.SessionExpireTime)
+	_ = d.Set("forward_type", instance.ForwardType)
 
 	//health check
 	if instance.HealthCheck != nil {
@@ -397,6 +408,11 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		request.Url = helper.String(url)
 	}
 
+	if d.HasChange("forward_type") {
+		changed = true
+		request.ForwardType = helper.String(d.Get("forward_type").(string))
+	}
+
 	if d.HasChange("scheduler") {
 		changed = true
 		scheduler = d.Get("scheduler").(string)
@@ -417,7 +433,6 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		}
 		sessionExpireTime64 := int64(sessionExpireTime)
 		request.SessionExpireTime = &sessionExpireTime64
-
 	}
 
 	healthSetFlag, healthCheck, healthErr := checkHealthCheckPara(ctx, d, protocol, HEALTH_APPLY_TYPE_RULE)
