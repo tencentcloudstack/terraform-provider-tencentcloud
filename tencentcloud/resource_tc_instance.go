@@ -107,7 +107,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The image to use for the instance. Changing `image_id' will cause the instance to be destroyed and re-created.",
+				Description: "The image to use for the instance. Changing `image_id` will cause the instance to be destroyed and re-created.",
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,
