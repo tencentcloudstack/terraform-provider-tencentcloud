@@ -80,38 +80,38 @@ resource "tencentcloud_instance" "my_awesome_app" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Required, ForceNew) The available zone that the CVM instance locates at.
-* `image_id` - (Required, ForceNew) The Image to use for the instance. Change 'image_id' will case instance destroy and re-created.
-* `allocate_public_ip` - (Optional, ForceNew) Associate a public ip address with an instance in a VPC or Classic. Boolean value, Default is false.
-* `data_disks` - (Optional, ForceNew) Settings for data disk.
+* `availability_zone` - (Required, ForceNew) The available zone for the CVM instance.
+* `image_id` - (Required, ForceNew) The image to use for the instance. Changing `image_id` will cause the instance to be destroyed and re-created.
+* `allocate_public_ip` - (Optional, ForceNew) Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.
+* `data_disks` - (Optional, ForceNew) Settings for data disks.
 * `disable_monitor_service` - (Optional) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed.
 * `disable_security_service` - (Optional) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed.
-* `force_delete` - (Optional) Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be permanently deleted instead of staying in recycle bin. Note: only works for `PREPAID` instance.
-* `hostname` - (Optional, ForceNew) The hostname of CVM. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-).
+* `force_delete` - (Optional) Indicate whether to force delete the instance. Default is false. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
+* `hostname` - (Optional, ForceNew) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-).
 * `instance_charge_type_prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.
 * `instance_charge_type_prepaid_renew_flag` - (Optional) When enabled, the CVM instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR` and `SPOTPAID`, The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
-* `instance_name` - (Optional) The name of the CVM. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.
-* `instance_type` - (Optional) The type of instance to start.
+* `instance_name` - (Optional) The name of the instance. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.
+* `instance_type` - (Optional) The type of the instance.
 * `internet_charge_type` - (Optional, ForceNew) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value does not need to be set when `allocate_public_ip` is false.
-* `internet_max_bandwidth_out` - (Optional) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). This value does not need to be set when `allocate_public_ip` is false.
-* `key_name` - (Optional) The key pair to use for the instance, it looks like skey-16jig7tx.
-* `password` - (Optional) Password to an instance. In order to take effect new password, the instance will be restarted after modifying the password.
-* `placement_group_id` - (Optional, ForceNew) The id of a placement group.
-* `private_ip` - (Optional) The private ip to be assigned to this instance, must be in the provided subnet and available.
-* `project_id` - (Optional) The project CVM belongs to, default to 0.
-* `running_flag` - (Optional) Set instance to running or stop. Default value is true, the instance will shutdown when flag is false.
-* `security_groups` - (Optional) A list of security group ids to associate with.
+* `internet_max_bandwidth_out` - (Optional) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). This value does not need to be set when `allocate_public_ip` is false.
+* `key_name` - (Optional) The key pair to use for the instance, it looks like `skey-16jig7tx`.
+* `password` - (Optional) Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change.
+* `placement_group_id` - (Optional, ForceNew) The ID of a placement group.
+* `private_ip` - (Optional) The private IP to be assigned to this instance, must be in the provided subnet and available.
+* `project_id` - (Optional) The project the instance belongs to, default to 0.
+* `running_flag` - (Optional) Set instance to running or stop. Default value is true, the instance will shutdown when this flag is false.
+* `security_groups` - (Optional) A list of security group IDs to associate with.
 * `spot_instance_type` - (Optional) Type of spot instance, only support `ONE-TIME` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
-* `spot_max_price` - (Optional, ForceNew) Max price of spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
-* `subnet_id` - (Optional) The id of a VPC subnetwork. If you want to create instances in VPC network, this parameter must be set.
+* `spot_max_price` - (Optional, ForceNew) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
+* `subnet_id` - (Optional) The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.
 * `system_disk_id` - (Optional) System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
-* `system_disk_size` - (Optional, ForceNew) Size of the system disk. Value range: [50, 1000], and unit is GB. Default is 50GB.
+* `system_disk_size` - (Optional, ForceNew) Size of the system disk. Value range: [50, 1000], and the unit is GB. Default is 50GB.
 * `system_disk_type` - (Optional, ForceNew) Type of the system disk. Valid values are `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_BASIC`, `CLOUD_SSD` and `CLOUD_PREMIUM`, default value is `CLOUD_BASIC`. NOTE: `LOCAL_BASIC` and `LOCAL_SSD` are deprecated.
 * `tags` - (Optional) A mapping of tags to assign to the resource. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
-* `user_data_raw` - (Optional, ForceNew) The user data to be specified into this instance, plain text. Conflicts with `user_data`. Limited in 16 KB after encrypted in base64 format.
-* `user_data` - (Optional, ForceNew) The user data to be specified into this instance. Must be encrypted in base64 format and limited in 16 KB.
-* `vpc_id` - (Optional) The id of a VPC network. If you want to create instances in VPC network, this parameter must be set.
+* `user_data_raw` - (Optional, ForceNew) The user data to be injected into this instance, in plain text. Conflicts with `user_data`. Up to 16 KB after base64 encoded.
+* `user_data` - (Optional, ForceNew) The user data to be injected into this instance. Must be base64 encoded and up to 16 KB.
+* `vpc_id` - (Optional) The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.
 
 The `data_disks` object supports the following:
 
@@ -130,7 +130,7 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the instance.
 * `expired_time` - Expired time of the instance.
 * `instance_status` - Current status of the instance.
-* `public_ip` - Public ip of the instance.
+* `public_ip` - Public IP of the instance.
 
 
 ## Import
