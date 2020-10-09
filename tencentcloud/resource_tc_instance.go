@@ -338,6 +338,14 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Sensitive:   true,
 				Description: "Password to an instance. In order to take effect new password, the instance will be restarted after modifying the password.",
 			},
+			"keep_image_login": {
+				Type:          schema.TypeBool,
+				Optional:      true,
+				Default:       false,
+				ForceNew:      true,
+				ConflictsWith: []string{"key_name", "password"},
+				Description:   "Whether to keep image login or not, default is `false`. It can be set `true` with private images, shared images and imported images.",
+			},
 			"user_data": {
 				Type:          schema.TypeString,
 				Optional:      true,
@@ -553,6 +561,13 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 	if v, ok := d.GetOk("password"); ok {
 		request.LoginSettings.Password = helper.String(v.(string))
+	}
+	if v, ok := d.GetOkExists("keep_image_login"); ok {
+		if v.(bool) {
+			request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
+		} else {
+			request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
+		}
 	}
 
 	if v, ok := d.GetOk("user_data"); ok {
@@ -777,6 +792,9 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("key_name", instance.LoginSettings.KeyIds[0])
 	} else {
 		_ = d.Set("key_name", "")
+	}
+	if instance.LoginSettings.KeepImageLogin != nil {
+		_ = d.Set("keep_image_login", *instance.LoginSettings.KeepImageLogin == CVM_IMAGE_LOGIN)
 	}
 	if *instance.InstanceState == CVM_STATUS_STOPPED {
 		_ = d.Set("running_flag", false)

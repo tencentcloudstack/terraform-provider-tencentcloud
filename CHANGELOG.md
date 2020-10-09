@@ -1,4 +1,9 @@
 ## 1.44.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_instance` add new argument `keep_image_login` to support keeping image login.
+
 ## 1.44.0 (September 25, 2020)
 
 FEATURES:
