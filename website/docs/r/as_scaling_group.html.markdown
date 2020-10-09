@@ -45,8 +45,8 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
 The following arguments are supported:
 
 * `configuration_id` - (Required) An available ID for a launch configuration.
-* `max_size` - (Required) Maximum number of CVM instances (0~2000).
-* `min_size` - (Required) Minimum number of CVM instances (0~2000).
+* `max_size` - (Required) Maximum number of CVM instances. Valid value ranges: (0~2000).
+* `min_size` - (Required) Minimum number of CVM instances. Valid value ranges: (0~2000).
 * `scaling_group_name` - (Required) Name of a scaling group.
 * `vpc_id` - (Required) ID of VPC network.
 * `default_cooldown` - (Optional) Default cooldown time in second, and default value is 300.
@@ -54,10 +54,10 @@ The following arguments are supported:
 * `forward_balancer_ids` - (Optional) List of application load balancers, which can't be specified with load_balancer_ids together.
 * `load_balancer_ids` - (Optional) ID list of traditional load balancers.
 * `project_id` - (Optional) Specifies to which project the scaling group belongs.
-* `retry_policy` - (Optional) Available values for retry policies include IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.
+* `retry_policy` - (Optional) Available values for retry policies. Valid values: IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.
 * `subnet_ids` - (Optional) ID list of subnet, and for VPC it is required.
 * `tags` - (Optional) Tags of a scaling group.
-* `termination_policies` - (Optional) Available values for termination policies include OLDEST_INSTANCE and NEWEST_INSTANCE.
+* `termination_policies` - (Optional) Available values for termination policies. Valid values: OLDEST_INSTANCE and NEWEST_INSTANCE.
 * `zones` - (Optional) List of available zones, for Basic network it is required.
 
 The `forward_balancer_ids` object supports the following:

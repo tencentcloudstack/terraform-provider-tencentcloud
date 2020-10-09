@@ -66,7 +66,7 @@ func resourceTencentCloudDayuL4Rule() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_RESOURCE_TYPE_RULE),
 				ForceNew:     true,
-				Description:  "Type of the resource that the layer 4 rule works for, valid values are `bgpip` and `net`.",
+				Description:  "Type of the resource that the layer 4 rule works for. Valid values: `bgpip` and `net`.",
 			},
 			"source_type": {
 				Type:         schema.TypeInt,
@@ -97,7 +97,7 @@ func resourceTencentCloudDayuL4Rule() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_L4_RULE_PROTOCOL),
-				Description:  "Protocol of the rule, valid values are `http`, `https`. When `source_type` is 1(host source), the value of this field can only set with `tcp`.",
+				Description:  "Protocol of the rule. Valid values: `http`, `https`. When `source_type` is 1(host source), the value of this field can only set with `tcp`.",
 			},
 			"source_list": {
 				Type:     schema.TypeSet,
@@ -177,7 +177,7 @@ func resourceTencentCloudDayuL4Rule() *schema.Resource {
 			"lb_type": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "LB type of the rule, 1 for weight cycling and 2 for IP hash.",
+				Description: "LB type of the rule. Valid values: 1, 2.  1 for weight cycling and 2 for IP hash.",
 			},
 		},
 	}

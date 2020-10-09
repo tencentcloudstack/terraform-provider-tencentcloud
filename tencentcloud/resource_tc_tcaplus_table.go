@@ -125,7 +125,7 @@ func resourceTencentCloudTcaplusTable() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_TABLE_IDL_TYPES),
-				Description:  "IDL type of the TcaplusDB table. Valid values are PROTO and TDR.",
+				Description:  "IDL type of the TcaplusDB table. Valid values: PROTO and TDR.",
 			},
 			"reserved_read_cu": {
 				Type:        schema.TypeInt,

@@ -32,12 +32,12 @@ resource "tencentcloud_ckafka_acl" "foo" {
 The following arguments are supported:
 
 * `instance_id` - (Required, ForceNew) Id of the ckafka instance.
-* `operation_type` - (Required, ForceNew) ACL operation mode, valid values are `UNKNOWN`, `ANY`, `ALL`, `READ`, `WRITE`, `CREATE`, `DELETE`, `ALTER`, `DESCRIBE`, `CLUSTER_ACTION`, `DESCRIBE_CONFIGS` and `ALTER_CONFIGS`.
+* `operation_type` - (Required, ForceNew) ACL operation mode. Valid values: `UNKNOWN`, `ANY`, `ALL`, `READ`, `WRITE`, `CREATE`, `DELETE`, `ALTER`, `DESCRIBE`, `CLUSTER_ACTION`, `DESCRIBE_CONFIGS` and `ALTER_CONFIGS`.
 * `resource_name` - (Required, ForceNew) ACL resource name, which is related to `resource_type`. For example, if `resource_type` is `TOPIC`, this field indicates the topic name; if `resource_type` is `GROUP`, this field indicates the group name.
 * `host` - (Optional, ForceNew) IP address allowed to access. The default value is `*`, which means that any host can access.
-* `permission_type` - (Optional, ForceNew) ACL permission type, valid values are `UNKNOWN`, `ANY`, `DENY`, `ALLOW`, and `ALLOW` by default. Currently, CKafka supports `ALLOW` (equivalent to allow list), and other fields will be used for future ACLs compatible with open-source Kafka.
+* `permission_type` - (Optional, ForceNew) ACL permission type. Valid values: `UNKNOWN`, `ANY`, `DENY`, `ALLOW`. and `ALLOW` by default. Currently, CKafka supports `ALLOW` (equivalent to allow list), and other fields will be used for future ACLs compatible with open-source Kafka.
 * `principal` - (Optional, ForceNew) User list. The default value is `*`, which means that any user can access. The current user can only be one included in the user list.
-* `resource_type` - (Optional, ForceNew) ACL resource type. Valid values are `UNKNOWN`, `ANY`, `TOPIC`, `GROUP`, `CLUSTER`, `TRANSACTIONAL_ID`, and `TOPIC` by default. Currently, only `TOPIC` is available, and other fields will be used for future ACLs compatible with open-source Kafka.
+* `resource_type` - (Optional, ForceNew) ACL resource type. Valid values are `UNKNOWN`, `ANY`, `TOPIC`, `GROUP`, `CLUSTER`, `TRANSACTIONAL_ID`. and `TOPIC` by default. Currently, only `TOPIC` is available, and other fields will be used for future ACLs compatible with open-source Kafka.
 
 ## Attributes Reference
 

@@ -70,7 +70,7 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 				Default:      CFS_PROTOCOL_NFS,
 				ValidateFunc: validateAllowedStringValue(CFS_PROTOCOL),
 				ForceNew:     true,
-				Description:  "File service protocol. Valid values are `NFS` and `CIFS`, and the default is `NFS`.",
+				Description:  "File service protocol. Valid values are `NFS` and `CIFS`. and the default is `NFS`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,

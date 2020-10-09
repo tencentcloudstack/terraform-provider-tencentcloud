@@ -86,7 +86,7 @@ The following arguments are supported:
 * `reserved_read_cu` - (Required, ForceNew) Reserved read capacity units of the TcaplusDB table.
 * `reserved_volume` - (Required, ForceNew) Reserved storage capacity of the TcaplusDB table (unit: GB).
 * `reserved_write_cu` - (Required, ForceNew) Reserved write capacity units of the TcaplusDB table.
-* `table_idl_type` - (Required) IDL type of the TcaplusDB table. Valid values are PROTO and TDR.
+* `table_idl_type` - (Required) IDL type of the TcaplusDB table. Valid values: PROTO and TDR.
 * `table_name` - (Required, ForceNew) Name of the TcaplusDB table.
 * `table_type` - (Required, ForceNew) Type of the TcaplusDB table. Valid values are GENERIC and LIST.
 * `tablegroup_id` - (Required, ForceNew) ID of the table group to which the table belongs.

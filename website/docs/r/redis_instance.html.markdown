@@ -36,7 +36,7 @@ The following arguments are supported:
 * `availability_zone` - (Required, ForceNew) The available zone ID of an instance to be created, please refer to tencentcloud_redis_zone_config.list.
 * `mem_size` - (Required) The memory volume of an available instance(in MB), please refer to tencentcloud_redis_zone_config.list[zone].mem_sizes.
 * `password` - (Required) Password for a Redis user, which should be 8 to 16 characters.
-* `charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.
+* `charge_type` - (Optional, ForceNew) The charge type of instance. Valid values: `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.
 * `force_delete` - (Optional) Indicate whether to delete Redis instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for PREPAID instance.
 * `name` - (Optional) Instance name.
 * `port` - (Optional, ForceNew) The port used to access a redis instance. The default value is 6379. And this value can't be changed after creation, or the Redis instance will be recreated.

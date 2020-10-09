@@ -55,14 +55,14 @@ func resourceTencentCloudEip() *schema.Resource {
 				Default:      EIP_TYPE_EIP,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(EIP_TYPE),
-				Description:  "The type of eip, and available values include `EIP` and `AnycastEIP`. Default is `EIP`.",
+				Description:  "The type of eip. Valid value:  `EIP` and `AnycastEIP`. Default is `EIP`.",
 			},
 			"anycast_zone": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(EIP_ANYCAST_ZONE),
-				Description:  "The zone of anycast, and available values include `ANYCAST_ZONE_GLOBAL` and `ANYCAST_ZONE_OVERSEAS`.",
+				Description:  "The zone of anycast. Valid value: `ANYCAST_ZONE_GLOBAL` and `ANYCAST_ZONE_OVERSEAS`.",
 			},
 			"applicable_for_clb": {
 				Type:        schema.TypeBool,
@@ -75,14 +75,14 @@ func resourceTencentCloudEip() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(EIP_INTERNET_PROVIDER),
-				Description:  "Internet service provider of eip, and available values include `BGP`, `CMCC`, `CTCC` and `CUCC`.",
+				Description:  "Internet service provider of eip. Valid value: `BGP`, `CMCC`, `CTCC` and `CUCC`.",
 			},
 			"internet_charge_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_INTERNET_CHARGE_TYPE),
-				Description:  "The charge type of eip, and available values include `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR` and `TRAFFIC_POSTPAID_BY_HOUR`.",
+				Description:  "The charge type of eip. Valid value: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR` and `TRAFFIC_POSTPAID_BY_HOUR`.",
 			},
 			"internet_max_bandwidth_out": {
 				Type:        schema.TypeInt,

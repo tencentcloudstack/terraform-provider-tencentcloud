@@ -55,7 +55,7 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
 				ForceNew:     true,
-				Description:  "Protocol of the layer7 listener, the available values include `HTTP` and `HTTPS`.",
+				Description:  "Protocol of the layer7 listener. Valid value: `HTTP` and `HTTPS`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -87,7 +87,7 @@ func resourceTencentCloudGaapLayer7Listener() *schema.Resource {
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
 				ForceNew:     true,
-				Description:  "Protocol type of the forwarding, the available values include `HTTP` and `HTTPS`. NOTES: Only supports listeners of `HTTPS` protocol.",
+				Description:  "Protocol type of the forwarding. Valid value: `HTTP` and `HTTPS`. NOTES: Only supports listeners of `HTTPS` protocol.",
 			},
 			"auth_type": {
 				Type:         schema.TypeInt,
