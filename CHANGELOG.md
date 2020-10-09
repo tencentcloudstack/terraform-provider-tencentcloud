@@ -1,4 +1,9 @@
 ## 1.44.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mysql_instance` modify argument `engine_version` to support mysql 8.0.
+
 ## 1.44.0 (September 25, 2020)
 
 FEATURES:
