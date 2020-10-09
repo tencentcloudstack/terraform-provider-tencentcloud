@@ -45,8 +45,8 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 }
 
 data "tencentcloud_sqlserver_publish_subscribes" "publish_subscribes" {
-	instance_id						= tencentcloud_sqlserver_publish_subscribe.example.publish_instance_id
-	pub_or_sub_instance_id			= tencentcloud_sqlserver_publish_subscribe.example.subscribe_instance_id
+	instance_id                     = tencentcloud_sqlserver_publish_subscribe.example.publish_instance_id
+	pub_or_sub_instance_id          = tencentcloud_sqlserver_publish_subscribe.example.subscribe_instance_id
 	publish_subscribe_name          = tencentcloud_sqlserver_publish_subscribe.example.publish_subscribe_name
 }
 
