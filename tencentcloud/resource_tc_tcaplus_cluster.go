@@ -131,7 +131,7 @@ func resourceTencentCloudTcaplusCluster() *schema.Resource {
 			"password_status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, `modifiable`. `unmodifiable`, which means the password can not be changed in this moment; `modifiable`, which means the password can be changed in this moment.",
+				Description: "Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, `modifiable`. `unmodifiable`. which means the password can not be changed in this moment; `modifiable`, which means the password can be changed in this moment.",
 			},
 			"api_access_id": {
 				Type:        schema.TypeString,

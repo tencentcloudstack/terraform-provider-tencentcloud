@@ -129,7 +129,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:     true,
 			ValidateFunc: validateIntegerInRange(1024, 65535),
 			Default:      3306,
-			Description:  "Public access port. Valid value ranges: [1024-65535]. The default value is 3306.",
+			Description:  "Public access port. Valid value ranges: (1024~65535). The default value is 3306.",
 		},
 		"mem_size": {
 			Type:        schema.TypeInt,

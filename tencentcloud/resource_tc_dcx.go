@@ -136,7 +136,7 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Default:     0,
-				Description: "Vlan of the dedicated tunnels. Valid value ranges:[0-3000]. '0' means that only one tunnel can be created for the physical connect.",
+				Description: "Vlan of the dedicated tunnels. Valid value ranges: (0~3000). '0' means that only one tunnel can be created for the physical connect.",
 			},
 			"tencent_address": {
 				Type:        schema.TypeString,

@@ -91,7 +91,7 @@ The `realservers` object supports the following:
 * `id` - (Required) ID of the GAAP realserver.
 * `ip` - (Required) IP of the GAAP realserver.
 * `port` - (Required) Port of the GAAP realserver.
-* `weight` - (Optional) Scheduling weight, default value is `1`. Valid value ranges: [1-100].
+* `weight` - (Optional) Scheduling weight, default value is `1`. Valid value ranges: (1~100).
 
 ## Attributes Reference
 

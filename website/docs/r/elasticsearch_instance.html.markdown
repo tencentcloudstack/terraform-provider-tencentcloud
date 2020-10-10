@@ -45,7 +45,7 @@ The following arguments are supported:
 * `subnet_id` - (Required, ForceNew) The id of a VPC subnetwork.
 * `version` - (Required) Version of the instance. Valid values are `5.6.4`, `6.4.3`, `6.8.2` and `7.5.1`.
 * `vpc_id` - (Required, ForceNew) The id of a VPC network.
-* `basic_security_type` - (Optional) Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`, `1` is disabled, `2` is enabled, and default value is `1`.
+* `basic_security_type` - (Optional) Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`.
 * `charge_period` - (Optional, ForceNew) The tenancy of the prepaid instance, and uint is month. NOTE: it only works when charge_type is set to `PREPAID`.
 * `charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`.
 * `deploy_mode` - (Optional, ForceNew) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.

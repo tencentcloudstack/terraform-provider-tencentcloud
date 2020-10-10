@@ -204,7 +204,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:     true,
 				Default:      ES_BASIC_SECURITY_TYPE_OFF,
 				ValidateFunc: validateAllowedIntValue(ES_BASIC_SECURITY_TYPE),
-				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`, `1` is disabled, `2` is enabled, and default value is `1`.",
+				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,

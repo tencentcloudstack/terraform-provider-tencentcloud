@@ -48,7 +48,7 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the TcaplusDB cluster.
 * `network_type` - Network type of the TcaplusDB cluster.
 * `old_password_expire_time` - Expiration time of the old password. If `password_status` is `unmodifiable`, it means the old password has not yet expired.
-* `password_status` - Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, `modifiable`. `unmodifiable`, which means the password can not be changed in this moment; `modifiable`, which means the password can be changed in this moment.
+* `password_status` - Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, `modifiable`. `unmodifiable`. which means the password can not be changed in this moment; `modifiable`, which means the password can be changed in this moment.
 
 
 ## Import

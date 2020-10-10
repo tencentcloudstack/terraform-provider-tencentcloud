@@ -160,7 +160,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      CVM_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: validateAllowedStringValue(CVM_CHARGE_TYPE),
-				Description:  "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR` and `SPOTPAID`, The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.",
+				Description:  "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR` and `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. `PREPAID` instance may not allow to delete before expired. `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.",
 			},
 			"instance_charge_type_prepaid_period": {
 				Type:         schema.TypeInt,
@@ -252,7 +252,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Default:      50,
 				ForceNew:     true,
 				ValidateFunc: validateIntegerInRange(50, 1000),
-				Description:  "Size of the system disk. Valid value ranges: [50, 1000]. and unit is GB. Default is 50GB.",
+				Description:  "Size of the system disk. Valid value ranges: (50~1000). and unit is GB. Default is 50GB.",
 			},
 			"system_disk_id": {
 				Type:        schema.TypeString,

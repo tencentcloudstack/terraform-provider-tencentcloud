@@ -70,7 +70,7 @@ The following arguments are supported:
 * `route_filter_prefixes` - (Optional, ForceNew) Static route, the network address of the user IDC. It can be modified after setting but cannot be deleted. AN unable field within BGP.
 * `route_type` - (Optional, ForceNew) Type of the route, and available values include BGP and STATIC. The default value is BGP.
 * `tencent_address` - (Optional, ForceNew) Interconnect IP of the DC within Tencent.
-* `vlan` - (Optional, ForceNew) Vlan of the dedicated tunnels. Valid value ranges:[0-3000]. '0' means that only one tunnel can be created for the physical connect.
+* `vlan` - (Optional, ForceNew) Vlan of the dedicated tunnels. Valid value ranges: (0~3000). '0' means that only one tunnel can be created for the physical connect.
 
 ## Attributes Reference
 

@@ -69,7 +69,7 @@ The following arguments are supported:
 * `ipsec_encrypt_algorithm` - (Optional) Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.
 * `ipsec_integrity_algorithm` - (Optional) Integrity algorithm of the IPSEC operation specification. Valid values: `SHA1`, `MD5`. Default value is `MD5`.
 * `ipsec_pfs_dh_group` - (Optional) PFS DH group. Valid value: `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`, `NULL`. Default value is `NULL`.
-* `ipsec_sa_lifetime_seconds` - (Optional) SA lifetime of the IPSEC operation specification, unit is `second`. Valid value ranges: [180-604800]. Default value is 3600 seconds.
+* `ipsec_sa_lifetime_seconds` - (Optional) SA lifetime of the IPSEC operation specification, unit is `second`. Valid value ranges: (180~604800). Default value is 3600 seconds.
 * `ipsec_sa_lifetime_traffic` - (Optional) SA lifetime of the IPSEC operation specification, unit is `KB`. The value should not be less then 2560. Default value is 1843200.
 * `tags` - (Optional) A list of tags used to associate different resources.
 * `vpc_id` - (Optional, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.

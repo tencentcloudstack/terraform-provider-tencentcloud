@@ -133,7 +133,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 							Optional:     true,
 							Computed:     true,
 							ValidateFunc: validateIntegerInRange(1, 12),
-							Description:  "Compare type. Valid value ranges: [1-12]. 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
+							Description:  "Compare type. Valid value ranges: (1~12). 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
 						},
 						"calc_value": {
 							Type:        schema.TypeFloat,

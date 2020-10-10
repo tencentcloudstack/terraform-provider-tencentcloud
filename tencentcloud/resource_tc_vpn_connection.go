@@ -228,7 +228,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Optional:     true,
 				Default:      3600,
 				ValidateFunc: validateIntegerInRange(180, 604800),
-				Description:  "SA lifetime of the IPSEC operation specification, unit is `second`. Valid value ranges: [180-604800]. Default value is 3600 seconds.",
+				Description:  "SA lifetime of the IPSEC operation specification, unit is `second`. Valid value ranges: (180~604800). Default value is 3600 seconds.",
 			},
 			"ipsec_pfs_dh_group": {
 				Type:         schema.TypeString,

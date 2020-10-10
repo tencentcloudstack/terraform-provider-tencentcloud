@@ -209,7 +209,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 							Optional:     true,
 							Default:      1,
 							ValidateFunc: validateIntegerInRange(1, 100),
-							Description:  "Scheduling weight, default value is `1`. Valid value ranges: [1-100].",
+							Description:  "Scheduling weight, default value is `1`. Valid value ranges: (1~100).",
 						},
 					},
 				},
