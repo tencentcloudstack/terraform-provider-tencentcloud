@@ -562,12 +562,11 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	if v, ok := d.GetOk("password"); ok {
 		request.LoginSettings.Password = helper.String(v.(string))
 	}
-	if v, ok := d.GetOkExists("keep_image_login"); ok {
-		if v.(bool) {
-			request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
-		} else {
-			request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
-		}
+	v := d.Get("keep_image_login").(bool)
+	if v {
+		request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
+	} else {
+		request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
 	}
 
 	if v, ok := d.GetOk("user_data"); ok {
