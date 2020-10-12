@@ -202,7 +202,6 @@ func resourceTencentCloudSqlserverPublishSubscribeUpdate(d *schema.ResourceData,
 
 	if d.HasChange("database_tuples") {
 		var deleteDatabaseTupleSet []*sqlserver.DatabaseTuple
-		var subscribeDatabases []*string
 		oldSet, newSet := d.GetChange("database_tuples")
 		//get new DatabaseTupleSet
 		var newDatabaseTupleSet []*sqlserver.DatabaseTuple
@@ -231,18 +230,12 @@ func resourceTencentCloudSqlserverPublishSubscribeUpdate(d *schema.ResourceData,
 					SubscribeDatabase: oldInstance.SubscribeDatabase,
 				}
 				deleteDatabaseTupleSet = append(deleteDatabaseTupleSet, &databaseTuple)
-				subDatabase := *oldInstance.SubscribeDatabase
-				subscribeDatabases = append(subscribeDatabases, &subDatabase)
 			}
 		}
 		if deleteDatabaseTupleSet == nil {
 			return fmt.Errorf("[CRITAL]%s resourceTencentCloudSqlserverPublishSubscribeUpdate fail, reason: DatabaseTupleSet does not allow modify", logId)
 		}
 		if err := sqlserverService.DeletePublishSubscribe(ctx, publishSubscribe, deleteDatabaseTupleSet); err != nil {
-			return err
-		}
-		//delete subscribe databases
-		if err = sqlserverService.DeleteSqlserverDB(ctx, subscribeInstanceId, subscribeDatabases); err != nil {
 			return err
 		}
 	}
