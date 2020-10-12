@@ -5,12 +5,12 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-	publish_instance_id             = tencentcloud_sqlserver_instance.example.id
-	subscribe_instance_id           = tencentcloud_sqlserver_instance.example.id
+	publish_instance_id             = tencentcloud_sqlserver_instance.publish_instance.id
+	subscribe_instance_id           = tencentcloud_sqlserver_instance.subscribe_instance.id
 	publish_subscribe_name          = "example"
 	database_tuples {
-		publish_database            = "db_test_name"
-		subscribe_database          = "db_test_name"
+		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
+		subscribe_database          = tencentcloud_sqlserver_db.test_publish_subscribe.name
 	}
 }
 ```
@@ -61,14 +61,14 @@ func resourceTencentCloudSqlserverPublishSubscribe() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "default_name",
-				Description: "The name of the Publish and Subscribe in the SQLServer instance, default is `default_name`.",
+				Description: "The name of the Publish and Subscribe in the SQLServer instance. default is `default_name`.",
 			},
 			"database_tuples": {
 				Type:        schema.TypeSet,
 				Required:    true,
 				MinItems:    1,
 				MaxItems:    80,
-				Description: "Database Publish and Publish relationship list, Modify database is not allowed.",
+				Description: "Database Publish and Publish relationship list. Modify database is not allowed.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"publish_database": {
@@ -270,19 +270,12 @@ func resourceTencentCloudSqlserverPublishSubscribeDelete(d *schema.ResourceData,
 
 	oldDatabaseTuples, _ := d.GetChange("database_tuples")
 	var oldDatabaseTupleSet []*sqlserver.DatabaseTuple
-	var subscribeDatabases []*string
 	for _, inst_ := range oldDatabaseTuples.(*schema.Set).List() {
 		inst := inst_.(map[string]interface{})
-		subDatabase := inst["subscribe_database"].(string)
 		oldDatabaseTupleSet = append(oldDatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["subscribe_database"]))
-		subscribeDatabases = append(subscribeDatabases, &subDatabase)
 	}
 
 	if err := sqlserverService.DeletePublishSubscribe(ctx, publishSubscribe, oldDatabaseTupleSet); err != nil {
-		return err
-	}
-	//delete subscribe databases
-	if err = sqlserverService.DeleteSqlserverDB(ctx, subscribeInstanceId, subscribeDatabases); err != nil {
 		return err
 	}
 	return nil

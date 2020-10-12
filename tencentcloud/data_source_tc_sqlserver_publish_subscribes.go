@@ -5,12 +5,12 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-	publish_instance_id             = "mssql-ahgcanf3"
-	subscribe_instance_id           = "mssql-cc1kh85p"
+	publish_instance_id             = tencentcloud_sqlserver_instance.publish_instance.id
+	subscribe_instance_id           = tencentcloud_sqlserver_instance.subscribe_instance.id
 	publish_subscribe_name          = "example"
 	database_tuples {
-		publish_database            = "db_test_name"
-		subscribe_database          = "db_test_name"
+		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
+		subscribe_database          = tencentcloud_sqlserver_db.test_publish_subscribe.name
 	}
 }
 ```
@@ -42,12 +42,12 @@ func dataSourceTencentSqlserverPublishSubscribes() *schema.Resource {
 			"pub_or_sub_instance_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The subscribe/publish instance ID is related to whether the `instance_id` is a publish instance or a subscribe instance, when `instance_id` is a publish instance, this field is filtered according to the subscribe instance ID, when `instance_id` is a subscribe instance, this field is filtering according to the publish instance ID.",
+				Description: "The subscribe/publish instance ID is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the subscribe instance ID; when `instance_id` is a subscribe instance, this field is filtering according to the publish instance ID.",
 			},
 			"pub_or_sub_instance_ip": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The intranet IP of the subscribe/publish instance is related to whether the `instance_id` is a publish instance or a subscribe instance, when `instance_id` is a publish instance, this field is filtered according to the intranet IP of the subscribe instance; when `instance_id` is a subscribe instance, this field is based on the publish instance intranet IP filter.",
+				Description: "The intranet IP of the subscribe/publish instance is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the intranet IP of the subscribe instance; when `instance_id` is a subscribe instance, this field is based on the publish instance intranet IP filter.",
 			},
 			"publish_subscribe_id": {
 				Type:        schema.TypeInt,
@@ -72,7 +72,7 @@ func dataSourceTencentSqlserverPublishSubscribes() *schema.Resource {
 			"publish_subscribe_list": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "Publish and subscribe list, Each element contains the following attributes.",
+				Description: "Publish and subscribe list. Each element contains the following attributes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"publish_subscribe_id": {

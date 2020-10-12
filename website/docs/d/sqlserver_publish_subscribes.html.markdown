@@ -15,12 +15,12 @@ Use this data source to query Publish Subscribe resources for the specific SQL S
 
 ```hcl
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-  publish_instance_id    = "mssql-ahgcanf3"
-  subscribe_instance_id  = "mssql-cc1kh85p"
+  publish_instance_id    = tencentcloud_sqlserver_instance.publish_instance.id
+  subscribe_instance_id  = tencentcloud_sqlserver_instance.subscribe_instance.id
   publish_subscribe_name = "example"
   database_tuples {
-    publish_database   = "db_test_name"
-    subscribe_database = "db_test_name"
+    publish_database   = tencentcloud_sqlserver_db.test_publish_subscribe.name
+    subscribe_database = tencentcloud_sqlserver_db.test_publish_subscribe.name
   }
 }
 ```
@@ -30,8 +30,8 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 The following arguments are supported:
 
 * `instance_id` - (Required) ID of the SQL Server instance.
-* `pub_or_sub_instance_id` - (Optional) The subscribe/publish instance ID is related to whether the `instance_id` is a publish instance or a subscribe instance, when `instance_id` is a publish instance, this field is filtered according to the subscribe instance ID, when `instance_id` is a subscribe instance, this field is filtering according to the publish instance ID.
-* `pub_or_sub_instance_ip` - (Optional) The intranet IP of the subscribe/publish instance is related to whether the `instance_id` is a publish instance or a subscribe instance, when `instance_id` is a publish instance, this field is filtered according to the intranet IP of the subscribe instance; when `instance_id` is a subscribe instance, this field is based on the publish instance intranet IP filter.
+* `pub_or_sub_instance_id` - (Optional) The subscribe/publish instance ID is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the subscribe instance ID; when `instance_id` is a subscribe instance, this field is filtering according to the publish instance ID.
+* `pub_or_sub_instance_ip` - (Optional) The intranet IP of the subscribe/publish instance is related to whether the `instance_id` is a publish instance or a subscribe instance. when `instance_id` is a publish instance, this field is filtered according to the intranet IP of the subscribe instance; when `instance_id` is a subscribe instance, this field is based on the publish instance intranet IP filter.
 * `publish_database` - (Optional) Publish the database.
 * `publish_subscribe_id` - (Optional) The id of the Publish and Subscribe in the SQLServer instance.
 * `publish_subscribe_name` - (Optional) The name of the Publish and Subscribe in the SQLServer instance.
@@ -42,7 +42,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `publish_subscribe_list` - Publish and subscribe list, Each element contains the following attributes.
+* `publish_subscribe_list` - Publish and subscribe list. Each element contains the following attributes.
   * `database_tuples` - Database Publish and Publish relationship list.
     * `last_sync_time` - Last sync time.
     * `publish_database` - Publish the database.

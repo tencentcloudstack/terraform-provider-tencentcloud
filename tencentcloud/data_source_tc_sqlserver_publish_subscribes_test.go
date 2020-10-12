@@ -16,31 +16,68 @@ func TestAccTencentCloudSqlserverPublishSubscribeDataSource(t *testing.T) {
 				Config: testAccTencentCloudSqlServerPublishSubscribeDataSourceConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverPublishSubscribeExists("tencentcloud_sqlserver_publish_subscribe.example"),
-					resource.TestCheckResourceAttr("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.publish_instance_id", "mssql-82lhybgn"),
-					resource.TestCheckResourceAttr("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.subscribe_instance_id", "mssql-12a60qdd"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.publish_instance_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.subscribe_instance_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.publish_subscribe_name", "example"),
-					resource.TestCheckResourceAttr("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.publish_instance_ip", "10.1.0.17"),
-					resource.TestCheckResourceAttr("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.subscribe_instance_ip", "10.1.0.11"),
-					resource.TestCheckResourceAttr("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.publish_instance_name", "pub-keep"),
-					resource.TestCheckResourceAttr("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.subscribe_instance_name", "sub-keep"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.publish_instance_ip"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.subscribe_instance_ip"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.publish_instance_name"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.subscribe_instance_name"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.publish_subscribe_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.0.database_tuples.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_sqlserver_publish_subscribes.publish_foos", "publish_subscribe_list.0.publish_instance_id", "mssql-82lhybgn"),
-					resource.TestCheckResourceAttr("data.tencentcloud_sqlserver_publish_subscribes.subscribe_foos", "publish_subscribe_list.0.subscribe_instance_id", "mssql-12a60qdd"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.publish_foos", "publish_subscribe_list.0.publish_instance_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.subscribe_foos", "publish_subscribe_list.0.subscribe_instance_id"),
 				),
 			},
 		},
 	})
 }
 
-const testAccTencentCloudSqlServerPublishSubscribeDataSourceConfig = `
+const testAccTencentCloudSqlServerPublishSubscribeDataSourceConfig = testAccSqlserverInstanceBasic + `
+resource "tencentcloud_sqlserver_instance" "publish_instance" {
+  name = "tf_sqlserver_publish_instance"
+  availability_zone = var.availability_zone
+  charge_type = "POSTPAID_BY_HOUR"
+  vpc_id                   = "` + defaultVpcId + `"
+  subnet_id = "` + defaultSubnetId + `"
+  project_id = 0
+  memory = 2
+  storage = 10
+  maintenance_week_set = [1,2,3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span = 3
+  security_groups = ["sg-nltpbqg1"]
+}
+
+resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
+  name = "tf_sqlserver_subscribe_instance"
+  availability_zone = var.availability_zone
+  charge_type = "POSTPAID_BY_HOUR"
+  vpc_id                   = "` + defaultVpcId + `"
+  subnet_id = "` + defaultSubnetId + `"
+  project_id = 0
+  memory = 2
+  storage = 10
+  maintenance_week_set = [1,2,3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span = 3
+  security_groups = ["sg-nltpbqg1"]
+}
+
+resource "tencentcloud_sqlserver_db" "test_publish_subscribe" {
+  instance_id = tencentcloud_sqlserver_instance.publish_instance.id
+  name        = "test111"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "testACC-remark"
+}
+
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-	publish_instance_id             = "mssql-82lhybgn"
-	subscribe_instance_id           = "mssql-12a60qdd"
+	publish_instance_id             = tencentcloud_sqlserver_instance.publish_instance.id
+	subscribe_instance_id           = tencentcloud_sqlserver_instance.subscribe_instance.id
 	publish_subscribe_name          = "example"
 	database_tuples {
-		publish_database            = "db_test_name"
-		subscribe_database          = "db_test_name"
+		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
+		subscribe_database          = tencentcloud_sqlserver_db.test_publish_subscribe.name
 	}
 }
 

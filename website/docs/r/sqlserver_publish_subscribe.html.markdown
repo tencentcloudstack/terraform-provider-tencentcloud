@@ -15,12 +15,12 @@ Provides a SQL Server PublishSubscribe resource belongs to SQL Server instance.
 
 ```hcl
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-  publish_instance_id    = tencentcloud_sqlserver_instance.example.id
-  subscribe_instance_id  = tencentcloud_sqlserver_instance.example.id
+  publish_instance_id    = tencentcloud_sqlserver_instance.publish_instance.id
+  subscribe_instance_id  = tencentcloud_sqlserver_instance.subscribe_instance.id
   publish_subscribe_name = "example"
   database_tuples {
-    publish_database   = "db_test_name"
-    subscribe_database = "db_test_name"
+    publish_database   = tencentcloud_sqlserver_db.test_publish_subscribe.name
+    subscribe_database = tencentcloud_sqlserver_db.test_publish_subscribe.name
   }
 }
 ```
@@ -29,10 +29,10 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 
 The following arguments are supported:
 
-* `database_tuples` - (Required) Database Publish and Publish relationship list, Modify database is not allowed.
+* `database_tuples` - (Required) Database Publish and Publish relationship list. Modify database is not allowed.
 * `publish_instance_id` - (Required, ForceNew) Publish the instance ID in the SQLServer instance.
 * `subscribe_instance_id` - (Required, ForceNew) Subscribe the instance ID in the SQLServer instance.
-* `publish_subscribe_name` - (Optional) The name of the Publish and Subscribe in the SQLServer instance, default is `default_name`.
+* `publish_subscribe_name` - (Optional) The name of the Publish and Subscribe in the SQLServer instance. default is `default_name`.
 
 The `database_tuples` object supports the following:
 
