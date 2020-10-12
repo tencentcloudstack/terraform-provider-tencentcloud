@@ -1,0 +1,205 @@
+/*
+Use this data source to query detailed information of Vod image sprite templates.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_vod_image_sprite_template" "foo" {
+  sample_type         = "Percent"
+  sample_interval     = 10
+  row_count           = 3
+  column_count        = 3
+  name                = "tf-sprite"
+  comment             = "test"
+  fill_type           = "stretch"
+  width               = 128
+  height              = 128
+  resolution_adaptive = "close"
+}
+
+data "tencentcloud_vod_image_sprite_templates" "foo" {
+  type       = "Custom"
+  definition = tencentcloud_vod_image_sprite_template.foo.id
+}
+```
+*/
+package tencentcloud
+
+import (
+	"context"
+	"log"
+	"strconv"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+)
+
+func dataSourceTencentCloudVodImageSpriteTemplates() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceTencentCloudVodImageSpriteTemplatesRead,
+
+		Schema: map[string]*schema.Schema{
+			"definition": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Unique ID filter of image sprite template.",
+			},
+			"type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Template type filter. Valid values: `Preset`: preset template; `Custom`: custom template.",
+			},
+			"sub_app_id": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.",
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
+			},
+			"template_list": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list of image sprite templates. Each element contains the following attributes:",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"definition": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Unique ID of image sprite template.",
+						},
+						"type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Template type filter. Valid values: `Preset`: preset template; `Custom`: custom template.",
+						},
+						"sample_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Sampling type. Valid values: `Percent`: by percent. `Time`: by time interval.",
+						},
+						"sample_interval": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Sampling interval. If `sample_type` is `Percent`, sampling will be performed at an interval of the specified percentage. If `sample_type` is `Time`, sampling will be performed at the specified time interval in seconds.",
+						},
+						"row_count": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Subimage row count of an image sprite.",
+						},
+						"column_count": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Subimage column count of an image sprite.",
+						},
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of a time point screen capturing template.",
+						},
+						"comment": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Template description.",
+						},
+						"fill_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Fill refers to the way of processing a screenshot when its aspect ratio is different from that of the source video. The following fill types are supported: `stretch`: stretch. The screenshot will be stretched frame by frame to match the aspect ratio of the source video, which may make the screenshot shorter or longer; `black`: fill with black. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with black color blocks.",
+						},
+						"width": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Maximum value of the `width` (or long side) of a screenshot in px. Value range: 0 and [128, 4,096]. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, width will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used.",
+						},
+						"height": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Maximum value of the `height` (or short side) of a screenshot in px. Value range: 0 and [128, 4,096]. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, `width` will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used.",
+						},
+						"resolution_adaptive": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Resolution adaption. Valid values: `open`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `close`: disabled. In this case, `width` represents the width of a video, while `height` the height.",
+						},
+						"create_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Creation time of template in ISO date format.",
+						},
+						"update_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Last modified time of template in ISO date format.",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func dataSourceTencentCloudVodImageSpriteTemplatesRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_vod_image_sprite_templates.read")()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	filter := make(map[string]interface{})
+	if v, ok := d.GetOk("definition"); ok {
+		filter["definitions"] = []string{v.(string)}
+	}
+	if v, ok := d.GetOk("type"); ok {
+		filter["type"] = v.(string)
+	}
+	if v, ok := d.GetOk("sub_app_id"); ok {
+		filter["sub_appid"] = v.(int)
+	}
+
+	vodService := VodService{
+		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+	templates, err := vodService.DescribeImageSpriteTemplatesByFilter(ctx, filter)
+	if err != nil {
+		return err
+	}
+
+	templatesList := make([]map[string]interface{}, 0, len(templates))
+	ids := make([]string, 0, len(templates))
+	for _, item := range templates {
+		templatesList = append(templatesList, map[string]interface{}{
+			"definition":          strconv.FormatUint(*item.Definition, 10),
+			"type":                item.Type,
+			"sample_type":         item.SampleType,
+			"sample_interval":     item.SampleInterval,
+			"row_count":           item.RowCount,
+			"column_count":        item.ColumnCount,
+			"name":                item.Name,
+			"comment":             item.Comment,
+			"fill_type":           item.FillType,
+			"width":               item.Width,
+			"height":              item.Height,
+			"resolution_adaptive": item.ResolutionAdaptive,
+			"create_time":         item.CreateTime,
+			"update_time":         item.UpdateTime,
+		})
+		ids = append(ids, strconv.FormatUint(*item.Definition, 10))
+	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
+	if e := d.Set("template_list", templatesList); e != nil {
+		log.Printf("[CRITAL]%s provider set vod image sprite template list fail, reason:%s ", logId, e.Error())
+	}
+
+	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
+		if err := writeToFile(output.(string), templatesList); err != nil {
+			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]", logId, output.(string), err.Error())
+			return err
+		}
+	}
+
+	return nil
+}

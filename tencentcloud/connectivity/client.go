@@ -35,6 +35,7 @@ import (
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 )
@@ -74,6 +75,7 @@ type TencentCloudClient struct {
 	ckafkaConn    *ckafka.Client
 	auditConn     *audit.Client
 	cynosConn     *cynosdb.Client
+	vodConn       *vod.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -472,4 +474,17 @@ func (me *TencentCloudClient) UseCynosdbClient() *cynosdb.Client {
 	me.cynosConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cynosConn
+}
+
+// UseVodClient returns vod client for service
+func (me *TencentCloudClient) UseVodClient() *vod.Client {
+	if me.vodConn != nil {
+		return me.vodConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.vodConn, _ = vod.NewClient(me.Credential, me.Region, cpf)
+	me.vodConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.vodConn
 }
