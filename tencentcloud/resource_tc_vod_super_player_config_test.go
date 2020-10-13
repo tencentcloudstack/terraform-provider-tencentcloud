@@ -20,7 +20,7 @@ func TestAccTencentCloudVodSuperPlayerConfigResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVodSuperPlayerConfigExists("tencentcloud_vod_super_player_config.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "name", "tf-super-player"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "drm_switch", "ON"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "drm_switch", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "drm_streaming_info.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "resolution_names.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "resolution_names.0.min_edge_length", "889"),
@@ -39,7 +39,7 @@ func TestAccTencentCloudVodSuperPlayerConfigResource(t *testing.T) {
 			{
 				Config: testAccVodSuperPlayerConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "drm_switch", "OFF"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "drm_switch", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "resolution_names.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "resolution_names.0.min_edge_length", "891"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_super_player_config.foo", "resolution_names.0.name", "test1-update"),
@@ -113,7 +113,7 @@ func testAccCheckVodSuperPlayerConfigExists(n string) resource.TestCheckFunc {
 const testAccVodSuperPlayerConfig = testAccVodAdaptiveDynamicStreamingTemplate + testAccVodImageSpriteTemplate + `
 resource "tencentcloud_vod_super_player_config" "foo" {
   name                    = "tf-super-player"
-  drm_switch              = "ON"
+  drm_switch              = true
   drm_streaming_info {
     simple_aes_definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
   }
@@ -135,7 +135,7 @@ resource "tencentcloud_vod_super_player_config" "foo" {
 const testAccVodSuperPlayerConfigUpdate = testAccVodAdaptiveDynamicStreamingTemplate + testAccVodImageSpriteTemplate + `
 resource "tencentcloud_vod_super_player_config" "foo" {
   name                                  = "tf-super-player"
-  drm_switch                            = "OFF"
+  drm_switch                            = false
   adaptive_dynamic_streaming_definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
   image_sprite_definition               = tencentcloud_vod_image_sprite_template.foo.id
   resolution_names {

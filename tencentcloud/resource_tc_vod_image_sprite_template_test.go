@@ -28,7 +28,7 @@ func TestAccTencentCloudVodImageSpriteTemplateResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "fill_type", "stretch"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "width", "128"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "height", "128"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "resolution_adaptive", "close"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "resolution_adaptive", "false"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_image_sprite_template.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_image_sprite_template.foo", "update_time"),
 				),
@@ -45,7 +45,7 @@ func TestAccTencentCloudVodImageSpriteTemplateResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "fill_type", "black"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "width", "129"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "height", "129"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "resolution_adaptive", "open"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_image_sprite_template.foo", "resolution_adaptive", "true"),
 				),
 			},
 			{
@@ -119,7 +119,7 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   fill_type           = "stretch"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
 }
 `
 
@@ -134,6 +134,6 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   fill_type           = "black"
   width               = 129
   height              = 129
-  resolution_adaptive = "open"
+  resolution_adaptive = true
 }
 `

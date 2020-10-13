@@ -1,5 +1,5 @@
 /*
-Use this data source to query detailed information of Vod super player configs.
+Use this data source to query detailed information of VOD super player configs.
 
 Example Usage
 
@@ -63,19 +63,19 @@ func dataSourceTencentCloudVodSuperPlayerConfigs() *schema.Resource {
 							Description: "Player configuration name, which can contain up to 64 letters, digits, underscores, and hyphens (such as test_ABC-123) and must be unique under a user.",
 						},
 						"drm_switch": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Switch of DRM-protected adaptive bitstream playback: `ON`: enabled, indicating to play back only output adaptive bitstreams protected by DRM; `OFF`: disabled, indicating to play back unencrypted output adaptive bitstreams.",
+							Description: "Switch of DRM-protected adaptive bitstream playback: `true`: enabled, indicating to play back only output adaptive bitstreams protected by DRM; `false`: disabled, indicating to play back unencrypted output adaptive bitstreams.",
 						},
 						"adaptive_dynamic_streaming_definition": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ID of the unencrypted adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `OFF`.",
+							Description: "ID of the unencrypted adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `false`.",
 						},
 						"drm_streaming_info": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Content of the DRM-protected adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `ON`.",
+							Description: "Content of the DRM-protected adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `true`.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"simple_aes_definition": {
@@ -174,7 +174,7 @@ func dataSourceTencentCloudVodSuperPlayerConfigsRead(d *schema.ResourceData, met
 			mapping := map[string]interface{}{
 				"type":        item.Type,
 				"name":        item.Name,
-				"drm_switch":  item.DrmSwitch,
+				"drm_switch":  *item.DrmSwitch == "ON",
 				"domain":      item.Domain,
 				"scheme":      item.Scheme,
 				"comment":     item.Comment,

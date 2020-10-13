@@ -20,7 +20,7 @@ func TestAccDataSourceTencentCloudVodSnapshotByTimeOffsetTemplates(t *testing.T)
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_snapshot_by_time_offset_templates.foo", "template_list.0.name", "tf-snapshot"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_snapshot_by_time_offset_templates.foo", "template_list.0.width", "128"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_snapshot_by_time_offset_templates.foo", "template_list.0.height", "128"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vod_snapshot_by_time_offset_templates.foo", "template_list.0.resolution_adaptive", "close"),
+					resource.TestCheckResourceAttr("data.tencentcloud_vod_snapshot_by_time_offset_templates.foo", "template_list.0.resolution_adaptive", "false"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_snapshot_by_time_offset_templates.foo", "template_list.0.format", "png"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_snapshot_by_time_offset_templates.foo", "template_list.0.comment", "test"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_snapshot_by_time_offset_templates.foo", "template_list.0.fill_type", "white"),

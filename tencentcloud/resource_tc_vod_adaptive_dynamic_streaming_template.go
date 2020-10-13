@@ -1,5 +1,5 @@
 /*
-Provide a resource to create a vod adaptive dynamic streaming template.
+Provide a resource to create a VOD adaptive dynamic streaming template.
 
 Example Usage
 
@@ -8,8 +8,8 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive"
   drm_type                        = "SimpleAES"
-  disable_higher_video_bitrate    = 0
-  disable_higher_video_resolution = 0
+  disable_higher_video_bitrate    = false
+  disable_higher_video_resolution = false
   comment                         = "test"
 
   stream_info {
@@ -23,7 +23,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 128
       sample_rate = 32000
     }
-    remove_audio = 1
+    remove_audio = true
   }
   stream_info {
     video {
@@ -36,7 +36,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 256
       sample_rate = 44100
     }
-    remove_audio = 1
+    remove_audio = true
   }
 }
 ```
@@ -94,16 +94,16 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 				Description: "DRM scheme type. Valid values: `SimpleAES`. If this field is an empty string, DRM will not be performed on the video.",
 			},
 			"disable_higher_video_bitrate": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     0,
-				Description: "Whether to prohibit transcoding video from low bitrate to high bitrate. Valid values: `0`: no, `1`: yes. Default value: `0`.",
+				Default:     false,
+				Description: "Whether to prohibit transcoding video from low bitrate to high bitrate. Valid values: `false`: no, `true`: yes. Default value: `false`.",
 			},
 			"disable_higher_video_resolution": {
-				Type:        schema.TypeInt,
+				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     0,
-				Description: "Whether to prohibit transcoding from low resolution to high resolution. Valid values: `0`: no, `1`: yes. Default value: `0`.",
+				Default:     false,
+				Description: "Whether to prohibit transcoding from low resolution to high resolution. Valid values: `false`: no, `true`: yes. Default value: `false`.",
 			},
 			"comment": {
 				Type:         schema.TypeString,
@@ -142,66 +142,26 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 										Description:  "Video frame rate in Hz. Value range: `[0, 60]`. If the value is `0`, the frame rate will be the same as that of the source video.",
 									},
 									"bitrate": {
-										Type:     schema.TypeInt,
-										Required: true,
-										ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-											value := int64(v.(int))
-											if value == 0 {
-												return
-											}
-											if value < 128 {
-												errors = append(errors, fmt.Errorf("%q cannot be lower than %d: %d", k, 128, value))
-											}
-											if value > 35000 {
-												errors = append(errors, fmt.Errorf("%q cannot be higher than %d: %d", k, 35000, value))
-											}
-											return
-										},
+										Type:        schema.TypeInt,
+										Required:    true,
 										Description: "Bitrate of video stream in Kbps. Value range: `0` and `[128, 35000]`. If the value is `0`, the bitrate of the video will be the same as that of the source video.",
 									},
 									"resolution_adaptive": {
-										Type:         schema.TypeString,
-										Optional:     true,
-										Default:      "open",
-										ValidateFunc: validateAllowedStringValue([]string{"open", "close"}),
-										Description:  "Resolution adaption. Valid values: `open`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `close`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `open`. Note: this field may return null, indicating that no valid values can be obtained.",
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Default:     true,
+										Description: "Resolution adaption. Valid values: `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `true`. Note: this field may return null, indicating that no valid values can be obtained.",
 									},
 									"width": {
-										Type:     schema.TypeInt,
-										Optional: true,
-										Default:  0,
-										ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-											value := int64(v.(int))
-											if value == 0 {
-												return
-											}
-											if value < 128 {
-												errors = append(errors, fmt.Errorf("%q cannot be lower than %d: %d", k, 128, value))
-											}
-											if value > 4096 {
-												errors = append(errors, fmt.Errorf("%q cannot be higher than %d: %d", k, 4096, value))
-											}
-											return
-										},
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Default:     0,
 										Description: "Maximum value of the width (or long side) of a video stream in px. Value range: `0` and `[128, 4096]`. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, `width` will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used. Default value: `0`. Note: this field may return null, indicating that no valid values can be obtained.",
 									},
 									"height": {
-										Type:     schema.TypeInt,
-										Optional: true,
-										Default:  0,
-										ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-											value := int64(v.(int))
-											if value == 0 {
-												return
-											}
-											if value < 128 {
-												errors = append(errors, fmt.Errorf("%q cannot be lower than %d: %d", k, 128, value))
-											}
-											if value > 4096 {
-												errors = append(errors, fmt.Errorf("%q cannot be higher than %d: %d", k, 4096, value))
-											}
-											return
-										},
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Default:     0,
 										Description: "Maximum value of the height (or short side) of a video stream in px. Value range: `0` and `[128, 4096]`. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, `width` will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used. Default value: `0`. Note: this field may return null, indicating that no valid values can be obtained.",
 									},
 									"fill_type": {
@@ -228,45 +188,29 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 										Description: "Audio stream encoder. Valid value are: `libfdk_aac` and `libmp3lame`, while `libfdk_aac` is recommended.",
 									},
 									"bitrate": {
-										Type:     schema.TypeInt,
-										Required: true,
-										ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-											value := int64(v.(int))
-											if value == 0 {
-												return
-											}
-											if value < 128 {
-												errors = append(errors, fmt.Errorf("%q cannot be lower than %d: %d", k, 26, value))
-											}
-											if value > 35000 {
-												errors = append(errors, fmt.Errorf("%q cannot be higher than %d: %d", k, 256, value))
-											}
-											return
-										},
+										Type:        schema.TypeInt,
+										Required:    true,
 										Description: "Audio stream bitrate in Kbps. Value range: `0` and `[26, 256]`. If the value is `0`, the bitrate of the audio stream will be the same as that of the original audio.",
 									},
 									"sample_rate": {
-										Type:         schema.TypeInt,
-										Required:     true,
-										ValidateFunc: validateAllowedIntValue([]int{32000, 44100, 48000}),
-										Description:  "Audio stream sample rate. Valid values: `32000`, `44100`, `48000`, in Hz.",
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Audio stream sample rate. Valid values: `32000`, `44100`, `48000`, in Hz.",
 									},
 									"audio_channel": {
-										Type:         schema.TypeString,
-										Optional:     true,
-										Default:      VOD_AUDIO_CHANNEL_DUAL,
-										ValidateFunc: validateAllowedStringValue([]string{VOD_AUDIO_CHANNEL_MONO, VOD_AUDIO_CHANNEL_DUAL, VOD_AUDIO_CHANNEL_STEREO}),
-										Description:  fmt.Sprintf("Audio channel system. Valid values: %s, %s, %s. Default value: %s.", VOD_AUDIO_CHANNEL_MONO, VOD_AUDIO_CHANNEL_DUAL, VOD_AUDIO_CHANNEL_STEREO, VOD_AUDIO_CHANNEL_DUAL),
+										Type:        schema.TypeString,
+										Optional:    true,
+										Default:     VOD_AUDIO_CHANNEL_DUAL,
+										Description: fmt.Sprintf("Audio channel system. Valid values: %s, %s, %s. Default value: %s.", VOD_AUDIO_CHANNEL_MONO, VOD_AUDIO_CHANNEL_DUAL, VOD_AUDIO_CHANNEL_STEREO, VOD_AUDIO_CHANNEL_DUAL),
 									},
 								},
 							},
 						},
 						"remove_audio": {
-							Type:         schema.TypeInt,
-							Optional:     true,
-							Default:      0,
-							ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-							Description:  "Whether to remove audio stream. Valid values: `0`: no, `1`: yes. `0` by default.",
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Whether to remove audio stream. Valid values: `false`: no, `true`: yes. `false` by default.",
 						},
 					},
 				},
@@ -299,8 +243,8 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 	if v, ok := d.GetOk("drm_type"); ok {
 		request.DrmType = helper.String(v.(string))
 	}
-	request.DisableHigherVideoBitrate = helper.IntUint64(d.Get("disable_higher_video_bitrate").(int))
-	request.DisableHigherVideoResolution = helper.IntUint64(d.Get("disable_higher_video_resolution").(int))
+	request.DisableHigherVideoBitrate = helper.Uint64(DISABLE_HIGHER_VIDEO_BITRATE_TO_UNINT[d.Get("disable_higher_video_bitrate").(bool)])
+	request.DisableHigherVideoResolution = helper.Uint64(DISABLE_HIGHER_VIDEO_RESOLUTION_TO_UNINT[d.Get("disable_higher_video_resolution").(bool)])
 	if v, ok := d.GetOk("comment"); ok {
 		request.Comment = helper.String(v.(string))
 	}
@@ -313,13 +257,13 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 		v := item.(map[string]interface{})
 		video := v["video"].([]interface{})[0].(map[string]interface{})
 		audio := v["audio"].([]interface{})[0].(map[string]interface{})
-		rAudio := v["remove_audio"]
+		rAudio := REMOVE_AUDIO_TO_UNINT[v["remove_audio"].(bool)]
 		request.StreamInfos = append(request.StreamInfos, &vod.AdaptiveStreamTemplate{
 			Video: &vod.VideoTemplateInfo{
 				Codec:              helper.String(video["codec"].(string)),
 				Fps:                helper.IntUint64(video["fps"].(int)),
 				Bitrate:            helper.IntUint64(video["bitrate"].(int)),
-				ResolutionAdaptive: helper.String(video["resolution_adaptive"].(string)),
+				ResolutionAdaptive: helper.String(RESOLUTION_ADAPTIVE_TO_STRING[video["resolution_adaptive"].(bool)]),
 				Width:              helper.IntUint64(video["width"].(int)),
 				Height:             helper.IntUint64(video["height"].(int)),
 				FillType:           helper.String(video["fill_type"].(string)),
@@ -330,7 +274,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 				SampleRate:   helper.IntUint64(audio["sample_rate"].(int)),
 				AudioChannel: helper.Int64(VOD_AUDIO_CHANNEL_TYPE_TO_INT[audio["audio_channel"].(string)]),
 			},
-			RemoveAudio: helper.IntUint64(rAudio.(int)),
+			RemoveAudio: &rAudio,
 		})
 	}
 
@@ -368,7 +312,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 		vodService = VodService{client: client}
 	)
 	// waiting for refreshing cache
-	time.Sleep(1 * time.Minute)
+	time.Sleep(30 * time.Second)
 	template, has, err := vodService.DescribeAdaptiveDynamicStreamingTemplatesById(ctx, id)
 	if err != nil {
 		return err
@@ -381,8 +325,8 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 	_ = d.Set("format", template.Format)
 	_ = d.Set("name", template.Name)
 	_ = d.Set("drm_type", template.DrmType)
-	_ = d.Set("disable_higher_video_bitrate", template.DisableHigherVideoBitrate)
-	_ = d.Set("disable_higher_video_resolution", template.DisableHigherVideoResolution)
+	_ = d.Set("disable_higher_video_bitrate", *template.DisableHigherVideoBitrate == 1)
+	_ = d.Set("disable_higher_video_resolution", *template.DisableHigherVideoResolution == 1)
 	_ = d.Set("comment", template.Comment)
 	_ = d.Set("create_time", template.CreateTime)
 	_ = d.Set("update_time", template.UpdateTime)
@@ -395,7 +339,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 					"codec":               v.Video.Codec,
 					"fps":                 v.Video.Fps,
 					"bitrate":             v.Video.Bitrate,
-					"resolution_adaptive": v.Video.ResolutionAdaptive,
+					"resolution_adaptive": *v.Video.ResolutionAdaptive == "open",
 					"width":               v.Video.Width,
 					"height":              v.Video.Height,
 					"fill_type":           v.Video.FillType,
@@ -409,7 +353,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 					"audio_channel": VOD_AUDIO_CHANNEL_TYPE_TO_STRING[*v.Audio.AudioChannel],
 				},
 			},
-			"remove_audio": v.RemoveAudio,
+			"remove_audio": *v.RemoveAudio == 1,
 		})
 	}
 	_ = d.Set("stream_info", streamInfos)
@@ -421,45 +365,53 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 	defer logElapsed("resource.tencentcloud_vod_adaptive_dynamic_streaming_template.update")()
 
 	var (
-		logId   = getLogId(contextNil)
-		request = vod.NewModifyAdaptiveDynamicStreamingTemplateRequest()
-		id      = d.Id()
+		logId      = getLogId(contextNil)
+		request    = vod.NewModifyAdaptiveDynamicStreamingTemplateRequest()
+		id         = d.Id()
+		changeFlag = false
 	)
 
 	idUint, _ := strconv.ParseUint(id, 0, 64)
 	request.Definition = &idUint
 	if d.HasChange("format") {
+		changeFlag = true
 		request.Format = helper.String(d.Get("format").(string))
 	}
 	if d.HasChange("name") {
+		changeFlag = true
 		request.Name = helper.String(d.Get("name").(string))
 	}
 	if d.HasChange("disable_higher_video_bitrate") {
-		request.DisableHigherVideoBitrate = helper.IntUint64(d.Get("disable_higher_video_bitrate").(int))
+		changeFlag = true
+		request.DisableHigherVideoBitrate = helper.Uint64(DISABLE_HIGHER_VIDEO_BITRATE_TO_UNINT[d.Get("disable_higher_video_bitrate").(bool)])
 	}
 	if d.HasChange("disable_higher_video_resolution") {
-		request.DisableHigherVideoResolution = helper.IntUint64(d.Get("disable_higher_video_resolution").(int))
+		changeFlag = true
+		request.DisableHigherVideoResolution = helper.Uint64(DISABLE_HIGHER_VIDEO_RESOLUTION_TO_UNINT[d.Get("disable_higher_video_resolution").(bool)])
 	}
 	if d.HasChange("comment") {
+		changeFlag = true
 		request.Comment = helper.String(d.Get("comment").(string))
 	}
 	if d.HasChange("sub_app_id") {
+		changeFlag = true
 		request.SubAppId = helper.IntUint64(d.Get("sub_app_id").(int))
 	}
 	if d.HasChange("stream_info") {
+		changeFlag = true
 		streamInfos := d.Get("stream_info").([]interface{})
 		request.StreamInfos = make([]*vod.AdaptiveStreamTemplate, 0, len(streamInfos))
 		for _, item := range streamInfos {
 			v := item.(map[string]interface{})
 			video := v["video"].([]interface{})[0].(map[string]interface{})
 			audio := v["audio"].([]interface{})[0].(map[string]interface{})
-			rAudio := v["remove_audio"]
+			rAudio := REMOVE_AUDIO_TO_UNINT[v["remove_audio"].(bool)]
 			request.StreamInfos = append(request.StreamInfos, &vod.AdaptiveStreamTemplate{
 				Video: &vod.VideoTemplateInfo{
 					Codec:              helper.String(video["codec"].(string)),
 					Fps:                helper.IntUint64(video["fps"].(int)),
 					Bitrate:            helper.IntUint64(video["bitrate"].(int)),
-					ResolutionAdaptive: helper.String(video["resolution_adaptive"].(string)),
+					ResolutionAdaptive: helper.String(RESOLUTION_ADAPTIVE_TO_STRING[video["resolution_adaptive"].(bool)]),
 					Width: func(width int) *uint64 {
 						if width == 0 {
 							return nil
@@ -480,26 +432,30 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 					SampleRate:   helper.IntUint64(audio["sample_rate"].(int)),
 					AudioChannel: helper.Int64(VOD_AUDIO_CHANNEL_TYPE_TO_INT[audio["audio_channel"].(string)]),
 				},
-				RemoveAudio: helper.IntUint64(rAudio.(int)),
+				RemoveAudio: &rAudio,
 			})
 		}
 	}
 
-	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifyAdaptiveDynamicStreamingTemplate(request)
+	if changeFlag {
+		var err error
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifyAdaptiveDynamicStreamingTemplate(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+				return retryError(err)
+			}
+			return nil
+		})
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		return err
+
+		return resourceTencentCloudVodAdaptiveDynamicStreamingTemplateRead(d, meta)
 	}
 
-	return resourceTencentCloudVodAdaptiveDynamicStreamingTemplateRead(d, meta)
+	return nil
 }
 
 func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateDelete(d *schema.ResourceData, meta interface{}) error {

@@ -1,5 +1,5 @@
 /*
-Provide a resource to create a vod image sprite template.
+Provide a resource to create a VOD image sprite template.
 
 Example Usage
 
@@ -14,7 +14,7 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   fill_type           = "stretch"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
 }
 ```
 
@@ -87,56 +87,28 @@ func resourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
 				Description:  "Template description. Length limit: 256 characters.",
 			},
 			"fill_type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      "black",
-				ValidateFunc: validateAllowedStringValue([]string{"stretch", "black"}),
-				Description:  "Fill refers to the way of processing a screenshot when its aspect ratio is different from that of the source video. The following fill types are supported: `stretch`: stretch. The screenshot will be stretched frame by frame to match the aspect ratio of the source video, which may make the screenshot shorter or longer; `black`: fill with black. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with black color blocks. Default value: `black`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "black",
+				Description: "Fill refers to the way of processing a screenshot when its aspect ratio is different from that of the source video. The following fill types are supported: `stretch`: stretch. The screenshot will be stretched frame by frame to match the aspect ratio of the source video, which may make the screenshot shorter or longer; `black`: fill with black. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with black color blocks. Default value: `black`.",
 			},
 			"width": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := int64(v.(int))
-					if value == 0 {
-						return
-					}
-					if value < 128 {
-						errors = append(errors, fmt.Errorf("%q cannot be lower than %d: %d", k, 128, value))
-					}
-					if value > 4096 {
-						errors = append(errors, fmt.Errorf("%q cannot be higher than %d: %d", k, 4096, value))
-					}
-					return
-				},
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
 				Description: "Maximum value of the `width` (or long side) of a screenshot in px. Value range: 0 and [128, 4,096]. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, width will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used. Default value: `0`.",
 			},
 			"height": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  0,
-				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
-					value := int64(v.(int))
-					if value == 0 {
-						return
-					}
-					if value < 128 {
-						errors = append(errors, fmt.Errorf("%q cannot be lower than %d: %d", k, 128, value))
-					}
-					if value > 4096 {
-						errors = append(errors, fmt.Errorf("%q cannot be higher than %d: %d", k, 4096, value))
-					}
-					return
-				},
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
 				Description: "Maximum value of the `height` (or short side) of a screenshot in px. Value range: 0 and [128, 4,096]. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, `width` will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used. Default value: `0`.",
 			},
 			"resolution_adaptive": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      "open",
-				ValidateFunc: validateAllowedStringValue([]string{"open", "close"}),
-				Description:  "Resolution adaption. Valid values: `open`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `close`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `open`.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Resolution adaption. Valid values: `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `true`.",
 			},
 			"sub_app_id": {
 				Type:        schema.TypeInt,
@@ -174,18 +146,10 @@ func resourceTencentCloudVodImageSpriteTemplateCreate(d *schema.ResourceData, me
 	if v, ok := d.GetOk("comment"); ok {
 		request.Comment = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("fill_type"); ok {
-		request.FillType = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("width"); ok {
-		request.Width = helper.IntUint64(v.(int))
-	}
-	if v, ok := d.GetOk("height"); ok {
-		request.Height = helper.IntUint64(v.(int))
-	}
-	if v, ok := d.GetOk("resolution_adaptive"); ok {
-		request.ResolutionAdaptive = helper.String(v.(string))
-	}
+	request.FillType = helper.String((d.Get("fill_type")).(string))
+	request.Width = helper.IntUint64(d.Get("width").(int))
+	request.Height = helper.IntUint64(d.Get("height").(int))
+	request.ResolutionAdaptive = helper.String(RESOLUTION_ADAPTIVE_TO_STRING[d.Get("resolution_adaptive").(bool)])
 	if v, ok := d.GetOk("sub_app_id"); ok {
 		request.SubAppId = helper.IntUint64(v.(int))
 	}
@@ -224,7 +188,7 @@ func resourceTencentCloudVodImageSpriteTemplateRead(d *schema.ResourceData, meta
 		vodService = VodService{client: client}
 	)
 	// waiting for refreshing cache
-	time.Sleep(1 * time.Minute)
+	time.Sleep(30 * time.Second)
 	template, has, err := vodService.DescribeImageSpriteTemplatesById(ctx, id)
 	if err != nil {
 		return err
@@ -243,7 +207,7 @@ func resourceTencentCloudVodImageSpriteTemplateRead(d *schema.ResourceData, meta
 	_ = d.Set("fill_type", template.FillType)
 	_ = d.Set("width", template.Width)
 	_ = d.Set("height", template.Height)
-	_ = d.Set("resolution_adaptive", template.ResolutionAdaptive)
+	_ = d.Set("resolution_adaptive", *template.ResolutionAdaptive == "open")
 	_ = d.Set("create_time", template.CreateTime)
 	_ = d.Set("update_time", template.UpdateTime)
 
@@ -254,58 +218,72 @@ func resourceTencentCloudVodImageSpriteTemplateUpdate(d *schema.ResourceData, me
 	defer logElapsed("resource.tencentcloud_vod_image_sprite_template.update")()
 
 	var (
-		logId   = getLogId(contextNil)
-		request = vod.NewModifyImageSpriteTemplateRequest()
-		id      = d.Id()
+		logId      = getLogId(contextNil)
+		request    = vod.NewModifyImageSpriteTemplateRequest()
+		id         = d.Id()
+		changeFlag = false
 	)
 
 	idUint, _ := strconv.ParseUint(id, 0, 64)
 	request.Definition = &idUint
 	if d.HasChange("sample_type") {
+		changeFlag = true
 		request.SampleType = helper.String(d.Get("sample_type").(string))
 	}
 	if d.HasChange("sample_interval") {
+		changeFlag = true
 		request.SampleInterval = helper.IntUint64(d.Get("sample_interval").(int))
 	}
 	if d.HasChange("row_count") {
+		changeFlag = true
 		request.RowCount = helper.IntUint64(d.Get("row_count").(int))
 	}
 	if d.HasChange("column_count") {
+		changeFlag = true
 		request.ColumnCount = helper.IntUint64(d.Get("column_count").(int))
 	}
 	if d.HasChange("name") {
+		changeFlag = true
 		request.Name = helper.String(d.Get("name").(string))
 	}
 	if d.HasChange("comment") {
+		changeFlag = true
 		request.Comment = helper.String(d.Get("comment").(string))
 	}
 	if d.HasChange("fill_type") {
+		changeFlag = true
 		request.FillType = helper.String(d.Get("fill_type").(string))
 	}
 	if d.HasChange("width") || d.HasChange("height") || d.HasChange("resolution_adaptive") {
+		changeFlag = true
 		request.Width = helper.IntUint64(d.Get("width").(int))
 		request.Height = helper.IntUint64(d.Get("height").(int))
-		request.ResolutionAdaptive = helper.String(d.Get("resolution_adaptive").(string))
+		request.ResolutionAdaptive = helper.String(RESOLUTION_ADAPTIVE_TO_STRING[d.Get("resolution_adaptive").(bool)])
 	}
 	if d.HasChange("sub_app_id") {
+		changeFlag = true
 		request.SubAppId = helper.IntUint64(d.Get("sub_app_id").(int))
 	}
 
-	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifyImageSpriteTemplate(request)
+	if changeFlag {
+		var err error
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifyImageSpriteTemplate(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+				return retryError(err)
+			}
+			return nil
+		})
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		return err
+
+		return resourceTencentCloudVodImageSpriteTemplateRead(d, meta)
 	}
 
-	return resourceTencentCloudVodImageSpriteTemplateRead(d, meta)
+	return nil
 }
 
 func resourceTencentCloudVodImageSpriteTemplateDelete(d *schema.ResourceData, meta interface{}) error {

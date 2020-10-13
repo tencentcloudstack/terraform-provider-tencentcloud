@@ -22,8 +22,8 @@ func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "format", "HLS"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "name", "tf-adaptive"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "drm_type", "SimpleAES"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "disable_higher_video_bitrate", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "disable_higher_video_resolution", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "disable_higher_video_bitrate", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "disable_higher_video_resolution", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "comment", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.video.#", "1"),
@@ -34,7 +34,7 @@ func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.codec", "libfdk_aac"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.bitrate", "128"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.sample_rate", "32000"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.remove_audio", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.remove_audio", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.1.video.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.1.video.0.codec", "libx264"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.1.video.0.fps", "4"),
@@ -43,7 +43,7 @@ func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.1.audio.0.codec", "libfdk_aac"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.1.audio.0.bitrate", "256"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.1.audio.0.sample_rate", "44100"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.1.remove_audio", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.1.remove_audio", "true"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "update_time"),
 				),
@@ -52,8 +52,8 @@ func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T
 				Config: testAccVodAdaptiveDynamicStreamingTemplateUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "name", "tf-adaptive-update"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "disable_higher_video_bitrate", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "disable_higher_video_resolution", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "disable_higher_video_bitrate", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "disable_higher_video_resolution", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "comment", "test-update"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.video.#", "1"),
@@ -68,7 +68,7 @@ func TestAccTencentCloudVodAdaptiveDynamicStreamingTemplateResource(t *testing.T
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.bitrate", "129"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.sample_rate", "44100"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.audio.0.audio_channel", "dual"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.remove_audio", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_adaptive_dynamic_streaming_template.foo", "stream_info.0.remove_audio", "false"),
 				),
 			},
 			{
@@ -136,8 +136,8 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive"
   drm_type                        = "SimpleAES"
-  disable_higher_video_bitrate    = 0
-  disable_higher_video_resolution = 0
+  disable_higher_video_bitrate    = false
+  disable_higher_video_resolution = false
   comment                         = "test"
 
   stream_info {
@@ -151,7 +151,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 128
       sample_rate = 32000
     }
-    remove_audio = 1
+    remove_audio = true
   }
   stream_info {
     video {
@@ -164,7 +164,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 256
       sample_rate = 44100
     }
-    remove_audio = 1
+    remove_audio = true
   }
 }
 `
@@ -174,8 +174,8 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive-update"
   drm_type                        = "SimpleAES"
-  disable_higher_video_bitrate    = 1
-  disable_higher_video_resolution = 1
+  disable_higher_video_bitrate    = true
+  disable_higher_video_resolution = true
   comment                         = "test-update"
 
   stream_info {
@@ -183,7 +183,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       codec               = "libx265"
       fps                 = 4
       bitrate             = 129
-      resolution_adaptive = "close"
+      resolution_adaptive = false
       width               = 128
       height              = 128
       fill_type           = "stretch"
@@ -194,7 +194,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       sample_rate   = 44100
       audio_channel = "dual"
     }
-    remove_audio = 0
+    remove_audio = false
   }
 }
 `

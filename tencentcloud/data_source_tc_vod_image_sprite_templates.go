@@ -1,5 +1,5 @@
 /*
-Use this data source to query detailed information of Vod image sprite templates.
+Use this data source to query detailed information of VOD image sprite templates.
 
 Example Usage
 
@@ -14,7 +14,7 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   fill_type           = "stretch"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
 }
 
 data "tencentcloud_vod_image_sprite_templates" "foo" {
@@ -121,9 +121,9 @@ func dataSourceTencentCloudVodImageSpriteTemplates() *schema.Resource {
 							Description: "Maximum value of the `height` (or short side) of a screenshot in px. Value range: 0 and [128, 4,096]. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, `width` will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used.",
 						},
 						"resolution_adaptive": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Resolution adaption. Valid values: `open`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `close`: disabled. In this case, `width` represents the width of a video, while `height` the height.",
+							Description: "Resolution adaption. Valid values: `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -170,8 +170,9 @@ func dataSourceTencentCloudVodImageSpriteTemplatesRead(d *schema.ResourceData, m
 	templatesList := make([]map[string]interface{}, 0, len(templates))
 	ids := make([]string, 0, len(templates))
 	for _, item := range templates {
+		definitionStr := strconv.FormatUint(*item.Definition, 10)
 		templatesList = append(templatesList, map[string]interface{}{
-			"definition":          strconv.FormatUint(*item.Definition, 10),
+			"definition":          definitionStr,
 			"type":                item.Type,
 			"sample_type":         item.SampleType,
 			"sample_interval":     item.SampleInterval,
@@ -182,11 +183,11 @@ func dataSourceTencentCloudVodImageSpriteTemplatesRead(d *schema.ResourceData, m
 			"fill_type":           item.FillType,
 			"width":               item.Width,
 			"height":              item.Height,
-			"resolution_adaptive": item.ResolutionAdaptive,
+			"resolution_adaptive": *item.ResolutionAdaptive == "open",
 			"create_time":         item.CreateTime,
 			"update_time":         item.UpdateTime,
 		})
-		ids = append(ids, strconv.FormatUint(*item.Definition, 10))
+		ids = append(ids, definitionStr)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

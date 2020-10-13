@@ -1,4 +1,18 @@
-## 1.44.1 (Unreleased)
+## 1.45.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_vod_adaptive_dynamic_streaming_template`
+* **New Resource**: `tencentcloud_vod_procedure_template`.
+* **New Resource**: `tencentcloud_vod_snapshot_by_time_offset_template`.
+* **New Resource**: `tencentcloud_vod_image_sprite_template`.
+* **New Resource**: `tencentcloud_vod_super_player_config`.
+* **New Data Source**: `tencentcloud_vod_adaptive_dynamic_streaming_templates`
+* **New Data Source**: `tencentcloud_vod_image_sprite_templates`.
+* **New Data Source**: `tencentcloud_vod_procedure_templates`.
+* **New Data Source**: `tencentcloud_vod_snapshot_by_time_offset_templates`.
+* **New Data Source**: `tencentcloud_vod_super_player_configs`.
+
 ## 1.44.0 (September 25, 2020)
 
 FEATURES:

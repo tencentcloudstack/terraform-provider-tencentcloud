@@ -1,5 +1,5 @@
 /*
-Use this data source to query detailed information of Vod procedure templates.
+Use this data source to query detailed information of VOD procedure templates.
 
 Example Usage
 

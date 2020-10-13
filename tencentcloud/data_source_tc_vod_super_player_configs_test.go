@@ -18,7 +18,7 @@ func TestAccDataSourceTencentCloudVodSuperPlayerConfigs(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_vod_super_player_configs.foo"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.name", "tf-super-player"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.drm_switch", "ON"),
+					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.drm_switch", "true"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.drm_streaming_info.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.resolution_names.#", "2"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_super_player_configs.foo", "config_list.0.resolution_names.0.min_edge_length", "889"),

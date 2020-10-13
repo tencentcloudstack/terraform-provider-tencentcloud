@@ -1,5 +1,5 @@
 /*
-Provide a resource to create a vod super player config.
+Provide a resource to create a VOD super player config.
 
 Example Usage
 
@@ -8,8 +8,8 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive"
   drm_type                        = "SimpleAES"
-  disable_higher_video_bitrate    = 0
-  disable_higher_video_resolution = 0
+  disable_higher_video_bitrate    = false
+  disable_higher_video_resolution = false
   comment                         = "test"
 
   stream_info {
@@ -23,7 +23,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 128
       sample_rate = 32000
     }
-    remove_audio = 1
+    remove_audio = true
   }
   stream_info {
     video {
@@ -36,7 +36,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 256
       sample_rate = 44100
     }
-    remove_audio = 1
+    remove_audio = true
   }
 }
 
@@ -50,12 +50,12 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   fill_type           = "stretch"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
 }
 
 resource "tencentcloud_vod_super_player_config" "foo" {
   name                    = "tf-super-player"
-  drm_switch              = "ON"
+  drm_switch              = true
   drm_streaming_info {
     simple_aes_definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
   }
@@ -115,23 +115,22 @@ func resourceTencentCloudVodSuperPlayerConfig() *schema.Resource {
 				Description:  "Player configuration name, which can contain up to 64 letters, digits, underscores, and hyphens (such as test_ABC-123) and must be unique under a user.",
 			},
 			"drm_switch": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      "OFF",
-				ValidateFunc: validateAllowedStringValue([]string{"ON", "OFF"}),
-				Description:  "Switch of DRM-protected adaptive bitstream playback: `ON`: enabled, indicating to play back only output adaptive bitstreams protected by DRM; `OFF`: disabled, indicating to play back unencrypted output adaptive bitstreams. Default value: `OFF`.",
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Switch of DRM-protected adaptive bitstream playback: `true`: enabled, indicating to play back only output adaptive bitstreams protected by DRM; `false`: disabled, indicating to play back unencrypted output adaptive bitstreams. Default value: `false`.",
 			},
 			"adaptive_dynamic_streaming_definition": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "ID of the unencrypted adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `OFF`.",
+				Description: "ID of the unencrypted adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `false`.",
 			},
 			"drm_streaming_info": {
 				Type:        schema.TypeList,
 				MinItems:    1,
 				MaxItems:    1,
 				Optional:    true,
-				Description: "Content of the DRM-protected adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `ON`.",
+				Description: "Content of the DRM-protected adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `true`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"simple_aes_definition": {
@@ -213,7 +212,7 @@ func resourceTencentCloudVodSuperPlayerConfigCreate(d *schema.ResourceData, meta
 	)
 
 	request.Name = helper.String(d.Get("name").(string))
-	request.DrmSwitch = helper.String(d.Get("drm_switch").(string))
+	request.DrmSwitch = helper.String(DRM_SWITCH_TO_STRING[d.Get("drm_switch").(bool)])
 	if v, ok := d.GetOk("adaptive_dynamic_streaming_definition"); ok {
 		idUint, _ := strconv.ParseUint(v.(string), 0, 64)
 		request.AdaptiveDynamicStreamingDefinition = &idUint
@@ -322,7 +321,7 @@ func resourceTencentCloudVodSuperPlayerConfigRead(d *schema.ResourceData, meta i
 	}
 
 	_ = d.Set("name", config.Name)
-	_ = d.Set("drm_switch", config.DrmSwitch)
+	_ = d.Set("drm_switch", *config.DrmSwitch == "ON")
 	// workaround for AdaptiveDynamicStreamingDefinition para cuz it's dirty data.
 	if *config.DrmSwitch == "OFF" {
 		_ = d.Set("adaptive_dynamic_streaming_definition", strconv.FormatUint(*config.AdaptiveDynamicStreamingDefinition, 10))
@@ -360,20 +359,24 @@ func resourceTencentCloudVodSuperPlayerConfigUpdate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_vod_super_player_config.update")()
 
 	var (
-		logId   = getLogId(contextNil)
-		request = vod.NewModifySuperPlayerConfigRequest()
-		id      = d.Id()
+		logId      = getLogId(contextNil)
+		request    = vod.NewModifySuperPlayerConfigRequest()
+		id         = d.Id()
+		changeFlag = false
 	)
 
 	request.Name = &id
 	if d.HasChange("drm_switch") {
-		request.DrmSwitch = helper.String(d.Get("drm_switch").(string))
+		changeFlag = true
+		request.DrmSwitch = helper.String(DRM_SWITCH_TO_STRING[d.Get("drm_switch").(bool)])
 	}
 	if d.HasChange("adaptive_dynamic_streaming_definition") {
+		changeFlag = true
 		idUint, _ := strconv.ParseUint(d.Get("adaptive_dynamic_streaming_definition").(string), 0, 64)
 		request.AdaptiveDynamicStreamingDefinition = &idUint
 	}
 	if d.HasChange("drm_streaming_info") {
+		changeFlag = true
 		request.DrmStreamingsInfo = func() *vod.DrmStreamingsInfoForUpdate {
 			if v, ok := d.GetOk("drm_streaming_info"); !ok {
 				return nil
@@ -390,10 +393,12 @@ func resourceTencentCloudVodSuperPlayerConfigUpdate(d *schema.ResourceData, meta
 		}()
 	}
 	if d.HasChange("image_sprite_definition") {
+		changeFlag = true
 		idUint, _ := strconv.ParseUint(d.Get("image_sprite_definition").(string), 0, 64)
 		request.ImageSpriteDefinition = &idUint
 	}
 	if d.HasChange("resolution_names") {
+		changeFlag = true
 		v := d.Get("resolution_names")
 		resolutionNames := make([]*vod.ResolutionNameInfo, 0, len(v.([]interface{})))
 		for _, item := range v.([]interface{}) {
@@ -406,33 +411,41 @@ func resourceTencentCloudVodSuperPlayerConfigUpdate(d *schema.ResourceData, meta
 		request.ResolutionNames = resolutionNames
 	}
 	if d.HasChange("domain") {
+		changeFlag = true
 		request.Domain = helper.String(d.Get("domain").(string))
 	}
 	if d.HasChange("scheme") {
+		changeFlag = true
 		request.Scheme = helper.String(d.Get("scheme").(string))
 	}
 	if d.HasChange("comment") {
+		changeFlag = true
 		request.Comment = helper.String(d.Get("comment").(string))
 	}
 	if d.HasChange("sub_app_id") {
+		changeFlag = true
 		request.SubAppId = helper.IntUint64(d.Get("sub_app_id").(int))
 	}
 
-	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifySuperPlayerConfig(request)
+	if changeFlag {
+		var err error
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifySuperPlayerConfig(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+				return retryError(err)
+			}
+			return nil
+		})
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		return err
+
+		return resourceTencentCloudVodSuperPlayerConfigRead(d, meta)
 	}
 
-	return resourceTencentCloudVodSuperPlayerConfigRead(d, meta)
+	return nil
 }
 
 func resourceTencentCloudVodSuperPlayerConfigDelete(d *schema.ResourceData, meta interface{}) error {

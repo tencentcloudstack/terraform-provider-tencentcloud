@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vod_procedure_template"
 sidebar_current: "docs-tencentcloud-resource-vod_procedure_template"
 description: |-
-  Provide a resource to create a vod procedure template.
+  Provide a resource to create a VOD procedure template.
 ---
 
 # tencentcloud_vod_procedure_template
 
-Provide a resource to create a vod procedure template.
+Provide a resource to create a VOD procedure template.
 
 ## Example Usage
 
@@ -18,8 +18,8 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive"
   drm_type                        = "SimpleAES"
-  disable_higher_video_bitrate    = 0
-  disable_higher_video_resolution = 0
+  disable_higher_video_bitrate    = false
+  disable_higher_video_resolution = false
   comment                         = "test"
 
   stream_info {
@@ -33,7 +33,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 128
       sample_rate = 32000
     }
-    remove_audio = 1
+    remove_audio = true
   }
   stream_info {
     video {
@@ -46,7 +46,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 256
       sample_rate = 44100
     }
-    remove_audio = 1
+    remove_audio = true
   }
 }
 
@@ -54,7 +54,7 @@ resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
   name                = "tf-snapshot"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
   format              = "png"
   comment             = "test"
   fill_type           = "white"
@@ -70,7 +70,7 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   fill_type           = "stretch"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
 }
 
 resource "tencentcloud_vod_procedure_template" "foo" {

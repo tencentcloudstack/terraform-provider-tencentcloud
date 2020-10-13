@@ -6,8 +6,8 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive"
   drm_type                        = "SimpleAES"
-  disable_higher_video_bitrate    = 0
-  disable_higher_video_resolution = 0
+  disable_higher_video_bitrate    = false
+  disable_higher_video_resolution = false
   comment                         = "test"
 
   stream_info {
@@ -15,7 +15,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       codec               = "libx265"
       fps                 = 4
       bitrate             = 129
-      resolution_adaptive = "close"
+      resolution_adaptive = false
       width               = 128
       height              = 128
       fill_type           = "stretch"
@@ -26,7 +26,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       sample_rate   = 44100
       audio_channel = "dual"
     }
-    remove_audio = 0
+    remove_audio = false
   }
   stream_info {
     video {
@@ -53,14 +53,14 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   fill_type           = "stretch"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
 }
 
 resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
   name                = "tf-snapshot"
   width               = 130
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
   format              = "png"
   comment             = "test"
   fill_type           = "white"
@@ -68,7 +68,7 @@ resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
 
 resource "tencentcloud_vod_super_player_config" "foo" {
   name                    = "tf-super-player"
-  drm_switch              = "ON"
+  drm_switch              = true
   drm_streaming_info {
     simple_aes_definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
   }

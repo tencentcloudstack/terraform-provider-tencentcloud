@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vod_adaptive_dynamic_streaming_template"
 sidebar_current: "docs-tencentcloud-resource-vod_adaptive_dynamic_streaming_template"
 description: |-
-  Provide a resource to create a vod adaptive dynamic streaming template.
+  Provide a resource to create a VOD adaptive dynamic streaming template.
 ---
 
 # tencentcloud_vod_adaptive_dynamic_streaming_template
 
-Provide a resource to create a vod adaptive dynamic streaming template.
+Provide a resource to create a VOD adaptive dynamic streaming template.
 
 ## Example Usage
 
@@ -18,8 +18,8 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive"
   drm_type                        = "SimpleAES"
-  disable_higher_video_bitrate    = 0
-  disable_higher_video_resolution = 0
+  disable_higher_video_bitrate    = false
+  disable_higher_video_resolution = false
   comment                         = "test"
 
   stream_info {
@@ -33,7 +33,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 128
       sample_rate = 32000
     }
-    remove_audio = 1
+    remove_audio = true
   }
   stream_info {
     video {
@@ -46,7 +46,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 256
       sample_rate = 44100
     }
-    remove_audio = 1
+    remove_audio = true
   }
 }
 ```
@@ -59,8 +59,8 @@ The following arguments are supported:
 * `name` - (Required) Template name. Length limit: 64 characters.
 * `stream_info` - (Required) List of AdaptiveStreamTemplate parameter information of output substream for adaptive bitrate streaming. Up to 10 substreams can be output. Note: the frame rate of all substreams must be the same; otherwise, the frame rate of the first substream will be used as the output frame rate.
 * `comment` - (Optional) Template description. Length limit: 256 characters.
-* `disable_higher_video_bitrate` - (Optional) Whether to prohibit transcoding video from low bitrate to high bitrate. Valid values: `0`: no, `1`: yes. Default value: `0`.
-* `disable_higher_video_resolution` - (Optional) Whether to prohibit transcoding from low resolution to high resolution. Valid values: `0`: no, `1`: yes. Default value: `0`.
+* `disable_higher_video_bitrate` - (Optional) Whether to prohibit transcoding video from low bitrate to high bitrate. Valid values: `false`: no, `true`: yes. Default value: `false`.
+* `disable_higher_video_resolution` - (Optional) Whether to prohibit transcoding from low resolution to high resolution. Valid values: `false`: no, `true`: yes. Default value: `false`.
 * `drm_type` - (Optional, ForceNew) DRM scheme type. Valid values: `SimpleAES`. If this field is an empty string, DRM will not be performed on the video.
 * `sub_app_id` - (Optional) Subapplication ID in VOD. If you need to access a resource in a subapplication, enter the subapplication ID in this field; otherwise, leave it empty.
 
@@ -75,7 +75,7 @@ The `stream_info` object supports the following:
 
 * `audio` - (Required) Audio parameter information.
 * `video` - (Required) Video parameter information.
-* `remove_audio` - (Optional) Whether to remove audio stream. Valid values: `0`: no, `1`: yes. `0` by default.
+* `remove_audio` - (Optional) Whether to remove audio stream. Valid values: `false`: no, `true`: yes. `false` by default.
 
 The `video` object supports the following:
 
@@ -84,7 +84,7 @@ The `video` object supports the following:
 * `fps` - (Required) Video frame rate in Hz. Value range: `[0, 60]`. If the value is `0`, the frame rate will be the same as that of the source video.
 * `fill_type` - (Optional) Fill type. Fill refers to the way of processing a screenshot when its aspect ratio is different from that of the source video. The following fill types are supported: `stretch`: stretch. The screenshot will be stretched frame by frame to match the aspect ratio of the source video, which may make the screenshot shorter or longer; `black`: fill with black. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with black color blocks. Default value: black. Note: this field may return null, indicating that no valid values can be obtained.
 * `height` - (Optional) Maximum value of the height (or short side) of a video stream in px. Value range: `0` and `[128, 4096]`. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, `width` will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used. Default value: `0`. Note: this field may return null, indicating that no valid values can be obtained.
-* `resolution_adaptive` - (Optional) Resolution adaption. Valid values: `open`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `close`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `open`. Note: this field may return null, indicating that no valid values can be obtained.
+* `resolution_adaptive` - (Optional) Resolution adaption. Valid values: `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `true`. Note: this field may return null, indicating that no valid values can be obtained.
 * `width` - (Optional) Maximum value of the width (or long side) of a video stream in px. Value range: `0` and `[128, 4096]`. If both `width` and `height` are `0`, the resolution will be the same as that of the source video; If `width` is `0`, but `height` is not `0`, `width` will be proportionally scaled; If `width` is not `0`, but `height` is `0`, `height` will be proportionally scaled; If both `width` and `height` are not `0`, the custom resolution will be used. Default value: `0`. Note: this field may return null, indicating that no valid values can be obtained.
 
 ## Attributes Reference

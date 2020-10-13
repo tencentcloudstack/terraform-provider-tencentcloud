@@ -26,7 +26,7 @@ func TestAccDataSourceTencentCloudVodImageSpriteTemplates(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_image_sprite_templates.foo", "template_list.0.fill_type", "stretch"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_image_sprite_templates.foo", "template_list.0.width", "128"),
 					resource.TestCheckResourceAttr("data.tencentcloud_vod_image_sprite_templates.foo", "template_list.0.height", "128"),
-					resource.TestCheckResourceAttr("data.tencentcloud_vod_image_sprite_templates.foo", "template_list.0.resolution_adaptive", "close"),
+					resource.TestCheckResourceAttr("data.tencentcloud_vod_image_sprite_templates.foo", "template_list.0.resolution_adaptive", "false"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_vod_image_sprite_templates.foo", "template_list.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_vod_image_sprite_templates.foo", "template_list.0.update_time"),
 				),

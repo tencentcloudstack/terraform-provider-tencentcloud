@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vod_super_player_config"
 sidebar_current: "docs-tencentcloud-resource-vod_super_player_config"
 description: |-
-  Provide a resource to create a vod super player config.
+  Provide a resource to create a VOD super player config.
 ---
 
 # tencentcloud_vod_super_player_config
 
-Provide a resource to create a vod super player config.
+Provide a resource to create a VOD super player config.
 
 ## Example Usage
 
@@ -18,8 +18,8 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive"
   drm_type                        = "SimpleAES"
-  disable_higher_video_bitrate    = 0
-  disable_higher_video_resolution = 0
+  disable_higher_video_bitrate    = false
+  disable_higher_video_resolution = false
   comment                         = "test"
 
   stream_info {
@@ -33,7 +33,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 128
       sample_rate = 32000
     }
-    remove_audio = 1
+    remove_audio = true
   }
   stream_info {
     video {
@@ -46,7 +46,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 256
       sample_rate = 44100
     }
-    remove_audio = 1
+    remove_audio = true
   }
 }
 
@@ -60,12 +60,12 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   fill_type           = "stretch"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
 }
 
 resource "tencentcloud_vod_super_player_config" "foo" {
   name       = "tf-super-player"
-  drm_switch = "ON"
+  drm_switch = true
   drm_streaming_info {
     simple_aes_definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
   }
@@ -89,11 +89,11 @@ resource "tencentcloud_vod_super_player_config" "foo" {
 The following arguments are supported:
 
 * `name` - (Required, ForceNew) Player configuration name, which can contain up to 64 letters, digits, underscores, and hyphens (such as test_ABC-123) and must be unique under a user.
-* `adaptive_dynamic_streaming_definition` - (Optional) ID of the unencrypted adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `OFF`.
+* `adaptive_dynamic_streaming_definition` - (Optional) ID of the unencrypted adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `false`.
 * `comment` - (Optional) Template description. Length limit: 256 characters.
 * `domain` - (Optional) Domain name used for playback. If it is left empty or set to `Default`, the domain name configured in [Default Distribution Configuration](https://cloud.tencent.com/document/product/266/33373) will be used. `Default` by default.
-* `drm_streaming_info` - (Optional) Content of the DRM-protected adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `ON`.
-* `drm_switch` - (Optional) Switch of DRM-protected adaptive bitstream playback: `ON`: enabled, indicating to play back only output adaptive bitstreams protected by DRM; `OFF`: disabled, indicating to play back unencrypted output adaptive bitstreams. Default value: `OFF`.
+* `drm_streaming_info` - (Optional) Content of the DRM-protected adaptive bitrate streaming template that allows output, which is required if `drm_switch` is `true`.
+* `drm_switch` - (Optional) Switch of DRM-protected adaptive bitstream playback: `true`: enabled, indicating to play back only output adaptive bitstreams protected by DRM; `false`: disabled, indicating to play back unencrypted output adaptive bitstreams. Default value: `false`.
 * `image_sprite_definition` - (Optional) ID of the image sprite template that allows output.
 * `resolution_names` - (Optional) Display name of player for substreams with different resolutions. If this parameter is left empty or an empty array, the default configuration will be used: `min_edge_length: 240, name: LD`; `min_edge_length: 480, name: SD`; `min_edge_length: 720, name: HD`; `min_edge_length: 1080, name: FHD`; `min_edge_length: 1440, name: 2K`; `min_edge_length: 2160, name: 4K`; `min_edge_length: 4320, name: 8K`.
 * `scheme` - (Optional) Scheme used for playback. If it is left empty or set to `Default`, the scheme configured in [Default Distribution Configuration](https://cloud.tencent.com/document/product/266/33373) will be used. Other valid values: `HTTP`; `HTTPS`.

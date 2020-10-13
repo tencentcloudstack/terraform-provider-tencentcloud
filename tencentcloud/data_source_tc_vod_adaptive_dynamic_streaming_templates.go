@@ -1,5 +1,5 @@
 /*
-Use this data source to query detailed information of Vod adaptive dynamic streaming templates.
+Use this data source to query detailed information of VOD adaptive dynamic streaming templates.
 
 Example Usage
 
@@ -8,8 +8,8 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive"
   drm_type                        = "SimpleAES"
-  disable_higher_video_bitrate    = 0
-  disable_higher_video_resolution = 0
+  disable_higher_video_bitrate    = false
+  disable_higher_video_resolution = false
   comment                         = "test"
 
   stream_info {
@@ -23,7 +23,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 128
       sample_rate = 32000
     }
-    remove_audio = 1
+    remove_audio = true
   }
   stream_info {
     video {
@@ -36,7 +36,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 256
       sample_rate = 44100
     }
-    remove_audio = 1
+    remove_audio = true
   }
 }
 
@@ -115,14 +115,14 @@ func dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplates() *schema.Resour
 							Description: "DRM scheme type.",
 						},
 						"disable_higher_video_bitrate": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Whether to prohibit transcoding video from low bitrate to high bitrate. `0`: no, `1`: yes.",
+							Description: "Whether to prohibit transcoding video from low bitrate to high bitrate. `false`: no, `true`: yes.",
 						},
 						"disable_higher_video_resolution": {
-							Type:        schema.TypeInt,
+							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Whether to prohibit transcoding from low resolution to high resolution. `0`: no, `1`: yes.",
+							Description: "Whether to prohibit transcoding from low resolution to high resolution. `false`: no, `true`: yes.",
 						},
 						"comment": {
 							Type:        schema.TypeString,
@@ -157,9 +157,9 @@ func dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplates() *schema.Resour
 													Description: "Bitrate of video stream in Kbps. Value range: `0` and `[128, 35000]`. If the value is `0`, the bitrate of the video will be the same as that of the source video.",
 												},
 												"resolution_adaptive": {
-													Type:        schema.TypeString,
+													Type:        schema.TypeBool,
 													Computed:    true,
-													Description: "Resolution adaption. Valid values: `open`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `close`: disabled. In this case, `width` represents the width of a video, while `height` the height. Note: this field may return null, indicating that no valid values can be obtained.",
+													Description: "Resolution adaption. Valid values: `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height. Note: this field may return null, indicating that no valid values can be obtained.",
 												},
 												"width": {
 													Type:        schema.TypeInt,
@@ -209,9 +209,9 @@ func dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplates() *schema.Resour
 										},
 									},
 									"remove_audio": {
-										Type:        schema.TypeInt,
+										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "Whether to remove audio stream. `0`: no, `1`: yes.",
+										Description: "Whether to remove audio stream. `false`: no, `true`: yes.",
 									},
 								},
 							},
@@ -262,14 +262,15 @@ func dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplatesRead(d *schema.Re
 	ids := make([]string, 0, len(templates))
 	for _, item := range templates {
 		templatesList = append(templatesList, func() map[string]interface{} {
+			definitionStr := strconv.FormatUint(*item.Definition, 10)
 			mapping := map[string]interface{}{
-				"definition":                      strconv.FormatUint(*item.Definition, 10),
+				"definition":                      definitionStr,
 				"type":                            item.Type,
 				"format":                          item.Format,
 				"name":                            item.Name,
 				"drm_type":                        item.DrmType,
-				"disable_higher_video_bitrate":    item.DisableHigherVideoBitrate,
-				"disable_higher_video_resolution": item.DisableHigherVideoResolution,
+				"disable_higher_video_bitrate":    *item.DisableHigherVideoBitrate == 1,
+				"disable_higher_video_resolution": *item.DisableHigherVideoResolution == 1,
 				"comment":                         item.Comment,
 				"create_time":                     item.CreateTime,
 				"update_time":                     item.UpdateTime,
@@ -282,7 +283,7 @@ func dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplatesRead(d *schema.Re
 							"codec":               v.Video.Codec,
 							"fps":                 v.Video.Fps,
 							"bitrate":             v.Video.Bitrate,
-							"resolution_adaptive": v.Video.ResolutionAdaptive,
+							"resolution_adaptive": *v.Video.ResolutionAdaptive == "open",
 							"width":               v.Video.Width,
 							"height":              v.Video.Height,
 							"fill_type":           v.Video.FillType,
@@ -296,11 +297,11 @@ func dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplatesRead(d *schema.Re
 							"audio_channel": VOD_AUDIO_CHANNEL_TYPE_TO_STRING[*v.Audio.AudioChannel],
 						},
 					},
-					"remove_audio": v.RemoveAudio,
+					"remove_audio": *v.RemoveAudio == 1,
 				})
 			}
 			mapping["stream_info"] = streamInfos
-			ids = append(ids, strconv.FormatUint(*item.Definition, 10))
+			ids = append(ids, definitionStr)
 			return mapping
 		}())
 	}

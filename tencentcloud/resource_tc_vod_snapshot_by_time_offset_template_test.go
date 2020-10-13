@@ -22,7 +22,7 @@ func TestAccTencentCloudVodSnapshotByTimeOffsetTemplateResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "name", "tf-snapshot"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "width", "128"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "height", "128"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "resolution_adaptive", "close"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "resolution_adaptive", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "format", "png"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "comment", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "fill_type", "white"),
@@ -36,7 +36,7 @@ func TestAccTencentCloudVodSnapshotByTimeOffsetTemplateResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "name", "tf-snapshot-update"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "width", "129"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "height", "129"),
-					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "resolution_adaptive", "open"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "resolution_adaptive", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "format", "jpg"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "comment", "test-update"),
 					resource.TestCheckResourceAttr("tencentcloud_vod_snapshot_by_time_offset_template.foo", "fill_type", "gauss"),
@@ -107,7 +107,7 @@ resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
   name                = "tf-snapshot"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
   format              = "png"
   comment             = "test"
   fill_type           = "white"
@@ -119,7 +119,7 @@ resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
   name                = "tf-snapshot-update"
   width               = 129
   height              = 129
-  resolution_adaptive = "open"
+  resolution_adaptive = true
   format              = "jpg"
   comment             = "test-update"
   fill_type           = "gauss"

@@ -22,6 +22,26 @@ var (
 		2: VOD_AUDIO_CHANNEL_DUAL,
 		6: VOD_AUDIO_CHANNEL_STEREO,
 	}
+	DISABLE_HIGHER_VIDEO_BITRATE_TO_UNINT = map[bool]uint64{
+		true:  1,
+		false: 0,
+	}
+	DISABLE_HIGHER_VIDEO_RESOLUTION_TO_UNINT = map[bool]uint64{
+		true:  1,
+		false: 0,
+	}
+	RESOLUTION_ADAPTIVE_TO_STRING = map[bool]string{
+		true:  "open",
+		false: "close",
+	}
+	REMOVE_AUDIO_TO_UNINT = map[bool]uint64{
+		true:  1,
+		false: 0,
+	}
+	DRM_SWITCH_TO_STRING = map[bool]string{
+		true:  "ON",
+		false: "OFF",
+	}
 )
 
 func VodWatermarkResource() *schema.Resource {

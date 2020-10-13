@@ -1,5 +1,5 @@
 /*
-Provide a resource to create a vod procedure template.
+Provide a resource to create a VOD procedure template.
 
 Example Usage
 
@@ -8,8 +8,8 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
   format                          = "HLS"
   name                            = "tf-adaptive"
   drm_type                        = "SimpleAES"
-  disable_higher_video_bitrate    = 0
-  disable_higher_video_resolution = 0
+  disable_higher_video_bitrate    = false
+  disable_higher_video_resolution = false
   comment                         = "test"
 
   stream_info {
@@ -23,7 +23,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 128
       sample_rate = 32000
     }
-    remove_audio = 1
+    remove_audio = true
   }
   stream_info {
     video {
@@ -36,7 +36,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 256
       sample_rate = 44100
     }
-    remove_audio = 1
+    remove_audio = true
   }
 }
 
@@ -44,7 +44,7 @@ resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
   name                = "tf-snapshot"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
   format              = "png"
   comment             = "test"
   fill_type           = "white"
@@ -60,7 +60,7 @@ resource "tencentcloud_vod_image_sprite_template" "foo" {
   fill_type           = "stretch"
   width               = 128
   height              = 128
-  resolution_adaptive = "close"
+  resolution_adaptive = false
 }
 
 resource "tencentcloud_vod_procedure_template" "foo" {
@@ -871,38 +871,46 @@ func resourceTencentCloudVodProcedureTemplateUpdate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_vod_procedure_template.update")()
 
 	var (
-		logId   = getLogId(contextNil)
-		request = vod.NewResetProcedureTemplateRequest()
-		id      = d.Id()
+		logId      = getLogId(contextNil)
+		request    = vod.NewResetProcedureTemplateRequest()
+		id         = d.Id()
+		changeFlag = false
 	)
 
 	request.Name = &id
 	if d.HasChange("comment") {
+		changeFlag = true
 		request.Comment = helper.String(d.Get("comment").(string))
 	}
 	if d.HasChange("sub_app_id") {
+		changeFlag = true
 		request.SubAppId = helper.IntUint64(d.Get("sub_app_id").(int))
 	}
 	if d.HasChange("media_process_task") {
+		changeFlag = true
 		mediaReq := generateMediaProcessTask(d)
 		request.MediaProcessTask = mediaReq
 	}
 
-	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ResetProcedureTemplate(request)
+	if changeFlag {
+		var err error
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ResetProcedureTemplate(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+				return retryError(err)
+			}
+			return nil
+		})
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		return err
+
+		return resourceTencentCloudVodProcedureTemplateRead(d, meta)
 	}
 
-	return resourceTencentCloudVodProcedureTemplateRead(d, meta)
+	return nil
 }
 
 func resourceTencentCloudVodProcedureTemplateDelete(d *schema.ResourceData, meta interface{}) error {

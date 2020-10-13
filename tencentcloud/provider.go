@@ -806,9 +806,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cynosdb_cluster":                         resourceTencentCloudCynosdbCluster(),
 			"tencentcloud_cynosdb_readonly_instance":               resourceTencentCloudCynosdbReadonlyInstance(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_template": resourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
+			"tencentcloud_vod_image_sprite_template":               resourceTencentCloudVodImageSpriteTemplate(),
 			"tencentcloud_vod_procedure_template":                  resourceTencentCloudVodProcedureTemplate(),
 			"tencentcloud_vod_snapshot_by_time_offset_template":    resourceTencentCloudVodSnapshotByTimeOffsetTemplate(),
-			"tencentcloud_vod_image_sprite_template":               resourceTencentCloudVodImageSpriteTemplate(),
 			"tencentcloud_vod_super_player_config":                 resourceTencentCloudVodSuperPlayerConfig(),
 		},
 
