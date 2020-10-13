@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
   name                = "tf-snapshot"
-  width               = 128
+  width               = 130
   height              = 128
   resolution_adaptive = false
   format              = "png"
@@ -17,7 +17,7 @@ resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
 
 Import
 
-Vod snapshot by time offset template can be imported using the id, e.g.
+VOD snapshot by time offset template can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_vod_snapshot_by_time_offset_template.foo 46906

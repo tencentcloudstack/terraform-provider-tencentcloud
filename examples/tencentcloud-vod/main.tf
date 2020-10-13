@@ -39,7 +39,7 @@ resource "tencentcloud_vod_adaptive_dynamic_streaming_template" "foo" {
       bitrate     = 256
       sample_rate = 44100
     }
-    remove_audio = 1
+    remove_audio = true
   }
 }
 

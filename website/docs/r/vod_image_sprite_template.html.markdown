@@ -55,7 +55,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-Vod image sprite template can be imported using the id, e.g.
+VOD image sprite template can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_vod_image_sprite_template.foo 51156

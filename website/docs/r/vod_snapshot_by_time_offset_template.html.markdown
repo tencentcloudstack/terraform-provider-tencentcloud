@@ -16,7 +16,7 @@ Provide a resource to create a VOD snapshot by time offset template.
 ```hcl
 resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
   name                = "tf-snapshot"
-  width               = 128
+  width               = 130
   height              = 128
   resolution_adaptive = false
   format              = "png"
@@ -49,7 +49,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-Vod snapshot by time offset template can be imported using the id, e.g.
+VOD snapshot by time offset template can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_vod_snapshot_by_time_offset_template.foo 46906
