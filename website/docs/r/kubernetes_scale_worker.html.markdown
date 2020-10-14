@@ -11,6 +11,8 @@ description: |-
 
 Provide a resource to increase instance to cluster
 
+~> **NOTE:** "extra_args" needs to be whitelist.
+
 ## Example Usage
 
 ```hcl
@@ -53,12 +55,59 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 }
 ```
 
+Use Kubelet
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "subnet" {
+  default = "subnet-pqfek0t8"
+}
+
+variable "scale_instance_type" {
+  default = "S2.LARGE16"
+}
+
+resource tencentcloud_kubernetes_scale_worker test_scale {
+  cluster_id = "cls-godovr32"
+
+  extra_args = [
+    "root-dir=/var/lib/kubelet"
+  ]
+
+  worker_config {
+    count                      = 3
+    availability_zone          = var.availability_zone
+    instance_type              = var.scale_instance_type
+    subnet_id                  = var.subnet
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 50
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "AABBccdd1122"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
 * `worker_config` - (Required, ForceNew) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.
+* `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
 
 The `data_disk` object supports the following:
 

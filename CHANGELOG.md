@@ -1,4 +1,10 @@
 ## 1.44.1 (Unreleased)
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_cluster` add new argument `extra_args` to support Kubelet.
+* Resource: `tencentcloud_kubernetes_scale_worker` add new argument `extra_args` to support Kubelet.
+* Resource: `tencentcloud_kubernetes_as_scaling_group` add new argument `extra_args` to support Kubelet.
+
 ## 1.44.0 (September 25, 2020)
 
 FEATURES:

@@ -160,6 +160,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 32
   cluster_internet                           = true
+  cluster_version		  					 = "1.18.4"
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
@@ -194,6 +195,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     "test1" = "test1",
     "test2" = "test2",
   }
+  extra_args = [
+ 	"root-dir=/var/lib/kubelet"
+  ]
 }
 `, key, value,
 	)

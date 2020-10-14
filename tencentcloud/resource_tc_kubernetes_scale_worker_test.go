@@ -153,6 +153,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_cidr            = "192.168.0.0/16"
   cluster_max_pod_num     = 32
   cluster_name            = "test"
+  cluster_version		  = "1.18.4"
   cluster_desc            = "test cluster desc"
   cluster_max_service_num = 32
 
@@ -183,6 +184,10 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
 resource tencentcloud_kubernetes_scale_worker test_scale {
   cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
+  
+  extra_args = [
+ 	"root-dir=/var/lib/kubelet"
+  ]	
 
   worker_config {
     count                      				= 1

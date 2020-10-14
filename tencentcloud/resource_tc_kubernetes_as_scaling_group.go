@@ -1,6 +1,8 @@
 /*
 Provide a resource to create an auto scaling group for kubernetes cluster.
 
+~> **NOTE:** "extra_args" needs to be whitelist.
+
 Example Usage
 
 ```hcl
@@ -52,6 +54,69 @@ resource "tencentcloud_kubernetes_as_scaling_group" "test" {
     }
 
   }
+
+  labels = {
+    "test1" = "test1",
+    "test1" = "test2",
+  }
+}
+```
+
+Use Kubelet
+
+```hcl
+
+resource "tencentcloud_kubernetes_as_scaling_group" "test" {
+
+  cluster_id = "cls-kb32pbv4"
+
+  auto_scaling_group {
+    scaling_group_name   = "tf-guagua-as-group"
+    max_size             = "5"
+    min_size             = "0"
+    vpc_id               = "vpc-dk8zmwuf"
+    subnet_ids           = ["subnet-pqfek0t8"]
+    project_id           = 0
+    default_cooldown     = 400
+    desired_capacity     = "0"
+    termination_policies = ["NEWEST_INSTANCE"]
+    retry_policy         = "INCREMENTAL_INTERVALS"
+
+    tags = {
+      "test" = "test"
+    }
+
+  }
+
+
+  auto_scaling_config {
+    configuration_name = "tf-guagua-as-config"
+    instance_type      = "S1.SMALL1"
+    project_id         = 0
+    system_disk_type   = "CLOUD_PREMIUM"
+    system_disk_size   = "50"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+
+    instance_tags = {
+      tag = "as"
+    }
+
+  }
+
+  extra_args = [
+ 	"root-dir=/var/lib/kubelet"
+  ]
 
   labels = {
     "test1" = "test1",
@@ -112,6 +177,13 @@ func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Description: "Labels of kubernetes AS Group created nodes.",
+			},
+			"extra_args": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Custom parameter information related to the node.",
 			},
 		},
 	}
@@ -756,6 +828,7 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 		groupParas  = d.Get("auto_scaling_group").([]interface{})
 		configParas = d.Get("auto_scaling_config").([]interface{})
 		asService   = AsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		iAdvanced   InstanceAdvancedSettings
 	)
 	if len(groupParas) != 1 || len(configParas) != 1 {
 		return fmt.Errorf("need only one auto_scaling_group and one auto_scaling_config")
@@ -773,9 +846,16 @@ func resourceKubernetesAsScalingGroupCreate(d *schema.ResourceData, meta interfa
 
 	labels := GetTkeLabels(d, "labels")
 
+	if temp, ok := d.GetOk("extra_args"); ok {
+		extraArgs := helper.InterfacesStrings(temp.([]interface{}))
+		for _, extraArg := range extraArgs {
+			iAdvanced.ExtraArgs.Kubelet = append(iAdvanced.ExtraArgs.Kubelet, &extraArg)
+		}
+	}
+
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	asGroupId, err := service.CreateClusterAsGroup(ctx, clusterId, groupParaStr, configParaStr, labels)
+	asGroupId, err := service.CreateClusterAsGroup(ctx, clusterId, groupParaStr, configParaStr, labels, iAdvanced)
 	if err != nil {
 		return err
 	}
