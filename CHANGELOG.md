@@ -2,16 +2,22 @@
 
 FEATURES:
 
-* **New Resource**: `tencentcloud_vod_adaptive_dynamic_streaming_template`
+* **New Resource**: `tencentcloud_vod_adaptive_dynamic_streaming_template`.
 * **New Resource**: `tencentcloud_vod_procedure_template`.
 * **New Resource**: `tencentcloud_vod_snapshot_by_time_offset_template`.
 * **New Resource**: `tencentcloud_vod_image_sprite_template`.
 * **New Resource**: `tencentcloud_vod_super_player_config`.
-* **New Data Source**: `tencentcloud_vod_adaptive_dynamic_streaming_templates`
+* **New Data Source**: `tencentcloud_vod_adaptive_dynamic_streaming_templates`.
 * **New Data Source**: `tencentcloud_vod_image_sprite_templates`.
 * **New Data Source**: `tencentcloud_vod_procedure_templates`.
 * **New Data Source**: `tencentcloud_vod_snapshot_by_time_offset_templates`.
 * **New Data Source**: `tencentcloud_vod_super_player_configs`.
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_mysql_instance` modify argument `engine_version` to support mysql 8.0.
+* Resource: `tencentcloud_clb_listener_rule` add new argument `forward_type` to support backend protocol([#522](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/522))
+* Resource: `tencentcloud_instance` add new argument `keep_image_login` to support keeping image login.
 
 ## 1.44.0 (September 25, 2020)
 

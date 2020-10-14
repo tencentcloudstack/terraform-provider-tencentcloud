@@ -25,7 +25,7 @@ data "tencentcloud_mysql_instance" "database" {
 The following arguments are supported:
 
 * `charge_type` - (Optional) Pay type of instance, valid values are `PREPAID` and `POSTPAID`.
-* `engine_version` - (Optional) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.
+* `engine_version` - (Optional) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0.
 * `init_flag` - (Optional) Initialization mark. Available values: 0 - Uninitialized; 1 - Initialized.
 * `instance_name` - (Optional) Name of mysql instance.
 * `instance_role` - (Optional) Instance type. Supported values include: master - master instance, dr - disaster recovery instance, and ro - read-only instance.
@@ -52,7 +52,7 @@ In addition to all arguments above, the following attributes are exported:
   * `dead_line_time` - Expire date of instance. NOTES: Only supported prepay instance.
   * `device_type` - Supported instance model.HA - high available version; Basic - basic version.
   * `dr_instance_ids` - ID list of disaster-recovery type associated with the current instance.
-  * `engine_version` - The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.
+  * `engine_version` - The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0.
   * `init_flag` - Initialization mark. Available values: 0 - Uninitialized; 1 - Initialized.
   * `instance_name` - Name of mysql instance.
   * `instance_role` - Instance type. Supported values include: master - master instance, dr - disaster recovery instance, and ro - read-only instance.
