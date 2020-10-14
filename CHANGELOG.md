@@ -3,6 +3,7 @@
 ENHANCEMENTS:
 
 * Resource: `tencentcloud_clb_listener_rule` add new argument `forward_type` to support backend protocol([#522](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/522))
+* Resource: `tencentcloud_instance` add new argument `keep_image_login` to support keeping image login.
 
 ## 1.44.0 (September 25, 2020)
 
