@@ -11,7 +11,6 @@ description: |-
 
 Provide a resource to create an auto scaling group for kubernetes cluster.
 
-~> **NOTE:** "extra_args" needs to be whitelist.
 ~> **NOTE:** To use the custom Kubernetes component startup parameter function, you need to submit a ticket for application.
 
 ## Example Usage
