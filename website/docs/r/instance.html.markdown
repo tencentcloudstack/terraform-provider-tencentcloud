@@ -95,7 +95,7 @@ The following arguments are supported:
 * `instance_type` - (Optional) The type of the instance.
 * `internet_charge_type` - (Optional, ForceNew) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value does not need to be set when `allocate_public_ip` is false.
 * `internet_max_bandwidth_out` - (Optional) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). This value does not need to be set when `allocate_public_ip` is false.
-* `keep_image_login` - (Optional, ForceNew) Whether to keep image login or not, default is `false`. It can be set `true` with private images, shared images and imported images.
+* `keep_image_login` - (Optional, ForceNew) Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`.
 * `key_name` - (Optional) The key pair to use for the instance, it looks like `skey-16jig7tx`.
 * `password` - (Optional) Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change.
 * `placement_group_id` - (Optional, ForceNew) The ID of a placement group.

@@ -344,7 +344,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Default:       false,
 				ForceNew:      true,
 				ConflictsWith: []string{"key_name", "password"},
-				Description:   "Whether to keep image login or not, default is `false`. It can be set `true` with private images, shared images and imported images.",
+				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`.",
 			},
 			"user_data": {
 				Type:          schema.TypeString,
