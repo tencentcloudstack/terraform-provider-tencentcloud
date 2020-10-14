@@ -252,7 +252,7 @@ func TestAccTencentCloudInstanceWithImageLogin(t *testing.T) {
 		CheckDestroy:  testAccCheckInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudInstanceWithImageLogin(),
+				Config: testAccTencentCloudInstanceWithImageLogin,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(id),
 					testAccCheckTencentCloudInstanceExists(id),
@@ -682,8 +682,7 @@ resource "tencentcloud_instance" "foo" {
 	)
 }
 
-func testAccTencentCloudInstanceWithImageLogin() string {
-	return defaultInstanceVariable + `
+const testAccTencentCloudInstanceWithImageLogin = defaultInstanceVariable + `
 data "tencentcloud_images" "zoo" {
   image_type = ["PRIVATE_IMAGE"]
   os_name    = "centos"
@@ -698,7 +697,6 @@ resource "tencentcloud_instance" "foo" {
   system_disk_type           = "CLOUD_PREMIUM"
 }
 `
-}
 
 func testAccTencentCloudInstanceWithName(instanceName string) string {
 	return fmt.Sprintf(
