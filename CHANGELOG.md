@@ -1,10 +1,3 @@
-## 1.45.1 (Unreleased)
-ENHANCEMENTS:
-
-* Resource: `tencentcloud_kubernetes_cluster` add new argument `extra_args` to support Kubelet.
-* Resource: `tencentcloud_kubernetes_scale_worker` add new argument `extra_args` to support Kubelet.
-* Resource: `tencentcloud_kubernetes_as_scaling_group` add new argument `extra_args` to support Kubelet.
-
 ## 1.45.0 (Unreleased)
 
 FEATURES:
@@ -25,6 +18,9 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_mysql_instance` modify argument `engine_version` to support mysql 8.0.
 * Resource: `tencentcloud_clb_listener_rule` add new argument `forward_type` to support backend protocol([#522](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/522))
 * Resource: `tencentcloud_instance` add new argument `keep_image_login` to support keeping image login.
+* Resource: `tencentcloud_kubernetes_cluster` add new argument `extra_args` to support Kubelet.
+* Resource: `tencentcloud_kubernetes_scale_worker` add new argument `extra_args` to support Kubelet.
+* Resource: `tencentcloud_kubernetes_as_scaling_group` add new argument `extra_args` to support Kubelet.
 
 ## 1.44.0 (September 25, 2020)
 
