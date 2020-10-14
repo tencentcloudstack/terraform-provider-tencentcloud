@@ -107,51 +107,51 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The Image to use for the instance. Change 'image_id' will case instance destroy and re-created.",
+				Description: "The image to use for the instance. Changing `image_id` will cause the instance to be destroyed and re-created.",
 			},
 			"availability_zone": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The available zone that the CVM instance locates at.",
+				Description: "The available zone for the CVM instance.",
 			},
 			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "Terraform-CVM-Instance",
 				ValidateFunc: validateStringLengthInRange(2, 128),
-				Description:  "The name of the CVM. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.",
+				Description:  "The name of the instance. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.",
 			},
 			"instance_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateInstanceType,
-				Description:  "The type of instance to start.",
+				Description:  "The type of the instance.",
 			},
 			"hostname": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "The hostname of CVM. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-).",
+				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-).",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
-				Description: "The project CVM belongs to, default to 0.",
+				Description: "The project the instance belongs to, default to 0.",
 			},
 			"running_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Set instance to running or stop. Default value is true, the instance will shutdown when flag is false.",
+				Description: "Set instance to running or stop. Default value is true, the instance will shutdown when this flag is false.",
 			},
 			"placement_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "The id of a placement group.",
+				Description: "The ID of a placement group.",
 			},
 			// payment
 			"instance_charge_type": {
@@ -186,7 +186,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateStringNumber,
-				Description:  "Max price of spot instance, is the format of decimal string, for example \"0.50\". Note: it only works when instance_charge_type is set to `SPOTPAID`.",
+				Description:  "Max price of a spot instance, is the format of decimal string, for example \"0.50\". Note: it only works when instance_charge_type is set to `SPOTPAID`.",
 			},
 			// network
 			"internet_charge_type": {
@@ -201,33 +201,33 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bit per second). This value does not need to be set when `allocate_public_ip` is false.",
+				Description: "Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). This value does not need to be set when `allocate_public_ip` is false.",
 			},
 			"allocate_public_ip": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
 				ForceNew:    true,
-				Description: "Associate a public ip address with an instance in a VPC or Classic. Boolean value, Default is false.",
+				Description: "Associate a public IP address with an instance in a VPC or Classic. Boolean value, Default is false.",
 			},
 			// vpc
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "The id of a VPC network. If you want to create instances in VPC network, this parameter must be set.",
+				Description: "The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "The id of a VPC subnetwork. If you want to create instances in VPC network, this parameter must be set.",
+				Description: "The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.",
 			},
 			"private_ip": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "The private ip to be assigned to this instance, must be in the provided subnet and available.",
+				Description: "The private IP to be assigned to this instance, must be in the provided subnet and available.",
 			},
 			// security group
 			"security_groups": {
@@ -235,7 +235,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
 				Computed:    true,
-				Description: "A list of security group ids to associate with.",
+				Description: "A list of security group IDs to associate with.",
 			},
 			// storage
 			"system_disk_type": {
@@ -252,7 +252,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Default:      50,
 				ForceNew:     true,
 				ValidateFunc: validateIntegerInRange(50, 1000),
-				Description:  "Size of the system disk. Value range: [50, 1000], and unit is GB. Default is 50GB.",
+				Description:  "Size of the system disk. Value range: [50, 1000], and the unit is GB. Default is 50GB.",
 			},
 			"system_disk_id": {
 				Type:        schema.TypeString,
@@ -266,7 +266,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "Settings for data disk.",
+				Description: "Settings for data disks.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"data_disk_type": {
@@ -330,27 +330,35 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "The key pair to use for the instance, it looks like skey-16jig7tx.",
+				Description: "The key pair to use for the instance, it looks like `skey-16jig7tx`.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				Description: "Password to an instance. In order to take effect new password, the instance will be restarted after modifying the password.",
+				Description: "Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change.",
+			},
+			"keep_image_login": {
+				Type:          schema.TypeBool,
+				Optional:      true,
+				Default:       false,
+				ForceNew:      true,
+				ConflictsWith: []string{"key_name", "password"},
+				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`.",
 			},
 			"user_data": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ForceNew:      true,
 				ConflictsWith: []string{"user_data_raw"},
-				Description:   "The user data to be specified into this instance. Must be encrypted in base64 format and limited in 16 KB.",
+				Description:   "The user data to be injected into this instance. Must be base64 encoded and up to 16 KB.",
 			},
 			"user_data_raw": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ForceNew:      true,
 				ConflictsWith: []string{"user_data"},
-				Description:   "The user data to be specified into this instance, plain text. Conflicts with `user_data`. Limited in 16 KB after encrypted in base64 format.",
+				Description:   "The user data to be injected into this instance, in plain text. Conflicts with `user_data`. Up to 16 KB after base64 encoded.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -361,7 +369,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be permanently deleted instead of staying in recycle bin. Note: only works for `PREPAID` instance.",
+				Description: "Indicate whether to force delete the instance. Default is false. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
 			},
 			// Computed values.
 			"instance_status": {
@@ -372,7 +380,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 			"public_ip": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Public ip of the instance.",
+				Description: "Public IP of the instance.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -553,6 +561,12 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	}
 	if v, ok := d.GetOk("password"); ok {
 		request.LoginSettings.Password = helper.String(v.(string))
+	}
+	v := d.Get("keep_image_login").(bool)
+	if v {
+		request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN)
+	} else {
+		request.LoginSettings.KeepImageLogin = helper.String(CVM_IMAGE_LOGIN_NOT)
 	}
 
 	if v, ok := d.GetOk("user_data"); ok {
@@ -777,6 +791,9 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("key_name", instance.LoginSettings.KeyIds[0])
 	} else {
 		_ = d.Set("key_name", "")
+	}
+	if instance.LoginSettings.KeepImageLogin != nil {
+		_ = d.Set("keep_image_login", *instance.LoginSettings.KeepImageLogin == CVM_IMAGE_LOGIN)
 	}
 	if *instance.InstanceState == CVM_STATUS_STOPPED {
 		_ = d.Set("running_flag", false)
