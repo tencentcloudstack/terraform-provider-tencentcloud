@@ -11,7 +11,7 @@ description: |-
 
 Provide a resource to create a kubernetes cluster.
 
-~> **NOTE:** "extra_args" needs to be whitelist. To use the custom Kubernetes component startup parameter function, you need to submit a ticket for application.
+~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
 
 ## Example Usage
 
