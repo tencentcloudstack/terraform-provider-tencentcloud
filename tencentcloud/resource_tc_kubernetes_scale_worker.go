@@ -2,6 +2,7 @@
 Provide a resource to increase instance to cluster
 
 ~> **NOTE:** "extra_args" needs to be whitelist.
+~> **NOTE:** To use the custom Kubernetes component startup parameter function, you need to submit a ticket for application.
 
 Example Usage
 
@@ -100,11 +101,10 @@ import (
 	"log"
 	"strings"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudTkeScaleWorker() *schema.Resource {

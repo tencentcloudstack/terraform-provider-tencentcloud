@@ -128,7 +128,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_name            = "tf-tke-unit-test"
   cluster_desc            = "test cluster desc"
   cluster_max_service_num = 32
-  cluster_version		  = "1.18.4"
+  cluster_version         = "1.18.4"
 
   worker_config {
     count                      = 1
