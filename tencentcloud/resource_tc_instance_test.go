@@ -241,6 +241,29 @@ func TestAccTencentCloudInstanceWithPassword(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstanceWithImageLogin(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudInstanceWithImageLogin,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+					resource.TestCheckResourceAttr(id, "keep_image_login", "true"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudInstanceWithName(t *testing.T) {
 	t.Parallel()
 
@@ -658,6 +681,22 @@ resource "tencentcloud_instance" "foo" {
 		password,
 	)
 }
+
+const testAccTencentCloudInstanceWithImageLogin = defaultInstanceVariable + `
+data "tencentcloud_images" "zoo" {
+  image_type = ["PRIVATE_IMAGE"]
+  os_name    = "centos"
+}
+resource "tencentcloud_instance" "foo" {
+  instance_name              = var.instance_name
+  availability_zone          = data.tencentcloud_availability_zones.default.zones.0.name
+  image_id                   = data.tencentcloud_images.zoo.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  internet_max_bandwidth_out = 1
+  keep_image_login 			 = true
+  system_disk_type           = "CLOUD_PREMIUM"
+}
+`
 
 func testAccTencentCloudInstanceWithName(instanceName string) string {
 	return fmt.Sprintf(
