@@ -129,6 +129,7 @@ func resourceTencentCloudClbTargetGroupAttachmentCreate(d *schema.ResourceData, 
 	for _, rule := range listener.Rules {
 		if locationId == *rule.LocationId && (rule.TargetType != nil && *rule.TargetType == CLB_TARGET_TYPE_TARGETGROUP) {
 			isRuleExist = true
+			break
 		}
 	}
 	if !isRuleExist {
