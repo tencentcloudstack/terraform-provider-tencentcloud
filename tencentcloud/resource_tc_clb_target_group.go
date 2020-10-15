@@ -75,13 +75,7 @@ func resourceTencentCloudClbTargetCreate(d *schema.ResourceData, meta interface{
 		err             error
 	)
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		targetGroupId, err = clbService.CreateTargetGroup(ctx, targetGroupName, vpcId, insAttachments)
-		if err != nil {
-			return retryError(err)
-		}
-		return nil
-	})
+	targetGroupId, err = clbService.CreateTargetGroup(ctx, targetGroupName, vpcId, insAttachments)
 	if err != nil {
 		return err
 	}

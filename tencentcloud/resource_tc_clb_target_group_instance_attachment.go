@@ -152,13 +152,8 @@ func resourceTencentCloudClbTGAttachmentInstanceCreate(d *schema.ResourceData, m
 		err           error
 	)
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		err = clbService.RegisterTargetInstances(ctx, targetGroupId, bindIp, uint64(port), uint64(weight))
-		if err != nil {
-			return retryError(err, InternalError)
-		}
-		return nil
-	})
+	err = clbService.RegisterTargetInstances(ctx, targetGroupId, bindIp, uint64(port), uint64(weight))
+
 	if err != nil {
 		return err
 	}
@@ -268,13 +263,8 @@ func resourceTencentCloudClbTGAttachmentInstanceDelete(d *schema.ResourceData, m
 		return err
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		e := clbService.DeregisterTargetInstances(ctx, targetGroupId, bindIp, port)
-		if e != nil {
-			return retryError(e, InternalError)
-		}
-		return nil
-	})
+	err = clbService.DeregisterTargetInstances(ctx, targetGroupId, bindIp, port)
+
 	if err != nil {
 		return err
 	}

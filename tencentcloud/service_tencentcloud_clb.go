@@ -893,6 +893,8 @@ func clbNewTarget(instanceId, port, weight interface{}) *clb.Target {
 
 func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName string, vpcId string,
 	targetGroupInstances []*clb.TargetGroupInstance) (targetGroupId string, err error) {
+	var response *clb.CreateTargetGroupResponse
+
 	request := clb.NewCreateTargetGroupRequest()
 	request.TargetGroupName = &targetGroupName
 	request.TargetGroupInstances = targetGroupInstances
@@ -900,8 +902,13 @@ func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName str
 		request.VpcId = &vpcId
 	}
 
-	response, err := me.client.UseClbClient().CreateTargetGroup(request)
-
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err = me.client.UseClbClient().CreateTargetGroup(request)
+		if err != nil {
+			return retryError(err)
+		}
+		return nil
+	})
 	if err != nil {
 		return
 	}
@@ -925,7 +932,7 @@ func (me *ClbService) ModifyTargetGroup(ctx context.Context, targetGroupId strin
 	return nil
 }
 
-func (me *ClbService) RegisterTargetInstances(ctx context.Context, targetGroupId, bindIp string, port, weight uint64) error {
+func (me *ClbService) RegisterTargetInstances(ctx context.Context, targetGroupId, bindIp string, port, weight uint64) (err error) {
 	request := clb.NewRegisterTargetGroupInstancesRequest()
 	request.TargetGroupId = &targetGroupId
 	request.TargetGroupInstances = []*clb.TargetGroupInstance{
@@ -935,15 +942,21 @@ func (me *ClbService) RegisterTargetInstances(ctx context.Context, targetGroupId
 			Weight: &weight,
 		},
 	}
-
-	_, err := me.client.UseClbClient().RegisterTargetGroupInstances(request)
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseClbClient().RegisterTargetGroupInstances(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
-func (me *ClbService) DeregisterTargetInstances(ctx context.Context, targetGroupId, bindIp string, port uint64) error {
+func (me *ClbService) DeregisterTargetInstances(ctx context.Context, targetGroupId, bindIp string, port uint64) (err error) {
 	request := clb.NewDeregisterTargetGroupInstancesRequest()
 	request.TargetGroupId = &targetGroupId
 	request.TargetGroupInstances = []*clb.TargetGroupInstance{
@@ -953,10 +966,17 @@ func (me *ClbService) DeregisterTargetInstances(ctx context.Context, targetGroup
 		},
 	}
 
-	_, err := me.client.UseClbClient().DeregisterTargetGroupInstances(request)
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseClbClient().DeregisterTargetGroupInstances(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -964,7 +984,13 @@ func (me *ClbService) DeleteTarget(ctx context.Context, targetGroupId string) er
 	request := clb.NewDeleteTargetGroupsRequest()
 	request.TargetGroupIds = []*string{&targetGroupId}
 
-	_, err := me.client.UseClbClient().DeleteTargetGroups(request)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseClbClient().DeleteTargetGroups(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
 	if err != nil {
 		return err
 	}
