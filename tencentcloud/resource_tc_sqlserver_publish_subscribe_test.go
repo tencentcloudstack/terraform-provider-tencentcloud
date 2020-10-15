@@ -97,6 +97,10 @@ func testAccCheckSqlserverPublishSubscribeExists(n string) resource.TestCheckFun
 }
 
 const testAccSqlserverPublishSubscribe_basic = testAccSqlserverInstanceBasic + `
+resource "tencentcloud_security_group" "foo" {
+  name = "test-sg-tf"
+}
+
 resource "tencentcloud_sqlserver_instance" "publish_instance" {
   name                      = "tf_sqlserver_publish_instance"
   availability_zone         = var.availability_zone
@@ -109,7 +113,7 @@ resource "tencentcloud_sqlserver_instance" "publish_instance" {
   maintenance_week_set      = [1,2,3]
   maintenance_start_time    = "09:00"
   maintenance_time_span     = 3
-  security_groups           = ["sg-nltpbqg1"]
+  security_groups           = [tencentcloud_security_group.foo.name]
 }
 
 resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
@@ -124,7 +128,7 @@ resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
   maintenance_week_set      = [1,2,3]
   maintenance_start_time    = "09:00"
   maintenance_time_span     = 3
-  security_groups           = ["sg-nltpbqg1"]
+  security_groups           = [tencentcloud_security_group.foo.name]
 }
 
 resource "tencentcloud_sqlserver_db" "test_publish_subscribe" {
@@ -157,7 +161,7 @@ resource "tencentcloud_sqlserver_instance" "publish_instance" {
   maintenance_week_set          = [1,2,3]
   maintenance_start_time        = "09:00"
   maintenance_time_span         = 3
-  security_groups               = ["sg-nltpbqg1"]
+  security_groups               = [tencentcloud_security_group.foo.name]
 }
 
 resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
@@ -172,7 +176,7 @@ resource "tencentcloud_sqlserver_instance" "subscribe_instance" {
   maintenance_week_set          = [1,2,3]
   maintenance_start_time        = "09:00"
   maintenance_time_span         = 3
-  security_groups               = ["sg-nltpbqg1"]
+  security_groups               = [tencentcloud_security_group.foo.name]
 }
 
 resource "tencentcloud_sqlserver_db" "test_publish_subscribe" {
