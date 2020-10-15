@@ -1124,7 +1124,7 @@ func (me *SqlserverService) DeleteSqlserverDB(ctx context.Context, instanceId st
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseSqlserverClient().DeleteDB(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s %s fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			log.Printf("[CRITAL]%s %s fail, reason:%s", logId, request.GetAction(), e.Error())
 			return retryError(e)
 		}
 		response = result
@@ -1182,10 +1182,7 @@ func (me *SqlserverService) CreateSqlserverPublishSubscribe(ctx context.Context,
 	}
 
 	flowId := int64(*response.Response.FlowId)
-	err := me.WaitForTaskFinish(ctx, flowId)
-	if err != nil {
-		errRet = err
-	}
+	errRet = me.WaitForTaskFinish(ctx, flowId)
 	return
 }
 
@@ -1199,8 +1196,16 @@ func sqlServerNewDatabaseTuple(publishDatabase, subscribeDatabase interface{}) *
 	return &databaseTuple
 }
 
-func (me *SqlserverService) DescribeSqlserverPublishSubscribeById(ctx context.Context, publishInstanceId, subscribeInstanceId string) (instance *sqlserver.PublishSubscribe, has bool, errRet error) {
-	instanceList, err := me.DescribeSqlserverPublishSubscribes(ctx, publishInstanceId, subscribeInstanceId, "", "", "", "", 0)
+func (me *SqlserverService) DescribeSqlserverPublishSubscribeById(ctx context.Context, instanceId, pubOrSubInstanceId string) (instance *sqlserver.PublishSubscribe, has bool, errRet error) {
+	paramMap := make(map[string]interface{})
+	paramMap["instanceId"] = instanceId
+	paramMap["pubOrSubInstanceId"] = pubOrSubInstanceId
+	paramMap["pubOrSubInstanceIp"] = ""
+	paramMap["publishSubscribeName"] = ""
+	paramMap["publishDBName"] = ""
+	paramMap["subscribeDBName"] = ""
+	paramMap["publishSubscribeId"] = *helper.IntUint64(0)
+	instanceList, err := me.DescribeSqlserverPublishSubscribes(ctx, paramMap)
 	if err != nil {
 		errRet = err
 		return
@@ -1216,7 +1221,7 @@ func (me *SqlserverService) DescribeSqlserverPublishSubscribeById(ctx context.Co
 	return
 }
 
-func (me *SqlserverService) DescribeSqlserverPublishSubscribes(ctx context.Context, instanceId, pubOrSubInstanceId, pubOrSubInstanceIp, publishSubscribeName, publishDBName, subscribeDBName string, publishSubscribeId uint64) (publishSubscribeList []*sqlserver.PublishSubscribe, errRet error) {
+func (me *SqlserverService) DescribeSqlserverPublishSubscribes(ctx context.Context, paramMap map[string]interface{}) (publishSubscribeList []*sqlserver.PublishSubscribe, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewDescribePublishSubscribeRequest()
 	defer func() {
@@ -1224,6 +1229,13 @@ func (me *SqlserverService) DescribeSqlserverPublishSubscribes(ctx context.Conte
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
+	instanceId := paramMap["instanceId"].(string)
+	pubOrSubInstanceId := paramMap["pubOrSubInstanceId"].(string)
+	pubOrSubInstanceIp := paramMap["pubOrSubInstanceIp"].(string)
+	publishSubscribeName := paramMap["publishSubscribeName"].(string)
+	publishDBName := paramMap["publishDBName"].(string)
+	subscribeDBName := paramMap["subscribeDBName"].(string)
+	publishSubscribeId := paramMap["publishSubscribeId"].(uint64)
 	if instanceId != "" {
 		request.InstanceId = &instanceId
 	}
@@ -1256,7 +1268,7 @@ func (me *SqlserverService) DescribeSqlserverPublishSubscribes(ctx context.Conte
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseSqlserverClient().DescribePublishSubscribe(request)
 			if err != nil {
-				log.Printf("[CRITAL]%s DescribePublishSubscribe fail, reason:%s\n", logId, err.Error())
+				log.Printf("[CRITAL]%s DescribePublishSubscribe fail, reason:%s", logId, err.Error())
 				return retryError(err)
 			}
 			return nil
@@ -1292,15 +1304,12 @@ func (me *SqlserverService) ModifyPublishSubscribeName(ctx context.Context, id u
 		ratelimit.Check(request.GetAction())
 		_, e := me.client.UseSqlserverClient().ModifyPublishSubscribeName(request)
 		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
 			return retryError(e)
 		}
 		return nil
 	})
-	if errRet != nil {
-		return errRet
-	}
-	return
+	return errRet
 }
 
 func (me *SqlserverService) DeletePublishSubscribe(ctx context.Context, publishSubscribe *sqlserver.PublishSubscribe, deleteDatabaseTuples []*sqlserver.DatabaseTuple) (errRet error) {
@@ -1319,7 +1328,7 @@ func (me *SqlserverService) DeletePublishSubscribe(ctx context.Context, publishS
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseSqlserverClient().DeletePublishSubscribe(request)
 		if err != nil {
-			log.Printf("[CRITAL]%s %s fail, reason:%s\n", logId, request.GetAction(), err.Error())
+			log.Printf("[CRITAL]%s %s fail, reason:%s", logId, request.GetAction(), err.Error())
 			return retryError(err)
 		}
 		return nil

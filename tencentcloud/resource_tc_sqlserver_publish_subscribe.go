@@ -8,6 +8,7 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	publish_instance_id             = tencentcloud_sqlserver_instance.publish_instance.id
 	subscribe_instance_id           = tencentcloud_sqlserver_instance.subscribe_instance.id
 	publish_subscribe_name          = "example"
+	delete_subscribe_db             = false
 	database_tuples {
 		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
 		subscribe_database          = tencentcloud_sqlserver_db.test_publish_subscribe.name
@@ -17,10 +18,10 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 
 Import
 
-SQL Server PublishSubscribe can be imported using the id, e.g.
+SQL Server PublishSubscribe can be imported using the publish_sqlserver_id#subscribe_sqlserver_id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_publish_subscribe.foo mssql-3cdq7kx5#db_name
+$ terraform import tencentcloud_sqlserver_publish_subscribe.foo publish_sqlserver_id#subscribe_sqlserver_id
 ```
 */
 package tencentcloud
@@ -63,12 +64,18 @@ func resourceTencentCloudSqlserverPublishSubscribe() *schema.Resource {
 				Default:     "default_name",
 				Description: "The name of the Publish and Subscribe in the SQLServer instance. default is `default_name`.",
 			},
+			"delete_subscribe_db": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether to delete the subscriber database when deleting the Publish and Subscribe in the SQLServer instance. `true` for deletes the subscribe database, `false` for does not delete the subscribe database. default is `false`.",
+			},
 			"database_tuples": {
 				Type:        schema.TypeSet,
 				Required:    true,
 				MinItems:    1,
 				MaxItems:    80,
-				Description: "Database Publish and Publish relationship list. Modify database is not allowed.",
+				Description: "Database Publish and Publish relationship list. The elements inside can be deleted and added individually, but modify is not allowed.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"publish_database": {
@@ -187,6 +194,7 @@ func resourceTencentCloudSqlserverPublishSubscribeUpdate(d *schema.ResourceData,
 		sqlserverService    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 		publishInstanceId   = d.Get("publish_instance_id").(string)
 		subscribeInstanceId = d.Get("subscribe_instance_id").(string)
+		deleteSubscribeDb   = d.Get("delete_subscribe_db").(bool)
 	)
 
 	publishSubscribe, _, err := sqlserverService.DescribeSqlserverPublishSubscribeById(ctx, publishInstanceId, subscribeInstanceId)
@@ -202,6 +210,7 @@ func resourceTencentCloudSqlserverPublishSubscribeUpdate(d *schema.ResourceData,
 
 	if d.HasChange("database_tuples") {
 		var deleteDatabaseTupleSet []*sqlserver.DatabaseTuple
+		var subscribeDatabases []*string
 		oldSet, newSet := d.GetChange("database_tuples")
 		//get new DatabaseTupleSet
 		var newDatabaseTupleSet []*sqlserver.DatabaseTuple
@@ -230,6 +239,8 @@ func resourceTencentCloudSqlserverPublishSubscribeUpdate(d *schema.ResourceData,
 					SubscribeDatabase: oldInstance.SubscribeDatabase,
 				}
 				deleteDatabaseTupleSet = append(deleteDatabaseTupleSet, &databaseTuple)
+				subDatabase := *oldInstance.SubscribeDatabase
+				subscribeDatabases = append(subscribeDatabases, &subDatabase)
 			}
 		}
 		if deleteDatabaseTupleSet == nil {
@@ -237,6 +248,12 @@ func resourceTencentCloudSqlserverPublishSubscribeUpdate(d *schema.ResourceData,
 		}
 		if err := sqlserverService.DeletePublishSubscribe(ctx, publishSubscribe, deleteDatabaseTupleSet); err != nil {
 			return err
+		}
+		if deleteSubscribeDb {
+			//delete subscribe databases
+			if err = sqlserverService.DeleteSqlserverDB(ctx, subscribeInstanceId, subscribeDatabases); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -252,6 +269,7 @@ func resourceTencentCloudSqlserverPublishSubscribeDelete(d *schema.ResourceData,
 		sqlserverService    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 		publishInstanceId   = d.Get("publish_instance_id").(string)
 		subscribeInstanceId = d.Get("subscribe_instance_id").(string)
+		deleteSubscribeDb   = d.Get("delete_subscribe_db").(bool)
 	)
 	publishSubscribe, has, err := sqlserverService.DescribeSqlserverPublishSubscribeById(ctx, publishInstanceId, subscribeInstanceId)
 	if err != nil {
@@ -263,13 +281,22 @@ func resourceTencentCloudSqlserverPublishSubscribeDelete(d *schema.ResourceData,
 
 	oldDatabaseTuples, _ := d.GetChange("database_tuples")
 	var oldDatabaseTupleSet []*sqlserver.DatabaseTuple
+	var subscribeDatabases []*string
 	for _, inst_ := range oldDatabaseTuples.(*schema.Set).List() {
 		inst := inst_.(map[string]interface{})
+		subDatabase := inst["subscribe_database"].(string)
 		oldDatabaseTupleSet = append(oldDatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["subscribe_database"]))
+		subscribeDatabases = append(subscribeDatabases, &subDatabase)
 	}
 
 	if err := sqlserverService.DeletePublishSubscribe(ctx, publishSubscribe, oldDatabaseTupleSet); err != nil {
 		return err
+	}
+	if deleteSubscribeDb {
+		//delete subscribe databases
+		if err = sqlserverService.DeleteSqlserverDB(ctx, subscribeInstanceId, subscribeDatabases); err != nil {
+			return err
+		}
 	}
 	return nil
 }

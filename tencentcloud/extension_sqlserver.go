@@ -72,6 +72,7 @@ const (
 	VPC_NEWORK    = 1
 )
 
-const INTERNALERROR_DBERROR = "InternalError.DBError"
-
-const INSTANCE_STATUS_INVALID = "ResourceUnavailable.InstanceStatusInvalid"
+const (
+	INTERNALERROR_DBERROR   = "InternalError.DBError"
+	INSTANCE_STATUS_INVALID = "ResourceUnavailable.InstanceStatusInvalid"
+)

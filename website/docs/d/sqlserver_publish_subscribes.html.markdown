@@ -18,6 +18,7 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
   publish_instance_id    = tencentcloud_sqlserver_instance.publish_instance.id
   subscribe_instance_id  = tencentcloud_sqlserver_instance.subscribe_instance.id
   publish_subscribe_name = "example"
+  delete_subscribe_db    = false
   database_tuples {
     publish_database   = tencentcloud_sqlserver_db.test_publish_subscribe.name
     subscribe_database = tencentcloud_sqlserver_db.test_publish_subscribe.name

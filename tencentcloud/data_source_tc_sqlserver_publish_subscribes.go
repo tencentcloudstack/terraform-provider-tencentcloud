@@ -8,6 +8,7 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	publish_instance_id             = tencentcloud_sqlserver_instance.publish_instance.id
 	subscribe_instance_id           = tencentcloud_sqlserver_instance.subscribe_instance.id
 	publish_subscribe_name          = "example"
+	delete_subscribe_db             = false
 	database_tuples {
 		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
 		subscribe_database          = tencentcloud_sqlserver_db.test_publish_subscribe.name
@@ -157,39 +158,41 @@ func dataSourceTencentSqlserverPublishSubscribesRead(d *schema.ResourceData, met
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-	var (
-		instanceId           = d.Get("instance_id").(string)
-		pubOrSubInstanceId   string
-		pubOrSubInstanceIp   string
-		publishSubscribeName string
-		publishSubscribeId   uint64 = 0
-		publishDBName        string
-		subscribeDBName      string
-	)
-
+	paramMap := make(map[string]interface{})
+	paramMap["instanceId"] = d.Get("instance_id").(string)
 	if v, ok := d.GetOk("pub_or_sub_instance_id"); ok {
-		pubOrSubInstanceId = v.(string)
+		paramMap["pubOrSubInstanceId"] = v.(string)
+	} else {
+		paramMap["pubOrSubInstanceId"] = ""
 	}
 	if v, ok := d.GetOk("pub_or_sub_instance_ip"); ok {
-		pubOrSubInstanceIp = v.(string)
+		paramMap["pubOrSubInstanceIp"] = v.(string)
+	} else {
+		paramMap["pubOrSubInstanceIp"] = ""
 	}
 	if v, ok := d.GetOk("publish_subscribe_name"); ok {
-		publishSubscribeName = v.(string)
+		paramMap["publishSubscribeName"] = v.(string)
+	} else {
+		paramMap["publishSubscribeName"] = ""
 	}
 	if v, ok := d.GetOk("publish_subscribe_id"); ok {
 		id := v.(int)
-		if id != 0 {
-			publishSubscribeId = *helper.IntUint64(id)
-		}
+		paramMap["publishSubscribeId"] = *helper.IntUint64(id)
+	} else {
+		paramMap["publishSubscribeId"] = *helper.IntUint64(0)
 	}
 	if v, ok := d.GetOk("publish_database"); ok {
-		publishDBName = v.(string)
+		paramMap["publishDBName"] = v.(string)
+	} else {
+		paramMap["publishDBName"] = ""
 	}
 	if v, ok := d.GetOk("subscribe_database"); ok {
-		subscribeDBName = v.(string)
+		paramMap["subscribeDBName"] = v.(string)
+	} else {
+		paramMap["subscribeDBName"] = ""
 	}
 
-	publishSubscribes, err := sqlserverService.DescribeSqlserverPublishSubscribes(ctx, instanceId, pubOrSubInstanceId, pubOrSubInstanceIp, publishSubscribeName, publishDBName, subscribeDBName, publishSubscribeId)
+	publishSubscribes, err := sqlserverService.DescribeSqlserverPublishSubscribes(ctx, paramMap)
 	if err != nil {
 		return err
 	}
@@ -198,12 +201,12 @@ func dataSourceTencentSqlserverPublishSubscribesRead(d *schema.ResourceData, met
 
 	for _, publishSubscribe := range publishSubscribes {
 		var databaseTupleStatus []map[string]interface{}
-		for _, inst_ := range publishSubscribe.DatabaseTupleSet {
+		for _, inst := range publishSubscribe.DatabaseTupleSet {
 			databaseTuple := map[string]interface{}{
-				"publish_database":   inst_.PublishDatabase,
-				"subscribe_database": inst_.SubscribeDatabase,
-				"last_sync_time":     inst_.LastSyncTime,
-				"status":             inst_.Status,
+				"publish_database":   inst.PublishDatabase,
+				"subscribe_database": inst.SubscribeDatabase,
+				"last_sync_time":     inst.LastSyncTime,
+				"status":             inst.Status,
 			}
 			databaseTupleStatus = append(databaseTupleStatus, databaseTuple)
 		}
@@ -225,7 +228,7 @@ func dataSourceTencentSqlserverPublishSubscribesRead(d *schema.ResourceData, met
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	if err = d.Set("publish_subscribe_list", instanceList); err != nil {
-		log.Printf("[CRITAL]%s provider set sql server publish subscribe list fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s provider set sql server publish and subscribe list fail, reason:%s ", logId, err.Error())
 		return err
 	}
 
