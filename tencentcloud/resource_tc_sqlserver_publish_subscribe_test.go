@@ -141,7 +141,6 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	delete_subscribe_db             = false
 	database_tuples {
 		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
-		subscribe_database          = tencentcloud_sqlserver_db.test_publish_subscribe.name
 	}
 }`
 
@@ -190,6 +189,5 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	delete_subscribe_db             = false
 	database_tuples {
 		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
-		subscribe_database          = tencentcloud_sqlserver_db.test_publish_subscribe.name
 	}
 }`

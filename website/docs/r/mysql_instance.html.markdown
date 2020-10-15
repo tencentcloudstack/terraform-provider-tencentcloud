@@ -56,7 +56,7 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional) Auto renew flag. NOTES: Only supported prepaid instance.
 * `availability_zone` - (Optional, ForceNew) Indicates which availability zone will be used.
 * `charge_type` - (Optional, ForceNew) Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.
-* `engine_version` - (Optional, ForceNew) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7, and default is 5.7.
+* `engine_version` - (Optional, ForceNew) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7.
 * `first_slave_zone` - (Optional, ForceNew) Zone information about first slave instance.
 * `force_delete` - (Optional) Indicate whether to delete instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
 * `internet_service` - (Optional) Indicates whether to enable the access to an instance from public network: 0 - No, 1 - Yes.

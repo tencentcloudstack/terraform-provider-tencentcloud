@@ -553,6 +553,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426
 # github.com/tetafro/godot v0.3.7

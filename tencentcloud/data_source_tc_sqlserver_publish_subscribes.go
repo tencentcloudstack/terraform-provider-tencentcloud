@@ -11,7 +11,6 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	delete_subscribe_db             = false
 	database_tuples {
 		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
-		subscribe_database          = tencentcloud_sqlserver_db.test_publish_subscribe.name
 	}
 }
 ```
@@ -162,18 +161,12 @@ func dataSourceTencentSqlserverPublishSubscribesRead(d *schema.ResourceData, met
 	paramMap["instanceId"] = d.Get("instance_id").(string)
 	if v, ok := d.GetOk("pub_or_sub_instance_id"); ok {
 		paramMap["pubOrSubInstanceId"] = v.(string)
-	} else {
-		paramMap["pubOrSubInstanceId"] = ""
 	}
 	if v, ok := d.GetOk("pub_or_sub_instance_ip"); ok {
 		paramMap["pubOrSubInstanceIp"] = v.(string)
-	} else {
-		paramMap["pubOrSubInstanceIp"] = ""
 	}
 	if v, ok := d.GetOk("publish_subscribe_name"); ok {
 		paramMap["publishSubscribeName"] = v.(string)
-	} else {
-		paramMap["publishSubscribeName"] = ""
 	}
 	if v, ok := d.GetOk("publish_subscribe_id"); ok {
 		id := v.(int)
@@ -183,13 +176,7 @@ func dataSourceTencentSqlserverPublishSubscribesRead(d *schema.ResourceData, met
 	}
 	if v, ok := d.GetOk("publish_database"); ok {
 		paramMap["publishDBName"] = v.(string)
-	} else {
-		paramMap["publishDBName"] = ""
-	}
-	if v, ok := d.GetOk("subscribe_database"); ok {
 		paramMap["subscribeDBName"] = v.(string)
-	} else {
-		paramMap["subscribeDBName"] = ""
 	}
 
 	publishSubscribes, err := sqlserverService.DescribeSqlserverPublishSubscribes(ctx, paramMap)

@@ -1153,7 +1153,7 @@ func (me *SqlserverService) CreateSqlserverPublishSubscribe(ctx context.Context,
 	request.PublishSubscribeName = &publishSubscribeName
 	for _, inst_ := range databaseTuples {
 		inst := inst_.(map[string]interface{})
-		request.DatabaseTupleSet = append(request.DatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["subscribe_database"]))
+		request.DatabaseTupleSet = append(request.DatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["publish_database"]))
 	}
 
 	var response *sqlserver.CreatePublishSubscribeResponse
@@ -1200,10 +1200,6 @@ func (me *SqlserverService) DescribeSqlserverPublishSubscribeById(ctx context.Co
 	paramMap := make(map[string]interface{})
 	paramMap["instanceId"] = instanceId
 	paramMap["pubOrSubInstanceId"] = pubOrSubInstanceId
-	paramMap["pubOrSubInstanceIp"] = ""
-	paramMap["publishSubscribeName"] = ""
-	paramMap["publishDBName"] = ""
-	paramMap["subscribeDBName"] = ""
 	paramMap["publishSubscribeId"] = *helper.IntUint64(0)
 	instanceList, err := me.DescribeSqlserverPublishSubscribes(ctx, paramMap)
 	if err != nil {
@@ -1229,33 +1225,30 @@ func (me *SqlserverService) DescribeSqlserverPublishSubscribes(ctx context.Conte
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	instanceId := paramMap["instanceId"].(string)
-	pubOrSubInstanceId := paramMap["pubOrSubInstanceId"].(string)
-	pubOrSubInstanceIp := paramMap["pubOrSubInstanceIp"].(string)
-	publishSubscribeName := paramMap["publishSubscribeName"].(string)
-	publishDBName := paramMap["publishDBName"].(string)
-	subscribeDBName := paramMap["subscribeDBName"].(string)
-	publishSubscribeId := paramMap["publishSubscribeId"].(uint64)
-	if instanceId != "" {
+	if v, ok := paramMap["instanceId"]; ok {
+		instanceId := v.(string)
 		request.InstanceId = &instanceId
 	}
-	if pubOrSubInstanceId != "" {
+	if v, ok := paramMap["pubOrSubInstanceId"]; ok {
+		pubOrSubInstanceId := v.(string)
 		request.PubOrSubInstanceId = &pubOrSubInstanceId
 	}
-	if pubOrSubInstanceIp != "" {
+	if v, ok := paramMap["pubOrSubInstanceIp"]; ok {
+		pubOrSubInstanceIp := v.(string)
 		request.PubOrSubInstanceIp = &pubOrSubInstanceIp
 	}
-	if publishSubscribeId != 0 {
+	if v, ok := paramMap["publishSubscribeId"]; ok {
+		publishSubscribeId := v.(uint64)
 		request.PublishSubscribeId = &publishSubscribeId
 	}
-	if publishSubscribeName != "" {
+	if v, ok := paramMap["publishSubscribeName"]; ok {
+		publishSubscribeName := v.(string)
 		request.PublishSubscribeName = &publishSubscribeName
 	}
-	if publishDBName != "" {
+	if v, ok := paramMap["publishDBName"]; ok {
+		publishDBName := v.(string)
 		request.PublishDBName = &publishDBName
-	}
-	if subscribeDBName != "" {
-		request.SubscribeDBName = &subscribeDBName
+		request.SubscribeDBName = &publishDBName
 	}
 	var offset, limit uint64 = SQLSERVER_DEFAULT_OFFSET, SQLSERVER_DEFAULT_LIMIT
 	request.Offset = &offset

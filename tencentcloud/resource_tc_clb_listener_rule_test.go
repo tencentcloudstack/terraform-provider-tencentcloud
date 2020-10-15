@@ -27,6 +27,20 @@ func TestAccTencentCloudClbListenerRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "session_expire_time", "30"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "url", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "forward_type", "HTTPS"),
+				),
+			},
+			{
+				Config: testAccClbListenerRule__basic_update,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerRuleExists("tencentcloud_clb_listener_rule.rule_basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_basic", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener_rule.rule_basic", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "domain", "abc.com"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "session_expire_time", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "url", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "forward_type", "HTTP"),
 				),
 			},
 		},
@@ -162,6 +176,31 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
   url                 = "/"
   session_expire_time = 30
   scheduler           = "WRR"
+  forward_type        = "HTTPS"
+}
+`
+
+const testAccClbListenerRule__basic_update = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-rule-basic"
+}
+
+resource "tencentcloud_clb_listener" "listener_basic" {
+  clb_id        = tencentcloud_clb_instance.clb_basic.id
+  port          = 1
+  protocol      = "HTTP"
+  listener_name = "listener_basic"
+}
+
+resource "tencentcloud_clb_listener_rule" "rule_basic" {
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_basic.id
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  forward_type        = "HTTP"
 }
 `
 

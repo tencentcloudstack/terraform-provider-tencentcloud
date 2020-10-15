@@ -11,7 +11,6 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	delete_subscribe_db             = false
 	database_tuples {
 		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
-		subscribe_database          = tencentcloud_sqlserver_db.test_publish_subscribe.name
 	}
 }
 ```
@@ -75,18 +74,13 @@ func resourceTencentCloudSqlserverPublishSubscribe() *schema.Resource {
 				Required:    true,
 				MinItems:    1,
 				MaxItems:    80,
-				Description: "Database Publish and Publish relationship list. The elements inside can be deleted and added individually, but modify is not allowed.",
+				Description: "Database Publish and Publish relationship list. The elements inside can be deleted and added individually, but modification is not allowed.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"publish_database": {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Publish the database.",
-						},
-						"subscribe_database": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Subscribe to the database.",
 						},
 					},
 				},
@@ -176,8 +170,7 @@ func resourceTencentCloudSqlserverPublishSubscribeRead(d *schema.ResourceData, m
 	var databaseTupleSet []map[string]interface{}
 	for _, inst_ := range publishSubscribe.DatabaseTupleSet {
 		databaseTuple := map[string]interface{}{
-			"publish_database":   inst_.PublishDatabase,
-			"subscribe_database": inst_.SubscribeDatabase,
+			"publish_database": inst_.PublishDatabase,
 		}
 		databaseTupleSet = append(databaseTupleSet, databaseTuple)
 	}
@@ -216,13 +209,13 @@ func resourceTencentCloudSqlserverPublishSubscribeUpdate(d *schema.ResourceData,
 		var newDatabaseTupleSet []*sqlserver.DatabaseTuple
 		for _, inst_ := range newSet.(*schema.Set).List() {
 			inst := inst_.(map[string]interface{})
-			newDatabaseTupleSet = append(newDatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["subscribe_database"]))
+			newDatabaseTupleSet = append(newDatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["publish_database"]))
 		}
 		//get old DatabaseTupleSet
 		var oldDatabaseTupleSet []*sqlserver.DatabaseTuple
 		for _, inst_ := range oldSet.(*schema.Set).List() {
 			inst := inst_.(map[string]interface{})
-			oldDatabaseTupleSet = append(oldDatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["subscribe_database"]))
+			oldDatabaseTupleSet = append(oldDatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["publish_database"]))
 		}
 
 		for _, oldInstance := range oldDatabaseTupleSet {
@@ -284,8 +277,8 @@ func resourceTencentCloudSqlserverPublishSubscribeDelete(d *schema.ResourceData,
 	var subscribeDatabases []*string
 	for _, inst_ := range oldDatabaseTuples.(*schema.Set).List() {
 		inst := inst_.(map[string]interface{})
-		subDatabase := inst["subscribe_database"].(string)
-		oldDatabaseTupleSet = append(oldDatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["subscribe_database"]))
+		subDatabase := inst["publish_database"].(string)
+		oldDatabaseTupleSet = append(oldDatabaseTupleSet, sqlServerNewDatabaseTuple(inst["publish_database"], inst["publish_database"]))
 		subscribeDatabases = append(subscribeDatabases, &subDatabase)
 	}
 
