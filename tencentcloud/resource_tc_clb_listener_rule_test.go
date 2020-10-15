@@ -27,6 +27,7 @@ func TestAccTencentCloudClbListenerRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "session_expire_time", "30"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "url", "/"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "scheduler", "WRR"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "target_type", "TARGETGROUP"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "forward_type", "HTTPS"),
 				),
 			},
@@ -176,6 +177,7 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
   url                 = "/"
   session_expire_time = 30
   scheduler           = "WRR"
+  target_type         = "TARGETGROUP"
   forward_type        = "HTTPS"
 }
 `

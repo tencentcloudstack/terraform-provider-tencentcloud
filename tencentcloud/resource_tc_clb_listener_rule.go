@@ -131,7 +131,7 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CERT_SSL_MODE),
-				Description:  "Type of certificate, and available values inclue 'UNIDIRECTIONAL', 'MUTUAL'. NOTES: Only supports listeners of 'HTTPS' protocol.",
+				Description:  "Type of certificate. Valid values: `UNIDIRECTIONAL`, `MUTUAL`. NOTES: Only supports listeners of 'HTTPS' protocol.",
 			},
 			"certificate_id": {
 				Type:        schema.TypeString,
@@ -156,14 +156,22 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				Default:      CLB_LISTENER_SCHEDULER_WRR,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_SCHEDULER),
-				Description:  "Scheduling method of the CLB listener rules, and available values are 'WRR', 'IP HASH' and 'LEAST_CONN'. The default is 'WRR'.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+				Description:  "Scheduling method of the CLB listener rules. Valid values: `WRR`, `IP HASH`, `LEAST_CONN`. The default is 'WRR'.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+			},
+			"target_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      CLB_TARGET_TYPE_NODE,
+				ValidateFunc: validateAllowedStringValue([]string{CLB_TARGET_TYPE_NODE, CLB_TARGET_TYPE_TARGETGROUP}),
+				Description:  "Backend target type. Valid values: `NODE`, `TARGETGROUP`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group.",
 			},
 			"forward_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS", "TRPC"}),
-				Description:  "Forwarding protocol between the CLB instance and real server. Currently, HTTP/HTTPS/TRPC are supported.",
+				Description:  "Forwarding protocol between the CLB instance and real server. Valid values: `HTTP`, `HTTPS`, `TRPC`.",
 			},
 		},
 	}
@@ -211,6 +219,7 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	rule.Domain = helper.String(domain)
 	url := d.Get("url").(string)
 	rule.Url = helper.String(url)
+	rule.TargetType = helper.String(d.Get("target_type").(string))
 	if v, ok := d.GetOk("forward_type"); ok {
 		rule.ForwardType = helper.String(v.(string))
 	}
@@ -336,6 +345,7 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	_ = d.Set("url", instance.Url)
 	_ = d.Set("scheduler", instance.Scheduler)
 	_ = d.Set("session_expire_time", instance.SessionExpireTime)
+	_ = d.Set("target_type", instance.TargetType)
 	_ = d.Set("forward_type", instance.ForwardType)
 
 	//health check

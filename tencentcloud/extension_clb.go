@@ -117,3 +117,8 @@ const (
 const (
 	CLB_PAGE_LIMIT = 100
 )
+
+const (
+	CLB_TARGET_TYPE_NODE        = "NODE"
+	CLB_TARGET_TYPE_TARGETGROUP = "TARGETGROUP"
+)

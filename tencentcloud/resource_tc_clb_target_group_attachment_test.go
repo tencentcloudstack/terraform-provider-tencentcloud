@@ -1,0 +1,152 @@
+package tencentcloud
+
+import (
+	"context"
+	"fmt"
+	"strings"
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+)
+
+const clbTargetGroupAttachment = "tencentcloud_clb_target_group_attachment.group"
+
+func TestAccTencentClbTargetGroupAttachmentResource(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbTargetGroupAttachmentDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbTargetGroupAttachment,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbTargetGroupAttachmentExists(clbTargetGroupAttachment),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "clb_id"),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "listener_id"),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "targrt_group_id"),
+					resource.TestCheckResourceAttrSet(clbTargetGroupAttachment, "rule_id"),
+				),
+			},
+			{
+				ResourceName:      clbTargetGroupAttachment,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccCheckClbTargetGroupAttachmentDestroy(s *terraform.State) error {
+	var (
+		clbService = ClbService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+		}
+		logId       = getLogId(contextNil)
+		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
+		targetInfos []*clb.TargetGroupInfo
+		err         error
+	)
+
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_clb_target_group_attachment" {
+			continue
+		}
+
+		ids := strings.Split(rs.Primary.ID, FILED_SP)
+		if len(ids) != 4 {
+			return fmt.Errorf("CLB target group attachment id must contains clb_id, listernrt_id, targrt_group_id, rule_id")
+		}
+
+		targetInfos, err = clbService.DescribeTargetGroups(ctx, ids[0], nil)
+		if err != nil {
+			return err
+		}
+		for _, info := range targetInfos {
+			for _, rule := range info.AssociatedRule {
+				var originLocationId string
+				originClbId := *rule.LoadBalancerId
+				originListenerId := *rule.ListenerId
+				if rule.LocationId != nil {
+					originLocationId = *rule.LocationId
+				}
+				if originListenerId == ids[1] && originClbId == ids[2] && originLocationId == ids[3] {
+					return fmt.Errorf("rule association target group instance still exist. [targetGroupId=%s, listenerId=%s, cldId=%s, ruleId=%s]",
+						ids[0], ids[1], ids[2], ids[3])
+				}
+			}
+		}
+		return nil
+	}
+	return nil
+}
+
+func testAccCheckClbTargetGroupAttachmentExists(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		var (
+			logId = getLogId(contextNil)
+			ctx   = context.WithValue(context.TODO(), logIdKey, logId)
+		)
+
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("CLB target group attachment %s is not found", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("CLB target group attachment id is not set")
+		}
+		clbService := ClbService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+		}
+
+		ids := strings.Split(rs.Primary.ID, FILED_SP)
+		if len(ids) != 4 {
+			return fmt.Errorf("CLB target group attachment id must contains clb_id, listernrt_id, targrt_group_id, rule_id")
+		}
+
+		has, err := clbService.DescribeAssociateTargetGroups(ctx, ids)
+		if err != nil {
+			return err
+		}
+		if !has {
+			return fmt.Errorf("CLB target group attachment not exist")
+		}
+
+		return nil
+	}
+}
+
+const testAccClbTargetGroupAttachment = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-rule-basic"
+}
+
+resource "tencentcloud_clb_listener" "listener_basic" {
+  clb_id        = tencentcloud_clb_instance.clb_basic.id
+  port          = 1
+  protocol      = "HTTP"
+  listener_name = "listener_basic"
+}
+
+resource "tencentcloud_clb_listener_rule" "rule_basic" {
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_basic.id
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  target_type         = "TARGETGROUP"
+}
+
+resource "tencentcloud_clb_target_group" "test"{
+    target_group_name = "test-target-keep-1"
+}
+
+resource "tencentcloud_clb_target_group_attachment" "group" {
+    clb_id          = tencentcloud_clb_instance.clb_basic.id
+    listener_id     = tencentcloud_clb_listener.listener_basic.id
+    rule_id         = tencentcloud_clb_listener_rule.rule_basic.id
+    targrt_group_id = tencentcloud_clb_target_group.test.id 
+}`
