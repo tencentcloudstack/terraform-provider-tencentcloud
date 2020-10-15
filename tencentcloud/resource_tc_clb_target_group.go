@@ -23,7 +23,6 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 )
@@ -50,12 +49,6 @@ func resourceTencentCloudClbTargetGroup() *schema.Resource {
 				Default:     "0",
 				ForceNew:    true,
 				Description: "VPC ID, default is based on the network.",
-			},
-			//computed
-			"target_group_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Target group ID.",
 			},
 		},
 	}
@@ -124,7 +117,7 @@ func resourceTencentCloudClbTargetUpdate(d *schema.ResourceData, meta interface{
 		targetGroupName := d.Get("target_group_name").(string)
 		err := clbService.ModifyTargetGroup(ctx, targetGroupId, targetGroupName)
 		if err != nil {
-			return nil
+			return err
 		}
 	}
 	return resourceTencentCloudClbTargetRead(d, meta)
@@ -140,13 +133,8 @@ func resourceTencentCloudClbTargetDelete(d *schema.ResourceData, meta interface{
 		targetGroupId = d.Id()
 	)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		e := clbService.DeleteTarget(ctx, targetGroupId)
-		if e != nil {
-			return retryError(e, InternalError)
-		}
-		return nil
-	})
+	err := clbService.DeleteTarget(ctx, targetGroupId)
+
 	if err != nil {
 		return err
 	}

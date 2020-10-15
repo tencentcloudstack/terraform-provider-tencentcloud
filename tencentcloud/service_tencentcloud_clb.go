@@ -1183,7 +1183,15 @@ func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targ
 	request.TargetGroupId = &targetGroupId
 	request.TargetGroupInstances = []*clb.TargetGroupInstance{&instance}
 
-	_, err := me.client.UseClbClient().ModifyTargetGroupInstancesWeight(request)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseClbClient().ModifyTargetGroupInstancesWeight(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}

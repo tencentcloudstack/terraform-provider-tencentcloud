@@ -237,7 +237,7 @@ func resourceTencentCloudClbTGAttachmentInstanceUpdate(d *schema.ResourceData, m
 		newWeight := d.Get("weight").(int)
 		err := clbService.ModifyTargetGroupInstancesWeight(ctx, targetGroupId, bindIp, uint64(port), uint64(newWeight))
 		if err != nil {
-			return nil
+			return err
 		}
 	}
 	return resourceTencentCloudClbTGAttachmentInstanceRead(d, meta)

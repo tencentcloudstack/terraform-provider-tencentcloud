@@ -204,6 +204,7 @@ func resourceTencentCloudClbTargetGroupAttachmentRead(d *schema.ResourceData, me
 		return err
 	}
 	if !has {
+		d.SetId("")
 		return nil
 	}
 
