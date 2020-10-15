@@ -148,12 +148,9 @@ func resourceTencentCloudClbTGAttachmentInstanceCreate(d *schema.ResourceData, m
 		targetGroupId = d.Get("target_group_id").(string)
 		bindIp        = d.Get("bind_ip").(string)
 		port          = d.Get("port").(int)
-		weight        int
+		weight        = d.Get("weight").(int)
 		err           error
 	)
-	if temp, ok := d.GetOk("weight"); ok {
-		weight = temp.(int)
-	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		err = clbService.RegisterTargetInstances(ctx, targetGroupId, bindIp, uint64(port), uint64(weight))

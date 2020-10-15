@@ -358,6 +358,7 @@ SQLServer
 	tencentcloud_sqlserver_account_db_attachments
 	tencentcloud_sqlserver_backups
   	tencentcloud_sqlserver_readonly_groups
+	tencentcloud_sqlserver_publish_subscribes
 
   Resource
 	tencentcloud_sqlserver_instance
@@ -365,6 +366,7 @@ SQLServer
     tencentcloud_sqlserver_db
 	tencentcloud_sqlserver_account
 	tencentcloud_sqlserver_account_db_attachment
+	tencentcloud_sqlserver_publish_subscribe
 
 SSL Certificates
   Data Source
@@ -684,6 +686,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vod_procedure_templates":                  dataSourceTencentCloudVodProcedureTemplates(),
 			"tencentcloud_vod_snapshot_by_time_offset_templates":    dataSourceTencentCloudVodSnapshotByTimeOffsetTemplates(),
 			"tencentcloud_vod_super_player_configs":                 dataSourceTencentCloudVodSuperPlayerConfigs(),
+			"tencentcloud_sqlserver_publish_subscribes":             dataSourceTencentSqlserverPublishSubscribes(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -818,6 +821,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vod_procedure_template":                  resourceTencentCloudVodProcedureTemplate(),
 			"tencentcloud_vod_snapshot_by_time_offset_template":    resourceTencentCloudVodSnapshotByTimeOffsetTemplate(),
 			"tencentcloud_vod_super_player_config":                 resourceTencentCloudVodSuperPlayerConfig(),
+			"tencentcloud_sqlserver_publish_subscribe":             resourceTencentCloudSqlserverPublishSubscribe(),
 		},
 
 		ConfigureFunc: providerConfigure,

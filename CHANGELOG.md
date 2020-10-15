@@ -5,12 +5,14 @@ FEATURES:
 * **New Resource**: `tencentcloud_clb_target_group_attachment`
 * **New Resource**: `tencentcloud_clb_target_group`
 * **New Resource**: `tencentcloud_clb_target_group_instance_attachment`
+* **New Resource**: `tencentcloud_sqlserver_publish_subscribe`
 * **New Resource**: `tencentcloud_vod_adaptive_dynamic_streaming_template`.
 * **New Resource**: `tencentcloud_vod_procedure_template`.
 * **New Resource**: `tencentcloud_vod_snapshot_by_time_offset_template`.
 * **New Resource**: `tencentcloud_vod_image_sprite_template`.
 * **New Resource**: `tencentcloud_vod_super_player_config`.
 * **New Data Source**: `tencentcloud_clb_target_groups`
+* **New Data Source**: `tencentcloud_sqlserver_publish_subscribes` 
 * **New Data Source**: `tencentcloud_vod_adaptive_dynamic_streaming_templates`.
 * **New Data Source**: `tencentcloud_vod_image_sprite_templates`.
 * **New Data Source**: `tencentcloud_vod_procedure_templates`.

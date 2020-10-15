@@ -185,5 +185,5 @@ func resourceTencentCloudSqlserverDBDelete(d *schema.ResourceData, meta interfac
 		return nil
 	}
 
-	return sqlserverService.DeleteSqlserverDB(ctx, instanceId, name)
+	return sqlserverService.DeleteSqlserverDB(ctx, instanceId, []*string{&name})
 }
