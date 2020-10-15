@@ -2,11 +2,15 @@
 
 FEATURES:
 
+* **New Resource**: `tencentcloud_clb_target_group_attachment`
+* **New Resource**: `tencentcloud_clb_target_group`
+* **New Resource**: `tencentcloud_clb_target_group_instance_attachment`
 * **New Resource**: `tencentcloud_vod_adaptive_dynamic_streaming_template`.
 * **New Resource**: `tencentcloud_vod_procedure_template`.
 * **New Resource**: `tencentcloud_vod_snapshot_by_time_offset_template`.
 * **New Resource**: `tencentcloud_vod_image_sprite_template`.
 * **New Resource**: `tencentcloud_vod_super_player_config`.
+* **New Data Source**: `tencentcloud_clb_target_groups`
 * **New Data Source**: `tencentcloud_vod_adaptive_dynamic_streaming_templates`.
 * **New Data Source**: `tencentcloud_vod_image_sprite_templates`.
 * **New Data Source**: `tencentcloud_vod_procedure_templates`.
@@ -15,6 +19,7 @@ FEATURES:
 
 ENHANCEMENTS:
 
+* Resource: `tencentcloud_clb_listener_rule` add new argument `target_type` to support backend target type with rule.
 * Resource: `tencentcloud_mysql_instance` modify argument `engine_version` to support mysql 8.0.
 * Resource: `tencentcloud_clb_listener_rule` add new argument `forward_type` to support backend protocol([#522](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/issues/522))
 * Resource: `tencentcloud_instance` add new argument `keep_image_login` to support keeping image login.
