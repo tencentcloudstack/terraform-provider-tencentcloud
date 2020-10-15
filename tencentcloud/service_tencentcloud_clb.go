@@ -920,12 +920,19 @@ func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName str
 	return
 }
 
-func (me *ClbService) ModifyTargetGroup(ctx context.Context, targetGroupId string, targetGroupName string) error {
+func (me *ClbService) ModifyTargetGroup(ctx context.Context, targetGroupId string, targetGroupName string) (err error) {
 	request := clb.NewModifyTargetGroupAttributeRequest()
 	request.TargetGroupId = &targetGroupId
 	request.TargetGroupName = &targetGroupName
 
-	_, err := me.client.UseClbClient().ModifyTargetGroupAttribute(request)
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseClbClient().ModifyTargetGroupAttribute(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
