@@ -60,6 +60,15 @@ resource "tencentcloud_sqlserver_readonly_instance" "example" {
   force_upgrade       = true
 }
 
+resource "tencentcloud_sqlserver_publish_subscribe" "example" {
+	publish_instance_id             = tencentcloud_sqlserver_instance.example.id
+	subscribe_instance_id           = tencentcloud_sqlserver_instance.example_other.id
+	publish_subscribe_name          = "example"
+	database_tuples {
+		publish_database            = tencentcloud_sqlserver_db.example.name
+	}
+}
+
 
 data "tencentcloud_sqlserver_instances" "id_example" {
   id = tencentcloud_sqlserver_instance.example.id
@@ -95,5 +104,11 @@ data "tencentcloud_sqlserver_backups" "example" {
 
 data "tencentcloud_sqlserver_readonly_groups" "example" {
   master_instance_id = tencentcloud_sqlserver_instance.example.id
+}
+
+data "tencentcloud_sqlserver_publish_subscribes" "publish_subscribes" {
+	instance_id                     = tencentcloud_sqlserver_publish_subscribe.example.publish_instance_id
+	pub_or_sub_instance_id          = tencentcloud_sqlserver_publish_subscribe.example.subscribe_instance_id
+	publish_subscribe_name          = tencentcloud_sqlserver_publish_subscribe.example.publish_subscribe_name
 }
 
