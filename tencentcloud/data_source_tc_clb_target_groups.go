@@ -26,7 +26,7 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
   target_type         = "TARGETGROUP"
 }
 
-resource "tencentcloud_clb_targetgroup" "test"{
+resource "tencentcloud_clb_target_group" "test"{
     target_group_name = "test-target-keep-1"
 }
 
@@ -34,11 +34,11 @@ resource "tencentcloud_clb_target_group_attachment" "group" {
     clb_id          = tencentcloud_clb_instance.clb_basic.id
     listener_id     = tencentcloud_clb_listener.listener_basic.id
     rule_id         = tencentcloud_clb_listener_rule.rule_basic.id
-    targrt_group_id = tencentcloud_clb_targetgroup.test.id
+    targrt_group_id = tencentcloud_clb_target_group.test.id
 }
 
 data "tencentcloud_clb_target_groups" "target_group_info_id" {
-  target_group_id = tencentcloud_clb_targetgroup.test.id
+  target_group_id = tencentcloud_clb_target_group.test.id
 }
 ```
 */
@@ -63,17 +63,20 @@ func dataSourceTencentCloudClbTargetGroups() *schema.Resource {
 				Type:          schema.TypeString,
 				Optional:      true,
 				ConflictsWith: []string{"vpc_id", "target_group_name"},
+				AtLeastOneOf:  []string{"vpc_id", "target_group_name"},
 				Description:   "ID of Target group. Mutually exclusive with 'vpc_id' and 'target_group_name'. 'target_group_id' is preferred.",
 			},
 			"vpc_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Target group VPC ID. Mutually exclusive with 'target_group_id'. 'target_group_id' is preferred.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				AtLeastOneOf: []string{"target_group_id", "target_group_name"},
+				Description:  "Target group VPC ID. Mutually exclusive with 'target_group_id'. 'target_group_id' is preferred.",
 			},
 			"target_group_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Name of target group. Mutually exclusive with 'target_group_id'. 'target_group_id' is preferred.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				AtLeastOneOf: []string{"target_group_id", "vpc_id"},
+				Description:  "Name of target group. Mutually exclusive with 'target_group_id'. 'target_group_id' is preferred.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

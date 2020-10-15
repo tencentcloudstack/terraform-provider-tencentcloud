@@ -9,7 +9,7 @@ import (
 const (
 	targetGroupById     = "data.tencentcloud_clb_target_groups.target_group_info_id"
 	targetGroupByName   = "data.tencentcloud_clb_target_groups.target_group_info_name"
-	targetGroupResource = "tencentcloud_clb_targetgroup.test"
+	targetGroupResource = "tencentcloud_clb_target_group.test"
 )
 
 func TestAccTencentCloudDataSourceClbTargetGroup(t *testing.T) {
@@ -75,7 +75,7 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
   target_type         = "TARGETGROUP"
 }
 
-resource "tencentcloud_clb_targetgroup" "test"{
+resource "tencentcloud_clb_target_group" "test"{
     target_group_name = "test-target-keep-1"
 }
 
@@ -83,18 +83,18 @@ resource "tencentcloud_clb_target_group_attachment" "group" {
     clb_id          = tencentcloud_clb_instance.clb_basic.id
     listener_id     = tencentcloud_clb_listener.listener_basic.id
     rule_id         = tencentcloud_clb_listener_rule.rule_basic.id
-    targrt_group_id = tencentcloud_clb_targetgroup.test.id 
+    targrt_group_id = tencentcloud_clb_target_group.test.id 
 }
 `
 
 const testAccTencentCloudDataSourceClbTargetGroup = tareGetGroupBase + `
 data "tencentcloud_clb_target_groups" "target_group_info_id" {
-  target_group_id = tencentcloud_clb_targetgroup.test.id
+  target_group_id = tencentcloud_clb_target_group.test.id
 }
 `
 
 const testAccTencentCloudDataSourceClbTargetGroupName = tareGetGroupBase + `
 data "tencentcloud_clb_target_groups" "target_group_info_name" {
-  target_group_name = tencentcloud_clb_targetgroup.test.target_group_name
+  target_group_name = tencentcloud_clb_target_group.test.target_group_name
 }
 `
