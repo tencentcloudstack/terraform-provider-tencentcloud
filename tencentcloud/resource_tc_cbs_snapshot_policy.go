@@ -66,7 +66,7 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 					Type:         schema.TypeInt,
 					ValidateFunc: validateIntegerInRange(0, 23),
 				},
-				Description: "Trigger times of periodic snapshot. Valid value ranges: [0-23]. The 0 means 00:00, and so on.",
+				Description: "Trigger times of periodic snapshot. Valid value ranges: (0~23). The 0 means 00:00, and so on.",
 			},
 			"retention_days": {
 				Type:        schema.TypeInt,

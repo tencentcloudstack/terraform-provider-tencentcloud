@@ -49,7 +49,6 @@ func dataSourceTencentCloudCcnBandwidthLimits() *schema.Resource {
 				Optional:    true,
 				Description: "Used to save results.",
 			},
-
 			// Computed values
 			"limits": {
 				Type:        schema.TypeList,

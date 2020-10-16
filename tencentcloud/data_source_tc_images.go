@@ -39,7 +39,7 @@ func dataSourceTencentCloudImages() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "A list of the image type to be queried. Available values include: 'PUBLIC_IMAGE', 'PRIVATE_IMAGE', 'SHARED_IMAGE', 'MARKET_IMAGE'.",
+				Description: "A list of the image type to be queried. Valid values: 'PUBLIC_IMAGE', 'PRIVATE_IMAGE', 'SHARED_IMAGE', 'MARKET_IMAGE'.",
 			},
 			"image_name_regex": {
 				Type:          schema.TypeString,

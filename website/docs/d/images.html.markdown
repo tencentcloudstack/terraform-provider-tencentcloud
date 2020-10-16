@@ -26,7 +26,7 @@ The following arguments are supported:
 
 * `image_id` - (Optional) ID of the image to be queried.
 * `image_name_regex` - (Optional) A regex string to apply to the image list returned by TencentCloud, conflict with 'os_name'. **NOTE**: it is not wildcard, should look like `image_name_regex = "^CentOS\s+6\.8\s+64\w*"`.
-* `image_type` - (Optional) A list of the image type to be queried. Available values include: 'PUBLIC_IMAGE', 'PRIVATE_IMAGE', 'SHARED_IMAGE', 'MARKET_IMAGE'.
+* `image_type` - (Optional) A list of the image type to be queried. Valid values: 'PUBLIC_IMAGE', 'PRIVATE_IMAGE', 'SHARED_IMAGE', 'MARKET_IMAGE'.
 * `os_name` - (Optional) A string to apply with fuzzy match to the os_name attribute on the image list returned by TencentCloud, conflict with 'image_name_regex'.
 * `result_output_file` - (Optional) Used to save results.
 

@@ -57,6 +57,7 @@ type InstanceAdvancedSettings struct {
 	UserScript      string
 	Unschedulable   int64
 	Labels          []*tke.Label
+	ExtraArgs       tke.InstanceExtraArgs
 }
 
 type ClusterCidrSettings struct {
@@ -351,6 +352,9 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.InstanceAdvancedSettings.DockerGraphPath = &iAdvanced.DockerGraphPath
 	request.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
 	request.InstanceAdvancedSettings.Unschedulable = &iAdvanced.Unschedulable
+	if len(iAdvanced.ExtraArgs.Kubelet) > 0 {
+		request.InstanceAdvancedSettings.ExtraArgs = &iAdvanced.ExtraArgs
+	}
 
 	if len(iAdvanced.Labels) > 0 {
 		request.InstanceAdvancedSettings.Labels = iAdvanced.Labels
@@ -426,6 +430,9 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context,
 	request.InstanceAdvancedSettings.DockerGraphPath = &iAdvanced.DockerGraphPath
 	request.InstanceAdvancedSettings.UserScript = &iAdvanced.UserScript
 	request.InstanceAdvancedSettings.Unschedulable = &iAdvanced.Unschedulable
+	if len(iAdvanced.ExtraArgs.Kubelet) > 0 {
+		request.InstanceAdvancedSettings.ExtraArgs = &iAdvanced.ExtraArgs
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().CreateClusterInstances(request)
@@ -511,7 +518,7 @@ func (me *TkeService) DescribeClusterSecurity(ctx context.Context, id string) (r
 	return me.client.UseTkeClient().DescribeClusterSecurity(request)
 }
 
-func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string, labels []*tke.Label) (asGroupId string, errRet error) {
+func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, configPara string, labels []*tke.Label, iAdvanced InstanceAdvancedSettings) (asGroupId string, errRet error) {
 
 	logId := getLogId(ctx)
 	request := tke.NewCreateClusterAsGroupRequest()
@@ -524,6 +531,11 @@ func (me *TkeService) CreateClusterAsGroup(ctx context.Context, id, groupPara, c
 	request.ClusterId = &id
 	request.AutoScalingGroupPara = &groupPara
 	request.LaunchConfigurePara = &configPara
+	if len(iAdvanced.ExtraArgs.Kubelet) > 0 {
+		request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{
+			ExtraArgs: &iAdvanced.ExtraArgs,
+		}
+	}
 
 	if len(labels) > 0 {
 		request.Labels = labels

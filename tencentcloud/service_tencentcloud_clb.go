@@ -890,3 +890,317 @@ func clbNewTarget(instanceId, port, weight interface{}) *clb.Target {
 	}
 	return &bk
 }
+
+func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName string, vpcId string,
+	targetGroupInstances []*clb.TargetGroupInstance) (targetGroupId string, err error) {
+	var response *clb.CreateTargetGroupResponse
+
+	request := clb.NewCreateTargetGroupRequest()
+	request.TargetGroupName = &targetGroupName
+	request.TargetGroupInstances = targetGroupInstances
+	if vpcId != "" {
+		request.VpcId = &vpcId
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, err = me.client.UseClbClient().CreateTargetGroup(request)
+		if err != nil {
+			return retryError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return
+	}
+	if response.Response.TargetGroupId == nil {
+		err = fmt.Errorf("TencentCloud SDK %s return empty ", request.GetAction())
+		return
+	}
+	targetGroupId = *response.Response.TargetGroupId
+	return
+}
+
+func (me *ClbService) ModifyTargetGroup(ctx context.Context, targetGroupId string, targetGroupName string) (err error) {
+	request := clb.NewModifyTargetGroupAttributeRequest()
+	request.TargetGroupId = &targetGroupId
+	request.TargetGroupName = &targetGroupName
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseClbClient().ModifyTargetGroupAttribute(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (me *ClbService) RegisterTargetInstances(ctx context.Context, targetGroupId, bindIp string, port, weight uint64) (err error) {
+	request := clb.NewRegisterTargetGroupInstancesRequest()
+	request.TargetGroupId = &targetGroupId
+	request.TargetGroupInstances = []*clb.TargetGroupInstance{
+		{
+			BindIP: &bindIp,
+			Port:   &port,
+			Weight: &weight,
+		},
+	}
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseClbClient().RegisterTargetGroupInstances(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (me *ClbService) DeregisterTargetInstances(ctx context.Context, targetGroupId, bindIp string, port uint64) (err error) {
+	request := clb.NewDeregisterTargetGroupInstancesRequest()
+	request.TargetGroupId = &targetGroupId
+	request.TargetGroupInstances = []*clb.TargetGroupInstance{
+		{
+			BindIP: &bindIp,
+			Port:   &port,
+		},
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseClbClient().DeregisterTargetGroupInstances(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (me *ClbService) DeleteTarget(ctx context.Context, targetGroupId string) error {
+	request := clb.NewDeleteTargetGroupsRequest()
+	request.TargetGroupIds = []*string{&targetGroupId}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseClbClient().DeleteTargetGroups(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (me *ClbService) DescribeTargetGroups(ctx context.Context, targetGroupId string, filters map[string]string) (targetGroupInfos []*clb.TargetGroupInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewDescribeTargetGroupsRequest()
+	if targetGroupId != "" {
+		request.TargetGroupIds = []*string{&targetGroupId}
+	}
+	request.Filters = make([]*clb.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := clb.Filter{
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	var offset uint64 = 0
+	var pageSize = uint64(CLB_PAGE_LIMIT)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseClbClient().DescribeTargetGroups(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.TargetGroupSet) < 1 {
+			break
+		}
+		targetGroupInfos = append(targetGroupInfos, response.Response.TargetGroupSet...)
+		if len(response.Response.TargetGroupSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *ClbService) DescribeTargetGroupInstances(ctx context.Context, filters map[string]string) (targetGroupInstances []*clb.TargetGroupBackend, errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewDescribeTargetGroupInstancesRequest()
+	request.Filters = make([]*clb.Filter, 0, len(filters))
+	for k, v := range filters {
+		filter := clb.Filter{
+			Name:   helper.String(k),
+			Values: []*string{helper.String(v)},
+		}
+		request.Filters = append(request.Filters, &filter)
+	}
+
+	var offset uint64 = 0
+	var pageSize = uint64(CLB_PAGE_LIMIT)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseClbClient().DescribeTargetGroupInstances(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.TargetGroupInstanceSet) < 1 {
+			break
+		}
+		targetGroupInstances = append(targetGroupInstances, response.Response.TargetGroupInstanceSet...)
+		if len(response.Response.TargetGroupInstanceSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *ClbService) AssociateTargetGroups(ctx context.Context, listenerId, clbId, targrtGroupId, locationId string) (errRet error) {
+	request := clb.NewAssociateTargetGroupsRequest()
+	request.Associations = []*clb.TargetGroupAssociation{
+		{
+			LoadBalancerId: &clbId,
+			ListenerId:     &listenerId,
+			TargetGroupId:  &targrtGroupId,
+			LocationId:     &locationId,
+		},
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseClbClient().AssociateTargetGroups(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	errRet = err
+	return
+}
+
+func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []string) (has bool, err error) {
+	var (
+		logId       = getLogId(ctx)
+		targetInfos []*clb.TargetGroupInfo
+	)
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		targetInfos, err = me.DescribeTargetGroups(ctx, ids[0], nil)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		if targetInfos == nil || len(targetInfos[0].AssociatedRule) == 0 {
+			return resource.RetryableError(fmt.Errorf("response is nil"))
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s DescribeTargetGroups failed, reason:%s ", logId, err.Error())
+		return
+	}
+
+	for _, info := range targetInfos {
+		for _, rule := range info.AssociatedRule {
+			var originLocationId string
+			originClbId := *rule.LoadBalancerId
+			originListenerId := *rule.ListenerId
+			if rule.LocationId != nil {
+				originLocationId = *rule.LocationId
+			}
+
+			if originListenerId == ids[1] && originClbId == ids[2] && originLocationId == ids[3] {
+				return true, nil
+			}
+		}
+	}
+
+	return false, nil
+}
+
+func (me *ClbService) DisassociateTargetGroups(ctx context.Context, targrtGroupId, listenerId, clbId, locationId string) (errRet error) {
+	var ruleId *string
+
+	if locationId != "" {
+		ruleId = &locationId
+	}
+
+	request := clb.NewDisassociateTargetGroupsRequest()
+	request.Associations = []*clb.TargetGroupAssociation{
+		{
+			LoadBalancerId: &clbId,
+			ListenerId:     &listenerId,
+			TargetGroupId:  &targrtGroupId,
+			LocationId:     ruleId,
+		},
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseClbClient().DisassociateTargetGroups(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	errRet = err
+	return
+}
+
+func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targetGroupId, bindIp string, port, weight uint64) (errRet error) {
+	var instance = clb.TargetGroupInstance{
+		BindIP: &bindIp,
+		Port:   &port,
+		Weight: &weight,
+	}
+	request := clb.NewModifyTargetGroupInstancesWeightRequest()
+	request.TargetGroupId = &targetGroupId
+	request.TargetGroupInstances = []*clb.TargetGroupInstance{&instance}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseClbClient().ModifyTargetGroupInstancesWeight(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}

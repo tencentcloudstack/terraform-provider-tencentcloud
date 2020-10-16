@@ -1,0 +1,149 @@
+package tencentcloud
+
+import (
+	"context"
+	"fmt"
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+)
+
+func TestAccTencentCloudVodProcedureTemplateResource(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckVodProcedureTemplateDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccVodProcedureTemplate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVodProcedureTemplateExists("tencentcloud_vod_procedure_template.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "name", "tf-procedure"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "comment", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.adaptive_dynamic_streaming_task_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.snapshot_by_time_offset_task_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.image_sprite_task_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.snapshot_by_time_offset_task_list.0.ext_time_offset_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.snapshot_by_time_offset_task_list.0.ext_time_offset_list.0", "3.5s"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_procedure_template.foo", "media_process_task.0.adaptive_dynamic_streaming_task_list.0.definition"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_procedure_template.foo", "media_process_task.0.snapshot_by_time_offset_task_list.0.definition"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_procedure_template.foo", "media_process_task.0.image_sprite_task_list.0.definition"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_procedure_template.foo", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_procedure_template.foo", "update_time"),
+				),
+			},
+			{
+				Config: testAccVodProcedureTemplateUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "comment", "test-update"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.adaptive_dynamic_streaming_task_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.snapshot_by_time_offset_task_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.snapshot_by_time_offset_task_list.0.ext_time_offset_list.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.snapshot_by_time_offset_task_list.0.ext_time_offset_list.0", "3.5s"),
+					resource.TestCheckResourceAttr("tencentcloud_vod_procedure_template.foo", "media_process_task.0.snapshot_by_time_offset_task_list.0.ext_time_offset_list.1", "4.0s"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_procedure_template.foo", "media_process_task.0.adaptive_dynamic_streaming_task_list.0.definition"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vod_procedure_template.foo", "media_process_task.0.snapshot_by_time_offset_task_list.0.definition"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_vod_procedure_template.foo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"sub_app_id"},
+			},
+		},
+	})
+}
+
+func testAccCheckVodProcedureTemplateDestroy(s *terraform.State) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	vodService := VodService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_vod_procedure_template" {
+			continue
+		}
+
+		_, has, err := vodService.DescribeProcedureTemplatesById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if !has {
+			return nil
+		}
+		return fmt.Errorf("vod procedure template still exists: %s", rs.Primary.ID)
+	}
+	return nil
+}
+
+func testAccCheckVodProcedureTemplateExists(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("vod procedure template %s is not found", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("vod procedure template id is not set")
+		}
+		vodService := VodService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+		}
+		_, has, err := vodService.DescribeProcedureTemplatesById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if !has {
+			return fmt.Errorf("vod procedure template doesn't exist: %s", rs.Primary.ID)
+		}
+		return nil
+	}
+}
+
+const testAccVodProcedureTemplate = testAccVodAdaptiveDynamicStreamingTemplate + testAccVodSnapshotByTimeOffsetTemplate + testAccVodImageSpriteTemplate + `
+resource "tencentcloud_vod_procedure_template" "foo" {
+  name    = "tf-procedure"
+  comment = "test"
+  media_process_task {
+    adaptive_dynamic_streaming_task_list {
+      definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
+    }
+    snapshot_by_time_offset_task_list {
+      definition           = tencentcloud_vod_snapshot_by_time_offset_template.foo.id
+      ext_time_offset_list = [
+        "3.5s"
+      ]
+    }
+    image_sprite_task_list {
+      definition = tencentcloud_vod_image_sprite_template.foo.id
+    }
+  }
+}
+`
+
+const testAccVodProcedureTemplateUpdate = testAccVodAdaptiveDynamicStreamingTemplate + testAccVodSnapshotByTimeOffsetTemplate + testAccVodImageSpriteTemplate + `
+resource "tencentcloud_vod_procedure_template" "foo" {
+  name    = "tf-procedure"
+  comment = "test-update"
+  media_process_task {
+    adaptive_dynamic_streaming_task_list {
+      definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
+    }
+    snapshot_by_time_offset_task_list {
+      definition           = tencentcloud_vod_snapshot_by_time_offset_template.foo.id
+      ext_time_offset_list = [
+        "3.5s",
+        "4.0s"
+      ]
+    }
+  }
+}
+`

@@ -11,6 +11,8 @@ description: |-
 
 Provide a resource to create a kubernetes cluster.
 
+~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
+
 ## Example Usage
 
 ```hcl
@@ -103,6 +105,102 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
+Use Kubelet
+
+```hcl
+variable "availability_zone_first" {
+  default = "ap-guangzhou-3"
+}
+
+variable "availability_zone_second" {
+  default = "ap-guangzhou-4"
+}
+
+variable "cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+variable "default_instance_type" {
+  default = "SA2.2XLARGE16"
+}
+
+data "tencentcloud_vpc_subnets" "vpc_first" {
+  is_default        = true
+  availability_zone = var.availability_zone_first
+}
+
+data "tencentcloud_vpc_subnets" "vpc_second" {
+  is_default        = true
+  availability_zone = var.availability_zone_second
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
+  cluster_cidr                               = var.cluster_cidr
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_internet                           = true
+  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  cluster_deploy_type                        = "MANAGED_CLUSTER"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone_first
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone_second
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_second.instance_list.0.subnet_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+    cam_role_name             = "CVM_QcsRole"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+  extra_args = [
+    "root-dir=/var/lib/kubelet"
+  ]
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -127,6 +225,7 @@ The following arguments are supported:
 * `container_runtime` - (Optional, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.
 * `deletion_protection` - (Optional) Indicates whether cluster deletion protection is enabled. Default is false.
 * `eni_subnet_ids` - (Optional) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
+* `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
 * `ignore_cluster_cidr_conflict` - (Optional, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
 * `is_non_static_ip_mode` - (Optional, ForceNew) Indicates whether static ip mode is enabled. Default is false.
 * `kube_proxy_mode` - (Optional) Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set.When set to kube-proxy-bpf, cluster version greater than 1.14 and with TKE-optimized kernel is required.

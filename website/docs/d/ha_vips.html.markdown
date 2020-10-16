@@ -45,7 +45,7 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_id` - Instance id that is associated.
   * `name` - Name of the HA VIP.
   * `network_interface_id` - Network interface id that is associated.
-  * `state` - State of the HA VIP, values are `AVAILABLE`, `UNBIND`.
+  * `state` - State of the HA VIP. Valid values: `AVAILABLE`, `UNBIND`.
   * `subnet_id` - Subnet id.
   * `vip` - Virtual IP address, it must not be occupied and in this VPC network segment. If not set, it will be assigned after resource created automatically.
   * `vpc_id` - VPC id.

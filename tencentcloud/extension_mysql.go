@@ -72,7 +72,7 @@ var MysqlDelStates = map[int64]bool{
 //mysql available period value
 var MYSQL_AVAILABLE_PERIOD = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}
 
-var MYSQL_SUPPORTS_ENGINE = []string{"5.5", "5.6", "5.7"}
+var MYSQL_SUPPORTS_ENGINE = []string{"5.5", "5.6", "5.7", "8.0"}
 
 //automatic renewal status code
 const (

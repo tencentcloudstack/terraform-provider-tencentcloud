@@ -51,7 +51,7 @@ func resourceTencentCloudCfsAccessRule() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerInRange(1, 100),
-				Description:  "The priority level of rule. Valid value ranges: 1-100. and 1 indicates the highest priority.",
+				Description:  "The priority level of rule. Valid value ranges: (1~100). and 1 indicates the highest priority.",
 			},
 			"rw_permission": {
 				Type:         schema.TypeString,
