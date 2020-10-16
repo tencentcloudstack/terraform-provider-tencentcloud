@@ -1,4 +1,9 @@
 ## 1.45.2 (Unreleased)
+
+ENHANCEMENTS:
+
+* update Resource and Datasource description.
+
 ## 1.45.1 (October 16, 2020)
 
 ENHANCEMENTS:
