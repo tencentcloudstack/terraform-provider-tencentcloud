@@ -1,4 +1,10 @@
 ## 1.45.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_clb_target_group_instance_attachment` update doc
+* Resource: `tencentcloud_clb_target_group_attachment` update doc
+
 ## 1.45.0 (October 15, 2020)
 
 FEATURES:

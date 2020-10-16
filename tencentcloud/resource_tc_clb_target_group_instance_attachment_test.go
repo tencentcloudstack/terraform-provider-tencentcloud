@@ -170,7 +170,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
     data_disk_size = 50
-	encrypt = false
+	encrypt        = false
   }
 
   tags = {
@@ -242,7 +242,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
     data_disk_size = 50
-	encrypt = false
+	encrypt        = false
   }
 
   tags = {

@@ -75,11 +75,10 @@ data "tencentcloud_instances" "foo" {
 resource "tencentcloud_clb_target_group" "test" {
   target_group_name = "test"
   vpc_id            = tencentcloud_vpc.app.id
-  port              = 33
 }
 
 resource "tencentcloud_clb_target_group_instance_attachment" "test" {
-  target_group_id = tencentcloud_clb_targetgroup.test.id
+  target_group_id = tencentcloud_clb_target_group.test.id
   bind_ip         = data.tencentcloud_instances.foo.instance_list[0].private_ip
   port            = 222
   weight          = 3
