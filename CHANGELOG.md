@@ -1,4 +1,8 @@
 ## 1.45.2 (Unreleased)
+
+BUG FIXES:
+* Resource: `tencentcloud_mysql_instance` fix creating prepaid instance error.
+
 ## 1.45.1 (October 16, 2020)
 
 ENHANCEMENTS:
