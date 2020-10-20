@@ -131,6 +131,50 @@ resource "tencentcloud_clb_redirection" "redirection_http" {
   target_rule_id     = tencentcloud_clb_listener_rule.rule_http_dst.id
 }
 
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-rule-basic"
+}
+
+resource "tencentcloud_clb_listener" "listener_basic" {
+  clb_id        = tencentcloud_clb_instance.clb_basic.id
+  port          = 1
+  protocol      = "HTTP"
+  listener_name = "listener_basic"
+}
+
+resource "tencentcloud_clb_listener_rule" "rule_basic" {
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_basic.id
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  target_type         = "TARGETGROUP"
+}
+
+resource "tencentcloud_clb_target_group" "test"{
+    target_group_name = "test-target-keep-1"
+}
+
+resource "tencentcloud_clb_target_group_instance_attachment" "test"{
+  target_group_id = tencentcloud_clb_target_group.test.id
+  bind_ip         = "172.16.48.18"
+  port            = 222
+  weight          = 3
+}
+
+resource "tencentcloud_clb_target_group_attachment" "group" {
+    clb_id          = tencentcloud_clb_instance.clb_basic.id
+    listener_id     = tencentcloud_clb_listener.listener_basic.id
+	rule_id         = tencentcloud_clb_listener_rule.rule_basic.id
+    targrt_group_id = tencentcloud_clb_target_group.test.id
+}
+
+data "tencentcloud_clb_target_groups" "target_group_info_id" {
+  target_group_id = tencentcloud_clb_target_group.test.id
+}
+
 data "tencentcloud_clb_instances" "instances" {
   clb_id = tencentcloud_clb_instance.example.id
 }
