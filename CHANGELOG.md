@@ -1,4 +1,8 @@
 ## 1.45.3 (Unreleased)
+
+BUG FIXES:
+* Resource: `tencentcloud_clb_instance` fix tag creation bug.
+
 ## 1.45.2 (October 19, 2020)
 
 BUG FIXES:
