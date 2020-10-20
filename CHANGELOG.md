@@ -1,4 +1,10 @@
 ## 1.45.3 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_sqlserver_instance` Fix the error of releasing associated resources when destroying sqlserver postpaid instance.
+* Resource: `tencentcloud_sqlserver_readonly_instance` Fix the bug that the instance cannot be recycled when destroying sqlserver postpaid instance.
+
 ## 1.45.2 (October 19, 2020)
 
 BUG FIXES:
