@@ -343,7 +343,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional: true,
 				Default:  false,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					if new == "false" && old == "" || old == "false" && new == "false" {
+					if new == "false" && old == "" || old == "false" && new == "" {
 						return true
 					} else {
 						return old == new
