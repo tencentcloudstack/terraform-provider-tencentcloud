@@ -134,7 +134,6 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The available tags within this CLB.",
 			},
 		},
