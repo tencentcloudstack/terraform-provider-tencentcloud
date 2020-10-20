@@ -4,6 +4,7 @@ BUG FIXES:
 * Resource: `tencentcloud_clb_instance` fix force new when updating tags.
 * Resource: `tencentcloud_redis_backup_config` fix doc issues.
 * Resource: `tencentcloud_instance` fix `keep_image_login` force new issue when updating terraform version.
+* Resource: `tencentcloud_clb_instance` fix tag creation bug.
 
 ## 1.45.2 (October 19, 2020)
 
