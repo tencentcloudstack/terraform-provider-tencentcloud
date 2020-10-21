@@ -44,11 +44,11 @@ In addition to all arguments above, the following attributes are exported:
   * `certificate_id` - The certificate ID.
   * `domain_name` - Domain name.
   * `is_default_mapping` - Whether to use default path mapping. Valid values: `true`, `false`. `true` means to use default path mapping, `false` means to use custom path mapping.
+  * `is_status_on` - Domain name resolution status. Valid values: `true`, `false`. `true` means normal parsing, `false` means parsing failed.
   * `net_type` - Network type.
   * `path_mappings` - Domain name mapping path and environment list.
     * `environment` - Release environment.
     * `path` - The domain mapping path.
   * `protocol` - Custom domain name agreement type.
-  * `status` - Domain name resolution status. Valid values: `true`, `false`. `true` means normal parsing, `false` means parsing failed.
 
 

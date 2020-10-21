@@ -153,7 +153,7 @@ func resourceTencentCloudAPIGatewayStrategyAttachmentCreate(d *schema.ResourceDa
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		_, err = apiGatewayService.CreateStrategyAttachment(ctx, serviceId, strategyId, envName, bindApiId)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})

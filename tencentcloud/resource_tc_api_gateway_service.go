@@ -30,6 +30,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -81,28 +82,11 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ForceNew:     true,
-				Default:      "Pv4",
+				Default:      "IPv4",
 				ValidateFunc: validateAllowedStringValue(API_GATEWAY_NET_IP_VERSIONS),
 				Description:  "IP version number. Valid values: `IPv4`, `IPv6`. Default value is `IPv4`.",
 			},
-			"set_server_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Cluster name, which is reserved and used by the tsf serverless type.",
-			},
-			"appid_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "User type, which is reserved and can be used by serverless users.",
-			},
 			// Computed values.
-			"service_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Service ID for query.",
-			},
 			"internal_sub_domain": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -212,8 +196,6 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 		serviceDesc       = d.Get("service_desc").(string)
 		exclusiveSetName  = d.Get("exclusive_set_name").(string)
 		ipVersion         = d.Get("ip_version").(string)
-		setServerName     = d.Get("set_server_name").(string)
-		appidType         = d.Get("appid_type").(string)
 		netTypes          = helper.InterfacesStrings(d.Get("net_type").(*schema.Set).List())
 		serviceId         string
 		err               error
@@ -226,12 +208,17 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 			serviceDesc,
 			exclusiveSetName,
 			ipVersion,
-			setServerName,
-			appidType,
+			"",
+			"",
 			netTypes)
 
 		if err != nil {
-			return retryError(err, InternalError)
+			if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
+				if sdkError.Code == OSS_EXCEPTION {
+					return resource.NonRetryableError(err)
+				}
+			}
+			return retryError(err)
 		}
 		return nil
 	})
@@ -351,7 +338,6 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 			})
 	}
 
-	_ = d.Set("service_id", serviceId)
 	_ = d.Set("service_name", info.Response.ServiceName)
 	_ = d.Set("protocol", info.Response.Protocol)
 	_ = d.Set("service_desc", info.Response.ServiceDesc)
@@ -392,7 +378,7 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 			protocol,
 			serviceDesc,
 			netTypes); err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -417,7 +403,7 @@ func resourceTencentCloudAPIGatewayServiceDelete(d *schema.ResourceData, meta in
 	for _, env := range API_GATEWAY_SERVICE_ENVS {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			if err = apiGatewayService.UnReleaseService(ctx, serviceId, env); err != nil {
-				return retryError(err, InternalError)
+				return retryError(err)
 			}
 			return nil
 		})
@@ -428,7 +414,7 @@ func resourceTencentCloudAPIGatewayServiceDelete(d *schema.ResourceData, meta in
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if err = apiGatewayService.DeleteService(ctx, serviceId); err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})

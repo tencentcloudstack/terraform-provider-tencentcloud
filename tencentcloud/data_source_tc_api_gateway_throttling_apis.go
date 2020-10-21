@@ -197,8 +197,7 @@ func dataSourceTencentCloudAPIGatewayThrottlingApisRead(d *schema.ResourceData, 
 			return err
 		}
 
-		for i := range infos {
-			result := infos[i]
+		for _, result := range infos {
 			if result.ServiceId == nil {
 				continue
 			}
@@ -208,32 +207,31 @@ func dataSourceTencentCloudAPIGatewayThrottlingApisRead(d *schema.ResourceData, 
 		serviceIds = append(serviceIds, serviceID)
 	}
 
-	for i := range serviceIds {
-		serviceIdTmp := serviceIds[i]
+	for _, serviceIdTmp := range serviceIds {
 		environmentList, err := apiGatewayService.DescribeApiEnvironmentStrategyList(ctx, serviceIdTmp, environmentNames)
 		if err != nil {
 			return err
 		}
 
 		environmentResults := make([]map[string]interface{}, 0, len(environmentList))
-		for i := range environmentList {
-			environmentSet := environmentList[i].EnvironmentStrategySet
+		for _, envList := range environmentList {
+			environmentSet := envList.EnvironmentStrategySet
 			strategyList := make([]map[string]interface{}, 0, len(environmentSet))
-			for j := range environmentSet {
-				if environmentSet[j] == nil {
+			for _, envSet := range environmentSet {
+				if envSet == nil {
 					continue
 				}
 				strategyList = append(strategyList, map[string]interface{}{
-					"environment_name": environmentSet[j].EnvironmentName,
-					"quota":            environmentSet[j].Quota,
+					"environment_name": envSet.EnvironmentName,
+					"quota":            envSet.Quota,
 				})
 			}
 
 			item := map[string]interface{}{
-				"api_id":        environmentList[i].ApiId,
-				"api_name":      environmentList[i].ApiName,
-				"path":          environmentList[i].Path,
-				"method":        environmentList[i].Method,
+				"api_id":        envList.ApiId,
+				"api_name":      envList.ApiName,
+				"path":          envList.Path,
+				"method":        envList.Method,
 				"strategy_list": strategyList,
 			}
 			environmentResults = append(environmentResults, item)

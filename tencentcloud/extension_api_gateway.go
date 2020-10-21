@@ -3,6 +3,7 @@ package tencentcloud
 const (
 	SERVICE_ERR_CODE = "ResourceNotFound.InvalidService"
 	API_ERR_CODE     = "ResourceNotFound.InvalidApi"
+	OSS_EXCEPTION    = "InternalError.OssException"
 )
 
 const (

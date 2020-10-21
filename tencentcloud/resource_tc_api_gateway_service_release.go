@@ -259,7 +259,7 @@ func resourceTencentCloudAPIGatewayServiceReleaseDelete(d *schema.ResourceData, 
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if err = apiGatewayService.UnReleaseService(ctx, serviceId, envName); err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})

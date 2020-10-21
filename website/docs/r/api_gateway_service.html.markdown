@@ -30,11 +30,9 @@ The following arguments are supported:
 * `net_type` - (Required) Network type list, which is used to specify the supported network types. Valid values: `INNER`, `OUTER`. `INNER` indicates access over private network, and `OUTER` indicates access over public network.
 * `protocol` - (Required) Service frontend request type. Valid values: `http`, `https`, `http&https`.
 * `service_name` - (Required) Custom service name.
-* `appid_type` - (Optional, ForceNew) User type, which is reserved and can be used by serverless users.
 * `exclusive_set_name` - (Optional, ForceNew) Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.
 * `ip_version` - (Optional, ForceNew) IP version number. Valid values: `IPv4`, `IPv6`. Default value is `IPv4`.
 * `service_desc` - (Optional) Custom service description.
-* `set_server_name` - (Optional, ForceNew) Cluster name, which is reserved and used by the tsf serverless type.
 
 ## Attributes Reference
 
@@ -53,7 +51,6 @@ In addition to all arguments above, the following attributes are exported:
 * `internal_sub_domain` - Private network access subdomain name.
 * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 * `outer_sub_domain` - Public network access subdomain name.
-* `service_id` - Service ID for query.
 * `usage_plan_list` - A list of attach usage plans.
   * `api_id` - ID of the API.
   * `bind_type` - Binding type.

@@ -300,7 +300,7 @@ func resourceTencentCloudAPIGatewayUsagePlanUpdate(d *schema.ResourceData, meta 
 				maxRequestNumPreSec)
 
 			if nil != err {
-				return retryError(err, InternalError)
+				return retryError(err)
 			}
 			return nil
 		})
@@ -325,7 +325,7 @@ func resourceTencentCloudAPIGatewayUsagePlanDelete(d *schema.ResourceData, meta 
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		inErr := apiGatewayService.DeleteUsagePlan(ctx, usagePlanId)
 		if inErr != nil {
-			return retryError(inErr, InternalError)
+			return retryError(inErr)
 		}
 		return nil
 	})

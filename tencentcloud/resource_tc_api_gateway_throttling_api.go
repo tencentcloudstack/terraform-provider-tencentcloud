@@ -205,24 +205,24 @@ func resourceTencentCloudAPIGatewayThrottlingAPIRead(d *schema.ResourceData, met
 	}
 
 	environmentResults := make([]map[string]interface{}, 0, len(environmentList))
-	for i := range environmentList {
-		environmentSet := environmentList[i].EnvironmentStrategySet
+	for _, envList := range environmentList {
+		environmentSet := envList.EnvironmentStrategySet
 		strategy_list := make([]map[string]interface{}, 0, len(environmentSet))
-		for j := range environmentSet {
-			if environmentSet[j] == nil {
+		for _, envSet := range environmentSet {
+			if envSet == nil {
 				continue
 			}
 			strategy_list = append(strategy_list, map[string]interface{}{
-				"environment_name": environmentSet[j].EnvironmentName,
-				"quota":            environmentSet[j].Quota,
+				"environment_name": envSet.EnvironmentName,
+				"quota":            envSet.Quota,
 			})
 		}
 
 		item := map[string]interface{}{
-			"api_id":        environmentList[i].ApiId,
-			"api_name":      environmentList[i].ApiName,
-			"path":          environmentList[i].Path,
-			"method":        environmentList[i].Method,
+			"api_id":        envList.ApiId,
+			"api_name":      envList.ApiName,
+			"path":          envList.Path,
+			"method":        envList.Method,
 			"strategy_list": strategy_list,
 		}
 		environmentResults = append(environmentResults, item)
@@ -304,11 +304,11 @@ func resourceTencentCloudAPIGatewayThrottlingAPIDelete(d *schema.ResourceData, m
 	if err != nil {
 		return err
 	}
-	for i := range environmentList {
-		if environmentList[i] == nil || environmentList[i].ApiId == nil {
+	for _, envList := range environmentList {
+		if envList == nil || envList.ApiId == nil {
 			continue
 		}
-		apiList = append(apiList, *environmentList[i].ApiId)
+		apiList = append(apiList, *envList.ApiId)
 	}
 
 	if len(apiList) == 0 {

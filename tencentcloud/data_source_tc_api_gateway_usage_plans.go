@@ -94,60 +94,6 @@ func dataSourceTencentCloudAPIGatewayUsagePlans() *schema.Resource {
 							Computed:    true,
 							Description: "Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.",
 						},
-						"attach_list": {
-							Type:        schema.TypeList,
-							Computed:    true,
-							Description: "Attach service and API list.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"service_id": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "The service ID.",
-									},
-									"service_name": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "The service name.",
-									},
-									"api_id": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "The API ID, this value is empty if attach service.",
-									},
-									"api_name": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "The API name, this value is empty if attach service.",
-									},
-									"path": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "The API path, this value is empty if attach service.",
-									},
-									"method": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "The API method, this value is empty if attach service.",
-									},
-									"environment": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "The environment name.",
-									},
-									"modify_time": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.",
-									},
-									"create_time": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.",
-									},
-								},
-							},
-						},
 					},
 				},
 			},
@@ -186,37 +132,7 @@ func dataSourceTencentCloudAPIGatewayUsagePlansRead(d *schema.ResourceData, meta
 	}
 
 	for _, info := range infos {
-		var (
-			infoMap    = make(map[string]interface{}, 10)
-			attachList []*apigateway.UsagePlanEnvironment
-		)
-		for _, bindType := range API_GATEWAY_TYPES {
-			var tyepeList []*apigateway.UsagePlanEnvironment
-			if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-				tyepeList, err = apiGatewayService.DescribeUsagePlanEnvironments(ctx, *info.UsagePlanId, bindType)
-				if err != nil {
-					return retryError(err, InternalError)
-				}
-				attachList = append(attachList, tyepeList...)
-				return nil
-			}); err != nil {
-				return err
-			}
-		}
-		infoAttachList := make([]map[string]interface{}, 0, len(attachList))
-		for _, v := range attachList {
-			infoAttachList = append(infoAttachList, map[string]interface{}{
-				"service_id":   v.ServiceId,
-				"service_name": v.ServiceName,
-				"api_id":       v.ApiId,
-				"api_name":     v.ApiName,
-				"path":         v.Path,
-				"method":       v.Method,
-				"environment":  v.Environment,
-				"modify_time":  v.ModifiedTime,
-				"create_time":  v.CreatedTime,
-			})
-		}
+		var infoMap = make(map[string]interface{}, 7)
 		infoMap["usage_plan_id"] = info.UsagePlanId
 		infoMap["usage_plan_name"] = info.UsagePlanName
 		infoMap["usage_plan_desc"] = info.UsagePlanDesc
@@ -224,7 +140,6 @@ func dataSourceTencentCloudAPIGatewayUsagePlansRead(d *schema.ResourceData, meta
 		infoMap["max_request_num_pre_sec"] = info.MaxRequestNumPreSec
 		infoMap["modify_time"] = info.ModifiedTime
 		infoMap["create_time"] = info.CreatedTime
-		infoMap["attach_list"] = infoAttachList
 
 		list = append(list, infoMap)
 	}

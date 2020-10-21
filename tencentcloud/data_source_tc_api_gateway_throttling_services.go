@@ -30,7 +30,6 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -134,8 +133,7 @@ func dataSourceTencentCloudAPIGatewayThrottlingServicesRead(d *schema.ResourceDa
 			return err
 		}
 
-		for i := range infos {
-			result := infos[i]
+		for _, result := range infos {
 			if result.ServiceId == nil {
 				continue
 			}
@@ -145,16 +143,14 @@ func dataSourceTencentCloudAPIGatewayThrottlingServicesRead(d *schema.ResourceDa
 		serviceIds = append(serviceIds, serviceID)
 	}
 
-	for i := range serviceIds {
-		serviceIdTmp := serviceIds[i]
+	for _, serviceIdTmp := range serviceIds {
 		environmentList, err := apiGatewayService.DescribeServiceEnvironmentStrategyList(ctx, serviceIdTmp)
 		if err != nil {
 			return err
 		}
 
 		environmentResults := make([]map[string]interface{}, 0, len(environmentList))
-		for i := range environmentList {
-			value := environmentList[i]
+		for _, value := range environmentList {
 			if value == nil {
 				continue
 			}

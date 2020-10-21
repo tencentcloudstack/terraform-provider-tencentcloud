@@ -174,7 +174,7 @@ func (me *APIGatewayService) CreateUsagePlan(ctx context.Context, usagePlanName 
 		response, err := me.client.UseAPIGatewayClient().CreateUsagePlan(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s API[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return resource.RetryableError(err)
+			return retryError(err)
 		}
 		if response.Response.Result == nil {
 			return resource.NonRetryableError(fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction()))
@@ -1050,7 +1050,7 @@ func (me *APIGatewayService) ModifyApiEnvironmentStrategy(ctx context.Context,
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseAPIGatewayClient().ModifyApiEnvironmentStrategy(request)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -1088,7 +1088,7 @@ func (me *APIGatewayService) ModifyServiceEnvironmentStrategy(ctx context.Contex
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseAPIGatewayClient().ModifyServiceEnvironmentStrategy(request)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -1145,7 +1145,7 @@ func (me *APIGatewayService) BindSubDomainService(ctx context.Context,
 					return resource.NonRetryableError(ee)
 				}
 			}
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -1259,7 +1259,7 @@ func (me *APIGatewayService) ModifySubDomainService(ctx context.Context,
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseAPIGatewayClient().ModifySubDomain(request)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -1294,7 +1294,7 @@ func (me *APIGatewayService) UnBindSubDomainService(ctx context.Context,
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseAPIGatewayClient().UnBindSubDomain(request)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -1534,7 +1534,7 @@ func (me *APIGatewayService) ReleaseService(ctx context.Context,
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseAPIGatewayClient().ReleaseService(request)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		if response == nil || response.Response.Result == nil || response.Response.Result.ReleaseVersion == nil {
 			return resource.NonRetryableError(fmt.Errorf("ReleaseService response is nil"))

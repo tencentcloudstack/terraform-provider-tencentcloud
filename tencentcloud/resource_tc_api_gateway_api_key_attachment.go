@@ -112,7 +112,7 @@ func resourceTencentCloudAPIGatewayAPIKeyAttachmentCreate(d *schema.ResourceData
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if err = apiGatewayService.BindSecretId(ctx, usagePlanId, apiKeyId); err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -189,10 +189,9 @@ func resourceTencentCloudAPIGatewayAPIKeyAttachmentRead(d *schema.ResourceData, 
 
 	for _, v := range info.BindSecretIds {
 		if *v == apiKeyId {
-			if err = d.Set("api_key_id", apiKeyId); err != nil {
-				return err
-			}
-			return d.Set("usage_plan_id", usagePlanId)
+			_ = d.Set("api_key_id", apiKeyId)
+			_ = d.Set("usage_plan_id", usagePlanId)
+			break
 		}
 	}
 	return nil
@@ -219,10 +218,10 @@ func resourceTencentCloudAPIGatewayAPIKeyAttachmentDelete(d *schema.ResourceData
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 
-	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		err = apiGatewayService.UnBindSecretId(ctx, usagePlanId, apiKeyId)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	}); err != nil {

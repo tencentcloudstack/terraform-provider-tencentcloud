@@ -157,40 +157,6 @@ func dataSourceTencentCloudAPIGatewayServices() *schema.Resource {
 								},
 							},
 						},
-						"api_list": {
-							Type:        schema.TypeList,
-							Computed:    true,
-							Description: "A list of APIs.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"api_id": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "ID of the API.",
-									},
-									"api_name": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Name of the API.",
-									},
-									"api_desc": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Description of the API.",
-									},
-									"path": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Path of the API.",
-									},
-									"method": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Method of the API.",
-									},
-								},
-							},
-						},
 					},
 				},
 			},
@@ -231,9 +197,7 @@ func dataSourceTencentCloudAPIGatewayServicesRead(d *schema.ResourceData, meta i
 	list := make([]map[string]interface{}, 0, len(services))
 
 	for _, service := range services {
-
 		var info apigateway.DescribeServiceResponse
-
 		if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			info, has, err = apiGatewayService.DescribeService(ctx, *service.ServiceId)
 			if err != nil {
@@ -245,19 +209,6 @@ func dataSourceTencentCloudAPIGatewayServicesRead(d *schema.ResourceData, meta i
 		}
 		if !has {
 			continue
-		}
-
-		var apiList = make([]map[string]interface{}, 0, len(info.Response.ApiIdStatusSet))
-
-		for _, item := range info.Response.ApiIdStatusSet {
-			apiList = append(
-				apiList, map[string]interface{}{
-					"api_id":   item.ApiId,
-					"api_name": item.ApiName,
-					"api_desc": item.ApiDesc,
-					"path":     item.Path,
-					"method":   item.Method,
-				})
 		}
 
 		var plans []*apigateway.ApiUsagePlan
@@ -324,7 +275,6 @@ func dataSourceTencentCloudAPIGatewayServicesRead(d *schema.ResourceData, meta i
 			"inner_https_port":    info.Response.InnerHttpsPort,
 			"modify_time":         info.Response.ModifiedTime,
 			"create_time":         info.Response.CreatedTime,
-			"api_list":            apiList,
 			"usage_plan_list":     planList,
 		})
 	}

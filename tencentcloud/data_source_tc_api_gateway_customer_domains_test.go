@@ -20,7 +20,7 @@ func TestAccTencentAPIGatewayCustomerDomain(t *testing.T) {
 					testAccCheckCustomDomainExists("tencentcloud_api_gateway_custom_domain.foo"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayDomainSourceName+".id", "list.#"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayDomainSourceName+".id", "list.0.domain_name"),
-					resource.TestCheckResourceAttrSet(testAPIGatewayDomainSourceName+".id", "list.0.status"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayDomainSourceName+".id", "list.0.is_status_on"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayDomainSourceName+".id", "list.0.is_default_mapping"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayDomainSourceName+".id", "list.0.net_type"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayDomainSourceName+".id", "list.0.path_mappings.#"),

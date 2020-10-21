@@ -57,7 +57,7 @@ func dataSourceTencentCloudAPIGatewayCustomerDomains() *schema.Resource {
 							Computed:    true,
 							Description: "Domain name.",
 						},
-						"status": {
+						"is_status_on": {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Domain name resolution status. Valid values: `true`, `false`. `true` means normal parsing, `false` means parsing failed.",
@@ -154,7 +154,7 @@ func dataSourceTencentCloudAPIGatewayCustomerDomainRead(d *schema.ResourceData, 
 		}
 		list = append(list, map[string]interface{}{
 			"domain_name":        info.DomainName,
-			"status":             status,
+			"is_status_on":       status,
 			"certificate_id":     info.CertificateId,
 			"is_default_mapping": info.IsDefaultMapping,
 			"protocol":           info.Protocol,

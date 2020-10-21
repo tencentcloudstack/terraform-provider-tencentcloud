@@ -196,11 +196,11 @@ func resourceTencentCloudAPIGatewayThrottlingServiceDelete(d *schema.ResourceDat
 	if err != nil {
 		return err
 	}
-	for i := range environmentList {
-		if environmentList[i] == nil || environmentList[i].EnvironmentName == nil {
+	for _, envList := range environmentList {
+		if envList == nil || envList.EnvironmentName == nil {
 			continue
 		}
-		environmentNames = append(environmentNames, *environmentList[i].EnvironmentName)
+		environmentNames = append(environmentNames, *envList.EnvironmentName)
 	}
 
 	if len(environmentNames) == 0 {

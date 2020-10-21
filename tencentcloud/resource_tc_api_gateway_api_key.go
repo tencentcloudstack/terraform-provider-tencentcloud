@@ -89,7 +89,7 @@ func resourceTencentCloudAPIGatewayAPIKeyCreate(d *schema.ResourceData, meta int
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		accessKeyId, err = apiGatewayService.CreateApiKey(ctx, secretName)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -118,7 +118,7 @@ func resourceTencentCloudAPIGatewayAPIKeyCreate(d *schema.ResourceData, meta int
 	if statusStr == API_GATEWAY_KEY_DISABLED {
 		if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			if err = apiGatewayService.DisableApiKey(ctx, accessKeyId); err != nil {
-				return retryError(err, InternalError)
+				return retryError(err)
 			}
 			return nil
 		}); err != nil {
@@ -189,7 +189,7 @@ func resourceTencentCloudAPIGatewayAPIKeyUpdate(d *schema.ResourceData, meta int
 				err = apiGatewayService.EnableApiKey(ctx, accessKeyId)
 			}
 			if err != nil {
-				return retryError(err, InternalError)
+				return retryError(err)
 			}
 			return nil
 		}); err != nil {
@@ -214,7 +214,7 @@ func resourceTencentCloudAPIGatewayAPIKeyDelete(d *schema.ResourceData, meta int
 	if d.Get("status") != API_GATEWAY_KEY_DISABLED {
 		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			if err := apiGatewayService.DisableApiKey(ctx, accessKeyId); err != nil {
-				return retryError(err, InternalError)
+				return retryError(err)
 			}
 			return nil
 		}); err != nil {
@@ -225,7 +225,7 @@ func resourceTencentCloudAPIGatewayAPIKeyDelete(d *schema.ResourceData, meta int
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		inErr := apiGatewayService.DeleteApiKey(ctx, accessKeyId)
 		if inErr != nil {
-			return retryError(inErr, InternalError)
+			return retryError(inErr)
 		}
 		return nil
 	})

@@ -44,12 +44,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list of services.
-  * `api_list` - A list of APIs.
-    * `api_desc` - Description of the API.
-    * `api_id` - ID of the API.
-    * `api_name` - Name of the API.
-    * `method` - Method of the API.
-    * `path` - Path of the API.
   * `create_time` - Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
   * `exclusive_set_name` - Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.
   * `inner_http_port` - Port number for http access over private network.

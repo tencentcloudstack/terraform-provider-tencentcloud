@@ -269,7 +269,7 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 				},
 			},
 			// Computed values.
-			"modify_time": {
+			"update_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.",
@@ -436,7 +436,7 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		ratelimit.Check(request.GetAction())
 		response, err = apiGatewayService.client.UseAPIGatewayClient().CreateApi(request)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -498,7 +498,7 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("service_config_scf_function_namespace", info.ServiceScfFunctionNamespace)
 	_ = d.Set("service_config_scf_function_qualifier", info.ServiceScfFunctionQualifier)
 	_ = d.Set("service_config_mock_return_message", info.ServiceMockReturnMessage)
-	_ = d.Set("modify_time", info.ModifiedTime)
+	_ = d.Set("update_time", info.ModifiedTime)
 	_ = d.Set("create_time", info.CreatedTime)
 
 	if info.RequestConfig != nil {
@@ -689,7 +689,7 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 		ratelimit.Check(request.GetAction())
 		response, err = apiGatewayService.client.UseAPIGatewayClient().ModifyApi(request)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -717,7 +717,7 @@ func resourceTencentCloudAPIGatewayAPIDelete(d *schema.ResourceData, meta interf
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		err := apiGatewayService.DeleteApi(ctx, serviceId, apiId)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})

@@ -110,7 +110,7 @@ func resourceTencentCloudAPIGatewayIPStrategyCreate(d *schema.ResourceData, meta
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		strategyId, err = apiGatewayService.CreateIPStrategy(ctx, serviceId, strategyName, strategyType, strategyData)
 		if err != nil {
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})
@@ -210,7 +210,7 @@ func resourceTencentCloudAPIGatewayIPStrategyUpdate(d *schema.ResourceData, meta
 			err = apiGatewayService.UpdateIPStrategy(ctx, serviceId, strategyId, strategyData)
 
 			if err != nil {
-				return retryError(err, InternalError)
+				return retryError(err)
 			}
 			return nil
 		}); err != nil {
