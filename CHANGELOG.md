@@ -1,6 +1,31 @@
-## 1.45.3 (Unreleased)
+## 1.46.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_api_gateway_api`
+* **New Resource**: `tencentcloud_api_gateway_service`
+* **New Resource**: `tencentcloud_api_gateway_throttling_api`
+* **New Resource**: `tencentcloud_api_gateway_throttling_service`
+* **New Resource**: `tencentcloud_api_gateway_custom_domain`
+* **New Resource**: `tencentcloud_api_gateway_usage_plan`
+* **New Resource**: `tencentcloud_api_gateway_usage_plan_attachment`
+* **New Resource**: `tencentcloud_api_gateway_ip_strategy`
+* **New Resource**: `tencentcloud_api_gateway_strategy_attachment`
+* **New Resource**: `tencentcloud_api_gateway_api_key`
+* **New Resource**: `tencentcloud_api_gateway_api_key_attachment`
+* **New Resource**: `tencentcloud_api_gateway_service_release`
+* **New Data Source**: `tencentcloud_api_gateway_apis` 
+* **New Data Source**: `tencentcloud_api_gateway_services` 
+* **New Data Source**: `tencentcloud_api_gateway_throttling_apis` 
+* **New Data Source**: `tencentcloud_api_gateway_throttling_services` 
+* **New Data Source**: `tencentcloud_api_gateway_usage_plans`
+* **New Data Source**: `tencentcloud_api_gateway_ip_strategies`
+* **New Data Source**: `tencentcloud_api_gateway_customer_domains`
+* **New Data Source**: `tencentcloud_api_gateway_usage_plan_environments`
+* **New Data Source**: `tencentcloud_api_gateway_api_keys`
 
 BUG FIXES:
+
 * Resource: `tencentcloud_clb_instance` fix force new when updating tags.
 * Resource: `tencentcloud_redis_backup_config` fix doc issues.
 * Resource: `tencentcloud_instance` fix `keep_image_login` force new issue when updating terraform version.
