@@ -1,4 +1,5 @@
-## 1.45.3 (Unreleased)
+## 1.45.4 (Unreleased)
+## 1.45.3 (October 21, 2020)
 
 BUG FIXES:
 * Resource: `tencentcloud_clb_instance` fix force new when updating tags.
