@@ -39,6 +39,9 @@ func TestAccTencentCloudAPIGateWayAPIResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testAPIGatewayAPIResourceKey, "response_fail_example", "fail"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayAPIResourceKey, "update_time"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayAPIResourceKey, "create_time"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIResourceKey, "release_limit", "500"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIResourceKey, "pre_limit", "500"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIResourceKey, "test_limit", "500"),
 				),
 			},
 			{
@@ -62,6 +65,9 @@ func TestAccTencentCloudAPIGateWayAPIResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testAPIGatewayAPIResourceKey, "response_fail_example", "<note>fail</note>"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayAPIResourceKey, "update_time"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayAPIResourceKey, "create_time"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIResourceKey, "release_limit", "100"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIResourceKey, "pre_limit", "100"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIResourceKey, "test_limit", "100"),
 				),
 			},
 		},
@@ -171,6 +177,10 @@ resource "tencentcloud_api_gateway_api" "api" {
     converted_code = -100
     need_convert   = true
   }
+
+  release_limit    = 500
+  pre_limit        = 500
+  test_limit       = 500
 }
 `
 
@@ -216,5 +226,9 @@ resource "tencentcloud_api_gateway_api" "api" {
     converted_code = -10
     need_convert   = true
   }
+
+  release_limit    = 100
+  pre_limit        = 100
+  test_limit       = 100
 }
 `

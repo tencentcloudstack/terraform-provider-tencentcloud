@@ -208,7 +208,7 @@ func dataSourceTencentCloudAPIGatewayThrottlingApisRead(d *schema.ResourceData, 
 	}
 
 	for _, serviceIdTmp := range serviceIds {
-		environmentList, err := apiGatewayService.DescribeApiEnvironmentStrategyList(ctx, serviceIdTmp, environmentNames)
+		environmentList, err := apiGatewayService.DescribeApiEnvironmentStrategyList(ctx, serviceIdTmp, environmentNames, "")
 		if err != nil {
 			return err
 		}

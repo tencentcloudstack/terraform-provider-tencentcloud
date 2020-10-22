@@ -15,11 +15,14 @@ Use this resource to create API gateway service.
 
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "niceservice"
-  protocol     = "http&https"
-  service_desc = "your nice service"
-  net_type     = ["INNER", "OUTER"]
-  ip_version   = "IPv4"
+  service_name  = "niceservice"
+  protocol      = "http&https"
+  service_desc  = "your nice service"
+  net_type      = ["INNER", "OUTER"]
+  ip_version    = "IPv4"
+  release_limit = 500
+  pre_limit     = 500
+  test_limit    = 500
 }
 ```
 
@@ -32,7 +35,10 @@ The following arguments are supported:
 * `service_name` - (Required) Custom service name.
 * `exclusive_set_name` - (Optional, ForceNew) Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.
 * `ip_version` - (Optional, ForceNew) IP version number. Valid values: `IPv4`, `IPv6`. Default value is `IPv4`.
+* `pre_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
+* `release_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 * `service_desc` - (Optional) Custom service description.
+* `test_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 
 ## Attributes Reference
 

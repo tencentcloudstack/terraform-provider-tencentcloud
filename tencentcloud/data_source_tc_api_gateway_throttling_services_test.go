@@ -1,9 +1,13 @@
 package tencentcloud
 
 import (
+	"context"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 var testAPIGatewaythrottlingServiceDataSourceName = "data.tencentcloud_api_gateway_throttling_services"
@@ -29,6 +33,73 @@ func TestAccTencentAPIGatewayThrottlingServicesDataSource(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccCheckThrottlingServiceDestroy(s *terraform.State) error {
+	var (
+		logId             = getLogId(contextNil)
+		ctx               = context.WithValue(context.TODO(), logIdKey, logId)
+		throttlingService = APIGatewayService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	)
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_api_gateway_throttling_service" {
+			continue
+		}
+
+		serviceId := rs.Primary.Attributes["service_id"]
+		environmentNames := rs.Primary.Attributes["environment_names"]
+		environmentList, err := throttlingService.DescribeServiceEnvironmentStrategyList(ctx, serviceId)
+		if err != nil {
+			return err
+		}
+
+		for _, v := range environmentList {
+			if v == nil || !strings.Contains(environmentNames, *v.EnvironmentName) {
+				continue
+			}
+			if *v.Strategy == STRATEGY || *v.Strategy == STRATEGY_MAX {
+				continue
+			}
+
+			return fmt.Errorf("throttling service still not restore: %s", rs.Primary.ID)
+		}
+	}
+	return nil
+}
+
+func testAccCheckThrottlingServiceExists(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		var (
+			logId             = getLogId(contextNil)
+			ctx               = context.WithValue(context.TODO(), logIdKey, logId)
+			throttlingService = APIGatewayService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		)
+
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("API gateway throttling service %s is not found", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("API gateway throttling service id is not set")
+		}
+
+		serviceId := rs.Primary.Attributes["service_id"]
+		environmentNames := rs.Primary.Attributes["environment_names"]
+		environmentList, err := throttlingService.DescribeServiceEnvironmentStrategyList(ctx, serviceId)
+		if err != nil {
+			return err
+		}
+
+		for _, v := range environmentList {
+			if v == nil || !strings.Contains(environmentNames, *v.EnvironmentName) {
+				continue
+			}
+			if *v.Strategy == STRATEGY {
+				return fmt.Errorf("throttling service still not set value: %s", rs.Primary.ID)
+			}
+		}
+		return nil
+	}
 }
 
 func testAccTestAccTencentAPIGatewayThrottlingServices() string {

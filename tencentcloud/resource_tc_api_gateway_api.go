@@ -268,6 +268,24 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 					},
 				},
 			},
+			"release_limit": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "API QPS value. Enter a positive number to limit the API query rate per second `QPS`.",
+			},
+			"pre_limit": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "API QPS value. Enter a positive number to limit the API query rate per second `QPS`.",
+			},
+			"test_limit": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "API QPS value. Enter a positive number to limit the API query rate per second `QPS`.",
+			},
 			// Computed values.
 			"update_time": {
 				Type:        schema.TypeString,
@@ -295,6 +313,10 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		request           = apigateway.NewCreateApiRequest()
 		serviceId         = d.Get("service_id").(string)
 		has               bool
+
+		releaseLimit int
+		preLimit     int
+		testLimit    int
 	)
 
 	request.ServiceId = &serviceId
@@ -419,6 +441,18 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	if v, ok := d.GetOk("pre_limit"); ok {
+		preLimit = v.(int)
+	}
+
+	if v, ok := d.GetOk("release_limit"); ok {
+		releaseLimit = v.(int)
+	}
+
+	if v, ok := d.GetOk("test_limit"); ok {
+		testLimit = v.(int)
+	}
+
 	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, has, err = apiGatewayService.DescribeService(ctx, serviceId)
 		if err != nil {
@@ -448,6 +482,27 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("create API fail, return nil response")
 	}
 
+	if preLimit != 0 {
+		_, err = apiGatewayService.ModifyApiEnvironmentStrategy(ctx, serviceId, int64(preLimit), "prepub", []string{*response.Response.Result.ApiId})
+		if err != nil {
+			return err
+		}
+	}
+
+	if releaseLimit != 0 {
+		_, err = apiGatewayService.ModifyApiEnvironmentStrategy(ctx, serviceId, int64(releaseLimit), "release", []string{*response.Response.Result.ApiId})
+		if err != nil {
+			return err
+		}
+	}
+
+	if testLimit != 0 {
+		_, err = apiGatewayService.ModifyApiEnvironmentStrategy(ctx, serviceId, int64(testLimit), "test", []string{*response.Response.Result.ApiId})
+		if err != nil {
+			return err
+		}
+	}
+
 	d.SetId(*response.Response.Result.ApiId)
 
 	return resourceTencentCloudAPIGatewayAPIRead(d, meta)
@@ -466,6 +521,9 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 		info              apigateway.ApiInfo
 		has               bool
 		err               error
+		releaseLimit      int64
+		preLimit          int64
+		testLimit         int64
 	)
 
 	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -542,6 +600,46 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("response_error_codes", list)
 	}
 
+	environmentList, err := apiGatewayService.DescribeApiEnvironmentStrategyList(ctx, serviceId, []string{}, apiId)
+	if len(environmentList) == 0 {
+		return nil
+	}
+
+	environmentSet := environmentList[0].EnvironmentStrategySet
+	for _, envSet := range environmentSet {
+		if envSet == nil {
+			continue
+		}
+		if *envSet.EnvironmentName == API_GATEWAY_SERVICE_ENV_PREPUB {
+			if  *envSet.Quota == -1{
+				preLimit = QUOTA_MAX
+				continue
+			}
+			preLimit = *envSet.Quota
+			continue
+		}
+		if *envSet.EnvironmentName == API_GATEWAY_SERVICE_ENV_TEST {
+			if  *envSet.Quota == -1{
+				testLimit = QUOTA_MAX
+				continue
+			}
+			testLimit = *envSet.Quota
+			continue
+		}
+		if *envSet.EnvironmentName == API_GATEWAY_SERVICE_ENV_RELEASE {
+			if  *envSet.Quota == -1{
+				releaseLimit = QUOTA_MAX
+				continue
+			}
+			releaseLimit = *envSet.Quota
+			continue
+		}
+	}
+
+	_ = d.Set("pre_limit", preLimit)
+	_ = d.Set("test_limit", testLimit)
+	_ = d.Set("release_limit", releaseLimit)
+
 	return nil
 }
 
@@ -550,11 +648,17 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 
 	var (
 		apiGatewayService = APIGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId             = getLogId(contextNil)
+		ctx               = context.WithValue(context.TODO(), logIdKey, logId)
 		response          = apigateway.NewModifyApiResponse()
 		request           = apigateway.NewModifyApiRequest()
 		apiId             = d.Id()
 		serviceId         = d.Get("service_id").(string)
 		err               error
+
+		releaseLimit int
+		preLimit     int
+		testLimit    int
 	)
 
 	request.ServiceId = &serviceId
@@ -685,6 +789,18 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	if v, ok := d.GetOk("pre_limit"); ok {
+		preLimit = v.(int)
+	}
+
+	if v, ok := d.GetOk("release_limit"); ok {
+		releaseLimit = v.(int)
+	}
+
+	if v, ok := d.GetOk("test_limit"); ok {
+		testLimit = v.(int)
+	}
+
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err = apiGatewayService.client.UseAPIGatewayClient().ModifyApi(request)
@@ -700,6 +816,28 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 	if response == nil {
 		return fmt.Errorf("modify API fail, return nil response")
 	}
+
+	if preLimit != 0 {
+		_, err = apiGatewayService.ModifyApiEnvironmentStrategy(ctx, serviceId, int64(preLimit), "prepub", []string{apiId})
+		if err != nil {
+			return err
+		}
+	}
+
+	if releaseLimit != 0 {
+		_, err = apiGatewayService.ModifyApiEnvironmentStrategy(ctx, serviceId, int64(preLimit), "release", []string{apiId})
+		if err != nil {
+			return err
+		}
+	}
+
+	if testLimit != 0 {
+		_, err = apiGatewayService.ModifyApiEnvironmentStrategy(ctx, serviceId, int64(preLimit), "test", []string{apiId})
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudAPIGatewayAPIRead(d, meta)
 }
 
@@ -707,15 +845,23 @@ func resourceTencentCloudAPIGatewayAPIDelete(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_api_gateway_api.delete")()
 
 	var (
-		apiGatewayService = APIGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
-		logId             = getLogId(contextNil)
-		ctx               = context.WithValue(context.TODO(), logIdKey, logId)
-		apiId             = d.Id()
-		serviceId         = d.Get("service_id").(string)
+		apiGatewayService       = APIGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId                   = getLogId(contextNil)
+		ctx                     = context.WithValue(context.TODO(), logIdKey, logId)
+		apiId                   = d.Id()
+		serviceId               = d.Get("service_id").(string)
+		limitNumber       int64 = QUOTA_MAX
+		err               error
 	)
+	for _, v := range API_GATEWAY_SERVICE_ENVS {
+		_, err = apiGatewayService.ModifyApiEnvironmentStrategy(ctx, serviceId, limitNumber, v, []string{apiId})
+		if err != nil {
+			return err
+		}
+	}
 
 	return resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		err := apiGatewayService.DeleteApi(ctx, serviceId, apiId)
+		err = apiGatewayService.DeleteApi(ctx, serviceId, apiId)
 		if err != nil {
 			return retryError(err)
 		}

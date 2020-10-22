@@ -29,6 +29,9 @@ func TestAccTencentCloudAPIGateWayServiceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "create_time"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "internal_sub_domain"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "inner_http_port"),
+					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "release_limit", "500"),
+					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "pre_limit", "500"),
+					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "test_limit", "500"),
 				),
 			},
 			{
@@ -49,6 +52,9 @@ func TestAccTencentCloudAPIGateWayServiceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "internal_sub_domain"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "outer_sub_domain"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "inner_http_port"),
+					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "release_limit", "100"),
+					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "pre_limit", "100"),
+					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "test_limit", "100"),
 				),
 			},
 		},
@@ -109,19 +115,25 @@ func testAccCheckAPIGatewayServiceExists(n string) resource.TestCheckFunc {
 
 const testAccAPIGatewayService = `
 resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "myservice"
-  protocol     = "http"
-  service_desc = "my nice service"
-  net_type     = ["INNER"]
-  ip_version   = "IPv4"
+  service_name     = "myservice"
+  protocol         = "http"
+  service_desc     = "my nice service"
+  net_type         = ["INNER"]
+  ip_version       = "IPv4"
+  release_limit    = 500
+  pre_limit        = 500
+  test_limit       = 500
 }
 `
 const testAccAPIGatewayServiceUpdate = `
 resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "yourservice"
-  protocol     = "http&https"
-  service_desc = "your nice service"
-  net_type     = ["INNER", "OUTER"]
-  ip_version   = "IPv4"
+  service_name     = "yourservice"
+  protocol         = "http&https"
+  service_desc     = "your nice service"
+  net_type         = ["INNER", "OUTER"]
+  ip_version       = "IPv4"
+  release_limit    = 100
+  pre_limit        = 100
+  test_limit       = 100
 }
 `
