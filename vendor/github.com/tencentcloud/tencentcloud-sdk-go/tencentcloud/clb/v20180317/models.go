@@ -586,7 +586,7 @@ type CreateListenerRequest struct {
 	// 会话保持类型。不传或传NORMAL表示默认会话保持类型。QUIC_CID 表示根据Quic Connection ID做会话保持。QUIC_CID只支持UDP协议。
 	SessionType *string `json:"SessionType,omitempty" name:"SessionType"`
 
-	// 是否开启长连接，此参数仅适用于HTTP/HTTPS监听器
+	// 是否开启长连接，此参数仅适用于HTTP/HTTPS监听器，0:关闭；1:开启， 默认关闭
 	KeepaliveEnable *int64 `json:"KeepaliveEnable,omitempty" name:"KeepaliveEnable"`
 }
 
@@ -665,8 +665,14 @@ type CreateLoadBalancerRequest struct {
 	// 购买负载均衡同时，给负载均衡打上标签
 	Tags []*TagInfo `json:"Tags,omitempty" name:"Tags" list`
 
+	// 独占集群信息
+	ExclusiveCluster *ExclusiveCluster `json:"ExclusiveCluster,omitempty" name:"ExclusiveCluster"`
+
 	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
 	ClientToken *string `json:"ClientToken,omitempty" name:"ClientToken"`
+
+	// Stgw独占集群的标签。
+	ClusterTag *string `json:"ClusterTag,omitempty" name:"ClusterTag"`
 }
 
 func (r *CreateLoadBalancerRequest) ToJsonString() string {

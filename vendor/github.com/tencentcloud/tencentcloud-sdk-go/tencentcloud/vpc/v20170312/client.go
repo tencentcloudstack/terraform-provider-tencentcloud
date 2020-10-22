@@ -304,7 +304,7 @@ func NewAssociateAddressResponse() (response *AssociateAddressResponse) {
 // * 将 EIP 绑定到实例（CVM）上，其本质是将 EIP 绑定到实例上主网卡的主内网 IP 上。
 // * 将 EIP 绑定到主网卡的主内网IP上，绑定过程会把其上绑定的普通公网 IP 自动解绑并释放。
 // * 将 EIP 绑定到指定网卡的内网 IP上（非主网卡的主内网IP），则必须先解绑该 EIP，才能再绑定新的。
-// * 将 EIP 绑定到NAT网关，请使用接口[EipBindNatGateway](https://cloud.tencent.com/document/product/215/4093)
+// * 将 EIP 绑定到NAT网关，请使用接口[AssociateNatGatewayAddress](https://cloud.tencent.com/document/product/215/36722)
 // * EIP 如果欠费或被封堵，则不能被绑定。
 // * 只有状态为 UNBIND 的 EIP 才能够被绑定。
 func (c *Client) AssociateAddress(request *AssociateAddressRequest) (response *AssociateAddressResponse, err error) {
@@ -2344,6 +2344,31 @@ func (c *Client) DescribeAssistantCidr(request *DescribeAssistantCidrRequest) (r
     return
 }
 
+func NewDescribeBandwidthPackageBillUsageRequest() (request *DescribeBandwidthPackageBillUsageRequest) {
+    request = &DescribeBandwidthPackageBillUsageRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeBandwidthPackageBillUsage")
+    return
+}
+
+func NewDescribeBandwidthPackageBillUsageResponse() (response *DescribeBandwidthPackageBillUsageResponse) {
+    response = &DescribeBandwidthPackageBillUsageResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口 (DescribeBandwidthPackageBillUsage) 用于查询后付费共享带宽包当前的计费用量.
+func (c *Client) DescribeBandwidthPackageBillUsage(request *DescribeBandwidthPackageBillUsageRequest) (response *DescribeBandwidthPackageBillUsageResponse, err error) {
+    if request == nil {
+        request = NewDescribeBandwidthPackageBillUsageRequest()
+    }
+    response = NewDescribeBandwidthPackageBillUsageResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeBandwidthPackageQuotaRequest() (request *DescribeBandwidthPackageQuotaRequest) {
     request = &DescribeBandwidthPackageQuotaRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2365,6 +2390,31 @@ func (c *Client) DescribeBandwidthPackageQuota(request *DescribeBandwidthPackage
         request = NewDescribeBandwidthPackageQuotaRequest()
     }
     response = NewDescribeBandwidthPackageQuotaResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBandwidthPackageResourcesRequest() (request *DescribeBandwidthPackageResourcesRequest) {
+    request = &DescribeBandwidthPackageResourcesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeBandwidthPackageResources")
+    return
+}
+
+func NewDescribeBandwidthPackageResourcesResponse() (response *DescribeBandwidthPackageResourcesResponse) {
+    response = &DescribeBandwidthPackageResourcesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 本接口 (DescribeBandwidthPackageResources) 用于根据共享带宽包唯一ID查询共享带宽包内的资源列表，支持按条件过滤查询结果和分页查询。
+func (c *Client) DescribeBandwidthPackageResources(request *DescribeBandwidthPackageResourcesRequest) (response *DescribeBandwidthPackageResourcesResponse, err error) {
+    if request == nil {
+        request = NewDescribeBandwidthPackageResourcesRequest()
+    }
+    response = NewDescribeBandwidthPackageResourcesResponse()
     err = c.Send(request, response)
     return
 }
@@ -3772,7 +3822,7 @@ func NewDisassociateAddressResponse() (response *DisassociateAddressResponse) {
 
 // 本接口 (DisassociateAddress) 用于解绑[弹性公网IP](https://cloud.tencent.com/document/product/213/1941)（简称 EIP）。
 // * 支持CVM实例，弹性网卡上的EIP解绑
-// * 不支持NAT上的EIP解绑。NAT上的EIP解绑请参考[EipUnBindNatGateway](https://cloud.tencent.com/document/product/215/4092)
+// * 不支持NAT上的EIP解绑。NAT上的EIP解绑请参考[DisassociateNatGatewayAddress](https://cloud.tencent.com/document/api/215/36716)
 // * 只有状态为 BIND 和 BIND_ENI 的 EIP 才能进行解绑定操作。
 // * EIP 如果被封堵，则不能进行解绑定操作。
 func (c *Client) DisassociateAddress(request *DisassociateAddressRequest) (response *DisassociateAddressResponse, err error) {
@@ -4333,7 +4383,7 @@ func NewModifyAddressesBandwidthResponse() (response *ModifyAddressesBandwidthRe
     return
 }
 
-// 本接口（ModifyAddressesBandwidth）用于调整[弹性公网IP](https://cloud.tencent.com/document/product/213/1941)(简称EIP)带宽，包括后付费EIP, 预付费EIP和带宽包EIP
+// 本接口（ModifyAddressesBandwidth）用于调整[弹性公网IP](https://cloud.tencent.com/document/product/213/1941)(简称EIP)带宽，支持后付费EIP, 预付费EIP和带宽包EIP
 func (c *Client) ModifyAddressesBandwidth(request *ModifyAddressesBandwidthRequest) (response *ModifyAddressesBandwidthResponse, err error) {
     if request == nil {
         request = NewModifyAddressesBandwidthRequest()
@@ -5259,6 +5309,31 @@ func (c *Client) RemoveIp6Rules(request *RemoveIp6RulesRequest) (response *Remov
         request = NewRemoveIp6RulesRequest()
     }
     response = NewRemoveIp6RulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRenewAddressesRequest() (request *RenewAddressesRequest) {
+    request = &RenewAddressesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vpc", APIVersion, "RenewAddresses")
+    return
+}
+
+func NewRenewAddressesResponse() (response *RenewAddressesResponse) {
+    response = &RenewAddressesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 该接口用于续费包月带宽计费模式的弹性公网IP
+func (c *Client) RenewAddresses(request *RenewAddressesRequest) (response *RenewAddressesResponse, err error) {
+    if request == nil {
+        request = NewRenewAddressesRequest()
+    }
+    response = NewRenewAddressesResponse()
     err = c.Send(request, response)
     return
 }

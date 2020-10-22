@@ -1333,3 +1333,39 @@ func (me *SqlserverService) DeletePublishSubscribe(ctx context.Context, publishS
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return
 }
+
+func (me *SqlserverService) RecycleDBInstance(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewRecycleDBInstanceRequest()
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	var response *sqlserver.RecycleDBInstanceResponse
+	var err error
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err = me.client.UseSqlserverClient().RecycleDBInstance(request)
+		if err != nil {
+			return retryError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	flowId := *response.Response.FlowId
+	err = me.WaitForTaskFinish(ctx, flowId)
+	if err != nil {
+		errRet = err
+	}
+	return
+}

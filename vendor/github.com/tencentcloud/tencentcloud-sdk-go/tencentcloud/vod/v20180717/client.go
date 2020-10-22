@@ -306,6 +306,31 @@ func (c *Client) CreateContentReviewTemplate(request *CreateContentReviewTemplat
     return
 }
 
+func NewCreateImageProcessingTemplateRequest() (request *CreateImageProcessingTemplateRequest) {
+    request = &CreateImageProcessingTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "CreateImageProcessingTemplate")
+    return
+}
+
+func NewCreateImageProcessingTemplateResponse() (response *CreateImageProcessingTemplateResponse) {
+    response = &CreateImageProcessingTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 创建一个用户自定义的图片处理模板，数量上限：16。最多支持三次操作，例如：裁剪-缩略-裁剪。
+func (c *Client) CreateImageProcessingTemplate(request *CreateImageProcessingTemplateRequest) (response *CreateImageProcessingTemplateResponse, err error) {
+    if request == nil {
+        request = NewCreateImageProcessingTemplateRequest()
+    }
+    response = NewCreateImageProcessingTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateImageSpriteTemplateRequest() (request *CreateImageSpriteTemplateRequest) {
     request = &CreateImageSpriteTemplateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -705,6 +730,31 @@ func (c *Client) DeleteContentReviewTemplate(request *DeleteContentReviewTemplat
         request = NewDeleteContentReviewTemplateRequest()
     }
     response = NewDeleteContentReviewTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteImageProcessingTemplateRequest() (request *DeleteImageProcessingTemplateRequest) {
+    request = &DeleteImageProcessingTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "DeleteImageProcessingTemplate")
+    return
+}
+
+func NewDeleteImageProcessingTemplateResponse() (response *DeleteImageProcessingTemplateResponse) {
+    response = &DeleteImageProcessingTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 删除用户自定义图片处理模板。
+func (c *Client) DeleteImageProcessingTemplate(request *DeleteImageProcessingTemplateRequest) (response *DeleteImageProcessingTemplateResponse, err error) {
+    if request == nil {
+        request = NewDeleteImageProcessingTemplateRequest()
+    }
+    response = NewDeleteImageProcessingTemplateResponse()
     err = c.Send(request, response)
     return
 }
@@ -1168,6 +1218,56 @@ func (c *Client) DescribeContentReviewTemplates(request *DescribeContentReviewTe
     return
 }
 
+func NewDescribeEventsStateRequest() (request *DescribeEventsStateRequest) {
+    request = &DescribeEventsStateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "DescribeEventsState")
+    return
+}
+
+func NewDescribeEventsStateResponse() (response *DescribeEventsStateResponse) {
+    response = &DescribeEventsStateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// * 该接口用于业务服务器获取 [可靠回调](https://cloud.tencent.com/document/product/266/33779#.E5.8F.AF.E9.9D.A0.E5.9B.9E.E8.B0.83) 事件通知的状态。
+func (c *Client) DescribeEventsState(request *DescribeEventsStateRequest) (response *DescribeEventsStateResponse, err error) {
+    if request == nil {
+        request = NewDescribeEventsStateRequest()
+    }
+    response = NewDescribeEventsStateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeImageProcessingTemplatesRequest() (request *DescribeImageProcessingTemplatesRequest) {
+    request = &DescribeImageProcessingTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    request.Init().WithApiInfo("vod", APIVersion, "DescribeImageProcessingTemplates")
+    return
+}
+
+func NewDescribeImageProcessingTemplatesResponse() (response *DescribeImageProcessingTemplatesResponse) {
+    response = &DescribeImageProcessingTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// 获取图片处理模板列表，支持根据条件，分页查询。
+func (c *Client) DescribeImageProcessingTemplates(request *DescribeImageProcessingTemplatesRequest) (response *DescribeImageProcessingTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDescribeImageProcessingTemplatesRequest()
+    }
+    response = NewDescribeImageProcessingTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeImageSpriteTemplatesRequest() (request *DescribeImageSpriteTemplatesRequest) {
     request = &DescribeImageSpriteTemplatesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1320,6 +1420,8 @@ func NewDescribeReviewDetailsResponse() (response *DescribeReviewDetailsResponse
     return
 }
 
+// <b>本接口已不推荐使用，用 [DescribeMediaProcessUsageData](/document/product/266/41464) 替代</b>
+// 
 // 该接口返回查询时间范围内每天使用的视频内容审核时长数据，单位： 秒。
 // 
 // 1. 可以查询最近365天内的视频内容审核时长统计数据。

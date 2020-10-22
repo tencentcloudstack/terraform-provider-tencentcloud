@@ -2,6 +2,9 @@
 ## 1.45.3 (October 21, 2020)
 
 BUG FIXES:
+
+* Resource: `tencentcloud_sqlserver_instance` Fix the error of releasing associated resources when destroying sqlserver postpaid instance.
+* Resource: `tencentcloud_sqlserver_readonly_instance` Fix the bug that the instance cannot be recycled when destroying sqlserver postpaid instance.
 * Resource: `tencentcloud_clb_instance` fix force new when updating tags.
 * Resource: `tencentcloud_redis_backup_config` fix doc issues.
 * Resource: `tencentcloud_instance` fix `keep_image_login` force new issue when updating terraform version.
