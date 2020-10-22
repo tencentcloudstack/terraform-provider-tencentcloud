@@ -24,6 +24,8 @@ FEATURES:
 * **New Data Source**: `tencentcloud_api_gateway_usage_plan_environments`
 * **New Data Source**: `tencentcloud_api_gateway_api_keys`
 
+## 1.45.3 (October 21, 2020)
+
 BUG FIXES:
 
 * Resource: `tencentcloud_clb_instance` fix force new when updating tags.
