@@ -976,7 +976,7 @@ func (me *APIGatewayService) DescribeServiceEnvironmentStrategyList(ctx context.
 }
 
 func (me *APIGatewayService) DescribeApiEnvironmentStrategyList(ctx context.Context,
-	serviceId string, environmentNames []string) (environmentApiList []*apigateway.ApiEnvironmentStrategy, errRet error) {
+	serviceId string, environmentNames []string, apiId string) (environmentApiList []*apigateway.ApiEnvironmentStrategy, errRet error) {
 	var (
 		request  = apigateway.NewDescribeApiEnvironmentStrategyRequest()
 		err      error
@@ -989,6 +989,10 @@ func (me *APIGatewayService) DescribeApiEnvironmentStrategyList(ctx context.Cont
 	if serviceId == "" {
 		errRet = fmt.Errorf("serviceId is must not empty")
 		return
+	}
+
+	if apiId != "" {
+		request.ApiId = &apiId
 	}
 
 	request.ServiceId = &serviceId

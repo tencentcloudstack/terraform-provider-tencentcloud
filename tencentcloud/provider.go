@@ -70,8 +70,6 @@ API GateWay
   Resource
   	tencentcloud_api_gateway_api
 	tencentcloud_api_gateway_service
-	tencentcloud_api_gateway_throttling_api
-	tencentcloud_api_gateway_throttling_service
 	tencentcloud_api_gateway_custom_domain
 	tencentcloud_api_gateway_usage_plan
 	tencentcloud_api_gateway_usage_plan_attachment
@@ -861,8 +859,6 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_api_gateway_usage_plan_attachment":       resourceTencentCloudAPIGatewayUsagePlanAttachment(),
 			"tencentcloud_api_gateway_api":                         resourceTencentCloudAPIGatewayAPI(),
 			"tencentcloud_api_gateway_service":                     resourceTencentCloudAPIGatewayService(),
-			"tencentcloud_api_gateway_throttling_api":              resourceTencentCloudAPIGatewayThrottlingAPI(),
-			"tencentcloud_api_gateway_throttling_service":          resourceTencentCloudAPIGatewayThrottlingService(),
 			"tencentcloud_api_gateway_custom_domain":               resourceTencentCloudAPIGatewayCustomDomain(),
 			"tencentcloud_api_gateway_ip_strategy":                 resourceTencentCloudAPIGatewayIPStrategy(),
 			"tencentcloud_api_gateway_strategy_attachment":         resourceTencentCloudAPIGatewayStrategyAttachment(),

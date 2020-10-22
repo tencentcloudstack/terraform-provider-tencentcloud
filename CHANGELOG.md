@@ -4,8 +4,6 @@ FEATURES:
 
 * **New Resource**: `tencentcloud_api_gateway_api`
 * **New Resource**: `tencentcloud_api_gateway_service`
-* **New Resource**: `tencentcloud_api_gateway_throttling_api`
-* **New Resource**: `tencentcloud_api_gateway_throttling_service`
 * **New Resource**: `tencentcloud_api_gateway_custom_domain`
 * **New Resource**: `tencentcloud_api_gateway_usage_plan`
 * **New Resource**: `tencentcloud_api_gateway_usage_plan_attachment`

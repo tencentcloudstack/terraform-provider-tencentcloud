@@ -68,7 +68,9 @@ The following arguments are supported:
 * `api_desc` - (Optional) Custom API description.
 * `auth_type` - (Optional) API authentication type. Valid values: `SECRET` (key pair authentication),`NONE` (no authentication). Default value: `NONE`.
 * `enable_cors` - (Optional) Whether to enable CORS. Default value: `true`.
+* `pre_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 * `protocol` - (Optional, ForceNew) API frontend request type. Valid values: `HTTP`, `WEBSOCKET`. Default value: `HTTP`.
+* `release_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 * `request_config_method` - (Optional) Request frontend method configuration. Like `GET`,`POST`,`PUT`,`DELETE`,`HEAD`,`ANY`. Default value: `GET`.
 * `request_parameters` - (Optional) Frontend request parameters.
 * `response_error_codes` - (Optional) Custom error code configuration. Must keep at least one after set.
@@ -86,6 +88,7 @@ The following arguments are supported:
 * `service_config_type` - (Optional) API backend service type. Valid values: `WEBSOCKET`, `HTTP`, `SCF`, `MOCK`. Default value: `HTTP`.
 * `service_config_url` - (Optional) API backend service url. This parameter is required when `service_config_type` is `HTTP`.
 * `service_config_vpc_id` - (Optional) Unique VPC ID.
+* `test_limit` - (Optional) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 
 The `request_parameters` object supports the following:
 

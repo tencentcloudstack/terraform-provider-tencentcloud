@@ -9,6 +9,9 @@ resource "tencentcloud_api_gateway_service" "service" {
   service_desc = var.service_desc
   net_type     = ["INNER", "OUTER"]
   ip_version   = var.ip_version
+  release_limit    = 100
+  pre_limit        = 100
+  test_limit       = 100
 }
 
 resource "tencentcloud_api_gateway_api" "api" {
@@ -44,6 +47,10 @@ resource "tencentcloud_api_gateway_api" "api" {
        	converted_code = -10
         need_convert   = true
     }
+
+    release_limit    = 100
+    pre_limit        = 100
+    test_limit       = 100
 }
 
 resource "tencentcloud_api_gateway_custom_domain" "foo" {
@@ -66,19 +73,6 @@ resource "tencentcloud_api_gateway_ip_strategy" "test"{
 resource "tencentcloud_api_gateway_api_key_attachment" "attach" {
   api_key_id    = tencentcloud_api_gateway_api_key.test.id
   usage_plan_id = tencentcloud_api_gateway_usage_plan.plan.id
-}
-
-resource "tencentcloud_api_gateway_throttling_api" "service" {
-	service_id       = tencentcloud_api_gateway_service.service.id
-	strategy         = "400"
-	environment_name = "test"
-	api_ids          = [tencentcloud_api_gateway_api.api.id]
-}
-
-resource "tencentcloud_api_gateway_throttling_service" "service" {
-	service_id        = tencentcloud_api_gateway_service.service.id
-	strategy          = "400"
-	environment_names = ["release"]
 }
 
 resource "tencentcloud_api_gateway_usage_plan" "plan" {
