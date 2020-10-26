@@ -25,7 +25,7 @@ resource "tencentcloud_api_gateway_api" "api" {
     request_config_method = "POST"
 
     request_parameters {
-    	name          = "email"
+        name          = "email"
         position      = "QUERY"
         type          = "string"
         desc          = "your email please?"
@@ -41,10 +41,10 @@ resource "tencentcloud_api_gateway_api" "api" {
     response_success_example = "<note>success</note>"
     response_fail_example    = "<note>fail</note>"
     response_error_codes {
-    	code           = 10
+        code           = 10
         msg            = "system error"
-       	desc           = "system error code"
-       	converted_code = -10
+        desc           = "system error code"
+        converted_code = -10
         need_convert   = true
     }
 
@@ -90,16 +90,16 @@ resource "tencentcloud_api_gateway_usage_plan_attachment" "attach_service" {
 }
 
 resource "tencentcloud_api_gateway_service_release" "service" {
-  service_id       = tencentcloud_api_gateway_throttling_api.service.service_id
+  service_id       = tencentcloud_api_gateway_service.service.id
   environment_name = "release"
   release_desc     = var.release_desc
 }
 
 resource "tencentcloud_api_gateway_strategy_attachment" "test"{
-   service_id       = tencentcloud_api_gateway_service_release.service.service_id
-   strategy_id      = tencentcloud_api_gateway_ip_strategy.test.strategy_id
-   environment_name = "release"
-   bind_api_id      = tencentcloud_api_gateway_api.api.id
+    service_id       = tencentcloud_api_gateway_service_release.service.service_id
+    strategy_id      = tencentcloud_api_gateway_ip_strategy.test.strategy_id
+    environment_name = "release"
+    bind_api_id      = tencentcloud_api_gateway_api.api.id
 }
 
 data "tencentcloud_api_gateway_api_keys" "name" {
@@ -142,11 +142,11 @@ data "tencentcloud_api_gateway_services" "id" {
 }
 
 data "tencentcloud_api_gateway_throttling_apis" "id" {
-    service_id = tencentcloud_api_gateway_throttling_api.service.service_id
+    service_id = tencentcloud_api_gateway_service.service.id
 }
 
 data "tencentcloud_api_gateway_throttling_apis" "foo" {
-	service_id        = tencentcloud_api_gateway_throttling_api.service.service_id
+	service_id        = tencentcloud_api_gateway_service.service.id
 	environment_names = ["release", "test"]
 }
 

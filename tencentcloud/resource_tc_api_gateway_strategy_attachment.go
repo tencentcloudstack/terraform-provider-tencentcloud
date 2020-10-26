@@ -53,15 +53,8 @@ resource "tencentcloud_api_gateway_api" "api" {
     }
 }
 
-resource "tencentcloud_api_gateway_throttling_api" "foo" {
-	service_id       = tencentcloud_api_gateway_service.service.id
-	strategy         = "400"
-	environment_name = "test"
-	api_ids          = [tencentcloud_api_gateway_api.api.id]
-}
-
 resource "tencentcloud_api_gateway_service_release" "service" {
-  service_id       = tencentcloud_api_gateway_throttling_api.foo.service_id
+  service_id       = tencentcloud_api_gateway_service.service.id
   environment_name = "release"
   release_desc     = "test service release"
 }

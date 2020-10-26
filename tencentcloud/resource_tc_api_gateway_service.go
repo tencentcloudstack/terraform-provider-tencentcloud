@@ -422,7 +422,7 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 		}
 
 		if *envSet.EnvironmentName == API_GATEWAY_SERVICE_ENV_PREPUB {
-			if  *envSet.Strategy == -1{
+			if *envSet.Strategy == -1 {
 				preLimit = QUOTA_MAX
 				continue
 			}
@@ -430,7 +430,7 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 			continue
 		}
 		if *envSet.EnvironmentName == API_GATEWAY_SERVICE_ENV_TEST {
-			if  *envSet.Strategy == -1{
+			if *envSet.Strategy == -1 {
 				testLimit = QUOTA_MAX
 				continue
 			}
@@ -438,7 +438,7 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 			continue
 		}
 		if *envSet.EnvironmentName == API_GATEWAY_SERVICE_ENV_RELEASE {
-			if  *envSet.Strategy == -1{
+			if *envSet.Strategy == -1 {
 				releaseLimit = QUOTA_MAX
 				continue
 			}
@@ -472,7 +472,7 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 		preLimit     int
 		testLimit    int
 	)
-
+	d.Partial(true)
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if err = apiGatewayService.ModifyService(ctx,
 			serviceId,
@@ -487,40 +487,51 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 	if err != nil {
 		return err
 	}
+	d.SetPartial("service_name")
+	d.SetPartial("protocol")
+	d.SetPartial("service_desc")
+	d.SetPartial("net_type")
 
-	if v, ok := d.GetOk("pre_limit"); ok {
-		preLimit = v.(int)
-	}
-
-	if v, ok := d.GetOk("release_limit"); ok {
-		releaseLimit = v.(int)
-	}
-
-	if v, ok := d.GetOk("test_limit"); ok {
-		testLimit = v.(int)
-	}
-
-	if preLimit != 0 {
-		_, err = apiGatewayService.ModifyServiceEnvironmentStrategy(ctx, serviceId, int64(preLimit), []string{API_GATEWAY_SERVICE_ENV_PREPUB})
-		if err != nil {
-			return err
+	if d.HasChange("pre_limit") {
+		if v, ok := d.GetOk("pre_limit"); ok {
+			preLimit = v.(int)
 		}
-	}
-
-	if releaseLimit != 0 {
-		_, err = apiGatewayService.ModifyServiceEnvironmentStrategy(ctx, serviceId, int64(releaseLimit), []string{API_GATEWAY_SERVICE_ENV_RELEASE})
-		if err != nil {
-			return err
+		if preLimit != 0 {
+			_, err = apiGatewayService.ModifyServiceEnvironmentStrategy(ctx, serviceId, int64(preLimit), []string{API_GATEWAY_SERVICE_ENV_PREPUB})
+			if err != nil {
+				return err
+			}
 		}
+		d.SetPartial("pre_limit")
 	}
 
-	if testLimit != 0 {
-		_, err = apiGatewayService.ModifyServiceEnvironmentStrategy(ctx, serviceId, int64(testLimit), []string{API_GATEWAY_SERVICE_ENV_TEST})
-		if err != nil {
-			return err
+	if d.HasChange("release_limit") {
+		if v, ok := d.GetOk("release_limit"); ok {
+			releaseLimit = v.(int)
 		}
+		if releaseLimit != 0 {
+			_, err = apiGatewayService.ModifyServiceEnvironmentStrategy(ctx, serviceId, int64(releaseLimit), []string{API_GATEWAY_SERVICE_ENV_RELEASE})
+			if err != nil {
+				return err
+			}
+		}
+		d.SetPartial("release_limit")
 	}
 
+	if d.HasChange("test_limit") {
+		if v, ok := d.GetOk("test_limit"); ok {
+			testLimit = v.(int)
+		}
+		if testLimit != 0 {
+			_, err = apiGatewayService.ModifyServiceEnvironmentStrategy(ctx, serviceId, int64(testLimit), []string{API_GATEWAY_SERVICE_ENV_TEST})
+			if err != nil {
+				return err
+			}
+		}
+		d.SetPartial("test_limit")
+	}
+
+	d.Partial(false)
 	return resourceTencentCloudAPIGatewayServiceRead(d, meta)
 }
 
