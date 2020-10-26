@@ -1,4 +1,5 @@
-## 1.46.0 (Unreleased)
+## 1.46.1 (Unreleased)
+## 1.46.0 (October 26, 2020)
 
 FEATURES:
 
