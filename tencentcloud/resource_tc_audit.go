@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_audit" "foo" {
-  name        = "audittest"
-  cos_bucket	= "test"
-  cos_region = "ap-hongkong"
-  log_file_prefix = "test"
-  audit_switch = true
+  name                 = "audittest"
+  cos_bucket           = "test"
+  cos_region           = "ap-hongkong"
+  log_file_prefix      = "test"
+  audit_switch         = true
   read_write_attribute = 3
 }
 ```

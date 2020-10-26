@@ -55,6 +55,30 @@ Anti-DDoS(Dayu)
     tencentcloud_dayu_l4_rule
     tencentcloud_dayu_l7_rule
 
+API GateWay
+  Data Source
+	tencentcloud_api_gateway_apis
+	tencentcloud_api_gateway_services
+	tencentcloud_api_gateway_throttling_services
+	tencentcloud_api_gateway_throttling_apis
+	tencentcloud_api_gateway_usage_plans
+	tencentcloud_api_gateway_ip_strategies
+	tencentcloud_api_gateway_customer_domains
+	tencentcloud_api_gateway_usage_plan_environments
+	tencentcloud_api_gateway_api_keys
+
+  Resource
+  	tencentcloud_api_gateway_api
+	tencentcloud_api_gateway_service
+	tencentcloud_api_gateway_custom_domain
+	tencentcloud_api_gateway_usage_plan
+	tencentcloud_api_gateway_usage_plan_attachment
+	tencentcloud_api_gateway_ip_strategy
+	tencentcloud_api_gateway_strategy_attachment
+	tencentcloud_api_gateway_api_key
+	tencentcloud_api_gateway_api_key_attachment
+    tencentcloud_api_gateway_service_release
+
 Audit
   Data Source
 	tencentcloud_audit_cos_regions
@@ -687,6 +711,15 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vod_snapshot_by_time_offset_templates":    dataSourceTencentCloudVodSnapshotByTimeOffsetTemplates(),
 			"tencentcloud_vod_super_player_configs":                 dataSourceTencentCloudVodSuperPlayerConfigs(),
 			"tencentcloud_sqlserver_publish_subscribes":             dataSourceTencentSqlserverPublishSubscribes(),
+			"tencentcloud_api_gateway_usage_plans":                  dataSourceTencentCloudAPIGatewayUsagePlans(),
+			"tencentcloud_api_gateway_ip_strategies":                dataSourceTencentCloudAPIGatewayIpStrategy(),
+			"tencentcloud_api_gateway_customer_domains":             dataSourceTencentCloudAPIGatewayCustomerDomains(),
+			"tencentcloud_api_gateway_usage_plan_environments":      dataSourceTencentCloudAPIGatewayUsagePlanEnvironments(),
+			"tencentcloud_api_gateway_throttling_services":          dataSourceTencentCloudAPIGatewayThrottlingServices(),
+			"tencentcloud_api_gateway_throttling_apis":              dataSourceTencentCloudAPIGatewayThrottlingApis(),
+			"tencentcloud_api_gateway_apis":                         dataSourceTencentCloudAPIGatewayAPIs(),
+			"tencentcloud_api_gateway_services":                     dataSourceTencentCloudAPIGatewayServices(),
+			"tencentcloud_api_gateway_api_keys":                     dataSourceTencentCloudAPIGatewayAPIKeys(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -822,6 +855,16 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vod_snapshot_by_time_offset_template":    resourceTencentCloudVodSnapshotByTimeOffsetTemplate(),
 			"tencentcloud_vod_super_player_config":                 resourceTencentCloudVodSuperPlayerConfig(),
 			"tencentcloud_sqlserver_publish_subscribe":             resourceTencentCloudSqlserverPublishSubscribe(),
+			"tencentcloud_api_gateway_usage_plan":                  resourceTencentCloudAPIGatewayUsagePlan(),
+			"tencentcloud_api_gateway_usage_plan_attachment":       resourceTencentCloudAPIGatewayUsagePlanAttachment(),
+			"tencentcloud_api_gateway_api":                         resourceTencentCloudAPIGatewayAPI(),
+			"tencentcloud_api_gateway_service":                     resourceTencentCloudAPIGatewayService(),
+			"tencentcloud_api_gateway_custom_domain":               resourceTencentCloudAPIGatewayCustomDomain(),
+			"tencentcloud_api_gateway_ip_strategy":                 resourceTencentCloudAPIGatewayIPStrategy(),
+			"tencentcloud_api_gateway_strategy_attachment":         resourceTencentCloudAPIGatewayStrategyAttachment(),
+			"tencentcloud_api_gateway_api_key":                     resourceTencentCloudAPIGatewayAPIKey(),
+			"tencentcloud_api_gateway_api_key_attachment":          resourceTencentCloudAPIGatewayAPIKeyAttachment(),
+			"tencentcloud_api_gateway_service_release":             resourceTencentCloudAPIGatewayServiceRelease(),
 		},
 
 		ConfigureFunc: providerConfigure,

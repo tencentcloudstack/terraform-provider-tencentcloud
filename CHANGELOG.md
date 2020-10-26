@@ -1,4 +1,27 @@
-## 1.45.4 (Unreleased)
+## 1.46.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_api_gateway_api`
+* **New Resource**: `tencentcloud_api_gateway_service`
+* **New Resource**: `tencentcloud_api_gateway_custom_domain`
+* **New Resource**: `tencentcloud_api_gateway_usage_plan`
+* **New Resource**: `tencentcloud_api_gateway_usage_plan_attachment`
+* **New Resource**: `tencentcloud_api_gateway_ip_strategy`
+* **New Resource**: `tencentcloud_api_gateway_strategy_attachment`
+* **New Resource**: `tencentcloud_api_gateway_api_key`
+* **New Resource**: `tencentcloud_api_gateway_api_key_attachment`
+* **New Resource**: `tencentcloud_api_gateway_service_release`
+* **New Data Source**: `tencentcloud_api_gateway_apis` 
+* **New Data Source**: `tencentcloud_api_gateway_services` 
+* **New Data Source**: `tencentcloud_api_gateway_throttling_apis` 
+* **New Data Source**: `tencentcloud_api_gateway_throttling_services` 
+* **New Data Source**: `tencentcloud_api_gateway_usage_plans`
+* **New Data Source**: `tencentcloud_api_gateway_ip_strategies`
+* **New Data Source**: `tencentcloud_api_gateway_customer_domains`
+* **New Data Source**: `tencentcloud_api_gateway_usage_plan_environments`
+* **New Data Source**: `tencentcloud_api_gateway_api_keys`
+
 ## 1.45.3 (October 21, 2020)
 
 BUG FIXES:
