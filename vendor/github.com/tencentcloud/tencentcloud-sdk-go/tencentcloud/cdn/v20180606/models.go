@@ -322,6 +322,12 @@ type AuthenticationTypeC struct {
 	// whitelist：白名单，表示对除了 FileExtensions 列表之外的所有类型进行鉴权
 	// blacklist：黑名单，表示仅对 FileExtensions 中的类型进行鉴权
 	FilterType *string `json:"FilterType,omitempty" name:"FilterType"`
+
+	// 时间戳进制设置
+	// dec：十进制
+	// hex：十六进制
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeFormat *string `json:"TimeFormat,omitempty" name:"TimeFormat"`
 }
 
 type AuthenticationTypeD struct {
@@ -653,6 +659,10 @@ type CdnIp struct {
 	// overseas：中国境外加速节点
 	// unknown：服务地域无法获取
 	Area *string `json:"Area,omitempty" name:"Area"`
+
+	// 节点的所在城市
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	City *string `json:"City,omitempty" name:"City"`
 }
 
 type CdnIpHistory struct {
@@ -834,6 +844,7 @@ type CreateScdnLogTaskRequest struct {
 	// Mode 映射如下：
 	//   waf = "Web攻击"
 	//   cc = "CC攻击"
+	//   bot = "Bot攻击"
 	Mode *string `json:"Mode,omitempty" name:"Mode"`
 
 	// 查询起始时间，如：2018-09-04 10:40:00，返回结果大于等于指定时间
@@ -862,12 +873,16 @@ type CreateScdnLogTaskRequest struct {
 	//   trojan_horse = "木马后门攻击"
 	//   csrf = "CSRF攻击"
 	//   malicious_file_upload= '恶意文件上传'
+	//   js = "JS主动探测"
+	//   cookie = "Cookie指纹"
 	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
 
 	// 指定执行动作, 不填默认查询全部执行动作
 	// DefenceMode 映射如下：
 	//   observe = '观察模式'
 	//   intercept = '拦截模式'
+	//   captcha = "验证码"
+	//   redirect = "重定向"
 	DefenceMode *string `json:"DefenceMode,omitempty" name:"DefenceMode"`
 
 	// 不填为全部ip
@@ -1023,6 +1038,43 @@ func (r *DeleteClsLogTopicResponse) ToJsonString() string {
 }
 
 func (r *DeleteClsLogTopicResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteScdnDomainRequest struct {
+	*tchttp.BaseRequest
+
+	// 域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+}
+
+func (r *DeleteScdnDomainRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DeleteScdnDomainRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DeleteScdnDomainResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 创建结果，Success表示成功
+		Result *string `json:"Result,omitempty" name:"Result"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DeleteScdnDomainResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DeleteScdnDomainResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1599,6 +1651,12 @@ type DescribeIpStatusRequest struct {
 	// last：表示回源层节点
 	// 不填充情况下，默认返回边缘节点信息
 	Layer *string `json:"Layer,omitempty" name:"Layer"`
+
+	// 查询区域：
+	// mainland: 国内节点
+	// overseas: 海外节点
+	// global: 全球节点
+	Area *string `json:"Area,omitempty" name:"Area"`
 }
 
 func (r *DescribeIpStatusRequest) ToJsonString() string {
@@ -3014,6 +3072,18 @@ type HttpHeaderPathRule struct {
 	RulePaths []*string `json:"RulePaths,omitempty" name:"RulePaths" list`
 }
 
+type HttpHeaderRule struct {
+
+	// http头部设置方式，支持add，set或del，分别表示新增，设置或删除头部。
+	HeaderMode *string `json:"HeaderMode,omitempty" name:"HeaderMode"`
+
+	// http头部名称。
+	HeaderName *string `json:"HeaderName,omitempty" name:"HeaderName"`
+
+	// http头部值。
+	HeaderValue *string `json:"HeaderValue,omitempty" name:"HeaderValue"`
+}
+
 type Https struct {
 
 	// https 配置开关
@@ -3104,6 +3174,41 @@ type IpFilter struct {
 	// 最多可填充 50 个白名单或 50 个黑名单
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Filters []*string `json:"Filters,omitempty" name:"Filters" list`
+
+	// IP 黑白名单分路径配置，白名单功能
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FilterRules []*IpFilterPathRule `json:"FilterRules,omitempty" name:"FilterRules" list`
+}
+
+type IpFilterPathRule struct {
+
+	// IP 黑白名单类型
+	// whitelist：白名单
+	// blacklist：黑名单
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FilterType *string `json:"FilterType,omitempty" name:"FilterType"`
+
+	// IP 黑白名单列表
+	// 支持 X.X.X.X 形式 IP，或 /8、 /16、/24 形式网段
+	// 最多可填充 50 个白名单或 50 个黑名单
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Filters []*string `json:"Filters,omitempty" name:"Filters" list`
+
+	// 规则类型：
+	// all：所有文件生效
+	// file：指定文件后缀生效
+	// directory：指定路径生效
+	// path：指定绝对路径生效
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleType *string `json:"RuleType,omitempty" name:"RuleType"`
+
+	// RuleType 对应类型下的匹配内容：
+	// all 时填充 *
+	// file 时填充后缀名，如 jpg、txt
+	// directory 时填充路径，如 /xxx/test/
+	// path 时填充绝对路径，如 /xxx/test.html
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RulePaths []*string `json:"RulePaths,omitempty" name:"RulePaths" list`
 }
 
 type IpFreqLimit struct {
@@ -3283,6 +3388,43 @@ func (r *ListClsTopicDomainsResponse) ToJsonString() string {
 }
 
 func (r *ListClsTopicDomainsResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ListScdnLogTasksRequest struct {
+	*tchttp.BaseRequest
+}
+
+func (r *ListScdnLogTasksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ListScdnLogTasksRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type ListScdnLogTasksResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 日志下载任务详情
+		TaskList []*ScdnLogTaskDetail `json:"TaskList,omitempty" name:"TaskList" list`
+
+		// 查询到的下载任务的总数
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *ListScdnLogTasksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *ListScdnLogTasksResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3652,6 +3794,10 @@ type Origin struct {
 	// 回源路径
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BasePath *string `json:"BasePath,omitempty" name:"BasePath"`
+
+	// 分路径回源配置规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PathRules []*PathRule `json:"PathRules,omitempty" name:"PathRules" list`
 }
 
 type OriginPullOptimization struct {
@@ -3776,6 +3922,37 @@ type OverseaConfig struct {
 	// 视频拖拽配置。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	VideoSeek *VideoSeek `json:"VideoSeek,omitempty" name:"VideoSeek"`
+}
+
+type PathRule struct {
+
+	// 是否是正则匹配。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Regex *bool `json:"Regex,omitempty" name:"Regex"`
+
+	// URL路径。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Path *string `json:"Path,omitempty" name:"Path"`
+
+	// 路径匹配时的回源源站。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Origin *string `json:"Origin,omitempty" name:"Origin"`
+
+	// 路径匹配时的回源Host头部。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServerName *string `json:"ServerName,omitempty" name:"ServerName"`
+
+	// 源站所属区域，支持CN，OV。分别表示国内或海外。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OriginArea *string `json:"OriginArea,omitempty" name:"OriginArea"`
+
+	// 路径匹配时的回源URI路径。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ForwardUri *string `json:"ForwardUri,omitempty" name:"ForwardUri"`
+
+	// 路径匹配时的回源头部设置。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RequestHeaders []*HttpHeaderRule `json:"RequestHeaders,omitempty" name:"RequestHeaders" list`
 }
 
 type PurgePathCacheRequest struct {
@@ -4223,6 +4400,68 @@ type RuleQueryString struct {
 	// 使用/排除的url参数数组，';' 分割
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+type ScdnLogTaskDetail struct {
+
+	// scdn域名
+	Domain *string `json:"Domain,omitempty" name:"Domain"`
+
+	// 防护类型
+	Mode *string `json:"Mode,omitempty" name:"Mode"`
+
+	// 查询任务开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 查询任务结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 任务创建时间
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 日志包下载链接
+	// 成功返回下载链接，其他情况返回'-'
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DownloadUrl *string `json:"DownloadUrl,omitempty" name:"DownloadUrl"`
+
+	// 任务状态
+	// created->任务已经创建
+	// processing->任务正在执行
+	// done->任务执行成功
+	// failed->任务执行失败
+	// no-log->没有日志产生
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 日志任务唯一id
+	TaskID *string `json:"TaskID,omitempty" name:"TaskID"`
+
+	// 攻击类型, 可以为"all"
+	// AttackType映射如下:
+	//   other = '未知类型'
+	//   malicious_scan = "恶意扫描"
+	//   sql_inject = "SQL注入攻击"
+	//   xss = "XSS攻击"
+	//   cmd_inject = "命令注入攻击"
+	//   ldap_inject = "LDAP注入攻击"
+	//   ssi_inject = "SSI注入攻击"
+	//   xml_inject = "XML注入攻击"
+	//   web_service = "WEB服务漏洞攻击"
+	//   web_app = "WEB应用漏洞攻击"
+	//   path_traversal = "路径跨越攻击"
+	//   illegal_access_core_file = "核心文件非法访问"
+	//   file_upload = "文件上传攻击"
+	//   trojan_horse = "木马后门攻击"
+	//   csrf = "CSRF攻击"
+	//   custom_policy = "自定义策略"
+	//   ai_engine= 'AI引擎检出'
+	//   malicious_file_upload= '恶意文件上传'
+	AttackType *string `json:"AttackType,omitempty" name:"AttackType"`
+
+	// 防御模式,可以为"all"
+	// DefenceMode映射如下：
+	//   observe = '观察模式'
+	//   intercept = '防御模式'
+	DefenceMode *string `json:"DefenceMode,omitempty" name:"DefenceMode"`
 }
 
 type ScdnTopData struct {

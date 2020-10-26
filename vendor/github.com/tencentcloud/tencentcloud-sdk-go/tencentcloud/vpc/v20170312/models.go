@@ -205,22 +205,22 @@ type Address struct {
 	// 是否本地带宽EIP
 	LocalBgp *bool `json:"LocalBgp,omitempty" name:"LocalBgp"`
 
-	// 弹性公网IP的带宽值。注意，非带宽上移账户的弹性公网IP没有带宽属性，值为空。
+	// 弹性公网IP的带宽值。注意，传统账户类型账户的弹性公网IP没有带宽属性，值为空。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Bandwidth *uint64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
 
-	// 弹性公网IP的网络计费模式。注意，非带宽上移账户的弹性公网IP没有网络计费模式属性，值为空。
+	// 弹性公网IP的网络计费模式。注意，传统账户类型账户的弹性公网IP没有网络计费模式属性，值为空。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
 }
 
 type AddressChargePrepaid struct {
 
-	// 购买实例的时长
+	// 购买实例的时长，单位是月。可支持时长：1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36
 	Period *int64 `json:"Period,omitempty" name:"Period"`
 
-	// 自动续费标志
-	RenewFlag *string `json:"RenewFlag,omitempty" name:"RenewFlag"`
+	// 自动续费标志。0表示手动续费，1表示自动续费，2表示到期不续费。默认缺省为0即手动续费
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
 }
 
 type AddressTemplate struct {
@@ -296,18 +296,23 @@ type AllocateAddressesRequest struct {
 	InternetServiceProvider *string `json:"InternetServiceProvider,omitempty" name:"InternetServiceProvider"`
 
 	// EIP计费方式。
-	// <ul style="margin:0"><li>已开通带宽上移白名单的用户，可选值：<ul><li>BANDWIDTH_PACKAGE：[共享带宽包](https://cloud.tencent.com/document/product/684/15255)付费（需额外开通共享带宽包白名单）</li>
+	// <ul style="margin:0"><li>已开通标准账户类型白名单的用户，可选值：<ul><li>BANDWIDTH_PACKAGE：[共享带宽包](https://cloud.tencent.com/document/product/684/15255)付费（需额外开通共享带宽包白名单）</li>
 	// <li>BANDWIDTH_POSTPAID_BY_HOUR：带宽按小时后付费</li>
+	// <li>BANDWIDTH_PREPAID_BY_MONTH：包月按带宽预付费</li>
 	// <li>TRAFFIC_POSTPAID_BY_HOUR：流量按小时后付费</li></ul>默认值：TRAFFIC_POSTPAID_BY_HOUR。</li>
-	// <li>未开通带宽上移白名单的用户，EIP计费方式与其绑定的实例的计费方式一致，无需传递此参数。</li></ul>
+	// <li>未开通标准账户类型白名单的用户，EIP计费方式与其绑定的实例的计费方式一致，无需传递此参数。</li></ul>
 	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
 
 	// EIP出带宽上限，单位：Mbps。
-	// <ul style="margin:0"><li>已开通带宽上移白名单的用户，可选值范围取决于EIP计费方式：<ul><li>BANDWIDTH_PACKAGE：1 Mbps 至 1000 Mbps</li>
+	// <ul style="margin:0"><li>已开通标准账户类型白名单的用户，可选值范围取决于EIP计费方式：<ul><li>BANDWIDTH_PACKAGE：1 Mbps 至 1000 Mbps</li>
 	// <li>BANDWIDTH_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li>
+	// <li>BANDWIDTH_PREPAID_BY_MONTH：1 Mbps 至 200 Mbps</li>
 	// <li>TRAFFIC_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li></ul>默认值：1 Mbps。</li>
-	// <li>未开通带宽上移白名单的用户，EIP出带宽上限取决于与其绑定的实例的公网出带宽上限，无需传递此参数。</li></ul>
+	// <li>未开通标准账户类型白名单的用户，EIP出带宽上限取决于与其绑定的实例的公网出带宽上限，无需传递此参数。</li></ul>
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitempty" name:"InternetMaxBandwidthOut"`
+
+	// 包月按带宽预付费EIP的计费参数。EIP为包月按带宽预付费时，该参数必传，其余场景不需传递
+	AddressChargePrepaid *AddressChargePrepaid `json:"AddressChargePrepaid,omitempty" name:"AddressChargePrepaid"`
 
 	// EIP类型。默认值：EIP。
 	// <ul style="margin:0"><li>已开通Anycast公网加速白名单的用户，可选值：<ul><li>AnycastEIP：加速IP，可参见 [Anycast 公网加速](https://cloud.tencent.com/document/product/644)</li></ul>注意：仅部分地域支持加速IP。</li></ul>
@@ -372,7 +377,7 @@ type AllocateIp6AddressesBandwidthRequest struct {
 	// 带宽，单位Mbps。默认是1Mbps
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitempty" name:"InternetMaxBandwidthOut"`
 
-	// 网络计费模式。IPV6当前对带宽上移账户支持"TRAFFIC_POSTPAID_BY_HOUR"，对带宽非上移支持"BANDWIDTH_PACKAGE"。默认网络计费模式是"TRAFFIC_POSTPAID_BY_HOUR"。
+	// 网络计费模式。IPV6当前对标准账户类型支持"TRAFFIC_POSTPAID_BY_HOUR"，对传统账户类型支持"BANDWIDTH_PACKAGE"。默认网络计费模式是"TRAFFIC_POSTPAID_BY_HOUR"。
 	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
 }
 
@@ -1009,6 +1014,12 @@ type BandwidthPackage struct {
 	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
 }
 
+type BandwidthPackageBillBandwidth struct {
+
+	// 当前计费用量，单位为 Mbps
+	BandwidthUsage *uint64 `json:"BandwidthUsage,omitempty" name:"BandwidthUsage"`
+}
+
 type CCN struct {
 
 	// 云联网唯一ID
@@ -1568,7 +1579,7 @@ type CreateBandwidthPackageRequest struct {
 	// 带宽包名字
 	BandwidthPackageName *string `json:"BandwidthPackageName,omitempty" name:"BandwidthPackageName"`
 
-	// 带宽包数量(非上移账户只能填1)
+	// 带宽包数量(传统账户类型只能填1)
 	BandwidthPackageCount *uint64 `json:"BandwidthPackageCount,omitempty" name:"BandwidthPackageCount"`
 
 	// 带宽包限速大小。单位：Mbps，-1表示不限速。
@@ -4244,6 +4255,43 @@ func (r *DescribeAssistantCidrResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeBandwidthPackageBillUsageRequest struct {
+	*tchttp.BaseRequest
+
+	// 后付费共享带宽包的唯一ID
+	BandwidthPackageId *string `json:"BandwidthPackageId,omitempty" name:"BandwidthPackageId"`
+}
+
+func (r *DescribeBandwidthPackageBillUsageRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeBandwidthPackageBillUsageRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeBandwidthPackageBillUsageResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 当前计费用量
+		BandwidthPackageBillBandwidthSet []*BandwidthPackageBillBandwidth `json:"BandwidthPackageBillBandwidthSet,omitempty" name:"BandwidthPackageBillBandwidthSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeBandwidthPackageBillUsageResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeBandwidthPackageBillUsageResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
 type DescribeBandwidthPackageQuotaRequest struct {
 	*tchttp.BaseRequest
 }
@@ -4275,6 +4323,57 @@ func (r *DescribeBandwidthPackageQuotaResponse) ToJsonString() string {
 }
 
 func (r *DescribeBandwidthPackageQuotaResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeBandwidthPackageResourcesRequest struct {
+	*tchttp.BaseRequest
+
+	// 标识 共享带宽包 的唯一 ID 列表。共享带宽包 唯一 ID 形如：`bwp-11112222`。
+	BandwidthPackageId *string `json:"BandwidthPackageId,omitempty" name:"BandwidthPackageId"`
+
+	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。参数不支持同时指定`AddressIds`和`Filters`。详细的过滤条件如下：
+	// <li> resource-id - String - 是否必填：否 - （过滤条件）按照 共享带宽包内资源 的唯一 ID 过滤。共享带宽包内资源 唯一 ID 形如：eip-11112222。</li>
+	// <li> resource-type - String - 是否必填：否 - （过滤条件）按照 共享带宽包内资源 类型过滤，目前仅支持 弹性IP 和 负载均衡 两种类型，可选值为 Address 和 LoadBalance。</li>
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters" list`
+
+	// 偏移量，默认为0。关于`Offset`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/11646)中的相关小节。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 返回数量，默认为20，最大值为100。关于`Limit`的更进一步介绍请参考 API [简介](https://cloud.tencent.com/document/api/213/11646)中的相关小节。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeBandwidthPackageResourcesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeBandwidthPackageResourcesRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeBandwidthPackageResourcesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 符合条件的 共享带宽包内资源 数量。
+		TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+		// 共享带宽包内资源 详细信息列表。
+		ResourceSet []*Resource `json:"ResourceSet,omitempty" name:"ResourceSet" list`
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *DescribeBandwidthPackageResourcesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *DescribeBandwidthPackageResourcesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8224,16 +8323,16 @@ func (r *ModifyAddressTemplateGroupAttributeResponse) FromJsonString(s string) e
 type ModifyAddressesBandwidthRequest struct {
 	*tchttp.BaseRequest
 
-	// EIP唯一标识ID，形如'eip-xxxx'
+	// EIP唯一标识ID列表，形如'eip-xxxx'
 	AddressIds []*string `json:"AddressIds,omitempty" name:"AddressIds" list`
 
 	// 调整带宽目标值
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitempty" name:"InternetMaxBandwidthOut"`
 
-	// 包月带宽起始时间
+	// 包月带宽起始时间(已废弃，输入无效)
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 包月带宽结束时间
+	// 包月带宽结束时间(已废弃，输入无效)
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 }
 
@@ -10080,6 +10179,43 @@ func (r *RemoveIp6RulesResponse) ToJsonString() string {
 }
 
 func (r *RemoveIp6RulesResponse) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type RenewAddressesRequest struct {
+	*tchttp.BaseRequest
+
+	// EIP唯一标识ID列表，形如'eip-xxxx'
+	AddressIds []*string `json:"AddressIds,omitempty" name:"AddressIds" list`
+
+	// 续费参数
+	AddressChargePrepaid *AddressChargePrepaid `json:"AddressChargePrepaid,omitempty" name:"AddressChargePrepaid"`
+}
+
+func (r *RenewAddressesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *RenewAddressesRequest) FromJsonString(s string) error {
+    return json.Unmarshal([]byte(s), &r)
+}
+
+type RenewAddressesResponse struct {
+	*tchttp.BaseResponse
+	Response *struct {
+
+		// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+		RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	} `json:"Response"`
+}
+
+func (r *RenewAddressesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+func (r *RenewAddressesResponse) FromJsonString(s string) error {
     return json.Unmarshal([]byte(s), &r)
 }
 
