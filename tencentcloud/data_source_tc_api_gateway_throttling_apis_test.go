@@ -1,13 +1,9 @@
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 var testAPIGatewaythrottlingApiDataSourceName = "data.tencentcloud_api_gateway_throttling_apis"
@@ -16,12 +12,12 @@ func TestAccTencentAPIGatewayThrottlingApisDataSource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckThrottlingAPIDestroy,
+		CheckDestroy: testAccCheckAPIGatewayAPIDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTestAccTencentAPIGatewayThrottlingApis(),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckThrottlingAPIExists("tencentcloud_api_gateway_throttling_api.service"),
+					testAccCheckAPIGatewayAPIExists("tencentcloud_api_gateway_api.api"),
 					resource.TestCheckResourceAttrSet(testAPIGatewaythrottlingApiDataSourceName+".id", "list.#"),
 					resource.TestCheckResourceAttrSet(testAPIGatewaythrottlingApiDataSourceName+".id", "list.0.service_id"),
 					resource.TestCheckResourceAttrSet(testAPIGatewaythrottlingApiDataSourceName+".id", "list.0.api_environment_strategies.#"),
@@ -47,87 +43,6 @@ func TestAccTencentAPIGatewayThrottlingApisDataSource(t *testing.T) {
 			},
 		},
 	})
-}
-
-func testAccCheckThrottlingAPIDestroy(s *terraform.State) error {
-	var (
-		logId             = getLogId(contextNil)
-		ctx               = context.WithValue(context.TODO(), logIdKey, logId)
-		throttlingService = APIGatewayService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-	)
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_api_gateway_throttling_api" {
-			continue
-		}
-
-		serviceId := rs.Primary.Attributes["service_id"]
-		environmentName := rs.Primary.Attributes["environment_name"]
-		apiIds := rs.Primary.Attributes["api_ids"]
-		environmentList, err := throttlingService.DescribeApiEnvironmentStrategyList(ctx, serviceId, []string{environmentName}, "")
-		if err != nil {
-			return err
-		}
-
-		for _, v := range environmentList {
-			if v == nil || !strings.Contains(apiIds, *v.ApiId) {
-				continue
-			}
-			environmentSet := v.EnvironmentStrategySet
-			for _, env := range environmentSet {
-				if env == nil || *env.EnvironmentName != environmentName {
-					continue
-				}
-
-				if *env.Quota == QUOTA || *env.Quota == QUOTA_MAX {
-					continue
-				}
-				return fmt.Errorf("throttling API still not restore: %s", rs.Primary.ID)
-			}
-		}
-	}
-	return nil
-}
-
-func testAccCheckThrottlingAPIExists(n string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		var (
-			logId             = getLogId(contextNil)
-			ctx               = context.WithValue(context.TODO(), logIdKey, logId)
-			throttlingService = APIGatewayService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		)
-
-		rs, ok := s.RootModule().Resources[n]
-		if !ok {
-			return fmt.Errorf("API Getway throttling API %s is not found", n)
-		}
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("API Getway throttling API id is not set")
-		}
-		serviceId := rs.Primary.Attributes["service_id"]
-		environmentName := rs.Primary.Attributes["environment_name"]
-		apiIds := rs.Primary.Attributes["api_ids"]
-		environmentList, err := throttlingService.DescribeApiEnvironmentStrategyList(ctx, serviceId, []string{environmentName}, "")
-		if err != nil {
-			return err
-		}
-
-		for _, v := range environmentList {
-			if v == nil || !strings.Contains(apiIds, *v.ApiId) {
-				continue
-			}
-			environmentSet := v.EnvironmentStrategySet
-			for _, env := range environmentSet {
-				if env == nil || *env.EnvironmentName != environmentName {
-					continue
-				}
-
-				if *env.Quota == QUOTA {
-					return fmt.Errorf("throttling API still not set value: %s", rs.Primary.ID)
-				}
-			}
-		}
-		return nil
-	}
 }
 
 func testAccTestAccTencentAPIGatewayThrottlingApis() string {
@@ -164,29 +79,27 @@ resource "tencentcloud_api_gateway_api" "api" {
     service_config_method    = "POST"
     response_type            = "XML"
     response_success_example = "<note>success</note>"
-    response_fail_example    = "<note>fail</note>"
+	response_fail_example    = "<note>fail</note>"
+	
     response_error_codes {
     	code           = 10
         msg            = "system error"
        	desc           = "system error code"
        	converted_code = -10
         need_convert   = true
-    }
-}
-
-resource "tencentcloud_api_gateway_throttling_api" "service" {
-	service_id       = tencentcloud_api_gateway_service.service.id
-	strategy         = "400"
-	environment_name = "test"
-	api_ids          = [tencentcloud_api_gateway_api.api.id]
+	}
+	
+	release_limit    = 100
+	pre_limit        = 100
+	test_limit       = 100
 }
 
 data "tencentcloud_api_gateway_throttling_apis" "id" {
-    service_id = tencentcloud_api_gateway_throttling_api.service.service_id
+    service_id = tencentcloud_api_gateway_api.api.service_id
 }
 
 data "tencentcloud_api_gateway_throttling_apis" "foo" {
-	service_id        = tencentcloud_api_gateway_throttling_api.service.service_id
+	service_id        = tencentcloud_api_gateway_api.api.service_id
 	environment_names = ["release", "test"]
 }
 `

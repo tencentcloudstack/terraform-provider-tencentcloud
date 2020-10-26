@@ -54,21 +54,18 @@ resource "tencentcloud_api_gateway_api" "api" {
     converted_code = -10
     need_convert   = true
   }
-}
 
-resource "tencentcloud_api_gateway_throttling_api" "service" {
-  service_id       = tencentcloud_api_gateway_service.service.id
-  strategy         = "400"
-  environment_name = "test"
-  api_ids          = [tencentcloud_api_gateway_api.api.id]
+  release_limit = 100
+  pre_limit     = 100
+  test_limit    = 100
 }
 
 data "tencentcloud_api_gateway_throttling_apis" "id" {
-  service_id = tencentcloud_api_gateway_throttling_api.service.service_id
+  service_id = tencentcloud_api_gateway_api.service_id
 }
 
 data "tencentcloud_api_gateway_throttling_apis" "foo" {
-  service_id        = tencentcloud_api_gateway_throttling_api.service.service_id
+  service_id        = tencentcloud_api_gateway_api.service.service_id
   environment_names = ["release", "test"]
 }
 ```

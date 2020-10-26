@@ -138,23 +138,16 @@ resource "tencentcloud_api_gateway_api" "api" {
     response_success_example = "<note>success</note>"
     response_fail_example    = "<note>fail</note>"
     response_error_codes {
-    	code           = 10
+    	code           = 20
         msg            = "system error"
        	desc           = "system error code"
        	converted_code = -10
         need_convert   = true
-    }
-}
-
-resource "tencentcloud_api_gateway_throttling_api" "foo" {
-	service_id       = tencentcloud_api_gateway_service.service.id
-	strategy         = "400"
-	environment_name = "test"
-	api_ids          = [tencentcloud_api_gateway_api.api.id]
+	}
 }
 
 resource "tencentcloud_api_gateway_service_release" "service" {
-  service_id       = tencentcloud_api_gateway_throttling_api.foo.service_id
+  service_id       = tencentcloud_api_gateway_api.api.service_id
   environment_name = "release"
   release_desc     = "test service release"
 }
