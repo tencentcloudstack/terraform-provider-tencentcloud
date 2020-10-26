@@ -173,12 +173,12 @@ func resourceTencentCloudAPIGatewayIPStrategyRead(d *schema.ResourceData, meta i
 		return nil
 	}
 
-	_ = d.Set("service_id", *IpStatus.ServiceId)
-	_ = d.Set("strategy_name", *IpStatus.StrategyName)
-	_ = d.Set("strategy_type", *IpStatus.StrategyType)
-	_ = d.Set("strategy_data", *IpStatus.StrategyData)
-	_ = d.Set("strategy_id", *IpStatus.StrategyId)
-	_ = d.Set("create_time", *IpStatus.CreatedTime)
+	_ = d.Set("service_id", IpStatus.ServiceId)
+	_ = d.Set("strategy_name", IpStatus.StrategyName)
+	_ = d.Set("strategy_type", IpStatus.StrategyType)
+	_ = d.Set("strategy_data", IpStatus.StrategyData)
+	_ = d.Set("strategy_id", IpStatus.StrategyId)
+	_ = d.Set("create_time", IpStatus.CreatedTime)
 
 	return nil
 }

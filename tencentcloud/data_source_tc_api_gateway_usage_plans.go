@@ -146,6 +146,7 @@ func dataSourceTencentCloudAPIGatewayUsagePlansRead(d *schema.ResourceData, meta
 
 	if err = d.Set("list", list); err != nil {
 		log.Printf("[CRITAL]%s provider set list fail, reason:%s", logId, err.Error())
+		return err
 	}
 
 	d.SetId(strings.Join([]string{usagePlanId, usagePlanName}, FILED_SP))

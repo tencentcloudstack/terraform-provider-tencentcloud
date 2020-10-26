@@ -47,7 +47,7 @@ resource "tencentcloud_api_gateway_api" "api" {
 }
 
 resource "tencentcloud_api_gateway_service_release" "service" {
-  service_id       = tencentcloud_api_gateway_service.service.id
+  service_id       = tencentcloud_api_gateway_api.api.service.id
   environment_name = "release"
   release_desc     = "test service release"
 }
@@ -222,8 +222,8 @@ func resourceTencentCloudAPIGatewayServiceReleaseRead(d *schema.ResourceData, me
 		if *v.VersionName == envVersion {
 			_ = d.Set("service_id", serviceId)
 			_ = d.Set("environment_name", envName)
-			_ = d.Set("release_desc", *v.VersionDesc)
-			_ = d.Set("release_version", *v.VersionName)
+			_ = d.Set("release_desc", v.VersionDesc)
+			_ = d.Set("release_version", v.VersionName)
 		}
 	}
 

@@ -281,6 +281,7 @@ func dataSourceTencentCloudAPIGatewayServicesRead(d *schema.ResourceData, meta i
 
 	if err = d.Set("list", list); err != nil {
 		log.Printf("[CRITAL]%s provider set list fail, reason:%s", logId, err.Error())
+		return err
 	}
 
 	d.SetId(strings.Join([]string{serviceName, serviceId}, FILED_SP))

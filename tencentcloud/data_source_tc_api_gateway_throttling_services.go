@@ -171,6 +171,7 @@ func dataSourceTencentCloudAPIGatewayThrottlingServicesRead(d *schema.ResourceDa
 	d.SetId(helper.DataResourceIdsHash(ids))
 	if err = d.Set("list", resultLists); err != nil {
 		log.Printf("[CRITAL]%s provider set list fail, reason:%s", logId, err.Error())
+		return err
 	}
 
 	output, ok := d.GetOk("result_output_file")

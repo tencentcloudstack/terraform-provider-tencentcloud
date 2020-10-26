@@ -136,11 +136,11 @@ func testAccCheckAPIGatewayServiceReleaseExists(n string) resource.TestCheckFunc
 
 const testAccAPIGatewayServiceRelease = `
 resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "myservice"
-  protocol     = "http"
-  service_desc = "my nice service"
-  net_type     = ["INNER"]
-  ip_version   = "IPv4"
+  	service_name = "niceservice"
+  	protocol     = "http&https"
+  	service_desc = "your nice service"
+  	net_type     = ["INNER", "OUTER"]
+  	ip_version   = "IPv4"
 }
 
 resource "tencentcloud_api_gateway_api" "api" {
@@ -169,16 +169,16 @@ resource "tencentcloud_api_gateway_api" "api" {
     response_success_example = "<note>success</note>"
     response_fail_example    = "<note>fail</note>"
     response_error_codes {
-    	code           = 10
+    	code           = 20
         msg            = "system error"
        	desc           = "system error code"
        	converted_code = -10
         need_convert   = true
-    }
+	}
 }
 
 resource "tencentcloud_api_gateway_service_release" "service" {
-  service_id       = tencentcloud_api_gateway_service.service.id
+  service_id       = tencentcloud_api_gateway_api.api.service_id
   environment_name = "release"
   release_desc     = "test service release"
 }

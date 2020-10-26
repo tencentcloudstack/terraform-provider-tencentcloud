@@ -90,7 +90,7 @@ resource "tencentcloud_api_gateway_usage_plan_attachment" "attach_service" {
 }
 
 resource "tencentcloud_api_gateway_service_release" "service" {
-  service_id       = tencentcloud_api_gateway_service.service.id
+  service_id       = tencentcloud_api_gateway_api.api.service_id
   environment_name = "release"
   release_desc     = var.release_desc
 }
@@ -151,7 +151,7 @@ data "tencentcloud_api_gateway_throttling_apis" "foo" {
 }
 
 data "tencentcloud_api_gateway_throttling_services" "id" {
-    service_id = tencentcloud_api_gateway_throttling_service.service.service_id
+    service_id = tencentcloud_api_gateway_service.service.id
 }
 
 data "tencentcloud_api_gateway_usage_plan_environments" "environment_test" {
