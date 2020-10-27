@@ -79,10 +79,11 @@ type ClusterInfo struct {
 }
 
 type InstanceInfo struct {
-	InstanceId    string
-	InstanceRole  string
-	InstanceState string
-	FailedReason  string
+	InstanceId               string
+	InstanceRole             string
+	InstanceState            string
+	FailedReason             string
+	InstanceAdvancedSettings *tke.InstanceAdvancedSettings
 }
 
 type TkeService struct {
@@ -138,10 +139,11 @@ getMoreData:
 		}
 		has[*item.InstanceId] = true
 		instanceInfo := InstanceInfo{
-			InstanceId:    *item.InstanceId,
-			InstanceRole:  *item.InstanceRole,
-			InstanceState: *item.InstanceState,
-			FailedReason:  *item.FailedReason,
+			InstanceId:               *item.InstanceId,
+			InstanceRole:             *item.InstanceRole,
+			InstanceState:            *item.InstanceState,
+			FailedReason:             *item.FailedReason,
+			InstanceAdvancedSettings: item.InstanceAdvancedSettings,
 		}
 		if instanceInfo.InstanceRole == TKE_ROLE_WORKER {
 			workers = append(workers, instanceInfo)
@@ -433,6 +435,7 @@ func (me *TkeService) CreateClusterInstances(ctx context.Context,
 	if len(iAdvanced.ExtraArgs.Kubelet) > 0 {
 		request.InstanceAdvancedSettings.ExtraArgs = &iAdvanced.ExtraArgs
 	}
+	request.InstanceAdvancedSettings.Labels = iAdvanced.Labels
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTkeClient().CreateClusterInstances(request)

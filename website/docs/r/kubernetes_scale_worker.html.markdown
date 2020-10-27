@@ -30,7 +30,10 @@ variable "scale_instance_type" {
 
 resource tencentcloud_kubernetes_scale_worker test_scale {
   cluster_id = "cls-godovr32"
-
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
   worker_config {
     count                      = 3
     availability_zone          = var.availability_zone
@@ -77,6 +80,11 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
     "root-dir=/var/lib/kubelet"
   ]
 
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
   worker_config {
     count                      = 3
     availability_zone          = var.availability_zone
@@ -108,6 +116,7 @@ The following arguments are supported:
 * `cluster_id` - (Required, ForceNew) ID of the cluster.
 * `worker_config` - (Required, ForceNew) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
+* `labels` - (Optional, ForceNew) Labels of kubernetes scale worker created nodes.
 
 The `data_disk` object supports the following:
 

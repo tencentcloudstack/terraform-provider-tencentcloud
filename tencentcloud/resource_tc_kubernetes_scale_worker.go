@@ -20,7 +20,10 @@ variable "scale_instance_type" {
 
 resource tencentcloud_kubernetes_scale_worker test_scale {
   cluster_id = "cls-godovr32"
-
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
   worker_config {
     count                      = 3
     availability_zone          = var.availability_zone
@@ -66,6 +69,11 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
   extra_args = [
  	"root-dir=/var/lib/kubelet"
   ]
+
+   labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
 
   worker_config {
     count                      = 3
@@ -128,6 +136,12 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 					Schema: TkeCvmCreateInfo(),
 				},
 				Description: "Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.",
+			},
+			"labels": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Labels of kubernetes scale worker created nodes.",
 			},
 			"extra_args": {
 				Type:        schema.TypeList,
@@ -195,6 +209,8 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 			cvms.Work = append(cvms.Work, paraJson)
 		}
 	}
+
+	iAdvanced.Labels = GetTkeLabels(d, "labels")
 
 	if temp, ok := d.GetOk("extra_args"); ok {
 		extraArgs := helper.InterfacesStrings(temp.([]interface{}))
@@ -328,7 +344,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 	}
 
 	newWorkerInstancesList := make([]map[string]interface{}, 0, len(workers))
-
+	newWorkerLabelList := make([]map[string]string, 0, len(workers))
 	for _, cvm := range workers {
 		if _, ok := instanceMap[cvm.InstanceId]; !ok {
 			continue
@@ -339,6 +355,13 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		tempMap["instance_state"] = cvm.InstanceState
 		tempMap["failed_reason"] = cvm.FailedReason
 		newWorkerInstancesList = append(newWorkerInstancesList, tempMap)
+
+		labels := cvm.InstanceAdvancedSettings.Labels
+		var labelsMap = make(map[string]string, len(labels))
+		for _, v := range labels {
+			labelsMap[*v.Name] = *v.Value
+		}
+		newWorkerLabelList = append(newWorkerLabelList, labelsMap)
 	}
 
 	// The machines I generated was deleted by others.
@@ -347,6 +370,7 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
+	_ = d.Set("labels", newWorkerLabelList)
 	return d.Set("worker_instances_list", newWorkerInstancesList)
 }
 func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta interface{}) error {
