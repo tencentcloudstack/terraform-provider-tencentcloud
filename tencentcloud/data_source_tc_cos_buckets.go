@@ -173,6 +173,11 @@ func dataSourceTencentCloudCosBuckets() *schema.Resource {
 							Computed:    true,
 							Description: "The tags of a bucket.",
 						},
+						"cos_bucket_url": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The URL of this cos bucket.",
+						},
 					},
 				},
 			},
@@ -234,7 +239,7 @@ LOOP:
 		}
 
 		bucket["tags"] = respTags
-
+		bucket["cos_bucket_url"] = fmt.Sprintf("%s.cos.%s.myqcloud.com", *v.Name, meta.(*TencentCloudClient).apiV3Conn.Region)
 		bucketList = append(bucketList, bucket)
 	}
 

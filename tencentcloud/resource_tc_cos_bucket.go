@@ -271,6 +271,12 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Optional:    true,
 				Description: "The tags of a bucket.",
 			},
+			//computed
+			"cos_bucket_url": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The URL of this cos bucket.",
+			},
 		},
 	}
 }
@@ -323,6 +329,8 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		}
 	}
 
+	cosBuckeUrl := fmt.Sprintf("%s.cos.%s.myqcloud.com", d.Id(), meta.(*TencentCloudClient).apiV3Conn.Region)
+	_ = d.Set("cos_bucket_url", cosBuckeUrl)
 	// set bucket in the import case
 	if _, ok := d.GetOk("bucket"); !ok {
 		_ = d.Set("bucket", d.Id())

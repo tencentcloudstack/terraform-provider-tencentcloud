@@ -24,6 +24,7 @@ func TestAccTencentCloudCosBucketDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.cors_rules.#", "0"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.lifecycle_rules.#", "0"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.website.#", "0"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cos_buckets.bucket_list", "bucket_list.0.cos_bucket_url"),
 				),
 			},
 		},

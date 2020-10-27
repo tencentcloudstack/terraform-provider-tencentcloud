@@ -16,6 +16,10 @@ resource "tencentcloud_postgresql_instance" "foo" {
   project_id        = 0
   memory            = 2
   storage           = 10
+
+  tags = {
+    test = "tf"
+  }
 }
 ```
 
@@ -36,6 +40,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudPostgresqlInstance() *schema.Resource {
@@ -125,6 +130,11 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Optional:    true,
 				Default:     false,
 				Description: "Indicates whether to enable the access to an instance from public network or not.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The available tags within this postgresql.",
 			},
 			//Computed values
 			"public_access_host": {
@@ -304,6 +314,15 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return checkErr
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudPostgresqlInstanceRead(d, meta)
 }
 
@@ -429,6 +448,21 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		d.SetPartial("root_password")
 	}
 
+	if d.HasChange("tags") {
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("tags")
+	}
+
 	d.Partial(false)
 
 	return resourceTencentCloudPostgresqlInstanceRead(d, meta)
@@ -503,6 +537,15 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("storage", instance.DBInstanceStorage)
 
 	//ignore spec_code
+	//qcs::postgres:ap-guangzhou:uin/123435236:DBInstanceId/postgres-xxx
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "postgres", "DBInstanceId", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
