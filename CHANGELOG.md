@@ -1,4 +1,9 @@
 ## 1.46.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_kubernetes_scale_worker` add new argument `labels` to support scale worker labels.
+
 ## 1.46.0 (October 26, 2020)
 
 FEATURES:
