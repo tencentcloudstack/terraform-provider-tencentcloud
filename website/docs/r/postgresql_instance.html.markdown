@@ -26,6 +26,10 @@ resource "tencentcloud_postgresql_instance" "foo" {
   project_id        = 0
   memory            = 2
   storage           = 10
+
+  tags = {
+    test = "tf"
+  }
 }
 ```
 
@@ -44,6 +48,7 @@ The following arguments are supported:
 * `project_id` - (Optional) Project id, default value is 0.
 * `public_access_switch` - (Optional) Indicates whether to enable the access to an instance from public network or not.
 * `subnet_id` - (Optional, ForceNew) ID of subnet.
+* `tags` - (Optional) The available tags within this postgresql.
 * `vpc_id` - (Optional, ForceNew) ID of VPC.
 
 ## Attributes Reference

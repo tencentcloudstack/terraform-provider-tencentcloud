@@ -96,6 +96,11 @@ func dataSourceTencentCloudNatGateways() *schema.Resource {
 							Computed:    true,
 							Description: "Create time of the NAT gateway.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "The available tags within this NAT gateway.",
+						},
 					},
 				},
 			},
@@ -169,6 +174,13 @@ func dataSourceTencentCloudNatGatewaysRead(d *schema.ResourceData, meta interfac
 			"state":            *nat.State,
 			"assigned_eip_set": flattenAddressList((*nat).PublicIpAddressSet),
 			"create_time":      *nat.CreatedTime,
+		}
+		if nat.TagSet != nil {
+			tags := make(map[string]interface{}, len(nat.TagSet))
+			for _, t := range nat.TagSet {
+				tags[*t.Key] = *t.Value
+			}
+			mapping["tags"] = tags
 		}
 		natList = append(natList, mapping)
 		ids = append(ids, *nat.NatGatewayId)

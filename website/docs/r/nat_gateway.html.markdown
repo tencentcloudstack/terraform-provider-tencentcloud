@@ -20,6 +20,10 @@ resource "tencentcloud_nat_gateway" "foo" {
   bandwidth        = 100
   max_concurrent   = 1000000
   assigned_eip_set = ["1.1.1.1"]
+
+  tags = {
+    test = "tf"
+  }
 }
 ```
 
@@ -32,6 +36,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, ForceNew) ID of the vpc.
 * `bandwidth` - (Optional) The maximum public network output bandwidth of NAT gateway (unit: Mbps), the available values include: 20,50,100,200,500,1000,2000,5000. Default is 100.
 * `max_concurrent` - (Optional) The upper limit of concurrent connection of NAT gateway, the available values include: 1000000,3000000,10000000. Default is 1000000.
+* `tags` - (Optional) The available tags within this NAT gateway.
 
 ## Attributes Reference
 

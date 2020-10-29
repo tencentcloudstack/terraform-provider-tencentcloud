@@ -1,4 +1,14 @@
 ## 1.46.1 (Unreleased)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_cos_bucket` add new argument `cos_bucket_url`.
+* Resource: `tencentcloud_nat_gateway` add new argument `tags`.
+* Resource: `tencentcloud_postgresql_instance` add new argument `tags`.
+* Data Source: `tencentcloud_cos_buckets` add new argument `cos_bucket_url`.
+* Data Source: `tencentcloud_nat_gateways` add new argument `tags`.
+* Data Source: `tencentcloud_postgresql_instances` add new argument `tags`.
+
 ## 1.46.0 (October 26, 2020)
 
 FEATURES:

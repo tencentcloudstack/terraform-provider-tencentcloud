@@ -82,6 +82,7 @@ func TestAccTencentCloudCosBucket_basic(t *testing.T) {
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "encryption_algorithm", "AES256"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "versioning_enable", "true"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_basic", "cos_bucket_url"),
 				),
 			},
 			{
