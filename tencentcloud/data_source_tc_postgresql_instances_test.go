@@ -21,7 +21,6 @@ func TestAccTencentCloudDataPostgresqlInstances(t *testing.T) {
 					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.#", "1"),
 					resource.TestCheckResourceAttrSet(testDataPostgresqlInstancesName, "instance_list.0.id"),
 					resource.TestCheckResourceAttrSet(testDataPostgresqlInstancesName, "instance_list.0.create_time"),
-					resource.TestCheckResourceAttrSet(testDataPostgresqlInstancesName, "instance_list.0.id"),
 					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.charge_type", "POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.engine_version", "9.3.5"),
 					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.project_id", "0"),
@@ -31,6 +30,7 @@ func TestAccTencentCloudDataPostgresqlInstances(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testDataPostgresqlInstancesName, "instance_list.0.private_access_port"),
 					resource.TestCheckResourceAttrSet(testDataPostgresqlInstancesName, "instance_list.0.public_access_switch"),
 					resource.TestCheckResourceAttrSet(testDataPostgresqlInstancesName, "instance_list.0.charset"),
+					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.0.tags.tf", "test"),
 				),
 			},
 		},
@@ -52,6 +52,10 @@ charset = "UTF8"
 project_id = 0
 memory = 2
 storage = 10
+
+	tags = {
+		tf = "test"
+	}
 }
 
 data "tencentcloud_postgresql_instances" "id_test"{

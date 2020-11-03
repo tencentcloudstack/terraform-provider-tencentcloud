@@ -42,6 +42,7 @@ In addition to all arguments above, the following attributes are exported:
   * `max_concurrent` - The upper limit of concurrent connection of NAT gateway, the available values include: 1000000,3000000,10000000. Default is 1000000.
   * `name` - Name of the NAT gateway.
   * `state` - State of the NAT gateway.
+  * `tags` - The available tags within this NAT gateway.
   * `vpc_id` - Id of the VPC.
 
 

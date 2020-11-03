@@ -24,6 +24,7 @@ func TestAccTencentCloudNatGateway_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "max_concurrent", "3000000"),
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "bandwidth", "500"),
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "assigned_eip_set.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "tags.tf", "test"),
 				),
 			},
 			{
@@ -34,6 +35,7 @@ func TestAccTencentCloudNatGateway_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "max_concurrent", "10000000"),
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "bandwidth", "1000"),
 					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "assigned_eip_set.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_nat_gateway.my_nat", "tags.tf", "teest"),
 				),
 			},
 		},
@@ -130,6 +132,9 @@ resource "tencentcloud_nat_gateway" "my_nat" {
 	  tencentcloud_eip.eip_dev_dnat.public_ip,
 	  tencentcloud_eip.eip_test_dnat.public_ip,
 	]
+	tags = {
+		tf = "test"
+	}
 }
 `
 const testAccNatGatewayConfigUpdate = `
@@ -152,9 +157,13 @@ resource "tencentcloud_nat_gateway" "my_nat" {
   name             = "new_name"
   max_concurrent   = 10000000
   bandwidth        = 1000
+
   assigned_eip_set = [
 	  tencentcloud_eip.eip_dev_dnat.public_ip,
 	  tencentcloud_eip.new_eip.public_ip,
 	]
+	tags = {
+		tf = "teest"
+	}
 }
 `
