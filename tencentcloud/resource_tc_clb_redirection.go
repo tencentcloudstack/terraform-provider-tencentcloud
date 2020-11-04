@@ -52,6 +52,7 @@ func resourceTencentCloudClbRedirection() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClbRedirectionCreate,
 		Read:   resourceTencentCloudClbRedirectionRead,
+		Update: resourceTencentCloudClbRedirectionUpdate,
 		Delete: resourceTencentCloudClbRedirectionDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -97,6 +98,12 @@ func resourceTencentCloudClbRedirection() *schema.Resource {
 				ForceNew:    true,
 				Optional:    true,
 				Description: "Indicates whether automatic forwarding is enable, default is false. If enabled, the source listener and location should be empty, the target listener must be https protocol and port is 443.",
+			},
+			"delete_all_auto_rewrite": {
+				Type:        schema.TypeBool,
+				Default:     false,
+				Optional:    true,
+				Description: "Indicates whether delete all auto redirection. Default is false. It will take effect only when this redirection is auto-rewrite and this auto-rewrite auto redirected more than one rules. All the auto-rewrite relations will be deleted when this parameter set true.",
 			},
 		},
 	}
@@ -333,6 +340,13 @@ func resourceTencentCloudClbRedirectionRead(d *schema.ResourceData, meta interfa
 	return nil
 }
 
+func resourceTencentCloudClbRedirectionUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_clb_redirection.update")()
+	defer inconsistentCheck(d, meta)()
+	// this nil update method works for the only filed `delete_all_auto_rewrite`
+	return nil
+}
+
 func resourceTencentCloudClbRedirectionDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clb_redirection.delete")()
 
@@ -342,20 +356,58 @@ func resourceTencentCloudClbRedirectionDelete(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	clbId := d.Id()
+	id := d.Id()
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		e := clbService.DeleteRedirectionById(ctx, clbId)
-		if e != nil {
-			return retryError(e)
+
+	deleteAll := d.Get("delete_all_auto_rewrite").(bool)
+	isAutoRewrite := d.Get("is_auto_rewrite").(bool)
+	if deleteAll && isAutoRewrite {
+		//delete all the auto rewrite
+		var rewrites []*map[string]string
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			result, inErr := clbService.DescribeAllAutoRedirections(ctx, id)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			rewrites = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s delete CLB redirection failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s delete CLB redirection failed, reason:%+v", logId, err)
-		return err
+
+		for _, rewrite := range rewrites {
+			if rewrite == nil {
+				continue
+			}
+			rewriteId := (*rewrite)["source_rule_id"] + FILED_SP + (*rewrite)["target_rule_id"] + FILED_SP + (*rewrite)["source_listener_id"] + FILED_SP + (*rewrite)["target_listener_id"] + FILED_SP + (*rewrite)["clb_id"]
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				e := clbService.DeleteRedirectionById(ctx, rewriteId)
+				if e != nil {
+					return retryError(e)
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s delete CLB redirection failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	} else {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := clbService.DeleteRedirectionById(ctx, id)
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s delete CLB redirection failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 	return nil
 }

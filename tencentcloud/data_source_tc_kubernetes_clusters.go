@@ -144,6 +144,7 @@ func tkeClusterInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Cluster kube-proxy mode.",
 		},
+
 		"service_cidr": {
 			Type:        schema.TypeString,
 			Computed:    true,
@@ -182,6 +183,11 @@ func tkeClusterInfo() map[string]*schema.Schema {
 			Type:        schema.TypeMap,
 			Computed:    true,
 			Description: "Tags of the cluster.",
+		},
+		"kube_config": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "kubernetes_config.",
 		},
 	}
 
@@ -367,6 +373,16 @@ LOOP:
 		infoMap["pgw_endpoint"] = emptyStrFunc(securityRet.Response.PgwEndpoint)
 		infoMap["security_policy"] = policies
 
+		config, err := service.DescribeClusterConfig(ctx, info.ClusterId)
+		if err != nil {
+			config, err = service.DescribeClusterConfig(ctx, info.ClusterId)
+		}
+		if err != nil {
+			log.Printf("[CRITAL]%s tencentcloud_kubernetes_clusters DescribeClusterInstances fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+
+		infoMap["kube_config"] = config
 		list = append(list, infoMap)
 	}
 

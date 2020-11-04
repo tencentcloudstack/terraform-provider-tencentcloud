@@ -85,6 +85,9 @@ func dataSourceTencentCloudAvailabilityRegionsRead(d *schema.ResourceData, meta 
 	if v, ok := d.GetOk("name"); ok {
 		name = v.(string)
 	}
+	if name == "default" {
+		name = meta.(*TencentCloudClient).apiV3Conn.Region
+	}
 	if v, ok := d.GetOkExists("include_unavailable"); ok {
 		includeUnavailable = v.(bool)
 	}
