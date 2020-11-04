@@ -131,7 +131,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Optional:     true,
 							Default:      CDN_ORIGIN_PULL_PROTOCOL_HTTP,
 							ValidateFunc: validateAllowedStringValue(CDN_ORIGIN_PULL_PROTOCOL),
-							Description:  "Origin-pull protocol configuration. Valid values are `http`, `https` and `follow`. and default value is `http`.",
+							Description:  "Origin-pull protocol configuration. Valid values are `http`, `https` and `follow`. Default value is `http`.",
 						},
 						"backup_origin_type": {
 							Type:         schema.TypeString,

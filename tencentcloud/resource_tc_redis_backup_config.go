@@ -1,5 +1,5 @@
 /*
-Use this data source to query which instance types of Redis are available in a specific region.
+Use this resource to create a backup config of redis.
 
 Example Usage
 

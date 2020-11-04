@@ -10,6 +10,10 @@ resource "tencentcloud_nat_gateway" "foo" {
   bandwidth        = 100
   max_concurrent   = 1000000
   assigned_eip_set = ["1.1.1.1"]
+
+  tags = {
+    test = "tf"
+  }
 }
 ```
 
@@ -24,6 +28,7 @@ $ terraform import tencentcloud_nat_gateway.foo nat-1asg3t63
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"time"
@@ -81,6 +86,12 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				MaxItems:    10,
 				Description: "EIP IP address set bound to the gateway. The value of at least 1 and at most 10.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The available tags within this NAT gateway.",
+			},
+			//computed
 			"created_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -161,6 +172,17 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 		log.Printf("[CRITAL]%s create NAT gateway failed, reason:%s\n", logId, err.Error())
 		return err
 	}
+
+	//cs::vpc:ap-guangzhou:uin/12345:nat/nat-nxxx
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("vpc", "nat", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 	return resourceTencentCloudNatGatewayRead(d, meta)
 }
 
@@ -169,6 +191,7 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	natGatewayId := d.Id()
 	request := vpc.NewDescribeNatGatewaysRequest()
@@ -201,6 +224,15 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("bandwidth", *nat.InternetMaxBandwidthOut)
 	_ = d.Set("create_time", *nat.CreatedTime)
 	_ = d.Set("assigned_eip_set", flattenAddressList((*nat).PublicIpAddressSet))
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "nat", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -407,6 +439,23 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 		}
 
 	}
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if d.HasChange("tags") {
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("vpc", "nat", tcClient.Region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("tags")
+	}
+
 	d.Partial(false)
 
 	return nil

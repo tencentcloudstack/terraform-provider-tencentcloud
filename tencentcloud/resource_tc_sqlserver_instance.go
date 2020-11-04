@@ -568,6 +568,11 @@ func resourceTencentCLoudSqlserverInstanceDelete(d *schema.ResourceData, meta in
 		return outErr
 	}
 
+	outErr = sqlserverService.RecycleDBInstance(ctx, instanceId)
+	if outErr != nil {
+		return outErr
+	}
+
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		_, has, inErr := sqlserverService.DescribeSqlserverInstanceById(ctx, d.Id())
 		if inErr != nil {

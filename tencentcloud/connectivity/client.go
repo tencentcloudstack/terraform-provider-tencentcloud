@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
@@ -47,35 +48,36 @@ type TencentCloudClient struct {
 	Protocol   string
 	Domain     string
 
-	cosConn       *s3.S3
-	mysqlConn     *cdb.Client
-	redisConn     *redis.Client
-	asConn        *as.Client
-	vpcConn       *vpc.Client
-	cbsConn       *cbs.Client
-	cvmConn       *cvm.Client
-	clbConn       *clb.Client
-	dayuConn      *dayu.Client
-	dcConn        *dc.Client
-	tagConn       *tag.Client
-	mongodbConn   *mongodb.Client
-	tkeConn       *tke.Client
-	camConn       *cam.Client
-	stsConn       *sts.Client
-	gaapConn      *gaap.Client
-	sslConn       *ssl.Client
-	cfsConn       *cfs.Client
-	scfConn       *scf.Client
-	tcaplusConn   *tcaplusdb.Client
-	cdnConn       *cdn.Client
-	monitorConn   *monitor.Client
-	esConn        *es.Client
-	sqlserverConn *sqlserver.Client
-	postgreConn   *postgre.Client
-	ckafkaConn    *ckafka.Client
-	auditConn     *audit.Client
-	cynosConn     *cynosdb.Client
-	vodConn       *vod.Client
+	cosConn        *s3.S3
+	mysqlConn      *cdb.Client
+	redisConn      *redis.Client
+	asConn         *as.Client
+	vpcConn        *vpc.Client
+	cbsConn        *cbs.Client
+	cvmConn        *cvm.Client
+	clbConn        *clb.Client
+	dayuConn       *dayu.Client
+	dcConn         *dc.Client
+	tagConn        *tag.Client
+	mongodbConn    *mongodb.Client
+	tkeConn        *tke.Client
+	camConn        *cam.Client
+	stsConn        *sts.Client
+	gaapConn       *gaap.Client
+	sslConn        *ssl.Client
+	cfsConn        *cfs.Client
+	scfConn        *scf.Client
+	tcaplusConn    *tcaplusdb.Client
+	cdnConn        *cdn.Client
+	monitorConn    *monitor.Client
+	esConn         *es.Client
+	sqlserverConn  *sqlserver.Client
+	postgreConn    *postgre.Client
+	ckafkaConn     *ckafka.Client
+	auditConn      *audit.Client
+	cynosConn      *cynosdb.Client
+	vodConn        *vod.Client
+	apiGatewayConn *apigateway.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -487,4 +489,17 @@ func (me *TencentCloudClient) UseVodClient() *vod.Client {
 	me.vodConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.vodConn
+}
+
+// UseAPIGatewayClient returns apigateway client for service
+func (me *TencentCloudClient) UseAPIGatewayClient() *apigateway.Client {
+	if me.apiGatewayConn != nil {
+		return me.apiGatewayConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.apiGatewayConn, _ = apigateway.NewClient(me.Credential, me.Region, cpf)
+	me.apiGatewayConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.apiGatewayConn
 }

@@ -88,7 +88,7 @@ In addition to all arguments above, the following attributes are exported:
       * `audio_channel` - Audio channel system. Valid values: mono, dual, stereo.
       * `bitrate` - Audio stream bitrate in Kbps. Value range: `0` and `[26, 256]`. If the value is `0`, the bitrate of the audio stream will be the same as that of the original audio.
       * `codec` - Audio stream encoder. Valid value are: `libfdk_aac` and `libmp3lame`.
-      * `sample_rate` - Audio stream sample rate. Valid values: `32000`, `44100`, `48000`. in Hz.
+      * `sample_rate` - Audio stream sample rate. Valid values: `32000`, `44100`, `48000`. Unit is HZ.
     * `remove_audio` - Whether to remove audio stream. `false`: no, `true`: yes.
     * `video` - Video parameter information.
       * `bitrate` - Bitrate of video stream in Kbps. Value range: `0` and `[128, 35000]`. If the value is `0`, the bitrate of the video will be the same as that of the source video.

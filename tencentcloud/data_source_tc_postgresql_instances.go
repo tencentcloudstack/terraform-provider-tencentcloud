@@ -148,6 +148,11 @@ func dataSourceTencentCloudPostgresqlInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Create time of the postgresql instance.",
 						},
+						"tags": {
+							Type:        schema.TypeMap,
+							Computed:    true,
+							Description: "The available tags within this postgresql.",
+						},
 					},
 				},
 			},
@@ -185,6 +190,8 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 
 	ids := make([]string, 0, len(instanceList))
 	list := make([]map[string]interface{}, 0, len(instanceList))
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
 
 	for _, v := range instanceList {
 		listItem := make(map[string]interface{})
@@ -222,6 +229,15 @@ func dataSourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta i
 		} else {
 			listItem["charge_type"] = COMMON_PAYTYPE_POSTPAID
 		}
+
+		//the describe list API is delayed with argument `tag`
+		tagList, err := tagService.DescribeResourceTags(ctx, "postgres", "DBInstanceId", tcClient.Region, *v.DBInstanceId)
+		if err != nil {
+			return err
+		}
+
+		listItem["tags"] = tagList
+
 		list = append(list, listItem)
 		ids = append(ids, *v.DBInstanceId)
 	}

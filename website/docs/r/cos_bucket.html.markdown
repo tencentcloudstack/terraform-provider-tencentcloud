@@ -122,7 +122,7 @@ The `website` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `cos_bucket_url` - The URL of this cos bucket.
 
 
 ## Import

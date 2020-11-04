@@ -1,8 +1,59 @@
-## 1.45.2 (Unreleased)
+## 1.46.2 (Unreleased)
 
 ENHANCEMENTS:
 
 * update Resource and Datasource description.
+
+## 1.46.1 (October 29, 2020)
+
+ENHANCEMENTS:
+
+* Resource: `tencentcloud_cos_bucket` add new argument `cos_bucket_url`.
+* Resource: `tencentcloud_nat_gateway` add new argument `tags`.
+* Resource: `tencentcloud_postgresql_instance` add new argument `tags`.
+* Data Source: `tencentcloud_cos_buckets` add new argument `cos_bucket_url`.
+* Data Source: `tencentcloud_nat_gateways` add new argument `tags`.
+* Data Source: `tencentcloud_postgresql_instances` add new argument `tags`.
+
+## 1.46.0 (October 26, 2020)
+
+FEATURES:
+
+* **New Resource**: `tencentcloud_api_gateway_api`
+* **New Resource**: `tencentcloud_api_gateway_service`
+* **New Resource**: `tencentcloud_api_gateway_custom_domain`
+* **New Resource**: `tencentcloud_api_gateway_usage_plan`
+* **New Resource**: `tencentcloud_api_gateway_usage_plan_attachment`
+* **New Resource**: `tencentcloud_api_gateway_ip_strategy`
+* **New Resource**: `tencentcloud_api_gateway_strategy_attachment`
+* **New Resource**: `tencentcloud_api_gateway_api_key`
+* **New Resource**: `tencentcloud_api_gateway_api_key_attachment`
+* **New Resource**: `tencentcloud_api_gateway_service_release`
+* **New Data Source**: `tencentcloud_api_gateway_apis` 
+* **New Data Source**: `tencentcloud_api_gateway_services` 
+* **New Data Source**: `tencentcloud_api_gateway_throttling_apis` 
+* **New Data Source**: `tencentcloud_api_gateway_throttling_services` 
+* **New Data Source**: `tencentcloud_api_gateway_usage_plans`
+* **New Data Source**: `tencentcloud_api_gateway_ip_strategies`
+* **New Data Source**: `tencentcloud_api_gateway_customer_domains`
+* **New Data Source**: `tencentcloud_api_gateway_usage_plan_environments`
+* **New Data Source**: `tencentcloud_api_gateway_api_keys`
+
+## 1.45.3 (October 21, 2020)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_sqlserver_instance` Fix the error of releasing associated resources when destroying sqlserver postpaid instance.
+* Resource: `tencentcloud_sqlserver_readonly_instance` Fix the bug that the instance cannot be recycled when destroying sqlserver postpaid instance.
+* Resource: `tencentcloud_clb_instance` fix force new when updating tags.
+* Resource: `tencentcloud_redis_backup_config` fix doc issues.
+* Resource: `tencentcloud_instance` fix `keep_image_login` force new issue when updating terraform version.
+* Resource: `tencentcloud_clb_instance` fix tag creation bug.
+
+## 1.45.2 (October 19, 2020)
+
+BUG FIXES:
+* Resource: `tencentcloud_mysql_instance` fix creating prepaid instance error.
 
 ## 1.45.1 (October 16, 2020)
 

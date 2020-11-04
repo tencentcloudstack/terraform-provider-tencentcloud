@@ -36,6 +36,7 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "availability_zone"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_ip"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_port"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "test"),
 				),
 			},
 			{
@@ -65,6 +66,7 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_port"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "public_access_host"),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "public_access_port"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "teest"),
 				),
 			},
 		},
@@ -140,6 +142,10 @@ resource "tencentcloud_postgresql_instance" "test" {
   project_id = 0
   memory = 4
   storage = 100
+
+	tags = {
+		tf = "test"
+	}
 }
 `
 
@@ -157,5 +163,9 @@ resource "tencentcloud_postgresql_instance" "test" {
   public_access_switch = true
   memory = 4
   storage = 250
+
+	tags = {
+		tf = "teest"
+	}
 }
 `

@@ -57,7 +57,7 @@ func resourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"Percent", "Time"}),
-				Description:  "Sampling type. Valid values: `Percent`,`Time`. `Percent`: by percent. `Time`: by time interval.",
+				Description:  "Sampling type. Valid values: `Percent`, `Time`. `Percent`: by percent. `Time`: by time interval.",
 			},
 			"sample_interval": {
 				Type:        schema.TypeInt,

@@ -339,9 +339,16 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Description: "Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change.",
 			},
 			"keep_image_login": {
-				Type:          schema.TypeBool,
-				Optional:      true,
-				Default:       false,
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					if new == "false" && old == "" || old == "false" && new == "" {
+						return true
+					} else {
+						return old == new
+					}
+				},
 				ForceNew:      true,
 				ConflictsWith: []string{"key_name", "password"},
 				Description:   "Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`.",
@@ -795,6 +802,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	if instance.LoginSettings.KeepImageLogin != nil {
 		_ = d.Set("keep_image_login", *instance.LoginSettings.KeepImageLogin == CVM_IMAGE_LOGIN)
 	}
+
 	if *instance.InstanceState == CVM_STATUS_STOPPED {
 		_ = d.Set("running_flag", false)
 	} else {

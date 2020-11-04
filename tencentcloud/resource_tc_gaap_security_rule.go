@@ -105,7 +105,7 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 					}
 					return
 				},
-				Description: "Target port. Default value is `ALL`. Valid value: `80`, `80,443` and `3306-20000`.",
+				Description: "Target port. Default value is `ALL`. Valid examples: `80`, `80,443` and `3306-20000`.",
 			},
 		},
 	}

@@ -104,7 +104,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 				Optional:     true,
 				Default:      0,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Description:  "The and or relation of indicator alarm rule.Valid values: 0, 1. 0 represents or rule (if any rule is met, the alarm will be raised), 1 represents and rule (if all rules are met, the alarm will be raised).The default is 0.",
+				Description:  "The and or relation of indicator alarm rule. Valid values: 0, 1. 0 represents or rule (if any rule is met, the alarm will be raised), 1 represents and rule (if all rules are met, the alarm will be raised).The default is 0.",
 			},
 			"conditions": {
 				Type:        schema.TypeList,
@@ -225,7 +225,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 						"receiver_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Receive type.Valid values: group, user. 'group' (receiving group) or 'user' (receiver).",
+							Description: "Receive type. Valid values: group, user. 'group' (receiving group) or 'user' (receiver).",
 						},
 						"round_number": {
 							Type:        schema.TypeInt,

@@ -40,6 +40,7 @@ In addition to all arguments above, the following attributes are exported:
     * `allowed_origins` - Specifies which origins are allowed.
     * `expose_headers` - Specifies expose header in the response.
     * `max_age_seconds` - Specifies time in seconds that browser can cache the response for a preflight request.
+  * `cos_bucket_url` - The URL of this cos bucket.
   * `lifecycle_rules` - The lifecycle configuration of a bucket.
     * `expiration` - Specifies a period in the object's expire.
       * `date` - Specifies the date after which you want the corresponding action to take effect.

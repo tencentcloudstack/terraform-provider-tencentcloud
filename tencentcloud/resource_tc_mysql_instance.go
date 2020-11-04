@@ -111,11 +111,8 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:      true,
 			Default:       1,
 			ConflictsWith: []string{"pay_type", "period"},
-			DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
-				return true
-			},
-			ValidateFunc: validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
-			Description:  "Period of instance. NOTES: Only supported prepaid instance.",
+			ValidateFunc:  validateAllowedIntValue(MYSQL_AVAILABLE_PERIOD),
+			Description:   "Period of instance. NOTES: Only supported prepaid instance.",
 		},
 		"auto_renew_flag": {
 			Type:         schema.TypeInt,
@@ -186,12 +183,12 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"locked": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Indicates whether the instance is locked.Valid values: 0, 1. 0 - No; 1 - Yes.",
+			Description: "Indicates whether the instance is locked. Valid values: 0, 1. 0 - No; 1 - Yes.",
 		},
 		"status": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Instance status. Valid values: 0,1,4,5. 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
+			Description: "Instance status. Valid values: 0, 1, 4, 5. 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
 		},
 		"task_status": {
 			Type:        schema.TypeInt,

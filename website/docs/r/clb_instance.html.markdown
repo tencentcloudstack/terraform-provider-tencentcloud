@@ -56,7 +56,7 @@ The following arguments are supported:
 * `project_id` - (Optional, ForceNew) Id of the project within the CLB instance, '0' - Default Project.
 * `security_groups` - (Optional) Security groups of the CLB instance. Only supports 'OPEN' CLBs.
 * `subnet_id` - (Optional, ForceNew) Subnet id of the CLB. Effective only for CLB within the VPC. Only supports 'INTERNAL' CLBs.
-* `tags` - (Optional, ForceNew) The available tags within this CLB.
+* `tags` - (Optional) The available tags within this CLB.
 * `target_region_info_region` - (Optional) Region information of backend services are attached the CLB instance. Only supports 'OPEN' CLBs.
 * `target_region_info_vpc_id` - (Optional) Vpc information of backend services are attached the CLB instance. Only supports 'OPEN' CLBs.
 * `vpc_id` - (Optional, ForceNew) VPC id of the CLB.

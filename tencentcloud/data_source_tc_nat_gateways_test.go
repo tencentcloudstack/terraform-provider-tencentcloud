@@ -18,6 +18,7 @@ func TestAccTencentCloudNatGatewaysDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateways.multi_nat", "nats.#", "2"),
 					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateways.multi_nat", "nats.0.name", "terraform_test_nats"),
 					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateways.multi_nat", "nats.1.bandwidth", "500"),
+					resource.TestCheckResourceAttr("data.tencentcloud_nat_gateways.multi_nat", "nats.0.tags.tf", "test"),
 				),
 			},
 		},
@@ -44,6 +45,10 @@ resource "tencentcloud_nat_gateway" "dev_nat" {
   assigned_eip_set = [
     tencentcloud_eip.eip_dev_dnat.public_ip,
   ]
+
+  tags = {
+	tf = "test"
+	}
 }
 resource "tencentcloud_nat_gateway" "test_nat" {
   vpc_id           = tencentcloud_vpc.main.id

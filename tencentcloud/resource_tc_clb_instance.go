@@ -134,7 +134,6 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The available tags within this CLB.",
 			},
 		},
@@ -287,7 +286,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("clb", "loadbalancerid", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("clb", "clb", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -338,7 +337,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "clb", "loadbalancerid", tcClient.Region, d.Id())
+	tags, err := tagService.DescribeResourceTags(ctx, "clb", "clb", tcClient.Region, d.Id())
 	if err != nil {
 		return err
 	}
@@ -470,7 +469,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("clb", "loadbalancerid", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("clb", "clb", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err

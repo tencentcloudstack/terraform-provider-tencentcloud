@@ -127,7 +127,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(2, 60),
-				Description:  "Response timeout of health check. Valid value ranges: (2~60) sec. and the default is 2 sec. Response timeout needs to be less than check interval. NOTES: Only supports listeners of 'TCP','UDP','TCP_SSL' protocol.",
+				Description:  "Response timeout of health check. Valid value ranges: (2~60) sec. Default is 2 sec. Response timeout needs to be less than check interval. NOTES: Only supports listeners of 'TCP','UDP','TCP_SSL' protocol.",
 			},
 			"health_check_interval_time": {
 				Type:         schema.TypeInt,

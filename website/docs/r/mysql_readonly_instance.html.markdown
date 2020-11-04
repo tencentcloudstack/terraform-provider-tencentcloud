@@ -58,8 +58,8 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `intranet_ip` - instance intranet IP.
-* `locked` - Indicates whether the instance is locked.Valid values: 0, 1. 0 - No; 1 - Yes.
-* `status` - Instance status. Valid values: 0,1,4,5. 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.
+* `locked` - Indicates whether the instance is locked. Valid values: 0, 1. 0 - No; 1 - Yes.
+* `status` - Instance status. Valid values: 0, 1, 4, 5. 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
 
 

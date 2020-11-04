@@ -59,7 +59,7 @@ The following arguments are supported:
 * `remark` - (Required, ForceNew) Policy group's remark information.
 * `conditions` - (Optional) A list of threshold rules. Each element contains the following attributes:
 * `event_conditions` - (Optional) A list of event rules. Each element contains the following attributes:
-* `is_union_rule` - (Optional) The and or relation of indicator alarm rule.Valid values: 0, 1. 0 represents or rule (if any rule is met, the alarm will be raised), 1 represents and rule (if all rules are met, the alarm will be raised).The default is 0.
+* `is_union_rule` - (Optional) The and or relation of indicator alarm rule. Valid values: 0, 1. 0 represents or rule (if any rule is met, the alarm will be raised), 1 represents and rule (if all rules are met, the alarm will be raised).The default is 0.
 * `project_id` - (Optional, ForceNew) The project id to which the policy group belongs, default is 0.
 
 The `conditions` object supports the following:
@@ -97,7 +97,7 @@ In addition to all arguments above, the following attributes are exported:
   * `person_interval` - Telephone warning to individual interval (seconds).
   * `receive_language` - Alert sending language.
   * `receiver_group_list` - Alarm receive group id list.
-  * `receiver_type` - Receive type.Valid values: group, user. 'group' (receiving group) or 'user' (receiver).
+  * `receiver_type` - Receive type. Valid values: group, user. 'group' (receiving group) or 'user' (receiver).
   * `receiver_user_list` - Alarm receiver id list.
   * `recover_notify` - Restore notification mode. Optional "SMS".
   * `round_interval` - Telephone alarm interval per round (seconds).

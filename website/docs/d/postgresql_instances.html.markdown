@@ -58,6 +58,7 @@ In addition to all arguments above, the following attributes are exported:
   * `public_access_switch` - Indicates whether to enable the access to an instance from public network or not.
   * `storage` - Volume size(in GB).
   * `subnet_id` - ID of subnet.
+  * `tags` - The available tags within this postgresql.
   * `vpc_id` - ID of VPC.
 
 

@@ -75,7 +75,7 @@ The `origin` object supports the following:
 * `backup_origin_type` - (Optional) Backup origin server type. Valid values are `domain` and `ip`.
 * `backup_server_name` - (Optional) Host header used when accessing the backup origin server. If left empty, the ServerName of master origin server will be used by default.
 * `cos_private_access` - (Optional) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`. and default value is `off`.
-* `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. Valid values are `http`, `https` and `follow`. and default value is `http`.
+* `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. Valid values are `http`, `https` and `follow`. Default value is `http`.
 * `server_name` - (Optional) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
 
 The `server_certificate_config` object supports the following:

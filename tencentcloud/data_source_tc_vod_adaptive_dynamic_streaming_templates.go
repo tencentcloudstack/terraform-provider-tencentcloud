@@ -203,7 +203,7 @@ func dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplates() *schema.Resour
 												"sample_rate": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "Audio stream sample rate. Valid values: `32000`, `44100`, `48000`. in Hz.",
+													Description: "Audio stream sample rate. Valid values: `32000`, `44100`, `48000`. Unit is HZ.",
 												},
 												"audio_channel": {
 													Type:        schema.TypeString,
