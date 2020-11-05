@@ -1,8 +1,8 @@
-## 1.46.2 (Unreleased)
+## 1.46.3 (Unreleased)
+## 1.46.2 (November 5, 2020)
 
 ENHANCEMENTS:
 
-* update Resource and Datasource description.
 * Resource: `tencentcloud_kubernetes_cluster` add new argument `kube_config`.
 * Resource: `tencentcloud_kubernetes_cluster` add value `tlinux2.4x86_64` with argument `cluster_os` to support linux OS system.
 * Resource: `tencentcloud_kubernetes_cluster` add new argument `mount_target` to support set disk mount path.
@@ -11,10 +11,11 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_kubernetes_scale_worker` add new argument `labels` to support scale worker labels.
 * Data Source: `tencentcloud_kubernetes_clusters` add new argument `kube_config`.
 * Data Source: `tencentcloud_availability_regions` support getting local region info by setting argument `name` with value `default`.
+* Docs: update argument description.
 
 BUG FIXES:
 
-* Resource: `tencentcloud_clb_redirection` fix inconsistent bugs when creating more than one auto redirection.
+* Resource: `tencentcloud_clb_redirection` fix inconsistent bug when creating more than one auto redirection.
 * Resource: `tencentcloud_redis_instance` fix updating issue when redis `type_id` is set `5`.
 
 ## 1.46.1 (October 29, 2020)
