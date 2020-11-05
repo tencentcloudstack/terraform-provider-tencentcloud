@@ -1,4 +1,8 @@
 ## 1.46.3 (Unreleased)
+
+ENHANCEMENTS:
+* Resource: `tencentcloud_kubernetes_cluster` add more values with argument `cluster_os` to support linux OS system.
+
 ## 1.46.2 (November 5, 2020)
 
 ENHANCEMENTS:
