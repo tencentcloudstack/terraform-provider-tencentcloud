@@ -344,7 +344,7 @@ func resourceTencentCloudClbRedirectionUpdate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_clb_redirection.update")()
 	defer inconsistentCheck(d, meta)()
 	// this nil update method works for the only filed `delete_all_auto_rewrite`
-	return nil
+	return resourceTencentCloudClbRedirectionRead(d, meta)
 }
 
 func resourceTencentCloudClbRedirectionDelete(d *schema.ResourceData, meta interface{}) error {
