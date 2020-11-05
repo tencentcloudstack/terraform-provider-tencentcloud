@@ -43,6 +43,7 @@ The following arguments are supported:
 * `clb_id` - (Required, ForceNew) Id of CLB instance.
 * `target_listener_id` - (Required, ForceNew) Id of source listener.
 * `target_rule_id` - (Required, ForceNew) Rule id of target listener.
+* `delete_all_auto_rewrite` - (Optional) Indicates whether delete all auto redirection. Default is false. It will take effect only when this redirection is auto-rewrite and this auto-rewrite auto redirected more than one rules. All the auto-rewrite relations will be deleted when this parameter set true.
 * `is_auto_rewrite` - (Optional, ForceNew) Indicates whether automatic forwarding is enable, default is false. If enabled, the source listener and location should be empty, the target listener must be https protocol and port is 443.
 * `source_listener_id` - (Optional, ForceNew) Id of source listener.
 * `source_rule_id` - (Optional, ForceNew) Rule id of source listener.

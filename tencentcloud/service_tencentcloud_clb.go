@@ -559,18 +559,78 @@ func (me *ClbService) DescribeRedirectionById(ctx context.Context, rewriteId str
 		return
 	}
 
-	ruleOutput := response.Response.RewriteSet[0]
-	if ruleOutput.RewriteTarget != nil {
-		if *ruleOutput.RewriteTarget.TargetListenerId == targetListenerId && *ruleOutput.RewriteTarget.TargetLocationId == targetLocId {
-			result["source_rule_id"] = sourceLocId
-			result["target_rule_id"] = targetLocId
-			result["source_listener_id"] = sourceListenerId
-			result["target_listener_id"] = targetListenerId
-			result["clb_id"] = clbId
-			rewriteInfo = &result
+	for _, v := range response.Response.RewriteSet {
+		//sometimes the response returns all the rules under a certain url, so filter again in the code
+		if v.RewriteTarget != nil {
+			if *v.RewriteTarget.TargetListenerId == targetListenerId && *v.RewriteTarget.TargetLocationId == targetLocId {
+				result["source_rule_id"] = sourceLocId
+				result["target_rule_id"] = targetLocId
+				result["source_listener_id"] = sourceListenerId
+				result["target_listener_id"] = targetListenerId
+				result["clb_id"] = clbId
+				rewriteInfo = &result
+				return
+			}
 		}
 	}
 
+	return
+}
+
+func (me *ClbService) DescribeAllAutoRedirections(ctx context.Context, rewriteId string) (rewriteInfos []*map[string]string, errRet error) {
+	logId := getLogId(ctx)
+	items := strings.Split(rewriteId, "#")
+	if len(items) != 5 {
+		errRet = fmt.Errorf("[TECENT_TERRAFORM_CHECK][CLB redirection][Describe] check: redirection id %s is not with format loc-xxx#loc-xxx#lbl-xxx#lbl-xxx#lb-xxx", rewriteId)
+		errRet = errors.WithStack(errRet)
+		return
+	}
+	sourceLocationId := items[0]
+	sourceListenerId := items[2]
+	clbId := items[4]
+	request := clb.NewDescribeRewriteRequest()
+	request.LoadBalancerId = &clbId
+	request.SourceListenerIds = []*string{&sourceListenerId}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().DescribeRewrite(request)
+	if err != nil {
+		//in case that the lb is not exist, return empty
+		if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if e.GetCode() == "InvalidParameter.LBIdNotFound" {
+				return
+			}
+		}
+		errRet = errors.WithStack(err)
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RewriteSet) < 1 {
+		return
+	}
+
+	//get listener id and domain
+	domain := ""
+	for _, v := range response.Response.RewriteSet {
+		if v.RewriteTarget != nil && sourceListenerId == *v.ListenerId && sourceLocationId == *v.LocationId {
+			domain = *v.Domain
+			break
+		}
+	}
+
+	for _, v := range response.Response.RewriteSet {
+		//auto rewrite will associate all the url under the domain
+		if v.RewriteTarget != nil && sourceListenerId == *v.ListenerId && domain == *v.Domain {
+			result := make(map[string]string)
+			result["source_rule_id"] = *v.LocationId
+			result["target_rule_id"] = *v.RewriteTarget.TargetLocationId
+			result["source_listener_id"] = *v.ListenerId
+			result["target_listener_id"] = *v.RewriteTarget.TargetListenerId
+			result["clb_id"] = clbId
+			rewriteInfos = append(rewriteInfos, &result)
+		}
+	}
 	return
 }
 

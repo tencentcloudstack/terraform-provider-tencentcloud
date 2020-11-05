@@ -215,15 +215,16 @@ The following arguments are supported:
 * `cluster_internet` - (Optional) Open internet access or not.
 * `cluster_intranet_subnet_id` - (Optional) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional) Open intranet access or not.
-* `cluster_ipvs` - (Optional, ForceNew) Indicates whether ipvs is enabled. Default is true.
+* `cluster_ipvs` - (Optional, ForceNew) Indicates whether `ipvs` is enabled. Default is true. False means `iptables` is enabled.
 * `cluster_max_pod_num` - (Optional, ForceNew) The maximum number of Pods per node in the cluster. Default is 256. Must be a multiple of 16 and large than 32.
 * `cluster_max_service_num` - (Optional, ForceNew) The maximum number of services in the cluster. Default is 256. Must be a multiple of 16.
 * `cluster_name` - (Optional, ForceNew) Name of the cluster.
 * `cluster_os_type` - (Optional, ForceNew) Image type of the cluster os, the available values include: 'DOCKER_CUSTOMIZE','GENERAL'. Default is 'GENERAL'. 'DOCKER_CUSTOMIZE' means 'TKE-Optimized'. Only 'centos7.6x86_64' or 'ubuntu18.04.1 LTSx86_64' support 'DOCKER_CUSTOMIZE' now.
-* `cluster_os` - (Optional, ForceNew) Operating system of the cluster, the available values include: 'centos7.2x86_64','centos7.6x86_64','ubuntu16.04.1 LTSx86_64','ubuntu18.04.1 LTSx86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.
+* `cluster_os` - (Optional, ForceNew) Operating system of the cluster, the available values include: 'centos7.2x86_64','centos7.6x86_64','ubuntu16.04.1 LTSx86_64','ubuntu18.04.1 LTSx86_64','tlinux2.4x86_64'. Default is 'ubuntu16.04.1 LTSx86_64'.
 * `cluster_version` - (Optional, ForceNew) Version of the cluster, Default is '1.10.5'.
 * `container_runtime` - (Optional, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.
 * `deletion_protection` - (Optional) Indicates whether cluster deletion protection is enabled. Default is false.
+* `docker_graph_path` - (Optional, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `eni_subnet_ids` - (Optional) Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.
 * `extra_args` - (Optional, ForceNew) Custom parameter information related to the node.
 * `ignore_cluster_cidr_conflict` - (Optional, ForceNew) Indicates whether to ignore the cluster cidr conflict error. Default is false.
@@ -232,6 +233,7 @@ The following arguments are supported:
 * `labels` - (Optional, ForceNew) Labels of tke cluster nodes.
 * `managed_cluster_internet_security_policies` - (Optional) Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
 * `master_config` - (Optional, ForceNew) Deploy the machine configuration information of the 'MASTER_ETCD' service, and create <=7 units for common users.
+* `mount_target` - (Optional, ForceNew) Mount target. Default is not mounting.
 * `network_type` - (Optional, ForceNew) Cluster network type, GR or VPC-CNI. Default is GR.
 * `node_name_type` - (Optional, ForceNew) Node name type of Cluster, the available values include: 'lan-ip' and 'hostname', Default is 'lan-ip'.
 * `project_id` - (Optional, ForceNew) Project ID, default value is 0.
@@ -308,6 +310,7 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_external_endpoint` - External network address to access.
 * `cluster_node_num` - Number of nodes in the cluster.
 * `domain` - Domain name for access.
+* `kube_config` - kubernetes config.
 * `password` - Password of account.
 * `pgw_endpoint` - The Intranet address used for access.
 * `security_policy` - Access policy.

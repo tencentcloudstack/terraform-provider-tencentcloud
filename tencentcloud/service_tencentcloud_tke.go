@@ -294,6 +294,36 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 	return
 }
 
+func (me *TkeService) DescribeClusterConfig(ctx context.Context, id string) (config string, errRet error) {
+
+	logId := getLogId(ctx)
+	request := tke.NewDescribeClusterKubeconfigRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = &id
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterKubeconfig(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	config = *response.Response.Kubeconfig
+	return
+}
+
 func (me *TkeService) CreateCluster(ctx context.Context,
 	basic ClusterBasicSetting,
 	advanced ClusterAdvancedSettings,

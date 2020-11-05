@@ -240,8 +240,10 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return outErr
 	}
 
+	d.SetId(instanceId)
+
 	//check creation done
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
 		if err != nil {
 			return retryError(err)
@@ -258,7 +260,6 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	if err != nil {
 		return err
 	}
-	d.SetId(instanceId)
 
 	var (
 		password = d.Get("root_password").(string)

@@ -532,7 +532,9 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if newMemSize < 1 {
 			return fmt.Errorf("redis mem_size value cannot be set to less than 1")
 		}
-		_, err := redisService.UpgradeInstance(ctx, id, int64(newMemSize))
+		redisShardNum := d.Get("redis_shard_num").(int)
+		redisReplicasNum := d.Get("redis_replicas_num").(int)
+		_, err := redisService.UpgradeInstance(ctx, id, int64(newMemSize), int64(redisShardNum), int64(redisReplicasNum))
 
 		if err != nil {
 			log.Printf("[CRITAL]%s redis update mem size error, reason:%s\n", logId, err.Error())

@@ -471,11 +471,10 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Description of the cluster.",
 		},
 		"cluster_os": {
-			Type:         schema.TypeString,
-			ForceNew:     true,
-			Optional:     true,
-			Default:      TKE_CLUSTER_OS_UBUNTU16,
-			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_OS),
+			Type:     schema.TypeString,
+			ForceNew: true,
+			Optional: true,
+			Default:  TKE_CLUSTER_OS_UBUNTU16,
 			Description: "Operating system of the cluster, the available values include: '" + strings.Join(TKE_CLUSTER_OS, "','") +
 				"'. Default is '" + TKE_CLUSTER_OS_UBUNTU16 + "'.",
 		},
@@ -517,7 +516,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			ForceNew:    true,
 			Optional:    true,
 			Default:     true,
-			Description: "Indicates whether ipvs is enabled. Default is true.",
+			Description: "Indicates whether `ipvs` is enabled. Default is true. False means `iptables` is enabled.",
 		},
 		"cluster_as_enabled": {
 			Type:        schema.TypeBool,
@@ -588,10 +587,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Indicates whether cluster deletion protection is enabled. Default is false.",
 		},
 		"kube_proxy_mode": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			Default:      "",
-			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_KUBE_PROXY_MODE),
+			Type:     schema.TypeString,
+			Optional: true,
+			Default:  "",
 			Description: "Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set." +
 				"When set to kube-proxy-bpf, cluster version greater than 1.14 and with TKE-optimized kernel is required.",
 		},
@@ -821,12 +819,30 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			ForceNew:    true,
 			Description: "Labels of tke cluster nodes.",
 		},
+		"mount_target": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Mount target. Default is not mounting.",
+		},
+		"docker_graph_path": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     "/var/lib/docker",
+			Description: "Docker graph path. Default is `/var/lib/docker`.",
+		},
 		"extra_args": {
 			Type:        schema.TypeList,
 			Optional:    true,
 			ForceNew:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
 			Description: "Custom parameter information related to the node.",
+		},
+		"kube_config": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "kubernetes config.",
 		},
 	}
 
@@ -1238,6 +1254,13 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if temp, ok := d.GetOk("docker_graph_path"); ok {
+		iAdvanced.DockerGraphPath = temp.(string)
+	}
+	if temp, ok := d.GetOk("mount_target"); ok {
+		iAdvanced.MountTarget = temp.(string)
+	}
+
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	id, err := service.CreateCluster(ctx, basic, advanced, cvms, iAdvanced, cidrSet, tags)
@@ -1416,6 +1439,23 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("cluster_max_service_num", info.MaxClusterServiceNum)
 	_ = d.Set("cluster_node_num", info.ClusterNodeNum)
 	_ = d.Set("tags", info.Tags)
+
+	config, err := service.DescribeClusterConfig(ctx, d.Id())
+	if err != nil {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			config, err = service.DescribeClusterConfig(ctx, d.Id())
+			if err != nil {
+				return retryError(err)
+			}
+			return nil
+		})
+	}
+
+	if err != nil {
+		return nil
+	}
+
+	_ = d.Set("kube_config", config)
 
 	_, workers, err := service.DescribeClusterInstances(ctx, d.Id())
 	if err != nil {
