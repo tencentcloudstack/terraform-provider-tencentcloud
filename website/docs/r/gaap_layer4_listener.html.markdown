@@ -60,14 +60,14 @@ The following arguments are supported:
 
 * `name` - (Required) Name of the layer4 listener, the maximum length is 30.
 * `port` - (Required, ForceNew) Port of the layer4 listener.
-* `protocol` - (Required, ForceNew) Protocol of the layer4 listener, the available values include `TCP` and `UDP`.
+* `protocol` - (Required, ForceNew) Protocol of the layer4 listener. Valid value: `TCP` and `UDP`.
 * `proxy_id` - (Required, ForceNew) ID of the GAAP proxy.
-* `realserver_type` - (Required, ForceNew) Type of the realserver, the available values include `IP` and `DOMAIN`. NOTES: when the `protocol` is specified as `TCP` and the `scheduler` is specified as `wrr`, the item can only be set to `IP`.
+* `realserver_type` - (Required, ForceNew) Type of the realserver. Valid value: `IP` and `DOMAIN`. NOTES: when the `protocol` is specified as `TCP` and the `scheduler` is specified as `wrr`, the item can only be set to `IP`.
 * `connect_timeout` - (Optional) Timeout of the health check response, should less than interval, default value is 2s. NOTES: Only supports listeners of `TCP` protocol and require less than `interval`.
 * `health_check` - (Optional) Indicates whether health check is enable, default value is `false`. NOTES: Only supports listeners of `TCP` protocol.
 * `interval` - (Optional) Interval of the health check, default value is 5s. NOTES: Only supports listeners of `TCP` protocol.
 * `realserver_bind_set` - (Optional) An information list of GAAP realserver.
-* `scheduler` - (Optional) Scheduling policy of the layer4 listener, default value is `rr`, the available values include `rr`, `wrr` and `lc`.
+* `scheduler` - (Optional) Scheduling policy of the layer4 listener, default value is `rr`. Valid value: `rr`, `wrr` and `lc`.
 
 The `realserver_bind_set` object supports the following:
 

@@ -321,7 +321,7 @@ func resourceTencentCloudVodProcedureTemplate() *schema.Resource {
 										Type:         schema.TypeString,
 										Required:     true,
 										ValidateFunc: validateAllowedStringValue([]string{"Time", "Percent"}),
-										Description:  "Screen capturing mode. Valid values: `Time`: screen captures by time point, `Percent`: screen captures by percentage.",
+										Description:  "Screen capturing mode. Valid values: `Time`, `Percent`. `Time`: screen captures by time point, `Percent`: screen captures by percentage.",
 									},
 									"position_value": {
 										Type:        schema.TypeFloat,

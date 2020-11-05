@@ -414,6 +414,11 @@ TcaplusDB
 
 VOD
   Data Source
+	tencentcloud_vod_adaptive_dynamic_streaming_templates
+	tencentcloud_vod_snapshot_by_time_offset_templates
+	tencentcloud_vod_super_player_configs
+	tencentcloud_vod_image_sprite_templates
+	tencentcloud_vod_procedure_templates
 
 
   Resource

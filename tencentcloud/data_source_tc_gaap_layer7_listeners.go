@@ -46,7 +46,7 @@ func dataSourceTencentCloudGaapLayer7Listeners() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS"}),
-				Description:  "Protocol of the layer7 listener to be queried, the available values include `HTTP` and `HTTPS`.",
+				Description:  "Protocol of the layer7 listener to be queried. Valid values: `HTTP` and `HTTPS`.",
 			},
 			"proxy_id": {
 				Type:        schema.TypeString,

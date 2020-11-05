@@ -97,7 +97,7 @@ func resourceTencentCloudCamPolicy() *schema.Resource {
 			"type": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Type of the policy strategy. 1 means customer strategy and 2 means preset strategy.",
+				Description: "Type of the policy strategy. Valid values: 1, 2.  1 means customer strategy and 2 means preset strategy.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,

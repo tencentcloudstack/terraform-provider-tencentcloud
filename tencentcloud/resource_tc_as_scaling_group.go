@@ -79,13 +79,13 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerInRange(0, 2000),
-				Description:  "Maximum number of CVM instances (0~2000).",
+				Description:  "Maximum number of CVM instances. Valid value ranges: (0~2000).",
 			},
 			"min_size": {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerInRange(0, 2000),
-				Description:  "Minimum number of CVM instances (0~2000).",
+				Description:  "Minimum number of CVM instances. Valid value ranges: (0~2000).",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -178,7 +178,7 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				MaxItems:    1,
-				Description: "Available values for termination policies include OLDEST_INSTANCE and NEWEST_INSTANCE.",
+				Description: "Available values for termination policies. Valid values: OLDEST_INSTANCE and NEWEST_INSTANCE.",
 				Elem: &schema.Schema{
 					Type:    schema.TypeString,
 					Default: SCALING_GROUP_TERMINATION_POLICY_OLDEST_INSTANCE,
@@ -189,7 +189,7 @@ func resourceTencentCloudAsScalingGroup() *schema.Resource {
 			"retry_policy": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Available values for retry policies include IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.",
+				Description: "Available values for retry policies. Valid values: IMMEDIATE_RETRY and INCREMENTAL_INTERVALS.",
 				Default:     SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 				ValidateFunc: validateAllowedStringValue([]string{SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 					SCALING_GROUP_RETRY_POLICY_INCREMENTAL_INTERVALS}),

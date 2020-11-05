@@ -104,7 +104,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 				Optional:     true,
 				Default:      0,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
-				Description:  "The and or relation of indicator alarm rule, 0 represents or rule (if any rule is met, the alarm will be raised), 1 represents and rule (if all rules are met, the alarm will be raised).The default is 0.",
+				Description:  "The and or relation of indicator alarm rule. Valid values: 0, 1. 0 represents or rule (if any rule is met, the alarm will be raised), 1 represents and rule (if all rules are met, the alarm will be raised).The default is 0.",
 			},
 			"conditions": {
 				Type:        schema.TypeList,
@@ -133,7 +133,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 							Optional:     true,
 							Computed:     true,
 							ValidateFunc: validateIntegerInRange(1, 12),
-							Description:  "Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
+							Description:  "Compare type. Valid value ranges: (1~12). 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.",
 						},
 						"calc_value": {
 							Type:        schema.TypeFloat,
@@ -220,12 +220,12 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Computed:    true,
-							Description: `Method of warning notification.Optional "SMS", "SITE", "EMAIL", "CALL", "WECHAT".`,
+							Description: `Method of warning notification. Valid values: "SMS", "SITE", "EMAIL", "CALL", "WECHAT".`,
 						},
 						"receiver_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Receive type, 'group' (receiving group) or 'user' (receiver).",
+							Description: "Receive type. Valid values: group, user. 'group' (receiving group) or 'user' (receiver).",
 						},
 						"round_number": {
 							Type:        schema.TypeInt,
@@ -251,7 +251,7 @@ func resourceTencentMonitorPolicyGroup() *schema.Resource {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Computed:    true,
-							Description: `Telephone warning time.Option "OCCUR","RECOVER".`,
+							Description: `Telephone warning time. Valid values: "OCCUR","RECOVER".`,
 						},
 						"recover_notify": {
 							Type:        schema.TypeList,

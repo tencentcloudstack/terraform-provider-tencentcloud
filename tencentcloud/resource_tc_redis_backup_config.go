@@ -67,7 +67,7 @@ func resourceTencentCloudRedisBackupConfig() *schema.Resource {
 				Type:        schema.TypeSet,
 				Required:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Specifys which day the backup action should take place. Supported values include: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday.",
+				Description: "Specifys which day the backup action should take place. Valid values: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday and Sunday.",
 			},
 		},
 	}

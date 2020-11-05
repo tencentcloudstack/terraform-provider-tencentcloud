@@ -61,11 +61,11 @@ The `https_config` object supports the following:
 
 * `https_switch` - (Required) HTTPS configuration switch. Valid values are `on` and `off`.
 * `client_certificate_config` - (Optional) Client certificate configuration information.
-* `http2_switch` - (Optional) HTTP2 configuration switch. Valid values are `on` and `off`, and default value is `off`.
-* `ocsp_stapling_switch` - (Optional) OCSP configuration switch. Valid values are `on` and `off`, and default value is `off`.
+* `http2_switch` - (Optional) HTTP2 configuration switch. Valid values are `on` and `off`. and default value is `off`.
+* `ocsp_stapling_switch` - (Optional) OCSP configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `server_certificate_config` - (Optional) Server certificate configuration information.
-* `spdy_switch` - (Optional) Spdy configuration switch. Valid values are `on` and `off`, and default value is `off`.
-* `verify_client` - (Optional) Client certificate authentication feature. Valid values are `on` and `off`, and default value is `off`.
+* `spdy_switch` - (Optional) Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`.
+* `verify_client` - (Optional) Client certificate authentication feature. Valid values are `on` and `off`. and default value is `off`.
 
 The `origin` object supports the following:
 
@@ -74,8 +74,8 @@ The `origin` object supports the following:
 * `backup_origin_list` - (Optional) Backup origin server list. Valid values can be ip or domain name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.
 * `backup_origin_type` - (Optional) Backup origin server type. Valid values are `domain` and `ip`.
 * `backup_server_name` - (Optional) Host header used when accessing the backup origin server. If left empty, the ServerName of master origin server will be used by default.
-* `cos_private_access` - (Optional) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`, and default value is `off`.
-* `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. Valid values are `http`, `https` and `follow`, and default value is `http`.
+* `cos_private_access` - (Optional) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`. and default value is `off`.
+* `origin_pull_protocol` - (Optional) Origin-pull protocol configuration. Valid values are `http`, `https` and `follow`. Default value is `http`.
 * `server_name` - (Optional) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
 
 The `server_certificate_config` object supports the following:

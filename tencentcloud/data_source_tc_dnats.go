@@ -102,7 +102,7 @@ func dataSourceTencentCloudDnats() *schema.Resource {
 						"protocol": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of the network protocol, the available values include: `TCP` and `UDP`.",
+							Description: "Type of the network protocol. Valid values: `TCP` and `UDP`.",
 						},
 						"elastic_ip": {
 							Type:        schema.TypeString,

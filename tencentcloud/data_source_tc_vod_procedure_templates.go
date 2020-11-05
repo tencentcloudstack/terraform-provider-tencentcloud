@@ -53,7 +53,7 @@ func dataSourceTencentCloudVodProcedureTemplates() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Template type filter. Valid values: `Preset`: preset template; `Custom`: custom template.",
+				Description: "Template type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.",
 			},
 			"sub_app_id": {
 				Type:        schema.TypeInt,
@@ -74,7 +74,7 @@ func dataSourceTencentCloudVodProcedureTemplates() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Template type filter. Valid values: `Preset`: preset template; `Custom`: custom template.",
+							Description: "Template type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -256,7 +256,7 @@ func dataSourceTencentCloudVodProcedureTemplates() *schema.Resource {
 												"position_type": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Screen capturing mode. Valid values: `Time`: screen captures by time point, `Percent`: screen captures by percentage.",
+													Description: "Screen capturing mode. Valid values: `Time`, `Percent`. `Time`: screen captures by time point, `Percent`: screen captures by percentage.",
 												},
 												"position_value": {
 													Type:        schema.TypeFloat,

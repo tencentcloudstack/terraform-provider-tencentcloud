@@ -34,7 +34,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, ForceNew) ID of a VPC network.
 * `mount_ip` - (Optional, ForceNew) IP of mount point.
 * `name` - (Optional) Name of a file system.
-* `protocol` - (Optional, ForceNew) File service protocol. Valid values are `NFS` and `CIFS`, and the default is `NFS`.
+* `protocol` - (Optional, ForceNew) File service protocol. Valid values are `NFS` and `CIFS`. and the default is `NFS`.
 * `tags` - (Optional) Instance tags.
 
 ## Attributes Reference

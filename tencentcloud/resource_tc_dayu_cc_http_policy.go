@@ -145,14 +145,14 @@ func resourceTencentCloudDayuCCHttpPolicy() *schema.Resource {
 							Optional:     true,
 							Default:      "host",
 							ValidateFunc: validateAllowedStringValue(DAYU_CC_POLICY_HTTP_CHECK_TYPE),
-							Description:  "Key of the rule, valid values are `host`, `cgi`, `ua`, `referer`.",
+							Description:  "Key of the rule. Valid values: `host`, `cgi`, `ua`, `referer`.",
 						},
 						"operator": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      "include",
 							ValidateFunc: validateAllowedStringValue(DAYU_CC_POLICY_CHECK_OP),
-							Description:  "Operator of the rule, valid values are `include`, `not_include`, `equal`.",
+							Description:  "Operator of the rule. Valid values: `include`, `not_include`, `equal`.",
 						},
 						"value": {
 							Type:         schema.TypeString,

@@ -75,7 +75,7 @@ func resourceTencentCloudSqlserverAccount() *schema.Resource {
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Status of the SQL Server account. 1 for creating, 2 for running, 3 for modifying, 4 for resetting password, -1 for deleting.",
+				Description: "Status of the SQL Server account. Valid values: 1, 2, 3, 4. 1 for creating, 2 for running, 3 for modifying, 4 for resetting password, -1 for deleting.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,

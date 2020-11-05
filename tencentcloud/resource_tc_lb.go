@@ -48,7 +48,7 @@ func resourceTencentCloudLB() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue([]string{lbNetworkTypeOpen, lbNetworkTypeInternal}),
-				Description:  "The network type of the LB, valid choices: 'OPEN', 'INTERNAL'.",
+				Description:  "The network type of the LB. Valid value: 'OPEN', 'INTERNAL'.",
 			},
 			"forward": {
 				Type:         schema.TypeString,
@@ -56,7 +56,7 @@ func resourceTencentCloudLB() *schema.Resource {
 				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue([]string{lbForwardTypeClassic, lbForwardTypeApplication}),
-				Description:  "The type of the LB, valid choices: 'CLASSIC', 'APPLICATION'.",
+				Description:  "The type of the LB. Valid value: 'CLASSIC', 'APPLICATION'.",
 			},
 			"name": {
 				Type:        schema.TypeString,

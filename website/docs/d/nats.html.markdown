@@ -43,7 +43,7 @@ The following arguments are supported:
 * `id` - (Optional) The ID for NAT Gateway.
 * `max_concurrent` - (Optional) The upper limit of concurrent connection of NAT gateway, for example: 1000000, 3000000, 10000000.
 * `name` - (Optional) The name for NAT Gateway.
-* `state` - (Optional) NAT gateway status, 0: Running, 1: Unavailable, 2: Be in arrears and out of service.
+* `state` - (Optional) NAT gateway status. Valid values: 0, 1, 2. 0: Running, 1: Unavailable, 2: Be in arrears and out of service.
 * `vpc_id` - (Optional) The VPC ID for NAT Gateway.
 
 ## Attributes Reference

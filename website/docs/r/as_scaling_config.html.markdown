@@ -52,7 +52,7 @@ The following arguments are supported:
 * `enhanced_monitor_service` - (Optional) To specify whether to enable cloud monitor service. Default is TRUE.
 * `enhanced_security_service` - (Optional) To specify whether to enable cloud security service. Default is TRUE.
 * `instance_tags` - (Optional) A list of tags used to associate different resources.
-* `internet_charge_type` - (Optional) Charge types for network traffic. Available values include `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+* `internet_charge_type` - (Optional) Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional) Max bandwidth of Internet access in Mbps. Default is 0.
 * `keep_image_login` - (Optional) Specify whether to keep original settings of a CVM image. And it can't be used with password or key_ids together.
 * `key_ids` - (Optional) ID list of keys.
@@ -61,13 +61,13 @@ The following arguments are supported:
 * `public_ip_assigned` - (Optional) Specify whether to assign an Internet IP address.
 * `security_group_ids` - (Optional) Security groups to which a CVM instance belongs.
 * `system_disk_size` - (Optional) Volume of system disk in GB. Default is 50.
-* `system_disk_type` - (Optional) Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.
+* `system_disk_type` - (Optional) Type of a CVM disk. Valid values: CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.
 * `user_data` - (Optional) ase64-encoded User Data text, the length limit is 16KB.
 
 The `data_disk` object supports the following:
 
 * `disk_size` - (Optional) Volume of disk in GB. Default is 0.
-* `disk_type` - (Optional) Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.
+* `disk_type` - (Optional) Types of disk. Valid values: CLOUD_PREMIUM and CLOUD_SSD.
 * `snapshot_id` - (Optional) Data disk snapshot ID.
 
 ## Attributes Reference

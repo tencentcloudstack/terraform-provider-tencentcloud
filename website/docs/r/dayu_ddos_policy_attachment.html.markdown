@@ -27,7 +27,7 @@ The following arguments are supported:
 
 * `policy_id` - (Required, ForceNew) Id of the policy.
 * `resource_id` - (Required, ForceNew) Id of the attached resource.
-* `resource_type` - (Required, ForceNew) Type of the resource that the DDoS policy works for, valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.
+* `resource_type` - (Required, ForceNew) Type of the resource that the DDoS policy works for. Valid values are `bgpip`, `bgp`, `bgp-multip`, `net`.
 
 ## Attributes Reference
 

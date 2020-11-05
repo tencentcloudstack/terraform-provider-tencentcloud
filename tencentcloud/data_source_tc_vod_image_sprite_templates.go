@@ -47,7 +47,7 @@ func dataSourceTencentCloudVodImageSpriteTemplates() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Template type filter. Valid values: `Preset`: preset template; `Custom`: custom template.",
+				Description: "Template type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.",
 			},
 			"sub_app_id": {
 				Type:        schema.TypeInt,
@@ -73,12 +73,12 @@ func dataSourceTencentCloudVodImageSpriteTemplates() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Template type filter. Valid values: `Preset`: preset template; `Custom`: custom template.",
+							Description: "Template type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.",
 						},
 						"sample_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Sampling type. Valid values: `Percent`: by percent. `Time`: by time interval.",
+							Description: "Sampling type. Valid values: `Percent`, `Time`. `Percent`: by percent. `Time`: by time interval.",
 						},
 						"sample_interval": {
 							Type:        schema.TypeInt,

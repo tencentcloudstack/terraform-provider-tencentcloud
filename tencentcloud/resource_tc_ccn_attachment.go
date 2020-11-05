@@ -100,7 +100,7 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "States of instance is attached, and available values include PENDING, ACTIVE, EXPIRED, REJECTED, DELETED, FAILED(asynchronous forced disassociation after 2 hours), ATTACHING, DETACHING and DETACHFAILED(asynchronous forced disassociation after 2 hours).",
+				Description: "States of instance is attached. Valid values: PENDING, ACTIVE, EXPIRED, REJECTED, DELETED, FAILED, ATTACHING, DETACHING and DETACHFAILED. FAILED means asynchronous forced disassociation after 2 hours. DETACHFAILED means asynchronous forced disassociation after 2 hours.",
 			},
 			"attached_time": {
 				Type:        schema.TypeString,

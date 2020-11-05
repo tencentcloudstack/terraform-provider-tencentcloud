@@ -110,7 +110,7 @@ func resourceTencentCloudRouteEntry() *schema.Resource {
 					}
 					return
 				},
-				Description: "The next hop type. Available value is `public_gateway`,`vpn_gateway`,`sslvpn_gateway`,`dc_gateway`,`peering_connection`,`nat_gateway` and `instance`. `instance` points to CVM Instance.",
+				Description: "The next hop type. Valid values: `public_gateway`,`vpn_gateway`,`sslvpn_gateway`,`dc_gateway`,`peering_connection`,`nat_gateway` and `instance`. `instance` points to CVM Instance.",
 			},
 			"next_hub": {
 				Type:        schema.TypeString,

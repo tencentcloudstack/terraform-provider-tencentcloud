@@ -35,11 +35,11 @@ The following arguments are supported:
 * `availability_zone` - (Required, ForceNew) The available zone that the CBS instance locates at.
 * `storage_name` - (Required) Name of CBS. The maximum length can not exceed 60 bytes.
 * `storage_size` - (Required) Volume of CBS, and unit is GB. If storage type is `CLOUD_SSD`, the size range is [100, 16000], and the others are [10-16000].
-* `storage_type` - (Required, ForceNew) Type of CBS medium, and available values include CLOUD_BASIC, CLOUD_PREMIUM and CLOUD_SSD.
-* `charge_type` - (Optional) The charge type of CBS instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`, The default is `POSTPAID_BY_HOUR`.
+* `storage_type` - (Required, ForceNew) Type of CBS medium. Valid values: CLOUD_BASIC, CLOUD_PREMIUM and CLOUD_SSD.
+* `charge_type` - (Optional) The charge type of CBS instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.
 * `encrypt` - (Optional, ForceNew) Indicates whether CBS is encrypted.
 * `force_delete` - (Optional) Indicate whether to delete CBS instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.
-* `period` - (Optional, **Deprecated**) It has been deprecated from version 1.33.0. Set `prepaid_period` instead. The purchased usage period of CBS, and value range [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].
+* `period` - (Optional, **Deprecated**) It has been deprecated from version 1.33.0. Set `prepaid_period` instead. The purchased usage period of CBS. Valid values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].
 * `prepaid_period` - (Optional) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.
 * `prepaid_renew_flag` - (Optional) When enabled, the CBS instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW` and `DISABLE_NOTIFY_AND_MANUAL_RENEW`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional) ID of the project to which the instance belongs.
@@ -52,7 +52,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `attached` - Indicates whether the CBS is mounted the CVM.
-* `storage_status` - Status of CBS, and available values include UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.
+* `storage_status` - Status of CBS. Valid values: UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.
 
 
 ## Import

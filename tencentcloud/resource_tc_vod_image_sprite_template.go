@@ -57,7 +57,7 @@ func resourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"Percent", "Time"}),
-				Description:  "Sampling type. Valid values: `Percent`: by percent. `Time`: by time interval.",
+				Description:  "Sampling type. Valid values: `Percent`, `Time`. `Percent`: by percent. `Time`: by time interval.",
 			},
 			"sample_interval": {
 				Type:        schema.TypeInt,
@@ -108,7 +108,7 @@ func resourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     true,
-				Description: "Resolution adaption. Valid values: `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `true`.",
+				Description: "Resolution adaption. Valid values: `true`,`false`. `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `true`.",
 			},
 			"sub_app_id": {
 				Type:        schema.TypeInt,

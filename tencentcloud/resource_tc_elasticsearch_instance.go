@@ -122,7 +122,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      ES_DEPLOY_MODE_SINGLE_REGION,
 				ValidateFunc: validateAllowedIntValue(ES_DEPLOY_MODE),
-				Description:  "Cluster deployment mode. Valid values are `0` and `1`, `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.",
+				Description:  "Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.",
 			},
 			"multi_zone_infos": {
 				Type:        schema.TypeList,
@@ -150,7 +150,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:     true,
 				Default:      ES_LICENSE_TYPE_PLATINUM,
 				ValidateFunc: validateAllowedStringValue(ES_LICENSE_TYPE),
-				Description:  "License type. Valid values are `oss`, `basic` and `platinum`, and default value is `platinum`.",
+				Description:  "License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.",
 			},
 			"node_info_list": {
 				Type:        schema.TypeList,
@@ -175,14 +175,14 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 							Optional:     true,
 							Default:      ES_NODE_TYPE_HOT_DATA,
 							ValidateFunc: validateAllowedStringValue(ES_NODE_TYPE),
-							Description:  "Node type. Valid values are `hotData`, `warmData` and `dedicatedMaster`, and default value is 'hotData`.",
+							Description:  "Node type. Valid values are `hotData`, `warmData` and `dedicatedMaster`. The default value is 'hotData`.",
 						},
 						"disk_type": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CVM_DISK_TYPE_CLOUD_SSD,
 							ValidateFunc: validateAllowedStringValue(ES_NODE_DISK_TYPE),
-							Description:  "Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`, and default value is `CLOUD_SSD`.",
+							Description:  "Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`. The default value is `CLOUD_SSD`.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
@@ -204,7 +204,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:     true,
 				Default:      ES_BASIC_SECURITY_TYPE_OFF,
 				ValidateFunc: validateAllowedIntValue(ES_BASIC_SECURITY_TYPE),
-				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`, `1` is disabled, `2` is enabled, and default value is `1`.",
+				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,

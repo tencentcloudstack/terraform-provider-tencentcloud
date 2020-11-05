@@ -82,7 +82,7 @@ func resourceTencentCloudAudit() *schema.Resource {
 			"read_write_attribute": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Event attribute filter. 1 for readonly, 2 for writeonly, 3 for all.",
+				Description: "Event attribute filter. Valid values: 1, 2, 3.  1 for readonly, 2 for writeonly, 3 for all.",
 			},
 			"audit_switch": {
 				Type:        schema.TypeBool,

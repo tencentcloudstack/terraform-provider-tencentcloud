@@ -102,31 +102,31 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Optional:    true,
-				Description: "Type of gateway instance, valid values are `IPSEC`, `SSL` and `CCN`. Note: CCN type is only for whitelist customer now.",
+				Description: "Type of gateway instance. Valid value: `IPSEC`, `SSL` and `CCN`. Note: CCN type is only for whitelist customer now.",
 			},
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "State of the VPN gateway, valid values are `PENDING`, `DELETING`, `AVAILABLE`.",
+				Description: "State of the VPN gateway. Valid value: `PENDING`, `DELETING`, `AVAILABLE`.",
 			},
 			"prepaid_renew_flag": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     VPN_PERIOD_PREPAID_RENEW_FLAG_AUTO_NOTIFY,
-				Description: "Flag indicates whether to renew or not, valid values are `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`. This para can only be set to take effect in create operation.",
+				Description: "Flag indicates whether to renew or not. Valid value: `NOTIFY_AND_RENEW`, `NOTIFY_AND_AUTO_RENEW`, `NOT_NOTIFY_AND_NOT_RENEW`. This para can only be set to take effect in create operation.",
 			},
 			"prepaid_period": {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Default:      1,
 				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36}),
-				Description:  "Period of instance to be prepaid. Valid values are 1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36 and unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.",
+				Description:  "Period of instance to be prepaid. Valid value:  1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.",
 			},
 			"charge_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     VPN_CHARGE_TYPE_POSTPAID_BY_HOUR,
-				Description: "Charge Type of the VPN gateway, valid values are `PREPAID`, `POSTPAID_BY_HOUR` and default is `POSTPAID_BY_HOUR`.",
+				Description: "Charge Type of the VPN gateway. Valid value: `PREPAID`, `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.",
 			},
 			"expired_time": {
 				Type:        schema.TypeString,
@@ -141,12 +141,12 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 			"new_purchase_plan": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The plan of new purchase, valid value is `PREPAID_TO_POSTPAID`.",
+				Description: "The plan of new purchase. Valid value: `PREPAID_TO_POSTPAID`.",
 			},
 			"restrict_state": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Restrict state of gateway, valid values are `PRETECIVELY_ISOLATED`, `NORMAL`.",
+				Description: "Restrict state of gateway. Valid value: `PRETECIVELY_ISOLATED`, `NORMAL`.",
 			},
 			"zone": {
 				Type:        schema.TypeString,

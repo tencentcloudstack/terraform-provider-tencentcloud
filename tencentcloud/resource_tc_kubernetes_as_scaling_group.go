@@ -217,7 +217,7 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			ForceNew:     true,
 			Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 			ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-			Description:  "Type of a CVM disk, and available values include CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.",
+			Description:  "Type of a CVM disk. Valid value: CLOUD_PREMIUM and CLOUD_SSD. Default is CLOUD_PREMIUM.",
 		},
 		"system_disk_size": {
 			Type:         schema.TypeInt,
@@ -241,7 +241,7 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 						ForceNew:     true,
 						Default:      SYSTEM_DISK_TYPE_CLOUD_PREMIUM,
 						ValidateFunc: validateAllowedStringValue(SYSTEM_DISK_ALLOW_TYPE),
-						Description:  "Types of disk, available values: CLOUD_PREMIUM and CLOUD_SSD.",
+						Description:  "Types of disk. Valid value: CLOUD_PREMIUM and CLOUD_SSD.",
 					},
 					"disk_size": {
 						Type:        schema.TypeInt,
@@ -265,7 +265,7 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			ForceNew:     true,
 			Default:      INTERNET_CHARGE_TYPE_TRAFFIC_POSTPAID_BY_HOUR,
 			ValidateFunc: validateAllowedStringValue(INTERNET_CHARGE_ALLOW_TYPE),
-			Description:  "Charge types for network traffic. Available values include `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
+			Description:  "Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 		},
 		"internet_max_bandwidth_out": {
 			Type:        schema.TypeInt,

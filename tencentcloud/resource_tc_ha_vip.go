@@ -74,7 +74,7 @@ func resourceTencentCloudHaVip() *schema.Resource {
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "State of the HA VIP, values are `AVAILABLE`, `UNBIND`.",
+				Description: "State of the HA VIP. Valid value: `AVAILABLE`, `UNBIND`.",
 			},
 			"instance_id": {
 				Type:        schema.TypeString,

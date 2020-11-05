@@ -49,9 +49,9 @@ The following arguments are supported:
 
 * `d_port` - (Required) The destination port of the L4 rule.
 * `name` - (Required, ForceNew) Name of the rule. When the `resource_type` is `net`, this field should be set with valid domain.
-* `protocol` - (Required) Protocol of the rule, valid values are `http`, `https`. When `source_type` is 1(host source), the value of this field can only set with `tcp`.
+* `protocol` - (Required) Protocol of the rule. Valid values: `http`, `https`. When `source_type` is 1(host source), the value of this field can only set with `tcp`.
 * `resource_id` - (Required, ForceNew) ID of the resource that the layer 4 rule works for.
-* `resource_type` - (Required, ForceNew) Type of the resource that the layer 4 rule works for, valid values are `bgpip` and `net`.
+* `resource_type` - (Required, ForceNew) Type of the resource that the layer 4 rule works for. Valid values: `bgpip` and `net`.
 * `s_port` - (Required) The source port of the L4 rule.
 * `source_list` - (Required) Source list of the rule, it can be a set of ip sources or a set of domain sources. The number of items ranges from 1 to 20.
 * `source_type` - (Required, ForceNew) Source type, 1 for source of host, 2 for source of ip.
@@ -73,7 +73,7 @@ The `source_list` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `lb_type` - LB type of the rule, 1 for weight cycling and 2 for IP hash.
+* `lb_type` - LB type of the rule. Valid values: 1, 2.  1 for weight cycling and 2 for IP hash.
 * `rule_id` - Id of the layer 4 rule.
 
 

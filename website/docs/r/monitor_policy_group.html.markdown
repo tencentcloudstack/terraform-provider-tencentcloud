@@ -59,7 +59,7 @@ The following arguments are supported:
 * `remark` - (Required, ForceNew) Policy group's remark information.
 * `conditions` - (Optional) A list of threshold rules. Each element contains the following attributes:
 * `event_conditions` - (Optional) A list of event rules. Each element contains the following attributes:
-* `is_union_rule` - (Optional) The and or relation of indicator alarm rule, 0 represents or rule (if any rule is met, the alarm will be raised), 1 represents and rule (if all rules are met, the alarm will be raised).The default is 0.
+* `is_union_rule` - (Optional) The and or relation of indicator alarm rule. Valid values: 0, 1. 0 represents or rule (if any rule is met, the alarm will be raised), 1 represents and rule (if all rules are met, the alarm will be raised).The default is 0.
 * `project_id` - (Optional, ForceNew) The project id to which the policy group belongs, default is 0.
 
 The `conditions` object supports the following:
@@ -68,7 +68,7 @@ The `conditions` object supports the following:
 * `alarm_notify_type` - (Required) Alarm sending convergence type. 0 continuous alarm, 1 index alarm.
 * `metric_id` - (Required) Id of the metric, refer to `data.tencentcloud_monitor_policy_conditions(metric_id)`.
 * `calc_period` - (Optional) Data aggregation cycle (unit of second), if the metric has a default value can not be filled, refer to `data.tencentcloud_monitor_policy_conditions(period_keys)`.
-* `calc_type` - (Optional) Compare type, 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.
+* `calc_type` - (Optional) Compare type. Valid value ranges: (1~12). 1 means more than, 2  means greater than or equal, 3 means less than, 4 means less than or equal to, 5 means equal, 6 means not equal, 7 means days rose, 8 means days fell, 9 means weeks rose, 10  means weeks fell, 11 means period rise, 12 means period fell, refer to `data.tencentcloud_monitor_policy_conditions(calc_type_keys)`.
 * `calc_value` - (Optional) Threshold value, refer to `data.tencentcloud_monitor_policy_conditions(calc_value_*)`.
 * `continue_period` - (Optional) The rule triggers an alert that lasts for several detection cycles, refer to `data.tencentcloud_monitor_policy_conditions(period_num_keys)`.
 
@@ -93,16 +93,16 @@ In addition to all arguments above, the following attributes are exported:
 * `receivers` - A list of receivers. Each element contains the following attributes:
   * `end_time` - End of alarm period. Meaning with `start_time`.
   * `need_send_notice` - Do need a telephone alarm contact prompt.You don't need 0, you need 1.
-  * `notify_way` - Method of warning notification.Optional "SMS", "SITE", "EMAIL", "CALL", "WECHAT".
+  * `notify_way` - Method of warning notification. Valid values: "SMS", "SITE", "EMAIL", "CALL", "WECHAT".
   * `person_interval` - Telephone warning to individual interval (seconds).
   * `receive_language` - Alert sending language.
   * `receiver_group_list` - Alarm receive group id list.
-  * `receiver_type` - Receive type, 'group' (receiving group) or 'user' (receiver).
+  * `receiver_type` - Receive type. Valid values: group, user. 'group' (receiving group) or 'user' (receiver).
   * `receiver_user_list` - Alarm receiver id list.
   * `recover_notify` - Restore notification mode. Optional "SMS".
   * `round_interval` - Telephone alarm interval per round (seconds).
   * `round_number` - Telephone alarm number.
-  * `send_for` - Telephone warning time.Option "OCCUR","RECOVER".
+  * `send_for` - Telephone warning time. Valid values: "OCCUR","RECOVER".
   * `start_time` - Alarm period start time.Range [0,86400], which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'.
   * `uid_list` - The phone alerts the receiver uid.
 * `support_regions` - Support regions this policy group.

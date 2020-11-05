@@ -57,7 +57,7 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the CKafka topic.
 * `forward_cos_bucket` - Data backup cos bucket: the bucket address that is dumped to cos.
 * `forward_interval` - Periodic frequency of data backup to cos.
-* `forward_status` - Data backup cos status. 1: do not open data backup, 0: open data backup.
+* `forward_status` - Data backup cos status. Valid values: 0, 1. 1: do not open data backup, 0: open data backup.
 * `message_storage_location` - Message storage location.
 * `segment_bytes` - Number of bytes rolled by shard.
 

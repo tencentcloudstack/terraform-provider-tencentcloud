@@ -48,13 +48,13 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_ORIGIN_PULL_PROTOCOL),
-				Description:  "Origin-pull protocol configuration. The available value include `http`, `https` and `follow`.",
+				Description:  "Origin-pull protocol configuration. Valid values: `http`, `https` and `follow`.",
 			},
 			"https_switch": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_HTTPS_SWITCH),
-				Description:  "HTTPS configuration. The available value include `on`, `off` and `processing`.",
+				Description:  "HTTPS configuration. Valid values: `on`, `off` and `processing`.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

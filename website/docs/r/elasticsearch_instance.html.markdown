@@ -45,12 +45,12 @@ The following arguments are supported:
 * `subnet_id` - (Required, ForceNew) The id of a VPC subnetwork.
 * `version` - (Required) Version of the instance. Valid values are `5.6.4`, `6.4.3`, `6.8.2` and `7.5.1`.
 * `vpc_id` - (Required, ForceNew) The id of a VPC network.
-* `basic_security_type` - (Optional) Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`, `1` is disabled, `2` is enabled, and default value is `1`.
+* `basic_security_type` - (Optional) Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`.
 * `charge_period` - (Optional, ForceNew) The tenancy of the prepaid instance, and uint is month. NOTE: it only works when charge_type is set to `PREPAID`.
 * `charge_type` - (Optional, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`.
-* `deploy_mode` - (Optional, ForceNew) Cluster deployment mode. Valid values are `0` and `1`, `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
+* `deploy_mode` - (Optional, ForceNew) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
 * `instance_name` - (Optional) Name of the instance, which can contain 1 to 50 English letters, Chinese characters, digits, dashes(-), or underscores(_).
-* `license_type` - (Optional) License type. Valid values are `oss`, `basic` and `platinum`, and default value is `platinum`.
+* `license_type` - (Optional) License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.
 * `multi_zone_infos` - (Optional, ForceNew) Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).
 * `renew_flag` - (Optional, ForceNew) When enabled, the instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `RENEW_FLAG_AUTO` and `RENEW_FLAG_MANUAL`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `tags` - (Optional) A mapping of tags to assign to the instance. For tag limits, please refer to [Use Limits](https://intl.cloud.tencent.com/document/product/651/13354).
@@ -65,9 +65,9 @@ The `node_info_list` object supports the following:
 * `node_num` - (Required) Number of nodes.
 * `node_type` - (Required) Node specification, and valid values refer to [document of tencentcloud](https://intl.cloud.tencent.com/document/product/845/18376).
 * `disk_size` - (Optional) Node disk size. Unit is GB, and default value is `100`.
-* `disk_type` - (Optional) Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`, and default value is `CLOUD_SSD`.
+* `disk_type` - (Optional) Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`. The default value is `CLOUD_SSD`.
 * `encrypt` - (Optional) Decides to encrypt this disk or not.
-* `type` - (Optional) Node type. Valid values are `hotData`, `warmData` and `dedicatedMaster`, and default value is 'hotData`.
+* `type` - (Optional) Node type. Valid values are `hotData`, `warmData` and `dedicatedMaster`. The default value is 'hotData`.
 
 ## Attributes Reference
 

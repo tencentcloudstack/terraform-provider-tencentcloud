@@ -102,13 +102,13 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Whether to prohibit transcoding video from low bitrate to high bitrate. Valid values: `false`: no, `true`: yes. Default value: `false`.",
+				Description: "Whether to prohibit transcoding video from low bitrate to high bitrate. Valid values: `false`,`true`. `false`: no, `true`: yes. Default value: `false`.",
 			},
 			"disable_higher_video_resolution": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Whether to prohibit transcoding from low resolution to high resolution. Valid values: `false`: no, `true`: yes. Default value: `false`.",
+				Description: "Whether to prohibit transcoding from low resolution to high resolution. Valid values: `false`,`true`. `false`: no, `true`: yes. Default value: `false`.",
 			},
 			"comment": {
 				Type:         schema.TypeString,
@@ -138,7 +138,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 									"codec": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Video stream encoder. Valid values: `libx264`: H.264, `libx265`: H.265, `av1`: AOMedia Video 1. Currently, a resolution within 640x480 must be specified for `H.265`. and the `av1` container only supports mp4.",
+										Description: "Video stream encoder. Valid values: `libx264`,`libx265`,`av1`. `libx264`: H.264, `libx265`: H.265, `av1`: AOMedia Video 1. Currently, a resolution within 640x480 must be specified for `H.265`. and the `av1` container only supports mp4.",
 									},
 									"fps": {
 										Type:         schema.TypeInt,
@@ -155,7 +155,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 										Type:        schema.TypeBool,
 										Optional:    true,
 										Default:     true,
-										Description: "Resolution adaption. Valid values: `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `true`. Note: this field may return null, indicating that no valid values can be obtained.",
+										Description: "Resolution adaption. Valid values: `true`,`false`. `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height. Default value: `true`. Note: this field may return null, indicating that no valid values can be obtained.",
 									},
 									"width": {
 										Type:        schema.TypeInt,
@@ -190,7 +190,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 									"codec": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Audio stream encoder. Valid value are: `libfdk_aac` and `libmp3lame`, while `libfdk_aac` is recommended.",
+										Description: "Audio stream encoder. Valid value are: `libfdk_aac` and `libmp3lame`. while `libfdk_aac` is recommended.",
 									},
 									"bitrate": {
 										Type:        schema.TypeInt,
@@ -200,7 +200,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 									"sample_rate": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "Audio stream sample rate. Valid values: `32000`, `44100`, `48000`, in Hz.",
+										Description: "Audio stream sample rate. Valid values: `32000`, `44100`, `48000`Hz.",
 									},
 									"audio_channel": {
 										Type:        schema.TypeString,
