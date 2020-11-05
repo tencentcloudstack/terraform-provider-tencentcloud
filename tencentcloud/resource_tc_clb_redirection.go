@@ -188,6 +188,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		}
 		instance := instances[0]
 		domain := instance.Domain
+		url := instance.Url
 		request.Domains = []*string{domain}
 		//check source listener is null
 		if sourceListenerId != "" || sourceLocId != "" {
@@ -238,6 +239,7 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 		rparams := make(map[string]string)
 		rparams["clb_id"] = clbId
 		rparams["domain"] = *domain
+		rparams["url"] = *url
 		rparams["listener_id"] = sourceListenerId
 		var rules []*clb.RuleOutput
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
