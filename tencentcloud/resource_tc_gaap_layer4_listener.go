@@ -80,7 +80,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"TCP", "UDP"}),
 				ForceNew:     true,
-				Description:  "Protocol of the layer4 listener, the available values include `TCP` and `UDP`.",
+				Description:  "Protocol of the layer4 listener. Valid value: `TCP` and `UDP`.",
 			},
 			"name": {
 				Type:         schema.TypeString,
@@ -100,14 +100,14 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Optional:     true,
 				Default:      "rr",
 				ValidateFunc: validateAllowedStringValue([]string{"rr", "wrr", "lc"}),
-				Description:  "Scheduling policy of the layer4 listener, default value is `rr`, the available values include `rr`, `wrr` and `lc`.",
+				Description:  "Scheduling policy of the layer4 listener, default value is `rr`. Valid value: `rr`, `wrr` and `lc`.",
 			},
 			"realserver_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"IP", "DOMAIN"}),
 				ForceNew:     true,
-				Description:  "Type of the realserver, the available values include `IP` and `DOMAIN`. NOTES: when the `protocol` is specified as `TCP` and the `scheduler` is specified as `wrr`, the item can only be set to `IP`.",
+				Description:  "Type of the realserver. Valid value: `IP` and `DOMAIN`. NOTES: when the `protocol` is specified as `TCP` and the `scheduler` is specified as `wrr`, the item can only be set to `IP`.",
 			},
 			"proxy_id": {
 				Type:        schema.TypeString,

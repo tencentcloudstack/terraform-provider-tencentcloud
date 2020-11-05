@@ -44,7 +44,7 @@ func dataSourceTencentCloudVodSnapshotByTimeOffsetTemplates() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Template type filter. Valid values: `Preset`: preset template; `Custom`: custom template.",
+				Description: "Template type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.",
 			},
 			"sub_app_id": {
 				Type:        schema.TypeInt,
@@ -70,7 +70,7 @@ func dataSourceTencentCloudVodSnapshotByTimeOffsetTemplates() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Template type filter. Valid values: `Preset`: preset template; `Custom`: custom template.",
+							Description: "Template type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.",
 						},
 						"name": {
 							Type:        schema.TypeString,
@@ -90,7 +90,7 @@ func dataSourceTencentCloudVodSnapshotByTimeOffsetTemplates() *schema.Resource {
 						"resolution_adaptive": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Resolution adaption. Valid values: `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height.",
+							Description: "Resolution adaption. Valid values: `true`, `false`. `true`: enabled. In this case, `width` represents the long side of a video, while `height` the short side; `false`: disabled. In this case, `width` represents the width of a video, while `height` the height.",
 						},
 						"format": {
 							Type:        schema.TypeString,

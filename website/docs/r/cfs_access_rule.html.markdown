@@ -29,9 +29,9 @@ The following arguments are supported:
 
 * `access_group_id` - (Required, ForceNew) ID of a access group.
 * `auth_client_ip` - (Required) A single IP or a single IP address range such as 10.1.10.11 or 10.10.1.0/24 indicates that all IPs are allowed. Please note that the IP entered should be CVM's private IP.
-* `priority` - (Required) The priority level of rule. The range is 1-100, and 1 indicates the highest priority.
-* `rw_permission` - (Optional) Read and write permissions. Valid values are `RO` and `RW`, and default is `RO`.
-* `user_permission` - (Optional) The permissions of accessing users. Valid values are `all_squash`, `no_all_squash`, `root_squash` and `no_root_squash`, and default is `root_squash`. `all_squash` indicates that all access users are mapped as anonymous users or user groups; `no_all_squash` indicates that access users will match local users first and be mapped to anonymous users or user groups after matching failed; `root_squash` indicates that map access root users to anonymous users or user groups; `no_root_squash` indicates that access root users keep root account permission.
+* `priority` - (Required) The priority level of rule. Valid value ranges: (1~100). `1` indicates the highest priority.
+* `rw_permission` - (Optional) Read and write permissions. Valid values are `RO` and `RW`. and default is `RO`.
+* `user_permission` - (Optional) The permissions of accessing users. Valid values are `all_squash`, `no_all_squash`, `root_squash` and `no_root_squash`. and default is `root_squash`. `all_squash` indicates that all access users are mapped as anonymous users or user groups; `no_all_squash` indicates that access users will match local users first and be mapped to anonymous users or user groups after matching failed; `root_squash` indicates that map access root users to anonymous users or user groups; `no_root_squash` indicates that access root users keep root account permission.
 
 ## Attributes Reference
 

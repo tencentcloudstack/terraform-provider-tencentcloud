@@ -72,6 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `attached_time` - Time of attaching.
 * `cidr_block` - A network address block of the instance that is attached.
-* `state` - States of instance is attached, and available values include PENDING, ACTIVE, EXPIRED, REJECTED, DELETED, FAILED(asynchronous forced disassociation after 2 hours), ATTACHING, DETACHING and DETACHFAILED(asynchronous forced disassociation after 2 hours).
+* `state` - States of instance is attached. Valid values: PENDING, ACTIVE, EXPIRED, REJECTED, DELETED, FAILED, ATTACHING, DETACHING and DETACHFAILED. FAILED means asynchronous forced disassociation after 2 hours. DETACHFAILED means asynchronous forced disassociation after 2 hours.
 
 

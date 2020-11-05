@@ -61,7 +61,7 @@ func dataSourceTencentCloudNats() *schema.Resource {
 			"state": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "NAT gateway status, 0: Running, 1: Unavailable, 2: Be in arrears and out of service.",
+				Description: "NAT gateway status. Valid values: 0, 1, 2. 0: Running, 1: Unavailable, 2: Be in arrears and out of service.",
 			},
 			"max_concurrent": {
 				Type:        schema.TypeInt,

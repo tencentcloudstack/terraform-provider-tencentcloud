@@ -55,7 +55,7 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CBS_STORAGE_TYPE),
-				Description:  "Type of CBS medium, and available values include CLOUD_BASIC, CLOUD_PREMIUM and CLOUD_SSD.",
+				Description:  "Type of CBS medium. Valid values: CLOUD_BASIC, CLOUD_PREMIUM and CLOUD_SSD.",
 			},
 			"storage_size": {
 				Type:         schema.TypeInt,
@@ -68,14 +68,14 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				ValidateFunc: validateIntegerInRange(1, 36),
-				Description:  "The purchased usage period of CBS, and value range [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].",
+				Description:  "The purchased usage period of CBS. Valid values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].",
 			},
 			"charge_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CBS_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: validateAllowedStringValue(CBS_CHARGE_TYPE),
-				Description:  "The charge type of CBS instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`, The default is `POSTPAID_BY_HOUR`.",
+				Description:  "The charge type of CBS instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.",
 			},
 			"prepaid_period": {
 				Type:         schema.TypeInt,
@@ -137,7 +137,7 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 			"storage_status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Status of CBS, and available values include UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.",
+				Description: "Status of CBS. Valid values: UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.",
 			},
 			"attached": {
 				Type:        schema.TypeBool,

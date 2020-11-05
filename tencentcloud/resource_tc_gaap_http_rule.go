@@ -120,14 +120,14 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"IP", "DOMAIN"}),
 				ForceNew:     true,
-				Description:  "Type of the realserver, the available values include `IP` and `DOMAIN`.",
+				Description:  "Type of the realserver. Valid value: `IP` and `DOMAIN`.",
 			},
 			"scheduler": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      "rr",
 				ValidateFunc: validateAllowedStringValue([]string{"rr", "wrr", "lc"}),
-				Description:  "Scheduling policy of the forward rule, default value is `rr`, the available values include `rr`, `wrr` and `lc`.",
+				Description:  "Scheduling policy of the forward rule, default value is `rr`. Valid value: `rr`, `wrr` and `lc`.",
 			},
 			"health_check": {
 				Type:        schema.TypeBool,
@@ -167,7 +167,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Optional:     true,
 				Default:      http.MethodHead,
 				ValidateFunc: validateAllowedStringValue([]string{http.MethodGet, http.MethodHead}),
-				Description:  "Method of the health check, the available values includes `GET` and `HEAD`.",
+				Description:  "Method of the health check. Valid value: `GET` and `HEAD`.",
 			},
 			"health_check_status_codes": {
 				Type:        schema.TypeSet,
@@ -175,7 +175,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 				Set:         schema.HashInt,
 				Computed:    true,
-				Description: "Return code of confirmed normal, the available values include `100`, `200`, `300`, `400` and `500`.",
+				Description: "Return code of confirmed normal. Valid value: `100`, `200`, `300`, `400` and `500`.",
 			},
 			"realservers": {
 				Type:     schema.TypeSet,
@@ -209,7 +209,7 @@ func resourceTencentCloudGaapHttpRule() *schema.Resource {
 							Optional:     true,
 							Default:      1,
 							ValidateFunc: validateIntegerInRange(1, 100),
-							Description:  "Scheduling weight, default value is `1`. The range of values is [1,100].",
+							Description:  "Scheduling weight, default value is `1`. Valid value ranges: (1~100).",
 						},
 					},
 				},

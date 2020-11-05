@@ -48,8 +48,8 @@ The following arguments are supported:
 
 The `rule_list` object supports the following:
 
-* `operator` - (Required) Operator of the rule, valid values are `include` and `equal`.
-* `skey` - (Required) Key of the rule, valid values are `cgi`, `ua` and `referer`.
+* `operator` - (Required) Operator of the rule. Valid values are `include` and `equal`.
+* `skey` - (Required) Key of the rule. Valid values are `cgi`, `ua` and `referer`.
 * `value` - (Required) Rule value, then length should be less than 31 bytes.
 
 ## Attributes Reference

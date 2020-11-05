@@ -40,7 +40,7 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the HA VIP.
 * `instance_id` - Instance id that is associated.
 * `network_interface_id` - Network interface id that is associated.
-* `state` - State of the HA VIP, values are `AVAILABLE`, `UNBIND`.
+* `state` - State of the HA VIP. Valid value: `AVAILABLE`, `UNBIND`.
 
 
 ## Import

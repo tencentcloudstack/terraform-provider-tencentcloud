@@ -78,7 +78,7 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_NETWORK_TYPE),
-				Description:  "Type of CLB instance, and available values include 'OPEN' and 'INTERNAL'.",
+				Description:  "Type of CLB instance. Valid values: 'OPEN' and 'INTERNAL'.",
 			},
 			"clb_name": {
 				Type:         schema.TypeString,

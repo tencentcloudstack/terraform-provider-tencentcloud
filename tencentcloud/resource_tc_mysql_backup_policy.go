@@ -44,7 +44,7 @@ func resourceTencentCloudMysqlBackupPolicy() *schema.Resource {
 				ValidateFunc: validateIntegerInRange(7, 732),
 				Optional:     true,
 				Default:      7,
-				Description:  "Instance backup retention days. Valid values: [7-730]. And default value is 7.",
+				Description:  "Instance backup retention days. Valid value ranges: (7~730). And default value is 7.",
 			},
 			"backup_model": {
 				Type:         schema.TypeString,

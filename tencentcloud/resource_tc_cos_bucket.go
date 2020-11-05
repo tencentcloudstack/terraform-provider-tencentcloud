@@ -130,7 +130,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 					s3.ObjectCannedACLPublicRead,
 					s3.ObjectCannedACLPublicReadWrite,
 				}),
-				Description: "The canned ACL to apply. Available values include private, public-read, and public-read-write. Defaults to private.",
+				Description: "The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.",
 			},
 			"encryption_algorithm": {
 				Type:        schema.TypeString,

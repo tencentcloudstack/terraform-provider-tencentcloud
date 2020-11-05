@@ -69,7 +69,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 				return true
 			},
 			Default:     -1,
-			Description: "Pay type of instance, 0: prepaid, 1: postpaid.",
+			Description: "Pay type of instance. Valid values:0, 1. 0: prepaid, 1: postpaid.",
 		},
 		"charge_type": {
 			Type:          schema.TypeString,
@@ -92,7 +92,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 				}
 				return olds == news
 			},
-			Description: "Pay type of instance, valid values are `PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
+			Description: "Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.",
 		},
 		"period": {
 			Type:          schema.TypeInt,
@@ -126,7 +126,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:     true,
 			ValidateFunc: validateIntegerInRange(1024, 65535),
 			Default:      3306,
-			Description:  "Public access port, rang form 1024 to 65535 and default value is 3306.",
+			Description:  "Public access port. Valid value ranges: (1024~65535). The default value is 3306.",
 		},
 		"mem_size": {
 			Type:        schema.TypeInt,
@@ -183,12 +183,12 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"locked": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Indicates whether the instance is locked. 0 - No; 1 - Yes.",
+			Description: "Indicates whether the instance is locked. Valid values: 0, 1. 0 - No; 1 - Yes.",
 		},
 		"status": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Instance status. Available values: 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
+			Description: "Instance status. Valid values: 0, 1, 4, 5. 0 - Creating; 1 - Running; 4 - Isolating; 5 - Isolated.",
 		},
 		"task_status": {
 			Type:        schema.TypeInt,

@@ -52,7 +52,7 @@ resource "tencentcloud_clb_instance" "open_clb" {
 The following arguments are supported:
 
 * `clb_name` - (Required) Name of the CLB. The name can only contain Chinese characters, English letters, numbers, underscore and hyphen '-'.
-* `network_type` - (Required, ForceNew) Type of CLB instance, and available values include 'OPEN' and 'INTERNAL'.
+* `network_type` - (Required, ForceNew) Type of CLB instance. Valid values: 'OPEN' and 'INTERNAL'.
 * `project_id` - (Optional, ForceNew) Id of the project within the CLB instance, '0' - Default Project.
 * `security_groups` - (Optional) Security groups of the CLB instance. Only supports 'OPEN' CLBs.
 * `subnet_id` - (Optional, ForceNew) Subnet id of the CLB. Effective only for CLB within the VPC. Only supports 'INTERNAL' CLBs.

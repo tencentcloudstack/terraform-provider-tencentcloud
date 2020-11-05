@@ -71,7 +71,7 @@ func resourceTencentCloudDayuL7Rule() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue(DAYU_L7_RULE_PROTOCOL),
-				Description:  "Protocol of the rule, valid values are `http`, `https`.",
+				Description:  "Protocol of the rule. Valid values: `http`, `https`.",
 			},
 			"name": {
 				Type:        schema.TypeString,
@@ -117,7 +117,7 @@ func resourceTencentCloudDayuL7Rule() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(10, 60),
-				Description:  "Interval time of health check. The value range is 10-60 sec, and the default is 15 sec.",
+				Description:  "Interval time of health check. Valid value ranges: (10~60)sec. The default is 15 sec.",
 			},
 			"health_check_health_num": {
 				Type:         schema.TypeInt,
@@ -138,7 +138,7 @@ func resourceTencentCloudDayuL7Rule() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateIntegerInRange(1, 31),
-				Description:  "HTTP Status Code. The default is 26 and value range is 1-31. 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.",
+				Description:  "HTTP Status Code. The default is 26. Valid value ranges: (1~31). 1 means the return value '1xx' is health. 2 means the return value '2xx' is health. 4 means the return value '3xx' is health. 8 means the return value '4xx' is health. 16 means the return value '5xx' is health. If you want multiple return codes to indicate health, need to add the corresponding values.",
 			},
 			"health_check_path": {
 				Type:        schema.TypeString,

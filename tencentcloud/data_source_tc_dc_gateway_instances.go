@@ -88,17 +88,17 @@ func dataSourceTencentCloudDcGatewayInstances() *schema.Resource {
 						"network_instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of associated network, the available value include 'VPC' and 'CCN'.",
+							Description: "Type of associated network. Valid values: 'VPC' and 'CCN'.",
 						},
 						"gateway_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of the gateway, the available value include 'NORMAL' and 'NAT'. Default is 'NORMAL'.",
+							Description: "Type of the gateway. Valid values: 'NORMAL' and 'NAT'. Default is 'NORMAL'.",
 						},
 						"cnn_route_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Type of CCN route, the available value include 'BGP' and 'STATIC'.",
+							Description: "Type of CCN route. Valid values: 'BGP' and 'STATIC'.",
 						},
 						"enable_bgp": {
 							Type:        schema.TypeBool,

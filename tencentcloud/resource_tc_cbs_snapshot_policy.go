@@ -57,7 +57,7 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 					Type:         schema.TypeInt,
 					ValidateFunc: validateIntegerInRange(0, 6),
 				},
-				Description: "Periodic snapshot is enabled, the available values are [0, 1, 2, 3, 4, 5, 6]. 0 means Sunday, 1-6 means Monday to Saturday.",
+				Description: "Periodic snapshot is enabled. Valid values: [0, 1, 2, 3, 4, 5, 6]. 0 means Sunday, 1-6 means Monday to Saturday.",
 			},
 			"repeat_hours": {
 				Type:     schema.TypeList,
@@ -66,7 +66,7 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 					Type:         schema.TypeInt,
 					ValidateFunc: validateIntegerInRange(0, 23),
 				},
-				Description: "Trigger times of periodic snapshot, the available values are 0 to 23. The 0 means 00:00, and so on.",
+				Description: "Trigger times of periodic snapshot. Valid value ranges: (0~23). The 0 means 00:00, and so on.",
 			},
 			"retention_days": {
 				Type:        schema.TypeInt,

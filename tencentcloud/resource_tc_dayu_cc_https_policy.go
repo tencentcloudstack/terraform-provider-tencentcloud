@@ -100,13 +100,13 @@ func resourceTencentCloudDayuCCHttpsPolicy() *schema.Resource {
 							Type:         schema.TypeString,
 							Required:     true,
 							ValidateFunc: validateAllowedStringValue(DAYU_CC_POLICY_HTTPS_CHECK_TYPE),
-							Description:  "Key of the rule, valid values are `cgi`, `ua` and `referer`.",
+							Description:  "Key of the rule. Valid values are `cgi`, `ua` and `referer`.",
 						},
 						"operator": {
 							Type:         schema.TypeString,
 							Required:     true,
 							ValidateFunc: validateAllowedStringValue(DAYU_CC_POLICY_CHECK_OP_HTTPS),
-							Description:  "Operator of the rule, valid values are `include` and `equal`.",
+							Description:  "Operator of the rule. Valid values are `include` and `equal`.",
 						},
 						"value": {
 							Type:         schema.TypeString,

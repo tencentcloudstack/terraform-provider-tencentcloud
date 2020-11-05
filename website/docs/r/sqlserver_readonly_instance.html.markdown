@@ -35,7 +35,7 @@ The following arguments are supported:
 * `master_instance_id` - (Required, ForceNew) Indicates the master instance ID of recovery instances.
 * `memory` - (Required) Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.
 * `name` - (Required) Name of the SQL Server instance.
-* `readonly_group_type` - (Required, ForceNew) Type of readonly group. 1 for one auto-assigned readonly instance per one readonly group, 2 for creating new readonly group, 3 for all exist readonly instances stay in the exist readonly group. For now, only 1 and 3 are supported.
+* `readonly_group_type` - (Required, ForceNew) Type of readonly group. Valid values: 1, 3. 1 for one auto-assigned readonly instance per one readonly group, 2 for creating new readonly group, 3 for all exist readonly instances stay in the exist readonly group. For now, only 1 and 3 are supported.
 * `storage` - (Required) Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides.
 * `availability_zone` - (Optional, ForceNew) Availability zone.
 * `charge_type` - (Optional, ForceNew) Pay type of the SQL Server instance. For now, only `POSTPAID_BY_HOUR` is valid.

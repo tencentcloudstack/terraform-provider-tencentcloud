@@ -97,7 +97,7 @@ func dataSourceTencentSqlserverZoneConfig() *schema.Resource {
 									"charge_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Billing mode under this specification. Valid values are `POSTPAID_BY_HOUR`, `PREPAID` and `ALL` which means both POSTPAID_BY_HOUR and PREPAID.",
+										Description: "Billing mode under this specification. Valid values are `POSTPAID_BY_HOUR`, `PREPAID` and `ALL`. `ALL` means both POSTPAID_BY_HOUR and PREPAID.",
 									},
 								},
 							},

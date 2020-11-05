@@ -50,7 +50,7 @@ func resourceTencentCloudPlacementGroup() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CVM_PLACEMENT_GROUP_TYPE),
-				Description:  "Type of the placement group, the available values include `HOST`,`SW` and `RACK`.",
+				Description:  "Type of the placement group. Valid values: `HOST`, `SW` and `RACK`.",
 			},
 
 			// computed

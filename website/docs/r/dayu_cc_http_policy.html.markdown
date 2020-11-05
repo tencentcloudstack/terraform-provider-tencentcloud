@@ -90,8 +90,8 @@ The following arguments are supported:
 
 The `rule_list` object supports the following:
 
-* `operator` - (Optional) Operator of the rule, valid values are `include`, `not_include`, `equal`.
-* `skey` - (Optional) Key of the rule, valid values are `host`, `cgi`, `ua`, `referer`.
+* `operator` - (Optional) Operator of the rule. Valid values: `include`, `not_include`, `equal`.
+* `skey` - (Optional) Key of the rule. Valid values: `host`, `cgi`, `ua`, `referer`.
 * `value` - (Optional) Rule value, then length should be less than 31 bytes.
 
 ## Attributes Reference

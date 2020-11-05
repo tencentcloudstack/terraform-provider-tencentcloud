@@ -54,7 +54,7 @@ func resourceTencentCloudTcaplusCluster() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(TCAPLUS_IDL_TYPES),
-				Description:  "IDL type of the TcaplusDB cluster. Valid values are PROTO and TDR.",
+				Description:  "IDL type of the TcaplusDB cluster. Valid values: PROTO and TDR.",
 			},
 			"cluster_name": {
 				Type:         schema.TypeString,
@@ -131,7 +131,7 @@ func resourceTencentCloudTcaplusCluster() *schema.Resource {
 			"password_status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, which means the password can not be changed in this moment; `modifiable`, which means the password can be changed in this moment.",
+				Description: "Password status of the TcaplusDB cluster. Valid values: `unmodifiable`, `modifiable`. `unmodifiable`. which means the password can not be changed in this moment; `modifiable`, which means the password can be changed in this moment.",
 			},
 			"api_access_id": {
 				Type:        schema.TypeString,

@@ -156,7 +156,7 @@ func resourceTencentCloudCkafkaTopic() *schema.Resource {
 			"forward_status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Data backup cos status. 1: do not open data backup, 0: open data backup.",
+				Description: "Data backup cos status. Valid values: 0, 1. 1: do not open data backup, 0: open data backup.",
 			},
 			"segment_bytes": {
 				Type:        schema.TypeInt,

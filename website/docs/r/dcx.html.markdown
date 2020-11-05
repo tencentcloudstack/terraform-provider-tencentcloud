@@ -66,11 +66,11 @@ The following arguments are supported:
 * `bgp_asn` - (Optional, ForceNew) BGP ASN of the user. A required field within BGP.
 * `bgp_auth_key` - (Optional, ForceNew) BGP key of the user.
 * `customer_address` - (Optional, ForceNew) Interconnect IP of the DC within client.
-* `network_type` - (Optional, ForceNew) Type of the network, and available values include VPC, BMVPC and CCN. The default value is VPC.
+* `network_type` - (Optional, ForceNew) Type of the network. Valid value:  VPC, BMVPC and CCN. The default value is VPC.
 * `route_filter_prefixes` - (Optional, ForceNew) Static route, the network address of the user IDC. It can be modified after setting but cannot be deleted. AN unable field within BGP.
 * `route_type` - (Optional, ForceNew) Type of the route, and available values include BGP and STATIC. The default value is BGP.
 * `tencent_address` - (Optional, ForceNew) Interconnect IP of the DC within Tencent.
-* `vlan` - (Optional, ForceNew) Vlan of the dedicated tunnels, and the range of values is [0-3000]. '0' means that only one tunnel can be created for the physical connect.
+* `vlan` - (Optional, ForceNew) Vlan of the dedicated tunnels. Valid value ranges: (0~3000). '0' means that only one tunnel can be created for the physical connect.
 
 ## Attributes Reference
 
@@ -78,6 +78,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Creation time of resource.
-* `state` - State of the dedicated tunnels, and available values include PENDING, ALLOCATING, ALLOCATED, ALTERING, DELETING, DELETED, COMFIRMING and REJECTED.
+* `state` - State of the dedicated tunnels. Valid value: PENDING, ALLOCATING, ALLOCATED, ALTERING, DELETING, DELETED, COMFIRMING and REJECTED.
 
 

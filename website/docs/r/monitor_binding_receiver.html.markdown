@@ -61,7 +61,7 @@ The `receivers` object supports the following:
 * `receive_language` - (Optional) Alert sending language. Optional `en-US`,`zh-CN`.
 * `receiver_group_list` - (Optional) Alarm receive group id list.
 * `receiver_user_list` - (Optional) Alarm receiver id list.
-* `start_time` - (Optional) Alarm period start time.Range [0,86399], which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'.
+* `start_time` - (Optional) Alarm period start time. Valid value ranges: (0~86399). which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'.
 
 ## Attributes Reference
 

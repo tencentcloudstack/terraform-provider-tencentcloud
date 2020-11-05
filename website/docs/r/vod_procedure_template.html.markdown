@@ -121,7 +121,7 @@ The `animated_graphic_task_list` object supports the following:
 The `cover_by_snapshot_task_list` object supports the following:
 
 * `definition` - (Required) Time point screen capturing template ID.
-* `position_type` - (Required) Screen capturing mode. Valid values: `Time`: screen captures by time point, `Percent`: screen captures by percentage.
+* `position_type` - (Required) Screen capturing mode. Valid values: `Time`, `Percent`. `Time`: screen captures by time point, `Percent`: screen captures by percentage.
 * `position_value` - (Required) Screenshot position: For time point screen capturing, this means to take a screenshot at a specified time point (in seconds) and use it as the cover. For percentage screen capturing, this value means to take a screenshot at a specified percentage of the video duration and use it as the cover.
 * `watermark_list` - (Optional) List of up to `10` image or text watermarks. Note: this field may return null, indicating that no valid values can be obtained.
 

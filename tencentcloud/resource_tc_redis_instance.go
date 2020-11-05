@@ -192,7 +192,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				ForceNew:     true,
 				Default:      REDIS_CHARGE_TYPE_POSTPAID,
 				ValidateFunc: validateAllowedStringValue([]string{REDIS_CHARGE_TYPE_POSTPAID, REDIS_CHARGE_TYPE_PREPAID}),
-				Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.",
+				Description:  "The charge type of instance. Valid values: `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.",
 			},
 			"prepaid_period": {
 				Type:         schema.TypeInt,

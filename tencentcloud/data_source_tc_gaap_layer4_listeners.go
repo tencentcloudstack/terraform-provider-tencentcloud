@@ -61,7 +61,7 @@ func dataSourceTencentCloudGaapLayer4Listeners() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"TCP", "UDP"}),
-				Description:  "Protocol of the layer4 listener to be queried, the available values include `TCP` and `UDP`.",
+				Description:  "Protocol of the layer4 listener to be queried. Valid values: `TCP` and `UDP`.",
 			},
 			"proxy_id": {
 				Type:        schema.TypeString,

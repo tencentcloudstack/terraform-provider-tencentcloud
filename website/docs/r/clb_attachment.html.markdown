@@ -39,8 +39,8 @@ The following arguments are supported:
 The `targets` object supports the following:
 
 * `instance_id` - (Required) Id of the backend server.
-* `port` - (Required) Port of the backend server.
-* `weight` - (Optional) Forwarding weight of the backend service, the range of [0, 100], defaults to 10.
+* `port` - (Required) Port of the backend server. Valid value ranges: (0~65535).
+* `weight` - (Optional) Forwarding weight of the backend service. Valid value ranges: (0~100). defaults to 10.
 
 ## Attributes Reference
 

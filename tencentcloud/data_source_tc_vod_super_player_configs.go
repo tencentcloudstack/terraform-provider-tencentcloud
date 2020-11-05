@@ -54,7 +54,7 @@ func dataSourceTencentCloudVodSuperPlayerConfigs() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Config type filter. Valid values: `Preset`: preset template; `Custom`: custom template.",
+				Description: "Config type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.",
 			},
 			"sub_app_id": {
 				Type:        schema.TypeInt,
@@ -75,7 +75,7 @@ func dataSourceTencentCloudVodSuperPlayerConfigs() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Template type filter. Valid values: `Preset`: preset template; `Custom`: custom template.",
+							Description: "Template type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.",
 						},
 						"name": {
 							Type:        schema.TypeString,

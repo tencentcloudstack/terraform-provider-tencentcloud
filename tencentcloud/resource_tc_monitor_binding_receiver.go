@@ -75,7 +75,7 @@ func resourceTencentMonitorBindingAlarmReceiver() *schema.Resource {
 							Optional:     true,
 							Default:      0,
 							ValidateFunc: validateIntegerInRange(0, 86399),
-							Description:  "Alarm period start time.Range [0,86399], which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'.",
+							Description:  "Alarm period start time. Valid value ranges: (0~86399). which removes the date after it is converted to Beijing time as a Unix timestamp, for example 7200 means '10:0:0'.",
 						},
 						"end_time": {
 							Type:         schema.TypeInt,
