@@ -649,14 +649,17 @@ func (me *RedisService) CleanUpInstance(ctx context.Context, redisId string) (ta
 	return
 }
 
-func (me *RedisService) UpgradeInstance(ctx context.Context, redisId string, newMemSize int64) (dealId string, errRet error) {
+func (me *RedisService) UpgradeInstance(ctx context.Context, redisId string, newMemSize int64, redisShardNum int64, redisReplicasNum int64) (dealId string, errRet error) {
 	logId := getLogId(ctx)
 
 	var uintNewMemSize = uint64(newMemSize)
-
+	var uintRedisReplicas = uint64(redisReplicasNum)
+	var uintRedisShardNum = uint64(redisShardNum)
 	request := redis.NewUpgradeInstanceRequest()
 	request.InstanceId = &redisId
 	request.MemSize = &uintNewMemSize
+	request.RedisReplicasNum = &uintRedisReplicas
+	request.RedisShardNum = &uintRedisShardNum
 
 	defer func() {
 		if errRet != nil {

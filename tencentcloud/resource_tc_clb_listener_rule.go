@@ -197,7 +197,9 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		if e != nil {
 			return retryError(e)
 		}
-		protocol = *(instance.Protocol)
+		if instance != nil {
+			protocol = *(instance.Protocol)
+		}
 		return nil
 	})
 	if err != nil {

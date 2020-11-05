@@ -1,7 +1,20 @@
 ## 1.46.2 (Unreleased)
+
 ENHANCEMENTS:
 
+* Resource: `tencentcloud_kubernetes_cluster` add new argument `kube_config`.
+* Resource: `tencentcloud_kubernetes_cluster` add value `tlinux2.4x86_64` with argument `cluster_os` to support linux OS system.
+* Resource: `tencentcloud_kubernetes_cluster` add new argument `mount_target` to support set disk mount path.
+* Resource: `tencentcloud_kubernetes_cluster` add new argument `docker_graph_path` to support set docker graph path.
+* Resource: `tencentcloud_clb_redirection` add new argument `delete_all_auto_rewirte` to delete all auto-associated redirection when destroying the resource.
+* Data Source: `tencentcloud_kubernetes_clusters` add new argument `kube_config`.
+* Data Source: `tencentcloud_availability_regions` support getting local region info by setting argument `name` with value `default`.
 * Resource: `tencentcloud_kubernetes_scale_worker` add new argument `labels` to support scale worker labels.
+
+BUG FIXES:
+
+* Resource: `tencentcloud_clb_redirection` fix inconsistent bugs when creating more than one auto redirection.
+* Resource: `tencentcloud_redis_instance` fix updating issue when redis `type_id` is set `5`.
 
 ## 1.46.1 (October 29, 2020)
 
