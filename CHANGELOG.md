@@ -9,6 +9,7 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_clb_redirection` add new argument `delete_all_auto_rewirte` to delete all auto-associated redirection when destroying the resource.
 * Data Source: `tencentcloud_kubernetes_clusters` add new argument `kube_config`.
 * Data Source: `tencentcloud_availability_regions` support getting local region info by setting argument `name` with value `default`.
+* Resource: `tencentcloud_kubernetes_scale_worker` add new argument `labels` to support scale worker labels.
 
 BUG FIXES:
 
