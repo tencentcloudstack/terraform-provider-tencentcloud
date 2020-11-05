@@ -189,6 +189,11 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
  	"root-dir=/var/lib/kubelet"
   ]	
 
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
   worker_config {
     count                      				= 1
     availability_zone          				= var.availability_zone
