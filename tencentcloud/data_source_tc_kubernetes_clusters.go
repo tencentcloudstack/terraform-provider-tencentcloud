@@ -187,7 +187,7 @@ func tkeClusterInfo() map[string]*schema.Schema {
 		"kube_config": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "kubernetes_config.",
+			Description: "kubernetes config.",
 		},
 	}
 

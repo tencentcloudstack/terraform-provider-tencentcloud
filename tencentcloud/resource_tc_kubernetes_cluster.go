@@ -842,7 +842,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"kube_config": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "kubernetes_config.",
+			Description: "kubernetes config.",
 		},
 	}
 
