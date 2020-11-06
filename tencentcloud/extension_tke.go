@@ -6,6 +6,8 @@ const (
 	TKE_CLUSTER_OS_UBUNTU16 = "ubuntu16.04.1 LTSx86_64"
 	TKE_CLUSTER_OS_UBUNTU18 = "ubuntu18.04.1 LTSx86_64"
 	TKE_CLUSTER_OS_LINUX24  = "tlinux2.4x86_64"
+	TKE_CLUSTER_OS_LINUX22  = "tlinux2.2(tkernel3)x86_64"
+	TKE_CLUSTER_OS_LINUXF22 = "Tencent tlinux release 2.2 (Final)"
 )
 
 var TKE_CLUSTER_OS = []string{TKE_CLUSTER_OS_CENTOS72, TKE_CLUSTER_OS_CENTOS76, TKE_CLUSTER_OS_UBUNTU16, TKE_CLUSTER_OS_UBUNTU18, TKE_CLUSTER_OS_LINUX24}
@@ -15,6 +17,8 @@ var tkeClusterOsMap = map[string]string{TKE_CLUSTER_OS_CENTOS72: TKE_CLUSTER_OS_
 	TKE_CLUSTER_OS_UBUNTU16: TKE_CLUSTER_OS_UBUNTU16,
 	TKE_CLUSTER_OS_UBUNTU18: "ubuntu18.04.1x86_64",
 	TKE_CLUSTER_OS_LINUX24:  "tlinux2.4x86_64",
+	TKE_CLUSTER_OS_LINUX22:  TKE_CLUSTER_OS_LINUX22,
+	TKE_CLUSTER_OS_LINUXF22: TKE_CLUSTER_OS_LINUXF22,
 }
 
 func tkeToShowClusterOs(apiOs string) string {
@@ -23,7 +27,7 @@ func tkeToShowClusterOs(apiOs string) string {
 			return showName
 		}
 	}
-	return "unknown"
+	return apiOs
 }
 
 const (
