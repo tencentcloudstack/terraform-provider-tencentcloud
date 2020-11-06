@@ -826,10 +826,17 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Mount target. Default is not mounting.",
 		},
 		"docker_graph_path": {
-			Type:        schema.TypeString,
-			Optional:    true,
-			ForceNew:    true,
-			Default:     "/var/lib/docker",
+			Type:     schema.TypeString,
+			Optional: true,
+			ForceNew: true,
+			Default:  "/var/lib/docker",
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+				if new == "/var/lib/docker" && old == "" || old == "/var/lib/docker" && new == "" {
+					return true
+				} else {
+					return old == new
+				}
+			},
 			Description: "Docker graph path. Default is `/var/lib/docker`.",
 		},
 		"extra_args": {
@@ -1116,10 +1123,10 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	cluster_os := d.Get("cluster_os").(string)
 
-	if tkeClusterOsMap[cluster_os] == "" {
-		basic.ClusterOs = cluster_os
+	if v, ok := tkeClusterOsMap[cluster_os]; ok {
+		basic.ClusterOs = v
 	} else {
-		basic.ClusterOs = tkeClusterOsMap[cluster_os]
+		basic.ClusterOs = cluster_os
 	}
 	basic.ClusterOsType = d.Get("cluster_os_type").(string)
 
