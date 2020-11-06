@@ -1,4 +1,5 @@
-## 1.46.4 (Unreleased)
+## 1.46.5 (Unreleased)
+## 1.46.4 (November 6, 2020)
 
 BUG FIXES:
 * Resource: `tencentcloud_kubernetes_cluster` fix force replacement when updating `docker_graph_path`.
