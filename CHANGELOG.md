@@ -1,4 +1,9 @@
 ## 1.46.5 (Unreleased)
+
+BUG FIXES:
+
+* Resource: `tencentcloud_elasticsearch_instance` fix inconsistent bug.
+
 ## 1.46.4 (November 6, 2020)
 
 BUG FIXES:
