@@ -1,4 +1,9 @@
 ## 1.46.5 (Unreleased)
+
+BUG FIXES:
+* Resource: `tencentcloud_redis_instance` fix incorrect number when updating `mem_size`.
+* Data Source: `tencentcloud_redis_instances` fix incorrect number for `mem_size`.
+
 ## 1.46.4 (November 6, 2020)
 
 BUG FIXES:

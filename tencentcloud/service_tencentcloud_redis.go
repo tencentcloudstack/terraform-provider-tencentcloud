@@ -180,7 +180,7 @@ needMoreItems:
 		instance.Zone = name
 		instance.CreateTime = *item.Createtime
 		instance.Ip = *item.WanIp
-		instance.MemSize = int64(*item.Size)
+		instance.MemSize = *item.RedisShardSize
 		instance.Name = *item.InstanceName
 		instance.Port = *item.Port
 		instance.ProjectId = *item.ProjectId
