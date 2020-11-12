@@ -3,6 +3,8 @@
 BUG FIXES:
 
 * Resource: `tencentcloud_elasticsearch_instance` fix inconsistent bug.
+* Resource: `tencentcloud_redis_instance` fix incorrect number when updating `mem_size`.
+* Data Source: `tencentcloud_redis_instances` fix incorrect number for `mem_size`.
 
 ## 1.46.4 (November 6, 2020)
 

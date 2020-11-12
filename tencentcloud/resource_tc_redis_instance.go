@@ -106,7 +106,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 							return
 						}
 					}
-					errors = append(errors, fmt.Errorf("this redis type %s not support now.", value))
+					errors = append(errors, fmt.Errorf("this redis type %s not support now", value))
 					return
 				},
 				Deprecated:  "It has been deprecated from version 1.33.1. Please use 'type_id' instead.",
@@ -122,7 +122,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"mem_size": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "The memory volume of an available instance(in MB), please refer to tencentcloud_redis_zone_config.list[zone].mem_sizes.",
+				Description: "The memory volume of an available instance(in MB), please refer to tencentcloud_redis_zone_config.list[zone].mem_sizes. When Redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding.",
 			},
 			"vpc_id": {
 				Type:         schema.TypeString,
@@ -451,13 +451,13 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	}
 
 	_ = d.Set("availability_zone", zoneName)
-	_ = d.Set("mem_size", int64(*info.Size))
-	_ = d.Set("vpc_id", *info.UniqVpcId)
-	_ = d.Set("subnet_id", *info.UniqSubnetId)
-	_ = d.Set("project_id", *info.ProjectId)
-	_ = d.Set("port", *info.Port)
-	_ = d.Set("ip", *info.WanIp)
-	_ = d.Set("create_time", *info.Createtime)
+	_ = d.Set("mem_size", info.RedisShardSize)
+	_ = d.Set("vpc_id", info.UniqVpcId)
+	_ = d.Set("subnet_id", info.UniqSubnetId)
+	_ = d.Set("project_id", info.ProjectId)
+	_ = d.Set("port", info.Port)
+	_ = d.Set("ip", info.WanIp)
+	_ = d.Set("create_time", info.Createtime)
 	if d.Get("vpc_id").(string) != "" {
 		securityGroups, err := service.DescribeInstanceSecurityGroup(ctx, d.Id())
 		if err != nil {
@@ -723,7 +723,7 @@ func resourceTencentCloudRedisInstanceDelete(d *schema.ResourceData, meta interf
 			if !has || isolated {
 				return nil
 			}
-			return resource.RetryableError(fmt.Errorf("Instance is not ready to be destroyed."))
+			return resource.RetryableError(fmt.Errorf("instance is not ready to be destroyed"))
 		}); errDestroyChecking != nil {
 			log.Printf("[CRITAL]%s redis querying before deleting task fail, reason:%s\n", logId, errDestroyChecking.Error())
 			return errDestroyChecking
