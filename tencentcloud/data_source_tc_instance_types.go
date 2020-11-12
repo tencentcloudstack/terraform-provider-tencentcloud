@@ -71,6 +71,12 @@ func dataSourceInstanceTypes() *schema.Resource {
 					},
 				},
 			},
+			"exclude_sold_out": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Indicate to filter instances types that is sold out or not, default is false.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -129,24 +135,86 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
+	isExcludeSoldOut := d.Get("exclude_sold_out").(bool)
 	cpu, cpuOk := d.GetOk("cpu_core_count")
 	gpu, gpuOk := d.GetOk("gpu_core_count")
 	memory, memoryOk := d.GetOk("memory_size")
 	var instanceTypes []*cvm.InstanceTypeConfig
+	var instanceSellTypes []*cvm.InstanceTypeQuotaItem
 	var errRet error
 	var err error
-	if v, ok := d.GetOk("availability_zone"); ok {
-		zone := v.(string)
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			instanceTypes, errRet = cvmService.DescribeInstanceTypes(ctx, zone)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
+	typeList := make([]map[string]interface{}, 0)
+	ids := make([]string, 0)
+
+	if !isExcludeSoldOut {
+		if v, ok := d.GetOk("availability_zone"); ok {
+			zone := v.(string)
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				instanceTypes, errRet = cvmService.DescribeInstanceTypes(ctx, zone)
+				if errRet != nil {
+					return retryError(errRet, InternalError)
+				}
+				return nil
+			})
+		} else {
+			filters := d.Get("filter").(*schema.Set).List()
+			filterMap := make(map[string][]string, len(filters))
+			for _, v := range filters {
+				item := v.(map[string]interface{})
+				name := item["name"].(string)
+				values := item["values"].([]interface{})
+				filterValues := make([]string, 0, len(values))
+				for _, value := range values {
+					filterValues = append(filterValues, value.(string))
+				}
+				filterMap[name] = filterValues
 			}
-			return nil
-		})
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				instanceTypes, errRet = cvmService.DescribeInstanceTypesByFilter(ctx, filterMap)
+				if errRet != nil {
+					return retryError(errRet, InternalError)
+				}
+				return nil
+			})
+		}
+		if err != nil {
+			return err
+		}
+		for _, instanceType := range instanceTypes {
+			flag := true
+			if cpuOk && int64(cpu.(int)) != *instanceType.CPU {
+				flag = false
+			}
+			if gpuOk && int64(gpu.(int)) != *instanceType.GPU {
+				flag = false
+			}
+			if memoryOk && int64(memory.(int)) != *instanceType.Memory {
+				flag = false
+			}
+
+			if flag {
+				mapping := map[string]interface{}{
+					"availability_zone": instanceType.Zone,
+					"cpu_core_count":    instanceType.CPU,
+					"gpu_core_count":    instanceType.GPU,
+					"memory_size":       instanceType.Memory,
+					"family":            instanceType.InstanceFamily,
+					"instance_type":     instanceType.InstanceType,
+				}
+				typeList = append(typeList, mapping)
+				ids = append(ids, *instanceType.InstanceType)
+			}
+		}
 	} else {
+		//exclude sold out
+		var zone string
+		var zone_in = 0
+		if v, ok := d.GetOk("availability_zone"); ok {
+			zone = v.(string)
+			zone_in = 1
+		}
 		filters := d.Get("filter").(*schema.Set).List()
-		filterMap := make(map[string][]string, len(filters))
+		filterMap := make(map[string][]string, len(filters)+zone_in)
 		for _, v := range filters {
 			item := v.(map[string]interface{})
 			name := item["name"].(string)
@@ -157,43 +225,43 @@ func dataSourceTencentCloudInstanceTypesRead(d *schema.ResourceData, meta interf
 			}
 			filterMap[name] = filterValues
 		}
+		if zone != "" {
+			filterMap["zone"] = []string{zone}
+		}
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			instanceTypes, errRet = cvmService.DescribeInstanceTypesByFilter(ctx, filterMap)
+			instanceSellTypes, errRet = cvmService.DescribeInstancesSellTypeByFilter(ctx, filterMap)
 			if errRet != nil {
 				return retryError(errRet, InternalError)
 			}
 			return nil
 		})
-	}
-	if err != nil {
-		return err
-	}
-
-	typeList := make([]map[string]interface{}, 0)
-	ids := make([]string, 0)
-	for _, instanceType := range instanceTypes {
-		flag := true
-		if cpuOk && int64(cpu.(int)) != *instanceType.CPU {
-			flag = false
+		if err != nil {
+			return err
 		}
-		if gpuOk && int64(gpu.(int)) != *instanceType.GPU {
-			flag = false
-		}
-		if memoryOk && int64(memory.(int)) != *instanceType.Memory {
-			flag = false
-		}
-
-		if flag {
-			mapping := map[string]interface{}{
-				"availability_zone": instanceType.Zone,
-				"cpu_core_count":    instanceType.CPU,
-				"gpu_core_count":    instanceType.GPU,
-				"memory_size":       instanceType.Memory,
-				"family":            instanceType.InstanceFamily,
-				"instance_type":     instanceType.InstanceType,
+		for _, instanceType := range instanceSellTypes {
+			flag := true
+			if cpuOk && int64(cpu.(int)) != *instanceType.Cpu {
+				flag = false
 			}
-			typeList = append(typeList, mapping)
-			ids = append(ids, *instanceType.InstanceType)
+			if gpuOk && int64(gpu.(int)) != *instanceType.Gpu {
+				flag = false
+			}
+			if memoryOk && int64(memory.(int)) != *instanceType.Memory {
+				flag = false
+			}
+
+			if flag {
+				mapping := map[string]interface{}{
+					"availability_zone": instanceType.Zone,
+					"cpu_core_count":    instanceType.Cpu,
+					"gpu_core_count":    instanceType.Gpu,
+					"memory_size":       instanceType.Memory,
+					"family":            instanceType.InstanceFamily,
+					"instance_type":     instanceType.InstanceType,
+				}
+				typeList = append(typeList, mapping)
+				ids = append(ids, *instanceType.InstanceType)
+			}
 		}
 	}
 

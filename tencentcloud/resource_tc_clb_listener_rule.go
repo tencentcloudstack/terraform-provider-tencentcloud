@@ -26,6 +26,13 @@ resource "tencentcloud_clb_listener_rule" "foo" {
   scheduler                  = "WRR"
 }
 ```
+Import
+
+CLB listener rule can be imported using the id (version >= 1.47.0), e.g.
+
+```
+$ terraform import tencentcloud_clb_listener_rule.foo lb-7a0t6zqb#lbl-hh141sn9#loc-agg236ys
+```
 */
 package tencentcloud
 
@@ -48,6 +55,9 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 		Read:   resourceTencentCloudClbListenerRuleRead,
 		Update: resourceTencentCloudClbListenerRuleUpdate,
 		Delete: resourceTencentCloudClbListenerRuleDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"listener_id": {
@@ -173,6 +183,12 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS", "TRPC"}),
 				Description:  "Forwarding protocol between the CLB instance and real server. Valid values: `HTTP`, `HTTPS`, `TRPC`.",
 			},
+			//computed
+			"rule_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Id of this CLB listener rule.",
+			},
 		},
 	}
 }
@@ -186,6 +202,10 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	listenerId := d.Get("listener_id").(string)
+	checkErr := ListenerIdCheck(listenerId)
+	if checkErr != nil {
+		return checkErr
+	}
 	clbId := d.Get("clb_id").(string)
 	protocol := ""
 	//get listener protocol
@@ -301,7 +321,8 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	d.SetId(locationId)
+	//this ID style changes since terraform 1.47.0
+	d.SetId(clbId + FILED_SP + listenerId + FILED_SP + locationId)
 
 	return resourceTencentCloudClbListenerRuleRead(d, meta)
 }
@@ -312,9 +333,30 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	locationId := d.Id()
-	listenerId := d.Get("listener_id").(string)
+
+	resourceId := d.Id()
+	var locationId = resourceId
+	items := strings.Split(resourceId, FILED_SP)
+	itemLength := len(items)
 	clbId := d.Get("clb_id").(string)
+	listenerId := d.Get("listener_id").(string)
+	checkErr := ListenerIdCheck(listenerId)
+	if checkErr != nil {
+		return checkErr
+	}
+	if itemLength == 1 && clbId == "" {
+		return fmt.Errorf("The old style listenerId %s does not support import, please use clbId#listenerId style", resourceId)
+	} else if itemLength == 3 && clbId == "" {
+		locationId = items[2]
+		listenerId = items[1]
+		clbId = items[0]
+	} else if itemLength == 3 && clbId != "" {
+		locationId = items[2]
+		listenerId = items[1]
+	} else if itemLength != 1 && itemLength != 3 {
+		return fmt.Errorf("broken ID %s", resourceId)
+	}
+
 	clbService := ClbService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
@@ -385,7 +427,15 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	resourceId := d.Id()
+	items := strings.Split(resourceId, FILED_SP)
+	itemLength := len(items)
+	locationId := items[itemLength-1]
 	listenerId := d.Get("listener_id").(string)
+	checkErr := ListenerIdCheck(listenerId)
+	if checkErr != nil {
+		return checkErr
+	}
 	clbId := d.Get("clb_id").(string)
 	protocol := ""
 	//get listener protocol
@@ -404,7 +454,7 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 		log.Printf("[CRITAL]%s get CLB listener failed, reason:%s\n ", logId, err.Error())
 		return err
 	}
-	locationId := d.Id()
+
 	changed := false
 	url := ""
 	scheduler := ""
@@ -489,8 +539,15 @@ func resourceTencentCloudClbListenerRuleDelete(d *schema.ResourceData, meta inte
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	locationId := d.Id()
+	resourceId := d.Id()
+	items := strings.Split(resourceId, FILED_SP)
+	itemLength := len(items)
+	locationId := items[itemLength-1]
 	listenerId := d.Get("listener_id").(string)
+	checkErr := ListenerIdCheck(listenerId)
+	if checkErr != nil {
+		return checkErr
+	}
 	clbId := d.Get("clb_id").(string)
 
 	clbService := ClbService{

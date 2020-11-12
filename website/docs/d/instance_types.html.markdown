@@ -27,6 +27,7 @@ The following arguments are supported:
 
 * `availability_zone` - (Optional) The available zone that the CVM instance locates at. This field is conflict with `filter`.
 * `cpu_core_count` - (Optional) The number of CPU cores of the instance.
+* `exclude_sold_out` - (Optional) Indicate to filter instances types that is sold out or not, default is false.
 * `filter` - (Optional) One or more name/value pairs to filter. This field is conflict with `availability_zone`.
 * `gpu_core_count` - (Optional) The number of GPU cores of the instance.
 * `memory_size` - (Optional) Instance memory capacity, unit in GB.

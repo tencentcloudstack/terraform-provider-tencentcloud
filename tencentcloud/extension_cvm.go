@@ -47,6 +47,8 @@ const (
 
 	CVM_IMAGE_LOGIN     = "TRUE"
 	CVM_IMAGE_LOGIN_NOT = "FALSE"
+
+	CVM_ZONE_NOT_SUPPORT_ERROR = "InvalidParameterValue.ZoneNotSupported"
 )
 
 var CVM_CHARGE_TYPE = []string{

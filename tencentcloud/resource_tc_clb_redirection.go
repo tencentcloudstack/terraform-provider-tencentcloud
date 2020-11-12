@@ -120,14 +120,30 @@ func resourceTencentCloudClbRedirectionCreate(d *schema.ResourceData, meta inter
 
 	clbId := d.Get("clb_id").(string)
 	targetListenerId := d.Get("target_listener_id").(string)
+	checkErr := ListenerIdCheck(targetListenerId)
+	if checkErr != nil {
+		return checkErr
+	}
 	targetLocId := d.Get("target_rule_id").(string)
+	checkErr = RuleIdCheck(targetLocId)
+	if checkErr != nil {
+		return checkErr
+	}
 	sourceListenerId := ""
 	sourceLocId := ""
 	if v, ok := d.GetOk("source_listener_id"); ok {
 		sourceListenerId = v.(string)
+		checkErr := ListenerIdCheck(sourceListenerId)
+		if checkErr != nil {
+			return checkErr
+		}
 	}
 	if v, ok := d.GetOk("source_rule_id"); ok {
 		sourceLocId = v.(string)
+		checkErr = RuleIdCheck(sourceLocId)
+		if checkErr != nil {
+			return checkErr
+		}
 	}
 
 	//check is auto forwarding or not

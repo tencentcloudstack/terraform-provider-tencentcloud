@@ -160,7 +160,12 @@ func dataSourceTencentCloudClbListenersRead(d *schema.ResourceData, meta interfa
 	params := make(map[string]interface{})
 	params["clb_id"] = clbId
 	if v, ok := d.GetOk("listener_id"); ok {
-		params["listener_id"] = v.(string)
+		listenerId := v.(string)
+		params["listener_id"] = listenerId
+		checkErr := ListenerIdCheck(listenerId)
+		if checkErr != nil {
+			return checkErr
+		}
 	}
 	if v, ok := d.GetOk("port"); ok {
 		params["port"] = v.(int)

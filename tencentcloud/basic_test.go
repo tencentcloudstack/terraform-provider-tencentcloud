@@ -23,8 +23,8 @@ const (
 	defaultInsName       = "tf-ci-test"
 	defaultInsNameUpdate = "tf-ci-test-update"
 
-	defaultSshCertificate  = "VjANRdz8"
-	defaultSshCertificateB = "VfqO4zkB"
+	defaultSshCertificate  = "f8kGFR2T"
+	defaultSshCertificateB = "fbW9Spiy"
 
 	defaultDayuBgp    = "bgp-000006mq"
 	defaultDayuBgpMul = "bgp-0000008o"
