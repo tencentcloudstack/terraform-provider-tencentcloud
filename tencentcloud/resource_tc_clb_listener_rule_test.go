@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -43,6 +44,11 @@ func TestAccTencentCloudClbListenerRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "scheduler", "WRR"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_basic", "forward_type", "HTTP"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_clb_listener_rule.rule_basic",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -99,6 +105,11 @@ func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_listener_rule.rule_full", "certificate_id", defaultSshCertificateB),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_clb_listener_rule.rule_full",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -114,7 +125,10 @@ func testAccCheckClbListenerRuleDestroy(s *terraform.State) error {
 		if rs.Type != "tencentcloud_clb_listener_rule" {
 			continue
 		}
-		locationId := rs.Primary.ID
+		resourceId := rs.Primary.ID
+		items := strings.Split(resourceId, FILED_SP)
+		itemLength := len(items)
+		locationId := items[itemLength-1]
 		listenerId := rs.Primary.Attributes["listener_id"]
 		clbId := rs.Primary.Attributes["clb_id"]
 		//this function is not supported by api, need to be travelled
@@ -142,7 +156,10 @@ func testAccCheckClbListenerRuleExists(n string) resource.TestCheckFunc {
 		clbService := ClbService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 		}
-		locationId := rs.Primary.ID
+		resourceId := rs.Primary.ID
+		items := strings.Split(resourceId, FILED_SP)
+		itemLength := len(items)
+		locationId := items[itemLength-1]
 		listenerId := rs.Primary.Attributes["listener_id"]
 		clbId := rs.Primary.Attributes["clb_id"]
 		filter := map[string]string{"rule_id": locationId, "listener_id": listenerId, "clb_id": clbId}
@@ -172,7 +189,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
   clb_id              = tencentcloud_clb_instance.clb_basic.id
-  listener_id         = tencentcloud_clb_listener.listener_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_basic.listener_id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -197,7 +214,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
   clb_id              = tencentcloud_clb_instance.clb_basic.id
-  listener_id         = tencentcloud_clb_listener.listener_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_basic.listener_id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -219,11 +236,12 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
   certificate_id       = "%s"
+  sni_switch = true
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_full" {
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
-  listener_id                = tencentcloud_clb_listener.listener_basic.id
+  listener_id                = tencentcloud_clb_listener.listener_basic.listener_id
   domain                     = "abc.com"
   url                        = "/"
   session_expire_time        = 30
@@ -254,11 +272,12 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   protocol             = "HTTPS"
   certificate_ssl_mode = "UNIDIRECTIONAL"
   certificate_id       = "%s"
+  sni_switch = true
 }
 
 resource "tencentcloud_clb_listener_rule" "rule_full" {
   clb_id                     = tencentcloud_clb_instance.clb_basic.id
-  listener_id                = tencentcloud_clb_listener.listener_basic.id
+  listener_id                = tencentcloud_clb_listener.listener_basic.listener_id
   domain                     = "abcdr.com"
   url                        = "/"
   session_expire_time        = 60

@@ -45,7 +45,7 @@ resource "tencentcloud_clb_listener" "listener" {
 
 resource "tencentcloud_clb_listener_rule" "rule" {
   clb_id              = tencentcloud_clb_instance.clb.id
-  listener_id         = tencentcloud_clb_listener.listener.id
+  listener_id         = tencentcloud_clb_listener.listener.listener_id
   domain              = "abcde.com"
   url                 = "/"
   session_expire_time = 30
@@ -54,7 +54,7 @@ resource "tencentcloud_clb_listener_rule" "rule" {
 
 data "tencentcloud_clb_listener_rules" "rules" {
   clb_id      = tencentcloud_clb_instance.clb.id
-  listener_id = tencentcloud_clb_listener.listener.id
+  listener_id = tencentcloud_clb_listener.listener.listener_id
   domain      = tencentcloud_clb_listener_rule.rule.domain
   url         = tencentcloud_clb_listener_rule.rule.url
 }

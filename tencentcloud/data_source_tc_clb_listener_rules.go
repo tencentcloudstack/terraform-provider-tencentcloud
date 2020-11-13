@@ -178,6 +178,10 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	listenerId := d.Get("listener_id").(string)
+	checkErr := ListenerIdCheck(listenerId)
+	if checkErr != nil {
+		return checkErr
+	}
 	clbId := d.Get("clb_id").(string)
 	params := make(map[string]string)
 	params["clb_id"] = clbId
@@ -190,6 +194,10 @@ func dataSourceTencentCloudClbListenerRulesRead(d *schema.ResourceData, meta int
 	}
 	if v, ok := d.GetOk("rule_id"); ok {
 		params["rule_id"] = v.(string)
+		checkErr := RuleIdCheck(params["rule_id"])
+		if checkErr != nil {
+			return checkErr
+		}
 	}
 	if v, ok := d.GetOk("domain"); ok {
 		params["domain"] = v.(string)

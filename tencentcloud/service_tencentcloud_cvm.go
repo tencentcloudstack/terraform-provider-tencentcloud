@@ -337,6 +337,40 @@ func (me *CvmService) DescribeInstanceTypesByFilter(ctx context.Context, filters
 	return
 }
 
+func (me *CvmService) DescribeInstancesSellTypeByFilter(ctx context.Context, filters map[string][]string) (instanceTypes []*cvm.InstanceTypeQuotaItem, errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewDescribeZoneInstanceConfigInfosRequest()
+	request.Filters = make([]*cvm.Filter, 0, len(filters))
+	for k, v := range filters {
+		values := make([]*string, 0, len(v))
+		for _, value := range v {
+			values = append(values, helper.String(value))
+		}
+		filter := &cvm.Filter{
+			Name:   helper.String(k),
+			Values: values,
+		}
+		request.Filters = append(request.Filters, filter)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().DescribeZoneInstanceConfigInfos(request)
+	if err != nil {
+		//deal with not supported error
+		e, ok := err.(*sdkErrors.TencentCloudSDKError)
+		if ok && e.Code == CVM_ZONE_NOT_SUPPORT_ERROR {
+			return
+		}
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	instanceTypes = response.Response.InstanceTypeQuotaSet
+	return
+}
+
 func (me *CvmService) DescribeKeyPairById(ctx context.Context, keyId string) (keyPair *cvm.KeyPair, errRet error) {
 	logId := getLogId(ctx)
 	request := cvm.NewDescribeKeyPairsRequest()

@@ -114,9 +114,17 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 	params := make(map[string]string)
 	clbId := d.Get("clb_id").(string)
 	listenerId := d.Get("listener_id").(string)
+	checkErr := ListenerIdCheck(listenerId)
+	if checkErr != nil {
+		return checkErr
+	}
 	locationId := ""
 	if v, ok := d.GetOk("rule_id"); ok {
 		locationId = v.(string)
+		checkErr := RuleIdCheck(locationId)
+		if checkErr != nil {
+			return checkErr
+		}
 		params["rule_id"] = locationId
 	}
 	params["clb_id"] = clbId

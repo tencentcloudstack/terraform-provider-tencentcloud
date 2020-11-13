@@ -115,6 +115,16 @@ func resourceTencentCloudClbTargetGroupAttachmentCreate(d *schema.ResourceData, 
 		err              error
 	)
 
+	//check listenerId
+	checkErr := ListenerIdCheck(listenerId)
+	if checkErr != nil {
+		return checkErr
+	}
+	//check ruleId
+	checkErr = RuleIdCheck(locationId)
+	if checkErr != nil {
+		return checkErr
+	}
 	//check rule
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		listener, err = clbService.DescribeListenerById(ctx, listenerId, clbId)

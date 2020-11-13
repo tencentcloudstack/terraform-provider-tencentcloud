@@ -49,6 +49,6 @@ resource "tencentcloud_clb_listener" "listener" {
 
 data "tencentcloud_clb_listeners" "listeners" {
   clb_id      = tencentcloud_clb_instance.clb.id
-  listener_id = tencentcloud_clb_listener.listener.id
+  listener_id = tencentcloud_clb_listener.listener.listener_id
 }
 `

@@ -66,6 +66,14 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `rule_id` - Id of this CLB listener rule.
 
 
+## Import
+
+CLB listener rule can be imported using the id (version >= 1.47.0), e.g.
+
+```
+$ terraform import tencentcloud_clb_listener_rule.foo lb-7a0t6zqb#lbl-hh141sn9#loc-agg236ys
+```
 
