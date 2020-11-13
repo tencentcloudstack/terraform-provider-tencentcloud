@@ -40,16 +40,16 @@ func TestAccTencentCloudDataSqlserverInstances(t *testing.T) {
 
 const testAccTencentCloudDataSqlserverInstancesBasic = `
 variable "availability_zone"{
-default = "ap-guangzhou-2"
+	default = "ap-guangzhou-2"
 }
 
 resource "tencentcloud_sqlserver_instance" "test" {
-  name = "tf_postsql_instance"
+  name              = "tf_postsql_instance"
   availability_zone = var.availability_zone
-  charge_type = "POSTPAID_BY_HOUR"
-  project_id = 0
-  memory = 2
-  storage = 10
+  charge_type       = "POSTPAID_BY_HOUR"
+  project_id        = 0
+  memory            = 2
+  storage           = 10
   tags = {
 	tf = "test"
   }

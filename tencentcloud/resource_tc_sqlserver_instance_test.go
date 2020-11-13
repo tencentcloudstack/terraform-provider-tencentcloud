@@ -168,63 +168,63 @@ variable "availability_zone"{
 
 const testAccSqlserverInstance string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
-  name = "tf_sqlserver_instance"
-  availability_zone = var.availability_zone
-  charge_type = "POSTPAID_BY_HOUR"
-  vpc_id                   = "` + defaultVpcId + `"
-  subnet_id = "` + defaultSubnetId + `"
-  project_id = 0
-  memory = 2
-  storage = 10
-  maintenance_week_set = [1,2,3]
-  maintenance_start_time = "09:00"
-  maintenance_time_span = 3
-  security_groups = ["sg-nltpbqg1"]
+  name                          = "tf_sqlserver_instance"
+  availability_zone             = var.availability_zone
+  charge_type                   = "POSTPAID_BY_HOUR"
+  vpc_id                        = "` + defaultVpcId + `"
+  subnet_id                     = "` + defaultSubnetId + `"
+  project_id                    = 0
+  memory                        = 2
+  storage                       = 10
+  maintenance_week_set          = [1,2,3]
+  maintenance_start_time        = "09:00"
+  maintenance_time_span         = 3
+  security_groups               = ["sg-nltpbqg1"]
 
   tags = {
-    "test" = "test"
+    "test"                      = "test"
   }
 }
 `
 
 const testAccSqlserverInstanceUpdate string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
-  name = "tf_sqlserver_instance_update"
-  availability_zone = var.availability_zone
-  charge_type = "POSTPAID_BY_HOUR"
-  vpc_id                   = "` + defaultVpcId + `"
-  subnet_id = "` + defaultSubnetId + `"
-  project_id = 1154137
-  memory = 4
-  storage = 20
-  maintenance_week_set = [2,3,4]
-  maintenance_start_time = "08:00"
-  maintenance_time_span = 4
+  name                      = "tf_sqlserver_instance_update"
+  availability_zone         = var.availability_zone
+  charge_type               = "POSTPAID_BY_HOUR"
+  vpc_id                    = "` + defaultVpcId + `"
+  subnet_id                 = "` + defaultSubnetId + `"
+  project_id                = 1154137
+  memory                    = 4
+  storage                   = 20
+  maintenance_week_set      = [2,3,4]
+  maintenance_start_time    = "08:00"
+  maintenance_time_span     = 4
 
   tags = {
-    abc = "abc"
+    abc                     = "abc"
   }
 }
 `
 
 const testAccSqlserverInstanceMultiCluster string = testAccSqlserverInstanceBasic + `
 resource "tencentcloud_sqlserver_instance" "test" {
-  name = "tf_sqlserver_instance_multi"
-  availability_zone = var.availability_zone
-  charge_type = "POSTPAID_BY_HOUR"
-  engine_version = "2017"
-  vpc_id                   = "` + defaultVpcId + `"
-  subnet_id = "` + defaultSubnetId + `"
-  project_id = 0
-  memory = 2
-  storage = 10
-  multi_zones = true
-  ha_type = "CLUSTER"
-  maintenance_week_set = [1,2,3]
-  maintenance_start_time = "09:00"
-  maintenance_time_span = 3
+  name                          = "tf_sqlserver_instance_multi"
+  availability_zone             = var.availability_zone
+  charge_type                   = "POSTPAID_BY_HOUR"
+  engine_version                = "2017"
+  vpc_id                        = "` + defaultVpcId + `"
+  subnet_id                     = "` + defaultSubnetId + `"
+  project_id                    = 0
+  memory                        = 2
+  storage                       = 10
+  multi_zones                   = true
+  ha_type                       = "CLUSTER"
+  maintenance_week_set          = [1,2,3]
+  maintenance_start_time        = "09:00"
+  maintenance_time_span         = 3
   tags = {
-    "test" = "test"
+    "test"                      = "test"
   }
 }
 `
