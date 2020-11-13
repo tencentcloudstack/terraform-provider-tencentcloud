@@ -52,7 +52,7 @@ resource "tencentcloud_clb_listener" "listener_tcp" {
 
 resource "tencentcloud_clb_attachment" "attachment_tcp" {
   clb_id      = tencentcloud_clb_instance.example.id
-  listener_id = tencentcloud_clb_listener.listener_tcp.id
+  listener_id = tencentcloud_clb_listener.listener_tcp.listener_id
 
   targets {
     instance_id = tencentcloud_instance.foo.id
@@ -72,7 +72,7 @@ resource "tencentcloud_clb_listener" "listener_https" {
 
 resource "tencentcloud_clb_listener_rule" "rule_https" {
   clb_id              = tencentcloud_clb_instance.example.id
-  listener_id         = tencentcloud_clb_listener.listener_https.id
+  listener_id         = tencentcloud_clb_listener.listener_https.listener_id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -81,8 +81,8 @@ resource "tencentcloud_clb_listener_rule" "rule_https" {
 
 resource "tencentcloud_clb_attachment" "attachment_https" {
   clb_id      = tencentcloud_clb_instance.example.id
-  listener_id = tencentcloud_clb_listener.listener_https.id
-  rule_id     = tencentcloud_clb_listener_rule.rule_https.id
+  listener_id = tencentcloud_clb_listener.listener_https.listener_id
+  rule_id     = tencentcloud_clb_listener_rule.rule_https.rule_id
 
   targets {
     instance_id = tencentcloud_instance.foo.id
@@ -100,7 +100,7 @@ resource "tencentcloud_clb_listener" "listener_http_src" {
 
 resource "tencentcloud_clb_listener_rule" "rule_http_src" {
   clb_id              = tencentcloud_clb_instance.example.id
-  listener_id         = tencentcloud_clb_listener.listener_http_src.id
+  listener_id         = tencentcloud_clb_listener.listener_http_src.listener_id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -116,7 +116,7 @@ resource "tencentcloud_clb_listener" "listener_http_dst" {
 
 resource "tencentcloud_clb_listener_rule" "rule_http_dst" {
   clb_id              = tencentcloud_clb_instance.example.id
-  listener_id         = tencentcloud_clb_listener.listener_http_dst.id
+  listener_id         = tencentcloud_clb_listener.listener_http_dst.listener_id
   domain              = "abcd.com"
   url                 = "/"
   session_expire_time = 30
@@ -125,10 +125,10 @@ resource "tencentcloud_clb_listener_rule" "rule_http_dst" {
 
 resource "tencentcloud_clb_redirection" "redirection_http" {
   clb_id             = tencentcloud_clb_instance.example.id
-  source_listener_id = tencentcloud_clb_listener.listener_http_src.id
-  target_listener_id = tencentcloud_clb_listener.listener_http_dst.id
-  source_rule_id     = tencentcloud_clb_listener_rule.rule_http_src.id
-  target_rule_id     = tencentcloud_clb_listener_rule.rule_http_dst.id
+  source_listener_id = tencentcloud_clb_listener.listener_http_src.listener_id
+  target_listener_id = tencentcloud_clb_listener.listener_http_dst.listener_id
+  source_rule_id     = tencentcloud_clb_listener_rule.rule_http_src.listener_id
+  target_rule_id     = tencentcloud_clb_listener_rule.rule_http_dst.listener_id
 }
 
 resource "tencentcloud_clb_instance" "clb_basic" {
@@ -145,7 +145,7 @@ resource "tencentcloud_clb_listener" "listener_basic" {
 
 resource "tencentcloud_clb_listener_rule" "rule_basic" {
   clb_id              = tencentcloud_clb_instance.clb_basic.id
-  listener_id         = tencentcloud_clb_listener.listener_basic.id
+  listener_id         = tencentcloud_clb_listener.listener_basic.listener_id
   domain              = "abc.com"
   url                 = "/"
   session_expire_time = 30
@@ -166,8 +166,8 @@ resource "tencentcloud_clb_target_group_instance_attachment" "test"{
 
 resource "tencentcloud_clb_target_group_attachment" "group" {
     clb_id          = tencentcloud_clb_instance.clb_basic.id
-    listener_id     = tencentcloud_clb_listener.listener_basic.id
-	rule_id         = tencentcloud_clb_listener_rule.rule_basic.id
+    listener_id     = tencentcloud_clb_listener.listener_basic.listener_id
+	rule_id         = tencentcloud_clb_listener_rule.rule_basic.rule_id
     targrt_group_id = tencentcloud_clb_target_group.test.id
 }
 
@@ -181,20 +181,20 @@ data "tencentcloud_clb_instances" "instances" {
 
 data "tencentcloud_clb_listeners" "listeners" {
   clb_id      = tencentcloud_clb_instance.example.id
-  listener_id = tencentcloud_clb_listener.listener_tcp.id
+  listener_id = tencentcloud_clb_listener.listener_tcp.listener_id
 }
 
 data "tencentcloud_clb_listener_rules" "rules" {
   clb_id      = tencentcloud_clb_instance.example.id
-  listener_id = tencentcloud_clb_listener.listener_https.id
+  listener_id = tencentcloud_clb_listener.listener_https.listener_id
   domain      = tencentcloud_clb_listener_rule.rule_https.domain
   url         = tencentcloud_clb_listener_rule.rule_https.url
 }
 
 data "tencentcloud_clb_attachments" "attachments" {
   clb_id      = tencentcloud_clb_instance.example.id
-  listener_id = tencentcloud_clb_listener.listener_https.id
-  rule_id     = tencentcloud_clb_attachment.attachment_https.id
+  listener_id = tencentcloud_clb_listener.listener_https.listener_id
+  rule_id     = tencentcloud_clb_attachment.attachment_https.rule_id
 }
 
 data "tencentcloud_clb_redirections" "redirections" {

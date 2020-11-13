@@ -20,6 +20,26 @@ type ClbService struct {
 	client *connectivity.TencentCloudClient
 }
 
+func RuleIdCheck(ruleId string) error {
+	//check clb listener rule id first
+	//old example file cause wrong usage of listener.id
+	items := strings.Split(ruleId, FILED_SP)
+	if len(items) > 1 {
+		return fmt.Errorf("Unsupported references of rule_id since version 1.47.0, please check your tf content and use `tencentcloud_clb_listener_rule.xxx.rule_id` instead of `tencentcloud_clb_listener_rule.xxx.id`")
+	}
+	return nil
+}
+
+func ListenerIdCheck(listenerId string) error {
+	//check clb listener listener id first
+	//old example file cause wrong usage of listener.id
+	items := strings.Split(listenerId, FILED_SP)
+	if len(items) > 1 {
+		return fmt.Errorf("Unsupported references of listener_id since version 1.47.0, please check your tf content and use `tencentcloud_clb_listener.xxx.listener_id` instead of `tencentcloud_clb_listener.xxx.id`")
+	}
+	return nil
+}
+
 func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string) (clbInstance *clb.LoadBalancer, errRet error) {
 	logId := getLogId(ctx)
 	request := clb.NewDescribeLoadBalancersRequest()
@@ -90,7 +110,6 @@ func (me *ClbService) DescribeLoadBalancerByFilter(ctx context.Context, params m
 }
 
 func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) error {
-
 	logId := getLogId(ctx)
 	request := clb.NewDeleteLoadBalancerRequest()
 	request.LoadBalancerIds = []*string{&clbId}
@@ -117,7 +136,6 @@ func (me *ClbService) DeleteLoadBalancerById(ctx context.Context, clbId string) 
 func (me *ClbService) DescribeListenerById(ctx context.Context, listenerId string, clbId string) (clbListener *clb.Listener, errRet error) {
 	logId := getLogId(ctx)
 	request := clb.NewDescribeListenersRequest()
-
 	request.ListenerIds = []*string{&listenerId}
 	request.LoadBalancerId = &clbId
 	ratelimit.Check(request.GetAction())

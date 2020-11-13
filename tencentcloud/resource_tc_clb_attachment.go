@@ -114,6 +114,10 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 
 	logId := getLogId(contextNil)
 	listenerId := d.Get("listener_id").(string)
+	checkErr := ListenerIdCheck(listenerId)
+	if checkErr != nil {
+		return checkErr
+	}
 	clbId := d.Get("clb_id").(string)
 	locationId := ""
 	request := clb.NewRegisterTargetsRequest()
@@ -121,6 +125,10 @@ func resourceTencentCloudClbServerAttachmentCreate(d *schema.ResourceData, meta 
 	request.ListenerId = helper.String(listenerId)
 	if v, ok := d.GetOk("rule_id"); ok {
 		locationId = v.(string)
+		checkErr := RuleIdCheck(locationId)
+		if checkErr != nil {
+			return checkErr
+		}
 		if locationId != "" {
 			request.LocationId = helper.String(locationId)
 		}

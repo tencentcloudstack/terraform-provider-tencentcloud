@@ -40,6 +40,40 @@ resource "tencentcloud_cdn_domain" "foo" {
 }
 ```
 
+Example Usage of COS bucket url as origin
+
+```hcl
+resource "tencentcloud_cos_bucket" "bucket" {
+  # Bucket format should be [custom name]-[appid].
+  bucket = "demo-bucket-1251234567"
+  acl    = "private"
+}
+
+# Create cdn domain
+resource "tencentcloud_cdn_domain" "cdn" {
+  domain         = "abc.com"
+  service_type   = "web"
+  area           = "mainland"
+  full_url_cache = false
+
+  origin {
+    origin_type          = "cos"
+    origin_list          = [tencentcloud_cos_bucket.bucket.cos_bucket_url]
+    server_name          = tencentcloud_cos_bucket.bucket.cos_bucket_url
+    origin_pull_protocol = "follow"
+    cos_private_access   = "on"
+  }
+
+  https_config {
+    https_switch         = "off"
+    http2_switch         = "off"
+    ocsp_stapling_switch = "off"
+    spdy_switch          = "off"
+    verify_client        = "off"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:

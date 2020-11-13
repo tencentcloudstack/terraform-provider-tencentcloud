@@ -107,12 +107,28 @@ func dataSourceTencentCloudClbRedirectionsRead(d *schema.ResourceData, meta inte
 	params := make(map[string]string)
 	params["clb_id"] = d.Get("clb_id").(string)
 	params["source_listener_id"] = d.Get("source_listener_id").(string)
+	checkErr := ListenerIdCheck(params["source_listener_id"])
+	if checkErr != nil {
+		return checkErr
+	}
 	params["source_rule_id"] = d.Get("source_rule_id").(string)
+	checkErr = RuleIdCheck(params["source_rule_id"])
+	if checkErr != nil {
+		return checkErr
+	}
 	if v, ok := d.GetOk("target_listener_id"); ok {
 		params["target_listener_id"] = v.(string)
+		checkErr := ListenerIdCheck(params["target_listener_id"])
+		if checkErr != nil {
+			return checkErr
+		}
 	}
 	if v, ok := d.GetOk("target_rule_id"); ok {
 		params["target_rule_id"] = v.(string)
+		checkErr = RuleIdCheck(params["target_rule_id"])
+		if checkErr != nil {
+			return checkErr
+		}
 	}
 
 	clbService := ClbService{
