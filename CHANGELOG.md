@@ -1,4 +1,5 @@
-## 1.47.0 (Unreleased)
+## 1.47.1 (Unreleased)
+## 1.47.0 (November 13, 2020)
 
 ENHANCEMENTS:
 * Resource: `tencentcloud_clb_listener` support import.
@@ -7,7 +8,7 @@ ENHANCEMENTS:
 * Resource: `tencentcloud_cdn_domain` add example that use COS bucket url as origin.
 * Resource: `tencentcloud_sqlserver_instance` add new argument `tags`.
 * Resource: `tencentcloud_sqlserver_readonly_instance` add new argument `tags`.
-* Resource: `tencentcloud_elasticsearch_instance` support nodeType and diskSize modification.
+* Resource: `tencentcloud_elasticsearch_instance` support `node_type` and `disk_size` modification.
 * Data Source: `tencentcloud_instance_types` add argument `exclude_sold_out` to support filtering sold out instance types. 
 * Data Source: `tencentcloud_sqlserver_instances` add new argument `tags`.
 
